@@ -2,8 +2,24 @@
   "name": "@graphscope/studio-query",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GraphScope/graphscope-components.git"
+  },
+  "files": [
+    "es",
+    "lib",
+    "dist"
+  ],
   "scripts": {
+    "start": " run-p build:cjs:watch build:esm:watch",
+    "build:cjs": "rimraf ./lib && tsc --module commonjs --outDir lib",
+    "build:esm": "rimraf ./esm && tsc --module ESNext --outDir es",
+    "build:cjs:watch": "rimraf ./lib && tsc --module commonjs --outDir lib --watch",
+    "build:esm:watch": "rimraf ./esm && tsc --module ESNext --outDir es --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

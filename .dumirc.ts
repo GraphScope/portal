@@ -24,10 +24,18 @@ export default defineConfig({
   resolve: {
     docDirs: ['docs'],
     atomDirs: [
-      // {
-      //   type: 'home',
-      //   dir: 'docs',
-      // },
+      {
+        type: 'products',
+        dir: 'packages/studio-sdk/src',
+      },
+      {
+        type: 'products',
+        dir: 'packages/studio-sdk-py/src',
+      },
+      {
+        type: 'component',
+        dir: 'packages/studio-canvas/src',
+      },
       {
         type: 'component',
         dir: 'packages/studio-importor/src',
@@ -36,6 +44,8 @@ export default defineConfig({
         type: 'component',
         dir: 'packages/studio-query/src',
       },
+     
+
     ],
   },
   mfsu: false,

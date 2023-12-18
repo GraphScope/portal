@@ -13,7 +13,7 @@ currently being supported with security updates.
 | pnpm       | 7.x     |
 | react      | 17.x    |
 | umi        | 3.x     |
-| father     | 2.x     |
+| father     | 4.x     |
 | webpack    | 5.x     |
 
 ## Reporting a Vulnerability
