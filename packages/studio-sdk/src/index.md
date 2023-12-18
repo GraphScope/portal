@@ -4,5 +4,6 @@ title: Studio
 toc: false
 ---
 
-## Studio SDK 
+## Studio SDK
 
+<code src='./index.tsx' ></code>
