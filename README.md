@@ -1,2 +1,1 @@
-# portal
-GraphScope
+# GraphScope Components
