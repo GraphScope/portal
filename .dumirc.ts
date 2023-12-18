@@ -7,7 +7,7 @@ const themeConfig = {
   socialLinks: { github: '' },
   footer: 'Made with ❤️ by GraphScope team',
   apiHeader: false,
-  // hideHomeNav: true,
+  hideHomeNav: true,
 };
 
 export default defineConfig({
