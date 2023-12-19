@@ -1,9 +1,3 @@
----
-nav: 组件
-group: 功能组件
-title: GremlinEditor
----
-
 ## Hello Gremlin Editor
 
 ```jsx

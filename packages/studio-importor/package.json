@@ -1,5 +1,5 @@
 {
-  "name": "@graphscope/studio-query",
+  "name": "@graphscope/studio-importor",
   "version": "0.1.0",
   "description": "",
   "main": "lib/index.js",
@@ -9,11 +9,7 @@
     "type": "git",
     "url": "https://github.com/GraphScope/graphscope-components.git"
   },
-  "files": [
-    "es",
-    "lib",
-    "dist"
-  ],
+  "files": ["es", "lib", "dist"],
   "scripts": {
     "start": " run-p build:cjs:watch build:esm:watch",
     "build:cjs": "rimraf ./lib && tsc --module commonjs --outDir lib",
@@ -23,8 +19,5 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC",
-  "publishConfig": {
-    "access": "public"
-  }
+  "license": "ISC"
 }

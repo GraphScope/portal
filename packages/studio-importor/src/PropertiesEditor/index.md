@@ -1,7 +1,5 @@
 ---
-nav: 组件
-group: 功能组件
-title: PropertiesEditor
+nav: components
 toc: false
 ---
 
