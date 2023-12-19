@@ -1,7 +1,7 @@
 {
   "name": "@graphscope/studio-importor",
   "version": "0.1.0",
-  "description": "",
+  "description": "A data modeling and import module in GraphStudio",
   "main": "lib/index.js",
   "module": "es/index.js",
   "types": "lib/index.d.ts",
@@ -11,7 +11,7 @@
   },
   "files": ["es", "lib", "dist"],
   "scripts": {
-    "start": " run-p build:cjs:watch build:esm:watch",
+    "start": "run-p build:cjs:watch build:esm:watch",
     "build:cjs": "rimraf ./lib && tsc --module commonjs --outDir lib",
     "build:esm": "rimraf ./esm && tsc --module ESNext --outDir es",
     "build:cjs:watch": "rimraf ./lib && tsc --module commonjs --outDir lib --watch",

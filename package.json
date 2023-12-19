@@ -5,7 +5,7 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "build:all:es": "turbo run build:es",
+    "build": "turbo run build:esm && turbo run build:cjs",
     "build:all:umd": "turbo run build:umd --no-cache",
     "clean": "pnpm run -r clean",
     "docs": "NODE_OPTIONS=--max_old_space_size=4098 && dumi dev",

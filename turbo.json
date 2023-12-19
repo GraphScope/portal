@@ -1,9 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
-    "build:es": {
-      "dependsOn": ["^build:es"],
-      "outputs": ["es/**", "lib/**"]
+    "build:esm": {
+      "dependsOn": ["^build:esm"],
+      "outputs": ["es/**"]
+    },
+    "build:cjs": {
+      "dependsOn": ["^build:cjs"],
+      "outputs": ["lib/**"]
     },
     "build:umd": {
       "dependsOn": ["^build:umd"],
