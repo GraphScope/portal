@@ -1,2 +1,1 @@
-export { default as PropertiesEditor} from './PropertiesEditor'
- 
+export { default as PropertiesEditor } from './properties-editor';
