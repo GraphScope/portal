@@ -5,8 +5,16 @@
       "dependsOn": ["^build:esm"],
       "outputs": ["es/**"]
     },
+    "build:esm:watch": {
+      "dependsOn": ["^build:esm:watch"],
+      "outputs": ["es/**"]
+    },
     "build:cjs": {
       "dependsOn": ["^build:cjs"],
+      "outputs": ["lib/**"]
+    },
+    "build:cjs:watch": {
+      "dependsOn": ["^build:cjs:watch"],
       "outputs": ["lib/**"]
     },
     "build:umd": {
