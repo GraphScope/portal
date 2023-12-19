@@ -7,3 +7,25 @@
 | studio-canvas   | Graph canvas module, supports relational data visualization                                                       |
 | studio-sdk      | Comprehensive workspace SDK built from `studio-importor`, `studio-query`, and `studio-canvas`, can run on the web |
 | studio-sdk-py   | Wraps `studio-sdk` into Python code, supports execution in JupyterLab                                             |
+
+## Development
+
+- install dependecies
+
+```
+pnpm install
+
+```
+
+- build sub packages and watching
+
+```
+npm run start
+
+```
+
+- start components demo site
+
+```
+npm run docs
+```
