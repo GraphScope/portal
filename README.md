@@ -10,7 +10,7 @@
 
 ## Development
 
-- install dependecies
+- install dependencies
 
 ```
 pnpm install
