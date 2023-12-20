@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Space, Tooltip, Popconfirm, Checkbox } from 'antd'
 import { PlusOutlined, createFromIconfontCN } from '@ant-design/icons';
 import { EditTable } from '../edit-table'
-
+// 使用createFromIconfontCN创建一个IconFont组件，加载自定义图标库
 const IconFont = createFromIconfontCN({
     scriptUrl: '//at.alicdn.com/t/a/font_4377140_eryoeoa0lk5.js',
 });
@@ -17,8 +17,9 @@ const styles = {
         borderRight: '1px solid #e5e6e8'
     }
 }
-const Editor = (props: { mapConfigParams: any; propertyConfigParams: any; }) => {
-    const { mapConfigParams, propertyConfigParams } = props    
+const Editor = (props: { mapConfigParams: any; propertyConfigParams: any;propertiesRef:any}) => {
+    // 解构props中的mapConfigParams和propertyConfigParams
+    const { mapConfigParams, propertyConfigParams ,propertiesRef} = props    
     return (
         <>
             <div>
@@ -64,6 +65,7 @@ const Editor = (props: { mapConfigParams: any; propertyConfigParams: any; }) => 
                     }
                 </p>
                 <EditTable
+                    propertiesRef={propertiesRef}
                     columns={propertyConfigParams?.columns}
                     dataSource={propertyConfigParams?.dataSource}
                     rowKey="id"

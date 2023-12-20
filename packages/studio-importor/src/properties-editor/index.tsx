@@ -1,199 +1,273 @@
-import React, { useState, type FC } from 'react';
-import {  Checkbox } from 'antd'
+import React, { type FC, useEffect } from 'react';
+import { Checkbox } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
-import { uniqueId } from 'lodash';
-import { EditType } from './components/edit-table'
-import Editor from './components/editor'
-
+import { uniqueId, cloneDeep } from 'lodash';
+import { useImmer } from 'use-immer';
+import { EditType } from './edit-table';
+import Editor from './editor';
+// 定义EditColumnsType和IndexData类型
 export type EditColumnsType<T> = {
-    inputType?: string;
-    prop: {
-        options: Array<{ label: string; value: string }>;
-        mode: 'multiple' | 'tags';
-    };
+  inputType?: string;
+  prop: {
+    options: Array<{ label: string; value: string }>;
+    mode: 'multiple' | 'tags';
+  };
 };
 export interface IndexData {
-    id: string | number;
-    index: string;
-    name?: boolean;
-    type?: string;
-    column?: string;
-    disabled?: boolean;
+  id: string | number;
+  index: string;
+  name?: boolean;
+  type?: string;
+  column?: string;
+  disabled?: boolean;
 }
 const IconFont = createFromIconfontCN({
-    scriptUrl: '//at.alicdn.com/t/a/font_4377140_eryoeoa0lk5.js',
+  scriptUrl: '//at.alicdn.com/t/a/font_4377140_eryoeoa0lk5.js',
 });
-const styles = {
-    "properties-head": {
-        display: 'flex',
-        justifyContent: 'space-between',
-        margin: '0'
+
+const PropertiesEditor: FC<{
+  properties: {
+    name: string;
+    type: string;
+    token: string;
+    primaryKey: boolean;
+  };
+  onChange: () => void;
+  propertiesRef:any;
+}> = props => {
+  const { properties, onChange ,propertiesRef} = props;
+  // 使用useImmer创建一个可变状态对象
+  const [state, updateState] = useImmer({
+    selectedRows: [],
+    selectedMapRowKeys: [],
+    configList: [],
+    mapfromfileList: [],
+    proSelectKey: [],
+  });
+  const { selectedRows, selectedMapRowKeys, configList, mapfromfileList, proSelectKey } = state;
+  // 使用useEffect在组件挂载后初始化mapfromfileList
+  useEffect(() => {
+    let data = cloneDeep(properties);
+    data.map((item, index) => {
+      return {
+        ...item,
+        id: item?.name + index,
+      };
+    });
+    updateState(draft => {
+      draft.mapfromfileList = data;
+    });
+  }, []);
+  // 使用useEffect监听configList的变化并调用onChange回调
+  useEffect(() => {
+    onChange(configList);
+  }, [configList]);
+  // 定义nodeConfigColumns，包含表格列的配置信息
+  const nodeConfigColumns: EditColumnsType<IndexData> = [
+    {
+      title: 'Name',
+      width: '15%',
+      dataIndex: 'name',
+      key: 'name',
+      editable: true,
+      editorConfig: (record: IndexData) => {
+        return {
+          inputType: EditType.INPUT,
+          prop: {
+            disabled: false,
+          },
+        };
+      },
     },
-    "sel-num": {
-        paddingRight: '12px',
-        borderRight: '1px solid #e5e6e8'
+    {
+      title: 'Type',
+      dataIndex: 'type',
+      width: '40%',
+      key: 'type',
+      editable: true,
+      editorConfig: (record: IndexData) => {
+        return {
+          inputType: EditType.SELECT,
+          prop: {
+            options: [],
+            disabled: record.disabled,
+          },
+        };
+      },
+    },
+    {
+      title: 'Column',
+      dataIndex: 'column',
+      width: '25%',
+      key: 'column',
+      editable: true,
+      editorConfig: (record: IndexData) => {
+        // if (!record.index) {
+        //     record.isUnique = false;
+        // }
+        return {
+          inputType: EditType.SELECT,
+          prop: {
+            options: [
+              {
+                label: '否',
+                value: false,
+              },
+              { label: '是', value: true },
+            ],
+            disabled: record.disabled,
+          },
+        };
+      },
+    },
+    {
+      title: 'ID',
+      dataIndex: 'operate',
+      key: 'operate',
+      render: (_, record: any) =>
+        record?.primaryKey ? (
+          <IconFont type="icon-yuechi" onClick={() => primaryKeyClick(record)} />
+        ) : (
+          <IconFont type="icon-yuechi1" onClick={() => primaryKeyClick(record)} />
+        ),
+    },
+  ];
+  // 定义primaryKeyClick回调函数，用于处理主键切换事件
+  const primaryKeyClick = val => {
+    let reasult = cloneDeep(configList);
+    const modifiedArray = reasult.map(item => {
+      if (item.name == val.name) {
+        return {
+          ...item,
+          primaryKey: !item.primaryKey,
+        };
+      } else {
+        return item;
+      }
+    });
+    updateState(draft => {
+      draft.configList = modifiedArray;
+    });
+  };
+  // 定义addNodeConfig函数，用于添加新的表格行
+  const addNodeConfig = () => {
+    const list = [...configList];
+    list.push({ id: uniqueId(`index_`), name: '', type: '', token: '', primaryKey: false });
+    updateState(draft => {
+      draft.configList = list;
+    });
+  };
+  // 定义rowSelection对象，用于多选功能
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      updateState(draft => {
+        draft.selectedRows = selectedRows;
+        draft.proSelectKey = selectedRowKeys;
+      });
+    },
+  };
+  // 定义handleSelectAll、handleSelectRow、mapcolumns等其他辅助函数和变量
+  const handleSelectAll = e => {
+    if (e.target.checked) {
+      updateState(draft => {
+        draft.selectedMapRowKeys = mapfromfileList.map(item => item.name);
+      });
+    } else {
+      updateState(draft => {
+        draft.selectedMapRowKeys = [];
+      });
     }
-}
-const PropertiesEditor: FC<{ title: string }> = props => {
-    const [configList, setConfigList] = useState([])
-    const [selectedRows, setSelectedRows] = useState([])
-    const nodeConfigColumns: EditColumnsType<IndexData> = [
-        {
-            title: 'Name',
-            width: '15%',
-            dataIndex: 'name',
-            key: 'name',
-            editable: true,
-            editorConfig: (record: IndexData) => {
-                return {
-                    inputType: EditType.INPUT,
-                    prop: {
-                        disabled: false,
-                    },
-                };
-            },
-        },
-        {
-            title: 'Type',
-            dataIndex: 'type',
-            width: '40%',
-            key: 'type',
-            editable: true,
-            editorConfig: (record: IndexData) => {
-                return {
-                    inputType: EditType.SELECT,
-                    prop: {
-                        options: [],
-                        disabled: record.disabled,
-                    },
-                };
-            },
-        },
-        {
-            title: 'Column',
-            dataIndex: 'column',
-            width: '25%',
-            key: 'column',
-            editable: true,
-            editorConfig: (record: IndexData) => {
-                // if (!record.index) {
-                //     record.isUnique = false;
-                // }
-                return {
-                    inputType: EditType.SELECT,
-                    prop: {
-                        options: [
-                            {
-                                label: '否',
-                                value: false,
-                            },
-                            { label: '是', value: true },
-                        ],
-                        disabled: record.disabled,
-                    },
-                };
-            },
-        },
-        {
-            title: 'ID',
-            dataIndex: 'operate',
-            key: 'operate',
-            render: (_, record: any) => {
-                return (
-                    <>
-                        {/* <IconFont type="icon-yuechi" /> */}
-                        <IconFont type="icon-yuechi1" />
-                    </>
-                )
-            }
-        },
-    ];
-    const addNodeConfig = () => {
-        const list = [...configList];
-        list.push({ id: uniqueId(`index_`), index: `#${configList.length + 1}` });
-        setConfigList(list)
-    };
-    // 多选
-    const rowSelection = {
-        onChange: (selectedRowKeys: React.Key[], selectedRows) => {
-            setSelectedRows(selectedRows)
-        },
-    };
-    const [selectedMapRowKeys, setSelectedMapRowKeys] = useState([]);
-    const data = [
-        { id: 1, name: 'John Doe', age: 25 },
-        { id: 2, name: 'Jane Smith', age: 30 },
-        { id: 3, name: 'Bob Johnson', age: 35 },
-    ]
-    const handleSelectAll = (e) => {
-        if (e.target.checked) {
-            setSelectedMapRowKeys(data.map((item) => item.id));
-        } else {
-            setSelectedMapRowKeys([]);
-        }
-    };
+  };
 
-    const handleSelectRow = (selectedRowKeys) => {
-        setSelectedMapRowKeys(selectedRowKeys);
-    };
-    const mapcolumns = [
-        {
-            dataIndex: 'id',
-            key: 'id',
-            width: 35,
-            render: (id) => (
-                <Checkbox
-                    checked={selectedMapRowKeys.includes(id)}
-                    onChange={(e) => handleSelectRow(e.target.checked ? [...selectedMapRowKeys, id] : selectedMapRowKeys.filter((key) => key !== id))}
-                />
-            ),
-        },
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-            ellipsis: true,
-        },
-        {
-            title: 'Contents',
-            dataIndex: 'Contents',
-            key: 'Contents',
-        },
-    ];
-    const delEditTable = () => { 
-        let result = []
-        configList.map(item => selectedRows.map(v=> {
-            if(item.id !==v.id){
-                result.push(item) 
-            }
-        }))
-        setSelectedRows([])
-        setConfigList(result)
-
-    }
-    const mapFromFileConfirm = () => { }
-    const mapConfigParams = {
-        dataSource: data,
-        columns: mapcolumns,
-        showHeader: false,
-        bordered: false,
-        selectedMapRowKeys: selectedMapRowKeys,
-        handleSelectAll: handleSelectAll,
-        handleSelectRow: handleSelectRow,
-        mapFromFileConfirm:mapFromFileConfirm
-    }
-    const propertyConfigParams = {
-        dataSource: configList,
-        columns: nodeConfigColumns,
-        bordered: true,
-        pagination: false,
-        rowSelection: rowSelection,
-        setConfigList: setConfigList,
-        selectedRows: selectedRows,
-        addNodeConfig: addNodeConfig,
-        delEditTable: delEditTable
-    }
-    return <Editor mapConfigParams={mapConfigParams} propertyConfigParams={propertyConfigParams} />
-}
+  const handleSelectRow = selectedRowKeys => {
+    updateState(draft => {
+      draft.selectedMapRowKeys = selectedRowKeys;
+    });
+  };
+  const mapcolumns = [
+    {
+      dataIndex: 'name',
+      key: 'name',
+      width: 35,
+      render: name => (
+        <Checkbox
+          checked={selectedMapRowKeys.includes(name)}
+          onChange={e =>
+            handleSelectRow(
+              e.target.checked ? [...selectedMapRowKeys, name] : selectedMapRowKeys.filter(key => key !== name),
+            )
+          }
+        />
+      ),
+    },
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      ellipsis: true,
+    },
+    {
+      title: 'Contents',
+      dataIndex: 'Contents',
+      key: 'Contents',
+    },
+  ];
+  // 定义delEditTable函数，用于删除选中表格行
+  const delEditTable = () => {
+    console.log(proSelectKey);
+    
+    const newDataSource = configList.filter(item => !proSelectKey.includes(item.id));
+    console.log(newDataSource);
+    
+    updateState(draft => {
+      draft.selectedRows = [];
+      draft.configList = newDataSource;
+    });
+  };
+  const setConfigList = val => {
+    updateState(draft => {
+      draft.configList = val;
+    });
+  };
+  // 定义mapFromFileConfirm函数，用于从文件映射数据到表格
+  const mapFromFileConfirm = () => {
+    let data = cloneDeep(properties);
+    data.map((item, index) => {
+      if (selectedMapRowKeys.includes(item?.name)) {
+        return {
+          ...item,
+          id: item?.name + index,
+        };
+      }
+    });
+    updateState(draft => {
+      draft.configList = data;
+    });
+  };
+  // 定义mapConfigParams和propertyConfigParams对象，作为Editor组件的props
+  const mapConfigParams = {
+    dataSource: properties,
+    columns: mapcolumns,
+    showHeader: false,
+    bordered: false,
+    selectedMapRowKeys: selectedMapRowKeys,
+    handleSelectAll: handleSelectAll,
+    handleSelectRow: handleSelectRow,
+    mapFromFileConfirm: mapFromFileConfirm,
+  };
+  const propertyConfigParams = {
+    dataSource: configList,
+    columns: nodeConfigColumns,
+    bordered: true,
+    pagination: false,
+    rowSelection: rowSelection,
+    setConfigList: setConfigList,
+    selectedRows: selectedRows,
+    addNodeConfig: addNodeConfig,
+    delEditTable: delEditTable,
+    propertiesRef:propertiesRef
+  };
+  return <Editor mapConfigParams={mapConfigParams} propertyConfigParams={propertyConfigParams} />;
+};
 
 export default PropertiesEditor;
