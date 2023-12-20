@@ -1,9 +1,21 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
-    "build:es": {
-      "dependsOn": ["^build:es"],
-      "outputs": ["es/**", "lib/**"]
+    "build:esm": {
+      "dependsOn": ["^build:esm"],
+      "outputs": ["es/**"]
+    },
+    "build:esm:watch": {
+      "dependsOn": ["^build:esm:watch"],
+      "outputs": ["es/**"]
+    },
+    "build:cjs": {
+      "dependsOn": ["^build:cjs"],
+      "outputs": ["lib/**"]
+    },
+    "build:cjs:watch": {
+      "dependsOn": ["^build:cjs:watch"],
+      "outputs": ["lib/**"]
     },
     "build:umd": {
       "dependsOn": ["^build:umd"],

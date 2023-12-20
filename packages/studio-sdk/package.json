@@ -1,7 +1,7 @@
 {
   "name": "@graphscope/studio-sdk",
   "version": "0.1.0",
-  "description": "",
+  "description": "A GraphStudio SDK built from `studio-importor`, `studio-query`, and `studio-canvas`",
   "main": "lib/index.js",
   "module": "es/index.js",
   "types": "lib/index.d.ts",

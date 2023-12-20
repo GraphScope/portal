@@ -5,7 +5,8 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "build:all:es": "turbo run build:es",
+    "build": "turbo run build:esm && turbo run build:cjs",
+    "start": "turbo run build:esm:watch && turbo run build:cjs:watch",
     "build:all:umd": "turbo run build:umd --no-cache",
     "clean": "pnpm run -r clean",
     "docs": "NODE_OPTIONS=--max_old_space_size=4098 && dumi dev",
@@ -35,6 +36,7 @@
     "use-immer": "^0.8.1"
   },
   "devDependencies": {
+    "prettier": "^3.1.1",
     "@types/react": "18.x",
     "@types/react-dom": "18.x",
     "babel-loader": "^8.2.5",
