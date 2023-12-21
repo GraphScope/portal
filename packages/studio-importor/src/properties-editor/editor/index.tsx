@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{ memo } from 'react';
 import { Button, Space, Tooltip, Popconfirm, Checkbox } from 'antd';
 import { PlusOutlined, createFromIconfontCN } from '@ant-design/icons';
 import { EditTable } from '../edit-table';
@@ -17,7 +17,7 @@ const styles = {
     borderRight: '1px solid #e5e6e8',
   },
 };
-const Editor = (props: { mapConfigParams: any; propertyConfigParams: any ;}) => {
+const Editor = memo((props: { mapConfigParams: any; propertyConfigParams: any ;}) => {
   // 解构props中的mapConfigParams和propertyConfigParams
   const { mapConfigParams, propertyConfigParams} = props;
   return (
@@ -95,6 +95,6 @@ const Editor = (props: { mapConfigParams: any; propertyConfigParams: any ;}) => 
       </div>
     </>
   );
-};
+});
 
 export default Editor;

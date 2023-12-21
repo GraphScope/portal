@@ -1,6 +1,6 @@
 import { Form, Input, Select, Table } from 'antd';
 import type { FormInstance } from 'antd/es/form';
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect ,memo} from 'react';
 import { EditOutlined } from '@ant-design/icons';
 // import styles from './index.module.less';
 export enum EditType {
@@ -68,7 +68,7 @@ const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
   );
 };
 
-export const EditTable = ({
+export const EditTable = memo(({
   columns,
   dataSource,
   onChange,
@@ -123,8 +123,6 @@ export const EditTable = ({
             }
           >
             {record?.disable ? <span style={{height:'27px',backgroundColor:'#505156',color:'#fff',borderRadius:'8px',padding:'8px'}} onDoubleClick={()=>inputDoubleClick(record)}>{record?.name}  <EditOutlined /></span> : <Input {...prop}/>}
-            
-            {/* <div onDoubleClick={()=>console.log(1,record)}><Input {...prop}/></div> */}
           </Form.Item>
         );
       } else if (inputType === EditType.SELECT) {
@@ -182,4 +180,4 @@ export const EditTable = ({
       />
     </TableContext.Provider>
   );
-}
+})
