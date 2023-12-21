@@ -24,11 +24,13 @@ const properties = [
     primaryKey: false,
   },
 ];
-const handleChange = (value, values) => {
-  console.log(123, value, values);
-};
+
 export default () => {
   const propertiesRef = useRef();
+  const getTable =()=>  console.log('values',propertiesRef.current.getValues())
+  const handleChange = (value, values) => {
+  console.log(value, values);
+};
   return <PropertiesEditor ref={propertiesRef} properties={properties} onChange={handleChange} />;
 };
 ```

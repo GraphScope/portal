@@ -1,4 +1,4 @@
-import React, { type FC, useEffect } from 'react';
+import React, { type FC, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Checkbox } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
 import { uniqueId, cloneDeep } from 'lodash';
@@ -21,21 +21,20 @@ export interface IndexData {
   column?: string;
   disabled?: boolean;
 }
+export interface PropertyList {
+  id: string | number;
+  name?: string;
+  type?: string;
+  token?: string;
+  primaryKey?: boolean;
+}
+
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_eryoeoa0lk5.js',
 });
 
-const PropertiesEditor: FC<{
-  properties: {
-    name: string;
-    type: string;
-    token: string;
-    primaryKey: boolean;
-  };
-  onChange: () => void;
-  propertiesRef:any;
-}> = props => {
-  const { properties, onChange ,propertiesRef} = props;
+const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> = forwardRef((props, ref) => {
+  const { properties, onChange } = props;
   // 使用useImmer创建一个可变状态对象
   const [state, updateState] = useImmer({
     selectedRows: [],
@@ -59,9 +58,9 @@ const PropertiesEditor: FC<{
     });
   }, []);
   // 使用useEffect监听configList的变化并调用onChange回调
-  useEffect(() => {
-    onChange(configList);
-  }, [configList]);
+  // useEffect(() => {
+  //   onChange(configList);
+  // }, [configList]);
   // 定义nodeConfigColumns，包含表格列的配置信息
   const nodeConfigColumns: EditColumnsType<IndexData> = [
     {
@@ -151,11 +150,12 @@ const PropertiesEditor: FC<{
   };
   // 定义addNodeConfig函数，用于添加新的表格行
   const addNodeConfig = () => {
-    const list = [...configList];
+    const list: PropertyList[] = [...configList];
     list.push({ id: uniqueId(`index_`), name: '', type: '', token: '', primaryKey: false });
     updateState(draft => {
       draft.configList = list;
     });
+    onChange(list);
   };
   // 定义rowSelection对象，用于多选功能
   const rowSelection = {
@@ -214,20 +214,18 @@ const PropertiesEditor: FC<{
   ];
   // 定义delEditTable函数，用于删除选中表格行
   const delEditTable = () => {
-    console.log(proSelectKey);
-    
     const newDataSource = configList.filter(item => !proSelectKey.includes(item.id));
-    console.log(newDataSource);
-    
     updateState(draft => {
       draft.selectedRows = [];
       draft.configList = newDataSource;
     });
+    onChange(newDataSource);
   };
   const setConfigList = val => {
     updateState(draft => {
       draft.configList = val;
     });
+    onChange(val);
   };
   // 定义mapFromFileConfirm函数，用于从文件映射数据到表格
   const mapFromFileConfirm = () => {
@@ -243,6 +241,7 @@ const PropertiesEditor: FC<{
     updateState(draft => {
       draft.configList = data;
     });
+    onChange(data);
   };
   // 定义mapConfigParams和propertyConfigParams对象，作为Editor组件的props
   const mapConfigParams = {
@@ -265,9 +264,15 @@ const PropertiesEditor: FC<{
     selectedRows: selectedRows,
     addNodeConfig: addNodeConfig,
     delEditTable: delEditTable,
-    propertiesRef:propertiesRef
   };
+  useImperativeHandle(ref, () => {
+    return {
+      getValues() {
+        return configList
+      }
+    };
+  }, [configList]);
   return <Editor mapConfigParams={mapConfigParams} propertyConfigParams={propertyConfigParams} />;
-};
+});
 
 export default PropertiesEditor;

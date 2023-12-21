@@ -41,7 +41,6 @@ interface EditableRowProps {
   index: number;
   onChange?: (newData: Array<any>) => void;
 }
-// 定义EditableRow组件
 const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
   const [form] = Form.useForm();
   const { onChange, data, rowKey } = useContext(TableContext)!;
@@ -144,7 +143,7 @@ export const EditTable: React.FC<Prop & TableProps<RecordType>> = ({
   onChange,
   rowKey,
   ...props
-}) => {
+},ref) => {
   const data = dataSource;
   const components = {
     body: {
@@ -152,7 +151,6 @@ export const EditTable: React.FC<Prop & TableProps<RecordType>> = ({
       cell: EditableCell,
     },
   };
-   // 将columns转换为可编辑的列
   const editColumns = columns.map((col: EditableCellProps) => {
     if (!col.editable) {
       return col;
@@ -168,6 +166,7 @@ export const EditTable: React.FC<Prop & TableProps<RecordType>> = ({
       }),
     };
   });
+
   return (
     <TableContext.Provider value={{ data, onChange, rowKey }}>
       <Table
@@ -181,4 +180,4 @@ export const EditTable: React.FC<Prop & TableProps<RecordType>> = ({
       />
     </TableContext.Provider>
   );
-};
+}
