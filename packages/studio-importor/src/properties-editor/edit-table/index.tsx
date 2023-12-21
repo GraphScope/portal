@@ -1,7 +1,7 @@
-import { Form, Input, Select, Table, TableProps } from 'antd';
+import { Form, Input, Select, Table } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import React, { createContext, useContext, useEffect } from 'react';
-
+import { EditOutlined } from '@ant-design/icons';
 // import styles from './index.module.less';
 export enum EditType {
   SWITCH = 'SWITCH',
@@ -68,83 +68,85 @@ const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
   );
 };
 
-const EditableCell: React.FC<EditableCellProps> = ({
-  children,
-  editable,
-  title,
-  dataIndex,
-  record,
-  editorConfig,
-  ...restProps
-}) => {
-  const form = useContext(EditableContext)!;
-  let childNode = children;
-  useEffect(() => {
-    if (record) {
-      form.setFieldsValue({ [dataIndex]: record[dataIndex] });
-    }
-  }, [record]);
-  if (editable) {
-    const { inputType, prop, name } = editorConfig(record);
-    if (inputType === EditType.INPUT) {
-      childNode = (
-        <Form.Item
-          key={`col-input-${dataIndex}`}
-          style={{ margin: 0 }}
-          name={dataIndex}
-          rules={
-            prop?.name && [
-              {
-                required: true,
-                validator: (_props, value) => {
-                  var reg = new RegExp('^[a-zA-Z0-9_\u4e00-\u9fa5]+$');
-                  if (!value) {
-                    return Promise.reject(`请填写属性名称！`);
-                  }
-                  if (!reg.test(value)) {
-                    return Promise.reject(
-                      '名称由中文、字母、数字、下划线组成。',
-                    );
-                  } else {
-                    return Promise.resolve();
-                  }
-                },
-              },
-            ]
-          }
-        >
-          <Input {...prop} />
-        </Form.Item>
-      );
-    } else if (inputType === EditType.SELECT) {
-      childNode = (
-        <Form.Item
-          style={{ margin: 0 }}
-          name={dataIndex}
-          key={`col-select-${dataIndex}`}
-        >
-          <Select {...prop} options={prop?.options} />
-        </Form.Item>
-      );
-    } else {
-      childNode = <span key={`col-element-${dataIndex}`}>{children}</span>;
-    }
-  }
-  return (
-    <td {...restProps} key={`col-td-${dataIndex}`}>
-      {childNode}
-    </td>
-  );
-};
-
-export const EditTable: React.FC<Prop & TableProps<RecordType>> = ({
+export const EditTable = ({
   columns,
   dataSource,
   onChange,
   rowKey,
+  inputDoubleClick,
   ...props
 }) => {
   const data = dataSource;
+  const EditableCell: React.FC<EditableCellProps> = ({
+    children,
+    editable,
+    title,
+    dataIndex,
+    record,
+    editorConfig,
+    ...restProps
+  }) => {
+    const form = useContext(EditableContext)!;
+    let childNode = children;
+    useEffect(() => {
+      if (record) {
+        form.setFieldsValue({ [dataIndex]: record[dataIndex] });
+      }
+    }, [record]);
+    if (editable) {
+      const { inputType, prop, name } = editorConfig(record);
+      if (inputType === EditType.INPUT) {
+        childNode = (
+          <Form.Item
+            key={`col-input-${dataIndex}`}
+            style={{ margin: 0 }}
+            name={dataIndex}
+            rules={
+              prop?.name && [
+                {
+                  required: true,
+                  validator: (_props, value) => {
+                    var reg = new RegExp('^[a-zA-Z0-9_\u4e00-\u9fa5]+$');
+                    if (!value) {
+                      return Promise.reject(`请填写属性名称！`);
+                    }
+                    if (!reg.test(value)) {
+                      return Promise.reject(
+                        '名称由中文、字母、数字、下划线组成。',
+                      );
+                    } else {
+                      return Promise.resolve();
+                    }
+                  },
+                },
+              ]
+            }
+          >
+            {record?.disable ? <span style={{height:'27px',backgroundColor:'#505156',color:'#fff',borderRadius:'8px',padding:'8px'}} onDoubleClick={()=>inputDoubleClick(record)}>{record?.name}  <EditOutlined /></span> : <Input {...prop}/>}
+            
+            {/* <div onDoubleClick={()=>console.log(1,record)}><Input {...prop}/></div> */}
+          </Form.Item>
+        );
+      } else if (inputType === EditType.SELECT) {
+        childNode = (
+          <Form.Item
+            style={{ margin: 0 }}
+            name={dataIndex}
+            key={`col-select-${dataIndex}`}
+          >
+            <Select {...prop} options={prop?.options} />
+          </Form.Item>
+        );
+      } else {
+        childNode = <span key={`col-element-${dataIndex}`}>{children}</span>;
+      }
+    }
+    return (
+      <td {...restProps} key={`col-td-${dataIndex}`}>
+        {childNode}
+      </td>
+    );
+  };
   const components = {
     body: {
       row: EditableRow,

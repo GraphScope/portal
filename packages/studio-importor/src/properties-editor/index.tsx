@@ -1,5 +1,5 @@
 import React, { type FC, useEffect, forwardRef, useImperativeHandle } from 'react';
-import { Checkbox } from 'antd';
+import { Checkbox, Input } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
 import { uniqueId, cloneDeep } from 'lodash';
 import { useImmer } from 'use-immer';
@@ -19,7 +19,7 @@ export interface IndexData {
   name?: boolean;
   type?: string;
   column?: string;
-  disabled?: boolean;
+  disable?: boolean;
 }
 export interface PropertyList {
   id: string | number;
@@ -27,6 +27,7 @@ export interface PropertyList {
   type?: string;
   token?: string;
   primaryKey?: boolean;
+  disable?: boolean;
 }
 export interface ConfigColumns {
   title: string;
@@ -34,8 +35,8 @@ export interface ConfigColumns {
   dataIndex?: string;
   key?: string;
   editable?: boolean;
-  editorConfig?:any;
-  render?:()=>void
+  editorConfig?: any;
+  render?: () => void;
 }
 
 const IconFont = createFromIconfontCN({
@@ -55,10 +56,23 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
     selectedRows: [],
     selectedMapRowKeys: [],
     configList: [],
-    mapfromfileList: cloneDeep(properties),
+    mapfromfileList: [],
     proSelectKey: [],
   });
   const { selectedRows, selectedMapRowKeys, configList, mapfromfileList, proSelectKey } = state;
+
+  useEffect(() => {
+    const data = cloneDeep(properties);
+    const modifiedArray = data.map(item => {
+      return {
+        ...item,
+        disable: true,
+      };
+    });
+    updateState(draft => {
+      draft.mapfromfileList = modifiedArray;
+    });
+  }, []);
   // 定义nodeConfigColumns，包含表格列的配置信息
   const nodeConfigColumns: ConfigColumns[] = [
     {
@@ -71,7 +85,8 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
         return {
           inputType: EditType.INPUT,
           prop: {
-            disabled: false,
+            value: record,
+            disabled: record.disable,
           },
         };
       },
@@ -87,7 +102,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
           inputType: EditType.SELECT,
           prop: {
             options: [],
-            disabled: record.disabled,
+            // disabled: record.disabled,
           },
         };
       },
@@ -112,7 +127,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
               },
               { label: '是', value: true },
             ],
-            disabled: record.disabled,
+            // disabled: record.disabled,
           },
         };
       },
@@ -149,7 +164,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
   // 定义addNodeConfig函数，用于添加新的表格行
   const addNodeConfig = () => {
     const list: PropertyList[] = [...configList];
-    list.push({ id: uniqueId(`index_`), name: '', type: '', token: '', primaryKey: false });
+    list.push({ id: uniqueId(`index_`), name: '', type: '', token: '', primaryKey: false, disable: false });
     updateState(draft => {
       draft.configList = list;
     });
@@ -167,8 +182,6 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
   // 定义handleSelectAll、handleSelectRow、mapcolumns等其他辅助函数和变量
   const handleSelectAll = e => {
     if (e.target.checked) {
-      console.log(mapfromfileList.map(item => item.name));
-
       updateState(draft => {
         draft.selectedMapRowKeys = mapfromfileList.map(item => item?.name);
       });
@@ -222,8 +235,6 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
     onChange(newDataSource);
   };
   const setConfigList = val => {
-    console.log(val);
-
     updateState(draft => {
       draft.configList = val;
     });
@@ -232,11 +243,12 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
   // 定义mapFromFileConfirm函数，用于从文件映射数据到表格
   const mapFromFileConfirm = () => {
     let data = cloneDeep(properties);
-    data.map((item, index) => {
+    data = data.map((item, index) => {
       if (selectedMapRowKeys.includes(item?.name)) {
         return {
           ...item,
           id: item?.name + index,
+          disable: true,
         };
       }
     });
@@ -244,6 +256,22 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
       draft.configList = data;
     });
     onChange(data);
+  };
+  const inputDoubleClick = val => {
+    let reasult = cloneDeep(configList);
+    const modifiedArray = reasult.map(item => {
+      if (item.name == val.name) {
+        return {
+          ...item,
+          disable: !item.disable,
+        };
+      } else {
+        return item;
+      }
+    });
+    updateState(draft => {
+      draft.configList = modifiedArray;
+    });
   };
   // 定义mapConfigParams和propertyConfigParams对象，作为Editor组件的props
   const mapConfigParams = {
@@ -266,6 +294,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
     selectedRows: selectedRows,
     addNodeConfig: addNodeConfig,
     delEditTable: delEditTable,
+    inputDoubleClick: inputDoubleClick,
   };
   useImperativeHandle(
     ref,

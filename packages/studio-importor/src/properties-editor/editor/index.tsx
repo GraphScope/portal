@@ -17,9 +17,9 @@ const styles = {
     borderRight: '1px solid #e5e6e8',
   },
 };
-const Editor = (props: { mapConfigParams: any; propertyConfigParams: any }) => {
+const Editor = (props: { mapConfigParams: any; propertyConfigParams: any ;}) => {
   // 解构props中的mapConfigParams和propertyConfigParams
-  const { mapConfigParams, propertyConfigParams } = props;
+  const { mapConfigParams, propertyConfigParams} = props;
   return (
     <>
       <div>
@@ -85,6 +85,7 @@ const Editor = (props: { mapConfigParams: any; propertyConfigParams: any }) => {
           onChange={(newData: any) => {
             propertyConfigParams?.setConfigList([...newData]);
           }}
+          inputDoubleClick={propertyConfigParams?.inputDoubleClick}
           bordered={true}
           pagination={false}
           rowSelection={{
