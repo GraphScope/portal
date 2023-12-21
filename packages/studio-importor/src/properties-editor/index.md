@@ -35,3 +35,13 @@ export default () => {
 };
 ```
 
+```bash
+      const properties =[
+        {
+          id: string | number; # id数据唯一性
+          name: string;
+          type: 'string';
+          token: 'string';
+          primaryKey: boolean,
+        }]
+```

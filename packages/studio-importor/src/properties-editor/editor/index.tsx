@@ -17,7 +17,7 @@ const styles = {
     borderRight: '1px solid #e5e6e8',
   },
 };
-const Editor = (props: { mapConfigParams: any; propertyConfigParams: any },ref) => {
+const Editor = (props: { mapConfigParams: any; propertyConfigParams: any }) => {
   // 解构props中的mapConfigParams和propertyConfigParams
   const { mapConfigParams, propertyConfigParams } = props;
   return (

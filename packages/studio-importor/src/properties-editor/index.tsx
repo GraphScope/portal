@@ -28,6 +28,15 @@ export interface PropertyList {
   token?: string;
   primaryKey?: boolean;
 }
+export interface ConfigColumns {
+  title: string;
+  width?: string;
+  dataIndex?: string;
+  key?: string;
+  editable?: boolean;
+  editorConfig?:any;
+  render?:()=>void
+}
 
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_eryoeoa0lk5.js',
@@ -36,33 +45,22 @@ const IconFont = createFromIconfontCN({
 const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> = forwardRef((props, ref) => {
   const { properties, onChange } = props;
   // 使用useImmer创建一个可变状态对象
-  const [state, updateState] = useImmer({
+  const [state, updateState] = useImmer<{
+    selectedRows: never[];
+    selectedMapRowKeys: string[];
+    configList: PropertyList[];
+    mapfromfileList: PropertyList[];
+    proSelectKey: never[];
+  }>({
     selectedRows: [],
     selectedMapRowKeys: [],
     configList: [],
-    mapfromfileList: [],
+    mapfromfileList: cloneDeep(properties),
     proSelectKey: [],
   });
   const { selectedRows, selectedMapRowKeys, configList, mapfromfileList, proSelectKey } = state;
-  // 使用useEffect在组件挂载后初始化mapfromfileList
-  useEffect(() => {
-    let data = cloneDeep(properties);
-    data.map((item, index) => {
-      return {
-        ...item,
-        id: item?.name + index,
-      };
-    });
-    updateState(draft => {
-      draft.mapfromfileList = data;
-    });
-  }, []);
-  // 使用useEffect监听configList的变化并调用onChange回调
-  // useEffect(() => {
-  //   onChange(configList);
-  // }, [configList]);
   // 定义nodeConfigColumns，包含表格列的配置信息
-  const nodeConfigColumns: EditColumnsType<IndexData> = [
+  const nodeConfigColumns: ConfigColumns[] = [
     {
       title: 'Name',
       width: '15%',
@@ -169,8 +167,10 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
   // 定义handleSelectAll、handleSelectRow、mapcolumns等其他辅助函数和变量
   const handleSelectAll = e => {
     if (e.target.checked) {
+      console.log(mapfromfileList.map(item => item.name));
+
       updateState(draft => {
-        draft.selectedMapRowKeys = mapfromfileList.map(item => item.name);
+        draft.selectedMapRowKeys = mapfromfileList.map(item => item?.name);
       });
     } else {
       updateState(draft => {
@@ -222,6 +222,8 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
     onChange(newDataSource);
   };
   const setConfigList = val => {
+    console.log(val);
+
     updateState(draft => {
       draft.configList = val;
     });
@@ -265,13 +267,17 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
     addNodeConfig: addNodeConfig,
     delEditTable: delEditTable,
   };
-  useImperativeHandle(ref, () => {
-    return {
-      getValues() {
-        return configList
-      }
-    };
-  }, [configList]);
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        getValues() {
+          return configList;
+        },
+      };
+    },
+    [configList],
+  );
   return <Editor mapConfigParams={mapConfigParams} propertyConfigParams={propertyConfigParams} />;
 });
 

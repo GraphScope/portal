@@ -143,7 +143,7 @@ export const EditTable: React.FC<Prop & TableProps<RecordType>> = ({
   onChange,
   rowKey,
   ...props
-},ref) => {
+}) => {
   const data = dataSource;
   const components = {
     body: {
