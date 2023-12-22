@@ -274,6 +274,20 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;pro
       draft.configList = modifiedArray;
     });
   };
+  const inputBlur = (val) => {
+    if(!val.disable){
+      let reasult = cloneDeep(configList);
+      const modifiedArray = reasult.map(item => {
+        return {
+          ...item,
+          disable: true,
+        };
+      });
+      updateState(draft => {
+        draft.configList = modifiedArray;
+      });
+    }
+  };
   // 定义mapConfigParams和propertyConfigParams对象，作为Editor组件的props
   const mapConfigParams = {
     dataSource: properties,
@@ -296,6 +310,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;pro
     addNodeConfig: addNodeConfig,
     delEditTable: delEditTable,
     inputDoubleClick: inputDoubleClick,
+    inputBlur: inputBlur,
   };
   useImperativeHandle(
     ref,

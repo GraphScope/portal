@@ -86,6 +86,7 @@ const Editor = memo((props: { mapConfigParams: any; propertyConfigParams: any ;}
             propertyConfigParams?.setConfigList([...newData]);
           }}
           inputDoubleClick={propertyConfigParams?.inputDoubleClick}
+          inputBlur={propertyConfigParams?.inputBlur}
           bordered={true}
           pagination={false}
           rowSelection={{
