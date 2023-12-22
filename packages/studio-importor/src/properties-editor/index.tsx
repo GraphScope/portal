@@ -268,7 +268,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;}> 
   const inputDoubleClick = async (val) => {
     let reasult = cloneDeep(configList);
     const modifiedArray = await reasult.map(item => {
-      if (item.name == val.name) {
+      if (item.id == val.id) {
         return {
           ...item,
           disable: false,

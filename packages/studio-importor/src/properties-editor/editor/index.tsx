@@ -23,7 +23,7 @@ const Editor = memo(forwardRef((props: { mapConfigParams: any; propertyConfigPar
   return (
     <>
       <div>
-        <p style={styles['properties-head']}>
+        <div style={styles['properties-head']}>
           <h3>Properties</h3>
           {propertyConfigParams?.selectedRows.length == 0 ? (
             <Space>
@@ -77,7 +77,7 @@ const Editor = memo(forwardRef((props: { mapConfigParams: any; propertyConfigPar
               <IconFont type="icon-delete" onClick={() => propertyConfigParams?.delEditTable()} />
             </Space>
           )}
-        </p>
+        </div>
         <EditTable
           ref={ref}
           columns={propertyConfigParams?.columns}
