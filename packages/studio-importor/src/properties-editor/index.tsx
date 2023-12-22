@@ -263,10 +263,13 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
       if (item.name == val.name) {
         return {
           ...item,
-          disable: !item.disable,
+          disable: false,
         };
       } else {
-        return item;
+        return {
+          ...item,
+          disable: true,
+        };
       }
     });
     updateState(draft => {
