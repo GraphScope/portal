@@ -1,4 +1,4 @@
-import React, { type FC, useEffect, forwardRef, useImperativeHandle ,useRef} from 'react';
+import React, { type FC, useEffect, forwardRef, useImperativeHandle, useRef, memo} from 'react';
 import { Checkbox, Input } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
 import { uniqueId, cloneDeep } from 'lodash';
@@ -38,17 +38,13 @@ export interface ConfigColumns {
   editorConfig?: any;
   render?: () => void;
 }
-export interface Options {
-  typeOption :{label: string, value: string }[],
-  columnOption :{label: string, value: boolean }[]
-}
 
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_eryoeoa0lk5.js',
 });
 
-const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;propertyOptions:Options}> = forwardRef((props, ref) => {
-  const { properties, onChange ,propertyOptions} = props;
+const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;}> = memo(forwardRef((props, ref) => {
+  const { properties, onChange} = props;
   const inputRef = useRef()
   // 使用useImmer创建一个可变状态对象
   const [state, updateState] = useImmer<{
@@ -57,32 +53,42 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;pro
     configList: PropertyList[];
     mapfromfileList: PropertyList[];
     proSelectKey: never[];
+    propertyOption:{label:string;value:string;}[];
+    columnOption:{label:string;value:string;}[];
   }>({
     selectedRows: [],
     selectedMapRowKeys: [],
     configList: [],
     mapfromfileList: [],
     proSelectKey: [],
+    propertyOption:[],
+    columnOption:[]
   });
-  const { selectedRows, selectedMapRowKeys, configList, mapfromfileList, proSelectKey } = state;
+  const { selectedRows, selectedMapRowKeys, configList, mapfromfileList, proSelectKey ,propertyOption,columnOption} = state;
 
   useEffect(() => {
     const data = cloneDeep(properties);
-    const modifiedArray = data.map(item => {
-      return {
-        ...item,
-        disable: true,
-      };
+    let option:{label:string;value:string;}[] = []
+    let modifiedArray:any =[]
+    let pOption:{label:string;value:string;}[] =[]
+    data.map(item => {
+      option.push({label:item.type,value:item?.type})
+      pOption.push({label:item.token,value:item?.token})
+      modifiedArray.push({...item,disable: true,})
     });
     updateState(draft => {
       draft.mapfromfileList = modifiedArray;
+      draft.propertyOption = option;
+      draft.columnOption = pOption;
+
+
     });
   }, []);
   // 定义nodeConfigColumns，包含表格列的配置信息
   const nodeConfigColumns: ConfigColumns[] = [
     {
       title: 'Name',
-      width: '15%',
+      width: '40%',
       dataIndex: 'name',
       key: 'name',
       editable: true,
@@ -99,14 +105,14 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;pro
     {
       title: 'Type',
       dataIndex: 'type',
-      width: '40%',
+      width: '30%',
       key: 'type',
       editable: true,
       editorConfig: (record: IndexData) => {
         return {
           inputType: EditType.SELECT,
           prop: {
-            options: propertyOptions?.typeOption,
+            options: propertyOption,
             // disabled: record.disabled,
           },
         };
@@ -114,9 +120,9 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;pro
     },
     {
       title: 'Column',
-      dataIndex: 'column',
+      dataIndex: 'token',
       width: '25%',
-      key: 'column',
+      key: 'token',
       editable: true,
       editorConfig: (record: IndexData) => {
         // if (!record.index) {
@@ -125,7 +131,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;pro
         return {
           inputType: EditType.SELECT,
           prop: {
-            options: propertyOptions?.columnOption,
+            options:columnOption,
             // disabled: record.disabled,
           },
         };
@@ -135,6 +141,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;pro
       title: 'ID',
       dataIndex: 'operate',
       key: 'operate',
+      width:'5%',
       render: (_, record: any) =>
         record?.primaryKey ? (
           <IconFont type="icon-yuechi" onClick={() => primaryKeyClick(record)} />
@@ -147,13 +154,23 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;pro
   const primaryKeyClick = val => {
     let reasult = cloneDeep(configList);
     const modifiedArray = reasult.map(item => {
-      if (item.name == val.name) {
+      if (item.id == val.id && item.primaryKey) {
         return {
           ...item,
-          primaryKey: !item.primaryKey,
+          primaryKey: false,
         };
       } else {
-        return item;
+        if (item.id == val.id && !item.primaryKey){
+          return {
+            ...item,
+            primaryKey: true,
+          };
+        }else{
+          return {
+            ...item,
+            primaryKey: false,
+          };
+        }
       }
     });
     updateState(draft => {
@@ -226,7 +243,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;pro
   ];
   // 定义delEditTable函数，用于删除选中表格行
   const delEditTable = () => {
-    const newDataSource = configList.filter(item => !proSelectKey.includes(item.id));
+    const newDataSource = configList.filter(item => !proSelectKey.includes(item?.id));
     updateState(draft => {
       draft.selectedRows = [];
       draft.configList = newDataSource;
@@ -241,16 +258,8 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;pro
   };
   // 定义mapFromFileConfirm函数，用于从文件映射数据到表格
   const mapFromFileConfirm = () => {
-    let data = cloneDeep(properties);
-    data = data.map((item, index) => {
-      if (selectedMapRowKeys.includes(item?.name)) {
-        return {
-          ...item,
-          id: item?.name + index,
-          disable: true,
-        };
-      }
-    });
+    let data = cloneDeep(mapfromfileList);
+    data = data.filter(item => selectedMapRowKeys.includes(item?.name))
     updateState(draft => {
       draft.configList = data;
     });
@@ -326,6 +335,6 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;pro
     [configList],
   );
   return <Editor ref={inputRef} mapConfigParams={mapConfigParams} propertyConfigParams={propertyConfigParams} />;
-});
+}));
 
 export default PropertiesEditor;

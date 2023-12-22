@@ -123,7 +123,7 @@ export const EditTable = memo(forwardRef(({
               ]
             }
           >
-            {record?.disable ? <span style={{height:'27px',backgroundColor:'#505156',color:'#fff',borderRadius:'8px',padding:'8px'}} onDoubleClick={()=>inputDoubleClick(record)}>{record?.name}  <EditOutlined /></span> : <Input ref={ref} {...prop} onBlur={()=>inputBlur(record)}/>}
+            {record?.disable ? <span style={{height:'27px',backgroundColor:'#505156',color:'#fff',borderRadius:'8px',padding:'8px'}} onClick={()=>inputDoubleClick(record)}>{record?.name}  <EditOutlined /></span> : <Input ref={ref} {...prop} onBlur={()=>inputBlur(record)}/>}
           </Form.Item>
         );
       } else if (inputType === EditType.SELECT) {
