@@ -24,14 +24,22 @@ const properties = [
     primaryKey: false,
   },
 ];
-
+const propertyOptions = {
+  typeOption :[
+    {label: 'DataTime', value: 'datatime' }
+  ],
+  columnOption :[
+    {label: '否',value: false,},
+    { label: '是', value: true },
+  ]
+}
 export default () => {
   const propertiesRef = useRef();
   const getTable =()=>  console.log('values',propertiesRef.current.getValues())
   const handleChange = (value, values) => {
   console.log(value, values);
 };
-  return <PropertiesEditor ref={propertiesRef} properties={properties} onChange={handleChange} />;
+  return <PropertiesEditor ref={propertiesRef} properties={properties} onChange={handleChange} propertyOptions={propertyOptions}/>;
 };
 ```
 

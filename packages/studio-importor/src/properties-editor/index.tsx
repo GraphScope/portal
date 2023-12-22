@@ -38,13 +38,17 @@ export interface ConfigColumns {
   editorConfig?: any;
   render?: () => void;
 }
+export interface Options {
+  typeOption :{label: string, value: string }[],
+  columnOption :{label: string, value: boolean }[]
+}
 
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_eryoeoa0lk5.js',
 });
 
-const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> = forwardRef((props, ref) => {
-  const { properties, onChange } = props;
+const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;propertyOptions:Options}> = forwardRef((props, ref) => {
+  const { properties, onChange ,propertyOptions} = props;
   // 使用useImmer创建一个可变状态对象
   const [state, updateState] = useImmer<{
     selectedRows: never[];
@@ -101,7 +105,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
         return {
           inputType: EditType.SELECT,
           prop: {
-            options: [],
+            options: propertyOptions?.typeOption,
             // disabled: record.disabled,
           },
         };
@@ -120,13 +124,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
         return {
           inputType: EditType.SELECT,
           prop: {
-            options: [
-              {
-                label: '否',
-                value: false,
-              },
-              { label: '是', value: true },
-            ],
+            options: propertyOptions?.columnOption,
             // disabled: record.disabled,
           },
         };
