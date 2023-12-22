@@ -1,6 +1,6 @@
 import { Form, Input, Select, Table } from 'antd';
 import type { FormInstance } from 'antd/es/form';
-import React, { createContext, useContext, useEffect ,memo} from 'react';
+import React, { createContext, useContext, useEffect,memo, useRef, forwardRef} from 'react';
 import { EditOutlined } from '@ant-design/icons';
 // import styles from './index.module.less';
 export enum EditType {
@@ -68,7 +68,7 @@ const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
   );
 };
 
-export const EditTable = memo(({
+export const EditTable = memo(forwardRef(({
   columns,
   dataSource,
   onChange,
@@ -76,7 +76,7 @@ export const EditTable = memo(({
   inputDoubleClick,
   inputBlur,
   ...props
-}) => {
+},ref) => {
   const data = dataSource;
   const EditableCell: React.FC<EditableCellProps> = ({
     children,
@@ -123,7 +123,7 @@ export const EditTable = memo(({
               ]
             }
           >
-            {record?.disable ? <span style={{height:'27px',backgroundColor:'#505156',color:'#fff',borderRadius:'8px',padding:'8px'}} onDoubleClick={()=>inputDoubleClick(record)}>{record?.name}  <EditOutlined /></span> : <Input {...prop} onBlur={()=>inputBlur(record)}/>}
+            {record?.disable ? <span style={{height:'27px',backgroundColor:'#505156',color:'#fff',borderRadius:'8px',padding:'8px'}} onDoubleClick={()=>inputDoubleClick(record)}>{record?.name}  <EditOutlined /></span> : <Input ref={ref} {...prop} onBlur={()=>inputBlur(record)}/>}
           </Form.Item>
         );
       } else if (inputType === EditType.SELECT) {
@@ -181,4 +181,4 @@ export const EditTable = memo(({
       />
     </TableContext.Provider>
   );
-})
+}))

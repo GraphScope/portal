@@ -1,4 +1,4 @@
-import React, { type FC, useEffect, forwardRef, useImperativeHandle } from 'react';
+import React, { type FC, useEffect, forwardRef, useImperativeHandle ,useRef} from 'react';
 import { Checkbox, Input } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
 import { uniqueId, cloneDeep } from 'lodash';
@@ -49,6 +49,7 @@ const IconFont = createFromIconfontCN({
 
 const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;propertyOptions:Options}> = forwardRef((props, ref) => {
   const { properties, onChange ,propertyOptions} = props;
+  const inputRef = useRef()
   // 使用useImmer创建一个可变状态对象
   const [state, updateState] = useImmer<{
     selectedRows: never[];
@@ -255,9 +256,9 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;pro
     });
     onChange(data);
   };
-  const inputDoubleClick = val => {
+  const inputDoubleClick = async (val) => {
     let reasult = cloneDeep(configList);
-    const modifiedArray = reasult.map(item => {
+    const modifiedArray = await reasult.map(item => {
       if (item.name == val.name) {
         return {
           ...item,
@@ -270,9 +271,10 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;pro
         };
       }
     });
-    updateState(draft => {
+    await updateState(draft => {
       draft.configList = modifiedArray;
     });
+    await inputRef?.current?.focus()
   };
   const inputBlur = (val) => {
     if(!val.disable){
@@ -323,7 +325,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;pro
     },
     [configList],
   );
-  return <Editor mapConfigParams={mapConfigParams} propertyConfigParams={propertyConfigParams} />;
+  return <Editor ref={inputRef} mapConfigParams={mapConfigParams} propertyConfigParams={propertyConfigParams} />;
 });
 
 export default PropertiesEditor;
