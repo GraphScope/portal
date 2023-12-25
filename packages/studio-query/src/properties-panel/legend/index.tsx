@@ -67,7 +67,6 @@ const Legend: React.FunctionComponent<ILegendProps> = (props, { children }) => {
       });
       message.success(`Caption selection is successful`);
     }
-    onChange({ color: state.color, size: state.size, caption: state.caption });
   };
   const Titlecontent = () => {
     return (
@@ -133,7 +132,9 @@ const Legend: React.FunctionComponent<ILegendProps> = (props, { children }) => {
       description={Titlecontent()}
       onOpenChange={() => console.log('open change')}
       showCancel={false}
-      okText=" "
+      okText="OK"
+      onConfirm={()=> onChange({ color: state.color, size: state.size, caption: state.caption })
+    }
     >
       {cutomer ? (
         <Button type="primary" danger style={{ borderRadius: '16px' ,marginBottom:10}}>
