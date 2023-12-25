@@ -1,26 +1,16 @@
 import * as React from 'react';
-import { Tag, Popconfirm, Button, Space, message } from 'antd';
-import { useImmer } from 'use-immer';
+import { Tag, Popconfirm, Button, Space } from 'antd';
+
 interface ILegendProps {
-  type?: string;
-  count?: string;
+  type: string;
+  count: string;
   label?: string;
-  cutomer?: string;
-  properties?: any;
-  onChange?: () => any;
+  properties: any;
+  onChange: () => object;
 }
 
-const Legend: React.FunctionComponent<ILegendProps> = (props, { children }) => {
-  const { type, label, count, properties, onChange, cutomer } = props;
-  const [state, updateState] = useImmer<{
-    color: string;
-    size: string;
-    caption: string;
-  }>({
-    color: '#C2B8A2',
-    size: '12px',
-    caption: '',
-  });
+const PopconfirmCom: React.FunctionComponent<ILegendProps> = (props, { children }) => {
+  const { type, label, count, properties, onChange } = props;
   // 随机生成颜色
   const getRandomColor = () => {
     return `#${((Math.random() * 0xffffff) << 0).toString(16)}`;
@@ -51,25 +41,9 @@ const Legend: React.FunctionComponent<ILegendProps> = (props, { children }) => {
   ];
 
   const propertiesChange = (val, type) => {
-    if (type == 'color') {
-      updateState(draf => {
-        draf.color = val;
-      });
-      message.success(`Color selection is successful`);
-    } else if (type == 'size') {
-      updateState(draf => {
-        draf.size = val?.width;
-      });
-      message.success(`Size selection is successful`);
-    } else {
-      updateState(draf => {
-        draf.caption = val;
-      });
-      message.success(`Caption selection is successful`);
-    }
-    onChange({ color: state.color, size: state.size, caption: state.caption });
+    onChange({ type: val });
   };
-  const Titlecontent = () => {
+  const Titlecontent = val => {
     return (
       <div style={{ width: '450px' }}>
         <Button type="primary" danger style={{ width: '100%', borderRadius: '15px' }}>
@@ -117,11 +91,9 @@ const Legend: React.FunctionComponent<ILegendProps> = (props, { children }) => {
         </div>
         <div>
           <span style={{ fontSize: '16px' }}>Caption: </span>
-          {cutomer !== 'cutomer'
-            ? Object.keys(properties)?.map(item => {
-                return <Tag onClick={() => propertiesChange(item, 'caption')}>{item}</Tag>;
-              })
-            : null}
+          {Object.keys(properties)?.map(item => {
+            return <Tag onClick={() => propertiesChange(item, 'caption')}>{item}</Tag>;
+          })}
         </div>
       </div>
     );
@@ -135,20 +107,9 @@ const Legend: React.FunctionComponent<ILegendProps> = (props, { children }) => {
       showCancel={false}
       okText=" "
     >
-      {cutomer ? (
-        <Button type="primary" danger style={{ borderRadius: '16px' ,marginBottom:10}}>
-          cutomer
-        </Button>
-      ) : (
-        <Tag
-          style={{ borderRadius: type == 'NODE' ? '10px' : '' }}
-          color={getRandomColor()}
-          bordered={false}
-          onClick={() => tagChange(props)}
-        >{`${label} (${count})`}</Tag>
-      )}
+      {children}
     </Popconfirm>
   );
 };
 
-export default Legend;
+export default PopconfirmCom;
