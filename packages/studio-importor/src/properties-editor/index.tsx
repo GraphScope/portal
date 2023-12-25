@@ -220,6 +220,9 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
     };
     // 定义mapFromFileConfirm函数，用于从文件映射数据到表格
     const mapFromFileConfirm = () => {
+      updateState(draft => {
+        draft.selectedMapRowKeys = [] // 映射数据前清空上次选中值
+      });
       let data = cloneDeep(mapfromfileList);
       data = data.filter(item => selectedMapRowKeys.includes(item?.name));
       updateState(draft => {
