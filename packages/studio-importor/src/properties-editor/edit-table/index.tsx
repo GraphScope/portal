@@ -2,24 +2,18 @@ import { Form, Input, Select, Table } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import React, { createContext, useContext, useEffect, memo, useRef, forwardRef } from 'react';
 import { EditOutlined } from '@ant-design/icons';
+import { EditableCellProps, EditableRowProps } from '../interface';
+import { EditType } from '../mapdata';
 // import styles from './index.module.less';
-export enum EditType {
-  SWITCH = 'SWITCH',
-  INPUT = 'INPUT',
-  RADIO = 'RADIO',
-  CASCADER = 'CASCADER',
-  SELECT = 'SELECT',
-  JSON = 'JSON',
-  SQL = 'SQL',
-  DATE_PICKER = 'DATE_PICKER',
-  CUSTOM = 'CUSTOM',
-  NULL = 'NULL',
-}
+
 const EditableContext = createContext<FormInstance<any> | null>(null);
 const TableContext = createContext<{
   onChange?: (i: any) => void;
   data?: Array<any>;
   rowKey?: string;
+  inputDoubleClick: (record: any) => void;
+  inputBlur: (record: any) => void;
+  ref: any;
 }>({});
 type Prop = {
   columns: any;
@@ -27,23 +21,7 @@ type Prop = {
   onChange?: (newData: Array<any>) => void;
   rowKey: string;
 };
-interface EditableCellProps {
-  title: React.ReactNode;
-  editable: boolean;
-  children: React.ReactNode;
-  dataIndex: keyof any;
-  record: any;
-  inputType: string;
-  prop: { options: Array<any> };
-  editorConfig: (record: any) => void;
-  inputDoubleClick: (record: any) => void;
-  inputBlur: (record: any) => void;
-  ref: any;
-}
-interface EditableRowProps {
-  index: number;
-  onChange?: (newData: Array<any>) => void;
-}
+
 const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
   const [form] = Form.useForm();
   const { onChange, data, rowKey } = useContext(TableContext)!;
@@ -86,7 +64,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   }, [record]);
   if (editable) {
     const { inputType, prop, name } = editorConfig(record);
-    const { inputDoubleClick, inputBlur, ref} = useContext(TableContext)!;
+    const { inputDoubleClick, inputBlur, ref } = useContext(TableContext)!;
     if (inputType === EditType.INPUT) {
       childNode = (
         <Form.Item
