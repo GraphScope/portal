@@ -54,3 +54,19 @@ export default () => {
   return <PropertiesEditor ref={propertiesRef} properties={properties} onChange={handleChange} />;
 };
 ```
+
+
+## Properties 
+属性面板是图数据展示中非常重要的一个组件。可以逐条添加节点或边的属性配置，也可以上传文件中映射节点或边的属性功能。
+
+### 映射节点或边的属性
+ ![EDITOR](./images/image.png)
+
+### 逐条添加属性
+
+![ADD](./images/add.png)
+
+### 选择唯一主键,单击修改属性名
+
+![PRIMARY](./images/primary.png)
+
