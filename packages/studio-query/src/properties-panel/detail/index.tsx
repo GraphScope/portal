@@ -10,7 +10,7 @@ interface DetialProps {
 }
 
 const Detial: React.FunctionComponent<DetialProps> = props => {
-  const { data ,onChange} = props;
+  const { label, data, onChange } = props;
   return (
     <div>
       <h3 style={{ marginBottom: '10px' }}>
@@ -25,7 +25,7 @@ const Detial: React.FunctionComponent<DetialProps> = props => {
           style={{ marginRight: '8px', fontSize: '16px' }}
         />
       </h3>
-      <Legend cutomer="cutomer" onChange={onChange} properties={data}/>
+      <Legend cutomer="cutomer" onChange={onChange} properties={data} label={label}/>
       <table>
         <tbody>
           {Object.entries(data).map(([key, value], i) => {
