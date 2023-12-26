@@ -26,12 +26,8 @@ const { useRef } = React;
 const Legend: React.FunctionComponent<ILegendProps> = props => {
   const { type, label, count, properties, onChange, cutomer, bgc } = props;
   const [state, updateState] = useImmer<{
-    color: string;
-    size: string;
     caption: string;
   }>({
-    color: '#C2B8A2',
-    size: '12px',
     caption: '',
   });
   const colorRef = useRef('');
@@ -69,6 +65,9 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
       sizeRef.current = val?.width;
     } else {
       captionRef.current = val;
+      updateState(draf=>{
+        draf.caption = val
+      })
     }
     onChange({ color: colorRef.current, size: sizeRef.current, caption: captionRef.current });
   };
