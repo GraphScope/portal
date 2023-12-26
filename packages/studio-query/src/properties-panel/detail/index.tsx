@@ -13,7 +13,7 @@ const Detial: React.FunctionComponent<DetialProps> = props => {
   const { data ,onChange} = props;
   return (
     <div>
-      <h3 style={{ marginBottom: 10 }}>
+      <h3 style={{ marginBottom: '10px' }}>
         Node properties{' '}
         <CopyOutlined
           onClick={e => {
@@ -22,7 +22,7 @@ const Detial: React.FunctionComponent<DetialProps> = props => {
             message.success('复制成功');
           }}
           type="icon-fuzhi1"
-          style={{ marginRight: 8, fontSize: 16 }}
+          style={{ marginRight: '8px', fontSize: '16px' }}
         />
       </h3>
       <Legend cutomer="cutomer" onChange={onChange} properties={data}/>
@@ -43,7 +43,7 @@ const Detial: React.FunctionComponent<DetialProps> = props => {
                         message.success('复制成功');
                       }}
                       type="icon-fuzhi1"
-                      style={{ marginRight: 8, fontSize: 16 }}
+                      style={{ marginRight: '8px', fontSize: '16px' }}
                     />
                   </Tooltip>
                 </td>

@@ -25,7 +25,7 @@ export default () => {
           {
             label: 'customer',
             count: 6,
-            bgc:'#F7A128',
+            color:'#F7A128',
             properties: {
               id: 'string',
               address: 'string',
@@ -35,7 +35,7 @@ export default () => {
           {
             label: 'account',
             count: 6,
-            bgc:'#40C054',
+            color:'#40C054',
             properties: {
               id: 'string',
               address: 'string',
@@ -47,7 +47,7 @@ export default () => {
           {
             label: 'ownership',
             count: 6,
-            bgc:'#8DCADD',
+            color:'#8DCADD',
             properties: {
               id: 'string',
               address: 'string',
@@ -57,7 +57,7 @@ export default () => {
           {
             label: 'transfer',
             count: 5,
-            bgc:'#A413A4',
+            color:'#A413A4',
             properties: {
               id: 'string',
               address: 'string',
@@ -127,6 +127,7 @@ const props = {
       {
         label: 'customer',
         count: 6,
+        color:'#F7A128'
         properties: {
           id: 'string',
           address: 'string',

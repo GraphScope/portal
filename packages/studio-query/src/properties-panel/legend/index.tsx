@@ -6,7 +6,7 @@ interface ILegendProps {
   count?: string;
   label?: string;
   cutomer?: string;
-  bgc?: string;
+  color?: string;
   properties?: any;
   onChange?: () => any;
 }
@@ -26,7 +26,7 @@ const styles = {
 };
 const { useRef } = React;
 const Legend: React.FunctionComponent<ILegendProps> = props => {
-  const { type, label, count, properties, onChange, cutomer, bgc } = props;
+  const { type, label, count, properties, onChange, cutomer, color } = props;
   const [state, updateState] = useImmer<{
     caption: string;
   }>({
@@ -38,7 +38,7 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
   const tagChange = checked => {
     console.log(checked);
   };
-  const color = [
+  const colors = [
     '#C2B8A2',
     '#EAD4E5',
     '#FCD8C2',
@@ -81,7 +81,7 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
         </Button>
         <div style={{ marginTop: '12px' }}>
           <span style={{ fontSize: '16px' }}>Color: </span>
-          {color.map(item => {
+          {colors.map(item => {
             return (
               <Space>
                 {' '}
@@ -142,12 +142,12 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
   return (
     <Popover placement="left" content={Titlecontent()}>
       {cutomer ? (
-        <Button type="primary" danger style={{ borderRadius: '16px', marginBottom: 10 ,cursor: 'pointer'}}>
+        <Button type="primary" danger style={{ borderRadius: '16px', marginBottom: '10px' ,cursor: 'pointer'}}>
           cutomer
         </Button>
       ) : (
         <Tag
-          style={{ borderRadius: type == 'NODE' ? '10px' : '', backgroundColor: bgc ,cursor: 'pointer'}}
+          style={{ borderRadius: type == 'NODE' ? '10px' : '', backgroundColor: color ,cursor: 'pointer'}}
           bordered={false}
           onClick={() => tagChange(props)}
         >{`${label} (${count})`}</Tag>
