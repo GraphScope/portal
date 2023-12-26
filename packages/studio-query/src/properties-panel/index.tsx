@@ -12,7 +12,7 @@ interface PropertiesPanelProps {
 
 const PropertiesPanel: React.FunctionComponent<PropertiesPanelProps> = props => {
   const { mode, overview, detail, onChange } = props;
-  const content = mode === 'detail' ? <Detial {...detail} /> : <Overview {...overview} onChange={onChange}/>;
+  const content = mode === 'detail' ? <Detial {...detail} onChange={onChange}/> : <Overview {...overview} onChange={onChange}/>;
   return <Container>{content}</Container>;
 };
 

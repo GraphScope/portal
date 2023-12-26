@@ -6,12 +6,11 @@ import Legend from '../legend';
 interface DetialProps {
   label: string;
   data: any;
+  onChange?: () => any;
 }
 
 const Detial: React.FunctionComponent<DetialProps> = props => {
-  const { data } = props;
-  console.log(props);
-
+  const { data ,onChange} = props;
   return (
     <div>
       <h3 style={{ marginBottom: 10 }}>
@@ -26,7 +25,7 @@ const Detial: React.FunctionComponent<DetialProps> = props => {
           style={{ marginRight: 8, fontSize: 16 }}
         />
       </h3>
-      <Legend cutomer="cutomer" />
+      <Legend cutomer="cutomer" onChange={onChange}/>
       <table>
         <tbody>
           {Object.entries(data).map(([key, value], i) => {

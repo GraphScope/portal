@@ -1,17 +1,30 @@
 import * as React from 'react';
-import { Tag, Popconfirm, Button, Space, message } from 'antd';
+import { Tag, Popover, Button, Space, message } from 'antd';
 import { useImmer } from 'use-immer';
 interface ILegendProps {
   type?: string;
   count?: string;
   label?: string;
   cutomer?: string;
+  bgc?: string;
   properties?: any;
   onChange?: () => any;
 }
-
-const Legend: React.FunctionComponent<ILegendProps> = (props, { children }) => {
-  const { type, label, count, properties, onChange, cutomer } = props;
+const styles = {
+  'tag-style': {
+    backgroundColor: '#9397A0',
+    color: '#fff',
+    border: '1px solid #9397A0',
+  },
+  'tag-active': {
+    backgroundColor: '#fff',
+    color: '#9395A0',
+    border: '1px solid #9395A0',
+  },
+};
+const { useRef } = React;
+const Legend: React.FunctionComponent<ILegendProps> = props => {
+  const { type, label, count, properties, onChange, cutomer, bgc } = props;
   const [state, updateState] = useImmer<{
     color: string;
     size: string;
@@ -21,10 +34,9 @@ const Legend: React.FunctionComponent<ILegendProps> = (props, { children }) => {
     size: '12px',
     caption: '',
   });
-  // 随机生成颜色
-  const getRandomColor = () => {
-    return `#${((Math.random() * 0xffffff) << 0).toString(16)}`;
-  };
+  const colorRef = useRef('');
+  const sizeRef = useRef('');
+  const captionRef = useRef('');
   const tagChange = checked => {
     console.log(checked);
   };
@@ -52,25 +64,17 @@ const Legend: React.FunctionComponent<ILegendProps> = (props, { children }) => {
 
   const propertiesChange = (val, type) => {
     if (type == 'color') {
-      updateState(draf => {
-        draf.color = val;
-      });
-      message.success(`Color selection is successful`);
+      colorRef.current = val;
     } else if (type == 'size') {
-      updateState(draf => {
-        draf.size = val?.width;
-      });
-      message.success(`Size selection is successful`);
+      sizeRef.current = val?.width;
     } else {
-      updateState(draf => {
-        draf.caption = val;
-      });
-      message.success(`Caption selection is successful`);
+      captionRef.current = val;
     }
+    onChange({ color: colorRef.current, size: sizeRef.current, caption: captionRef.current });
   };
   const Titlecontent = () => {
     return (
-      <div style={{ width: '450px' }}>
+      <div style={{ width: '350px', padding: '12px' }}>
         <Button type="primary" danger style={{ width: '100%', borderRadius: '15px' }}>
           customer
         </Button>
@@ -118,7 +122,14 @@ const Legend: React.FunctionComponent<ILegendProps> = (props, { children }) => {
           <span style={{ fontSize: '16px' }}>Caption: </span>
           {cutomer !== 'cutomer'
             ? Object.keys(properties)?.map(item => {
-                return <Tag onClick={() => propertiesChange(item, 'caption')}>{item}</Tag>;
+                return (
+                  <Tag
+                    style={state?.caption == item ? styles['tag-style'] : styles['tag-active']}
+                    onClick={() => propertiesChange(item, 'caption')}
+                  >
+                    {item}
+                  </Tag>
+                );
               })
             : null}
         </div>
@@ -126,29 +137,19 @@ const Legend: React.FunctionComponent<ILegendProps> = (props, { children }) => {
     );
   };
   return (
-    <Popconfirm
-      placement="left"
-      icon={null}
-      description={Titlecontent()}
-      onOpenChange={() => console.log('open change')}
-      showCancel={false}
-      okText="OK"
-      onConfirm={()=> onChange({ color: state.color, size: state.size, caption: state.caption })
-    }
-    >
+    <Popover placement="left" content={Titlecontent()}>
       {cutomer ? (
-        <Button type="primary" danger style={{ borderRadius: '16px' ,marginBottom:10}}>
+        <Button type="primary" danger style={{ borderRadius: '16px', marginBottom: 10 }}>
           cutomer
         </Button>
       ) : (
         <Tag
-          style={{ borderRadius: type == 'NODE' ? '10px' : '' }}
-          color={getRandomColor()}
+          style={{ borderRadius: type == 'NODE' ? '10px' : '', backgroundColor: bgc }}
           bordered={false}
           onClick={() => tagChange(props)}
         >{`${label} (${count})`}</Tag>
       )}
-    </Popconfirm>
+    </Popover>
   );
 };
 
