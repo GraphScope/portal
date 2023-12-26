@@ -15,11 +15,13 @@ const styles = {
     backgroundColor: '#9397A0',
     color: '#fff',
     border: '1px solid #9397A0',
+    cursor: 'pointer'
   },
   'tag-active': {
     backgroundColor: '#fff',
     color: '#9395A0',
     border: '1px solid #9395A0',
+    cursor: 'pointer'
   },
 };
 const { useRef } = React;
@@ -91,6 +93,7 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
                     height: '16px',
                     display: 'inline-block',
                     borderRadius: '50%',
+                    cursor: 'pointer'
                   }}
                 ></span>
               </Space>
@@ -111,6 +114,7 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
                     height: item.width,
                     display: 'inline-block',
                     borderRadius: '50%',
+                    cursor: 'pointer'
                   }}
                 ></span>
               </Space>
@@ -138,12 +142,12 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
   return (
     <Popover placement="left" content={Titlecontent()}>
       {cutomer ? (
-        <Button type="primary" danger style={{ borderRadius: '16px', marginBottom: 10 }}>
+        <Button type="primary" danger style={{ borderRadius: '16px', marginBottom: 10 ,cursor: 'pointer'}}>
           cutomer
         </Button>
       ) : (
         <Tag
-          style={{ borderRadius: type == 'NODE' ? '10px' : '', backgroundColor: bgc }}
+          style={{ borderRadius: type == 'NODE' ? '10px' : '', backgroundColor: bgc ,cursor: 'pointer'}}
           bordered={false}
           onClick={() => tagChange(props)}
         >{`${label} (${count})`}</Tag>
