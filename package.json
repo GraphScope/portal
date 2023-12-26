@@ -29,6 +29,7 @@
     "antd": "^5.x",
     "buffer": "^6.0.3",
     "buffer-browserify": "^0.2.5",
+    "copy-to-clipboard": "^3.3.3",
     "lodash": "4.17.21",
     "node-fetch": "^3.3.0",
     "react": "18.x",
