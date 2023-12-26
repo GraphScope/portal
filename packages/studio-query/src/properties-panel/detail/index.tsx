@@ -25,7 +25,7 @@ const Detial: React.FunctionComponent<DetialProps> = props => {
           style={{ marginRight: 8, fontSize: 16 }}
         />
       </h3>
-      <Legend cutomer="cutomer" onChange={onChange}/>
+      <Legend cutomer="cutomer" onChange={onChange} properties={data}/>
       <table>
         <tbody>
           {Object.entries(data).map(([key, value], i) => {

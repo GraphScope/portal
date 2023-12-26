@@ -119,8 +119,8 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
         </div>
         <div>
           <span style={{ fontSize: '16px' }}>Caption: </span>
-          {cutomer !== 'cutomer'
-            ? Object.keys(properties)?.map(item => {
+          {
+            Object.keys(properties)?.map(item => {
                 return (
                   <Tag
                     style={state?.caption == item ? styles['tag-style'] : styles['tag-active']}
@@ -130,7 +130,7 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
                   </Tag>
                 );
               })
-            : null}
+            }
         </div>
       </div>
     );
