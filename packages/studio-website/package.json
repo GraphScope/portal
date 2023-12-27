@@ -1,0 +1,24 @@
+{
+  "private": true,
+  "name": "@graphscope/studio-site",
+  "author": "pomelo-nwu <czynwu@outlook.com>",
+  "scripts": {
+    "dev": "umi dev",
+    "build": "umi build",
+    "postinstall": "umi setup",
+    "setup": "umi setup",
+    "start": "npm run dev"
+  },
+  "dependencies": {
+    "@graphscope/studio-query": "workspace:*",
+    "@graphscope/studio-importor": "workspace:*",
+    "@ant-design/icons": "^5.2.6",
+    "antd": "^5.12.2",
+    "umi": "^4.0.89"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "typescript": "^5.3.3"
+  }
+}
