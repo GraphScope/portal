@@ -9,7 +9,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
   const { children, left } = props;
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
-      <div style={{ width: '300px', background: 'red' }}>{left}</div>
+      <div style={{ width: '300px' }}>{left}</div>
       <div style={{ flex: 1 }}>{children}</div>
     </div>
   );

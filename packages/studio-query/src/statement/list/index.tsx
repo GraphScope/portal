@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Input, Tree, Button, Space } from 'antd';
+import { Input, Tree, Button, Space ,Checkbox} from 'antd';
 import type { DataNode, TreeProps } from 'antd/es/tree';
 import { FolderOpenOutlined, DownOutlined, EditOutlined, EditTwoTone } from '@ant-design/icons';
 interface IStatementListProps {}
@@ -8,22 +8,22 @@ const treeData = [
   {
     title: 'parent 01',
     key: '0-0',
-    level: 1,
     children: [
-      { title: 'leaf 0-0', key: '0-0-0', level: 2 },
-      { title: 'leaf 0-1', key: '0-0-1', level: 2 },
+      { title: 'leaf 0-0', key: '0-0-0' },
+      { title: 'leaf 0-1', key: '0-0-1' },
     ],
   },
   {
-    title: 'parent 1',
+    title: 'parent 11',
     key: '0-1',
     level: 1,
     children: [
-      { title: 'leaf 1-0', key: '0-1-0', level: 2 },
-      { title: 'leaf 1-1', key: '0-1-1', level: 2 },
+      { title: 'leaf 1-0', key: '0-1-0' },
+      { title: 'leaf 1-1', key: '0-1-1' },
     ],
   },
 ];
+
 const StatementList: React.FunctionComponent<IStatementListProps> = props => {
   const inputRef = useRef();
   const [gData, setGData] = useState(treeData);
@@ -111,7 +111,6 @@ const StatementList: React.FunctionComponent<IStatementListProps> = props => {
     data.push({
       title: 'default',
       key: `0-${data.length}`, // 这个 key 应该是唯一的
-      level: 1,
       children: [],
     });
     setExpandedKeys([...expandedKeys, key]);
@@ -161,9 +160,9 @@ const StatementList: React.FunctionComponent<IStatementListProps> = props => {
       }
     }
   };
-  const selectAll = v => {
-    setChecked(!checked);
-    if (!checked) {
+  // 全选/反选
+  const selectAll = () => {
+    if (checked) {
       let keys = [];
       const collectKeys = node => {
         if (node.key) {
@@ -175,26 +174,45 @@ const StatementList: React.FunctionComponent<IStatementListProps> = props => {
       };
       gData.forEach(collectKeys);
       setExpandedKeys(keys);
-    }else{
+    } else {
       setExpandedKeys([]);
     }
+    setChecked(!checked);
+  };
+  const delNode = () => {
+    const filterArray = data => {
+      return data.reduce((acc, item) => {
+        if (expandedKeys.includes(item.key)) {
+          return acc;
+        }
+        if (item.children) {
+          item.children = filterArray(item.children);
+        }
+        acc.push(item);
+        return acc;
+      }, []);
+    };
+    setGData(filterArray(gData));
+    setExpandedKeys([]);
+    setChecked(true)
   };
   return (
     <div>
-      <Space>
-        <Button onClick={() => onAdd(Math.random())}>Add</Button>
-        <Button onClick={() => selectAll(checked ? false : true)}>Select all</Button>
+      <Space style={{marginBottom:'16px'}}>
+        <Button size='small' onClick={() => onAdd(Math.random())}>Add</Button>
+        <Checkbox checked={!checked} onClick={() => selectAll()}>Select all</Checkbox>
+        <Button size='small' onClick={() => delNode()}>Delete</Button>
       </Space>
       <Tree
         checkable
         blockNode
         multiple
-        showLine
+        showLine={gData?.length>1 ? true :false}
         defaultExpandAll
         draggable
         defaultExpandedKeys={expandedKeys}
         checkedKeys={expandedKeys}
-        onCheck={checkedKeys => console.log(checkedKeys)}
+        onCheck={checkedKeys => setExpandedKeys(checkedKeys)}
         switcherIcon={<DownOutlined />}
         onDragEnter={onDragEnter}
         onDrop={onDrop}
@@ -202,28 +220,28 @@ const StatementList: React.FunctionComponent<IStatementListProps> = props => {
         titleRender={(nodeData: DataNode) => {
           if (nodeData.isEditable) {
             return (
-              <>
+              <div style={{ height: '32px' }}>
                 <FolderOpenOutlined style={{ marginRight: '5px' }} />
                 <Input
                   ref={inputRef}
-                  style={{ display: 'inline-block', width: '85%', whiteSpace: 'nowrap' }}
+                  style={{ display: 'inline-block', width: '90%', whiteSpace: 'nowrap' }}
                   value={nodeData.editValue || ''}
                   onChange={e => onChange(e, nodeData.key)}
                   onBlur={() => onSave(nodeData.key)}
                 />
-              </>
+              </div>
             );
           } else {
             return (
-              <div style={{ display: 'flex', justifyContent: 'space-between', whiteSpace: 'nowrap' }}>
-                <span>
+              <div
+                style={{ display: 'flex', justifyContent: 'space-between', whiteSpace: 'nowrap', height: '32px' }}
+                onClick={e => e.stopPropagation()}
+              >
+                <span style={{ marginTop: '4px' }}>
                   <FolderOpenOutlined style={{ marginRight: '5px' }} />
                   <span>{nodeData.title}</span>
                 </span>
-                <EditTwoTone
-                  onClick={() => onEdit(nodeData.key)}
-                  style={{ paddingRight: nodeData.level > 1 ? '12px' : '10px' }}
-                />
+                <EditTwoTone onClick={() => onEdit(nodeData.key)} style={{ paddingRight: '12px' }} />
               </div>
             );
           }
