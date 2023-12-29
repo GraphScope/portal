@@ -6,7 +6,6 @@ export default () => {
   return (
     <div>
       <div>
-        ... ,...
         <StudioQuery />
         <StudioImportor />
       </div>

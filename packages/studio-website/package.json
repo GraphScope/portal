@@ -13,7 +13,7 @@
     "@graphscope/studio-query": "workspace:*",
     "@graphscope/studio-importor": "workspace:*",
     "@ant-design/icons": "^5.2.6",
-    "antd": "^5.12.2",
+    "antd": "^5.12.5",
     "umi": "^4.0.89"
   },
   "devDependencies": {
