@@ -1,1 +1,1 @@
-#  GraphScope Studio SDK
+# GraphScope Studio SDK
