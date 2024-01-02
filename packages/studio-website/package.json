@@ -10,9 +10,10 @@
     "start": "npm run dev"
   },
   "dependencies": {
-    "@graphscope/studio-query": "workspace:*",
-    "@graphscope/studio-importor": "workspace:*",
     "@ant-design/icons": "^5.2.6",
+    "@antv/graphin": "^2.7.27",
+    "@graphscope/studio-importor": "workspace:*",
+    "@graphscope/studio-query": "workspace:*",
     "antd": "^5.12.5",
     "umi": "^4.0.89"
   },
