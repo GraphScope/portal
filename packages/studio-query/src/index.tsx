@@ -1,6 +1,4 @@
 import React from 'react';
-const App = () => {
-  return <div> StudioQuery Module</div>;
-};
+import App from './app';
 
 export default App;

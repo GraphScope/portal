@@ -1,8 +1,14 @@
 import React, { useEffect } from 'react';
 
-import Container from './container';
+import Layout from './layout';
 import StatementList from '../statement/list';
-import QueryStatement from '../statement';
+import Content from './content';
+import './index.less';
+interface Info {
+  name: string;
+  connect_url: string;
+  home_url: string;
+}
 interface IStatement {
   /** 语句ID */
   id: string;
@@ -20,6 +26,7 @@ interface IGraphSchema {
   edges: { id: string; label: string; properties: { [key: string]: any }; source: string; target: string }[];
 }
 interface IStudioQueryProps {
+  queryInfo: () => Promise<Info[]>;
   /**  查询语句列表 */
   queryStatement: () => Promise<IStatement[]>;
   /**  更新语句 */
@@ -38,9 +45,9 @@ interface IStudioQueryProps {
 
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   return (
-    <Container {...props} left={<StatementList />}>
-      <QueryStatement {...props} />
-    </Container>
+    <Layout {...props} left={<StatementList />}>
+      <Content {...props} />
+    </Layout>
   );
 };
 

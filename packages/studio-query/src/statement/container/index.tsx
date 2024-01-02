@@ -6,7 +6,7 @@ interface ContainerProps {
 
 const Container: React.FunctionComponent<ContainerProps> = props => {
   const { children } = props;
-  return <div style={{ flex: 1 }}>{children}</div>;
+  return <div style={{ flex: 1, minHeight: '500px' }}>{children}</div>;
 };
 
 export default Container;
