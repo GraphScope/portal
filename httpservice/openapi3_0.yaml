@@ -1,0 +1,303 @@
+openapi: 3.0.3
+info:
+  title: GraphScope FLEX HTTP SERVICE API
+  description: |-
+    This is a specification for GraphScope FLEX HTTP service based on the OpenAPI 3.0 specification. You can find out more details about
+    specification at [doc](https://swagger.io/specification/v3/).
+    
+    Some useful links:
+    - [GraphScope Repository](https://github.com/alibaba/GraphScope)
+    - [The Source API definition for GraphScope Interactive](https://github.com/GraphScope/portal/tree/main/httpservice)
+  contact:
+    name: GraphScope
+    email: graphscope@alibaba-inc.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.9.1
+externalDocs:
+  description: Find out More about GraphScope
+  url: http://graphscope.io
+paths:
+  /api/v1/graph:
+    post:
+      tags:
+        - graph
+      description: Create a new graph
+      operationId: CreateGraph
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Graph'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+          description: Graph already exists
+    get:
+      tags:
+        - graph
+      description: List all graphs
+      operationId: ListGraphs
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Graph'
+  /api/v1/graph/{graph_name}:
+    delete:
+      tags:
+        - graph
+      description: Delete a graph by graph name
+      operationId: DeleteGraphbyName
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Graph not found
+  /api/v1/graph/{graph_name}/schema:
+    post:
+      tags:
+        - graph
+      description: Import schema to graph
+      operationId: ImportSchema
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schema'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+            description: Schema not empty
+    get:
+      tags:
+        - graph
+      description: List all graphs
+      operationId: GetSchema
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schema'
+        '404':
+          description: Graph not found
+  /api/v1/graph/{graph_name}/schema/vertex:
+    post:
+      tags:
+        - graph
+      description: Create a vertex type
+      operationId: CreateVertexType
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VertexType'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+            description: Vertex type already exists
+  /api/v1/graph/{graph_name}/schema/vertex/{label_name}:
+    delete:
+      tags:
+        - graph
+      description: Delete a vertex type by name
+      operationId: DeleteVertexbyName
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Graph or vertex type not found
+  /api/v1/graph/{graph_name}/schema/edge:
+    post:
+      tags:
+        - graph
+      description: Create a edge type
+      operationId: CreateEdgeType
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EdgeType'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+            description: Edge type already exists
+  /api/v1/graph/{graph_name}/schema/edge/{label_name}:
+    delete:
+      tags:
+        - graph
+      description: Delete a edge type by name
+      operationId: DeleteEdgebyName
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: source_vertex_type
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: destination_vertex_type
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Graph or edge type not found
+components:
+  schemas:
+    Graph:
+      type: object
+      x-body-name: graph
+      properties:
+        name:
+          type: string
+        schema:
+          $ref: '#/components/schemas/Schema'
+    Schema:
+      type: object
+      properties: 
+        vertex_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/VertexType'
+        edge_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/EdgeType'
+    VertexType:
+      type: object
+      properties:
+        type_name:
+          type: string
+        properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Property'
+    EdgeType:
+      type: object
+      properties:
+        type_name:
+          type: string
+        vertex_type_pair_relation:
+          type: object
+          properties:
+            source_vertex_type:
+              type: string
+            destination_vertex_type:
+              type: string
+            relation:
+              type: string
+              enum:
+                - MANY_TO_MANY
+                - ONE_TO_MANY
+                - MANY_TO_ONE
+        properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Property'
+    Property:
+      type: object
+      properties:
+        property_name:
+          type: string
+        property_type:
+          type: string
+          enum:
+            - DT_STRING
+            - DT_DOUBLE
+            - DT_SIGNED_INT32
+            - DT_SIGNED_INT64
+            - DT_DATE32
+        is_primary_key:
+          type: boolean
+    ApiResponse:
+      type: string
