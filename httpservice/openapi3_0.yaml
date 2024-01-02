@@ -232,6 +232,174 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Graph or edge type not found
+  /api/v1/graph/{graph_name}/datasource/vertex/{label_name}:
+    post:
+      tags:
+        - data_source
+      description: Bind data source to vertex type
+      operationId: BindVertexDataSource
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataSource'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+            description: Data source already exists
+    put:
+      tags:
+        - data_source
+      operationId: UpdateVertexDataSource
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataSource'
+      responses:
+        '200':
+           description: Successful operation
+           content:
+             application/json:
+               schema:
+                  $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Data source not found
+    get:
+      tags:
+        - data_source
+      operationId: GetVertexDataSource
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataSource'
+        '404':
+          description: Data source  not found
+  /api/v1/graph/{graph_name}/datasource/edge/{label_name}:
+    post:
+      tags:
+        - data_source
+      description: Bind data source to edge type
+      operationId: BindEdgeDataSource
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataSource'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+            description: Data source already exists
+    put:
+      tags:
+        - data_source
+      operationId: UpdateEdgeDataSource
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataSource'
+      responses:
+        '200':
+           description: Successful operation
+           content:
+             application/json:
+               schema:
+                  $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Data source not found
+    get:
+      tags:
+        - data_source
+      operationId: GetEdgeDataSource
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataSource'
+        '404':
+          description: Data source  not found
 components:
   schemas:
     Graph:
@@ -301,3 +469,57 @@ components:
           type: boolean
     ApiResponse:
       type: string
+    DataSource:
+      type: object
+      properties:
+        data_source_type:
+          type: string
+          enum:
+            - LOCAL_FILE
+            - ODPS
+            - OSS
+        type_name:
+          type: string
+        source_vertex_type:
+          type: string
+          description: edge only
+        destination_vertex_type:
+          type: string
+          description: edge only
+        location:
+          type: string
+        source_vertex_mapping:
+          type: object
+          description: edge only
+          properties:
+            column:
+              type: object
+              properties:
+                index:
+                  type: integer
+                name:
+                  type: string
+        destination_vertex_mapping:
+          type: object
+          description: edge only
+          properties:
+            column:
+              type: object
+              properties:
+                index:
+                  type: integer
+                name:
+                  type: string
+        property_mapping:
+          type: object
+          properties:
+            column:
+              type: object
+              properties:
+                index:
+                  type: integer
+                name:
+                  type: string
+            property:
+              type: string
+              description: property name

@@ -11,9 +11,12 @@
 | DELETE /api/v1/graph/{graph_name}/schema/vertex/{label_name}     | (GRAPH) 删除点类型                         | ✓   |     x     |    x     |
 | POST /api/v1/graph/{graph_name}/schema/edge                      | (GRAPH) 新增边类型                         | ✓   |     x     |    x     |
 | DELETE /api/v1/graph/{graph_name}/schema/edge/{label_name}       | (GRAPH) 删除边类型                         | ✓   |     x     |    x     |
-| GET /api/v1/graph/{graph_name}/datasource                        | (DATASOURCE) 获取数据源绑定信息            | ✓   |     ✓     |    ✓     |
 | POST /api/v1/graph/{graph_name}/datasource/vertex/{label_name}   | (DATASOURCE) 绑定点类型数据源              | ✓   |     ✓     |    ✓     |
+| GET /api/v1/graph/{graph_name}/datasource/vertex/{label_name}    | (DATASOURCE) 获取点类型数据源              | ✓   |     ✓     |    ✓     |
+| PUT /api/v1/graph/{graph_name}/datasource/vertex/{label_name}    | (DATASOURCE) 修改点类型数据源              | ✓   |     ✓     |    ✓     |
 | POST /api/v1/graph/{graph_name}/datasource/edge/{label_name}     | (DATASOURCE) 绑定边类型数据源              | ✓   |     ✓     |    ✓     |
+| GET /api/v1/graph/{graph_name}/datasource/edge/{label_name}      | (DATASOURCE) 获取边类型数据源              | ✓   |     ✓     |    ✓     |
+| PUT /api/v1/graph/{graph_name}/datasource/edge/{label_name}      | (DATASOURCE) 修改边类型数据源              | ✓   |     ✓     |    ✓     |
 | POST /api/v1/job                                                 | (JOB) 创建任务(载图、运行算法)             | ✓   |     ✓     |    ✓     |
 | GET /api/v1/job                                                  | (JOB) 获取任务信息列表                     | ✓   |     ✓     |    ✓     |
 | DELETE /api/v1/job/{job_id}                                      | (JOB) 取消任务                             | ✓   |     ✓     |    ✓     |
