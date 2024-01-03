@@ -4,9 +4,7 @@ import neo4j, { Driver, Node, Path, Relationship, Session } from 'neo4j-driver';
 export interface GraphNode {
   id: string; // 节点id
   label: string; // 节点标签
-  nodeType: string;
-  nodeTypeKeyFromProperties: string;
-  data: Record<string, any>; // 节点属性
+  properties: Record<string, any>; // 节点属性
 }
 
 export interface GraphEdge {
@@ -14,9 +12,7 @@ export interface GraphEdge {
   source: string; // 边的起点
   target: string; // 边的终点
   label: string; // 边的标签
-  edgeType: string;
-  edgeTypeKeyFromProperties: string;
-  data: Record<string, any>; // 边的属性
+  properties: Record<string, any>; // 边的属性
 }
 
 export interface Graph {
@@ -58,7 +54,9 @@ class CypherDriver {
   }
   async getSession() {
     if (this.driver) {
-      if (!this.session) {
+      //@ts-ignore
+      const IS_OPEN = this.session && this.session._open;
+      if (!IS_OPEN) {
         const session = this.driver.session();
         this.session = session;
       }
@@ -83,8 +81,8 @@ class CypherDriver {
       `;
 
       const result = await session.run(value);
-      console.log('%c[Neo4j Driver] NeighborsQuery 查询语句', 'color:yellow', value);
-      console.log('%c[Neo4j Driver] NeighborsQuery 查询结果', 'color:green', result);
+      console.log('%c[Cypher Query Driver] NeighborsQuery 查询语句', 'color:blue', value);
+      console.log('%c[Cypher Query Driver] NeighborsQuery 查询结果', 'color:green', result);
 
       session.close();
 
@@ -120,8 +118,8 @@ class CypherDriver {
         };
       }
       const result = await session.run(cypher);
-      console.log('%c[Neo4j Driver] QueryCypher 查询语句', 'color:yellow', cypher);
-      console.log('%c[Neo4j Driver] QueryCypher 查询结果', 'color:green', result);
+      console.log('%c[Cypher Query Driver] QueryCypher 查询语句', 'color:blue', cypher);
+      console.log('%c[Cypher Query Driver] QueryCypher 查询结果', 'color:green', result);
       session.close();
       return processResult(result);
     } catch (error: any) {
@@ -167,24 +165,18 @@ export function processResult(result) {
       const isEdge = item.__isRelationship__;
       const isPath = item.__isPath__;
       const isInteger = item.__isInteger__;
-
+      const properties = processProperties(item.properties);
       if (isNode) {
-        const { labels, properties, identity } = item as Node;
+        const { labels, identity } = item as Node;
         const nodeLabel = labels[0];
         nodes.push({
           id: identity.low.toString(),
           label: nodeLabel,
-          nodeType: nodeLabel,
-          nodeTypeKeyFromProperties: 'GI_TYPE',
-          data: {
-            label: nodeLabel,
-            GI_TYPE: nodeLabel,
-            ...properties,
-          },
+          properties,
         });
       }
       if (isEdge) {
-        const { start, end, properties, type, identity } = item as Relationship;
+        const { start, end, type, identity } = item as Relationship;
         const source = start.low.toString();
         const target = end.low.toString();
         const label = type;
@@ -193,15 +185,7 @@ export function processResult(result) {
           source,
           target,
           label,
-          edgeType: label,
-          edgeTypeKeyFromProperties: 'GI_TYPE',
-          data: {
-            source,
-            target,
-            GI_TYPE: label,
-            label,
-            ...properties,
-          },
+          properties,
         });
       }
       if (isPath) {
@@ -221,29 +205,17 @@ export function processResult(result) {
             nodes.push({
               id: startIdentity.low.toString(),
               label: startLabels[0],
-              nodeType: startLabels[0],
-              nodeTypeKeyFromProperties: 'GI_TYPE',
-              data: {
-                label: startLabels[0],
-                GI_TYPE: startLabels[0],
-                ...startProperties,
-              },
+              properties: processProperties(start.properties),
             });
           }
           if (!hasEndNode) {
             nodes.push({
               id: endIdentity.low.toString(),
               label: endLabels[0],
-              nodeType: endLabels[0],
-              nodeTypeKeyFromProperties: 'GI_TYPE',
-              data: {
-                label: endLabels[0],
-                GI_TYPE: endLabels[0],
-                ...endProperties,
-              },
+              properties: processProperties(end.properties),
             });
           }
-          const { identity, type, start: source, end: target, properties } = relationship;
+          const { identity, type, start: source, end: target } = relationship;
           const hasRelationship = edges.find(d => d.id === identity.low.toString());
           if (!hasRelationship) {
             edges.push({
@@ -251,14 +223,7 @@ export function processResult(result) {
               source: source.low.toString(),
               target: target.low.toString(),
               label: type,
-              edgeType: type,
-              edgeTypeKeyFromProperties: 'GI_TYPE',
-              data: {
-                source: source.low.toString(),
-                target: target.low.toString(),
-                GI_TYPE: type,
-                ...properties,
-              },
+              properties: processProperties(relationship.properties),
             });
           }
         });
@@ -272,4 +237,15 @@ export function processResult(result) {
 
   console.log({ nodes, edges, table });
   return { nodes, edges, table };
+}
+
+export function processProperties(properties) {
+  Object.keys(properties).forEach(key => {
+    const value = properties[key];
+    const isInteger = value.__isInteger__;
+    if (isInteger) {
+      properties[key] = value.low;
+    }
+  });
+  return properties;
 }

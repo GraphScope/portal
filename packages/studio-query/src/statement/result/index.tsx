@@ -1,16 +1,13 @@
 import * as React from 'react';
-import { Space, Button } from 'antd';
+import { Space, Button, Segmented } from 'antd';
 
 interface IResultProps {}
 
 const Result: React.FunctionComponent<IResultProps> = props => {
   return (
     <div>
-      <Space>
-        <Button>Graph</Button>
-        <Button>Table</Button>
-        <Button>Raw</Button>
-      </Space>
+      <Segmented options={['graph', 'table', 'raw']}></Segmented>
+      <div style={{ height: '100px', background: 'grey' }}></div>
     </div>
   );
 };

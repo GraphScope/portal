@@ -23,7 +23,6 @@ const Content: React.FunctionComponent<IContentProps> = props => {
   });
   const { queryIds, activeId, mode } = state;
   const instances = [...queryIds];
-  const statementClasses = mode === 'tabs' ? `gs-statement-content tab-item` : 'gs-statement-content';
   const statementStyles =
     mode === 'tabs'
       ? ({
@@ -54,7 +53,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
 
   console.log('mode', mode, activeId);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#f5f6f6' }}>
       <div style={{ minHeight: '100px', background: 'red' }}>
         <Header onChangeMode={onChangeMode} />
         {mode === 'tabs' && <Segmented size="small" options={queryIds} onChange={handleChangeTab} />}
