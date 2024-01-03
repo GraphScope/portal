@@ -24,47 +24,52 @@ const Editor = memo(forwardRef((props: { mapConfigParams: any; propertyConfigPar
     <>
       <div>
         <div style={styles['properties-head']}>
-          <h3>Properties</h3>
+          <h4>Properties</h4>
+          <div>
           {propertyConfigParams?.selectedRows.length == 0 ? (
             <Space>
-              <Popconfirm
-                placement="leftTop"
-                title={() => {
-                  return (
-                    <div style={{ width: '350px', padding: '0 12px' }}>
-                      <span>Map from file</span>
-                      <Checkbox
-                        indeterminate={
-                          mapConfigParams?.selectedMapRowKeys.length > 0 &&
-                          mapConfigParams?.selectedMapRowKeys.length < mapConfigParams?.dataSource.length
-                        }
-                        checked={mapConfigParams?.selectedMapRowKeys.length === mapConfigParams?.dataSource.length}
-                        onChange={mapConfigParams?.handleSelectAll}
-                        style={{ float: 'right' }}
-                      >
-                        Select all
-                      </Checkbox>
+              {
+                propertyConfigParams?.isMapFromFile ? (
+                  <Popconfirm
+                  placement="leftTop"
+                  title={() => {
+                    return (
+                      <div style={{ width: '350px', padding: '0 12px' }}>
+                        <span>Map from file</span>
+                        <Checkbox
+                          indeterminate={
+                            mapConfigParams?.selectedMapRowKeys.length > 0 &&
+                            mapConfigParams?.selectedMapRowKeys.length < mapConfigParams?.dataSource.length
+                          }
+                          checked={mapConfigParams?.selectedMapRowKeys.length === mapConfigParams?.dataSource.length}
+                          onChange={mapConfigParams?.handleSelectAll}
+                          style={{ float: 'right' }}
+                        >
+                          Select all
+                        </Checkbox>
+                      </div>
+                    );
+                  }}
+                  description={
+                    <div style={{ width: '350px' }}>
+                      <EditTable
+                        rowKey="mapfromfile"
+                        bordered={mapConfigParams?.bordered}
+                        showHeader={mapConfigParams?.showHeader}
+                        columns={mapConfigParams?.columns}
+                        dataSource={mapConfigParams?.dataSource}
+                      />
                     </div>
-                  );
-                }}
-                description={
-                  <div style={{ width: '350px' }}>
-                    <EditTable
-                      rowKey="mapfromfile"
-                      bordered={mapConfigParams?.bordered}
-                      showHeader={mapConfigParams?.showHeader}
-                      columns={mapConfigParams?.columns}
-                      dataSource={mapConfigParams?.dataSource}
-                    />
-                  </div>
-                }
-                icon=""
-                okText={<div style={{ width: '88px', height: '45px' }}>Confirm</div>}
-                cancelText={<div style={{ width: '88px', height: '45px' }}>Cancel</div>}
-                onConfirm={() => mapConfigParams?.mapFromFileConfirm()}
-              >
-                <Button>Map from file</Button>
-              </Popconfirm>
+                  }
+                  icon=""
+                  okText={<div style={{ width: '88px', height: '45px' }}>Confirm</div>}
+                  cancelText={<div style={{ width: '88px', height: '45px' }}>Cancel</div>}
+                  onConfirm={() => mapConfigParams?.mapFromFileConfirm()}
+                >
+                  <Button>Map from file</Button>
+                </Popconfirm>
+                ): null
+              }
               <Tooltip title="Add property">
                 <Button type="dashed" block onClick={() => propertyConfigParams?.addNodeConfig()}>
                   <PlusOutlined />
@@ -77,6 +82,7 @@ const Editor = memo(forwardRef((props: { mapConfigParams: any; propertyConfigPar
               <IconFont type="icon-delete" onClick={() => propertyConfigParams?.delEditTable()} />
             </Space>
           )}
+          </div>
         </div>
         <EditTable
           ref={ref}

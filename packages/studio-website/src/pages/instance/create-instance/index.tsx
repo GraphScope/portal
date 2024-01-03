@@ -1,96 +1,59 @@
 import * as React from 'react';
-import { Button, Form, Input, Radio, Tabs } from 'antd';
+import { Button, Form, Radio, Tabs, Steps, Alert, Row, Col ,Space} from 'antd';
 import { useImmer } from 'use-immer';
-// import PropertiesEditor from '@graphscope/studio-importor/src/properties-editor';
-interface ICreateInstanceProps {}
-const { useRef } = React;
-export type FieldType = {
-  label?: string;
-  sourcenodelabel?: string;
-  targetnodelabek?: string;
-};
-const FormTable = () => {
-  // const propertiesRef = useRef();
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
-  };
-  return (
-    <>
-      <Form name="basic" onFinish={onFinish} layout="vertical">
-        <Form.Item<FieldType>
-          label="Node Label"
-          name="label"
-          tooltip=" "
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          rules={[{ required: true, message: '' }]}
-          style={{ marginBottom: '0' }}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item<FieldType>
-          label="Source Node Label"
-          name="sourcenodelabel"
-          tooltip=" "
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          rules={[{ required: true, message: '' }]}
-          style={{ marginBottom: '0' }}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item<FieldType>
-          label="Target Node Labek"
-          name="targetnodelabek"
-          tooltip=" "
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          rules={[{ required: true, message: '' }]}
-          style={{ marginBottom: '0' }}
-        >
-          <Input />
-        </Form.Item>
-      </Form>
-      {/* <PropertiesEditor
-        ref={propertiesRef}
-        properties={[
-          {
-            id: 1,
-            name: 'id',
-            type: 'string',
-            token: 'id',
-            primaryKey: true,
-          },
-          {
-            id: 2,
-            name: 'create-date',
-            type: 'datetime',
-            token: '__create-date',
-            primaryKey: false,
-          },
-        ]}
-        onChange={(values: any) => {
-          console.log(values);
-        }}
-      /> */}
-    </>
-  );
-};
+import { useLocation, history } from 'umi';
+import { useSnapshot } from 'valtio';
+import { creategraphdata } from '@/valtio/createGraph';
+import GraphIn from './graph-in';
+import CreateSchema from './create-schema';
 
+interface ICreateInstanceProps {
+  graphData?: any;
+  isAlert?: boolean;
+}
+const { useRef } = React;
 const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
+  const { graphData } = props;
+  const { isAlert } = useSnapshot(creategraphdata);
+  const params = useLocation().state;
+  const [form] = Form.useForm();
   const newTabIndex = useRef(0);
   const [state, updateState] = useImmer({
-    items: [],
+    nodeitems: [],
+    edgeitems: [],
     activeKey: '0',
     nodeEdge: 'Node',
+    graphData: graphData || [],
   });
-  const { items, activeKey, nodeEdge } = state;
-  const add = () => {
-    const newActiveKey = `newTab${newTabIndex.current++}`;
-    updateState(draft => {
-      draft.items = [...items, { label: 'undefine', children: <FormTable />, key: newActiveKey }];
-      draft.activeKey = newActiveKey;
-    });
+  const { activeKey, nodeEdge, nodeitems, edgeitems } = state;
+  const add = async () => {
+    if (nodeEdge == 'Node') {
+      const newActiveKey = `node${newTabIndex.current++}`;
+      updateState(draft => {
+        draft.nodeitems = [
+          ...nodeitems,
+          {
+            label: 'undefine',
+            children: <CreateSchema nodeEdge={nodeEdge} isEdit={params == 'detail'} />,
+            key: newActiveKey,
+          },
+        ];
+        draft.activeKey = newActiveKey;
+      });
+    } else {
+      const newActiveKey = `edge${newTabIndex.current++}`;
+      updateState(draft => {
+        draft.edgeitems = [
+          ...edgeitems,
+          {
+            label: 'undefine',
+            children: <CreateSchema nodeEdge={nodeEdge} isEdit={params == 'detail'} />,
+            key: newActiveKey,
+          },
+        ];
+        draft.activeKey = newActiveKey;
+      });
+    }
   };
   const onChange = (key: string) => {
     updateState(draft => {
@@ -103,32 +66,93 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
     });
   };
   return (
-    <div style={{ backgroundColor: '#fff', padding: '24px', height: '80vh', borderRadius: '6px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Radio.Group defaultValue="Nodes" style={{ marginBottom: '16px' }} onChange={nodeEdgeChange}>
-          <Radio.Button value="Node">Nodes</Radio.Button>
-          <Radio.Button value="Edge">Edges</Radio.Button>
-        </Radio.Group>
-        {items.length > 0 ? (
-          <Button type="dashed" onClick={add}>
-            + Add {nodeEdge}
-          </Button>
-        ) : null}
-      </div>
-      {items.length == 0 ? (
-        <Button style={{ width: '100%', color: '#1650ff' }} type="dashed" onClick={add}>
-          + Add {nodeEdge}
+    <>
+      {isAlert || params == 'detail' ? (
+        <Alert
+          message="您的图实例类型为 Interactive，一旦创建则不支持修改图模型，您可以选择新建图实例"
+          type="info"
+          showIcon
+          closable
+          style={{ margin: '16px 0' }}
+        />
+      ) : (
+        <Steps
+          current={1}
+          items={[
+            {
+              title: 'Choose EngineType',
+            },
+            {
+              title: 'Create Schema',
+            },
+            {
+              title: 'Result',
+            },
+          ]}
+        />
+      )}
+      <Row style={{ marginTop: '16px' }}>
+        <Col span={14}>
+          <div
+            style={{
+              backgroundColor: '#fff',
+              padding: '16px',
+              border: '1px solid #000',
+              height: '65vh',
+              marginRight: '12px',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Radio.Group defaultValue="Node" style={{ marginBottom: '16px' }} onChange={nodeEdgeChange}>
+                <Radio.Button value="Node">Nodes</Radio.Button>
+                <Radio.Button value="Edge">Edges</Radio.Button>
+              </Radio.Group>
+              {[...nodeitems, ...edgeitems].length > 0 ? (
+                <Button type="dashed" onClick={add}>
+                  + Add {nodeEdge}
+                </Button>
+              ) : null}
+            </div>
+            {[...nodeitems, ...edgeitems].length == 0 ? (
+              <Button style={{ width: '100%', color: '#1650ff' }} type="dashed" onClick={add}>
+                + Add {nodeEdge}
+              </Button>
+            ) : null}
+            <Tabs
+              defaultActiveKey="newTab0"
+              tabBarStyle={{ borderLeft: 0 }}
+              tabPosition="left"
+              items={nodeEdge == 'Node' ? nodeitems : edgeitems}
+              activeKey={activeKey}
+              onChange={onChange}
+              onTabClick={(key,event)=>{console.log(111111,key,event);
+              }}
+            />
+          </div>
+        </Col>
+        <Col span={10}>
+          <GraphIn isAlert={params == 'detail'} />
+        </Col>
+      </Row>
+      <Space>
+        <Button
+          type="primary"
+          onClick={() => {
+            history.back();
+          }}
+        >
+          上一页
         </Button>
-      ) : null}
-
-      <Tabs
-        tabBarStyle={{ borderLeft: 0 }}
-        tabPosition="left"
-        items={items}
-        activeKey={activeKey}
-        onChange={onChange}
-      />
-    </div>
+        <Button
+          type="primary"
+          onClick={() => {
+            history.push('/instance/create/result');
+          }}
+        >
+          下一页
+        </Button>
+      </Space>
+    </>
   );
 };
 export default CreateInstance;

@@ -15,7 +15,8 @@
     "@graphscope/studio-importor": "workspace:*",
     "@graphscope/studio-query": "workspace:*",
     "antd": "^5.12.5",
-    "umi": "^4.0.89"
+    "umi": "^4.0.89",
+    "valtio": "^1.12.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.45",

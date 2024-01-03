@@ -6,9 +6,9 @@ import { ImmerType, IndexData, PropertyList, ConfigColumns } from './interface';
 import { EditType, IconFont } from './mapdata';
 import Editor from './editor';
 
-const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> = memo(
+const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isMapFromFile?:boolean;}> = memo(
   forwardRef((props, ref) => {
-    const { properties, onChange } = props;
+    const { properties, onChange ,isMapFromFile} = props;
     const inputRef = useRef();
     // 使用useImmer创建一个可变状态对象
     const [state, updateState] = useImmer<ImmerType>({
@@ -35,7 +35,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
       let option: { label: string; value: string }[] = [];
       let modifiedArray: any = [];
       let pOption: { label: string; value: string }[] = [];
-      data.map(item => {
+      data?.map(item => {
         option.push({ label: item.type, value: item?.type });
         pOption.push({ label: item.token, value: item?.token });
         modifiedArray.push({ ...item, disable: true });
@@ -287,6 +287,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
       delEditTable: delEditTable,
       inputDoubleClick: inputDoubleClick,
       inputBlur: inputBlur,
+      isMapFromFile:isMapFromFile
     };
     useImperativeHandle(
       ref,
