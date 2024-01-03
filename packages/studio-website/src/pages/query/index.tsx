@@ -1,5 +1,6 @@
 import * as React from 'react';
 import StudioQuery from '@graphscope/studio-query';
+import { GraphApiFp, GraphApiFactory } from '@graphscope/studio-server';
 interface IQueryModuleProps {}
 
 const queryGraph = async () => {};
@@ -81,6 +82,13 @@ const QueryModule: React.FunctionComponent<IQueryModuleProps> = props => {
     updateStatement,
     addStatement,
   };
+  React.useEffect(() => {
+    GraphApiFactory({ basePath: 'localhost:7678' })
+      .listGraphs()
+      .then(res => {
+        console.log('res...', res);
+      });
+  }, []);
   return (
     <div>
       <StudioQuery {...services} />
