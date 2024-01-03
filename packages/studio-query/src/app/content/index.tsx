@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Statement from '../../statement';
-import Header from './header';
+import Header from '../header';
 import { Segmented } from 'antd';
 import './index.less';
-
+import { useContext } from '../context';
 interface IContentProps {}
 
 interface IContentState {
@@ -16,13 +16,9 @@ interface IContentState {
 }
 
 const Content: React.FunctionComponent<IContentProps> = props => {
-  const [state, updateState] = useState<IContentState>({
-    activeId: 'query-1',
-    queryIds: ['query-1', 'query-2', 'query-3', 'query-4'],
-    mode: 'tabs',
-  });
-  const { queryIds, activeId, mode } = state;
-  const instances = [...queryIds];
+  const { store, updateStore } = useContext();
+  const { activeId, mode, statements } = store;
+
   const statementStyles =
     mode === 'tabs'
       ? ({
@@ -32,35 +28,38 @@ const Content: React.FunctionComponent<IContentProps> = props => {
       : ({} as React.CSSProperties);
   const handleChangeTab = value => {
     console.log('value', value);
-    updateState(preState => {
-      return {
-        ...preState,
-        activeId: value,
-      };
+
+    updateStore(draft => {
+      draft.activeId = value;
     });
   };
   const onChangeMode = value => {
     console.log('value', value);
-    updateState(preState => {
-      return {
-        ...preState,
-        mode: value,
-      };
+
+    updateStore(draft => {
+      draft.mode = value;
     });
   };
 
   React.useEffect(() => {}, []);
 
   console.log('mode', mode, activeId);
+  const queryOptions = statements.map(item => {
+    return {
+      label: item.id,
+      value: item.id,
+    };
+  });
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#f5f6f6' }}>
       <div style={{ minHeight: '100px', background: 'red' }}>
-        <Header onChangeMode={onChangeMode} />
-        {mode === 'tabs' && <Segmented size="small" options={queryIds} onChange={handleChangeTab} />}
+        <Header />
+        {mode === 'tabs' && <Segmented size="small" options={queryOptions} onChange={handleChangeTab} />}
       </div>
 
       <div style={{ overflowY: 'scroll', flex: '1' }}>
-        {instances.map(id => {
+        {statements.map(item => {
+          const { id } = item;
           return (
             <div
               key={id}

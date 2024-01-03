@@ -15,4 +15,9 @@ export default defineConfig({
   ],
   npmClient: 'pnpm',
   monorepoRedirect: {},
+  externals: { react: 'React', 'react-dom': 'ReactDOM' },
+  headScripts: [
+    'https://unpkg.com/react@18.2/umd/react.production.min.js',
+    'https://unpkg.com/react-dom@18.2/umd/react-dom.production.min.js',
+  ],
 });

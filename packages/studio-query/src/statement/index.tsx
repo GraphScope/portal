@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { Space, Button } from 'antd';
 import Toolbar from './toolbar';
 import Editor from './editor';
@@ -25,4 +25,4 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
   );
 };
 
-export default Statement;
+export default memo(Statement);
