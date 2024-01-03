@@ -400,6 +400,89 @@ paths:
                 $ref: '#/components/schemas/DataSource'
         '404':
           description: Data source  not found
+  /api/v1/job/dataloading:
+    post:
+      tags:
+        - job
+      operationId: CreateDataloadingJob
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataLoadingJob'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/job:
+    get:
+      tags:
+        - job
+      operationId: ListJobs
+      parameters:
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - DATALOADING
+              - ANALYSIS
+        - name: status
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - RUNNING
+              - CANCELLED
+              - SUCCESS
+              - FAILED
+              - WAITING
+        - name: start_time
+          in: query
+          required: true
+          description: format with "2023-02-21 11:56:30"
+          schema:
+            type: string
+        - name: end_time
+          in: query
+          required: true
+          description: format with "2023-02-21 11:56:30"
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobStatus'
+  /api/v1/job/{job_id}:
+    delete:
+      tags:
+        - job
+      operationId: DeleteJobbyId
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: job not found
 components:
   schemas:
     Graph:
@@ -523,3 +606,87 @@ components:
             property:
               type: string
               description: property name
+    DataLoadingJob:
+      type: object
+      properties:
+        schedule:
+          type: object
+          properties:
+            run_now:
+              type: boolean
+            time:
+              type: string
+              description: format with "2023-02-21 11:56:30"
+            repeat:
+              type: string
+              enum:
+                - day
+                - week
+                - once
+        config:
+          type: object
+          properties:
+            graph:
+              type: string
+            unit:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - vertex
+                    - edge
+                type_name:
+                  type: string
+                source_vertex:type:
+                  type: string
+                  description: edge only
+                destination_vertex_type:
+                  type: string
+                  description: edge only
+            loading_config:
+              type: object
+              properties:
+                import_option:
+                  type: string
+                  enum:
+                    - init
+                format:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                        - csv
+                        - arrow
+                    metadata:
+                      type: object
+                      additionalProperties: true
+    JobStatus:
+      type: object
+      properties:
+        jobid:
+          type: string
+        type:
+          type: string
+        status:
+          type: string
+          enum:
+            - RUNNING
+            - CANCELLED
+            - SUCCESS
+            - FAILED
+            - WAITING
+        start_time:
+          type: string
+        end_time:
+          type: string
+        log:
+          type: string
+          description: URL or log string
+        detail:
+          type: object
+          additionalProperties: true
+        message:
+          type: string
+          description: error message

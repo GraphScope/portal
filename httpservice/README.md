@@ -17,7 +17,8 @@
 | POST /api/v1/graph/{graph_name}/datasource/edge/{label_name}     | (DATASOURCE) 绑定边类型数据源              | ✓   |     ✓     |    ✓     |
 | GET /api/v1/graph/{graph_name}/datasource/edge/{label_name}      | (DATASOURCE) 获取边类型数据源              | ✓   |     ✓     |    ✓     |
 | PUT /api/v1/graph/{graph_name}/datasource/edge/{label_name}      | (DATASOURCE) 修改边类型数据源              | ✓   |     ✓     |    ✓     |
-| POST /api/v1/job                                                 | (JOB) 创建任务(载图、运行算法)             | ✓   |     ✓     |    ✓     |
+| POST /api/v1/job/dataloading                                     | (JOB) 创建数据导入任务                     | ✓   |     ✓     |    x     |
+| POST /api/v1/job/analysis                                        | (JOB) 创建图分析  任务                     | x   |     x     |    ✓     |
 | GET /api/v1/job                                                  | (JOB) 获取任务信息列表                     | ✓   |     ✓     |    ✓     |
 | DELETE /api/v1/job/{job_id}                                      | (JOB) 取消任务                             | ✓   |     ✓     |    ✓     |
 | POST /api/v1/extension/query                                     | (EXTENSION) 新建 gremlin/cypher 语句       | ✓   |     ✓     |    x     |
