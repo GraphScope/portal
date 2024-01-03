@@ -429,6 +429,7 @@ paths:
           schema:
             type: string
             enum:
+              - ALL
               - DATALOADING
               - ANALYSIS
         - name: status
@@ -437,6 +438,7 @@ paths:
           schema:
             type: string
             enum:
+              - ALL
               - RUNNING
               - CANCELLED
               - SUCCESS
@@ -483,6 +485,180 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
         '404':
           description: job not found
+  /api/v1/extension/query:
+    post:
+      tags:
+        - extension
+      operationId: SaveQuery
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryStatement'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+          description: Query name already exists
+    get:
+      tags:
+        - extension
+      operationId: ListQuerys
+      parameters:
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - ALL
+              - GREMLIN
+              - CYPHER
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QueryStatement'
+  /api/v1/extension/query/{query_name}:
+    put:
+      tags:
+        - extension
+      operationId: UpdateQuerybyName
+      parameters:
+        - name: query_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryStatement'
+      responses:
+        '200':
+           description: Successful operation
+           content:
+             application/json:
+               schema:
+                  $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Query not found
+    delete:
+      tags:
+        - extension
+      operationId: DeleteQuerybyName
+      parameters:
+        - name: query_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Query not found
+  /api/v1/extension/procedure:
+    post:
+      tags:
+        - extension
+      operationId: CreateProcedure
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Procedure'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+          description: Procedure name already exists
+    get:
+      tags:
+        - extension
+      operationId: ListProcedures
+      parameters:
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - ALL
+              - CPP
+              - CYPHER
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Procedure'
+  /api/v1/extension/procedure/{procedure_name}:
+    put:
+      tags:
+        - extension
+      operationId: UpdateProcedurebyName
+      parameters:
+        - name: procedure_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Procedure'
+      responses:
+        '200':
+           description: Successful operation
+           content:
+             application/json:
+               schema:
+                  $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Query not found
+    delete:
+      tags:
+        - extension
+      operationId: DeleteProcedurebyName
+      parameters:
+        - name: procedure_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Query not found
 components:
   schemas:
     Graph:
@@ -495,6 +671,7 @@ components:
           $ref: '#/components/schemas/Schema'
     Schema:
       type: object
+      x-body-name: schema
       properties: 
         vertex_types:
           type: array
@@ -506,6 +683,7 @@ components:
             $ref: '#/components/schemas/EdgeType'
     VertexType:
       type: object
+      x-body-name: vertex_type
       properties:
         type_name:
           type: string
@@ -515,6 +693,7 @@ components:
             $ref: '#/components/schemas/Property'
     EdgeType:
       type: object
+      x-body-name: edge_type
       properties:
         type_name:
           type: string
@@ -537,6 +716,7 @@ components:
             $ref: '#/components/schemas/Property'
     Property:
       type: object
+      x-body-name: property
       properties:
         property_name:
           type: string
@@ -554,6 +734,7 @@ components:
       type: string
     DataSource:
       type: object
+      x-body-name: data_source
       properties:
         data_source_type:
           type: string
@@ -608,6 +789,7 @@ components:
               description: property name
     DataLoadingJob:
       type: object
+      x-body-name: dataloading_job
       properties:
         schedule:
           type: object
@@ -664,6 +846,7 @@ components:
                       additionalProperties: true
     JobStatus:
       type: object
+      x-body-name: job_status
       properties:
         jobid:
           type: string
@@ -690,3 +873,63 @@ components:
         message:
           type: string
           description: error message
+    QueryStatement:
+      type: object
+      x-body-name: query
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+          description: flat structure /a/b/c/d
+        query:
+          type: string
+    Procedure:
+      type: object
+      x-body-name: procedure
+      properties:
+        name:
+          type: string
+        bound_graph:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum:
+           - cpp
+           - cypher
+        query:
+          type: string
+        enable:
+          type: boolean
+        params:
+          type: array
+          description: Generate in server side
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+                enum:
+                  - DT_STRING
+                  - DT_DOUBLE
+                  - DT_SIGNED_INT64
+        returns:
+          type: array
+          description: Generate in server side
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+                enum:
+                  - DT_STRING
+                  - DT_DOUBLE
+                  - DT_SIGNED_INT64
