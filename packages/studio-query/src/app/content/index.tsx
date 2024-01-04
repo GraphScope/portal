@@ -96,7 +96,15 @@ const Content: React.FunctionComponent<IContentProps> = props => {
               key={id}
               style={{ ...statementStyles, visibility: id === activeId || mode === 'flow' ? 'visible' : 'hidden' }}
             >
-              <Statement id={id} script={script} onQuery={onQuery} onClose={onClose} onSave={onSave} />
+              <Statement
+                mode={mode}
+                active={id === activeId}
+                id={id}
+                script={script}
+                onQuery={onQuery}
+                onClose={onClose}
+                onSave={onSave}
+              />
             </div>
           );
         })}

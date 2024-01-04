@@ -11,11 +11,15 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
     updateStore(draft => {
       const num = Math.round(Math.random() * 10000);
       const id = `query-${num}`;
-      draft.statements.push({
-        id,
-        name: id,
-        script: 'Match (n) return n limit 10',
-      });
+      draft.statements = [
+        {
+          id,
+          name: id,
+          script: 'Match (n) return n limit 10',
+        },
+        ...draft.statements,
+      ];
+
       draft.activeId = id;
     });
   };
