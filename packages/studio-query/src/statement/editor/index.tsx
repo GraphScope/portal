@@ -43,8 +43,8 @@ const Editor: React.FunctionComponent<IEditorProps> = props => {
         <Space align="end">
           {/* <TextArea autoSize={{ minRows: 1, maxRows: 20 }}></TextArea> */}
           <Button type="text" icon={<PlayCircleOutlined />} onClick={handleQuery} />
-          <Button type="text" icon={<BookOutlined onClick={handleSave} />} />
-          <Button type="text" icon={<CloseOutlined onClick={handleClose} />} />
+          {onSave && <Button type="text" icon={<BookOutlined onClick={handleSave} />} />}
+          {onClose && <Button type="text" icon={<CloseOutlined onClick={handleClose} />} />}
         </Space>
       </Flex>
       <div style={{ height: '100px', width: 'calc(100vw - 328px)' }}>
