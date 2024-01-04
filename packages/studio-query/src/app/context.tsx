@@ -18,6 +18,18 @@ const initialStore: IStore<{}> = {
       script: 'Match (n) return n limit 30',
     },
   ],
+  savedStatements: [
+    {
+      id: 'my-query-1 ',
+      name: 'my-query-1',
+      script: 'Match (n) return n limit 100',
+    },
+    {
+      id: 'my-query-2',
+      name: 'my-query-2',
+      script: 'Match (n) return n limit 300',
+    },
+  ],
   mode: 'tabs',
 };
 

@@ -17,4 +17,6 @@ export type IStore<T> = T & {
   statements: IStatement[];
   /** 展示的模式 */
   mode: 'flow' | 'tabs';
+  /** 保存的语句 */
+  savedStatements: IStatement[];
 };

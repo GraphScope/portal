@@ -1,7 +1,7 @@
 import React from 'react';
 import { BarsOutlined, InsertRowAboveOutlined, OrderedListOutlined, PlayCircleOutlined } from '@ant-design/icons';
-import { Tooltip, Segmented, Button } from 'antd';
-import Toolbar from '../../statement/toolbar';
+import { Tooltip, Segmented, Button, Space, Select, Flex } from 'antd';
+
 import { useContext } from '../context';
 interface IHeaderProps {}
 
@@ -10,11 +10,13 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
   const handleAddQuery = () => {
     updateStore(draft => {
       const num = Math.round(Math.random() * 10000);
+      const id = `query-${num}`;
       draft.statements.push({
-        id: `query-${num}`,
-        name: `query-${num}`,
+        id,
+        name: id,
         script: 'Match (n) return n limit 10',
       });
+      draft.activeId = id;
     });
   };
   const onChangeMode = value => {
@@ -23,18 +25,21 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
     });
   };
   return (
-    <div style={{ position: 'relative', minHeight: '50px', lineHeight: '50px', borderBottom: '1px solid #ddd' }}>
-      <div style={{}}>
-        <Button type="text" icon={<PlayCircleOutlined />} onClick={handleAddQuery} />
-      </div>
-      <div>
+    <div style={{ position: 'relative', minHeight: '50px', lineHeight: '50px' }}>
+      <Flex align="center" justify="space-between">
+        <div style={{}}>
+          <Select
+            defaultValue="Cypher"
+            options={[
+              { value: 'Cypher', label: 'Cypher' },
+              { value: 'Gremlin', label: 'Gremlin', disabled: true },
+              { value: 'ISO-GQL', label: 'ISO-GQL', disabled: true },
+            ]}
+          />
+          <Button type="text" icon={<PlayCircleOutlined />} onClick={handleAddQuery} />
+        </div>
+
         <Segmented
-          style={{
-            position: 'absolute',
-            top: '0px',
-            right: '0px',
-          }}
-          size="small"
           options={[
             {
               icon: <InsertRowAboveOutlined />,
@@ -44,7 +49,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
           ]}
           onChange={onChangeMode}
         />
-      </div>
+      </Flex>
     </div>
   );
 };

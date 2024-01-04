@@ -15,13 +15,13 @@ const styles = {
     backgroundColor: '#9397A0',
     color: '#fff',
     border: '1px solid #9397A0',
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   'tag-active': {
     backgroundColor: '#fff',
     color: '#9395A0',
     border: '1px solid #9395A0',
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
 };
 const { useRef } = React;
@@ -67,9 +67,9 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
       sizeRef.current = val?.width;
     } else {
       captionRef.current = val;
-      updateState(draf=>{
-        draf.caption = val
-      })
+      updateState(draf => {
+        draf.caption = val;
+      });
     }
     onChange({ color: colorRef.current, size: sizeRef.current, caption: captionRef.current });
   };
@@ -93,7 +93,7 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
                     height: '16px',
                     display: 'inline-block',
                     borderRadius: '50%',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
                   }}
                 ></span>
               </Space>
@@ -114,7 +114,7 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
                     height: item.width,
                     display: 'inline-block',
                     borderRadius: '50%',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
                   }}
                 ></span>
               </Space>
@@ -123,18 +123,16 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
         </div>
         <div>
           <span style={{ fontSize: '16px' }}>Caption: </span>
-          {
-            Object.keys(properties)?.map(item => {
-                return (
-                  <Tag
-                    style={state?.caption == item ? styles['tag-style'] : styles['tag-active']}
-                    onClick={() => propertiesChange(item, 'caption')}
-                  >
-                    {item}
-                  </Tag>
-                );
-              })
-            }
+          {Object.keys(properties)?.map(item => {
+            return (
+              <Tag
+                style={state?.caption == item ? styles['tag-style'] : styles['tag-active']}
+                onClick={() => propertiesChange(item, 'caption')}
+              >
+                {item}
+              </Tag>
+            );
+          })}
         </div>
       </div>
     );
@@ -142,12 +140,12 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
   return (
     <Popover placement="left" content={Titlecontent()}>
       {cutomer ? (
-        <Button type="primary" danger style={{ borderRadius: '16px', marginBottom: '10px' ,cursor: 'pointer'}}>
+        <Button type="primary" danger style={{ borderRadius: '16px', marginBottom: '10px', cursor: 'pointer' }}>
           cutomer
         </Button>
       ) : (
         <Tag
-          style={{ borderRadius: type == 'NODE' ? '10px' : '', backgroundColor: color ,cursor: 'pointer'}}
+          style={{ borderRadius: type == 'NODE' ? '10px' : '', backgroundColor: color, cursor: 'pointer' }}
           bordered={false}
           onClick={() => tagChange(props)}
         >{`${label} (${count})`}</Tag>

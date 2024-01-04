@@ -16,6 +16,12 @@ export default function Layout() {
     <>
       <ConfigProvider
         theme={{
+          components: {
+            Select: {
+              selectorBg: 'red',
+              optionSelectedBg: 'red',
+            },
+          },
           token: {
             colorPrimary: primary,
           },

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { forwardRef } from 'react';
 import { MonacoEnvironment, EditorProvider } from '@difizen/cofine-editor-core';
 import cypherLanguage from '@difizen/cofine-language-cypher';

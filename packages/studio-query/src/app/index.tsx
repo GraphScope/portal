@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 
 import Layout from './layout';
-import StatementList from '../statement/list';
+
 import Content from './content';
+import SavedStatements from './saved-statements';
 import './index.less';
 interface Info {
   name: string;
@@ -45,7 +46,7 @@ interface IStudioQueryProps {
 
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   return (
-    <Layout {...props} left={<StatementList />}>
+    <Layout {...props} left={<SavedStatements></SavedStatements>}>
       <Content {...props} />
     </Layout>
   );

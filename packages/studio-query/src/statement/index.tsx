@@ -1,25 +1,18 @@
 import React, { useState, memo } from 'react';
 import { Space, Button } from 'antd';
-import Toolbar from './toolbar';
+
 import Editor from './editor';
 import Result from './result';
 import Container from './container';
+import { IEditorProps } from './typing';
 
-export interface IStatementProps {
-  /** 单击选中的语句 */
-  activeId: string;
-}
+export type IStatementProps = IEditorProps & {};
 
-export interface IStatementState {
-  /** 需要额外对比的语句 */
-  compareIds: string[];
-  /** 展示的模式 */
-  compareDisplayMode: 'flow' | 'tabs';
-}
 const Statement: React.FunctionComponent<IStatementProps> = props => {
+  const { onQuery, onClose, onSave, script, id } = props;
   return (
     <Container>
-      <Editor />
+      <Editor id={id} script={script} onClose={onClose} onQuery={onQuery} onSave={onSave} />
       <Result />
     </Container>
   );
