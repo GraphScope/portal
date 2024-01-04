@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { useSnapshot } from 'valtio';
 import { history } from 'umi';
 import { Button, Form, Input, Row, Col, Avatar, Card, ConfigProvider, Alert, Steps, Space } from 'antd';
-import { creategraphdata } from '@/valtio/createGraph';
+import { useContext } from '../../../valtio/createGraph';
 import styles from './index.module.less';
 interface IListsProps {}
 export type FieldType = {
@@ -11,7 +10,8 @@ export type FieldType = {
 };
 const Lists: React.FunctionComponent<IListsProps> = _props => {
   const [form] = Form.useForm();
-  const { isAlert } = useSnapshot(creategraphdata);
+  const { store, updateStore } = useContext();
+  const { isAlert } = store;
   const onFinish = () => {
     form.validateFields().then(res => {
       console.log(res);
@@ -120,48 +120,26 @@ const Lists: React.FunctionComponent<IListsProps> = _props => {
           </Row>
         </Form.Item>
       </Form>
-      <Space>
-        <Button
-          type="primary"
-          onClick={() => {
-            history.back();
-          }}
-        >
-          上一页
-        </Button>
-        <Button
-          type="primary"
-          onClick={() => {
-            form.getFieldsValue().inputname ? history.push('/instance/create') : form.validateFields();
-          }}
-        >
-          下一页
-        </Button>
-      </Space>
-      {/* <Button
-          type="primary"
-          onClick={() => {
-            history.push('/instance/create');
-          }}
-        >
-          create instance
-        </Button>
-        <Button
-          type="primary"
-          onClick={() => {
-            history.push('/instance/import');
-          }}
-        >
-          import data
-        </Button>
-        <Button
-          type="primary"
-          onClick={() => {
-            history.push('/instance/schema');
-          }}
-        >
-          view Schema
-        </Button> */}
+      {!isAlert ? (
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => {
+              history.back();
+            }}
+          >
+            上一页
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              form.getFieldsValue().inputname ? history.push('/instance/create') : form.validateFields();
+            }}
+          >
+            下一页
+          </Button>
+        </Space>
+      ):null}
     </ConfigProvider>
   );
 };

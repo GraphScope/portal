@@ -34,7 +34,7 @@ const GraphIn = (props: { isAlert?: any; graphData?: any; }) => {
         document.body.removeChild(eleLink);
       };
   return (
-    <div style={{ backgroundColor: '#fff', padding: '16px', border: '1px solid #000', height: '65vh' }}>
+    <div style={{ backgroundColor: '#fff', padding: '16px', border: '1px solid #000', height: '65vh' ,overflow:'hidden'}}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <h3>Graph Schema View</h3>
         {!isAlert ? (

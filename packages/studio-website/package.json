@@ -15,7 +15,9 @@
     "@graphscope/studio-importor": "workspace:*",
     "@graphscope/studio-query": "workspace:*",
     "antd": "^5.12.5",
+    "lodash": "^4.17.21",
     "umi": "^4.0.89",
+    "uuid": "^9.0.1",
     "valtio": "^1.12.1"
   },
   "devDependencies": {
