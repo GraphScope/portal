@@ -1,0 +1,1152 @@
+openapi: 3.0.3
+info:
+  title: GraphScope FLEX HTTP SERVICE API
+  description: |-
+    This is a specification for GraphScope FLEX HTTP service based on the OpenAPI 3.0 specification. You can find out more details about
+    specification at [doc](https://swagger.io/specification/v3/).
+    
+    Some useful links:
+    - [GraphScope Repository](https://github.com/alibaba/GraphScope)
+    - [The Source API definition for GraphScope Interactive](https://github.com/GraphScope/portal/tree/main/httpservice)
+  contact:
+    name: GraphScope
+    email: graphscope@alibaba-inc.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.9.1
+externalDocs:
+  description: Find out More about GraphScope
+  url: http://graphscope.io
+paths:
+  /api/v1/graph:
+    post:
+      tags:
+        - graph
+      description: Create a new graph
+      operationId: CreateGraph
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Graph'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+          description: Graph already exists
+    get:
+      tags:
+        - graph
+      description: List all graphs
+      operationId: ListGraphs
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Graph'
+  /api/v1/graph/{graph_name}:
+    delete:
+      tags:
+        - graph
+      description: Delete a graph by graph name
+      operationId: DeleteGraphbyName
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Graph not found
+  /api/v1/graph/{graph_name}/schema:
+    post:
+      tags:
+        - graph
+      description: Import schema to graph
+      operationId: ImportSchema
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schema'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+            description: Schema not empty
+    get:
+      tags:
+        - graph
+      description: List all graphs
+      operationId: GetSchema
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schema'
+        '404':
+          description: Graph not found
+  /api/v1/graph/{graph_name}/schema/vertex:
+    post:
+      tags:
+        - graph
+      description: Create a vertex type
+      operationId: CreateVertexType
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VertexType'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+            description: Vertex type already exists
+  /api/v1/graph/{graph_name}/schema/vertex/{label_name}:
+    delete:
+      tags:
+        - graph
+      description: Delete a vertex type by name
+      operationId: DeleteVertexbyName
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Graph or vertex type not found
+  /api/v1/graph/{graph_name}/schema/edge:
+    post:
+      tags:
+        - graph
+      description: Create a edge type
+      operationId: CreateEdgeType
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EdgeType'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+            description: Edge type already exists
+  /api/v1/graph/{graph_name}/schema/edge/{label_name}:
+    delete:
+      tags:
+        - graph
+      description: Delete a edge type by name
+      operationId: DeleteEdgebyName
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: source_vertex_type
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: destination_vertex_type
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Graph or edge type not found
+  /api/v1/graph/{graph_name}/datasource/vertex/{label_name}:
+    post:
+      tags:
+        - data_source
+      description: Bind data source to vertex type
+      operationId: BindVertexDataSource
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataSource'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+            description: Data source already exists
+    put:
+      tags:
+        - data_source
+      operationId: UpdateVertexDataSource
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataSource'
+      responses:
+        '200':
+           description: Successful operation
+           content:
+             application/json:
+               schema:
+                  $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Data source not found
+    get:
+      tags:
+        - data_source
+      operationId: GetVertexDataSource
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataSource'
+        '404':
+          description: Data source  not found
+  /api/v1/graph/{graph_name}/datasource/edge/{label_name}:
+    post:
+      tags:
+        - data_source
+      description: Bind data source to edge type
+      operationId: BindEdgeDataSource
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataSource'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+            description: Data source already exists
+    put:
+      tags:
+        - data_source
+      operationId: UpdateEdgeDataSource
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataSource'
+      responses:
+        '200':
+           description: Successful operation
+           content:
+             application/json:
+               schema:
+                  $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Data source not found
+    get:
+      tags:
+        - data_source
+      operationId: GetEdgeDataSource
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: label_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataSource'
+        '404':
+          description: Data source  not found
+  /api/v1/job/dataloading:
+    post:
+      tags:
+        - job
+      operationId: CreateDataloadingJob
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataLoadingJob'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/job:
+    get:
+      tags:
+        - job
+      operationId: ListJobs
+      parameters:
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - ALL
+              - DATALOADING
+              - ANALYSIS
+        - name: status
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - ALL
+              - RUNNING
+              - CANCELLED
+              - SUCCESS
+              - FAILED
+              - WAITING
+        - name: start_time
+          in: query
+          required: true
+          description: format with "2023-02-21 11:56:30"
+          schema:
+            type: string
+        - name: end_time
+          in: query
+          required: true
+          description: format with "2023-02-21 11:56:30"
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobStatus'
+  /api/v1/job/{job_id}:
+    delete:
+      tags:
+        - job
+      operationId: DeleteJobbyId
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: job not found
+  /api/v1/extension/query:
+    post:
+      tags:
+        - extension
+      operationId: SaveQuery
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryStatement'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+          description: Query name already exists
+    get:
+      tags:
+        - extension
+      operationId: ListQuerys
+      parameters:
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - ALL
+              - GREMLIN
+              - CYPHER
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QueryStatement'
+  /api/v1/extension/query/{query_name}:
+    put:
+      tags:
+        - extension
+      operationId: UpdateQuerybyName
+      parameters:
+        - name: query_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryStatement'
+      responses:
+        '200':
+           description: Successful operation
+           content:
+             application/json:
+               schema:
+                  $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Query not found
+    delete:
+      tags:
+        - extension
+      operationId: DeleteQuerybyName
+      parameters:
+        - name: query_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Query not found
+  /api/v1/extension/procedure:
+    post:
+      tags:
+        - extension
+      operationId: CreateProcedure
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Procedure'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '409':
+          description: Procedure name already exists
+    get:
+      tags:
+        - extension
+      operationId: ListProcedures
+      parameters:
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - ALL
+              - CPP
+              - CYPHER
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Procedure'
+  /api/v1/extension/procedure/{procedure_name}:
+    put:
+      tags:
+        - extension
+      operationId: UpdateProcedurebyName
+      parameters:
+        - name: procedure_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Procedure'
+      responses:
+        '200':
+           description: Successful operation
+           content:
+             application/json:
+               schema:
+                  $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Query not found
+    delete:
+      tags:
+        - extension
+      operationId: DeleteProcedurebyName
+      parameters:
+        - name: procedure_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Query not found
+  /api/v1/alert/rule:
+    get:
+      tags:
+        - alert
+      operationId: ListAlertRules
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AlertRule'
+  /api/v1/alert/rule/{rule_name}:
+    put:
+      tags:
+        - alert
+      operationId: UpdateAlertRulebyName
+      parameters:
+        - name: rule_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertRule'
+      responses:
+        '200':
+           description: Successful operation
+           content:
+             application/json:
+               schema:
+                  $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Alert rule not found
+    delete:
+      tags:
+        - alert
+      operationId: DeleteAlertRulebyName
+      parameters:
+        - name: rule_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Alert rule not found
+  /api/v1/alert/message:
+    get:
+      tags:
+        - alert
+      operationId: ListAlertMessages
+      parameters:
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - solved
+              - unsolved
+              - dealing
+        - name: severity
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - warning
+              - emergency
+        - name: start_time
+          in: query
+          required: true
+          description: format with "2023-02-21 11:56:30"
+          schema:
+            type: string
+        - name: end_time
+          in: query
+          required: true
+          description: format with "2023-02-21 11:56:30"
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AlertMessage'
+    put:
+      tags:
+        - alert
+      operationId: UpdateAlertMessages
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                messages:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/AlertMessage'
+                batch_status:
+                  type: string
+                  description: Override the status of each message
+                  enum:
+                    - solved
+                    - unsolved
+                    - dealing
+                batch_delete:
+                  type: boolean
+                  description: True will delete all the messages in request body
+                  default: false
+      responses:
+        '200':
+           description: Successful operation
+           content:
+             application/json:
+               schema:
+                  $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Alert message not found
+components:
+  schemas:
+    Graph:
+      type: object
+      x-body-name: graph
+      properties:
+        name:
+          type: string
+        schema:
+          $ref: '#/components/schemas/Schema'
+    Schema:
+      type: object
+      x-body-name: schema
+      properties: 
+        vertex_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/VertexType'
+        edge_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/EdgeType'
+    VertexType:
+      type: object
+      x-body-name: vertex_type
+      properties:
+        type_name:
+          type: string
+        properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Property'
+    EdgeType:
+      type: object
+      x-body-name: edge_type
+      properties:
+        type_name:
+          type: string
+        vertex_type_pair_relation:
+          type: object
+          properties:
+            source_vertex_type:
+              type: string
+            destination_vertex_type:
+              type: string
+            relation:
+              type: string
+              enum:
+                - MANY_TO_MANY
+                - ONE_TO_MANY
+                - MANY_TO_ONE
+        properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Property'
+    Property:
+      type: object
+      x-body-name: property
+      properties:
+        property_name:
+          type: string
+        property_type:
+          type: string
+          enum:
+            - DT_STRING
+            - DT_DOUBLE
+            - DT_SIGNED_INT32
+            - DT_SIGNED_INT64
+            - DT_DATE32
+        is_primary_key:
+          type: boolean
+    ApiResponse:
+      type: string
+    DataSource:
+      type: object
+      x-body-name: data_source
+      properties:
+        data_source_type:
+          type: string
+          enum:
+            - LOCAL_FILE
+            - ODPS
+            - OSS
+        type_name:
+          type: string
+        source_vertex_type:
+          type: string
+          description: edge only
+        destination_vertex_type:
+          type: string
+          description: edge only
+        location:
+          type: string
+        source_vertex_mapping:
+          type: object
+          description: edge only
+          properties:
+            column:
+              type: object
+              properties:
+                index:
+                  type: integer
+                name:
+                  type: string
+        destination_vertex_mapping:
+          type: object
+          description: edge only
+          properties:
+            column:
+              type: object
+              properties:
+                index:
+                  type: integer
+                name:
+                  type: string
+        property_mapping:
+          type: object
+          properties:
+            column:
+              type: object
+              properties:
+                index:
+                  type: integer
+                name:
+                  type: string
+            property:
+              type: string
+              description: property name
+    DataLoadingJob:
+      type: object
+      x-body-name: dataloading_job
+      properties:
+        schedule:
+          type: object
+          properties:
+            run_now:
+              type: boolean
+            time:
+              type: string
+              description: format with "2023-02-21 11:56:30"
+            repeat:
+              type: string
+              enum:
+                - day
+                - week
+                - once
+        config:
+          type: object
+          properties:
+            graph:
+              type: string
+            unit:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - vertex
+                    - edge
+                type_name:
+                  type: string
+                source_vertex:type:
+                  type: string
+                  description: edge only
+                destination_vertex_type:
+                  type: string
+                  description: edge only
+            loading_config:
+              type: object
+              properties:
+                import_option:
+                  type: string
+                  enum:
+                    - init
+                format:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                        - csv
+                        - arrow
+                    metadata:
+                      type: object
+                      additionalProperties: true
+    JobStatus:
+      type: object
+      x-body-name: job_status
+      properties:
+        jobid:
+          type: string
+        type:
+          type: string
+        status:
+          type: string
+          enum:
+            - RUNNING
+            - CANCELLED
+            - SUCCESS
+            - FAILED
+            - WAITING
+        start_time:
+          type: string
+        end_time:
+          type: string
+        log:
+          type: string
+          description: URL or log string
+        detail:
+          type: object
+          additionalProperties: true
+        message:
+          type: string
+          description: error message
+    QueryStatement:
+      type: object
+      x-body-name: query
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+          description: flat structure /a/b/c/d
+        query:
+          type: string
+    Procedure:
+      type: object
+      x-body-name: procedure
+      properties:
+        name:
+          type: string
+        bound_graph:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum:
+           - cpp
+           - cypher
+        query:
+          type: string
+        enable:
+          type: boolean
+        params:
+          type: array
+          description: Generate in server side
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+                enum:
+                  - DT_STRING
+                  - DT_DOUBLE
+                  - DT_SIGNED_INT64
+        returns:
+          type: array
+          description: Generate in server side
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+                enum:
+                  - DT_STRING
+                  - DT_DOUBLE
+                  - DT_SIGNED_INT64
+    AlertRule:
+      type: object
+      x-body-name: alert_rule
+      properties:
+        name:
+          type: string
+        severity:
+          type: string
+          enum:
+            - warning
+            - emergency
+        metric_type:
+          type: string
+          enum:
+            - node
+            - service
+        conditions_desription:
+          type: string
+        frequency:
+          type: integer
+          description: (mins)
+        enable:
+          type: boolean
+    AlertMessage:
+      type: object
+      x-body-name: alert_message
+      properties:
+        message_id:
+          type: string
+        alert_name:
+          type: string
+        severity:
+          type: string
+          enum:
+            - warning
+            - emergency
+        metric_type:
+          type: string
+          enum:
+            - node
+            - service
+        target:
+          type: string
+        trigger_time:
+          type: string
+        status:
+          type: string
+          enum:
+            - unsolved
+            - solved
+            - dealing
+        message:
+          type: string
+    AlertReceiver:
+      type: object
+      x-body-name: alert_receiver
+      properties:
+        type:
+          type: string
+          enum:
+            - webhook
+        receiver_id:
+          type: string
+        webhook_url:
+          type: string
+        at_user_ids:
+          type: array
+          items:
+            type: string
+        is_at_all:
+          type: boolean
+        enable:
+          type: boolean
+        message:
+          type: string
+          description: error message generated in server side

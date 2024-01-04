@@ -11,20 +11,24 @@
 | DELETE /api/v1/graph/{graph_name}/schema/vertex/{label_name}     | (GRAPH) 删除点类型                         | ✓   |     x     |    x     |
 | POST /api/v1/graph/{graph_name}/schema/edge                      | (GRAPH) 新增边类型                         | ✓   |     x     |    x     |
 | DELETE /api/v1/graph/{graph_name}/schema/edge/{label_name}       | (GRAPH) 删除边类型                         | ✓   |     x     |    x     |
-| GET /api/v1/graph/{graph_name}/datasource                        | (DATASOURCE) 获取数据源绑定信息            | ✓   |     ✓     |    ✓     |
 | POST /api/v1/graph/{graph_name}/datasource/vertex/{label_name}   | (DATASOURCE) 绑定点类型数据源              | ✓   |     ✓     |    ✓     |
+| GET /api/v1/graph/{graph_name}/datasource/vertex/{label_name}    | (DATASOURCE) 获取点类型数据源              | ✓   |     ✓     |    ✓     |
+| PUT /api/v1/graph/{graph_name}/datasource/vertex/{label_name}    | (DATASOURCE) 修改点类型数据源              | ✓   |     ✓     |    ✓     |
 | POST /api/v1/graph/{graph_name}/datasource/edge/{label_name}     | (DATASOURCE) 绑定边类型数据源              | ✓   |     ✓     |    ✓     |
-| POST /api/v1/job                                                 | (JOB) 创建任务(载图、运行算法)             | ✓   |     ✓     |    ✓     |
+| GET /api/v1/graph/{graph_name}/datasource/edge/{label_name}      | (DATASOURCE) 获取边类型数据源              | ✓   |     ✓     |    ✓     |
+| PUT /api/v1/graph/{graph_name}/datasource/edge/{label_name}      | (DATASOURCE) 修改边类型数据源              | ✓   |     ✓     |    ✓     |
+| POST /api/v1/job/dataloading                                     | (JOB) 创建数据导入任务                     | ✓   |     ✓     |    x     |
+| POST /api/v1/job/analysis                                        | (JOB) 创建图分析  任务                     | x   |     x     |    ✓     |
 | GET /api/v1/job                                                  | (JOB) 获取任务信息列表                     | ✓   |     ✓     |    ✓     |
 | DELETE /api/v1/job/{job_id}                                      | (JOB) 取消任务                             | ✓   |     ✓     |    ✓     |
 | POST /api/v1/extension/query                                     | (EXTENSION) 新建 gremlin/cypher 语句       | ✓   |     ✓     |    x     |
-| PUT /api/v1/extension/query/{query_id}                           | (EXTENSION) 修改查询语句信息               | ✓   |     ✓     |    x     |
+| PUT /api/v1/extension/query/{query_name}                         | (EXTENSION) 修改查询语句信息               | ✓   |     ✓     |    x     |
 | GET /api/v1/extension/query                                      | (EXTENSION) 获取查询语句列表               | ✓   |     ✓     |    x     |
-| DELETE /api/v1/extension/query/{query_id}                        | (EXTENSION) 删除某一查询语句               | ✓   |     ✓     |    x     |
+| DELETE /api/v1/extension/query/{query_name}                      | (EXTENSION) 删除某一查询语句               | ✓   |     ✓     |    x     |
 | POST /api/v1/extension/procedure                                 | (EXTENSION) 新建 storedprocedure           | x   |     ✓     |    x     |
-| PUT /api/v1/extension/procedure/{procedure_id}                   | (EXTENSION) 修改 storedprocedure 信息      | x   |     ✓     |    x     |
+| PUT /api/v1/extension/procedure/{procedure_name}                 | (EXTENSION) 修改 storedprocedure 信息      | x   |     ✓     |    x     |
 | GET /api/v1/extension/procedure                                  | (EXTENSION) 获取 storedprocedure 列表      | x   |     ✓     |    x     |
-| DELETE /api/v1/extension/procedure/{procedure_id}                | (EXTENSION) 删除某一 storedprocedure       | x   |     ✓     |    x     |
+| DELETE /api/v1/extension/procedure/{procedure_name}              | (EXTENSION) 删除某一 storedprocedure       | x   |     ✓     |    x     |
 | POST /api/v1/extension/algo                                      | (EXTENSION) 新建算法应用                   | x   |     x     |    ✓     |
 | PUT /api/v1/extension/algo/{algo_id}                             | (EXTENSION) 修改算法信息                   | x   |     x     |    ✓     |
 | GET /api/v1/extension/algo                                       | (EXTENSION) 获取算法列表                   | x   |     x     |    ✓     |
