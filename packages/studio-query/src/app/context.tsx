@@ -25,6 +25,7 @@ export type IStore<T> = T & {
   mode: 'flow' | 'tabs';
   /** 保存的语句 */
   savedStatements: IStatement[];
+  storeProcedures: IStatement[];
 };
 
 const initialStore: IStore<{}> = {
@@ -58,6 +59,13 @@ const initialStore: IStore<{}> = {
       id: 'my-query-2',
       name: 'my-query-2',
       script: 'Match (n) return n limit 300',
+    },
+  ],
+  storeProcedures: [
+    {
+      id: 'store-procedure-1 ',
+      name: 'store-procedure-1 ',
+      script: 'CALL actore()',
     },
   ],
   mode: 'tabs',
