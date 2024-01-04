@@ -1,19 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import Statement from '../../statement';
-import Header from '../header';
+import Header from './header';
 import { Segmented } from 'antd';
-import './index.less';
 import { useContext } from '../context';
 interface IContentProps {}
-
-interface IContentState {
-  /** 单击选中的语句 */
-  activeId: string;
-  /** 需要额外对比的语句 */
-  queryIds: string[];
-  /** 展示的模式 */
-  mode: 'flow' | 'tabs';
-}
 
 const Content: React.FunctionComponent<IContentProps> = props => {
   const { store, updateStore } = useContext();
@@ -27,17 +17,8 @@ const Content: React.FunctionComponent<IContentProps> = props => {
         } as React.CSSProperties)
       : ({} as React.CSSProperties);
   const handleChangeTab = value => {
-    console.log('value', value);
-
     updateStore(draft => {
       draft.activeId = value;
-    });
-  };
-  const onChangeMode = value => {
-    console.log('value', value);
-
-    updateStore(draft => {
-      draft.mode = value;
     });
   };
 
@@ -79,9 +60,9 @@ const Content: React.FunctionComponent<IContentProps> = props => {
   };
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#f5f6f6' }}>
-      <div style={{ minHeight: '50px', background: '#fff', padding: '0px 12px' }}>
+      <div style={{ minHeight: '50px', background: '#fff', padding: '0px 12px', borderBottom: '1px solid #ddd' }}>
         <Header />
-        {mode === 'tabs' && (
+        {mode === 'tabs' && queryOptions.length !== 0 && (
           <div style={{ padding: '8px 0px' }}>
             <Segmented options={queryOptions} onChange={handleChangeTab} value={activeId} />
           </div>
@@ -113,4 +94,4 @@ const Content: React.FunctionComponent<IContentProps> = props => {
   );
 };
 
-export default Content;
+export default memo(Content);

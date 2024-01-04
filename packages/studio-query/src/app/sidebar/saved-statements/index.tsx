@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext } from '../context';
+import { useContext } from '../../context';
 import List from './list';
 interface ISavedStatementsProps {}
 
@@ -17,7 +17,7 @@ const SavedStatements: React.FunctionComponent<ISavedStatementsProps> = props =>
       const HAS_QUERY = queryIds.indexOf(id) !== -1;
       draft.activeId = id;
       if (!HAS_QUERY) {
-        draft.statements.push(value);
+        draft.statements = [value, ...draft.statements];
       }
     });
   };
