@@ -770,6 +770,7 @@ paths:
       tags:
         - alert
       operationId: UpdateAlertMessages
+      description: Update alert messages in batch
       requestBody:
         content:
           application/json:
@@ -800,6 +801,81 @@ paths:
                   $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Alert message not found
+  /api/v1/alert/receiver:
+    post:
+      tags:
+        - alert
+      operationId: RegisterReceiver
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertReceiver'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    get:
+      tags:
+        - extension
+      operationId: ListReceivers
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AlertReceiver'
+  /api/v1/alert/receiver/{receiver_id}:
+    put:
+      tags:
+        - alert
+      operationId: UpdateReceiverbyId
+      parameters:
+        - name: receiver_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertReceiver'
+      responses:
+        '200':
+           description: Successful operation
+           content:
+             application/json:
+               schema:
+                  $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Reveiver not found
+    delete:
+      tags:
+        - extension
+      operationId: DeleteReceiverbyId
+      parameters:
+        - name: receiver_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Reveiver not found
 components:
   schemas:
     Graph:
@@ -1137,6 +1213,7 @@ components:
             - webhook
         receiver_id:
           type: string
+          description: Generated in server side
         webhook_url:
           type: string
         at_user_ids:
