@@ -251,9 +251,6 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
           <Button
             type="primary"
             onClick={() => {
-              console.log(getLocalData('nodeList'));
-              
-              return
               history.push('/instance/create/result');
             }}
           >
