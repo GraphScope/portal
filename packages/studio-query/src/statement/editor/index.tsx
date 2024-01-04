@@ -5,10 +5,6 @@ import { PlayCircleOutlined, BookOutlined, CloseOutlined } from '@ant-design/ico
 import { useRef } from 'react';
 import { IEditorProps } from '../typing';
 
-import CypherDriver from '../../cypher-editor/driver';
-export const driver = new CypherDriver('neo4j://localhost:7687');
-console.log('driver', driver);
-
 const Editor: React.FunctionComponent<IEditorProps> = props => {
   const { onClose, onQuery, script = `Match (n) return n limit 10`, onSave, id } = props;
   const editorRef = useRef<any>(null);
@@ -18,12 +14,11 @@ const Editor: React.FunctionComponent<IEditorProps> = props => {
   };
   const handleQuery = async () => {
     const value = editorRef?.current?.codeEditor?.getValue();
-    onQuery &&
-      onQuery({
-        id,
-        script: value,
-      });
-    // const res = await driver.queryCypher(value);
+    const result = await onQuery({
+      id,
+      script: value,
+    });
+    console.log('result', result);
   };
   const handleSave = () => {
     const value = editorRef?.current?.codeEditor?.getValue();

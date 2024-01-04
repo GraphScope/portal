@@ -1,9 +1,15 @@
 import * as React from 'react';
-import StudioQuery from '@graphscope/studio-query';
+import StudioQuery, { CypherDriver } from '@graphscope/studio-query';
 import { GraphApiFp, GraphApiFactory } from '@graphscope/studio-server';
-interface IQueryModuleProps {}
 
-const queryGraph = async () => {};
+const driver = new CypherDriver('neo4j://localhost:7687');
+export interface IStatement {
+  id: string;
+  script: string;
+}
+const queryGraphData = async (value: IStatement) => {
+  return driver.queryCypher(value.script);
+};
 const queryInfo = async () => {
   return new Promise(reslove => {
     reslove({
@@ -81,6 +87,7 @@ const QueryModule: React.FunctionComponent<IQueryModuleProps> = props => {
     delelteStatement,
     updateStatement,
     addStatement,
+    queryGraphData,
   };
   React.useEffect(() => {
     GraphApiFactory({ basePath: 'localhost:7678' })

@@ -3,9 +3,14 @@ import Statement from '../../statement';
 import Header from './header';
 import { Segmented } from 'antd';
 import { useContext } from '../context';
-interface IContentProps {}
+import type { IStudioQueryProps } from '../context';
+interface IContentProps {
+  createStatement: IStudioQueryProps['createStatement'];
+  queryGraphData: IStudioQueryProps['queryGraphData'];
+}
 
 const Content: React.FunctionComponent<IContentProps> = props => {
+  const { createStatement, queryGraphData } = props;
   const { store, updateStore } = useContext();
   const { activeId, mode, statements } = store;
 
@@ -31,9 +36,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
       value: item.id,
     };
   });
-  const onQuery = ({ id, script }) => {
-    console.log('query', id, script);
-  };
+
   const onSave = ({ id, script }) => {
     console.log('save', id, script);
     updateStore(draft => {
@@ -47,6 +50,8 @@ const Content: React.FunctionComponent<IContentProps> = props => {
         });
       } else {
         draft.savedStatements.push({ id, script, name: id });
+        // fetch server
+        createStatement && createStatement({ id, script, name: id });
       }
     });
   };
@@ -82,7 +87,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
                 active={id === activeId}
                 id={id}
                 script={script}
-                onQuery={onQuery}
+                onQuery={queryGraphData}
                 onClose={onClose}
                 onSave={onSave}
               />

@@ -23,6 +23,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@antv/graphin": "latest",
     "valtio": "^1.12.1",
     "neo4j-driver": "^5.12.0",
     "@difizen/cofine-editor-core": "^0.0.1-alpha.6",
