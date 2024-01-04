@@ -2,7 +2,8 @@ import * as React from 'react';
 import StudioQuery, { CypherDriver } from '@graphscope/studio-query';
 import { GraphApiFp, GraphApiFactory } from '@graphscope/studio-server';
 
-const driver = new CypherDriver('neo4j://localhost:7687');
+const HOST_URL = 'localhost';
+const driver = new CypherDriver(`neo4j://${HOST_URL}:7687`);
 export interface IStatement {
   id: string;
   script: string;

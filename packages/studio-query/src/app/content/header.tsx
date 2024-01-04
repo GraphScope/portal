@@ -1,12 +1,45 @@
 import React from 'react';
 import { BarsOutlined, InsertRowAboveOutlined, OrderedListOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { Tooltip, Segmented, Button, Space, Select, Flex } from 'antd';
-
+import { localStorageVars } from '../context';
 import { useContext } from '../context';
 interface IHeaderProps {}
 
+const options = [
+  {
+    icon: <InsertRowAboveOutlined />,
+    value: 'tabs',
+  },
+  { icon: <OrderedListOutlined />, value: 'flow' },
+];
+
+const ModeSwitch = () => {
+  const { updateStore, store } = useContext();
+  const { mode } = store;
+  const onChangeMode = value => {
+    updateStore(draft => {
+      draft.mode = value;
+      localStorage.setItem(localStorageVars.mode, value);
+    });
+  };
+  return (
+    <Segmented
+      value={mode}
+      options={[
+        {
+          icon: <InsertRowAboveOutlined />,
+          value: 'tabs',
+        },
+        { icon: <OrderedListOutlined />, value: 'flow' },
+      ]}
+      onChange={onChangeMode}
+    />
+  );
+};
+
 const Header: React.FunctionComponent<IHeaderProps> = props => {
-  const { updateStore } = useContext();
+  const { updateStore, store } = useContext();
+
   const handleAddQuery = () => {
     updateStore(draft => {
       const num = Math.round(Math.random() * 10000);
@@ -23,11 +56,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       draft.activeId = id;
     });
   };
-  const onChangeMode = value => {
-    updateStore(draft => {
-      draft.mode = value;
-    });
-  };
+
   return (
     <div style={{ position: 'relative', minHeight: '50px', lineHeight: '50px' }}>
       <Flex align="center" justify="space-between">
@@ -42,17 +71,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
           />
           <Button type="text" icon={<PlayCircleOutlined />} onClick={handleAddQuery} />
         </div>
-
-        <Segmented
-          options={[
-            {
-              icon: <InsertRowAboveOutlined />,
-              value: 'tabs',
-            },
-            { icon: <OrderedListOutlined />, value: 'flow' },
-          ]}
-          onChange={onChangeMode}
-        />
+        <ModeSwitch />
       </Flex>
     </div>
   );

@@ -17,7 +17,7 @@ export default defineConfig({
   monorepoRedirect: {},
   externals: { react: 'React', 'react-dom': 'ReactDOM' },
   headScripts: [
-    'https://unpkg.com/react@18.2/umd/react.production.min.js',
-    'https://unpkg.com/react-dom@18.2/umd/react-dom.production.min.js',
+    'https://gw.alipayobjects.com/os/lib/react/18.2.0/umd/react.production.min.js',
+    'https://gw.alipayobjects.com/os/lib/react-dom/18.2.0/umd/react-dom.production.min.js',
   ],
 });

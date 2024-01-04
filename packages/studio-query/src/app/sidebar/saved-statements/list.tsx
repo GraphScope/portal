@@ -1,9 +1,14 @@
 import * as React from 'react';
-
+import { useContext } from '../../context';
+import { theme } from 'antd';
 const styles: Record<string, React.CSSProperties> = {
+  ul: {
+    paddingInlineStart: '0px',
+  },
   li: {
-    padding: '8px',
+    padding: '8px 16px',
     cursor: 'pointer',
+    listStyle: 'none',
   },
 };
 interface IListProps {
@@ -13,13 +18,23 @@ interface IListProps {
 
 const List: React.FunctionComponent<IListProps> = props => {
   const { items, onClick } = props;
+  const { store, updateStore } = useContext();
+  const { activeId } = store;
+  const { token } = theme.useToken();
   return (
-    <ul>
+    <ul style={styles.ul}>
       {items.map(item => {
+        const activeStyles =
+          activeId === item.id
+            ? {
+                background: token.colorBgTextHover,
+              }
+            : {};
+
         return (
           <li
             key={item.id}
-            style={styles.li}
+            style={{ ...styles.li, ...activeStyles }}
             onClick={() => {
               onClick && onClick(item);
             }}

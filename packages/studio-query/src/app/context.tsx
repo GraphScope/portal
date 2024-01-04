@@ -1,6 +1,10 @@
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 
+export const localStorageVars = {
+  mode: 'GS_STUDIO_QUERY_MODE',
+};
+
 export interface IStatement {
   /** 语句ID */
   id: string;
@@ -68,7 +72,7 @@ const initialStore: IStore<{}> = {
       script: 'CALL actore()',
     },
   ],
-  mode: 'tabs',
+  mode: (localStorage.getItem(localStorageVars.mode) as 'flow' | 'tabs') || 'flow',
 };
 
 type ContextType<T> = {
