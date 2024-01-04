@@ -7,13 +7,16 @@ import Result from './result';
 import { IEditorProps } from './typing';
 
 export type IStatementProps = IEditorProps & {
+  /** 是否是当前激活的语句 */
   active: boolean;
+  // 是否是保存的语句
+  saved: boolean;
   mode?: 'tabs' | 'flow';
 };
 const { useToken } = theme;
 
 const Statement: React.FunctionComponent<IStatementProps> = props => {
-  const { onQuery, onClose, onSave, script, id, active, mode } = props;
+  const { onQuery, onClose, onSave, script, id, active, mode, saved } = props;
   const { token } = useToken();
   const borderStyle =
     active && mode === 'flow'
@@ -66,6 +69,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
       }}
     >
       <Editor
+        saved={saved}
         id={id}
         script={script}
         onClose={onClose}

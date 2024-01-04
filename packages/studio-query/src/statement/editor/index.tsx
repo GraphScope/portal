@@ -1,13 +1,19 @@
 import * as React from 'react';
 import CypherEdit from '../../cypher-editor';
-import { Space, Button, Input, Flex } from 'antd';
+import { Space, Button, Input, Flex, Tooltip } from 'antd';
 import type { GlobalToken } from 'antd';
 import { PlayCircleOutlined, BookOutlined, CloseOutlined } from '@ant-design/icons';
 import { useRef } from 'react';
 import { IEditorProps } from '../typing';
 
-const Editor: React.FunctionComponent<IEditorProps & { isFetching: boolean; antdToken: GlobalToken }> = props => {
-  const { onClose, onQuery, script = `Match (n) return n limit 10`, onSave, id, isFetching, antdToken } = props;
+const Editor: React.FunctionComponent<
+  IEditorProps & {
+    isFetching: boolean;
+    antdToken: GlobalToken;
+    saved: boolean; // 是否是保存的语句
+  }
+> = props => {
+  const { onClose, onQuery, script = `Match (n) return n limit 10`, onSave, id, isFetching, antdToken, saved } = props;
   const editorRef = useRef<any>(null);
 
   const handleChange = async value => {
@@ -50,7 +56,15 @@ const Editor: React.FunctionComponent<IEditorProps & { isFetching: boolean; antd
             }
             onClick={handleQuery}
           />
-          {onSave && <Button type="text" icon={<BookOutlined onClick={handleSave} />} />}
+          {onSave && (
+            <Tooltip title={saved ? '更新语句' : '保存语句'}>
+              <Button
+                type="text"
+                icon={<BookOutlined style={saved ? { color: antdToken.colorPrimary } : {}}></BookOutlined>}
+                onClick={handleSave}
+              />
+            </Tooltip>
+          )}
           {onClose && <Button type="text" icon={<CloseOutlined onClick={handleClose} />} />}
         </Space>
       </Flex>

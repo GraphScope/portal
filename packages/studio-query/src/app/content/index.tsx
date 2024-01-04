@@ -20,7 +20,8 @@ const styles: Record<string, React.CSSProperties> = {
 const Content: React.FunctionComponent<IContentProps> = props => {
   const { createStatement, queryGraphData } = props;
   const { store, updateStore } = useContext();
-  const { activeId, mode, statements } = store;
+  const { activeId, mode, statements, savedStatements } = store;
+  const savedIds = savedStatements.map(item => item.id);
 
   const statementStyles =
     mode === 'tabs'
@@ -103,6 +104,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
               <Statement
                 mode={mode}
                 active={id === activeId}
+                saved={savedIds.indexOf(id) !== -1}
                 id={id}
                 script={script}
                 onQuery={queryGraphData}
