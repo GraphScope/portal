@@ -1,12 +1,13 @@
 import * as React from 'react';
 import CypherEdit from '../../cypher-editor';
 import { Space, Button, Input, Flex } from 'antd';
+import type { GlobalToken } from 'antd';
 import { PlayCircleOutlined, BookOutlined, CloseOutlined } from '@ant-design/icons';
 import { useRef } from 'react';
 import { IEditorProps } from '../typing';
 
-const Editor: React.FunctionComponent<IEditorProps> = props => {
-  const { onClose, onQuery, script = `Match (n) return n limit 10`, onSave, id } = props;
+const Editor: React.FunctionComponent<IEditorProps & { isFetching: boolean; antdToken: GlobalToken }> = props => {
+  const { onClose, onQuery, script = `Match (n) return n limit 10`, onSave, id, isFetching, antdToken } = props;
   const editorRef = useRef<any>(null);
 
   const handleChange = async value => {
@@ -37,7 +38,18 @@ const Editor: React.FunctionComponent<IEditorProps> = props => {
       <Flex justify="end" align="center">
         <Space align="end">
           {/* <TextArea autoSize={{ minRows: 1, maxRows: 20 }}></TextArea> */}
-          <Button type="text" icon={<PlayCircleOutlined />} onClick={handleQuery} />
+          <Button
+            type="text"
+            icon={
+              <PlayCircleOutlined
+                spin={isFetching}
+                style={{
+                  color: isFetching ? '#52c41a' : antdToken.colorPrimary,
+                }}
+              />
+            }
+            onClick={handleQuery}
+          />
           {onSave && <Button type="text" icon={<BookOutlined onClick={handleSave} />} />}
           {onClose && <Button type="text" icon={<CloseOutlined onClick={handleClose} />} />}
         </Space>

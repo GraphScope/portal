@@ -13,7 +13,7 @@ const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
   }, []);
   return (
     <div style={{ width: '100%' }}>
-      <Graphin data={data} layout={{ type: 'force' }} style={{ minHeight: '100px' }} />
+      <Graphin data={data} layout={{ type: 'force' }} style={{ minHeight: '500px' }} />
     </div>
   );
 };

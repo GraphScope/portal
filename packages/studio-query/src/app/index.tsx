@@ -8,31 +8,38 @@ import './index.less';
 import { useContext } from './context';
 import type { IStatement } from './context';
 import Sidebar from './sidebar';
-import { AppstoreOutlined, BgColorsOutlined, BranchesOutlined } from '@ant-design/icons';
+import {
+  RedditOutlined,
+  DeploymentUnitOutlined,
+  DatabaseOutlined,
+  BgColorsOutlined,
+  BranchesOutlined,
+  BookOutlined,
+} from '@ant-design/icons';
 import type { IStudioQueryProps } from './context';
 export const navbarOptions = [
   {
     id: 'saved',
     name: 'saved',
-    icon: <BgColorsOutlined />,
+    icon: <BookOutlined />,
     children: <SavedStatements />,
   },
   {
     id: 'recommended',
     name: 'recommended',
-    icon: <BranchesOutlined />,
+    icon: <DeploymentUnitOutlined />,
     children: <RecommendedStatements />,
   },
   {
     id: 'store-procedure',
     name: 'store-procedure',
-    icon: <AppstoreOutlined />,
+    icon: <DatabaseOutlined />,
     children: <StoreProcedure />,
   },
   {
     id: 'qwen',
     name: 'qwen',
-    icon: <AppstoreOutlined />,
+    icon: <RedditOutlined />,
     children: <GPTStatements />,
   },
 ];

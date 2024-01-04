@@ -1,15 +1,16 @@
 import React, { memo } from 'react';
-import { Space, Button, Segmented } from 'antd';
+import { Space, Button, Segmented, Skeleton } from 'antd';
 import TableView from './table';
 import JSONView from './json';
 import GraphView from './graph';
 
 interface IResultProps {
   data: any;
+  isFetching: boolean;
 }
 
 const Result: React.FunctionComponent<IResultProps> = props => {
-  const { data } = props;
+  const { data, isFetching } = props;
   const [state, updateState] = React.useState<{
     viewMode: 'graph' | 'table' | 'raw';
   }>({
@@ -40,14 +41,18 @@ const Result: React.FunctionComponent<IResultProps> = props => {
   return (
     <div>
       <Segmented options={['graph', 'table', 'raw']} onChange={handleChange} value={viewMode}></Segmented>
-      <div style={{ height: '100px', background: 'grey', position: 'relative' }}>
-        <div style={viewMode === 'graph' ? activeItemStyle : itemStyle}>
+      <div style={{ height: '500px', position: 'relative', overflowY: 'scroll' }}>
+        <div style={isFetching ? activeItemStyle : itemStyle}>
+          <Skeleton active />
+          <Skeleton active />
+        </div>
+        <div style={viewMode === 'graph' && !isFetching ? activeItemStyle : itemStyle}>
           <GraphView data={data} />
         </div>
-        <div style={viewMode === 'table' ? activeItemStyle : itemStyle}>
+        <div style={viewMode === 'table' && !isFetching ? activeItemStyle : itemStyle}>
           <TableView data={data} />
         </div>
-        <div style={viewMode === 'raw' ? activeItemStyle : itemStyle}>
+        <div style={viewMode === 'raw' && !isFetching ? activeItemStyle : itemStyle}>
           <JSONView data={data} />
         </div>
       </div>
