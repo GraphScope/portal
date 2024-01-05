@@ -5,6 +5,7 @@ import { useImmer } from 'use-immer';
 import { cloneDeep } from 'lodash';
 import Graphin, { Utils, Behaviors } from '@antv/graphin';
 import { useContext } from '../../../../valtio/createGraph';
+import { getLocalData } from '../../localStorage';
 const { ZoomCanvas } = Behaviors;
 const GraphIn = (props: { isAlert?: any; graphData?: any }) => {
   const { isAlert, graphData } = props;
@@ -13,16 +14,14 @@ const GraphIn = (props: { isAlert?: any; graphData?: any }) => {
   });
   const { store, updateStore } = useContext();
   const { nodeList, edgeList } = store;
-  console.log(nodeList, edgeList);
-  
   React.useEffect(() => {
     getVertexEdges();
   }, [nodeList,edgeList]);
   const getVertexEdges = async () => {
     const result = {
-      vertices: Object.values(cloneDeep(nodeList)),
-      edges: Object.values(cloneDeep(edgeList)),
-    };
+      vertices: Object.values(getLocalData('nodeList')),
+      edges: Object.values(getLocalData('edgeList')),
+    };    
     let nodes: { id: string; label: string; style: any }[] = [];
     let edge: { source: string; target: string; style: any; label: string }[] = [];
     let edge_: { source: string; target: string; style: any; label: string }[] = [];
