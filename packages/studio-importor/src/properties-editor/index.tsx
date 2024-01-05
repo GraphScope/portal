@@ -14,7 +14,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isM
     const [state, updateState] = useImmer<ImmerType>({
       selectedRows: [],
       selectedMapRowKeys: [],
-      configList: [],
+      configList: properties,
       mapfromfileList: [],
       proSelectKey: [],
       propertyOption: [],

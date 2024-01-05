@@ -6,11 +6,11 @@ import { useImmer } from 'use-immer';
 import { cloneDeep } from 'lodash';
 export type FieldType = {
   label?: string;
-  sourcenodelabel?: string;
-  targetnodelabek?: string;
+  src_label?: string;
+  dst_label?: string;
 };
-const CreateSchema = (props: { nodeEdge: any; isEdit: boolean; newActiveKey?: String; data?: any }) => {
-  const { nodeEdge, isEdit, newActiveKey, deleteNode, data } = props;
+const CreateSchema = (props) => {
+  const { nodeEdge, isEdit, newActiveKey, deleteNode, data ,option} = props;
   const [form] = Form.useForm();
   const [state, updateState] = useImmer({
     params: {},
@@ -23,22 +23,6 @@ const CreateSchema = (props: { nodeEdge: any; isEdit: boolean; newActiveKey?: St
   React.useEffect(() => {
     if (data) {
       form.setFieldsValue(data);
-      // const propertiesData = []
-      // let arr = []
-      // console.log(data?.properties);
-      
-      // data?.properties.map(item=>{
-      //   arr.push(  {
-      //     id: 1,
-      //     name: 'id',
-      //     type: 'string',
-      //     token: 'id',
-      //     primaryKey: true,
-      //   },)
-      // })
-      // updateState(draft => {
-      //   draft.properties = data?.properties;
-      // });
     }
   }, []);
   React.useEffect(() => {
@@ -58,7 +42,7 @@ const CreateSchema = (props: { nodeEdge: any; isEdit: boolean; newActiveKey?: St
   return (
     <>
       <Form
-        name="basic"
+        name={`${newActiveKey}`}
         form={form}
         layout="vertical"
         onValuesChange={(changedValues, allValues) => formValuesChange(changedValues, allValues)}
@@ -86,25 +70,25 @@ const CreateSchema = (props: { nodeEdge: any; isEdit: boolean; newActiveKey?: St
           <>
             <Form.Item<FieldType>
               label="Source Node Label"
-              name="sourcenodelabel"
+              name="src_label"
               tooltip=" "
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               rules={[{ required: true, message: '' }]}
               style={{ marginBottom: '0' }}
             >
-              <Select options={[]} disabled={isEdit} />
+              <Select options={option} disabled={isEdit} />
             </Form.Item>
             <Form.Item<FieldType>
               label="Target Node Labek"
-              name="targetnodelabek"
+              name="dst_label"
               tooltip=" "
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               rules={[{ required: true, message: '' }]}
               style={{ marginBottom: '0' }}
             >
-              <Select options={[]} disabled={isEdit} />
+              <Select options={option} disabled={isEdit} />
             </Form.Item>
           </>
         ) : null}

@@ -30,6 +30,9 @@ interface Istate {
 }
 const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
   const { graphData } = props;
+  const nodeRef = React.useRef([])
+  const edgeRef = React.useRef([])
+  const optionRef = React.useRef([])
   const { store, updateStore } = useContext();
   const { isAlert, nodeList, edgeList } = store;
   const params = useLocation().state;
@@ -42,98 +45,106 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
     graphData: graphData || [],
   });
   const { activeKey, nodeEdge, nodeitems, edgeitems } = state;
-  React.useEffect(()=>{
-    const data = cloneDeep(getLocalData('nodeList'))
-    let arr = []
-    Object.entries(data).map((key)=>{
-      arr.push(
+  React.useEffect(() => {
+    const data = cloneDeep(getLocalData('nodeList'));
+    let arr = [];
+    let nodearr = [];
+    Object.entries(data).map(key => {
+      arr.push({
+        label: key[1].label || 'undefine',
+        children: (
+          <CreateSchema
+            nodeEdge={nodeEdge}
+            isEdit={params == 'detail'}
+            newActiveKey={key[0]}
+            deleteNode={deleteNode}
+            data={key[1]}
+            option={optionRef.current}
+          />
+        ),
+        key: key[0],
+      });
+      nodearr.push({
+        value:key[1].label,
+        label:key[1].label,
+      });
+    });
+    optionRef.current = nodearr
+    updateState(draft => {
+      draft.nodeitems = arr;
+    });
+  }, []);
+  const add = () => {
+    if (nodeEdge == 'Node') {
+      const newActiveKey = uuidv4();
+      const node = [
+        ...nodeitems,
         {
-          label: key[1].label,
+          label: 'undefine',
           children: (
             <CreateSchema
               nodeEdge={nodeEdge}
               isEdit={params == 'detail'}
-              newActiveKey={key[0]}
+              newActiveKey={newActiveKey}
               deleteNode={deleteNode}
-              data = {key[1]}
             />
           ),
-          key: key[0],
-        }
-      )
-    })
-    console.log(arr);
-    
-    updateState(draft=>{
-      draft.nodeitems = arr
-    })
-  },[])
-  const add = () => {
-    if (nodeEdge == 'Node') {
-      const newActiveKey = uuidv4();
+          key: newActiveKey,
+        },
+      ]
       updateState(draft => {
-        draft.nodeitems = [
-          ...nodeitems,
-          {
-            label: 'undefine',
-            children: (
-              <CreateSchema
-                nodeEdge={nodeEdge}
-                isEdit={params == 'detail'}
-                newActiveKey={newActiveKey}
-                deleteNode={deleteNode}
-              />
-            ),
-            key: newActiveKey,
-          },
-        ];
+        draft.nodeitems = node;
         draft.activeKey = newActiveKey;
       });
+      nodeRef.current = node
     } else {
       const newActiveKey = uuidv4();
+      const node = [
+        ...edgeitems,
+        {
+          label: 'undefine',
+          children: (
+            <CreateSchema
+              nodeEdge={nodeEdge}
+              isEdit={params == 'detail'}
+              newActiveKey={newActiveKey}
+              deleteNode={deleteNode}
+              option={optionRef.current}
+            />
+          ),
+          key: newActiveKey,
+        },
+      ]
       updateState(draft => {
-        draft.edgeitems = [
-          ...edgeitems,
-          {
-            label: 'undefine',
-            children: (
-              <CreateSchema
-                nodeEdge={nodeEdge}
-                isEdit={params == 'detail'}
-                newActiveKey={newActiveKey}
-                deleteNode={deleteNode}
-              />
-            ),
-            key: newActiveKey,
-          },
-        ];
+        draft.edgeitems = node;
         draft.activeKey = newActiveKey;
       });
+      edgeRef.current = node
     }
   };
   // del node or edge
   const deleteNode = (val: string, key: string) => {
-    let data = val == 'Node' ? nodeitems : edgeitems;
+    let data = val == 'Node' ? nodeRef.current : edgeRef.current;
     const newPanes = data.filter(pane => pane.key !== key);
     if (val == 'Node') {
-      const data = cloneDeep(getLocalData('nodeList'))
-      Object.entries(data).map((keys,i)=>{
-        if(keys[0] == key){
-          delete data[key]
+      const nodedata = cloneDeep(getLocalData('nodeList'));
+      Object.entries(nodedata).map((keys, i) => {
+        if (keys[0] == key) {
+          delete nodedata[key];
         }
-      })
-      setLocalData('nodeList',data)
+      });
+      setLocalData('nodeList', nodedata);
       updateState(draft => {
         draft.nodeitems = newPanes;
       });
     } else {
-      const data = cloneDeep(getLocalData('edgeList'))
-      Object.entries(data).map((keys,i)=>{
-        if(keys[0] == key){
-          delete data[key]
+      const edgedata = cloneDeep(getLocalData('edgeList'));
+      Object.entries(edgedata).map((keys, i) => {
+        if (keys[0] == key) {
+          delete edgedata[key];
         }
-      })
-      setLocalData('nodeList',data)
+      });
+      setLocalData('edgeList', edgedata);
       updateState(draft => {
         draft.edgeitems = newPanes;
       });
@@ -148,7 +159,38 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
     updateState(draft => {
       draft.nodeEdge = e.target.value;
     });
+    const data = cloneDeep(getLocalData('edgeList'));
+    let arr = [];
+    Object.entries(data).map(key => {
+      arr.push({
+        label: key[1].label,
+        children: (
+          <CreateSchema
+            nodeEdge={e.target.value}
+            isEdit={params == 'detail'}
+            newActiveKey={key[0]}
+            deleteNode={deleteNode}
+            data={key[1]}
+          />
+        ),
+        key: key[0],
+      });
+    });
+    updateState(draft => {
+      draft.edgeitems = arr;
+    });
+    const nodedata = cloneDeep(getLocalData('nodeList'));
+    let nodearr = [];
+    Object.entries(nodedata).map(key => {
+      nodearr.push({
+        value:key[1].label,
+        label:key[1].label,
+      });
+    });
+    optionRef.current = nodearr
   };
+  // graphin 
+  
   return (
     <>
       {isAlert || params == 'detail' ? (
@@ -205,22 +247,22 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
             <div>
               <div style={{ display: nodeEdge == 'Node' ? '' : 'none' }}>
                 <Tabs
-                  defaultActiveKey={'node0'}
+                  // defaultActiveKey={'node0'}
                   tabBarStyle={{ borderLeft: 0 }}
                   tabPosition="left"
                   items={nodeitems}
-                  // activeKey={activeKey}
-                  // onChange={onChange}
+                  activeKey={activeKey}
+                  onChange={onChange}
                 />
               </div>
               <div style={{ display: nodeEdge !== 'Node' ? '' : 'none' }}>
                 <Tabs
-                  defaultActiveKey={'edge0'}
+                  // defaultActiveKey={'edge0'}
                   tabBarStyle={{ borderLeft: 0 }}
                   tabPosition="left"
                   items={edgeitems}
-                  // activeKey={activeKey}
-                  // onChange={onChange}
+                  activeKey={activeKey}
+                  onChange={onChange}
                 />
               </div>
             </div>
@@ -235,7 +277,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
           </div>
         </Col>
         <Col span={10}>
-          <GraphIn isAlert={params == 'detail'} />
+          <GraphIn isAlert={params == 'detail'} graphData={[]}/>
         </Col>
       </Row>
       {params == 'detail' ? null : (
