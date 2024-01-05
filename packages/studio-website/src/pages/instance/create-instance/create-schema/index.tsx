@@ -4,6 +4,7 @@ import { setLocalData, getLocalData } from '../../localStorage';
 import PropertiesEditor from '../../../../../../studio-importor/src/properties-editor';
 import { useImmer } from 'use-immer';
 import { cloneDeep } from 'lodash';
+import { useContext } from '../../../../valtio/createGraph';
 export type FieldType = {
   label?: string;
   src_label?: string;
@@ -12,6 +13,7 @@ export type FieldType = {
 const CreateSchema = (props) => {
   const { nodeEdge, isEdit, newActiveKey, deleteNode, data ,option} = props;
   const [form] = Form.useForm();
+  const { store, updateStore } = useContext();
   const [state, updateState] = useImmer({
     params: {},
     properties: [],
@@ -33,10 +35,16 @@ const CreateSchema = (props) => {
       const getData = cloneDeep(getLocalData('nodeList'));
       getData[newActiveKey] = { ...form.getFieldsValue(), properties: propertyRef.current.getValues() };
       setLocalData('nodeList', getData);
+      updateStore(draft=>{
+        draft.nodeList = getData
+      })
     } else {
       const getData = cloneDeep(getLocalData('edgeList'));
       getData[newActiveKey] = { ...form.getFieldsValue(), properties: propertyRef.current.getValues() };
       setLocalData('edgeList', getData);
+      updateStore(draft=>{
+        draft.edgeList = getData
+      })
     }
   };
   return (
@@ -77,7 +85,7 @@ const CreateSchema = (props) => {
               rules={[{ required: true, message: '' }]}
               style={{ marginBottom: '0' }}
             >
-              <Select options={option} disabled={isEdit} />
+              <Select options={store?.option} disabled={isEdit} />
             </Form.Item>
             <Form.Item<FieldType>
               label="Target Node Labek"
@@ -88,7 +96,7 @@ const CreateSchema = (props) => {
               rules={[{ required: true, message: '' }]}
               style={{ marginBottom: '0' }}
             >
-              <Select options={option} disabled={isEdit} />
+              <Select options={store?.option} disabled={isEdit} />
             </Form.Item>
           </>
         ) : null}

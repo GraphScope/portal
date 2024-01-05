@@ -4,20 +4,24 @@ import type { UploadProps } from 'antd';
 import { useImmer } from 'use-immer';
 import { cloneDeep } from 'lodash';
 import Graphin, { Utils, Behaviors } from '@antv/graphin';
-import { setLocalData, getLocalData } from '../../localStorage';
+import { useContext } from '../../../../valtio/createGraph';
 const { ZoomCanvas } = Behaviors;
 const GraphIn = (props: { isAlert?: any; graphData?: any }) => {
   const { isAlert, graphData } = props;
   const [state, updateState] = useImmer({
     graphData: graphData || [],
   });
+  const { store, updateStore } = useContext();
+  const { nodeList, edgeList } = store;
+  console.log(nodeList, edgeList);
+  
   React.useEffect(() => {
     getVertexEdges();
-  }, [getLocalData('nodeList'),getLocalData('edgeList')]);
+  }, [nodeList,edgeList]);
   const getVertexEdges = async () => {
     const result = {
-      vertices: Object.values(cloneDeep(getLocalData('nodeList'))),
-      edges: Object.values(cloneDeep(getLocalData('edgeList'))),
+      vertices: Object.values(cloneDeep(nodeList)),
+      edges: Object.values(cloneDeep(edgeList)),
     };
     let nodes: { id: string; label: string; style: any }[] = [];
     let edge: { source: string; target: string; style: any; label: string }[] = [];
@@ -38,6 +42,7 @@ const GraphIn = (props: { isAlert?: any; graphData?: any }) => {
       });
     });
     result?.edges?.map(e => {
+      if (e['src_label'] !== e['dst_label']) {
       edge_.push({
         source: e['src_label'],
         target: e['dst_label'],
@@ -46,9 +51,32 @@ const GraphIn = (props: { isAlert?: any; graphData?: any }) => {
           keyshape: {
             lineWidth: 1,
             startArrow: false,
-          }
+          },
         },
       });
+    } else {
+        edge_.push({
+            source: e['src_label'],
+            target: e['dst_label'],
+            label: e.label,
+            style: {
+                keyshape: {
+                    lineWidth: 1,
+                    endArrow: {
+                        path: 'M 0,1 L -3,7 L 3,6 Z',
+                        fill: '#dedede',
+                    },
+                    startArrow: false,
+                },
+                // animate: {
+                //     type: 'circle-running',
+                //     color: 'green',
+                //     repeat: true,
+                //     duration: 4000,
+                // },
+            },
+        })
+    }
     });
     let ed = Utils.processEdges([...edge, ...edge_], { poly: 30, loop: 20 });
     ed.forEach((edge, index) => {

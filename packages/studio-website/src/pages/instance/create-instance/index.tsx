@@ -8,7 +8,6 @@ import { setLocalData, getLocalData } from '../localStorage';
 import { useContext } from '../../../valtio/createGraph';
 import GraphIn from './graph-in';
 import CreateSchema from './create-schema';
-
 interface ICreateInstanceProps {
   graphData?: any;
   isAlert?: boolean;
@@ -32,9 +31,8 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
   const { graphData } = props;
   const nodeRef = React.useRef([])
   const edgeRef = React.useRef([])
-  const optionRef = React.useRef([])
   const { store, updateStore } = useContext();
-  const { isAlert, nodeList, edgeList } = store;
+  const { isAlert, nodeList, edgeList} = store;
   const params = useLocation().state;
 
   const [state, updateState] = useImmer<Istate>({
@@ -47,8 +45,8 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
   const { activeKey, nodeEdge, nodeitems, edgeitems } = state;
   React.useEffect(() => {
     const data = cloneDeep(getLocalData('nodeList'));
-    let arr = [];
-    let nodearr = [];
+    let arr: { label: string; children: any; key: string; }[] | { label: any; children: JSX.Element; key: string; }[] = [];
+    let nodearr:{value:string;label:string;}[] = [];
     Object.entries(data).map(key => {
       arr.push({
         label: key[1].label || 'undefine',
@@ -59,7 +57,6 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
             newActiveKey={key[0]}
             deleteNode={deleteNode}
             data={key[1]}
-            option={optionRef.current}
           />
         ),
         key: key[0],
@@ -69,11 +66,43 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
         label:key[1].label,
       });
     });
-    optionRef.current = nodearr
     updateState(draft => {
       draft.nodeitems = arr;
     });
-  }, []);
+    updateStore(draft => {
+      draft.option = nodearr;
+    });
+  }, [nodeList]);
+  React.useEffect(() => {
+    const data = cloneDeep(edgeList);
+    let arr: { label: string; children: any; key: string; }[] | { label: any; children: JSX.Element; key: string; }[] = [];
+    Object.entries(data).map(key => {
+      arr.push({
+        label: key[1].label || 'undefine',
+        children: (
+          <CreateSchema
+            nodeEdge={nodeEdge}
+            isEdit={params == 'detail'}
+            newActiveKey={key[0]}
+            deleteNode={deleteNode}
+            data={key[1]}
+          />
+        ),
+        key: key[0],
+      });
+    });
+    const nodedata = cloneDeep(getLocalData('nodeList'));
+    let nodearr: { value: any; label: any; }[] = [];
+    Object.entries(nodedata).map(key => {
+      nodearr.push({
+        value:key[1].label,
+        label:key[1].label,
+      });
+    });
+    updateState(draft => {
+      draft.edgeitems = arr;
+    });
+  }, [edgeList]);
   const add = () => {
     if (nodeEdge == 'Node') {
       const newActiveKey = uuidv4();
@@ -109,7 +138,6 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
               isEdit={params == 'detail'}
               newActiveKey={newActiveKey}
               deleteNode={deleteNode}
-              option={optionRef.current}
             />
           ),
           key: newActiveKey,
@@ -137,6 +165,9 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
       updateState(draft => {
         draft.nodeitems = newPanes;
       });
+      updateStore(draft => {
+        draft.nodeList = nodedata;
+      });
     } else {
       const edgedata = cloneDeep(getLocalData('edgeList'));
       Object.entries(edgedata).map((keys, i) => {
@@ -147,6 +178,9 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
       setLocalData('edgeList', edgedata);
       updateState(draft => {
         draft.edgeitems = newPanes;
+      });
+      updateStore(draft => {
+        draft.edgeList = edgedata;
       });
     }
   };
@@ -159,35 +193,6 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
     updateState(draft => {
       draft.nodeEdge = e.target.value;
     });
-    const data = cloneDeep(getLocalData('edgeList'));
-    let arr = [];
-    Object.entries(data).map(key => {
-      arr.push({
-        label: key[1].label,
-        children: (
-          <CreateSchema
-            nodeEdge={e.target.value}
-            isEdit={params == 'detail'}
-            newActiveKey={key[0]}
-            deleteNode={deleteNode}
-            data={key[1]}
-          />
-        ),
-        key: key[0],
-      });
-    });
-    updateState(draft => {
-      draft.edgeitems = arr;
-    });
-    const nodedata = cloneDeep(getLocalData('nodeList'));
-    let nodearr = [];
-    Object.entries(nodedata).map(key => {
-      nodearr.push({
-        value:key[1].label,
-        label:key[1].label,
-      });
-    });
-    optionRef.current = nodearr
   };
   // graphin 
   

@@ -13,6 +13,7 @@ export type IStore<T> = T & {
   mode: 'flow' | 'tabs';
   nodeList: [];
   edgeList: [];
+  option:[],
   isAlert:boolean;
 };
 const initialStore: IStore<{}> = {
@@ -34,6 +35,7 @@ const initialStore: IStore<{}> = {
   mode: 'tabs',
   nodeList: [],
   edgeList: [],
+  option:[],
   isAlert:false
 };
 
