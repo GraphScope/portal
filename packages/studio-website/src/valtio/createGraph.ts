@@ -14,6 +14,7 @@ export type IStore<T> = T & {
   nodeItems: {};
   edgeItems: {};
   isChecked:string;
+  inputvalues:string;
 };
 const initialStore: IStore<{}> = {
   nodeList: [],
@@ -27,7 +28,8 @@ const initialStore: IStore<{}> = {
   properties:[],
   nodeItems: {},
   edgeItems: {},
-  isChecked:''
+  isChecked:'',
+  inputvalues:''
 };
 
 type ContextType<T> = {

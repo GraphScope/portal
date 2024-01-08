@@ -12,7 +12,7 @@ const Lists: React.FunctionComponent<IListsProps> = _props => {
   const [form] = Form.useForm();
   const { store, updateStore } = useContext();
   const checkRef = React.useRef();
-  const { isAlert, isChecked } = store;
+  const { isAlert, isChecked ,inputvalues} = store;
   const onFinish = () => {
     form.validateFields().then(res => {
       console.log(res);
@@ -65,7 +65,7 @@ const Lists: React.FunctionComponent<IListsProps> = _props => {
           wrapperCol={{ span: 8 }}
           rules={[{ required: true, message: '' }]}
         >
-          <Input />
+          <Input defaultValue={inputvalues}/>
         </Form.Item>
 
         <Form.Item<FieldType>
@@ -114,6 +114,7 @@ const Lists: React.FunctionComponent<IListsProps> = _props => {
           <Button
             type="primary"
             onClick={() => {
+              updateStore(dreaft=>dreaft.inputvalues = form.getFieldsValue().inputname);
               form.getFieldsValue().inputname ? history.push('/instance/create') : form.validateFields();
             }}
           >
