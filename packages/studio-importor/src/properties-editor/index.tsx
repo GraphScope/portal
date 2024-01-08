@@ -6,9 +6,9 @@ import { ImmerType, IndexData, PropertyList, ConfigColumns } from './interface';
 import { EditType, IconFont } from './mapdata';
 import Editor from './editor';
 
-const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isMapFromFile?:boolean;}> = memo(
+const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isMapFromFile?:boolean;tableType:string[];propertyType?:{type:string;}[]}> = memo(
   forwardRef((props, ref) => {
-    const { properties, onChange ,isMapFromFile} = props;
+    const { properties, onChange ,isMapFromFile,tableType,propertyType} = props;
     const inputRef = useRef();
     // 使用useImmer创建一个可变状态对象
     const [state, updateState] = useImmer<ImmerType>({
@@ -36,9 +36,11 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isM
       let modifiedArray: any = [];
       let pOption: { label: string; value: string }[] = [];
       data?.map(item => {
-        option.push({ label: item.type, value: item?.type });
         pOption.push({ label: item.token, value: item?.token });
         modifiedArray.push({ ...item, disable: true });
+      });
+      cloneDeep(propertyType)?.map(item => {
+        option.push({ label: item.type, value: item?.type });
       });
       updateState(draft => {
         draft.mapfromfileList = modifiedArray;
@@ -50,7 +52,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isM
     const nodeConfigColumns: ConfigColumns[] = [
       {
         title: 'Name',
-        width: '40%',
+        // width: '40%',
         dataIndex: 'name',
         key: 'name',
         editable: true,
@@ -67,7 +69,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isM
       {
         title: 'Type',
         dataIndex: 'type',
-        width: '30%',
+        // width: '30%',
         key: 'type',
         editable: true,
         editorConfig: (record: IndexData) => {
@@ -83,7 +85,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isM
       {
         title: 'Column',
         dataIndex: 'token',
-        width: '25%',
+        // width: '25%',
         key: 'token',
         editable: true,
         editorConfig: (record: IndexData) => {
@@ -277,7 +279,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isM
     };
     const propertyConfigParams = {
       dataSource: configList,
-      columns: nodeConfigColumns,
+      columns: nodeConfigColumns?.filter(item=>tableType.includes(item?.title)),
       bordered: true,
       pagination: false,
       rowSelection: rowSelection,

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Form, Input, Select, Button } from 'antd';
 import { setLocalData, getLocalData } from '../../localStorage';
 import PropertiesEditor from '../../../../../../studio-importor/src/properties-editor';
-import { useImmer } from 'use-immer';
 import { cloneDeep } from 'lodash';
 import { useContext } from '../../../../valtio/createGraph';
 export type FieldType = {
@@ -10,14 +9,11 @@ export type FieldType = {
   src_label?: string;
   dst_label?: string;
 };
-const CreateSchema = (props) => {
-  const { nodeEdge, isEdit, newActiveKey, deleteNode, data ,option} = props;
+const CreateSchema = props => {
+  const { nodeEdge, isEdit, newActiveKey, deleteNode, data, option } = props;
   const [form] = Form.useForm();
   const { store, updateStore } = useContext();
-  const [state, updateState] = useImmer({
-    params: {},
-    properties: [],
-  });
+  const { properties } =store
   const propertyRef = React.useRef();
   const formValuesChange = (changedValues: any, allValues: any) => {
     formChange();
@@ -29,22 +25,22 @@ const CreateSchema = (props) => {
   }, []);
   React.useEffect(() => {
     formChange();
-  }, [state.properties]);
+  }, [properties]);
   const formChange = () => {
     if (nodeEdge == 'Node') {
       const getData = cloneDeep(getLocalData('nodeList'));
       getData[newActiveKey] = { ...form.getFieldsValue(), properties: propertyRef.current.getValues() };
       setLocalData('nodeList', getData);
-      updateStore(draft=>{
-        draft.nodeList = getData
-      })
+      updateStore(draft => {
+        draft.nodeList = getData;
+      });
     } else {
       const getData = cloneDeep(getLocalData('edgeList'));
       getData[newActiveKey] = { ...form.getFieldsValue(), properties: propertyRef.current.getValues() };
       setLocalData('edgeList', getData);
-      updateStore(draft=>{
-        draft.edgeList = getData
-      })
+      updateStore(draft => {
+        draft.edgeList = getData;
+      });
     }
   };
   return (
@@ -104,11 +100,13 @@ const CreateSchema = (props) => {
       <PropertiesEditor
         ref={propertyRef}
         properties={data?.properties || []}
+        propertyType={[{type: 'string'},{type: 'datetime'}]}
         onChange={values => {
-          updateState(draft => {
+          updateStore(draft => {
             draft.properties = values;
           });
         }}
+        tableType={['Name', 'Type', 'ID']} // all['Name', 'Column', 'Type', 'ID']
       />
     </>
   );

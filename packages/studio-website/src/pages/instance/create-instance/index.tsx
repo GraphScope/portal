@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Card, Radio, Tabs, Steps, Alert, Row, Col, Space, ConfigProvider } from 'antd';
+import { Button, Card, Radio, Tabs, Steps, Alert, Row, Col, Space, Tooltip } from 'antd';
 import { useImmer } from 'use-immer';
 import { useLocation, history } from 'umi';
 import { v4 as uuidv4 } from 'uuid';
@@ -23,38 +23,34 @@ interface Istate {
     children: any;
     key: string;
   }[];
-  nodeActiveKey: string;
-  edgeActiveKey: string;
-  nodeEdge: string;
-  graphData: [];
 }
 const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
-  const { graphData } = props;
   const nodeRef = React.useRef([]);
   const edgeRef = React.useRef([]);
   const { store, updateStore } = useContext();
-  const { isAlert, nodeList, edgeList } = store;
+  const { isAlert, nodeList, edgeList ,nodeEdge,nodeActiveKey,edgeActiveKey} = store;
   const params = useLocation().state;
   const [state, updateState] = useImmer<Istate>({
     nodeitems: [],
     edgeitems: [],
-    nodeActiveKey: '0',
-    edgeActiveKey: '0',
-    nodeEdge: 'Node',
-    graphData: graphData || [],
   });
-  const { nodeActiveKey, edgeActiveKey, nodeEdge, nodeitems, edgeitems } = state;
-  React.useEffect(()=>{
-    onChange(nodeitems[0]?.key)
-  },[])
+  const { nodeitems, edgeitems } = state;
+  React.useEffect(() => {
+    onChange(nodeitems[0]?.key);
+  }, []);
   React.useEffect(() => {
     const data = cloneDeep(getLocalData('nodeList'));
-    let arr: { label: string; children: any; key: string }[] | { label: any; children: JSX.Element; key: string }[] =
-      [];
+    let arr: { label: any; children: any; key: string }[] | { label: any; children: JSX.Element; key: string }[] = [];
     let nodearr: { value: string; label: string }[] = [];
     Object.entries(data).map(key => {
       arr.push({
-        label: key[1].label || 'undefine',
+        label: (
+          <div style={{ width: '60px', overflow: 'hidden' }}>
+            <Tooltip placement="topLeft" title={key[1].label || 'undefine'}>
+              {key[1].label || 'undefine'}
+            </Tooltip>
+          </div>
+        ),
         children: (
           <CreateSchema
             nodeEdge={nodeEdge}
@@ -78,7 +74,9 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
       draft.option = nodearr;
     });
   }, [nodeList]);
-  React.useEffect(() => { edgeChange('Edge') }, [edgeList]);
+  React.useEffect(() => {
+    edgeChange('Edge');
+  }, [edgeList]);
   const add = () => {
     if (nodeEdge == 'Node') {
       const newActiveKey = uuidv4();
@@ -99,6 +97,8 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
       ];
       updateState(draft => {
         draft.nodeitems = node;
+      });
+      updateStore(draft => {
         draft.nodeActiveKey = newActiveKey;
       });
       nodeRef.current = node;
@@ -121,6 +121,8 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
       ];
       updateState(draft => {
         draft.edgeitems = node;
+      });
+      updateStore(draft => {
         draft.edgeActiveKey = newActiveKey;
       });
       edgeRef.current = node;
@@ -162,31 +164,36 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
   };
   const onChange = (key: string) => {
     if (nodeEdge == 'Node') {
-      updateState(draft => {
+      updateStore(draft => {
         draft.nodeActiveKey = key;
       });
     } else {
-      updateState(draft => {
+      updateStore(draft => {
         draft.edgeActiveKey = key;
       });
     }
   };
   const nodeEdgeChange = (e: { target: { value: string } }): void => {
-    updateState(draft => {
+    updateStore(draft => {
       draft.nodeEdge = e.target.value;
     });
-    edgeChange(e.target.value)
-    updateState(draft => {
+    edgeChange(e.target.value);
+    updateStore(draft => {
       draft.edgeActiveKey = edgeitems[0]?.key;
     });
   };
-  const edgeChange = (val) => {
+  const edgeChange = val => {
     const data = cloneDeep(getLocalData('edgeList'));
-    let arr: { label: string; children: any; key: string }[] | { label: any; children: JSX.Element; key: string }[] =
-      [];
+    let arr: { label: any; children: any; key: string }[] | { label: any; children: JSX.Element; key: string }[] = [];
     Object.entries(data).map(key => {
       arr.push({
-        label: key[1].label || 'undefine',
+        label: (
+          <div style={{ width: '60px', overflow: 'hidden' }}>
+            <Tooltip placement="topLeft" title={key[1].label || 'undefine'}>
+              {key[1].label || 'undefine'}
+            </Tooltip>
+          </div>
+        ),
         children: (
           <CreateSchema
             nodeEdge={val}

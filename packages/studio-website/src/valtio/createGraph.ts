@@ -2,41 +2,26 @@ import { proxy, useSnapshot } from "valtio";
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 
 export type IStore<T> = T & {
-  graphName: string;
-  // nav
-  nav: 'save' | 'info' | 'gpt' | 'store_procedure';
-  /** 单击选中的语句,如果是 fLow 模式，则滚动定位到这条语句 ，如果是 Tabs 模式，则直接展示*/
-  activeId: string;
-  /** 查询的语句 */
-  statements: IStatement[];
-  /** 展示的模式 */
-  mode: 'flow' | 'tabs';
   nodeList: [];
   edgeList: [];
-  option:[],
+  option:{value:string;label:string;}[],
   isAlert:boolean;
+  nodeEdge:string;
+  nodeActiveKey:string;
+  edgeActiveKey: string;
+  graphData:any;
+  properties:any;
 };
 const initialStore: IStore<{}> = {
-  graphName: 'movie',
-  nav: 'save',
-  activeId: 'query-1',
-  statements: [
-    {
-      id: 'query-1',
-      name: 'query-1',
-      script: 'Match (n) return n limit 10',
-    },
-    {
-      id: 'query-2',
-      name: 'query-2',
-      script: 'Match (n) return n limit 30',
-    },
-  ],
-  mode: 'tabs',
   nodeList: [],
   edgeList: [],
   option:[],
-  isAlert:false
+  isAlert:false,
+  nodeEdge:'Node',
+  nodeActiveKey:'0',
+  edgeActiveKey: '0',
+  graphData:[],
+  properties:[]
 };
 
 type ContextType<T> = {

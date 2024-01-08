@@ -1,19 +1,14 @@
 import * as React from 'react';
 import { Button, Space, Upload } from 'antd';
 import type { UploadProps } from 'antd';
-import { useImmer } from 'use-immer';
-import { cloneDeep } from 'lodash';
 import Graphin, { Utils, Behaviors } from '@antv/graphin';
 import { useContext } from '../../../../valtio/createGraph';
 import { getLocalData } from '../../localStorage';
 const { ZoomCanvas } = Behaviors;
 const GraphIn = (props: { isAlert?: any; graphData?: any }) => {
-  const { isAlert, graphData } = props;
-  const [state, updateState] = useImmer({
-    graphData: graphData || [],
-  });
+  const { isAlert } = props;
   const { store, updateStore } = useContext();
-  const { nodeList, edgeList } = store;
+  const { nodeList, edgeList ,graphData} = store;
   React.useEffect(() => {
     getVertexEdges();
   }, [nodeList,edgeList]);
@@ -87,7 +82,7 @@ const GraphIn = (props: { isAlert?: any; graphData?: any }) => {
       };
     });
     let arr = { nodes, edges: ed };
-    updateState(draft => {
+    updateStore(draft => {
       draft.graphData = arr;
     });
   };
@@ -132,7 +127,7 @@ const GraphIn = (props: { isAlert?: any; graphData?: any }) => {
           </Space>
         ) : null}
       </div>
-      <Graphin data={state.graphData} layout={{ type: 'circular' }} fitView fitCenter style={{ height: '60vh' }}>
+      <Graphin data={graphData} layout={{ type: 'circular' }} fitView fitCenter style={{ height: '60vh' }}>
         <ZoomCanvas enableOptimize minZoom={0.5} />
       </Graphin>
     </div>
