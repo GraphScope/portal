@@ -11,10 +11,16 @@ export type FieldType = {
 const Lists: React.FunctionComponent<IListsProps> = _props => {
   const [form] = Form.useForm();
   const { store, updateStore } = useContext();
-  const { isAlert } = store;
+  const checkRef = React.useRef();
+  const { isAlert, isChecked } = store;
   const onFinish = () => {
     form.validateFields().then(res => {
       console.log(res);
+    });
+  };
+  const cardClick = (val: string) => {
+    updateStore(draft => {
+      draft.isChecked = val;
     });
   };
   return (
@@ -69,54 +75,29 @@ const Lists: React.FunctionComponent<IListsProps> = _props => {
           rules={[{ required: true, message: '' }]}
         >
           <Row>
-            <Col span={6}>
-              <Card style={{ margin: '12px 12px 0 0' }} className={styles['card']}>
-                <div style={{ display: 'flex', justifyContent: 'start' }}>
-                  <Avatar shape="square" size={45} />
-                  <div style={{ marginLeft: '12px', verticalAlign: 'middle' }}>
-                    <h3 style={{ margin: '0px' }}>instance</h3>
-                    <span>引擎介绍</span>
-                  </div>
-                </div>
-                <div className={styles['triangle']}></div>
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card style={{ margin: '12px 12px 0 0' }} className={styles['card']}>
-                <div style={{ display: 'flex', justifyContent: 'start' }}>
-                  <Avatar shape="square" size={45} />
-                  <div style={{ marginLeft: '12px', verticalAlign: 'middle' }}>
-                    <h3 style={{ margin: '0px' }}>instance</h3>
-                    <span>引擎介绍</span>
-                  </div>
-                </div>
-                <div className={styles['triangle']}></div>
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card style={{ margin: '12px 12px 0 0' }} className={styles['card']}>
-                <div style={{ display: 'flex', justifyContent: 'start' }}>
-                  <Avatar shape="square" size={45} />
-                  <div style={{ marginLeft: '12px', verticalAlign: 'middle' }}>
-                    <h3 style={{ margin: '0px' }}>instance</h3>
-                    <span>引擎介绍</span>
-                  </div>
-                </div>
-                <div className={styles['triangle']}></div>
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card style={{ margin: '12px 12px 0 0' }} className={styles['card']}>
-                <div style={{ display: 'flex', justifyContent: 'start' }}>
-                  <Avatar shape="square" size={45} />
-                  <div style={{ marginLeft: '12px', verticalAlign: 'middle' }}>
-                    <h3 style={{ margin: '0px' }}>instance</h3>
-                    <span>引擎介绍</span>
-                  </div>
-                </div>
-                <div className={styles['triangle']}></div>
-              </Card>
-            </Col>
+            {
+              ['1','2','3','4','5'].map(item=>{
+                return(
+                  <Col span={6}>
+                  <Card
+                    style={{ margin: '12px 12px 0 0' }}
+                    className={isChecked == item ? styles['cards'] : ''}
+                    onClick={() => cardClick(item)}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'start' }}>
+                      <Avatar shape="square" size={45} />
+                      <div style={{ marginLeft: '12px', verticalAlign: 'middle' }}>
+                        <h3 style={{ margin: '0px' }}>instance</h3>
+                        <span>引擎介绍{item}</span>
+                      </div>
+                    </div>
+                    <div className={styles['triangle']}></div>
+                  </Card>
+                </Col>
+                )
+              })
+            }
+
           </Row>
         </Form.Item>
       </Form>
@@ -139,7 +120,7 @@ const Lists: React.FunctionComponent<IListsProps> = _props => {
             下一页
           </Button>
         </Space>
-      ):null}
+      ) : null}
     </ConfigProvider>
   );
 };

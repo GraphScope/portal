@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Form, Input, Select, Button } from 'antd';
-import { setLocalData, getLocalData } from '../../localStorage';
 import PropertiesEditor from '../../../../../../studio-importor/src/properties-editor';
 import { cloneDeep } from 'lodash';
 import { useContext } from '../../../../valtio/createGraph';
@@ -13,7 +12,7 @@ const CreateSchema = props => {
   const { nodeEdge, isEdit, newActiveKey, deleteNode, data, option } = props;
   const [form] = Form.useForm();
   const { store, updateStore } = useContext();
-  const { properties } =store
+  const { properties, nodeItems, edgeItems } = store;
   const propertyRef = React.useRef();
   const formValuesChange = (changedValues: any, allValues: any) => {
     formChange();
@@ -28,25 +27,22 @@ const CreateSchema = props => {
   }, [properties]);
   const formChange = () => {
     if (nodeEdge == 'Node') {
-      const getData = cloneDeep(getLocalData('nodeList'));
+      const getData = cloneDeep(nodeItems);
       getData[newActiveKey] = { ...form.getFieldsValue(), properties: propertyRef.current.getValues() };
-      setLocalData('nodeList', getData);
       updateStore(draft => {
-        draft.nodeList = getData;
+        draft.nodeItems = getData;
       });
     } else {
-      const getData = cloneDeep(getLocalData('edgeList'));
+      const getData = cloneDeep(edgeItems);
       getData[newActiveKey] = { ...form.getFieldsValue(), properties: propertyRef.current.getValues() };
-      setLocalData('edgeList', getData);
       updateStore(draft => {
-        draft.edgeList = getData;
+        draft.edgeItems = getData;
       });
     }
   };
   return (
     <>
       <Form
-        name={`${newActiveKey}`}
         form={form}
         layout="vertical"
         onValuesChange={(changedValues, allValues) => formValuesChange(changedValues, allValues)}
@@ -100,7 +96,7 @@ const CreateSchema = props => {
       <PropertiesEditor
         ref={propertyRef}
         properties={data?.properties || []}
-        propertyType={[{type: 'string'},{type: 'datetime'}]}
+        propertyType={[{ type: 'string' }, { type: 'datetime' }]}
         onChange={values => {
           updateStore(draft => {
             draft.properties = values;

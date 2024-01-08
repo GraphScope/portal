@@ -7,10 +7,13 @@ export type IStore<T> = T & {
   option:{value:string;label:string;}[],
   isAlert:boolean;
   nodeEdge:string;
-  nodeActiveKey:string;
-  edgeActiveKey: string;
+  nodeActiveKey:null;
+  edgeActiveKey: null;
   graphData:any;
   properties:any;
+  nodeItems: {};
+  edgeItems: {};
+  isChecked:string;
 };
 const initialStore: IStore<{}> = {
   nodeList: [],
@@ -18,10 +21,13 @@ const initialStore: IStore<{}> = {
   option:[],
   isAlert:false,
   nodeEdge:'Node',
-  nodeActiveKey:'0',
-  edgeActiveKey: '0',
+  nodeActiveKey:null,
+  edgeActiveKey: null,
   graphData:[],
-  properties:[]
+  properties:[],
+  nodeItems: {},
+  edgeItems: {},
+  isChecked:''
 };
 
 type ContextType<T> = {

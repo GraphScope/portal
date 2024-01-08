@@ -3,19 +3,18 @@ import { Button, Space, Upload } from 'antd';
 import type { UploadProps } from 'antd';
 import Graphin, { Utils, Behaviors } from '@antv/graphin';
 import { useContext } from '../../../../valtio/createGraph';
-import { getLocalData } from '../../localStorage';
 const { ZoomCanvas } = Behaviors;
 const GraphIn = (props: { isAlert?: any; graphData?: any }) => {
   const { isAlert } = props;
   const { store, updateStore } = useContext();
-  const { nodeList, edgeList ,graphData} = store;
+  const { nodeItems, edgeItems ,graphData} = store;
   React.useEffect(() => {
     getVertexEdges();
-  }, [nodeList,edgeList]);
+  }, [nodeItems,edgeItems]);
   const getVertexEdges = async () => {
     const result = {
-      vertices: Object.values(getLocalData('nodeList')),
-      edges: Object.values(getLocalData('edgeList')),
+      vertices: Object.values(nodeItems),
+      edges: Object.values(edgeItems),
     };    
     let nodes: { id: string; label: string; style: any }[] = [];
     let edge: { source: string; target: string; style: any; label: string }[] = [];
@@ -62,12 +61,6 @@ const GraphIn = (props: { isAlert?: any; graphData?: any }) => {
                     },
                     startArrow: false,
                 },
-                // animate: {
-                //     type: 'circle-running',
-                //     color: 'green',
-                //     repeat: true,
-                //     duration: 4000,
-                // },
             },
         })
     }

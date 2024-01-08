@@ -28,7 +28,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
   const nodeRef = React.useRef([]);
   const edgeRef = React.useRef([]);
   const { store, updateStore } = useContext();
-  const { isAlert, nodeList, edgeList ,nodeEdge,nodeActiveKey,edgeActiveKey} = store;
+  const { isAlert, nodeList, edgeList ,nodeEdge,nodeActiveKey,edgeActiveKey,nodeItems,edgeItems} = store;
   const params = useLocation().state;
   const [state, updateState] = useImmer<Istate>({
     nodeitems: [],
@@ -39,7 +39,8 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
     onChange(nodeitems[0]?.key);
   }, []);
   React.useEffect(() => {
-    const data = cloneDeep(getLocalData('nodeList'));
+    // const data = cloneDeep(getLocalData('nodeList'));
+    const data = cloneDeep(nodeItems);
     let arr: { label: any; children: any; key: string }[] | { label: any; children: JSX.Element; key: string }[] = [];
     let nodearr: { value: string; label: string }[] = [];
     Object.entries(data).map(key => {
@@ -73,10 +74,10 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
     updateStore(draft => {
       draft.option = nodearr;
     });
-  }, [nodeList]);
+  }, [nodeItems]);
   React.useEffect(() => {
     edgeChange('Edge');
-  }, [edgeList]);
+  }, [edgeItems]);
   const add = () => {
     if (nodeEdge == 'Node') {
       const newActiveKey = uuidv4();
@@ -100,6 +101,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
       });
       updateStore(draft => {
         draft.nodeActiveKey = newActiveKey;
+        draft.nodeList = node
       });
       nodeRef.current = node;
     } else {
@@ -124,41 +126,40 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
       });
       updateStore(draft => {
         draft.edgeActiveKey = newActiveKey;
+        draft.edgeList = node
       });
       edgeRef.current = node;
     }
   };
+  
   // del node or edge
   const deleteNode = (val: string, key: string) => {
     let data = val == 'Node' ? nodeRef.current : edgeRef.current;
     const newPanes = data.filter(pane => pane.key !== key);
     if (val == 'Node') {
-      const nodedata = cloneDeep(getLocalData('nodeList'));
+      const nodedata = cloneDeep(nodeItems);
       Object.entries(nodedata).map((keys, i) => {
         if (keys[0] == key) {
           delete nodedata[key];
         }
       });
-      setLocalData('nodeList', nodedata);
       updateState(draft => {
         draft.nodeitems = newPanes;
       });
       updateStore(draft => {
         draft.nodeList = nodedata;
+        draft.nodeItems = nodedata
       });
     } else {
-      const edgedata = cloneDeep(getLocalData('edgeList'));
+      const edgedata = cloneDeep(edgeItems);
       Object.entries(edgedata).map((keys, i) => {
         if (keys[0] == key) {
           delete edgedata[key];
         }
       });
-      setLocalData('edgeList', edgedata);
-      updateState(draft => {
-        draft.edgeitems = newPanes;
-      });
       updateStore(draft => {
         draft.edgeList = edgedata;
+        draft.edgeItems = edgedata
       });
     }
   };
@@ -177,13 +178,15 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
     updateStore(draft => {
       draft.nodeEdge = e.target.value;
     });
-    edgeChange(e.target.value);
-    updateStore(draft => {
-      draft.edgeActiveKey = edgeitems[0]?.key;
-    });
+    if(nodeEdge == 'Edge'){
+      edgeChange(e.target.value);
+      updateStore(draft => {
+        draft.edgeActiveKey = edgeitems[0]?.key;
+      });
+    }
   };
   const edgeChange = val => {
-    const data = cloneDeep(getLocalData('edgeList'));
+    const data = cloneDeep(edgeItems);
     let arr: { label: any; children: any; key: string }[] | { label: any; children: JSX.Element; key: string }[] = [];
     Object.entries(data).map(key => {
       arr.push({
@@ -206,7 +209,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
         key: key[0],
       });
     });
-    const nodedata = cloneDeep(getLocalData('nodeList'));
+    const nodedata = cloneDeep(nodeItems);
     let nodearr: { value: any; label: any }[] = [];
     Object.entries(nodedata).map(key => {
       nodearr.push({
@@ -315,7 +318,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
             <Button
               type="primary"
               onClick={() => {
-                history.push('/instance/create/result');
+                history.push('/instance/create/confirm-info',nodeList);
               }}
             >
               下一页
