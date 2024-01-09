@@ -24,6 +24,8 @@ export type IStore<T> = T & {
   isChecked:string;
   inputvalues:string;
   detail:boolean;
+  checked:string;
+  json_object:object;
 };
 const initialStore: IStore<{}> = {
   nodeList: [],
@@ -39,7 +41,12 @@ const initialStore: IStore<{}> = {
   edgeItems: {},
   isChecked:'',
   inputvalues:'',
-  detail:false
+  detail:false,
+  checked:'table',
+  json_object:{
+    title: 'Choose EngineType',
+    type: 'Create Schema',
+  }
 };
 
 type ContextType<T> = {

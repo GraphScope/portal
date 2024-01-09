@@ -11,8 +11,8 @@ export type FieldType = {
 const Lists: React.FunctionComponent<IListsProps> = _props => {
   const [form] = Form.useForm();
   const { store, updateStore } = useContext();
-  const checkRef = React.useRef();
   const { isAlert, isChecked ,inputvalues} = store;
+  React.useEffect(()=>{form.setFieldsValue(inputvalues)},[])
   const onFinish = () => {
     form.validateFields().then(res => {
       console.log(res);
@@ -65,7 +65,7 @@ const Lists: React.FunctionComponent<IListsProps> = _props => {
           wrapperCol={{ span: 8 }}
           rules={[{ required: true, message: '' }]}
         >
-          <Input defaultValue={inputvalues}/>
+          <Input />
         </Form.Item>
 
         <Form.Item<FieldType>
@@ -78,7 +78,7 @@ const Lists: React.FunctionComponent<IListsProps> = _props => {
             {
               ['1','2','3','4','5'].map(item=>{
                 return(
-                  <Col span={6}>
+                  <Col span={6} key={item}>
                   <Card
                     style={{ margin: '12px 12px 0 0' }}
                     className={isChecked == item ? styles['cards'] : ''}

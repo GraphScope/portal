@@ -1,24 +1,15 @@
 import * as React from 'react';
 import { Radio, Card, Row, Col, Button, Steps, Space } from 'antd';
-import { history ,useLocation} from 'umi';
-import { useImmer } from 'use-immer';
+import { history } from 'umi';
+import { useContext } from '../../../../valtio/createGraph';
 import ReactJson from 'react-json-view';
 import GraphIn from '../graph-in';
 interface IImportDataProps {}
 const ImportData: React.FunctionComponent<IImportDataProps> = props => {
-  const params = useLocation().state;
-  console.log(params);
-  
-  const [state, updateState] = useImmer({
-    checked: 'table',
-    json_object:{
-      title: 'Choose EngineType',
-      type: 'Create Schema',
-    }
-  });
-  const { checked, json_object } = state;
-  const nodeEdgeChange = e => {
-    updateState(draft => {
+  const { store, updateStore } = useContext();
+  const { checked, json_object } = store;
+  const nodeEdgeChange = (e:{target:{value:string}}) => {
+    updateStore(draft => {
       draft.checked = e.target.value;
     });
   };
@@ -102,7 +93,9 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         >
           上一页
         </Button>
-        <Button type="primary"> 确认创建</Button>
+        <Button type="primary"  onClick={() => {
+            history.push('/instance');
+          }}> 确认创建</Button>
       </Space>
     </div>
   );
