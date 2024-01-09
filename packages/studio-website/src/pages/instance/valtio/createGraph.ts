@@ -21,7 +21,6 @@ export type IStore<T> = T & {
   properties:any;
   nodeItems: {};
   edgeItems: {};
-  isChecked:string;
   inputvalues:string;
   detail:boolean;
   checked:string;
@@ -39,7 +38,6 @@ const initialStore: IStore<{}> = {
   properties:[],
   nodeItems: {},
   edgeItems: {},
-  isChecked:'',
   inputvalues:'',
   detail:false,
   checked:'table',

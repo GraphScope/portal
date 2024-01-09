@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { Button, Space, Upload } from 'antd';
-import type { UploadProps } from 'antd';
-import Graphin, { Utils, Behaviors } from '@antv/graphin';
-import { useContext } from '../../../../valtio/createGraph';
+import Graphin, { Behaviors ,Utils} from '@antv/graphin';
+import { useContext } from '../../valtio/createGraph';
+import {download,prop} from '../utils'
 const { ZoomCanvas } = Behaviors;
-const GraphIn = (props: { isAlert?: any; graphData?: any }) => {
-  const { isAlert } = props;
-  const { store, updateStore } = useContext();
-  const { nodeItems, edgeItems ,graphData} = store;
+const GraphIn = () => {
+  const { store ,updateStore} = useContext();
+  const { isAlert ,graphData,nodeItems,edgeItems} = store;
   React.useEffect(() => {
     getVertexEdges();
   }, [nodeItems,edgeItems]);
@@ -78,30 +77,6 @@ const GraphIn = (props: { isAlert?: any; graphData?: any }) => {
     updateStore(draft => {
       draft.graphData = arr;
     });
-  };
-  // 导入数据
-  const prop: UploadProps = {
-    beforeUpload(file: Blob) {
-      let reader = new FileReader();
-      reader.readAsText(file, 'utf-8');
-      reader.onload = async () => {
-        // let res = await importSchema({ name: props.importName, data: reader.result });
-        // if (!res.success) return message.error(res?.message, 3);
-        // message.success('import successfully !', 3);
-      };
-    },
-    capture: undefined,
-  };
-  // 导出
-  const download = (queryData: string, states: BlobPart) => {
-    const eleLink = document.createElement('a');
-    eleLink.download = queryData;
-    eleLink.style.display = 'none';
-    const blob = new Blob([states]);
-    eleLink.href = URL.createObjectURL(blob);
-    document.body.appendChild(eleLink);
-    eleLink.click();
-    document.body.removeChild(eleLink);
   };
   return (
     <div

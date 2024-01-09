@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Tag, Radio, Collapse, Row, Col, Button, Steps, Space } from 'antd';
+import { Tag, Radio, Collapse, Row, Col, Button, Space } from 'antd';
 import { history } from 'umi';
 import GraphIn from '../graph-in';
 interface IImportDataProps {}
@@ -29,20 +29,6 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   const nodeEdgeChange = e => {};
   return (
     <div>
-      <Steps
-        current={2}
-        items={[
-          {
-            title: 'Choose EngineType',
-          },
-          {
-            title: 'Create Schema',
-          },
-          {
-            title: 'Result',
-          },
-        ]}
-      />
       <p>
         恭喜你已经完成图实例的创建，图实例名称为 <Tag color="green">DEFAULT GRAPH</Tag>，类型为{' '}
         <Tag color="green">Interactive</Tag>, 有2 种类型的点，1 种类型的边，具体信息详见
@@ -60,7 +46,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         </Col>
       </Row>
       <p>如果确认下没问题的话，我们就可以去导入数据啦～</p>
-      <Space>
+      {/* <Space>
         <Button
           type="primary"
           onClick={() => {
@@ -70,7 +56,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           上一页
         </Button>
         <Button type="primary">完成</Button>
-      </Space>
+      </Space> */}
     </div>
   );
 };

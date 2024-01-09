@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { Button, Card, Radio, Tabs, Steps, Alert, Row, Col, Space, Tooltip } from 'antd';
-import { history } from 'umi';
-import { v4 as uuidv4 } from 'uuid';
+import { Button, Card, Radio, Tabs,  Row, Col, Tooltip } from 'antd';
+// import { v4 as uuidv4 } from 'uuid';
 import { cloneDeep } from 'lodash';
-import { useContext } from '../../../valtio/createGraph';
+import { useContext } from '../valtio/createGraph';
 import GraphIn from './graph-in';
 import CreateSchema from './create-schema';
+import NodeEdgeButton from './node-edge-button'
 interface ICreateInstanceProps {
   graphData?: any;
   isAlert?: boolean;
 }
-const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
+const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
   const { store, updateStore } = useContext();
-  const { isAlert, nodeList, edgeList ,nodeEdge,nodeActiveKey,edgeActiveKey,nodeItems,edgeItems,detail} = store;
+  const { nodeList, edgeList ,nodeEdge,nodeActiveKey,edgeActiveKey,nodeItems,edgeItems,detail} = store;
   React.useEffect(() => {
     onChange(nodeList[0]?.key);
     updateStore(draft=>{
@@ -91,51 +91,6 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
       draft.option = nodearr
     });
   }, [edgeItems]);
-  const add = () => {
-    if (nodeEdge == 'Node') {
-      const newActiveKey = uuidv4();
-      const node = [
-        ...nodeList,
-        {
-          label: 'undefine',
-          children: (
-            <CreateSchema
-              nodeEdge={nodeEdge}
-              isEdit={detail}
-              newActiveKey={newActiveKey}
-              deleteNode={deleteNode}
-            />
-          ),
-          key: newActiveKey,
-        },
-      ];
-      updateStore(draft => {
-        draft.nodeActiveKey = newActiveKey;
-        draft.nodeList = node
-      });
-    } else {
-      const newActiveKey = uuidv4();
-      const node = [
-        ...edgeList,
-        {
-          label: 'undefine',
-          children: (
-            <CreateSchema
-              nodeEdge={nodeEdge}
-              isEdit={detail}
-              newActiveKey={newActiveKey}
-              deleteNode={deleteNode}
-            />
-          ),
-          key: newActiveKey,
-        },
-      ];
-      updateStore(draft => {
-        draft.edgeActiveKey = newActiveKey;
-        draft.edgeList = node
-      });
-    }
-  };
   // del node or edge
   const deleteNode = (val: string, key: string) => {
     let data = val == 'Node' ? cloneDeep(nodeList) : cloneDeep(edgeList);
@@ -175,44 +130,9 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
       });
     }
   };
-  const nodeEdgeChange = (e: { target: { value: string } }): void => {
-    updateStore(draft => {
-      draft.nodeEdge = e.target.value;
-    });
-    if(nodeEdge == 'Edge'){
-      updateStore(draft => {
-        draft.edgeActiveKey = edgeList[0]?.key;
-      });
-    }
-  };
 
   return (
-    <>
       <Card>
-        {isAlert || detail ? (
-          <Alert
-            message="您的图实例类型为 Interactive，一旦创建则不支持修改图模型，您可以选择新建图实例"
-            type="info"
-            showIcon
-            closable
-            style={{ margin: '16px 0' }}
-          />
-        ) : (
-          <Steps
-            current={1}
-            items={[
-              {
-                title: 'Choose EngineType',
-              },
-              {
-                title: 'Create Schema',
-              },
-              {
-                title: 'Result',
-              },
-            ]}
-          />
-        )}
         <Row style={{ marginTop: '16px' }}>
           <Col span={14}>
             <div
@@ -225,22 +145,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
                 overflow: 'hidden',
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Radio.Group defaultValue="Node" style={{ marginBottom: '16px' }} onChange={nodeEdgeChange}>
-                  <Radio.Button value="Node">Nodes</Radio.Button>
-                  <Radio.Button value="Edge">Edges</Radio.Button>
-                </Radio.Group>
-                {[...nodeList, ...edgeList].length > 0 ? (
-                  <Button type="dashed" onClick={add}>
-                    + Add {nodeEdge}
-                  </Button>
-                ) : null}
-              </div>
-              {[...nodeList, ...edgeList].length == 0 ? (
-                <Button style={{ width: '100%', color: '#1650ff' }} type="dashed" onClick={add}>
-                  + Add {nodeEdge}
-                </Button>
-              ) : null}
+              <NodeEdgeButton/>
               <div>
                 <div style={{ display: nodeEdge == 'Node' ? '' : 'none' }}>
                   <Tabs
@@ -264,32 +169,10 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
             </div>
           </Col>
           <Col span={10}>
-            <GraphIn isAlert={detail} graphData={[]} />
+            <GraphIn />
           </Col>
         </Row>
-        {detail ? null : (
-          <Space>
-            <Button
-              type="primary"
-              onClick={() => {
-                history.back();
-              }}
-            >
-              上一页
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => {
-                console.log(nodeItems,edgeItems);
-                history.push('/instance/create/confirm-info');
-              }}
-            >
-              下一页
-            </Button>
-          </Space>
-        )}
       </Card>
-    </>
   );
 };
 export default CreateInstance;

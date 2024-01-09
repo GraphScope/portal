@@ -1,37 +1,54 @@
-import * as React from 'react';
-import { history } from 'umi';
-import { Button, Form, Input, Row, Col, Avatar, Card, ConfigProvider, Alert, Steps, Space } from 'antd';
-import { useContext } from '../../../valtio/createGraph';
-import styles from './index.module.less';
-interface IListsProps {}
-export type FieldType = {
-  inputname?: string;
-  type?: string;
-};
-const Lists: React.FunctionComponent<IListsProps> = _props => {
-  const [form] = Form.useForm();
-  const { store, updateStore } = useContext();
-  const { isAlert, isChecked ,inputvalues} = store;
-  React.useEffect(()=>{form.setFieldsValue(inputvalues)},[])
-  const onFinish = () => {
-    form.validateFields().then(res => {
-      console.log(res);
-    });
+import React, { useState } from 'react';
+import { Button, message, Steps, theme ,Alert} from 'antd';
+import { useContext } from '../valtio/createGraph';
+import ChooseEnginetype from '../create-instance/choose-enginetype';
+import CreateInstance from '../create-instance';
+import ConfigInfo from '../create-instance/confirm-info';
+
+
+
+const Lists = () => {
+  const { store } = useContext();
+  const { isAlert } = store;
+  const { token } = theme.useToken();
+  const [current, setCurrent] = useState(0);
+  const steps = [
+    {
+      title: 'Choose EngineType',
+      content: <ChooseEnginetype />,
+    },
+    {
+      title: 'Create Schema',
+      content: <CreateInstance />,
+    },
+    {
+      title: 'Result',
+      content: <ConfigInfo />,
+    },
+  ];
+  const next = () => {
+    setCurrent(current + 1);
   };
-  const cardClick = (val: string) => {
-    updateStore(draft => {
-      draft.isChecked = val;
-    });
+
+  const prev = () => {
+    setCurrent(current - 1);
+  };
+
+  const items = steps.map(item => ({ key: item.title, title: item.title }));
+
+  const contentStyle: React.CSSProperties = {
+    lineHeight: '260px',
+    textAlign: 'center',
+    color: token.colorTextTertiary,
+    backgroundColor: token.colorFillAlter,
+    borderRadius: token.borderRadiusLG,
+    border: `1px dashed ${token.colorBorder}`,
+    marginTop: 16,
   };
   return (
-    <ConfigProvider
-      theme={{
-        token: {
-          borderRadius: 6,
-          colorBgBase: '#fff',
-        },
-      }}
-    >
+    <>
+      <Steps current={current} items={items} />
+      <div style={contentStyle}>{steps[current].content}</div>
       {isAlert ? (
         <Alert
           message="您的图实例类型为 Interactive，一旦创建则不支持修改图模型，您可以选择新建图实例"
@@ -41,88 +58,25 @@ const Lists: React.FunctionComponent<IListsProps> = _props => {
           style={{ margin: '16px 0' }}
         />
       ) : (
-        <Steps
-          current={0}
-          items={[
-            {
-              title: 'Choose EngineType',
-            },
-            {
-              title: 'Create Schema',
-            },
-            {
-              title: 'Result',
-            },
-          ]}
-        />
+        <div style={{ marginTop: 24 }}>
+          {current < steps.length - 1 && (
+            <Button type="primary" onClick={() => next()}>
+              下一步
+            </Button>
+          )}
+          {current === steps.length - 1 && (
+            <Button type="primary" onClick={() => message.success('Processing complete!')}>
+              完成
+            </Button>
+          )}
+          {current > 0 && (
+            <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+              上一步
+            </Button>
+          )}
+        </div>
       )}
-      <Form name="basic" form={form} layout="vertical" style={{ marginTop: '24px' }}>
-        <Form.Item<FieldType>
-          label="Input Name"
-          name="inputname"
-          tooltip=" "
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 8 }}
-          rules={[{ required: true, message: '' }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item<FieldType>
-          label="Choose GraphInstance Type"
-          name="type"
-          tooltip=" "
-          rules={[{ required: true, message: '' }]}
-        >
-          <Row>
-            {
-              ['1','2','3','4','5'].map(item=>{
-                return(
-                  <Col span={6} key={item}>
-                  <Card
-                    style={{ margin: '12px 12px 0 0' }}
-                    className={isChecked == item ? styles['cards'] : ''}
-                    onClick={() => cardClick(item)}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'start' }}>
-                      <Avatar shape="square" size={45} />
-                      <div style={{ marginLeft: '12px', verticalAlign: 'middle' }}>
-                        <h3 style={{ margin: '0px' }}>instance</h3>
-                        <span>引擎介绍{item}</span>
-                      </div>
-                    </div>
-                    <div className={styles['triangle']}></div>
-                  </Card>
-                </Col>
-                )
-              })
-            }
-
-          </Row>
-        </Form.Item>
-      </Form>
-      {!isAlert ? (
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => {
-              history.back();
-            }}
-          >
-            上一页
-          </Button>
-          <Button
-            type="primary"
-            onClick={() => {
-              updateStore(dreaft=>dreaft.inputvalues = form.getFieldsValue().inputname);
-              form.getFieldsValue().inputname ? history.push('/instance/create') : form.validateFields();
-            }}
-          >
-            下一页
-          </Button>
-        </Space>
-      ) : null}
-    </ConfigProvider>
+    </>
   );
 };
 

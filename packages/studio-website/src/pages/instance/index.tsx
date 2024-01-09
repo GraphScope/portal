@@ -2,7 +2,7 @@ import * as React from 'react';
 import { history } from 'umi';
 import { UploadOutlined, EllipsisOutlined, ApartmentOutlined, PlusOutlined } from '@ant-design/icons';
 import { Avatar, Card, Row, Col } from 'antd';
-import { useContext } from '../../valtio/createGraph';
+import { useContext } from './valtio/createGraph';
 interface InstanceProps {}
 const { Meta } = Card;
 const Instance: React.FunctionComponent<InstanceProps> = props => {
@@ -20,6 +20,7 @@ const Instance: React.FunctionComponent<InstanceProps> = props => {
               textAlign: 'center',
             }}
             onClick={() => {
+              updateStore(draft=> draft.detail = false);
               history.push('/instance/list');
             }}
           >
@@ -52,7 +53,7 @@ const Instance: React.FunctionComponent<InstanceProps> = props => {
             ]}
           >
             <Meta
-              avatar={<Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />}
+              avatar={<Avatar src="" />}
               title="DEFAULT GRAPH"
               description={
                 <div>

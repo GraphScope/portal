@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Form, Row, Col, Select, Input, Space, Button, Radio } from 'antd';
-import PrpertiesEditor from '../../../../../studio-importor/src/properties-editor'
+import PrpertiesEditor from '@graphscope/studio-importor'
 interface IImportDataProps {}
 
 const ImportData: React.FunctionComponent<IImportDataProps> = props => {

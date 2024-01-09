@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { Radio, Card, Row, Col, Button, Steps, Space } from 'antd';
-import { history } from 'umi';
-import { useContext } from '../../../../valtio/createGraph';
+import { useContext } from '../../valtio/createGraph';
 import ReactJson from 'react-json-view';
-import GraphIn from '../graph-in';
 interface IImportDataProps {}
-const ImportData: React.FunctionComponent<IImportDataProps> = props => {
+const ConfigInfo: React.FunctionComponent<IImportDataProps> = props => {
   const { store, updateStore } = useContext();
   const { checked, json_object } = store;
   const nodeEdgeChange = (e:{target:{value:string}}) => {
@@ -15,20 +13,6 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   };
   return (
     <div style={{backgroundColor:'#fff',padding:'16px'}}>
-      <Steps
-        current={2}
-        items={[
-          {
-            title: 'Choose EngineType',
-          },
-          {
-            title: 'Create Schema',
-          },
-          {
-            title: 'Result',
-          },
-        ]}
-      />
       <div>
         请您先预览确认信息：
         <Radio.Group defaultValue="Nodes" style={{ marginBottom: '16px' }} onChange={nodeEdgeChange}>
@@ -84,7 +68,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         )}
       </div>
       <p>如果确认下没问题的话，我们就可以去导入数据啦～</p>
-      <Space>
+      {/* <Space>
         <Button
           type="primary"
           onClick={() => {
@@ -96,9 +80,9 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         <Button type="primary"  onClick={() => {
             history.push('/instance');
           }}> 确认创建</Button>
-      </Space>
+      </Space> */}
     </div>
   );
 };
 
-export default ImportData;
+export default ConfigInfo;

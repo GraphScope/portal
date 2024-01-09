@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { Form, Input, Select, Button } from 'antd';
-import PropertiesEditor from '../../../../../../studio-importor/src/properties-editor';
+import {PropertiesEditor} from '@graphscope/studio-importor';
 import { cloneDeep } from 'lodash';
-import { useContext } from '../../../../valtio/createGraph';
+import { useContext } from '../../valtio/createGraph';
 export type FieldType = {
   label?: string;
   src_label?: string;
   dst_label?: string;
 };
-const CreateSchema = props => {
-  const { nodeEdge, isEdit, newActiveKey, deleteNode, data, option } = props;
+const CreateSchema = (props:{nodeEdge:string;isEdit:boolean;newActiveKey:string;deleteNode:()=>void;data:any;}) => {
+  const { nodeEdge, isEdit, newActiveKey, deleteNode, data ,} = props;
   const [form] = Form.useForm();
   const { store, updateStore } = useContext();
   const { properties, nodeItems, edgeItems } = store;
