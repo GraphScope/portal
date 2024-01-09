@@ -1,11 +1,76 @@
 import * as React from 'react';
+import CypherEdit from '../../cypher-editor';
+import { Space, Button, Input, Flex, Tooltip } from 'antd';
+import type { GlobalToken } from 'antd';
+import { PlayCircleOutlined, BookOutlined, CloseOutlined } from '@ant-design/icons';
+import { useRef } from 'react';
+import { IEditorProps } from '../typing';
 
-interface IEditorProps {}
+const Editor: React.FunctionComponent<
+  IEditorProps & {
+    isFetching: boolean;
+    antdToken: GlobalToken;
+    saved: boolean; // 是否是保存的语句
+  }
+> = props => {
+  const { onClose, onQuery, script = `Match (n) return n limit 10`, onSave, id, isFetching, antdToken, saved } = props;
+  const editorRef = useRef<any>(null);
 
-const Editor: React.FunctionComponent<IEditorProps> = props => {
+  const handleChange = async value => {
+    console.log('value', value);
+  };
+  const handleQuery = async () => {
+    const value = editorRef?.current?.codeEditor?.getValue();
+    const result = await onQuery({
+      id,
+      script: value,
+    });
+    console.log('result', result);
+  };
+  const handleSave = () => {
+    const value = editorRef?.current?.codeEditor?.getValue();
+    onSave &&
+      onSave({
+        id,
+        script: value,
+      });
+  };
+  const handleClose = () => {
+    onClose && onClose(id);
+  };
+
   return (
     <div>
-      <div>match (n) return n limit 10</div>
+      <Flex justify="end" align="center">
+        <Space align="end">
+          {/* <TextArea autoSize={{ minRows: 1, maxRows: 20 }}></TextArea> */}
+          <Button
+            type="text"
+            icon={
+              <PlayCircleOutlined
+                spin={isFetching}
+                style={{
+                  color: isFetching ? '#52c41a' : antdToken.colorPrimary,
+                }}
+              />
+            }
+            onClick={handleQuery}
+          />
+          {onSave && (
+            <Tooltip title={saved ? '更新语句' : '保存语句'}>
+              <Button
+                type="text"
+                icon={<BookOutlined style={saved ? { color: antdToken.colorPrimary } : {}}></BookOutlined>}
+                onClick={handleSave}
+              />
+            </Tooltip>
+          )}
+          {onClose && <Button type="text" icon={<CloseOutlined onClick={handleClose} />} />}
+        </Space>
+      </Flex>
+      <div style={{ height: '100px', width: 'calc(100vw - 328px)' }}>
+        <CypherEdit ref={editorRef} value={script} onChange={handleChange} onInit={(initEditor: any) => {}} />
+      </div>
     </div>
   );
 };
