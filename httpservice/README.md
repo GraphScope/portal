@@ -38,8 +38,9 @@
 | GET /api/v1/alert/rule                                           | (ALERT) 获取报警规则列表                   | ✓   |     ✓     |    ✓     |
 | PUT /api/v1/alert/rule/{rule_name}                               | (ALERT) 修改某一报警规则                   | ✓   |     ✓     |    ✓     |
 | POST /api/v1/alert/rule                                          | (ALERT) 自定义报警规则 (暂不支持)          | ✓   |     ✓     |    ✓     |
+| DELETE /api/v1/alert/rule/{rule_name}                            | (ALERT) 删除某一报警负责                   | ✓   |     ✓     |    ✓     |
 | GET /api/v1/alert/message                                        | (ALERT) 获取报警信息列表                   | ✓   |     ✓     |    ✓     |
-| PUT /api/v1/alert/message/{message_id}                           | (ALERT) 修改报警信息状态(solved、dealing)  | ✓   |     ✓     |    ✓     |
+| PUT /api/v1/alert/message                                        | (ALERT) 批量修改信息状态(solved、dealing)  | ✓   |     ✓     |    ✓     |
 | GET /api/v1/alert/receiver                                       | (ALERT) 获取警报接收列表(email、dingtalk)  | ✓   |     ✓     |    ✓     |
 | DELETE /api/v1/alert/receiver/{receiver_id}                      | (ALERT) 删除某一警报接收对象               | ✓   |     ✓     |    ✓     |
 | PUT /api/v1/alert/receiver/{receiver_id}                         | (ALERT) 修改某一警报接收对象信息           | ✓   |     ✓     |    ✓     |

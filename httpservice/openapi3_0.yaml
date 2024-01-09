@@ -4,7 +4,7 @@ info:
   description: |-
     This is a specification for GraphScope FLEX HTTP service based on the OpenAPI 3.0 specification. You can find out more details about
     specification at [doc](https://swagger.io/specification/v3/).
-    
+
     Some useful links:
     - [GraphScope Repository](https://github.com/alibaba/GraphScope)
     - [The Source API definition for GraphScope Interactive](https://github.com/GraphScope/portal/tree/main/httpservice)
@@ -101,7 +101,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
         '409':
-            description: Schema not empty
+          description: Schema not empty
     get:
       tags:
         - graph
@@ -142,7 +142,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
         '409':
-            description: Vertex type already exists
+          description: Vertex type already exists
   /api/v1/graph/{graph_name}/schema/vertex/{label_name}:
     delete:
       tags:
@@ -195,7 +195,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
         '409':
-            description: Edge type already exists
+          description: Edge type already exists
   /api/v1/graph/{graph_name}/schema/edge/{label_name}:
     delete:
       tags:
@@ -262,7 +262,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
         '409':
-            description: Data source already exists
+          description: Data source already exists
     put:
       tags:
         - data_source
@@ -285,11 +285,11 @@ paths:
               $ref: '#/components/schemas/DataSource'
       responses:
         '200':
-           description: Successful operation
-           content:
-             application/json:
-               schema:
-                  $ref: '#/components/schemas/ApiResponse'
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Data source not found
     get:
@@ -346,7 +346,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
         '409':
-            description: Data source already exists
+          description: Data source already exists
     put:
       tags:
         - data_source
@@ -369,11 +369,11 @@ paths:
               $ref: '#/components/schemas/DataSource'
       responses:
         '200':
-           description: Successful operation
-           content:
-             application/json:
-               schema:
-                  $ref: '#/components/schemas/ApiResponse'
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Data source not found
     get:
@@ -546,11 +546,11 @@ paths:
               $ref: '#/components/schemas/QueryStatement'
       responses:
         '200':
-           description: Successful operation
-           content:
-             application/json:
-               schema:
-                  $ref: '#/components/schemas/ApiResponse'
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Query not found
     delete:
@@ -633,11 +633,11 @@ paths:
               $ref: '#/components/schemas/Procedure'
       responses:
         '200':
-           description: Successful operation
-           content:
-             application/json:
-               schema:
-                  $ref: '#/components/schemas/ApiResponse'
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Query not found
     delete:
@@ -691,11 +691,11 @@ paths:
               $ref: '#/components/schemas/AlertRule'
       responses:
         '200':
-           description: Successful operation
-           content:
-             application/json:
-               schema:
-                  $ref: '#/components/schemas/ApiResponse'
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Alert rule not found
     delete:
@@ -770,6 +770,7 @@ paths:
       tags:
         - alert
       operationId: UpdateAlertMessages
+      description: Update alert messages in batch
       requestBody:
         content:
           application/json:
@@ -793,13 +794,88 @@ paths:
                   default: false
       responses:
         '200':
-           description: Successful operation
-           content:
-             application/json:
-               schema:
-                  $ref: '#/components/schemas/ApiResponse'
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Alert message not found
+  /api/v1/alert/receiver:
+    post:
+      tags:
+        - alert
+      operationId: RegisterReceiver
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertReceiver'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    get:
+      tags:
+        - extension
+      operationId: ListReceivers
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AlertReceiver'
+  /api/v1/alert/receiver/{receiver_id}:
+    put:
+      tags:
+        - alert
+      operationId: UpdateReceiverbyId
+      parameters:
+        - name: receiver_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertReceiver'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Reveiver not found
+    delete:
+      tags:
+        - extension
+      operationId: DeleteReceiverbyId
+      parameters:
+        - name: receiver_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Reveiver not found
 components:
   schemas:
     Graph:
@@ -813,7 +889,7 @@ components:
     Schema:
       type: object
       x-body-name: schema
-      properties: 
+      properties:
         vertex_types:
           type: array
           items:
@@ -1040,8 +1116,8 @@ components:
         type:
           type: string
           enum:
-           - cpp
-           - cypher
+            - cpp
+            - cypher
         query:
           type: string
         enable:
@@ -1137,6 +1213,7 @@ components:
             - webhook
         receiver_id:
           type: string
+          description: Generated in server side
         webhook_url:
           type: string
         at_user_ids:

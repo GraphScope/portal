@@ -1,28 +1,45 @@
-## API Summary
+## @1.0.0
 
-| API                               | Comments                    | Groot      | Interactive |
-| --------------------------------- | --------------------------- | ---------- | ----------- |
-| /api/v1/deployment/info           | Cluster Meta Info           | K8s API    | ✅          |
-| /api/v1/deployment/status         | Cluster Status              | K8s API    | ✅          |
-| /api/v1/deployment/log            | Cluster Log                 | K8s API    | ✅          |
-| /api/v1/deployment/resource       | Cluster Resource            | K8s API    | ✅          |
-| /api/v1/graph                     | Graph Management            | K8s API    | ✅          |
-| /api/v1/graph/schema              | Graph Schema Management     | Groot      | ✅          |
-| /api/v1/graph/schema/vertex       | Graph Vertex Management     | Groot      | ❌          |
-| /api/v1/graph/schema/edge         | Graph Edge Management       | Groot      | ❌          |
-| /api/v1/graph/datasource          | Graph datasource Management | Data-Store | ❌          |
-| /api/v1/job                       | Job Management              | Data-Store | ✅          |
-| /api/v1/alert/rule                | Alert Rules Management      | Data-Store | ✅          |
-| /api/v1/alert/message             | Alert Message Management    | Data-Store | ✅          |
-| /api/v1/alert/receiver            | Alert Receiver Management   | Data-Store | ✅          |
-| /api/v1/statement                 | management statement        | ✅         | ✅          |
-| bolt://localhost:6878             | query statement             | ✅         | ✅          |
-| ?                                 | query stored-procedure      | ✅         | ✅          |
-| /api/v1/extension/storedprocedure | management stored-procedure | ❌         | ✅          |
-| /api/v1/extension/algo            | management algo             | ❌         | ❌          |
+This generator creates TypeScript/JavaScript client that utilizes [axios](https://github.com/axios/axios). The generated Node module can be used in the following environments:
 
-- depolyment 部署
-  - info 信息
-  - status 状态
-  - log 日志
-  - resource CPU 内存
+Environment
+* Node.js
+* Webpack
+* Browserify
+
+Language level
+* ES5 - you must have a Promises/A+ library installed
+* ES6
+
+Module system
+* CommonJS
+* ES6 module system
+
+It can be used in both TypeScript and JavaScript. In TypeScript, the definition should be automatically resolved via `package.json`. ([Reference](http://www.typescriptlang.org/docs/handbook/typings-for-npm-packages.html))
+
+### Building
+
+To build and compile the typescript sources to javascript use:
+```
+npm install
+npm run build
+```
+
+### Publishing
+
+First build the package then run ```npm publish```
+
+### Consuming
+
+navigate to the folder of your consuming project and run one of the following commands.
+
+_published:_
+
+```
+npm install @1.0.0 --save
+```
+
+_unPublished (not recommended):_
+
+```
+npm install PATH_TO_GENERATED_PACKAGE --save
