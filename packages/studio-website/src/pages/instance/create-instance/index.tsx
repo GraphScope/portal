@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { Button, Card, Radio, Tabs, Steps, Alert, Row, Col, Space, Tooltip } from 'antd';
-import { useImmer } from 'use-immer';
-import { useLocation, history } from 'umi';
+import { history } from 'umi';
 import { v4 as uuidv4 } from 'uuid';
 import { cloneDeep } from 'lodash';
-import { setLocalData, getLocalData } from '../localStorage';
 import { useContext } from '../../../valtio/createGraph';
 import GraphIn from './graph-in';
 import CreateSchema from './create-schema';
@@ -12,34 +10,16 @@ interface ICreateInstanceProps {
   graphData?: any;
   isAlert?: boolean;
 }
-interface Istate {
-  nodeitems: {
-    label: string;
-    children: any;
-    key: string;
-  }[];
-  edgeitems: {
-    label: string;
-    children: any;
-    key: string;
-  }[];
-}
 const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
-  const nodeRef = React.useRef([]);
-  const edgeRef = React.useRef([]);
   const { store, updateStore } = useContext();
-  const { isAlert, nodeList, edgeList ,nodeEdge,nodeActiveKey,edgeActiveKey,nodeItems,edgeItems} = store;
-  const params = useLocation().state;
-  const [state, updateState] = useImmer<Istate>({
-    nodeitems: [],
-    edgeitems: [],
-  });
-  const { nodeitems, edgeitems } = state;
+  const { isAlert, nodeList, edgeList ,nodeEdge,nodeActiveKey,edgeActiveKey,nodeItems,edgeItems,detail} = store;
   React.useEffect(() => {
-    onChange(nodeitems[0]?.key);
+    onChange(nodeList[0]?.key);
+    updateStore(draft=>{
+      draft.nodeEdge = 'Node'
+    })
   }, []);
   React.useEffect(() => {
-    // const data = cloneDeep(getLocalData('nodeList'));
     const data = cloneDeep(nodeItems);
     let arr: { label: any; children: any; key: string }[] | { label: any; children: JSX.Element; key: string }[] = [];
     let nodearr: { value: string; label: string }[] = [];
@@ -54,8 +34,8 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
         ),
         children: (
           <CreateSchema
-            nodeEdge={nodeEdge}
-            isEdit={params == 'detail'}
+            nodeEdge={'Node'}
+            isEdit={detail}
             newActiveKey={key[0]}
             deleteNode={deleteNode}
             data={key[1]}
@@ -68,27 +48,60 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
         label: key[1].label,
       });
     });
-    updateState(draft => {
-      draft.nodeitems = arr;
-    });
+
     updateStore(draft => {
       draft.option = nodearr;
+      draft.nodeList = arr
     });
   }, [nodeItems]);
   React.useEffect(() => {
-    edgeChange('Edge');
+    const data = cloneDeep(edgeItems);
+    let arr: { label: any; children: any; key: string }[] | { label: any; children: JSX.Element; key: string }[] = [];
+    Object.entries(data).map(key => {
+      arr.push({
+        label: (
+          <div style={{ width: '60px', overflow: 'hidden' }}>
+            <Tooltip placement="topLeft" title={key[1].label || 'undefine'}>
+              {key[1].label || 'undefine'}
+            </Tooltip>
+          </div>
+        ),
+        children: (
+          <CreateSchema
+            nodeEdge={'Edge'}
+            isEdit={detail}
+            newActiveKey={key[0]}
+            deleteNode={deleteNode}
+            data={key[1]}
+          />
+        ),
+        key: key[0],
+      });
+    });
+    const nodedata = cloneDeep(nodeItems);
+    let nodearr: { value: any; label: any }[] = [];
+    Object.entries(nodedata).map(key => {
+      nodearr.push({
+        value: key[1].label,
+        label: key[1].label,
+      });
+    });
+    updateStore(draft => {
+      draft.edgeList = arr;
+      draft.option = nodearr
+    });
   }, [edgeItems]);
   const add = () => {
     if (nodeEdge == 'Node') {
       const newActiveKey = uuidv4();
       const node = [
-        ...nodeitems,
+        ...nodeList,
         {
           label: 'undefine',
           children: (
             <CreateSchema
               nodeEdge={nodeEdge}
-              isEdit={params == 'detail'}
+              isEdit={detail}
               newActiveKey={newActiveKey}
               deleteNode={deleteNode}
             />
@@ -96,24 +109,20 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
           key: newActiveKey,
         },
       ];
-      updateState(draft => {
-        draft.nodeitems = node;
-      });
       updateStore(draft => {
         draft.nodeActiveKey = newActiveKey;
         draft.nodeList = node
       });
-      nodeRef.current = node;
     } else {
       const newActiveKey = uuidv4();
       const node = [
-        ...edgeitems,
+        ...edgeList,
         {
           label: 'undefine',
           children: (
             <CreateSchema
               nodeEdge={nodeEdge}
-              isEdit={params == 'detail'}
+              isEdit={detail}
               newActiveKey={newActiveKey}
               deleteNode={deleteNode}
             />
@@ -121,20 +130,15 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
           key: newActiveKey,
         },
       ];
-      updateState(draft => {
-        draft.edgeitems = node;
-      });
       updateStore(draft => {
         draft.edgeActiveKey = newActiveKey;
         draft.edgeList = node
       });
-      edgeRef.current = node;
     }
   };
-  
   // del node or edge
   const deleteNode = (val: string, key: string) => {
-    let data = val == 'Node' ? nodeRef.current : edgeRef.current;
+    let data = val == 'Node' ? cloneDeep(nodeList) : cloneDeep(edgeList);
     const newPanes = data.filter(pane => pane.key !== key);
     if (val == 'Node') {
       const nodedata = cloneDeep(nodeItems);
@@ -143,11 +147,8 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
           delete nodedata[key];
         }
       });
-      updateState(draft => {
-        draft.nodeitems = newPanes;
-      });
       updateStore(draft => {
-        draft.nodeList = nodedata;
+        draft.nodeList = newPanes;
         draft.nodeItems = nodedata
       });
     } else {
@@ -158,7 +159,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
         }
       });
       updateStore(draft => {
-        draft.edgeList = edgedata;
+        draft.edgeList = newPanes;
         draft.edgeItems = edgedata
       });
     }
@@ -179,53 +180,16 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
       draft.nodeEdge = e.target.value;
     });
     if(nodeEdge == 'Edge'){
-      edgeChange(e.target.value);
       updateStore(draft => {
-        draft.edgeActiveKey = edgeitems[0]?.key;
+        draft.edgeActiveKey = edgeList[0]?.key;
       });
     }
-  };
-  const edgeChange = val => {
-    const data = cloneDeep(edgeItems);
-    let arr: { label: any; children: any; key: string }[] | { label: any; children: JSX.Element; key: string }[] = [];
-    Object.entries(data).map(key => {
-      arr.push({
-        label: (
-          <div style={{ width: '60px', overflow: 'hidden' }}>
-            <Tooltip placement="topLeft" title={key[1].label || 'undefine'}>
-              {key[1].label || 'undefine'}
-            </Tooltip>
-          </div>
-        ),
-        children: (
-          <CreateSchema
-            nodeEdge={val}
-            isEdit={params == 'detail'}
-            newActiveKey={key[0]}
-            deleteNode={deleteNode}
-            data={key[1]}
-          />
-        ),
-        key: key[0],
-      });
-    });
-    const nodedata = cloneDeep(nodeItems);
-    let nodearr: { value: any; label: any }[] = [];
-    Object.entries(nodedata).map(key => {
-      nodearr.push({
-        value: key[1].label,
-        label: key[1].label,
-      });
-    });
-    updateState(draft => {
-      draft.edgeitems = arr;
-    });
   };
 
   return (
     <>
       <Card>
-        {isAlert || params == 'detail' ? (
+        {isAlert || detail ? (
           <Alert
             message="您的图实例类型为 Interactive，一旦创建则不支持修改图模型，您可以选择新建图实例"
             type="info"
@@ -266,13 +230,13 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
                   <Radio.Button value="Node">Nodes</Radio.Button>
                   <Radio.Button value="Edge">Edges</Radio.Button>
                 </Radio.Group>
-                {[...nodeitems, ...edgeitems].length > 0 ? (
+                {[...nodeList, ...edgeList].length > 0 ? (
                   <Button type="dashed" onClick={add}>
                     + Add {nodeEdge}
                   </Button>
                 ) : null}
               </div>
-              {[...nodeitems, ...edgeitems].length == 0 ? (
+              {[...nodeList, ...edgeList].length == 0 ? (
                 <Button style={{ width: '100%', color: '#1650ff' }} type="dashed" onClick={add}>
                   + Add {nodeEdge}
                 </Button>
@@ -280,20 +244,18 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
               <div>
                 <div style={{ display: nodeEdge == 'Node' ? '' : 'none' }}>
                   <Tabs
-                    // defaultActiveKey={nodeitems[0]?.key}
                     tabBarStyle={{ borderLeft: 0 }}
                     tabPosition="left"
-                    items={nodeitems}
+                    items={cloneDeep(nodeList)}
                     activeKey={nodeActiveKey}
                     onChange={onChange}
                   />
                 </div>
                 <div style={{ display: nodeEdge !== 'Node' ? '' : 'none' }}>
                   <Tabs
-                    // defaultActiveKey={'edge0'}
                     tabBarStyle={{ borderLeft: 0 }}
                     tabPosition="left"
-                    items={edgeitems}
+                    items={cloneDeep(edgeList)}
                     activeKey={edgeActiveKey}
                     onChange={onChange}
                   />
@@ -302,10 +264,10 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
             </div>
           </Col>
           <Col span={10}>
-            <GraphIn isAlert={params == 'detail'} graphData={[]} />
+            <GraphIn isAlert={detail} graphData={[]} />
           </Col>
         </Row>
-        {params == 'detail' ? null : (
+        {detail ? null : (
           <Space>
             <Button
               type="primary"
@@ -318,7 +280,8 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
             <Button
               type="primary"
               onClick={() => {
-                history.push('/instance/create/confirm-info',nodeList);
+                console.log(nodeItems,edgeItems);
+                history.push('/instance/create/confirm-info');
               }}
             >
               下一页

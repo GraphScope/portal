@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { history } from 'umi';
 import { UploadOutlined, EllipsisOutlined, ApartmentOutlined, PlusOutlined } from '@ant-design/icons';
-import { Avatar, Card, Row, Col, Divider } from 'antd';
+import { Avatar, Card, Row, Col } from 'antd';
+import { useContext } from '../../valtio/createGraph';
 interface InstanceProps {}
 const { Meta } = Card;
 const Instance: React.FunctionComponent<InstanceProps> = props => {
+  const { store, updateStore } = useContext();
   return (
     <div style={{ backgroundColor: '#fff', padding: '24px', borderRadius: '6px' }}>
       <Row>
@@ -31,7 +33,8 @@ const Instance: React.FunctionComponent<InstanceProps> = props => {
               <ApartmentOutlined
                 key="setting"
                 onClick={() => {
-                  history.push('/instance/create','detail');
+                  updateStore(draft=> draft.detail = true);
+                  history.push('/instance/create');
                 }}
               />,
               <UploadOutlined

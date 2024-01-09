@@ -2,19 +2,28 @@ import { proxy, useSnapshot } from "valtio";
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 
 export type IStore<T> = T & {
-  nodeList: [];
-  edgeList: [];
+  nodeList: {
+    label: string;
+    children: any;
+    key: string;
+  }[];
+  edgeList: {
+    label: string;
+    children: any;
+    key: string;
+  }[];
   option:{value:string;label:string;}[],
   isAlert:boolean;
   nodeEdge:string;
-  nodeActiveKey:null;
-  edgeActiveKey: null;
+  nodeActiveKey:string;
+  edgeActiveKey: string;
   graphData:any;
   properties:any;
   nodeItems: {};
   edgeItems: {};
   isChecked:string;
   inputvalues:string;
+  detail:boolean;
 };
 const initialStore: IStore<{}> = {
   nodeList: [],
@@ -22,14 +31,15 @@ const initialStore: IStore<{}> = {
   option:[],
   isAlert:false,
   nodeEdge:'Node',
-  nodeActiveKey:null,
-  edgeActiveKey: null,
+  nodeActiveKey:'',
+  edgeActiveKey: '',
   graphData:[],
   properties:[],
   nodeItems: {},
   edgeItems: {},
   isChecked:'',
-  inputvalues:''
+  inputvalues:'',
+  detail:false
 };
 
 type ContextType<T> = {

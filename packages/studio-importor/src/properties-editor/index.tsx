@@ -279,7 +279,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isM
     };
     const propertyConfigParams = {
       dataSource: configList,
-      columns: nodeConfigColumns?.filter(item=>tableType.includes(item?.title)),
+      columns: nodeConfigColumns?.filter(item=>tableType?.includes(item?.title)),
       bordered: true,
       pagination: false,
       rowSelection: rowSelection,
