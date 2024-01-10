@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Radio, RadioChangeEvent } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
-import { cloneDeep } from 'lodash';
+import {cloneDeep} from 'lodash'
 import { useContext } from '../../valtio/createGraph';
 import Schema from '../schema';
 const NodeEdgeButton = () => {
@@ -24,7 +24,7 @@ const NodeEdgeButton = () => {
         ...nodeList,
         {
           label: 'undefine',
-          children: <Schema nodeEdge={nodeEdge} newActiveKey={newActiveKey} deleteNode={deleteNode} />,
+          children: <Schema nodeEdge={nodeEdge} newActiveKey={newActiveKey} deleteNode={deleteNode}/>,
           key: newActiveKey,
         },
       ];
@@ -38,7 +38,7 @@ const NodeEdgeButton = () => {
         ...edgeList,
         {
           label: 'undefine',
-          children: <Schema nodeEdge={nodeEdge} newActiveKey={newActiveKey} deleteNode={deleteNode} />,
+          children: <Schema nodeEdge={nodeEdge} newActiveKey={newActiveKey} deleteNode={deleteNode}/>,
           key: newActiveKey,
         },
       ];
@@ -48,7 +48,6 @@ const NodeEdgeButton = () => {
       });
     }
   };
-  // del node or edge
   const deleteNode = (val: string, key: string) => {
     let data = val == 'Node' ? cloneDeep(nodeList) : cloneDeep(edgeList);
     const newPanes = data.filter(pane => pane.key !== key);
@@ -59,20 +58,24 @@ const NodeEdgeButton = () => {
           delete nodedata[key];
         }
       });
+      const activeKey = Object.keys(nodedata)[Object.keys(nodedata).length-1];
       updateStore(draft => {
         draft.nodeList = newPanes;
         draft.nodeItems = nodedata;
+        draft.nodeActiveKey = activeKey;
       });
     } else {
-      const edgedata = cloneDeep(edgeItems)
+      const edgedata = cloneDeep(edgeItems);
       Object.entries(edgedata).map((keys, i) => {
         if (keys[0] == key) {
           delete edgedata[key];
         }
       });
+      const activeKey = Object.keys(edgedata)[Object.keys(edgedata).length-1];
       updateStore(draft => {
         draft.edgeList = newPanes;
         draft.edgeItems = edgedata;
+        draft.edgeActiveKey = activeKey;
       });
     }
   };

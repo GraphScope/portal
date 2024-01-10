@@ -1,3 +1,5 @@
+import { DefaultOptionType } from "antd/es/cascader";
+
 // 定义EditColumnsType和IndexData类型
 export type EditColumnsType<T> = {
     inputType?: string;
@@ -29,30 +31,31 @@ export type EditColumnsType<T> = {
     key?: string;
     editable?: boolean;
     editorConfig?: any;
-    render?: () => void;
+    render?: any;
   }
 
   export interface EditableCellProps {
     title: React.ReactNode;
     editable: boolean;
     children: React.ReactNode;
-    dataIndex: keyof any;
+    dataIndex: string;
     record: any;
     inputType: string;
     prop: { options: Array<any> };
-    editorConfig: (record: any) => void;
+    editorConfig: (record: any) => {inputType:string;prop:{
+      options: DefaultOptionType[] | undefined;name:string;
+}};
   }
   export interface EditableRowProps {
     index: number;
-    onChange?: (newData: Array<any>) => void;
   }
 
 export interface ImmerType {
     selectedRows: never[];
-    selectedMapRowKeys: string[];
+    selectedMapRowKeys: any[];
     configList: PropertyList[];
     mapfromfileList: PropertyList[];
-    proSelectKey: never[];
+    proSelectKey: any[];
     propertyOption:{label:string;value:string;}[];
     columnOption:{label:string;value:string;}[];
 }

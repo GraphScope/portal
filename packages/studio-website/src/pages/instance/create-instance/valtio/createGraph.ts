@@ -12,32 +12,34 @@ export type IStore<T> = T & {
     children: any;
     key: string;
   }[];
-  option:{value:string;label:string;}[], 
+  option:{value:string;label:string;}[], /*Source Node Label/Target Node Label options*/
   isAlert:boolean;
-  nodeEdge:string;
-  nodeActiveKey:string;
-  edgeActiveKey: string;
-  graphData:any;
-  properties:any;
-  nodeItems: {};
-  edgeItems: {};
-  inputvalues:string;
-  detail:boolean;
+  nodeEdge:string; /*Node /Edge change value*/
+  nodeActiveKey:string; /*add node key*/ 
+  edgeActiveKey: string; /*add edge key*/ 
+  graphData:any; /*graphIn data*/
+  properties:any; 
+  nodeItems: {}; /*node tabs items*/ 
+  edgeItems: {}; /*edge tabs items*/ 
+  inputvalues:string; /*Choose EngineType input value*/ 
+  detail:boolean; /*create or detail */ 
+  checked:string;
 };
 const initialStore: IStore<{}> = {
   nodeList: [], 
   edgeList: [],
-  option:[], // Source Node Label/Target Node Label options
+  option:[],
   isAlert:false,
-  nodeEdge:'Node', // Node /Edge change value
-  nodeActiveKey:'', // add node key
-  edgeActiveKey: '', // add edge key
-  graphData:[], // graphIn data
+  nodeEdge:'Node',
+  nodeActiveKey:'', 
+  edgeActiveKey: '', 
+  graphData:[],
   properties:[],
-  nodeItems: {}, // node tabs items
-  edgeItems: {}, // edge tabs items
-  inputvalues:'', // Choose EngineType input value
-  detail:false, // create or detail 
+  nodeItems: {},
+  edgeItems: {},
+  inputvalues:'', 
+  detail:false, 
+  checked:'table'
 };
 
 type ContextType<T> = {

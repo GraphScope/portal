@@ -6,15 +6,15 @@ import { ImmerType, IndexData, PropertyList, ConfigColumns } from './interface';
 import { EditType, IconFont } from './mapdata';
 import Editor from './editor';
 
-const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isMapFromFile?:boolean;tableType:string[];propertyType?:{type:string;}[]}> = memo(
+const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFile?:boolean;tableType:string[];propertyType?:{type:string;}[]}> = memo(
   forwardRef((props, ref) => {
     const { properties, onChange ,isMapFromFile,tableType,propertyType} = props;
-    const inputRef = useRef();
+    const inputRef:any = useRef();
     // 使用useImmer创建一个可变状态对象
     const [state, updateState] = useImmer<ImmerType>({
       selectedRows: [],
       selectedMapRowKeys: [],
-      configList: properties,
+      configList: cloneDeep(properties),
       mapfromfileList: [],
       proSelectKey: [],
       propertyOption: [],
@@ -61,7 +61,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isM
             inputType: EditType.INPUT,
             prop: {
               value: record,
-              disabled: record.disable,
+              // disabled: record.disable,
             },
           };
         },
@@ -166,6 +166,8 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isM
     // 定义handleSelectAll、handleSelectRow、mapcolumns等其他辅助函数和变量
     const handleSelectAll = e => {
       if (e.target.checked) {
+        console.log(mapfromfileList.map(item => item?.name));
+        
         updateState(draft => {
           draft.selectedMapRowKeys = mapfromfileList.map(item => item?.name);
         });
@@ -275,7 +277,6 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isM
       dataSource: properties,
       columns: mapcolumns,
       showHeader: false,
-      bordered: false,
       selectedMapRowKeys: selectedMapRowKeys,
       handleSelectAll: handleSelectAll,
       handleSelectRow: handleSelectRow,
@@ -285,7 +286,6 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isM
       dataSource: configList,
       columns: nodeConfigColumns?.filter(item=>tableType?.includes(item?.title)),
       bordered: true,
-      pagination: false,
       rowSelection: rowSelection,
       setConfigList: setConfigList,
       selectedRows: selectedRows,

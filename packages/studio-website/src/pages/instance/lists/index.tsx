@@ -64,7 +64,19 @@ const Lists: React.FC = () => {
     <>
       <div style={{display:'flex',justifyContent:'space-between'}}>
         <h3>Instance List</h3>
-        <Button onClick={()=>{history.push('/instance/create');updateStore(draft=>draft.detail = false)}}>Create Graph Instance</Button>
+        <Button onClick={()=>{history.push('/instance/create');
+        updateStore(draft=>{
+          draft.detail = false;
+          /**
+           * 首次清空列表数据
+           */
+          draft.nodeItems = {};
+          draft.nodeList = [];
+          draft.edgeItems = {};
+          draft.edgeList = [];
+          draft.graphData = [];
+        })}}
+        >Create Graph Instance</Button>
       </div>
       <Table columns={columns} dataSource={data} bordered/>
     </>

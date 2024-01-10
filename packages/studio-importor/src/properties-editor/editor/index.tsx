@@ -54,7 +54,7 @@ const Editor = memo(forwardRef((props: { mapConfigParams: any; propertyConfigPar
                     <div style={{ width: '350px' }}>
                       <EditTable
                         rowKey="mapfromfile"
-                        bordered={mapConfigParams?.bordered}
+                        bordered={false}
                         showHeader={mapConfigParams?.showHeader}
                         columns={mapConfigParams?.columns}
                         dataSource={mapConfigParams?.dataSource}
@@ -95,7 +95,6 @@ const Editor = memo(forwardRef((props: { mapConfigParams: any; propertyConfigPar
           inputDoubleClick={propertyConfigParams?.inputDoubleClick}
           inputBlur={propertyConfigParams?.inputBlur}
           bordered={true}
-          pagination={false}
           rowSelection={{
             ...propertyConfigParams?.rowSelection,
           }}

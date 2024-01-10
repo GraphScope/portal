@@ -95,7 +95,7 @@ const GraphIn = () => {
           </Space>
         ) : null}
       </div>
-      <Graphin data={graphData} layout={{ type: 'circular' }} fitView fitCenter style={{ height: '60vh' }}>
+      <Graphin data={graphData} layout={{ type: 'circular' }} fitView style={{ height: '60vh' }}>
         <ZoomCanvas enableOptimize minZoom={0.5} />
       </Graphin>
     </div>

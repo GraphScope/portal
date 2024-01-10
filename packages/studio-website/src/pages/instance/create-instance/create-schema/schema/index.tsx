@@ -13,7 +13,7 @@ const CreateSchema = (props:{nodeEdge?:string;newActiveKey?:string;deleteNode?:a
   const [form] = Form.useForm();
   const { store, updateStore } = useContext();
   const { properties, nodeItems, edgeItems ,detail} = store;
-  const propertyRef = React.useRef();
+  const propertyRef= React.useRef();
   const formValuesChange = (changedValues: any, allValues: any) => {
     formChange();
   };

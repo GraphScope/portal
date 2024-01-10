@@ -2,7 +2,7 @@ import { Form, Input, Select, Table } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import React, { createContext, useContext, useEffect, memo, useRef, forwardRef } from 'react';
 import { EditOutlined } from '@ant-design/icons';
-import { EditableCellProps, EditableRowProps } from '../interface';
+import { EditableCellProps, EditableRowProps ,ConfigColumns,PropertyList} from '../interface';
 import { EditType } from '../mapdata';
 // import styles from './index.module.less';
 
@@ -10,17 +10,20 @@ const EditableContext = createContext<FormInstance<any> | null>(null);
 const TableContext = createContext<{
   onChange?: (i: any) => void;
   data?: Array<any>;
-  rowKey?: string;
+  rowKey: string;
   inputDoubleClick: (record: any) => void;
   inputBlur: (record: any) => void;
   ref: any;
-}>({});
-type Prop = {
-  columns: any;
-  dataSource: any;
-  onChange?: (newData: Array<any>) => void;
-  rowKey: string;
-};
+}>({
+  rowKey: '',
+  inputDoubleClick: function (record: any): void {
+    throw new Error('Function not implemented.');
+  },
+  inputBlur: function (record: any): void {
+    throw new Error('Function not implemented.');
+  },
+  ref: undefined
+});
 
 const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
   const [form] = Form.useForm();
@@ -29,7 +32,7 @@ const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
     <Form
       form={form}
       component={false}
-      disabled={data?.find(item => item[rowKey] === props[`data-row-key`])?.disabled}
+      // disabled={data?.find(item => item[rowKey] === props[`data-row-key`])?.disabled}
       onValuesChange={() => {
         const newData = data?.map(item => {
           if (item[rowKey] === props[`data-row-key`]) {
@@ -63,7 +66,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     }
   }, [record]);
   if (editable) {
-    const { inputType, prop, name } = editorConfig(record);
+    const { inputType, prop } = editorConfig(record);
     const { inputDoubleClick, inputBlur, ref } = useContext(TableContext)!;
     if (inputType === EditType.INPUT) {
       childNode = (
@@ -72,7 +75,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
           style={{ margin: 0 }}
           name={dataIndex}
           rules={
-            prop?.name && [
+            [
               {
                 required: true,
                 validator: (_props, value) => {
@@ -118,17 +121,16 @@ const EditableCell: React.FC<EditableCellProps> = ({
     </td>
   );
 };
-export const EditTable = memo(
+export const EditTable: React.FC<{ columns: ConfigColumns[] ; dataSource:PropertyList[];onChange?:any;rowKey:string;inputDoubleClick?:any;inputBlur?:any;bordered?:boolean;showHeader?:boolean;rowSelection?:any;ref?:any;}> = memo(
   forwardRef(({ columns, dataSource, onChange, rowKey, inputDoubleClick, inputBlur, ...props }, ref) => {
     const data = dataSource;
-
     const components = {
       body: {
         row: EditableRow,
         cell: EditableCell,
       },
     };
-    const editColumns = columns.map((col: EditableCellProps) => {
+    const editColumns = columns.map(col => {
       if (!col.editable) {
         return col;
       }

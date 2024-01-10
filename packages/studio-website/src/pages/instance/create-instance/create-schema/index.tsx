@@ -11,7 +11,7 @@ interface ICreateInstanceProps {
 }
 const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
   const { store, updateStore } = useContext();
-  const { nodeList, edgeList ,nodeEdge,nodeActiveKey,edgeActiveKey,nodeItems,edgeItems,detail} = store;
+  const { nodeList, edgeList ,nodeEdge,nodeActiveKey,edgeActiveKey,nodeItems,edgeItems} = store;
   React.useEffect(() => {
     onChange(nodeList[0]?.key);
     updateStore(draft=>{
@@ -19,8 +19,10 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
     })
   }, []);
   React.useEffect(() => {
-    const data = cloneDeep(nodeItems);
-    let arr: { label: any; children: any; key: string }[] | { label: any; children: JSX.Element; key: string }[] = [];
+    console.log(cloneDeep(nodeItems));
+    
+    const data: { label: string; children: JSX.Element; key: string }[] = cloneDeep(nodeItems);
+    let arr: { label: any; children: JSX.Element; key: string }[] = [];
     let nodearr: { value: string; label: string }[] = [];
     Object.entries(data).map(key => {
       arr.push({
@@ -53,7 +55,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
     });
   }, [nodeItems]);
   React.useEffect(() => {
-    const data = cloneDeep(edgeItems);
+    const data: { label: string; children: JSX.Element; key: string }[] = cloneDeep(edgeItems);
     let arr: { label: any; children: any; key: string }[] | { label: any; children: JSX.Element; key: string }[] = [];
     Object.entries(data).map(key => {
       arr.push({
@@ -75,7 +77,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
         key: key[0],
       });
     });
-    const nodedata = cloneDeep(nodeItems);
+    const nodedata: { label: string; children: JSX.Element; key: string }[]  = cloneDeep(nodeItems);
     let nodearr: { value: any; label: any }[] = [];
     Object.entries(nodedata).map(key => {
       nodearr.push({
