@@ -1,111 +1,179 @@
 import * as React from 'react';
-import { Form, Input, Select, Button } from 'antd';
-import {PropertiesEditor} from '@graphscope/studio-importor';
+import { Card, Tabs,  Row, Col, Tooltip } from 'antd';
 import { cloneDeep } from 'lodash';
-import { useContext } from '../../valtio/createGraph';
-export type FieldType = {
-  label?: string;
-  src_label?: string;
-  dst_label?: string;
-};
-const CreateSchema = (props:{nodeEdge:string;isEdit:boolean;newActiveKey:string;deleteNode:()=>void;data:any;}) => {
-  const { nodeEdge, isEdit, newActiveKey, deleteNode, data ,} = props;
-  const [form] = Form.useForm();
+import { useContext } from '../valtio/createGraph';
+import GraphIn from './graph-in';
+import Schema from '../create-schema/schema';
+import NodeEdgeButton from './node-edge-button'
+interface ICreateInstanceProps {
+  graphData?: any;
+  isAlert?: boolean;
+}
+const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
   const { store, updateStore } = useContext();
-  const { properties, nodeItems, edgeItems } = store;
-  const propertyRef = React.useRef();
-  const formValuesChange = (changedValues: any, allValues: any) => {
-    formChange();
-  };
+  const { nodeList, edgeList ,nodeEdge,nodeActiveKey,edgeActiveKey,nodeItems,edgeItems,detail} = store;
   React.useEffect(() => {
-    if (data) {
-      form.setFieldsValue(data);
-    }
+    onChange(nodeList[0]?.key);
+    updateStore(draft=>{
+      draft.nodeEdge = 'Node'
+    })
   }, []);
   React.useEffect(() => {
-    formChange();
-  }, [properties]);
-  const formChange = () => {
-    if (nodeEdge == 'Node') {
-      const getData = cloneDeep(nodeItems);
-      getData[newActiveKey] = { ...form.getFieldsValue(), properties: propertyRef.current.getValues() };
+    const data = cloneDeep(nodeItems);
+    let arr: { label: any; children: any; key: string }[] | { label: any; children: JSX.Element; key: string }[] = [];
+    let nodearr: { value: string; label: string }[] = [];
+    Object.entries(data).map(key => {
+      arr.push({
+        label: (
+          <div style={{ width: '60px', overflow: 'hidden' }}>
+            <Tooltip placement="topLeft" title={key[1].label || 'undefine'}>
+              {key[1].label || 'undefine'}
+            </Tooltip>
+          </div>
+        ),
+        children: (
+          <Schema
+            nodeEdge={'Node'}
+            newActiveKey={key[0]}
+            deleteNode={deleteNode}
+            data={key[1]}
+          />
+        ),
+        key: key[0],
+      });
+      nodearr.push({
+        value: key[1].label,
+        label: key[1].label,
+      });
+    });
+
+    updateStore(draft => {
+      draft.option = nodearr;
+      draft.nodeList = arr
+    });
+  }, [nodeItems]);
+  React.useEffect(() => {
+    const data = cloneDeep(edgeItems);
+    let arr: { label: any; children: any; key: string }[] | { label: any; children: JSX.Element; key: string }[] = [];
+    Object.entries(data).map(key => {
+      arr.push({
+        label: (
+          <div style={{ width: '60px', overflow: 'hidden' }}>
+            <Tooltip placement="topLeft" title={key[1].label || 'undefine'}>
+              {key[1].label || 'undefine'}
+            </Tooltip>
+          </div>
+        ),
+        children: (
+          <Schema
+            nodeEdge={'Edge'}
+            newActiveKey={key[0]}
+            deleteNode={deleteNode}
+            data={key[1]}
+          />
+        ),
+        key: key[0],
+      });
+    });
+    const nodedata = cloneDeep(nodeItems);
+    let nodearr: { value: any; label: any }[] = [];
+    Object.entries(nodedata).map(key => {
+      nodearr.push({
+        value: key[1].label,
+        label: key[1].label,
+      });
+    });
+    updateStore(draft => {
+      draft.edgeList = arr;
+      draft.option = nodearr
+    });
+  }, [edgeItems]);
+  // del node or edge
+  const deleteNode = (val: string, key: string) => {
+    let data = val == 'Node' ? cloneDeep(nodeList) : cloneDeep(edgeList);
+    const newPanes = data.filter(pane => pane.key !== key);
+    if (val == 'Node') {
+      const nodedata = cloneDeep(nodeItems);
+      Object.entries(nodedata).map((keys, i) => {
+        if (keys[0] == key) {
+          delete nodedata[key];
+        }
+      });
+      const activeKey = Object.keys(nodedata)[Object.keys(nodedata).length-1];
       updateStore(draft => {
-        draft.nodeItems = getData;
+        draft.nodeList = newPanes;
+        draft.nodeItems = nodedata;
+        draft.nodeActiveKey = activeKey;
       });
     } else {
-      const getData = cloneDeep(edgeItems);
-      getData[newActiveKey] = { ...form.getFieldsValue(), properties: propertyRef.current.getValues() };
+      const edgedata = cloneDeep(edgeItems);
+      Object.entries(edgedata).map((keys, i) => {
+        if (keys[0] == key) {
+          delete edgedata[key];
+        }
+      });
+      const activeKey = Object.keys(edgedata)[Object.keys(edgedata).length-1];
       updateStore(draft => {
-        draft.edgeItems = getData;
+        draft.edgeList = newPanes;
+        draft.edgeItems = edgedata;
+        draft.edgeActiveKey = activeKey;
       });
     }
   };
+  const onChange = (key: string) => {
+    if (nodeEdge == 'Node') {
+      updateStore(draft => {
+        draft.nodeActiveKey = key;
+      });
+    } else {
+      updateStore(draft => {
+        draft.edgeActiveKey = key;
+      });
+    }
+  };
+
   return (
-    <>
-      <Form
-        form={form}
-        layout="vertical"
-        onValuesChange={(changedValues, allValues) => formValuesChange(changedValues, allValues)}
-      >
-        <div style={{ position: 'relative' }}>
-          <Form.Item<FieldType>
-            label={nodeEdge == 'Node' ? 'Node Label' : 'Edge Label'}
-            name="label"
-            tooltip=" "
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            rules={[{ required: true, message: '' }]}
-            style={{ marginBottom: '0' }}
-          >
-            <Input disabled={isEdit} />
-          </Form.Item>
-          <Button
-            style={{ position: 'absolute', top: '0px', right: '0px' }}
-            onClick={() => deleteNode(nodeEdge, newActiveKey)}
-          >
-            Delete
-          </Button>
-        </div>
-        {nodeEdge !== 'Node' ? (
-          <>
-            <Form.Item<FieldType>
-              label="Source Node Label"
-              name="src_label"
-              tooltip=" "
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              rules={[{ required: true, message: '' }]}
-              style={{ marginBottom: '0' }}
+      <Card>
+        <Row style={{ marginTop: '16px' }}>
+          <Col span={14}>
+            <div
+              style={{
+                backgroundColor: '#fff',
+                padding: '16px',
+                border: '1px solid #000',
+                height: '65vh',
+                marginRight: '12px',
+                overflow: 'hidden',
+              }}
             >
-              <Select options={store?.option} disabled={isEdit} />
-            </Form.Item>
-            <Form.Item<FieldType>
-              label="Target Node Labek"
-              name="dst_label"
-              tooltip=" "
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              rules={[{ required: true, message: '' }]}
-              style={{ marginBottom: '0' }}
-            >
-              <Select options={store?.option} disabled={isEdit} />
-            </Form.Item>
-          </>
-        ) : null}
-      </Form>
-      <PropertiesEditor
-        ref={propertyRef}
-        properties={data?.properties || []}
-        propertyType={[{ type: 'string' }, { type: 'datetime' }]}
-        onChange={values => {
-          updateStore(draft => {
-            draft.properties = values;
-          });
-        }}
-        tableType={['Name', 'Type', 'ID']} // all['Name', 'Column', 'Type', 'ID']
-      />
-    </>
+              <NodeEdgeButton/>
+              <div>
+                <div style={{ display: nodeEdge == 'Node' ? '' : 'none' }}>
+                  <Tabs
+                    tabBarStyle={{ borderLeft: 0 }}
+                    tabPosition="left"
+                    items={cloneDeep(nodeList)}
+                    activeKey={nodeActiveKey}
+                    onChange={onChange}
+                  />
+                </div>
+                <div style={{ display: nodeEdge !== 'Node' ? '' : 'none' }}>
+                  <Tabs
+                    tabBarStyle={{ borderLeft: 0 }}
+                    tabPosition="left"
+                    items={cloneDeep(edgeList)}
+                    activeKey={edgeActiveKey}
+                    onChange={onChange}
+                  />
+                </div>
+              </div>
+            </div>
+          </Col>
+          <Col span={10}>
+            <GraphIn />
+          </Col>
+        </Row>
+      </Card>
   );
 };
-
-export default CreateSchema;
+export default CreateInstance;

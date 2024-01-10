@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Radio, Card, Row, Col, Button, Steps, Space } from 'antd';
-import { useContext } from '../../valtio/createGraph';
+import { useContext } from '../valtio/createGraph';
 import ReactJson from 'react-json-view';
 interface IImportDataProps {}
 const ConfigInfo: React.FunctionComponent<IImportDataProps> = props => {

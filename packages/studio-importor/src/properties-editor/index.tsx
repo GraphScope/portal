@@ -52,7 +52,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isM
     const nodeConfigColumns: ConfigColumns[] = [
       {
         title: 'Name',
-        // width: '40%',
+        width: '40%',
         dataIndex: 'name',
         key: 'name',
         editable: true,
@@ -69,7 +69,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isM
       {
         title: 'Type',
         dataIndex: 'type',
-        // width: '30%',
+        width: '25%',
         key: 'type',
         editable: true,
         editorConfig: (record: IndexData) => {
@@ -85,7 +85,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isM
       {
         title: 'Column',
         dataIndex: 'token',
-        // width: '25%',
+        width: '25%',
         key: 'token',
         editable: true,
         editorConfig: (record: IndexData) => {
@@ -105,7 +105,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isM
         title: 'ID',
         dataIndex: 'operate',
         key: 'operate',
-        width: '5%',
+        width: '10%',
         render: (_, record: any) =>
           record?.primaryKey ? (
             <IconFont type="icon-yuechi" onClick={() => primaryKeyClick(record)} />
@@ -144,7 +144,11 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void ;isM
     // 定义addNodeConfig函数，用于添加新的表格行
     const addNodeConfig = () => {
       const list: PropertyList[] = [...configList];
-      list.push({ id: uniqueId(`index_`), name: '', type: '', token: '', primaryKey: false, disable: false });
+      if(!list?.length){
+        list.push({ id: uniqueId(`index_`), name: '', type: '', token: '', primaryKey: true, disable: false });
+      }else{
+        list.push({ id: uniqueId(`index_`), name: '', type: '', token: '', primaryKey: false, disable: false });
+      }
       updateState(draft => {
         draft.configList = list;
       });

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Tag, Radio, Collapse, Row, Col, Button, Space } from 'antd';
 import { history } from 'umi';
-import GraphIn from '../graph-in';
+import GraphIn from '../create-schema/graph-in';
 interface IImportDataProps {}
 const text = `
   A dog is a type of domesticated animal.

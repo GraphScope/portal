@@ -10,11 +10,11 @@
     "start": "npm run dev"
   },
   "dependencies": {
-    "@graphscope/studio-server": "workspace:*",
     "@ant-design/icons": "^5.2.6",
     "@antv/graphin": "^2.7.27",
     "@graphscope/studio-importor": "workspace:*",
     "@graphscope/studio-query": "workspace:*",
+    "@graphscope/studio-server": "workspace:*",
     "antd": "^5.12.5",
     "lodash": "^4.17.21",
     "react-json-view": "^1.21.3",
@@ -23,8 +23,10 @@
     "valtio": "^1.12.1"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.202",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
+    "@types/uuid": "^9.0.7",
     "typescript": "^5.3.3"
   }
 }

@@ -1,178 +1,85 @@
-import * as React from 'react';
-import { Button, Card, Radio, Tabs,  Row, Col, Tooltip } from 'antd';
-// import { v4 as uuidv4 } from 'uuid';
-import { cloneDeep } from 'lodash';
-import { useContext } from '../valtio/createGraph';
-import GraphIn from './graph-in';
-import CreateSchema from './create-schema';
-import NodeEdgeButton from './node-edge-button'
-interface ICreateInstanceProps {
-  graphData?: any;
-  isAlert?: boolean;
-}
-const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
-  const { store, updateStore } = useContext();
-  const { nodeList, edgeList ,nodeEdge,nodeActiveKey,edgeActiveKey,nodeItems,edgeItems,detail} = store;
-  React.useEffect(() => {
-    onChange(nodeList[0]?.key);
-    updateStore(draft=>{
-      draft.nodeEdge = 'Node'
-    })
-  }, []);
-  React.useEffect(() => {
-    const data = cloneDeep(nodeItems);
-    let arr: { label: any; children: any; key: string }[] | { label: any; children: JSX.Element; key: string }[] = [];
-    let nodearr: { value: string; label: string }[] = [];
-    Object.entries(data).map(key => {
-      arr.push({
-        label: (
-          <div style={{ width: '60px', overflow: 'hidden' }}>
-            <Tooltip placement="topLeft" title={key[1].label || 'undefine'}>
-              {key[1].label || 'undefine'}
-            </Tooltip>
-          </div>
-        ),
-        children: (
-          <CreateSchema
-            nodeEdge={'Node'}
-            isEdit={detail}
-            newActiveKey={key[0]}
-            deleteNode={deleteNode}
-            data={key[1]}
-          />
-        ),
-        key: key[0],
-      });
-      nodearr.push({
-        value: key[1].label,
-        label: key[1].label,
-      });
-    });
+import React, { useState } from 'react';
+import { Button, message, Steps, theme ,Alert} from 'antd';
+import { useContext } from '../create-instance/valtio/createGraph';
+import ChooseEnginetype from '../create-instance/choose-enginetype';
+import CreateSchema from '../create-instance/create-schema';
+import ConfigInfo from '../create-instance/confirm-info';
 
-    updateStore(draft => {
-      draft.option = nodearr;
-      draft.nodeList = arr
-    });
-  }, [nodeItems]);
-  React.useEffect(() => {
-    const data = cloneDeep(edgeItems);
-    let arr: { label: any; children: any; key: string }[] | { label: any; children: JSX.Element; key: string }[] = [];
-    Object.entries(data).map(key => {
-      arr.push({
-        label: (
-          <div style={{ width: '60px', overflow: 'hidden' }}>
-            <Tooltip placement="topLeft" title={key[1].label || 'undefine'}>
-              {key[1].label || 'undefine'}
-            </Tooltip>
-          </div>
-        ),
-        children: (
-          <CreateSchema
-            nodeEdge={'Edge'}
-            isEdit={detail}
-            newActiveKey={key[0]}
-            deleteNode={deleteNode}
-            data={key[1]}
-          />
-        ),
-        key: key[0],
-      });
-    });
-    const nodedata = cloneDeep(nodeItems);
-    let nodearr: { value: any; label: any }[] = [];
-    Object.entries(nodedata).map(key => {
-      nodearr.push({
-        value: key[1].label,
-        label: key[1].label,
-      });
-    });
-    updateStore(draft => {
-      draft.edgeList = arr;
-      draft.option = nodearr
-    });
-  }, [edgeItems]);
-  // del node or edge
-  const deleteNode = (val: string, key: string) => {
-    let data = val == 'Node' ? cloneDeep(nodeList) : cloneDeep(edgeList);
-    const newPanes = data.filter(pane => pane.key !== key);
-    if (val == 'Node') {
-      const nodedata = cloneDeep(nodeItems);
-      Object.entries(nodedata).map((keys, i) => {
-        if (keys[0] == key) {
-          delete nodedata[key];
-        }
-      });
-      updateStore(draft => {
-        draft.nodeList = newPanes;
-        draft.nodeItems = nodedata
-      });
-    } else {
-      const edgedata = cloneDeep(edgeItems);
-      Object.entries(edgedata).map((keys, i) => {
-        if (keys[0] == key) {
-          delete edgedata[key];
-        }
-      });
-      updateStore(draft => {
-        draft.edgeList = newPanes;
-        draft.edgeItems = edgedata
-      });
-    }
-  };
-  const onChange = (key: string) => {
-    if (nodeEdge == 'Node') {
-      updateStore(draft => {
-        draft.nodeActiveKey = key;
-      });
-    } else {
-      updateStore(draft => {
-        draft.edgeActiveKey = key;
-      });
-    }
+
+
+const Lists = () => {
+  const { store } = useContext();
+  const { isAlert } = store;
+  const { token } = theme.useToken();
+  const [current, setCurrent] = useState(0);
+  const steps = [
+    {
+      title: 'Choose EngineType',
+      content: <ChooseEnginetype />,
+    },
+    {
+      title: 'Create Schema',
+      content: <CreateSchema />,
+    },
+    {
+      title: 'Result',
+      content: <ConfigInfo />,
+    },
+  ];
+  const next = () => {
+    setCurrent(current + 1);
+    console.log(store.nodeList,store.nodeItems);
+    
   };
 
+  const prev = () => {
+    setCurrent(current - 1);
+  };
+
+  const items = steps.map(item => ({ key: item.title, title: item.title }));
+
+  const contentStyle: React.CSSProperties = {
+    lineHeight: '260px',
+    textAlign: 'center',
+    color: token.colorTextTertiary,
+    backgroundColor: token.colorFillAlter,
+    borderRadius: token.borderRadiusLG,
+    border: `1px dashed ${token.colorBorder}`,
+    marginTop: 16,
+  };
   return (
-      <Card>
-        <Row style={{ marginTop: '16px' }}>
-          <Col span={14}>
-            <div
-              style={{
-                backgroundColor: '#fff',
-                padding: '16px',
-                border: '1px solid #000',
-                height: '65vh',
-                marginRight: '12px',
-                overflow: 'hidden',
-              }}
-            >
-              <NodeEdgeButton/>
-              <div>
-                <div style={{ display: nodeEdge == 'Node' ? '' : 'none' }}>
-                  <Tabs
-                    tabBarStyle={{ borderLeft: 0 }}
-                    tabPosition="left"
-                    items={cloneDeep(nodeList)}
-                    activeKey={nodeActiveKey}
-                    onChange={onChange}
-                  />
-                </div>
-                <div style={{ display: nodeEdge !== 'Node' ? '' : 'none' }}>
-                  <Tabs
-                    tabBarStyle={{ borderLeft: 0 }}
-                    tabPosition="left"
-                    items={cloneDeep(edgeList)}
-                    activeKey={edgeActiveKey}
-                    onChange={onChange}
-                  />
-                </div>
-              </div>
-            </div>
-          </Col>
-          <Col span={10}>
-            <GraphIn />
-          </Col>
-        </Row>
-      </Card>
+    <>
+      <Steps current={current} items={items} />
+      <div style={contentStyle}>{steps[current].content}</div>
+      {isAlert ? (
+        <Alert
+          message="您的图实例类型为 Interactive，一旦创建则不支持修改图模型，您可以选择新建图实例"
+          type="info"
+          showIcon
+          closable
+          style={{ margin: '16px 0' }}
+        />
+      ) : (
+        <div style={{ marginTop: 24 }}>
+          {current < steps.length - 1 && (
+            <Button type="primary" onClick={() => next()}>
+              下一步
+            </Button>
+          )}
+          {current === steps.length - 1 && (
+            <Button type="primary" onClick={() => message.success('Processing complete!')}>
+              完成
+            </Button>
+          )}
+          {current > 0 && (
+            <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+              上一步
+            </Button>
+          )}
+        </div>
+      )}
+    </>
   );
 };
-export default CreateInstance;
+
+export default Lists;

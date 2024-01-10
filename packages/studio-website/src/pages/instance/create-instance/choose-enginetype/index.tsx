@@ -1,11 +1,12 @@
 import React ,{useState}from 'react';
-import {Form, Input, Row, Col, Avatar, Card } from 'antd';
-import { useContext } from '../../valtio/createGraph';
+import {Form, Input, Row, Col, Avatar, Card, Select } from 'antd';
+import { useContext } from '../valtio/createGraph';
 import styles from './index.module.less';
 
 export type FieldType = {
   inputname?: string;
   type?: string;
+  directed:boolean;
 };
 const ChooseEnginetype: () => JSX.Element = () => {
   const [form] = Form.useForm();
@@ -65,6 +66,16 @@ const ChooseEnginetype: () => JSX.Element = () => {
             }
 
           </Row>
+        </Form.Item>
+        <Form.Item<FieldType>
+          label="Directed"
+          name="directed"
+          tooltip=" "
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 8 }}
+          rules={[{ required: true, message: '' }]}
+        >
+          <Select defaultValue={true} options={[{value:true,label:'True'},{value:false,label:'False'}]}/>
         </Form.Item>
       </Form>
   );

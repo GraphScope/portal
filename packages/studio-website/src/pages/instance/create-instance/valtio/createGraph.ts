@@ -12,7 +12,7 @@ export type IStore<T> = T & {
     children: any;
     key: string;
   }[];
-  option:{value:string;label:string;}[],
+  option:{value:string;label:string;}[], 
   isAlert:boolean;
   nodeEdge:string;
   nodeActiveKey:string;
@@ -23,28 +23,21 @@ export type IStore<T> = T & {
   edgeItems: {};
   inputvalues:string;
   detail:boolean;
-  checked:string;
-  json_object:object;
 };
 const initialStore: IStore<{}> = {
-  nodeList: [],
+  nodeList: [], 
   edgeList: [],
-  option:[],
+  option:[], // Source Node Label/Target Node Label options
   isAlert:false,
-  nodeEdge:'Node',
-  nodeActiveKey:'',
-  edgeActiveKey: '',
-  graphData:[],
+  nodeEdge:'Node', // Node /Edge change value
+  nodeActiveKey:'', // add node key
+  edgeActiveKey: '', // add edge key
+  graphData:[], // graphIn data
   properties:[],
-  nodeItems: {},
-  edgeItems: {},
-  inputvalues:'',
-  detail:false,
-  checked:'table',
-  json_object:{
-    title: 'Choose EngineType',
-    type: 'Create Schema',
-  }
+  nodeItems: {}, // node tabs items
+  edgeItems: {}, // edge tabs items
+  inputvalues:'', // Choose EngineType input value
+  detail:false, // create or detail 
 };
 
 type ContextType<T> = {

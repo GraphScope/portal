@@ -153,6 +153,7 @@ export const EditTable = memo(
           rowKey={rowKey}
           pagination={false}
           {...props}
+          scroll={{y:300}}
           // className={styles[`table-container`]}
         />
       </TableContext.Provider>
