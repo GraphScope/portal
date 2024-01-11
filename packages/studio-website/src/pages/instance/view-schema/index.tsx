@@ -7,7 +7,7 @@ interface IViewSchemaProps {
 const ViewSchema: React.FunctionComponent<IViewSchemaProps> = props => {
   return (
     <div>
-      <CreateInstance isAlert={true}/>
+      <CreateInstance />
     </div>
   );
 };

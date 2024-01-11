@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Row, Col, Select, Input, Space, Button, Radio } from 'antd';
+import { Form, Row, Col, Select, Input, Space, Button, Radio, RadioChangeEvent } from 'antd';
 import PrpertiesEditor from '@graphscope/studio-importor'
 interface IImportDataProps {}
 
@@ -26,7 +26,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       });
     }
   };
-  const nodeEdgeChange = (e: { target: { value: string } }): void => {
+  const nodeEdgeChange:(e:RadioChangeEvent)=>void = (e) => {
 
   };
   return (

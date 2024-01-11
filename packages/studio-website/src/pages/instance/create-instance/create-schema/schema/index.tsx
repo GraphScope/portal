@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Form, Input, Select, Button } from 'antd';
-import {PropertiesEditor} from '@graphscope/studio-importor';
+import { PropertiesEditor } from '@graphscope/studio-importor';
 import { cloneDeep } from 'lodash';
 import { useContext } from '../../valtio/createGraph';
 export type FieldType = {
@@ -8,12 +8,17 @@ export type FieldType = {
   src_label?: string;
   dst_label?: string;
 };
-const CreateSchema = (props:{nodeEdge?:string;newActiveKey?:string;deleteNode?:any;data?:any;}) => {
-  const { nodeEdge, newActiveKey, deleteNode, data } = props;
+type SchemaType = {
+  newActiveKey: string;
+  deleteNode: (nodeEdge: string, newActiveKey: string ) => void  ;
+  data?: any;
+};
+const CreateSchema: React.FunctionComponent<SchemaType> = props => {
+  const { newActiveKey, deleteNode, data } = props;
   const [form] = Form.useForm();
   const { store, updateStore } = useContext();
-  const { properties, nodeItems, edgeItems ,detail} = store;
-  const propertyRef= React.useRef();
+  const { nodeEdge,properties, nodeItems, edgeItems, detail,option } = store;
+  const propertyRef = React.useRef<any>();
   const formValuesChange = (changedValues: any, allValues: any) => {
     formChange();
   };
@@ -27,14 +32,14 @@ const CreateSchema = (props:{nodeEdge?:string;newActiveKey?:string;deleteNode?:a
   }, [properties]);
   const formChange = () => {
     if (nodeEdge == 'Node') {
-      const getData = cloneDeep(nodeItems);
-      getData[newActiveKey] = { ...form.getFieldsValue(), properties: propertyRef.current.getValues() };
+      const getData:any = cloneDeep(nodeItems);
+      getData[newActiveKey] = { ...form.getFieldsValue(), properties: propertyRef?.current?.getValues() };
       updateStore(draft => {
         draft.nodeItems = getData;
       });
     } else {
-      const getData = cloneDeep(edgeItems);
-      getData[newActiveKey] = { ...form.getFieldsValue(), properties: propertyRef.current.getValues() };
+      const getData:any = cloneDeep(edgeItems);
+      getData[newActiveKey] = { ...form.getFieldsValue(), properties: propertyRef?.current?.getValues() };
       updateStore(draft => {
         draft.edgeItems = getData;
       });
@@ -77,7 +82,7 @@ const CreateSchema = (props:{nodeEdge?:string;newActiveKey?:string;deleteNode?:a
               rules={[{ required: true, message: '' }]}
               style={{ marginBottom: '0' }}
             >
-              <Select options={store?.option} disabled={detail} />
+              <Select options={[...option]} disabled={detail} />
             </Form.Item>
             <Form.Item<FieldType>
               label="Target Node Labek"
@@ -88,7 +93,7 @@ const CreateSchema = (props:{nodeEdge?:string;newActiveKey?:string;deleteNode?:a
               rules={[{ required: true, message: '' }]}
               style={{ marginBottom: '0' }}
             >
-              <Select options={store?.option} disabled={detail} />
+              <Select options={[...option]} disabled={detail} />
             </Form.Item>
           </>
         ) : null}

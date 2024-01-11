@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState ,memo} from 'react';
 import { Button, message, Steps, theme, Alert, Breadcrumb } from 'antd';
 import { useContext } from '../create-instance/valtio/createGraph';
 import ChooseEnginetype from '../create-instance/choose-enginetype';
 import CreateSchema from '../create-instance/create-schema';
 import ConfigInfo from '../create-instance/confirm-info';
 
-const Lists = () => {
+const Lists: React.FunctionComponent = () => {
   const { store } = useContext();
   const { isAlert } = store;
   const { token } = theme.useToken();
@@ -80,4 +80,4 @@ const Lists = () => {
   );
 };
 
-export default Lists;
+export default memo(Lists);

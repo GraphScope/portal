@@ -12,7 +12,7 @@ export type IStore<T> = T & {
     children: any;
     key: string;
   }[];
-  option:{value:string;label:string;}[], /*Source Node Label/Target Node Label options*/
+  option:{ value: string; label: string;}[]; /*Source Node Label/Target Node Label options*/
   isAlert:boolean;
   nodeEdge:string; /*Node /Edge change value*/
   nodeActiveKey:string; /*add node key*/ 
@@ -23,7 +23,7 @@ export type IStore<T> = T & {
   edgeItems: {}; /*edge tabs items*/ 
   inputvalues:string; /*Choose EngineType input value*/ 
   detail:boolean; /*create or detail */ 
-  checked:string;
+  checked:'table' | 'json' | 'graph';
 };
 const initialStore: IStore<{}> = {
   nodeList: [], 

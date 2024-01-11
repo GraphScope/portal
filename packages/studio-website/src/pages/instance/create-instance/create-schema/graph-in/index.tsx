@@ -11,12 +11,12 @@ const GraphIn = () => {
     getVertexEdges();
   }, [nodeItems,edgeItems]);
   const getVertexEdges = async () => {
-    const result = {
+    const result:{vertices:{label:string;}[];edges:{label:string;src_label:string;dst_label:string;}[];} = {
       vertices: Object.values(nodeItems),
       edges: Object.values(edgeItems),
     };    
     let nodes: { id: string; label: string; style: any }[] = [];
-    let edge: { source: string; target: string; style: any; label: string }[] = [];
+    let edge: { source: string; target: string; label: string }[] = [];
     let edge_: { source: string; target: string; style: any; label: string }[] = [];
     result?.vertices?.map(v => {
       nodes.push({
@@ -65,9 +65,9 @@ const GraphIn = () => {
     }
     });
     let ed = Utils.processEdges([...edge, ...edge_], { poly: 30, loop: 20 });
-    ed.forEach((edge, index) => {
-      const { label } = edge;
-      edge.style.label = {
+    ed.forEach((item:any) => {
+      const { label ,style} = item;
+      style.label = {
         value: label,
         fill: 'block',
         fontSize: 12,

@@ -2,14 +2,14 @@ import React, { type FC, useEffect, forwardRef, useImperativeHandle, useRef, mem
 import { Checkbox } from 'antd';
 import { uniqueId, cloneDeep } from 'lodash';
 import { useImmer } from 'use-immer';
-import { ImmerType, IndexData, PropertyList, ConfigColumns } from './interface';
+import { ImmerType, IndexData, PropertyList, ConfigColumns ,MapConfigParamsType,PropertyConfigParamsType} from './interface';
 import { EditType, IconFont } from './mapdata';
 import Editor from './editor';
 
 const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFile?:boolean;tableType:string[];propertyType?:{type:string;}[]}> = memo(
   forwardRef((props, ref) => {
     const { properties, onChange ,isMapFromFile,tableType,propertyType} = props;
-    const inputRef:any = useRef();
+    const inputRef = useRef<HTMLInputElement>();
     // 使用useImmer创建一个可变状态对象
     const [state, updateState] = useImmer<ImmerType>({
       selectedRows: [],
@@ -166,8 +166,6 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFi
     // 定义handleSelectAll、handleSelectRow、mapcolumns等其他辅助函数和变量
     const handleSelectAll = e => {
       if (e.target.checked) {
-        console.log(mapfromfileList.map(item => item?.name));
-        
         updateState(draft => {
           draft.selectedMapRowKeys = mapfromfileList.map(item => item?.name);
         });
@@ -273,7 +271,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFi
       }
     };
     // 定义mapConfigParams和propertyConfigParams对象，作为Editor组件的props
-    const mapConfigParams = {
+    const mapConfigParams:MapConfigParamsType["mapConfigParams"] = {
       dataSource: properties,
       columns: mapcolumns,
       showHeader: false,
@@ -282,7 +280,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFi
       handleSelectRow: handleSelectRow,
       mapFromFileConfirm: mapFromFileConfirm,
     };
-    const propertyConfigParams = {
+    const propertyConfigParams:PropertyConfigParamsType["propertyConfigParams"] = {
       dataSource: configList,
       columns: nodeConfigColumns?.filter(item=>tableType?.includes(item?.title)),
       bordered: true,

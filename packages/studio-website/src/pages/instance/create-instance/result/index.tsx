@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Tag, Radio, Collapse, Row, Col, Button, Space } from 'antd';
-import { history } from 'umi';
+import { Tag, Radio, Collapse, Row, Col} from 'antd';
 import GraphIn from '../create-schema/graph-in';
 interface IImportDataProps {}
 const text = `

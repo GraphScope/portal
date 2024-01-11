@@ -59,3 +59,29 @@ export interface ImmerType {
     propertyOption:{label:string;value:string;}[];
     columnOption:{label:string;value:string;}[];
 }
+export type MapConfigParamsType = {
+  mapConfigParams: {
+    selectedMapRowKeys:string[];
+    handleSelectAll:(e)=>void;
+    showHeader:boolean;
+    columns:any;
+    dataSource:any;
+    mapFromFileConfirm:()=>void;
+    handleSelectRow?:(selectedRowKeys:any)=>void;
+  };
+};
+export type PropertyConfigParamsType = {
+  propertyConfigParams: {
+    selectedRows:string[];
+    isMapFromFile?:boolean;
+    addNodeConfig:()=>void;
+    delEditTable:()=>void;
+    columns:any;
+    dataSource:PropertyList[];
+    setConfigList:any;
+    inputDoubleClick:(val:{id:string;})=>void;
+    inputBlur:(val:{disable:boolean;})=>void;
+    rowSelection:any;
+    bordered?:boolean;
+  };
+};

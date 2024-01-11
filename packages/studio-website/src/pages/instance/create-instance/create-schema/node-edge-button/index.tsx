@@ -24,7 +24,7 @@ const NodeEdgeButton = () => {
         ...nodeList,
         {
           label: 'undefine',
-          children: <Schema nodeEdge={nodeEdge} newActiveKey={newActiveKey} deleteNode={deleteNode}/>,
+          children: <Schema newActiveKey={newActiveKey} deleteNode={deleteNode}/>,
           key: newActiveKey,
         },
       ];
@@ -38,7 +38,7 @@ const NodeEdgeButton = () => {
         ...edgeList,
         {
           label: 'undefine',
-          children: <Schema nodeEdge={nodeEdge} newActiveKey={newActiveKey} deleteNode={deleteNode}/>,
+          children: <Schema newActiveKey={newActiveKey} deleteNode={deleteNode}/>,
           key: newActiveKey,
         },
       ];
@@ -52,7 +52,7 @@ const NodeEdgeButton = () => {
     let data = val == 'Node' ? cloneDeep(nodeList) : cloneDeep(edgeList);
     const newPanes = data.filter(pane => pane.key !== key);
     if (val == 'Node') {
-      const nodedata = cloneDeep(nodeItems);
+      const nodedata:{[x:string]:any} = cloneDeep(nodeItems);
       Object.entries(nodedata).map((keys, i) => {
         if (keys[0] == key) {
           delete nodedata[key];
@@ -65,7 +65,7 @@ const NodeEdgeButton = () => {
         draft.nodeActiveKey = activeKey;
       });
     } else {
-      const edgedata = cloneDeep(edgeItems);
+      const edgedata:{[x:string]:any}  = cloneDeep(edgeItems);
       Object.entries(edgedata).map((keys, i) => {
         if (keys[0] == key) {
           delete edgedata[key];
