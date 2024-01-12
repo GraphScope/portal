@@ -1,13 +1,13 @@
-import * as React from 'react';
+import React,{useEffect} from 'react';
 import { Button, Space, Upload } from 'antd';
 import Graphin, { Behaviors, Utils } from '@antv/graphin';
-import { useContext } from '../../valtio/createGraph';
-import { download, prop } from '../utils';
+import { useContext } from '../useContext';
+import { download, prop } from './utils';
 const { ZoomCanvas } = Behaviors;
 const GraphIn = () => {
   const { store, updateStore } = useContext();
   const { isAlert, graphData, nodeItems, edgeItems } = store;
-  React.useEffect(() => {
+  useEffect(() => {
       getVertexEdges();
   }, [nodeItems, edgeItems]);
   /**
@@ -22,7 +22,7 @@ const GraphIn = () => {
     let nodes: { id: string; label: string; style: any }[] = [];
     let edge: { source: string; target: string; label: string }[] = [];
     let edge_: { source: string; target: string; style: any; label: string }[] = [];
-    result?.vertices?.map(v => {
+    result.vertices.map(v => {
       nodes.push({
         id: v.label,
         label: v.label,
@@ -37,7 +37,7 @@ const GraphIn = () => {
         },
       });
     });
-    result?.edges?.map(e => {
+    result.edges.map(e => {
       if (e['src_label'] !== e['dst_label']) {
         edge_.push({
           source: e['src_label'],

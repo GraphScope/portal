@@ -33,8 +33,8 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         <Tag color="green">Interactive</Tag>, 有2 种类型的点，1 种类型的边，具体信息详见
       </p>
       <Radio.Group defaultValue="Nodes" style={{ marginBottom: '16px' }} onChange={nodeEdgeChange}>
-        <Radio.Button value="Node">Node Label</Radio.Button>
-        <Radio.Button value="Edge">Edge Label</Radio.Button>
+        <Radio.Button value="node">Node Label</Radio.Button>
+        <Radio.Button value="edge">Edge Label</Radio.Button>
       </Radio.Group>
       <Row>
         <Col span={10}>
@@ -45,17 +45,6 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         </Col>
       </Row>
       <p>如果确认下没问题的话，我们就可以去导入数据啦～</p>
-      {/* <Space>
-        <Button
-          type="primary"
-          onClick={() => {
-            history.back();
-          }}
-        >
-          上一页
-        </Button>
-        <Button type="primary">完成</Button>
-      </Space> */}
     </div>
   );
 };

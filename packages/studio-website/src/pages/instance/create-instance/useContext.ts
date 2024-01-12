@@ -1,3 +1,4 @@
+import { IUserEdge } from "@antv/graphin";
 import { proxy, useSnapshot } from "valtio";
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 
@@ -14,32 +15,37 @@ export type IStore<T> = T & {
   }[];
   option:{ value: string; label: string;}[]; /*Source Node Label/Target Node Label options*/
   isAlert:boolean;
-  nodeEdge:string; /*Node /Edge change value*/
+  currentType:'node' | 'edge'; /*node or edge*/
   nodeActiveKey:string; /*add node key*/ 
   edgeActiveKey: string; /*add edge key*/ 
-  graphData:any; /*graphIn data*/
+  graphData:{
+    nodes:{ id: string; label: string; style: any }[];
+    edges: IUserEdge[]
+  }; /*graphIn data*/
   properties:any; 
   nodeItems: {}; /*node tabs items*/ 
   edgeItems: {}; /*edge tabs items*/ 
   inputvalues:string; /*Choose EngineType input value*/ 
   detail:boolean; /*create or detail */ 
-  checked:'table' | 'json' | 'graph';
+  checked:'table' | 'json' | 'graph'; /** result view */
+  currentStep:number;
 };
 const initialStore: IStore<{}> = {
   nodeList: [], 
   edgeList: [],
   option:[],
   isAlert:false,
-  nodeEdge:'Node',
+  currentType:'node',
   nodeActiveKey:'', 
   edgeActiveKey: '', 
-  graphData:[],
+  graphData:{nodes:[],edges:[]},
   properties:[],
   nodeItems: {},
   edgeItems: {},
   inputvalues:'', 
   detail:false, 
-  checked:'table'
+  checked:'table',
+  currentStep:0
 };
 
 type ContextType<T> = {

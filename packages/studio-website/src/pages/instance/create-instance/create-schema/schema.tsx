@@ -1,8 +1,8 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, Select, Button } from 'antd';
 import { PropertiesEditor } from '@graphscope/studio-importor';
 import { cloneDeep } from 'lodash';
-import { useContext } from '../../valtio/createGraph';
+import { useContext } from '../useContext';
 export type FieldType = {
   label?: string;
   src_label?: string;
@@ -10,35 +10,35 @@ export type FieldType = {
 };
 type SchemaType = {
   newActiveKey: string;
-  deleteNode: (nodeEdge: string, newActiveKey: string ) => void  ;
+  deleteNode: (currentType: string, newActiveKey: string) => void;
   data?: any;
 };
 const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   const { newActiveKey, deleteNode, data } = props;
   const [form] = Form.useForm();
   const { store, updateStore } = useContext();
-  const { nodeEdge,properties, nodeItems, edgeItems, detail,option } = store;
+  const { currentType, properties, nodeItems, edgeItems, detail, option } = store;
   const propertyRef = React.useRef<any>();
   const formValuesChange = (changedValues: any, allValues: any) => {
     formChange();
   };
-  React.useEffect(() => {
+  useEffect(() => {
     if (data) {
       form.setFieldsValue(data);
     }
   }, []);
-  React.useEffect(() => {
+  useEffect(() => {
     formChange();
   }, [properties]);
   const formChange = () => {
-    if (nodeEdge == 'Node') {
-      const getData:any = cloneDeep(nodeItems);
+    if (currentType == 'node') {
+      const getData: any = cloneDeep(nodeItems);
       getData[newActiveKey] = { ...form.getFieldsValue(), properties: propertyRef?.current?.getValues() };
       updateStore(draft => {
         draft.nodeItems = getData;
       });
     } else {
-      const getData:any = cloneDeep(edgeItems);
+      const getData: any = cloneDeep(edgeItems);
       getData[newActiveKey] = { ...form.getFieldsValue(), properties: propertyRef?.current?.getValues() };
       updateStore(draft => {
         draft.edgeItems = getData;
@@ -54,7 +54,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
       >
         <div style={{ position: 'relative' }}>
           <Form.Item<FieldType>
-            label={nodeEdge == 'Node' ? 'Node Label' : 'Edge Label'}
+            label={currentType == 'node' ? 'Node Label' : 'Edge Label'}
             name="label"
             tooltip=" "
             labelCol={{ span: 8 }}
@@ -66,12 +66,12 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
           </Form.Item>
           <Button
             style={{ position: 'absolute', top: '0px', right: '0px' }}
-            onClick={() => deleteNode(nodeEdge, newActiveKey)}
+            onClick={() => deleteNode(currentType, newActiveKey)}
           >
             Delete
           </Button>
         </div>
-        {nodeEdge !== 'Node' ? (
+        {currentType !== 'node' ? (
           <>
             <Form.Item<FieldType>
               label="Source Node Label"

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Space, Table, Tag, Button } from 'antd';
+import { Space, Table, Button } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { history } from 'umi';
-import { useContext } from '@/pages/instance/create-instance/valtio/createGraph';
+import { useContext } from '@/pages/instance/create-instance/useContext';
 
 interface DataType {
   key: string;
@@ -74,7 +74,7 @@ const Lists: React.FC = () => {
           draft.nodeList = [];
           draft.edgeItems = {};
           draft.edgeList = [];
-          draft.graphData = [];
+          draft.graphData = {nodes:[],edges:[]};
         })}}
         >Create Graph Instance</Button>
       </div>
