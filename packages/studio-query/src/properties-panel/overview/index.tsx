@@ -3,7 +3,7 @@ import * as React from 'react';
 import Legend from '../legend';
 interface IOverviewProps {
   schema: any;
-  onChange: () => any;
+  onChange: () => void;
 }
 
 const Overview: React.FunctionComponent<IOverviewProps> = props => {
@@ -26,4 +26,4 @@ const Overview: React.FunctionComponent<IOverviewProps> = props => {
   );
 };
 
-export default Overview;
+export default React.memo(Overview);

@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Tooltip, Button, message } from 'antd';
+import { Tooltip, message } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import copy from 'copy-to-clipboard';
 import Legend from '../legend';
 interface DetialProps {
   label: string;
   data: any;
-  onChange?: () => any;
+  onChange: () => void;
 }
 
 const Detial: React.FunctionComponent<DetialProps> = props => {
@@ -28,18 +28,18 @@ const Detial: React.FunctionComponent<DetialProps> = props => {
       <Legend cutomer="cutomer" onChange={onChange} properties={data} label={label}/>
       <table>
         <tbody>
-          {Object.entries(data).map(([key, value], i) => {
+          {Object.keys(data).map((key, i) => {
             return (
               <tr style={{ backgroundColor: i % 2 == 0 ? '' : '#F7F6F6' }}>
                 <td style={{ minWidth: '120px' }}>{key}</td>
-                <td style={{ minWidth: '120px' }}>{value}</td>
+                <td style={{ minWidth: '120px' }}>{data[key]}</td>
                 <td>
                   {' '}
                   <Tooltip title="复制">
                     <CopyOutlined
                       onClick={e => {
                         e.stopPropagation();
-                        copy(value);
+                        copy(data[key]);
                         message.success('复制成功');
                       }}
                       type="icon-fuzhi1"
@@ -56,4 +56,4 @@ const Detial: React.FunctionComponent<DetialProps> = props => {
   );
 };
 
-export default Detial;
+export default React.memo(Detial);

@@ -19,7 +19,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
     });
   }, []);
   React.useEffect(() => {
-    const data:{[x:string]:{label:string;}} = cloneDeep(nodeItems);
+    const data: { [x: string]: { label: string } } = cloneDeep(nodeItems);
     let arr: { label: any; children: JSX.Element; key: string }[] = [];
     let nodearr: { value: string; label: string }[] = [];
     Object.entries(data).map(key => {
@@ -39,47 +39,46 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
         label: key[1].label,
       });
     });
-
     updateStore(draft => {
       draft.option = nodearr;
       draft.nodeList = arr;
     });
   }, [nodeItems]);
   React.useEffect(() => {
-    const data:{[x:string]:{label:string;}} = cloneDeep(edgeItems);
-    let arr: { label: any; children: JSX.Element; key: string }[] = [];
-    Object.entries(data).map(key => {
-      arr.push({
-        label: (
-          <div style={{ width: '60px', overflow: 'hidden' }}>
-            <Tooltip placement="topLeft" title={key[1].label || 'undefine'}>
-              {key[1].label || 'undefine'}
-            </Tooltip>
-          </div>
-        ),
-        children: <Schema newActiveKey={key[0]} deleteNode={deleteNode} data={key[1]} />,
-        key: key[0],
+      const data:{[x:string]:{label:string;}} = cloneDeep(edgeItems);
+      let arr: { label: any; children: JSX.Element; key: string }[] = [];
+      Object.entries(data).map(key => {
+        arr.push({
+          label: (
+            <div style={{ width: '60px', overflow: 'hidden' }}>
+              <Tooltip placement="topLeft" title={key[1].label || 'undefine'}>
+                {key[1].label || 'undefine'}
+              </Tooltip>
+            </div>
+          ),
+          children: <Schema newActiveKey={key[0]} deleteNode={deleteNode} data={key[1]} />,
+          key: key[0],
+        });
       });
-    });
-    const nodedata:{[x:string]:{label:string;}} = cloneDeep(nodeItems);
-    let nodearr: { value: any; label: any }[] = [];
-    Object.entries(nodedata).map(key => {
-      nodearr.push({
-        value: key[1].label,
-        label: key[1].label,
+      const nodedata:{[x:string]:{label:string;}} = cloneDeep(nodeItems);
+      let nodearr: { value: any; label: any }[] = [];
+      Object.entries(nodedata).map(key => {
+        nodearr.push({
+          value: key[1].label,
+          label: key[1].label,
+        });
       });
-    });
-    updateStore(draft => {
-      draft.edgeList = arr;
-      draft.option = nodearr;
-    });
+      updateStore(draft => {
+        draft.edgeList = arr;
+        draft.option = nodearr;
+      });
   }, [edgeItems]);
   // del node or edge
   const deleteNode = (val: string, key: string) => {
     let data = val == 'Node' ? cloneDeep(nodeList) : cloneDeep(edgeList);
     const newPanes = data.filter(pane => pane.key !== key);
     if (val == 'Node') {
-      const nodedata:{[x:string]:{label:string;}} = cloneDeep(nodeItems);
+      const nodedata: { [x: string]: { label: string } } = cloneDeep(nodeItems);
       Object.entries(nodedata).map((keys, i) => {
         if (keys[0] == key) {
           delete nodedata[key];
@@ -92,7 +91,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
         draft.nodeActiveKey = activeKey;
       });
     } else {
-      const edgedata:{[x:string]:{label:string;}} = cloneDeep(edgeItems);
+      const edgedata: { [x: string]: { label: string } } = cloneDeep(edgeItems);
       Object.entries(edgedata).map((keys, i) => {
         if (keys[0] == key) {
           delete edgedata[key];

@@ -1,20 +1,24 @@
 import * as React from 'react';
 import { Button, Space, Upload } from 'antd';
-import Graphin, { Behaviors ,Utils} from '@antv/graphin';
+import Graphin, { Behaviors, Utils } from '@antv/graphin';
 import { useContext } from '../../valtio/createGraph';
-import {download,prop} from '../utils'
+import { download, prop } from '../utils';
 const { ZoomCanvas } = Behaviors;
 const GraphIn = () => {
-  const { store ,updateStore} = useContext();
-  const { isAlert ,graphData,nodeItems,edgeItems} = store;
+  const { store, updateStore } = useContext();
+  const { isAlert, graphData, nodeItems, edgeItems } = store;
   React.useEffect(() => {
-    getVertexEdges();
-  }, [nodeItems,edgeItems]);
+      getVertexEdges();
+  }, [nodeItems, edgeItems]);
+  /**
+   * graphin 数据
+   */
   const getVertexEdges = async () => {
-    const result:{vertices:{label:string;}[];edges:{label:string;src_label:string;dst_label:string;}[];} = {
-      vertices: Object.values(nodeItems),
-      edges: Object.values(edgeItems),
-    };    
+    const result: { vertices: { label: string }[]; edges: { label: string; src_label: string; dst_label: string }[] } =
+      {
+        vertices: Object.values(nodeItems),
+        edges: Object.values(edgeItems),
+      };
     let nodes: { id: string; label: string; style: any }[] = [];
     let edge: { source: string; target: string; label: string }[] = [];
     let edge_: { source: string; target: string; style: any; label: string }[] = [];
@@ -35,38 +39,38 @@ const GraphIn = () => {
     });
     result?.edges?.map(e => {
       if (e['src_label'] !== e['dst_label']) {
-      edge_.push({
-        source: e['src_label'],
-        target: e['dst_label'],
-        label: e.label,
-        style: {
-          keyshape: {
-            lineWidth: 1,
-            startArrow: false,
-          },
-        },
-      });
-    } else {
         edge_.push({
-            source: e['src_label'],
-            target: e['dst_label'],
-            label: e.label,
-            style: {
-                keyshape: {
-                    lineWidth: 1,
-                    endArrow: {
-                        path: 'M 0,1 L -3,7 L 3,6 Z',
-                        fill: '#dedede',
-                    },
-                    startArrow: false,
-                },
+          source: e['src_label'],
+          target: e['dst_label'],
+          label: e.label,
+          style: {
+            keyshape: {
+              lineWidth: 1,
+              startArrow: false,
             },
-        })
-    }
+          },
+        });
+      } else {
+        edge_.push({
+          source: e['src_label'],
+          target: e['dst_label'],
+          label: e.label,
+          style: {
+            keyshape: {
+              lineWidth: 1,
+              endArrow: {
+                path: 'M 0,1 L -3,7 L 3,6 Z',
+                fill: '#dedede',
+              },
+              startArrow: false,
+            },
+          },
+        });
+      }
     });
     let ed = Utils.processEdges([...edge, ...edge_], { poly: 30, loop: 20 });
-    ed.forEach((item:any) => {
-      const { label ,style} = item;
+    ed.forEach((item: any) => {
+      const { label, style } = item;
       style.label = {
         value: label,
         fill: 'block',
