@@ -13,21 +13,31 @@ export type IStore<T> = T & {
     children: any;
     key: string;
   }[];
-  option:{ value: string; label: string;}[]; /*Source Node Label/Target Node Label options*/
+   /** Source Node Label/Target Node Label options */
+  option:{ value: string; label: string;}[];
   isAlert:boolean;
-  currentType:'node' | 'edge'; /*node or edge*/
-  nodeActiveKey:string; /*add node key*/ 
-  edgeActiveKey: string; /*add edge key*/ 
+  /** node or edge */
+  currentType:'node' | 'edge'; 
+  /** add node key */ 
+  nodeActiveKey:string; 
+  /** add edge key */ 
+  edgeActiveKey: string; 
+  /** graphIn data */
   graphData:{
     nodes:{ id: string; label: string; style: any }[];
     edges: IUserEdge[]
-  }; /*graphIn data*/
+  };
   properties:any; 
-  nodeItems: {}; /*node tabs items*/ 
-  edgeItems: {}; /*edge tabs items*/ 
-  inputvalues:string; /*Choose EngineType input value*/ 
-  detail:boolean; /*create or detail */ 
-  checked:'table' | 'json' | 'graph'; /** result view */
+  /** node tabs items */ 
+  nodeItems: {};
+   /**edge tabs items */ 
+  edgeItems: {};
+  /** Choose EngineType input value */ 
+  inputvalues:string; 
+  /** create or detail */ 
+  detail:boolean;
+  /** result view */
+  checked:'table' | 'json' | 'graph';
   currentStep:number;
 };
 const initialStore: IStore<{}> = {
