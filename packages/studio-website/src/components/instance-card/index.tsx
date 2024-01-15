@@ -16,7 +16,11 @@ export type InstaceCardType = {
   createtime: string;
   /** connecturl 实例链接 */
   connecturl: string;
+  /** 运行状态 */
+  status: string;
+  /** 路由 */
   routes: React.ReactNode;
+  /** 操作 */
   actions: React.ReactNode;
 };
 
@@ -24,14 +28,14 @@ const styles: React.CSSProperties = {
   margin: '6px 0px',
 };
 const InstaceCard: React.FC<InstaceCardType> = props => {
-  const { user, version, createtime, connecturl, routes, actions } = props;
+  const { user, version, createtime, connecturl, routes, actions, status } = props;
   return (
     <Card>
       <Flex gap="middle" justify="space-between">
         <Flex gap="middle" align="flex-start" vertical>
           <div>
             <p style={{ margin: '0px 0px 12px' }}>My Graph Instance</p>
-            <Tag color="green">Running</Tag>
+            <Tag color="green">{status}</Tag>
           </div>
           <div>
             <p style={styles}>Sharing User：{user}</p>

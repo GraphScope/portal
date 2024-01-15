@@ -29,6 +29,14 @@ const Lists: React.FunctionComponent = () => {
     ...itemStyle,
     display: 'block',
   };
+  useEffect(() => {
+    console.log('unmount....');
+    return () => {
+      updateStore(draft => {
+        draft.detail = false;
+      });
+    };
+  }, []);
   return (
     <>
       <Breadcrumb
