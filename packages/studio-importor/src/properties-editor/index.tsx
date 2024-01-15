@@ -2,19 +2,19 @@ import React, { type FC, useEffect, forwardRef, useImperativeHandle, useRef, mem
 import { Checkbox } from 'antd';
 import { uniqueId, cloneDeep } from 'lodash';
 import { useImmer } from 'use-immer';
-import { ImmerType, IndexData, PropertyList, ConfigColumns } from './interface';
+import { ImmerType, IndexData, PropertyList, ConfigColumns ,MapConfigParamsType,PropertyConfigParamsType} from './interface';
 import { EditType, IconFont } from './mapdata';
 import Editor from './editor';
 
-const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> = memo(
+const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFile?:boolean;tableType:string[];propertyType?:{type:string;}[]}> = memo(
   forwardRef((props, ref) => {
-    const { properties, onChange } = props;
-    const inputRef = useRef();
+    const { properties, onChange ,isMapFromFile,tableType,propertyType} = props;
+    const inputRef = useRef<HTMLInputElement>();
     // 使用useImmer创建一个可变状态对象
     const [state, updateState] = useImmer<ImmerType>({
       selectedRows: [],
       selectedMapRowKeys: [],
-      configList: [],
+      configList: cloneDeep(properties),
       mapfromfileList: [],
       proSelectKey: [],
       propertyOption: [],
@@ -35,10 +35,12 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
       let option: { label: string; value: string }[] = [];
       let modifiedArray: any = [];
       let pOption: { label: string; value: string }[] = [];
-      data.map(item => {
-        option.push({ label: item.type, value: item?.type });
+      data?.map(item => {
         pOption.push({ label: item.token, value: item?.token });
         modifiedArray.push({ ...item, disable: true });
+      });
+      cloneDeep(propertyType)?.map(item => {
+        option.push({ label: item.type, value: item?.type });
       });
       updateState(draft => {
         draft.mapfromfileList = modifiedArray;
@@ -59,7 +61,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
             inputType: EditType.INPUT,
             prop: {
               value: record,
-              disabled: record.disable,
+              // disabled: record.disable,
             },
           };
         },
@@ -67,7 +69,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
       {
         title: 'Type',
         dataIndex: 'type',
-        width: '30%',
+        width: '25%',
         key: 'type',
         editable: true,
         editorConfig: (record: IndexData) => {
@@ -103,7 +105,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
         title: 'ID',
         dataIndex: 'operate',
         key: 'operate',
-        width: '5%',
+        width: '10%',
         render: (_, record: any) =>
           record?.primaryKey ? (
             <IconFont type="icon-yuechi" onClick={() => primaryKeyClick(record)} />
@@ -142,7 +144,11 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
     // 定义addNodeConfig函数，用于添加新的表格行
     const addNodeConfig = () => {
       const list: PropertyList[] = [...configList];
-      list.push({ id: uniqueId(`index_`), name: '', type: '', token: '', primaryKey: false, disable: false });
+      if(!list?.length){
+        list.push({ id: uniqueId(`index_`), name: '', type: '', token: '', primaryKey: true, disable: false });
+      }else{
+        list.push({ id: uniqueId(`index_`), name: '', type: '', token: '', primaryKey: false, disable: false });
+      }
       updateState(draft => {
         draft.configList = list;
       });
@@ -265,21 +271,19 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
       }
     };
     // 定义mapConfigParams和propertyConfigParams对象，作为Editor组件的props
-    const mapConfigParams = {
+    const mapConfigParams:MapConfigParamsType["mapConfigParams"] = {
       dataSource: properties,
       columns: mapcolumns,
       showHeader: false,
-      bordered: false,
       selectedMapRowKeys: selectedMapRowKeys,
       handleSelectAll: handleSelectAll,
       handleSelectRow: handleSelectRow,
       mapFromFileConfirm: mapFromFileConfirm,
     };
-    const propertyConfigParams = {
+    const propertyConfigParams:PropertyConfigParamsType["propertyConfigParams"] = {
       dataSource: configList,
-      columns: nodeConfigColumns,
+      columns: nodeConfigColumns?.filter(item=>tableType?.includes(item?.title)),
       bordered: true,
-      pagination: false,
       rowSelection: rowSelection,
       setConfigList: setConfigList,
       selectedRows: selectedRows,
@@ -287,6 +291,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange: () => void }> =
       delEditTable: delEditTable,
       inputDoubleClick: inputDoubleClick,
       inputBlur: inputBlur,
+      isMapFromFile:isMapFromFile
     };
     useImperativeHandle(
       ref,

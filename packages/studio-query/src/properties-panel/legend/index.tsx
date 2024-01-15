@@ -1,16 +1,17 @@
 import * as React from 'react';
-import { Tag, Popover, Button, Space, message } from 'antd';
+import { memo } from 'react';
+import { Tag, Popover, Button, Space } from 'antd';
 import { useImmer } from 'use-immer';
 interface ILegendProps {
   type?: string;
   count?: string;
-  label?: string;
+  label: string;
   cutomer?: string;
   color?: string;
   properties?: any;
-  onChange?: () => any;
+  onChange: (val: { label: string; color: string; size: string; caption: string }) => void;
 }
-const styles = {
+const styles: { [x: string]: React.CSSProperties } = {
   'tag-style': {
     backgroundColor: '#9397A0',
     color: '#fff',
@@ -38,7 +39,7 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
   const tagChange = checked => {
     console.log(checked);
   };
-  const colors = [
+  const colors: string[] = [
     '#C2B8A2',
     '#EAD4E5',
     '#FCD8C2',
@@ -52,7 +53,7 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
     '#F1C7D6',
     '#BBD5CD',
   ];
-  const size = [
+  const size: { width: string; color: string }[] = [
     { width: '12px', color: '#A9ABAA' },
     { width: '14px', color: '#AAA9AA' },
     { width: '16px', color: '#AAAAAA' },
@@ -71,7 +72,7 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
         draf.caption = val;
       });
     }
-    onChange({ color: colorRef.current, size: sizeRef.current, caption: captionRef.current });
+    onChange({ label, color: colorRef.current, size: sizeRef.current, caption: captionRef.current });
   };
   const Titlecontent = () => {
     return (
@@ -154,4 +155,4 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
   );
 };
 
-export default Legend;
+export default memo(Legend);

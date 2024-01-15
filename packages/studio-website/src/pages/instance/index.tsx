@@ -1,13 +1,8 @@
 import * as React from 'react';
-import InstanceLits from './lists';
+import InstanceLists from './lists';
 interface InstanceProps {}
-
 const Instance: React.FunctionComponent<InstanceProps> = props => {
-  return (
-    <div>
-      <InstanceLits />
-    </div>
-  );
+  return <InstanceLists />;
 };
 
 export default Instance;

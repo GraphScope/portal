@@ -1,9 +1,15 @@
 import * as React from 'react';
-
-interface IViewSchemaProps {}
+import CreateInstance from '../create-instance';
+interface IViewSchemaProps {
+  graphData?: any;
+}
 
 const ViewSchema: React.FunctionComponent<IViewSchemaProps> = props => {
-  return <div>view schema</div>;
+  return (
+    <div>
+      <CreateInstance />
+    </div>
+  );
 };
 
 export default ViewSchema;

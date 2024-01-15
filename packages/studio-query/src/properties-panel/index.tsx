@@ -7,7 +7,7 @@ interface PropertiesPanelProps {
   mode: 'overview' | 'detail';
   overview: any;
   detail: any;
-  onChange: () => string;
+  onChange: () => void;
 }
 
 const PropertiesPanel: React.FunctionComponent<PropertiesPanelProps> = props => {

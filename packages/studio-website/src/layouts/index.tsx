@@ -18,8 +18,8 @@ export default function Layout() {
         theme={{
           components: {
             Select: {
-              selectorBg: 'red',
-              optionSelectedBg: 'red',
+              // selectorBg: 'red',
+              // optionSelectedBg: 'red',
             },
           },
           token: {
