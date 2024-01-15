@@ -4,7 +4,7 @@ import Graphin, { Behaviors, Utils } from '@antv/graphin';
 import { useContext } from '../useContext';
 import { download, prop } from './utils';
 const { ZoomCanvas } = Behaviors;
-const GraphIn = () => {
+const GraphInsight = () => {
   const { store, updateStore } = useContext();
   const { isAlert, graphData, nodeItems, edgeItems } = store;
   useEffect(() => {
@@ -106,4 +106,4 @@ const GraphIn = () => {
   );
 };
 
-export default GraphIn;
+export default GraphInsight;

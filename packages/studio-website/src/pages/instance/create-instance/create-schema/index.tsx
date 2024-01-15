@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { Card, Tabs, Row, Col, Tooltip } from 'antd';
 import { cloneDeep } from 'lodash';
 import { useContext ,initialStore} from '../useContext';
-import GraphIn from './graph-in';
+import GraphInsight from './graph-insight';
 import Schema from './schema';
-import NodeEdgeButton from './node-edge-button';
+import AddLabel from './ add-label';
 interface ICreateInstanceProps {
   graphData?: any;
   isAlert?: boolean;
@@ -133,7 +133,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
               overflow: 'hidden',
             }}
           >
-            <NodeEdgeButton />
+            <AddLabel />
             <div>
               <div style={{ display: currentType == 'node' ? '' : 'none' }}>
                 <Tabs
@@ -157,7 +157,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
           </div>
         </Col>
         <Col span={10}>
-          <GraphIn />
+          <GraphInsight />
         </Col>
       </Row>
     </Card>

@@ -9,7 +9,7 @@ import {
   MoreOutlined,
   CopyOutlined,
 } from '@ant-design/icons';
-import { InstaceList } from '../pages/instance/lists';
+import { InstaceList } from '../../pages/instance/InstanceCard';
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_8fiw2wn073a.js',
 });
@@ -18,8 +18,12 @@ type InstaceType = {
   instanceData: InstaceList;
   index: number;
 };
-const Lists: React.FC<InstaceType> = props => {
+const styles: React.CSSProperties = {
+  margin: '6px 0px',
+};
+const InstaceItem: React.FC<InstaceType> = props => {
   const { instanceData, index } = props;
+  const { user, version, createtime, connecturl } = instanceData;
   return (
     <Card style={{ marginRight: index % 2 == 0 ? '6px' : '0px' }}>
       <Flex gap="middle" justify="space-between">
@@ -29,15 +33,15 @@ const Lists: React.FC<InstaceType> = props => {
             <Tag color="green">Running</Tag>
           </div>
           <div>
-            <p style={{ margin: '6px 0px' }}>Sharing User：{instanceData['Sharing-User']}</p>
-            <p style={{ margin: '6px 0px' }}>Version：{instanceData['Version']}</p>
-            <p style={{ margin: '6px 0px' }}>CreateTime：{instanceData['CreateTime']}</p>
-            <p style={{ margin: '6px 0px' }}>
-              Connect URL：{instanceData['Connect-URL']}
+            <p style={styles}>Sharing User：{user}</p>
+            <p style={styles}>Version：{version}</p>
+            <p style={styles}>CreateTime：{createtime}</p>
+            <p style={styles}>
+              Connect URL：{connecturl}
               <CopyOutlined
                 onClick={e => {
                   e.stopPropagation();
-                  copy(instanceData['Connect-URL']);
+                  copy(connecturl);
                   message.success('复制成功');
                 }}
                 type="icon-fuzhi1"
@@ -65,4 +69,4 @@ const Lists: React.FC<InstaceType> = props => {
   );
 };
 
-export default Lists;
+export default InstaceItem;

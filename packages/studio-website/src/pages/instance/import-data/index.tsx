@@ -26,8 +26,8 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           <span>绑定数据源</span>
           <Segmented options={['Node Label', 'Edge labels']} defaultValue="Node Label" style={{ marginBottom: '16px' }} onChange={nodeEdgeChange}/> 
         </Space>
-        <Collapse>
-          <Panel key={''} header={undefined} extra={genExtra()}>
+        <Collapse defaultActiveKey={['1']}>
+          <Panel key={'1'} header={undefined} extra={genExtra()}>
             <AddDisposition />
           </Panel>
         </Collapse>

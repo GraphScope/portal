@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { cloneDeep } from 'lodash';
 import { useContext } from '../useContext';
 import Schema from './schema';
-const NodeEdgeButton = () => {
+const AddLabel = () => {
   const { store, updateStore } = useContext();
   const { nodeList, edgeList, currentType, nodeItems, edgeItems, detail } = store;
   const nodeEdgeChange = (val: string): void => {
@@ -104,4 +104,4 @@ const NodeEdgeButton = () => {
     </>
   );
 };
-export default NodeEdgeButton;
+export default AddLabel;

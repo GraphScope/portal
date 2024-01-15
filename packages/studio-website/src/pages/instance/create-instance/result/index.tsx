@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Tag, Segmented, Collapse, Row, Col} from 'antd';
-import GraphIn from '../create-schema/graph-in';
+import GraphInsight from '../create-schema/graph-insight';
 interface IImportDataProps {}
 const text = `
   A dog is a type of domesticated animal.
@@ -38,7 +38,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           <Collapse items={items} defaultActiveKey={['1']} />
         </Col>
         <Col span={10} push={2}>
-          <GraphIn />
+          <GraphInsight />
         </Col>
       </Row>
       <p>如果确认下没问题的话，我们就可以去导入数据啦～</p>

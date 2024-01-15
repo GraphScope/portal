@@ -4,21 +4,10 @@ import { useContext } from '../create-instance/useContext';
 import ChooseEnginetype from './choose-enginetype';
 import CreateSchema from '../create-instance/create-schema';
 import ConfigInfo from './confirm-info';
-
+const steps = [{ title: 'Choose EngineType' }, { title: 'Create Schema' }, { title: 'Result' }];
 const Lists: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { isAlert, currentStep } = store;
-  const steps = [
-    {
-      title: 'Choose EngineType',
-    },
-    {
-      title: 'Create Schema',
-    },
-    {
-      title: 'Result',
-    },
-  ];
   const next = () => {
     updateStore(draft => {
       draft.currentStep = currentStep + 1;
@@ -52,7 +41,7 @@ const Lists: React.FunctionComponent = () => {
           },
         ]}
       />
-      <div style={{ backgroundColor: '#fff', padding: '16px' ,marginTop:'12px'}}>
+      <div style={{ backgroundColor: '#fff', padding: '16px', marginTop: '12px' }}>
         <Steps current={currentStep} items={items} />
         <div>
           <div style={currentStep === 0 ? activeItemStyle : itemStyle}>

@@ -4,7 +4,7 @@ export default defineConfig({
   routes: [
     { path: '/', component: 'overview' },
     { path: '/instance', component: 'instance' },
-    { path: '/instance/list', component: 'instance/lists' },
+    { path: '/instance/list', component: 'instance/InstanceCard' },
     { path: '/instance/create', component: 'instance/create-instance' },
     { path: '/instance/create/result', component: 'instance/create-instance/result' },
     { path: '/instance/create/confirm-info', component: 'instance/create-instance/confirm-info' },

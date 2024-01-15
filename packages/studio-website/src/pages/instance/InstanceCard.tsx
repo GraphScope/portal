@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Flex, Row, Col, Button, Modal, Form, Input } from 'antd';
 import { history } from 'umi';
-import InstanceCard from '../../components/InstanceCard';
+import InstaceItem from '../../components/instance-card';
 import { createFromIconfontCN } from '@ant-design/icons';
 import { useContext } from '@/pages/instance/create-instance/useContext';
 const IconFont = createFromIconfontCN({
@@ -9,26 +9,35 @@ const IconFont = createFromIconfontCN({
 });
 const arr = [
   {
-    'Sharing-User': '山果 / 东泽',
-    Version: '0.24.0',
-    CreateTime: '2024-01-10',
-    'Connect-URL': 'xx.xxx.xxx.xxx:8787',
+    user: '山果 / 东泽',
+    version: '0.24.0',
+    createtime: '2024-01-10',
+    connecturl: 'xx.xxx.xxx.xxx:8787',
   },
   {
-    'Sharing-User': '山果 / 东泽',
-    Version: '0.24.0',
-    CreateTime: '2024-01-10',
-    'Connect-URL': 'xx.xxx.xxx.xxx:8787',
+    user: '山果 / 东泽',
+    version: '0.24.0',
+    createtime: '2024-01-10',
+    connecturl: 'xx.xxx.xxx.xxx:8787',
   },
   {
-    'Sharing-User': '山果 / 东泽',
-    Version: '0.24.0',
-    CreateTime: '2024-01-10',
-    'Connect-URL': 'xx.xxx.xxx.xxx:8787',
+    user: '山果 / 东泽',
+    version: '0.24.0',
+    createtime: '2024-01-10',
+    connecturl: 'xx.xxx.xxx.xxx:8787',
   },
 ];
-export type InstaceList = { 'Sharing-User': string; Version: string; CreateTime: string; 'Connect-URL': string }
-const Lists: React.FC = () => {
+export type InstaceList = {
+  /** user 用户名 */
+  user: string;
+  /** version 版本号 */
+  version: string;
+  /** createtime 创建时间 */
+  createtime: string;
+  /** connecturl 实例链接 */
+  connecturl: string;
+};
+const InstanceCard: React.FC = () => {
   const [form] = Form.useForm();
   const { updateStore } = useContext();
   const [state, updateState] = useState<{ isModalOpen?: boolean; instanceList?: InstaceList[] }>({
@@ -77,11 +86,16 @@ const Lists: React.FC = () => {
         {instanceList &&
           instanceList.map((item, i) => (
             <Col span={12} key={i} style={{ marginTop: '6px' }}>
-              <InstanceCard index={i} instanceData={item} />
+              <InstaceItem index={i} instanceData={item} />
             </Col>
           ))}
       </Row>
-      <Modal title="绑定实例" open={isModalOpen} onOk={bindEndpoint} onCancel={() => updateState({ isModalOpen: false })}>
+      <Modal
+        title="绑定实例"
+        open={isModalOpen}
+        onOk={bindEndpoint}
+        onCancel={() => updateState({ isModalOpen: false })}
+      >
         <div style={{ padding: '16px', backgroundColor: '#F5F5F5', border: '1px dashed #ccc' }}>
           <Form name="modal-basic" labelCol={{ span: 12 }} form={form}>
             <Form.Item<{ endpoint: string }>
@@ -100,4 +114,4 @@ const Lists: React.FC = () => {
   );
 };
 
-export default Lists;
+export default InstanceCard;
