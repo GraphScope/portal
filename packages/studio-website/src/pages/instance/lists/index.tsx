@@ -14,18 +14,21 @@ const arr = [
     version: '0.24.0',
     createtime: '2024-01-10',
     connecturl: 'xx.xxx.xxx.xxx:8787',
+    status: 'running',
   },
   {
     user: '山果 / 东泽',
     version: '0.24.0',
     createtime: '2024-01-10',
     connecturl: 'xx.xxx.xxx.xxx:8787',
+    status: 'failed',
   },
   {
     user: '山果 / 东泽',
     version: '0.24.0',
     createtime: '2024-01-10',
     connecturl: 'xx.xxx.xxx.xxx:8787',
+    status: 'running',
   },
 ];
 
