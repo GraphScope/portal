@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Radio, RadioChangeEvent } from 'antd';
+import { Button, Segmented } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { cloneDeep } from 'lodash';
 import { useContext } from '../useContext';
@@ -7,9 +7,9 @@ import Schema from './schema';
 const NodeEdgeButton = () => {
   const { store, updateStore } = useContext();
   const { nodeList, edgeList, currentType, nodeItems, edgeItems, detail } = store;
-  const nodeEdgeChange = (e: RadioChangeEvent): void => {
+  const nodeEdgeChange = (val: string): void => {
     updateStore(draft => {
-      draft.currentType = e.target.value;
+      draft.currentType = val == 'Nodes' ? 'node' : 'edge';
     });
     if (currentType == 'edge') {
       updateStore(draft => {
@@ -89,10 +89,7 @@ const NodeEdgeButton = () => {
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Radio.Group defaultValue="Node" style={{ marginBottom: '16px' }} onChange={e => nodeEdgeChange(e)}>
-          <Radio.Button value="node">Nodes</Radio.Button>
-          <Radio.Button value="edge">Edges</Radio.Button>
-        </Radio.Group>
+        <Segmented defaultValue="Nodes" options={['Nodes', 'Edges']} style={{ marginBottom: '16px' }} onChange={e => nodeEdgeChange(e)} />
         {nodeEddgeLength() > 0 ? (
           <Button type="dashed" onClick={add} disabled={detail}>
             + Add {currentType == 'node' ? 'Node' : 'Edge'}

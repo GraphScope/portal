@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Tag, Radio, Collapse, Row, Col} from 'antd';
+import { Tag, Segmented, Collapse, Row, Col} from 'antd';
 import GraphIn from '../create-schema/graph-in';
 interface IImportDataProps {}
 const text = `
@@ -25,17 +25,14 @@ const items = [
   },
 ];
 const ImportData: React.FunctionComponent<IImportDataProps> = props => {
-  const nodeEdgeChange = e => {};
+  const nodeEdgeChange = (val:string) => {};
   return (
     <div>
       <p>
         恭喜你已经完成图实例的创建，图实例名称为 <Tag color="green">DEFAULT GRAPH</Tag>，类型为{' '}
         <Tag color="green">Interactive</Tag>, 有2 种类型的点，1 种类型的边，具体信息详见
       </p>
-      <Radio.Group defaultValue="Nodes" style={{ marginBottom: '16px' }} onChange={nodeEdgeChange}>
-        <Radio.Button value="node">Node Label</Radio.Button>
-        <Radio.Button value="edge">Edge Label</Radio.Button>
-      </Radio.Group>
+      <Segmented options={['Node Label', 'Edge Label']} defaultValue="Node Label" style={{ marginBottom: '16px' }} onChange={nodeEdgeChange}/> 
       <Row>
         <Col span={10}>
           <Collapse items={items} defaultActiveKey={['1']} />

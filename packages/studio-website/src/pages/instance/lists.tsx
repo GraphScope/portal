@@ -1,28 +1,55 @@
-import React, { useState } from 'react';
-import { Flex, Card, Button, Row, Col, Tag, Modal, Form, Input, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Flex, Row, Col, Button, Modal, Form, Input } from 'antd';
 import { history } from 'umi';
-import copy from 'copy-to-clipboard';
 import InstanceCard from '../../components/InstanceCard';
-import {
-  createFromIconfontCN,
-  DeploymentUnitOutlined,
-  SearchOutlined,
-  MoreOutlined,
-  CopyOutlined,
-} from '@ant-design/icons';
+import { createFromIconfontCN } from '@ant-design/icons';
 import { useContext } from '@/pages/instance/create-instance/useContext';
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_8fiw2wn073a.js',
 });
+const arr = [
+  {
+    'Sharing-User': '山果 / 东泽',
+    Version: '0.24.0',
+    CreateTime: '2024-01-10',
+    'Connect-URL': 'xx.xxx.xxx.xxx:8787',
+  },
+  {
+    'Sharing-User': '山果 / 东泽',
+    Version: '0.24.0',
+    CreateTime: '2024-01-10',
+    'Connect-URL': 'xx.xxx.xxx.xxx:8787',
+  },
+  {
+    'Sharing-User': '山果 / 东泽',
+    Version: '0.24.0',
+    CreateTime: '2024-01-10',
+    'Connect-URL': 'xx.xxx.xxx.xxx:8787',
+  },
+];
 const Lists: React.FC = () => {
   const [form] = Form.useForm();
   const { updateStore } = useContext();
   const [isModalOpen, setisModalOpen] = useState<boolean>(false);
+  const [instanceList, setInstanceList] = useState([]);
   const bindEndpoint = () => {
     form.validateFields().then(res => {
       console.log(res);
     });
   };
+  useEffect(() => {
+    getInstanceList();
+  }, []);
+  const getInstanceList = async () => {
+    let data: any = [];
+    data = await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(arr);
+      }, 500);
+    });
+    data && setInstanceList(data);
+  };
+
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -42,7 +69,13 @@ const Lists: React.FC = () => {
           <Button onClick={() => setisModalOpen(true)}>绑定</Button>
         </Flex>
       </div>
-      {<InstanceCard instanceData={{}} />}
+      <Row>
+        { instanceList.map((item, i) => (
+            <Col span={12} key={i} style={{marginTop:'6px'}}>
+              <InstanceCard index={i} instanceData={item} />
+            </Col>
+          ))}
+      </Row>
       <Modal title="绑定实例" open={isModalOpen} onOk={bindEndpoint} onCancel={() => setisModalOpen(false)}>
         <div style={{ padding: '16px', backgroundColor: '#F5F5F5', border: '1px dashed #ccc' }}>
           <Form name="modal-basic" labelCol={{ span: 12 }} form={form}>

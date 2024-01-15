@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Radio, Table, Row, Col, Tag } from 'antd';
+import { Segmented, Table, Row, Col, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useContext } from './useContext';
 import ReactJson from 'react-json-view';
+import { SegmentedValue } from 'antd/es/segmented';
 interface IImportDataProps {}
 interface DataType {
   key: string;
@@ -17,9 +18,9 @@ interface DataType {
 const ConfigInfo: React.FunctionComponent<IImportDataProps> = props => {
   const { store, updateStore } = useContext();
   const { checked } = store;
-  const nodeEdgeChange = (e: { target: { value: string } }) => {
+  const nodeEdgeChange:(value: SegmentedValue) => void = (val) => {
     updateStore(draft => {
-      draft.checked = e.target.value;
+      draft.checked = val == 'Table' ? 'table' : val == 'Json' ? 'json' : 'graph';
     });
   };
   const columns: ColumnsType<DataType> = [
@@ -67,17 +68,21 @@ const ConfigInfo: React.FunctionComponent<IImportDataProps> = props => {
           恭喜你已经完成图实例的创建，图实例名称为 <Tag color="green">DEFAULT GRAPH</Tag>，类型为{' '}
           <Tag color="green">Interactive</Tag>, 有2 种类型的点，1 种类型的边
         </p>
-        <Radio.Group defaultValue="Nodes" onChange={nodeEdgeChange}>
-          <Radio.Button value="table">Table</Radio.Button>
-          <Radio.Button value="json">Json</Radio.Button>
-          <Radio.Button value="graph">Graph</Radio.Button>
-        </Radio.Group>
+        <Segmented
+          options={['Table', 'Json', 'Graph']}
+          defaultValue="Node Label"
+          style={{ marginBottom: '16px' }}
+          onChange={nodeEdgeChange}
+        />
       </div>
       <div style={{ padding: '16px', border: '1px dashed #000' }}>
         {checked == 'table' ? (
           <>
-            <Table columns={columns?.filter(item => !['source_label','target_label'].includes(item?.title))} dataSource={[]} />
-            <Table columns={columns?.filter(item =>item?.title !== 'label_name' )} dataSource={[]} />
+            <Table
+              columns={columns?.filter(item => !['source_label', 'target_label'].includes(item?.title))}
+              dataSource={[]}
+            />
+            <Table columns={columns?.filter(item => item?.title !== 'label_name')} dataSource={[]} />
           </>
         ) : (
           <Row>

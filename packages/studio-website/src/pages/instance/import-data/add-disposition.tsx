@@ -1,16 +1,10 @@
 import * as React from 'react';
-import { Form, Row, Col, Select, Input, Space, Button, Radio, RadioChangeEvent } from 'antd';
+import { Form, Row, Col, Input, Space, Button} from 'antd';
 import PrpertiesEditor from '@graphscope/studio-importor'
 interface IImportDataProps {}
 
-const ImportData: React.FunctionComponent<IImportDataProps> = props => {
+const AddDisposition: React.FunctionComponent<IImportDataProps> = props => {
   const [form] = Form.useForm();
-  const Option = [
-    {
-      value: 'ODPS',
-      label: 'ODPS',
-    },
-  ];
   //输入映射outputTable字段
   const inputBlur = (e: { target: { value: string } }) => {
     if (e.target.value) {
@@ -26,31 +20,8 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       });
     }
   };
-  const nodeEdgeChange:(e:RadioChangeEvent)=>void = (e) => {
-
-  };
   return (
     <div style={{ paddingRight: '24px' }}>
-      <div>
-      <Space>
-        <span>数据源类型</span>
-        <Radio.Group defaultValue="Nodes" style={{ marginBottom: '16px' }} onChange={nodeEdgeChange}>
-          <Radio.Button value="Local">Local Files</Radio.Button>
-          <Radio.Button value="OSS">OSS</Radio.Button>
-        </Radio.Group>
-      </Space>
-
-      </div>
-      <div>
-      <Space>
-      <span>绑定数据源</span>
-        <Radio.Group defaultValue="Nodes" style={{ marginBottom: '16px' }} onChange={nodeEdgeChange}>
-          <Radio.Button value="nodelabel">node label</Radio.Button>
-          <Radio.Button value="edgelabels">edge labels</Radio.Button>
-        </Radio.Group>
-      </Space>
-
-      </div>
       <Form
         className="table-edit-form"
         form={form}
@@ -58,18 +29,6 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         labelAlign="right"
         wrapperCol={{ flex: 1 }}
       >
-        <Row>
-          <Col span={24}>
-            <Form.Item
-              label={<span>数据源</span>}
-              name="datasource"
-              rules={[{ required: true, message: 'Please input Source Label!' }]}
-              tooltip="数据源类型"
-            >
-              <Select allowClear disabled options={Option} />
-            </Form.Item>
-          </Col>
-        </Row>
         <Row>
           <Col span={24}>
             <Form.Item
@@ -138,4 +97,4 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   );
 };
 
-export default ImportData;
+export default AddDisposition;
