@@ -36,7 +36,7 @@ const Lists: React.FC<instanceType> = props => {
               <CopyOutlined
                 onClick={e => {
                   e.stopPropagation();
-                  copy('xx.xxx.xxx.xxx:8787 ');
+                  copy(instanceData['Connect-URL']);
                   message.success('复制成功');
                 }}
                 type="icon-fuzhi1"
