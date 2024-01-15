@@ -86,7 +86,7 @@ const InstanceCard: React.FC = () => {
         {instanceList &&
           instanceList.map((item, i) => (
             <Col span={12} key={i} style={{ marginTop: '6px' }}>
-              <InstaceItem index={i} instanceData={item} />
+              <InstaceItem index={i} instanceLeftInfo={item} />
             </Col>
           ))}
       </Row>

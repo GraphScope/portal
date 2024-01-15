@@ -15,15 +15,14 @@ const IconFont = createFromIconfontCN({
 });
 
 type InstaceType = {
-  instanceData: InstaceList;
-  index: number;
+  instanceLeftInfo: InstaceList;
+    index: number;
 };
 const styles: React.CSSProperties = {
   margin: '6px 0px',
 };
 const InstaceItem: React.FC<InstaceType> = props => {
-  const { instanceData, index } = props;
-  const { user, version, createtime, connecturl } = instanceData;
+  const { instanceLeftInfo: {user, version, createtime, connecturl}, index } = props;
   return (
     <Card style={{ marginRight: index % 2 == 0 ? '6px' : '0px' }}>
       <Flex gap="middle" justify="space-between">
