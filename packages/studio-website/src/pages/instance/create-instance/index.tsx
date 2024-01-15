@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { Button, message, Steps, theme, Alert, Breadcrumb } from 'antd';
 import { useContext } from '../create-instance/useContext';
 import ChooseEnginetype from './choose-enginetype';
@@ -8,7 +8,6 @@ import ConfigInfo from './confirm-info';
 const Lists: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { isAlert, currentStep } = store;
-  const { token } = theme.useToken();
   const steps = [
     {
       title: 'Choose EngineType',

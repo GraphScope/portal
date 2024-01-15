@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Card, Tabs, Row, Col, Tooltip } from 'antd';
 import { cloneDeep } from 'lodash';
-import { useContext } from '../useContext';
+import { useContext ,initialStore} from '../useContext';
 import GraphIn from './graph-in';
 import Schema from './schema';
 import NodeEdgeButton from './node-edge-button';
@@ -15,7 +15,9 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
   useEffect(() => {
     onChange(nodeList[0]?.key);
     updateStore(draft => {
-      draft.currentType = 'node';
+      Object.keys(initialStore).forEach(key=>{
+        draft[key] = initialStore[key]
+      })
     });
   }, []);
   useEffect(() => {

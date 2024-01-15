@@ -1,97 +1,63 @@
-import React from 'react';
-import { Flex, Card, Button, Row, Col ,Tag} from 'antd';
+import React, { useState } from 'react';
+import { Flex, Card, Button, Row, Col, Tag, Modal, Form, Input, message } from 'antd';
 import { history } from 'umi';
-import { createFromIconfontCN, DeploymentUnitOutlined, SearchOutlined, MoreOutlined } from '@ant-design/icons';
+import copy from 'copy-to-clipboard';
+import InstanceCard from '../../components/InstanceCard';
+import {
+  createFromIconfontCN,
+  DeploymentUnitOutlined,
+  SearchOutlined,
+  MoreOutlined,
+  CopyOutlined,
+} from '@ant-design/icons';
 import { useContext } from '@/pages/instance/create-instance/useContext';
-
+const IconFont = createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/a/font_4377140_8fiw2wn073a.js',
+});
 const Lists: React.FC = () => {
-  const { store, updateStore } = useContext();
-  const IconFont = createFromIconfontCN({
-    scriptUrl: '//at.alicdn.com/t/a/font_4377140_8fiw2wn073a.js',
-  });
+  const [form] = Form.useForm();
+  const { updateStore } = useContext();
+  const [isModalOpen, setisModalOpen] = useState<boolean>(false);
+  const bindEndpoint = () => {
+    form.validateFields().then(res => {
+      console.log(res);
+    });
+  };
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <h3>GraphScope Instance</h3>
         <Flex wrap="wrap" gap="small">
-        <Button
-          type='primary'
-          onClick={() => {
-            history.push('/instance/create');
-            updateStore(draft => {
-              draft.detail = false;
-              /**
-               * 首次清空列表数据
-               */
-              draft.nodeItems = {};
-              draft.nodeList = [];
-              draft.edgeItems = {};
-              draft.edgeList = [];
-              draft.graphData = { nodes: [], edges: [] };
-            });
-          }}
-        >
-          创建图实例
-        </Button>
-        <Button>绑定</Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              history.push('/instance/create');
+              updateStore(draft => {
+                draft.detail = false;
+              });
+            }}
+          >
+            创建图实例
+          </Button>
+          <Button onClick={() => setisModalOpen(true)}>绑定</Button>
         </Flex>
       </div>
-      {
-        <Row>
-          <Col span={12}>
-            <Card>
-              <Row>
-                <Col span={12}>
-                  <p>My Graph Instance</p>
-                  <Tag color="green">Running</Tag>
-                  <p>Sharing User：山果 / 东泽</p>
-                  <p>Version： 0.24.0</p>
-                  <p>CreateTime： 2024-01-10</p>
-                  <p>Connect URL：xx.xxx.xxx.xxx:8787</p>
-                </Col>
-                <Col span={12}>
-                  <Flex gap="small" align="flex-start" vertical>
-                    <Button icon={<DeploymentUnitOutlined />}>Modal</Button>
-                    <Button icon={<DeploymentUnitOutlined />}>Import</Button>
-                    <Button icon={<SearchOutlined />}>Query</Button>
-                    <Flex wrap="wrap" gap="small">
-                      <Button icon={<SearchOutlined />} />
-                      <Button icon={<IconFont type="icon-delete1" />} />
-                      <Button icon={<MoreOutlined />} />
-                    </Flex>
-                  </Flex>
-                </Col>
-              </Row>
-            </Card>
-          </Col>
-          <Col span={12}>
-            <Card>
-              <Row>
-                <Col span={12}>
-                  <p>My Graph Instance</p>
-                  <Tag color="green">Running</Tag>
-                  <p>Sharing User：山果 / 东泽</p>
-                  <p>Version： 0.24.0</p>
-                  <p>CreateTime： 2024-01-10</p>
-                  <p>Connect URL：xx.xxx.xxx.xxx:8787</p>
-                </Col>
-                <Col span={12}>
-                  <Flex gap="small" align="flex-start" vertical>
-                    <Button icon={<DeploymentUnitOutlined />}>Modal</Button>
-                    <Button icon={<DeploymentUnitOutlined />}>Import</Button>
-                    <Button icon={<SearchOutlined />}>Query</Button>
-                    <Flex wrap="wrap" gap="small">
-                      <Button icon={<SearchOutlined />} />
-                      <Button icon={<IconFont type="icon-delete1" />} />
-                      <Button icon={<MoreOutlined />} />
-                    </Flex>
-                  </Flex>
-                </Col>
-              </Row>
-            </Card>
-          </Col>
-        </Row>
-      }
+      {<InstanceCard instanceData={{}} />}
+      <Modal title="绑定实例" open={isModalOpen} onOk={bindEndpoint} onCancel={() => setisModalOpen(false)}>
+        <div style={{ padding: '16px', backgroundColor: '#F5F5F5', border: '1px dashed #ccc' }}>
+          <Form name="modal-basic" labelCol={{ span: 12 }} form={form}>
+            <Form.Item<{ endpoint: string }>
+              label="Endpoint URL"
+              name="endpoint"
+              tooltip="Endpoint URL"
+              rules={[{ required: true, message: '' }]}
+              style={{ marginBottom: '0px' }}
+            >
+              <Input />
+            </Form.Item>
+          </Form>
+        </div>
+      </Modal>
     </>
   );
 };

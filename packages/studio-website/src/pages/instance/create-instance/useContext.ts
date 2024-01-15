@@ -3,6 +3,7 @@ import { proxy, useSnapshot } from "valtio";
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 
 export type IStore<T> = T & {
+  [x:string]:any;
   nodeList: {
     label: string;
     children: any;
@@ -40,7 +41,7 @@ export type IStore<T> = T & {
   checked:'table' | 'json' | 'graph';
   currentStep:number;
 };
-const initialStore: IStore<{}> = {
+export const initialStore: IStore<{}> = {
   nodeList: [], 
   edgeList: [],
   option:[],

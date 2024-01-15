@@ -34,6 +34,7 @@ const ChooseEnginetype: () => JSX.Element = () => {
       }, 1000);
     });
     data && setChooseGraphInstanceData(data);
+    form.resetFields()
   };
   const onFinish = () => {
     form.validateFields().then(res => {
