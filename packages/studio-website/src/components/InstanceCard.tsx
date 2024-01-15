@@ -9,18 +9,19 @@ import {
   MoreOutlined,
   CopyOutlined,
 } from '@ant-design/icons';
+import { InstaceList } from '../pages/instance/lists';
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_8fiw2wn073a.js',
 });
 
-type instanceType = {
-  instanceData: { 'Sharing-User': string; Version: string; CreateTime: string; 'Connect-URL': string };
-  index:number;
+type InstaceType = {
+  instanceData: InstaceList;
+  index: number;
 };
-const Lists: React.FC<instanceType> = props => {
-  const { instanceData ,index} = props;
+const Lists: React.FC<InstaceType> = props => {
+  const { instanceData, index } = props;
   return (
-    <Card style={{marginRight:index%2==0?'6px':'0px'}}>
+    <Card style={{ marginRight: index % 2 == 0 ? '6px' : '0px' }}>
       <Flex gap="middle" justify="space-between">
         <Flex gap="middle" align="flex-start" vertical>
           <div>

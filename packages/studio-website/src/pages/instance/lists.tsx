@@ -27,11 +27,15 @@ const arr = [
     'Connect-URL': 'xx.xxx.xxx.xxx:8787',
   },
 ];
+export type InstaceList = { 'Sharing-User': string; Version: string; CreateTime: string; 'Connect-URL': string }
 const Lists: React.FC = () => {
   const [form] = Form.useForm();
   const { updateStore } = useContext();
-  const [isModalOpen, setisModalOpen] = useState<boolean>(false);
-  const [instanceList, setInstanceList] = useState([]);
+  const [state, updateState] = useState<{ isModalOpen?: boolean; instanceList?: InstaceList[] }>({
+    isModalOpen: false,
+    instanceList: [],
+  });
+  const { isModalOpen, instanceList } = state;
   const bindEndpoint = () => {
     form.validateFields().then(res => {
       console.log(res);
@@ -47,7 +51,7 @@ const Lists: React.FC = () => {
         resolve(arr);
       }, 500);
     });
-    data && setInstanceList(data);
+    data && updateState({ instanceList: data });
   };
 
   return (
@@ -66,17 +70,18 @@ const Lists: React.FC = () => {
           >
             创建图实例
           </Button>
-          <Button onClick={() => setisModalOpen(true)}>绑定</Button>
+          <Button onClick={() => updateState({ isModalOpen: true })}>绑定</Button>
         </Flex>
       </div>
       <Row>
-        { instanceList.map((item, i) => (
-            <Col span={12} key={i} style={{marginTop:'6px'}}>
+        {instanceList &&
+          instanceList.map((item, i) => (
+            <Col span={12} key={i} style={{ marginTop: '6px' }}>
               <InstanceCard index={i} instanceData={item} />
             </Col>
           ))}
       </Row>
-      <Modal title="绑定实例" open={isModalOpen} onOk={bindEndpoint} onCancel={() => setisModalOpen(false)}>
+      <Modal title="绑定实例" open={isModalOpen} onOk={bindEndpoint} onCancel={() => updateState({ isModalOpen: false })}>
         <div style={{ padding: '16px', backgroundColor: '#F5F5F5', border: '1px dashed #ccc' }}>
           <Form name="modal-basic" labelCol={{ span: 12 }} form={form}>
             <Form.Item<{ endpoint: string }>
