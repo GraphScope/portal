@@ -29,8 +29,8 @@
 | DELETE /api/v1/job/{job_id}                                      | (JOB) 取消任务                                         | ✓   |     ✓     |    ✓     | ✓   |
 | POST /api/v1/statement                                           | (STATEMENT) 新建 gremlin/cypher 语句                   | ✓   |     ✓     |    x     | ✓   |
 | GET /api/v1/statement                                            | (STATEMENT) 获取查询语句列表                           | ✓   |     ✓     |    x     | ✓   |
-| PUT /api/v1/statement/{statement_name}                           | (STATEMENT) 修改查询语句信息                           | ✓   |     ✓     |    x     | ✓   |
-| DELETE /api/v1/statement/{statement_name}                        | (STATEMENT) 删除某一查询语句                           | ✓   |     ✓     |    x     | ✓   |
+| PUT /api/v1/statement/{statement_id}                             | (STATEMENT) 修改查询语句信息                           | ✓   |     ✓     |    x     | ✓   |
+| DELETE /api/v1/statement/{statement_id}                          | (STATEMENT) 删除某一查询语句                           | ✓   |     ✓     |    x     | ✓   |
 | GET /api/v1/procedure                                            | (EXTENSION) 获取全部 storedprocedure 列表              | x   |     ✓     |    x     | ✓   |
 | POST /api/v1/graph/{graph_name}/procedure                        | (EXTENSION) 新建 storedprocedure                       | x   |     ✓     |    x     | ✓   |
 | GET /api/v1/graph/{graph_name}/procedure                         | (EXTENSION) 获取某张图上 storedprocedure 列表          | x   |     ✓     |    x     | ✓   |
