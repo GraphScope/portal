@@ -1,10 +1,8 @@
 import * as React from 'react';
-import InstanceCard from './InstanceCard';
+import InstanceLists from './lists';
 interface InstanceProps {}
 const Instance: React.FunctionComponent<InstanceProps> = props => {
-  return (
-    <InstanceCard/>
-  );
+  return <InstanceLists />;
 };
 
 export default Instance;
