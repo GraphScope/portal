@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Flex, Row, Col, Button, Modal, Form, Input } from 'antd';
 import { history } from 'umi';
 import InstaceCard, { InstaceCardType } from '../../../components/instance-card';
-import { useContext } from '@/pages/instance/create-instance/useContext';
 import { createFromIconfontCN, DeploymentUnitOutlined, SearchOutlined, MoreOutlined } from '@ant-design/icons';
 
 const IconFont = createFromIconfontCN({
@@ -34,7 +33,7 @@ const arr = [
 
 const InstanceCard: React.FC = () => {
   const [form] = Form.useForm();
-  const { updateStore } = useContext();
+
   const [state, updateState] = useState<{ isModalOpen?: boolean; instanceList?: InstaceCardType[] }>({
     isModalOpen: false,
     instanceList: [],
@@ -67,9 +66,6 @@ const InstanceCard: React.FC = () => {
             type="primary"
             onClick={() => {
               history.push('/instance/create');
-              updateStore(draft => {
-                draft.detail = false;
-              });
             }}
           >
             创建图实例
