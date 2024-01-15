@@ -1,30 +1,32 @@
 import React from 'react';
-import { Flex, Card, Button, Tag, message } from 'antd';
-import { history } from 'umi';
+import { Flex, Card, Tag, message } from 'antd';
 import copy from 'copy-to-clipboard';
-import {
-  createFromIconfontCN,
-  DeploymentUnitOutlined,
-  SearchOutlined,
-  MoreOutlined,
-  CopyOutlined,
-} from '@ant-design/icons';
-import { InstaceList } from '../../pages/instance/InstanceCard';
+import { createFromIconfontCN, CopyOutlined } from '@ant-design/icons';
+
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_8fiw2wn073a.js',
 });
 
-type InstaceType = {
-  instanceLeftInfo: InstaceList;
-    index: number;
+export type InstaceCardType = {
+  /** user 用户名 */
+  user: string;
+  /** version 版本号 */
+  version: string;
+  /** createtime 创建时间 */
+  createtime: string;
+  /** connecturl 实例链接 */
+  connecturl: string;
+  routes: React.ReactNode;
+  actions: React.ReactNode;
 };
+
 const styles: React.CSSProperties = {
   margin: '6px 0px',
 };
-const InstaceItem: React.FC<InstaceType> = props => {
-  const { instanceLeftInfo: {user, version, createtime, connecturl}, index } = props;
+const InstaceCard: React.FC<InstaceCardType> = props => {
+  const { user, version, createtime, connecturl, routes, actions } = props;
   return (
-    <Card style={{ marginRight: index % 2 == 0 ? '6px' : '0px' }}>
+    <Card>
       <Flex gap="middle" justify="space-between">
         <Flex gap="middle" align="flex-start" vertical>
           <div>
@@ -51,16 +53,10 @@ const InstaceItem: React.FC<InstaceType> = props => {
         </Flex>
         <Flex gap={25} align="flex-start" vertical>
           <Flex gap="middle" align="flex-start" vertical>
-            <Button icon={<DeploymentUnitOutlined />}>Modal</Button>
-            <Button icon={<DeploymentUnitOutlined />} onClick={() => history.push('/instance/import-data')}>
-              Import
-            </Button>
-            <Button icon={<SearchOutlined />}>Query</Button>
+            {routes}
           </Flex>
           <Flex wrap="wrap" gap="small">
-            <Button icon={<SearchOutlined />} />
-            <Button icon={<IconFont type="icon-delete1" />} />
-            <Button icon={<MoreOutlined />} />
+            {actions}
           </Flex>
         </Flex>
       </Flex>
@@ -68,4 +64,4 @@ const InstaceItem: React.FC<InstaceType> = props => {
   );
 };
 
-export default InstaceItem;
+export default InstaceCard;

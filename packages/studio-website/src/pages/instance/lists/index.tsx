@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Flex, Row, Col, Button, Modal, Form, Input } from 'antd';
 import { history } from 'umi';
-import InstaceItem from '../../components/instance-card';
-import { createFromIconfontCN } from '@ant-design/icons';
+import InstaceCard, { InstaceCardType } from '../../../components/instance-card';
 import { useContext } from '@/pages/instance/create-instance/useContext';
+import { createFromIconfontCN, DeploymentUnitOutlined, SearchOutlined, MoreOutlined } from '@ant-design/icons';
+
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_8fiw2wn073a.js',
 });
@@ -27,20 +28,11 @@ const arr = [
     connecturl: 'xx.xxx.xxx.xxx:8787',
   },
 ];
-export type InstaceList = {
-  /** user 用户名 */
-  user: string;
-  /** version 版本号 */
-  version: string;
-  /** createtime 创建时间 */
-  createtime: string;
-  /** connecturl 实例链接 */
-  connecturl: string;
-};
+
 const InstanceCard: React.FC = () => {
   const [form] = Form.useForm();
   const { updateStore } = useContext();
-  const [state, updateState] = useState<{ isModalOpen?: boolean; instanceList?: InstaceList[] }>({
+  const [state, updateState] = useState<{ isModalOpen?: boolean; instanceList?: InstaceCardType[] }>({
     isModalOpen: false,
     instanceList: [],
   });
@@ -86,7 +78,26 @@ const InstanceCard: React.FC = () => {
         {instanceList &&
           instanceList.map((item, i) => (
             <Col span={12} key={i} style={{ marginTop: '6px' }}>
-              <InstaceItem index={i} instanceLeftInfo={item} />
+              <InstaceCard
+                key={i}
+                {...item}
+                routes={
+                  <>
+                    <Button icon={<DeploymentUnitOutlined />}>Modal</Button>
+                    <Button icon={<DeploymentUnitOutlined />} onClick={() => history.push('/instance/import-data')}>
+                      Import
+                    </Button>
+                    <Button icon={<SearchOutlined />}>Query</Button>
+                  </>
+                }
+                actions={
+                  <>
+                    <Button icon={<SearchOutlined />} />
+                    <Button icon={<IconFont type="icon-delete1" />} />
+                    <Button icon={<MoreOutlined />} />
+                  </>
+                }
+              />
             </Col>
           ))}
       </Row>
