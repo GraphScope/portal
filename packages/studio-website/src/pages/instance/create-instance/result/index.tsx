@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Tag, Segmented, Collapse, Row, Col} from 'antd';
-import GraphInsight from '../create-schema/graph-insight';
+import GraphInsight from '../create-schema/graph-view';
 interface IImportDataProps {}
 const text = `
   A dog is a type of domesticated animal.

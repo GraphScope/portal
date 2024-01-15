@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { Card, Tabs, Row, Col, Tooltip } from 'antd';
 import { cloneDeep } from 'lodash';
 import { useContext ,initialStore} from '../useContext';
-import GraphInsight from './graph-insight';
+import GraphInsight from './graph-view';
 import Schema from './schema';
-import AddLabel from './ add-label';
+import AddLabel from './add-label';
 interface ICreateInstanceProps {
   graphData?: any;
   isAlert?: boolean;
