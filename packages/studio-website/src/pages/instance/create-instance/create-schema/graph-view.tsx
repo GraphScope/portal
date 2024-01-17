@@ -1,19 +1,18 @@
-import React,{useEffect} from 'react';
-import { Button, Space, Upload } from 'antd';
-import Graphin, { Behaviors, Utils } from '@antv/graphin';
+import { useEffect ,memo, FunctionComponent} from 'react';
+import Graphin, { Utils } from '@antv/graphin';
 import { useContext } from '../useContext';
-import { download, prop } from './utils';
-const { ZoomCanvas } = Behaviors;
-const GraphInsight = () => {
+interface Props {
+  children?: JSX.Element;
+}
+const GraphInsight:FunctionComponent<Props> = props => {
+  const { children = <></> } = props;
   const { store, updateStore } = useContext();
-  const { isAlert, graphData, nodeItems, edgeItems } = store;
+  const { graphData, nodeItems, edgeItems } = store;
   useEffect(() => {
-      getVertexEdges();
+    getVertexEdges();
   }, [nodeItems, edgeItems]);
-  /**
-   * graphin 数据
-   */
-  const getVertexEdges = async () => {
+  /** graphin 数据处理 */
+  const getVertexEdges = () => {
     const result: { vertices: { label: string }[]; edges: { label: string; src_label: string; dst_label: string }[] } =
       {
         vertices: Object.values(nodeItems),
@@ -86,24 +85,10 @@ const GraphInsight = () => {
     <div
       style={{ backgroundColor: '#fff', padding: '16px', border: '1px solid #000', height: '65vh', overflow: 'hidden' }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h3>Graph Schema View</h3>
-        {!isAlert ? (
-          <Space>
-            <Upload {...prop} showUploadList={false}>
-              <Button type="dashed">Import</Button>
-            </Upload>
-            <Button type="dashed" onClick={() => download(`xxx.json`, '')}>
-              Export
-            </Button>
-          </Space>
-        ) : null}
-      </div>
-      <Graphin data={graphData} layout={{ type: 'circular' }} fitView style={{ height: '60vh' }}>
-        <ZoomCanvas enableOptimize minZoom={0.5} />
-      </Graphin>
+      <div>{children}</div>
+      <Graphin data={graphData} layout={{ type: 'circular' }} fitView style={{ height: '60vh' }} />
     </div>
   );
 };
 
-export default GraphInsight;
+export default memo(GraphInsight);

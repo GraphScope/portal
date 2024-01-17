@@ -1,12 +1,13 @@
-import * as React from 'react';
+import { FunctionComponent } from 'react';
 import { Button, Segmented } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { cloneDeep } from 'lodash';
 import { useContext } from '../useContext';
 import Schema from './schema';
-const AddLabel = () => {
+const AddLabel: FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { nodeList, edgeList, currentType, nodeItems, edgeItems, detail } = store;
+  /** 切换 node/edge */
   const nodeEdgeChange = (val: string): void => {
     updateStore(draft => {
       draft.currentType = val == 'Nodes' ? 'node' : 'edge';
@@ -17,14 +18,15 @@ const AddLabel = () => {
       });
     }
   };
-  const add = () => {
+  /** 添加点边模版 */
+  const addLabel = () => {
     if (currentType == 'node') {
       const newActiveKey = uuidv4();
       const node = [
         ...nodeList,
         {
           label: 'undefine',
-          children: <Schema newActiveKey={newActiveKey} deleteNode={deleteNode} />,
+          children: <Schema newActiveKey={newActiveKey} deleteNode={deleteLabel} />,
           key: newActiveKey,
         },
       ];
@@ -38,7 +40,7 @@ const AddLabel = () => {
         ...edgeList,
         {
           label: 'undefine',
-          children: <Schema newActiveKey={newActiveKey} deleteNode={deleteNode} />,
+          children: <Schema newActiveKey={newActiveKey} deleteNode={deleteLabel} />,
           key: newActiveKey,
         },
       ];
@@ -48,7 +50,8 @@ const AddLabel = () => {
       });
     }
   };
-  const deleteNode = (val: string, key: string) => {
+  /** 删除点边模版 */
+  const deleteLabel = (val: string, key: string) => {
     let data = val == 'Node' ? cloneDeep(nodeList) : cloneDeep(edgeList);
     const newPanes = data.filter(pane => pane.key !== key);
     if (val == 'Node') {
@@ -79,25 +82,23 @@ const AddLabel = () => {
       });
     }
   };
-  const nodeEddgeLength = () => {
-    if (currentType == 'node') {
-      return nodeList.length;
-    } else {
-      return edgeList.length;
-    }
-  };
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Segmented defaultValue="Nodes" options={['Nodes', 'Edges']} style={{ marginBottom: '16px' }} onChange={e => nodeEdgeChange(e)} />
-        {nodeEddgeLength() > 0 ? (
-          <Button type="dashed" onClick={add} disabled={detail}>
+        <Segmented
+          defaultValue="Nodes"
+          options={['Nodes', 'Edges']}
+          style={{ marginBottom: '16px' }}
+          onChange={e => nodeEdgeChange(e)}
+        />
+        {(currentType == 'node' ? nodeList.length : edgeList.length) > 0 ? (
+          <Button type="dashed" onClick={addLabel} disabled={detail}>
             + Add {currentType == 'node' ? 'Node' : 'Edge'}
           </Button>
         ) : null}
       </div>
-      {nodeEddgeLength() == 0 ? (
-        <Button disabled={detail} style={{ width: '100%', color: '#1650ff' }} type="dashed" onClick={add}>
+      {(currentType == 'node' ? nodeList.length : edgeList.length) == 0 ? (
+        <Button disabled={detail} style={{ width: '100%', color: '#1650ff' }} type="dashed" onClick={addLabel}>
           + Add {currentType == 'node' ? 'Node' : 'Edge'}
         </Button>
       ) : null}

@@ -1,5 +1,5 @@
 import type { UploadProps } from 'antd';
-  // 导入数据
+  /** 导入数据 */
   export const prop: UploadProps = {
     beforeUpload(file: Blob) {
       let reader = new FileReader();
@@ -12,7 +12,7 @@ import type { UploadProps } from 'antd';
     },
     capture: undefined,
   };
-  // 导出
+  /** 导出数据*/ 
   export const download = (queryData: string, states: BlobPart) => {
     const eleLink = document.createElement('a');
     eleLink.download = queryData;
@@ -23,4 +23,5 @@ import type { UploadProps } from 'antd';
     eleLink.click();
     document.body.removeChild(eleLink);
   };
+  
   

@@ -33,6 +33,14 @@ export type EditColumnsType<T> = {
     editorConfig?: any;
     render?: any;
   }
+  export interface IMapColumns {
+    title?: string;
+    width?: number;
+    dataIndex: string;
+    key: string;
+    ellipsis?:boolean;
+    render?: (name:string)=>any;
+  }
 
   export interface EditableCellProps {
     title: React.ReactNode;

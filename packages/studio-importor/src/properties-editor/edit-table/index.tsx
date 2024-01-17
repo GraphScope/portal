@@ -4,7 +4,6 @@ import React, { createContext, useContext, useEffect, memo, useRef, forwardRef }
 import { EditOutlined } from '@ant-design/icons';
 import { EditableCellProps, EditableRowProps ,ConfigColumns,PropertyList} from '../interface';
 import { EditType } from '../mapdata';
-// import styles from './index.module.less';
 
 const EditableContext = createContext<FormInstance<any> | null>(null);
 const TableContext = createContext<{
@@ -93,7 +92,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
             ]
           }
         >
-          {record?.disable ? (
+          {(record?.disable && record?.name)? (
             <span
               style={{ height: '27px', backgroundColor: '#505156', color: '#fff', borderRadius: '8px', padding: '8px' }}
               onClick={() => inputDoubleClick(record)}

@@ -60,7 +60,7 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
     { width: '18px', color: '#DDDEDE' },
     { width: '20px', color: '#DEDFDE' },
   ];
-
+  /**属性事件 */
   const propertiesChange = (val, type) => {
     if (type == 'color') {
       colorRef.current = val;
@@ -74,7 +74,8 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
     }
     onChange({ label, color: colorRef.current, size: sizeRef.current, caption: captionRef.current });
   };
-  const Titlecontent = () => {
+  /**EditProperty 节点/边 （color,size,caption）编辑*/
+  const EditProperty = () => {
     return (
       <div style={{ width: '350px', padding: '12px' }}>
         <Button type="primary" danger style={{ width: '100%', borderRadius: '15px' }}>
@@ -139,7 +140,7 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
     );
   };
   return (
-    <Popover placement="left" content={Titlecontent()}>
+    <Popover placement="left" content={EditProperty()}>
       {cutomer ? (
         <Button type="primary" danger style={{ borderRadius: '16px', marginBottom: '10px', cursor: 'pointer' }}>
           cutomer

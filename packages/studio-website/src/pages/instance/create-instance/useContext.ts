@@ -28,13 +28,10 @@ export type IStore<T> = T & {
     nodes:{ id: string; label: string; style: any }[];
     edges: IUserEdge[]
   };
-  properties:any; 
   /** node tabs items */ 
   nodeItems: {};
    /**edge tabs items */ 
   edgeItems: {};
-  /** Choose EngineType input value */ 
-  inputvalues:string; 
   /** create or detail */ 
   detail:boolean;
   /** result view */
@@ -50,10 +47,8 @@ export const initialStore: IStore<{}> = {
   nodeActiveKey:'', 
   edgeActiveKey: '', 
   graphData:{nodes:[],edges:[]},
-  properties:[],
   nodeItems: {},
   edgeItems: {},
-  inputvalues:'', 
   detail:false, 
   checked:'table',
   currentStep:0

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,memo} from 'react';
 import { Flex, Row, Col, Button, Modal, Form, Input } from 'antd';
 import { history } from 'umi';
 import InstaceCard, { InstaceCardType } from '../../../components/instance-card';
 import { createFromIconfontCN, DeploymentUnitOutlined, SearchOutlined, MoreOutlined } from '@ant-design/icons';
-
+/** 自定义icon */
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_8fiw2wn073a.js',
 });
@@ -33,7 +33,7 @@ const arr = [
 
 const InstanceCard: React.FC = () => {
   const [form] = Form.useForm();
-  const [state, updateState] = useState<{ isModalOpen?: boolean; instanceList?: InstaceCardType[] }>({
+  const [state, updateState] = useState<{ isModalOpen: boolean; instanceList: InstaceCardType[] }>({
     isModalOpen: false,
     instanceList: [],
   });
@@ -53,7 +53,7 @@ const InstanceCard: React.FC = () => {
         resolve(arr);
       }, 500);
     });
-    data && updateState({ instanceList: data });
+    data && updateState(preState=>{ return {...preState,instanceList: data }});
   };
 
   return (
@@ -69,7 +69,7 @@ const InstanceCard: React.FC = () => {
           >
             创建图实例
           </Button>
-          <Button onClick={() => updateState({ isModalOpen: true })}>绑定</Button>
+          <Button onClick={() => updateState(preState=>{ return { ...preState,isModalOpen: true }})}>绑定</Button>
         </Flex>
       </div>
       <Row>
@@ -103,7 +103,7 @@ const InstanceCard: React.FC = () => {
         title="绑定实例"
         open={isModalOpen}
         onOk={bindEndpoint}
-        onCancel={() => updateState({ isModalOpen: false })}
+        onCancel={() => updateState(preState=>{ return { ...preState,isModalOpen: false }})}
       >
         <div style={{ padding: '16px', backgroundColor: '#F5F5F5', border: '1px dashed #ccc' }}>
           <Form name="modal-basic" labelCol={{ span: 12 }} form={form}>
@@ -123,4 +123,4 @@ const InstanceCard: React.FC = () => {
   );
 };
 
-export default InstanceCard;
+export default memo(InstanceCard);

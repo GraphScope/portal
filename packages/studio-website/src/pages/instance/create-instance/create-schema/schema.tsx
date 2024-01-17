@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect ,useRef} from 'react';
 import { Form, Input, Select, Button } from 'antd';
 import { PropertiesEditor } from '@graphscope/studio-importor';
 import { cloneDeep } from 'lodash';
@@ -13,33 +13,39 @@ type SchemaType = {
   deleteNode: (currentType: string, newActiveKey: string) => void;
   data?: any;
 };
+
+type IFormType = {
+  [x:string]:{
+    label:string;
+    src_label?:string;
+    dst_label?:string;
+    properties:any;
+  };
+}
 const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   const { newActiveKey, deleteNode, data } = props;
   const [form] = Form.useForm();
   const { store, updateStore } = useContext();
-  const { currentType, properties, nodeItems, edgeItems, detail, option } = store;
-  const propertyRef = React.useRef<any>();
-  const formValuesChange = (changedValues: any, allValues: any) => {
-    formChange();
-  };
+  const { currentType, nodeItems, edgeItems, detail, option } = store;
+  const propertyRef = useRef<any>();
   useEffect(() => {
     if (data) {
       form.setFieldsValue(data);
     }
   }, []);
-  useEffect(() => {
-    formChange();
-  }, [properties]);
+  /** 创建点、边时值的监控 */
   const formChange = () => {
     if (currentType == 'node') {
-      const getData: any = cloneDeep(nodeItems);
-      getData[newActiveKey] = { ...form.getFieldsValue(), properties: propertyRef?.current?.getValues() };
+      const getData:IFormType = cloneDeep(nodeItems);
+      const { label } = form.getFieldsValue();
+      getData[newActiveKey] = { label, properties: propertyRef?.current?.getValues() };
       updateStore(draft => {
         draft.nodeItems = getData;
       });
     } else {
-      const getData: any = cloneDeep(edgeItems);
-      getData[newActiveKey] = { ...form.getFieldsValue(), properties: propertyRef?.current?.getValues() };
+      const getData: IFormType = cloneDeep(edgeItems);
+      const { label, src_label, dst_label } = form.getFieldsValue();
+      getData[newActiveKey] = { label, src_label:src_label || '', dst_label:dst_label || '', properties: propertyRef?.current?.getValues() };
       updateStore(draft => {
         draft.edgeItems = getData;
       });
@@ -47,11 +53,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   };
   return (
     <>
-      <Form
-        form={form}
-        layout="vertical"
-        onValuesChange={(changedValues, allValues) => formValuesChange(changedValues, allValues)}
-      >
+      <Form form={form} layout="vertical" onValuesChange={() => formChange()}>
         <div style={{ position: 'relative' }}>
           <Form.Item<FieldType>
             label={currentType == 'node' ? 'Node Label' : 'Edge Label'}
@@ -103,11 +105,9 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
         properties={data?.properties || []}
         propertyType={[{ type: 'string' }, { type: 'datetime' }]}
         onChange={(values: any) => {
-          updateStore(draft => {
-            draft.properties = values;
-          });
+          formChange();
         }}
-        tableType={['Name', 'Type', 'ID']} // all['Name', 'Column', 'Type', 'ID']
+        tableType={['Name', 'Type', 'primary_key']} // all['Name', 'Column', 'Type', 'primary_key']
       />
     </>
   );

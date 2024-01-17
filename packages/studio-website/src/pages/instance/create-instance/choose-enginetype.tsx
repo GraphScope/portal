@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect ,memo} from 'react';
 import { Form, Input, Row, Col, Avatar, Card, Select } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
-import { useContext } from './useContext';
 
 export type FieldType = {
   inputname?: string;
   type?: string;
   directed: boolean;
 };
+type Istate = {
+  isChecked: string;
+  chooseGraphInstanceList: { key: string; name: string; content: string }[];
+};
+type ChooseEnginetypeProps ={
+
+}
 const arr = [
   { key: uuidv4(), name: 'instance', content: '引擎介绍' },
   { key: uuidv4(), name: 'instance', content: '引擎介绍' },
@@ -15,17 +21,17 @@ const arr = [
   { key: uuidv4(), name: 'instance', content: '引擎介绍' },
   { key: uuidv4(), name: 'instance', content: '引擎介绍' },
 ];
-const ChooseEnginetype: () => JSX.Element = () => {
+const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = () => {
   const [form] = Form.useForm();
-  const { store } = useContext();
-  const { inputvalues } = store;
-  const [isChecked, setIsChecked] = useState('');
-  const [chooseGraphInstanceData, setChooseGraphInstanceData] = useState<
-    { key: string; name: string; content: string }[]
-  >([]);
+  const [state, updateState] = useState<Istate>({
+    isChecked: '',
+    chooseGraphInstanceList: [],
+  });
+  const { isChecked, chooseGraphInstanceList } = state;
   useEffect(() => {
     getInstanceData();
   }, []);
+  /** 初始化实例 */
   const getInstanceData = async () => {
     let data: { key: string; name: string; content: string }[] = [];
     data = await new Promise((resolve, reject) => {
@@ -33,24 +39,20 @@ const ChooseEnginetype: () => JSX.Element = () => {
         resolve(arr);
       }, 1000);
     });
-    data && setChooseGraphInstanceData(data);
-    form.resetFields()
+    data && updateState(preState=>{return{...preState,chooseGraphInstanceList:data}});
+    form.resetFields();
+    form.setFieldsValue({ directed: true });
   };
-  const onFinish = () => {
-    form.validateFields().then(res => {
-      console.log(res);
-    });
-  };
-  const cardClick = (val: string) => {
-    setIsChecked(val);
-  };
-  const itemStyle: React.CSSProperties = {
-    margin: '12px 12px 0 0',
-  };
-  const activeItemStyle: React.CSSProperties = {
-    margin: '12px 12px 0 0',
-    border: '1px solid #1650ff',
-  };
+
+  const styles:{[x:string]:React.CSSProperties } ={
+    itemStyle:{
+      margin: '12px 12px 0 0',
+    },
+    activeItemStyle:{
+      margin: '12px 12px 0 0',
+      border: '1px solid #1650ff',
+    }
+  }
   return (
     <Form name="basic" form={form} layout="vertical" style={{ marginTop: '24px' }}>
       <Form.Item<FieldType>
@@ -71,13 +73,10 @@ const ChooseEnginetype: () => JSX.Element = () => {
         rules={[{ required: true, message: '' }]}
       >
         <Row>
-          {chooseGraphInstanceData.map(item => {
+          {chooseGraphInstanceList.map(item => {
             return (
               <Col span={6} key={item.key}>
-                <Card
-                  style={isChecked == item.key ? activeItemStyle : itemStyle}
-                  onClick={() => cardClick(item.key)}
-                >
+                <Card style={isChecked == item.key ? styles['activeItemStyle'] : styles['itemStyle']} onClick={() => updateState(preState=>{return{...preState,isChecked:item.key}})}>
                   <div style={{ display: 'flex', justifyContent: 'start' }}>
                     <Avatar shape="square" size={45} />
                     <div style={{ marginLeft: '12px', verticalAlign: 'middle' }}>
@@ -103,7 +102,6 @@ const ChooseEnginetype: () => JSX.Element = () => {
         rules={[{ required: true, message: '' }]}
       >
         <Select
-          defaultValue={true}
           options={[
             { value: true, label: 'True' },
             { value: false, label: 'False' },
@@ -114,4 +112,4 @@ const ChooseEnginetype: () => JSX.Element = () => {
   );
 };
 
-export default ChooseEnginetype;
+export default memo(ChooseEnginetype);

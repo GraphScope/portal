@@ -2,11 +2,17 @@ import React, { type FC, useEffect, forwardRef, useImperativeHandle, useRef, mem
 import { Checkbox } from 'antd';
 import { uniqueId, cloneDeep } from 'lodash';
 import { useImmer } from 'use-immer';
-import { ImmerType, IndexData, PropertyList, ConfigColumns ,MapConfigParamsType,PropertyConfigParamsType} from './interface';
+import { ImmerType, IndexData, PropertyList, ConfigColumns ,MapConfigParamsType,PropertyConfigParamsType, IMapColumns} from './interface';
 import { EditType, IconFont } from './mapdata';
 import Editor from './editor';
-
-const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFile?:boolean;tableType:string[];propertyType?:{type:string;}[]}> = memo(
+type IPropertiesEditorProps ={
+  properties: PropertyList; 
+  onChange:any ;
+  isMapFromFile?:boolean;
+  tableType:string[];
+  propertyType?:{type:string;}[]
+}
+const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
   forwardRef((props, ref) => {
     const { properties, onChange ,isMapFromFile,tableType,propertyType} = props;
     const inputRef = useRef<HTMLInputElement>();
@@ -102,10 +108,10 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFi
         },
       },
       {
-        title: 'ID',
+        title: 'primary_key',
         dataIndex: 'operate',
         key: 'operate',
-        width: '10%',
+        width: '25%',
         render: (_, record: any) =>
           record?.primaryKey ? (
             <IconFont type="icon-yuechi" onClick={() => primaryKeyClick(record)} />
@@ -115,7 +121,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFi
       },
     ];
     // 定义primaryKeyClick回调函数，用于处理主键切换事件
-    const primaryKeyClick = val => {
+    const primaryKeyClick:(val:{id:string})=>void = val => {
       let reasult = cloneDeep(configList);
       const modifiedArray = reasult.map(item => {
         if (item.id == val.id && item.primaryKey) {
@@ -164,7 +170,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFi
       },
     };
     // 定义handleSelectAll、handleSelectRow、mapcolumns等其他辅助函数和变量
-    const handleSelectAll = e => {
+    const handleSelectAll= e => {
       if (e.target.checked) {
         updateState(draft => {
           draft.selectedMapRowKeys = mapfromfileList.map(item => item?.name);
@@ -181,7 +187,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFi
         draft.selectedMapRowKeys = selectedRowKeys;
       });
     };
-    const mapcolumns = [
+    const mapcolumns:IMapColumns[] = [
       {
         dataIndex: 'name',
         key: 'name',
@@ -236,7 +242,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFi
       });
       onChange(data);
     };
-    const inputDoubleClick = async val => {
+    const inputDoubleClick:(val:{id:string;})=>void = async val => {
       let reasult = cloneDeep(configList);
       const modifiedArray = await reasult.map(item => {
         if (item.id == val.id) {
@@ -256,7 +262,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFi
       });
       await inputRef?.current?.focus();
     };
-    const inputBlur = val => {
+    const inputBlur:(val:{disable:boolean;})=>void = val => {
       if (!val.disable) {
         let reasult = cloneDeep(configList);
         const modifiedArray = reasult.map(item => {

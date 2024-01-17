@@ -1,23 +1,26 @@
 import React, { useEffect } from 'react';
-import { Card, Tabs, Row, Col, Tooltip } from 'antd';
+import { Card, Tabs, Row, Col, Tooltip ,Button, Space, Upload } from 'antd';
 import { cloneDeep } from 'lodash';
-import { useContext ,initialStore} from '../useContext';
+import { useContext, initialStore } from '../useContext';
 import GraphInsight from './graph-view';
 import Schema from './schema';
 import AddLabel from './add-label';
+import { download, prop } from './utils';
+
 interface ICreateInstanceProps {
   graphData?: any;
   isAlert?: boolean;
 }
 const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
   const { store, updateStore } = useContext();
-  const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, nodeItems, edgeItems } = store;
+  const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, nodeItems, edgeItems ,isAlert} = store;
   useEffect(() => {
-    onChange(nodeList[0]?.key);
+    nodeChangeEdge(nodeList[0]?.key);
+    /** 首次创建初始化变量 */
     updateStore(draft => {
-      Object.keys(initialStore).forEach(key=>{
-        draft[key] = initialStore[key]
-      })
+      Object.keys(initialStore).forEach(key => {
+        draft[key] = initialStore[key];
+      });
     });
   }, []);
   useEffect(() => {
@@ -75,7 +78,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
       draft.option = nodearr;
     });
   }, [edgeItems]);
-  // del node or edge
+ /** del node or edge*/
   const deleteNode = (val: string, key: string) => {
     let data = val == 'node' ? cloneDeep(nodeList) : cloneDeep(edgeList);
     const newPanes = data.filter(pane => pane.key !== key);
@@ -107,7 +110,8 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
       });
     }
   };
-  const onChange = (key: string) => {
+  /** 点/边 切换 */
+  const nodeChangeEdge = (key: string) => {
     if (currentType == 'node') {
       updateStore(draft => {
         draft.nodeActiveKey = key;
@@ -118,7 +122,22 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
       });
     }
   };
-
+  /** 图头部组件 */
+  const GraphViewTitle = (
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <h3>Graph Schema View</h3>
+      {!isAlert ? (
+        <Space>
+          <Upload {...prop} showUploadList={false}>
+            <Button type="dashed">Import</Button>
+          </Upload>
+          <Button type="dashed" onClick={() => download(`xxx.json`, '')}>
+            Export
+          </Button>
+        </Space>
+      ) : null}
+    </div>
+  );
   return (
     <Card>
       <Row style={{ marginTop: '16px' }}>
@@ -141,7 +160,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
                   tabPosition="left"
                   items={[...cloneDeep(nodeList)]}
                   activeKey={nodeActiveKey}
-                  onChange={onChange}
+                  onChange={nodeChangeEdge}
                 />
               </div>
               <div style={{ display: currentType !== 'node' ? '' : 'none' }}>
@@ -150,14 +169,14 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
                   tabPosition="left"
                   items={[...cloneDeep(edgeList)]}
                   activeKey={edgeActiveKey}
-                  onChange={onChange}
+                  onChange={nodeChangeEdge}
                 />
               </div>
             </div>
           </div>
         </Col>
         <Col span={10}>
-          <GraphInsight />
+          <GraphInsight children={GraphViewTitle} />
         </Col>
       </Row>
     </Card>
