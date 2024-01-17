@@ -29,15 +29,17 @@
 | DELETE /api/v1/job/{job_id}                                      | (JOB) 取消任务                                         | ✓   |     ✓     |    ✓     | ✓   |
 | POST /api/v1/statement                                           | (STATEMENT) 新建 gremlin/cypher 语句                   | ✓   |     ✓     |    x     | ✓   |
 | GET /api/v1/statement                                            | (STATEMENT) 获取查询语句列表                           | ✓   |     ✓     |    x     | ✓   |
-| PUT /api/v1/statement/{statement_name}                           | (STATEMENT) 修改查询语句信息                           | ✓   |     ✓     |    x     | ✓   |
-| DELETE /api/v1/statement/{statement_name}                        | (STATEMENT) 删除某一查询语句                           | ✓   |     ✓     |    x     | ✓   |
-| POST /api/v1/graph/{graph_name}/procedure                        | (EXTENSION) 新建 storedprocedure                       | x   |     ✓     |    x     | ✓   |
-| PUT /api/v1/graph/{graph_name}/procedure/{procedure_name}        | (EXTENSION) 修改 storedprocedure 信息                  | x   |     ✓     |    x     | ✓   |
+| PUT /api/v1/statement/{statement_id}                             | (STATEMENT) 修改查询语句信息                           | ✓   |     ✓     |    x     | ✓   |
+| DELETE /api/v1/statement/{statement_id}                          | (STATEMENT) 删除某一查询语句                           | ✓   |     ✓     |    x     | ✓   |
 | GET /api/v1/procedure                                            | (EXTENSION) 获取全部 storedprocedure 列表              | x   |     ✓     |    x     | ✓   |
+| POST /api/v1/graph/{graph_name}/procedure                        | (EXTENSION) 新建 storedprocedure                       | x   |     ✓     |    x     | ✓   |
 | GET /api/v1/graph/{graph_name}/procedure                         | (EXTENSION) 获取某张图上 storedprocedure 列表          | x   |     ✓     |    x     | ✓   |
+| PUT /api/v1/graph/{graph_name}/procedure/{procedure_name}        | (EXTENSION) 修改 storedprocedure 信息                  | x   |     ✓     |    x     | ✓   |
 | DELETE /api/v1/graph/{graph_name}/procedure/{procedure_name}     | (EXTENSION) 删除某一 storedprocedure                   | x   |     ✓     |    x     | ✓   |
-| GET /api/v1/deployment/status                                    | (DEPLOYMENT) 获取集群状态(cpu/memory/disk)             | ✓   |     ✓     |    ✓     | ✓   |
+| GET /api/v1/deployment/info                                      | (DEPLOYMENT) 获取集群信息                              | ✓   |     ✓     |    ✓     | ✓   |
+| GET /api/v1/deployment/status                                    | (DEPLOYMENT) 获取集群状态(k8s only)                    | ✓   |     ✓     |    ✓     | ✓   |
 | GET /api/v1/deployment/log                                       | (DEPLOYMENT) 获取集群日志 (可能废弃)                   | ✓   |     ✓     |    ✓     | ✓   |
+| GET /api/v1/node/status                                          | (DEPLOYMENT) 获取集群节点状态 (cpu/memory)             | ✓   |     ✓     |    ✓     | ✓   |
 | GET /api/v1/alert/rule                                           | (ALERT) 获取报警规则列表                               | ✓   |     ✓     |    ✓     | ✓   |
 | PUT /api/v1/alert/rule/{rule_name}                               | (ALERT) 修改某一报警规则                               | ✓   |     ✓     |    ✓     | ✓   |
 | POST /api/v1/alert/rule                                          | (ALERT) 自定义报警规则 (暂不支持)                      | ✓   |     ✓     |    ✓     |     ｜
