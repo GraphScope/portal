@@ -209,7 +209,6 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
     };
     /** 初始化表格下拉选项及映射列表值*/
     const getConfigColumns = () => {
-      /** 初始化表格下拉选项及映射列表值*/
       let configcolumns: ConfigColumns[] = [];
       cloneDeep(tableConfig).map(item => {
         switch (item.type) {
