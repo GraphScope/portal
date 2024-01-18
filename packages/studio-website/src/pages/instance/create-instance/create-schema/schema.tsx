@@ -1,4 +1,4 @@
-import React, { useEffect ,useRef} from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Form, Input, Select, Button } from 'antd';
 import { PropertiesEditor } from '@graphscope/studio-importor';
 import { cloneDeep } from 'lodash';
@@ -15,19 +15,26 @@ type SchemaType = {
 };
 
 type IFormType = {
-  [x:string]:{
-    label:string;
-    src_label?:string;
-    dst_label?:string;
-    properties:any;
+  [x: string]: {
+    label: string;
+    src_label?: string;
+    dst_label?: string;
+    properties: any;
   };
-}
+};
 const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   const { newActiveKey, deleteNode, data } = props;
   const [form] = Form.useForm();
   const { store, updateStore } = useContext();
   const { currentType, nodeItems, edgeItems, detail, option } = store;
   const propertyRef = useRef<any>();
+  let cbRef = useRef()
+  /** 子项 [{title:'表头'，dataIndex:'绑定字段'，type:'字段对应编辑框'，option:'select配置选项',width:'表头宽度'}] */
+  const configcolumns = [
+    { title: 'primary_name', dataIndex: 'name', width: '40%', type: 'INPUT' },
+    { title: 'Type', dataIndex: 'type', width: '25%', type: 'SELECT', option: [{ value: 'string',label:'string' }, { value: 'datetime' ,label:'datetime'}] },
+    { title: 'primary_key', width: '25%' },
+  ];
   useEffect(() => {
     if (data) {
       form.setFieldsValue(data);
@@ -36,21 +43,26 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   /** 创建点、边时值的监控 */
   const formChange = () => {
     if (currentType == 'node') {
-      const getData:IFormType = cloneDeep(nodeItems);
+      const getData: IFormType = cloneDeep(nodeItems);
       const { label } = form.getFieldsValue();
-      getData[newActiveKey] = { label, properties: propertyRef?.current?.getValues() };
+      getData[newActiveKey] = { label, properties: cbRef.current };
       updateStore(draft => {
         draft.nodeItems = getData;
-      });
+      });  
     } else {
       const getData: IFormType = cloneDeep(edgeItems);
       const { label, src_label, dst_label } = form.getFieldsValue();
-      getData[newActiveKey] = { label, src_label:src_label || '', dst_label:dst_label || '', properties: propertyRef?.current?.getValues() };
+      getData[newActiveKey] = {
+        label,
+        src_label: src_label || '',
+        dst_label: dst_label || '',
+        properties: cbRef.current,
+      };
       updateStore(draft => {
         draft.edgeItems = getData;
       });
     }
-  };
+  };  
   return (
     <>
       <Form form={form} layout="vertical" onValuesChange={() => formChange()}>
@@ -102,12 +114,15 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
       </Form>
       <PropertiesEditor
         ref={propertyRef}
-        properties={data?.properties || []}
-        propertyType={[{ type: 'string' }, { type: 'datetime' }]}
+        properties={data?.properties ||[]}
         onChange={(values: any) => {
+          cbRef.current = values
           formChange();
         }}
-        tableType={['Name', 'Type', 'primary_key']} // all['Name', 'Column', 'Type', 'primary_key']
+        /**映射控制 */
+        isMapFromFile={false}
+        tableConfig={configcolumns}
+
       />
     </>
   );

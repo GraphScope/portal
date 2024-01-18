@@ -66,6 +66,7 @@ export interface ImmerType {
     proSelectKey: any[];
     propertyOption:{label:string;value:string;}[];
     columnOption:{label:string;value:string;}[];
+    propertyColumns?:ConfigColumns[]
 }
 export type MapConfigParamsType = {
   mapConfigParams: {

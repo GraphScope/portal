@@ -19,8 +19,8 @@ const styles: { [x: string]: CSSProperties } = {
   },
 };
 
-const Editor: FunctionComponent<MapConfigParamsType & PropertyConfigParamsType> = memo(
-  forwardRef((props, ref) => {
+const Editor: FunctionComponent<MapConfigParamsType & PropertyConfigParamsType> = 
+  (props) => {
     // 解构props中的mapConfigParams和propertyConfigParams
     const { mapConfigParams, propertyConfigParams } = props;
     return (
@@ -85,7 +85,6 @@ const Editor: FunctionComponent<MapConfigParamsType & PropertyConfigParamsType> 
           </div>
         </div>
         <EditTable
-          ref={ref}
           columns={propertyConfigParams?.columns}
           dataSource={propertyConfigParams?.dataSource}
           rowKey="id"
@@ -101,7 +100,6 @@ const Editor: FunctionComponent<MapConfigParamsType & PropertyConfigParamsType> 
         />
       </>
     );
-  }),
-);
+  }
 
 export default Editor;
