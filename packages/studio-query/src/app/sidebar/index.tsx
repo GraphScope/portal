@@ -19,6 +19,7 @@ interface SidebarProps {
   value: Option['id'];
   collapse?: boolean;
   onChange: (option: Option) => void;
+  onBack: () => void;
 }
 
 const styles: Record<string, React.CSSProperties> = {
@@ -58,7 +59,7 @@ const styles: Record<string, React.CSSProperties> = {
   content: {},
 };
 const Sidebar: React.FunctionComponent<SidebarProps> = props => {
-  const { options, collapse, onChange, title } = props;
+  const { options, collapse, onChange, title, onBack } = props;
   const { searchParams, path } = getSearchParams(window.location);
   const nav = searchParams.get('nav') || 'style';
   const activeOption = options.find(item => {
@@ -77,7 +78,7 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
       }}
     >
       <div style={styles.header}>
-        <Button type="text" style={{ margin: '0px 10px' }} icon={<RollbackOutlined />} />
+        <Button type="text" style={{ margin: '0px 10px' }} icon={<RollbackOutlined />} onClick={onBack} />
         <span style={{ padding: '0px 12px' }}>{title}</span>
       </div>
       <div style={styles.container}>

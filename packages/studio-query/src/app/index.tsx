@@ -45,7 +45,7 @@ export const navbarOptions = [
 ];
 
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
-  const { queryInfo, createStatement, queryGraphData } = props;
+  const { queryInfo, createStatement, queryGraphData, onBack } = props;
   const { store, updateStore } = useContext();
   const { graphName, isReady, collapse, activeNavbar } = store;
 
@@ -79,6 +79,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
           value={activeNavbar}
           collapse={collapse}
           onChange={handleChangeNavbar}
+          onBack={onBack}
         />
         <div
           style={{
