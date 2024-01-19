@@ -52,9 +52,9 @@ const AddLabel: FunctionComponent = () => {
   };
   /** 删除点边模版 */
   const deleteLabel = (val: string, key: string) => {
-    let data = val == 'Node' ? cloneDeep(nodeList) : cloneDeep(edgeList);
+    let data = val == 'node' ? cloneDeep(nodeList) : cloneDeep(edgeList);
     const newPanes = data.filter(pane => pane.key !== key);
-    if (val == 'Node') {
+    if (val == 'node') {
       const nodedata: { [x: string]: any } = cloneDeep(nodeItems);
       Object.entries(nodedata).map((keys, i) => {
         if (keys[0] == key) {
