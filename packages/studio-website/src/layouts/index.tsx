@@ -1,5 +1,5 @@
-import { Link, Outlet, useLocation } from 'umi';
-import { Button, ConfigProvider, Space, Input, ColorPicker, Divider } from 'antd';
+import { Outlet } from 'umi';
+import { ConfigProvider, Space, Input, ColorPicker, Divider } from 'antd';
 import './index.less';
 import Sidebar from './sidebar';
 
@@ -10,20 +10,22 @@ import { IntlProvider, FormattedMessage, FormattedNumber } from 'react-intl';
 import locales from '../locales';
 import { useContext } from './useContext';
 export default function Layout() {
-  const location = useLocation();
-  console.log('props', location);
   const { store } = useContext();
   const { locale, primaryColor } = store;
   //@ts-ignore
   const messages = locales[locale];
-
   return (
     <>
       <IntlProvider messages={messages} locale={locale}>
         <ConfigProvider
           theme={{
             components: {
-              Select: {},
+              Menu: {
+                itemBg: 'rgba(255, 255, 255, 0)',
+                subMenuItemBg: 'rgba(255, 255, 255, 0)',
+                // itemMarginInline: 16,
+                itemPaddingInline: 16,
+              },
             },
             token: {
               colorPrimary: primaryColor,
@@ -33,8 +35,8 @@ export default function Layout() {
           <Sidebar />
           <Content>
             <Outlet />
+            <Footer />
           </Content>
-          <Footer />
         </ConfigProvider>
       </IntlProvider>
     </>

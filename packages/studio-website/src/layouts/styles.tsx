@@ -23,8 +23,8 @@ const styles: Record<string, React.CSSProperties> = {
     borderRight: '1px solid #ddd',
   },
   menu: {
-    borderInlineEnd: 'none',
-    background: '#fafafa',
+    // borderInlineEnd: 'none',
+    // background: '#fafafa',
   },
 };
 

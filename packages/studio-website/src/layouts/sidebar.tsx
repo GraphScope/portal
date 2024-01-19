@@ -54,45 +54,57 @@ const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
   };
 
   return (
-    <div style={styles.sidebar}>
+    <div
+      style={{
+        position: 'absolute',
+        top: '0px',
+        left: '0px',
+        bottom: '0px',
+        width: '240px',
+        padding: '16px',
+        boxSizing: 'border-box',
+      }}
+    >
       <Logo></Logo>
       <Menu
         onClick={onClick}
         // defaultSelectedKeys={[location.pathname]}
         selectedKeys={[current]}
-        items={items}
+        items={[...items, ...otherItems]}
         mode="vertical"
-        style={styles.menu}
+        style={{ borderInlineEnd: 'none' }}
       />
-      <Divider style={{ minWidth: 240 - 24 + 'px', width: 240 - 24 + 'px', margin: '12px' }} />
+      {/* <Divider style={{ margin: '12px' }} />
       <Menu
         onClick={onClick}
         // defaultSelectedKeys={[location.pathname]}
         selectedKeys={[current]}
         items={otherItems}
         mode="vertical"
-        style={styles.menu}
-      />
-      <Space direction="vertical">
-        <LocaleSwitch
-          value={locale}
-          onChange={value => {
-            updateStore(draft => {
-              draft.locale = value;
-            });
-          }}
-        ></LocaleSwitch>
-        <ColorPicker
-          // style={{ display: 'block' }}
-          showText
-          value={primaryColor}
-          onChangeComplete={color => {
-            updateStore(draft => {
-              draft.primaryColor = color.toHexString();
-            });
-          }}
-        />
-      </Space>
+        style={{ borderInlineEnd: 'none' }}
+      /> */}
+      <div style={{ position: 'absolute', bottom: '50px', left: '40px' }}>
+        <Space direction="vertical">
+          <LocaleSwitch
+            value={locale}
+            onChange={value => {
+              updateStore(draft => {
+                draft.locale = value;
+              });
+            }}
+          ></LocaleSwitch>
+          <ColorPicker
+            // style={{ display: 'block' }}
+            showText
+            value={primaryColor}
+            onChangeComplete={color => {
+              updateStore(draft => {
+                draft.primaryColor = color.toHexString();
+              });
+            }}
+          />
+        </Space>
+      </div>
     </div>
   );
 };
