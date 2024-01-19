@@ -1,4 +1,4 @@
-# GraphScope Components
+# GraphScope Portal
 
 | Subpackage      | Description                                                                                                       |
 | --------------- | ----------------------------------------------------------------------------------------------------------------- |
@@ -22,6 +22,16 @@ pnpm install
 - build sub packages and watching
 
 ```
+npm run start
+
+```
+
+- build portal website
+
+```
+
+cd packages/studio-website
+
 npm run start
 
 ```
