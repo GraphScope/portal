@@ -102,11 +102,15 @@ const InstanceCard: React.FC = () => {
                       <Button
                         style={{ width: '150px' }}
                         icon={<DeploymentUnitOutlined />}
-                        onClick={() => history.push('/instance/import-data')}
+                        // onClick={() => history.push('/instance/import-data')}
                       >
                         Import Data
                       </Button>
-                      <Button style={{ width: '150px' }} icon={<SearchOutlined />}>
+                      <Button
+                        style={{ width: '150px' }}
+                        icon={<SearchOutlined />}
+                        onClick={() => history.push(`/query?graph=movie`)}
+                      >
                         Query Graph
                       </Button>
                     </>
@@ -114,8 +118,8 @@ const InstanceCard: React.FC = () => {
                   actions={
                     <>
                       <Space>
-                        <Button icon={<PlayCircleOutlined />} />
-                        <Button icon={<DeleteOutlined />} />
+                        <Button type="text" icon={<PlayCircleOutlined />} />
+                        <Button type="text" icon={<DeleteOutlined />} />
                       </Space>
                     </>
                   }
