@@ -121,4 +121,6 @@ export interface IStudioQueryProps {
   queryGraphSchema: (id: string) => Promise<IGraphSchema>;
   /** 语句的类型 */
   type: 'gremlin' | 'cypher' | 'iso_gql';
+  /** 返回按钮 */
+  onBack: () => {};
 }
