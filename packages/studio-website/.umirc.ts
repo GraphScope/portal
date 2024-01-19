@@ -17,9 +17,9 @@ export default defineConfig({
   ],
   npmClient: 'pnpm',
   monorepoRedirect: {},
-  externals: { react: 'React', 'react-dom': 'ReactDOM' },
-  headScripts: [
-    'https://gw.alipayobjects.com/os/lib/react/18.2.0/umd/react.production.min.js',
-    'https://gw.alipayobjects.com/os/lib/react-dom/18.2.0/umd/react-dom.production.min.js',
-  ],
+  // externals: { react: 'React', 'react-dom': 'ReactDOM' },
+  // headScripts: [
+  //   'https://gw.alipayobjects.com/os/lib/react/18.2.0/umd/react.production.min.js',
+  //   'https://gw.alipayobjects.com/os/lib/react-dom/18.2.0/umd/react-dom.production.min.js',
+  // ],
 });
