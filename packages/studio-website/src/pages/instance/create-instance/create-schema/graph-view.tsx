@@ -5,7 +5,6 @@ interface Props {
   children?: JSX.Element;
 }
 const GraphInsight:FunctionComponent<Props> = props => {
-  const { children = <></> } = props;
   const { store, updateStore } = useContext();
   const { graphData, nodeItems, edgeItems } = store;
   useEffect(() => {
@@ -81,14 +80,7 @@ const GraphInsight:FunctionComponent<Props> = props => {
       draft.graphData = arr;
     });
   };
-  return (
-    <div
-      style={{ backgroundColor: '#fff', padding: '16px', border: '1px solid #000', height: '65vh', overflow: 'hidden' }}
-    >
-      <div>{children}</div>
-      <Graphin data={graphData} layout={{ type: 'circular' }} fitView style={{ height: '60vh' }} />
-    </div>
-  );
+  return <Graphin data={graphData} layout={{ type: 'circular' }} fitView style={{ height: '60vh' }} />
 };
 
 export default memo(GraphInsight);

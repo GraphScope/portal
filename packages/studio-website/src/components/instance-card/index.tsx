@@ -28,14 +28,14 @@ const styles: React.CSSProperties = {
   margin: '6px 0px',
 };
 const InstaceCard: React.FC<InstaceCardType> = props => {
-  const { user, version, createtime, connecturl, routes, actions, status } = props;
+  const { user, version, createtime, connecturl, routes, actions, status} = props;
   return (
     <Card>
       <Flex gap="middle" justify="space-between">
         <Flex gap="middle" align="flex-start" vertical>
           <div>
             <p style={{ margin: '0px 0px 12px' }}>My Graph Instance</p>
-            <Tag color="green">{status}</Tag>
+            <Tag color={status =='running' ? "green" :'red'}>{status}</Tag>
           </div>
           <div>
             <p style={styles}>Sharing User：{user}</p>

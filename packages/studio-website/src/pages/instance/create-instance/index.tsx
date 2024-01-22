@@ -3,16 +3,17 @@ import { Button, message, Steps, theme, Alert, Breadcrumb } from 'antd';
 import { useContext } from '../create-instance/useContext';
 import ChooseEnginetype from './choose-enginetype';
 import CreateSchema from '../create-instance/create-schema';
-import ConfigInfo from './confirm-info';
-const steps = [{ title: 'Choose EngineType' }, { title: 'Create Schema' }, { title: 'Result' }];
+import Result from './result'
+// const steps = [{ title: 'Choose EngineType' }, { title: 'Create Schema' }, { title: 'Result' }];
+const steps = [{ title: '选择引擎' }, { title: '创建模型' }, { title: '创建结果' }];
 const Lists: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { isAlert, currentStep } = store;
   const next = () => {
-    updateStore(draft => {
+    console.log(store.nodeItems,store.edgeItems );
+    updateStore(async draft => {
       draft.currentStep = currentStep + 1;
     });
-    console.log(store.nodeList, store.nodeItems);
   };
 
   const prev = () => {
@@ -59,7 +60,7 @@ const Lists: React.FunctionComponent = () => {
             <CreateSchema />
           </div>
           <div style={currentStep === 2 ? activeItemStyle : itemStyle}>
-            <ConfigInfo />
+            <Result />
           </div>
         </div>
         <div>

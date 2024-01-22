@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Card, Tabs, Row, Col, Tooltip ,Button, Space, Upload } from 'antd';
+import { Card, Tabs, Row, Col, Tooltip, Button, Space, Upload, Segmented } from 'antd';
 import { cloneDeep } from 'lodash';
 import { useContext, initialStore } from '../useContext';
 import GraphInsight from './graph-view';
@@ -13,9 +13,10 @@ interface ICreateInstanceProps {
 }
 const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
   const { store, updateStore } = useContext();
-  const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, nodeItems, edgeItems ,isAlert} = store;
+  const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, nodeItems, edgeItems, isAlert, detail } =
+    store;
   useEffect(() => {
-    nodeChangeEdge(nodeList[0]?.key);
+    tabsChange(nodeList[0]?.key);
     /** 首次创建初始化变量 */
     updateStore(draft => {
       Object.keys(initialStore).forEach(key => {
@@ -78,7 +79,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
       draft.option = nodearr;
     });
   }, [edgeItems]);
- /** del node or edge*/
+  /** del node or edge*/
   const deleteNode = (val: string, key: string) => {
     let data = val == 'node' ? cloneDeep(nodeList) : cloneDeep(edgeList);
     const newPanes = data.filter(pane => pane.key !== key);
@@ -111,7 +112,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
     }
   };
   /** 点/边 切换 */
-  const nodeChangeEdge = (key: string) => {
+  const tabsChange = (key: string) => {
     if (currentType == 'node') {
       updateStore(draft => {
         draft.nodeActiveKey = key;
@@ -125,61 +126,80 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
   /** 图头部组件 */
   const GraphViewTitle = (
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <h3>Graph Schema View</h3>
+      {/* <h3>Graph Schema View</h3> */}
       {!isAlert ? (
         <Space>
           <Upload {...prop} showUploadList={false}>
-            <Button type="dashed">Import</Button>
+            <Button>导入</Button>
           </Upload>
-          <Button type="dashed" onClick={() => download(`xxx.json`, '')}>
-            Export
-          </Button>
+          <Button onClick={() => download(`xxx.json`, '')}>导出</Button>
         </Space>
       ) : null}
     </div>
   );
+  /** 切换 node/edge */
+  const nodeEdgeChange:(val:string)=>void = (val) => {
+    updateStore(draft => {
+      draft.currentType = val == '点类型' ? 'node' : 'edge';
+    });
+    if (currentType == 'edge') {
+      updateStore(draft => {
+        draft.edgeActiveKey = edgeList[0]?.key;
+      });
+    }
+  };
   return (
-    <Card>
-      <Row style={{ marginTop: '16px' }}>
-        <Col span={14}>
-          <div
-            style={{
-              backgroundColor: '#fff',
-              padding: '16px',
-              border: '1px solid #000',
-              height: '65vh',
-              marginRight: '12px',
-              overflow: 'hidden',
-            }}
+    <Row style={{ marginTop: '16px' }}>
+      <Col span={14}>
+        <div
+          style={{
+            backgroundColor: '#fff',
+            marginRight: '12px',
+            overflow: 'hidden',
+          }}
+        >
+          <Card
+            bodyStyle={{ height: '65vh' }}
+            title={<Segmented defaultValue="点类型" options={['点类型', '边类型']} onChange={e => nodeEdgeChange(e)} />}
+            extra={<>{(currentType == 'node' ? nodeList.length : edgeList.length) >0 ? <AddLabel /> : null}</>}
           >
-            <AddLabel />
             <div>
               <div style={{ display: currentType == 'node' ? '' : 'none' }}>
-                <Tabs
-                  tabBarStyle={{ borderLeft: 0 }}
-                  tabPosition="left"
-                  items={[...cloneDeep(nodeList)]}
-                  activeKey={nodeActiveKey}
-                  onChange={nodeChangeEdge}
-                />
+                {nodeList.length == 0 ? (
+                  <AddLabel />
+                ) : (
+                  <Tabs
+                    tabBarStyle={{ borderLeft: 0 }}
+                    tabPosition="left"
+                    items={[...cloneDeep(nodeList)]}
+                    activeKey={nodeActiveKey}
+                    onChange={tabsChange}
+                  />
+                )}
               </div>
               <div style={{ display: currentType !== 'node' ? '' : 'none' }}>
-                <Tabs
-                  tabBarStyle={{ borderLeft: 0 }}
-                  tabPosition="left"
-                  items={[...cloneDeep(edgeList)]}
-                  activeKey={edgeActiveKey}
-                  onChange={nodeChangeEdge}
-                />
+                {edgeList.length == 0 ? (
+                  <AddLabel />
+                ) : (
+                  <Tabs
+                    tabBarStyle={{ borderLeft: 0 }}
+                    tabPosition="left"
+                    items={[...cloneDeep(edgeList)]}
+                    activeKey={edgeActiveKey}
+                    onChange={tabsChange}
+                  />
+                )}
               </div>
             </div>
-          </div>
-        </Col>
-        <Col span={10}>
+          </Card>
+        </div>
+      </Col>
+      <Col span={10}>
+        <Card title="图模型预览" extra={GraphViewTitle}>
           <GraphInsight children={GraphViewTitle} />
-        </Col>
-      </Row>
-    </Card>
+        </Card>
+      </Col>
+    </Row>
   );
 };
 export default CreateInstance;

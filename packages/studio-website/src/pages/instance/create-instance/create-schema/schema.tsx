@@ -78,12 +78,6 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
           >
             <Input disabled={detail} />
           </Form.Item>
-          <Button
-            style={{ position: 'absolute', top: '0px', right: '0px' }}
-            onClick={() => deleteNode(currentType, newActiveKey)}
-          >
-            Delete
-          </Button>
         </div>
         {currentType !== 'node' ? (
           <>

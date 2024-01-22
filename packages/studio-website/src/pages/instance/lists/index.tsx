@@ -72,10 +72,10 @@ const InstanceCard: React.FC = () => {
           <Button onClick={() => updateState(preState=>{ return { ...preState,isModalOpen: true }})}>绑定</Button>
         </Flex>
       </div>
-      <Row>
+      <Row gutter={16}>
         {instanceList &&
           instanceList.map((item, i) => (
-            <Col span={12} key={i} style={{ marginTop: '6px' }}>
+            <Col span={12} key={i} style={{ marginTop: '16px'}}>
               <InstaceCard
                 key={i}
                 {...item}
