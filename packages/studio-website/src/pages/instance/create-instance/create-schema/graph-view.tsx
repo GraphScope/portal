@@ -80,7 +80,7 @@ const GraphInsight:FunctionComponent<Props> = props => {
       draft.graphData = arr;
     });
   };
-  return <Graphin data={graphData} layout={{ type: 'circular' }} fitView style={{ height: '60vh' }} />
+  return <Graphin data={graphData} layout={{ type: 'circular' }} fitView style={{ height: '60vh', paddingBottom:'3px' }} />
 };
 
 export default memo(GraphInsight);
