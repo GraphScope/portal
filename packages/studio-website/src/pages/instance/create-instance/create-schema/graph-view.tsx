@@ -1,10 +1,11 @@
-import { useEffect ,memo, FunctionComponent} from 'react';
+import { useEffect, memo, FunctionComponent } from 'react';
 import Graphin, { Utils } from '@antv/graphin';
 import { useContext } from '../useContext';
 interface Props {
   children?: JSX.Element;
 }
-const GraphInsight:FunctionComponent<Props> = props => {
+const GraphInsight: FunctionComponent<Props> = props => {
+  const { children = <></> } = props;
   const { store, updateStore } = useContext();
   const { graphData, nodeItems, edgeItems } = store;
   useEffect(() => {
@@ -80,7 +81,12 @@ const GraphInsight:FunctionComponent<Props> = props => {
       draft.graphData = arr;
     });
   };
-  return <Graphin data={graphData} layout={{ type: 'circular' }} fitView style={{ height: '60vh', paddingBottom:'3px' }} />
+  return (
+    <>
+      {children}
+      <Graphin data={graphData} layout={{ type: 'circular' }} fitView style={{ height: '60vh', paddingBottom: '3px' }} />
+    </>
+  );
 };
 
 export default memo(GraphInsight);

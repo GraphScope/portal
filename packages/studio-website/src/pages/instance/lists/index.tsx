@@ -2,7 +2,7 @@ import React, { useEffect, useState ,memo} from 'react';
 import { Flex, Row, Col, Button, Modal, Form, Input } from 'antd';
 import { history } from 'umi';
 import InstaceCard, { InstaceCardType } from '../../../components/instance-card';
-import { createFromIconfontCN, DeploymentUnitOutlined, SearchOutlined, MoreOutlined } from '@ant-design/icons';
+import { createFromIconfontCN, DeploymentUnitOutlined, SearchOutlined, MoreOutlined, PlayCircleOutlined } from '@ant-design/icons';
 /** 自定义icon */
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_8fiw2wn073a.js',
@@ -90,7 +90,7 @@ const InstanceCard: React.FC = () => {
                 }
                 actions={
                   <>
-                    <Button icon={<SearchOutlined />} />
+                    <Button icon={<PlayCircleOutlined />} />
                     <Button icon={<IconFont type="icon-delete1" />} />
                     <Button icon={<MoreOutlined />} />
                   </>
