@@ -33,7 +33,7 @@ npm run start
 
 ---
 
-## others
+## others components
 
 - start components demo site
 
