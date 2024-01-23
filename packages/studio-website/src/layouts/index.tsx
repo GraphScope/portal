@@ -1,46 +1,44 @@
-import { Link, Outlet, useLocation } from 'umi';
-import { Button, ConfigProvider, Space, Input, ColorPicker, Divider } from 'antd';
+import { Outlet } from 'umi';
+import { ConfigProvider, Space, Input, ColorPicker, Divider } from 'antd';
 import './index.less';
 import Sidebar from './sidebar';
-import Navbar from './navbar';
+
 import Content from './content';
 import Footer from './footer';
 import { useState } from 'react';
-
+import { IntlProvider, FormattedMessage, FormattedNumber } from 'react-intl';
+import locales from '../locales';
+import { useContext } from './useContext';
 export default function Layout() {
-  const location = useLocation();
-  console.log('props', location);
-  const [primary, setPrimary] = useState('#1677ff');
-
+  const { store } = useContext();
+  const { locale, primaryColor } = store;
+  //@ts-ignore
+  const messages = locales[locale];
   return (
     <>
-      <ConfigProvider
-        theme={{
-          components: {
-            Select: {
-              // selectorBg: 'red',
-              // optionSelectedBg: 'red',
+      <IntlProvider messages={messages} locale={locale}>
+        <ConfigProvider
+          theme={{
+            components: {
+              Menu: {
+                itemBg: 'rgba(255, 255, 255, 0)',
+                subMenuItemBg: 'rgba(255, 255, 255, 0)',
+                // itemMarginInline: 16,
+                itemPaddingInline: 16,
+              },
             },
-          },
-          token: {
-            colorPrimary: primary,
-          },
-        }}
-      >
-        <Navbar />
-        <Sidebar />
-        <Content>
-          <ColorPicker
-            showText
-            value={primary}
-            onChangeComplete={color => setPrimary(color.toHexString())}
-            style={{ position: 'absolute', top: '-48px' }}
-          />
-
-          <Outlet />
-        </Content>
-        <Footer />
-      </ConfigProvider>
+            token: {
+              colorPrimary: primaryColor,
+            },
+          }}
+        >
+          <Sidebar />
+          <Content>
+            <Outlet />
+            <Footer />
+          </Content>
+        </ConfigProvider>
+      </IntlProvider>
     </>
   );
 }

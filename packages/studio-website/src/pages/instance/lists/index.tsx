@@ -1,65 +1,81 @@
 import React, { useEffect, useState ,memo} from 'react';
-import { Flex, Row, Col, Button, Modal, Form, Input } from 'antd';
+import { Flex, Row, Col, Button, Modal, Form, Input, Breadcrumb, Divider, Card, Space, Skeleton } from 'antd';
 import { history } from 'umi';
-import InstaceCard, { InstaceCardType } from '../../../components/instance-card';
-import { createFromIconfontCN, DeploymentUnitOutlined, SearchOutlined, MoreOutlined, PlayCircleOutlined } from '@ant-design/icons';
-/** 自定义icon */
-const IconFont = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/a/font_4377140_8fiw2wn073a.js',
-});
-const arr = [
+import InstaceCard, { InstaceCardType } from './instance-card';
+
+import {
+  createFromIconfontCN,
+  DeploymentUnitOutlined,
+  SearchOutlined,
+  MoreOutlined,
+  PlusOutlined,
+  PlayCircleOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons';
+import { FormattedMessage } from 'react-intl';
+
+const graphs = [
   {
-    user: '山果 / 东泽',
+    name: 'Movie',
     version: '0.24.0',
-    createtime: '2024-01-10',
-    connecturl: 'xx.xxx.xxx.xxx:8787',
-    status: 'running',
-  },
-  {
-    user: '山果 / 东泽',
-    version: '0.24.0',
-    createtime: '2024-01-10',
-    connecturl: 'xx.xxx.xxx.xxx:8787',
-    status: 'failed',
-  },
-  {
-    user: '山果 / 东泽',
-    version: '0.24.0',
-    createtime: '2024-01-10',
-    connecturl: 'xx.xxx.xxx.xxx:8787',
+    createtime: '2024-01-8',
+    updatetime: '2024-01-10',
+    importtime: '2024-01-11',
+    server: 'xx.xxx.xxx.xxx:8787',
+    statistics: 'xxxx',
+    logs: 'xxxx',
     status: 'running',
   },
 ];
 
 const InstanceCard: React.FC = () => {
   const [form] = Form.useForm();
-  const [state, updateState] = useState<{ isModalOpen: boolean; instanceList: InstaceCardType[] }>({
-    isModalOpen: false,
+  const [state, updateState] = useState<{ isReady?: boolean; instanceList?: InstaceCardType[] }>({
     instanceList: [],
+    isReady: false,
   });
-  const { isModalOpen, instanceList } = state;
-  const bindEndpoint = () => {
-    form.validateFields().then(res => {
-      console.log(res);
-    });
-  };
+  const { instanceList, isReady } = state;
+
   useEffect(() => {
-    getInstanceList();
+    getInstanceList().then(res => {
+      updateState(preState => {
+        return {
+          ...preState,
+          isReady: true,
+          instanceList: res || [],
+        };
+      });
+    });
   }, []);
   const getInstanceList = async () => {
-    let data: any = [];
-    data = await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve(arr);
-      }, 500);
+        resolve(graphs);
+      }, 600);
     });
-    data && updateState(preState=>{ return {...preState,instanceList: data }});
   };
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h3>GraphScope Instance</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', padding: '0px 20px' }}>
+        <Breadcrumb
+          items={[
+            {
+              title: 'Home',
+            },
+            {
+              title: 'Graphs',
+            },
+          ]}
+        />
+        <h1>
+          <FormattedMessage id="navbar.graphs" />
+        </h1>
+        <p style={{ marginTop: '0px' }}>
+          <FormattedMessage id="Listing all graphs on the cluster" />
+        </p>
+        <Divider />
+        {/*         
         <Flex wrap="wrap" gap="small">
           <Button
             type="primary"
@@ -69,56 +85,66 @@ const InstanceCard: React.FC = () => {
           >
             创建图实例
           </Button>
-          <Button onClick={() => updateState(preState=>{ return { ...preState,isModalOpen: true }})}>绑定</Button>
-        </Flex>
-      </div>
-      <Row gutter={16}>
-        {instanceList &&
-          instanceList.map((item, i) => (
-            <Col span={12} key={i} style={{ marginTop: '16px'}}>
-              <InstaceCard
-                key={i}
-                {...item}
-                routes={
-                  <>
-                    <Button icon={<DeploymentUnitOutlined />}>Modal</Button>
-                    <Button icon={<DeploymentUnitOutlined />} onClick={() => history.push('/instance/import-data')}>
-                      Import
-                    </Button>
-                    <Button icon={<SearchOutlined />}>Query</Button>
-                  </>
-                }
-                actions={
-                  <>
-                    <Button icon={<PlayCircleOutlined />} />
-                    <Button icon={<IconFont type="icon-delete1" />} />
-                    <Button icon={<MoreOutlined />} />
-                  </>
-                }
-              />
+          <Button onClick={() => updateState({ isModalOpen: true })}>绑定</Button>
+        </Flex> */}
+        <Row gutter={[12, 12]}>
+          {instanceList &&
+            instanceList.map((item, i) => (
+              <Col key={i}>
+                <InstaceCard
+                  key={i}
+                  {...item}
+                  routes={
+                    <>
+                      <Button style={{ width: '150px' }} icon={<DeploymentUnitOutlined />}>
+                        Define Schema
+                      </Button>
+                      <Button
+                        style={{ width: '150px' }}
+                        icon={<DeploymentUnitOutlined />}
+                        // onClick={() => history.push('/instance/import-data')}
+                      >
+                        Import Data
+                      </Button>
+                      <Button
+                        style={{ width: '150px' }}
+                        icon={<SearchOutlined />}
+                        onClick={() => history.push(`/query?graph=movie`)}
+                      >
+                        Query Graph
+                      </Button>
+                    </>
+                  }
+                  actions={
+                    <>
+                      <Space>
+                        <Button type="text" icon={<PlayCircleOutlined />} />
+                        <Button type="text" icon={<DeleteOutlined />} />
+                      </Space>
+                    </>
+                  }
+                />
+              </Col>
+            ))}
+
+          {!isReady && (
+            <Col>
+              <Card title={'Loading graph'} style={{ background: '#FCFCFC' }} bodyStyle={{ width: '484px' }}>
+                <div style={{ display: 'flex', height: '185px', justifyContent: 'center', alignContent: 'center' }}>
+                  <Skeleton />
+                </div>
+              </Card>
             </Col>
-          ))}
-      </Row>
-      <Modal
-        title="绑定实例"
-        open={isModalOpen}
-        onOk={bindEndpoint}
-        onCancel={() => updateState(preState=>{ return { ...preState,isModalOpen: false }})}
-      >
-        <div style={{ padding: '16px', backgroundColor: '#F5F5F5', border: '1px dashed #ccc' }}>
-          <Form name="modal-basic" labelCol={{ span: 12 }} form={form}>
-            <Form.Item<{ endpoint: string }>
-              label="Endpoint URL"
-              name="endpoint"
-              tooltip="Endpoint URL"
-              rules={[{ required: true, message: '' }]}
-              style={{ marginBottom: '0px' }}
-            >
-              <Input />
-            </Form.Item>
-          </Form>
-        </div>
-      </Modal>
+          )}
+          <Col>
+            <Card title={'New Graph'} style={{ background: '#FCFCFC' }} bodyStyle={{ width: '484px' }}>
+              <div style={{ display: 'flex', height: '185px', justifyContent: 'center', alignContent: 'center' }}>
+                <PlusOutlined style={{ fontSize: '80px', color: 'gray' }} />
+              </div>
+            </Card>
+          </Col>
+        </Row>
+      </div>
     </>
   );
 };

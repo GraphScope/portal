@@ -1,7 +1,7 @@
 import * as React from 'react';
 import StudioQuery, { CypherDriver } from '@graphscope/studio-query';
 import { GraphApiFp, GraphApiFactory } from '@graphscope/studio-server';
-
+import { history } from 'umi';
 const HOST_URL = 'localhost';
 const driver = new CypherDriver(`neo4j://${HOST_URL}:7687`);
 export interface IStatement {
@@ -99,7 +99,12 @@ const QueryModule: React.FunctionComponent<IQueryModuleProps> = props => {
   }, []);
   return (
     <div>
-      <StudioQuery {...services} />
+      <StudioQuery
+        {...services}
+        onBack={() => {
+          history.push('/instance');
+        }}
+      />
     </div>
   );
 };
