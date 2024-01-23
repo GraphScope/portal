@@ -4,7 +4,7 @@
     "pnpm": "^8"
   },
   "scripts": {
-    "ci": "npm install -g pnpm && pnpm i && rm -rf package-lock.json && npm run build && npm run build:site",
+    "ci": "pnpm i && rm -rf package-lock.json && npm run build && npm run build:site",
     "build": "turbo run build:esm && turbo run build:cjs",
     "build:site": "cd packages/studio-website && npm run build",
     "start": "turbo run build:esm:watch && turbo run build:cjs:watch",
