@@ -1,5 +1,5 @@
-import React, { forwardRef, memo, FunctionComponent, CSSProperties } from 'react';
-import { Button, Space, Tooltip, Popconfirm, Checkbox } from 'antd';
+import React, { FunctionComponent, CSSProperties } from 'react';
+import { Button, Space, Tooltip, Popconfirm, Checkbox, Flex } from 'antd';
 import { PlusOutlined, createFromIconfontCN } from '@ant-design/icons';
 import { EditTable } from '../edit-table';
 import { MapConfigParamsType, PropertyConfigParamsType } from '../interface';
@@ -19,87 +19,86 @@ const styles: { [x: string]: CSSProperties } = {
   },
 };
 
-const Editor: FunctionComponent<MapConfigParamsType & PropertyConfigParamsType> = 
-  (props) => {
-    // 解构props中的mapConfigParams和propertyConfigParams
-    const { mapConfigParams, propertyConfigParams } = props;
-    return (
-      <>
-        <div style={styles['properties-head']}>
-          <h4>Properties</h4>
-          <div>
-            {propertyConfigParams?.selectedRows.length == 0 ? (
-              <Space>
-                {propertyConfigParams?.isMapFromFile ? (
-                  <Popconfirm
-                    placement="leftTop"
-                    title={() => {
-                      return (
-                        <div style={{ width: '350px', padding: '0 12px' }}>
-                          <span>Map from file</span>
-                          <Checkbox
-                            indeterminate={
-                              mapConfigParams?.selectedMapRowKeys.length > 0 &&
-                              mapConfigParams?.selectedMapRowKeys.length < mapConfigParams?.dataSource.length
-                            }
-                            checked={mapConfigParams?.selectedMapRowKeys.length === mapConfigParams?.dataSource.length}
-                            onChange={mapConfigParams?.handleSelectAll}
-                            style={{ float: 'right' }}
-                          >
-                            Select all
-                          </Checkbox>
-                        </div>
-                      );
-                    }}
-                    description={
-                      <div style={{ width: '350px' }}>
-                        <EditTable
-                          rowKey="mapfromfile"
-                          bordered={false}
-                          showHeader={mapConfigParams?.showHeader}
-                          columns={mapConfigParams?.columns}
-                          dataSource={mapConfigParams?.dataSource}
-                        />
+const Editor: FunctionComponent<MapConfigParamsType & PropertyConfigParamsType> = props => {
+  // 解构props中的mapConfigParams和propertyConfigParams
+  const { mapConfigParams, propertyConfigParams } = props;
+  return (
+    <>
+      <Flex justify={'space-between'}>
+        <h4>Properties</h4>
+        <>
+          {propertyConfigParams?.selectedRows.length == 0 ? (
+            <Space>
+              <Tooltip title="Add property">
+                <Button icon={<PlusOutlined />} block onClick={() => propertyConfigParams?.addNodeConfig()}>
+                  Add property
+                </Button>
+              </Tooltip>
+              {propertyConfigParams?.isMapFromFile ? (
+                <Popconfirm
+                  placement="leftTop"
+                  title={() => {
+                    return (
+                      <div style={{ width: '350px', padding: '0 12px' }}>
+                        <span>Map from file</span>
+                        <Checkbox
+                          indeterminate={
+                            mapConfigParams?.selectedMapRowKeys.length > 0 &&
+                            mapConfigParams?.selectedMapRowKeys.length < mapConfigParams?.dataSource.length
+                          }
+                          checked={mapConfigParams?.selectedMapRowKeys.length === mapConfigParams?.dataSource.length}
+                          onChange={mapConfigParams?.handleSelectAll}
+                          style={{ float: 'right' }}
+                        >
+                          Select all
+                        </Checkbox>
                       </div>
-                    }
-                    icon=""
-                    okText={<div style={{ width: '88px', height: '45px' }}>Confirm</div>}
-                    cancelText={<div style={{ width: '88px', height: '45px' }}>Cancel</div>}
-                    onConfirm={() => mapConfigParams?.mapFromFileConfirm()}
-                  >
-                    <Button>Map from file</Button>
-                  </Popconfirm>
-                ) : null}
-                <Tooltip title="Add property">
-                  <Button type="dashed" block onClick={() => propertyConfigParams?.addNodeConfig()}>
-                    <PlusOutlined />
-                  </Button>
-                </Tooltip>
-              </Space>
-            ) : (
-              <Space>
-                <span style={styles['sel-num']}>{propertyConfigParams?.selectedRows.length} selected</span>
-                <IconFont type="icon-delete" onClick={() => propertyConfigParams?.delEditTable()} />
-              </Space>
-            )}
-          </div>
-        </div>
-        <EditTable
-          columns={propertyConfigParams?.columns}
-          dataSource={propertyConfigParams?.dataSource}
-          rowKey="id"
-          onChange={(newData: any) => {
-            propertyConfigParams?.setConfigList([...newData]);
-          }}
-          inputDoubleClick={propertyConfigParams?.inputDoubleClick}
-          inputBlur={propertyConfigParams?.inputBlur}
-          bordered={true}
-          rowSelection={{
-            ...propertyConfigParams?.rowSelection,
-          }}
-        />
-      </>
-    );
-  }
+                    );
+                  }}
+                  description={
+                    <div style={{ width: '350px' }}>
+                      <EditTable
+                        rowKey="mapfromfile"
+                        bordered={false}
+                        showHeader={mapConfigParams?.showHeader}
+                        columns={mapConfigParams?.columns}
+                        dataSource={mapConfigParams?.dataSource}
+                      />
+                    </div>
+                  }
+                  icon=""
+                  okText={<div style={{ width: '88px', height: '45px' }}>Confirm</div>}
+                  cancelText={<div style={{ width: '88px', height: '45px' }}>Cancel</div>}
+                  onConfirm={() => mapConfigParams?.mapFromFileConfirm()}
+                >
+                  <Button>Map from file</Button>
+                </Popconfirm>
+              ) : null}
+            </Space>
+          ) : (
+            <Space>
+              <span style={styles['sel-num']}>{propertyConfigParams?.selectedRows.length} selected</span>
+              <IconFont type="icon-delete" onClick={() => propertyConfigParams?.delEditTable()} />
+            </Space>
+          )}
+        </>
+      </Flex>
+      <EditTable
+        columns={propertyConfigParams?.columns}
+        dataSource={propertyConfigParams?.dataSource}
+        rowKey="id"
+        onChange={(newData: any) => {
+          propertyConfigParams?.setConfigList([...newData]);
+        }}
+        inputDoubleClick={propertyConfigParams?.inputDoubleClick}
+        inputBlur={propertyConfigParams?.inputBlur}
+        bordered={true}
+        rowSelection={{
+          ...propertyConfigParams?.rowSelection,
+        }}
+      />
+    </>
+  );
+};
 
 export default Editor;

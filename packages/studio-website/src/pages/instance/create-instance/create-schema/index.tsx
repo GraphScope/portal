@@ -196,7 +196,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
       </Col>
       <Col span={10}>
         <Card title="图模型预览" extra={GraphViewTitle}>
-          <GraphInsight children={GraphViewTitle} />
+          <GraphInsight />
         </Card>
       </Col>
     </Row>

@@ -2,14 +2,47 @@ import * as React from 'react';
 import { Segmented, Tag, Card } from 'antd';
 import { useContext } from '../useContext';
 import { SegmentedValue } from 'antd/es/segmented';
+import { cloneDeep } from 'lodash';
 import TableList from './table';
 import ReactJsonView from './react-json-view';
 import GraphInsight from '../create-schema/graph-view';
+import ResultSuccess from './result-success'
+import ResultFailed from './result-failed'
 interface IImportDataProps {}
-
 const Result: React.FunctionComponent<IImportDataProps> = props => {
   const { store, updateStore } = useContext();
-  const { checked } = store;
+  const { checked, nodeItems, edgeItems } = store;
+  const getTableData = (items: {},U?:string)=>{
+    let data:{ type?:string;label_name:string; property_name?:string; property_type?:string; primary_keys?:string}[] =[]
+    Object.values(items).map((item:any)=>{
+      if(item?.properties?.length > 0){
+        item?.properties?.map((v: { name:string;type:string;primaryKey:boolean },i: number)=>{
+          if(i==0){
+            data.push({
+              type:U,
+              label_name:item.label,
+              property_name:v.name,
+              property_type:v.type,
+              primary_keys:v.primaryKey ? 'true' : 'false'
+            })
+          }else{
+            data.push({
+              label_name:'',
+              property_name:v.name,
+              property_type:v.type,
+              primary_keys:v.primaryKey ? 'true' : 'false'
+            })
+          }
+        })
+      }else{
+        data.push({
+          type:U,
+          label_name:item.label,
+        })
+      }
+    })
+    return data
+  }
   /** 'Table', 'Json', 'Graph' 切换 */
   const nodeEdgeChange: (value: SegmentedValue) => void = val => {
     updateStore(draft => {
@@ -33,10 +66,12 @@ const Result: React.FunctionComponent<IImportDataProps> = props => {
         }
         extra={<Segmented options={['Table', 'Json', 'Graph']} defaultValue="Table" onChange={nodeEdgeChange} />}
       >
-        {checked == 'table' ? <TableList /> : null}
-        {checked == 'json' ? <ReactJsonView reactJson={{}} /> : null}
+        {checked == 'table' ? <TableList data={[...getTableData(cloneDeep(nodeItems),'Node'),...getTableData(cloneDeep(edgeItems),'Edge')]}/> : null}
+        {checked == 'json' ? <ReactJsonView reactJson={{node:getTableData(cloneDeep(nodeItems)),edge:getTableData(cloneDeep(edgeItems))}} /> : null}
         {checked == 'graph' ? <GraphInsight /> : null}
       </Card>
+      {/* <ResultFailed/>
+      <ResultSuccess/> */}
     </div>
   );
 };

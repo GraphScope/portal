@@ -1,16 +1,16 @@
 import React, { memo, useEffect } from 'react';
+import { history } from 'umi';
 import { Button, message, Steps, theme, Alert, Breadcrumb } from 'antd';
 import { useContext } from '../create-instance/useContext';
 import ChooseEnginetype from './choose-enginetype';
 import CreateSchema from '../create-instance/create-schema';
-import Result from './result'
+import Result from './result';
 // const steps = [{ title: 'Choose EngineType' }, { title: 'Create Schema' }, { title: 'Result' }];
 const steps = [{ title: '选择引擎' }, { title: '创建模型' }, { title: '创建结果' }];
 const Lists: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { isAlert, currentStep } = store;
   const next = () => {
-    console.log(store.nodeItems,store.edgeItems );
     updateStore(async draft => {
       draft.currentStep = currentStep + 1;
     });
@@ -85,7 +85,12 @@ const Lists: React.FunctionComponent = () => {
                 </Button>
               )}
               {currentStep === steps.length - 1 && (
-                <Button type="primary" onClick={() => message.success('Processing complete!')}>
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    message.success('Processing complete!').then(()=>history.push('/instance')) ;
+                  }}
+                >
                   确认创建
                 </Button>
               )}

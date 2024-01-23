@@ -1,7 +1,8 @@
-import React, { useState, useEffect ,memo} from 'react';
-import { Form, Input, Row, Col, Avatar, Card, Select } from 'antd';
+import React, { useState, useEffect, memo } from 'react';
+import { Form, Input, Row, Col, Avatar, Card, Select,theme } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
-
+import { CheckCircleTwoTone } from '@ant-design/icons';
+const { useToken } = theme;
 export type FieldType = {
   inputname?: string;
   type?: string;
@@ -10,10 +11,9 @@ export type FieldType = {
 type Istate = {
   isChecked: string;
   chooseGraphInstanceList: { key: string; name: string; content: string }[];
+  isHover:string;
 };
-type ChooseEnginetypeProps ={
-
-}
+type ChooseEnginetypeProps = {};
 const arr = [
   { key: uuidv4(), name: 'instance', content: '引擎介绍' },
   { key: uuidv4(), name: 'instance', content: '引擎介绍' },
@@ -23,11 +23,13 @@ const arr = [
 ];
 const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = () => {
   const [form] = Form.useForm();
+  const { token } = useToken();
   const [state, updateState] = useState<Istate>({
     isChecked: '',
     chooseGraphInstanceList: [],
+    isHover:''
   });
-  const { isChecked, chooseGraphInstanceList } = state;
+  const { isChecked, chooseGraphInstanceList ,isHover} = state;
   useEffect(() => {
     getInstanceData();
   }, []);
@@ -39,7 +41,10 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = () => {
         resolve(arr);
       }, 1000);
     });
-    data && updateState(preState=>{return{...preState,chooseGraphInstanceList:data}});
+    data &&
+      updateState(preState => {
+        return { ...preState, chooseGraphInstanceList: data };
+      });
     form.resetFields();
     form.setFieldsValue({ directed: true });
   };
@@ -50,7 +55,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = () => {
     },
     activeItemStyle:{
       margin: '12px 12px 0 0',
-      border: '1px solid #1650ff',
+      border: `1px solid ${token.colorPrimary}`,
     }
   }
   return (
@@ -76,7 +81,24 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = () => {
           {chooseGraphInstanceList.map(item => {
             return (
               <Col span={6} key={item.key}>
-                <Card style={isChecked == item.key ? styles['activeItemStyle'] : styles['itemStyle']} onClick={() => updateState(preState=>{return{...preState,isChecked:item.key}})}>
+                <Card
+                  style={{...isChecked == item.key ? styles['activeItemStyle'] : styles['itemStyle'],...isHover ==item.key ? styles['activeItemStyle'] : ''}}
+                  onClick={() =>
+                    updateState(preState => {
+                      return { ...preState, isChecked: item.key };
+                    })
+                  }
+                  onMouseOver={()=>{
+                    updateState(preState => {
+                      return { ...preState, isHover: item.key };
+                    });
+                  }}
+                  onMouseOut={()=>{
+                    updateState(preState => {
+                      return { ...preState, isHover: '' };
+                    });
+                  }}
+                >
                   <div style={{ display: 'flex', justifyContent: 'start' }}>
                     <Avatar shape="square" size={45} />
                     <div style={{ marginLeft: '12px', verticalAlign: 'middle' }}>
@@ -87,6 +109,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = () => {
                       </span>
                     </div>
                   </div>
+                  {isChecked == item.key ? <CheckCircleTwoTone twoToneColor={token.colorPrimary} style={{position:'absolute',top:'5px',right:'5px',fontSize:'20px'}}/> : null}
                 </Card>
               </Col>
             );

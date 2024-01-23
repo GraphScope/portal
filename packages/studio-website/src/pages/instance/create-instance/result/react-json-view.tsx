@@ -6,7 +6,7 @@ interface IImportDataProps {
 
 const ReactJsonView: React.FunctionComponent<IImportDataProps> = props => {
   const { reactJson } = props;
-  return <ReactJson src={reactJson} />;
+  return <div style={{overflowY: 'scroll',height:'60vh'}}><ReactJson src={reactJson}/></div>;
 };
 
 export default ReactJsonView;

@@ -11,7 +11,7 @@ const IconFont = createFromIconfontCN({
 
 const AddLabel: FunctionComponent = () => {
   const { store, updateStore } = useContext();
-  const { nodeList, edgeList, currentType, detail, nodeActiveKey, edgeActiveKey } = store;
+  const { nodeList, edgeList, currentType, detail, nodeActiveKey, edgeActiveKey, nodeItems, edgeItems } = store;
   /** 添加点边模版 */
   const addLabel = () => {
     if (currentType == 'node') {
@@ -50,15 +50,29 @@ const AddLabel: FunctionComponent = () => {
     let data = val == 'node' ? cloneDeep(nodeList) : cloneDeep(edgeList);
     const newPanes = data.filter(pane => pane.key !== key);
     if (val == 'node') {
+      const nodedata: { [x: string]: { label: string } } = cloneDeep(nodeItems);
+      Object.entries(nodedata).map((keys, i) => {
+        if (keys[0] == key) {
+          delete nodedata[key];
+        }
+      });
       const activeKey = newPanes.length > 0 ? newPanes[newPanes.length - 1].key : '';
       updateStore(draft => {
         draft.nodeList = newPanes;
+        draft.nodeItems = nodedata;
         draft.nodeActiveKey = activeKey;
       });
     } else {
+      const edgedata: { [x: string]: { label: string } } = cloneDeep(edgeItems);
+      Object.entries(edgedata).map((keys, i) => {
+        if (keys[0] == key) {
+          delete edgedata[key];
+        }
+      });
       const activeKey = newPanes.length > 0 ? newPanes[newPanes.length - 1].key : '';
       updateStore(draft => {
         draft.edgeList = newPanes;
+        draft.edgeItems = edgedata;
         draft.edgeActiveKey = activeKey;
       });
     }

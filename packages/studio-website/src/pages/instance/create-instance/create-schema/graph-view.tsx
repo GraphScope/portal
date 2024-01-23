@@ -84,7 +84,7 @@ const GraphInsight: FunctionComponent<Props> = props => {
   return (
     <>
       {children}
-      <Graphin data={graphData} layout={{ type: 'circular' }} fitView style={{ height: '60vh', paddingBottom: '3px' }} />
+      <Graphin data={graphData} layout={{ type: 'circular' }} fitView fitCenter style={{ height: '60vh', paddingBottom: '3px' }} />
     </>
   );
 };
