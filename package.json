@@ -4,20 +4,15 @@
     "pnpm": "^8"
   },
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
+    "ci": "pnpm i && rm -rf package-lock.json && npm run build && npm run build:site",
     "build": "turbo run build:esm && turbo run build:cjs",
+    "build:site": "cd packages/studio-website && npm run build",
     "start": "turbo run build:esm:watch && turbo run build:cjs:watch",
     "build:all:umd": "turbo run build:umd --no-cache",
     "clean": "pnpm run -r clean",
     "docs": "NODE_OPTIONS=--max_old_space_size=4098 && dumi dev",
     "publish": "pnpm publish -r --registry=https://registry.npmjs.org"
   },
-  "workspaces": [
-    "packages/studio-query",
-    "packages/studio-importor",
-    "packages/studio-website"
-
-  ],
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"

@@ -2,13 +2,26 @@ import React, { type FC, useEffect, forwardRef, useImperativeHandle, useRef, mem
 import { Checkbox } from 'antd';
 import { uniqueId, cloneDeep } from 'lodash';
 import { useImmer } from 'use-immer';
-import { ImmerType, IndexData, PropertyList, ConfigColumns ,MapConfigParamsType,PropertyConfigParamsType} from './interface';
+import {
+  ImmerType,
+  IndexData,
+  PropertyList,
+  ConfigColumns,
+  MapConfigParamsType,
+  PropertyConfigParamsType,
+} from './interface';
 import { EditType, IconFont } from './mapdata';
 import Editor from './editor';
 
-const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFile?:boolean;tableType:string[];propertyType?:{type:string;}[]}> = memo(
+const PropertiesEditor: FC<{
+  properties: PropertyList;
+  onChange: any;
+  isMapFromFile?: boolean;
+  tableType: string[];
+  propertyType?: { type: string }[];
+}> = memo(
   forwardRef((props, ref) => {
-    const { properties, onChange ,isMapFromFile,tableType,propertyType} = props;
+    const { properties, onChange, isMapFromFile, tableType, propertyType } = props;
     const inputRef = useRef<HTMLInputElement>();
     // 使用useImmer创建一个可变状态对象
     const [state, updateState] = useImmer<ImmerType>({
@@ -144,9 +157,9 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFi
     // 定义addNodeConfig函数，用于添加新的表格行
     const addNodeConfig = () => {
       const list: PropertyList[] = [...configList];
-      if(!list?.length){
+      if (!list?.length) {
         list.push({ id: uniqueId(`index_`), name: '', type: '', token: '', primaryKey: true, disable: false });
-      }else{
+      } else {
         list.push({ id: uniqueId(`index_`), name: '', type: '', token: '', primaryKey: false, disable: false });
       }
       updateState(draft => {
@@ -227,7 +240,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFi
     // 定义mapFromFileConfirm函数，用于从文件映射数据到表格
     const mapFromFileConfirm = () => {
       updateState(draft => {
-        draft.selectedMapRowKeys = [] // 映射数据前清空上次选中值
+        draft.selectedMapRowKeys = []; // 映射数据前清空上次选中值
       });
       let data = cloneDeep(mapfromfileList);
       data = data.filter(item => selectedMapRowKeys.includes(item?.name));
@@ -271,7 +284,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFi
       }
     };
     // 定义mapConfigParams和propertyConfigParams对象，作为Editor组件的props
-    const mapConfigParams:MapConfigParamsType["mapConfigParams"] = {
+    const mapConfigParams: MapConfigParamsType['mapConfigParams'] = {
       dataSource: properties,
       columns: mapcolumns,
       showHeader: false,
@@ -280,9 +293,9 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFi
       handleSelectRow: handleSelectRow,
       mapFromFileConfirm: mapFromFileConfirm,
     };
-    const propertyConfigParams:PropertyConfigParamsType["propertyConfigParams"] = {
+    const propertyConfigParams: PropertyConfigParamsType['propertyConfigParams'] = {
       dataSource: configList,
-      columns: nodeConfigColumns?.filter(item=>tableType?.includes(item?.title)),
+      columns: nodeConfigColumns?.filter(item => tableType?.includes(item?.title)),
       bordered: true,
       rowSelection: rowSelection,
       setConfigList: setConfigList,
@@ -291,7 +304,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFi
       delEditTable: delEditTable,
       inputDoubleClick: inputDoubleClick,
       inputBlur: inputBlur,
-      isMapFromFile:isMapFromFile
+      isMapFromFile: isMapFromFile,
     };
     useImperativeHandle(
       ref,
@@ -304,6 +317,7 @@ const PropertiesEditor: FC<{ properties: PropertyList; onChange:any ;isMapFromFi
       },
       [configList],
     );
+    //@ts-ignore
     return <Editor ref={inputRef} mapConfigParams={mapConfigParams} propertyConfigParams={propertyConfigParams} />;
   }),
 );
