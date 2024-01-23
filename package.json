@@ -4,7 +4,6 @@
     "pnpm": "^8"
   },
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "build": "turbo run build:esm && turbo run build:cjs",
     "start": "turbo run build:esm:watch && turbo run build:cjs:watch",
     "build:all:umd": "turbo run build:umd --no-cache",
@@ -12,12 +11,6 @@
     "docs": "NODE_OPTIONS=--max_old_space_size=4098 && dumi dev",
     "publish": "pnpm publish -r --registry=https://registry.npmjs.org"
   },
-  "workspaces": [
-    "packages/studio-query",
-    "packages/studio-importor",
-    "packages/studio-website"
-
-  ],
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
@@ -43,6 +36,7 @@
     "use-immer": "^0.9.0"
   },
   "devDependencies": {
+    "pnpm": "^8.12.1",
     "@types/react": "18.x",
     "@types/react-dom": "18.x",
     "babel-loader": "^8.2.5",
