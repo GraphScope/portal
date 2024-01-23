@@ -12,6 +12,12 @@
     "docs": "NODE_OPTIONS=--max_old_space_size=4098 && dumi dev",
     "publish": "pnpm publish -r --registry=https://registry.npmjs.org"
   },
+  "workspaces": [
+    "packages/studio-query",
+    "packages/studio-importor",
+    "packages/studio-website"
+
+  ],
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
