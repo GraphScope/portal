@@ -3,6 +3,7 @@ import { Form, Input, Select, Button } from 'antd';
 import { PropertiesEditor } from '@graphscope/studio-importor';
 import { cloneDeep } from 'lodash';
 import { useContext } from '../useContext';
+import { FormattedMessage } from 'react-intl';
 export type FieldType = {
   label?: string;
   src_label?: string;
@@ -68,7 +69,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
       <Form form={form} layout="vertical" onValuesChange={() => formChange()}>
         <div style={{ position: 'relative' }}>
           <Form.Item<FieldType>
-            label={currentType == 'node' ? 'Node Label' : 'Edge Label'}
+            label={currentType == 'node' ? <FormattedMessage id='node-label'/> : <FormattedMessage id='edge-label'/>}
             name="label"
             tooltip=" "
             labelCol={{ span: 8 }}
@@ -82,7 +83,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
         {currentType !== 'node' ? (
           <>
             <Form.Item<FieldType>
-              label="Source Node Label"
+              label={<FormattedMessage id='source-node-label'/>}
               name="src_label"
               tooltip=" "
               labelCol={{ span: 8 }}
@@ -93,7 +94,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
               <Select options={[...option]} disabled={detail} />
             </Form.Item>
             <Form.Item<FieldType>
-              label="Target Node Labek"
+              label={<FormattedMessage id='target-node-label'/>}
               name="dst_label"
               tooltip=" "
               labelCol={{ span: 8 }}

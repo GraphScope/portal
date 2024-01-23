@@ -2,6 +2,7 @@ import React, { useState, useEffect, memo } from 'react';
 import { Form, Input, Row, Col, Avatar, Card, Select,theme } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { CheckCircleTwoTone } from '@ant-design/icons';
+import { FormattedMessage } from 'react-intl';
 const { useToken } = theme;
 export type FieldType = {
   inputname?: string;
@@ -61,7 +62,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = () => {
   return (
     <Form name="basic" form={form} layout="vertical" style={{ marginTop: '24px' }}>
       <Form.Item<FieldType>
-        label="Input Name"
+        label={<FormattedMessage id='input-name'/>}
         name="inputname"
         tooltip=" "
         labelCol={{ span: 8 }}
@@ -72,7 +73,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = () => {
       </Form.Item>
 
       <Form.Item<FieldType>
-        label="Choose GraphInstance Type"
+        label={<FormattedMessage id='choose-engine-type'/>}
         name="type"
         tooltip=" "
         rules={[{ required: true, message: '' }]}
@@ -117,7 +118,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = () => {
         </Row>
       </Form.Item>
       <Form.Item<FieldType>
-        label="Directed"
+        label={<FormattedMessage id='directed'/>}
         name="directed"
         tooltip=" "
         labelCol={{ span: 8 }}

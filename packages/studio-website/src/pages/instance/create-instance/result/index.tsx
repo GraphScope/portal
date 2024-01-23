@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Segmented, Tag, Card } from 'antd';
-import { useContext } from '../useContext';
-import { SegmentedValue } from 'antd/es/segmented';
 import { cloneDeep } from 'lodash';
+import { useContext } from '../useContext';
+import { Segmented, Tag, Card } from 'antd';
+import { FormattedMessage } from 'react-intl';
 import TableList from './table';
 import ReactJsonView from './react-json-view';
 import GraphInsight from '../create-schema/graph-view';
@@ -44,9 +44,9 @@ const Result: React.FunctionComponent<IImportDataProps> = props => {
     return data
   }
   /** 'Table', 'Json', 'Graph' 切换 */
-  const nodeEdgeChange: (value: SegmentedValue) => void = val => {
+  const nodeEdgeChange: (value:any) => void = value => {
     updateStore(draft => {
-      draft.checked = val == 'Table' ? 'table' : val == 'Json' ? 'json' : 'graph';
+      draft.checked = value;
     });
   };
 
@@ -61,10 +61,11 @@ const Result: React.FunctionComponent<IImportDataProps> = props => {
                 <Tag color="green">Interactive</Tag>, 有2 种类型的点，1 种类型的边
               </p>
             ) : null}
-            {checked == 'table' ? <p>实例名称：{'My GRAPH'}</p> : null}
+            {checked == 'table' ? <p><FormattedMessage id='instance-name'/>：{'My GRAPH'}</p> : null}
           </>
         }
-        extra={<Segmented options={['Table', 'Json', 'Graph']} defaultValue="Table" onChange={nodeEdgeChange} />}
+        // 'Table', 'Json', 'Graph'
+        extra={<Segmented options={[{label:<FormattedMessage id='table'/>,value:'table'},{label:<FormattedMessage id='json'/>,value:'json'},{label:<FormattedMessage id='graph'/>,value:'graph'}]} onChange={(value)=>nodeEdgeChange(value)} />}
       >
         {checked == 'table' ? <TableList data={[...getTableData(cloneDeep(nodeItems),'Node'),...getTableData(cloneDeep(edgeItems),'Edge')]}/> : null}
         {checked == 'json' ? <ReactJsonView reactJson={{node:getTableData(cloneDeep(nodeItems)),edge:getTableData(cloneDeep(edgeItems))}} /> : null}

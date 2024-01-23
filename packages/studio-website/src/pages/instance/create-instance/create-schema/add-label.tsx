@@ -2,7 +2,8 @@ import { FunctionComponent } from 'react';
 import { Button, Space } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { cloneDeep } from 'lodash';
-import { createFromIconfontCN } from '@ant-design/icons';
+import { FormattedMessage } from 'react-intl';
+import { createFromIconfontCN, PlusOutlined } from '@ant-design/icons';
 import { useContext } from '../useContext';
 import Schema from './schema';
 const IconFont = createFromIconfontCN({
@@ -81,13 +82,13 @@ const AddLabel: FunctionComponent = () => {
     <>
       {(currentType == 'node' ? nodeList.length : edgeList.length) == 0 ? (
         <Button disabled={detail} style={{ width: '100%', color: '#1650ff' }} type="dashed" onClick={addLabel}>
-          + 添加{currentType == 'node' ? '点' : '边'}
+          <PlusOutlined /> {currentType == 'node' ? <FormattedMessage id='add-node'/> : <FormattedMessage id='add-edge'/> }
         </Button>
       ) : (
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Space>
             <Button onClick={addLabel} disabled={detail}>
-              + 添加{currentType == 'node' ? '点' : '边'}
+            <PlusOutlined /> {currentType == 'node' ? <FormattedMessage id='add-node'/> : <FormattedMessage id='add-edge'/> }
             </Button>
             <Button
               icon={<IconFont type="icon-delete1" />}

@@ -5,8 +5,8 @@ import { useContext } from '../create-instance/useContext';
 import ChooseEnginetype from './choose-enginetype';
 import CreateSchema from '../create-instance/create-schema';
 import Result from './result';
-// const steps = [{ title: 'Choose EngineType' }, { title: 'Create Schema' }, { title: 'Result' }];
-const steps = [{ title: '选择引擎' }, { title: '创建模型' }, { title: '创建结果' }];
+import { FormattedMessage } from 'react-intl';
+const steps = [{ title: <FormattedMessage id='choose-engine-type'/> }, { title: <FormattedMessage id='create-schema'/> }, { title: <FormattedMessage id='result'/> }];
 const Lists: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { isAlert, currentStep } = store;
@@ -43,10 +43,10 @@ const Lists: React.FunctionComponent = () => {
       <Breadcrumb
         items={[
           {
-            title: <a href="/instance">图实例</a>,
+            title: <a href="/instance"><FormattedMessage id='navbar.graphs'/></a>,
           },
           {
-            title: <a href="/instance/create">创建图实例</a>,
+            title: <a href="/instance/create"><FormattedMessage id='create-instance'/></a>,
           },
         ]}
       />
@@ -76,12 +76,12 @@ const Lists: React.FunctionComponent = () => {
             <div style={{ marginTop: 24 }}>
               {currentStep > 0 && (
                 <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
-                  上一步
+                  <FormattedMessage id='previous'/>
                 </Button>
               )}
               {currentStep < steps.length - 1 && (
                 <Button type="primary" onClick={() => next()}>
-                  下一步
+                  <FormattedMessage id='next'/>
                 </Button>
               )}
               {currentStep === steps.length - 1 && (
@@ -91,7 +91,7 @@ const Lists: React.FunctionComponent = () => {
                     message.success('Processing complete!').then(()=>history.push('/instance')) ;
                   }}
                 >
-                  确认创建
+                  <FormattedMessage id='confirm-create'/>
                 </Button>
               )}
             </div>

@@ -6,7 +6,7 @@ import GraphInsight from './graph-view';
 import Schema from './schema';
 import AddLabel from './add-label';
 import { download, prop } from './utils';
-
+import { FormattedMessage } from 'react-intl';
 interface ICreateInstanceProps {
   graphData?: any;
   isAlert?: boolean;
@@ -126,13 +126,12 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
   /** 图头部组件 */
   const GraphViewTitle = (
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      {/* <h3>Graph Schema View</h3> */}
       {!isAlert ? (
         <Space>
           <Upload {...prop} showUploadList={false}>
-            <Button>导入</Button>
+            <Button><FormattedMessage id='import'/></Button>
           </Upload>
-          <Button onClick={() => download(`xxx.json`, '')}>导出</Button>
+          <Button onClick={() => download(`xxx.json`, '')}><FormattedMessage id='export'/></Button>
         </Space>
       ) : null}
     </div>
@@ -140,7 +139,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
   /** 切换 node/edge */
   const nodeEdgeChange:(val:string)=>void = (val) => {
     updateStore(draft => {
-      draft.currentType = val == '点类型' ? 'node' : 'edge';
+      draft.currentType = val == 'node' ? 'node' : 'edge';
     });
     if (currentType == 'edge') {
       updateStore(draft => {
@@ -160,7 +159,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
         >
           <Card
             bodyStyle={{ height: '65vh' }}
-            title={<Segmented defaultValue="点类型" options={['点类型', '边类型']} onChange={e => nodeEdgeChange(e)} />}
+            title={<Segmented options={[{label:<FormattedMessage id='node-type'/>, value:'node'},{label:<FormattedMessage id='edge-type'/>,value:'edge'}]} onChange={e => nodeEdgeChange(e)} />}
             extra={<>{(currentType == 'node' ? nodeList.length : edgeList.length) >0 ? <AddLabel /> : null}</>}
           >
             <div>
@@ -195,7 +194,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
         </div>
       </Col>
       <Col span={10}>
-        <Card title="图模型预览" extra={GraphViewTitle}>
+        <Card title={<FormattedMessage id='graph-model'/>} extra={GraphViewTitle}>
           <GraphInsight />
         </Card>
       </Col>
