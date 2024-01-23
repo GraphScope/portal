@@ -3,6 +3,7 @@
     "node": "^16",
     "pnpm": "^8"
   },
+  "workspaces":[],
   "scripts": {
     "build": "turbo run build:esm && turbo run build:cjs",
     "start": "turbo run build:esm:watch && turbo run build:cjs:watch",
@@ -16,6 +17,7 @@
       "pre-commit": "lint-staged"
     }
   },
+  
   "type": "module",
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
