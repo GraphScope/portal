@@ -139,7 +139,7 @@ const InstanceCard: React.FC = () => {
           <Col>
             <Card title={'New Graph'} style={{ background: '#FCFCFC' }} bodyStyle={{ width: '484px' }}>
               <div style={{ display: 'flex', height: '185px', justifyContent: 'center', alignContent: 'center' }}>
-                <PlusOutlined style={{ fontSize: '80px', color: 'gray' }} />
+                <PlusOutlined style={{ fontSize: '80px', color: 'gray' }}    onClick={() => history.push('/instance/create')}/>
               </div>
             </Card>
           </Col>
