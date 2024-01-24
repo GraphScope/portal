@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { memo } from 'react';
 import { Tag, Popover, Button, Space } from 'antd';
-import { useImmer } from 'use-immer';
+import { useImmer } from '../use-immer';
 interface ILegendProps {
   type?: string;
   count?: string;
@@ -28,11 +28,8 @@ const styles: { [x: string]: React.CSSProperties } = {
 const { useRef } = React;
 const Legend: React.FunctionComponent<ILegendProps> = props => {
   const { type, label, count, properties, onChange, cutomer, color } = props;
-  const [state, updateState] = useImmer<{
-    caption: string;
-  }>({
-    caption: '',
-  });
+  const { state, updateState } = useImmer();
+  const { caption } = state;
   const colorRef = useRef('');
   const sizeRef = useRef('');
   const captionRef = useRef('');
@@ -128,7 +125,7 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
           {Object.keys(properties)?.map(item => {
             return (
               <Tag
-                style={state?.caption == item ? styles['tag-style'] : styles['tag-active']}
+                style={caption == item ? styles['tag-style'] : styles['tag-active']}
                 onClick={() => propertiesChange(item, 'caption')}
               >
                 {item}

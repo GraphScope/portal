@@ -1,9 +1,8 @@
 import React, { type FC, useEffect, forwardRef, useImperativeHandle, useRef, memo } from 'react';
 import { Checkbox } from 'antd';
 import { uniqueId, cloneDeep } from 'lodash';
-import { useImmer } from 'use-immer';
+import { useImmer } from './use-immer';
 import {
-  ImmerType,
   IndexData,
   PropertyList,
   ConfigColumns,
@@ -25,17 +24,8 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
     const { properties=[], onChange, isMapFromFile, tableConfig } = props;
     const inputRef = useRef<HTMLInputElement>();
     // 使用useImmer创建一个可变状态对象
-    const [state, updateState] = useImmer<ImmerType>({
-      selectedRows: [],
-      selectedMapRowKeys: [],
-      configList: [],
-      mapfromfileList: [],
-      proSelectKey: [],
-      propertyOption: [],
-      columnOption: [],
-      propertyColumns: [],
-    });
-    const { selectedRows, selectedMapRowKeys, configList, mapfromfileList, proSelectKey, propertyColumns } = state;
+    const { state, updateState } = useImmer();
+    const { selectedRows, selectedMapRowKeys, configList, mapfromfileList, proSelectKey } = state;
     // 初始化表格下拉选项及映射列表值
     useEffect(() => {
       /** map映射值 */
