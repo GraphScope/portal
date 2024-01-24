@@ -5,7 +5,7 @@ interface IFooterProps {}
 
 const Footer: React.FunctionComponent<IFooterProps> = props => {
   return (
-    <div>
+    <div style={{ display: 'flex', justifyContent: 'space-between', justifyItems: 'center' }}>
       <Space split={<Divider type="vertical" />}>
         <span>docs</span>
         <span>website</span>

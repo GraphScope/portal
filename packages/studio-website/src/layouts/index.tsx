@@ -4,7 +4,6 @@ import './index.less';
 import Sidebar from './sidebar';
 import Container from './container';
 
-import Content from './content';
 import Footer from './footer';
 import { useState } from 'react';
 import { IntlProvider, FormattedMessage, FormattedNumber } from 'react-intl';
@@ -33,15 +32,7 @@ export default function Layout() {
           },
         }}
       >
-        <Container
-          sidebar={<Sidebar />}
-          content={
-            <Content>
-              <Outlet />
-            </Content>
-          }
-          footer={<Footer />}
-        />
+        <Container sidebar={<Sidebar />} content={<Outlet />} footer={<Footer />} />
       </ConfigProvider>
     </IntlProvider>
   );

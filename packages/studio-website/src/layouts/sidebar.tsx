@@ -8,16 +8,18 @@ import {
   DashboardOutlined,
   OrderedListOutlined,
   AppstoreAddOutlined,
+  SettingFilled,
+  LayoutOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu, Divider, ColorPicker, Space } from 'antd';
 import styles from './styles';
 import { history, useLocation } from 'umi';
 import { FormattedMessage } from 'react-intl';
-import LocaleSwitch from '../components/locale-switch';
+
 import { useContext } from './useContext';
 import Logo from './logo';
-import { LayoutOutlined } from '@ant-design/icons';
+
 interface ISidebarProps {}
 
 const items: MenuProps['items'] = [
@@ -51,6 +53,19 @@ const otherItems: MenuProps['items'] = [
   },
 ];
 
+const settingMenu: MenuProps['items'] = [
+  {
+    label: <FormattedMessage id="navbar.setting" />,
+    key: '/setting',
+    icon: <SettingFilled />,
+  },
+  {
+    label: <FormattedMessage id="collasped sidebar" />,
+    key: '/layout',
+    icon: <LayoutOutlined />,
+  },
+];
+
 let currentPath = window.location.pathname;
 export const SideWidth = 150;
 const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
@@ -61,24 +76,30 @@ const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
   const [current, setCurrent] = useState(location.pathname);
 
   const onClick: MenuProps['onClick'] = e => {
+    if (e.key === '/layout') {
+      updateStore(draft => {
+        draft.collapse = !draft.collapse;
+      });
+      return;
+    }
     setCurrent(e.key);
     history.push(`${e.key}`);
   };
 
   return (
-    <div
-      style={{
-        // position: 'absolute',
-        // top: '0px',
-        // left: '0px',
-        // bottom: '0px',
-        width: collapse ? '80px' : `${SideWidth}px`,
-        boxSizing: 'border-box',
-        // border: '1px solid red',
-      }}
-    >
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Logo></Logo>
-      <div style={{ width: `${SideWidth}px`, padding: '0px 0px', boxSizing: 'border-box' }}>
+      <div
+        style={{
+          flex: 1,
+          width: `${SideWidth}px`,
+          padding: '0px 0px',
+          boxSizing: 'border-box',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}
+      >
         <Menu
           inlineCollapsed={collapse}
           onClick={onClick}
@@ -88,44 +109,18 @@ const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
           mode="vertical"
           style={{ borderInlineEnd: 'none' }}
         />
-      </div>
-      {/* <Divider style={{ margin: '12px' }} />
-      <Menu
-        onClick={onClick}
-        // defaultSelectedKeys={[location.pathname]}
-        selectedKeys={[current]}
-        items={otherItems}
-        mode="vertical"
-        style={{ borderInlineEnd: 'none' }}
-      /> */}
-      <div style={{}}>
-        <Space direction="vertical">
-          <LocaleSwitch
-            value={locale}
-            onChange={value => {
-              updateStore(draft => {
-                draft.locale = value;
-              });
-            }}
-          ></LocaleSwitch>
-          <ColorPicker
-            // style={{ display: 'block' }}
-            showText
-            value={primaryColor}
-            onChangeComplete={color => {
-              updateStore(draft => {
-                draft.primaryColor = color.toHexString();
-              });
-            }}
+
+        <div style={{}}>
+          <Menu
+            inlineCollapsed={collapse}
+            onClick={onClick}
+            // defaultSelectedKeys={[location.pathname]}
+            selectedKeys={[current]}
+            items={settingMenu}
+            mode="vertical"
+            style={{ borderInlineEnd: 'none' }}
           />
-          <LayoutOutlined
-            onClick={() => {
-              updateStore(draft => {
-                draft.collapse = !collapse;
-              });
-            }}
-          />
-        </Space>
+        </div>
       </div>
     </div>
   );

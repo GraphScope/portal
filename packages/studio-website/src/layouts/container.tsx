@@ -13,10 +13,11 @@ const Padding = 24;
 
 const Container: React.FunctionComponent<ContainerProps> = props => {
   const { sidebar, content, footer } = props;
-  const { store, updateStore } = useContext();
+  const { store } = useContext();
   const { collapse } = store;
   return (
     <div
+      className="gs-root"
       style={{
         background: '#f5f7f9',
         display: 'flex',
@@ -26,20 +27,25 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
       }}
     >
       <div
+        className="gs-container"
         style={{
           boxSizing: 'border-box',
           width: `${ContainerWidth}px`,
+          transition: 'all 0.3s ease',
           height: '100%',
           margin: 'auto',
           //   background: '#f5f7f9',
           display: 'flex',
           padding: '24px',
-          border: '1px solid #ddd',
+          // border: '1px solid #ddd',
+          flexShrink: 0,
         }}
       >
         <div
+          className="gs-sidebar"
           style={{
             width: collapse ? '80px' : `${SideWidth}px`,
+            transition: 'all 0.3s ease',
             boxSizing: 'border-box',
             border: '1px solid #ddd',
           }}
@@ -47,27 +53,34 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
           {sidebar}
         </div>
         <div
+          className="gs-main"
           style={{
             flex: 1,
             boxSizing: 'border-box',
-            background: '#fff',
-            borderRadius: '8px',
             marginLeft: '24px',
             display: 'flex',
             flexDirection: 'column',
-            border: '1px solid blue',
           }}
         >
-          <div style={{ flex: 1 }}>{content}</div>
-
           <div
             style={{
-              flexBasis: '40px',
-              padding: '12px',
+              boxSizing: 'border-box',
+              flex: 1,
+              overflowY: 'scroll',
+              padding: '12px 24px',
+              background: '#fff',
+              borderRadius: '8px',
+            }}
+            className="gs-content"
+          >
+            {content}
+          </div>
+
+          <div
+            className="gs-footer"
+            style={{
+              padding: '6px 6px',
               fontSize: '12px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              justifyItems: 'center',
               color: '#ddd',
             }}
           >
