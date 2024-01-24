@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
+import {
+  AppstoreOutlined,
+  MailOutlined,
+  SettingOutlined,
+  DesktopOutlined,
+  FileSearchOutlined,
+  DashboardOutlined,
+  OrderedListOutlined,
+  AppstoreAddOutlined,
+} from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu, Divider, ColorPicker, Space } from 'antd';
 import styles from './styles';
@@ -8,18 +17,19 @@ import { FormattedMessage } from 'react-intl';
 import LocaleSwitch from '../components/locale-switch';
 import { useContext } from './useContext';
 import Logo from './logo';
+import { LayoutOutlined } from '@ant-design/icons';
 interface ISidebarProps {}
 
 const items: MenuProps['items'] = [
   {
     label: <FormattedMessage id="navbar.graphs" />,
     key: '/instance',
-    icon: <AppstoreOutlined />,
+    icon: <DesktopOutlined />,
   },
   {
     label: <FormattedMessage id="navbar.query" />,
     key: '/query',
-    icon: <MailOutlined />,
+    icon: <FileSearchOutlined />,
   },
 ];
 
@@ -27,25 +37,27 @@ const otherItems: MenuProps['items'] = [
   {
     label: <FormattedMessage id="navbar.jobs" />,
     key: '/job',
-    icon: <MailOutlined />,
+    icon: <OrderedListOutlined />,
   },
   {
     label: <FormattedMessage id="navbar.alert" />,
     key: '/alert',
-    icon: <AppstoreOutlined />,
+    icon: <DashboardOutlined />,
   },
   {
     label: <FormattedMessage id="navbar.extension" />,
     key: '/extension',
-    icon: <AppstoreOutlined />,
+    icon: <AppstoreAddOutlined />,
   },
 ];
 
+let currentPath = window.location.pathname;
+export const SideWidth = 150;
 const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
   const location = useLocation();
   console.log('location', location.pathname);
   const { store, updateStore } = useContext();
-  const { locale, primaryColor } = store;
+  const { locale, primaryColor, collapse } = store;
   const [current, setCurrent] = useState(location.pathname);
 
   const onClick: MenuProps['onClick'] = e => {
@@ -56,24 +68,27 @@ const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
   return (
     <div
       style={{
-        position: 'absolute',
-        top: '0px',
-        left: '0px',
-        bottom: '0px',
-        width: '240px',
-        padding: '16px',
+        // position: 'absolute',
+        // top: '0px',
+        // left: '0px',
+        // bottom: '0px',
+        width: collapse ? '80px' : `${SideWidth}px`,
         boxSizing: 'border-box',
+        // border: '1px solid red',
       }}
     >
       <Logo></Logo>
-      <Menu
-        onClick={onClick}
-        // defaultSelectedKeys={[location.pathname]}
-        selectedKeys={[current]}
-        items={[...items, ...otherItems]}
-        mode="vertical"
-        style={{ borderInlineEnd: 'none' }}
-      />
+      <div style={{ width: `${SideWidth}px`, padding: '0px 0px', boxSizing: 'border-box' }}>
+        <Menu
+          inlineCollapsed={collapse}
+          onClick={onClick}
+          // defaultSelectedKeys={[location.pathname]}
+          selectedKeys={[current]}
+          items={[...items, ...otherItems]}
+          mode="vertical"
+          style={{ borderInlineEnd: 'none' }}
+        />
+      </div>
       {/* <Divider style={{ margin: '12px' }} />
       <Menu
         onClick={onClick}
@@ -83,7 +98,7 @@ const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
         mode="vertical"
         style={{ borderInlineEnd: 'none' }}
       /> */}
-      <div style={{ position: 'absolute', bottom: '50px', left: '40px' }}>
+      <div style={{}}>
         <Space direction="vertical">
           <LocaleSwitch
             value={locale}
@@ -100,6 +115,13 @@ const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
             onChangeComplete={color => {
               updateStore(draft => {
                 draft.primaryColor = color.toHexString();
+              });
+            }}
+          />
+          <LayoutOutlined
+            onClick={() => {
+              updateStore(draft => {
+                draft.collapse = !collapse;
               });
             }}
           />

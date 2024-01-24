@@ -15,7 +15,6 @@ export default defineConfig({
     { path: '/deployment', component: 'deployment' },
   ],
   npmClient: 'pnpm',
-
   monorepoRedirect: {},
   // externals: { react: 'React', 'react-dom': 'ReactDOM' },
   // headScripts: [

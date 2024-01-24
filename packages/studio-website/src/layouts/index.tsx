@@ -2,6 +2,7 @@ import { Outlet } from 'umi';
 import { ConfigProvider, Space, Input, ColorPicker, Divider } from 'antd';
 import './index.less';
 import Sidebar from './sidebar';
+import Container from './container';
 
 import Content from './content';
 import Footer from './footer';
@@ -15,30 +16,33 @@ export default function Layout() {
   //@ts-ignore
   const messages = locales[locale];
   return (
-    <>
-      <IntlProvider messages={messages} locale={locale}>
-        <ConfigProvider
-          theme={{
-            components: {
-              Menu: {
-                itemBg: 'rgba(255, 255, 255, 0)',
-                subMenuItemBg: 'rgba(255, 255, 255, 0)',
-                // itemMarginInline: 16,
-                itemPaddingInline: 16,
-              },
+    <IntlProvider messages={messages} locale={locale}>
+      <ConfigProvider
+        theme={{
+          components: {
+            Menu: {
+              itemBg: 'rgba(255, 255, 255, 0)',
+              subMenuItemBg: 'rgba(255, 255, 255, 0)',
+              iconMarginInlineEnd: 14,
+              itemMarginInline: 4,
+              iconSize: 14,
             },
-            token: {
-              colorPrimary: primaryColor,
-            },
-          }}
-        >
-          <Sidebar />
-          <Content>
-            <Outlet />
-            <Footer />
-          </Content>
-        </ConfigProvider>
-      </IntlProvider>
-    </>
+          },
+          token: {
+            colorPrimary: primaryColor,
+          },
+        }}
+      >
+        <Container
+          sidebar={<Sidebar />}
+          content={
+            <Content>
+              <Outlet />
+            </Content>
+          }
+          footer={<Footer />}
+        />
+      </ConfigProvider>
+    </IntlProvider>
   );
 }
