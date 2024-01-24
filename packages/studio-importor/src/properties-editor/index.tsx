@@ -1,7 +1,7 @@
 import React, { type FC, useEffect, forwardRef, useImperativeHandle, useRef, memo } from 'react';
 import { Checkbox } from 'antd';
 import { uniqueId, cloneDeep } from 'lodash';
-import { useImmer } from './use-immer';
+import { useImmer } from '../use-immer';
 import {
   IndexData,
   PropertyList,
@@ -21,10 +21,16 @@ type IPropertiesEditorProps = {
 };
 const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
   forwardRef((props, ref) => {
-    const { properties=[], onChange, isMapFromFile, tableConfig } = props;
+    const { properties = [], onChange, isMapFromFile, tableConfig } = props;
     const inputRef = useRef<HTMLInputElement>();
     // 使用useImmer创建一个可变状态对象
-    const { state, updateState } = useImmer();
+    const [state, updateState] = useImmer({
+      selectedRows: [],
+      selectedMapRowKeys: [],
+      configList: [],
+      mapfromfileList: [],
+      proSelectKey: [],
+    });
     const { selectedRows, selectedMapRowKeys, configList, mapfromfileList, proSelectKey } = state;
     // 初始化表格下拉选项及映射列表值
     useEffect(() => {
@@ -66,7 +72,7 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
       updateState(draft => {
         draft.configList = modifiedArray;
       });
-      onChange(modifiedArray)
+      onChange(modifiedArray);
     };
     // 定义addNodeConfig函数，用于添加新的表格行
     const addNodeConfig = () => {
