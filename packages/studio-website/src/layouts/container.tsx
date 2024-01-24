@@ -10,6 +10,7 @@ interface ContainerProps {
 const SideWidth = 150;
 const ContainerWidth = 1360;
 const Padding = 24;
+const CollapsedWidth = 60;
 
 const Container: React.FunctionComponent<ContainerProps> = props => {
   const { sidebar, content, footer } = props;
@@ -44,10 +45,10 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
         <div
           className="gs-sidebar"
           style={{
-            width: collapse ? '80px' : `${SideWidth}px`,
+            width: collapse ? `${CollapsedWidth}px` : `${SideWidth}px`,
             transition: 'all 0.3s ease',
             boxSizing: 'border-box',
-            border: '1px solid #ddd',
+            // border: '1px solid #ddd',
           }}
         >
           {sidebar}

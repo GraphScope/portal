@@ -25,6 +25,7 @@ export default function Layout() {
               iconMarginInlineEnd: 14,
               itemMarginInline: 4,
               iconSize: 14,
+              collapsedWidth: 60,
             },
           },
           token: {
