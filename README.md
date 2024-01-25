@@ -1,6 +1,6 @@
 # GraphScope Portal
 
-test ci
+test webhook
 
 ## Perpare
 
