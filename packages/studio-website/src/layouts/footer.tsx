@@ -5,21 +5,8 @@ interface IFooterProps {}
 
 const Footer: React.FunctionComponent<IFooterProps> = props => {
   return (
-    <div
-      style={{
-        position: 'absolute',
-        bottom: '-40px',
-        padding: '12px',
-        fontSize: '12px',
-        right: '0px',
-        left: '0px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        justifyItems: 'center',
-        color: '#ddd',
-      }}
-    >
-      <Space split={<Divider type="vertical" />}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', justifyItems: 'center' }}>
+      <Space split={<Divider type="vertical" />} size={0}>
         <span>docs</span>
         <span>website</span>
         <span>github</span>

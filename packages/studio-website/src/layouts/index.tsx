@@ -1,9 +1,9 @@
 import { Outlet } from 'umi';
-import { ConfigProvider, Space, Input, ColorPicker, Divider } from 'antd';
+import { ConfigProvider, Space, Input, ColorPicker, Divider, theme } from 'antd';
 import './index.less';
 import Sidebar from './sidebar';
+import Container from './container';
 
-import Content from './content';
 import Footer from './footer';
 import { useState } from 'react';
 import { IntlProvider, FormattedMessage, FormattedNumber } from 'react-intl';
@@ -15,30 +15,33 @@ export default function Layout() {
   //@ts-ignore
   const messages = locales[locale];
   return (
-    <>
-      <IntlProvider messages={messages} locale={locale}>
-        <ConfigProvider
-          theme={{
-            components: {
-              Menu: {
-                itemBg: 'rgba(255, 255, 255, 0)',
-                subMenuItemBg: 'rgba(255, 255, 255, 0)',
-                // itemMarginInline: 16,
-                itemPaddingInline: 16,
-              },
+    <IntlProvider messages={messages} locale={locale}>
+      <ConfigProvider
+        theme={{
+          // 1. 单独使用暗色算法
+          algorithm: theme.defaultAlgorithm,
+          components: {
+            Menu: {
+              itemBg: 'rgba(255, 255, 255, 0)',
+              subMenuItemBg: 'rgba(255, 255, 255, 0)',
+              iconMarginInlineEnd: 14,
+              itemMarginInline: 4,
+              iconSize: 14,
+              collapsedWidth: 60,
             },
-            token: {
-              colorPrimary: primaryColor,
+            Typography: {
+              titleMarginBottom: '0.2em',
+              titleMarginTop: '0.8em',
             },
-          }}
-        >
-          <Sidebar />
-          <Content>
-            <Outlet />
-            <Footer />
-          </Content>
-        </ConfigProvider>
-      </IntlProvider>
-    </>
+          },
+          token: {
+            borderRadius: 8,
+            colorPrimary: primaryColor,
+          },
+        }}
+      >
+        <Container sidebar={<Sidebar />} content={<Outlet />} footer={<Footer />} />
+      </ConfigProvider>
+    </IntlProvider>
   );
 }
