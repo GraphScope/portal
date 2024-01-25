@@ -1,19 +1,23 @@
 import * as React from 'react';
-import { Breadcrumb, Divider, Typography } from 'antd';
+import { Breadcrumb, Divider, Typography, Tabs } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { BreadcrumbProps } from 'antd';
+import type { BreadcrumbProps, TabsProps } from 'antd';
 
 interface ISectionProps {
   title: string;
   desc: string;
   breadcrumb: BreadcrumbProps['items'];
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  items?: TabsProps['items'];
 }
 
 const Section: React.FunctionComponent<ISectionProps> = props => {
-  const { title, desc, breadcrumb, children } = props;
+  const { title, desc, breadcrumb, children, items } = props;
   const style = {
     padding: '12px 24px',
+  };
+  const onChange = (key: string) => {
+    console.log(key);
   };
   return (
     <section style={{ display: 'flex', flexDirection: 'column' }}>
@@ -26,7 +30,13 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
           <FormattedMessage id={desc} />
         </Typography.Text>
       </div>
-      <Divider />
+      {!items && <Divider />}
+      {items && (
+        <div style={{ padding: '0px 24px' }}>
+          <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+        </div>
+      )}
+
       <div style={style}>{children}</div>
     </section>
   );
