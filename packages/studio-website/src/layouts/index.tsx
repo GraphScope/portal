@@ -1,5 +1,5 @@
 import { Outlet } from 'umi';
-import { ConfigProvider, Space, Input, ColorPicker, Divider } from 'antd';
+import { ConfigProvider, Space, Input, ColorPicker, Divider, theme } from 'antd';
 import './index.less';
 import Sidebar from './sidebar';
 import Container from './container';
@@ -18,6 +18,8 @@ export default function Layout() {
     <IntlProvider messages={messages} locale={locale}>
       <ConfigProvider
         theme={{
+          // 1. 单独使用暗色算法
+          algorithm: theme.defaultAlgorithm,
           components: {
             Menu: {
               itemBg: 'rgba(255, 255, 255, 0)',
@@ -29,6 +31,7 @@ export default function Layout() {
             },
           },
           token: {
+            borderRadius: 8,
             colorPrimary: primaryColor,
           },
         }}
