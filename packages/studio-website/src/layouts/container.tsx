@@ -47,6 +47,8 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
             width: collapse ? `${CollapsedWidth}px` : `${SideWidth}px`,
             transition: 'all 0.3s ease',
             boxSizing: 'border-box',
+            overflow: 'hidden',
+
             // border: '1px solid #ddd',
           }}
         >
