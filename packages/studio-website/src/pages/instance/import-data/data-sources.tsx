@@ -1,11 +1,18 @@
 import * as React from 'react';
-import { Form, Input, Button, Table, InputNumber, Select, Checkbox, Flex } from 'antd';
-
+import { createFromIconfontCN } from '@ant-design/icons';
+import { Form, Input, Button, Table, InputNumber, Select, Checkbox, Flex, Row, Col, Space } from 'antd';
+const IconFont = createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/a/font_4377140_slis0xqmzfo.js',
+});
 interface IImportDataProps {}
 
 const { Option } = Select;
 const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const [form] = Form.useForm();
+  const [state, updateState] = React.useState({
+    isEidtProperty: false,
+  });
+  const { isEidtProperty } = state;
   const CheckboxComponent = (field: any) => {
     return (
       <Checkbox
@@ -110,36 +117,76 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       <Option value="ODPS">ODPS</Option>
     </Select>
   );
+  const inputFocus = () => {
+    updateState(preState => {
+      return {
+        ...preState,
+        isEidtProperty: true,
+      };
+    });
+  };
+  const saveBind = () => {
+    updateState(preState => {
+      return {
+        ...preState,
+        isEidtProperty: false,
+      };
+    });
+  };
   return (
-    <div style={{ paddingRight: '24px' }}>
-      <Form
-        className="table-edit-form"
-        form={form}
-        labelCol={{ flex: '80px' }}
-        labelAlign="right"
-        wrapperCol={{ flex: 1 }}
-      >
-        <Form.Item label="数据源" name="location">
-          <Input addonBefore={selectBefore} placeholder="graphscope/modern_graph/user.csv" />
-        </Form.Item>
-
-        <Form.Item label="属性映射" rules={[{ required: true, message: 'Please input Source Label!' }]}>
-          <Form.List name="propertyMapping">
-            {(fields: any, { add, remove }: any) => {
-              // 将Table视为 Form.List 中循环的 Form.Item
-              return (
-                <Form.Item>
-                  <Table dataSource={fields} columns={getColumns(remove)} bordered pagination={false} />
-                </Form.Item>
-              );
-            }}
-          </Form.List>
-        </Form.Item>
-      </Form>
-      <Flex justify="end">
-        <Button type="primary">保存绑定</Button>
-      </Flex>
-    </div>
+    <Form
+      className="table-edit-form"
+      form={form}
+      labelCol={{ flex: '80px' }}
+      labelAlign="right"
+      wrapperCol={{ flex: 1 }}
+      style={{ border: '1px solid #000',margin:'0px 24px' }}
+    >
+      <Row style={{ borderBottom: '1px solid #000' }}>
+        <Col span={18} style={{ paddingTop: '12px' }}>
+          <Form.Item label="label" name="label" style={{ margin: '10px' }}>
+            <Input style={{ border: '0px', backgroundColor: '#fff' }} disabled />
+          </Form.Item>
+          <Form.Item label="数据源" name="location">
+            <Input addonBefore={selectBefore} placeholder="graphscope/modern_graph/user.csv" onFocus={inputFocus} />
+          </Form.Item>
+        </Col>
+        <Col span={6} style={{ display: 'flex', justifyContent: 'end', alignItems: 'center', paddingRight: '16px' }}>
+          <IconFont type="icon-jiechubangding" style={{ fontSize: '50px' }} />
+        </Col>
+      </Row>
+      {isEidtProperty ? (
+        <Row style={{ padding: '0 24px 24px', marginTop: '12px' }}>
+          <Col span={24}>
+            <Form.Item label="属性映射" rules={[{ required: true, message: 'Please input Source Label!' }]}>
+              <Form.List name="propertyMapping">
+                {(fields: any, { add, remove }: any) => {
+                  // 将Table视为 Form.List 中循环的 Form.Item
+                  return (
+                    <Form.Item>
+                      <Table dataSource={fields} columns={getColumns(remove)} bordered pagination={false} />
+                    </Form.Item>
+                  );
+                }}
+              </Form.List>
+            </Form.Item>
+            <Flex justify="end">
+              <Space>
+                <Button type="primary" onClick={saveBind}>
+                  周期导入
+                </Button>
+                <Button type="primary" onClick={saveBind}>
+                  立即导入
+                </Button>
+                {/* <Button type="primary" onClick={saveBind}>
+                  保存绑定
+                </Button> */}
+              </Space>
+            </Flex>
+          </Col>
+        </Row>
+      ) : null}
+    </Form>
   );
 };
 
