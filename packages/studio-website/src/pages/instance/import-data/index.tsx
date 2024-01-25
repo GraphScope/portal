@@ -30,7 +30,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
     },
   ];
   return (
-    <Row style={{ padding: '24px' }} gutter={[32, 16]}>
+    <Row style={{ padding: '24px' }} gutter={32}>
       <Col span={16}>
         <Flex gap="middle" justify="space-between">
           <Segmented options={option} onChange={nodeEdgeChange} />
