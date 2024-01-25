@@ -1,11 +1,10 @@
-import React, { useState, useEffect, memo } from 'react';
-import { Form, Input, Row, Col, Avatar, Card, Select, theme } from 'antd';
-import { v4 as uuidv4 } from 'uuid';
-import { CheckCircleTwoTone } from '@ant-design/icons';
+import React, { memo } from 'react';
+import { Form, Input, Select } from 'antd';
+
 import { FormattedMessage } from 'react-intl';
 import SelectCards from '@/components/select-cards';
 import { useContext } from './useContext';
-const { useToken } = theme;
+
 export type FieldType = {
   inputname?: string;
   type?: string;
