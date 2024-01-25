@@ -1,16 +1,19 @@
 import { useEffect, memo, FunctionComponent } from 'react';
 import Graphin, { Utils } from '@antv/graphin';
 import { useContext } from '../useContext';
+import { theme } from 'antd';
+const { useToken } = theme;
 interface Props {
   children?: JSX.Element;
 }
 const GraphInsight: FunctionComponent<Props> = props => {
   const { children = <></> } = props;
+  const { token } = useToken();
   const { store, updateStore } = useContext();
   const { graphData, nodeItems, edgeItems } = store;
   useEffect(() => {
     getVertexEdges();
-  }, [nodeItems, edgeItems]);
+  }, [nodeItems, edgeItems,token.colorPrimary]);
   /** graphin 数据处理 */
   const getVertexEdges = () => {
     const result: { vertices: { label: string }[]; edges: { label: string; src_label: string; dst_label: string }[] } =
@@ -32,6 +35,8 @@ const GraphInsight: FunctionComponent<Props> = props => {
           fontSize: 14,
           keyshape: {
             size: 50,
+            stroke: token.colorPrimary,
+            fill: token.colorPrimary,
           },
         },
       });
@@ -46,6 +51,8 @@ const GraphInsight: FunctionComponent<Props> = props => {
             keyshape: {
               lineWidth: 1,
               startArrow: false,
+              stroke: token.colorPrimary,
+              fill: token.colorPrimary,
             },
           },
         });
@@ -84,7 +91,7 @@ const GraphInsight: FunctionComponent<Props> = props => {
   return (
     <>
       {children}
-      <Graphin data={graphData} layout={{ type: 'circular' }} fitView fitCenter style={{ height: '60vh', paddingBottom: '3px' }} />
+      <Graphin data={graphData} layout={{ type: 'circular' }} fitView fitCenter style={{ paddingBottom: '3px' }} />
     </>
   );
 };

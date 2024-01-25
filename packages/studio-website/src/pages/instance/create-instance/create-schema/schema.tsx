@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef ,memo} from 'react';
 import { Form, Input, Select, Button } from 'antd';
 import { PropertiesEditor } from '@graphscope/studio-importor';
 import { cloneDeep } from 'lodash';
@@ -11,7 +11,6 @@ export type FieldType = {
 };
 type SchemaType = {
   newActiveKey: string;
-  deleteNode: (currentType: string, newActiveKey: string) => void;
   data?: any;
 };
 
@@ -23,8 +22,9 @@ type IFormType = {
     properties: any;
   };
 };
+
 const CreateSchema: React.FunctionComponent<SchemaType> = props => {
-  const { newActiveKey, deleteNode, data } = props;
+  const { newActiveKey, data } = props;
   const [form] = Form.useForm();
   const { store, updateStore } = useContext();
   const { currentType, nodeItems, edgeItems, detail, option } = store;
@@ -32,9 +32,9 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   let cbRef = useRef()
   /** 子项 [{title:'表头'，dataIndex:'绑定字段'，type:'字段对应编辑框'，option:'select配置选项',width:'表头宽度'}] */
   const configcolumns = [
-    { title: 'primary_name', dataIndex: 'name', width: '40%', type: 'INPUT' },
-    { title: 'Type', dataIndex: 'type', width: '25%', type: 'SELECT', option: [{ value: 'string',label:'string' }, { value: 'datetime' ,label:'datetime'}] },
-    { title: 'primary_key', width: '25%' },
+    { title: <FormattedMessage id='primary_name'/>, dataIndex: 'name', width: '40%', type: 'INPUT' },
+    { title: <FormattedMessage id='primary_key'/>, width: '25%' },
+    { title: <FormattedMessage id='primary_type'/>, dataIndex: 'type', width: '25%', type: 'SELECT', option: [{ value: 'string',label:'string' }, { value: 'datetime' ,label:'datetime'}] },
   ];
   useEffect(() => {
     if (data) {
@@ -65,11 +65,11 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
     }
   };  
   return (
-    <>
-      <Form form={form} layout="vertical" onValuesChange={() => formChange()}>
+    <div>
+      <Form key={newActiveKey} form={form} layout="vertical" onValuesChange={() => formChange()}>
         <div style={{ position: 'relative' }}>
           <Form.Item<FieldType>
-            label={currentType == 'node' ? <FormattedMessage id='node-label'/> : <FormattedMessage id='edge-label'/>}
+            label={currentType == 'node' ? <FormattedMessage id='Node Label'/> : <FormattedMessage id='Edge Label'/>}
             name="label"
             tooltip=" "
             labelCol={{ span: 8 }}
@@ -77,13 +77,13 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             rules={[{ required: true, message: '' }]}
             style={{ marginBottom: '0' }}
           >
-            <Input disabled={detail} />
+            <Input disabled={detail} placeholder={`Please Enter ${currentType == 'node' ? 'Node Label.' : 'Edge Label.'}`}/>
           </Form.Item>
         </div>
         {currentType !== 'node' ? (
           <>
             <Form.Item<FieldType>
-              label={<FormattedMessage id='source-node-label'/>}
+              label={<FormattedMessage id='Source Node Label'/>}
               name="src_label"
               tooltip=" "
               labelCol={{ span: 8 }}
@@ -91,10 +91,10 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
               rules={[{ required: true, message: '' }]}
               style={{ marginBottom: '0' }}
             >
-              <Select options={[...option]} disabled={detail} />
+              <Select options={[...option]} disabled={detail} placeholder='Please Select Source Node Label.'/>
             </Form.Item>
             <Form.Item<FieldType>
-              label={<FormattedMessage id='target-node-label'/>}
+              label={<FormattedMessage id='Target Node Label'/>}
               name="dst_label"
               tooltip=" "
               labelCol={{ span: 8 }}
@@ -102,13 +102,14 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
               rules={[{ required: true, message: '' }]}
               style={{ marginBottom: '0' }}
             >
-              <Select options={[...option]} disabled={detail} />
+              <Select options={[...option]} disabled={detail} placeholder='Please Select Target Node Label.'/>
             </Form.Item>
           </>
         ) : null}
       </Form>
       <PropertiesEditor
         ref={propertyRef}
+        locales={{properties:<FormattedMessage id='Properties'/>,addProperty:<FormattedMessage id='Add Property'/>,mapFromFile:<FormattedMessage id='Map From File'/>}}
         properties={data?.properties ||[]}
         onChange={(values: any) => {
           cbRef.current = values
@@ -117,10 +118,9 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
         /**映射控制 */
         isMapFromFile={false}
         tableConfig={configcolumns}
-
       />
-    </>
+    </div>
   );
 };
 
-export default CreateSchema;
+export default memo(CreateSchema);

@@ -7,6 +7,7 @@ import Schema from './schema';
 import AddLabel from './add-label';
 import { download, prop } from './utils';
 import { FormattedMessage } from 'react-intl';
+import { SegmentedValue } from 'antd/es/segmented';
 interface ICreateInstanceProps {
   graphData?: any;
   isAlert?: boolean;
@@ -31,13 +32,13 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
     Object.entries(data).map(key => {
       arr.push({
         label: (
-          <div style={{ width: '60px', overflow: 'hidden' }}>
+          <div key={key[0]} style={{ width: '56px', overflow: 'hidden' }}>
             <Tooltip placement="topLeft" title={key[1].label || 'undefine'}>
               {key[1].label || 'undefine'}
             </Tooltip>
           </div>
         ),
-        children: <Schema newActiveKey={key[0]} deleteNode={deleteNode} data={key[1]} />,
+        children: <Schema newActiveKey={key[0]} data={key[1]} />,
         key: key[0],
       });
       nodearr.push({
@@ -56,13 +57,13 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
     Object.entries(data).map(key => {
       arr.push({
         label: (
-          <div style={{ width: '60px', overflow: 'hidden' }}>
+          <div key={key[0]} style={{ width: '56px', overflow: 'hidden' }}>
             <Tooltip placement="topLeft" title={key[1].label || 'undefine'}>
               {key[1].label || 'undefine'}
             </Tooltip>
           </div>
         ),
-        children: <Schema newActiveKey={key[0]} deleteNode={deleteNode} data={key[1]} />,
+        children: <Schema newActiveKey={key[0]} data={key[1]} />,
         key: key[0],
       });
     });
@@ -79,38 +80,6 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
       draft.option = nodearr;
     });
   }, [edgeItems]);
-  /** del node or edge*/
-  const deleteNode = (val: string, key: string) => {
-    let data = val == 'node' ? cloneDeep(nodeList) : cloneDeep(edgeList);
-    const newPanes = data.filter(pane => pane.key !== key);
-    if (val == 'node') {
-      const nodedata: { [x: string]: { label: string } } = cloneDeep(nodeItems);
-      Object.entries(nodedata).map((keys, i) => {
-        if (keys[0] == key) {
-          delete nodedata[key];
-        }
-      });
-      const activeKey = Object.keys(nodedata)[Object.keys(nodedata).length - 1];
-      updateStore(draft => {
-        draft.nodeList = newPanes;
-        draft.nodeItems = nodedata;
-        draft.nodeActiveKey = activeKey;
-      });
-    } else {
-      const edgedata: { [x: string]: { label: string } } = cloneDeep(edgeItems);
-      Object.entries(edgedata).map((keys, i) => {
-        if (keys[0] == key) {
-          delete edgedata[key];
-        }
-      });
-      const activeKey = Object.keys(edgedata)[Object.keys(edgedata).length - 1];
-      updateStore(draft => {
-        draft.edgeList = newPanes;
-        draft.edgeItems = edgedata;
-        draft.edgeActiveKey = activeKey;
-      });
-    }
-  };
   /** 点/边 切换 */
   const tabsChange = (key: string) => {
     if (currentType == 'node') {
@@ -129,15 +98,23 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
       {!isAlert ? (
         <Space>
           <Upload {...prop} showUploadList={false}>
-            <Button><FormattedMessage id='import'/></Button>
+            <Tooltip title="导入提示，待确认">
+              <Button>
+                <FormattedMessage id="Import" />
+              </Button>
+            </Tooltip>
           </Upload>
-          <Button onClick={() => download(`xxx.json`, '')}><FormattedMessage id='export'/></Button>
+          <Tooltip title="导出提示，待确认">
+            <Button onClick={() => download(`xxx.json`, '')}>
+              <FormattedMessage id="Export" />
+            </Button>
+          </Tooltip>
         </Space>
       ) : null}
     </div>
   );
   /** 切换 node/edge */
-  const nodeEdgeChange:(val:string)=>void = (val) => {
+  const nodeEdgeChange = (val: SegmentedValue) => {
     updateStore(draft => {
       draft.currentType = val == 'node' ? 'node' : 'edge';
     });
@@ -149,7 +126,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
   };
   return (
     <Row style={{ marginTop: '16px' }}>
-      <Col span={14}>
+      <Col span={16}>
         <div
           style={{
             backgroundColor: '#fff',
@@ -158,9 +135,17 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
           }}
         >
           <Card
-            bodyStyle={{ height: '65vh' }}
-            title={<Segmented options={[{label:<FormattedMessage id='node-type'/>, value:'node'},{label:<FormattedMessage id='edge-type'/>,value:'edge'}]} onChange={e => nodeEdgeChange(e)} />}
-            extra={<>{(currentType == 'node' ? nodeList.length : edgeList.length) >0 ? <AddLabel /> : null}</>}
+            bodyStyle={{ paddingLeft: '0px',marginBottom:'18px', height:'500px' }}
+            title={
+              <Segmented
+                options={[
+                  { label: <FormattedMessage id="Node labels" />, value: 'node' },
+                  { label: <FormattedMessage id="Edge Labels" />, value: 'edge' },
+                ]}
+                onChange={(value: SegmentedValue) => nodeEdgeChange(value)}
+              />
+            }
+            extra={<>{(currentType == 'node' ? nodeList.length : edgeList.length) > 0 ? <AddLabel /> : null}</>}
           >
             <div>
               <div style={{ display: currentType == 'node' ? '' : 'none' }}>
@@ -168,6 +153,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
                   <AddLabel />
                 ) : (
                   <Tabs
+                    style={{height:'500px',marginBottom:'12px'}}
                     tabBarStyle={{ borderLeft: 0 }}
                     tabPosition="left"
                     items={[...cloneDeep(nodeList)]}
@@ -181,6 +167,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
                   <AddLabel />
                 ) : (
                   <Tabs
+                    style={{height:'500px',marginBottom:'12px'}}
                     tabBarStyle={{ borderLeft: 0 }}
                     tabPosition="left"
                     items={[...cloneDeep(edgeList)]}
@@ -193,8 +180,8 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
           </Card>
         </div>
       </Col>
-      <Col span={10}>
-        <Card title={<FormattedMessage id='graph-model'/>} extra={GraphViewTitle}>
+      <Col span={8}>
+        <Card bodyStyle={{padding:'0px',height:'500px',marginBottom:'18px', overflow:'hidden'}} title={<FormattedMessage id="Graph Model" />} extra={GraphViewTitle}>
           <GraphInsight />
         </Card>
       </Col>

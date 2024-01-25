@@ -20,8 +20,8 @@ const AddLabel: FunctionComponent = () => {
       const node = [
         ...nodeList,
         {
-          label: 'undefine',
-          children: <Schema newActiveKey={newActiveKey} deleteNode={deleteLabel} />,
+          label: <div key={newActiveKey} style={{ width: '56px', overflow: 'hidden' }}>undefine</div>,
+          children: <Schema newActiveKey={newActiveKey}/>,
           key: newActiveKey,
         },
       ];
@@ -34,8 +34,8 @@ const AddLabel: FunctionComponent = () => {
       const node = [
         ...edgeList,
         {
-          label: 'undefine',
-          children: <Schema newActiveKey={newActiveKey} deleteNode={deleteLabel} />,
+          label: <div key={newActiveKey} style={{ width: '56px', overflow: 'hidden' }}>undefine</div>,
+          children: <Schema newActiveKey={newActiveKey}/>,
           key: newActiveKey,
         },
       ];
@@ -81,14 +81,14 @@ const AddLabel: FunctionComponent = () => {
   return (
     <>
       {(currentType == 'node' ? nodeList.length : edgeList.length) == 0 ? (
-        <Button disabled={detail} style={{ width: '100%', color: '#1650ff' }} type="dashed" onClick={addLabel}>
-          <PlusOutlined /> {currentType == 'node' ? <FormattedMessage id='add-node'/> : <FormattedMessage id='add-edge'/> }
+        <Button disabled={detail} style={{ width: '100%',marginLeft:'12px'}} type="dashed" onClick={addLabel} icon={<PlusOutlined /> }>
+          {currentType == 'node' ? <FormattedMessage id='Add Node'/> : <FormattedMessage id='Add Edge'/> }
         </Button>
       ) : (
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Space>
-            <Button onClick={addLabel} disabled={detail}>
-            <PlusOutlined /> {currentType == 'node' ? <FormattedMessage id='add-node'/> : <FormattedMessage id='add-edge'/> }
+            <Button onClick={addLabel} disabled={detail} icon={<PlusOutlined />}>
+              {currentType == 'node' ? <FormattedMessage id='Add Node'/> : <FormattedMessage id='Add Edge'/> }
             </Button>
             <Button
               icon={<IconFont type="icon-delete1" />}

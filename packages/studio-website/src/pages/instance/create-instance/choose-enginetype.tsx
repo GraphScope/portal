@@ -14,7 +14,9 @@ type Istate = {
   chooseGraphInstanceList: { key: string; name: string; content: string }[];
   isHover:string;
 };
-type ChooseEnginetypeProps = {};
+type ChooseEnginetypeProps = {
+  form:any;
+};
 const arr = [
   { key: uuidv4(), name: 'instance', content: '引擎介绍' },
   { key: uuidv4(), name: 'instance', content: '引擎介绍' },
@@ -22,8 +24,9 @@ const arr = [
   { key: uuidv4(), name: 'instance', content: '引擎介绍' },
   { key: uuidv4(), name: 'instance', content: '引擎介绍' },
 ];
-const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = () => {
-  const [form] = Form.useForm();
+const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = (props) => {
+  // const [form] = Form.useForm();
+  const {form} =props
   const { token } = useToken();
   const [state, updateState] = useState<Istate>({
     isChecked: '',
@@ -62,18 +65,18 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = () => {
   return (
     <Form name="basic" form={form} layout="vertical" style={{ marginTop: '24px' }}>
       <Form.Item<FieldType>
-        label={<FormattedMessage id='input-name'/>}
+        label={<FormattedMessage id='Input Name'/>}
         name="inputname"
         tooltip=" "
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 8 }}
         rules={[{ required: true, message: '' }]}
       >
-        <Input />
+        <Input placeholder='Please Enter Input Name.'/>
       </Form.Item>
 
       <Form.Item<FieldType>
-        label={<FormattedMessage id='choose-engine-type'/>}
+        label={<FormattedMessage id='Choose Engine Type'/>}
         name="type"
         tooltip=" "
         rules={[{ required: true, message: '' }]}
@@ -118,7 +121,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = () => {
         </Row>
       </Form.Item>
       <Form.Item<FieldType>
-        label={<FormattedMessage id='directed'/>}
+        label={<FormattedMessage id='Directed'/>}
         name="directed"
         tooltip=" "
         labelCol={{ span: 8 }}

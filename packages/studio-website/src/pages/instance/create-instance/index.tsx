@@ -1,19 +1,32 @@
 import React, { memo, useEffect } from 'react';
 import { history } from 'umi';
-import { Button, message, Steps, theme, Alert, Breadcrumb } from 'antd';
+import { Button, message, Steps, Alert, Breadcrumb, Form } from 'antd';
 import { useContext } from '../create-instance/useContext';
 import ChooseEnginetype from './choose-enginetype';
 import CreateSchema from '../create-instance/create-schema';
 import Result from './result';
+import ResultFailed from './result/result-failed';
+import ResultSuccess from './result/result-success';
 import { FormattedMessage } from 'react-intl';
-const steps = [{ title: <FormattedMessage id='choose-engine-type'/> }, { title: <FormattedMessage id='create-schema'/> }, { title: <FormattedMessage id='result'/> }];
+import { values } from 'lodash';
+const steps = [
+  { title: <FormattedMessage id="Choose Engine Type" /> },
+  { title: <FormattedMessage id="Create Schema" /> },
+  { title: <FormattedMessage id="Preview" /> },
+  { title: <FormattedMessage id="Result" /> },
+];
 const Lists: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
-  const { isAlert, currentStep } = store;
+  const { isAlert, currentStep, createInstaseResult } = store;
+  const [form] = Form.useForm();
   const next = () => {
-    updateStore(async draft => {
-      draft.currentStep = currentStep + 1;
-    });
+    if (form.getFieldsValue().inputname) {
+      updateStore(draft => {
+        draft.currentStep = currentStep + 1;
+      });
+    }else{
+      form.validateFields()
+    }
   };
 
   const prev = () => {
@@ -38,29 +51,41 @@ const Lists: React.FunctionComponent = () => {
       });
     };
   }, []);
+
   return (
     <>
       <Breadcrumb
         items={[
           {
-            title: <a href="/instance"><FormattedMessage id='navbar.graphs'/></a>,
+            title: (
+              <a href="/instance">
+                <FormattedMessage id="navbar.graphs" />
+              </a>
+            ),
           },
           {
-            title: <a href="/instance/create"><FormattedMessage id='create-instance'/></a>,
+            title: (
+              <a href="/instance/create">
+                <FormattedMessage id="Create Instance" />
+              </a>
+            ),
           },
         ]}
       />
-      <div style={{ backgroundColor: '#fff', padding: '16px', marginTop: '12px' }}>
+      <div style={{ padding: '16px', marginTop: '12px' }}>
         <Steps current={currentStep} items={items} />
         <div>
           <div style={currentStep === 0 ? activeItemStyle : itemStyle}>
-            <ChooseEnginetype />
+            <ChooseEnginetype form={form} />
           </div>
           <div style={currentStep === 1 ? activeItemStyle : itemStyle}>
             <CreateSchema />
           </div>
           <div style={currentStep === 2 ? activeItemStyle : itemStyle}>
             <Result />
+          </div>
+          <div style={currentStep === 3 ? activeItemStyle : itemStyle}>
+            {createInstaseResult ? <ResultSuccess /> : <ResultFailed />}
           </div>
         </div>
         <div>
@@ -75,24 +100,41 @@ const Lists: React.FunctionComponent = () => {
           ) : (
             <div style={{ marginTop: 24 }}>
               {currentStep > 0 && (
-                <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
-                  <FormattedMessage id='previous'/>
-                </Button>
+                <>
+                  {createInstaseResult ? null : (
+                    <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+                      <FormattedMessage id="Previous" />
+                    </Button>
+                  )}
+                </>
               )}
               {currentStep < steps.length - 1 && (
                 <Button type="primary" onClick={() => next()}>
-                  <FormattedMessage id='next'/>
+                  <FormattedMessage id="Next" />
                 </Button>
               )}
               {currentStep === steps.length - 1 && (
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    message.success('Processing complete!').then(()=>history.push('/instance')) ;
-                  }}
-                >
-                  <FormattedMessage id='confirm-create'/>
-                </Button>
+                <>
+                  {currentStep == 3 ? (
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        history.push('/instance');
+                      }}
+                    >
+                      <FormattedMessage id="Done" />
+                    </Button>
+                  ) : (
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        message.success('Processing complete!');
+                      }}
+                    >
+                      <FormattedMessage id="Confirm Create" />
+                    </Button>
+                  )}
+                </>
               )}
             </div>
           )}

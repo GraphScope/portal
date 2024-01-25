@@ -5,12 +5,12 @@ import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 export type IStore<T> = T & {
   [x:string]:any;
   nodeList: {
-    label: string;
+    label: JSX.Element;
     children: any;
     key: string;
   }[];
   edgeList: {
-    label: string;
+    label: JSX.Element;
     children: any;
     key: string;
   }[];
@@ -37,6 +37,8 @@ export type IStore<T> = T & {
   /** result view */
   checked:'table' | 'json' | 'graph';
   currentStep:number;
+  /** 实例创建是否成功 */
+  createInstaseResult:true | false;
 };
 export const initialStore: IStore<{}> = {
   nodeList: [], 
@@ -51,7 +53,8 @@ export const initialStore: IStore<{}> = {
   edgeItems: {},
   detail:false, 
   checked:'table',
-  currentStep:0
+  currentStep:0,
+  createInstaseResult:false
 };
 
 type ContextType<T> = {

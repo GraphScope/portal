@@ -14,24 +14,24 @@ const TableList: React.FunctionComponent<IImportDataProps> = props => {
   const {data}=props
   const columns: DataType[] = [
     {
-      title: <FormattedMessage id='label-name'/>,
+      title: <FormattedMessage id='label_name'/>,
       key: 'label_name',
       render:(record)=>{
         return <>{record?.type && (record?.type == 'Node' ? <Tag color='magenta'>{record?.type}</Tag>:<Tag color='green'>{record?.type}</Tag>)}{record?.label_name}</>
       }
     },
     {
-      title: <FormattedMessage id='property-name'/>,
+      title: <FormattedMessage id='property_name'/>,
       dataIndex: 'property_name',
       key: 'property_name',
     },
     {
-      title: <FormattedMessage id='property-type'/>,
+      title: <FormattedMessage id='property_type'/>,
       dataIndex: 'property_type',
       key: 'property_type',
     },
     {
-      title: <FormattedMessage id='property-keys'/>,
+      title: <FormattedMessage id='property_keys'/>,
       dataIndex: 'primary_keys',
       key: 'primary_keys',
     },
