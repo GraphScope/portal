@@ -67,6 +67,7 @@ export type MapConfigParamsType = {
     dataSource:any;
     mapFromFileConfirm:()=>void;
     handleSelectRow?:(selectedRowKeys:any)=>void;
+    locales:{properties:React.ReactNode;addProperty:React.ReactNode;mapFromFile:React.ReactNode;}
   };
 };
 export type PropertyConfigParamsType = {

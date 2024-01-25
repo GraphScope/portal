@@ -25,13 +25,13 @@ const Editor: FunctionComponent<MapConfigParamsType & PropertyConfigParamsType> 
   return (
     <>
       <Flex justify={'space-between'}>
-        <h4>Properties</h4>
+        <h4>{mapConfigParams.locales.properties}</h4>
         <>
           {propertyConfigParams?.selectedRows.length == 0 ? (
             <Space>
               <Tooltip title="Add property">
                 <Button icon={<PlusOutlined />} block onClick={() => propertyConfigParams?.addNodeConfig()}>
-                  Add property
+                {mapConfigParams.locales.addProperty}
                 </Button>
               </Tooltip>
               {propertyConfigParams?.isMapFromFile ? (
@@ -40,7 +40,7 @@ const Editor: FunctionComponent<MapConfigParamsType & PropertyConfigParamsType> 
                   title={() => {
                     return (
                       <div style={{ width: '350px', padding: '0 12px' }}>
-                        <span>Map from file</span>
+                        <span>{mapConfigParams.locales.mapFromFile}</span>
                         <Checkbox
                           indeterminate={
                             mapConfigParams?.selectedMapRowKeys.length > 0 &&
