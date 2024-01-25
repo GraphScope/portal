@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import {
-  AppstoreOutlined,
-  MailOutlined,
-  SettingOutlined,
   DesktopOutlined,
   FileSearchOutlined,
   DashboardOutlined,
@@ -18,7 +15,7 @@ import { history, useLocation } from 'umi';
 import { FormattedMessage } from 'react-intl';
 
 import { useContext } from './useContext';
-import Logo from './logo';
+import Logo from '@/components/logo';
 
 interface ISidebarProps {}
 
@@ -88,7 +85,7 @@ const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <Logo></Logo>
+      <Logo style={{}} onlyIcon={collapse}></Logo>
       <div
         style={{
           flex: 1,

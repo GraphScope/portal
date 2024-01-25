@@ -19,10 +19,9 @@ const Setting: React.FunctionComponent<ISettingProps> = props => {
             title: 'Setting',
           },
         ]}
-        title="navbar.setting"
-        desc="Listing all setting on the website"
+        title="Appearance Setting"
+        desc="Change how Untitled UI looks and feels in your browser"
       >
-        WIP
         <div>
           <ColorPicker
             showText

@@ -47,6 +47,8 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
             width: collapse ? `${CollapsedWidth}px` : `${SideWidth}px`,
             transition: 'all 0.3s ease',
             boxSizing: 'border-box',
+            overflow: 'hidden',
+
             // border: '1px solid #ddd',
           }}
         >
@@ -67,7 +69,6 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
               boxSizing: 'border-box',
               flex: 1,
               overflowY: 'scroll',
-              padding: '12px 24px',
               background: '#fff',
               borderRadius: '12px',
             }}
@@ -75,7 +76,6 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
           >
             {content}
           </div>
-
           <div
             className="gs-footer"
             style={{
