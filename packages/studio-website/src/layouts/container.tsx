@@ -35,7 +35,6 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
           transition: 'all 0.3s ease',
           height: '100%',
           margin: 'auto',
-          //   background: '#f5f7f9',
           display: 'flex',
           padding: '24px',
           // border: '1px solid #ddd',
@@ -70,7 +69,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
               overflowY: 'scroll',
               padding: '12px 24px',
               background: '#fff',
-              borderRadius: '8px',
+              borderRadius: '12px',
             }}
             className="gs-content"
           >

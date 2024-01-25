@@ -30,7 +30,7 @@ const graphs = [
 
 const InstanceCard: React.FC = () => {
   const [form] = Form.useForm();
-  const [state, updateState] = useState<{ isReady?: boolean; instanceList?: InstaceCardType[] }>({
+  const [state, updateState] = useState<{ isReady: boolean; instanceList: InstaceCardType[] }>({
     instanceList: [],
     isReady: false,
   });
@@ -70,48 +70,15 @@ const InstanceCard: React.FC = () => {
       desc="Listing all graphs on the cluster"
     >
       <Row gutter={[12, 12]}>
-        {instanceList &&
-          instanceList.map((item, i) => (
-            <Col key={i} span={12}>
-              <InstaceCard
-                key={i}
-                {...item}
-                routes={
-                  <>
-                    <Button style={{ width: '150px' }} icon={<DeploymentUnitOutlined />}>
-                      Define Schema
-                    </Button>
-                    <Button
-                      style={{ width: '150px' }}
-                      icon={<DeploymentUnitOutlined />}
-                      // onClick={() => history.push('/instance/import-data')}
-                    >
-                      Import Data
-                    </Button>
-                    <Button
-                      style={{ width: '150px' }}
-                      icon={<SearchOutlined />}
-                      onClick={() => history.push(`/query?graph=movie`)}
-                    >
-                      Query Graph
-                    </Button>
-                  </>
-                }
-                actions={
-                  <>
-                    <Space>
-                      <Button type="text" icon={<PlayCircleOutlined />} />
-                      <Button type="text" icon={<DeleteOutlined />} />
-                    </Space>
-                  </>
-                }
-              />
-            </Col>
-          ))}
+        {instanceList.map((item, i) => (
+          <Col key={i} span={12}>
+            <InstaceCard key={i} {...item} />
+          </Col>
+        ))}
         {!isReady && (
           <Col span={12}>
             <Card title={'Loading graph'} style={{ background: '#FCFCFC' }}>
-              <div style={{ display: 'flex', height: '185px', justifyContent: 'center', alignContent: 'center' }}>
+              <div style={{ display: 'flex', height: '164px', justifyContent: 'center', alignContent: 'center' }}>
                 <Skeleton />
               </div>
             </Card>
@@ -119,7 +86,7 @@ const InstanceCard: React.FC = () => {
         )}
         <Col span={12}>
           <Card title={'New Graph'} style={{ background: '#FCFCFC' }} bodyStyle={{ width: '100%' }}>
-            <div style={{ display: 'flex', height: '185px', justifyContent: 'center', alignContent: 'center' }}>
+            <div style={{ display: 'flex', height: '164px', justifyContent: 'center', alignContent: 'center' }}>
               <PlusOutlined style={{ fontSize: '80px', color: 'gray' }} />
             </div>
           </Card>
