@@ -3,6 +3,7 @@ import { Row, Col, Segmented, Collapse, Flex, Button, Divider, Card, Space, Tool
 import { createFromIconfontCN } from '@ant-design/icons';
 import { SegmentedValue } from 'antd/es/segmented';
 import GraphInsight from '../create-instance/create-schema/graph-view';
+import DataSource from './data-sources'
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_slis0xqmzfo.js',
 });
@@ -13,9 +14,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   const genExtra: () => React.ReactNode = () => {
     return (
       <div>
-        {/* <IconFont type="icon-baocun" /> */}
         <IconFont type="icon-bangding" />
-        {/* <IconFont type="icon-ziyuan" /> */}
         <IconFont type="icon-jiechubangding" />
       </div>
     );
@@ -26,7 +25,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       value: 'nodesource',
     },
     {
-      label: '边数据源绑定（0/2）',
+      label: '边数据源绑定（0/1）',
       value: 'edgesource',
     },
   ];
@@ -42,12 +41,12 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         <Divider style={{ margin: '12px 0px' }} />
         <Collapse>
           <Panel key={'1'} header={<>label:{'user'}</>} extra={genExtra()}>
-            test
+            <DataSource/>
           </Panel>
         </Collapse>
       </Col>
       <Col span={8}>
-        <Flex gap="middle" justify="space-between">
+        <Flex gap="middle" justify="space-between" align='center'>
           <>预览</>
           <Space>
             <Tooltip placement="topRight" title="导入「数据导入」的配置文件">
