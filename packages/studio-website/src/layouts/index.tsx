@@ -29,6 +29,10 @@ export default function Layout() {
               iconSize: 14,
               collapsedWidth: 60,
             },
+            Typography: {
+              titleMarginBottom: '0.2em',
+              titleMarginTop: '0.8em',
+            },
           },
           token: {
             borderRadius: 8,
