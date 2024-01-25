@@ -1,4 +1,4 @@
-import React, { useEffect, useRef ,memo} from 'react';
+import React, { useEffect, useRef , useCallback} from 'react';
 import { Form, Input, Select, Button } from 'antd';
 import { PropertiesEditor } from '@graphscope/studio-importor';
 import { cloneDeep } from 'lodash';
@@ -42,7 +42,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
     }
   }, []);
   /** 创建点、边时值的监控 */
-  const formChange = () => {
+  const formChange = useCallback(() => {
     if (currentType == 'node') {
       const getData: IFormType = cloneDeep(nodeItems);
       const { label } = form.getFieldsValue();
@@ -63,10 +63,10 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
         draft.edgeItems = getData;
       });
     }
-  };  
+  },[]);  
   return (
     <div>
-      <Form key={newActiveKey} form={form} layout="vertical" onValuesChange={() => formChange()}>
+      <Form form={form} layout="vertical" onValuesChange={() => formChange()}>
         <div style={{ position: 'relative' }}>
           <Form.Item<FieldType>
             label={currentType == 'node' ? <FormattedMessage id='Node Label'/> : <FormattedMessage id='Edge Label'/>}
@@ -123,4 +123,4 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   );
 };
 
-export default memo(CreateSchema);
+export default CreateSchema;

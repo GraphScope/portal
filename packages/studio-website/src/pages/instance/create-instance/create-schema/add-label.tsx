@@ -20,7 +20,7 @@ const AddLabel: FunctionComponent = () => {
       const node = [
         ...nodeList,
         {
-          label: <div key={newActiveKey} style={{ width: '56px', overflow: 'hidden' }}>undefine</div>,
+          label: <div style={{ width: '56px', overflow: 'hidden' }}>undefine</div>,
           children: <Schema newActiveKey={newActiveKey}/>,
           key: newActiveKey,
         },
@@ -34,7 +34,7 @@ const AddLabel: FunctionComponent = () => {
       const node = [
         ...edgeList,
         {
-          label: <div key={newActiveKey} style={{ width: '56px', overflow: 'hidden' }}>undefine</div>,
+          label: <div style={{ width: '56px', overflow: 'hidden' }}>undefine</div>,
           children: <Schema newActiveKey={newActiveKey}/>,
           key: newActiveKey,
         },
