@@ -54,7 +54,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   ];
   return (
     <Card
-      headStyle={{ fontSize: '20px' }}
+      headStyle={{ fontSize: '30px' }}
       title={name}
       style={{ background: '#FCFCFC' }}
       extra={

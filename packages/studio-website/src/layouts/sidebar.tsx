@@ -90,11 +90,13 @@ const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
         style={{
           flex: 1,
           width: `${SideWidth}px`,
-          padding: '0px 0px',
+          padding: '16px 0px',
           boxSizing: 'border-box',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
+          fontSize: '16px',
+          fontWeight: '600',
         }}
       >
         <Menu
