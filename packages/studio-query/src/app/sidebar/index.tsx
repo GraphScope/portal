@@ -58,6 +58,9 @@ const styles: Record<string, React.CSSProperties> = {
   },
   content: {},
 };
+
+const collapsedWidth = 50;
+const width = 300;
 const Sidebar: React.FunctionComponent<SidebarProps> = props => {
   const { options, collapse, onChange, title, onBack } = props;
   const { searchParams, path } = getSearchParams(window.location);
@@ -69,12 +72,8 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
   return (
     <div
       style={{
-        position: 'absolute',
-        top: '0px',
-        bottom: '0px',
-        width: collapse ? '49px' : '299px',
+        width: collapse ? `${collapsedWidth}px` : `${width}px`,
         transition: 'width ease 0.3s',
-        borderRight: '1px solid #ddd',
       }}
     >
       <div style={styles.header}>

@@ -98,14 +98,12 @@ const QueryModule: React.FunctionComponent<IQueryModuleProps> = props => {
       });
   }, []);
   return (
-    <div>
-      <StudioQuery
-        {...services}
-        onBack={() => {
-          history.push('/instance');
-        }}
-      />
-    </div>
+    <StudioQuery
+      {...services}
+      onBack={() => {
+        history.push('/instance');
+      }}
+    />
   );
 };
 

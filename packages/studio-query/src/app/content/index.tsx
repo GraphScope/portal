@@ -26,7 +26,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
   const statementStyles =
     mode === 'tabs'
       ? ({
-          position: 'absolute',
+          // position: 'absolute',
           top: '',
         } as React.CSSProperties)
       : ({} as React.CSSProperties);
@@ -74,7 +74,14 @@ const Content: React.FunctionComponent<IContentProps> = props => {
   };
   const isEmpty = statements.length === 0;
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#f5f6f6' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        background: '#f5f6f6',
+      }}
+    >
       <div style={{ minHeight: '50px', background: '#fff', padding: '0px 12px', borderBottom: '1px solid #ddd' }}>
         <Header />
         {mode === 'tabs' && queryOptions.length !== 0 && (
@@ -88,7 +95,8 @@ const Content: React.FunctionComponent<IContentProps> = props => {
         {isEmpty && (
           <div style={styles.empty}>
             <Empty
-              imageStyle={{ width: '80vw', height: '100%' }}
+              // imageStyle={{ width: '80vw', height: '100%' }}
+              imageStyle={{ width: '300px' }}
               image="https://img.alicdn.com/imgextra/i3/O1CN01ioBjPd24ALzvMY66U_!!6000000007350-55-tps-915-866.svg"
               description={<div style={styles.empty}>please input your statements and query graph data</div>}
             />
