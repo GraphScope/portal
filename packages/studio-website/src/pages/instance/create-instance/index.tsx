@@ -15,7 +15,7 @@ const steps = [
   { title: <FormattedMessage id="Preview" /> },
   { title: <FormattedMessage id="Result" /> },
 ];
-const Lists: React.FunctionComponent = () => {
+const CreateInstance: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { isAlert, currentStep, createInstaseResult } = store;
   const [form] = Form.useForm();
@@ -24,8 +24,8 @@ const Lists: React.FunctionComponent = () => {
       updateStore(draft => {
         draft.currentStep = currentStep + 1;
       });
-    }else{
-      form.validateFields()
+    } else {
+      form.validateFields();
     }
   };
 
@@ -98,7 +98,7 @@ const Lists: React.FunctionComponent = () => {
               style={{ margin: '16px 0' }}
             />
           ) : (
-            <div style={{ marginTop: 24 }}>
+            <div style={{ position: 'absolute', bottom: '12px', left: '24px' }}>
               {currentStep > 0 && (
                 <>
                   {createInstaseResult ? null : (
@@ -144,4 +144,4 @@ const Lists: React.FunctionComponent = () => {
   );
 };
 
-export default memo(Lists);
+export default memo(CreateInstance);
