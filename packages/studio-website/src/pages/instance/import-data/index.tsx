@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Row, Col, Segmented, Flex, Button, Divider, Card, Space, Tooltip, Typography } from 'antd';
 import { SegmentedValue } from 'antd/es/segmented';
+import GraphInsight from '../create-instance/create-schema/graph-view';
 import DataSource from './data-sources';
 interface IImportDataProps {}
 const { Text } = Typography;
@@ -26,11 +27,12 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           </Tooltip>
         </Flex>
         <Divider style={{ margin: '12px 0px' }} />
-        <DataSource/>
+        {/* 遍历需要绑定的数据源 */}
+        <DataSource />
       </Col>
       <Col span={8}>
         <Flex gap="middle" justify="space-between" align="center">
-          <Text type="secondary">预览</Text>
+          <Text type='secondary'>预览</Text>
           <Space>
             <Tooltip placement="topRight" title="导入「数据导入」的配置文件">
               <Button>导入配置</Button>
@@ -41,7 +43,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           </Space>
         </Flex>
         <Card style={{ marginTop: '24px', border: '1px dashed #000', borderRadius: '0px' }}>
-          GraphInsight
+          <GraphInsight children={<Text type='secondary' style={{ display:'block',textAlign:'center', margin: '0px' }}>目前绑定了 1 条边，2个点</Text>} />
         </Card>
       </Col>
     </Row>
