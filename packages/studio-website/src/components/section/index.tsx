@@ -19,12 +19,12 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
     <section style={{ display: 'flex', flexDirection: 'column' }}>
       <div style={style}>
         <Breadcrumb items={breadcrumb} />
-        <Typography.Title level={2}>
+        <Typography.Title level={1} style={{ fontSize: 40 }}>
           <FormattedMessage id={title} />
         </Typography.Title>
-        <Typography.Text type="secondary">
+        <Typography.Title type="secondary" level={4} style={{ fontWeight: 300 }}>
           <FormattedMessage id={desc} />
-        </Typography.Text>
+        </Typography.Title>
       </div>
       <Divider />
       <div style={style}>{children}</div>
