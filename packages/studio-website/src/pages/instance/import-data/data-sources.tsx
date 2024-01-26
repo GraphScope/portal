@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createFromIconfontCN } from '@ant-design/icons';
-import { Form, Input, Button, Table, InputNumber, Select, Checkbox, Flex, Row, Col, Space } from 'antd';
+import { Form, Input, Button, Table, InputNumber, Select, Checkbox, Flex, Row, Col, Space, Upload } from 'antd';
+import UploadFiles from './upload-file';
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_slis0xqmzfo.js',
 });
@@ -11,8 +12,9 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const [form] = Form.useForm();
   const [state, updateState] = React.useState({
     isEidtProperty: false,
+    sourceType: 'ODPS',
   });
-  const { isEidtProperty } = state;
+  const { isEidtProperty, sourceType } = state;
   const CheckboxComponent = (field: any) => {
     return (
       <Checkbox
@@ -111,12 +113,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       },
     ];
   };
-  const selectBefore = (
-    <Select defaultValue="ODPS">
-      <Option value="Files">Files</Option>
-      <Option value="ODPS">ODPS</Option>
-    </Select>
-  );
+
   const inputFocus = () => {
     updateState(preState => {
       return {
@@ -126,6 +123,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     });
   };
   const saveBind = () => {
+    console.log(form.getFieldsValue());
     updateState(preState => {
       return {
         ...preState,
@@ -133,30 +131,66 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       };
     });
   };
+  const selsctSource = (val: string) => {
+    updateState(preState => {
+      return {
+        ...preState,
+        sourceType: val,
+      };
+    });
+  };
+
   return (
     <Form
       className="table-edit-form"
       form={form}
-      labelCol={{ flex: '80px' }}
+      labelCol={{ flex: '100px' }}
       labelAlign="right"
       wrapperCol={{ flex: 1 }}
-      style={{ border: '1px solid #000',margin:'0px 24px' }}
+      style={{ border: '1px solid #000', margin: '0px 24px' }}
     >
       <Row style={{ borderBottom: '1px solid #000' }}>
         <Col span={18} style={{ paddingTop: '12px' }}>
-          <Form.Item label="label" name="label" style={{ margin: '10px' }}>
+          <Form.Item label="label" name="label" style={{ margin: '10px 10px 10px 0px' }}>
             <Input style={{ border: '0px', backgroundColor: '#fff' }} disabled />
           </Form.Item>
-          <Form.Item label="数据源" name="location">
-            <Input addonBefore={selectBefore} placeholder="graphscope/modern_graph/user.csv" onFocus={inputFocus} />
+          <Form.Item label="数据源" style={{ margin: '0px' }}>
+            <Flex justify="flex-start">
+              <Form.Item name="select">
+                <Select defaultValue="ODPS" onChange={selsctSource}>
+                  <Option value="Files">Files</Option>
+                  <Option value="ODPS">ODPS</Option>
+                </Select>
+              </Form.Item>
+              <Form.Item name="location">
+                {sourceType == 'ODPS' ? (
+                  <Input placeholder="graphscope/modern_graph/user.csv" onFocus={inputFocus} />
+                ) : (
+                  <UploadFiles
+                    onChange={(val) => {
+                      updateState(preState => {
+                        return {
+                          ...preState,
+                          isEidtProperty: val,
+                        };
+                      });
+                    }}
+                  />
+                )}
+              </Form.Item>
+            </Flex>
           </Form.Item>
         </Col>
         <Col span={6} style={{ display: 'flex', justifyContent: 'end', alignItems: 'center', paddingRight: '16px' }}>
-          <IconFont type="icon-jiechubangding" style={{ fontSize: '50px' }} />
+          {isEidtProperty ? (
+            <IconFont type="icon-bangding" style={{ fontSize: '50px' }} />
+          ) : (
+            <IconFont type="icon-jiechubangding" style={{ fontSize: '50px' }} />
+          )}
         </Col>
       </Row>
       {isEidtProperty ? (
-        <Row style={{ padding: '0 24px 24px', marginTop: '12px' }}>
+        <Row style={{ padding: '0 24px 24px 0px', marginTop: '12px' }}>
           <Col span={24}>
             <Form.Item label="属性映射" rules={[{ required: true, message: 'Please input Source Label!' }]}>
               <Form.List name="propertyMapping">
@@ -172,15 +206,15 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
             </Form.Item>
             <Flex justify="end">
               <Space>
-                <Button type="primary" onClick={saveBind}>
+                {/* <Button type="primary" onClick={saveBind}>
                   周期导入
                 </Button>
                 <Button type="primary" onClick={saveBind}>
                   立即导入
-                </Button>
-                {/* <Button type="primary" onClick={saveBind}>
-                  保存绑定
                 </Button> */}
+                <Button type="primary" onClick={saveBind}>
+                  保存绑定
+                </Button>
               </Space>
             </Flex>
           </Col>
