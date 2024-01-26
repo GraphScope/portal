@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Row, Col, Segmented, Flex, Button, Divider, Card, Space, Tooltip, Typography } from 'antd';
 import { SegmentedValue } from 'antd/es/segmented';
-import GraphInsight from '../create-instance/create-schema/graph-view';
+import DataSource from './data-sources';
 interface IImportDataProps {}
 const { Text } = Typography;
 const ImportData: React.FunctionComponent<IImportDataProps> = props => {
@@ -26,7 +26,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           </Tooltip>
         </Flex>
         <Divider style={{ margin: '12px 0px' }} />
-        <>数据源</>
+        <DataSource/>
       </Col>
       <Col span={8}>
         <Flex gap="middle" justify="space-between" align="center">
