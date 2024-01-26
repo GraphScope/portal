@@ -92,7 +92,6 @@ const InstanceCard: React.FC = () => {
             instanceList.map((item, i) => (
               <Col key={i}>
                 <InstaceCard
-                  key={i}
                   {...item}
                   routes={
                     <>

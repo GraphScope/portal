@@ -1,8 +1,8 @@
 import React from 'react';
-import { Flex, Card, Tag, message } from 'antd';
+import { Flex, Card, Tag, message, Typography } from 'antd';
 import copy from 'copy-to-clipboard';
 import { createFromIconfontCN, CopyOutlined } from '@ant-design/icons';
-
+const { Paragraph, Text } = Typography;
 export type InstaceCardType = {
   /** graph name */
   name: string;
@@ -41,18 +41,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
             <p style={styles}>Last data import: {importtime}</p>
             <br />
             <p style={styles}>Created on：{createtime}</p>
-            <p style={styles}>
-              Server from: {server}
-              <CopyOutlined
-                onClick={e => {
-                  e.stopPropagation();
-                  copy(server);
-                  message.success('复制成功');
-                }}
-                type="icon-fuzhi1"
-                style={{ marginLeft: '8px', fontSize: '16px', color: '#1577FE' }}
-              />
-            </p>
+            <p style={styles}> Server from: <Paragraph copyable>{server}</Paragraph></p>
           </div>
         </Flex>
         <Flex gap={25} align="flex-start" vertical>
