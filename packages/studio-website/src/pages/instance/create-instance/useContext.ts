@@ -1,62 +1,79 @@
-import { IUserEdge } from "@antv/graphin";
-import { proxy, useSnapshot } from "valtio";
+import { IUserEdge } from '@antv/graphin';
+import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 
+export interface NodeSchema {
+  key: string;
+  label: string;
+  properties: any[];
+}
+export interface EdgeSchema {
+  key: string;
+  label: string;
+  source: string;
+  target: string;
+  properties: any[];
+}
 export type IStore<T> = T & {
-  [x:string]:any;
-  nodeList: {
-    label: string;
-    children: any;
-    key: string;
-  }[];
-  edgeList: {
-    label: string;
-    children: any;
-    key: string;
-  }[];
-   /** Source Node Label/Target Node Label options */
-  option:{ value: string; label: string;}[];
-  isAlert:boolean;
-  /** node or edge */
-  currentType:'node' | 'edge'; 
-  /** add node key */ 
-  nodeActiveKey:string; 
-  /** add edge key */ 
-  edgeActiveKey: string; 
+  /********* STEP 1 *************/
+  /** 引擎类型 */
+  engineType: string;
+  /** 图名称 */
+  graphName: string;
+  /********* STEP 2 *************/
+  /** 当前选择的元素类型，节点 or 边 */
+  currentType: 'node' | 'edge';
+  nodeList: NodeSchema[];
+  edgeList: EdgeSchema[];
+  /** 当前正在编辑的节点ID */
+  nodeActiveKey: string;
+  /** 当前正在编辑的边ID */
+  edgeActiveKey: string;
+
+  /** Source Node Label/Target Node Label options */
+  option: { value: string; label: string }[];
+  isAlert: boolean;
+
   /** graphIn data */
-  graphData:{
-    nodes:{ id: string; label: string; style: any }[];
-    edges: IUserEdge[]
+  graphData: {
+    nodes: { id: string; label: string; style: any }[];
+    edges: IUserEdge[];
   };
-  properties:any; 
-  /** node tabs items */ 
+  /** node tabs items */
   nodeItems: {};
-   /**edge tabs items */ 
+  /**edge tabs items */
   edgeItems: {};
-  /** Choose EngineType input value */ 
-  inputvalues:string; 
-  /** create or detail */ 
-  detail:boolean;
+  /** create or detail */
+  detail: boolean;
   /** result view */
-  checked:'table' | 'json' | 'graph';
-  currentStep:number;
+  checked: 'table' | 'json' | 'graph';
+  currentStep: number;
+  /** 实例创建是否成功 */
+  createInstaseResult: true | false;
 };
+
 export const initialStore: IStore<{}> = {
-  nodeList: [], 
+  /** 引擎类型 */
+  engineType: '',
+  /** 图名称 */
+  graphName: '',
+  /** 当前步骤 */
+  currentStep: 1,
+
+  nodeList: [],
   edgeList: [],
-  option:[],
-  isAlert:false,
-  currentType:'node',
-  nodeActiveKey:'', 
-  edgeActiveKey: '', 
-  graphData:{nodes:[],edges:[]},
-  properties:[],
+  option: [],
+  isAlert: false,
+  currentType: 'node',
+  nodeActiveKey: '',
+  edgeActiveKey: '',
+  graphData: { nodes: [], edges: [] },
   nodeItems: {},
   edgeItems: {},
-  inputvalues:'', 
-  detail:false, 
-  checked:'table',
-  currentStep:0
+  detail: false,
+  checked: 'table',
+
+  createInstaseResult: false,
 };
 
 type ContextType<T> = {

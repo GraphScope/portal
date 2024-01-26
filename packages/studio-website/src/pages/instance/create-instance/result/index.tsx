@@ -1,49 +1,102 @@
 import * as React from 'react';
-import { Tag, Segmented, Collapse, Row, Col} from 'antd';
+import { cloneDeep } from 'lodash';
+import { useContext } from '../useContext';
+import { Segmented, Tag, Card } from 'antd';
+import { FormattedMessage } from 'react-intl';
+import TableList from './table';
+import ReactJsonView from './react-json-view';
 import GraphInsight from '../create-schema/graph-view';
 interface IImportDataProps {}
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
-const items = [
-  {
-    key: '1',
-    label: 'This is panel header 1',
-    children: <p>{text}</p>,
-  },
-  {
-    key: '2',
-    label: 'This is panel header 2',
-    children: <p>{text}</p>,
-  },
-  {
-    key: '3',
-    label: 'This is panel header 3',
-    children: <p>{text}</p>,
-  },
-];
-const ImportData: React.FunctionComponent<IImportDataProps> = props => {
-  const nodeEdgeChange = (val:string) => {};
+const Result: React.FunctionComponent<IImportDataProps> = props => {
+  const { store, updateStore } = useContext();
+  const { checked, nodeList, edgeList } = store;
+
+  const handleChange = (value: any) => {
+    updateStore(draft => {
+      draft.checked = value;
+    });
+  };
+
+  let Content;
+
+  if (checked === 'table') {
+    const nodes = getTableData(nodeList, 'Node');
+    const edges = getTableData(edgeList, 'Edge');
+    Content = <TableList data={[...nodes, ...edges]} />;
+  }
+  if (checked == 'json') {
+    const node = getTableData(nodeList);
+    const edge = getTableData(edgeList);
+    Content = <ReactJsonView reactJson={{ node, edge }} />;
+  }
+  if (checked == 'graph') {
+    Content = <GraphInsight />;
+  }
+
   return (
-    <div>
-      <p>
-        恭喜你已经完成图实例的创建，图实例名称为 <Tag color="green">DEFAULT GRAPH</Tag>，类型为{' '}
-        <Tag color="green">Interactive</Tag>, 有2 种类型的点，1 种类型的边，具体信息详见
-      </p>
-      <Segmented options={['Node Label', 'Edge Label']} defaultValue="Node Label" style={{ marginBottom: '16px' }} onChange={nodeEdgeChange}/> 
-      <Row>
-        <Col span={10}>
-          <Collapse items={items} defaultActiveKey={['1']} />
-        </Col>
-        <Col span={10} push={2}>
-          <GraphInsight />
-        </Col>
-      </Row>
-      <p>如果确认下没问题的话，我们就可以去导入数据啦～</p>
+    <div style={{ margin: '16px 0px' }}>
+      <Card
+        title={
+          <p>
+            <FormattedMessage id="Instance Name" />：{'My GRAPH'}
+          </p>
+        }
+        // 'Table', 'Json', 'Graph'
+        extra={
+          <Segmented
+            options={[
+              { label: <FormattedMessage id="Table" />, value: 'table' },
+              { label: <FormattedMessage id="Json" />, value: 'json' },
+              { label: <FormattedMessage id="Graph" />, value: 'graph' },
+            ]}
+            onChange={handleChange}
+          />
+        }
+      >
+        {Content}
+      </Card>
     </div>
   );
 };
 
-export default ImportData;
+export default Result;
+
+function getTableData(items: {}, U?: string) {
+  let data: {
+    type?: string;
+    label_name: string;
+    property_name?: string;
+    property_type?: string;
+    primary_keys?: string;
+  }[] = [];
+  // console.log(items, U);
+
+  Object.values(items).map((item: any) => {
+    if (item?.properties?.length > 0) {
+      item?.properties?.map((v: { name: string; type: string; primaryKey: boolean }, i: number) => {
+        if (i == 0) {
+          data.push({
+            type: U,
+            label_name: item.label,
+            property_name: v.name,
+            property_type: v.type,
+            primary_keys: v.primaryKey ? 'true' : 'false',
+          });
+        } else {
+          data.push({
+            label_name: '',
+            property_name: v.name,
+            property_type: v.type,
+            primary_keys: v.primaryKey ? 'true' : 'false',
+          });
+        }
+      });
+    } else {
+      data.push({
+        type: U,
+        label_name: item.label,
+      });
+    }
+  });
+  return data;
+}

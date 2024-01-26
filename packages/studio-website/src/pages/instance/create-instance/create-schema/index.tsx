@@ -1,113 +1,23 @@
-import React, { useEffect } from 'react';
-import { Card, Tabs, Row, Col, Tooltip } from 'antd';
-import { cloneDeep } from 'lodash';
-import { useContext ,initialStore} from '../useContext';
+import React from 'react';
+import { Card, Tabs, Row, Col, Tooltip, Button, Space, Upload, Segmented } from 'antd';
+import { useContext } from '../useContext';
 import GraphInsight from './graph-view';
 import Schema from './schema';
 import AddLabel from './add-label';
+import { download, prop } from './utils';
+import { FormattedMessage } from 'react-intl';
+import { SegmentedValue } from 'antd/es/segmented';
+import EmptyInfo from './empty-info';
 interface ICreateInstanceProps {
   graphData?: any;
   isAlert?: boolean;
 }
 const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
   const { store, updateStore } = useContext();
-  const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, nodeItems, edgeItems } = store;
-  useEffect(() => {
-    onChange(nodeList[0]?.key);
-    updateStore(draft => {
-      Object.keys(initialStore).forEach(key=>{
-        draft[key] = initialStore[key]
-      })
-    });
-  }, []);
-  useEffect(() => {
-    const data: { [x: string]: { label: string } } = cloneDeep(nodeItems);
-    let arr: { label: any; children: JSX.Element; key: string }[] = [];
-    let nodearr: { value: string; label: string }[] = [];
-    Object.entries(data).map(key => {
-      arr.push({
-        label: (
-          <div style={{ width: '60px', overflow: 'hidden' }}>
-            <Tooltip placement="topLeft" title={key[1].label || 'undefine'}>
-              {key[1].label || 'undefine'}
-            </Tooltip>
-          </div>
-        ),
-        children: <Schema newActiveKey={key[0]} deleteNode={deleteNode} data={key[1]} />,
-        key: key[0],
-      });
-      nodearr.push({
-        value: key[1].label,
-        label: key[1].label,
-      });
-    });
-    updateStore(draft => {
-      draft.option = nodearr;
-      draft.nodeList = arr;
-    });
-  }, [nodeItems]);
-  useEffect(() => {
-    const data: { [x: string]: { label: string } } = cloneDeep(edgeItems);
-    let arr: { label: any; children: JSX.Element; key: string }[] = [];
-    Object.entries(data).map(key => {
-      arr.push({
-        label: (
-          <div style={{ width: '60px', overflow: 'hidden' }}>
-            <Tooltip placement="topLeft" title={key[1].label || 'undefine'}>
-              {key[1].label || 'undefine'}
-            </Tooltip>
-          </div>
-        ),
-        children: <Schema newActiveKey={key[0]} deleteNode={deleteNode} data={key[1]} />,
-        key: key[0],
-      });
-    });
-    const nodedata: { [x: string]: { label: string } } = cloneDeep(nodeItems);
-    let nodearr: { value: any; label: any }[] = [];
-    Object.entries(nodedata).map(key => {
-      nodearr.push({
-        value: key[1].label,
-        label: key[1].label,
-      });
-    });
-    updateStore(draft => {
-      draft.edgeList = arr;
-      draft.option = nodearr;
-    });
-  }, [edgeItems]);
-  // del node or edge
-  const deleteNode = (val: string, key: string) => {
-    let data = val == 'node' ? cloneDeep(nodeList) : cloneDeep(edgeList);
-    const newPanes = data.filter(pane => pane.key !== key);
-    if (val == 'node') {
-      const nodedata: { [x: string]: { label: string } } = cloneDeep(nodeItems);
-      Object.entries(nodedata).map((keys, i) => {
-        if (keys[0] == key) {
-          delete nodedata[key];
-        }
-      });
-      const activeKey = Object.keys(nodedata)[Object.keys(nodedata).length - 1];
-      updateStore(draft => {
-        draft.nodeList = newPanes;
-        draft.nodeItems = nodedata;
-        draft.nodeActiveKey = activeKey;
-      });
-    } else {
-      const edgedata: { [x: string]: { label: string } } = cloneDeep(edgeItems);
-      Object.entries(edgedata).map((keys, i) => {
-        if (keys[0] == key) {
-          delete edgedata[key];
-        }
-      });
-      const activeKey = Object.keys(edgedata)[Object.keys(edgedata).length - 1];
-      updateStore(draft => {
-        draft.edgeList = newPanes;
-        draft.edgeItems = edgedata;
-        draft.edgeActiveKey = activeKey;
-      });
-    }
-  };
-  const onChange = (key: string) => {
+  const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, isAlert } = store;
+
+  /** 点/边 切换 */
+  const tabsChange = (key: string) => {
     if (currentType == 'node') {
       updateStore(draft => {
         draft.nodeActiveKey = key;
@@ -118,49 +28,151 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
       });
     }
   };
+  /** 图头部组件 */
+  const GraphViewTitle = (
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      {!isAlert ? (
+        <Space>
+          <Upload {...prop} showUploadList={false}>
+            <Tooltip title="导入提示，待确认">
+              <Button>
+                <FormattedMessage id="Import" />
+              </Button>
+            </Tooltip>
+          </Upload>
+          <Tooltip title="导出提示，待确认">
+            <Button onClick={() => download(`xxx.json`, '')}>
+              <FormattedMessage id="Export" />
+            </Button>
+          </Tooltip>
+        </Space>
+      ) : null}
+    </div>
+  );
+
+  const nodeEdgeChange = (val: SegmentedValue) => {
+    updateStore(draft => {
+      draft.currentType = val as 'node' | 'edge';
+    });
+    if (currentType == 'edge') {
+      updateStore(draft => {
+        draft.edgeActiveKey = edgeList[0]?.key;
+      });
+    }
+  };
+
+  let nodeOptions: { label: string; value: string }[] = [];
+
+  const nodeItems = nodeList.map(item => {
+    const { key, label } = item;
+    const invalid = label === 'undefined' || label === '';
+    if (!invalid) {
+      nodeOptions.push({
+        label,
+        value: key,
+      });
+    }
+    return {
+      key: key,
+      label: label,
+      children: (
+        <Schema
+          updateStore={updateStore}
+          currentType={currentType}
+          id={key}
+          newActiveKey={key}
+          shouldRender={nodeActiveKey === item.key}
+        />
+      ),
+    };
+  });
+
+  const edgeItems = edgeList.map(item => {
+    const { key, label } = item;
+    return {
+      key: key,
+      label: label,
+      children: (
+        <Schema
+          nodeOptions={nodeOptions}
+          updateStore={updateStore}
+          currentType={currentType}
+          id={key}
+          newActiveKey={key}
+          shouldRender={nodeActiveKey === key}
+        />
+      ),
+    };
+  });
+  const IS_NODES_EMPTY = nodeList.length === 0;
+  const IS_EDGES_EMPTY = edgeList.length === 0;
+  const extra = (currentType == 'node' ? nodeList.length : edgeList.length) > 0 ? <AddLabel /> : null;
 
   return (
-    <Card>
-      <Row style={{ marginTop: '16px' }}>
-        <Col span={14}>
-          <div
-            style={{
-              backgroundColor: '#fff',
-              padding: '16px',
-              border: '1px solid #000',
-              height: '65vh',
-              marginRight: '12px',
-              overflow: 'hidden',
-            }}
+    <Row style={{ marginTop: '16px' }}>
+      <Col span={16}>
+        <div
+          style={{
+            backgroundColor: '#fff',
+            marginRight: '12px',
+            overflow: 'hidden',
+          }}
+        >
+          <Card
+            bodyStyle={{ height: '500px', padding: '0px' }}
+            title={
+              <Segmented
+                value={currentType}
+                options={[
+                  { label: <FormattedMessage id="Node labels" />, value: 'node' },
+                  { label: <FormattedMessage id="Edge Labels" />, value: 'edge' },
+                ]}
+                onChange={(value: SegmentedValue) => nodeEdgeChange(value)}
+              />
+            }
+            extra={extra}
           >
-            <AddLabel />
-            <div>
-              <div style={{ display: currentType == 'node' ? '' : 'none' }}>
+            <div style={{ display: currentType === 'node' ? '' : 'none' }}>
+              {IS_NODES_EMPTY ? (
+                <EmptyInfo />
+              ) : (
                 <Tabs
-                  tabBarStyle={{ borderLeft: 0 }}
+                  style={{ height: '500px', padding: '12px' }}
+                  tabBarStyle={{ borderLeft: 0, width: '80px' }}
                   tabPosition="left"
-                  items={[...cloneDeep(nodeList)]}
+                  items={nodeItems}
                   activeKey={nodeActiveKey}
-                  onChange={onChange}
+                  onChange={tabsChange}
                 />
-              </div>
-              <div style={{ display: currentType !== 'node' ? '' : 'none' }}>
-                <Tabs
-                  tabBarStyle={{ borderLeft: 0 }}
-                  tabPosition="left"
-                  items={[...cloneDeep(edgeList)]}
-                  activeKey={edgeActiveKey}
-                  onChange={onChange}
-                />
-              </div>
+              )}
             </div>
-          </div>
-        </Col>
-        <Col span={10}>
+            <div style={{ display: currentType === 'edge' ? '' : 'none' }}>
+              {IS_EDGES_EMPTY ? (
+                <EmptyInfo />
+              ) : (
+                <Tabs
+                  style={{ height: '500px', padding: '12px' }}
+                  tabBarStyle={{ borderLeft: 0, width: '80px' }}
+                  tabPosition="left"
+                  items={edgeItems}
+                  activeKey={edgeActiveKey}
+                  onChange={tabsChange}
+                />
+              )}
+            </div>
+          </Card>
+        </div>
+      </Col>
+      <Col span={8}>
+        <Card
+          bodyStyle={{ padding: '0px', height: '500px', marginBottom: '18px', overflow: 'hidden' }}
+          title={<FormattedMessage id="Graph Model" />}
+          extra={GraphViewTitle}
+        >
           <GraphInsight />
-        </Col>
-      </Row>
-    </Card>
+        </Card>
+      </Col>
+    </Row>
   );
 };
 export default CreateInstance;

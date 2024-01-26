@@ -1,135 +1,61 @@
 import React, { type FC, useEffect, forwardRef, useImperativeHandle, useRef, memo } from 'react';
 import { Checkbox } from 'antd';
 import { uniqueId, cloneDeep } from 'lodash';
-import { useImmer } from 'use-immer';
+import { useImmer } from '../use-immer';
 import {
-  ImmerType,
   IndexData,
   PropertyList,
   ConfigColumns,
   MapConfigParamsType,
   PropertyConfigParamsType,
+  IMapColumns,
 } from './interface';
 import { EditType, IconFont } from './mapdata';
 import Editor from './editor';
-
-const PropertiesEditor: FC<{
-  properties: PropertyList;
+type IPropertiesEditorProps = {
+  properties?: PropertyList[];
   onChange: any;
   isMapFromFile?: boolean;
-  tableType: string[];
   propertyType?: { type: string }[];
-}> = memo(
+  tableConfig?: [];
+  locales: { properties: React.ReactNode; addProperty: React.ReactNode; mapFromFile: React.ReactNode };
+};
+const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
   forwardRef((props, ref) => {
-    const { properties, onChange, isMapFromFile, tableType, propertyType } = props;
+    const { properties = [], onChange, isMapFromFile, tableConfig, locales } = props;
     const inputRef = useRef<HTMLInputElement>();
     // 使用useImmer创建一个可变状态对象
-    const [state, updateState] = useImmer<ImmerType>({
+    const [state, updateState] = useImmer<{
+      selectedRows: string[];
+      selectedMapRowKeys: any[];
+      configList: PropertyList[];
+      mapfromfileList: PropertyList[];
+      proSelectKey: any;
+    }>({
       selectedRows: [],
       selectedMapRowKeys: [],
-      configList: cloneDeep(properties),
+      configList: [],
       mapfromfileList: [],
       proSelectKey: [],
-      propertyOption: [],
-      columnOption: [],
     });
-    const {
-      selectedRows,
-      selectedMapRowKeys,
-      configList,
-      mapfromfileList,
-      proSelectKey,
-      propertyOption,
-      columnOption,
-    } = state;
+    const { selectedRows, selectedMapRowKeys, configList, mapfromfileList, proSelectKey } = state;
     // 初始化表格下拉选项及映射列表值
     useEffect(() => {
-      const data = cloneDeep(properties);
-      let option: { label: string; value: string }[] = [];
-      let modifiedArray: any = [];
-      let pOption: { label: string; value: string }[] = [];
-      data?.map(item => {
-        pOption.push({ label: item.token, value: item?.token });
-        modifiedArray.push({ ...item, disable: true });
-      });
-      cloneDeep(propertyType)?.map(item => {
-        option.push({ label: item.type, value: item?.type });
-      });
-      updateState(draft => {
-        draft.mapfromfileList = modifiedArray;
-        draft.propertyOption = option;
-        draft.columnOption = pOption;
-      });
+      /** map映射值 */
+      if (properties.length > 0) {
+        const data = cloneDeep(properties);
+        let modifiedArray: any = [];
+        data?.map(item => {
+          modifiedArray.push({ ...item, disable: true });
+        });
+        updateState(draft => {
+          draft.mapfromfileList = modifiedArray;
+        });
+      }
     }, []);
-    // 定义nodeConfigColumns，包含表格列的配置信息
-    const nodeConfigColumns: ConfigColumns[] = [
-      {
-        title: 'Name',
-        width: '40%',
-        dataIndex: 'name',
-        key: 'name',
-        editable: true,
-        editorConfig: (record: IndexData) => {
-          return {
-            inputType: EditType.INPUT,
-            prop: {
-              value: record,
-              // disabled: record.disable,
-            },
-          };
-        },
-      },
-      {
-        title: 'Type',
-        dataIndex: 'type',
-        width: '25%',
-        key: 'type',
-        editable: true,
-        editorConfig: (record: IndexData) => {
-          return {
-            inputType: EditType.SELECT,
-            prop: {
-              options: propertyOption,
-              // disabled: record.disabled,
-            },
-          };
-        },
-      },
-      {
-        title: 'Column',
-        dataIndex: 'token',
-        width: '25%',
-        key: 'token',
-        editable: true,
-        editorConfig: (record: IndexData) => {
-          // if (!record.index) {
-          //     record.isUnique = false;
-          // }
-          return {
-            inputType: EditType.SELECT,
-            prop: {
-              options: columnOption,
-              // disabled: record.disabled,
-            },
-          };
-        },
-      },
-      {
-        title: 'ID',
-        dataIndex: 'operate',
-        key: 'operate',
-        width: '10%',
-        render: (_, record: any) =>
-          record?.primaryKey ? (
-            <IconFont type="icon-yuechi" onClick={() => primaryKeyClick(record)} />
-          ) : (
-            <IconFont type="icon-yuechi1" onClick={() => primaryKeyClick(record)} />
-          ),
-      },
-    ];
     // 定义primaryKeyClick回调函数，用于处理主键切换事件
     const primaryKeyClick = val => {
-      let reasult = cloneDeep(configList);
+      let reasult = [...configList];
       const modifiedArray = reasult.map(item => {
         if (item.id == val.id && item.primaryKey) {
           return {
@@ -153,6 +79,7 @@ const PropertiesEditor: FC<{
       updateState(draft => {
         draft.configList = modifiedArray;
       });
+      onChange(modifiedArray);
     };
     // 定义addNodeConfig函数，用于添加新的表格行
     const addNodeConfig = () => {
@@ -194,7 +121,7 @@ const PropertiesEditor: FC<{
         draft.selectedMapRowKeys = selectedRowKeys;
       });
     };
-    const mapcolumns = [
+    const mapcolumns: IMapColumns[] = [
       {
         dataIndex: 'name',
         key: 'name',
@@ -249,7 +176,7 @@ const PropertiesEditor: FC<{
       });
       onChange(data);
     };
-    const inputDoubleClick = async val => {
+    const inputDoubleClick: (val: { id: string }) => void = async val => {
       let reasult = cloneDeep(configList);
       const modifiedArray = await reasult.map(item => {
         if (item.id == val.id) {
@@ -269,7 +196,7 @@ const PropertiesEditor: FC<{
       });
       await inputRef?.current?.focus();
     };
-    const inputBlur = val => {
+    const inputBlur: (val: { disable: boolean }) => void = val => {
       if (!val.disable) {
         let reasult = cloneDeep(configList);
         const modifiedArray = reasult.map(item => {
@@ -283,6 +210,57 @@ const PropertiesEditor: FC<{
         });
       }
     };
+    /** 初始化表格下拉选项及映射列表值*/
+    const getConfigColumns = () => {
+      let configcolumns: ConfigColumns[] = [];
+      cloneDeep(tableConfig).map(item => {
+        switch (item.type) {
+          case 'INPUT':
+            configcolumns.push({
+              ...item,
+              key: 'name',
+              editable: true,
+              editorConfig: (record: IndexData) => {
+                return {
+                  inputType: EditType.INPUT,
+                  prop: {
+                    value: record,
+                  },
+                };
+              },
+            });
+            break;
+          case 'SELECT':
+            configcolumns.push({
+              ...item,
+              key: 'type',
+              editable: true,
+              editorConfig: (record: IndexData) => {
+                return {
+                  inputType: EditType.SELECT,
+                  prop: {
+                    options: item.option,
+                  },
+                };
+              },
+            });
+            break;
+          default:
+            configcolumns.push({
+              ...item,
+              key: 'operate',
+              render: (_, record: any) =>
+                record?.primaryKey ? (
+                  <IconFont type="icon-yuechi" onClick={() => primaryKeyClick(record)} />
+                ) : (
+                  <IconFont type="icon-yuechi1" onClick={() => primaryKeyClick(record)} />
+                ),
+            });
+            break;
+        }
+      });
+      return configcolumns;
+    };
     // 定义mapConfigParams和propertyConfigParams对象，作为Editor组件的props
     const mapConfigParams: MapConfigParamsType['mapConfigParams'] = {
       dataSource: properties,
@@ -292,10 +270,11 @@ const PropertiesEditor: FC<{
       handleSelectAll: handleSelectAll,
       handleSelectRow: handleSelectRow,
       mapFromFileConfirm: mapFromFileConfirm,
+      locales: locales,
     };
     const propertyConfigParams: PropertyConfigParamsType['propertyConfigParams'] = {
       dataSource: configList,
-      columns: nodeConfigColumns?.filter(item => tableType?.includes(item?.title)),
+      columns: getConfigColumns(),
       bordered: true,
       rowSelection: rowSelection,
       setConfigList: setConfigList,
@@ -317,8 +296,7 @@ const PropertiesEditor: FC<{
       },
       [configList],
     );
-    //@ts-ignore
-    return <Editor ref={inputRef} mapConfigParams={mapConfigParams} propertyConfigParams={propertyConfigParams} />;
+    return <Editor mapConfigParams={mapConfigParams} propertyConfigParams={propertyConfigParams} />;
   }),
 );
 

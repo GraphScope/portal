@@ -1,107 +1,83 @@
-import * as React from 'react';
-import { Button, Segmented } from 'antd';
+import { FunctionComponent } from 'react';
+import { Button, Space } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { cloneDeep } from 'lodash';
+import { FormattedMessage } from 'react-intl';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useContext } from '../useContext';
-import Schema from './schema';
-const AddLabel = () => {
+
+const AddLabel: FunctionComponent = () => {
   const { store, updateStore } = useContext();
-  const { nodeList, edgeList, currentType, nodeItems, edgeItems, detail } = store;
-  const nodeEdgeChange = (val: string): void => {
+  const { nodeList, edgeList, currentType, detail, nodeActiveKey, edgeActiveKey, nodeItems, edgeItems } = store;
+
+  /** 添加点边模版 */
+  const addLabel = () => {
+    const id = uuidv4();
     updateStore(draft => {
-      draft.currentType = val == 'Nodes' ? 'node' : 'edge';
+      if (currentType == 'node') {
+        draft.nodeActiveKey = id;
+        draft.nodeList.push({
+          key: id,
+          label: 'undefined',
+          properties: [],
+        });
+      }
+      if (currentType === 'edge') {
+        draft.edgeActiveKey = id;
+        draft.edgeList.push({
+          key: id,
+          label: 'undefined',
+          source: '',
+          target: '',
+          properties: [],
+        });
+      }
     });
-    if (currentType == 'edge') {
-      updateStore(draft => {
-        draft.edgeActiveKey = edgeList[0]?.key;
-      });
-    }
   };
-  const add = () => {
-    if (currentType == 'node') {
-      const newActiveKey = uuidv4();
-      const node = [
-        ...nodeList,
-        {
-          label: 'undefine',
-          children: <Schema newActiveKey={newActiveKey} deleteNode={deleteNode} />,
-          key: newActiveKey,
-        },
-      ];
-      updateStore(draft => {
-        draft.nodeActiveKey = newActiveKey;
-        draft.nodeList = node;
-      });
-    } else {
-      const newActiveKey = uuidv4();
-      const node = [
-        ...edgeList,
-        {
-          label: 'undefine',
-          children: <Schema newActiveKey={newActiveKey} deleteNode={deleteNode} />,
-          key: newActiveKey,
-        },
-      ];
-      updateStore(draft => {
-        draft.edgeActiveKey = newActiveKey;
-        draft.edgeList = node;
-      });
-    }
-  };
-  const deleteNode = (val: string, key: string) => {
-    let data = val == 'Node' ? cloneDeep(nodeList) : cloneDeep(edgeList);
+
+  /** 删除点边模版 */
+  const deleteLabel = (type: string, key: string) => {
+    const data = type == 'node' ? nodeList : edgeList;
     const newPanes = data.filter(pane => pane.key !== key);
-    if (val == 'Node') {
-      const nodedata: { [x: string]: any } = cloneDeep(nodeItems);
-      Object.entries(nodedata).map((keys, i) => {
-        if (keys[0] == key) {
-          delete nodedata[key];
-        }
-      });
-      const activeKey = Object.keys(nodedata)[Object.keys(nodedata).length - 1];
-      updateStore(draft => {
+    const activeKey = newPanes.length > 0 ? newPanes[newPanes.length - 1].key : '';
+
+    updateStore(draft => {
+      if (type === 'node') {
+        //@ts-ignore
         draft.nodeList = newPanes;
-        draft.nodeItems = nodedata;
         draft.nodeActiveKey = activeKey;
-      });
-    } else {
-      const edgedata: { [x: string]: any } = cloneDeep(edgeItems);
-      Object.entries(edgedata).map((keys, i) => {
-        if (keys[0] == key) {
-          delete edgedata[key];
-        }
-      });
-      const activeKey = Object.keys(edgedata)[Object.keys(edgedata).length - 1];
-      updateStore(draft => {
+      }
+      if (type === 'edge') {
+        //@ts-ignore
         draft.edgeList = newPanes;
-        draft.edgeItems = edgedata;
         draft.edgeActiveKey = activeKey;
-      });
-    }
+      }
+    });
   };
-  const nodeEddgeLength = () => {
-    if (currentType == 'node') {
-      return nodeList.length;
-    } else {
-      return edgeList.length;
-    }
-  };
+
+  const IS_EMPTY = currentType === 'node' ? nodeList.length === 0 : edgeList.length === 0;
+
+  /** 空的时候展示为一个 */
+  if (IS_EMPTY) {
+    return (
+      <Button disabled={detail} style={{ width: '100%' }} type="dashed" onClick={addLabel} icon={<PlusOutlined />}>
+        {currentType == 'node' ? <FormattedMessage id="Add Node" /> : <FormattedMessage id="Add Edge" />}
+      </Button>
+    );
+  }
+
   return (
-    <>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Segmented defaultValue="Nodes" options={['Nodes', 'Edges']} style={{ marginBottom: '16px' }} onChange={e => nodeEdgeChange(e)} />
-        {nodeEddgeLength() > 0 ? (
-          <Button type="dashed" onClick={add} disabled={detail}>
-            + Add {currentType == 'node' ? 'Node' : 'Edge'}
-          </Button>
-        ) : null}
-      </div>
-      {nodeEddgeLength() == 0 ? (
-        <Button disabled={detail} style={{ width: '100%', color: '#1650ff' }} type="dashed" onClick={add}>
-          + Add {currentType == 'node' ? 'Node' : 'Edge'}
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Space>
+        <Button onClick={addLabel} disabled={detail} icon={<PlusOutlined />}>
+          {currentType == 'node' ? <FormattedMessage id="Add Node" /> : <FormattedMessage id="Add Edge" />}
         </Button>
-      ) : null}
-    </>
+        <Button
+          icon={<DeleteOutlined />}
+          onClick={() => deleteLabel(currentType, currentType == 'node' ? nodeActiveKey : edgeActiveKey)}
+        />
+      </Space>
+    </div>
   );
 };
 export default AddLabel;

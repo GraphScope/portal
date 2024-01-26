@@ -33,6 +33,14 @@ export type EditColumnsType<T> = {
     editorConfig?: any;
     render?: any;
   }
+  export interface IMapColumns {
+    title?: string;
+    width?: number;
+    dataIndex: string;
+    key: string;
+    ellipsis?:boolean;
+    render?: (name:string)=>any;
+  }
 
   export interface EditableCellProps {
     title: React.ReactNode;
@@ -50,15 +58,6 @@ export type EditColumnsType<T> = {
     index: number;
   }
 
-export interface ImmerType {
-    selectedRows: never[];
-    selectedMapRowKeys: any[];
-    configList: PropertyList[];
-    mapfromfileList: PropertyList[];
-    proSelectKey: any[];
-    propertyOption:{label:string;value:string;}[];
-    columnOption:{label:string;value:string;}[];
-}
 export type MapConfigParamsType = {
   mapConfigParams: {
     selectedMapRowKeys:string[];
@@ -68,6 +67,7 @@ export type MapConfigParamsType = {
     dataSource:any;
     mapFromFileConfirm:()=>void;
     handleSelectRow?:(selectedRowKeys:any)=>void;
+    locales:{properties:React.ReactNode;addProperty:React.ReactNode;mapFromFile:React.ReactNode;}
   };
 };
 export type PropertyConfigParamsType = {

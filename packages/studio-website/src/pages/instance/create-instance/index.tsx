@@ -1,18 +1,32 @@
 import React, { memo, useEffect } from 'react';
-import { Button, message, Steps, theme, Alert, Breadcrumb } from 'antd';
+import { history } from 'umi';
+import { Button, message, Steps, Alert, Breadcrumb, Form } from 'antd';
 import { useContext } from '../create-instance/useContext';
 import ChooseEnginetype from './choose-enginetype';
 import CreateSchema from '../create-instance/create-schema';
-import ConfigInfo from './confirm-info';
-const steps = [{ title: 'Choose EngineType' }, { title: 'Create Schema' }, { title: 'Result' }];
-const Lists: React.FunctionComponent = () => {
+import Result from './result';
+import ResultFailed from './result/result-failed';
+import ResultSuccess from './result/result-success';
+import { FormattedMessage } from 'react-intl';
+import { values } from 'lodash';
+const steps = [
+  { title: <FormattedMessage id="Choose Engine Type" /> },
+  { title: <FormattedMessage id="Create Schema" /> },
+  { title: <FormattedMessage id="Preview" /> },
+  { title: <FormattedMessage id="Result" /> },
+];
+const CreateInstance: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
-  const { isAlert, currentStep } = store;
+  const { isAlert, currentStep, createInstaseResult } = store;
+  const [form] = Form.useForm();
   const next = () => {
-    updateStore(draft => {
-      draft.currentStep = currentStep + 1;
-    });
-    console.log(store.nodeList, store.nodeItems);
+    if (form.getFieldsValue().inputname) {
+      updateStore(draft => {
+        draft.currentStep = currentStep + 1;
+      });
+    } else {
+      form.validateFields();
+    }
   };
 
   const prev = () => {
@@ -24,6 +38,7 @@ const Lists: React.FunctionComponent = () => {
   const items = steps.map(item => ({ key: item.title, title: item.title }));
   const itemStyle: React.CSSProperties = {
     display: 'none',
+    padding: '12px 0px',
   };
   const activeItemStyle: React.CSSProperties = {
     ...itemStyle,
@@ -37,29 +52,37 @@ const Lists: React.FunctionComponent = () => {
       });
     };
   }, []);
+
   return (
-    <>
+    <div style={{ padding: '12px 24px' }}>
       <Breadcrumb
         items={[
           {
-            title: <a href="/instance">图实例</a>,
+            title: (
+              <a href="/instance">
+                <FormattedMessage id="navbar.graphs" />
+              </a>
+            ),
           },
           {
-            title: <a href="/instance/create">创建图实例</a>,
+            title: <FormattedMessage id="Create Instance" />,
           },
         ]}
       />
-      <div style={{ backgroundColor: '#fff', padding: '16px', marginTop: '12px' }}>
+      <div style={{ padding: '24px 0px' }}>
         <Steps current={currentStep} items={items} />
         <div>
           <div style={currentStep === 0 ? activeItemStyle : itemStyle}>
-            <ChooseEnginetype />
+            <ChooseEnginetype form={form} />
           </div>
           <div style={currentStep === 1 ? activeItemStyle : itemStyle}>
             <CreateSchema />
           </div>
           <div style={currentStep === 2 ? activeItemStyle : itemStyle}>
-            <ConfigInfo />
+            <Result />
+          </div>
+          <div style={currentStep === 3 ? activeItemStyle : itemStyle}>
+            {createInstaseResult ? <ResultSuccess /> : <ResultFailed />}
           </div>
         </div>
         <div>
@@ -72,28 +95,50 @@ const Lists: React.FunctionComponent = () => {
               style={{ margin: '16px 0' }}
             />
           ) : (
-            <div style={{ marginTop: 24 }}>
+            <div style={{}}>
               {currentStep > 0 && (
-                <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
-                  上一步
-                </Button>
+                <>
+                  {createInstaseResult ? null : (
+                    <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+                      <FormattedMessage id="Previous" />
+                    </Button>
+                  )}
+                </>
               )}
               {currentStep < steps.length - 1 && (
                 <Button type="primary" onClick={() => next()}>
-                  下一步
+                  <FormattedMessage id="Next" />
                 </Button>
               )}
               {currentStep === steps.length - 1 && (
-                <Button type="primary" onClick={() => message.success('Processing complete!')}>
-                  确认创建
-                </Button>
+                <>
+                  {currentStep == 3 ? (
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        history.push('/instance');
+                      }}
+                    >
+                      <FormattedMessage id="Done" />
+                    </Button>
+                  ) : (
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        message.success('Processing complete!');
+                      }}
+                    >
+                      <FormattedMessage id="Confirm Create" />
+                    </Button>
+                  )}
+                </>
               )}
             </div>
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default memo(Lists);
+export default memo(CreateInstance);

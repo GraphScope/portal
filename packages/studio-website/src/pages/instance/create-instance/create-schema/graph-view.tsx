@@ -1,109 +1,85 @@
-import React,{useEffect} from 'react';
-import { Button, Space, Upload } from 'antd';
-import Graphin, { Behaviors, Utils } from '@antv/graphin';
-import { useContext } from '../useContext';
-import { download, prop } from './utils';
-const { ZoomCanvas } = Behaviors;
-const GraphInsight = () => {
-  const { store, updateStore } = useContext();
-  const { isAlert, graphData, nodeItems, edgeItems } = store;
-  useEffect(() => {
-      getVertexEdges();
-  }, [nodeItems, edgeItems]);
-  /**
-   * graphin 数据
-   */
-  const getVertexEdges = async () => {
-    const result: { vertices: { label: string }[]; edges: { label: string; src_label: string; dst_label: string }[] } =
-      {
-        vertices: Object.values(nodeItems),
-        edges: Object.values(edgeItems),
-      };
-    let nodes: { id: string; label: string; style: any }[] = [];
-    let edge: { source: string; target: string; label: string }[] = [];
-    let edge_: { source: string; target: string; style: any; label: string }[] = [];
-    result.vertices.map(v => {
-      nodes.push({
-        id: v.label,
-        label: v.label,
+import { useEffect, memo, FunctionComponent } from 'react';
+import Graphin, { Utils } from '@antv/graphin';
+import { useContext, NodeSchema, EdgeSchema } from '../useContext';
+import { theme } from 'antd';
+const { useToken } = theme;
+interface Props {
+  children?: JSX.Element;
+}
+
+/** graphin 数据处理 */
+const getVertexEdges = (nodeList: NodeSchema[], edgeList: EdgeSchema[], token: any) => {
+  const nodesMap = new Map();
+  const nodes = nodeList.map(item => {
+    const { key, label } = item;
+    nodesMap.set(key, item);
+    return {
+      id: key,
+      style: {
+        label: {
+          value: label,
+        },
+        fontSize: 14,
+        keyshape: {
+          size: 50,
+          stroke: token.colorPrimary,
+          fillOpacity: 1,
+          fill: token.colorPrimary,
+        },
+      },
+    };
+  });
+
+  const edges = edgeList
+    .map(item => {
+      const { key, label, source, target } = item;
+      return {
+        id: key,
+        source,
+        target,
+        label,
         style: {
           label: {
-            value: v.label,
-          },
-          fontSize: 14,
-          keyshape: {
-            size: 50,
+            value: label,
+            fill: token.colorPrimary,
+            offset: [0, 0],
           },
         },
-      });
-    });
-    result.edges.map(e => {
-      if (e['src_label'] !== e['dst_label']) {
-        edge_.push({
-          source: e['src_label'],
-          target: e['dst_label'],
-          label: e.label,
-          style: {
-            keyshape: {
-              lineWidth: 1,
-              startArrow: false,
-            },
-          },
-        });
-      } else {
-        edge_.push({
-          source: e['src_label'],
-          target: e['dst_label'],
-          label: e.label,
-          style: {
-            keyshape: {
-              lineWidth: 1,
-              endArrow: {
-                path: 'M 0,1 L -3,7 L 3,6 Z',
-                fill: '#dedede',
-              },
-              startArrow: false,
-            },
-          },
-        });
-      }
-    });
-    let ed = Utils.processEdges([...edge, ...edge_], { poly: 30, loop: 20 });
-    ed.forEach((item: any) => {
-      const { label, style } = item;
-      style.label = {
-        value: label,
-        fill: 'block',
-        fontSize: 12,
       };
+    })
+    .filter(item => {
+      const { source, target } = item;
+      if (nodesMap.get(source) && nodesMap.get(target)) {
+        return true;
+      }
+      return false;
     });
-    let arr = { nodes, edges: ed };
-    updateStore(draft => {
-      draft.graphData = arr;
-    });
-  };
+  // //@ts-ignore
+  const processEdges = Utils.processEdges(edges, { poly: 30, loop: 20 });
+  /** TODO：这个地方是Graphin的BUG，一旦走了processEdge，Offset应该不做改变 */
+  processEdges.forEach(item => {
+    if (item.style?.label) {
+      item.style.label.offset = [0, 0];
+    }
+  });
+
+  return { nodes, edges: processEdges };
+};
+
+const GraphInsight: FunctionComponent<Props> = props => {
+  const { children = <></> } = props;
+  const { token } = useToken();
+  const { store } = useContext();
+  const { nodeList, edgeList } = store;
+  //@ts-ignore
+  const graphData = getVertexEdges(nodeList, edgeList, token);
+
   return (
-    <div
-      style={{ backgroundColor: '#fff', padding: '16px', border: '1px solid #000', height: '65vh', overflow: 'hidden' }}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h3>Graph Schema View</h3>
-        {!isAlert ? (
-          <Space>
-            <Upload {...prop} showUploadList={false}>
-              <Button type="dashed">Import</Button>
-            </Upload>
-            <Button type="dashed" onClick={() => download(`xxx.json`, '')}>
-              Export
-            </Button>
-          </Space>
-        ) : null}
-      </div>
-      <Graphin data={graphData} layout={{ type: 'circular' }} fitView style={{ height: '60vh' }}>
-        <ZoomCanvas enableOptimize minZoom={0.5} />
-      </Graphin>
-    </div>
+    <>
+      {children}
+      <Graphin data={graphData} layout={{ type: 'circular' }} fitView fitCenter style={{ paddingBottom: '3px' }} />
+    </>
   );
 };
 
-export default GraphInsight;
+export default memo(GraphInsight);

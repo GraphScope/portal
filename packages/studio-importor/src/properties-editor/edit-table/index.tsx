@@ -4,7 +4,6 @@ import React, { createContext, useContext, useEffect, memo, useRef, forwardRef }
 import { EditOutlined } from '@ant-design/icons';
 import { EditableCellProps, EditableRowProps ,ConfigColumns,PropertyList} from '../interface';
 import { EditType } from '../mapdata';
-// import styles from './index.module.less';
 
 const EditableContext = createContext<FormInstance<any> | null>(null);
 const TableContext = createContext<{
@@ -13,7 +12,6 @@ const TableContext = createContext<{
   rowKey: string;
   inputDoubleClick: (record: any) => void;
   inputBlur: (record: any) => void;
-  ref: any;
 }>({
   rowKey: '',
   inputDoubleClick: function (record: any): void {
@@ -21,8 +19,7 @@ const TableContext = createContext<{
   },
   inputBlur: function (record: any): void {
     throw new Error('Function not implemented.');
-  },
-  ref: undefined
+  }
 });
 
 const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
@@ -60,6 +57,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 }) => {
   const form = useContext(EditableContext)!;
   let childNode = children;
+  const inputRef = useRef<any>()
   useEffect(() => {
     if (record) {
       form.setFieldsValue({ [dataIndex]: record[dataIndex] });
@@ -67,7 +65,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   }, [record]);
   if (editable) {
     const { inputType, prop } = editorConfig(record);
-    const { inputDoubleClick, inputBlur, ref } = useContext(TableContext)!;
+    const { inputDoubleClick, inputBlur } = useContext(TableContext)!;
     if (inputType === EditType.INPUT) {
       childNode = (
         <Form.Item
@@ -93,15 +91,18 @@ const EditableCell: React.FC<EditableCellProps> = ({
             ]
           }
         >
-          {record?.disable ? (
+          {(record?.disable && record?.name)? (
             <span
               style={{ height: '27px', backgroundColor: '#505156', color: '#fff', borderRadius: '8px', padding: '8px' }}
-              onClick={() => inputDoubleClick(record)}
+              onClick={async() => {
+                await inputDoubleClick(record);
+                await inputRef.current.focus();
+              }}
             >
               {record?.name} <EditOutlined />
             </span>
           ) : (
-            <Input ref={ref} {...prop} onBlur={() => inputBlur(record)} />
+            <Input ref={inputRef} {...prop} onBlur={() => inputBlur(record)} />
           )}
         </Form.Item>
       );
@@ -121,8 +122,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
     </td>
   );
 };
-export const EditTable: React.FC<{ columns: ConfigColumns[] ; dataSource:PropertyList[];onChange?:any;rowKey:string;inputDoubleClick?:any;inputBlur?:any;bordered?:boolean;showHeader?:boolean;rowSelection?:any;ref?:any;}> = memo(
-  forwardRef(({ columns, dataSource, onChange, rowKey, inputDoubleClick, inputBlur, ...props }, ref) => {
+export const EditTable: React.FC<{ columns: ConfigColumns[] ; dataSource:PropertyList[];onChange?:any;rowKey:string;inputDoubleClick?:any;inputBlur?:any;bordered?:boolean;showHeader?:boolean;rowSelection?:any;}> = memo(
+  ({ columns, dataSource, onChange, rowKey, inputDoubleClick, inputBlur, ...props }) => {
     const data = dataSource;
     const components = {
       body: {
@@ -147,7 +148,7 @@ export const EditTable: React.FC<{ columns: ConfigColumns[] ; dataSource:Propert
     });
 
     return (
-      <TableContext.Provider value={{ data, onChange, rowKey, inputDoubleClick, inputBlur, ref }}>
+      <TableContext.Provider value={{ data, onChange, rowKey, inputDoubleClick, inputBlur }}>
         <Table
           columns={editColumns}
           dataSource={data}
@@ -160,5 +161,5 @@ export const EditTable: React.FC<{ columns: ConfigColumns[] ; dataSource:Propert
         />
       </TableContext.Provider>
     );
-  }),
+  }
 );
