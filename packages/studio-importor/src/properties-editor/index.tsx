@@ -18,19 +18,19 @@ type IPropertiesEditorProps = {
   isMapFromFile?: boolean;
   propertyType?: { type: string }[];
   tableConfig?: [];
-  locales:{properties:React.ReactNode;addProperty:React.ReactNode;mapFromFile:React.ReactNode;}
+  locales: { properties: React.ReactNode; addProperty: React.ReactNode; mapFromFile: React.ReactNode };
 };
 const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
   forwardRef((props, ref) => {
-    const { properties=[], onChange, isMapFromFile, tableConfig, locales } = props;
+    const { properties = [], onChange, isMapFromFile, tableConfig, locales } = props;
     const inputRef = useRef<HTMLInputElement>();
     // 使用useImmer创建一个可变状态对象
     const [state, updateState] = useImmer<{
-      selectedRows:string[];
-      selectedMapRowKeys:any[];
-      configList:PropertyList[];
-      mapfromfileList:PropertyList[];
-      proSelectKey:any;
+      selectedRows: string[];
+      selectedMapRowKeys: any[];
+      configList: PropertyList[];
+      mapfromfileList: PropertyList[];
+      proSelectKey: any;
     }>({
       selectedRows: [],
       selectedMapRowKeys: [],
@@ -270,7 +270,7 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
       handleSelectAll: handleSelectAll,
       handleSelectRow: handleSelectRow,
       mapFromFileConfirm: mapFromFileConfirm,
-      locales:locales
+      locales: locales,
     };
     const propertyConfigParams: PropertyConfigParamsType['propertyConfigParams'] = {
       dataSource: configList,

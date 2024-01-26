@@ -6,6 +6,10 @@ export const initialStore = {
   locale: 'en-US',
   /** 主题色 */
   primaryColor: '#1677ff',
+  /** 收起导航 */
+  collapse: false,
+  /** 当前导航 */
+  currentnNav: '',
 };
 
 export type IStore = typeof initialStore;

@@ -2,8 +2,9 @@ import { defineConfig } from 'umi';
 
 export default defineConfig({
   routes: [
-    { path: '/', component: 'overview' },
+    { path: '/', redirect: '/instance' },
     { path: '/instance', component: 'instance' },
+    { path: '/setting', component: 'setting' },
     { path: '/query', component: 'query' },
     { path: '/instance/create', component: 'instance/create-instance' },
     { path: '/instance/schema', component: 'instance/view-schema' },
@@ -15,7 +16,6 @@ export default defineConfig({
     { path: '/deployment', component: 'deployment' },
   ],
   npmClient: 'pnpm',
-
   monorepoRedirect: {},
   // externals: { react: 'React', 'react-dom': 'ReactDOM' },
   // headScripts: [
