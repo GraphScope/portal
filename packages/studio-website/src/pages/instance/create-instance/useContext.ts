@@ -2,46 +2,57 @@ import { IUserEdge } from '@antv/graphin';
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 
-// export type IStore<T> = T & {
-//   [x: string]: any;
-//   nodeList: {
-//     label: JSX.Element;
-//     children: any;
-//     key: string;
-//   }[];
-//   edgeList: {
-//     label: JSX.Element;
-//     children: any;
-//     key: string;
-//   }[];
-//   /** Source Node Label/Target Node Label options */
-//   option: { value: string; label: string }[];
-//   isAlert: boolean;
-//   /** node or edge */
-//   currentType: 'node' | 'edge';
-//   /** add node key */
-//   nodeActiveKey: string;
-//   /** add edge key */
-//   edgeActiveKey: string;
-//   /** graphIn data */
-//   graphData: {
-//     nodes: { id: string; label: string; style: any }[];
-//     edges: IUserEdge[];
-//   };
-//   /** node tabs items */
-//   nodeItems: {};
-//   /**edge tabs items */
-//   edgeItems: {};
-//   /** create or detail */
-//   detail: boolean;
-//   /** result view */
-//   checked: 'table' | 'json' | 'graph';
-//   currentStep: number;
-//   /** 实例创建是否成功 */
-//   createInstaseResult: true | false;
-// };
+export interface NodeSchema {
+  key: string;
+  label: string;
+  properties: any[];
+}
+export interface EdgeSchema {
+  key: string;
+  label: string;
+  source: string;
+  target: string;
+  properties: any[];
+}
+export type IStore<T> = T & {
+  /********* STEP 1 *************/
+  /** 引擎类型 */
+  engineType: string;
+  /** 图名称 */
+  graphName: string;
+  /********* STEP 2 *************/
+  /** 当前选择的元素类型，节点 or 边 */
+  currentType: 'node' | 'edge';
+  nodeList: NodeSchema[];
+  edgeList: EdgeSchema[];
+  /** 当前正在编辑的节点ID */
+  nodeActiveKey: string;
+  /** 当前正在编辑的边ID */
+  edgeActiveKey: string;
 
-export const initialStore = {
+  /** Source Node Label/Target Node Label options */
+  option: { value: string; label: string }[];
+  isAlert: boolean;
+
+  /** graphIn data */
+  graphData: {
+    nodes: { id: string; label: string; style: any }[];
+    edges: IUserEdge[];
+  };
+  /** node tabs items */
+  nodeItems: {};
+  /**edge tabs items */
+  edgeItems: {};
+  /** create or detail */
+  detail: boolean;
+  /** result view */
+  checked: 'table' | 'json' | 'graph';
+  currentStep: number;
+  /** 实例创建是否成功 */
+  createInstaseResult: true | false;
+};
+
+export const initialStore: IStore<{}> = {
   /** 引擎类型 */
   engineType: '',
   /** 图名称 */
@@ -65,7 +76,6 @@ export const initialStore = {
   createInstaseResult: false,
 };
 
-export type IStore<T> = typeof initialStore & T;
 type ContextType<T> = {
   store: Snapshot<IStore<T>>;
   updateStore: (fn: (draft: IStore<T>) => void) => void;

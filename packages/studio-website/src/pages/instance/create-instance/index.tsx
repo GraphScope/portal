@@ -98,7 +98,7 @@ const CreateInstance: React.FunctionComponent = () => {
               style={{ margin: '16px 0' }}
             />
           ) : (
-            <div style={{ marginTop: 24 }}>
+            <div style={{ position: 'absolute', bottom: '12px', left: '24px' }}>
               {currentStep > 0 && (
                 <>
                   {createInstaseResult ? null : (
