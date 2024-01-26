@@ -13,11 +13,9 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const handleChange: UploadProps['onChange'] = info => {
     let newFileList = [...info.fileList];
-
     // 1. Limit the number of uploaded files
     // Only to show two recent uploaded files, and old ones will be replaced by the new
     newFileList = newFileList.slice(-2);
-
     // 2. Read from response and show file link
     newFileList = newFileList.map(file => {
       if (file.response) {
