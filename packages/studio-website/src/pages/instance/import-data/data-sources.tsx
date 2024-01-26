@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createFromIconfontCN } from '@ant-design/icons';
 import { Form, Input, Button, Table, InputNumber, Select, Checkbox, Flex, Row, Col, Space, Modal } from 'antd';
+import UploadFiles from './upload-file';
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_slis0xqmzfo.js',
 });
@@ -165,6 +166,22 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                     <Option value="Files">Files</Option>
                     <Option value="ODPS">ODPS</Option>
                   </Select>
+                </Form.Item>
+                <Form.Item name="location">
+                  {sourceType == 'ODPS' ? (
+                    <Input placeholder="graphscope/modern_graph/user.csv" onFocus={inputFocus} />
+                  ) : (
+                    <UploadFiles
+                      onChange={val => {
+                        updateState(preState => {
+                          return {
+                            ...preState,
+                            isEidtProperty: val,
+                          };
+                        });
+                      }}
+                    />
+                  )}
                 </Form.Item>
               </Flex>
             </Form.Item>
