@@ -80,7 +80,13 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
     }
   };
   return (
-    <div key={newActiveKey}>
+    <div
+      style={
+        {
+          // padding: '12px'
+        }
+      }
+    >
       <Form form={form} layout="vertical" onValuesChange={() => formChange()}>
         <div style={{ position: 'relative' }}>
           <Form.Item<FieldType>

@@ -55,6 +55,9 @@ const InstanceCard: React.FC = () => {
       }, 600);
     });
   };
+  const handleCreate = () => {
+    history.push('/instance/create');
+  };
 
   return (
     <Section
@@ -72,7 +75,7 @@ const InstanceCard: React.FC = () => {
       <Row gutter={[12, 12]}>
         {instanceList.map((item, i) => (
           <Col key={i} span={12}>
-            <InstaceCard key={i} {...item} />
+            <InstaceCard {...item} />
           </Col>
         ))}
         {!isReady && (
@@ -86,7 +89,16 @@ const InstanceCard: React.FC = () => {
         )}
         <Col span={12}>
           <Card title={'New Graph'} style={{ background: '#FCFCFC' }} bodyStyle={{ width: '100%' }}>
-            <div style={{ display: 'flex', height: '164px', justifyContent: 'center', alignContent: 'center' }}>
+            <div
+              style={{
+                display: 'flex',
+                height: '164px',
+                justifyContent: 'center',
+                alignContent: 'center',
+                cursor: 'pointer',
+              }}
+              onClick={handleCreate}
+            >
               <PlusOutlined style={{ fontSize: '80px', color: 'gray' }} />
             </div>
           </Card>

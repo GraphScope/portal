@@ -137,7 +137,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
                 <EmptyInfo />
               ) : (
                 <Tabs
-                  style={{ height: '500px', marginBottom: '12px' }}
+                  style={{ height: '500px', padding: '12px' }}
                   tabBarStyle={{ borderLeft: 0, width: '80px' }}
                   tabPosition="left"
                   items={nodeItems}
@@ -151,7 +151,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
                 <EmptyInfo />
               ) : (
                 <Tabs
-                  style={{ height: '500px', marginBottom: '12px' }}
+                  style={{ height: '500px', padding: '12px' }}
                   tabBarStyle={{ borderLeft: 0, width: '80px' }}
                   tabPosition="left"
                   items={edgeItems}

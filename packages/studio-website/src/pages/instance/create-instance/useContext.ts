@@ -58,7 +58,7 @@ export const initialStore: IStore<{}> = {
   /** 图名称 */
   graphName: '',
   /** 当前步骤 */
-  currentStep: 0,
+  currentStep: 1,
 
   nodeList: [],
   edgeList: [],

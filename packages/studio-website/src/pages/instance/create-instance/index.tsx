@@ -38,6 +38,7 @@ const CreateInstance: React.FunctionComponent = () => {
   const items = steps.map(item => ({ key: item.title, title: item.title }));
   const itemStyle: React.CSSProperties = {
     display: 'none',
+    padding: '12px 0px',
   };
   const activeItemStyle: React.CSSProperties = {
     ...itemStyle,
@@ -53,7 +54,7 @@ const CreateInstance: React.FunctionComponent = () => {
   }, []);
 
   return (
-    <>
+    <div style={{ padding: '12px 24px' }}>
       <Breadcrumb
         items={[
           {
@@ -64,15 +65,11 @@ const CreateInstance: React.FunctionComponent = () => {
             ),
           },
           {
-            title: (
-              <a href="/instance/create">
-                <FormattedMessage id="Create Instance" />
-              </a>
-            ),
+            title: <FormattedMessage id="Create Instance" />,
           },
         ]}
       />
-      <div style={{ padding: '16px', marginTop: '12px' }}>
+      <div style={{ padding: '24px 0px' }}>
         <Steps current={currentStep} items={items} />
         <div>
           <div style={currentStep === 0 ? activeItemStyle : itemStyle}>
@@ -98,7 +95,7 @@ const CreateInstance: React.FunctionComponent = () => {
               style={{ margin: '16px 0' }}
             />
           ) : (
-            <div style={{ position: 'absolute', bottom: '12px', left: '24px' }}>
+            <div style={{}}>
               {currentStep > 0 && (
                 <>
                   {createInstaseResult ? null : (
@@ -140,7 +137,7 @@ const CreateInstance: React.FunctionComponent = () => {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
