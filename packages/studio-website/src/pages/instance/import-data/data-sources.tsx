@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createFromIconfontCN } from '@ant-design/icons';
 import { Form, Input, Button, Table, InputNumber, Select, Checkbox, Flex, Row, Col, Space, Modal } from 'antd';
 import UploadFiles from './upload-file';
+import StagesImportPackages from './stages-import-packages';
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_slis0xqmzfo.js',
 });
@@ -236,6 +237,18 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
           </Row>
         ) : null}
       </Form>
+      <Modal width={'75%'} open={isShowModal} footer={null}>
+        <StagesImportPackages
+          onChange={(val:boolean) => {
+            updateState(preState => {
+              return {
+                ...preState,
+                isShowModal: val,
+              };
+            });
+          }}
+        />
+      </Modal>
     </>
   );
 };

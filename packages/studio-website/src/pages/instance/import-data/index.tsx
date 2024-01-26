@@ -27,7 +27,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           </Tooltip>
         </Flex>
         <Divider style={{ margin: '12px 0px' }} />
-        {/* 遍历需要绑定的数据源 */}
+        <DataSource />
         <DataSource />
       </Col>
       <Col span={8}>
