@@ -9,63 +9,94 @@ import GraphInsight from '../create-schema/graph-view';
 interface IImportDataProps {}
 const Result: React.FunctionComponent<IImportDataProps> = props => {
   const { store, updateStore } = useContext();
-  const { checked, nodeItems, edgeItems } = store;
-  const getTableData = (items: {},U?:string)=>{
-    let data:{ type?:string;label_name:string; property_name?:string; property_type?:string; primary_keys?:string}[] =[]
-    Object.values(items).map((item:any)=>{
-      if(item?.properties?.length > 0){
-        item?.properties?.map((v: { name:string;type:string;primaryKey:boolean },i: number)=>{
-          if(i==0){
-            data.push({
-              type:U,
-              label_name:item.label,
-              property_name:v.name,
-              property_type:v.type,
-              primary_keys:v.primaryKey ? 'true' : 'false'
-            })
-          }else{
-            data.push({
-              label_name:'',
-              property_name:v.name,
-              property_type:v.type,
-              primary_keys:v.primaryKey ? 'true' : 'false'
-            })
-          }
-        })
-      }else{
-        data.push({
-          type:U,
-          label_name:item.label,
-        })
-      }
-    })
-    return data
-  }
-  /** 'Table', 'Json', 'Graph' 切换 */
-  const nodeEdgeChange: (value:any) => void = value => {
+  const { checked, nodeList, edgeList } = store;
+
+  const handleChange = (value: any) => {
     updateStore(draft => {
       draft.checked = value;
     });
   };
 
+  let Content;
+
+  if (checked === 'table') {
+    const nodes = getTableData(nodeList, 'Node');
+    const edges = getTableData(edgeList, 'Edge');
+    Content = <TableList data={[...nodes, ...edges]} />;
+  }
+  if (checked == 'json') {
+    const node = getTableData(nodeList);
+    const edge = getTableData(edgeList);
+    Content = <ReactJsonView reactJson={{ node, edge }} />;
+  }
+  if (checked == 'graph') {
+    Content = <GraphInsight />;
+  }
+
   return (
     <div style={{ margin: '16px 0px' }}>
       <Card
-        title={<p><FormattedMessage id='Instance Name'/>：{'My GRAPH'}</p>}
+        title={
+          <p>
+            <FormattedMessage id="Instance Name" />：{'My GRAPH'}
+          </p>
+        }
         // 'Table', 'Json', 'Graph'
-        extra={<Segmented options={[{label:<FormattedMessage id='Table'/>,value:'table'},{label:<FormattedMessage id='Json'/>,value:'json'},{label:<FormattedMessage id='Graph'/>,value:'graph'}]} onChange={(value)=>nodeEdgeChange(value)} />}
+        extra={
+          <Segmented
+            options={[
+              { label: <FormattedMessage id="Table" />, value: 'table' },
+              { label: <FormattedMessage id="Json" />, value: 'json' },
+              { label: <FormattedMessage id="Graph" />, value: 'graph' },
+            ]}
+            onChange={handleChange}
+          />
+        }
       >
-        {checked == 'table' ? <TableList data={[...getTableData(cloneDeep(nodeItems),'Node'),...getTableData(cloneDeep(edgeItems),'Edge')]}/> : null}
-        {checked == 'json' ? (
-          <>
-            <div>恭喜你已经完成图实例的创建，图实例名称为 <Tag color="green">DEFAULT GRAPH</Tag>，类型为 <Tag color="green">Interactive</Tag>, 有 {getTableData(cloneDeep(nodeItems)).length} 种类型的点，{getTableData(cloneDeep(edgeItems)).length} 种类型的边</div>
-            <ReactJsonView reactJson={{node:getTableData(cloneDeep(nodeItems)),edge:getTableData(cloneDeep(edgeItems))}} /> 
-          </>
-        ): null}
-        {checked == 'graph' ? <GraphInsight /> : null}
+        {Content}
       </Card>
     </div>
   );
 };
 
 export default Result;
+
+function getTableData(items: {}, U?: string) {
+  let data: {
+    type?: string;
+    label_name: string;
+    property_name?: string;
+    property_type?: string;
+    primary_keys?: string;
+  }[] = [];
+  // console.log(items, U);
+
+  Object.values(items).map((item: any) => {
+    if (item?.properties?.length > 0) {
+      item?.properties?.map((v: { name: string; type: string; primaryKey: boolean }, i: number) => {
+        if (i == 0) {
+          data.push({
+            type: U,
+            label_name: item.label,
+            property_name: v.name,
+            property_type: v.type,
+            primary_keys: v.primaryKey ? 'true' : 'false',
+          });
+        } else {
+          data.push({
+            label_name: '',
+            property_name: v.name,
+            property_type: v.type,
+            primary_keys: v.primaryKey ? 'true' : 'false',
+          });
+        }
+      });
+    } else {
+      data.push({
+        type: U,
+        label_name: item.label,
+      });
+    }
+  });
+  return data;
+}
