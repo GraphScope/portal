@@ -9,7 +9,7 @@ export default defineConfig({
     { path: '/instance/schema', component: 'instance/view-schema' },
     { path: '/instance/import-data', component: 'instance/import-data' },
     { path: '/query', component: 'query' },
-    { path: '/query-app', component: 'query', layout: false },
+    { path: '/query-app', component: 'query/app', layout: false },
     { path: '/job', component: 'job' },
     { path: '/extension', component: 'extension' },
     { path: '/alert', component: 'alert' },

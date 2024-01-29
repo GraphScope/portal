@@ -46,7 +46,7 @@ export const navbarOptions = [
 ];
 
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
-  const { queryInfo, createStatement, queryGraphData, onBack } = props;
+  const { queryInfo, createStatement, queryGraphData, onBack, displaySidebarPosition } = props;
   const { store, updateStore } = useContext();
   const { graphName, isReady, collapse, activeNavbar } = store;
 
@@ -74,6 +74,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   if (isReady) {
     return (
       <Container
+        displaySidebarPosition={displaySidebarPosition}
         sidebar={
           <Sidebar
             title={graphName}

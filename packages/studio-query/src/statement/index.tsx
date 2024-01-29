@@ -60,7 +60,6 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
       ref={ContainerRef}
       style={{
         flex: 1,
-
         margin: '12px',
         padding: '8px',
         background: '#fff',

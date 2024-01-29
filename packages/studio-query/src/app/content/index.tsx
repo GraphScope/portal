@@ -1,21 +1,14 @@
 import React, { useState, memo } from 'react';
 import Statement from '../../statement';
 import Header from './header';
-import { Segmented, Empty } from 'antd';
+import { Segmented } from 'antd';
 import { useContext } from '../context';
 import type { IStudioQueryProps } from '../context';
+import Empty from './empty';
 interface IContentProps {
   createStatement: IStudioQueryProps['createStatement'];
   queryGraphData: IStudioQueryProps['queryGraphData'];
 }
-const styles: Record<string, React.CSSProperties> = {
-  empty: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
 
 const Content: React.FunctionComponent<IContentProps> = props => {
   const { createStatement, queryGraphData } = props;
@@ -26,8 +19,8 @@ const Content: React.FunctionComponent<IContentProps> = props => {
   const statementStyles =
     mode === 'tabs'
       ? ({
-          // position: 'absolute',
-          top: '',
+          position: 'absolute',
+          width: '100%',
         } as React.CSSProperties)
       : ({} as React.CSSProperties);
   const handleChangeTab = value => {
@@ -79,7 +72,6 @@ const Content: React.FunctionComponent<IContentProps> = props => {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        background: '#f5f6f6',
       }}
     >
       <div style={{ minHeight: '50px', background: '#fff', padding: '0px 12px', borderBottom: '1px solid #ddd' }}>
@@ -91,17 +83,8 @@ const Content: React.FunctionComponent<IContentProps> = props => {
         )}
       </div>
 
-      <div style={{ overflowY: 'scroll', flex: '1' }}>
-        {isEmpty && (
-          <div style={styles.empty}>
-            <Empty
-              // imageStyle={{ width: '80vw', height: '100%' }}
-              imageStyle={{ width: '300px' }}
-              image="https://img.alicdn.com/imgextra/i3/O1CN01ioBjPd24ALzvMY66U_!!6000000007350-55-tps-915-866.svg"
-              description={<div style={styles.empty}>please input your statements and query graph data</div>}
-            />
-          </div>
-        )}
+      <div style={{ overflowY: 'scroll', flex: '1', position: 'relative' }}>
+        {isEmpty && <Empty />}
         {statements.map(item => {
           const { id, script } = item;
           return (

@@ -26,7 +26,7 @@ const styles: Record<string, React.CSSProperties> = {
   container: {
     display: 'flex',
     flexDirection: 'row',
-    height: 'calc(100vh - 50px)',
+    height: '100%',
   },
   header: {
     height: '50px',
@@ -72,6 +72,7 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
   return (
     <div
       style={{
+        height: '100%',
         width: collapse ? `${collapsedWidth}px` : `${width}px`,
         transition: 'width ease 0.3s',
       }}

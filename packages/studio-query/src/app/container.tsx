@@ -5,13 +5,31 @@ interface ContainerProps {
   content: React.ReactNode;
   footer?: React.ReactNode;
   collapse: boolean;
+  displaySidebarPosition: 'right' | 'left';
 }
 
 const SideWidth = 300;
 const CollapsedWidth = 50;
 
 const Container: React.FunctionComponent<ContainerProps> = props => {
-  const { sidebar, content, footer, collapse } = props;
+  const { sidebar, content, footer, collapse, displaySidebarPosition = 'left' } = props;
+  const SidebarNode = (
+    <div
+      style={{
+        width: collapse ? `${CollapsedWidth}px` : `${SideWidth}px`,
+        transition: 'all 0.3s ease',
+        boxSizing: 'border-box',
+        overflow: 'hidden',
+        border: '1px solid #ddd',
+        borderTop: 'none',
+        borderBottom: 'none',
+        flexBasis: collapse ? `${CollapsedWidth}px` : `${SideWidth}px`,
+        flexShrink: 0,
+      }}
+    >
+      {sidebar}
+    </div>
+  );
 
   return (
     <div
@@ -22,16 +40,18 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
         height: '100%',
         margin: 'auto',
         display: 'flex',
-        flexShrink: 0,
+        flexWrap: 'nowrap',
+        overflow: 'hidden',
       }}
     >
+      {displaySidebarPosition === 'left' && SidebarNode}
       <div
         style={{
           flex: 1,
           boxSizing: 'border-box',
-          marginLeft: '24px',
           display: 'flex',
           flexDirection: 'column',
+          overflow: 'hidden',
         }}
       >
         <div
@@ -57,17 +77,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
           {footer}
         </div>
       </div>
-      <div
-        style={{
-          width: collapse ? `${CollapsedWidth}px` : `${SideWidth}px`,
-          transition: 'all 0.3s ease',
-          boxSizing: 'border-box',
-          overflow: 'hidden',
-          border: '1px solid #ddd',
-        }}
-      >
-        {sidebar}
-      </div>
+      {displaySidebarPosition === 'right' && SidebarNode}
     </div>
   );
 };

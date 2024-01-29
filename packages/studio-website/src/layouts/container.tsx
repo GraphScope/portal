@@ -39,6 +39,8 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
           padding: '24px',
           // border: '1px solid #ddd',
           flexShrink: 0,
+          overflow: 'hidden',
+          flexWrap: 'nowrap',
         }}
       >
         <div
@@ -48,6 +50,8 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
             transition: 'all 0.3s ease',
             boxSizing: 'border-box',
             overflow: 'hidden',
+
+            flexWrap: 'nowrap',
 
             // border: '1px solid #ddd',
           }}
@@ -62,6 +66,8 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
             marginLeft: '24px',
             display: 'flex',
             flexDirection: 'column',
+            overflow: 'hidden',
+            flexWrap: 'nowrap',
           }}
         >
           <div

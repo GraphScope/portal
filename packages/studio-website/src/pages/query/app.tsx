@@ -97,7 +97,14 @@ const QueryModule: React.FunctionComponent<IQueryModuleProps> = props => {
         console.log('res...', res);
       });
   }, []);
-  return <StudioQuery {...services} displaySidebarPosition="right" />;
+  return (
+    <StudioQuery
+      {...services}
+      onBack={() => {
+        history.push('/instance');
+      }}
+    />
+  );
 };
 
 export default QueryModule;
