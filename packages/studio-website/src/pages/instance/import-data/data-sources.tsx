@@ -1,24 +1,49 @@
 import * as React from 'react';
 import { createFromIconfontCN } from '@ant-design/icons';
-import { Form, Input, Button, Table, InputNumber, Select, Checkbox, Flex, Row, Col, Space, Modal } from 'antd';
+import {
+  Form,
+  Input,
+  Button,
+  Table,
+  InputNumber,
+  Select,
+  Checkbox,
+  Flex,
+  Row,
+  Col,
+  Space,
+  Modal,
+  notification,
+  Typography,
+} from 'antd';
+import { PropertyType } from './index';
 import UploadFiles from './upload-file';
 import StagesImportPackages from './stages-import-packages';
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_slis0xqmzfo.js',
 });
-interface IImportDataProps {}
-const {useEffect}=React
+const { Text } = Typography;
+interface IImportDataProps {
+  data: PropertyType;
+}
 const { Option } = Select;
 const DataSource: React.FunctionComponent<IImportDataProps> = props => {
+  const { data } = props;
   const [form] = Form.useForm();
+  const search = location.search.split('=')[1];
+  const [api, contextHolder] = notification.useNotification();
   const [state, updateState] = React.useState({
-    isEidtProperty: false,
-    sourceType: 'ODPS',
+    isEidtProperty: data ? data.bind : false,
+    sourceType: data.select,
     isShowModal: false,
   });
-  useEffect(()=>{
-    form && form.setFieldsValue({select:'ODPS'})
-  },[])
+  //
+  data
+    ? form.setFieldsValue({
+        ...data,
+        label: data && data.source && data.target ? `${data.source}-${data.label}-${data.target}` : data.label,
+      })
+    : form.setFieldsValue({ select: 'ODPS' });
   const { isEidtProperty, sourceType, isShowModal } = state;
   const CheckboxComponent = (field: any) => {
     return (
@@ -31,6 +56,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       />
     );
   };
+
   const getColumns = () => {
     return [
       {
@@ -128,7 +154,12 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     });
   };
   const saveBind = () => {
-    console.log(form.getFieldsValue());
+    let data = {
+      ...form.getFieldsValue(),
+      bind: true,
+    };
+    console.log(data);
+
     updateState(preState => {
       return {
         ...preState,
@@ -144,9 +175,28 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       };
     });
   };
-
+  const openNotification = () => {
+    api.open({
+      message: '数据导入',
+      description: (
+        <>
+          <Text>'「User」类型的节点正在导入中，详情查看任务 JOB-xxx'</Text>
+          <Flex justify="flex-end">
+            <Space>
+              <Button onClick={()=>api.destroy()}>关闭</Button>
+              <Button type="primary">前往查看</Button>
+            </Space>
+          </Flex>
+        </>
+      ),
+      style: {
+        width: 600,
+      },
+    });
+  };
   return (
     <>
+      {contextHolder}
       <Form
         className="table-edit-form"
         form={form}
@@ -158,7 +208,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
         <Row style={{ borderBottom: '1px solid #000' }}>
           <Col span={18} style={{ paddingTop: '12px' }}>
             <Form.Item label="label" name="label" style={{ margin: '10px 10px 10px 0px' }}>
-              <Input style={{ border: '0px', backgroundColor: '#fff' }} disabled />
+              <Input variant="borderless" disabled />
             </Form.Item>
             <Form.Item label="数据源" style={{ margin: '0px' }}>
               <Flex justify="flex-start">
@@ -188,7 +238,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
             </Form.Item>
           </Col>
           <Col span={6} style={{ display: 'flex', justifyContent: 'end', alignItems: 'center', paddingRight: '16px' }}>
-            {isEidtProperty ? (
+            {data && data.bind ? (
               <IconFont type="icon-bangding" style={{ fontSize: '50px' }} />
             ) : (
               <IconFont type="icon-jiechubangding" style={{ fontSize: '50px' }} />
@@ -196,50 +246,53 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
           </Col>
         </Row>
         {isEidtProperty ? (
-          <Row style={{ padding: '0 24px 24px 0px', marginTop: '12px' }}>
-            <Col span={24}>
-              <Form.Item label="属性映射" rules={[{ required: true, message: 'Please input Source Label!' }]}>
-                <Form.List name="propertyMapping">
-                  {(fields: any, { add, remove }: any) => {
-                    // 将Table视为 Form.List 中循环的 Form.Item
-                    return (
-                      <Form.Item>
-                        <Table dataSource={fields} columns={getColumns(remove)} bordered pagination={false} />
-                      </Form.Item>
-                    );
-                  }}
-                </Form.List>
-              </Form.Item>
-              <Flex justify="end">
-                <Space>
-                  <Button
-                    type="primary"
-                    onClick={() => {
-                      updateState(preState => {
-                        return {
-                          ...preState,
-                          isShowModal: true,
-                        };
-                      });
-                    }}
-                  >
-                    周期导入
-                  </Button>
+          <>
+            <Form.Item label="属性映射" rules={[{ required: true, message: 'Please input Source Label!' }]}>
+              <Form.List name="properties">
+                {(fields: any, { add, remove }: any) => {
+                  // 将Table视为 Form.List 中循环的 Form.Item
+                  return (
+                    <Form.Item>
+                      <Table dataSource={fields} columns={getColumns(remove)} bordered pagination={false} />
+                    </Form.Item>
+                  );
+                }}
+              </Form.List>
+            </Form.Item>
+            <Flex justify="end" style={{ margin: '16px' }}>
+              <Space>
+                {search === 'groot' ? (
+                  <>
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        updateState(preState => {
+                          return {
+                            ...preState,
+                            isShowModal: true,
+                          };
+                        });
+                      }}
+                    >
+                      周期导入
+                    </Button>
+                    <Button type="primary" onClick={openNotification}>
+                      立即导入
+                    </Button>
+                  </>
+                ) : (
                   <Button type="primary" onClick={saveBind}>
-                    立即导入
-                  </Button>
-                  {/* <Button type="primary" onClick={saveBind}>
                     保存绑定
-                  </Button> */}
-                </Space>
-              </Flex>
-            </Col>
-          </Row>
+                  </Button>
+                )}
+              </Space>
+            </Flex>
+          </>
         ) : null}
       </Form>
       <Modal width={'75%'} open={isShowModal} footer={null}>
         <StagesImportPackages
-          onChange={(val:boolean) => {
+          onChange={(val: boolean) => {
             updateState(preState => {
               return {
                 ...preState,
