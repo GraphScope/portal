@@ -10,9 +10,12 @@ export type PropertyType = {
   key: string | number;
   label: string;
   select?: string;
+  /** 文件位置 */
   location?: string;
+  /** 起始节点 */
   source?: string;
   target?: string;
+  /** 是否绑定 isBind */
   bind: boolean;
   properties?: {
     name: string;
@@ -31,6 +34,7 @@ type IStateType = {
 const { Text } = Typography;
 const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   const [state, updateState] = useState<IStateType>({
+    /** currentType */
     suorceSelect: 'nodesource',
     sourceList: {
       nodes: [
@@ -40,6 +44,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           select: 'ODPS',
           location: 'nodes',
           bind: true,
+          // source 应该改为  dataIndex
           properties: [{ name: 'id', type: 'string', primaryKey: true, source: 1 }],
         },
         {
@@ -79,13 +84,17 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       };
     });
   };
+
+  const bindNodeCount = nodes.filter(item => item.bind).length;
+  const bindEdgeCount = edges.filter(item => item.bind).length;
+
   const option: { label: string; value: string }[] = [
     {
-      label: `点数据源绑定（${nodes.filter(item => item.bind).length}/${nodes.length}）`,
+      label: `点数据源绑定（${bindNodeCount}/${nodes.length}）`,
       value: 'nodesource',
     },
     {
-      label: `边数据源绑定（${edges.filter(item => item.bind).length}/${edges.length})`,
+      label: `边数据源绑定（${bindEdgeCount}/${edges.length})`,
       value: 'edgesource',
     },
   ];
@@ -157,14 +166,10 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           </Space>
         </Flex>
         <Card style={{ marginTop: '24px', border: '1px dashed #000', borderRadius: '0px' }}>
-          <GraphInsight
-            children={
-              <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
-                目前绑定了{edges.filter(item => item.bind).length} 条边，{nodes.filter(item => item.bind).length}个点
-              </Text>
-            }
-            pdata={{nodeLists:nodes,edgeLists:edges}}
-          />
+          <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
+            目前绑定了{bindEdgeCount} 条边，{bindNodeCount}个点
+          </Text>
+          <GraphInsight pdata={{ nodeLists: nodes, edgeLists: edges }}></GraphInsight>
         </Card>
       </Col>
     </Row>

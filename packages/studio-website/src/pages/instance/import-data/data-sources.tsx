@@ -19,6 +19,7 @@ import {
 import { PropertyType } from './index';
 import UploadFiles from './upload-file';
 import StagesImportPackages from './stages-import-packages';
+import ImportPeriodic from './data-source/import-periodic';
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_slis0xqmzfo.js',
 });
@@ -183,7 +184,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
           <Text>'「User」类型的节点正在导入中，详情查看任务 JOB-xxx'</Text>
           <Flex justify="flex-end">
             <Space>
-              <Button onClick={()=>api.destroy()}>关闭</Button>
+              <Button onClick={() => api.destroy()}>关闭</Button>
               <Button type="primary">前往查看</Button>
             </Space>
           </Flex>
@@ -208,7 +209,8 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
         <Row style={{ borderBottom: '1px solid #000' }}>
           <Col span={18} style={{ paddingTop: '12px' }}>
             <Form.Item label="label" name="label" style={{ margin: '10px 10px 10px 0px' }}>
-              <Input variant="borderless" disabled />
+              {/* <Input variant="borderless" disabled /> */}
+              xx label
             </Form.Item>
             <Form.Item label="数据源" style={{ margin: '0px' }}>
               <Flex justify="flex-start">
@@ -245,7 +247,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
             )}
           </Col>
         </Row>
-        {isEidtProperty ? (
+        {isEidtProperty && (
           <>
             <Form.Item label="属性映射" rules={[{ required: true, message: 'Please input Source Label!' }]}>
               <Form.List name="properties">
@@ -253,7 +255,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                   // 将Table视为 Form.List 中循环的 Form.Item
                   return (
                     <Form.Item>
-                      <Table dataSource={fields} columns={getColumns(remove)} bordered pagination={false} />
+                      <Table dataSource={fields} columns={getColumns()} bordered pagination={false} />
                     </Form.Item>
                   );
                 }}
@@ -263,19 +265,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
               <Space>
                 {search === 'groot' ? (
                   <>
-                    <Button
-                      type="primary"
-                      onClick={() => {
-                        updateState(preState => {
-                          return {
-                            ...preState,
-                            isShowModal: true,
-                          };
-                        });
-                      }}
-                    >
-                      周期导入
-                    </Button>
+                    <ImportPeriodic />
                     <Button type="primary" onClick={openNotification}>
                       立即导入
                     </Button>
@@ -288,20 +278,8 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
               </Space>
             </Flex>
           </>
-        ) : null}
+        )}
       </Form>
-      <Modal width={'75%'} open={isShowModal} footer={null}>
-        <StagesImportPackages
-          onChange={(val: boolean) => {
-            updateState(preState => {
-              return {
-                ...preState,
-                isShowModal: val,
-              };
-            });
-          }}
-        />
-      </Modal>
     </>
   );
 };
