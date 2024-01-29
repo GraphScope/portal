@@ -2,12 +2,13 @@ import { FunctionComponent } from 'react';
 import Graphin, { Utils } from '@antv/graphin';
 import { theme } from 'antd';
 import React from 'react';
+import {PropertyType} from './index'
 const { useToken } = theme;
 interface Props {
   children?: JSX.Element;
   pdata:{
-    nodeLists:[];
-    edgeLists:[]
+    nodeLists:PropertyType[];
+    edgeLists:PropertyType[]
   }
 }
 
@@ -18,7 +19,7 @@ const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
     const { key, label } = item;
     nodesMap.set(key, item);
     return {
-      id: key,
+      id: label,
       style: {
         label: {
           value: `${label}(${item.bind ? '已绑定' : '未绑定'})`,
@@ -69,6 +70,8 @@ const GraphInsight: FunctionComponent<Props> = props => {
   const { token } = useToken();
   //@ts-ignore
   const graphData = getVertexEdges(pdata.nodeLists, pdata.edgeLists,token);
+  console.log(graphData);
+  
   return (
     <>
       {children}

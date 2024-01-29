@@ -9,12 +9,12 @@ interface IImportDataProps {}
 export type PropertyType = {
   key: string | number;
   label: string;
-  select: string;
-  location: string;
+  select?: string;
+  location?: string;
   source?: string;
   target?: string;
   bind: boolean;
-  properties: {
+  properties?: {
     name: string;
     type: string;
     primaryKey: boolean;
@@ -103,11 +103,11 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
               let reader = new FileReader();
               reader.readAsText(file, 'utf-8');
               reader.onload = () => {
-                console.log(reader.result);
                 updateState(preState => {
                   return {
                     ...preState,
-                    sourceList: JSON.parse(reader.result),
+                    //@ts-ignore
+                    sourceList: JSON.parse(reader && reader.result),
                   };
                 });
               };
@@ -143,12 +143,6 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
                 reader.readAsText(file, 'utf-8');
                 reader.onload = () => {
                   console.log(reader.result);
-                  updateState(preState => {
-                    return {
-                      ...preState,
-                      sourceList: JSON.parse(reader.result),
-                    };
-                  });
                 };
               }}
               showUploadList={false}
