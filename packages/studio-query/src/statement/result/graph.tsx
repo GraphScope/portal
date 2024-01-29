@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Graphin from '@antv/graphin';
+import Graph from '../../graph';
 interface IGraphViewProps {
   data: any;
 }
@@ -11,9 +11,10 @@ const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
       console.log('unmount....graph');
     };
   }, []);
+
   return (
     <div style={{ width: '100%' }}>
-      <Graphin data={data} layout={{ type: 'force' }} style={{ minHeight: '500px' }} />
+      <Graph data={data} />
     </div>
   );
 };

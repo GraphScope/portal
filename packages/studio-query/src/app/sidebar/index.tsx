@@ -77,10 +77,12 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
         transition: 'width ease 0.3s',
       }}
     >
-      <div style={styles.header}>
-        <Button type="text" style={{ margin: '0px 10px' }} icon={<RollbackOutlined />} onClick={onBack} />
-        <span style={{ padding: '0px 12px' }}>{title}</span>
-      </div>
+      {onBack && (
+        <div style={styles.header}>
+          <Button type="text" style={{ margin: '0px 10px' }} icon={<RollbackOutlined />} onClick={onBack} />
+          <span style={{ padding: '0px 12px' }}>{title}</span>
+        </div>
+      )}
       <div style={styles.container}>
         <ul style={styles.ul}>
           {options.map(opt => {
