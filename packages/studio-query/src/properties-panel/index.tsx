@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Overview from './overview';
 import Detial from './detail';
+export { sizes, widths, colors } from './legend/content';
 
 export interface IDetail {
   type: 'node' | 'edge';

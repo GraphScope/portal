@@ -21,7 +21,7 @@ export type ILengendContentProps = ILegnedOption & {
   onChange: (val: ILegnedOption) => void;
 };
 
-const colors: string[] = [
+export const colors: string[] = [
   '#C2B8A2',
   '#EAD4E5',
   '#FCD8C2',
@@ -35,12 +35,12 @@ const colors: string[] = [
   '#F1C7D6',
   '#BBD5CD',
 ];
-const sizes: number[] = Array.from({
+export const sizes: number[] = Array.from({
   length: 10,
 }).map((_item, index) => {
   return (index + 3) * 6;
 });
-const widths: number[] = Array.from({
+export const widths: number[] = Array.from({
   length: 10,
 }).map((_item, index) => {
   return (index + 1) * 0.5;

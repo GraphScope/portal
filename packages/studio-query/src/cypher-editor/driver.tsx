@@ -182,7 +182,7 @@ export function processResult(result) {
         const target = end.low.toString();
         const label = type;
         edges.push({
-          id: identity.low.toString(),
+          id: 'e_' + identity.low.toString(),
           source,
           target,
           label,
@@ -220,7 +220,7 @@ export function processResult(result) {
           const hasRelationship = edges.find(d => d.id === identity.low.toString());
           if (!hasRelationship) {
             edges.push({
-              id: identity.low.toString(),
+              id: 'e_' + identity.low.toString(),
               source: source.low.toString(),
               target: target.low.toString(),
               label: type,

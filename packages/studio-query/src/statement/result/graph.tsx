@@ -38,10 +38,11 @@ const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
       },
     ],
   };
+  const graphName = 'movie';
 
   return (
     <div style={{ width: '100%' }}>
-      <Graph data={data} schema={schema} />
+      <Graph data={data} schemaData={schema} schemaId={graphName} />
     </div>
   );
 };
