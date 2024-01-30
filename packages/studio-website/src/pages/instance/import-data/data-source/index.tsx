@@ -2,10 +2,12 @@ import * as React from 'react';
 import { DisconnectOutlined } from '@ant-design/icons';
 import { Button, Flex, Row, Col, Space, Typography } from 'antd';
 import { PropertyType } from '../index';
-import ModifySource from './modify-source';
+import SwitchSource from './switch-source';
 import ImportPeriodic from './import-periodic';
 import ImportNow from './import-now';
 import TableList from './table';
+import { getUrlParams } from '../utils';
+
 interface IImportDataProps {
   data: PropertyType;
 }
@@ -15,8 +17,8 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const {
     data: { label, isBind, filelocation, datatype, properties },
   } = props;
-
-  const search = location.search.split('=')[1];
+  /** 根据引擎的类型，进行部分UI的隐藏和展示 */
+  const { engineType } = getUrlParams();
   const [state, updateState] = React.useState({
     /** 判断是否绑定 */
     isEidtProperty: isBind || false,
@@ -24,12 +26,10 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     /** table value */
     dataSources: [],
     /** 数据源输入值 */
-    inputValue: '', // 应该是 location
+    location: '', // 应该是 location
   });
-  const { isEidtProperty, currentType, dataSources, inputValue } = state;
-  console.log(dataSources, inputValue);
-  // 命名问题
-  const saveisBind = () => {
+  const { isEidtProperty, currentType, dataSources, location } = state;
+  const saveBindData = () => {
     updateState(preState => {
       return {
         ...preState,
@@ -50,7 +50,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                 <Text>数据源:</Text>
               </Col>
               <Col span={21}>
-                <ModifySource
+                <SwitchSource
                   // 命名：SwitchSource
                   datatype={datatype}
                   filelocation={filelocation}
@@ -92,13 +92,13 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
           <Col span={24}>
             <Flex justify="end" style={{ margin: '16px' }}>
               <Space>
-                {search === 'groot' ? (
+                {engineType === 'groot' ? (
                   <>
                     <ImportPeriodic />
-                    <ImportNow />
+                    <ImportNow label={label} />
                   </>
                 ) : (
-                  <Button type="primary" onClick={saveisBind}>
+                  <Button type="primary" onClick={saveBindData}>
                     保存绑定
                   </Button>
                 )}

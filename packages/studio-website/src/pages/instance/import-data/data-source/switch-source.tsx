@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Flex, Select, Input } from 'antd';
 import UploadFiles from './upload-file';
-interface IModifySourceProps {
+interface ISwitchSourceProps {
   updateState: any;
   datatype?: string;
   filelocation?: string;
   currentType?: string;
 }
-const { Option } = Select;
-const ModifySource: React.FunctionComponent<IModifySourceProps> = props => {
+const SOURCEOPTIONS = [
+  { label: 'Files', value: 'Files' },
+  { label: 'ODPS', value: 'ODPS' },
+];
+const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
   const { datatype, filelocation, updateState, currentType } = props;
   const selsctSource = (val: string) => {
     updateState((preState: any) => {
@@ -21,13 +24,9 @@ const ModifySource: React.FunctionComponent<IModifySourceProps> = props => {
   return (
     <div>
       <Flex justify="flex-start">
-        <Select defaultValue={datatype} onChange={selsctSource}>
-          <Option value="Files">Files</Option>
-          <Option value="ODPS">ODPS</Option>
-          <Option value="ODPS xxx">ODPS xxx</Option>
-        </Select>
+        <Select defaultValue={datatype} options={SOURCEOPTIONS} onChange={selsctSource} />
         <>
-          {currentType == 'ODPS' ? (
+          {currentType == 'ODPS' && (
             <Input
               defaultValue={filelocation}
               placeholder="graphscope/modern_graph/user.csv"
@@ -35,7 +34,7 @@ const ModifySource: React.FunctionComponent<IModifySourceProps> = props => {
                 updateState((preState: any) => {
                   return {
                     ...preState,
-                    inputValue: e.target.value,
+                    location: e.target.value,
                   };
                 });
               }}
@@ -48,7 +47,8 @@ const ModifySource: React.FunctionComponent<IModifySourceProps> = props => {
                 });
               }}
             />
-          ) : (
+          )}
+          {currentType == 'Files' && (
             <UploadFiles
               onChange={val => {
                 updateState((preState: any) => {
@@ -66,4 +66,4 @@ const ModifySource: React.FunctionComponent<IModifySourceProps> = props => {
   );
 };
 
-export default ModifySource;
+export default SwitchSource;

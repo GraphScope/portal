@@ -1,6 +1,6 @@
 import React from 'react';
 import { Segmented } from 'antd';
-import Stage from './stage';
+import Stage from './stages-import-packages';
 type StagesImportPackagesProps = {
   onChange(val: boolean): void;
 };
