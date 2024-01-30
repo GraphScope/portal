@@ -6,34 +6,8 @@ const { useToken } = theme;
 
 interface GraphViewProps {
   data: GraphinData;
+  schema: any;
 }
-
-const schema = {
-  nodes: [
-    {
-      label: 'person',
-      properties: {
-        age: 'number',
-        name: 'string',
-      },
-    },
-    {
-      label: 'software',
-      properties: {
-        lang: 'string',
-        name: 'string',
-      },
-    },
-  ],
-  edges: [
-    {
-      label: 'created',
-      properties: {
-        weight: 'number',
-      },
-    },
-  ],
-};
 
 export interface ConfigItem {
   /** 类型 */
@@ -47,21 +21,19 @@ export interface ConfigItem {
   /** 文本映射字段 */
   caption: string;
 }
-const config: {
-  nodes: ConfigItem[];
-  edges: ConfigItem[];
-} = {
+
+const config = {
   nodes: [
     {
       label: 'person',
       color: '#F7A128',
-      size: 20,
+      size: 40,
       caption: 'name',
     },
     {
       label: 'software',
       color: '#40C054',
-      size: 20,
+      size: 60,
       caption: 'name',
     },
   ],
@@ -75,9 +47,7 @@ const config: {
   ],
 };
 
-const GraphView: React.FunctionComponent<GraphViewProps> = props => {
-  const { data } = props;
-
+function getConfig() {
   const configMap = new Map<string, ConfigItem>();
   config.nodes.forEach(item => {
     configMap.set(item.label, item);
@@ -85,17 +55,41 @@ const GraphView: React.FunctionComponent<GraphViewProps> = props => {
   config.edges.forEach(item => {
     configMap.set(item.label, item);
   });
+  return configMap;
+}
+
+const GraphView: React.FunctionComponent<GraphViewProps> = props => {
+  const { data, schema } = props;
+  const [state, updateState] = useState(() => {
+    const configMap = getConfig();
+    return {
+      configMap,
+    };
+  });
+
+  const { configMap } = state;
 
   const newData = processData(data, configMap);
   const overview = calcOverview(schema, configMap, data);
-
+  const onChange = params => {
+    console.log('params', params);
+    const { label } = params;
+    configMap.set(label, params);
+    updateState(preState => {
+      return {
+        ...preState,
+        configMap,
+      };
+    });
+  };
   return (
     <Graphin
       data={newData}
       layout={{ type: 'force' }}
       style={{ height: '480px', minHeight: '480px', background: '#f8fcfe' }}
     >
-      <Panel overview={overview}></Panel>
+      {/** @ts-ignore */}
+      <Panel overview={overview} onChange={onChange}></Panel>
     </Graphin>
   );
 };

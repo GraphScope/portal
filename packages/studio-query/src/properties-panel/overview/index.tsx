@@ -14,13 +14,15 @@ const Overview: React.FunctionComponent<IOverviewProps> = props => {
   console.log('schema', schema);
   return (
     <div>
-      <Title level={5}>Node Labels</Title>
+      <Title level={5} style={{ marginTop: '12px' }}>
+        Node Labels
+      </Title>
       {nodes.map(item => {
-        return <Legend key={item.label} {...item} type="NODE" onChange={onChange} />;
+        return <Legend key={item.label} {...item} type="node" onChange={onChange} />;
       })}
       <Title level={5}>Relationship Labels</Title>
       {edges.map(item => {
-        return <Legend key={item.label} {...item} onChange={onChange} />;
+        return <Legend key={item.label} {...item} type="node" onChange={onChange} />;
       })}
     </div>
   );

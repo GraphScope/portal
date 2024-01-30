@@ -5,10 +5,11 @@ import type { IDetail } from '../properties-panel';
 import { theme } from 'antd';
 interface IPanelProps {
   overview: any;
+  onChange: () => void;
 }
 
 const Panel: React.FunctionComponent<IPanelProps> = props => {
-  const { overview } = props;
+  const { overview, onChange } = props;
   const { graph } = React.useContext(GraphinContext);
   const { token } = theme.useToken();
   const [state, updateState] = useState<{
@@ -20,7 +21,6 @@ const Panel: React.FunctionComponent<IPanelProps> = props => {
   });
   const { detail, mode } = state;
 
-  const handleChange = () => {};
   useEffect(() => {
     const handleClick = e => {
       const model = e.item.getModel();
@@ -55,6 +55,9 @@ const Panel: React.FunctionComponent<IPanelProps> = props => {
       graph.off('canvas:click', handleClear);
     };
   }, [graph]);
+  const handleChange = value => {
+    console.log(value);
+  };
 
   return (
     <div
@@ -66,9 +69,10 @@ const Panel: React.FunctionComponent<IPanelProps> = props => {
         background: token.colorBgContainer,
         padding: '12px',
         boxShadow: token.boxShadowTertiary,
+        width: '250px',
       }}
     >
-      <PropertiesPanel mode={mode} overview={overview} detail={detail as IDetail} onChange={handleChange} />
+      <PropertiesPanel mode={mode} overview={overview} detail={detail as IDetail} onChange={onChange} />
     </div>
   );
 };
