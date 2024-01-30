@@ -22,7 +22,7 @@ const Overview: React.FunctionComponent<IOverviewProps> = props => {
       })}
       <Title level={5}>Relationship Labels</Title>
       {edges.map(item => {
-        return <Legend key={item.label} {...item} type="node" onChange={onChange} />;
+        return <Legend key={item.label} {...item} type="edge" onChange={onChange} />;
       })}
     </div>
   );

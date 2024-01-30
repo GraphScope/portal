@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Flex, Typography, Space, Tag } from 'antd';
-
+import { Flex, Typography, Space, Tag, theme } from 'antd';
+const { useToken } = theme;
 export interface ILegnedOption {
   /** 属性 */
   properties: Record<string, any>;
@@ -35,21 +35,31 @@ const colors: string[] = [
   '#F1C7D6',
   '#BBD5CD',
 ];
-const sizes: number[] = [10, 20, 30, 40, 50, 60];
-
-const widths: number[] = [1, 2, 3, 4, 5, 6];
+const sizes: number[] = Array.from({
+  length: 10,
+}).map((_item, index) => {
+  return (index + 3) * 6;
+});
+const widths: number[] = Array.from({
+  length: 10,
+}).map((_item, index) => {
+  return (index + 1) * 0.5;
+});
 
 const styles = {
   color: {
     width: '16px',
     height: '16px',
-    display: 'inline-block',
+    display: 'block',
     borderRadius: '50%',
     cursor: 'pointer',
   },
 };
+
 const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
-  const { color, size, caption, properties, label, onChange } = props;
+  const { color, size, caption, properties, label, onChange, type } = props;
+  const { token } = useToken();
+  console.log('type', type);
   const handleChange = (type, item) => {
     console.log(type, item, label);
     onChange &&
@@ -62,12 +72,14 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
         [type]: item,
       });
   };
+  const activeStyle = `2px solid ${token.colorPrimary}`;
   return (
     <div>
-      <Flex>
+      <Flex gap={12} style={{ padding: '6px 0px' }}>
         <Typography.Text>Color</Typography.Text>
         <Space>
           {colors.map(item => {
+            const isActive = color == item;
             return (
               <span
                 key={item}
@@ -75,41 +87,86 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
                 style={{
                   ...styles.color,
                   backgroundColor: item,
+                  boxSizing: 'border-box',
+                  border: isActive ? activeStyle : 'none',
                 }}
               ></span>
             );
           })}
         </Space>
       </Flex>
-      <Flex>
-        <Typography.Text>Size</Typography.Text>
-        <Space>
-          {sizes.map(item => {
-            return (
-              <span
-                key={item}
-                onClick={() => handleChange('size', item)}
-                style={{
-                  ...styles.color,
-                  background: '#ddd',
-                }}
-              ></span>
-            );
-          })}
-        </Space>
-      </Flex>
-      <Flex>
+      {type === 'node' && (
+        <Flex gap={12} style={{ padding: '6px 0px' }}>
+          <Typography.Text>Size</Typography.Text>
+          <Space size={8}>
+            {sizes.map(item => {
+              const isActive = size == item;
+              return (
+                <span
+                  key={item}
+                  onClick={() => handleChange('size', item)}
+                  style={{
+                    ...styles.color,
+                    width: `${item / 3}px`,
+                    height: `${item / 3}px`,
+                    background: '#ddd',
+                    boxSizing: 'border-box',
+                    border: isActive ? activeStyle : 'none',
+                  }}
+                ></span>
+              );
+            })}
+          </Space>
+        </Flex>
+      )}
+      {type === 'edge' && (
+        <Flex gap={12} style={{ padding: '6px 0px' }}>
+          <Typography.Text>LineWidth</Typography.Text>
+          <Space>
+            {widths.map(item => {
+              const isActive = size == item;
+              return (
+                <span
+                  key={item}
+                  onClick={() => handleChange('size', item)}
+                  style={{
+                    cursor: 'pointer',
+                    width: `${item * 5}px`,
+                    height: `16px`,
+                    background: '#ddd',
+                    display: 'block',
+                    boxSizing: 'border-box',
+                    border: isActive ? activeStyle : 'none',
+                  }}
+                ></span>
+              );
+            })}
+          </Space>
+        </Flex>
+      )}
+      <Flex gap={12} style={{ padding: '6px 0px' }}>
         <Typography.Text>Caption</Typography.Text>
         <Space>
           {Object.keys(properties)?.map(item => {
+            const isActive = caption == item;
             return (
-              <Tag
+              <span
                 key={item}
-                style={caption == item ? styles['tag-style'] : styles['tag-active']}
+                style={{
+                  fontSize: '12px',
+                  color: token.colorTextSecondary,
+                  display: 'block',
+                  borderRadius: '6px',
+                  padding: '0px 4px',
+                  boxSizing: 'border-box',
+                  cursor: 'pointer',
+                  background: token.colorBgBlur,
+                  border: isActive ? activeStyle : '1px solid #ddd',
+                }}
                 onClick={() => handleChange('caption', item)}
               >
                 {item}
-              </Tag>
+              </span>
             );
           })}
         </Space>
