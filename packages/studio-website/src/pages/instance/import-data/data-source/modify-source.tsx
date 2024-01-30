@@ -24,6 +24,7 @@ const ModifySource: React.FunctionComponent<IModifySourceProps> = props => {
         <Select defaultValue={datatype} onChange={selsctSource}>
           <Option value="Files">Files</Option>
           <Option value="ODPS">ODPS</Option>
+          <Option value="ODPS xxx">ODPS xxx</Option>
         </Select>
         <>
           {currentType == 'ODPS' ? (

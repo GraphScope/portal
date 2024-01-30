@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DisconnectOutlined } from '@ant-design/icons';
-import { Form, Button, Flex, Row, Col, Space, Typography } from 'antd';
+import { Button, Flex, Row, Col, Space, Typography } from 'antd';
 import { PropertyType } from '../index';
 import ModifySource from './modify-source';
 import ImportPeriodic from './import-periodic';
@@ -15,7 +15,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const {
     data: { label, isBind, filelocation, datatype, properties },
   } = props;
-  const [form] = Form.useForm();
+
   const search = location.search.split('=')[1];
   const [state, updateState] = React.useState({
     /** 判断是否绑定 */
@@ -24,18 +24,12 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     /** table value */
     dataSources: [],
     /** 数据源输入值 */
-    inputValue: '',
+    inputValue: '', // 应该是 location
   });
   const { isEidtProperty, currentType, dataSources, inputValue } = state;
   console.log(dataSources, inputValue);
-
+  // 命名问题
   const saveisBind = () => {
-    let data = {
-      ...form.getFieldsValue(),
-      isBind: true,
-    };
-    console.log(data);
-
     updateState(preState => {
       return {
         ...preState,
@@ -57,6 +51,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
               </Col>
               <Col span={21}>
                 <ModifySource
+                  // 命名：SwitchSource
                   datatype={datatype}
                   filelocation={filelocation}
                   currentType={currentType}
@@ -67,11 +62,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
           </Col>
         </Col>
         <Col span={6} style={{ display: 'flex', justifyContent: 'end', alignItems: 'center', paddingRight: '16px' }}>
-          {isBind && isBind ? (
-            <DisconnectOutlined style={{ fontSize: '50px', color: '#53C31C' }} />
-          ) : (
-            <DisconnectOutlined style={{ fontSize: '50px' }} />
-          )}
+          <DisconnectOutlined style={{ fontSize: '50px', color: isBind ? '#53C31C' : '#ddd' }} />
         </Col>
       </Row>
       {isEidtProperty && (

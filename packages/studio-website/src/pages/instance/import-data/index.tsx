@@ -65,6 +65,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   const [state, updateState] = useState<IStateType>({
     /** currentType */
     suorceSelect: 'nodesource',
+    // schema 需要通过 fetch(/graph/schema) 接口得到，同时需要增加 iSReady，增加骨架图，提高体验
     sourceList: {
       nodes: [
         {
@@ -130,6 +131,15 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       value: 'edgesource',
     },
   ];
+  /** 根据引擎的类型，进行部分UI的隐藏和展示 */
+  const engineType = 'interactive';
+
+  const handleImport = () => {
+    console.log('state', state);
+
+    // todo fetch
+  };
+
   return (
     <Row style={{ padding: '24px' }} gutter={32}>
       <Col span={16}>
@@ -139,7 +149,11 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
             //@ts-ignore
             onChange={nodeEdgeChange}
           />
-          <UploadCompnent option={option} updateState={updateState} />
+          {engineType === 'interactive' && (
+            <Button type="primary" onClick={handleImport}>
+              导入数据
+            </Button>
+          )}
         </Flex>
         <Divider style={{ margin: '12px 0px' }} />
         {/* 遍历需要绑定的数据源 */}

@@ -16,9 +16,42 @@ type TableListProps = {
 };
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
 
+const PROPERTY_KEY_OPTIONS = [
+  {
+    value: 'long',
+    label: 'LONG',
+  },
+  {
+    value: 'double',
+    label: 'DOUBLE',
+  },
+  {
+    value: 'str',
+    label: 'STRING',
+  },
+];
+
 const TableList: React.FC<TableListProps> = props => {
   const { tabledata, onChange } = props;
   const [dataSource, setDataSource] = useState<DataType[]>(tabledata);
+  const handleChangeIndex = (value: any, text: any) => {
+    let newData: DataType[] = [];
+    // 这段逻辑太繁琐了
+    dataSource.map(item => {
+      if (item.name === text.name) {
+        newData.push({
+          ...item,
+          dataindex: value,
+        });
+      } else {
+        newData.push({
+          ...item,
+        });
+      }
+    });
+    setDataSource(newData);
+    onChange && onChange(newData);
+  };
   const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex?: string })[] = [
     {
       title: '属性名',
@@ -32,27 +65,7 @@ const TableList: React.FC<TableListProps> = props => {
       key: 'type',
       width: '30%',
       render(text) {
-        return (
-          <Select
-            style={{ width: '100%' }}
-            defaultValue={text}
-            disabled
-            options={[
-              {
-                value: 'long',
-                label: 'LONG',
-              },
-              {
-                value: 'double',
-                label: 'DOUBLE',
-              },
-              {
-                value: 'str',
-                label: 'STRING',
-              },
-            ]}
-          />
-        );
+        return <Select style={{ width: '100%' }} defaultValue={text} disabled options={PROPERTY_KEY_OPTIONS} />;
       },
     },
     {
@@ -70,29 +83,7 @@ const TableList: React.FC<TableListProps> = props => {
       width: '20%',
       editable: true,
       render(text) {
-        return (
-          <InputNumber
-            min={0}
-            defaultValue={text.dataindex}
-            onChange={value => {
-              let newData: DataType[] = [];
-              dataSource.map(item => {
-                if (item.name === text.name) {
-                  newData.push({
-                    ...item,
-                    dataindex: value,
-                  });
-                } else {
-                  newData.push({
-                    ...item,
-                  });
-                }
-              });
-              setDataSource(newData);
-              onChange(newData);
-            }}
-          />
-        );
+        return <InputNumber min={0} defaultValue={text.dataindex} onChange={value => handleChangeIndex(value, text)} />;
       },
     },
   ];

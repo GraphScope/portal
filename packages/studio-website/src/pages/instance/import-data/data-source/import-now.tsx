@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, notification, Typography, Flex, Space } from 'antd';
 interface IImportNowProps {}
 const { Text } = Typography;
 const ImportNow: React.FunctionComponent<IImportNowProps> = props => {
-  const [visible, setVisible] = useState(false);
   const [api, contextHolder] = notification.useNotification();
   const openNotification = () => {
     api.open({
       message: '数据导入',
       description: (
         <>
-          <Text>'「User」类型的节点正在导入中，详情查看任务 JOB-xxx'</Text>
+          {/** 这里的值应该都是变量： */}
+          <Text>「User」类型的节点正在导入中，详情查看任务 JOB-xxx</Text>
           <Flex justify="flex-end">
             <Space>
               <Button onClick={() => api.destroy()}>关闭</Button>
