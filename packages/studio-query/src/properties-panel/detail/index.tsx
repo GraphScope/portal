@@ -25,16 +25,15 @@ const Detial: React.FunctionComponent<DetialProps> = props => {
           style={{ marginRight: '8px', fontSize: '16px' }}
         />
       </h3>
-      <Legend cutomer="cutomer" onChange={onChange} properties={data} label={label}/>
+      <Legend cutomer="cutomer" onChange={onChange} properties={data} label={label} />
       <table>
         <tbody>
           {Object.keys(data).map((key, i) => {
             return (
-              <tr style={{ backgroundColor: i % 2 == 0 ? '' : '#F7F6F6' }}>
+              <tr style={{ backgroundColor: i % 2 == 0 ? '' : '#F7F6F6' }} key={key}>
                 <td style={{ minWidth: '120px' }}>{key}</td>
                 <td style={{ minWidth: '120px' }}>{data[key]}</td>
                 <td>
-                  {' '}
                   <Tooltip title="复制">
                     <CopyOutlined
                       onClick={e => {

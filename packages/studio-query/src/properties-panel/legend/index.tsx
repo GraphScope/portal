@@ -82,8 +82,7 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
           <span style={{ fontSize: '16px' }}>Color: </span>
           {colors.map(item => {
             return (
-              <Space>
-                {' '}
+              <Space key={item}>
                 <span
                   onClick={() => propertiesChange(item, 'color')}
                   style={{
@@ -103,8 +102,7 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
           <span style={{ fontSize: '16px' }}>Size: </span>
           {size.map(item => {
             return (
-              <Space>
-                {' '}
+              <Space key={item.width}>
                 <span
                   onClick={() => propertiesChange(item, 'size')}
                   style={{
@@ -125,6 +123,7 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
           {Object.keys(properties)?.map(item => {
             return (
               <Tag
+                key={item}
                 style={caption == item ? styles['tag-style'] : styles['tag-active']}
                 onClick={() => propertiesChange(item, 'caption')}
               >

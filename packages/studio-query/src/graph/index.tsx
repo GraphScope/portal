@@ -101,6 +101,7 @@ const GraphView: React.FunctionComponent<GraphViewProps> = props => {
 };
 
 export default GraphView;
+
 function calcOverview(schema, configMap: Map<string, ConfigItem>, data: GraphinData) {
   const nodekeyOccurrences = countOccurrencesByKey(data.nodes, 'label');
   const edgekeyOccurrences = countOccurrencesByKey(data.edges, 'label');
@@ -137,6 +138,13 @@ function calcOverview(schema, configMap: Map<string, ConfigItem>, data: GraphinD
   };
 }
 
+/**
+ * 根据指定的键值，统计数组中每个键值的出现次数，并返回包含统计结果的对象。
+ *
+ * @param {Array} arr - 要统计的数组。
+ * @param {string} key - 用于统计的键值。
+ * @returns {Object} 包含键值出现次数的对象。
+ */
 function countOccurrencesByKey(arr, key) {
   return arr.reduce((acc, curr) => {
     const label = curr[key];
@@ -149,6 +157,7 @@ function countOccurrencesByKey(arr, key) {
     return acc;
   }, {});
 }
+
 function processData(data: GraphinData, configMap: Map<string, ConfigItem>) {
   const nodesMap = new Map();
   const { nodes: Nodes, edges: Edges } = data;
