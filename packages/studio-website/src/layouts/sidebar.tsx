@@ -30,6 +30,11 @@ const items: MenuProps['items'] = [
     key: '/query',
     icon: <FileSearchOutlined />,
   },
+  {
+    label: <FormattedMessage id="Query App" />,
+    key: '/query-app',
+    icon: <FileSearchOutlined />,
+  },
 ];
 
 const otherItems: MenuProps['items'] = [

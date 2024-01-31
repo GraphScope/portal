@@ -68,7 +68,12 @@ const Editor: React.FunctionComponent<
           {onClose && <Button type="text" icon={<CloseOutlined onClick={handleClose} />} />}
         </Space>
       </Flex>
-      <div style={{ height: '100px', width: 'calc(100vw - 328px)' }}>
+      <div
+        style={{
+          height: '100px',
+          width: '100%', // 'calc(100vw - 328px)'
+        }}
+      >
         <CypherEdit ref={editorRef} value={script} onChange={handleChange} onInit={(initEditor: any) => {}} />
       </div>
     </div>

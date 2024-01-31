@@ -146,6 +146,7 @@ class CypherDriver {
 
 export default CypherDriver;
 
+// todo: 和Neo4j官方的数据处理逻辑保持一致：https://github.com/neo4j/neo4j-browser/blob/master/src/browser/modules/Stream/CypherFrame/VisualizationView/VisualizationView.tsx#L129
 /**
  * 将查询结果转化为图结构，如果不能转化为图结构，转化为table结构
  * @param result 查询结果
@@ -181,7 +182,7 @@ export function processResult(result) {
         const target = end.low.toString();
         const label = type;
         edges.push({
-          id: identity.low.toString(),
+          id: 'e_' + identity.low.toString(),
           source,
           target,
           label,
@@ -219,7 +220,7 @@ export function processResult(result) {
           const hasRelationship = edges.find(d => d.id === identity.low.toString());
           if (!hasRelationship) {
             edges.push({
-              id: identity.low.toString(),
+              id: 'e_' + identity.low.toString(),
               source: source.low.toString(),
               target: target.low.toString(),
               label: type,
@@ -235,8 +236,22 @@ export function processResult(result) {
     });
   });
 
-  console.log({ nodes, edges, table });
-  return { nodes, edges, table };
+  console.log({ nodes: deduplicateNodes(nodes), edges, table });
+  return { nodes: deduplicateNodes(nodes), edges, table };
+}
+
+export function deduplicateNodes(nodes) {
+  const res = nodes.reduce(
+    (acc, curr) => {
+      if (!acc.taken[curr.id]) {
+        acc.nodes.push(curr);
+        acc.taken[curr.id] = true;
+      }
+      return acc;
+    },
+    { nodes: [], taken: {}, nodeLimitHit: false },
+  );
+  return res.nodes;
 }
 
 export function processProperties(properties) {

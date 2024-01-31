@@ -17,6 +17,7 @@ import {
   BookOutlined,
 } from '@ant-design/icons';
 import type { IStudioQueryProps } from './context';
+import Container from './container';
 export const navbarOptions = [
   {
     id: 'saved',
@@ -45,7 +46,7 @@ export const navbarOptions = [
 ];
 
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
-  const { queryInfo, createStatement, queryGraphData, onBack } = props;
+  const { queryInfo, createStatement, queryGraphData, onBack, displaySidebarPosition } = props;
   const { store, updateStore } = useContext();
   const { graphName, isReady, collapse, activeNavbar } = store;
 
@@ -72,29 +73,21 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
 
   if (isReady) {
     return (
-      <div>
-        <Sidebar
-          title={graphName}
-          options={navbarOptions}
-          value={activeNavbar}
-          collapse={collapse}
-          onChange={handleChangeNavbar}
-          onBack={onBack}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            top: '0px',
-            left: collapse ? '50px' : '300px',
-            right: '0px',
-            bottom: '0px',
-            background: '#f1f1f1',
-            transition: 'left ease 0.3s',
-          }}
-        >
-          <Content createStatement={createStatement} queryGraphData={queryGraphData} />
-        </div>
-      </div>
+      <Container
+        displaySidebarPosition={displaySidebarPosition}
+        sidebar={
+          <Sidebar
+            title={graphName}
+            options={navbarOptions}
+            value={activeNavbar}
+            collapse={collapse}
+            onChange={handleChangeNavbar}
+            onBack={onBack}
+          />
+        }
+        content={<Content createStatement={createStatement} queryGraphData={queryGraphData} />}
+        collapse={collapse}
+      ></Container>
     );
   }
   return null;

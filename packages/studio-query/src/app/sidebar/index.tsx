@@ -26,7 +26,7 @@ const styles: Record<string, React.CSSProperties> = {
   container: {
     display: 'flex',
     flexDirection: 'row',
-    height: 'calc(100vh - 50px)',
+    height: '100%',
   },
   header: {
     height: '50px',
@@ -58,6 +58,9 @@ const styles: Record<string, React.CSSProperties> = {
   },
   content: {},
 };
+
+const collapsedWidth = 50;
+const width = 300;
 const Sidebar: React.FunctionComponent<SidebarProps> = props => {
   const { options, collapse, onChange, title, onBack } = props;
   const { searchParams, path } = getSearchParams(window.location);
@@ -69,18 +72,17 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
   return (
     <div
       style={{
-        position: 'absolute',
-        top: '0px',
-        bottom: '0px',
-        width: collapse ? '49px' : '299px',
+        height: '100%',
+        width: collapse ? `${collapsedWidth}px` : `${width}px`,
         transition: 'width ease 0.3s',
-        borderRight: '1px solid #ddd',
       }}
     >
-      <div style={styles.header}>
-        <Button type="text" style={{ margin: '0px 10px' }} icon={<RollbackOutlined />} onClick={onBack} />
-        <span style={{ padding: '0px 12px' }}>{title}</span>
-      </div>
+      {onBack && (
+        <div style={styles.header}>
+          <Button type="text" style={{ margin: '0px 10px' }} icon={<RollbackOutlined />} onClick={onBack} />
+          <span style={{ padding: '0px 12px' }}>{title}</span>
+        </div>
+      )}
       <div style={styles.container}>
         <ul style={styles.ul}>
           {options.map(opt => {

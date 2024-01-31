@@ -123,4 +123,9 @@ export interface IStudioQueryProps {
   type: 'gremlin' | 'cypher' | 'iso_gql';
   /** 返回按钮 */
   onBack: () => {};
+  /** 自定义配置 */
+  /** 展示的模式 */
+  dispalyMode: 'flow' | 'tabs';
+  /** 侧边栏展示的位置 */
+  displaySidebarPosition: 'left' | 'right';
 }
