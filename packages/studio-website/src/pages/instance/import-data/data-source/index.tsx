@@ -73,7 +73,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   );
   return (
     <>
-      <Row style={{ border: `1px solid #000`, padding: '12px 16px' }}>
+      <Row style={{ border: `1px solid ${token.colorBorder}`, padding: '12px 16px' }}>
         <Flex justify="start" align="center">
           {handleIconChange}
         </Flex>
