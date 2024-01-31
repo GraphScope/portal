@@ -1,6 +1,7 @@
 import * as React from 'react';
 import StudioQuery, { CypherDriver } from '@graphscope/studio-query';
 import { GraphApiFp, GraphApiFactory } from '@graphscope/studio-server';
+import Section from '@/components/section';
 import { history } from 'umi';
 const HOST_URL = 'localhost';
 const driver = new CypherDriver(`neo4j://${HOST_URL}:7687`);
@@ -97,7 +98,26 @@ const QueryModule: React.FunctionComponent<IQueryModuleProps> = props => {
         console.log('res...', res);
       });
   }, []);
-  return <StudioQuery {...services} displaySidebarPosition="right" />;
+  return (
+    <Section
+      breadcrumb={[
+        {
+          title: 'Home',
+        },
+        {
+          title: 'Query',
+        },
+      ]}
+      title="Query"
+      desc="You can use Cypher or Gremlin here to query the graph data"
+      style={{
+        padding: '0px',
+        marginTop: '-24px',
+      }}
+    >
+      <StudioQuery {...services} displaySidebarPosition="right" enableAbsolutePosition={true} />
+    </Section>
+  );
 };
 
 export default QueryModule;

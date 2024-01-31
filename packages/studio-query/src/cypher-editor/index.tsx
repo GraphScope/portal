@@ -2,12 +2,14 @@
 import React, { forwardRef } from 'react';
 import { MonacoEnvironment, EditorProvider } from '@difizen/cofine-editor-core';
 import cypherLanguage from '@difizen/cofine-language-cypher';
+import './index.css';
+
 export interface CypherEditorProps {
   maxRows?: number;
   minRows?: number;
 }
 const Editor = forwardRef<any, any>((props, editorRef) => {
-  const { value, onCreated, onChange, language = 'cypher', onInit, maxRows = 20, minRows = 1 } = props;
+  const { value, onCreated, onChange, language = 'cypher', onInit, maxRows = 10, minRows = 1 } = props;
   let codeEditor: monaco.editor.IStandaloneCodeEditor;
   // 监听事件
   let erdElement: HTMLElement | null;

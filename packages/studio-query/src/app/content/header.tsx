@@ -1,8 +1,9 @@
-import React from 'react';
-import { BarsOutlined, InsertRowAboveOutlined, OrderedListOutlined, PlayCircleOutlined } from '@ant-design/icons';
+import React, { useRef } from 'react';
+import { InsertRowAboveOutlined, OrderedListOutlined, PlusOutlined } from '@ant-design/icons';
 import { Tooltip, Segmented, Button, Space, Select, Flex } from 'antd';
 import { localStorageVars } from '../context';
 import { useContext } from '../context';
+
 interface IHeaderProps {}
 
 const options = [
@@ -58,24 +59,22 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
   };
 
   return (
-    <div style={{ position: 'relative', minHeight: '50px', lineHeight: '50px' }}>
-      <Flex align="center" justify="space-between">
-        <div style={{}}>
-          <Select
-            defaultValue="Cypher"
-            options={[
-              { value: 'Cypher', label: 'Cypher' },
-              { value: 'Gremlin', label: 'Gremlin', disabled: true },
-              { value: 'ISO-GQL', label: 'ISO-GQL', disabled: true },
-            ]}
-          />
-          <Button type="text" icon={<PlayCircleOutlined />} onClick={handleAddQuery}>
-            Add Query
-          </Button>
-        </div>
-        <ModeSwitch />
-      </Flex>
-    </div>
+    <Flex align="center" justify="space-between" gap={8} style={{ padding: '9px 0px' }}>
+      <Select
+        defaultValue="Cypher"
+        options={[
+          { value: 'Cypher', label: 'Cypher' },
+          { value: 'Gremlin', label: 'Gremlin', disabled: true },
+          { value: 'ISO-GQL', label: 'ISO-GQL', disabled: true },
+        ]}
+      />
+      <Button type="dashed" style={{ width: '100%' }} icon={<PlusOutlined />} onClick={handleAddQuery}>
+        Add Query Statement
+      </Button>
+      {/* <CypherEdit ref={editorRef} value={script} onChange={handleChange} onInit={(initEditor: any) => {}} /> */}
+
+      <ModeSwitch />
+    </Flex>
   );
 };
 
