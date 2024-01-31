@@ -27,6 +27,7 @@ const ImportNow: React.FunctionComponent<IImportNowProps> = props => {
       style: {
         width: 600,
       },
+      duration: null,
     });
   };
   return (

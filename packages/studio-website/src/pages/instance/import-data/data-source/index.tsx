@@ -28,6 +28,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const [state, updateState] = React.useState({
     /** 判断是否绑定 */
     isEidtProperty: isBind || false,
+    /** 数据源选择 Files or ODPS */
     currentType: datatype,
     /** table value */
     dataSources: [],
