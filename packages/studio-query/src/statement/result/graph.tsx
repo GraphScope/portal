@@ -12,9 +12,37 @@ const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
     };
   }, []);
 
+  const schema = {
+    nodes: [
+      {
+        label: 'person',
+        properties: {
+          age: 'number',
+          name: 'string',
+        },
+      },
+      {
+        label: 'software',
+        properties: {
+          lang: 'string',
+          name: 'string',
+        },
+      },
+    ],
+    edges: [
+      {
+        label: 'created',
+        properties: {
+          weight: 'number',
+        },
+      },
+    ],
+  };
+  const graphName = 'movie';
+
   return (
     <div style={{ width: '100%' }}>
-      <Graph data={data} />
+      <Graph data={data} schemaData={schema} schemaId={graphName} />
     </div>
   );
 };
