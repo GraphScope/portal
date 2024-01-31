@@ -90,7 +90,11 @@ const Content: React.FunctionComponent<IContentProps> = props => {
           return (
             <div
               key={id}
-              style={{ ...statementStyles, visibility: id === activeId || mode === 'flow' ? 'visible' : 'hidden' }}
+              style={{
+                ...statementStyles,
+                visibility: id === activeId || mode === 'flow' ? 'visible' : 'hidden',
+                flex: 1,
+              }}
             >
               <Statement
                 mode={mode}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import CypherEdit from '../../cypher-editor';
-import { Space, Button, Input, Flex, Tooltip } from 'antd';
+import { Space, Button, Input, Flex, Tooltip, Typography, Tag } from 'antd';
 import type { GlobalToken } from 'antd';
 import { PlayCircleOutlined, BookOutlined, CloseOutlined } from '@ant-design/icons';
 import { useRef } from 'react';
@@ -40,10 +40,16 @@ const Editor: React.FunctionComponent<
   };
 
   return (
-    <div>
-      <Flex justify="end" align="center">
-        <Space align="end">
-          {/* <TextArea autoSize={{ minRows: 1, maxRows: 20 }}></TextArea> */}
+    <div style={{}}>
+      <Flex justify="space-between">
+        <Space>
+          <Tag>Cypher</Tag>
+          <Typography.Text type="secondary" style={{ fontSize: '12px', textAlign: 'center' }}>
+            2024/12/1 12:00:00
+          </Typography.Text>
+        </Space>
+
+        <Space>
           <Button
             type="text"
             icon={
@@ -68,14 +74,7 @@ const Editor: React.FunctionComponent<
           {onClose && <Button type="text" icon={<CloseOutlined onClick={handleClose} />} />}
         </Space>
       </Flex>
-      <div
-        style={{
-          height: '100px',
-          width: '100%', // 'calc(100vw - 328px)'
-        }}
-      >
-        <CypherEdit ref={editorRef} value={script} onChange={handleChange} onInit={(initEditor: any) => {}} />
-      </div>
+      <CypherEdit ref={editorRef} value={script} onChange={handleChange} onInit={(initEditor: any) => {}} />
     </div>
   );
 };

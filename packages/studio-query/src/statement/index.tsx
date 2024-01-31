@@ -59,6 +59,8 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
     <div
       ref={ContainerRef}
       style={{
+        display: 'flex',
+        flexDirection: 'column',
         flex: 1,
         margin: '12px',
         padding: '8px',
@@ -77,6 +79,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
         isFetching={isFetching}
         antdToken={token}
       />
+
       {data && <Result data={data} isFetching={isFetching} />}
     </div>
   );
