@@ -16,8 +16,8 @@ interface Props {
 /** graphin 数据处理 */
 const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
   const nodes = nodeList.map((item: PropertyType) => {
-    const { key, label } = item;
-    const labelValue = `${label}(${item.bind ? '已绑定' : '未绑定'})`;
+    const { key, label, isBind } = item;
+    const labelValue = `${label}(${isBind ? '已绑定' : '未绑定'})`;
 
     return {
       id: label,
@@ -37,15 +37,15 @@ const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
   });
 
   const edges = edgeList.map((item: PropertyType) => {
-    const { key, label, source, target } = item;
+    const { key, label, source, target, isBind } = item;
     return {
       id: key,
       source,
       target,
-      label: `${label}(${item.bind ? '已绑定' : '未绑定'})`,
+      label: `${label}(${isBind ? '已绑定' : '未绑定'})`,
       style: {
         label: {
-          value: `${label}(${item.bind ? '已绑定' : '未绑定'})`,
+          value: `${label}(${isBind ? '已绑定' : '未绑定'})`,
           fill: token.colorPrimary,
           offset: [0, 0],
         },
