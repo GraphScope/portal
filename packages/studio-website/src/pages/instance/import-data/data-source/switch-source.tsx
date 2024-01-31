@@ -3,7 +3,6 @@ import { Flex, Select, Input } from 'antd';
 import UploadFiles from './upload-file';
 interface ISwitchSourceProps {
   updateState: any;
-  datatype?: string;
   filelocation?: string;
   currentType?: string;
 }
@@ -12,7 +11,7 @@ const SOURCEOPTIONS = [
   { label: 'ODPS', value: 'ODPS' },
 ];
 const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
-  const { datatype, filelocation, updateState, currentType } = props;
+  const { filelocation, updateState, currentType } = props;
   const selsctSource = (val: string) => {
     updateState((preState: any) => {
       return {
@@ -24,7 +23,7 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
   return (
     <div>
       <Flex justify="flex-start">
-        <Select defaultValue={datatype} options={SOURCEOPTIONS} onChange={selsctSource} />
+        <Select defaultValue={currentType} options={SOURCEOPTIONS} onChange={selsctSource} />
         <>
           {currentType === 'ODPS' && (
             <Input

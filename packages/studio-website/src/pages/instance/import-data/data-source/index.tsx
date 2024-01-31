@@ -14,10 +14,9 @@ interface IImportDataProps {
 }
 const { Text } = Typography;
 const styles: React.CSSProperties = {
-  display: 'flex',
-  justifyContent: 'start',
-  alignItems: 'center',
-  paddingRight: '16px',
+  width: '55px',
+  textAlign: 'end',
+  marginRight: '12px',
 };
 const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const {
@@ -29,7 +28,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const [state, updateState] = React.useState({
     /** 判断是否绑定 */
     isEidtProperty: isBind || false,
-    currentType: 'ODPS',
+    currentType: datatype,
     /** table value */
     dataSources: [],
     /** 数据源输入值 */
@@ -46,58 +45,50 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     /** 改变本条数据 */
     handleChange && handleChange({ label, location, properties: dataSources, datatype: currentType });
   };
+  /** 切换图标 */
+  const handleIconChange = isEidtProperty ? (
+    <CaretDownOutlined
+      onClick={() =>
+        updateState(preState => {
+          return {
+            ...preState,
+            isEidtProperty: !isEidtProperty,
+          };
+        })
+      }
+    />
+  ) : (
+    <CaretUpOutlined
+      onClick={() =>
+        updateState(preState => {
+          return {
+            ...preState,
+            isEidtProperty: !isEidtProperty,
+          };
+        })
+      }
+    />
+  );
   return (
     <>
-      <Row style={{ border: '1px solid #000', padding: '0px 24px 12px' }}>
-        <Col span={1} style={styles}>
-          {isEidtProperty ? (
-            <CaretDownOutlined
-              onClick={() =>
-                updateState(preState => {
-                  return {
-                    ...preState,
-                    isEidtProperty: !isEidtProperty,
-                  };
-                })
-              }
-            />
-          ) : (
-            <CaretUpOutlined
-              onClick={() =>
-                updateState(preState => {
-                  return {
-                    ...preState,
-                    isEidtProperty: !isEidtProperty,
-                  };
-                })
-              }
-            />
-          )}
-        </Col>
-        <Col span={17} style={{ paddingTop: '12px' }}>
-          <Flex justify="flex-start">
-            <Text>label:</Text> <Text>{label}</Text>
+      <Row style={{ border: '1px solid #000', padding: '12px 16px' }}>
+        <Flex justify="start" align="center">
+          {handleIconChange}
+        </Flex>
+        <Col span={20}>
+          <Flex justify="flex-start" align="center">
+            <Text style={styles}>label:</Text> <Text>{label}</Text>
           </Flex>
-          <Col span={24}>
-            <Row>
-              <Col span={3}>
-                <Text>数据源:</Text>
-              </Col>
-              <Col span={21}>
-                <SwitchSource
-                  // 命名：SwitchSource
-                  datatype={datatype}
-                  filelocation={filelocation}
-                  currentType={currentType}
-                  updateState={updateState}
-                />
-              </Col>
-            </Row>
+          <Flex justify="flex-start" align="center">
+            <Text style={styles}>数据源:</Text>
+            <SwitchSource filelocation={filelocation} currentType={currentType} updateState={updateState} />
+          </Flex>
+        </Col>
+        <Flex justify="end" align="center">
+          <Col span={3}>
+            <DisconnectOutlined style={{ fontSize: '50px', color: isBind ? '#53C31C' : '#ddd' }} />
           </Col>
-        </Col>
-        <Col span={6} style={styles}>
-          <DisconnectOutlined style={{ fontSize: '50px', color: isBind ? '#53C31C' : '#ddd' }} />
-        </Col>
+        </Flex>
       </Row>
       {isEidtProperty && (
         <Row style={{ border: '1px solid #000', borderTop: 'none', padding: '12px 24px' }}>
