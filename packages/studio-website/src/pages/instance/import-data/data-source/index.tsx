@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { DisconnectOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
-import { Button, Flex, Row, Col, Space, Typography } from 'antd';
-import { PropertyType } from '../index';
+import { Button, Flex, Row, Col, Space, Typography, theme } from 'antd';
+import { PropertyType } from '../useContext';
 import SwitchSource from './switch-source';
 import ImportPeriodic from './import-periodic';
 import ImportNow from './import-now';
 import TableList from './table';
 import { getUrlParams } from '../utils';
-
+const { useToken } = theme;
 interface IImportDataProps {
   data: PropertyType;
   handleChange(val: any): void;
@@ -23,6 +23,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     data: { label, isBind, filelocation, datatype, properties },
     handleChange,
   } = props;
+  const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const { engineType, graph } = getUrlParams();
   const [state, updateState] = React.useState({
@@ -44,7 +45,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       };
     });
     /** 改变本条数据 */
-    handleChange && handleChange({ label, location, properties: dataSources, datatype: currentType });
+    handleChange && handleChange({ label, location, properties: dataSources, datatype: currentType, isBind: true });
   };
   /** 切换图标 */
   const handleIconChange = isEidtProperty ? (
@@ -72,7 +73,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   );
   return (
     <>
-      <Row style={{ border: '1px solid #000', padding: '12px 16px' }}>
+      <Row style={{ border: `1px solid #000`, padding: '12px 16px' }}>
         <Flex justify="start" align="center">
           {handleIconChange}
         </Flex>
@@ -101,7 +102,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
               <Col span={21}>
                 <TableList
                   //@ts-ignore
-                  tabledata={properties}
+                  tabledata={JSON.parse(JSON.stringify(properties))}
                   onChange={val => {
                     //@ts-ignore
                     updateState(preState => {

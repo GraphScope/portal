@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Table, Select, Checkbox, InputNumber } from 'antd';
-
 type EditableTableProps = Parameters<typeof Table>[0];
 
 interface DataType {
@@ -35,7 +34,7 @@ const TableList: React.FC<TableListProps> = props => {
   const { tabledata, onChange } = props;
   const [dataSource, setDataSource] = useState<DataType[]>(tabledata);
   const handleChangeIndex = (value: any, text: any) => {
-    dataSource.map(item => {
+    dataSource.forEach(item => {
       if (item.name === text.name) {
         item.dataindex = value;
       }
