@@ -12,7 +12,12 @@ interface IImportDataProps {
   data: PropertyType;
 }
 const { Text } = Typography;
-
+const styles: React.CSSProperties = {
+  display: 'flex',
+  justifyContent: 'start',
+  alignItems: 'center',
+  paddingRight: '16px',
+};
 const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const {
     data: { label, isBind, filelocation, datatype, properties },
@@ -40,7 +45,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   return (
     <>
       <Row style={{ border: '1px solid #000', padding: '0px 24px 12px' }}>
-        <Col span={1} style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingRight: '16px' }}>
+        <Col span={1} style={styles}>
           {isEidtProperty ? (
             <CaretDownOutlined
               onClick={() =>
@@ -86,7 +91,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
             </Row>
           </Col>
         </Col>
-        <Col span={6} style={{ display: 'flex', justifyContent: 'end', alignItems: 'center', paddingRight: '16px' }}>
+        <Col span={6} style={styles}>
           <DisconnectOutlined style={{ fontSize: '50px', color: isBind ? '#53C31C' : '#ddd' }} />
         </Col>
       </Row>
