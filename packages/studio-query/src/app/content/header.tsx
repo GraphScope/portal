@@ -69,7 +69,9 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
               { value: 'ISO-GQL', label: 'ISO-GQL', disabled: true },
             ]}
           />
-          <Button type="text" icon={<PlayCircleOutlined />} onClick={handleAddQuery} />
+          <Button type="text" icon={<PlayCircleOutlined />} onClick={handleAddQuery}>
+            Add Query
+          </Button>
         </div>
         <ModeSwitch />
       </Flex>
