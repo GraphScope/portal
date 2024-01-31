@@ -46,9 +46,17 @@ export const navbarOptions = [
 ];
 
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
-  const { queryInfo, createStatement, queryGraphData, onBack, displaySidebarPosition } = props;
+  const {
+    queryInfo,
+    createStatement,
+    queryGraphData,
+    onBack,
+    displaySidebarPosition = 'left',
+    enableAbsolutePosition,
+  } = props;
   const { store, updateStore } = useContext();
-  const { graphName, isReady, collapse, activeNavbar } = store;
+  const { graphName, isReady, collapse, activeNavbar, statements } = store;
+  const enable = !!enableAbsolutePosition && statements.length > 0;
 
   useEffect(() => {
     (async () => {
@@ -75,6 +83,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     return (
       <Container
         displaySidebarPosition={displaySidebarPosition}
+        enableAbsolutePosition={enable}
         sidebar={
           <Sidebar
             title={graphName}

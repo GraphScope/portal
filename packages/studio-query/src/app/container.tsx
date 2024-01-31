@@ -6,13 +6,22 @@ interface ContainerProps {
   footer?: React.ReactNode;
   collapse: boolean;
   displaySidebarPosition: 'right' | 'left';
+  enableAbsolutePosition: boolean;
 }
 
 const SideWidth = 300;
 const CollapsedWidth = 50;
 
 const Container: React.FunctionComponent<ContainerProps> = props => {
-  const { sidebar, content, footer, collapse, displaySidebarPosition = 'left' } = props;
+  const { sidebar, content, footer, collapse, displaySidebarPosition = 'left', enableAbsolutePosition } = props;
+  const positionStyle: React.CSSProperties = enableAbsolutePosition
+    ? {
+        position: 'absolute',
+        top: '0px',
+      }
+    : {
+        position: 'relative',
+      };
   const SidebarNode = (
     <div
       style={{
@@ -20,9 +29,8 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
         transition: 'all 0.3s ease',
         boxSizing: 'border-box',
         overflow: 'hidden',
-        border: '1px solid #ddd',
-        borderTop: 'none',
-        borderBottom: 'none',
+        borderLeft: displaySidebarPosition === 'left' ? 'none' : '1px solid #ddd',
+        borderRight: displaySidebarPosition === 'right' ? 'none' : '1px solid #ddd',
         flexBasis: collapse ? `${CollapsedWidth}px` : `${SideWidth}px`,
         flexShrink: 0,
       }}
@@ -42,6 +50,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
         display: 'flex',
         flexWrap: 'nowrap',
         overflow: 'hidden',
+        ...positionStyle,
       }}
     >
       {displaySidebarPosition === 'left' && SidebarNode}
