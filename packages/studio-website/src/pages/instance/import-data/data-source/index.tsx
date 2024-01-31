@@ -10,6 +10,7 @@ import { getUrlParams } from '../utils';
 
 interface IImportDataProps {
   data: PropertyType;
+  handleChange(val: any): void;
 }
 const { Text } = Typography;
 const styles: React.CSSProperties = {
@@ -21,9 +22,10 @@ const styles: React.CSSProperties = {
 const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const {
     data: { label, isBind, filelocation, datatype, properties },
+    handleChange,
   } = props;
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
-  const { engineType } = getUrlParams();
+  const { engineType, graph } = getUrlParams();
   const [state, updateState] = React.useState({
     /** 判断是否绑定 */
     isEidtProperty: isBind || false,
@@ -41,6 +43,8 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
         isEidtProperty: false,
       };
     });
+    /** 改变本条数据 */
+    handleChange && handleChange({ label, location, properties: dataSources, datatype: currentType });
   };
   return (
     <>

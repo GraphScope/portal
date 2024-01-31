@@ -139,6 +139,29 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
 
     // todo fetch
   };
+  /** 更新入口state数据 */
+  const handleChange = (val: any) => {
+    if (currentType === 'nodesource') {
+      nodes.map(item => {
+        if (item.label === val.label) {
+          item.label = val.label;
+          item.datatype = val.datatype;
+          item.filelocation = val.location;
+          item.properties = val.properties;
+        }
+      });
+    }
+    if (currentType === 'edgesource') {
+      edges.map(item => {
+        if (item.label === val.label) {
+          item.label = val.label;
+          item.datatype = val.datatype;
+          item.filelocation = val.location;
+          item.properties = val.properties;
+        }
+      });
+    }
+  };
 
   return (
     <Row style={{ padding: '24px' }} gutter={32}>
@@ -165,6 +188,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
                 <DataSource
                   //@ts-ignore
                   data={item}
+                  handleChange={handleChange}
                 />
               </div>
             );

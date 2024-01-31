@@ -90,7 +90,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
           <Button
             style={{ width: '150px' }}
             icon={<DeploymentUnitOutlined />}
-            onClick={() => history.push('/instance/import-data/?engineType=groot')}
+            onClick={() => history.push('/instance/import-data/?engineType=groot&graph=movie')}
           >
             Import Data
           </Button>

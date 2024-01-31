@@ -35,22 +35,13 @@ const TableList: React.FC<TableListProps> = props => {
   const { tabledata, onChange } = props;
   const [dataSource, setDataSource] = useState<DataType[]>(tabledata);
   const handleChangeIndex = (value: any, text: any) => {
-    let newData: DataType[] = [];
-    // 这段逻辑太繁琐了
     dataSource.map(item => {
       if (item.name === text.name) {
-        newData.push({
-          ...item,
-          dataindex: value,
-        });
-      } else {
-        newData.push({
-          ...item,
-        });
+        item.dataindex = value;
       }
     });
-    setDataSource(newData);
-    onChange && onChange(newData);
+    setDataSource(dataSource);
+    onChange && onChange(dataSource);
   };
   const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex?: string })[] = [
     {

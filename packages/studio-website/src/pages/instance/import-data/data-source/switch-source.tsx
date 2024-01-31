@@ -26,7 +26,7 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
       <Flex justify="flex-start">
         <Select defaultValue={datatype} options={SOURCEOPTIONS} onChange={selsctSource} />
         <>
-          {currentType == 'ODPS' && (
+          {currentType === 'ODPS' && (
             <Input
               defaultValue={filelocation}
               placeholder="graphscope/modern_graph/user.csv"
@@ -48,7 +48,7 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
               }}
             />
           )}
-          {currentType == 'Files' && (
+          {currentType === 'Files' && (
             <UploadFiles
               onChange={val => {
                 updateState((preState: any) => {
