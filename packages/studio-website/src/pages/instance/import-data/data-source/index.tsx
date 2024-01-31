@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DisconnectOutlined } from '@ant-design/icons';
+import { DisconnectOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import { Button, Flex, Row, Col, Space, Typography } from 'antd';
 import { PropertyType } from '../index';
 import SwitchSource from './switch-source';
@@ -40,7 +40,32 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   return (
     <>
       <Row style={{ border: '1px solid #000', padding: '0px 24px 12px' }}>
-        <Col span={18} style={{ paddingTop: '12px' }}>
+        <Col span={1} style={{ display: 'flex', justifyContent: 'start', alignItems: 'center', paddingRight: '16px' }}>
+          {isEidtProperty ? (
+            <CaretDownOutlined
+              onClick={() =>
+                updateState(preState => {
+                  return {
+                    ...preState,
+                    isEidtProperty: !isEidtProperty,
+                  };
+                })
+              }
+            />
+          ) : (
+            <CaretUpOutlined
+              onClick={() =>
+                updateState(preState => {
+                  return {
+                    ...preState,
+                    isEidtProperty: !isEidtProperty,
+                  };
+                })
+              }
+            />
+          )}
+        </Col>
+        <Col span={17} style={{ paddingTop: '12px' }}>
           <Flex justify="flex-start">
             <Text>label:</Text> <Text>{label}</Text>
           </Flex>
