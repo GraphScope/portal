@@ -12,11 +12,13 @@ interface IImportDataProps {
   data: PropertyType;
   handleChange(val: any): void;
 }
-const { Text } = Typography;
+const { Title, Text } = Typography;
 const styles: React.CSSProperties = {
-  width: '55px',
+  display: 'inline-block',
+  margin: '0px',
+  width: '80px',
   textAlign: 'end',
-  marginRight: '12px',
+  marginRight: '8px',
 };
 const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const {
@@ -79,10 +81,15 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
         </Flex>
         <Col span={20}>
           <Flex justify="flex-start" align="center">
-            <Text style={styles}>label:</Text> <Text>{label}</Text>
+            <Title level={5} style={styles}>
+              label:
+            </Title>
+            <Text>{label}</Text>
           </Flex>
           <Flex justify="flex-start" align="center">
-            <Text style={styles}>数据源:</Text>
+            <Title level={5} style={styles}>
+              数据源:
+            </Title>
             <SwitchSource filelocation={filelocation} currentType={currentType} updateState={updateState} />
           </Flex>
         </Col>
@@ -93,13 +100,15 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
         </Flex>
       </Row>
       {isEidtProperty && (
-        <Row style={{ border: '1px solid #000', borderTop: 'none', padding: '12px 24px' }}>
+        <Row style={{ border: `1px solid ${token.colorBorder}`, borderTop: 'none', padding: '12px 0px 12px 40px' }}>
           <Col span={24}>
             <Row>
-              <Col span={3}>
-                <Text>属性映射：</Text>
+              <Col span={4}>
+                <Title level={5} style={styles}>
+                  属性映射：
+                </Title>
               </Col>
-              <Col span={21}>
+              <Col span={20} pull={1}>
                 <TableList
                   //@ts-ignore
                   tabledata={JSON.parse(JSON.stringify(properties))}
