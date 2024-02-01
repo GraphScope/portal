@@ -1,7 +1,8 @@
 import { FunctionComponent, ReactNode } from 'react';
 import Graphin, { Utils } from '@antv/graphin';
+import iconLoader from '@antv/graphin-icons';
+import '@antv/graphin-icons/dist/index.css';
 import { theme } from 'antd';
-import React from 'react';
 import { PropertyType } from './index';
 const { useToken } = theme;
 interface Props {
@@ -15,16 +16,27 @@ interface Props {
 
 /** graphin 数据处理 */
 const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
+  const icons = Graphin.registerFontFamily(iconLoader);
   const nodes = nodeList.map((item: PropertyType) => {
     const { key, label, isBind } = item;
-    const labelValue = `${label}(${isBind ? '已绑定' : '未绑定'})`;
-
     return {
       id: label,
       style: {
         label: {
-          value: labelValue,
+          value: label,
+          fill: token.colorPrimary,
         },
+        badges: [
+          {
+            position: 'RT',
+            type: 'font',
+            fontFamily: 'graphin',
+            value: icons.disconnect,
+            size: [20, 20],
+            color: isBind ? '#53C31C' : '#ddd',
+            fill: '#fff',
+          },
+        ],
         fontSize: 14,
         keyshape: {
           size: 50,
