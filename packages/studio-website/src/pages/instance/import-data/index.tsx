@@ -99,8 +99,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           </Card>
         </Col>
         <Col span={8}>
-          <GraphTitle />
-          <Card style={{ marginTop: '24px', border: `1px dashed ${token.colorBorder}`, borderRadius: '0px' }}>
+          <Card title={<GraphTitle />}>
             <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
               目前绑定了{bindEdgeCount} 条边，{bindNodeCount}个点
             </Text>

@@ -98,30 +98,25 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
         </Flex>
       </div>
       {isEidtProperty && (
-        <Row style={{ borderTop: `1px solid ${token.colorBorder}`, padding: '8px' }}>
-          <Row>
-            <Col span={4}>
-              <Title level={5} style={{ ...styles, marginTop: '14px' }}>
-                属性映射：
-              </Title>
-            </Col>
-            <Col span={20} pull={1} style={{}}>
-              <TableList
+        <Row style={{ borderTop: `1px solid ${token.colorBorder}`, padding: '8px' }} gutter={[0, 8]}>
+          <Title level={5} style={{ ...styles, marginTop: '14px', padding: '0px' }}>
+            属性映射：
+          </Title>
+          <Col span={21}>
+            <TableList
+              //@ts-ignore
+              tabledata={JSON.parse(JSON.stringify(properties))}
+              onChange={val => {
                 //@ts-ignore
-                tabledata={JSON.parse(JSON.stringify(properties))}
-                onChange={val => {
-                  //@ts-ignore
-                  updateState(preState => {
-                    return {
-                      ...preState,
-                      dataSources: val,
-                    };
-                  });
-                }}
-              />
-            </Col>
-          </Row>
-
+                updateState(preState => {
+                  return {
+                    ...preState,
+                    dataSources: val,
+                  };
+                });
+              }}
+            />
+          </Col>
           <Col span={24}>
             <Flex justify="end">
               <Space>
