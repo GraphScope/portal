@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
-import StagesImportPackages from './import-stage/stages-import-packages';
+import StagesImportPackages from './import-stage';
 interface IImportPeriodicProps {}
 
 const ImportPeriodic: React.FunctionComponent<IImportPeriodicProps> = props => {

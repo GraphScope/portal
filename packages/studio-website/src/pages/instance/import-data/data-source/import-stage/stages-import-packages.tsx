@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, DatePicker, Select, Typography, Flex } from 'antd';
+import { Form, Input, Button, DatePicker, Select, Typography, Flex, Card } from 'antd';
 type StageProps = {
   onChange(val: boolean): void;
 };
@@ -26,8 +26,10 @@ const Stage: React.FunctionComponent<StageProps> = props => {
     onChange && onChange(false);
   };
   return (
-    <>
-      <Title level={4}>从指定 ODPS 表创建周期性导入任务</Title>
+    <Card style={{ marginTop: '18px' }}>
+      <Title level={5} style={{ margin: '0px 0px 16px' }}>
+        从指定 ODPS 表创建周期性导入任务
+      </Title>
       <Form name="basic" labelCol={{ span: 2 }} wrapperCol={{ span: 20 }} form={form}>
         <Form.Item label="路径" name="path" rules={[{ required: true, message: 'Please input Path!' }]}>
           <Input placeholder="odps://<project>/<table>[|ds=${bizdate},type=param]" />
@@ -45,7 +47,7 @@ const Stage: React.FunctionComponent<StageProps> = props => {
           提交
         </Button>
       </Flex>
-    </>
+    </Card>
   );
 };
 
