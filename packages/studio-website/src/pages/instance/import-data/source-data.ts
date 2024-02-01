@@ -9,7 +9,7 @@ export const SOURCEDATA = {
       isBind: true,
       // source 应该改为  dataIndex
       properties: [
-        { key: uuidv4(), name: 'id', type: 'string', primaryKey: true, dataindex: 1 },
+        { key: uuidv4(), name: 'id', type: 'str', primaryKey: true, dataindex: 1 },
         { key: uuidv4(), name: 'pre', type: 'double', primaryKey: true, dataindex: 3 },
       ],
     },
@@ -19,7 +19,7 @@ export const SOURCEDATA = {
       datatype: 'Files',
       filelocation: '',
       isBind: false,
-      properties: [{ key: uuidv4(), name: 'id', type: 'string', primaryKey: true, dataindex: 3 }],
+      properties: [{ key: uuidv4(), name: 'id', type: 'str', primaryKey: true, dataindex: 3 }],
     },
   ],
   edges: [

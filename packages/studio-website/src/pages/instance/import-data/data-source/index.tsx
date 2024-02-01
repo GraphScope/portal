@@ -19,6 +19,7 @@ const styles: React.CSSProperties = {
   width: '80px',
   textAlign: 'end',
   marginRight: '8px',
+  fontSize: '14px',
 };
 const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const {
@@ -95,20 +96,20 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
         </Col>
         <Flex justify="end" align="center">
           <Col span={3}>
-            <DisconnectOutlined style={{ fontSize: '50px', color: isBind ? '#53C31C' : '#ddd' }} />
+            <DisconnectOutlined style={{ fontSize: '32px', color: isBind ? '#53C31C' : '#ddd', marginLeft: '13px' }} />
           </Col>
         </Flex>
       </Row>
       {isEidtProperty && (
-        <Row style={{ border: `1px solid ${token.colorBorder}`, borderTop: 'none', padding: '12px 0px 12px 40px' }}>
+        <Row style={{ border: `1px solid ${token.colorBorder}`, borderTop: 'none', padding: '12px 0px 12px 38px' }}>
           <Col span={24}>
             <Row>
               <Col span={4}>
-                <Title level={5} style={styles}>
+                <Title level={5} style={{ ...styles, marginTop: '14px' }}>
                   属性映射：
                 </Title>
               </Col>
-              <Col span={20} pull={1}>
+              <Col span={20} pull={1} style={{}}>
                 <TableList
                   //@ts-ignore
                   tabledata={JSON.parse(JSON.stringify(properties))}
@@ -126,7 +127,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
             </Row>
           </Col>
           <Col span={24}>
-            <Flex justify="end" style={{ margin: '16px 16px 5px' }}>
+            <Flex justify="end" style={{ margin: '16px 27px 5px' }}>
               <Space>
                 {engineType === 'groot' ? (
                   <>
