@@ -45,6 +45,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
   const [state, updateState] = useState({
     lineCount: 1,
   });
+  const { globalScript } = store;
 
   const handleAddQuery = () => {
     updateStore(draft => {
@@ -63,7 +64,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
     });
   };
   const script = '';
-  const handleChange = () => {};
+  const handleChange = value => {};
   const onChangeContent = (line, editor) => {
     updateState(preState => {
       return {
@@ -72,8 +73,17 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       };
     });
   };
-  const handleQuery = () => {};
+  const handleQuery = () => {
+    if (editorRef.current) {
+      const value = editorRef.current.codeEditor.getValue();
+      console.log('value', value);
+      updateStore(draft => {
+        draft.globalScript = value;
+      });
+    }
+  };
   const isShowCypherSwitch = state.lineCount === 1;
+  console.log(globalScript, 'globalScript');
   return (
     <div
       style={{
@@ -124,7 +134,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       >
         <CypherEditor
           onChangeContent={onChangeContent}
-          value={script}
+          value={globalScript}
           ref={editorRef}
           onChange={handleChange}
           onInit={(initEditor: any) => {}}

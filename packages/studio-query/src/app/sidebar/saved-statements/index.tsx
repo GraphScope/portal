@@ -11,8 +11,9 @@ const SavedStatements: React.FunctionComponent<ISavedStatementsProps> = props =>
     return item;
   });
   const handleClick = value => {
-    const { id } = value;
+    const { id, script } = value;
     updateStore(draft => {
+      draft.globalScript = script;
       const queryIds = draft.statements.map(item => item.id);
       const HAS_QUERY = queryIds.indexOf(id) !== -1;
       draft.activeId = id;

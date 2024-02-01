@@ -35,7 +35,11 @@ export type IStore<T> = T & {
   savedStatements: IStatement[];
   storeProcedures: IStatement[];
   /** 启用绝对布局 */
-  absolutePosition: false;
+  absolutePosition: boolean;
+  /** 启用立即查询 */
+  enableImmediateQuery: boolean;
+  /** 全局的语句 */
+  globalScript: string;
 };
 
 const initialStore: IStore<{}> = {
@@ -45,6 +49,8 @@ const initialStore: IStore<{}> = {
   activeNavbar: 'saved',
   collapse: true,
   activeId: 'query-1',
+  /** 全局语句 */
+  globalScript: 'Match (n) return n limit 10',
   /** 启用绝对布局 */
   absolutePosition: false,
   schemaData: {
@@ -83,6 +89,7 @@ const initialStore: IStore<{}> = {
     },
   ],
   mode: (localStorage.getItem(localStorageVars.mode) as 'flow' | 'tabs') || 'flow',
+  enableImmediateQuery: false,
 };
 
 type ContextType<T> = {
@@ -140,4 +147,6 @@ export interface IStudioQueryProps {
   displaySidebarPosition?: 'left' | 'right';
   /** 是否需要再添加查询语句的时候，切换展示为 absolute */
   enableAbsolutePosition?: boolean;
+  /**  启用立刻查询 */
+  enableImmediateQuery: boolean;
 }

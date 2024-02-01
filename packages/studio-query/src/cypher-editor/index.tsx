@@ -92,9 +92,7 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
         if (onCreated) {
           onCreated(editor.codeEditor);
         }
-        if (onChange) {
-          onChange(editor.codeEditor.getValue());
-        }
+
         editor.codeEditor.onDidChangeModelContent(() => {
           const contentHeight = editor.codeEditor.getContentHeight();
           const lineCount = editor.codeEditor.getModel()?.getLineCount(); // 获取行数
@@ -102,10 +100,12 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
 
           // 计算编辑器容器的高度
           const height = lineCount === 1 ? (lineCount + MAGIC_NUMBER) * lineHeight : (lineCount + 1) * lineHeight;
-          console.log('editor.codeEditor', editor.codeEditor.getContentHeight(), lineCount, height);
 
           if (contentHeight <= maxRows * lineHeight) {
             editorRef.current.style.height = height + 'px';
+          }
+          if (onChange) {
+            onChange(editor.codeEditor.getValue());
           }
 
           if (onChangeContent) {
@@ -113,15 +113,10 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
           }
         });
 
-        editor.codeEditor.onDidContentSizeChange(params => {
-          const { contentHeight } = params;
-          console.log('onDidContentSizeChange', contentHeight);
-        });
         registerOptions({
           querySchema: () => Promise.resolve(schemaData),
           queryFunctions: () => Promise.resolve(functions),
         });
-        editor.codeEditor.layout();
 
         // 监听光标位置变化事件
         // editor.codeEditor.onDidChangeCursorPosition(() => {
@@ -143,12 +138,14 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
         // });
       }
     });
+
     return () => {
       if (codeEditor) {
         codeEditor.dispose();
       }
     };
-  }, [editorRef]);
+  }, [editorRef, value]);
+
   return (
     <div
       ref={editorRef}
