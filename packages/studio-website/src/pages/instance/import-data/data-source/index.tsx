@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DisconnectOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
-import { Button, Flex, Row, Col, Space, Typography, theme } from 'antd';
+import { Button, Flex, Row, Col, Space, Typography, theme, Tooltip } from 'antd';
 import { PropertyType } from '../useContext';
 import SwitchSource from './switch-source';
 import ImportPeriodic from './import-periodic';
@@ -92,7 +92,9 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
             </Space>
           </Flex>
           <Space>
-            <Button type="text" icon={<DisconnectOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}></Button>
+            <Tooltip title={isBind ? '已绑定' : '未绑定'}>
+              <Button type="text" icon={<DisconnectOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}></Button>
+            </Tooltip>
             <Button type="text" icon={ToggleIcon}></Button>
           </Space>
         </Flex>
