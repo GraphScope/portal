@@ -8,15 +8,9 @@ import './index.less';
 import { useContext } from './context';
 import type { IStatement } from './context';
 import Sidebar from './sidebar';
-import {
-  RedditOutlined,
-  DeploymentUnitOutlined,
-  DatabaseOutlined,
-  BgColorsOutlined,
-  BranchesOutlined,
-  BookOutlined,
-} from '@ant-design/icons';
+import { RedditOutlined, DeploymentUnitOutlined, DatabaseOutlined, BookOutlined } from '@ant-design/icons';
 import type { IStudioQueryProps } from './context';
+
 import Container from './container';
 export const navbarOptions = [
   {
