@@ -77,6 +77,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
               overflowY: 'scroll',
               background: '#fff',
               borderRadius: '12px',
+              position: 'relative',
             }}
             className="gs-content"
           >

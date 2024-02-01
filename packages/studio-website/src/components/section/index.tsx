@@ -9,35 +9,46 @@ interface ISectionProps {
   breadcrumb: BreadcrumbProps['items'];
   children?: React.ReactNode;
   items?: TabsProps['items'];
+  style?: React.CSSProperties;
 }
 
 const Section: React.FunctionComponent<ISectionProps> = props => {
-  const { title, desc, breadcrumb, children, items } = props;
-  const style = {
-    padding: '12px 24px',
-  };
+  const { title, desc, breadcrumb, children, items, style } = props;
+
   const onChange = (key: string) => {
     console.log(key);
   };
+  const hasDivider = title && desc && !items;
   return (
-    <section style={{ display: 'flex', flexDirection: 'column' }}>
-      <div style={style}>
+    <section style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div style={{ padding: '12px 24px' }}>
         <Breadcrumb items={breadcrumb} />
-        <Typography.Title level={1} style={{ fontSize: 40 }}>
-          <FormattedMessage id={title} />
-        </Typography.Title>
-        <Typography.Title type="secondary" level={4} style={{ fontWeight: 300 }}>
-          <FormattedMessage id={desc} />
-        </Typography.Title>
+        {title && (
+          <Typography.Title level={1} style={{ fontSize: 40 }}>
+            <FormattedMessage id={title} />
+          </Typography.Title>
+        )}
+        {desc && (
+          <Typography.Title type="secondary" level={4} style={{ fontWeight: 300 }}>
+            <FormattedMessage id={desc} />
+          </Typography.Title>
+        )}
       </div>
-      {!items && <Divider />}
+      {hasDivider && <Divider />}
       {items && (
         <div style={{ padding: '0px 24px' }}>
           <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
         </div>
       )}
-
-      <div style={style}>{children}</div>
+      <div
+        style={{
+          padding: '12px 24px',
+          flex: 1,
+          ...style,
+        }}
+      >
+        {children}
+      </div>
     </section>
   );
 };

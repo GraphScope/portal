@@ -30,16 +30,19 @@ export type IStore<T> = T & {
   /** 保存的语句 */
   savedStatements: IStatement[];
   storeProcedures: IStatement[];
+  /** 启用绝对布局 */
+  absolutePosition: false;
 };
 
 const initialStore: IStore<{}> = {
   /** isReady */
   isReady: false,
-
   graphName: 'movie',
   activeNavbar: 'saved',
-  collapse: false,
+  collapse: true,
   activeId: 'query-1',
+  /** 启用绝对布局 */
+  absolutePosition: false,
 
   statements: [
     // {
@@ -125,7 +128,9 @@ export interface IStudioQueryProps {
   onBack: () => {};
   /** 自定义配置 */
   /** 展示的模式 */
-  dispalyMode: 'flow' | 'tabs';
+  dispalyMode?: 'flow' | 'tabs';
   /** 侧边栏展示的位置 */
-  displaySidebarPosition: 'left' | 'right';
+  displaySidebarPosition?: 'left' | 'right';
+  /** 是否需要再添加查询语句的时候，切换展示为 absolute */
+  enableAbsolutePosition?: boolean;
 }
