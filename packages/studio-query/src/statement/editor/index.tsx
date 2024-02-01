@@ -13,7 +13,17 @@ const Editor: React.FunctionComponent<
     saved: boolean; // 是否是保存的语句
   }
 > = props => {
-  const { onClose, onQuery, script = `Match (n) return n limit 10`, onSave, id, isFetching, antdToken, saved } = props;
+  const {
+    onClose,
+    onQuery,
+    script = `Match (n) return n limit 10`,
+    onSave,
+    id,
+    isFetching,
+    antdToken,
+    saved,
+    schemaData,
+  } = props;
   const editorRef = useRef<any>(null);
 
   const handleChange = async value => {
@@ -74,7 +84,14 @@ const Editor: React.FunctionComponent<
           {onClose && <Button type="text" icon={<CloseOutlined onClick={handleClose} />} />}
         </Space>
       </Flex>
-      <CypherEdit ref={editorRef} value={script} onChange={handleChange} onInit={(initEditor: any) => {}} />
+
+      <CypherEdit
+        schemaData={schemaData}
+        ref={editorRef}
+        value={script}
+        onChange={handleChange}
+        onInit={(initEditor: any) => {}}
+      />
     </div>
   );
 };

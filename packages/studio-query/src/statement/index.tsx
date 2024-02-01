@@ -16,7 +16,7 @@ export type IStatementProps = IEditorProps & {
 const { useToken } = theme;
 
 const Statement: React.FunctionComponent<IStatementProps> = props => {
-  const { onQuery, onClose, onSave, script, id, active, mode, saved } = props;
+  const { onQuery, onClose, onSave, script, id, active, mode, saved, schemaData } = props;
   const { token } = useToken();
   const borderStyle =
     active && mode === 'flow'
@@ -70,6 +70,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
       }}
     >
       <Editor
+        schemaData={schemaData}
         saved={saved}
         id={id}
         script={script}

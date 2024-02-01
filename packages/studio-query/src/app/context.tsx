@@ -15,7 +15,11 @@ export interface IStatement {
 }
 
 export type IStore<T> = T & {
+  /** is ready  */
   isReady: boolean;
+  /** graph schema data */
+  schemaData: any;
+  /** graph name */
   graphName: string;
   // nav collapse
   collapse: boolean;
@@ -43,7 +47,10 @@ const initialStore: IStore<{}> = {
   activeId: 'query-1',
   /** 启用绝对布局 */
   absolutePosition: false,
-
+  schemaData: {
+    nodes: [],
+    edges: [],
+  },
   statements: [
     // {
     //   id: 'query-1',
