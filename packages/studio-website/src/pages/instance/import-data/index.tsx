@@ -42,26 +42,27 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
 
   /** 更新入口state数据 */
   const handleChange = (val: any) => {
+    const { label, isBind, datatype, location, properties } = val;
     updateStore(draft => {
       if (currentType === 'nodesource') {
         draft.sourceList.nodes.forEach(item => {
-          if (item.label === val.label) {
-            item.label = val.label;
-            item.isBind = val.isBind;
-            item.datatype = val.datatype;
-            item.filelocation = val.location;
-            item.properties = val.properties;
+          if (item.label === label) {
+            item.label = label;
+            item.isBind = isBind;
+            item.datatype = datatype;
+            item.filelocation = location;
+            item.properties = properties;
           }
         });
       }
       if (currentType === 'edgesource') {
         draft.sourceList.edges.forEach(item => {
-          if (item.label === val.label) {
-            item.label = val.label;
-            item.isBind = val.isBind;
-            item.datatype = val.datatype;
-            item.filelocation = val.location;
-            item.properties = val.properties;
+          if (item.label === label) {
+            item.label = label;
+            item.isBind = isBind;
+            item.datatype = datatype;
+            item.filelocation = location;
+            item.properties = properties;
           }
         });
       }

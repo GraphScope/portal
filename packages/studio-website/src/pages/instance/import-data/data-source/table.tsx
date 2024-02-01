@@ -34,8 +34,9 @@ const TableList: React.FC<TableListProps> = props => {
   const { tabledata, onChange } = props;
   const [dataSource, setDataSource] = useState<DataType[]>(tabledata);
   const handleChangeIndex = (value: any, text: any) => {
+    const { name } = text;
     dataSource.forEach(item => {
-      if (item.name === text.name) {
+      if (item.name === name) {
         item.dataindex = value;
       }
     });
