@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Row, Col, Card, Typography, Skeleton } from 'antd';
+import { Row, Col, Card, Typography, Skeleton, theme } from 'antd';
 import { useContext } from './useContext';
 import GraphView from './graph-view';
 import DataSource from './data-source/index';
@@ -9,8 +9,9 @@ import GraphTitle from './graph-title';
 interface IImportDataProps {}
 
 const { Text } = Typography;
-
+const { useToken } = theme;
 const ImportData: React.FunctionComponent<IImportDataProps> = props => {
+  const { token } = useToken();
   const { store, updateStore } = useContext();
   const {
     currentType,
@@ -71,22 +72,24 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
     <Row style={{ padding: '24px' }} gutter={32}>
       <Col span={16}>
         <SourceTitle />
-        {!isReady && <Skeleton />}
-        {/* 遍历需要绑定的数据源 */}
-        {sourceData.map(item => {
-          return (
-            <DataSource
-              key={item.key}
-              //@ts-ignore
-              data={item}
-              handleChange={handleChange}
-            />
-          );
-        })}
+        <Card bodyStyle={{ padding: '12px' }}>
+          {!isReady && <Skeleton />}
+          {/* 遍历需要绑定的数据源 */}
+          {sourceData.map(item => {
+            return (
+              <DataSource
+                key={item.key}
+                //@ts-ignore
+                data={item}
+                handleChange={handleChange}
+              />
+            );
+          })}
+        </Card>
       </Col>
       <Col span={8}>
         <GraphTitle />
-        <Card style={{ marginTop: '24px', border: '1px dashed #000', borderRadius: '0px' }}>
+        <Card style={{ marginTop: '24px', border: `1px dashed ${token.colorBorder}`, borderRadius: '0px' }}>
           <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
             目前绑定了{bindEdgeCount} 条边，{bindNodeCount}个点
           </Text>
