@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Table, Select, Checkbox, InputNumber } from 'antd';
+import { Table, Select, Checkbox, InputNumber, Typography } from 'antd';
 type EditableTableProps = Parameters<typeof Table>[0];
-
+const { Text } = Typography;
 interface DataType {
   key: React.Key;
   name: string;
@@ -29,7 +29,10 @@ const PROPERTY_KEY_OPTIONS = [
     label: 'STRING',
   },
 ];
-
+const styles: React.CSSProperties = {
+  fontSize: '12px',
+  fontWeight: 400,
+};
 const TableList: React.FC<TableListProps> = props => {
   const { tabledata, onChange } = props;
   const [dataSource, setDataSource] = useState<DataType[]>(tabledata);
@@ -45,13 +48,21 @@ const TableList: React.FC<TableListProps> = props => {
   };
   const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex?: string })[] = [
     {
-      title: '属性名',
+      title: (
+        <Text type="secondary" style={styles}>
+          属性名
+        </Text>
+      ),
       dataIndex: 'name',
       key: 'name',
       width: '40%',
     },
     {
-      title: '类型',
+      title: (
+        <Text type="secondary" style={styles}>
+          类型
+        </Text>
+      ),
       dataIndex: 'type',
       key: 'type',
       width: '30%',
@@ -60,7 +71,11 @@ const TableList: React.FC<TableListProps> = props => {
       },
     },
     {
-      title: '主键',
+      title: (
+        <Text type="secondary" style={styles}>
+          主键
+        </Text>
+      ),
       dataIndex: 'primaryKey',
       key: 'primaryKey',
       width: '10%',
@@ -69,7 +84,11 @@ const TableList: React.FC<TableListProps> = props => {
       },
     },
     {
-      title: '列索引(名称)',
+      title: (
+        <Text type="secondary" style={styles}>
+          列索引(名称)
+        </Text>
+      ),
       //   dataIndex: 'dataindex',
       width: '20%',
       editable: true,

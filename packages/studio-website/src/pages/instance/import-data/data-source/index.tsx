@@ -19,6 +19,7 @@ const styles: React.CSSProperties = {
   width: '80px',
   padding: '0px 8px',
   fontSize: '14px',
+  fontWeight: 400,
 };
 const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const {

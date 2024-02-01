@@ -1,6 +1,5 @@
 import { FunctionComponent, ReactNode } from 'react';
 import Graphin, { Utils } from '@antv/graphin';
-import iconLoader from '@antv/graphin-icons';
 import '@antv/graphin-icons/dist/index.css';
 import { theme } from 'antd';
 import { PropertyType } from './index';
@@ -16,27 +15,15 @@ interface Props {
 
 /** graphin 数据处理 */
 const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
-  const icons = Graphin.registerFontFamily(iconLoader);
   const nodes = nodeList.map((item: PropertyType) => {
     const { key, label, isBind } = item;
     return {
       id: label,
       style: {
         label: {
-          value: label,
+          value: `${label} ${isBind ? '✅' : '☑️'}`,
           fill: token.colorPrimary,
         },
-        badges: [
-          {
-            position: 'RT',
-            type: 'font',
-            fontFamily: 'graphin',
-            value: icons.disconnect,
-            size: [20, 20],
-            color: isBind ? '#53C31C' : '#ddd',
-            fill: '#fff',
-          },
-        ],
         fontSize: 14,
         keyshape: {
           size: 50,
@@ -54,10 +41,10 @@ const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
       id: key,
       source,
       target,
-      label: `${label}(${isBind ? '已绑定' : '未绑定'})`,
+      label: `${label} ${isBind ? '✅' : '☑️'}`,
       style: {
         label: {
-          value: `${label}(${isBind ? '已绑定' : '未绑定'})`,
+          value: `${label} ${isBind ? '✅' : '☑️'}`,
           fill: token.colorPrimary,
           offset: [0, 0],
         },
