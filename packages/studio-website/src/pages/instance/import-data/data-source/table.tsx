@@ -79,7 +79,7 @@ const TableList: React.FC<TableListProps> = props => {
   ];
   return (
     <div>
-      <Table columns={defaultColumns} bordered dataSource={dataSource} pagination={false} />
+      <Table columns={defaultColumns} bordered dataSource={dataSource} pagination={false} size="middle" />
     </div>
   );
 };

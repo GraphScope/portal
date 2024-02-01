@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Select, Input } from 'antd';
+import { Flex, Select, Input, Space } from 'antd';
 import UploadFiles from './upload-file';
 interface ISwitchSourceProps {
   updateState: any;
@@ -23,43 +23,45 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
   return (
     <div>
       <Flex justify="flex-start">
-        <Select defaultValue={currentType} options={SOURCEOPTIONS} onChange={selsctSource} />
-        <>
-          {currentType === 'ODPS' && (
-            <Input
-              defaultValue={filelocation}
-              placeholder="graphscope/modern_graph/user.csv"
-              onChange={e => {
-                updateState((preState: any) => {
-                  return {
-                    ...preState,
-                    location: e.target.value,
-                  };
-                });
-              }}
-              onFocus={() => {
-                updateState((preState: any) => {
-                  return {
-                    ...preState,
-                    isEidtProperty: true,
-                  };
-                });
-              }}
-            />
-          )}
-          {currentType === 'Files' && (
-            <UploadFiles
-              onChange={val => {
-                updateState((preState: any) => {
-                  return {
-                    ...preState,
-                    isEidtProperty: val,
-                  };
-                });
-              }}
-            />
-          )}
-        </>
+        <Space>
+          <Select defaultValue={currentType} options={SOURCEOPTIONS} onChange={selsctSource} />
+          <>
+            {currentType === 'ODPS' && (
+              <Input
+                defaultValue={filelocation}
+                placeholder="graphscope/modern_graph/user.csv"
+                onChange={e => {
+                  updateState((preState: any) => {
+                    return {
+                      ...preState,
+                      location: e.target.value,
+                    };
+                  });
+                }}
+                onFocus={() => {
+                  updateState((preState: any) => {
+                    return {
+                      ...preState,
+                      isEidtProperty: true,
+                    };
+                  });
+                }}
+              />
+            )}
+            {currentType === 'Files' && (
+              <UploadFiles
+                onChange={val => {
+                  updateState((preState: any) => {
+                    return {
+                      ...preState,
+                      isEidtProperty: val,
+                    };
+                  });
+                }}
+              />
+            )}
+          </>
+        </Space>
       </Flex>
     </div>
   );

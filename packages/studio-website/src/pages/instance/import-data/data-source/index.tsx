@@ -126,7 +126,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
             </Row>
           </Col>
           <Col span={24}>
-            <Flex justify="end" style={{ margin: '16px' }}>
+            <Flex justify="end" style={{ margin: '16px 16px 5px' }}>
               <Space>
                 {engineType === 'groot' ? (
                   <>
