@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { InsertRowAboveOutlined, OrderedListOutlined, PlusOutlined } from '@ant-design/icons';
+import { InsertRowAboveOutlined, OrderedListOutlined, PlusOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { Tooltip, Segmented, Button, Space, Select, Flex } from 'antd';
 import { localStorageVars } from '../context';
 import { useContext } from '../context';
@@ -62,7 +62,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       draft.activeId = id;
     });
   };
-  const script = 'fsafa fsdadfas fdsafdsafadsfasfas';
+  const script = '';
   const handleChange = () => {};
   const onChangeContent = (line, editor) => {
     updateState(preState => {
@@ -72,23 +72,24 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       };
     });
   };
+  const handleQuery = () => {};
   const isShowCypherSwitch = state.lineCount === 1;
   return (
     <div
       style={{
+        flex: 1,
         display: 'flex',
-        overflow: 'hidden',
-        width: '100%',
+        border: '1px solid #ddd',
+        borderRadius: '6px',
+        padding: '3px',
         justifyItems: 'start',
         alignItems: 'start',
-        padding: '9px 0px',
-        gap: '6px',
-        position: 'relative',
-        // minHeight: '50px',
+        margin: '5px 0px',
       }}
     >
       {isShowCypherSwitch && (
         <Select
+          style={{ marginRight: '-32px', zIndex: 999 }}
           defaultValue="Cypher"
           options={[
             { value: 'Cypher', label: 'Cypher' },
@@ -106,19 +107,15 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
             height: '28px',
             width: '28px',
             lineHeight: '28px',
-            background: '#fff',
+            // background: '#',
             zIndex: 9999,
             textAlign: 'center',
           }}
-        >
-          $
-        </span>
+        ></span>
       )}
       <div
         style={{
-          border: '1px solid #ddd',
           // height: '100%',
-          borderRadius: '6px',
           flex: 1,
           width: '400px',
           display: 'block',
@@ -134,13 +131,10 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
           maxRows={25}
         />
       </div>
-
-      {/* <Button type="dashed" style={{ width: '100%' }} icon={<PlusOutlined />} onClick={handleAddQuery}>
-        Add Query Statement
-      </Button> */}
-      {/* <CypherEdit ref={editorRef} value={script} onChange={handleChange} onInit={(initEditor: any) => {}} /> */}
-
-      <ModeSwitch />
+      <Space>
+        <Button type="text" icon={<PlayCircleOutlined />} onClick={handleQuery} />
+        <ModeSwitch />
+      </Space>
     </div>
   );
 };
