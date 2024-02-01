@@ -1,10 +1,11 @@
 import * as React from 'react';
-import StudioQuery, { CypherDriver } from '@graphscope/studio-query';
+import StudioQuery, { CypherDriver, CypherSchemaData } from '@graphscope/studio-query';
 import { GraphApiFp, GraphApiFactory } from '@graphscope/studio-server';
 import Section from '@/components/section';
 import { history } from 'umi';
 const HOST_URL = 'localhost';
 const driver = new CypherDriver(`neo4j://${HOST_URL}:7687`);
+import { SCHEMA_DATA } from './const';
 export interface IStatement {
   id: string;
   script: string;
@@ -27,12 +28,10 @@ const queryInfo = async () => {
     });
   });
 };
-const querySchema = async () => {
+const queryGraphSchema = async (): Promise<CypherSchemaData> => {
   return new Promise(reslove => {
-    reslove({
-      edges: [],
-      nodes: [],
-    });
+    //@ts-ignore
+    reslove(SCHEMA_DATA);
   });
 };
 
@@ -83,7 +82,7 @@ const QueryModule: React.FunctionComponent<IQueryModuleProps> = props => {
   const services = {
     /** query graph info */
     queryInfo,
-    querySchema,
+    queryGraphSchema,
     /** statement */
     queryStatement,
     delelteStatement,

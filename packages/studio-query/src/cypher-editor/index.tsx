@@ -1,15 +1,47 @@
 //@ts-nocheck
 import React, { forwardRef } from 'react';
 import { MonacoEnvironment, EditorProvider } from '@difizen/cofine-editor-core';
-import cypherLanguage from '@difizen/cofine-language-cypher';
+
+import cypherLanguage, { registerOptions } from '@difizen/cofine-language-cypher';
 import './index.css';
 
+export interface ItemSchema {
+  label: string;
+  properties: {
+    name: string;
+    type: 'string' | 'number';
+  }[];
+  primary: string;
+}
+export interface CypherSchemaData {
+  nodes: ItemSchema[];
+  edges: (ItemSchema & {
+    constraints: [[string, string]];
+  })[];
+}
 export interface CypherEditorProps {
   maxRows?: number;
   minRows?: number;
+  schemaData?: CypherSchemaData;
+  functions?: {
+    name: string;
+    type: string;
+    signatures: [];
+    desc: string;
+  }[];
 }
 const Editor = forwardRef<any, any>((props, editorRef) => {
-  const { value, onCreated, onChange, language = 'cypher', onInit, maxRows = 10, minRows = 1 } = props;
+  const {
+    value,
+    onCreated,
+    onChange,
+    language = 'cypher',
+    onInit,
+    maxRows = 10,
+    minRows = 1,
+    schemaData,
+    functions,
+  } = props;
   let codeEditor: monaco.editor.IStandaloneCodeEditor;
   // 监听事件
   let erdElement: HTMLElement | null;
@@ -78,8 +110,10 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
           const { contentHeight } = params;
           console.log('onDidContentSizeChange', contentHeight);
         });
-
-        // registerOptions({});
+        registerOptions({
+          querySchema: () => Promise.resolve(schemaData),
+          queryFunctions: () => Promise.resolve(functions),
+        });
       }
     });
     return () => {

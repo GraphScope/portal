@@ -50,6 +50,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     queryInfo,
     createStatement,
     queryGraphData,
+    queryGraphSchema,
     onBack,
     displaySidebarPosition = 'left',
     enableAbsolutePosition,
@@ -61,9 +62,11 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   useEffect(() => {
     (async () => {
       const info = await queryInfo();
+      const schemaData = await queryGraphSchema(info.name);
       updateStore(draft => {
         draft.isReady = true;
         draft.graphName = info.name;
+        draft.schemaData = schemaData;
       });
     })();
   }, []);
