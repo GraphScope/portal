@@ -162,6 +162,7 @@ export function processResult(result) {
   result.records.forEach(record => {
     //@ts-ignore
     record._fields.forEach(item => {
+      const isString = typeof item === 'string';
       const isNode = item.__isNode__;
       const isEdge = item.__isRelationship__;
       const isPath = item.__isPath__;
@@ -233,6 +234,12 @@ export function processResult(result) {
         table.headers.push(...(record.keys as string[]));
         table.rows.push(item.low);
       }
+
+      if (isString) {
+        table.headers.push(...(record.keys as string[]));
+        //@ts-ignore
+        table.rows.push(item);
+      }
     });
   });
 
@@ -255,6 +262,9 @@ export function deduplicateNodes(nodes) {
 }
 
 export function processProperties(properties) {
+  if (!properties) {
+    return {};
+  }
   Object.keys(properties).forEach(key => {
     const value = properties[key];
     const isInteger = value.__isInteger__;
