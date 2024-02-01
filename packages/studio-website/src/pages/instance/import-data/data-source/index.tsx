@@ -17,8 +17,7 @@ const styles: React.CSSProperties = {
   display: 'inline-block',
   margin: '0px',
   width: '80px',
-  textAlign: 'end',
-  marginRight: '8px',
+  padding: '0px 8px',
   fontSize: '14px',
 };
 const DataSource: React.FunctionComponent<IImportDataProps> = props => {
@@ -51,7 +50,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     handleChange && handleChange({ label, location, properties: dataSources, datatype: currentType, isBind: true });
   };
   /** 切换图标 */
-  const handleIconChange = isEidtProperty ? (
+  const ToggleIcon = isEidtProperty ? (
     <CaretDownOutlined
       onClick={() =>
         updateState(preState => {
@@ -75,59 +74,56 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     />
   );
   return (
-    <>
-      <Row style={{ border: `1px solid ${token.colorBorder}`, padding: '12px 16px' }}>
-        <Flex justify="start" align="center">
-          {handleIconChange}
-        </Flex>
-        <Col span={20}>
-          <Flex justify="flex-start" align="center">
-            <Title level={5} style={styles}>
-              label:
-            </Title>
-            <Text>{label}</Text>
+    <div style={{ background: '#FCFCFC', margin: '8px 0px', borderRadius: '8px', border: '1px solid #ddd' }}>
+      <div style={{ padding: '16px 8px' }}>
+        <Flex justify="space-between" align="center">
+          <Flex justify="start" vertical gap={8}>
+            <Space size={6}>
+              <Title level={5} style={styles}>
+                label:
+              </Title>
+              <Text>{label}</Text>
+            </Space>
+            <Space>
+              <Title level={5} style={styles}>
+                数据源:
+              </Title>
+              <SwitchSource filelocation={filelocation} currentType={currentType} updateState={updateState} />
+            </Space>
           </Flex>
-          <Flex justify="flex-start" align="center">
-            <Title level={5} style={styles}>
-              数据源:
-            </Title>
-            <SwitchSource filelocation={filelocation} currentType={currentType} updateState={updateState} />
-          </Flex>
-        </Col>
-        <Flex justify="end" align="center">
-          <Col span={3}>
-            <DisconnectOutlined style={{ fontSize: '32px', color: isBind ? '#53C31C' : '#ddd', marginLeft: '13px' }} />
-          </Col>
+          <Space>
+            <Button type="text" icon={<DisconnectOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}></Button>
+            <Button type="text" icon={ToggleIcon}></Button>
+          </Space>
         </Flex>
-      </Row>
+      </div>
       {isEidtProperty && (
-        <Row style={{ border: `1px solid ${token.colorBorder}`, borderTop: 'none', padding: '12px 0px 12px 38px' }}>
-          <Col span={24}>
-            <Row>
-              <Col span={4}>
-                <Title level={5} style={{ ...styles, marginTop: '14px' }}>
-                  属性映射：
-                </Title>
-              </Col>
-              <Col span={20} pull={1} style={{}}>
-                <TableList
+        <Row style={{ borderTop: `1px solid ${token.colorBorder}`, padding: '8px' }}>
+          <Row>
+            <Col span={4}>
+              <Title level={5} style={{ ...styles, marginTop: '14px' }}>
+                属性映射：
+              </Title>
+            </Col>
+            <Col span={20} pull={1} style={{}}>
+              <TableList
+                //@ts-ignore
+                tabledata={JSON.parse(JSON.stringify(properties))}
+                onChange={val => {
                   //@ts-ignore
-                  tabledata={JSON.parse(JSON.stringify(properties))}
-                  onChange={val => {
-                    //@ts-ignore
-                    updateState(preState => {
-                      return {
-                        ...preState,
-                        dataSources: val,
-                      };
-                    });
-                  }}
-                />
-              </Col>
-            </Row>
-          </Col>
+                  updateState(preState => {
+                    return {
+                      ...preState,
+                      dataSources: val,
+                    };
+                  });
+                }}
+              />
+            </Col>
+          </Row>
+
           <Col span={24}>
-            <Flex justify="end" style={{ margin: '16px 27px 5px' }}>
+            <Flex justify="end">
               <Space>
                 {engineType === 'groot' ? (
                   <>
@@ -135,7 +131,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                     <ImportNow label={label} />
                   </>
                 ) : (
-                  <Button type="primary" onClick={saveBindData}>
+                  <Button onClick={saveBindData} size="small">
                     保存绑定
                   </Button>
                 )}
@@ -144,7 +140,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
           </Col>
         </Row>
       )}
-    </>
+    </div>
   );
 };
 

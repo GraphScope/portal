@@ -34,6 +34,7 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
       value: 'edgesource',
     },
   ];
+  const isBind = nodes.every(item => item.isBind) && edges.every(item => item.isBind);
   return (
     <>
       <Flex gap="middle" justify="space-between">
@@ -43,12 +44,11 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
           onChange={nodeEdgeChange}
         />
         {engineType !== 'groot' && (
-          <Button type="primary" onClick={handleImport}>
+          <Button type={isBind ? 'primary' : 'dashed'} onClick={handleImport} disabled={!isBind}>
             导入数据
           </Button>
         )}
       </Flex>
-      <Divider style={{ margin: '12px 0px' }} />
     </>
   );
 };

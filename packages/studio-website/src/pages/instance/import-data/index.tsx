@@ -6,6 +6,7 @@ import DataSource from './data-source/index';
 import { SOURCEDATA } from './source-data';
 import SourceTitle from './source-title';
 import GraphTitle from './graph-title';
+import Section from '@/components/section';
 interface IImportDataProps {}
 
 const { Text } = Typography;
@@ -70,38 +71,48 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   };
 
   return (
-    <Row style={{ padding: '24px' }} gutter={32}>
-      <Col span={16}>
-        <SourceTitle />
-        <Card bodyStyle={{ padding: '12px' }}>
-          {!isReady && <Skeleton />}
-          {/* 遍历需要绑定的数据源 */}
-          {sourceData.map(item => {
-            return (
-              <DataSource
-                key={item.key}
-                //@ts-ignore
-                data={item}
-                handleChange={handleChange}
-              />
-            );
-          })}
-        </Card>
-      </Col>
-      <Col span={8}>
-        <GraphTitle />
-        <Card style={{ marginTop: '24px', border: `1px dashed ${token.colorBorder}`, borderRadius: '0px' }}>
-          <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
-            目前绑定了{bindEdgeCount} 条边，{bindNodeCount}个点
-          </Text>
-          {!isReady && <Skeleton />}
-          <GraphView
-            //@ts-ignore
-            pdata={{ nodeLists: nodes, edgeLists: edges }}
-          ></GraphView>
-        </Card>
-      </Col>
-    </Row>
+    <Section
+      breadcrumb={[
+        {
+          title: 'Graphs',
+        },
+        {
+          title: 'import data',
+        },
+      ]}
+    >
+      <Row style={{}} gutter={32}>
+        <Col span={16}>
+          <Card title={<SourceTitle />}>
+            {!isReady && <Skeleton />}
+            {/* 遍历需要绑定的数据源 */}
+            {sourceData.map(item => {
+              return (
+                <DataSource
+                  key={item.key}
+                  //@ts-ignore
+                  data={item}
+                  handleChange={handleChange}
+                />
+              );
+            })}
+          </Card>
+        </Col>
+        <Col span={8}>
+          <GraphTitle />
+          <Card style={{ marginTop: '24px', border: `1px dashed ${token.colorBorder}`, borderRadius: '0px' }}>
+            <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
+              目前绑定了{bindEdgeCount} 条边，{bindNodeCount}个点
+            </Text>
+            {!isReady && <Skeleton />}
+            <GraphView
+              //@ts-ignore
+              pdata={{ nodeLists: nodes, edgeLists: edges }}
+            ></GraphView>
+          </Card>
+        </Col>
+      </Row>
+    </Section>
   );
 };
 

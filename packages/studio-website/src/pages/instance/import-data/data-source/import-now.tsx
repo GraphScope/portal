@@ -32,7 +32,7 @@ const ImportNow: React.FunctionComponent<IImportNowProps> = props => {
   };
   return (
     <>
-      <Button type="primary" onClick={openNotification}>
+      <Button onClick={openNotification} size="small">
         立即导入
       </Button>
       {contextHolder}

@@ -9,10 +9,10 @@ const ImportPeriodic: React.FunctionComponent<IImportPeriodicProps> = props => {
   return (
     <div>
       <Button
-        type="primary"
         onClick={() => {
           setVisible(true);
         }}
+        size="small"
       >
         周期导入
       </Button>
