@@ -29,6 +29,7 @@ export interface CypherEditorProps {
     signatures: [];
     desc: string;
   }[];
+  onChangeContent?: (lineCount: number, editor: any) => void;
 }
 const Editor = forwardRef<any, any>((props, editorRef) => {
   const {
@@ -41,10 +42,12 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
     minRows = 1,
     schemaData,
     functions,
+    onChangeContent,
   } = props;
   let codeEditor: monaco.editor.IStandaloneCodeEditor;
   // 监听事件
   let erdElement: HTMLElement | null;
+  const MAGIC_NUMBER = onChangeContent ? 0 : 1;
 
   React.useEffect(() => {
     MonacoEnvironment.loadModule(async (container: { load: (arg0: Syringe.Module) => void }) => {
@@ -58,8 +61,8 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
           language,
           value,
           theme: 'cypherTheme',
-          suggestLineHeight: 24,
-          suggestLineHeight: 24,
+          suggestLineHeight: 20,
+          suggestLineHeight: 20,
           automaticLayout: true,
           minimap: { enabled: false },
           fontSize: 14,
@@ -89,46 +92,67 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
         if (onCreated) {
           onCreated(editor.codeEditor);
         }
-        if (onChange) {
-          editor.codeEditor.onDidChangeModelContent(() => {
-            const contentHeight = editor.codeEditor.getContentHeight();
-            const lineCount = editor.codeEditor.getModel()?.getLineCount(); // 获取行数
-            const lineHeight = 20; // 获取行高
 
-            // 计算编辑器容器的高度
-            const height = lineCount * lineHeight;
-            console.log('editor.codeEditor', editor.codeEditor.getContentHeight(), lineCount, height);
+        editor.codeEditor.onDidChangeModelContent(() => {
+          const contentHeight = editor.codeEditor.getContentHeight();
+          const lineCount = editor.codeEditor.getModel()?.getLineCount(); // 获取行数
+          const lineHeight = 20; // 获取行高
 
-            if (contentHeight <= maxRows * lineHeight) {
-              editorRef.current.style.height = height + lineHeight + 'px';
-            }
-            return onChange(editor.codeEditor.getValue());
-          });
-        }
+          // 计算编辑器容器的高度
+          const height = lineCount === 1 ? (lineCount + MAGIC_NUMBER) * lineHeight : (lineCount + 1) * lineHeight;
 
-        editor.codeEditor.onDidContentSizeChange(params => {
-          const { contentHeight } = params;
-          console.log('onDidContentSizeChange', contentHeight);
+          if (contentHeight <= maxRows * lineHeight) {
+            editorRef.current.style.height = height + 'px';
+          }
+          if (onChange) {
+            onChange(editor.codeEditor.getValue());
+          }
+
+          if (onChangeContent) {
+            onChangeContent(lineCount, editor.codeEditor);
+          }
         });
+
         registerOptions({
           querySchema: () => Promise.resolve(schemaData),
           queryFunctions: () => Promise.resolve(functions),
         });
+
+        // 监听光标位置变化事件
+        // editor.codeEditor.onDidChangeCursorPosition(() => {
+        //   // 获取当前光标所在的行号
+        //   const currentLineNumber = editor.codeEditor.getPosition().lineNumber;
+        //   console.log('currentLineNumber', currentLineNumber);
+
+        //   // 判断行数是否为1
+        //   if (currentLineNumber === 1) {
+        //     // 在行数为1时，将编辑区域往右移动50px
+        //     editor.codeEditor.getDomNode().style.marginLeft = '50px';
+        //   } else {
+        //     // 行数不为1时，恢复到正常位置
+        //     editor.codeEditor.getDomNode().style.marginLeft = '0';
+        //   }
+
+        //   // 强制重新布局编辑器
+        //   editor.codeEditor.layout();
+        // });
       }
     });
+
     return () => {
       if (codeEditor) {
         codeEditor.dispose();
       }
     };
-  }, [editorRef]);
+  }, [editorRef, value]);
+
   return (
     <div
       ref={editorRef}
       style={{
-        paddingTop: '8px',
+        padding: '5px 0px',
         width: '100%',
-        height: (minRows + 1) * 20 + 'px',
+        height: (minRows + MAGIC_NUMBER) * 20 + 'px',
       }}
     />
   );
