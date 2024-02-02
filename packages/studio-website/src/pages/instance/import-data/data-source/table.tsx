@@ -50,35 +50,37 @@ const TableList: React.FC<TableListProps> = props => {
     {
       title: (
         <Text type="secondary" style={styles}>
-          属性名
+          Properties
         </Text>
       ),
-      dataIndex: 'name',
-      key: 'name',
-      width: '40%',
+      dataIndex: 'properties',
+      key: 'properties',
+      width: '30%',
     },
     {
       title: (
         <Text type="secondary" style={styles}>
-          类型
+          Type
         </Text>
       ),
       dataIndex: 'type',
       key: 'type',
-      width: '30%',
+      width: '15%',
       render(text) {
-        return <Select style={{ width: '100%' }} defaultValue={text} disabled options={PROPERTY_KEY_OPTIONS} />;
+        return (
+          <Select style={{ width: '100%' }} defaultValue={text} disabled options={PROPERTY_KEY_OPTIONS} size="small" />
+        );
       },
     },
     {
       title: (
         <Text type="secondary" style={styles}>
-          主键
+          Main_Key
         </Text>
       ),
-      dataIndex: 'primaryKey',
-      key: 'primaryKey',
-      width: '10%',
+      dataIndex: 'main_key',
+      key: 'main_key',
+      width: '20%',
       render(text) {
         return <Checkbox defaultChecked={text} disabled />;
       },
@@ -86,22 +88,25 @@ const TableList: React.FC<TableListProps> = props => {
     {
       title: (
         <Text type="secondary" style={styles}>
-          列索引(名称)
+          ColumnType or Name
         </Text>
       ),
-      //   dataIndex: 'dataindex',
-      width: '20%',
+      dataIndex: 'columntype',
+      width: '35%',
       editable: true,
-      render(text) {
-        return <InputNumber min={0} defaultValue={text.dataindex} onChange={value => handleChangeIndex(value, text)} />;
+      render(columntype) {
+        return (
+          <InputNumber
+            min={0}
+            size="small"
+            defaultValue={columntype}
+            onChange={value => handleChangeIndex(value, columntype)}
+          />
+        );
       },
     },
   ];
-  return (
-    <div>
-      <Table columns={defaultColumns} bordered dataSource={dataSource} pagination={false} size="middle" />
-    </div>
-  );
+  return <Table columns={defaultColumns} dataSource={dataSource} pagination={false} size="small" />;
 };
 
 export default TableList;

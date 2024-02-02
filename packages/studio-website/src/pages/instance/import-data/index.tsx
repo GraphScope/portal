@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Row, Col, Card, Typography, Skeleton, theme } from 'antd';
+import { Row, Col, Card, Typography, Skeleton, theme, Space } from 'antd';
 import { useContext } from './useContext';
 import GraphView from './graph-view';
 import DataSource from './data-source/index';
@@ -9,7 +9,7 @@ import GraphTitle from './graph-title';
 import Section from '@/components/section';
 interface IImportDataProps {}
 
-const { Text } = Typography;
+const { Title, Text } = Typography;
 const { useToken } = theme;
 const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   const { token } = useToken();
@@ -81,24 +81,36 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         },
       ]}
     >
-      <Row style={{}} gutter={32}>
-        <Col span={16}>
+      <Row style={{}} gutter={24}>
+        <Col span={15}>
           <Card title={<SourceTitle />}>
             {!isReady && <Skeleton />}
             {/* 遍历需要绑定的数据源 */}
-            {sourceData.map(item => {
-              return (
-                <DataSource
-                  key={item.key}
-                  //@ts-ignore
-                  data={item}
-                  handleChange={handleChange}
-                />
-              );
-            })}
+            <div style={{ background: '#FCFCFC', border: '1px solid #ddd', borderRadius: '8px' }}>
+              <header>
+                <Space size={29}>
+                  <Title level={5} style={{ margin: '16px 0px 16px 48px' }}>
+                    Labels
+                  </Title>{' '}
+                  <Title level={5} style={{ margin: '16px 0px' }}>
+                    Datasource
+                  </Title>
+                </Space>
+              </header>
+              {sourceData.map(item => {
+                return (
+                  <DataSource
+                    key={item.key}
+                    //@ts-ignore
+                    data={item}
+                    handleChange={handleChange}
+                  />
+                );
+              })}
+            </div>
           </Card>
         </Col>
-        <Col span={8}>
+        <Col span={9}>
           <Card title={<GraphTitle />}>
             <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
               目前绑定了{bindEdgeCount} 条边，{bindNodeCount}个点

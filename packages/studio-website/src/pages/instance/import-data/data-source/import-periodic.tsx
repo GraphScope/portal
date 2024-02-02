@@ -14,7 +14,7 @@ const ImportPeriodic: React.FunctionComponent<IImportPeriodicProps> = props => {
         }}
         size="small"
       >
-        周期导入
+        Import Periodic
       </Button>
       <Modal width={'75%'} open={visible} footer={null}>
         <StagesImportPackages

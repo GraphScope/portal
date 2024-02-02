@@ -26,11 +26,11 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
 
   const SOURCEDATAOPTIONS = [
     {
-      label: `点数据源绑定（${bindNodeCount}/${nodes?.length}）`,
+      label: `Point Data Eource Binding（${bindNodeCount}/${nodes?.length}）`,
       value: 'nodesource',
     },
     {
-      label: `边数据源绑定（${bindEdgeCount}/${edges?.length})`,
+      label: `Edge Data Eource Binding（${bindEdgeCount}/${edges?.length})`,
       value: 'edgesource',
     },
   ];
@@ -44,8 +44,9 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
           onChange={nodeEdgeChange}
         />
         {engineType !== 'groot' && (
-          <Button type={isBind ? 'primary' : 'dashed'} onClick={handleImport} disabled={!isBind}>
-            导入数据
+          <Button type={isBind ? 'primary' : 'text'} onClick={handleImport} disabled={!isBind}>
+            {/* 导入数据 */}
+            Import Data
           </Button>
         )}
       </Flex>

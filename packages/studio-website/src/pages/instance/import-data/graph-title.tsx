@@ -11,7 +11,7 @@ const GraphTitle: React.FunctionComponent<IGraphTitleProps> = () => {
   return (
     <>
       <Flex gap="middle" justify="space-between" align="center">
-        <Text type="secondary">预览</Text>
+        <Text>Preview</Text>
         <Space>
           <Upload
             beforeUpload={file => {
@@ -27,11 +27,13 @@ const GraphTitle: React.FunctionComponent<IGraphTitleProps> = () => {
             showUploadList={false}
           >
             <Tooltip placement="topRight" title="导入「数据导入」的配置文件">
-              <Button>导入配置</Button>
+              <Button type="text">Import Config</Button>
             </Tooltip>
           </Upload>
           <Tooltip placement="topRight" title="导出「数据导入」的配置文件">
-            <Button onClick={() => download('source', JSON.stringify(sourceList))}>导出配置</Button>
+            <Button type="text" onClick={() => download('source', JSON.stringify(sourceList))}>
+              Export Config
+            </Button>
           </Tooltip>
         </Space>
       </Flex>

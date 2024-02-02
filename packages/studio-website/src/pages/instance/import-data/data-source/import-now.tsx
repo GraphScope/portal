@@ -18,8 +18,8 @@ const ImportNow: React.FunctionComponent<IImportNowProps> = props => {
           </Text>
           <Flex justify="flex-end">
             <Space>
-              <Button onClick={() => api.destroy()}>关闭</Button>
-              <Button type="primary">前往查看</Button>
+              <Button onClick={() => api.destroy()}>Close</Button>
+              <Button type="primary">Go to view</Button>
             </Space>
           </Flex>
         </>
@@ -33,7 +33,7 @@ const ImportNow: React.FunctionComponent<IImportNowProps> = props => {
   return (
     <>
       <Button onClick={openNotification} size="small">
-        立即导入
+        Import Now
       </Button>
       {contextHolder}
     </>

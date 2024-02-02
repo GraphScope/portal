@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DisconnectOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
+import { CheckSquareOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import { Button, Flex, Row, Col, Space, Typography, theme, Tooltip } from 'antd';
 import { PropertyType } from '../useContext';
 import SwitchSource from './switch-source';
@@ -75,70 +75,72 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     />
   );
   return (
-    <div style={{ background: '#FCFCFC', margin: '8px 0px', borderRadius: '8px', border: '1px solid #ddd' }}>
-      <div style={{ padding: '16px 8px' }}>
-        <Flex justify="space-between" align="center">
-          <Flex justify="start" vertical gap={8}>
-            <Space size={6}>
-              <Title level={5} style={styles}>
-                label:
-              </Title>
-              <Text>{label}</Text>
+    <>
+      <div>
+        <div style={{ padding: '8px', borderTop: `1px solid ${token.colorBorder}` }}>
+          <Flex justify="space-between" align="center">
+            <Space>
+              <Button type="text" icon={ToggleIcon}></Button>
+              <Flex justify="start" vertical gap={8}>
+                <Space>
+                  <Text style={{ display: 'inline-block', width: '100px' }}>{label}</Text>
+                  <SwitchSource filelocation={filelocation} currentType={currentType} updateState={updateState} />
+                </Space>
+              </Flex>
             </Space>
-            <Space size={0}>
-              <Title level={5} style={styles}>
-                数据源:
-              </Title>
-              <SwitchSource filelocation={filelocation} currentType={currentType} updateState={updateState} />
-            </Space>
-          </Flex>
-          <Space>
             <Tooltip title={isBind ? '已绑定' : '未绑定'}>
-              <Button type="text" icon={<DisconnectOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}></Button>
+              <Button
+                type="text"
+                icon={<CheckSquareOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}
+              ></Button>
             </Tooltip>
-            <Button type="text" icon={ToggleIcon}></Button>
-          </Space>
-        </Flex>
-      </div>
-      {isEidtProperty && (
-        <Row style={{ borderTop: `1px solid ${token.colorBorder}`, padding: '8px' }} gutter={[0, 8]}>
-          <Title level={5} style={{ ...styles, marginTop: '14px', padding: '0px' }}>
-            属性映射：
-          </Title>
-          <Col span={21}>
-            <TableList
-              //@ts-ignore
-              tabledata={JSON.parse(JSON.stringify(properties))}
-              onChange={val => {
+          </Flex>
+        </div>
+        {isEidtProperty && (
+          <Row
+            style={{
+              borderTop: `1px solid ${token.colorBorder}`,
+              padding: '8px 8px 8px 5px',
+              display: 'flex',
+              justifyContent: 'end',
+            }}
+            // gutter={[0, 8]}
+          >
+            <Col span={18}>
+              <TableList
                 //@ts-ignore
-                updateState(preState => {
-                  return {
-                    ...preState,
-                    dataSources: val,
-                  };
-                });
-              }}
-            />
-          </Col>
-          <Col span={24}>
-            <Flex justify="end">
-              <Space>
-                {engineType === 'groot' ? (
-                  <>
-                    <ImportPeriodic />
-                    <ImportNow label={label} />
-                  </>
-                ) : (
-                  <Button onClick={saveBindData} size="small">
-                    保存绑定
-                  </Button>
-                )}
-              </Space>
-            </Flex>
-          </Col>
-        </Row>
-      )}
-    </div>
+                tabledata={JSON.parse(JSON.stringify(properties))}
+                onChange={val => {
+                  //@ts-ignore
+                  updateState(preState => {
+                    return {
+                      ...preState,
+                      dataSources: val,
+                    };
+                  });
+                }}
+              />
+            </Col>
+            <Col span={24}>
+              <Flex justify="end">
+                <Space>
+                  {engineType === 'interactive' ? (
+                    <>
+                      <ImportPeriodic />
+                      <ImportNow label={label} />
+                    </>
+                  ) : (
+                    <Button onClick={saveBindData} size="small">
+                      Save Bind
+                    </Button>
+                  )}
+                </Space>
+              </Flex>
+            </Col>
+          </Row>
+        )}
+      </div>
+    </>
   );
 };
 

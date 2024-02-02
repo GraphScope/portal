@@ -7,8 +7,8 @@ interface ISwitchSourceProps {
   currentType?: string;
 }
 const SOURCEOPTIONS = [
-  { label: 'Files', value: 'Files' },
-  { label: 'ODPS', value: 'ODPS' },
+  { label: 'Files://', value: 'Files' },
+  { label: 'ODPS://', value: 'ODPS' },
 ];
 const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
   const { filelocation, updateState, currentType } = props;
@@ -21,7 +21,7 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
     });
   };
   return (
-    <Space.Compact>
+    <Space.Compact size="small">
       <Select defaultValue={currentType} options={SOURCEOPTIONS} onChange={selsctSource} />
       <>
         {currentType === 'ODPS' && (
@@ -32,7 +32,7 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
               updateState((preState: any) => {
                 return {
                   ...preState,
-                  location: e.target.value,
+                  location: `://${e.target.value}`,
                 };
               });
             }}
