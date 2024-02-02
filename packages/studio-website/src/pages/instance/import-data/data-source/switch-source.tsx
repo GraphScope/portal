@@ -23,7 +23,7 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
   return (
     <div>
       <Flex justify="flex-start">
-        <Space>
+        <Space.Compact>
           <Select defaultValue={currentType} options={SOURCEOPTIONS} onChange={selsctSource} />
           <>
             {currentType === 'ODPS' && (
@@ -61,7 +61,7 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
               />
             )}
           </>
-        </Space>
+        </Space.Compact>
       </Flex>
     </div>
   );
