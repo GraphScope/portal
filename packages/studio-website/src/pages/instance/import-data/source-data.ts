@@ -29,7 +29,7 @@ export const SOURCEDATA = {
       datatype: 'ODPS',
       filelocation: 'edges',
       source: 'user',
-      target: 'user1',
+      target: 'usertest',
       isBind: false,
       properties: [{ key: uuidv4(), properties: 'id', type: 'str', main_key: true, columntype: 5 }],
     },

@@ -104,7 +104,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
               display: 'flex',
               justifyContent: 'end',
             }}
-            // gutter={[0, 8]}
+            gutter={[0, 8]}
           >
             <Col span={18}>
               <TableList
