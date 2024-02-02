@@ -85,7 +85,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
               </Title>
               <Text>{label}</Text>
             </Space>
-            <Space>
+            <Space size={0}>
               <Title level={5} style={styles}>
                 数据源:
               </Title>

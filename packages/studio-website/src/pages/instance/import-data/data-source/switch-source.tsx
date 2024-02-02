@@ -21,49 +21,45 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
     });
   };
   return (
-    <div>
-      <Flex justify="flex-start">
-        <Space.Compact>
-          <Select defaultValue={currentType} options={SOURCEOPTIONS} onChange={selsctSource} />
-          <>
-            {currentType === 'ODPS' && (
-              <Input
-                defaultValue={filelocation}
-                placeholder="graphscope/modern_graph/user.csv"
-                onChange={e => {
-                  updateState((preState: any) => {
-                    return {
-                      ...preState,
-                      location: e.target.value,
-                    };
-                  });
-                }}
-                onFocus={() => {
-                  updateState((preState: any) => {
-                    return {
-                      ...preState,
-                      isEidtProperty: true,
-                    };
-                  });
-                }}
-              />
-            )}
-            {currentType === 'Files' && (
-              <UploadFiles
-                onChange={val => {
-                  updateState((preState: any) => {
-                    return {
-                      ...preState,
-                      isEidtProperty: val,
-                    };
-                  });
-                }}
-              />
-            )}
-          </>
-        </Space.Compact>
-      </Flex>
-    </div>
+    <Space.Compact>
+      <Select defaultValue={currentType} options={SOURCEOPTIONS} onChange={selsctSource} />
+      <>
+        {currentType === 'ODPS' && (
+          <Input
+            defaultValue={filelocation}
+            placeholder="graphscope/modern_graph/user.csv"
+            onChange={e => {
+              updateState((preState: any) => {
+                return {
+                  ...preState,
+                  location: e.target.value,
+                };
+              });
+            }}
+            onFocus={() => {
+              updateState((preState: any) => {
+                return {
+                  ...preState,
+                  isEidtProperty: true,
+                };
+              });
+            }}
+          />
+        )}
+        {currentType === 'Files' && (
+          <UploadFiles
+            onChange={val => {
+              updateState((preState: any) => {
+                return {
+                  ...preState,
+                  isEidtProperty: val,
+                };
+              });
+            }}
+          />
+        )}
+      </>
+    </Space.Compact>
   );
 };
 
