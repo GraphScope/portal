@@ -125,7 +125,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
             {!isReady && <Skeleton />}
             <GraphView
               //@ts-ignore
-              pdata={{ nodeLists: nodes, edgeLists: edges }}
+              viewdata={{ nodeLists: nodes, edgeLists: edges }}
             ></GraphView>
           </Card>
         </Col>

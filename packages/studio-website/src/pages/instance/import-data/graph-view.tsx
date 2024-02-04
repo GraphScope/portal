@@ -6,8 +6,7 @@ import { PropertyType } from './useContext';
 const { useToken } = theme;
 interface Props {
   children?: ReactNode;
-  // 命名修改为 data / nodes/edges
-  pdata: {
+  viewdata: {
     nodeLists: PropertyType[];
     edgeLists: PropertyType[];
   };
@@ -66,10 +65,10 @@ const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
 
 // 改名为 graphview
 const GraphInsight: FunctionComponent<Props> = props => {
-  const { children, pdata } = props;
+  const { children, viewdata } = props;
   const { token } = useToken();
   //@ts-ignore
-  const graphData = getVertexEdges(pdata.nodeLists, pdata.edgeLists, token);
+  const graphData = getVertexEdges(viewdata.nodeLists, viewdata.edgeLists, token);
 
   return (
     <>
