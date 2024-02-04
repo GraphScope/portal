@@ -10,8 +10,7 @@ const GraphTitle: React.FunctionComponent<IGraphTitleProps> = () => {
   const { sourceList } = store;
   return (
     <>
-      <Flex gap="middle" justify="space-between" align="center">
-        <Text>Preview</Text>
+      <Flex gap="middle" justify="end" align="center">
         <Space>
           <Upload
             beforeUpload={file => {

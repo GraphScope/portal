@@ -2,7 +2,7 @@ import { FunctionComponent, ReactNode } from 'react';
 import Graphin, { Utils } from '@antv/graphin';
 import '@antv/graphin-icons/dist/index.css';
 import { theme } from 'antd';
-import { PropertyType } from './index';
+import { PropertyType } from './useContext';
 const { useToken } = theme;
 interface Props {
   children?: ReactNode;

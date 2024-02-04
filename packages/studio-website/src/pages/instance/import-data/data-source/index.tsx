@@ -12,15 +12,8 @@ interface IImportDataProps {
   data: PropertyType;
   handleChange(val: any): void;
 }
-const { Title, Text } = Typography;
-const styles: React.CSSProperties = {
-  display: 'inline-block',
-  margin: '0px',
-  width: '80px',
-  padding: '0px 8px',
-  fontSize: '14px',
-  fontWeight: 400,
-};
+const { Text } = Typography;
+
 const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const {
     data: { label, isBind, filelocation, datatype, properties },
@@ -77,7 +70,14 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   return (
     <>
       <div>
-        <div style={{ padding: '8px', borderTop: `1px solid ${token.colorBorder}` }}>
+        <div
+          style={{
+            padding: '8px',
+            borderTop: `1px solid ${token.colorBorder}`,
+            background: isEidtProperty ? 'none' : '#FCFCFC',
+            borderRadius: '0px 0px 8px 8px',
+          }}
+        >
           <Flex justify="space-between" align="center">
             <Space>
               <Button type="text" icon={ToggleIcon}></Button>
@@ -99,10 +99,12 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
         {isEidtProperty && (
           <Row
             style={{
-              borderTop: `1px solid ${token.colorBorder}`,
-              padding: '8px 8px 8px 5px',
+              borderTop: isEidtProperty ? 'none' : `1px solid ${token.colorBorder}`,
+              padding: '0px 8px 8px 5px',
               display: 'flex',
               justifyContent: 'end',
+              transition: 'all 4s ease-in-out 1s',
+              boxSizing: 'border-box',
             }}
             gutter={[0, 8]}
           >

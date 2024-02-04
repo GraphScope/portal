@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Row, Col, Card, Typography, Skeleton, theme, Space } from 'antd';
+import { Row, Col, Card, Typography, Skeleton, theme, Space, Flex, Divider } from 'antd';
 import { useContext } from './useContext';
 import GraphView from './graph-view';
 import DataSource from './data-source/index';
@@ -81,37 +81,44 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         },
       ]}
     >
-      <Row style={{}} gutter={24}>
+      <Row gutter={24}>
         <Col span={15}>
-          <Card title={<SourceTitle />}>
-            {!isReady && <Skeleton />}
-            {/* 遍历需要绑定的数据源 */}
-            <div style={{ background: '#FCFCFC', border: '1px solid #ddd', borderRadius: '8px' }}>
-              <header>
-                <Space size={29}>
-                  <Title level={5} style={{ margin: '16px 0px 16px 48px' }}>
-                    Labels
-                  </Title>{' '}
-                  <Title level={5} style={{ margin: '16px 0px' }}>
-                    Datasource
-                  </Title>
-                </Space>
-              </header>
-              {sourceData.map(item => {
-                return (
-                  <DataSource
-                    key={item.key}
-                    //@ts-ignore
-                    data={item}
-                    handleChange={handleChange}
-                  />
-                );
-              })}
-            </div>
-          </Card>
+          <SourceTitle />
         </Col>
         <Col span={9}>
-          <Card title={<GraphTitle />}>
+          <GraphTitle />
+        </Col>
+      </Row>
+      <Divider style={{ margin: '0px 0px 16px' }} />
+      <Row gutter={24}>
+        <Col span={15}>
+          {!isReady && <Skeleton />}
+          {/* 遍历需要绑定的数据源 */}
+          <div style={{ border: '1px solid #ddd', borderRadius: '8px' }}>
+            <header style={{ background: '#FCFCFC', borderRadius: '8px' }}>
+              <Space size={29}>
+                <Title level={5} type="secondary" style={{ margin: '16px 0px 16px 48px' }}>
+                  Labels
+                </Title>{' '}
+                <Title level={5} type="secondary" style={{ margin: '16px 0px' }}>
+                  Datasource
+                </Title>
+              </Space>
+            </header>
+            {sourceData.map(item => {
+              return (
+                <DataSource
+                  key={item.key}
+                  //@ts-ignore
+                  data={item}
+                  handleChange={handleChange}
+                />
+              );
+            })}
+          </div>
+        </Col>
+        <Col span={9}>
+          <Card>
             <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
               目前绑定了{bindEdgeCount} 条边，{bindNodeCount}个点
             </Text>

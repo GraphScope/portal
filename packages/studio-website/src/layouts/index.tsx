@@ -33,6 +33,14 @@ export default function Layout() {
               titleMarginBottom: '0.2em',
               titleMarginTop: '0.8em',
             },
+            Table: {
+              headerBg: '#fff',
+              headerSplitColor: '#fff',
+            },
+            Segmented: {
+              trackBg: '#fff',
+              trackPadding: 0,
+            },
           },
           token: {
             borderRadius: 8,
