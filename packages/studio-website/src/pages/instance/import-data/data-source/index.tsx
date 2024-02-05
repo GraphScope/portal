@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CheckSquareOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import { Button, Flex, Row, Col, Space, Typography, theme, Tooltip } from 'antd';
 import { PropertyType } from '../useContext';
 import SwitchSource from './switch-source';
@@ -91,7 +91,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
             <Tooltip title={isBind ? '已绑定' : '未绑定'}>
               <Button
                 type="text"
-                icon={<CheckSquareOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}
+                icon={<CheckCircleOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}
               ></Button>
             </Tooltip>
           </Flex>

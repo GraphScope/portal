@@ -8,7 +8,10 @@ const { useToken } = theme;
 const TabAction: React.FC<ITabActionProps> = props => {
   const { token } = useToken();
   const { store, updateStore } = useContext();
-  const { currentType } = store;
+  const {
+    currentType,
+    sourceList: { nodes, edges },
+  } = store;
   const styles: React.CSSProperties = {
     borderBottom: `2px solid ${token.colorPrimary}`,
     paddingBottom: '7px',
@@ -24,13 +27,16 @@ const TabAction: React.FC<ITabActionProps> = props => {
     });
   };
   const verticesStyle = currentType === 'node';
+
+  const bindNodeCount = nodes.filter(item => item.isBind).length;
+  const bindEdgeCount = edges.filter(item => item.isBind).length;
   return (
     <Space>
       <Text style={verticesStyle ? styles : activeStyles} onClick={() => handleChange('Vertices')}>
-        Vertices
+        Point Data Eource Binding（{bindNodeCount}/{nodes?.length}）
       </Text>
       <Text style={!verticesStyle ? styles : activeStyles} onClick={() => handleChange('Edges')}>
-        Edges
+        Edge Data Eource Binding({bindEdgeCount}/{edges?.length})
       </Text>
     </Space>
   );
