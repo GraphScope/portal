@@ -14,7 +14,7 @@ interface IContentProps {
 const Content: React.FunctionComponent<IContentProps> = props => {
   const { createStatement, queryGraphData, enableImmediateQuery } = props;
   const { store, updateStore } = useContext();
-  const { activeId, mode, statements, savedStatements, schemaData } = store;
+  const { activeId, mode, statements, savedStatements, schemaData, graphName } = store;
   const savedIds = savedStatements.map(item => item.id);
 
   const statementStyles =
@@ -101,6 +101,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
                 active={id === activeId}
                 saved={savedIds.indexOf(id) !== -1}
                 id={id}
+                graphName={graphName}
                 schemaData={schemaData}
                 script={script}
                 onQuery={queryGraphData}

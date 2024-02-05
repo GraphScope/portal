@@ -73,6 +73,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     (async () => {
       const info = await queryInfo();
       const schemaData = await queryGraphSchema(info.name);
+      console.log('schemaData', schemaData);
       const historyStatements = await queryHistoryStatements('');
 
       updateStore(draft => {

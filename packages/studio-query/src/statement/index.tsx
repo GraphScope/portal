@@ -14,11 +14,13 @@ export type IStatementProps = IEditorProps & {
   saved: boolean;
   mode?: 'tabs' | 'flow';
   enableImmediateQuery: boolean;
+  graphName: string;
 };
 const { useToken } = theme;
 
 const Statement: React.FunctionComponent<IStatementProps> = props => {
-  const { onQuery, onClose, onSave, script, id, active, mode, saved, schemaData, enableImmediateQuery } = props;
+  const { onQuery, onClose, onSave, script, id, active, mode, saved, schemaData, enableImmediateQuery, graphName } =
+    props;
   const { token } = useToken();
   const borderStyle =
     active && mode === 'flow'
@@ -99,7 +101,9 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
         isFetching={isFetching}
         antdToken={token}
       />
-      {data && !isFetching && <Result data={data} isFetching={isFetching} />}
+      {data && !isFetching && (
+        <Result data={data} isFetching={isFetching} schemaData={schemaData} graphName={graphName} />
+      )}
       {isFetching && <Skeleton />}
     </div>
   );
