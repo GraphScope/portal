@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Section from '@/components/section';
-
+import AlertSegmente from './segmente';
 interface AlertModuleProps {}
 
 const AlertModule: React.FunctionComponent<AlertModuleProps> = props => {
@@ -17,7 +17,7 @@ const AlertModule: React.FunctionComponent<AlertModuleProps> = props => {
       title="Alert"
       desc="Alert"
     >
-      WIP...
+      <AlertSegmente />
     </Section>
   );
 };

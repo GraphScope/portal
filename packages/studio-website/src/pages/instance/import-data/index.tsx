@@ -70,6 +70,11 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       }
     });
   };
+  const tabHandleChange = (val: string) => {
+    updateStore(draft => {
+      draft.currentType = val;
+    });
+  };
 
   return (
     <Section
@@ -91,7 +96,13 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         </Col>
       </Row> */}
       <Flex justify="space-between" align="center">
-        <TabelAction />
+        <TabelAction
+          items={[
+            { label: `Point Data Eource Binding（${bindNodeCount}/${nodes?.length}）`, value: 'node' },
+            { label: `Edge Data Eource Binding(${bindEdgeCount}/${edges?.length})`, value: 'edge' },
+          ]}
+          tabChange={tabHandleChange}
+        />
         <GraphTitle />
       </Flex>
       <Divider style={{ margin: '0px 0px 16px' }} />
