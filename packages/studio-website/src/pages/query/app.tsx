@@ -10,6 +10,7 @@ import {
   deleteStatement,
   updateStatement,
   createStatement,
+  queryHistoryStatements,
 } from './services';
 
 const QueryModule = () => {
@@ -40,6 +41,9 @@ const QueryModule = () => {
       /** 查询语句列表  */
       //@ts-ignore
       queryStatement={queryStatement}
+      /** 查询历史语句列表  */
+      //@ts-ignore
+      queryHistoryStatements={queryHistoryStatements}
       /**  更新语句 */
       //@ts-ignore
       updateStatement={updateStatement}

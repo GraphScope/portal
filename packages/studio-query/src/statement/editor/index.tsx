@@ -26,16 +26,13 @@ const Editor: React.FunctionComponent<
   } = props;
   const editorRef = useRef<any>(null);
 
-  const handleChange = async value => {
-    console.log('value', value);
-  };
+  const handleChange = async value => {};
   const handleQuery = async () => {
     const value = editorRef?.current?.codeEditor?.getValue();
     const result = await onQuery({
       id,
       script: value,
     });
-    console.log('result', result);
   };
   const handleSave = () => {
     const value = editorRef?.current?.codeEditor?.getValue();
@@ -89,7 +86,7 @@ const Editor: React.FunctionComponent<
         schemaData={schemaData}
         ref={editorRef}
         value={script}
-        onChange={handleChange}
+        // onChange={handleChange}
         onInit={(initEditor: any) => {}}
       />
     </div>

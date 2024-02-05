@@ -40,12 +40,18 @@ const Result: React.FunctionComponent<IResultProps> = props => {
 
   return (
     <div>
-      <Segmented options={['graph', 'table', 'raw']} onChange={handleChange} value={viewMode}></Segmented>
       <div style={{ height: '500px', position: 'relative', overflowY: 'scroll' }}>
-        <div style={isFetching ? activeItemStyle : itemStyle}>
-          <Skeleton active />
-          <Skeleton active />
-        </div>
+        <Segmented
+          style={{
+            zIndex: 999,
+            position: 'absolute',
+            top: '6px',
+            left: '6px',
+          }}
+          options={['graph', 'table', 'raw']}
+          onChange={handleChange}
+          value={viewMode}
+        ></Segmented>
         <div style={viewMode === 'graph' && !isFetching ? activeItemStyle : itemStyle}>
           <GraphView data={data} />
         </div>

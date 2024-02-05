@@ -65,7 +65,6 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       if (value === '') {
         return;
       }
-
       updateStore(draft => {
         draft.globalScript = '';
         const num = Math.round(Math.random() * 10000);
@@ -141,7 +140,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
         }}
       >
         <CypherEditor
-          onChangeContent={debounce(onChangeContent, 500)}
+          onChangeContent={onChangeContent}
           value={globalScript}
           ref={editorRef}
           onChange={handleChange}
