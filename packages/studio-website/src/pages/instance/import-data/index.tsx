@@ -7,6 +7,7 @@ import { SOURCEDATA } from './source-data';
 import SourceTitle from './source-title';
 import GraphTitle from './graph-title';
 import Section from '@/components/section';
+import TabelAction from './tab-action';
 interface IImportDataProps {}
 
 const { Title, Text } = Typography;
@@ -36,7 +37,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       }, 600);
     });
   };
-  const sourceData = currentType === 'nodesource' ? nodes : edges;
+  const sourceData = currentType === 'node' ? nodes : edges;
 
   const bindNodeCount = nodes.filter(item => item.isBind).length;
   const bindEdgeCount = edges.filter(item => item.isBind).length;
@@ -45,7 +46,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   const handleChange = (val: any) => {
     const { label, isBind, datatype, location, properties } = val;
     updateStore(draft => {
-      if (currentType === 'nodesource') {
+      if (currentType === 'node') {
         draft.sourceList.nodes.forEach(item => {
           if (item.label === label) {
             item.label = label;
@@ -56,7 +57,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           }
         });
       }
-      if (currentType === 'edgesource') {
+      if (currentType === 'edge') {
         draft.sourceList.edges.forEach(item => {
           if (item.label === label) {
             item.label = label;
@@ -81,14 +82,18 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         },
       ]}
     >
-      <Row gutter={24}>
+      {/* <Row gutter={24}>
         <Col span={15}>
           <SourceTitle />
         </Col>
         <Col span={9}>
           <GraphTitle />
         </Col>
-      </Row>
+      </Row> */}
+      <Flex justify="space-between" align="center">
+        <TabelAction />
+        <GraphTitle />
+      </Flex>
       <Divider style={{ margin: '0px 0px 16px' }} />
       <Row gutter={24}>
         <Col span={15}>

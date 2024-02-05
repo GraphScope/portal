@@ -37,10 +37,6 @@ export default function Layout() {
               headerBg: '#fff',
               headerSplitColor: '#fff',
             },
-            Segmented: {
-              trackBg: '#fff',
-              trackPadding: 0,
-            },
           },
           token: {
             borderRadius: 8,
