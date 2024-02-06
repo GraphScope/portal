@@ -7,10 +7,12 @@ import GraphView from './graph';
 interface IResultProps {
   data: any;
   isFetching: boolean;
+  schemaData: any;
+  graphName: string;
 }
 
 const Result: React.FunctionComponent<IResultProps> = props => {
-  const { data, isFetching } = props;
+  const { data, isFetching, schemaData, graphName } = props;
   const [state, updateState] = React.useState<{
     viewMode: 'graph' | 'table' | 'raw';
   }>({
@@ -40,14 +42,20 @@ const Result: React.FunctionComponent<IResultProps> = props => {
 
   return (
     <div>
-      <Segmented options={['graph', 'table', 'raw']} onChange={handleChange} value={viewMode}></Segmented>
       <div style={{ height: '500px', position: 'relative', overflowY: 'scroll' }}>
-        <div style={isFetching ? activeItemStyle : itemStyle}>
-          <Skeleton active />
-          <Skeleton active />
-        </div>
+        <Segmented
+          style={{
+            zIndex: 999,
+            position: 'absolute',
+            top: '6px',
+            left: '6px',
+          }}
+          options={['graph', 'table', 'raw']}
+          onChange={handleChange}
+          value={viewMode}
+        ></Segmented>
         <div style={viewMode === 'graph' && !isFetching ? activeItemStyle : itemStyle}>
-          <GraphView data={data} />
+          <GraphView data={data} schemaData={schemaData} graphName={graphName} />
         </div>
         <div style={viewMode === 'table' && !isFetching ? activeItemStyle : itemStyle}>
           <TableView data={data} />

@@ -2,47 +2,21 @@ import React, { useEffect } from 'react';
 import Graph from '../../graph';
 interface IGraphViewProps {
   data: any;
+  schemaData: any;
+  graphName: string;
 }
 
 const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
-  const { data } = props;
+  const { data, schemaData, graphName } = props;
   useEffect(() => {
     return () => {
       console.log('unmount....graph');
     };
   }, []);
 
-  const schema = {
-    nodes: [
-      {
-        label: 'person',
-        properties: {
-          age: 'number',
-          name: 'string',
-        },
-      },
-      {
-        label: 'software',
-        properties: {
-          lang: 'string',
-          name: 'string',
-        },
-      },
-    ],
-    edges: [
-      {
-        label: 'created',
-        properties: {
-          weight: 'number',
-        },
-      },
-    ],
-  };
-  const graphName = 'movie';
-
   return (
     <div style={{ width: '100%' }}>
-      <Graph data={data} schemaData={schema} schemaId={graphName} />
+      <Graph data={data} schemaData={schemaData} schemaId={graphName} />
     </div>
   );
 };

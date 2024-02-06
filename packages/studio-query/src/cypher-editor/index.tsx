@@ -43,6 +43,7 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
     schemaData,
     functions,
     onChangeContent,
+    clear,
   } = props;
   let codeEditor: monaco.editor.IStandaloneCodeEditor;
   // 监听事件
@@ -145,6 +146,12 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
       }
     };
   }, [editorRef, value]);
+  React.useEffect(() => {
+    console.log('value>?>>>>>>>>>>', clear);
+    if (clear && editorRef && editorRef.current && editorRef.current.codeEditor) {
+      editorRef.current.codeEditor.setValue('');
+    }
+  }, [clear]);
 
   return (
     <div

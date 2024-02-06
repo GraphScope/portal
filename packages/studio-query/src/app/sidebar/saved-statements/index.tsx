@@ -10,19 +10,20 @@ const SavedStatements: React.FunctionComponent<ISavedStatementsProps> = props =>
   const items = savedStatements.map(item => {
     return item;
   });
+
   const handleClick = value => {
     const { id, script } = value;
     updateStore(draft => {
       draft.globalScript = script;
-      const queryIds = draft.statements.map(item => item.id);
-      const HAS_QUERY = queryIds.indexOf(id) !== -1;
+      // const queryIds = draft.statements.map(item => item.id);
+      // const HAS_QUERY = queryIds.indexOf(id) !== -1;
       draft.activeId = id;
-      if (!HAS_QUERY) {
-        draft.statements = [value, ...draft.statements];
-      }
+      // if (!HAS_QUERY) {
+      //   draft.statements = [value, ...draft.statements];
+      // }
     });
   };
-  console.log(savedStatements);
+
   return (
     <div>
       <List items={items} onClick={handleClick} />

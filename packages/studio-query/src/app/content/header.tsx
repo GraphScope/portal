@@ -4,6 +4,7 @@ import { Tooltip, Segmented, Button, Space, Select, Flex } from 'antd';
 import { localStorageVars } from '../context';
 import { useContext } from '../context';
 import CypherEditor from '../../cypher-editor';
+import { debounce } from '../utils';
 
 interface IHeaderProps {}
 
@@ -44,46 +45,52 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
   const editorRef = useRef<any>(null);
   const [state, updateState] = useState({
     lineCount: 1,
+    clear: false,
   });
   const { globalScript } = store;
 
-  const handleAddQuery = () => {
-    updateStore(draft => {
-      const num = Math.round(Math.random() * 10000);
-      const id = `query-${num}`;
-      draft.statements = [
-        {
-          id,
-          name: id,
-          script: 'Match (n) return n limit 10',
-        },
-        ...draft.statements,
-      ];
-
-      draft.activeId = id;
-    });
-  };
-  const script = '';
   const handleChange = value => {};
-  const onChangeContent = (line, editor) => {
+  const onChangeContent = line => {
     updateState(preState => {
       return {
         ...preState,
         lineCount: line,
+        clear: false,
       };
     });
   };
   const handleQuery = () => {
     if (editorRef.current) {
       const value = editorRef.current.codeEditor.getValue();
-      console.log('value', value);
+      if (value === '') {
+        return;
+      }
       updateStore(draft => {
-        draft.globalScript = value;
+        draft.globalScript = '';
+        const num = Math.round(Math.random() * 10000);
+        const id = `query-${num}`;
+        draft.statements = [
+          {
+            id,
+            name: id,
+            script: value,
+          },
+          ...draft.statements,
+        ];
+        draft.activeId = id;
+      });
+
+      updateState(preState => {
+        return {
+          ...preState,
+          clear: true,
+        };
       });
     }
   };
   const isShowCypherSwitch = state.lineCount === 1;
-  console.log(globalScript, 'globalScript');
+  console.log('globalScript', globalScript, 'clear:', state.clear);
+
   return (
     <div
       style={{
@@ -139,6 +146,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
           onChange={handleChange}
           onInit={(initEditor: any) => {}}
           maxRows={25}
+          clear={state.clear}
         />
       </div>
       <Space>

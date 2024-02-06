@@ -8,12 +8,13 @@ import Empty from './empty';
 interface IContentProps {
   createStatement: IStudioQueryProps['createStatement'];
   queryGraphData: IStudioQueryProps['queryGraphData'];
+  enableImmediateQuery: boolean;
 }
 
 const Content: React.FunctionComponent<IContentProps> = props => {
-  const { createStatement, queryGraphData } = props;
+  const { createStatement, queryGraphData, enableImmediateQuery } = props;
   const { store, updateStore } = useContext();
-  const { activeId, mode, statements, savedStatements, schemaData } = store;
+  const { activeId, mode, statements, savedStatements, schemaData, graphName } = store;
   const savedIds = savedStatements.map(item => item.id);
 
   const statementStyles =
@@ -31,7 +32,6 @@ const Content: React.FunctionComponent<IContentProps> = props => {
 
   React.useEffect(() => {}, []);
 
-  console.log('mode', mode, activeId);
   const queryOptions = statements.map(item => {
     return {
       label: item.id,
@@ -40,7 +40,6 @@ const Content: React.FunctionComponent<IContentProps> = props => {
   });
 
   const onSave = ({ id, script }) => {
-    console.log('save', id, script);
     updateStore(draft => {
       const saveIds = draft.savedStatements.map(item => item.id);
       const HAS_SAVED = saveIds.indexOf(id) !== -1;
@@ -97,10 +96,12 @@ const Content: React.FunctionComponent<IContentProps> = props => {
               }}
             >
               <Statement
+                enableImmediateQuery={enableImmediateQuery}
                 mode={mode}
                 active={id === activeId}
                 saved={savedIds.indexOf(id) !== -1}
                 id={id}
+                graphName={graphName}
                 schemaData={schemaData}
                 script={script}
                 onQuery={queryGraphData}

@@ -8,10 +8,14 @@ export const localStorageVars = {
 export interface IStatement {
   /** 语句ID */
   id: string;
-  /** 语句名称 */
-  name?: string;
+  /** 查询ID */
+  queryId?: string;
   /** 语句脚本 */
   script: string;
+  /** 时间戳 */
+  timestamp?: string;
+  /** 语句名称 */
+  name?: string;
 }
 
 export type IStore<T> = T & {
@@ -27,6 +31,8 @@ export type IStore<T> = T & {
   activeNavbar: 'saved' | 'info' | 'gpt' | 'store_procedure';
   /** 单击选中的语句,如果是 fLow 模式，则滚动定位到这条语句 ，如果是 Tabs 模式，则直接展示*/
   activeId: string;
+  /** 保存的语句 */
+  historyStatements: IStatement[];
   /** 查询的语句 */
   statements: IStatement[];
   /** 展示的模式 */
@@ -57,18 +63,8 @@ const initialStore: IStore<{}> = {
     nodes: [],
     edges: [],
   },
-  statements: [
-    // {
-    //   id: 'query-1',
-    //   name: 'query-1',
-    //   script: 'Match (n) return n limit 10',
-    // },
-    // {
-    //   id: 'query-2',
-    //   name: 'query-2',
-    //   script: 'Match (n) return n limit 30',
-    // },
-  ],
+  historyStatements: [],
+  statements: [],
   savedStatements: [
     {
       id: 'my-query-1 ',
@@ -126,6 +122,8 @@ export interface IStudioQueryProps {
   queryInfo: () => Promise<Info>;
   /**  查询语句列表 */
   queryStatement: () => Promise<IStatement[]>;
+  /** 查看历史语句 */
+  queryHistoryStatements?: (dt?: string) => Promise<IGraphSchema>;
   /**  更新语句 */
   updateStatement: (params: IStatement) => Promise<IStatement>;
   /** 创建语句 */
@@ -136,6 +134,7 @@ export interface IStudioQueryProps {
   queryGraphData: (params: IStatement) => Promise<IGraphData>;
   /** 查询Schema */
   queryGraphSchema: (id: string) => Promise<IGraphSchema>;
+
   /** 语句的类型 */
   type: 'gremlin' | 'cypher' | 'iso_gql';
   /** 返回按钮 */

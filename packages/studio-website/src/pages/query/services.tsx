@@ -1,5 +1,34 @@
 import { CypherDriver, CypherSchemaData } from '@graphscope/studio-query';
-const HOST_URL = 'localhost';
+import localforage from 'localforage';
+import { v4 as uuidv4 } from 'uuid';
+import { GraphApiFactory, GraphApi, GraphApiFp, ServiceApiFactory } from '@graphscope/studio-server';
+import { transformSchema } from './utils/schema';
+import { handleServerResponse } from './utils/handleServerResponse';
+const DB_QUERY_HISTORY = localforage.createInstance({
+  name: 'GS_QUERY',
+});
+const DB_QUERY_FAVOR = localforage.createInstance({
+  name: 'GS_QUERY',
+});
+
+/** 查询历史记录 */
+export async function queryHistoryStatements() {
+  const result: IStatement[] = [];
+  await DB_QUERY_HISTORY.iterate((item: IStatement) => {
+    if (item) {
+      result.push(item);
+    }
+  });
+  return result;
+}
+/** 添加历史记录 */
+export async function addHistoryStatements(value: IStatement) {
+  const { id } = value;
+  DB_QUERY_HISTORY.setItem(id, value);
+}
+
+const HOST_URL = '47.242.172.5'; //'localhost';
+const HOST_API: string = 'http://47.242.172.5:8080';
 const driver = new CypherDriver(`neo4j://${HOST_URL}:7687`);
 import { SCHEMA_DATA } from './const';
 export interface IStatement {
@@ -7,28 +36,30 @@ export interface IStatement {
   script: string;
 }
 export const queryGraphData = async (value: IStatement) => {
+  const queryId = uuidv4();
+  const timestamp = new Date().getTime();
+  //@ts-ignore
+  addHistoryStatements({ id: queryId, script: value.script, timestamp });
   return driver.queryCypher(value.script);
 };
 export const queryInfo = async () => {
-  return new Promise(reslove => {
-    reslove({
-      name: 'defauleGraph',
-      type: 'interactive',
-      home_url: '/instance',
-      connect: {
-        url: 'bolt://localhost:7678',
-        usename: '',
-        password: '',
-      },
-      connect_url: 'bolt://localhost:7678',
-    });
-  });
+  const result = await ServiceApiFactory(undefined, HOST_API).getServiceStatus();
+  const service = handleServerResponse(result);
+  console.log('service', service);
+  return service;
 };
 export const queryGraphSchema = async (): Promise<CypherSchemaData> => {
-  return new Promise(reslove => {
+  const result = await GraphApiFactory(undefined, HOST_API).getSchema('graph_algo');
+  const schema = handleServerResponse(result);
+  if (schema) {
+    const cypherSchema = transformSchema(schema);
     //@ts-ignore
-    reslove(SCHEMA_DATA);
-  });
+    return cypherSchema;
+  }
+  return {
+    nodes: [],
+    edges: [],
+  };
 };
 
 export const queryStatement = async () => {

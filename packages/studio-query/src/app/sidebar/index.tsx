@@ -109,7 +109,7 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
             );
           })}
         </ul>
-        <div style={{ flex: 1 }}>{activeOption?.children}</div>
+        <div style={{ flex: 1, overflow: 'hidden' }}>{activeOption?.children}</div>
       </div>
     </div>
   );

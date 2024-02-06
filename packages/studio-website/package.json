@@ -10,6 +10,7 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "localforage": "^1.10.0",
     "@ant-design/icons": "^5.2.6",
     "@antv/graphin": "^2.7.27",
     "@graphscope/studio-importor": "workspace:*",
