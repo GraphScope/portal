@@ -1,13 +1,12 @@
 import { FunctionComponent, ReactNode } from 'react';
 import Graphin, { Utils } from '@antv/graphin';
+import '@antv/graphin-icons/dist/index.css';
 import { theme } from 'antd';
-import React from 'react';
-import { PropertyType } from './index';
+import { PropertyType } from './useContext';
 const { useToken } = theme;
 interface Props {
   children?: ReactNode;
-  // 命名修改为 data / nodes/edges
-  pdata: {
+  viewdata: {
     nodeLists: PropertyType[];
     edgeLists: PropertyType[];
   };
@@ -17,13 +16,12 @@ interface Props {
 const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
   const nodes = nodeList.map((item: PropertyType) => {
     const { key, label, isBind } = item;
-    const labelValue = `${label}(${isBind ? '已绑定' : '未绑定'})`;
-
     return {
       id: label,
       style: {
         label: {
-          value: labelValue,
+          value: `${label} ${isBind ? '✅' : '☑️'}`,
+          fill: token.colorPrimary,
         },
         fontSize: 14,
         keyshape: {
@@ -42,10 +40,10 @@ const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
       id: key,
       source,
       target,
-      label: `${label}(${isBind ? '已绑定' : '未绑定'})`,
+      label: `${label} ${isBind ? '✅' : '☑️'}`,
       style: {
         label: {
-          value: `${label}(${isBind ? '已绑定' : '未绑定'})`,
+          value: `${label} ${isBind ? '✅' : '☑️'}`,
           fill: token.colorPrimary,
           offset: [0, 0],
         },
@@ -67,10 +65,10 @@ const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
 
 // 改名为 graphview
 const GraphInsight: FunctionComponent<Props> = props => {
-  const { children, pdata } = props;
+  const { children, viewdata } = props;
   const { token } = useToken();
   //@ts-ignore
-  const graphData = getVertexEdges(pdata.nodeLists, pdata.edgeLists, token);
+  const graphData = getVertexEdges(viewdata.nodeLists, viewdata.edgeLists, token);
 
   return (
     <>

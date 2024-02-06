@@ -32,7 +32,7 @@ export type IStore<T> = T & {
 
 export const initialStore: IStore<{}> = {
   /** 数据源 currentType */
-  currentType: 'nodesource',
+  currentType: 'node',
   // schema 需要通过 fetch(/graph/schema) 接口得到，同时需要增加 iSReady，增加骨架图，提高体验
   sourceList: {
     nodes: [],

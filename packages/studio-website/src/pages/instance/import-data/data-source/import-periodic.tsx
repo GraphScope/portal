@@ -9,12 +9,12 @@ const ImportPeriodic: React.FunctionComponent<IImportPeriodicProps> = props => {
   return (
     <div>
       <Button
-        type="primary"
         onClick={() => {
           setVisible(true);
         }}
+        size="small"
       >
-        周期导入
+        Import Periodic
       </Button>
       <Modal width={'75%'} open={visible} footer={null}>
         <StagesImportPackages

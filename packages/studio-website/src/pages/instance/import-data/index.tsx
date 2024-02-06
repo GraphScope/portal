@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react';
-import { Row, Col, Card, Typography, Skeleton, theme } from 'antd';
+import { Row, Col, Card, Typography, Skeleton, theme, Space, Flex, Divider } from 'antd';
 import { useContext } from './useContext';
 import GraphView from './graph-view';
 import DataSource from './data-source/index';
 import { SOURCEDATA } from './source-data';
 import SourceTitle from './source-title';
 import GraphTitle from './graph-title';
+import Section from '@/components/section';
+import TabelAction from './tab-action';
 interface IImportDataProps {}
 
-const { Text } = Typography;
+const { Title, Text } = Typography;
 const { useToken } = theme;
 const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   const { token } = useToken();
@@ -35,7 +37,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       }, 600);
     });
   };
-  const sourceData = currentType === 'nodesource' ? nodes : edges;
+  const sourceData = currentType === 'node' ? nodes : edges;
 
   const bindNodeCount = nodes.filter(item => item.isBind).length;
   const bindEdgeCount = edges.filter(item => item.isBind).length;
@@ -44,7 +46,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   const handleChange = (val: any) => {
     const { label, isBind, datatype, location, properties } = val;
     updateStore(draft => {
-      if (currentType === 'nodesource') {
+      if (currentType === 'node') {
         draft.sourceList.nodes.forEach(item => {
           if (item.label === label) {
             item.label = label;
@@ -55,7 +57,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           }
         });
       }
-      if (currentType === 'edgesource') {
+      if (currentType === 'edge') {
         draft.sourceList.edges.forEach(item => {
           if (item.label === label) {
             item.label = label;
@@ -70,38 +72,70 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   };
 
   return (
-    <Row style={{ padding: '24px' }} gutter={32}>
-      <Col span={16}>
-        <SourceTitle />
-        <Card bodyStyle={{ padding: '12px' }}>
+    <Section
+      breadcrumb={[
+        {
+          title: 'Graphs',
+        },
+        {
+          title: 'import data',
+        },
+      ]}
+    >
+      {/* <Row gutter={24}>
+        <Col span={15}>
+          <SourceTitle />
+        </Col>
+        <Col span={9}>
+          <GraphTitle />
+        </Col>
+      </Row> */}
+      <Flex justify="space-between" align="center">
+        <TabelAction />
+        <GraphTitle />
+      </Flex>
+      <Divider style={{ margin: '0px 0px 16px' }} />
+      <Row gutter={24}>
+        <Col span={15}>
           {!isReady && <Skeleton />}
           {/* 遍历需要绑定的数据源 */}
-          {sourceData.map(item => {
-            return (
-              <DataSource
-                key={item.key}
-                //@ts-ignore
-                data={item}
-                handleChange={handleChange}
-              />
-            );
-          })}
-        </Card>
-      </Col>
-      <Col span={8}>
-        <GraphTitle />
-        <Card style={{ marginTop: '24px', border: `1px dashed ${token.colorBorder}`, borderRadius: '0px' }}>
-          <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
-            目前绑定了{bindEdgeCount} 条边，{bindNodeCount}个点
-          </Text>
-          {!isReady && <Skeleton />}
-          <GraphView
-            //@ts-ignore
-            pdata={{ nodeLists: nodes, edgeLists: edges }}
-          ></GraphView>
-        </Card>
-      </Col>
-    </Row>
+          <div style={{ border: '1px solid #ddd', borderRadius: '8px' }}>
+            <header style={{ background: '#FCFCFC', borderRadius: '8px' }}>
+              <Space size={29}>
+                <Title level={5} type="secondary" style={{ margin: '16px 0px 16px 48px' }}>
+                  Labels
+                </Title>{' '}
+                <Title level={5} type="secondary" style={{ margin: '16px 0px' }}>
+                  Datasource
+                </Title>
+              </Space>
+            </header>
+            {sourceData.map(item => {
+              return (
+                <DataSource
+                  key={item.key}
+                  //@ts-ignore
+                  data={item}
+                  handleChange={handleChange}
+                />
+              );
+            })}
+          </div>
+        </Col>
+        <Col span={9}>
+          <Card>
+            <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
+              目前绑定了{bindEdgeCount} 条边，{bindNodeCount}个点
+            </Text>
+            {!isReady && <Skeleton />}
+            <GraphView
+              //@ts-ignore
+              viewdata={{ nodeLists: nodes, edgeLists: edges }}
+            ></GraphView>
+          </Card>
+        </Col>
+      </Row>
+    </Section>
   );
 };
 

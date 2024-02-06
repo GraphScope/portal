@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { DisconnectOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
-import { Button, Flex, Row, Col, Space, Typography, theme } from 'antd';
+import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
+import { Button, Flex, Row, Col, Space, Typography, theme, Tooltip } from 'antd';
 import { PropertyType } from '../useContext';
 import SwitchSource from './switch-source';
 import ImportPeriodic from './import-periodic';
@@ -12,15 +12,8 @@ interface IImportDataProps {
   data: PropertyType;
   handleChange(val: any): void;
 }
-const { Title, Text } = Typography;
-const styles: React.CSSProperties = {
-  display: 'inline-block',
-  margin: '0px',
-  width: '80px',
-  textAlign: 'end',
-  marginRight: '8px',
-  fontSize: '14px',
-};
+const { Text } = Typography;
+
 const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const {
     data: { label, isBind, filelocation, datatype, properties },
@@ -51,7 +44,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     handleChange && handleChange({ label, location, properties: dataSources, datatype: currentType, isBind: true });
   };
   /** 切换图标 */
-  const handleIconChange = isEidtProperty ? (
+  const ToggleIcon = isEidtProperty ? (
     <CaretDownOutlined
       onClick={() =>
         updateState(preState => {
@@ -76,74 +69,79 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   );
   return (
     <>
-      <Row style={{ border: `1px solid ${token.colorBorder}`, padding: '12px 16px' }}>
-        <Flex justify="start" align="center">
-          {handleIconChange}
-        </Flex>
-        <Col span={20}>
-          <Flex justify="flex-start" align="center">
-            <Title level={5} style={styles}>
-              label:
-            </Title>
-            <Text>{label}</Text>
+      <div>
+        <div
+          style={{
+            padding: '8px',
+            borderTop: `1px solid ${token.colorBorder}`,
+            background: isEidtProperty ? 'none' : '#FCFCFC',
+            borderRadius: '0px 0px 8px 8px',
+          }}
+        >
+          <Flex justify="space-between" align="center">
+            <Space>
+              <Button type="text" icon={ToggleIcon}></Button>
+              <Flex justify="start" vertical gap={8}>
+                <Space>
+                  <Text style={{ display: 'inline-block', width: '100px' }}>{label}</Text>
+                  <SwitchSource filelocation={filelocation} currentType={currentType} updateState={updateState} />
+                </Space>
+              </Flex>
+            </Space>
+            <Tooltip title={isBind ? '已绑定' : '未绑定'}>
+              <Button
+                type="text"
+                icon={<CheckCircleOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}
+              ></Button>
+            </Tooltip>
           </Flex>
-          <Flex justify="flex-start" align="center">
-            <Title level={5} style={styles}>
-              数据源:
-            </Title>
-            <SwitchSource filelocation={filelocation} currentType={currentType} updateState={updateState} />
-          </Flex>
-        </Col>
-        <Flex justify="end" align="center">
-          <Col span={3}>
-            <DisconnectOutlined style={{ fontSize: '32px', color: isBind ? '#53C31C' : '#ddd', marginLeft: '13px' }} />
-          </Col>
-        </Flex>
-      </Row>
-      {isEidtProperty && (
-        <Row style={{ border: `1px solid ${token.colorBorder}`, borderTop: 'none', padding: '12px 0px 12px 38px' }}>
-          <Col span={24}>
-            <Row>
-              <Col span={4}>
-                <Title level={5} style={{ ...styles, marginTop: '14px' }}>
-                  属性映射：
-                </Title>
-              </Col>
-              <Col span={20} pull={1} style={{}}>
-                <TableList
+        </div>
+        {isEidtProperty && (
+          <Row
+            style={{
+              borderTop: isEidtProperty ? 'none' : `1px solid ${token.colorBorder}`,
+              padding: '0px 8px 8px 5px',
+              display: 'flex',
+              justifyContent: 'end',
+              transition: 'all 4s ease-in-out 1s',
+              boxSizing: 'border-box',
+            }}
+            gutter={[0, 8]}
+          >
+            <Col span={18}>
+              <TableList
+                //@ts-ignore
+                tabledata={JSON.parse(JSON.stringify(properties))}
+                onChange={val => {
                   //@ts-ignore
-                  tabledata={JSON.parse(JSON.stringify(properties))}
-                  onChange={val => {
-                    //@ts-ignore
-                    updateState(preState => {
-                      return {
-                        ...preState,
-                        dataSources: val,
-                      };
-                    });
-                  }}
-                />
-              </Col>
-            </Row>
-          </Col>
-          <Col span={24}>
-            <Flex justify="end" style={{ margin: '16px 27px 5px' }}>
-              <Space>
-                {engineType === 'groot' ? (
-                  <>
-                    <ImportPeriodic />
-                    <ImportNow label={label} />
-                  </>
-                ) : (
-                  <Button type="primary" onClick={saveBindData}>
-                    保存绑定
-                  </Button>
-                )}
-              </Space>
-            </Flex>
-          </Col>
-        </Row>
-      )}
+                  updateState(preState => {
+                    return {
+                      ...preState,
+                      dataSources: val,
+                    };
+                  });
+                }}
+              />
+            </Col>
+            <Col span={24}>
+              <Flex justify="end">
+                <Space>
+                  {engineType === 'interactive' ? (
+                    <>
+                      <ImportPeriodic />
+                      <ImportNow label={label} />
+                    </>
+                  ) : (
+                    <Button onClick={saveBindData} size="small">
+                      Save Bind
+                    </Button>
+                  )}
+                </Space>
+              </Flex>
+            </Col>
+          </Row>
+        )}
+      </div>
     </>
   );
 };

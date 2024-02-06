@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Table, Select, Checkbox, InputNumber } from 'antd';
+import { Table, Select, Checkbox, InputNumber, Typography } from 'antd';
 type EditableTableProps = Parameters<typeof Table>[0];
-
+const { Text } = Typography;
 interface DataType {
   key: React.Key;
   name: string;
@@ -29,7 +29,10 @@ const PROPERTY_KEY_OPTIONS = [
     label: 'STRING',
   },
 ];
-
+const styles: React.CSSProperties = {
+  fontSize: '12px',
+  fontWeight: 400,
+};
 const TableList: React.FC<TableListProps> = props => {
   const { tabledata, onChange } = props;
   const [dataSource, setDataSource] = useState<DataType[]>(tabledata);
@@ -45,44 +48,65 @@ const TableList: React.FC<TableListProps> = props => {
   };
   const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex?: string })[] = [
     {
-      title: '属性名',
-      dataIndex: 'name',
-      key: 'name',
-      width: '40%',
+      title: (
+        <Text type="secondary" style={styles}>
+          Properties
+        </Text>
+      ),
+      dataIndex: 'properties',
+      key: 'properties',
+      width: '30%',
     },
     {
-      title: '类型',
+      title: (
+        <Text type="secondary" style={styles}>
+          Type
+        </Text>
+      ),
       dataIndex: 'type',
       key: 'type',
-      width: '30%',
+      width: '15%',
       render(text) {
-        return <Select style={{ width: '100%' }} defaultValue={text} disabled options={PROPERTY_KEY_OPTIONS} />;
+        return (
+          <Select style={{ width: '100%' }} defaultValue={text} disabled options={PROPERTY_KEY_OPTIONS} size="small" />
+        );
       },
     },
     {
-      title: '主键',
-      dataIndex: 'primaryKey',
-      key: 'primaryKey',
-      width: '10%',
+      title: (
+        <Text type="secondary" style={styles}>
+          Main_Key
+        </Text>
+      ),
+      dataIndex: 'main_key',
+      key: 'main_key',
+      width: '20%',
       render(text) {
         return <Checkbox defaultChecked={text} disabled />;
       },
     },
     {
-      title: '列索引(名称)',
-      //   dataIndex: 'dataindex',
-      width: '20%',
+      title: (
+        <Text type="secondary" style={styles}>
+          ColumnType or Name
+        </Text>
+      ),
+      dataIndex: 'columntype',
+      width: '35%',
       editable: true,
-      render(text) {
-        return <InputNumber min={0} defaultValue={text.dataindex} onChange={value => handleChangeIndex(value, text)} />;
+      render(columntype) {
+        return (
+          <InputNumber
+            min={0}
+            size="small"
+            defaultValue={columntype}
+            onChange={value => handleChangeIndex(value, columntype)}
+          />
+        );
       },
     },
   ];
-  return (
-    <div>
-      <Table columns={defaultColumns} bordered dataSource={dataSource} pagination={false} size="middle" />
-    </div>
-  );
+  return <Table columns={defaultColumns} dataSource={dataSource} pagination={false} size="small" />;
 };
 
 export default TableList;

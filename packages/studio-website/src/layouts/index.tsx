@@ -33,6 +33,10 @@ export default function Layout() {
               titleMarginBottom: '0.2em',
               titleMarginTop: '0.8em',
             },
+            Table: {
+              headerBg: '#fff',
+              headerSplitColor: '#fff',
+            },
           },
           token: {
             borderRadius: 8,
