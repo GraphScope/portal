@@ -11,7 +11,7 @@ interface IOverviewProps {
 const Overview: React.FunctionComponent<IOverviewProps> = props => {
   const { schema, onChange } = props;
   const { nodes, edges } = schema;
-  console.log('schema', schema);
+
   return (
     <div>
       <Title level={5} style={{ marginTop: '12px' }}>

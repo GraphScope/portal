@@ -8,6 +8,7 @@ import { IEditorProps } from '../typing';
 
 const Editor: React.FunctionComponent<
   IEditorProps & {
+    timestamp: string;
     isFetching: boolean;
     antdToken: GlobalToken;
     saved: boolean; // 是否是保存的语句
@@ -23,6 +24,7 @@ const Editor: React.FunctionComponent<
     antdToken,
     saved,
     schemaData,
+    timestamp,
   } = props;
   const editorRef = useRef<any>(null);
 
@@ -52,7 +54,7 @@ const Editor: React.FunctionComponent<
         <Space>
           <Tag>Cypher</Tag>
           <Typography.Text type="secondary" style={{ fontSize: '12px', textAlign: 'center' }}>
-            2024/12/1 12:00:00
+            {timestamp}
           </Typography.Text>
         </Space>
 

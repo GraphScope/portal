@@ -14,13 +14,6 @@ import {
 } from './services';
 
 const QueryModule = () => {
-  React.useEffect(() => {
-    GraphApiFactory({ basePath: 'localhost:7678' })
-      .listGraphs()
-      .then(res => {
-        console.log('res...', res);
-      });
-  }, []);
   return (
     <StudioQuery
       /** 返回导航 */
@@ -59,6 +52,8 @@ const QueryModule = () => {
       /** 查询Schema */
       //@ts-ignore
       queryGraphSchema={queryGraphSchema}
+      /** 是否立即查询 */
+      enableImmediateQuery={true}
     />
   );
 };

@@ -53,7 +53,7 @@ function generateDefaultConfig(schema: ISchema) {
 export function calcOverview(schema, configMap: Map<string, ConfigItem>, data: GraphinData) {
   const nodekeyOccurrences = countOccurrencesByKey(data.nodes, 'label');
   const edgekeyOccurrences = countOccurrencesByKey(data.edges, 'label');
-  console.log(nodekeyOccurrences, edgekeyOccurrences);
+
   const nodes = schema.nodes.map(item => {
     const { label } = item;
     const configItem = configMap.get(label);

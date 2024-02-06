@@ -15,12 +15,26 @@ export type IStatementProps = IEditorProps & {
   mode?: 'tabs' | 'flow';
   enableImmediateQuery: boolean;
   graphName: string;
+  /** 时间戳 */
+  timestamp: string;
 };
 const { useToken } = theme;
 
 const Statement: React.FunctionComponent<IStatementProps> = props => {
-  const { onQuery, onClose, onSave, script, id, active, mode, saved, schemaData, enableImmediateQuery, graphName } =
-    props;
+  const {
+    onQuery,
+    onClose,
+    onSave,
+    script,
+    id,
+    active,
+    mode,
+    saved,
+    schemaData,
+    enableImmediateQuery,
+    graphName,
+    timestamp,
+  } = props;
   const { token } = useToken();
   const borderStyle =
     active && mode === 'flow'
@@ -43,7 +57,6 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
   }, [active]);
 
   const handleQuery = async value => {
-    console.log('value', value);
     const { script, id } = value;
     const queryId = uuidv4();
     const timestamp = new Date().getTime();
@@ -91,6 +104,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
       }}
     >
       <Editor
+        timestamp={timestamp}
         schemaData={schemaData}
         saved={saved}
         id={id}

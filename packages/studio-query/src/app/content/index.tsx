@@ -85,7 +85,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
       <div style={{ overflowY: 'scroll', flex: '1', position: 'relative' }}>
         {isEmpty && <Empty />}
         {statements.map(item => {
-          const { id, script } = item;
+          const { id, script, timestamp } = item;
           return (
             <div
               key={id}
@@ -101,6 +101,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
                 active={id === activeId}
                 saved={savedIds.indexOf(id) !== -1}
                 id={id}
+                timestamp={timestamp}
                 graphName={graphName}
                 schemaData={schemaData}
                 script={script}

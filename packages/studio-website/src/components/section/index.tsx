@@ -15,9 +15,7 @@ interface ISectionProps {
 const Section: React.FunctionComponent<ISectionProps> = props => {
   const { title, desc, breadcrumb, children, items, style } = props;
 
-  const onChange = (key: string) => {
-    console.log(key);
-  };
+  const onChange = (key: string) => {};
   const hasDivider = title && desc && !items;
   return (
     <section style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>

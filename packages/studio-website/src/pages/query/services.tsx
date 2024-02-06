@@ -45,7 +45,7 @@ export const queryGraphData = async (value: IStatement) => {
 export const queryInfo = async () => {
   const result = await ServiceApiFactory(undefined, HOST_API).getServiceStatus();
   const service = handleServerResponse(result);
-  console.log('service', service);
+
   return service;
 };
 export const queryGraphSchema = async (): Promise<CypherSchemaData> => {

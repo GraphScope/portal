@@ -88,8 +88,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       });
     }
   };
-  const isShowCypherSwitch = state.lineCount === 1;
-  console.log('globalScript', globalScript, 'clear:', state.clear);
+  const isShowCypherSwitch = state.lineCount === 1 && countLines(globalScript) === 1;
 
   return (
     <div
@@ -158,3 +157,8 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
 };
 
 export default Header;
+
+function countLines(str) {
+  // 使用正则表达式匹配换行符，并计算匹配到的数量，即为行数
+  return (str.match(/\r?\n/g) || []).length + 1;
+}

@@ -155,13 +155,11 @@ export default CypherDriver;
 export function processResult(result) {
   const nodes: GraphNode[] = [];
   const edges: GraphEdge[] = [];
-  const table: Table = {
-    headers: [],
-    rows: [],
-  };
+  const table: any[] = [];
   result.records.forEach(record => {
+    let tempRow = {};
     //@ts-ignore
-    record._fields.forEach(item => {
+    record._fields.forEach((item, idx) => {
       const isString = typeof item === 'string';
       const isNode = item.__isNode__;
       const isEdge = item.__isRelationship__;
@@ -231,16 +229,16 @@ export function processResult(result) {
         });
       }
       if (isInteger) {
-        table.headers.push(...(record.keys as string[]));
-        table.rows.push(item.low);
+        tempRow[record.keys[idx]] = item.low;
       }
-
       if (isString) {
-        table.headers.push(...(record.keys as string[]));
         //@ts-ignore
-        table.rows.push(item);
+        tempRow[record.keys[idx]] = item;
       }
     });
+    if (Object.keys(tempRow).length !== 0) {
+      table.push(tempRow);
+    }
   });
 
   console.log({ nodes: deduplicateNodes(nodes), edges, table });

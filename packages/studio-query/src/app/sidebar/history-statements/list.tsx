@@ -96,7 +96,11 @@ const List: React.FunctionComponent<IListProps> = props => {
 export default List;
 
 export function convertTimestamps(timestamps) {
-  return timestamps.reduce((result, entry) => {
+  const a = timestamps.sort((a, b) => {
+    return b.timestamp - a.timestamp;
+  });
+
+  return a.reduce((result, entry) => {
     const date = dayjs(entry.timestamp);
     const day = date.format('YYYY-MM-DD');
     const hours = date.format('HH:mm');

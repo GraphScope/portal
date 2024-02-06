@@ -25,7 +25,7 @@ export default () => {
           {
             label: 'customer',
             count: 6,
-            color:'#F7A128',
+            color: '#F7A128',
             properties: {
               id: 'string',
               address: 'string',
@@ -35,7 +35,7 @@ export default () => {
           {
             label: 'account',
             count: 6,
-            color:'#40C054',
+            color: '#40C054',
             properties: {
               id: 'string',
               address: 'string',
@@ -47,7 +47,7 @@ export default () => {
           {
             label: 'ownership',
             count: 6,
-            color:'#8DCADD',
+            color: '#8DCADD',
             properties: {
               id: 'string',
               address: 'string',
@@ -57,7 +57,7 @@ export default () => {
           {
             label: 'transfer',
             count: 5,
-            color:'#A413A4',
+            color: '#A413A4',
             properties: {
               id: 'string',
               address: 'string',
@@ -78,7 +78,6 @@ export default () => {
   };
   const handleChange = values => {
     // 当 legend 改变的时候，设置color，size，caption
-    console.log(values);
   };
   return (
     <div>
