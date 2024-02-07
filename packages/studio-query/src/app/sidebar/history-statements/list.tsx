@@ -17,31 +17,44 @@ const styles: Record<string, React.CSSProperties> = {
     boxSizing: 'border-box',
   },
   li: {
-    padding: '8px 16px',
+    padding: '4px 8px 4px 0px',
     cursor: 'pointer',
     listStyle: 'none',
     boxSizing: 'border-box',
+    display: 'flex',
+    alignItems: 'start',
+    gap: '4px',
   },
 };
 interface IListProps {
   items: IStatement[];
   onClick: (value: any) => void;
+  checkedSet: Set<string>;
+  updateCheckedSet: (value: Set<string>) => void;
 }
 
 const List: React.FunctionComponent<IListProps> = props => {
-  const { items, onClick } = props;
+  const { items, onClick, checkedSet, updateCheckedSet } = props;
   const { store, updateStore } = useContext();
   const { activeId } = store;
   const { token } = theme.useToken();
 
   const convertItems = convertTimestamps(items);
 
-  const onChange = () => {};
+  const onChange = (id, value) => {
+    if (value) {
+      checkedSet.add(id);
+    } else {
+      checkedSet.delete(id);
+    }
+    updateCheckedSet(checkedSet);
+  };
 
   return (
     <div style={styles.container}>
       {convertItems.map(item => {
         const { day, items } = item;
+
         return (
           <>
             <Title
@@ -57,29 +70,33 @@ const List: React.FunctionComponent<IListProps> = props => {
             </Title>
             <ul style={styles.ul}>
               {items.map(item => {
-                const { hours } = item;
+                const { hours, id } = item;
+                const checked = checkedSet.has(id);
                 return (
-                  <li
-                    key={item.id}
-                    style={styles.li}
-                    onClick={() => {
-                      onClick && onClick(item);
-                    }}
-                  >
-                    <Space>
-                      <Checkbox onChange={onChange}></Checkbox>
-                      <Text type="secondary">{hours}</Text>
-                    </Space>
+                  <li key={item.id} style={styles.li}>
+                    <Checkbox
+                      checked={checked}
+                      onChange={e => onChange(item.id, e.target.checked)}
+                      style={{ marginTop: '8px' }}
+                    ></Checkbox>
+
                     <pre
                       style={{
-                        border: '1px solid #ddd',
                         background: '#f4f5f5',
                         overflow: 'hidden',
                         textWrap: 'pretty',
-                        padding: '12px',
+                        padding: '6px 12px',
+                        fontSize: '12px',
+                        margin: '2px 0px',
+                        border: '1px solid #ddd',
                         borderRadius: '6px',
                       }}
+                      onClick={() => {
+                        onClick && onClick(item);
+                      }}
                     >
+                      <div style={{ fontSize: '12px', padding: '4px 0px' }}>{hours}</div>
+
                       <code>{item.script}</code>
                     </pre>
                   </li>

@@ -72,7 +72,7 @@ const Editor: React.FunctionComponent<
             onClick={handleQuery}
           />
           {onSave && (
-            <Tooltip title={saved ? '更新语句' : '保存语句'}>
+            <Tooltip title={saved ? '更新语句' : '收藏语句'}>
               <Button
                 type="text"
                 icon={<BookOutlined style={saved ? { color: antdToken.colorPrimary } : {}}></BookOutlined>}

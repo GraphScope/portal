@@ -21,6 +21,13 @@ export async function queryHistoryStatements() {
   });
   return result;
 }
+/** 删除历史记录 */
+export async function deleteHistoryStatements(ids: string[]) {
+  ids.forEach(id => {
+    DB_QUERY_HISTORY.removeItem(id);
+  });
+  return;
+}
 /** 添加历史记录 */
 export async function addHistoryStatements(value: IStatement) {
   const { id } = value;

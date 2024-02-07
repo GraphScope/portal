@@ -124,6 +124,8 @@ export interface IStudioQueryProps {
   queryStatement: () => Promise<IStatement[]>;
   /** 查看历史语句 */
   queryHistoryStatements?: (dt?: string) => Promise<IGraphSchema>;
+  /** 删除历史语句 */
+  deleteHistoryStatements?: (ids?: string[]) => void;
   /**  更新语句 */
   updateStatement: (params: IStatement) => Promise<IStatement>;
   /** 创建语句 */

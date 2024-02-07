@@ -31,6 +31,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     enableAbsolutePosition,
     /** statements */
     queryHistoryStatements = () => [],
+    deleteHistoryStatements,
     enableImmediateQuery,
   } = props;
   const { store, updateStore } = useContext();
@@ -53,7 +54,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       id: 'history',
       name: 'History',
       icon: <HistoryOutlined />,
-      children: <HistoryStatements />,
+      children: <HistoryStatements deleteHistoryStatements={deleteHistoryStatements} />,
     },
     {
       id: 'store-procedure',
