@@ -1,9 +1,10 @@
 import React, { memo } from 'react';
-import { Space, Button, Segmented, Skeleton } from 'antd';
+import { Space, Button, Segmented, Skeleton, Flex } from 'antd';
 import TableView from './table';
 import JSONView from './json';
 import GraphView from './graph';
 import ChartView from './chart';
+import { DeploymentUnitOutlined, TableOutlined, BarChartOutlined, CodeOutlined } from '@ant-design/icons';
 
 interface IResultProps {
   data: any;
@@ -11,6 +12,10 @@ interface IResultProps {
   schemaData: any;
   graphName: string;
 }
+
+const MAP = {
+  icon: <DeploymentUnitOutlined />,
+};
 
 const Result: React.FunctionComponent<IResultProps> = props => {
   const { data, isFetching, schemaData, graphName } = props;
@@ -24,21 +29,22 @@ const Result: React.FunctionComponent<IResultProps> = props => {
     const hasEdges = edges.length > 0;
     const hasRows = table.length > 0;
     let viewMode = 'table';
-    let options: string[] = ['table'];
+
+    let options: string[] = ['code', 'table'];
     if (hasNodes) {
       viewMode = 'graph';
-      options = ['graph', 'table'];
+      options = ['code', 'graph', 'table'];
     }
     if (!hasNodes && hasEdges) {
       viewMode = 'table';
-      options = ['table'];
+      options = ['code', 'table'];
     }
     if (!hasNodes && !hasEdges && hasRows) {
       viewMode = 'table';
-      options = ['table', 'chart'];
+      options = ['code', 'table', 'chart'];
     }
     return {
-      viewMode: viewMode as 'graph' | 'table' | 'chart',
+      viewMode: viewMode as 'graph' | 'table' | 'chart' | 'code',
       options,
     };
   });
@@ -69,21 +75,16 @@ const Result: React.FunctionComponent<IResultProps> = props => {
     return options.indexOf(type) !== -1;
   };
 
+  const SegmentedOptions = [
+    { label: 'Graph View ', value: 'graph', icon: <DeploymentUnitOutlined />, disabled: !isExist('graph') },
+    { label: 'Table View', value: 'table', icon: <TableOutlined />, disabled: !isExist('table') },
+    { label: 'Chart View', value: 'chart', icon: <BarChartOutlined />, disabled: !isExist('chart') },
+    { label: 'Code View', value: 'code', icon: <CodeOutlined />, disabled: !isExist('code') },
+  ];
+
   return (
-    <div>
-      <Segmented
-        style={
-          {
-            // zIndex: 999,
-            // position: 'absolute',
-            // top: '6px',
-            // left: '6px',
-          }
-        }
-        options={options}
-        onChange={handleChange}
-        value={viewMode}
-      ></Segmented>
+    <Flex gap={12} vertical>
+      <Segmented block options={SegmentedOptions} onChange={handleChange} value={viewMode}></Segmented>
       <div style={{ height: '500px', position: 'relative', overflowY: 'scroll' }}>
         {isExist('graph') && (
           <div style={viewMode === 'graph' && !isFetching ? activeItemStyle : itemStyle}>
@@ -104,7 +105,7 @@ const Result: React.FunctionComponent<IResultProps> = props => {
           </div>
         )}
       </div>
-    </div>
+    </Flex>
   );
 };
 

@@ -5,10 +5,13 @@ import type { GlobalToken } from 'antd';
 import { PlayCircleOutlined, BookOutlined, CloseOutlined } from '@ant-design/icons';
 import { useRef } from 'react';
 import { IEditorProps } from '../typing';
+import SaveStatement from './save';
+
+import { v4 as uuidv4 } from 'uuid';
 
 const Editor: React.FunctionComponent<
   IEditorProps & {
-    timestamp?: string;
+    timestamp?: number;
     isFetching: boolean;
     antdToken: GlobalToken;
     saved: boolean; // 是否是保存的语句
@@ -27,26 +30,32 @@ const Editor: React.FunctionComponent<
     timestamp,
   } = props;
   const editorRef = useRef<any>(null);
+  const [queryTime, setQueryTime] = React.useState(timestamp);
 
-  const handleChange = async value => {};
   const handleQuery = async () => {
     const value = editorRef?.current?.codeEditor?.getValue();
-    const result = await onQuery({
+    const queryTimestamp = new Date().getTime();
+    setQueryTime(queryTimestamp);
+    onQuery({
       id,
       script: value,
     });
   };
-  const handleSave = () => {
+
+  const handleSave = (name: string) => {
     const value = editorRef?.current?.codeEditor?.getValue();
+    const id = uuidv4();
     onSave &&
       onSave({
         id,
         script: value,
+        name,
       });
   };
   const handleClose = () => {
     onClose && onClose(id);
   };
+  console.log('editor timestamp', timestamp, queryTime);
 
   return (
     <div style={{}}>
@@ -54,7 +63,7 @@ const Editor: React.FunctionComponent<
         <Space>
           <Tag>Cypher</Tag>
           <Typography.Text type="secondary" style={{ fontSize: '12px', textAlign: 'center' }}>
-            {timestamp}
+            {queryTime}
           </Typography.Text>
         </Space>
 
@@ -71,15 +80,7 @@ const Editor: React.FunctionComponent<
             }
             onClick={handleQuery}
           />
-          {onSave && (
-            <Tooltip title={saved ? '更新语句' : '收藏语句'}>
-              <Button
-                type="text"
-                icon={<BookOutlined style={saved ? { color: antdToken.colorPrimary } : {}}></BookOutlined>}
-                onClick={handleSave}
-              />
-            </Tooltip>
-          )}
+          {onSave && <SaveStatement onSave={handleSave} />}
           {onClose && <Button type="text" icon={<CloseOutlined onClick={handleClose} />} />}
         </Space>
       </Flex>

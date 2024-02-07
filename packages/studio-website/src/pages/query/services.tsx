@@ -1,26 +1,18 @@
 import { CypherDriver, CypherSchemaData } from '@graphscope/studio-query';
+import type { IStudioQueryProps } from '@graphscope/studio-query';
 import localforage from 'localforage';
 import { v4 as uuidv4 } from 'uuid';
 import { GraphApiFactory, GraphApi, GraphApiFp, ServiceApiFactory } from '@graphscope/studio-server';
 import { transformSchema } from './utils/schema';
 import { handleServerResponse } from './utils/handleServerResponse';
+
 const DB_QUERY_HISTORY = localforage.createInstance({
-  name: 'GS_QUERY',
+  name: 'DB_QUERY_HISTORY',
 });
-const DB_QUERY_FAVOR = localforage.createInstance({
-  name: 'GS_QUERY',
+const DB_QUERY_SAVED = localforage.createInstance({
+  name: 'DB_QUERY_SAVED',
 });
 
-/** 查询历史记录 */
-export async function queryHistoryStatements() {
-  const result: IStatement[] = [];
-  await DB_QUERY_HISTORY.iterate((item: IStatement) => {
-    if (item) {
-      result.push(item);
-    }
-  });
-  return result;
-}
 /** 删除历史记录 */
 export async function deleteHistoryStatements(ids: string[]) {
   ids.forEach(id => {
@@ -28,26 +20,19 @@ export async function deleteHistoryStatements(ids: string[]) {
   });
   return;
 }
-/** 添加历史记录 */
-export async function addHistoryStatements(value: IStatement) {
-  const { id } = value;
-  DB_QUERY_HISTORY.setItem(id, value);
-}
 
 const HOST_URL = '47.242.172.5'; //'localhost';
 const HOST_API: string = 'http://47.242.172.5:8080';
 const driver = new CypherDriver(`neo4j://${HOST_URL}:7687`);
-import { SCHEMA_DATA } from './const';
+
 export interface IStatement {
   id: string;
   script: string;
 }
-export const queryGraphData = async (value: IStatement) => {
-  const queryId = uuidv4();
-  const timestamp = new Date().getTime();
-  //@ts-ignore
-  addHistoryStatements({ id: queryId, script: value.script, timestamp });
-  return driver.queryCypher(value.script);
+
+export const queryGraphData = async (params: IStatement) => {
+  createStatements('history', params);
+  return driver.queryCypher(params.script);
 };
 export const queryInfo = async () => {
   const result = await ServiceApiFactory(undefined, HOST_API).getServiceStatus();
@@ -69,45 +54,54 @@ export const queryGraphSchema = async (): Promise<CypherSchemaData> => {
   };
 };
 
-export const queryStatement = async () => {
-  return new Promise(reslove => {
-    reslove([
-      {
-        id: 'query-1',
-        name: 'query_10_nodes',
-        text: 'Match (n) return n limit 10',
-      },
-      {
-        id: 'query-2',
-        name: 'query_top_10_movie',
-        text: `MATCH (n) 
-            WHERE n.data IS NOT NULL
-            RETURN DISTINCT "node" as entity, n.data AS data LIMIT 25
-            UNION ALL 
-            MATCH ()-[r]-() 
-            WHERE r.data IS NOT NULL
-            RETURN DISTINCT "relationship" AS entity, r.data AS data LIMIT 25;
-          `,
-      },
-    ]);
-  });
-};
-export const deleteStatement = async () => {
-  return {
-    data: {},
-    success: true,
-  };
+export const queryStatements: IStudioQueryProps['queryStatements'] = async type => {
+  const result: IStatement[] = [];
+  if (type === 'history') {
+    await DB_QUERY_HISTORY.iterate((item: IStatement) => {
+      if (item) {
+        result.push(item);
+      }
+    });
+  }
+  if (type === 'saved') {
+    await DB_QUERY_SAVED.iterate((item: IStatement) => {
+      if (item) {
+        result.push(item);
+      }
+    });
+  }
+  if (type === 'store-procedure') {
+    return [];
+  }
+  return result;
 };
 
-export const updateStatement = async () => {
-  return {
-    data: {},
-    success: true,
-  };
+export const deleteStatements: IStudioQueryProps['deleteStatements'] = async (type, ids) => {
+  if (type === 'history') {
+    ids.forEach(id => {
+      DB_QUERY_HISTORY.removeItem(id);
+    });
+    return true;
+  }
+  if (type === 'saved') {
+    ids.forEach(id => {
+      DB_QUERY_SAVED.removeItem(id);
+    });
+    return true;
+  }
+  return false;
 };
-export const createStatement = async () => {
-  return {
-    data: {},
-    success: true,
-  };
+
+export const createStatements: IStudioQueryProps['createStatements'] = async (type, params) => {
+  if (type === 'history') {
+    const { id } = params;
+    await DB_QUERY_HISTORY.setItem(id, params);
+    return true;
+  }
+  if (type === 'saved') {
+    const { id } = params;
+    await DB_QUERY_SAVED.setItem(id, params);
+    return true;
+  }
+  return false;
 };

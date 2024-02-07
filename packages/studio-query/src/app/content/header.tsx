@@ -5,7 +5,7 @@ import { localStorageVars } from '../context';
 import { useContext } from '../context';
 import CypherEditor from '../../cypher-editor';
 import { debounce } from '../utils';
-
+import { v4 as uuidv4 } from 'uuid';
 interface IHeaderProps {}
 
 const options = [
@@ -67,8 +67,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       }
       updateStore(draft => {
         draft.globalScript = '';
-        const num = Math.round(Math.random() * 10000);
-        const id = `query-${num}`;
+        const id = uuidv4();
         draft.statements = [
           {
             id,

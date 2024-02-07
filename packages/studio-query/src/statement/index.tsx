@@ -16,7 +16,7 @@ export type IStatementProps = IEditorProps & {
   enableImmediateQuery: boolean;
   graphName: string;
   /** 时间戳 */
-  timestamp?: string;
+  timestamp?: number;
 };
 const { useToken } = theme;
 
@@ -56,22 +56,14 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
     }
   }, [active]);
 
-  const handleQuery = async value => {
-    const { script, id } = value;
-    const queryId = uuidv4();
-    const timestamp = new Date().getTime();
-    const params = {
-      id,
-      queryId,
-      timestamp,
-      script,
-    };
+  const handleQuery = async params => {
     updateState(preState => {
       return {
         ...preState,
         isFetching: true,
       };
     });
+
     const res = await onQuery(params);
     //@ts-ignore
     updateState(preState => {

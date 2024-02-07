@@ -15,7 +15,14 @@ const RowTable = ({ data }) => {
       key: key,
     };
   });
-  return <Table columns={columns} dataSource={data} />;
+  const dataSource = data.map(item => {
+    return {
+      ...item,
+      key: item.id,
+    };
+  });
+
+  return <Table columns={columns} dataSource={dataSource} />;
 };
 const NodeTable = ({ data }) => {
   const columns = [
@@ -38,6 +45,7 @@ const NodeTable = ({ data }) => {
   const dataSource = data.map(item => {
     const { id, label, properties } = item;
     return {
+      key: id,
       id,
       label,
       properties: JSON.stringify(properties, null, 2),
@@ -60,12 +68,12 @@ const EdgeTable = ({ data }) => {
     {
       title: 'source',
       dataIndex: 'label',
-      key: 'label',
+      key: 'source',
     },
     {
       title: 'target',
       dataIndex: 'label',
-      key: 'label',
+      key: 'target',
     },
     {
       title: 'properties',
@@ -76,6 +84,7 @@ const EdgeTable = ({ data }) => {
   const dataSource = data.map(item => {
     const { id, label, source, target, properties } = item;
     return {
+      key: id,
       id,
       label,
       source,

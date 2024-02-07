@@ -17,7 +17,7 @@ const SavedStatements: React.FunctionComponent<ISavedStatementsProps> = props =>
       draft.globalScript = script;
       // const queryIds = draft.statements.map(item => item.id);
       // const HAS_QUERY = queryIds.indexOf(id) !== -1;
-      draft.activeId = id;
+      // draft.activeId = id;
       // if (!HAS_QUERY) {
       //   draft.statements = [value, ...draft.statements];
       // }
