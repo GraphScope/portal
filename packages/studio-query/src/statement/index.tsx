@@ -16,7 +16,7 @@ export type IStatementProps = IEditorProps & {
   enableImmediateQuery: boolean;
   graphName: string;
   /** 时间戳 */
-  timestamp: string;
+  timestamp?: string;
 };
 const { useToken } = theme;
 

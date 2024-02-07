@@ -8,7 +8,7 @@ import { IEditorProps } from '../typing';
 
 const Editor: React.FunctionComponent<
   IEditorProps & {
-    timestamp: string;
+    timestamp?: string;
     isFetching: boolean;
     antdToken: GlobalToken;
     saved: boolean; // 是否是保存的语句
