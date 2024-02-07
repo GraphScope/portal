@@ -22,7 +22,7 @@ const Result: React.FunctionComponent<IResultProps> = props => {
   const { nodes = [], edges = [], table = [] } = data;
 
   const [state, updateState] = React.useState<{
-    viewMode: 'graph' | 'table' | 'chart';
+    viewMode: 'graph' | 'table' | 'chart' | 'code';
     options: string[];
   }>(() => {
     const hasNodes = nodes.length > 0;
