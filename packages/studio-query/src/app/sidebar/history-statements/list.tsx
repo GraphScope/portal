@@ -3,8 +3,8 @@ import { IStatement } from '../../context';
 import { Typography, Checkbox, Button, Flex } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-var relativeTime = require('dayjs/plugin/relativeTime');
-dayjs.extend(relativeTime);
+// var relativeTime = require('dayjs/plugin/relativeTime');
+// dayjs.extend(relativeTime);
 
 const { Text, Title } = Typography;
 
