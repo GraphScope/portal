@@ -1,21 +1,20 @@
 import { Card, Segmented } from 'antd';
 import * as React from 'react';
 import { ReactNode } from 'react';
-import { getSearchParams } from '../../utils';
-import { useContext } from '../useContext';
-import TabAction from '../../instance/import-data/tab-action';
+import { getSearchParams } from '@/pages/utils';
+import TabAction from './tab-action';
 import './index.less';
 interface SegmentedTabsProps {
-  items: { key: string; children: ReactNode; label?: string; icon?: ReactNode }[];
+  items: { key: string; children: ReactNode; label: string; icon?: ReactNode }[];
   queryKey?: string;
   style?: React.CSSProperties;
   extra?: ReactNode;
   defaultActive?: string;
+  segmentedTabsChange(val: string): void;
 }
 
 const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
-  const { items, queryKey = 'tab', style = {}, extra = <></>, defaultActive } = props;
-  const { updateStore } = useContext();
+  const { items, queryKey = 'tab', style = {}, extra = <></>, defaultActive, segmentedTabsChange } = props;
   const [state, setState] = React.useState<{ active: string }>(() => {
     const { searchParams, path } = getSearchParams(window.location);
     const active = searchParams.get(queryKey) || defaultActive || items[0]?.key || '';
@@ -32,7 +31,6 @@ const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
       icon: item.icon,
     };
   });
-
   const onChange = value => {
     const { searchParams, path } = getSearchParams(window.location);
     searchParams.set(queryKey, value);
@@ -43,11 +41,14 @@ const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
         active: value,
       };
     });
-    updateStore(draft => {
-      draft.currentType = value;
-    });
+    segmentedTabsChange(value);
   };
-
+  const CardTitle =
+    queryKey === 'tab' ? (
+      <TabAction tabItems={options} tabChange={onChange} />
+    ) : (
+      <Segmented options={options} value={active} onChange={onChange} />
+    );
   return (
     <Card
       style={{ borderRadius: '8px', height: '100%', background: 'var(--background-color-transparent)' }}
@@ -58,7 +59,7 @@ const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
         padding: '12px 12px',
         ...style,
       }}
-      title={<Segmented options={options} value={active} onChange={onChange} />}
+      title={<>{CardTitle}</>}
       extra={extra}
     >
       <div className="gi-segmented-tabs">

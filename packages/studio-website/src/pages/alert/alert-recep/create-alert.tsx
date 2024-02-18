@@ -20,7 +20,7 @@ const CreateRecep: React.FC = () => {
     });
   };
   return (
-    <Form name="basic" labelCol={{ span: 2 }} wrapperCol={{ span: 12 }} onFinish={onFinish}>
+    <Form name="basic" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }} onFinish={onFinish}>
       <Form.Item<FieldType>
         label="Receiver 类型"
         name="receiver"
