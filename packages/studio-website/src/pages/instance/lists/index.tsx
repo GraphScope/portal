@@ -4,20 +4,8 @@ import { history } from 'umi';
 import InstaceCard, { InstaceCardType } from './instance-card';
 import Section from '@/components/section';
 import { PlusOutlined } from '@ant-design/icons';
-
-const graphs = [
-  {
-    name: 'Movie',
-    version: '0.24.0',
-    createtime: '2024-01-8',
-    updatetime: '2024-01-10',
-    importtime: '2024-01-11',
-    server: 'xx.xxx.xxx.xxx:8787',
-    statistics: 'xxxx',
-    logs: 'xxxx',
-    status: 'running',
-  },
-];
+import { GraphApiFactory, ServiceApiFactory, ServiceApi } from '@graphscope/studio-server';
+import { listGraphs } from './service';
 
 const InstanceCard: React.FC = () => {
   const [form] = Form.useForm();
@@ -28,7 +16,7 @@ const InstanceCard: React.FC = () => {
   const { instanceList, isReady } = state;
 
   useEffect(() => {
-    getInstanceList().then(res => {
+    listGraphs().then(res => {
       //@ts-ignore
       updateState(preState => {
         return {
@@ -39,13 +27,7 @@ const InstanceCard: React.FC = () => {
       });
     });
   }, []);
-  const getInstanceList = async () => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(graphs);
-      }, 600);
-    });
-  };
+
   const handleCreate = () => {
     history.push('/instance/create');
   };

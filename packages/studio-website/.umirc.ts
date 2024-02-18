@@ -1,5 +1,4 @@
 import { defineConfig } from 'umi';
-
 export default defineConfig({
   routes: [
     { path: '/', redirect: '/instance' },
@@ -20,6 +19,12 @@ export default defineConfig({
   externals: {
     '@antv/g2': 'G2',
     // react: 'React', 'react-dom': 'ReactDOM'
+  },
+  proxy: {
+    '/api': {
+      target: 'http://47.242.172.5:8080',
+      changeOrigin: true,
+    },
   },
   headScripts: [
     'https://gw.alipayobjects.com/os/lib/antv/g2/5.1.14/dist/g2.min.js',
