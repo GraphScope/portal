@@ -8,12 +8,10 @@ export const localStorageVars = {
 export interface IStatement {
   /** 语句ID */
   id: string;
-  /** 查询ID */
-  queryId?: string;
   /** 语句脚本 */
   script: string;
   /** 时间戳 */
-  timestamp?: string;
+  timestamp?: number;
   /** 语句名称 */
   name?: string;
 }
@@ -63,27 +61,14 @@ const initialStore: IStore<{}> = {
     nodes: [],
     edges: [],
   },
-  historyStatements: [],
+  /** 运行时语句 */
   statements: [],
-  savedStatements: [
-    {
-      id: 'my-query-1 ',
-      name: 'my-query-1',
-      script: 'Match (n) return n limit 100',
-    },
-    {
-      id: 'my-query-2',
-      name: 'my-query-2',
-      script: 'Match (n) return n limit 300',
-    },
-  ],
-  storeProcedures: [
-    {
-      id: 'store-procedure-1 ',
-      name: 'store-procedure-1 ',
-      script: 'CALL actore()',
-    },
-  ],
+  /** 历史查询语句 */
+  historyStatements: [],
+  /** 收藏语句 */
+  savedStatements: [],
+  /** 存储过程语句 */
+  storeProcedures: [],
   mode: (localStorage.getItem(localStorageVars.mode) as 'flow' | 'tabs') || 'flow',
   enableImmediateQuery: false,
 };
@@ -118,22 +103,22 @@ export interface IGraphSchema {
   nodes: { id: string; label: string; properties: { [key: string]: any } }[];
   edges: { id: string; label: string; properties: { [key: string]: any }; source: string; target: string }[];
 }
+
+export type StatementType = 'saved' | 'history' | 'store-procedure';
+
 export interface IStudioQueryProps {
   queryInfo: () => Promise<Info>;
-  /**  查询语句列表 */
-  queryStatement: () => Promise<IStatement[]>;
-  /** 查看历史语句 */
-  queryHistoryStatements?: (dt?: string) => Promise<IGraphSchema>;
-  /**  更新语句 */
-  updateStatement: (params: IStatement) => Promise<IStatement>;
-  /** 创建语句 */
-  createStatement: (params: IStatement) => Promise<IStatement>;
-  /** 删除语句 */
-  deleteStatement: (id: string) => Promise<boolean>;
   /** 查询图数据 */
   queryGraphData: (params: IStatement) => Promise<IGraphData>;
   /** 查询Schema */
   queryGraphSchema: (id: string) => Promise<IGraphSchema>;
+
+  /** 创建语句 */
+  createStatements: (type: StatementType, params: IStatement) => Promise<boolean>;
+  /** 查询语句 */
+  queryStatements: (type: StatementType) => Promise<IStatement[]>;
+  /** 删除语句 */
+  deleteStatements: (type: StatementType, ids: string[]) => Promise<boolean>;
 
   /** 语句的类型 */
   type: 'gremlin' | 'cypher' | 'iso_gql';

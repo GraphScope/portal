@@ -2,7 +2,8 @@
 import React, { memo } from 'react';
 import { getSearchParams } from '../utils';
 import { RollbackOutlined, PicLeftOutlined, SlidersOutlined } from '@ant-design/icons';
-import { Space, Button } from 'antd';
+import { Space, Button, theme } from 'antd';
+const { useToken } = theme;
 
 interface Option {
   /** 导航图标 */
@@ -34,7 +35,6 @@ const styles: Record<string, React.CSSProperties> = {
     width: '100%',
     transition: 'width ease 0.3s',
     borderBottom: '1px solid #ddd',
-    // borderRight: '1px solid #ddd',
     overflow: 'hidden',
   },
   ul: {
@@ -49,8 +49,8 @@ const styles: Record<string, React.CSSProperties> = {
   li: {
     display: 'flex',
     width: '100%',
-    height: '54px',
-    padding: '6px 0px',
+    height: '34px',
+    margin: '24px 0px',
     cursor: 'pointer',
     listStyle: 'none',
     justifyContent: 'center',
@@ -63,6 +63,7 @@ const collapsedWidth = 50;
 const width = 300;
 const Sidebar: React.FunctionComponent<SidebarProps> = props => {
   const { options, collapse, onChange, title, onBack } = props;
+  const { token } = useToken();
   const { searchParams, path } = getSearchParams(window.location);
   const nav = searchParams.get('nav') || 'style';
   const activeOption = options.find(item => {
@@ -90,7 +91,13 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
             const isActive = id === nav;
             const activeLi = isActive
               ? {
-                  borderRight: '1px solid red',
+                  borderRight: `1px solid ${token.colorPrimary}`,
+                }
+              : {};
+            const activeIcon = isActive
+              ? {
+                  color: token.colorPrimary,
+                  fontWeight: '600',
                 }
               : {};
 
@@ -104,12 +111,15 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
                   onChange(opt);
                 }}
               >
-                <span>{icon}</span>
+                <span style={activeIcon}>{icon}</span>
               </li>
             );
           })}
         </ul>
-        <div style={{ flex: 1, overflow: 'hidden' }}>{activeOption?.children}</div>
+
+        <div style={{ flex: 1, overflow: 'hidden', height: 'calc(100% - 60px)', position: 'relative' }}>
+          {activeOption?.children}
+        </div>
       </div>
     </div>
   );

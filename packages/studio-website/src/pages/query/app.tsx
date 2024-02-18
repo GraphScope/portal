@@ -1,26 +1,17 @@
 import * as React from 'react';
 import StudioQuery from '@graphscope/studio-query';
-import { GraphApiFactory } from '@graphscope/studio-server';
+
 import { history } from 'umi';
 import {
   queryGraphData,
   queryGraphSchema,
   queryInfo,
-  queryStatement,
-  deleteStatement,
-  updateStatement,
-  createStatement,
-  queryHistoryStatements,
+  queryStatements,
+  deleteStatements,
+  createStatements,
 } from './services';
 
 const QueryModule = () => {
-  React.useEffect(() => {
-    GraphApiFactory({ basePath: 'localhost:7678' })
-      .listGraphs()
-      .then(res => {
-        console.log('res...', res);
-      });
-  }, []);
   return (
     <StudioQuery
       /** 返回导航 */
@@ -36,27 +27,16 @@ const QueryModule = () => {
       dispalyMode="flow"
       /** 查询类型 */
       type="cypher"
-      //@ts-ignore
+      /** 是否立即查询 */
+      enableImmediateQuery={true}
       queryInfo={queryInfo}
-      /** 查询语句列表  */
-      //@ts-ignore
-      queryStatement={queryStatement}
-      /** 查询历史语句列表  */
-      //@ts-ignore
-      queryHistoryStatements={queryHistoryStatements}
-      /**  更新语句 */
-      //@ts-ignore
-      updateStatement={updateStatement}
-      /** 创建语句 */
-      //@ts-ignore
-      createStatement={createStatement}
-      /** 删除语句  */
-      //@ts-ignore
-      deleteStatement={deleteStatement}
+      /** 语句  */
+      queryStatements={queryStatements}
+      createStatements={createStatements}
+      deleteStatements={deleteStatements}
       /** 查询图数据 */
       //@ts-ignore
       queryGraphData={queryGraphData}
-      /** 查询Schema */
       //@ts-ignore
       queryGraphSchema={queryGraphSchema}
     />

@@ -17,20 +17,22 @@ import {
   HistoryOutlined,
 } from '@ant-design/icons';
 import type { IStudioQueryProps } from './context';
+import { v4 as uuidv4 } from 'uuid';
 
 import Container from './container';
 
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const {
     queryInfo,
-    createStatement,
     queryGraphData,
     queryGraphSchema,
     onBack,
     displaySidebarPosition = 'left',
     enableAbsolutePosition,
     /** statements */
-    queryHistoryStatements = () => [],
+    queryStatements,
+    deleteStatements,
+    createStatements,
     enableImmediateQuery,
   } = props;
   const { store, updateStore } = useContext();
@@ -53,7 +55,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       id: 'history',
       name: 'History',
       icon: <HistoryOutlined />,
-      children: <HistoryStatements />,
+      children: <HistoryStatements deleteHistoryStatements={ids => deleteStatements('history', ids)} />,
     },
     {
       id: 'store-procedure',
@@ -73,15 +75,17 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     (async () => {
       const info = await queryInfo();
       const schemaData = await queryGraphSchema(info.name);
-      console.log('schemaData', schemaData);
-      const historyStatements = await queryHistoryStatements('');
+      const historyStatements = await queryStatements('history');
+      const savedStatements = await queryStatements('saved');
+      const storeProcedures = await queryStatements('store-procedure');
 
       updateStore(draft => {
         draft.isReady = true;
         draft.graphName = info.name;
         draft.schemaData = schemaData;
-        //@ts-ignore
         draft.historyStatements = historyStatements;
+        draft.savedStatements = savedStatements;
+        draft.storeProcedures = storeProcedures;
       });
     })();
   }, []);
@@ -96,8 +100,20 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       }
     });
   };
-  const handleQuery = (params: IStatement) => {
+  const handleQuery = (value: IStatement) => {
     /** 查询的时候，就可以存储历史记录了 */
+    //@ts-ignore
+
+    const { script, id: statementId } = value;
+    const queryId = uuidv4();
+    const timestamp = new Date().getTime();
+    const params = {
+      id: queryId,
+      timestamp,
+      script,
+    };
+
+    console.log('newParams', params);
     updateStore(draft => {
       draft.historyStatements.push(params);
     });
@@ -122,7 +138,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         }
         content={
           <Content
-            createStatement={createStatement}
+            createStatements={createStatements}
             queryGraphData={handleQuery}
             enableImmediateQuery={enableImmediateQuery}
           />

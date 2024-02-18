@@ -15,12 +15,26 @@ export type IStatementProps = IEditorProps & {
   mode?: 'tabs' | 'flow';
   enableImmediateQuery: boolean;
   graphName: string;
+  /** 时间戳 */
+  timestamp?: number;
 };
 const { useToken } = theme;
 
 const Statement: React.FunctionComponent<IStatementProps> = props => {
-  const { onQuery, onClose, onSave, script, id, active, mode, saved, schemaData, enableImmediateQuery, graphName } =
-    props;
+  const {
+    onQuery,
+    onClose,
+    onSave,
+    script,
+    id,
+    active,
+    mode,
+    saved,
+    schemaData,
+    enableImmediateQuery,
+    graphName,
+    timestamp,
+  } = props;
   const { token } = useToken();
   const borderStyle =
     active && mode === 'flow'
@@ -42,23 +56,14 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
     }
   }, [active]);
 
-  const handleQuery = async value => {
-    console.log('value', value);
-    const { script, id } = value;
-    const queryId = uuidv4();
-    const timestamp = new Date().getTime();
-    const params = {
-      id,
-      queryId,
-      timestamp,
-      script,
-    };
+  const handleQuery = async params => {
     updateState(preState => {
       return {
         ...preState,
         isFetching: true,
       };
     });
+
     const res = await onQuery(params);
     //@ts-ignore
     updateState(preState => {
@@ -91,6 +96,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
       }}
     >
       <Editor
+        timestamp={timestamp}
         schemaData={schemaData}
         saved={saved}
         id={id}

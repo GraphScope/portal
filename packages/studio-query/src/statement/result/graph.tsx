@@ -5,9 +5,42 @@ interface IGraphViewProps {
   schemaData: any;
   graphName: string;
 }
+function transGraphSchema(schema) {
+  return {
+    nodes: schema.nodes.map(item => {
+      const { properties, ...others } = item;
+      return {
+        ...others,
+        properties: properties.reduce((acc, curr) => {
+          return {
+            ...acc,
+            [curr.name]: curr.type,
+          };
+        }, {}),
+      };
+    }),
+    edges: schema.edges.map(item => {
+      const { properties, constraints, ...others } = item;
+      const [source, target] = constraints;
+      return {
+        ...others,
+        source,
+        target,
+        properties: properties.reduce((acc, curr) => {
+          return {
+            ...acc,
+            [curr.name]: curr.type,
+          };
+        }, {}),
+      };
+    }),
+  };
+}
 
 const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
   const { data, schemaData, graphName } = props;
+  const graphSchema = transGraphSchema(schemaData);
+
   useEffect(() => {
     return () => {
       console.log('unmount....graph');
@@ -16,7 +49,7 @@ const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
 
   return (
     <div style={{ width: '100%' }}>
-      <Graph data={data} schemaData={schemaData} schemaId={graphName} />
+      <Graph data={data} schemaData={graphSchema} schemaId={graphName} />
     </div>
   );
 };

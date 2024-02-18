@@ -5,7 +5,7 @@ import { localStorageVars } from '../context';
 import { useContext } from '../context';
 import CypherEditor from '../../cypher-editor';
 import { debounce } from '../utils';
-
+import { v4 as uuidv4 } from 'uuid';
 interface IHeaderProps {}
 
 const options = [
@@ -67,8 +67,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       }
       updateStore(draft => {
         draft.globalScript = '';
-        const num = Math.round(Math.random() * 10000);
-        const id = `query-${num}`;
+        const id = uuidv4();
         draft.statements = [
           {
             id,
@@ -88,8 +87,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       });
     }
   };
-  const isShowCypherSwitch = state.lineCount === 1;
-  console.log('globalScript', globalScript, 'clear:', state.clear);
+  const isShowCypherSwitch = state.lineCount === 1 && countLines(globalScript) === 1;
 
   return (
     <div
@@ -158,3 +156,8 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
 };
 
 export default Header;
+
+function countLines(str) {
+  // 使用正则表达式匹配换行符，并计算匹配到的数量，即为行数
+  return (str.match(/\r?\n/g) || []).length + 1;
+}

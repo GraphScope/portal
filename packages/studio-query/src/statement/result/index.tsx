@@ -1,8 +1,10 @@
 import React, { memo } from 'react';
-import { Space, Button, Segmented, Skeleton } from 'antd';
+import { Space, Button, Segmented, Skeleton, Flex } from 'antd';
 import TableView from './table';
 import JSONView from './json';
 import GraphView from './graph';
+import ChartView from './chart';
+import { DeploymentUnitOutlined, TableOutlined, BarChartOutlined, CodeOutlined } from '@ant-design/icons';
 
 interface IResultProps {
   data: any;
@@ -11,14 +13,43 @@ interface IResultProps {
   graphName: string;
 }
 
+const MAP = {
+  icon: <DeploymentUnitOutlined />,
+};
+
 const Result: React.FunctionComponent<IResultProps> = props => {
   const { data, isFetching, schemaData, graphName } = props;
+  const { nodes = [], edges = [], table = [] } = data;
+
   const [state, updateState] = React.useState<{
-    viewMode: 'graph' | 'table' | 'raw';
-  }>({
-    viewMode: 'graph',
+    viewMode: 'graph' | 'table' | 'chart' | 'code';
+    options: string[];
+  }>(() => {
+    const hasNodes = nodes.length > 0;
+    const hasEdges = edges.length > 0;
+    const hasRows = table.length > 0;
+    let viewMode = 'table';
+
+    let options: string[] = ['code', 'table'];
+    if (hasNodes) {
+      viewMode = 'graph';
+      options = ['code', 'graph', 'table'];
+    }
+    if (!hasNodes && hasEdges) {
+      viewMode = 'table';
+      options = ['code', 'table'];
+    }
+    if (!hasNodes && !hasEdges && hasRows) {
+      viewMode = 'table';
+      options = ['code', 'table', 'chart'];
+    }
+    return {
+      viewMode: viewMode as 'graph' | 'table' | 'chart' | 'code',
+      options,
+    };
   });
-  const { viewMode } = state;
+  const { viewMode, options } = state;
+
   const handleChange = value => {
     updateState(preState => {
       return {
@@ -27,6 +58,7 @@ const Result: React.FunctionComponent<IResultProps> = props => {
       };
     });
   };
+
   const itemStyle: React.CSSProperties = {
     position: 'absolute',
     right: '0px',
@@ -39,32 +71,41 @@ const Result: React.FunctionComponent<IResultProps> = props => {
     ...itemStyle,
     display: 'block',
   };
+  const isExist = type => {
+    return options.indexOf(type) !== -1;
+  };
+
+  const SegmentedOptions = [
+    { label: 'Graph View ', value: 'graph', icon: <DeploymentUnitOutlined />, disabled: !isExist('graph') },
+    { label: 'Table View', value: 'table', icon: <TableOutlined />, disabled: !isExist('table') },
+    { label: 'Chart View', value: 'chart', icon: <BarChartOutlined />, disabled: !isExist('chart') },
+    { label: 'Code View', value: 'code', icon: <CodeOutlined />, disabled: !isExist('code') },
+  ];
 
   return (
-    <div>
+    <Flex gap={12} vertical>
+      <Segmented block options={SegmentedOptions} onChange={handleChange} value={viewMode}></Segmented>
       <div style={{ height: '500px', position: 'relative', overflowY: 'scroll' }}>
-        <Segmented
-          style={{
-            zIndex: 999,
-            position: 'absolute',
-            top: '6px',
-            left: '6px',
-          }}
-          options={['graph', 'table', 'raw']}
-          onChange={handleChange}
-          value={viewMode}
-        ></Segmented>
-        <div style={viewMode === 'graph' && !isFetching ? activeItemStyle : itemStyle}>
-          <GraphView data={data} schemaData={schemaData} graphName={graphName} />
-        </div>
-        <div style={viewMode === 'table' && !isFetching ? activeItemStyle : itemStyle}>
-          <TableView data={data} />
-        </div>
-        <div style={viewMode === 'raw' && !isFetching ? activeItemStyle : itemStyle}>
+        {isExist('graph') && (
+          <div style={viewMode === 'graph' && !isFetching ? activeItemStyle : itemStyle}>
+            <GraphView data={data} schemaData={schemaData} graphName={graphName} />
+          </div>
+        )}
+        {isExist('table') && (
+          <div style={viewMode === 'table' && !isFetching ? activeItemStyle : itemStyle}>
+            <TableView data={data} />
+          </div>
+        )}
+        {/* <div style={viewMode === 'raw' && !isFetching ? activeItemStyle : itemStyle}>
           <JSONView data={data} />
-        </div>
+        </div> */}
+        {isExist('chart') && (
+          <div style={viewMode === 'chart' && !isFetching ? activeItemStyle : itemStyle}>
+            <ChartView data={data} />
+          </div>
+        )}
       </div>
-    </div>
+    </Flex>
   );
 };
 

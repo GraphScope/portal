@@ -31,6 +31,12 @@ export interface CypherEditorProps {
   }[];
   onChangeContent?: (lineCount: number, editor: any) => void;
 }
+
+function countLines(str) {
+  // 使用正则表达式匹配换行符，并计算匹配到的数量，即为行数
+  return (str.match(/\r?\n/g) || []).length + 1;
+}
+
 const Editor = forwardRef<any, any>((props, editorRef) => {
   const {
     value,
@@ -57,6 +63,9 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
     });
     MonacoEnvironment.init().then(async () => {
       if (editorRef && editorRef.current) {
+        if (countLines(value) <= maxRows) {
+          editorRef.current.style.height = countLines(value) * 20 + 'px';
+        }
         const editorProvider = MonacoEnvironment.container.get<EditorProvider>(EditorProvider);
         const editor = editorProvider.create(editorRef.current, {
           language,
@@ -123,7 +132,6 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
         // editor.codeEditor.onDidChangeCursorPosition(() => {
         //   // 获取当前光标所在的行号
         //   const currentLineNumber = editor.codeEditor.getPosition().lineNumber;
-        //   console.log('currentLineNumber', currentLineNumber);
 
         //   // 判断行数是否为1
         //   if (currentLineNumber === 1) {
@@ -147,7 +155,6 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
     };
   }, [editorRef, value]);
   React.useEffect(() => {
-    console.log('value>?>>>>>>>>>>', clear);
     if (clear && editorRef && editorRef.current && editorRef.current.codeEditor) {
       editorRef.current.codeEditor.setValue('');
     }
