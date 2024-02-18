@@ -4,9 +4,10 @@
     "pnpm": "^8"
   },
   "scripts": {
-    "ci": "pnpm i && rm -rf package-lock.json && npm run build && npm run build:site",
+    "ci": "pnpm i && rm -rf package-lock.json && npm run build && npm run build:site && npm run deploy",
     "build": "turbo run build:esm && turbo run build:cjs",
     "build:site": "cd packages/studio-website && npm run build",
+    "deploy": "cd packages/studio-website/proxy && npm run start",
     "start": "turbo run build:esm:watch && turbo run build:cjs:watch",
     "build:all:umd": "turbo run build:umd --no-cache",
     "clean": "pnpm run -r clean",

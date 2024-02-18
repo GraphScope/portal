@@ -24,7 +24,7 @@
     "dist"
   ],
   "scripts": {
-    "gen-api": "npx @openapitools/openapi-generator-cli generate -i ./openapi_coordinator.yaml -g typescript-axios -o typescript-axios",
+    "update api": "npx @openapitools/openapi-generator-cli generate -i ./openapi_coordinator.yaml -g typescript-axios -o typescript-axios",
     "start": " run-p build:cjs:watch build:esm:watch",
     "build:cjs": "rimraf ./lib && tsc --module commonjs --outDir lib",
     "build:esm": "rimraf ./esm && tsc --module ESNext --outDir es",

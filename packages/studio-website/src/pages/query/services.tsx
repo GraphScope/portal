@@ -22,7 +22,6 @@ export async function deleteHistoryStatements(ids: string[]) {
 }
 
 const HOST_URL = '47.242.172.5'; //'localhost';
-const HOST_API: string = 'http://47.242.172.5:8080';
 const driver = new CypherDriver(`neo4j://${HOST_URL}:7687`);
 
 export interface IStatement {
@@ -35,13 +34,13 @@ export const queryGraphData = async (params: IStatement) => {
   return driver.queryCypher(params.script);
 };
 export const queryInfo = async () => {
-  const result = await ServiceApiFactory(undefined, HOST_API).getServiceStatus();
+  const result = await ServiceApiFactory(undefined, location.origin).getServiceStatus();
   const service = handleServerResponse(result);
 
   return service;
 };
 export const queryGraphSchema = async (): Promise<CypherSchemaData> => {
-  const result = await GraphApiFactory(undefined, HOST_API).getSchema('graph_algo');
+  const result = await GraphApiFactory(undefined, location.origin).getSchema('graph_algo');
   const schema = handleServerResponse(result);
   if (schema) {
     const cypherSchema = transformSchema(schema);

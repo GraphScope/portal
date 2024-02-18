@@ -40,16 +40,6 @@ jspm_packages/
 # build
 lib
 # dist
-packages/gi-assets-advance/dist
-packages/gi-assets-basic/dist
-packages/gi-assets-scene/dist
-packages/gi-assets-analytics/dist
-packages/gi-assets-testing/dist
-packages/gi-site/dist
-packages/gi-assets-tugraph-analytics/dist
-# do not ignore gi-portal dist
-packages/gi/dist
-packages/gi-common-components/dist
  
 build
 
@@ -65,32 +55,15 @@ yarn.lock
 dist
 
 default.etcd
-
-
-# ignore *.d.ts
-packages/gi-site/**/*.d.ts
-packages/gi-httpservice/**/*.d.ts
-
+ 
 # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#pnpm
 # pnpm-lock.yaml 
 
-## ignore offline assets
-packages/gi-site/public/libs/@antv/*.min.js
-packages/gi-site/public/libs/@antv/*.css
-packages/gi-site/public/libs/*.js
-packages/gi-site/public/libs/*.css
-packages/gi-site/src/env.ts
-packages/gi-site/scripts/*.json
-
-# ignore inject
-packages/gi-site/src/services/inject.ts
-
+  
 .turbo
 
-scripts/publish_yuyan.mjs
-packages/gi-httpservice-xxx
-release/gi-httpservice
-
+ 
 **/unprocessed-code.ts.txt
 
 pnpm-lock.yaml
+package-lock.json
