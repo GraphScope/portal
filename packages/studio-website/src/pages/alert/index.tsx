@@ -34,12 +34,22 @@ const AlertModule: React.FunctionComponent<AlertModuleProps> = props => {
       label: '部署状态',
     },
   ];
+  /**
+   * 告警接收内容区组件切换
+   */
   const handleChange = () => {
     updateStore(draft => {
       draft.isEditRecep = true;
     });
   };
-  const Content = currentType === 'recep' && <Button onClick={handleChange}>创建告警规则</Button>;
+  /**
+   * 创建告警接收入口
+   */
+  const Content = currentType === 'recep' && (
+    <Button type="text" onClick={handleChange}>
+      创建告警规则
+    </Button>
+  );
   return (
     <Section
       breadcrumb={[
@@ -56,7 +66,7 @@ const AlertModule: React.FunctionComponent<AlertModuleProps> = props => {
       <SegmentedTabs
         items={items}
         extra={Content}
-        segmentedTabsChange={e => {
+        segmentedTabsChange={(e: 'info' | 'rule' | 'recep' | 'status') => {
           updateStore(draft => {
             draft.currentType = e;
           });

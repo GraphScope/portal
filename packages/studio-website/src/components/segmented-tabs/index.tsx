@@ -43,6 +43,9 @@ const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
     });
     segmentedTabsChange(value);
   };
+  /**
+   * Tabs or Segmented
+   */
   const CardTitle =
     queryKey === 'tab' ? (
       <TabAction tabItems={options} tabChange={onChange} />

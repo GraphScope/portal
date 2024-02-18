@@ -29,7 +29,7 @@ const columns = [
   {
     title: '操作',
     key: 'actions',
-    render: all => {
+    render: (all: any) => {
       return (
         <Button danger size="small">
           Delete
@@ -42,7 +42,7 @@ const columns = [
 const AlertRecep: React.FC<IAlertRecepProps> = () => {
   const { store } = useContext();
   const { alertRecep } = store;
-  return <Table columns={columns} dataSource={alertRecep} size="small" />;
+  return <Table columns={columns} dataSource={alertRecep} size="small" pagination={false} />;
 };
 
 export default AlertRecep;
