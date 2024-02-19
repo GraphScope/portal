@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Checkbox, Form, Input, Select } from 'antd';
+import { FormattedMessage } from 'react-intl';
 import { useContext } from '../useContext';
 
 type FieldType = {
@@ -22,7 +23,7 @@ const CreateRecep: React.FC = () => {
   return (
     <Form name="basic" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }} onFinish={onFinish}>
       <Form.Item<FieldType>
-        label="Receiver 类型"
+        label={<FormattedMessage id="Receiver Type" />}
         name="receiver"
         rules={[{ required: true, message: 'Please input your Receiver!' }]}
       >
@@ -30,23 +31,23 @@ const CreateRecep: React.FC = () => {
       </Form.Item>
 
       <Form.Item<FieldType>
-        label="WebHook URL"
+        label={<FormattedMessage id="WebHook URL" />}
         name="webhookUrl"
         rules={[{ required: true, message: 'Please input your WebHook URL!' }]}
       >
         <Input />
       </Form.Item>
-      <Form.Item<FieldType> label="被@人的用户ID" name="id">
+      <Form.Item<FieldType> label={<FormattedMessage id="At User Ids" />} name="id">
         <Input />
       </Form.Item>
 
-      <Form.Item<FieldType> label="所有人" name="isAll" valuePropName="checked">
+      <Form.Item<FieldType> label={<FormattedMessage id="Is At All" />} name="isAll" valuePropName="checked">
         <Checkbox />
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
         <Button type="primary" htmlType="submit">
-          提交
+          <FormattedMessage id="Submit" />
         </Button>
       </Form.Item>
     </Form>

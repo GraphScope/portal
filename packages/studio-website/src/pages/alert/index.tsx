@@ -7,6 +7,7 @@ import CreateRecep from './alert-recep/create-alert';
 import SegmentedTabs from '@/components/segmented-tabs/index';
 import { useContext } from './useContext';
 import { Button } from 'antd';
+import { FormattedMessage } from 'react-intl';
 interface AlertModuleProps {}
 
 const AlertModule: React.FunctionComponent<AlertModuleProps> = props => {
@@ -16,22 +17,22 @@ const AlertModule: React.FunctionComponent<AlertModuleProps> = props => {
     {
       key: 'info',
       children: <AlertInfo />,
-      label: '告警信息',
+      label: <FormattedMessage id="Alert Info" />,
     },
     {
       key: 'rule',
       children: <AlertRule />,
-      label: '告警规则',
+      label: <FormattedMessage id="Alert Rules" />,
     },
     {
       key: 'recep',
       children: !isEditRecep ? <AlertRecep /> : <CreateRecep />,
-      label: '告警接收',
+      label: <FormattedMessage id="Alert Recep" />,
     },
     {
       key: 'status',
       children: <>部署状态</>,
-      label: '部署状态',
+      label: <FormattedMessage id="Deployment Status" />,
     },
   ];
   /**
@@ -47,7 +48,7 @@ const AlertModule: React.FunctionComponent<AlertModuleProps> = props => {
    */
   const Content = currentType === 'recep' && (
     <Button type="text" onClick={handleChange}>
-      创建告警规则
+      <FormattedMessage id="Create Alert Rules" />
     </Button>
   );
   return (

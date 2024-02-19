@@ -1,33 +1,34 @@
 import React from 'react';
 import { Button, Table, Tag } from 'antd';
+import { FormattedMessage } from 'react-intl';
 import { useContext } from '../useContext';
 
 type IAlertRecepProps = {};
 const columns = [
   {
-    title: 'WebhookUrl',
+    title: <FormattedMessage id="WebhookUrl" />,
     dataIndex: 'webhookUrl',
     key: 'webhookUrl',
   },
   {
-    title: '被@人的用户ID',
+    title: <FormattedMessage id="At User Ids" />,
     key: 'id',
     dataIndex: 'id',
   },
   {
-    title: '是否@所有人',
+    title: <FormattedMessage id="Is At All" />,
     dataIndex: 'isAll',
     key: 'isAll',
     render: (record: boolean) => <>{record ? '是' : '否'}</>,
   },
   {
-    title: '状态',
+    title: <FormattedMessage id="Status" />,
     dataIndex: 'status',
     key: 'status',
     render: (record: String) => <Tag color="magenta">{record}</Tag>,
   },
   {
-    title: '操作',
+    title: <FormattedMessage id="Action" />,
     key: 'actions',
     render: (all: any) => {
       return (

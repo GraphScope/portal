@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
+import { FormattedMessage } from 'react-intl';
 import { useContext, IAlertRule } from './useContext';
 
 type IAlertRuleProps = {};
@@ -11,7 +12,7 @@ const columns: TableProps<IAlertRule>['columns'] = [
     key: 'name',
   },
   {
-    title: '严重性',
+    title: <FormattedMessage id="Severity" />,
     key: 'severity',
     dataIndex: 'severity',
     render: severity => {
@@ -24,22 +25,22 @@ const columns: TableProps<IAlertRule>['columns'] = [
     },
   },
   {
-    title: '类型',
+    title: <FormattedMessage id="Type" />,
     dataIndex: 'type',
     key: 'type',
   },
   {
-    title: '报警条件',
+    title: <FormattedMessage id="Alert Conditions" />,
     dataIndex: 'condition',
     key: 'condition',
   },
   {
-    title: '报警频率',
+    title: <FormattedMessage id="Alert Frequency" />,
     dataIndex: 'condition',
     key: 'condition',
   },
   {
-    title: '状态',
+    title: <FormattedMessage id="Status" />,
     dataIndex: 'status',
     key: 'status',
     render: record => (
