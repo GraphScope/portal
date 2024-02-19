@@ -157,3 +157,72 @@ export function transformSchemaToOptions(originalSchema: DeepRequired<Schema>, d
     edges,
   };
 }
+
+/**
+ *
+ * @param options 将store中的schema信息转化为引擎需要的schema
+ * @returns
+ */
+export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
+  const { edges } = options;
+  const nodeMap: Record<string, string> = {};
+  //@ts-ignore
+  const vertex_types: VertexType[] = options.nodes.map(item => {
+    nodeMap[item.key] = item.label;
+    return {
+      primary_keys: [item.primary],
+      type_id: item.key,
+      type_name: item.label,
+      properties: item.properties.map(p => {
+        return {
+          property_id: p.id,
+          property_name: p.name,
+          property_type: {
+            primitive_type: p.type,
+          },
+        };
+      }),
+    };
+  });
+  const edgeMap = new Map();
+
+  options.edges.forEach(item => {
+    const { label, source: sourceID, target: targetID, relation, properties, key } = item;
+    const source = nodeMap[sourceID];
+    const target = nodeMap[targetID];
+    const constraint = {
+      destination_vertex: target,
+      relation,
+      source_vertex: source,
+    };
+
+    const current = edgeMap.get(label);
+
+    if (current) {
+      const { vertex_type_pair_relations = [] } = current.properties || {};
+      vertex_type_pair_relations.push(constraint);
+      edgeMap.set(label, current);
+    } else {
+      edgeMap.set(label, {
+        type_id: key,
+        type_name: label,
+        properties: properties.map(p => {
+          return {
+            property_id: p.id,
+            property_name: p.name,
+            property_type: {
+              primitive_type: p.type,
+            },
+          };
+        }),
+        vertex_type_pair_relations: [constraint],
+      });
+    }
+  });
+  const edge_types = [...edgeMap.values()];
+
+  return {
+    vertex_types,
+    edge_types,
+  };
+}

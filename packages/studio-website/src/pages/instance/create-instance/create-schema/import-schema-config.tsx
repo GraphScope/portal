@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Space, Tooltip, Upload, Button, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { download, transformSchema, transformSchemaToOptions } from './utils';
+import { download, transformSchema, transformSchemaToOptions, transOptionsToSchema } from './utils';
 import { useContext } from '../useContext';
 import yaml from 'js-yaml';
+import { cloneDeep } from 'lodash';
 interface IExportConfigProps {}
 
 const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
@@ -45,6 +46,13 @@ const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
     });
   };
 
+  const Json2Yaml = () => {
+    //@ts-ignore
+    const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
+    const schemaYaml = yaml.dump(schemaJSON);
+    download('schema.yaml', schemaYaml);
+  };
+
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <Space>
@@ -63,7 +71,7 @@ const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
           </Tooltip>
         </Upload>
         <Tooltip title="导出提示，待确认">
-          <Button onClick={() => download(`xxx.json`, '')}>
+          <Button onClick={Json2Yaml}>
             <FormattedMessage id="Export" />
           </Button>
         </Tooltip>
