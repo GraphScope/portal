@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Space, Table, Tag, Button } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { useContext } from './useContext';
+import { listAlertMessages } from './service';
 
 type IAlertInfoProps = {};
 
 const AlertInfo: React.FC<IAlertInfoProps> = () => {
-  const { store } = useContext();
-  const { alertInfo } = store;
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const { store, updateStore } = useContext();
+  const { selectedRowKeys, alertInfo } = store;
+
+  useEffect(() => {
+    listAlertMessages().then(res => {
+      updateStore(draft => {
+        draft.alertInfo = res || [];
+      });
+    });
+  }, []);
   const columns = [
     {
       title: <FormattedMessage id="Alert Information" />,
@@ -57,13 +65,15 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
   ];
   const rowSelection = {
     selectedRowKeys,
-    onChange: (newSelectedRowKeys: React.Key[]) => {
-      console.log(newSelectedRowKeys);
-      setSelectedRowKeys(newSelectedRowKeys);
+    onChange: (newSelectedRowKeys: string[]) => {
+      updateStore(draft => {
+        draft.selectedRowKeys = newSelectedRowKeys;
+      });
     },
   };
   return (
     <Table
+      // @ts-ignore
       rowSelection={rowSelection}
       columns={columns}
       dataSource={alertInfo}

@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Checkbox, Form, Input, Select } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { useContext } from '../useContext';
+import { registerReceiver } from '../service';
 
 type FieldType = {
   receiver: string;
@@ -13,8 +14,9 @@ const RECEIVEROPTION = [{ label: 'WebHook', value: 'WebHook' }];
 const CreateRecep: React.FC = () => {
   const { store, updateStore } = useContext();
   const { alertRecep } = store;
-  const onFinish = (values: any) => {
+  const onFinish = async (values: any) => {
     console.log('Success:', values);
+    // await porstAlertReceiver(values);
     updateStore(draft => {
       draft.isEditRecep = false;
       draft.alertRecep = [...alertRecep, { ...values, status: '激活' }];

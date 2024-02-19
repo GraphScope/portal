@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Table, Tag } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { useContext } from '../useContext';
-
+import { useContext } from './useContext';
+import { listReceivers } from './service';
 type IAlertRecepProps = {};
 const columns = [
   {
@@ -41,8 +41,16 @@ const columns = [
 ];
 
 const AlertRecep: React.FC<IAlertRecepProps> = () => {
-  const { store } = useContext();
+  const { store, updateStore } = useContext();
   const { alertRecep } = store;
+  useEffect(() => {
+    listReceivers().then(res => {
+      updateStore(draft => {
+        draft.alertRecep = res || [];
+      });
+    });
+  }, []);
+
   return <Table columns={columns} dataSource={alertRecep} size="small" pagination={false} />;
 };
 

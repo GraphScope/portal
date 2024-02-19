@@ -32,6 +32,7 @@ export type IStore<T> = T & {
   /** 警告接收 table */
   alertRecep: IAlertRecep[];
   isEditRecep: boolean;
+  selectedRowKeys: string[];
 };
 
 export const initialStore: IStore<{}> = {
@@ -41,6 +42,7 @@ export const initialStore: IStore<{}> = {
   alertRule: [],
   alertRecep: [],
   isEditRecep: false,
+  selectedRowKeys: [],
 };
 
 type ContextType<T> = {

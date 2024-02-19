@@ -4,10 +4,9 @@ import { useContext } from './useContext';
 import GraphView from './graph-view';
 import DataSource from './data-source/index';
 import { SOURCEDATA } from './source-data';
-import SourceTitle from './source-title';
 import GraphTitle from './graph-title';
 import Section from '@/components/section';
-import TabelAction from './tab-action';
+import TabAction from './tab-action';
 interface IImportDataProps {}
 
 const { Title, Text } = Typography;
@@ -96,7 +95,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         </Col>
       </Row> */}
       <Flex justify="space-between" align="center">
-        <TabelAction
+        <TabAction
           items={[
             { label: `Point Data Eource Binding（${bindNodeCount}/${nodes?.length}）`, value: 'node' },
             { label: `Edge Data Eource Binding(${bindEdgeCount}/${edges?.length})`, value: 'edge' },

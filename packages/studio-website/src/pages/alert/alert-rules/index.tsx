@@ -1,8 +1,9 @@
-import React from 'react';
-import { Switch, Table, Tag } from 'antd';
+import React, { useEffect } from 'react';
+import { Switch, Table, Tag, Button } from 'antd';
 import type { TableProps } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { useContext, IAlertRule } from './useContext';
+import { useContext, IAlertRule } from '../useContext';
+import { listAlertRules } from '../service';
 
 type IAlertRuleProps = {};
 const columns: TableProps<IAlertRule>['columns'] = [
@@ -36,8 +37,8 @@ const columns: TableProps<IAlertRule>['columns'] = [
   },
   {
     title: <FormattedMessage id="Alert Frequency" />,
-    dataIndex: 'condition',
-    key: 'condition',
+    dataIndex: 'frequency',
+    key: 'frequency',
   },
   {
     title: <FormattedMessage id="Status" />,
@@ -54,9 +55,31 @@ const columns: TableProps<IAlertRule>['columns'] = [
 ];
 
 const AlertRule: React.FC<IAlertRuleProps> = () => {
-  const { store } = useContext();
+  const { store, updateStore } = useContext();
   const { alertRule } = store;
-  return <Table columns={columns} dataSource={alertRule} size="middle" />;
+  useEffect(() => {
+    listAlertRules().then(res => {
+      updateStore(draft => {
+        draft.alertRule = res || [];
+      });
+    });
+  }, []);
+  /**
+   * 告警接收内容区组件切换
+   */
+  const handleChange = () => {
+    updateStore(draft => {
+      draft.isEditRecep = true;
+    });
+  };
+  return (
+    <>
+      <Button style={{ position: 'absolute', top: '-55px', right: '0px' }} type="primary" onClick={handleChange}>
+        <FormattedMessage id="Create Alert Rules" />
+      </Button>
+      <Table columns={columns} dataSource={alertRule} size="middle" />
+    </>
+  );
 };
 
 export default AlertRule;
