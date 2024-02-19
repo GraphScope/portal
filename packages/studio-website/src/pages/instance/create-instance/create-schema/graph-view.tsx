@@ -66,8 +66,8 @@ const getVertexEdges = (nodeList: NodeSchema[], edgeList: EdgeSchema[], token: a
   return { nodes, edges: processEdges };
 };
 
-const GraphInsight: FunctionComponent<Props> = props => {
-  const { children = <></> } = props;
+const GraphView: FunctionComponent<Props> = props => {
+  const {} = props;
   const { token } = useToken();
   const { store } = useContext();
   const { nodeList, edgeList } = store;
@@ -76,10 +76,9 @@ const GraphInsight: FunctionComponent<Props> = props => {
 
   return (
     <>
-      {children}
       <Graphin data={graphData} layout={{ type: 'circular' }} fitView fitCenter style={{ paddingBottom: '3px' }} />
     </>
   );
 };
 
-export default memo(GraphInsight);
+export default memo(GraphView);
