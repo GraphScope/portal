@@ -7,7 +7,7 @@ const app = express();
 
 // port
 const args = process.argv.slice(2);
-const port = args.length > 0 ? args[0] : 8080;
+const port = args.length > 0 ? args[0] : 8888;
 
 const WORKSPACE = path.dirname(__dirname);
 console.log('WORKSPACE: ', WORKSPACE);
