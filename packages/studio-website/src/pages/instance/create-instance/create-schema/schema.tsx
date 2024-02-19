@@ -6,8 +6,8 @@ import { FormattedMessage } from 'react-intl';
 import type { IStore } from '../useContext';
 export type FieldType = {
   label?: string;
-  src_label?: string;
-  dst_label?: string;
+  source?: string;
+  target?: string;
 };
 type SchemaType = {
   newActiveKey: string;
@@ -109,7 +109,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
           <>
             <Form.Item<FieldType>
               label={'Source Node Label'}
-              name="src_label"
+              name="source"
               tooltip=" "
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
@@ -120,7 +120,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             </Form.Item>
             <Form.Item<FieldType>
               label={'Target Node Label'}
-              name="dst_label"
+              name="target"
               tooltip=" "
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
