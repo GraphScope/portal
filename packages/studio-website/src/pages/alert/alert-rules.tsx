@@ -7,7 +7,7 @@ import { useContext, IAlertRule } from './useContext';
 type IAlertRuleProps = {};
 const columns: TableProps<IAlertRule>['columns'] = [
   {
-    title: '警报名字',
+    title: <FormattedMessage id="Alert Name" />,
     dataIndex: 'name',
     key: 'name',
   },
