@@ -1,0 +1,11 @@
+{
+  "buildCommand": "npm run ci",
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "http://47.242.172.5:8080/api/$1"
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
