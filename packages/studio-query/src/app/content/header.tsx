@@ -1,9 +1,11 @@
-import React, { useRef } from 'react';
-import { InsertRowAboveOutlined, OrderedListOutlined, PlusOutlined } from '@ant-design/icons';
+import React, { useRef, useState } from 'react';
+import { InsertRowAboveOutlined, OrderedListOutlined, PlusOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { Tooltip, Segmented, Button, Space, Select, Flex } from 'antd';
 import { localStorageVars } from '../context';
 import { useContext } from '../context';
-
+import CypherEditor from '../../cypher-editor';
+import { debounce } from '../utils';
+import { v4 as uuidv4 } from 'uuid';
 interface IHeaderProps {}
 
 const options = [
@@ -40,42 +42,122 @@ const ModeSwitch = () => {
 
 const Header: React.FunctionComponent<IHeaderProps> = props => {
   const { updateStore, store } = useContext();
+  const editorRef = useRef<any>(null);
+  const [state, updateState] = useState({
+    lineCount: 1,
+    clear: false,
+  });
+  const { globalScript } = store;
 
-  const handleAddQuery = () => {
-    updateStore(draft => {
-      const num = Math.round(Math.random() * 10000);
-      const id = `query-${num}`;
-      draft.statements = [
-        {
-          id,
-          name: id,
-          script: 'Match (n) return n limit 10',
-        },
-        ...draft.statements,
-      ];
-
-      draft.activeId = id;
+  const handleChange = value => {};
+  const onChangeContent = line => {
+    updateState(preState => {
+      return {
+        ...preState,
+        lineCount: line,
+        clear: false,
+      };
     });
   };
+  const handleQuery = () => {
+    if (editorRef.current) {
+      const value = editorRef.current.codeEditor.getValue();
+      if (value === '') {
+        return;
+      }
+      updateStore(draft => {
+        draft.globalScript = '';
+        const id = uuidv4();
+        draft.statements = [
+          {
+            id,
+            name: id,
+            script: value,
+          },
+          ...draft.statements,
+        ];
+        draft.activeId = id;
+      });
+
+      updateState(preState => {
+        return {
+          ...preState,
+          clear: true,
+        };
+      });
+    }
+  };
+  const isShowCypherSwitch = state.lineCount === 1 && countLines(globalScript) === 1;
 
   return (
-    <Flex align="center" justify="space-between" gap={8} style={{ padding: '9px 0px' }}>
-      <Select
-        defaultValue="Cypher"
-        options={[
-          { value: 'Cypher', label: 'Cypher' },
-          { value: 'Gremlin', label: 'Gremlin', disabled: true },
-          { value: 'ISO-GQL', label: 'ISO-GQL', disabled: true },
-        ]}
-      />
-      <Button type="dashed" style={{ width: '100%' }} icon={<PlusOutlined />} onClick={handleAddQuery}>
-        Add Query Statement
-      </Button>
-      {/* <CypherEdit ref={editorRef} value={script} onChange={handleChange} onInit={(initEditor: any) => {}} /> */}
-
-      <ModeSwitch />
-    </Flex>
+    <div
+      style={{
+        flex: 1,
+        display: 'flex',
+        border: '1px solid #ddd',
+        borderRadius: '6px',
+        padding: '3px',
+        justifyItems: 'start',
+        alignItems: 'start',
+        margin: '5px 0px',
+      }}
+    >
+      {isShowCypherSwitch && (
+        <Select
+          style={{ marginRight: '-32px', zIndex: 999 }}
+          defaultValue="Cypher"
+          options={[
+            { value: 'Cypher', label: 'Cypher' },
+            { value: 'Gremlin', label: 'Gremlin', disabled: true },
+            { value: 'ISO-GQL', label: 'ISO-GQL', disabled: true },
+          ]}
+        />
+      )}
+      {isShowCypherSwitch && (
+        <span
+          style={{
+            position: 'absolute',
+            top: '11px',
+            left: '99px',
+            height: '28px',
+            width: '28px',
+            lineHeight: '28px',
+            // background: '#',
+            zIndex: 9999,
+            textAlign: 'center',
+          }}
+        ></span>
+      )}
+      <div
+        style={{
+          // height: '100%',
+          flex: 1,
+          width: '400px',
+          display: 'block',
+          overflow: 'hidden',
+        }}
+      >
+        <CypherEditor
+          onChangeContent={onChangeContent}
+          value={globalScript}
+          ref={editorRef}
+          onChange={handleChange}
+          onInit={(initEditor: any) => {}}
+          maxRows={25}
+          clear={state.clear}
+        />
+      </div>
+      <Space>
+        <Button type="text" icon={<PlayCircleOutlined />} onClick={handleQuery} />
+        <ModeSwitch />
+      </Space>
+    </div>
   );
 };
 
 export default Header;
+
+function countLines(str) {
+  // 使用正则表达式匹配换行符，并计算匹配到的数量，即为行数
+  return (str.match(/\r?\n/g) || []).length + 1;
+}

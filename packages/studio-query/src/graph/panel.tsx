@@ -55,9 +55,6 @@ const Panel: React.FunctionComponent<IPanelProps> = props => {
       graph.off('canvas:click', handleClear);
     };
   }, [graph]);
-  const handleChange = value => {
-    console.log(value);
-  };
 
   return (
     <div

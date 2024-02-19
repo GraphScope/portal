@@ -4,6 +4,7 @@ import SavedStatements from './sidebar/saved-statements';
 import GPTStatements from './sidebar/gpt-statements';
 import RecommendedStatements from './sidebar/recommended-statements';
 import StoreProcedure from './sidebar/store-procedure';
+import HistoryStatements from './sidebar/history-statements';
 import './index.less';
 import { useContext } from './context';
 import type { IStatement } from './context';
@@ -12,61 +13,79 @@ import {
   RedditOutlined,
   DeploymentUnitOutlined,
   DatabaseOutlined,
-  BgColorsOutlined,
-  BranchesOutlined,
   BookOutlined,
+  HistoryOutlined,
 } from '@ant-design/icons';
 import type { IStudioQueryProps } from './context';
+import { v4 as uuidv4 } from 'uuid';
+
 import Container from './container';
-export const navbarOptions = [
-  {
-    id: 'saved',
-    name: 'saved',
-    icon: <BookOutlined />,
-    children: <SavedStatements />,
-  },
-  {
-    id: 'recommended',
-    name: 'recommended',
-    icon: <DeploymentUnitOutlined />,
-    children: <RecommendedStatements />,
-  },
-  {
-    id: 'store-procedure',
-    name: 'store-procedure',
-    icon: <DatabaseOutlined />,
-    children: <StoreProcedure />,
-  },
-  {
-    id: 'qwen',
-    name: 'qwen',
-    icon: <RedditOutlined />,
-    children: <GPTStatements />,
-  },
-];
 
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const {
     queryInfo,
-    createStatement,
     queryGraphData,
     queryGraphSchema,
     onBack,
     displaySidebarPosition = 'left',
     enableAbsolutePosition,
+    /** statements */
+    queryStatements,
+    deleteStatements,
+    createStatements,
+    enableImmediateQuery,
   } = props;
   const { store, updateStore } = useContext();
   const { graphName, isReady, collapse, activeNavbar, statements } = store;
   const enable = !!enableAbsolutePosition && statements.length > 0;
+  const navbarOptions = [
+    {
+      id: 'recommended',
+      name: 'recommended',
+      icon: <DeploymentUnitOutlined />,
+      children: <RecommendedStatements />,
+    },
+    {
+      id: 'saved',
+      name: 'saved',
+      icon: <BookOutlined />,
+      children: <SavedStatements />,
+    },
+    {
+      id: 'history',
+      name: 'History',
+      icon: <HistoryOutlined />,
+      children: <HistoryStatements deleteHistoryStatements={ids => deleteStatements('history', ids)} />,
+    },
+    {
+      id: 'store-procedure',
+      name: 'store-procedure',
+      icon: <DatabaseOutlined />,
+      children: <StoreProcedure />,
+    },
+    {
+      id: 'qwen',
+      name: 'qwen',
+      icon: <RedditOutlined />,
+      children: <GPTStatements />,
+    },
+  ];
 
   useEffect(() => {
     (async () => {
       const info = await queryInfo();
       const schemaData = await queryGraphSchema(info.name);
+      const historyStatements = await queryStatements('history');
+      const savedStatements = await queryStatements('saved');
+      const storeProcedures = await queryStatements('store-procedure');
+
       updateStore(draft => {
         draft.isReady = true;
         draft.graphName = info.name;
         draft.schemaData = schemaData;
+        draft.historyStatements = historyStatements;
+        draft.savedStatements = savedStatements;
+        draft.storeProcedures = storeProcedures;
       });
     })();
   }, []);
@@ -80,6 +99,26 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         draft.collapse = false;
       }
     });
+  };
+  const handleQuery = (value: IStatement) => {
+    /** 查询的时候，就可以存储历史记录了 */
+    //@ts-ignore
+
+    const { script, id: statementId } = value;
+    const queryId = uuidv4();
+    const timestamp = new Date().getTime();
+    const params = {
+      id: queryId,
+      timestamp,
+      script,
+    };
+
+    console.log('newParams', params);
+    updateStore(draft => {
+      draft.historyStatements.push(params);
+    });
+    /** 正式查询 */
+    return queryGraphData(params);
   };
 
   if (isReady) {
@@ -97,7 +136,13 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
             onBack={onBack}
           />
         }
-        content={<Content createStatement={createStatement} queryGraphData={queryGraphData} />}
+        content={
+          <Content
+            createStatements={createStatements}
+            queryGraphData={handleQuery}
+            enableImmediateQuery={enableImmediateQuery}
+          />
+        }
         collapse={collapse}
       ></Container>
     );

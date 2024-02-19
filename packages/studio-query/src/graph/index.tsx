@@ -37,7 +37,7 @@ const GraphView: React.FunctionComponent<GraphViewProps> = props => {
     <Graphin
       data={newData}
       layout={{
-        type: 'force2',
+        type: 'graphin-force',
         preset: {
           type: 'concentric',
         },

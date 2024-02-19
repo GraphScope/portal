@@ -1,5 +1,6 @@
 import React, { useState, memo, useRef, useEffect } from 'react';
-import { Space, Button, theme } from 'antd';
+import { Space, Button, theme, Skeleton } from 'antd';
+import { v4 as uuidv4 } from 'uuid';
 
 import Editor from './editor';
 import Result from './result';
@@ -12,11 +13,28 @@ export type IStatementProps = IEditorProps & {
   // 是否是保存的语句
   saved: boolean;
   mode?: 'tabs' | 'flow';
+  enableImmediateQuery: boolean;
+  graphName: string;
+  /** 时间戳 */
+  timestamp?: number;
 };
 const { useToken } = theme;
 
 const Statement: React.FunctionComponent<IStatementProps> = props => {
-  const { onQuery, onClose, onSave, script, id, active, mode, saved, schemaData } = props;
+  const {
+    onQuery,
+    onClose,
+    onSave,
+    script,
+    id,
+    active,
+    mode,
+    saved,
+    schemaData,
+    enableImmediateQuery,
+    graphName,
+    timestamp,
+  } = props;
   const { token } = useToken();
   const borderStyle =
     active && mode === 'flow'
@@ -37,14 +55,16 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
       ContainerRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [active]);
-  const handleQuery = async value => {
+
+  const handleQuery = async params => {
     updateState(preState => {
       return {
         ...preState,
         isFetching: true,
       };
     });
-    const res = await onQuery(value);
+
+    const res = await onQuery(params);
     //@ts-ignore
     updateState(preState => {
       return {
@@ -54,6 +74,12 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
       };
     });
   };
+  useEffect(() => {
+    if (enableImmediateQuery) {
+      console.log('enableImmediateQuery script', enableImmediateQuery, script);
+      handleQuery({ id, script });
+    }
+  }, [enableImmediateQuery]);
 
   return (
     <div
@@ -70,6 +96,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
       }}
     >
       <Editor
+        timestamp={timestamp}
         schemaData={schemaData}
         saved={saved}
         id={id}
@@ -80,8 +107,10 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
         isFetching={isFetching}
         antdToken={token}
       />
-
-      {data && <Result data={data} isFetching={isFetching} />}
+      {data && !isFetching && (
+        <Result data={data} isFetching={isFetching} schemaData={schemaData} graphName={graphName} />
+      )}
+      {isFetching && <Skeleton />}
     </div>
   );
 };

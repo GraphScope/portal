@@ -1,5 +1,4 @@
 import { defineConfig } from 'umi';
-
 export default defineConfig({
   routes: [
     { path: '/', redirect: '/instance' },
@@ -17,9 +16,19 @@ export default defineConfig({
   ],
   npmClient: 'pnpm',
   monorepoRedirect: {},
-  // externals: { react: 'React', 'react-dom': 'ReactDOM' },
-  // headScripts: [
-  //   'https://gw.alipayobjects.com/os/lib/react/18.2.0/umd/react.production.min.js',
-  //   'https://gw.alipayobjects.com/os/lib/react-dom/18.2.0/umd/react-dom.production.min.js',
-  // ],
+  externals: {
+    '@antv/g2': 'G2',
+    // react: 'React', 'react-dom': 'ReactDOM'
+  },
+  proxy: {
+    '/api': {
+      target: 'http://47.242.172.5:8080',
+      changeOrigin: true,
+    },
+  },
+  headScripts: [
+    'https://gw.alipayobjects.com/os/lib/antv/g2/5.1.14/dist/g2.min.js',
+    //   'https://gw.alipayobjects.com/os/lib/react/18.2.0/umd/react.production.min.js',
+    //   'https://gw.alipayobjects.com/os/lib/react-dom/18.2.0/umd/react-dom.production.min.js',
+  ],
 });

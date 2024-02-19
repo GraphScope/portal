@@ -1,3 +1,10 @@
 .monaco-editor .view-overlays .current-line {
   background-color: transparent !important;
 }
+
+.monaco-editor .monaco-scrollable-element::-webkit-scrollbar {
+  display: none;
+}
+.decorationsOverviewRuler {
+  display: none !important;
+}

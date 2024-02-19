@@ -2,47 +2,54 @@ import React, { useEffect } from 'react';
 import Graph from '../../graph';
 interface IGraphViewProps {
   data: any;
+  schemaData: any;
+  graphName: string;
+}
+function transGraphSchema(schema) {
+  return {
+    nodes: schema.nodes.map(item => {
+      const { properties, ...others } = item;
+      return {
+        ...others,
+        properties: properties.reduce((acc, curr) => {
+          return {
+            ...acc,
+            [curr.name]: curr.type,
+          };
+        }, {}),
+      };
+    }),
+    edges: schema.edges.map(item => {
+      const { properties, constraints, ...others } = item;
+      const [source, target] = constraints;
+      return {
+        ...others,
+        source,
+        target,
+        properties: properties.reduce((acc, curr) => {
+          return {
+            ...acc,
+            [curr.name]: curr.type,
+          };
+        }, {}),
+      };
+    }),
+  };
 }
 
 const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
-  const { data } = props;
+  const { data, schemaData, graphName } = props;
+  const graphSchema = transGraphSchema(schemaData);
+
   useEffect(() => {
     return () => {
       console.log('unmount....graph');
     };
   }, []);
 
-  const schema = {
-    nodes: [
-      {
-        label: 'person',
-        properties: {
-          age: 'number',
-          name: 'string',
-        },
-      },
-      {
-        label: 'software',
-        properties: {
-          lang: 'string',
-          name: 'string',
-        },
-      },
-    ],
-    edges: [
-      {
-        label: 'created',
-        properties: {
-          weight: 'number',
-        },
-      },
-    ],
-  };
-  const graphName = 'movie';
-
   return (
     <div style={{ width: '100%' }}>
-      <Graph data={data} schemaData={schema} schemaId={graphName} />
+      <Graph data={data} schemaData={graphSchema} schemaId={graphName} />
     </div>
   );
 };

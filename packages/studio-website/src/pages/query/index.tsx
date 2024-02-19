@@ -1,102 +1,17 @@
 import * as React from 'react';
-import StudioQuery, { CypherDriver, CypherSchemaData } from '@graphscope/studio-query';
-import { GraphApiFp, GraphApiFactory } from '@graphscope/studio-server';
+import StudioQuery from '@graphscope/studio-query';
 import Section from '@/components/section';
-import { history } from 'umi';
-const HOST_URL = 'localhost';
-const driver = new CypherDriver(`neo4j://${HOST_URL}:7687`);
-import { SCHEMA_DATA } from './const';
-export interface IStatement {
-  id: string;
-  script: string;
-}
-const queryGraphData = async (value: IStatement) => {
-  return driver.queryCypher(value.script);
-};
-const queryInfo = async () => {
-  return new Promise(reslove => {
-    reslove({
-      name: 'defauleGraph',
-      type: 'interactive',
-      home_url: '/instance',
-      connect: {
-        url: 'bolt://localhost:7678',
-        usename: '',
-        password: '',
-      },
-      connect_url: 'bolt://localhost:7678',
-    });
-  });
-};
-const queryGraphSchema = async (): Promise<CypherSchemaData> => {
-  return new Promise(reslove => {
-    //@ts-ignore
-    reslove(SCHEMA_DATA);
-  });
-};
 
-const queryStatement = async () => {
-  return new Promise(reslove => {
-    reslove([
-      {
-        id: 'query-1',
-        name: 'query_10_nodes',
-        text: 'Match (n) return n limit 10',
-      },
-      {
-        id: 'query-2',
-        name: 'query_top_10_movie',
-        text: `MATCH (n) 
-          WHERE n.data IS NOT NULL
-          RETURN DISTINCT "node" as entity, n.data AS data LIMIT 25
-          UNION ALL 
-          MATCH ()-[r]-() 
-          WHERE r.data IS NOT NULL
-          RETURN DISTINCT "relationship" AS entity, r.data AS data LIMIT 25;
-        `,
-      },
-    ]);
-  });
-};
-const delelteStatement = async () => {
-  return {
-    data: {},
-    success: true,
-  };
-};
+import {
+  queryGraphData,
+  queryGraphSchema,
+  queryInfo,
+  queryStatements,
+  deleteStatements,
+  createStatements,
+} from './services';
 
-const updateStatement = async () => {
-  return {
-    data: {},
-    success: true,
-  };
-};
-const addStatement = async () => {
-  return {
-    data: {},
-    success: true,
-  };
-};
-
-const QueryModule: React.FunctionComponent<IQueryModuleProps> = props => {
-  const services = {
-    /** query graph info */
-    queryInfo,
-    queryGraphSchema,
-    /** statement */
-    queryStatement,
-    delelteStatement,
-    updateStatement,
-    addStatement,
-    queryGraphData,
-  };
-  React.useEffect(() => {
-    GraphApiFactory({ basePath: 'localhost:7678' })
-      .listGraphs()
-      .then(res => {
-        console.log('res...', res);
-      });
-  }, []);
+const QueryModule = () => {
   return (
     <Section
       breadcrumb={[
@@ -114,7 +29,30 @@ const QueryModule: React.FunctionComponent<IQueryModuleProps> = props => {
         marginTop: '-24px',
       }}
     >
-      <StudioQuery {...services} displaySidebarPosition="right" enableAbsolutePosition={true} />
+      <StudioQuery
+        /** 侧边栏展示的位置 */
+        displaySidebarPosition="right"
+        /** 是否启用绝对定位布局 */
+        enableAbsolutePosition={true}
+        /** 语句默认展示的模式 */
+        dispalyMode="flow"
+        /** 查询类型 */
+        type="cypher"
+        //@ts-ignore
+        queryInfo={queryInfo}
+        /** 语句服务  */
+        queryStatements={queryStatements}
+        createStatements={createStatements}
+        deleteStatements={deleteStatements}
+        /** 查询图数据 */
+        //@ts-ignore
+        queryGraphData={queryGraphData}
+        /** 查询Schema */
+        //@ts-ignore
+        queryGraphSchema={queryGraphSchema}
+        /** 是否立即查询 */
+        enableImmediateQuery={true}
+      />
     </Section>
   );
 };
