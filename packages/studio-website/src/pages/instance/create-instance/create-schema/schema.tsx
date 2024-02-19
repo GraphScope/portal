@@ -39,6 +39,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   const { newActiveKey, data, currentType, updateStore, nodeOptions } = props;
   const [form] = Form.useForm();
   const detail = false;
+  console.log(' data', currentType, data, newActiveKey, nodeOptions);
 
   const propertyRef = useRef<any>();
   let cbRef = useRef();
