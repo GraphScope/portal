@@ -4,11 +4,13 @@ import { theme } from 'antd';
 const styles: Record<string, React.CSSProperties> = {
   ul: {
     paddingInlineStart: '0px',
+    padding: '12px',
   },
   li: {
     padding: '8px 16px',
     cursor: 'pointer',
     listStyle: 'none',
+    borderRadius: '8px',
   },
 };
 interface IListProps {

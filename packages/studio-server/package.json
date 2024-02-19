@@ -1,26 +1,42 @@
 {
   "name": "@graphscope/studio-server",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "OpenAPI client for GraphScope Studio",
   "author": "OpenAPI-Generator Contributors",
   "keywords": [
     "axios",
     "typescript",
     "openapi-client",
-    "openapi-generator"
+    "openapi-generator",
+    ""
   ],
   "license": "Unlicense",
-  "main": "./dist/index.js",
-  "typings": "./dist/index.d.ts",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GraphScope/graphscope-components.git"
+  },
+  "files": [
+    "es",
+    "lib",
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc --outDir dist/",
+    "update api": "npx @openapitools/openapi-generator-cli generate -i ./openapi_coordinator.yaml -g typescript-axios -o typescript-axios",
+    "start": " run-p build:cjs:watch build:esm:watch",
+    "build:cjs": "rimraf ./lib && tsc --module commonjs --outDir lib",
+    "build:esm": "rimraf ./esm && tsc --module ESNext --outDir es",
+    "build:cjs:watch": "rimraf ./lib && tsc --module commonjs --outDir lib --watch",
+    "build:esm:watch": "rimraf ./esm && tsc --module ESNext --outDir es --watch",
+    "clean": "rimraf es esm lib dist",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^1.6.7"
   },
   "devDependencies": {
-    "@types/node": "^12.11.5",
-    "typescript": "^3.6.4"
+    "@openapitools/openapi-generator-cli": "^2.9.0"
   }
 }

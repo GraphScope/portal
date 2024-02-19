@@ -8,10 +8,12 @@ export const localStorageVars = {
 export interface IStatement {
   /** 语句ID */
   id: string;
-  /** 语句名称 */
-  name?: string;
   /** 语句脚本 */
   script: string;
+  /** 时间戳 */
+  timestamp?: number;
+  /** 语句名称 */
+  name?: string;
 }
 
 export type IStore<T> = T & {
@@ -27,6 +29,8 @@ export type IStore<T> = T & {
   activeNavbar: 'saved' | 'info' | 'gpt' | 'store_procedure';
   /** 单击选中的语句,如果是 fLow 模式，则滚动定位到这条语句 ，如果是 Tabs 模式，则直接展示*/
   activeId: string;
+  /** 保存的语句 */
+  historyStatements: IStatement[];
   /** 查询的语句 */
   statements: IStatement[];
   /** 展示的模式 */
@@ -35,7 +39,11 @@ export type IStore<T> = T & {
   savedStatements: IStatement[];
   storeProcedures: IStatement[];
   /** 启用绝对布局 */
-  absolutePosition: false;
+  absolutePosition: boolean;
+  /** 启用立即查询 */
+  enableImmediateQuery: boolean;
+  /** 全局的语句 */
+  globalScript: string;
 };
 
 const initialStore: IStore<{}> = {
@@ -45,44 +53,24 @@ const initialStore: IStore<{}> = {
   activeNavbar: 'saved',
   collapse: true,
   activeId: 'query-1',
+  /** 全局语句 */
+  globalScript: 'Match (n) return n limit 10',
   /** 启用绝对布局 */
   absolutePosition: false,
   schemaData: {
     nodes: [],
     edges: [],
   },
-  statements: [
-    // {
-    //   id: 'query-1',
-    //   name: 'query-1',
-    //   script: 'Match (n) return n limit 10',
-    // },
-    // {
-    //   id: 'query-2',
-    //   name: 'query-2',
-    //   script: 'Match (n) return n limit 30',
-    // },
-  ],
-  savedStatements: [
-    {
-      id: 'my-query-1 ',
-      name: 'my-query-1',
-      script: 'Match (n) return n limit 100',
-    },
-    {
-      id: 'my-query-2',
-      name: 'my-query-2',
-      script: 'Match (n) return n limit 300',
-    },
-  ],
-  storeProcedures: [
-    {
-      id: 'store-procedure-1 ',
-      name: 'store-procedure-1 ',
-      script: 'CALL actore()',
-    },
-  ],
+  /** 运行时语句 */
+  statements: [],
+  /** 历史查询语句 */
+  historyStatements: [],
+  /** 收藏语句 */
+  savedStatements: [],
+  /** 存储过程语句 */
+  storeProcedures: [],
   mode: (localStorage.getItem(localStorageVars.mode) as 'flow' | 'tabs') || 'flow',
+  enableImmediateQuery: false,
 };
 
 type ContextType<T> = {
@@ -115,20 +103,23 @@ export interface IGraphSchema {
   nodes: { id: string; label: string; properties: { [key: string]: any } }[];
   edges: { id: string; label: string; properties: { [key: string]: any }; source: string; target: string }[];
 }
+
+export type StatementType = 'saved' | 'history' | 'store-procedure';
+
 export interface IStudioQueryProps {
   queryInfo: () => Promise<Info>;
-  /**  查询语句列表 */
-  queryStatement: () => Promise<IStatement[]>;
-  /**  更新语句 */
-  updateStatement: (params: IStatement) => Promise<IStatement>;
-  /** 创建语句 */
-  createStatement: (params: IStatement) => Promise<IStatement>;
-  /** 删除语句 */
-  deleteStatement: (id: string) => Promise<boolean>;
   /** 查询图数据 */
   queryGraphData: (params: IStatement) => Promise<IGraphData>;
   /** 查询Schema */
   queryGraphSchema: (id: string) => Promise<IGraphSchema>;
+
+  /** 创建语句 */
+  createStatements: (type: StatementType, params: IStatement) => Promise<boolean>;
+  /** 查询语句 */
+  queryStatements: (type: StatementType) => Promise<IStatement[]>;
+  /** 删除语句 */
+  deleteStatements: (type: StatementType, ids: string[]) => Promise<boolean>;
+
   /** 语句的类型 */
   type: 'gremlin' | 'cypher' | 'iso_gql';
   /** 返回按钮 */
@@ -140,4 +131,6 @@ export interface IStudioQueryProps {
   displaySidebarPosition?: 'left' | 'right';
   /** 是否需要再添加查询语句的时候，切换展示为 absolute */
   enableAbsolutePosition?: boolean;
+  /**  启用立刻查询 */
+  enableImmediateQuery: boolean;
 }

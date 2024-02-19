@@ -59,9 +59,8 @@ const styles = {
 const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
   const { color, size, caption, properties, label, onChange, type } = props;
   const { token } = useToken();
-  console.log('type', type);
+
   const handleChange = (type, item) => {
-    console.log(type, item, label);
     onChange &&
       onChange({
         label,

@@ -1,21 +1,20 @@
 {
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
     "declaration": true,
-    "target": "es5",
-    "module": "commonjs",
-    "noImplicitAny": true,
-    "outDir": "dist",
-    "rootDir": ".",
-    "lib": [
-      "es6",
-      "dom"
-    ],
-    "typeRoots": [
-      "node_modules/@types"
-    ]
+    "target": "es2015",
+    "moduleResolution": "node",
+    "jsx": "react",
+    "resolveJsonModule": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "lib": ["dom", "esnext"],
+    "module": "esnext",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": false
   },
-  "exclude": [
-    "dist",
-    "node_modules"
-  ]
+  "include": ["typescript-axios"],
+  "exclude": ["node_modules"]
 }
