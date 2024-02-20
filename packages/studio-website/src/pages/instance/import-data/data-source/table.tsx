@@ -53,7 +53,7 @@ const TableList: React.FC<TableListProps> = props => {
       ),
       dataIndex: 'properties',
       key: 'properties',
-      width: '30%',
+      width: '25%',
     },
     {
       title: (
@@ -78,7 +78,7 @@ const TableList: React.FC<TableListProps> = props => {
       ),
       dataIndex: 'main_key',
       key: 'main_key',
-      width: '20%',
+      width: '25%',
       render(text) {
         return <Checkbox defaultChecked={text} disabled />;
       },
