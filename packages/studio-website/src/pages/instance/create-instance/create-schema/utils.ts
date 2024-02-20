@@ -167,15 +167,15 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
   const { edges } = options;
   const nodeMap: Record<string, string> = {};
   //@ts-ignore
-  const vertex_types: VertexType[] = options.nodes.map(item => {
+  const vertex_types: VertexType[] = options.nodes.map((item, itemIdx) => {
     nodeMap[item.key] = item.label;
     return {
       primary_keys: [item.primary],
-      type_id: item.key,
+      type_id: itemIdx, // item.key,
       type_name: item.label,
-      properties: item.properties.map(p => {
+      properties: item.properties.map((p, pIdx) => {
         return {
-          property_id: p.id,
+          property_id: pIdx, // p.id,
           property_name: p.name,
           property_type: {
             primitive_type: p.type,
@@ -186,7 +186,7 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
   });
   const edgeMap = new Map();
 
-  options.edges.forEach(item => {
+  options.edges.forEach((item, itemIdx) => {
     const { label, source: sourceID, target: targetID, relation, properties, key } = item;
     const source = nodeMap[sourceID];
     const target = nodeMap[targetID];
@@ -204,11 +204,11 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
       edgeMap.set(label, current);
     } else {
       edgeMap.set(label, {
-        type_id: key,
+        type_id: itemIdx, //key,
         type_name: label,
-        properties: properties.map(p => {
+        properties: properties.map((p, pIdx) => {
           return {
-            property_id: p.id,
+            property_id: pIdx, //p.id,
             property_name: p.name,
             property_type: {
               primitive_type: p.type,

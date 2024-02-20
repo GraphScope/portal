@@ -8,16 +8,76 @@ import Result from './result';
 import ResultFailed from './result/result-failed';
 import ResultSuccess from './result/result-success';
 import { FormattedMessage } from 'react-intl';
-import { values } from 'lodash';
+import { createGraph } from './service';
+import { transOptionsToSchema } from './create-schema/utils';
+import { cloneDeep } from 'lodash';
+import { initialStore } from './useContext';
 const steps = [
   { title: <FormattedMessage id="Choose Engine Type" /> },
   { title: <FormattedMessage id="Create Schema" /> },
   { title: <FormattedMessage id="Preview" /> },
   { title: <FormattedMessage id="Result" /> },
 ];
+/**
+ * 左侧的操作按钮
+ * @param props
+ * @returns
+ */
+const LeftButton = (props: { currentStep: any; handlePrev: any; createInstaseResult: any }) => {
+  const { currentStep, handlePrev, createInstaseResult } = props;
+  if (currentStep === 0) {
+    return null;
+  }
+  if (currentStep === 3 && !createInstaseResult) {
+    return null;
+  }
+  if (currentStep > 0) {
+    return (
+      <Button style={{ margin: '0 8px' }} onClick={handlePrev}>
+        <FormattedMessage id="Previous" />
+      </Button>
+    );
+  }
+};
+/**
+ * 右侧的操作按钮
+ * @param props
+ * @returns
+ */
+const RightButton = (props: { currentStep: any; handleNext: any; handleSubmit: any }) => {
+  const { currentStep, handleNext, handleSubmit } = props;
+  if (currentStep === 0 || currentStep === 1) {
+    return (
+      <Button type="primary" onClick={handleNext}>
+        <FormattedMessage id="Next" />
+      </Button>
+    );
+  }
+  if (currentStep === 2) {
+    return (
+      <Button type="primary" onClick={handleSubmit}>
+        <FormattedMessage id="Confirm Create" />
+      </Button>
+    );
+  }
+  if (currentStep === 3) {
+    return (
+      <Button
+        type="primary"
+        onClick={() => {
+          history.push('/instance');
+        }}
+      >
+        <FormattedMessage id="Done" />
+      </Button>
+    );
+  }
+};
+
 const CreateInstance: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
-  const { isAlert, currentStep, createInstaseResult } = store;
+  const { isAlert, currentStep, createInstaseResult, nodeList, edgeList, engineInput, engineType, engineDirected } =
+    store;
   const [form] = Form.useForm();
   const next = () => {
     if (form.getFieldsValue().inputname) {
@@ -28,7 +88,28 @@ const CreateInstance: React.FunctionComponent = () => {
       form.validateFields();
     }
   };
-
+  // createGraph
+  const handleSubmit = () => {
+    console.log(nodeList, edgeList, engineInput, engineType, engineDirected);
+    //@ts-ignore
+    const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
+    console.log('schemaJSON', schemaJSON);
+    const data = {
+      name: engineInput,
+      store_type: engineType,
+      stored_procedures: {
+        directory: 'plugins',
+      },
+      schema: schemaJSON,
+    };
+    createGraph(data).then(res => {
+      /** 成功true */
+      updateStore(draft => {
+        draft.currentStep = currentStep + 1;
+        draft.createInstaseResult = true;
+      });
+    });
+  };
   const prev = () => {
     updateStore(draft => {
       draft.currentStep = currentStep - 1;
@@ -44,11 +125,15 @@ const CreateInstance: React.FunctionComponent = () => {
     ...itemStyle,
     display: 'block',
   };
+
   useEffect(() => {
     console.log('unmount....');
     return () => {
       updateStore(draft => {
-        draft.detail = false;
+        Object.keys(initialStore).forEach(key => {
+          //@ts-ignore
+          draft[key] = initialStore[key];
+        });
       });
     };
   }, []);
@@ -96,43 +181,8 @@ const CreateInstance: React.FunctionComponent = () => {
             />
           ) : (
             <div style={{}}>
-              {currentStep > 0 && (
-                <>
-                  {createInstaseResult ? null : (
-                    <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
-                      <FormattedMessage id="Previous" />
-                    </Button>
-                  )}
-                </>
-              )}
-              {currentStep < steps.length - 1 && (
-                <Button type="primary" onClick={() => next()}>
-                  <FormattedMessage id="Next" />
-                </Button>
-              )}
-              {currentStep === steps.length - 1 && (
-                <>
-                  {currentStep == 3 ? (
-                    <Button
-                      type="primary"
-                      onClick={() => {
-                        history.push('/instance');
-                      }}
-                    >
-                      <FormattedMessage id="Done" />
-                    </Button>
-                  ) : (
-                    <Button
-                      type="primary"
-                      onClick={() => {
-                        message.success('Processing complete!');
-                      }}
-                    >
-                      <FormattedMessage id="Confirm Create" />
-                    </Button>
-                  )}
-                </>
-              )}
+              <LeftButton currentStep={currentStep} handlePrev={prev} createInstaseResult={createInstaseResult} />
+              <RightButton currentStep={currentStep} handleNext={next} handleSubmit={handleSubmit} />
             </div>
           )}
         </div>

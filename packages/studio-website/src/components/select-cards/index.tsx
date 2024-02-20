@@ -8,10 +8,11 @@ export interface Card {
   title: string;
   desc: string;
   avatar?: string;
+  disabled?: boolean;
 }
 interface ISelectCardsProps {
   items: Card[];
-  value: string;
+  val: string;
   onChange: (card: Card) => void;
 }
 const iconStyle: React.CSSProperties = {
@@ -21,24 +22,35 @@ const iconStyle: React.CSSProperties = {
   fontSize: '20px',
 };
 const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
-  const { value, onChange, items } = props;
+  const { val: value, onChange, items } = props;
   const [current, setCurrent] = useState(value);
   const { useToken } = theme;
   const { token } = useToken();
-
+  console.log('value', value, props);
   return (
     <div>
       <Row gutter={16}>
         {items.map(item => {
-          const { id, title, desc, avatar } = item;
+          const { id, title, desc, avatar, disabled } = item;
           const isChecked = id === current;
+          console.log('isChecked', value, current, id);
           return (
             <Col span={8} key={id}>
               <Card
                 onClick={() => {
-                  setCurrent(id);
-                  onChange && onChange(item);
+                  if (!disabled) {
+                    setCurrent(id);
+                    onChange && onChange(item);
+                  }
                 }}
+                style={
+                  disabled
+                    ? {
+                        background: '#dddddd29',
+                        cursor: 'not-allowed',
+                      }
+                    : {}
+                }
               >
                 <Flex justify="space-between" align="">
                   {avatar && <Avatar shape="square" size={45} />}

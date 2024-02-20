@@ -5,7 +5,7 @@ import InstaceCard, { InstaceCardType } from './instance-card';
 import Section from '@/components/section';
 import { PlusOutlined } from '@ant-design/icons';
 import { GraphApiFactory, ServiceApiFactory, ServiceApi } from '@graphscope/studio-server';
-import { listGraphs } from './service';
+import { listGraphs, deleteGraph, startService, stopService } from './service';
 
 const InstanceCard: React.FC = () => {
   const [form] = Form.useForm();
@@ -16,22 +16,33 @@ const InstanceCard: React.FC = () => {
   const { instanceList, isReady } = state;
 
   useEffect(() => {
-    listGraphs().then(res => {
-      //@ts-ignore
-      updateState(preState => {
-        return {
-          ...preState,
-          isReady: true,
-          instanceList: res || [],
-        };
-      });
-    });
+    fetchLists();
   }, []);
+
+  const fetchLists = async () => {
+    const res = await listGraphs();
+    //@ts-ignore
+    updateState(preState => {
+      return {
+        ...preState,
+        isReady: true,
+        instanceList: res || [],
+      };
+    });
+  };
 
   const handleCreate = () => {
     history.push('/instance/create');
   };
-
+  const handleDelete = async (name: string) => {
+    const isSuccess = await deleteGraph(name);
+    if (isSuccess) {
+      fetchLists();
+    }
+  };
+  const handleStart = async (name: string) => {
+    await startService(name);
+  };
   return (
     <Section
       breadcrumb={[
@@ -48,7 +59,7 @@ const InstanceCard: React.FC = () => {
       <Row gutter={[12, 12]}>
         {instanceList.map((item, i) => (
           <Col key={i} span={12}>
-            <InstaceCard {...item} />
+            <InstaceCard {...item} handleDelete={handleDelete} handleStart={handleStart} />
           </Col>
         ))}
         {!isReady && (
