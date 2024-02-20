@@ -34,7 +34,7 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
     }>({
       selectedRows: [],
       selectedMapRowKeys: [],
-      configList: [],
+      configList: properties,
       mapfromfileList: [],
       proSelectKey: [],
     });
