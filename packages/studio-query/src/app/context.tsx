@@ -12,6 +12,10 @@ export interface IStatement {
   name?: string;
 }
 
+export const localStorageVars = {
+  mode: 'GS_STUDIO_QUERY_MODE',
+};
+
 export type IStore<T> = T & {
   /** is ready  */
   isReady: boolean;

@@ -6,7 +6,7 @@ import RecommendedStatements from './sidebar/recommended-statements';
 import StoreProcedure from './sidebar/store-procedure';
 import HistoryStatements from './sidebar/history-statements';
 import './index.less';
-import { useContext } from './context';
+import { useContext, localStorageVars } from './context';
 import type { IStatement } from './context';
 import Sidebar from './sidebar';
 import {
@@ -19,10 +19,6 @@ import {
 import type { IStudioQueryProps } from './context';
 import { v4 as uuidv4 } from 'uuid';
 import { getSearchParams, searchParamOf, formatCypherStatement } from './utils';
-
-export const localStorageVars = {
-  mode: 'GS_STUDIO_QUERY_MODE',
-};
 
 import Container from './container';
 
@@ -76,7 +72,6 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     },
   ];
 
-  console.log("searchParamOf('nav')", searchParamOf('nav'));
   useEffect(() => {
     (async () => {
       //@ts-ignore
@@ -84,7 +79,6 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       const graphName = searchParamOf('graph_name');
       const activeNavbar = searchParamOf('nav') || 'saved';
       const globalScript = searchParamOf('cypher') || 'Match (n) return n limit 10';
-
       const displayMode = searchParamOf('display_mode') || localStorage.getItem(localStorageVars.mode) || 'flow';
       const autoRun = searchParamOf('auto_run') === 'true' ? true : false;
 
@@ -93,8 +87,6 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       const historyStatements = await queryStatements('history');
       const savedStatements = await queryStatements('saved');
       const storeProcedures = await queryStatements('store-procedure');
-      console.log(globalScript);
-      console.log(formatCypherStatement(globalScript));
 
       updateStore(draft => {
         draft.isReady = true;
