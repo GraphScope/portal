@@ -31,6 +31,7 @@ const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
         draft.edgeList = options.edges;
         draft.nodeList = options.nodes;
         draft.nodeActiveKey = options.nodes[0].key;
+        draft.edgeActiveKey = options.edges[0].key;
       });
     } catch (error) {
       console.error('解析 YAML 文件失败:', error);
