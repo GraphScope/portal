@@ -65,7 +65,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
       });
     }
     if (currentType === 'edge') {
-      const { label, src_label, dst_label } = form.getFieldsValue();
+      const { label, source, target } = form.getFieldsValue();
 
       updateStore(draft => {
         draft.edgeList.forEach(item => {
@@ -73,8 +73,8 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             //@ts-ignore
             item.properties = cbRef.current;
             item.label = label;
-            item.source = src_label || '';
-            item.target = dst_label || '';
+            item.source = source || '';
+            item.target = target || '';
           }
         });
       });

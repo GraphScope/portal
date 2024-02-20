@@ -41,7 +41,14 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
         wrapperCol={{ span: 8 }}
         rules={[{ required: true, message: '' }]}
       >
-        <Input placeholder="Please Enter Input Name." />
+        <Input
+          placeholder="Please Enter Input Name."
+          onChange={e =>
+            updateStore(draft => {
+              draft.engineInput = e.target.value;
+            })
+          }
+        />
       </Form.Item>
 
       <Form.Item<FieldType>
@@ -65,6 +72,11 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
             { value: true, label: 'true' },
             { value: false, label: 'false' },
           ]}
+          onChange={e =>
+            updateStore(draft => {
+              draft.engineDirected = e.target.checked;
+            })
+          }
         />
       </Form.Item>
     </Form>

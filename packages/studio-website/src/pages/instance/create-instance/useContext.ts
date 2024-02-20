@@ -18,6 +18,10 @@ export type IStore<T> = T & {
   /********* STEP 1 *************/
   /** 引擎类型 */
   engineType: string;
+  /** 引擎input */
+  engineInput: string;
+  /** 引擎Directed */
+  engineDirected: boolean;
   /** 图名称 */
   graphName: string;
   /********* STEP 2 *************/
@@ -58,7 +62,7 @@ export const initialStore: IStore<{}> = {
   /** 图名称 */
   graphName: '',
   /** 当前步骤 */
-  currentStep: 1,
+  currentStep: 0,
 
   nodeList: [],
   edgeList: [],
@@ -74,6 +78,8 @@ export const initialStore: IStore<{}> = {
   checked: 'table',
 
   createInstaseResult: false,
+  engineInput: '',
+  engineDirected: false,
 };
 
 type ContextType<T> = {

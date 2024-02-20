@@ -8,7 +8,7 @@ import Result from './result';
 import ResultFailed from './result/result-failed';
 import ResultSuccess from './result/result-success';
 import { FormattedMessage } from 'react-intl';
-import { values } from 'lodash';
+import { createGraph } from './service';
 const steps = [
   { title: <FormattedMessage id="Choose Engine Type" /> },
   { title: <FormattedMessage id="Create Schema" /> },
@@ -17,18 +17,42 @@ const steps = [
 ];
 const CreateInstance: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
-  const { isAlert, currentStep, createInstaseResult } = store;
+  const { isAlert, currentStep, createInstaseResult, nodeList, edgeList, engineInput, engineType, engineDirected } =
+    store;
   const [form] = Form.useForm();
   const next = () => {
     if (form.getFieldsValue().inputname) {
       updateStore(draft => {
         draft.currentStep = currentStep + 1;
       });
+      currentStep === 2 && handleSubmit();
     } else {
       form.validateFields();
     }
   };
-
+  // createGraph
+  const handleSubmit = () => {
+    console.log(nodeList, edgeList, engineInput, engineType, engineDirected);
+    const data = {
+      name: engineInput,
+      store_type: engineType,
+      stored_procedures: {
+        directory: engineDirected,
+      },
+      schema: {
+        vertex_types: nodeList,
+        edge_types: edgeList,
+      },
+    };
+    createGraph(data).then(res => {
+      console.log('保存成功');
+      createInstaseResult;
+      /** 成功true */
+      updateStore(draft => {
+        draft.createInstaseResult = true;
+      });
+    });
+  };
   const prev = () => {
     updateStore(draft => {
       draft.currentStep = currentStep - 1;
