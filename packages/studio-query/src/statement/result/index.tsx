@@ -69,6 +69,7 @@ const Result: React.FunctionComponent<IResultProps> = props => {
     visibility: 'hidden',
     display: 'block',
     width: '100%',
+    overflowY: 'scroll',
   };
   const activeItemStyle: React.CSSProperties = {
     ...itemStyle,
@@ -89,7 +90,7 @@ const Result: React.FunctionComponent<IResultProps> = props => {
   return (
     <Flex gap={12} vertical>
       <Segmented block options={SegmentedOptions} onChange={handleChange} value={viewMode}></Segmented>
-      <div style={{ height: '500px', position: 'relative', overflowY: 'scroll' }}>
+      <div style={{ height: '500px', position: 'relative', overflow: 'hidden' }}>
         {isExist('graph') && (
           <div style={viewMode === 'graph' && !isFetching ? activeItemStyle : itemStyle}>
             <GraphView data={data} schemaData={schemaData} graphName={graphName} />

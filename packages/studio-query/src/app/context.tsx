@@ -1,10 +1,6 @@
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 
-export const localStorageVars = {
-  mode: 'GS_STUDIO_QUERY_MODE',
-};
-
 export interface IStatement {
   /** 语句ID */
   id: string;
@@ -72,7 +68,7 @@ const initialStore: IStore<{}> = {
   savedStatements: [],
   /** 存储过程语句 */
   storeProcedures: [],
-  mode: (localStorage.getItem(localStorageVars.mode) as 'flow' | 'tabs') || 'flow',
+  mode: 'flow',
   enableImmediateQuery: false,
 };
 

@@ -20,6 +20,10 @@ import type { IStudioQueryProps } from './context';
 import { v4 as uuidv4 } from 'uuid';
 import { getSearchParams, searchParamOf, formatCypherStatement } from './utils';
 
+export const localStorageVars = {
+  mode: 'GS_STUDIO_QUERY_MODE',
+};
+
 import Container from './container';
 
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
@@ -81,7 +85,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       const activeNavbar = searchParamOf('nav') || 'saved';
       const globalScript = searchParamOf('cypher') || 'Match (n) return n limit 10';
 
-      const displayMode = (searchParamOf('display_mode') || 'flow') as 'flow' | 'tabs';
+      const displayMode = searchParamOf('display_mode') || localStorage.getItem(localStorageVars.mode) || 'flow';
       const autoRun = searchParamOf('auto_run') === 'true' ? true : false;
 
       const info = await queryInfo();
@@ -103,7 +107,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         draft.activeNavbar = activeNavbar;
         draft.autoRun = autoRun;
         draft.globalScript = formatCypherStatement(globalScript);
-        draft.mode = displayMode;
+        draft.mode = displayMode as 'flow' | 'tabs';
       });
     })();
   }, []);
