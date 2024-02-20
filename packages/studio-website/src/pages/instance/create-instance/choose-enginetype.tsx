@@ -16,9 +16,9 @@ type ChooseEnginetypeProps = {
 };
 
 const engines = [
-  { id: 'interactive', title: 'Interactive', desc: ' Interactive 引擎介绍' },
-  { id: 'insights', title: 'Insights', desc: 'Insights 引擎介绍' },
-  { id: 'v6d', title: 'Vineyard', desc: 'Vineyard 引擎介绍' },
+  { id: 'mutable_csr', title: 'Interactive', desc: ' Interactive 引擎介绍' },
+  { id: 'insights', title: 'Insights', desc: 'Insights 引擎介绍', disabled: true },
+  { id: 'v6d', title: 'Vineyard', desc: 'Vineyard 引擎介绍', disabled: true },
 ];
 
 const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props => {
@@ -30,6 +30,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
       draft.engineType = item.id;
     });
   };
+  console.log('engineType', engineType, engines);
 
   return (
     <Form name="basic" form={form} layout="vertical" style={{ marginTop: '24px' }}>
@@ -45,7 +46,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
           placeholder="Please Enter Input Name."
           onChange={e =>
             updateStore(draft => {
-              draft.engineInput = e.target.value;
+              draft.engineInput = String(e.target.value || 'unkown');
             })
           }
         />
@@ -57,9 +58,9 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
         tooltip=" "
         rules={[{ required: true, message: '' }]}
       >
-        <SelectCards items={engines} value={engineType} onChange={changeEngineType} />
+        <SelectCards val={engineType} items={engines} onChange={changeEngineType} />
       </Form.Item>
-      <Form.Item<FieldType>
+      {/* <Form.Item<FieldType>
         label={<FormattedMessage id="Directed" />}
         name="directed"
         tooltip=" "
@@ -72,13 +73,13 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
             { value: true, label: 'true' },
             { value: false, label: 'false' },
           ]}
-          onChange={e =>
+          onChange={checked =>
             updateStore(draft => {
-              draft.engineDirected = e.target.checked;
+              draft.engineDirected = checked;
             })
           }
         />
-      </Form.Item>
+      </Form.Item> */}
     </Form>
   );
 };

@@ -58,7 +58,7 @@ export type IStore<T> = T & {
 
 export const initialStore: IStore<{}> = {
   /** 引擎类型 */
-  engineType: '',
+  engineType: 'mutable_csr',
   /** 图名称 */
   graphName: '',
   /** 当前步骤 */
