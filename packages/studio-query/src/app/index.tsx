@@ -6,7 +6,7 @@ import RecommendedStatements from './sidebar/recommended-statements';
 import StoreProcedure from './sidebar/store-procedure';
 import HistoryStatements from './sidebar/history-statements';
 import './index.less';
-import { useContext } from './context';
+import { useContext, localStorageVars } from './context';
 import type { IStatement } from './context';
 import Sidebar from './sidebar';
 import {
@@ -18,6 +18,7 @@ import {
 } from '@ant-design/icons';
 import type { IStudioQueryProps } from './context';
 import { v4 as uuidv4 } from 'uuid';
+import { getSearchParams, searchParamOf, formatCypherStatement } from './utils';
 
 import Container from './container';
 
@@ -73,6 +74,14 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
 
   useEffect(() => {
     (async () => {
+      //@ts-ignore
+
+      const graphName = searchParamOf('graph_name');
+      const activeNavbar = searchParamOf('nav') || 'saved';
+      const globalScript = searchParamOf('cypher') || 'Match (n) return n limit 10';
+      const displayMode = searchParamOf('display_mode') || localStorage.getItem(localStorageVars.mode) || 'flow';
+      const autoRun = searchParamOf('auto_run') === 'true' ? true : false;
+
       const info = await queryInfo();
       const schemaData = await queryGraphSchema(info.name);
       const historyStatements = await queryStatements('history');
@@ -81,11 +90,16 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
 
       updateStore(draft => {
         draft.isReady = true;
-        draft.graphName = info.name;
+        draft.graphName = graphName || info.name;
         draft.schemaData = schemaData;
         draft.historyStatements = historyStatements;
         draft.savedStatements = savedStatements;
         draft.storeProcedures = storeProcedures;
+        //@ts-ignore
+        draft.activeNavbar = activeNavbar;
+        draft.autoRun = autoRun;
+        draft.globalScript = formatCypherStatement(globalScript);
+        draft.mode = displayMode as 'flow' | 'tabs';
       });
     })();
   }, []);

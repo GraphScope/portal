@@ -55,7 +55,6 @@ const Editor: React.FunctionComponent<
   const handleClose = () => {
     onClose && onClose(id);
   };
-  console.log('editor timestamp', timestamp, queryTime);
 
   return (
     <div style={{}}>

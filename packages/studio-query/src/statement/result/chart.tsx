@@ -142,7 +142,7 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
 
   const handleChange = () => {};
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       <Space>
         Type:
         <Select
@@ -206,7 +206,7 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
         />
       </Space>
 
-      <div ref={ChartRef}></div>
+      <div ref={ChartRef} style={{ width: '100%' }}></div>
     </div>
   );
 };
