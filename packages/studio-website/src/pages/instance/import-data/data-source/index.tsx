@@ -41,7 +41,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       };
     });
     /** 改变本条数据 */
-    handleChange && handleChange({ label, location, properties: dataSources, datatype: currentType, isBind: true });
+    // handleChange && handleChange({ label, location, properties: dataSources, datatype: currentType, isBind: true });
   };
   /** 切换图标 */
   const ToggleIcon = isEidtProperty ? (
@@ -67,6 +67,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       }
     />
   );
+
   return (
     <>
       <div>
@@ -120,6 +121,8 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                       dataSources: val,
                     };
                   });
+                  handleChange &&
+                    handleChange({ label, location, properties: val, datatype: currentType, isBind: true });
                 }}
               />
             </Col>

@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Select, Checkbox, InputNumber, Typography } from 'antd';
 type EditableTableProps = Parameters<typeof Table>[0];
 const { Text } = Typography;
 interface DataType {
   key: React.Key;
-  name: string;
+  properties: string;
   type: string;
   primaryKey: boolean;
-  dataindex?: number;
+  columntype?: number;
 }
 type TableListProps = {
   tabledata: DataType[];
@@ -35,16 +35,14 @@ const styles: React.CSSProperties = {
 };
 const TableList: React.FC<TableListProps> = props => {
   const { tabledata, onChange } = props;
-  const [dataSource, setDataSource] = useState<DataType[]>(tabledata);
-  const handleChangeIndex = (value: any, text: any) => {
-    const { name } = text;
-    dataSource.forEach(item => {
-      if (item.name === name) {
-        item.dataindex = value;
+
+  const handleChangeIndex = (value: any, name: string) => {
+    tabledata.forEach(item => {
+      if (item.properties === name) {
+        item.columntype = value;
       }
     });
-    setDataSource(dataSource);
-    onChange && onChange(dataSource);
+    onChange && onChange(tabledata);
   };
   const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex?: string })[] = [
     {
@@ -94,19 +92,19 @@ const TableList: React.FC<TableListProps> = props => {
       dataIndex: 'columntype',
       width: '35%',
       editable: true,
-      render(columntype) {
+      render(columntype, all) {
         return (
           <InputNumber
             min={0}
             size="small"
-            defaultValue={columntype}
-            onChange={value => handleChangeIndex(value, columntype)}
+            value={columntype}
+            onChange={value => handleChangeIndex(value, all.properties)}
           />
         );
       },
     },
   ];
-  return <Table columns={defaultColumns} dataSource={dataSource} pagination={false} size="small" />;
+  return <Table columns={defaultColumns} dataSource={tabledata} pagination={false} size="small" />;
 };
 
 export default TableList;

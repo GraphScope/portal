@@ -7,6 +7,8 @@ import { SOURCEDATA } from './source-data';
 import GraphTitle from './graph-title';
 import Section from '@/components/section';
 import TabAction from './tab-action';
+import { getUrlParams } from './utils';
+import { getSchema } from './service';
 interface IImportDataProps {}
 
 const { Title, Text } = Typography;
@@ -17,23 +19,30 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
     sourceList: { nodes, edges },
     isReady,
   } = store;
-
   useEffect(() => {
-    getInportList().then(res => {
+    const { graph } = getUrlParams();
+    getSchema(graph).then(res => {
       updateStore(draft => {
         draft.isReady = true;
         //@ts-ignore
-        draft.sourceList = res;
+        draft.sourceList = res || {};
       });
     });
+    // getInportList().then(res => {
+    //   updateStore(draft => {
+    //     draft.isReady = true;
+    //     //@ts-ignore
+    //     draft.sourceList = res || {};
+    //   });
+    // });
   }, []);
-  const getInportList = async () => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(SOURCEDATA);
-      }, 600);
-    });
-  };
+  // const getInportList = async () => {
+  //   return new Promise((resolve, reject) => {
+  //     setTimeout(() => {
+  //       resolve(SOURCEDATA);
+  //     }, 600);
+  //   });
+  // };
   const sourceData = currentType === 'node' ? nodes : edges;
 
   const bindNodeCount = nodes.filter(item => item.isBind).length;
@@ -67,6 +76,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       }
     });
   };
+
   const tabHandleChange = (val: string) => {
     updateStore(draft => {
       draft.currentType = val;
