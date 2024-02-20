@@ -18,6 +18,7 @@ import {
 } from '@ant-design/icons';
 import type { IStudioQueryProps } from './context';
 import { v4 as uuidv4 } from 'uuid';
+import { getSearchParams, searchParamOf, formatCypherStatement } from './utils';
 
 import Container from './container';
 
@@ -71,21 +72,38 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     },
   ];
 
+  console.log("searchParamOf('nav')", searchParamOf('nav'));
   useEffect(() => {
     (async () => {
+      //@ts-ignore
+
+      const graphName = searchParamOf('graph_name');
+      const activeNavbar = searchParamOf('nav') || 'saved';
+      const globalScript = searchParamOf('cypher') || 'Match (n) return n limit 10';
+
+      const displayMode = (searchParamOf('display_mode') || 'flow') as 'flow' | 'tabs';
+      const autoRun = searchParamOf('auto_run') === 'true' ? true : false;
+
       const info = await queryInfo();
       const schemaData = await queryGraphSchema(info.name);
       const historyStatements = await queryStatements('history');
       const savedStatements = await queryStatements('saved');
       const storeProcedures = await queryStatements('store-procedure');
+      console.log(globalScript);
+      console.log(formatCypherStatement(globalScript));
 
       updateStore(draft => {
         draft.isReady = true;
-        draft.graphName = info.name;
+        draft.graphName = graphName || info.name;
         draft.schemaData = schemaData;
         draft.historyStatements = historyStatements;
         draft.savedStatements = savedStatements;
         draft.storeProcedures = storeProcedures;
+        //@ts-ignore
+        draft.activeNavbar = activeNavbar;
+        draft.autoRun = autoRun;
+        draft.globalScript = formatCypherStatement(globalScript);
+        draft.mode = displayMode;
       });
     })();
   }, []);

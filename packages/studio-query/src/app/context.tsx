@@ -44,6 +44,7 @@ export type IStore<T> = T & {
   enableImmediateQuery: boolean;
   /** 全局的语句 */
   globalScript: string;
+  autoRun: boolean;
 };
 
 const initialStore: IStore<{}> = {
@@ -55,6 +56,8 @@ const initialStore: IStore<{}> = {
   activeId: 'query-1',
   /** 全局语句 */
   globalScript: 'Match (n) return n limit 10',
+  /** autoRun */
+  autoRun: false,
   /** 启用绝对布局 */
   absolutePosition: false,
   schemaData: {

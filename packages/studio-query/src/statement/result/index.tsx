@@ -65,11 +65,15 @@ const Result: React.FunctionComponent<IResultProps> = props => {
     bottom: '0px',
     top: '0px',
     left: '0px',
-    display: 'none',
+    // display: 'none',
+    visibility: 'hidden',
+    display: 'block',
+    width: '100%',
   };
   const activeItemStyle: React.CSSProperties = {
     ...itemStyle,
     display: 'block',
+    visibility: 'visible',
   };
   const isExist = type => {
     return options.indexOf(type) !== -1;
