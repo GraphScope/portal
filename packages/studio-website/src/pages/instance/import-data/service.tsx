@@ -1,19 +1,33 @@
 import { GraphApiFactory } from '@graphscope/studio-server';
 
+type IProperty = {
+  key: string;
+  property_id: string;
+  property_name: string;
+  property_type: {
+    primitive_type: string;
+  };
+  columntype: number;
+};
+
+type ISchemaType = {
+  type_name: string;
+  type_id: string;
+  properties: IProperty[];
+  primary_keys: string[];
+};
 export const getSchema = async (pramas: string) => {
   const schema = await GraphApiFactory(undefined, location.origin)
     .getSchema(pramas)
     .then(res => {
       if (res.status === 200) {
-        console.log(res.data);
-
         return res.data;
       }
       return [];
     });
   const { vertex_types, edge_types } = schema;
 
-  const nodes = vertex_types.map(item => {
+  const nodes = vertex_types.map((item: ISchemaType) => {
     const { type_name, type_id, properties, primary_keys } = item;
     const types = properties.map(v => {
       const { property_id, property_type, property_name } = v;
@@ -31,11 +45,10 @@ export const getSchema = async (pramas: string) => {
       datatype: 'ODPS',
       filelocation: 'nodes',
       isBind: false,
-      // source 应该改为  dataIndex
       properties: types,
     };
   });
-  const edges = edge_types.map(item => {
+  const edges = edge_types.map((item: ISchemaType) => {
     const { type_name, type_id, properties } = item;
     const types = properties.map(v => {
       const { property_id, property_type, property_name } = v;
@@ -53,7 +66,6 @@ export const getSchema = async (pramas: string) => {
       datatype: 'ODPS',
       filelocation: 'nodes1',
       isBind: false,
-      // source 应该改为  dataIndex
       properties: types,
     };
   });
