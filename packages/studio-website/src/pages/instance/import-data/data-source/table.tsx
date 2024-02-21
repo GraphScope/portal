@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Select, Checkbox, InputNumber, Typography } from 'antd';
+import { Table, Select, Checkbox, Input, Typography } from 'antd';
 type EditableTableProps = Parameters<typeof Table>[0];
 const { Text } = Typography;
 interface DataType {
@@ -15,28 +15,16 @@ type TableListProps = {
 };
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
 
-const PROPERTY_KEY_OPTIONS = [
-  {
-    value: 'long',
-    label: 'LONG',
-  },
-  {
-    value: 'double',
-    label: 'DOUBLE',
-  },
-  {
-    value: 'str',
-    label: 'STRING',
-  },
-];
 const styles: React.CSSProperties = {
   fontSize: '12px',
   fontWeight: 400,
 };
+
 const TableList: React.FC<TableListProps> = props => {
   const { tabledata, onChange } = props;
 
   const handleChangeIndex = (value: any, name: string) => {
+    console.log(value, name);
     tabledata.forEach(item => {
       if (item.properties === name) {
         item.columntype = value;
@@ -65,15 +53,13 @@ const TableList: React.FC<TableListProps> = props => {
       key: 'type',
       width: '15%',
       render(text) {
-        return (
-          <Select style={{ width: '100%' }} defaultValue={text} disabled options={PROPERTY_KEY_OPTIONS} size="small" />
-        );
+        return <Select style={{ width: '100%' }} defaultValue={text} disabled size="small" />;
       },
     },
     {
       title: (
         <Text type="secondary" style={styles}>
-          Main_Key
+          Primary Key
         </Text>
       ),
       dataIndex: 'main_key',
@@ -86,7 +72,7 @@ const TableList: React.FC<TableListProps> = props => {
     {
       title: (
         <Text type="secondary" style={styles}>
-          ColumnType or Name
+          ColumnIndex or Name
         </Text>
       ),
       dataIndex: 'columntype',
@@ -94,12 +80,7 @@ const TableList: React.FC<TableListProps> = props => {
       editable: true,
       render(columntype, all) {
         return (
-          <InputNumber
-            min={0}
-            size="small"
-            value={columntype}
-            onChange={value => handleChangeIndex(value, all.properties)}
-          />
+          <Input size="small" value={columntype} onChange={e => handleChangeIndex(e.target.value, all.properties)} />
         );
       },
     },

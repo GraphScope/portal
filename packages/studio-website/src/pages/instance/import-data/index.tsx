@@ -5,6 +5,7 @@ import GraphView from './graph-view';
 import DataSource from './data-source/index';
 import { SOURCEDATA } from './source-data';
 import GraphTitle from './graph-title';
+import SourceTitle from './source-title';
 import Section from '@/components/section';
 import TabAction from './tab-action';
 import { getUrlParams } from './utils';
@@ -83,19 +84,11 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         },
       ]}
     >
-      <Flex justify="space-between" align="center">
-        <TabAction
-          items={[
-            { label: `Point Data Eource Binding（${bindNodeCount}/${nodes?.length}）`, value: 'node' },
-            { label: `Edge Data Eource Binding(${bindEdgeCount}/${edges?.length})`, value: 'edge' },
-          ]}
-          tabChange={tabHandleChange}
-        />
-        <GraphTitle />
-      </Flex>
       <Divider style={{ margin: '0px 0px 16px' }} />
+
       <Row gutter={24}>
         <Col span={16}>
+          <SourceTitle />
           {!isReady && <Skeleton />}
           {/* 遍历需要绑定的数据源 */}
           <div style={{ border: '1px solid #ddd', borderRadius: '8px' }}>
@@ -122,6 +115,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           </div>
         </Col>
         <Col span={8}>
+          <GraphTitle />
           <Card>
             <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
               目前绑定了{bindEdgeCount} 条边，{bindNodeCount}个点

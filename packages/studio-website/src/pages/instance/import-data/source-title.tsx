@@ -24,8 +24,8 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
   //     draft.currentType = val;
   //   });
   // };
-  // const bindNodeCount = nodes.filter(item => item.isBind).length;
-  // const bindEdgeCount = edges.filter(item => item.isBind).length;
+  const bindNodeCount = nodes.filter(item => item.isBind).length;
+  const bindEdgeCount = edges.filter(item => item.isBind).length;
 
   // const SOURCEDATAOPTIONS = [
   //   {
@@ -38,6 +38,11 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
   //   },
   // ];
   const isBind = nodes.every(item => item.isBind) && edges.every(item => item.isBind);
+  const tabHandleChange = (val: string) => {
+    updateStore(draft => {
+      draft.currentType = val;
+    });
+  };
   return (
     <>
       <Flex gap="middle" justify="space-between">
@@ -46,10 +51,15 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
           //@ts-ignore
           onChange={nodeEdgeChange}
         /> */}
-        <TabAction />
+        <TabAction
+          items={[
+            { label: `Vertexs（${bindNodeCount}/${nodes?.length}）`, value: 'node' },
+            { label: `Edges (${bindEdgeCount}/${edges?.length})`, value: 'edge' },
+          ]}
+          tabChange={tabHandleChange}
+        />
         {engineType !== 'groot' && (
           <Button type={isBind ? 'primary' : 'text'} onClick={handleImport} disabled={!isBind}>
-            {/* 导入数据 */}
             Import Data
           </Button>
         )}
