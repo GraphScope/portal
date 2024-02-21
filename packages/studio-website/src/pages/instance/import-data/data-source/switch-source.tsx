@@ -26,6 +26,7 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
       <>
         {currentType === 'ODPS' && (
           <Input
+            style={{ width: '400px' }}
             defaultValue={filelocation}
             placeholder="graphscope/modern_graph/user.csv"
             onChange={e => {

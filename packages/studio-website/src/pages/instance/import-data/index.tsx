@@ -9,6 +9,7 @@ import Section from '@/components/section';
 import TabAction from './tab-action';
 import { getUrlParams } from './utils';
 import { getSchema } from './service';
+
 interface IImportDataProps {}
 
 const { Title, Text } = Typography;
@@ -21,6 +22,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   } = store;
   useEffect(() => {
     const { graph } = getUrlParams();
+
     getSchema(graph).then(res => {
       updateStore(draft => {
         draft.isReady = true;
@@ -28,21 +30,8 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         draft.sourceList = res || {};
       });
     });
-    // getInportList().then(res => {
-    //   updateStore(draft => {
-    //     draft.isReady = true;
-    //     //@ts-ignore
-    //     draft.sourceList = res || {};
-    //   });
-    // });
   }, []);
-  // const getInportList = async () => {
-  //   return new Promise((resolve, reject) => {
-  //     setTimeout(() => {
-  //       resolve(SOURCEDATA);
-  //     }, 600);
-  //   });
-  // };
+
   const sourceData = currentType === 'node' ? nodes : edges;
 
   const bindNodeCount = nodes.filter(item => item.isBind).length;
@@ -84,6 +73,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   };
   return (
     <Section
+      title="Movie Graph"
       breadcrumb={[
         {
           title: 'Graphs',
@@ -105,15 +95,15 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       </Flex>
       <Divider style={{ margin: '0px 0px 16px' }} />
       <Row gutter={24}>
-        <Col span={15}>
+        <Col span={16}>
           {!isReady && <Skeleton />}
           {/* 遍历需要绑定的数据源 */}
           <div style={{ border: '1px solid #ddd', borderRadius: '8px' }}>
             <header style={{ background: '#FCFCFC', borderRadius: '8px' }}>
               <Space size={29}>
-                <Title level={5} type="secondary" style={{ margin: '16px 0px 16px 48px' }}>
+                <Title level={5} type="secondary" style={{ margin: '16px 32px 16px 48px' }}>
                   Labels
-                </Title>{' '}
+                </Title>
                 <Title level={5} type="secondary" style={{ margin: '16px 0px' }}>
                   Datasource
                 </Title>
@@ -131,7 +121,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
             })}
           </div>
         </Col>
-        <Col span={9}>
+        <Col span={8}>
           <Card>
             <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
               目前绑定了{bindEdgeCount} 条边，{bindNodeCount}个点

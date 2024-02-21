@@ -109,7 +109,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
             }}
             gutter={[0, 8]}
           >
-            <Col span={18}>
+            <Col span={19}>
               <TableList
                 //@ts-ignore
                 tabledata={JSON.parse(JSON.stringify(properties))}
@@ -129,7 +129,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
             <Col span={24}>
               <Flex justify="end">
                 <Space>
-                  {engineType === 'interactive' ? (
+                  {engineType === 'groot' ? (
                     <>
                       <ImportPeriodic />
                       <ImportNow label={label} />
