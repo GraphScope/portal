@@ -31,3 +31,14 @@ export function debounce<T extends (...args: any[]) => any>(func: T, delay: numb
     }, delay);
   };
 }
+/** 导出数据*/
+export const download = (queryData: string, states: BlobPart) => {
+  const eleLink = document.createElement('a');
+  eleLink.download = queryData;
+  eleLink.style.display = 'none';
+  const blob = new Blob([states]);
+  eleLink.href = URL.createObjectURL(blob);
+  document.body.appendChild(eleLink);
+  eleLink.click();
+  document.body.removeChild(eleLink);
+};
