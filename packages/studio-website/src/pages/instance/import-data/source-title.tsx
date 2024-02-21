@@ -4,12 +4,13 @@ import { useContext } from './useContext';
 import { getUrlParams } from './utils';
 import TabAction from './tab-action';
 type ISourceTitleProps = {};
-// const { useToken } = theme;
+
 const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
   const { store, updateStore } = useContext();
-  // const { token } = useToken();
+
   const {
-    sourceList: { nodes, edges },
+    nodes,
+    edges,
     // currentType,
   } = store;
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */

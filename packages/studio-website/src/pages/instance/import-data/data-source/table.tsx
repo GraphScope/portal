@@ -4,7 +4,7 @@ type EditableTableProps = Parameters<typeof Table>[0];
 const { Text } = Typography;
 interface DataType {
   key: React.Key;
-  properties: string;
+  name: string;
   type: string;
   primaryKey: boolean;
   columnIndex?: number;
@@ -22,11 +22,12 @@ const styles: React.CSSProperties = {
 
 const TableList: React.FC<TableListProps> = props => {
   const { tabledata, onChange } = props;
+  console.log('tabledata', tabledata);
 
   const handleChangeIndex = (value: any, name: string) => {
     console.log(value, name);
     tabledata.forEach(item => {
-      if (item.properties === name) {
+      if (item.name === name) {
         item.columnIndex = value;
       }
     });
@@ -39,8 +40,8 @@ const TableList: React.FC<TableListProps> = props => {
           Properties
         </Text>
       ),
-      dataIndex: 'properties',
-      key: 'properties',
+      dataIndex: 'name',
+      key: 'name',
       width: '25%',
     },
     {
@@ -62,8 +63,8 @@ const TableList: React.FC<TableListProps> = props => {
           Primary Key
         </Text>
       ),
-      dataIndex: 'main_key',
-      key: 'main_key',
+      dataIndex: 'primaryKey',
+      key: 'primaryKey',
       width: '25%',
       render(text) {
         return <Checkbox defaultChecked={text} disabled />;
@@ -79,9 +80,7 @@ const TableList: React.FC<TableListProps> = props => {
       width: '35%',
       editable: true,
       render(columnIndex, all) {
-        return (
-          <Input size="small" value={columnIndex} onChange={e => handleChangeIndex(e.target.value, all.properties)} />
-        );
+        return <Input size="small" value={columnIndex} onChange={e => handleChangeIndex(e.target.value, all.name)} />;
       },
     },
   ];

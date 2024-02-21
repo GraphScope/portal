@@ -7,7 +7,7 @@ import { SOURCEDATA } from './source-data';
 import GraphTitle from './graph-title';
 import SourceTitle from './source-title';
 import Section from '@/components/section';
-import TabAction from './tab-action';
+
 import { getUrlParams } from './utils';
 import { getSchema } from './service';
 
@@ -16,11 +16,7 @@ interface IImportDataProps {}
 const { Title, Text } = Typography;
 const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   const { store, updateStore } = useContext();
-  const {
-    currentType,
-    sourceList: { nodes, edges },
-    isReady,
-  } = store;
+  const { currentType, nodes, edges, isReady } = store;
   useEffect(() => {
     const { graph } = getUrlParams();
 
@@ -28,12 +24,11 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       updateStore(draft => {
         draft.isReady = true;
         //@ts-ignore
-        draft.sourceList = res || {};
+        draft.nodes = res.nodes || [];
+        draft.edges = res.edges || [];
       });
     });
   }, []);
-
-  const sourceData = currentType === 'node' ? nodes : edges;
 
   const bindNodeCount = nodes.filter(item => item.isBind).length;
   const bindEdgeCount = edges.filter(item => item.isBind).length;
@@ -43,7 +38,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
     const { label, isBind, datatype, location, properties } = val;
     updateStore(draft => {
       if (currentType === 'node') {
-        draft.sourceList.nodes.forEach(item => {
+        draft.nodes.forEach(item => {
           if (item.label === label) {
             item.label = label;
             item.isBind = isBind;
@@ -54,7 +49,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         });
       }
       if (currentType === 'edge') {
-        draft.sourceList.edges.forEach(item => {
+        draft.edges.forEach(item => {
           if (item.label === label) {
             item.label = label;
             item.isBind = isBind;
@@ -66,12 +61,8 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       }
     });
   };
+  console.log('nodes,', nodes, edges);
 
-  const tabHandleChange = (val: string) => {
-    updateStore(draft => {
-      draft.currentType = val;
-    });
-  };
   return (
     <Section
       title="Movie Graph"
@@ -102,16 +93,28 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
                 </Title>
               </Space>
             </header>
-            {sourceData.map(item => {
-              return (
-                <DataSource
-                  key={item.key}
-                  //@ts-ignore
-                  data={item}
-                  handleChange={handleChange}
-                />
-              );
-            })}
+            {currentType === 'node' &&
+              nodes.map(item => {
+                return (
+                  <DataSource
+                    key={item.key}
+                    //@ts-ignore
+                    data={item}
+                    handleChange={handleChange}
+                  />
+                );
+              })}
+            {currentType === 'edge' &&
+              edges.map(item => {
+                return (
+                  <DataSource
+                    key={item.key}
+                    //@ts-ignore
+                    data={item}
+                    handleChange={handleChange}
+                  />
+                );
+              })}
           </div>
         </Col>
         <Col span={8}>

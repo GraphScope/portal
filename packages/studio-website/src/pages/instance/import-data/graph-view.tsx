@@ -17,7 +17,7 @@ const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
   const nodes = nodeList.map((item: PropertyType) => {
     const { key, label, isBind } = item;
     return {
-      id: label,
+      id: key,
       style: {
         label: {
           value: `${label} ${isBind ? '✅' : '☑️'}`,
@@ -69,6 +69,7 @@ const GraphInsight: FunctionComponent<Props> = props => {
   const { token } = useToken();
   //@ts-ignore
   const graphData = getVertexEdges(viewdata.nodeLists, viewdata.edgeLists, token);
+  console.log('graphData', graphData, viewdata);
 
   return (
     <>
