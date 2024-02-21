@@ -7,7 +7,7 @@ interface DataType {
   properties: string;
   type: string;
   primaryKey: boolean;
-  columntype?: number;
+  columnIndex?: number;
 }
 type TableListProps = {
   tabledata: DataType[];
@@ -27,7 +27,7 @@ const TableList: React.FC<TableListProps> = props => {
     console.log(value, name);
     tabledata.forEach(item => {
       if (item.properties === name) {
-        item.columntype = value;
+        item.columnIndex = value;
       }
     });
     onChange && onChange(tabledata);
@@ -75,12 +75,12 @@ const TableList: React.FC<TableListProps> = props => {
           ColumnIndex or Name
         </Text>
       ),
-      dataIndex: 'columntype',
+      dataIndex: 'columnIndex',
       width: '35%',
       editable: true,
-      render(columntype, all) {
+      render(columnIndex, all) {
         return (
-          <Input size="small" value={columntype} onChange={e => handleChangeIndex(e.target.value, all.properties)} />
+          <Input size="small" value={columnIndex} onChange={e => handleChangeIndex(e.target.value, all.properties)} />
         );
       },
     },
