@@ -18,6 +18,10 @@ export const searchParamOf = (key: string) => {
   return searchParams.get(key);
 };
 
+export const getUrlParams = () => {
+  return Object.fromEntries(new URLSearchParams(location.href.split('?')[1]).entries());
+};
+
 type DebouncedFunction<T extends (...args: any[]) => any> = (...args: Parameters<T>) => void;
 
 export function debounce<T extends (...args: any[]) => any>(func: T, delay: number): DebouncedFunction<T> {

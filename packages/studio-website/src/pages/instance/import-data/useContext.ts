@@ -16,7 +16,7 @@ export type IStore<T> = T & {
   graphName: string;
   currentType: string;
   nodes: BindingNode[];
-  edges: TransformedEdge[];
+  edges: BindingEdge[];
   isReady: boolean;
 };
 

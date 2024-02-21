@@ -1,22 +1,23 @@
 import * as React from 'react';
 import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import { Button, Flex, Row, Col, Space, Typography, theme, Tooltip } from 'antd';
-import { PropertyType } from '../useContext';
+import { BindingEdge, BindingNode } from '../useContext';
 import SwitchSource from './switch-source';
 import ImportPeriodic from './import-periodic';
 import ImportNow from './import-now';
 import TableList from './table';
-import { getUrlParams } from '../utils';
+import { getUrlParams } from '@/components/utils';
+
 const { useToken } = theme;
 interface IImportDataProps {
-  data: PropertyType;
+  data: BindingEdge | BindingNode;
   handleChange(val: any): void;
 }
 const { Text } = Typography;
 
 const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const {
-    data: { label, isBind, filelocation, datatype, properties },
+    data: { label, isBind, datatype, properties, filelocation: propsFileLocation },
     handleChange,
   } = props;
   const { token } = useToken();
@@ -30,9 +31,11 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     /** table value */
     dataSources: [],
     /** 数据源输入值 */
-    location: '', // 应该是 location
+    filelocation: propsFileLocation, // 应该是 filelocation
   });
-  const { isEidtProperty, currentType, dataSources, location } = state;
+
+  const { isEidtProperty, currentType, dataSources, filelocation } = state;
+
   const saveBindData = () => {
     updateState(preState => {
       return {
@@ -41,7 +44,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       };
     });
     /** 改变本条数据 */
-    // handleChange && handleChange({ label, location, properties: dataSources, datatype: currentType, isBind: true });
+    // handleChange && handleChange({ label, filelocation, properties: dataSources, datatype: currentType, isBind: true });
   };
   /** 切换图标 */
   const ToggleIcon = isEidtProperty ? (
@@ -122,7 +125,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                     };
                   });
                   handleChange &&
-                    handleChange({ label, location, properties: val, datatype: currentType, isBind: true });
+                    handleChange({ label, filelocation, properties: val, datatype: currentType, isBind: true });
                 }}
               />
             </Col>

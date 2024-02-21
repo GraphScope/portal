@@ -1,8 +1,8 @@
 import { GraphApiFactory } from '@graphscope/studio-server';
-import type { BindingNode } from './useContext';
+import type { BindingEdge, BindingNode } from './useContext';
 import { transformSchemaToOptions } from '@/components/utils/schema';
 
-export const getSchema = async (graph_name: string) => {
+export const getSchema = async (graph_name: string): Promise<{ nodes: BindingNode[]; edges: BindingEdge[] }> => {
   const schema = await GraphApiFactory(undefined, location.origin)
     .getSchema(graph_name)
     .then(res => {
@@ -11,7 +11,7 @@ export const getSchema = async (graph_name: string) => {
       }
     });
   if (!schema) {
-    return {};
+    return { nodes: [], edges: [] };
   }
 
   const { vertex_types, edge_types } = schema;

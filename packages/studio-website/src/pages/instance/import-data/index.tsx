@@ -18,14 +18,12 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   const { store, updateStore } = useContext();
   const { currentType, nodes, edges, isReady } = store;
   useEffect(() => {
-    const { graph } = getUrlParams();
-
-    getSchema(graph).then(res => {
+    const { graph_name } = getUrlParams();
+    getSchema(graph_name).then(res => {
       updateStore(draft => {
         draft.isReady = true;
-        //@ts-ignore
-        draft.nodes = res.nodes || [];
-        draft.edges = res.edges || [];
+        draft.nodes = res.nodes;
+        draft.edges = res.edges;
       });
     });
   }, []);
@@ -35,30 +33,18 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
 
   /** 更新入口state数据 */
   const handleChange = (val: any) => {
-    const { label, isBind, datatype, location, properties } = val;
+    const { label, isBind, datatype, filelocation, properties } = val;
     updateStore(draft => {
-      if (currentType === 'node') {
-        draft.nodes.forEach(item => {
-          if (item.label === label) {
-            item.label = label;
-            item.isBind = isBind;
-            item.datatype = datatype;
-            item.filelocation = location;
-            item.properties = properties;
-          }
-        });
-      }
-      if (currentType === 'edge') {
-        draft.edges.forEach(item => {
-          if (item.label === label) {
-            item.label = label;
-            item.isBind = isBind;
-            item.datatype = datatype;
-            item.filelocation = location;
-            item.properties = properties;
-          }
-        });
-      }
+      const KEY = `${currentType}s` as 'nodes' | 'edges';
+      draft[KEY].forEach(item => {
+        if (item.label === label) {
+          item.label = label;
+          item.isBind = isBind;
+          item.datatype = datatype;
+          item.filelocation = filelocation;
+          item.properties = properties;
+        }
+      });
     });
   };
   console.log('nodes,', nodes, edges);

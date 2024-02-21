@@ -2,19 +2,19 @@ import { FunctionComponent, ReactNode } from 'react';
 import Graphin, { Utils } from '@antv/graphin';
 import '@antv/graphin-icons/dist/index.css';
 import { theme } from 'antd';
-import { PropertyType } from './useContext';
+import { BindingEdge, BindingNode } from './useContext';
 const { useToken } = theme;
 interface Props {
   children?: ReactNode;
   viewdata: {
-    nodeLists: PropertyType[];
-    edgeLists: PropertyType[];
+    nodeLists: BindingNode[];
+    edgeLists: BindingEdge[];
   };
 }
 
 /** graphin 数据处理 */
 const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
-  const nodes = nodeList.map((item: PropertyType) => {
+  const nodes = nodeList.map((item: BindingNode) => {
     const { key, label, isBind } = item;
     return {
       id: key,
@@ -34,7 +34,7 @@ const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
     };
   });
 
-  const edges = edgeList.map((item: PropertyType) => {
+  const edges = edgeList.map((item: BindingEdge) => {
     const { key, label, source, target, isBind } = item;
     return {
       id: key,
@@ -74,6 +74,7 @@ const GraphInsight: FunctionComponent<Props> = props => {
   return (
     <>
       {children}
+      {/** @ts-ignore */}
       <Graphin data={graphData} layout={{ type: 'force2' }} fitView fitCenter style={{ paddingBottom: '3px' }} />
     </>
   );
