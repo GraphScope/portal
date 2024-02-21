@@ -11,9 +11,7 @@ export interface Properties {
   /** 是否禁用：UI */
   disable?: boolean;
   /** 属性名映射的数据下标 */
-  columnIndex?: number;
-  /** 属性名映射的数据名称 */
-  columnName?: string;
+  token?: number | string;
 }
 
 export interface TransformedNode {
@@ -116,8 +114,7 @@ export function transformSchemaToOptions(originalSchema: DeepRequired<Schema>, d
           primaryKey: name === primary,
           disable,
           id: uuidv4(),
-          columnIndex: pIdx,
-          columnName: '',
+          token: pIdx,
         };
       }),
     };
@@ -137,8 +134,7 @@ export function transformSchemaToOptions(originalSchema: DeepRequired<Schema>, d
           type,
           disable,
           id: uuidv4(),
-          columnIndex: pIdx,
-          columnName: '',
+          token: pIdx,
         };
       }),
     };

@@ -31,6 +31,7 @@ export const initialStore: IStore<{}> = {
   edges: [],
   isReady: false,
 };
+export const initialDataMap: Record<string, BindingNode & BindingEdge> = {};
 
 type ContextType<T> = {
   store: Snapshot<IStore<T>>;
@@ -45,5 +46,32 @@ export function useContext<T>(): ContextType<T> {
     updateStore: (fn: (draft: IStore<T>) => void) => {
       return fn(proxyStore);
     },
+  };
+}
+
+/** 节点和边的配置，每次改动会带来大量重绘，因此单独把数据拿出来，做成 data map */
+const proxyDataMap = proxy(initialDataMap);
+
+export function useDataMap() {
+  return useSnapshot(proxyDataMap);
+}
+export function updateDataMap(fn: (draft: Record<string, BindingNode & BindingEdge>) => void) {
+  return fn(proxyDataMap);
+}
+
+export function transformDataMap(dataMap: BindingEdge) {
+  let nodes: any[] = [];
+  let edges: any[] = [];
+  Object.values(dataMap).forEach((item: BindingEdge & BindingNode) => {
+    const { source, target } = item;
+    if (source && target) {
+      edges.push(item);
+    } else {
+      nodes.push(item);
+    }
+  });
+  return {
+    nodes,
+    edges,
   };
 }

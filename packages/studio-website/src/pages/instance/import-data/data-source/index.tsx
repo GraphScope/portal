@@ -1,75 +1,74 @@
 import * as React from 'react';
 import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import { Button, Flex, Row, Col, Space, Typography, theme, Tooltip } from 'antd';
-import { BindingEdge, BindingNode } from '../useContext';
+import { BindingEdge, BindingNode, useDataMap, updateDataMap } from '../useContext';
 import SwitchSource from './switch-source';
 import ImportPeriodic from './import-periodic';
 import ImportNow from './import-now';
 import TableList from './table';
 import { getUrlParams } from '@/components/utils';
-
+import { useContext } from '../useContext';
 const { useToken } = theme;
 interface IImportDataProps {
-  data: BindingEdge | BindingNode;
-  handleChange(val: any): void;
+  id: string;
 }
 const { Text } = Typography;
 
+const ToggleIcon = ({ isEidtProperty, handleClick }) => {
+  if (isEidtProperty) {
+    return <CaretDownOutlined onClick={handleClick} />;
+  }
+  return <CaretUpOutlined onClick={handleClick} />;
+};
 const DataSource: React.FunctionComponent<IImportDataProps> = props => {
-  const {
-    data: { label, isBind, datatype, properties, filelocation: propsFileLocation },
-    handleChange,
-  } = props;
+  const { id } = props;
+  const dataMap = useDataMap();
+  console.log('dataMap', dataMap, id);
+  const data = dataMap[id] as BindingNode & { isEidtProperty: boolean };
+  const { isBind, filelocation, isEidtProperty, datatype, label, properties } = data;
   const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const { engineType, graph } = getUrlParams();
-  const [state, updateState] = React.useState({
-    /** 判断是否绑定 */
-    isEidtProperty: isBind || false,
-    /** 数据源选择 Files or ODPS */
-    currentType: datatype,
-    /** table value */
-    dataSources: [],
-    /** 数据源输入值 */
-    filelocation: propsFileLocation, // 应该是 filelocation
-  });
-
-  const { isEidtProperty, currentType, dataSources, filelocation } = state;
 
   const saveBindData = () => {
-    updateState(preState => {
-      return {
-        ...preState,
-        isEidtProperty: false,
-      };
+    updateDataMap(draft => {
+      draft[id].isEidtProperty = false;
     });
-    /** 改变本条数据 */
-    // handleChange && handleChange({ label, filelocation, properties: dataSources, datatype: currentType, isBind: true });
   };
-  /** 切换图标 */
-  const ToggleIcon = isEidtProperty ? (
-    <CaretDownOutlined
-      onClick={() =>
-        updateState(preState => {
-          return {
-            ...preState,
-            isEidtProperty: !isEidtProperty,
-          };
-        })
-      }
-    />
-  ) : (
-    <CaretUpOutlined
-      onClick={() =>
-        updateState(preState => {
-          return {
-            ...preState,
-            isEidtProperty: !isEidtProperty,
-          };
-        })
-      }
-    />
-  );
+  /** 折叠面板 */
+  const handleToggle = () => {
+    updateDataMap(draft => {
+      draft[id].isEidtProperty = !draft[id].isEidtProperty;
+    });
+  };
+  /** 改变数据源类型 */
+  const onChangeType = (type: string) => {
+    updateDataMap(draft => {
+      draft[id].datatype = type;
+    });
+  };
+  /** 改变数据源地址 */
+  const onChangeValue = (e: any) => {
+    console.log('e', e.target.value);
+    const { value } = e.target;
+
+    updateDataMap(draft => {
+      draft[id].filelocation = value;
+      draft[id].isBind = value !== '';
+    });
+  };
+  /** 聚焦到数据源的时候 */
+  const onFocus = () => {
+    updateDataMap(draft => {
+      draft[id].isEidtProperty = true;
+    });
+  };
+  /** 改变表格映射字段 */
+  const onChangeTable = (values: any) => {
+    updateDataMap(draft => {
+      draft[id].properties = values;
+    });
+  };
 
   return (
     <>
@@ -84,11 +83,20 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
         >
           <Flex justify="space-between" align="center">
             <Space>
-              <Button type="text" icon={ToggleIcon}></Button>
+              <Button
+                type="text"
+                icon={<ToggleIcon isEidtProperty={isEidtProperty} handleClick={handleToggle} />}
+              ></Button>
               <Flex justify="start" vertical gap={8}>
                 <Space>
                   <Text style={{ display: 'inline-block', width: '100px' }}>{label}</Text>
-                  <SwitchSource filelocation={filelocation} currentType={currentType} updateState={updateState} />
+                  <SwitchSource
+                    filelocation={filelocation}
+                    currentType={datatype}
+                    onChangeType={onChangeType}
+                    onChangeValue={onChangeValue}
+                    onFocus={onFocus}
+                  />
                 </Space>
               </Flex>
             </Space>
@@ -115,18 +123,17 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
             <Col span={19}>
               <TableList
                 //@ts-ignore
-                tabledata={JSON.parse(JSON.stringify(properties))}
-                onChange={val => {
-                  //@ts-ignore
-                  updateState(preState => {
-                    return {
-                      ...preState,
-                      dataSources: val,
-                    };
-                  });
-                  handleChange &&
-                    handleChange({ label, filelocation, properties: val, datatype: currentType, isBind: true });
-                }}
+                tabledata={JSON.parse(
+                  JSON.stringify(
+                    properties.map(item => {
+                      return {
+                        ...item,
+                        key: item.id,
+                      };
+                    }),
+                  ),
+                )}
+                onChange={onChangeTable}
               />
             </Col>
             <Col span={24}>

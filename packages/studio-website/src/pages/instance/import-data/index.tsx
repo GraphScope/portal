@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { Row, Col, Card, Typography, Skeleton, Space, Flex, Divider } from 'antd';
-import { useContext } from './useContext';
+import { useContext, updateDataMap } from './useContext';
 import GraphView from './graph-view';
 import DataSource from './data-source/index';
 import { SOURCEDATA } from './source-data';
 import GraphTitle from './graph-title';
 import SourceTitle from './source-title';
 import Section from '@/components/section';
+import { cloneDeep } from 'lodash';
 
 import { getUrlParams } from './utils';
 import { getSchema } from './service';
@@ -16,6 +17,7 @@ interface IImportDataProps {}
 const { Title, Text } = Typography;
 const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   const { store, updateStore } = useContext();
+
   const { currentType, nodes, edges, isReady } = store;
   useEffect(() => {
     const { graph_name } = getUrlParams();
@@ -25,29 +27,21 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         draft.nodes = res.nodes;
         draft.edges = res.edges;
       });
+      updateDataMap(draft => {
+        res.nodes.map(item => {
+          draft[item.key as string] = cloneDeep(item);
+        });
+        res.edges.map(item => {
+          draft[item.key as string] = cloneDeep(item);
+        });
+      });
     });
   }, []);
 
   const bindNodeCount = nodes.filter(item => item.isBind).length;
   const bindEdgeCount = edges.filter(item => item.isBind).length;
 
-  /** 更新入口state数据 */
-  const handleChange = (val: any) => {
-    const { label, isBind, datatype, filelocation, properties } = val;
-    updateStore(draft => {
-      const KEY = `${currentType}s` as 'nodes' | 'edges';
-      draft[KEY].forEach(item => {
-        if (item.label === label) {
-          item.label = label;
-          item.isBind = isBind;
-          item.datatype = datatype;
-          item.filelocation = filelocation;
-          item.properties = properties;
-        }
-      });
-    });
-  };
-  console.log('nodes,', nodes, edges);
+  console.log('store....', store);
 
   return (
     <Section
@@ -81,25 +75,11 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
             </header>
             {currentType === 'node' &&
               nodes.map(item => {
-                return (
-                  <DataSource
-                    key={item.key}
-                    //@ts-ignore
-                    data={item}
-                    handleChange={handleChange}
-                  />
-                );
+                return <DataSource id={item.key as string} />;
               })}
             {currentType === 'edge' &&
               edges.map(item => {
-                return (
-                  <DataSource
-                    key={item.key}
-                    //@ts-ignore
-                    data={item}
-                    handleChange={handleChange}
-                  />
-                );
+                return <DataSource id={item.key as string} />;
               })}
           </div>
         </Col>

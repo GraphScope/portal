@@ -2,63 +2,43 @@ import React from 'react';
 import { Flex, Select, Input, Space } from 'antd';
 import UploadFiles from './upload-file';
 interface ISwitchSourceProps {
-  updateState: any;
   filelocation?: string;
   currentType?: string;
+  onChangeType: (e: any) => void;
+  onChangeValue: (e: any) => void;
+  onFocus: (e: any) => void;
 }
 const SOURCEOPTIONS = [
-  { label: 'Files://', value: 'Files' },
-  { label: 'ODPS://', value: 'ODPS' },
+  { label: 'local file', value: 'file' },
+  { label: 'location', value: 'location' },
+  { label: 'odps', value: 'odps', disabled: true },
 ];
 const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
-  const { filelocation, updateState, currentType } = props;
-  const selsctSource = (val: string) => {
-    updateState((preState: any) => {
-      return {
-        ...preState,
-        currentType: val,
-      };
-    });
-  };
+  const { filelocation, currentType, onChangeType, onChangeValue, onFocus } = props;
+
   return (
     <Space.Compact size="small">
-      <Select defaultValue={currentType} options={SOURCEOPTIONS} onChange={selsctSource} />
+      <Select defaultValue={currentType} options={SOURCEOPTIONS} onChange={onChangeType} style={{ width: '94px' }} />
       <>
-        {currentType === 'ODPS' && (
+        {currentType === 'odps' && (
           <Input
             style={{ width: '400px' }}
             defaultValue={filelocation}
-            placeholder="graphscope/modern_graph/user.csv"
-            onChange={e => {
-              updateState((preState: any) => {
-                return {
-                  ...preState,
-                  location: `://${e.target.value}`,
-                };
-              });
-            }}
-            onFocus={() => {
-              updateState((preState: any) => {
-                return {
-                  ...preState,
-                  isEidtProperty: true,
-                };
-              });
-            }}
+            placeholder="/graphscope/modern_graph/user.csv"
+            onChange={onChangeValue}
+            onFocus={onFocus}
           />
         )}
-        {currentType === 'Files' && (
-          <UploadFiles
-            onChange={val => {
-              updateState((preState: any) => {
-                return {
-                  ...preState,
-                  isEidtProperty: val,
-                };
-              });
-            }}
+        {currentType === 'location' && (
+          <Input
+            style={{ width: '400px' }}
+            defaultValue={filelocation}
+            placeholder="/graphscope/modern_graph/user.csv"
+            onChange={onChangeValue}
+            onFocus={onFocus}
           />
         )}
+        {currentType === 'file' && <UploadFiles onChange={onChangeValue} />}
       </>
     </Space.Compact>
   );

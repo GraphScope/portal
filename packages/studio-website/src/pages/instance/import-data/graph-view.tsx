@@ -3,6 +3,7 @@ import Graphin, { Utils } from '@antv/graphin';
 import '@antv/graphin-icons/dist/index.css';
 import { theme } from 'antd';
 import { BindingEdge, BindingNode } from './useContext';
+import { useDataMap, transformDataMap } from './useContext';
 const { useToken } = theme;
 interface Props {
   children?: ReactNode;
@@ -13,8 +14,8 @@ interface Props {
 }
 
 /** graphin 数据处理 */
-const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
-  const nodes = nodeList.map((item: BindingNode) => {
+const getVertexEdges = (source: any, token: any) => {
+  const nodes = source.nodes.map((item: BindingNode) => {
     const { key, label, isBind } = item;
     return {
       id: key,
@@ -34,7 +35,7 @@ const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
     };
   });
 
-  const edges = edgeList.map((item: BindingEdge) => {
+  const edges = source.edges.map((item: BindingEdge) => {
     const { key, label, source, target, isBind } = item;
     return {
       id: key,
@@ -68,8 +69,9 @@ const GraphInsight: FunctionComponent<Props> = props => {
   const { children, viewdata } = props;
   const { token } = useToken();
   //@ts-ignore
-  const graphData = getVertexEdges(viewdata.nodeLists, viewdata.edgeLists, token);
-  console.log('graphData', graphData, viewdata);
+  const source = transformDataMap(useDataMap());
+  //@ts-ignore
+  const graphData = getVertexEdges(source, token);
 
   return (
     <>
