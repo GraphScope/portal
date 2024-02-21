@@ -10,7 +10,7 @@ interface IExportConfigProps {}
 const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
   const { store, updateStore } = useContext();
   const { edgeList, nodeList } = store;
-  console.log('edgeList & nodeList', nodeList, edgeList);
+
   const handleUpload = async (file: any) => {
     try {
       const yamlContent = (await readFile(file)) as string;
