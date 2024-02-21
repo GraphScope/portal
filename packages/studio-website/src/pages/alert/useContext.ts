@@ -9,11 +9,14 @@ export type IalertInfo = {
 };
 export type IAlertRule = {
   key: string;
-  info: string;
   name: number;
   severity: string;
-  status: string[];
+  metric_type: string;
+  conditions_desription: string;
+  frequency: number;
+  enable: boolean;
 };
+
 export type IAlertRecep = {
   key: string;
   webhookUrl: string;
@@ -32,7 +35,7 @@ export type IStore<T> = T & {
   /** 警告信息类型选项  */
   metricTypeOptions: { value: string; text: string }[];
   /** 警告规则 table */
-  alertRule: IAlertRule[];
+  alertRule: [];
   /** 警告接收 table */
   alertRecep: IAlertRecep[];
   isEditRecep: boolean;

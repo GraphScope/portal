@@ -1,4 +1,5 @@
 import { AlertApiFactory, UpdateAlertMessagesRequest } from '@graphscope/studio-server';
+import { message } from 'antd';
 
 export type IAlertMessages = {
   type?: string;
@@ -42,19 +43,31 @@ export const listAlertRules = async () => {
       return [];
     });
 
-  const info = rules.map(item => {
-    const { name, severity, enable, conditions_desription, frequency, metric_type } = item;
-    return {
-      name,
-      severity,
-      type: metric_type,
-      status: enable,
-      condition: conditions_desription,
-      frequency,
-    };
-  });
+  return rules;
+};
+export const deleteAlertRuleByName = async (params: string) => {
+  const rules = await AlertApiFactory(undefined, location.origin)
+    .deleteAlertRuleByName(params)
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
+      return [];
+    });
 
-  return info;
+  return rules;
+};
+export const updateAlertRuleByName = async (params: string) => {
+  const rules = await AlertApiFactory(undefined, location.origin)
+    .updateAlertRuleByName(params)
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
+      return [];
+    });
+
+  return rules;
 };
 export const listReceivers = async () => {
   const receivers = await AlertApiFactory(undefined, location.origin)
