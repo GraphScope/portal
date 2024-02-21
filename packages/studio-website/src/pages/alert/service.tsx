@@ -1,26 +1,36 @@
-import { AlertApiFactory } from '@graphscope/studio-server';
+import { AlertApiFactory, UpdateAlertMessagesRequest } from '@graphscope/studio-server';
 
-export const listAlertMessages = async () => {
+export type IAlertMessages = {
+  type?: string;
+  status?: 'unsolved' | 'solved' | 'dealing';
+  severity?: 'warning' | 'emergency';
+  startTime?: string;
+  endTime?: string;
+};
+export const listAlertMessages = async (params: IAlertMessages) => {
   const message = await AlertApiFactory(undefined, location.origin)
-    .listAlertMessages()
-    .then(res => {
+    .listAlertMessages(params)
+    .then((res: { status: number; data: any }) => {
       if (res.status === 200) {
         return res.data;
       }
       return [];
     });
 
-  const info = message.map(item => {
-    const { name } = item;
-    return {
-      info: '',
-      name: '',
-      severity: '',
-      status: '',
-    };
-  });
+  return message;
+};
 
-  return info;
+export const updateAlertMessages = async (params: UpdateAlertMessagesRequest) => {
+  const message = await AlertApiFactory(undefined, location.origin)
+    .updateAlertMessages(params)
+    .then((res: { status: number; data: any }) => {
+      if (res.status === 200) {
+        return res.data;
+      }
+      return [];
+    });
+
+  return message;
 };
 export const listAlertRules = async () => {
   const rules = await AlertApiFactory(undefined, location.origin)

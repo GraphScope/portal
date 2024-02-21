@@ -3,7 +3,7 @@ import Section from '@/components/section';
 import AlertInfo from './alert-info';
 import AlertRule from './alert-rules';
 import AlertRecep from './alert-recep';
-import CreateRecep from './alert-rules/create-alert';
+import CreateRecep from './alert-recep/create-alert';
 import { useContext } from './useContext';
 import { FormattedMessage } from 'react-intl';
 interface AlertModuleProps {}
@@ -19,12 +19,12 @@ const AlertModule: React.FunctionComponent<AlertModuleProps> = props => {
     },
     {
       key: 'rule',
-      children: !isEditRecep ? <AlertRule /> : <CreateRecep />,
+      children: <AlertRule />,
       label: <FormattedMessage id="Alert Rules" />,
     },
     {
       key: 'recep',
-      children: <AlertRecep />,
+      children: !isEditRecep ? <AlertRecep /> : <CreateRecep />,
       label: <FormattedMessage id="Alert Recep" />,
     },
     {

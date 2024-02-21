@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { Switch, Table, Tag, Button } from 'antd';
 import type { TableProps } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { useContext, IAlertRule } from '../useContext';
-import { listAlertRules } from '../service';
+import { useContext, IAlertRule } from './useContext';
+import { listAlertRules } from './service';
 
 type IAlertRuleProps = {};
 const columns: TableProps<IAlertRule>['columns'] = [
@@ -64,22 +64,7 @@ const AlertRule: React.FC<IAlertRuleProps> = () => {
       });
     });
   }, []);
-  /**
-   * 告警接收内容区组件切换
-   */
-  const handleChange = () => {
-    updateStore(draft => {
-      draft.isEditRecep = true;
-    });
-  };
-  return (
-    <>
-      <Button style={{ position: 'absolute', top: '-55px', right: '0px' }} type="primary" onClick={handleChange}>
-        <FormattedMessage id="Create Alert Rules" />
-      </Button>
-      <Table columns={columns} dataSource={alertRule} size="middle" />
-    </>
-  );
+  return <Table columns={columns} dataSource={alertRule} size="middle" />;
 };
 
 export default AlertRule;

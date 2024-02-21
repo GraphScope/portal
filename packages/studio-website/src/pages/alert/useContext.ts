@@ -27,12 +27,18 @@ export type IStore<T> = T & {
   currentType: 'info' | 'rule' | 'recep' | 'status';
   /** 警告信息 table */
   alertInfo: IalertInfo[];
+  /** 警告信息严重性选项 */
+  severityTypeOptions: { value: string; text: string }[];
+  /** 警告信息类型选项  */
+  metricTypeOptions: { value: string; text: string }[];
   /** 警告规则 table */
   alertRule: IAlertRule[];
   /** 警告接收 table */
   alertRecep: IAlertRecep[];
   isEditRecep: boolean;
   selectedRowKeys: string[];
+  defaultFilteredValue: string;
+  isReady: boolean;
 };
 
 export const initialStore: IStore<{}> = {
@@ -43,6 +49,10 @@ export const initialStore: IStore<{}> = {
   alertRecep: [],
   isEditRecep: false,
   selectedRowKeys: [],
+  severityTypeOptions: [],
+  metricTypeOptions: [],
+  defaultFilteredValue: 'All',
+  isReady: false,
 };
 
 type ContextType<T> = {

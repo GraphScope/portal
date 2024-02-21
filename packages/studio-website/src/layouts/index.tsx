@@ -35,7 +35,8 @@ export default function Layout() {
             },
             Table: {
               headerBg: '#fff',
-              headerSplitColor: '#fff',
+              // headerSplitColor: '#fff',
+              headerColor: '#8D8D8D',
             },
           },
           token: {

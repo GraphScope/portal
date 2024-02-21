@@ -75,4 +75,6 @@ export default {
   'WebHook URL': 'WebHook URL',
   'Create Alert Rules': '创建告警规则',
   Submit: '提交',
+  'Trigger Time': '触发时间',
+  Metric: '类型',
 };

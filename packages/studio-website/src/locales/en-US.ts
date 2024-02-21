@@ -76,4 +76,6 @@ export default {
   'WebHook URL': 'WebHook URL',
   'Create Alert Rules': 'Create Alert Rules',
   Submit: 'Submit',
+  'Trigger Time': 'Trigger Time',
+  Metric: 'Metric',
 };
