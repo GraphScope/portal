@@ -54,7 +54,7 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
     <Flex justify="flex-start" align="center">
       {!filelocation && (
         <Upload showUploadList={false} customRequest={customRequest}>
-          <Button icon={<UploadOutlined />}>Please upload the local file to the server side</Button>
+          <Button icon={<UploadOutlined />}>please upload the local file to the server side</Button>
         </Upload>
       )}
       {isLoading && <LoadingOutlined />}
