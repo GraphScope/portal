@@ -300,6 +300,18 @@ export interface DeploymentInfo {
      * @memberof DeploymentInfo
      */
     'version'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeploymentInfo
+     */
+    'solution'?: DeploymentInfoSolutionEnum;
+    /**
+     * 
+     * @type {{ [key: string]: DeploymentInfoGraphsInfoValue; }}
+     * @memberof DeploymentInfo
+     */
+    'graphs_info'?: { [key: string]: DeploymentInfoGraphsInfoValue; };
 }
 
 export const DeploymentInfoClusterTypeEnum = {
@@ -308,7 +320,44 @@ export const DeploymentInfoClusterTypeEnum = {
 } as const;
 
 export type DeploymentInfoClusterTypeEnum = typeof DeploymentInfoClusterTypeEnum[keyof typeof DeploymentInfoClusterTypeEnum];
+export const DeploymentInfoSolutionEnum = {
+    Interactive: 'INTERACTIVE',
+    GraphscopeInsight: 'GRAPHSCOPE_INSIGHT'
+} as const;
 
+export type DeploymentInfoSolutionEnum = typeof DeploymentInfoSolutionEnum[keyof typeof DeploymentInfoSolutionEnum];
+
+/**
+ * 
+ * @export
+ * @interface DeploymentInfoGraphsInfoValue
+ */
+export interface DeploymentInfoGraphsInfoValue {
+    /**
+     * 
+     * @type {string}
+     * @memberof DeploymentInfoGraphsInfoValue
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeploymentInfoGraphsInfoValue
+     */
+    'creation_time'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeploymentInfoGraphsInfoValue
+     */
+    'update_time'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeploymentInfoGraphsInfoValue
+     */
+    'last_dataloading_time'?: string;
+}
 /**
  * K8s only
  * @export
@@ -4295,6 +4344,115 @@ export class ServiceApi extends BaseAPI {
      */
     public stopService(options?: RawAxiosRequestConfig) {
         return ServiceApiFp(this.configuration).stopService(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * UtilsApi - axios parameter creator
+ * @export
+ */
+export const UtilsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {File} [filestorage] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        uploadFile: async (filestorage?: File, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/v1/file/uploading`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
+
+
+            if (filestorage !== undefined) { 
+                localVarFormParams.append('filestorage', filestorage as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * UtilsApi - functional programming interface
+ * @export
+ */
+export const UtilsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = UtilsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {File} [filestorage] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async uploadFile(filestorage?: File, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.uploadFile(filestorage, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['UtilsApi.uploadFile']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * UtilsApi - factory interface
+ * @export
+ */
+export const UtilsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = UtilsApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {File} [filestorage] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        uploadFile(filestorage?: File, options?: any): AxiosPromise<string> {
+            return localVarFp.uploadFile(filestorage, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * UtilsApi - object-oriented interface
+ * @export
+ * @class UtilsApi
+ * @extends {BaseAPI}
+ */
+export class UtilsApi extends BaseAPI {
+    /**
+     * 
+     * @param {File} [filestorage] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UtilsApi
+     */
+    public uploadFile(filestorage?: File, options?: RawAxiosRequestConfig) {
+        return UtilsApiFp(this.configuration).uploadFile(filestorage, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
