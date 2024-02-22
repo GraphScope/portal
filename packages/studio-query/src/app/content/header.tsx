@@ -4,7 +4,6 @@ import { Tooltip, Segmented, Button, Space, Select, Flex } from 'antd';
 import { localStorageVars } from '../context';
 import { useContext } from '../context';
 import CypherEditor from '../../cypher-editor';
-import { countLines } from '../utils';
 import { v4 as uuidv4 } from 'uuid';
 interface IHeaderProps {}
 
