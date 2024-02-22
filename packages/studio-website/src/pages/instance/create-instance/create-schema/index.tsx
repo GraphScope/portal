@@ -8,6 +8,7 @@ import { download, prop } from './utils';
 import { FormattedMessage } from 'react-intl';
 import { SegmentedValue } from 'antd/es/segmented';
 import EmptyInfo from './empty-info';
+import ExportConfig from './import-schema-config';
 interface ICreateInstanceProps {
   graphData?: any;
   isAlert?: boolean;
@@ -28,27 +29,6 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
       });
     }
   };
-  /** 图头部组件 */
-  const GraphViewTitle = (
-    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      {!isAlert ? (
-        <Space>
-          <Upload {...prop} showUploadList={false}>
-            <Tooltip title="导入提示，待确认">
-              <Button>
-                <FormattedMessage id="Import" />
-              </Button>
-            </Tooltip>
-          </Upload>
-          <Tooltip title="导出提示，待确认">
-            <Button onClick={() => download(`xxx.json`, '')}>
-              <FormattedMessage id="Export" />
-            </Button>
-          </Tooltip>
-        </Space>
-      ) : null}
-    </div>
-  );
 
   const nodeEdgeChange = (val: SegmentedValue) => {
     updateStore(draft => {
@@ -77,6 +57,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
       label: label,
       children: (
         <Schema
+          data={item}
           updateStore={updateStore}
           currentType={currentType}
           id={key}
@@ -98,6 +79,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
           updateStore={updateStore}
           currentType={currentType}
           id={key}
+          data={item}
           newActiveKey={key}
           shouldRender={nodeActiveKey === key}
         />
@@ -167,7 +149,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
         <Card
           bodyStyle={{ padding: '0px', height: '500px', marginBottom: '18px', overflow: 'hidden' }}
           title={<FormattedMessage id="Graph Model" />}
-          extra={GraphViewTitle}
+          extra={<ExportConfig />}
         >
           <GraphInsight />
         </Card>

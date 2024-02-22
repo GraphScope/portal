@@ -6,8 +6,8 @@ import { FormattedMessage } from 'react-intl';
 import type { IStore } from '../useContext';
 export type FieldType = {
   label?: string;
-  src_label?: string;
-  dst_label?: string;
+  source?: string;
+  target?: string;
 };
 type SchemaType = {
   newActiveKey: string;
@@ -18,6 +18,7 @@ type SchemaType = {
   updateStore: (fn: (draft: IStore<{}>) => void) => void;
   nodeOptions?: { label: string; value: string }[];
 };
+const primitive_types = ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64', 'DT_DATE32'];
 
 /** 子项 [{title:'表头'，dataIndex:'绑定字段'，type:'字段对应编辑框'，option:'select配置选项',width:'表头宽度'}] */
 const configcolumns = [
@@ -28,10 +29,9 @@ const configcolumns = [
     dataIndex: 'type',
     width: '25%',
     type: 'SELECT',
-    option: [
-      { value: 'string', label: 'string' },
-      { value: 'datetime', label: 'datetime' },
-    ],
+    option: primitive_types.map(item => {
+      return { label: item, value: item };
+    }),
   },
 ];
 
@@ -39,6 +39,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   const { newActiveKey, data, currentType, updateStore, nodeOptions } = props;
   const [form] = Form.useForm();
   const detail = false;
+  console.log(' data', currentType, data, newActiveKey, nodeOptions);
 
   const propertyRef = useRef<any>();
   let cbRef = useRef();
@@ -64,7 +65,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
       });
     }
     if (currentType === 'edge') {
-      const { label, src_label, dst_label } = form.getFieldsValue();
+      const { label, source, target } = form.getFieldsValue();
 
       updateStore(draft => {
         draft.edgeList.forEach(item => {
@@ -72,8 +73,8 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             //@ts-ignore
             item.properties = cbRef.current;
             item.label = label;
-            item.source = src_label || '';
-            item.target = dst_label || '';
+            item.source = source || '';
+            item.target = target || '';
           }
         });
       });
@@ -108,7 +109,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
           <>
             <Form.Item<FieldType>
               label={'Source Node Label'}
-              name="src_label"
+              name="source"
               tooltip=" "
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
@@ -119,7 +120,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             </Form.Item>
             <Form.Item<FieldType>
               label={'Target Node Label'}
-              name="dst_label"
+              name="target"
               tooltip=" "
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}

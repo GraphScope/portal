@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { memo } from 'react';
-import { getSearchParams } from '../utils';
+import { getSearchParams, searchParamOf } from '../utils';
 import { RollbackOutlined, PicLeftOutlined, SlidersOutlined } from '@ant-design/icons';
 import { Space, Button, theme } from 'antd';
 const { useToken } = theme;
@@ -65,7 +65,7 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
   const { options, collapse, onChange, title, onBack } = props;
   const { token } = useToken();
   const { searchParams, path } = getSearchParams(window.location);
-  const nav = searchParams.get('nav') || 'style';
+  const nav = searchParams.get('nav') || 'saved';
   const activeOption = options.find(item => {
     return item.id === nav;
   });

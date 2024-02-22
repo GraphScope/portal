@@ -1,52 +1,51 @@
 import type { Schema, VertexType, EdgeType } from '@graphscope/studio-server';
 import { v4 as uuidv4 } from 'uuid';
-/** 导出数据*/
-export const download = (queryData: string, states: BlobPart) => {
-  const eleLink = document.createElement('a');
-  eleLink.download = queryData;
-  eleLink.style.display = 'none';
-  const blob = new Blob([states]);
-  eleLink.href = URL.createObjectURL(blob);
-  document.body.appendChild(eleLink);
-  eleLink.click();
-  document.body.removeChild(eleLink);
-};
 
-interface Properties {
+export interface Properties {
   name: string;
   type: string;
   /** others */
   primaryKey?: boolean;
-  token?: string;
+  /** 属性唯一标识 */
   id?: string;
+  /** 是否禁用：UI */
   disable?: boolean;
+  /** 属性名映射的数据下标 */
+  token?: number | string;
 }
 
-interface TransformedNode {
+export interface TransformedNode {
+  /** 节点类型 */
   label: string;
+  /** 节点属性 */
   properties: Properties[];
+  /** 节点主键 */
   primary: string;
   /** 唯一标识 */
   key?: string;
 }
 
-interface TransformedEdge {
-  /** 唯一标识 */
-  key?: string;
+export interface TransformedEdge {
+  /** 边类型 */
   label: string;
+  /** 边属性 */
   properties: Properties[];
-  primary: string;
+  /** 启始节点ID */
   source: string;
+  /** 目标节点ID */
   target: string;
+  /** 唯一标识 */
+  key?: string;
+  /** relation */
   relation?: string;
 }
 
-interface TransformedSchema {
+export interface TransformedSchema {
   nodes: TransformedNode[];
   edges: TransformedEdge[];
 }
 
-type DeepRequired<T> = T extends (...args: any[]) => any
+export type DeepRequired<T> = T extends (...args: any[]) => any
   ? T
   : T extends object
     ? { [K in keyof T]-?: DeepRequired<T[K]> }
@@ -67,16 +66,6 @@ export function transformSchema(originalSchema: DeepRequired<Schema>): Transform
     primary: vertexType.primary_keys[0],
   });
 
-  const transformEdge = (edgeType: DeepRequired<EdgeType>): TransformedEdge => ({
-    label: edgeType.type_name,
-    properties: (edgeType.properties || []).map(({ property_name, property_type }) => ({
-      name: property_name,
-      type: property_type.primitive_type,
-    })),
-    primary: edgeType.type_name,
-    source: '',
-    target: '',
-  });
   /** Edges  */
   const edges: TransformedEdge[] = [];
   edge_types.forEach(edge => {
@@ -89,7 +78,7 @@ export function transformSchema(originalSchema: DeepRequired<Schema>): Transform
           name: property_name,
           type: property_type.primitive_type,
         })),
-        primary: type_name,
+
         source: source_vertex,
         target: destination_vertex,
         relation,
@@ -108,7 +97,7 @@ export function transformSchema(originalSchema: DeepRequired<Schema>): Transform
 export function transformSchemaToOptions(originalSchema: DeepRequired<Schema>, disable: boolean) {
   const schema = transformSchema(originalSchema);
   const nodeMap: Record<string, string> = {};
-  const nodes = schema.nodes.map(item => {
+  const nodes: TransformedNode[] = schema.nodes.map(item => {
     const { properties, primary, label, ...others } = item;
     const key = uuidv4();
     nodeMap[label] = key;
@@ -117,37 +106,35 @@ export function transformSchemaToOptions(originalSchema: DeepRequired<Schema>, d
       primary,
       label,
       key,
-      properties: properties.map(p => {
+      properties: properties.map((p, pIdx) => {
         const { name, type } = p;
         return {
           name,
           type,
           primaryKey: name === primary,
           disable,
-          token: '',
           id: uuidv4(),
+          token: pIdx,
         };
       }),
     };
   });
   const edges = schema.edges.map(item => {
-    const { properties, primary, source, target, ...others } = item;
+    const { properties, source, target, ...others } = item;
     const key = uuidv4();
     return {
       ...others,
-      primary,
       key,
       source: nodeMap[source],
       target: nodeMap[target],
-      properties: properties.map(p => {
+      properties: properties.map((p, pIdx) => {
         const { name, type } = p;
         return {
           name,
           type,
-          primaryKey: name === primary,
           disable,
-          token: '',
           id: uuidv4(),
+          token: pIdx,
         };
       }),
     };

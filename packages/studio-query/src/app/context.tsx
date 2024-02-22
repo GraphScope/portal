@@ -1,10 +1,6 @@
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 
-export const localStorageVars = {
-  mode: 'GS_STUDIO_QUERY_MODE',
-};
-
 export interface IStatement {
   /** 语句ID */
   id: string;
@@ -15,6 +11,10 @@ export interface IStatement {
   /** 语句名称 */
   name?: string;
 }
+
+export const localStorageVars = {
+  mode: 'GS_STUDIO_QUERY_MODE',
+};
 
 export type IStore<T> = T & {
   /** is ready  */
@@ -44,6 +44,7 @@ export type IStore<T> = T & {
   enableImmediateQuery: boolean;
   /** 全局的语句 */
   globalScript: string;
+  autoRun: boolean;
 };
 
 const initialStore: IStore<{}> = {
@@ -55,6 +56,8 @@ const initialStore: IStore<{}> = {
   activeId: 'query-1',
   /** 全局语句 */
   globalScript: 'Match (n) return n limit 10',
+  /** autoRun */
+  autoRun: false,
   /** 启用绝对布局 */
   absolutePosition: false,
   schemaData: {
@@ -69,7 +72,7 @@ const initialStore: IStore<{}> = {
   savedStatements: [],
   /** 存储过程语句 */
   storeProcedures: [],
-  mode: (localStorage.getItem(localStorageVars.mode) as 'flow' | 'tabs') || 'flow',
+  mode: 'flow',
   enableImmediateQuery: false,
 };
 

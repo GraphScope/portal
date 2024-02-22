@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { GraphApiFactory, GraphApi, GraphApiFp, ServiceApiFactory } from '@graphscope/studio-server';
 import { transformSchema } from './utils/schema';
 import { handleServerResponse } from './utils/handleServerResponse';
+import { message } from 'antd';
 
 const DB_QUERY_HISTORY = localforage.createInstance({
   name: 'DB_QUERY_HISTORY',
@@ -21,8 +22,7 @@ export async function deleteHistoryStatements(ids: string[]) {
   return;
 }
 
-const HOST_URL = '47.242.172.5'; //'localhost';
-const driver = new CypherDriver(`neo4j://${HOST_URL}:7687`);
+let driver: any;
 
 export interface IStatement {
   id: string;
@@ -34,10 +34,24 @@ export const queryGraphData = async (params: IStatement) => {
   return driver.queryCypher(params.script);
 };
 export const queryInfo = async () => {
-  const result = await ServiceApiFactory(undefined, location.origin).getServiceStatus();
-  const service = handleServerResponse(result);
+  const result = await ServiceApiFactory(undefined, location.origin)
+    .getServiceStatus()
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      } else {
+        message.error('请求失败，请稍后重试！');
+        throw new Error('请求失败');
+      }
+    });
+  if (result) {
+    const { cypher } = result.sdk_endpoints!;
+    if (cypher && !driver) {
+      driver = new CypherDriver(cypher);
+    }
+  }
 
-  return service;
+  return result;
 };
 export const queryGraphSchema = async (): Promise<CypherSchemaData> => {
   const result = await GraphApiFactory(undefined, location.origin).getSchema('graph_algo');

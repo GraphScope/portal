@@ -1,10 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { InsertRowAboveOutlined, OrderedListOutlined, PlusOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { Tooltip, Segmented, Button, Space, Select, Flex } from 'antd';
 import { localStorageVars } from '../context';
 import { useContext } from '../context';
 import CypherEditor from '../../cypher-editor';
-import { debounce } from '../utils';
+import { countLines } from '../utils';
 import { v4 as uuidv4 } from 'uuid';
 interface IHeaderProps {}
 
@@ -47,7 +47,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
     lineCount: 1,
     clear: false,
   });
-  const { globalScript } = store;
+  const { globalScript, autoRun } = store;
 
   const handleChange = value => {};
   const onChangeContent = line => {
@@ -87,7 +87,9 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       });
     }
   };
-  const isShowCypherSwitch = state.lineCount === 1 && countLines(globalScript) === 1;
+
+  const minRows = countLines(globalScript);
+  const isShowCypherSwitch = state.lineCount === 1 && minRows === 1;
 
   return (
     <div
@@ -142,8 +144,13 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
           value={globalScript}
           ref={editorRef}
           onChange={handleChange}
-          onInit={(initEditor: any) => {}}
+          onInit={(initEditor: any) => {
+            if (autoRun) {
+              handleQuery();
+            }
+          }}
           maxRows={25}
+          minRows={minRows}
           clear={state.clear}
         />
       </div>

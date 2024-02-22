@@ -18,6 +18,10 @@ export const searchParamOf = (key: string) => {
   return searchParams.get(key);
 };
 
+export const getUrlParams = () => {
+  return Object.fromEntries(new URLSearchParams(location.href.split('?')[1]).entries());
+};
+
 type DebouncedFunction<T extends (...args: any[]) => any> = (...args: Parameters<T>) => void;
 
 export function debounce<T extends (...args: any[]) => any>(func: T, delay: number): DebouncedFunction<T> {
@@ -31,28 +35,14 @@ export function debounce<T extends (...args: any[]) => any>(func: T, delay: numb
     }, delay);
   };
 }
-
-export function formatCypherStatement(cypherStatement) {
-  const keywords = ['MATCH', 'WHERE', 'RETURN', 'CREATE', 'DELETE'];
-
-  // 添加换行符到每个关键词后面
-  for (const keyword of keywords) {
-    cypherStatement = cypherStatement.replace(new RegExp(`(${keyword})(?![^\\(]*\\))`, 'g'), '\n$1');
-  }
-
-  // 在逗号后添加换行符
-  cypherStatement = cypherStatement.replace(/, /g, ',\n');
-
-  // 其他格式化步骤...
-
-  // 使用正则表达式匹配连续的换行符，并将其替换为单个换行符
-  cypherStatement = cypherStatement.replace(/\n+/g, '\n');
-
-  // 返回格式化后的Cypher语句
-  return cypherStatement.trim();
-}
-
-export function countLines(str) {
-  // 使用正则表达式匹配换行符，并计算匹配到的数量，即为行数
-  return (str.match(/\r?\n/g) || []).length + 1;
-}
+/** 导出数据*/
+export const download = (queryData: string, states: BlobPart) => {
+  const eleLink = document.createElement('a');
+  eleLink.download = queryData;
+  eleLink.style.display = 'none';
+  const blob = new Blob([states]);
+  eleLink.href = URL.createObjectURL(blob);
+  document.body.appendChild(eleLink);
+  eleLink.click();
+  document.body.removeChild(eleLink);
+};

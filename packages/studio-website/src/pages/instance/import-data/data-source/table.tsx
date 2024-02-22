@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Table, Select, Checkbox, InputNumber, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Table, Select, Checkbox, Input, Typography } from 'antd';
 type EditableTableProps = Parameters<typeof Table>[0];
 const { Text } = Typography;
 interface DataType {
@@ -7,7 +7,7 @@ interface DataType {
   name: string;
   type: string;
   primaryKey: boolean;
-  dataindex?: number;
+  token?: number;
 }
 type TableListProps = {
   tabledata: DataType[];
@@ -15,36 +15,25 @@ type TableListProps = {
 };
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
 
-const PROPERTY_KEY_OPTIONS = [
-  {
-    value: 'long',
-    label: 'LONG',
-  },
-  {
-    value: 'double',
-    label: 'DOUBLE',
-  },
-  {
-    value: 'str',
-    label: 'STRING',
-  },
-];
 const styles: React.CSSProperties = {
   fontSize: '12px',
   fontWeight: 400,
 };
+
 const TableList: React.FC<TableListProps> = props => {
   const { tabledata, onChange } = props;
-  const [dataSource, setDataSource] = useState<DataType[]>(tabledata);
-  const handleChangeIndex = (value: any, text: any) => {
-    const { name } = text;
-    dataSource.forEach(item => {
-      if (item.name === name) {
-        item.dataindex = value;
+  console.log('tabledata', tabledata);
+
+  const handleChangeIndex = (value: any, all: any) => {
+    console.log(value, all, tabledata);
+    const { key } = all;
+
+    tabledata.forEach(item => {
+      if (item.key === key) {
+        item.token = value;
       }
     });
-    setDataSource(dataSource);
-    onChange && onChange(dataSource);
+    onChange && onChange(tabledata);
   };
   const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex?: string })[] = [
     {
@@ -53,9 +42,9 @@ const TableList: React.FC<TableListProps> = props => {
           Properties
         </Text>
       ),
-      dataIndex: 'properties',
-      key: 'properties',
-      width: '30%',
+      dataIndex: 'name',
+      key: 'name',
+      width: '25%',
     },
     {
       title: (
@@ -67,20 +56,18 @@ const TableList: React.FC<TableListProps> = props => {
       key: 'type',
       width: '15%',
       render(text) {
-        return (
-          <Select style={{ width: '100%' }} defaultValue={text} disabled options={PROPERTY_KEY_OPTIONS} size="small" />
-        );
+        return <Select style={{ width: '100%' }} defaultValue={text} disabled size="small" />;
       },
     },
     {
       title: (
         <Text type="secondary" style={styles}>
-          Main_Key
+          Primary Key
         </Text>
       ),
-      dataIndex: 'main_key',
-      key: 'main_key',
-      width: '20%',
+      dataIndex: 'primaryKey',
+      key: 'primaryKey',
+      width: '25%',
       render(text) {
         return <Checkbox defaultChecked={text} disabled />;
       },
@@ -88,25 +75,18 @@ const TableList: React.FC<TableListProps> = props => {
     {
       title: (
         <Text type="secondary" style={styles}>
-          ColumnType or Name
+          ColumnIndex or Name
         </Text>
       ),
-      dataIndex: 'columntype',
+      dataIndex: 'token',
       width: '35%',
       editable: true,
-      render(columntype) {
-        return (
-          <InputNumber
-            min={0}
-            size="small"
-            defaultValue={columntype}
-            onChange={value => handleChangeIndex(value, columntype)}
-          />
-        );
+      render(token, all) {
+        return <Input size="small" value={token} onChange={e => handleChangeIndex(e.target.value, all)} />;
       },
     },
   ];
-  return <Table columns={defaultColumns} dataSource={dataSource} pagination={false} size="small" />;
+  return <Table columns={defaultColumns} dataSource={tabledata} pagination={false} size="small" />;
 };
 
 export default TableList;

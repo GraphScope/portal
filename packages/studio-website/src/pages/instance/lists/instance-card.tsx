@@ -32,6 +32,9 @@ export type InstaceCardType = {
   routes: React.ReactNode;
   /** 操作 */
   actions: React.ReactNode;
+  /** events */
+  handleDelete: (name: string) => void;
+  handleStart: (name: string) => void;
 };
 
 const styles: React.CSSProperties = {
@@ -39,7 +42,19 @@ const styles: React.CSSProperties = {
   color: '#404A54',
 };
 const InstaceCard: React.FC<InstaceCardType> = props => {
-  const { updatetime, importtime, version, createtime, server, routes, actions, status, name } = props;
+  const {
+    updatetime,
+    importtime,
+    version,
+    createtime,
+    server,
+    routes,
+    actions,
+    status,
+    name,
+    handleDelete,
+    handleStart,
+  } = props;
   const items: MenuProps['items'] = [
     {
       label: 'delete',
@@ -48,10 +63,22 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     },
     {
       label: 'restart',
-      key: 'delete',
+      key: 'restart',
       icon: <StarOutlined />,
     },
   ];
+
+  const handleRestart = () => {};
+  const onClick: MenuProps['onClick'] = ({ key }) => {
+    console.log('key', key, name);
+    if (key === 'delete') {
+      handleDelete(name);
+    }
+    if (key === 'restart') {
+      handleRestart();
+    }
+  };
+
   return (
     <Card
       headStyle={{ fontSize: '30px' }}
@@ -59,9 +86,15 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
       style={{ background: '#FCFCFC' }}
       extra={
         <Space>
-          <Button type="text" icon={<PlayCircleOutlined />} />
+          <Button
+            type="text"
+            icon={<PlayCircleOutlined />}
+            onClick={() => {
+              handleStart(name);
+            }}
+          />
           {/* <Button type="text" icon={<DeleteOutlined />} /> */}
-          <Dropdown menu={{ items }}>
+          <Dropdown menu={{ items, onClick }}>
             <Button type="text" icon={<MoreOutlined />} />
           </Dropdown>
         </Space>
@@ -90,7 +123,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
           <Button
             style={{ width: '150px' }}
             icon={<DeploymentUnitOutlined />}
-            onClick={() => history.push('/instance/import-data?engineType=interactive&graph=movie')}
+            onClick={() => history.push(`/instance/import-data#?engineType=interactive&graph_name=${name}`)}
           >
             Import Data
           </Button>

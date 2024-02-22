@@ -1,7 +1,9 @@
 {
   "scripts": {
     "prestart": "rm -rf package-lock.json && npm i",
-    "start": "npx pm2 start -f index.js && npx pm2 list"
+    "check": "bash check-deploy.sh",
+    "start": "npm run check &&  npm run status",
+    "status": " npx pm2 status"
   },
   "dependencies": {
     "express": "^4.18.2",
