@@ -123,7 +123,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
           <Button
             style={{ width: '150px' }}
             icon={<DeploymentUnitOutlined />}
-            onClick={() => history.push(`/instance/import-data?engineType=interactive&graph=${name}`)}
+            onClick={() => history.push(`/instance/import-data#?engineType=interactive&graph_name=${name}`)}
           >
             Import Data
           </Button>

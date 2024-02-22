@@ -14,7 +14,6 @@ export const getSchema = async (graph_name: string): Promise<{ nodes: BindingNod
     return { nodes: [], edges: [] };
   }
 
-  const { vertex_types, edge_types } = schema;
   //@ts-ignore
   const schemaOption = transformSchemaToOptions(schema, false);
 

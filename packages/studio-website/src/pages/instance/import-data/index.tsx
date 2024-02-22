@@ -18,7 +18,7 @@ const { Title, Text } = Typography;
 const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   const { store, updateStore } = useContext();
 
-  const { currentType, nodes, edges, isReady } = store;
+  const { currentType, nodes, edges, isReady, graphName } = store;
   useEffect(() => {
     const { graph_name } = getUrlParams();
     getSchema(graph_name).then(res => {
@@ -26,6 +26,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         draft.isReady = true;
         draft.nodes = res.nodes;
         draft.edges = res.edges;
+        draft.graphName = graph_name;
       });
       updateDataMap(draft => {
         res.nodes.map(item => {
@@ -41,11 +42,11 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   const bindNodeCount = nodes.filter(item => item.isBind).length;
   const bindEdgeCount = edges.filter(item => item.isBind).length;
 
-  console.log('store....', store);
+  console.log('store....', graphName, store);
 
   return (
     <Section
-      title="Movie Graph"
+      title={graphName}
       breadcrumb={[
         {
           title: 'Graphs',
@@ -55,11 +56,19 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         },
       ]}
     >
+      <Row gutter={24}>
+        <Col span={16}>
+          <SourceTitle />
+        </Col>
+        <Col span={8}>
+          <GraphTitle />
+        </Col>
+      </Row>
+
       <Divider style={{ margin: '0px 0px 16px' }} />
 
       <Row gutter={24}>
         <Col span={16}>
-          <SourceTitle />
           {!isReady && <Skeleton />}
           {/* 遍历需要绑定的数据源 */}
           <div style={{ border: '1px solid #ddd', borderRadius: '8px' }}>
@@ -84,7 +93,6 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           </div>
         </Col>
         <Col span={8}>
-          <GraphTitle />
           <Card>
             <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
               目前绑定了{bindEdgeCount} 条边，{bindNodeCount}个点

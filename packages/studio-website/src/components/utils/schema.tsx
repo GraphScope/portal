@@ -32,7 +32,7 @@ export interface TransformedEdge {
   properties: Properties[];
   /** 启始节点ID */
   source: string;
-  /** 启始节点ID */
+  /** 目标节点ID */
   target: string;
   /** 唯一标识 */
   key?: string;

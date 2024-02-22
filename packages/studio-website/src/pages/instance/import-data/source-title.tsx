@@ -10,7 +10,6 @@ type ISourceTitleProps = {};
 const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
   const { updateStore } = useContext();
   const dataMap = useDataMap();
-
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const engineType = searchParamOf('engineType');
   console.log('engineType ', dataMap);
@@ -51,7 +50,7 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
 
 export default SourceTitle;
 
-function count(dataMap: BindingEdge & BindingNode) {
+function count(dataMap: BindingEdge | BindingNode) {
   let nodeCount: number = 0;
   let nodeBind: number = 0;
   let edgeCount: number = 0;

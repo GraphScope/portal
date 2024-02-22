@@ -31,7 +31,7 @@ export const initialStore: IStore<{}> = {
   edges: [],
   isReady: false,
 };
-export const initialDataMap: Record<string, BindingNode & BindingEdge> = {};
+export const initialDataMap: Record<string, BindingNode | BindingEdge> = {};
 
 type ContextType<T> = {
   store: Snapshot<IStore<T>>;
@@ -55,14 +55,14 @@ const proxyDataMap = proxy(initialDataMap);
 export function useDataMap() {
   return useSnapshot(proxyDataMap);
 }
-export function updateDataMap(fn: (draft: Record<string, BindingNode & BindingEdge>) => void) {
+export function updateDataMap(fn: (draft: Record<string, BindingNode | BindingEdge>) => void) {
   return fn(proxyDataMap);
 }
 
-export function transformDataMap(dataMap: BindingEdge) {
+export function transformDataMap(dataMap: BindingEdge | BindingNode) {
   let nodes: any[] = [];
   let edges: any[] = [];
-  Object.values(dataMap).forEach((item: BindingEdge & BindingNode) => {
+  Object.values(dataMap).forEach(item => {
     const { source, target } = item;
     if (source && target) {
       edges.push(item);
