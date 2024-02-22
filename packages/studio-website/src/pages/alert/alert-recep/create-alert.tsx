@@ -10,17 +10,16 @@ type FieldType = {
   at_user_ids: string;
   is_at_all: string;
 };
-const RECEIVEROPTION = [{ label: 'WebHook', value: 'WebHook' }];
+const RECEIVEROPTION = [{ label: 'WebHook', value: 'webhook' }];
 const CreateRecep: React.FC = () => {
   const { store, updateStore } = useContext();
   const { alertRecep } = store;
   const onFinish = async (values: any) => {
     console.log('Success:', values);
     const { at_user_ids } = values;
-    await registerReceiver(values);
+    await registerReceiver({ ...values, at_user_ids: [at_user_ids], enable: true });
     updateStore(draft => {
       draft.isEditRecep = false;
-      draft.alertRecep = [...alertRecep, { ...values, at_user_ids: [at_user_ids], status: '激活' }];
     });
   };
   return (

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Popconfirm, Table, Typography, Button, Switch, Space, Tooltip, Skeleton } from 'antd';
+import { Form, Input, Popconfirm, Table, Typography, Button, Switch, Space, Tooltip, Skeleton, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { useContext } from '../useContext';
 import { listReceivers, deleteReceiverById, updateReceiverById } from '../service';
@@ -70,6 +70,29 @@ const Receivers: React.FC<IReceiversProps> = props => {
     updateStore(draft => {
       draft.alertRecep = res || [];
       draft.isReady = true;
+    });
+  };
+  /** 保存告警接收 */
+  const saveRowReceiver = async (val: Item) => {
+    const { receiver_id } = val;
+    const { at_user_ids } = form.getFieldsValue();
+    const userid = Array.isArray(at_user_ids) ? at_user_ids : at_user_ids.split(',');
+    const data = { ...val, ...form.getFieldsValue(), at_user_ids: userid };
+    setEditingKey('');
+    const res = await updateReceiverById(receiver_id, data);
+    await getAlertReceivers();
+    await message.success(res);
+  };
+  /** 删除告警接收 */
+  const delRowReceiver = async (receiver_id: string) => {
+    const res = await deleteReceiverById(receiver_id);
+    await getAlertReceivers();
+    await message.success(res);
+  };
+  /** 创建告警接收 */
+  const handleChange = () => {
+    updateStore(draft => {
+      draft.isEditRecep = true;
     });
   };
   /** 是否允许编辑 */
@@ -173,27 +196,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
       },
     };
   });
-  /** 保存告警接收 */
-  const saveRowReceiver = async (val: Item) => {
-    const { receiver_id } = val;
-    const { at_user_ids } = form.getFieldsValue();
-    const data = { ...val, ...form.getFieldsValue(), at_user_ids: at_user_ids.split(',') };
-    console.log('修改', data);
-    setEditingKey('');
-    await updateReceiverById(receiver_id, data);
-    await getAlertReceivers();
-  };
-  /** 删除告警接收 */
-  const delRowReceiver = async (receiver_id: string) => {
-    console.log(receiver_id);
-    await deleteReceiverById(receiver_id);
-  };
-  /** 创建告警接收 */
-  const handleChange = () => {
-    updateStore(draft => {
-      draft.isEditRecep = true;
-    });
-  };
+
   return (
     <>
       <Button style={{ position: 'absolute', top: '-55px', right: '0px' }} type="primary" onClick={handleChange}>
