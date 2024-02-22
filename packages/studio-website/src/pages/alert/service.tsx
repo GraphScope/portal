@@ -1,6 +1,6 @@
 import { message } from 'antd';
 import { AlertApiFactory, UpdateAlertMessagesRequest } from '@graphscope/studio-server';
-import type { AlertReceiver } from '@graphscope/studio-server';
+import type { AlertReceiver, AlertRule } from '@graphscope/studio-server';
 export type IAlertMessages = {
   type?: string;
   status?: 'unsolved' | 'solved' | 'dealing';
@@ -93,9 +93,9 @@ export const deleteAlertRuleByName = async (params: string) => {
 
   return rules;
 };
-export const updateAlertRuleByName = async (params: string) => {
+export const updateAlertRuleByName = async (params: string, alertRule: AlertRule) => {
   const rules = await AlertApiFactory(undefined, location.origin)
-    .updateAlertRuleByName(params)
+    .updateAlertRuleByName(params, alertRule)
     .then((res: { status: number; data: any }) => {
       if (res.status === 200) {
         return res.data;

@@ -213,6 +213,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
               },
             }}
             dataSource={JSON.parse(JSON.stringify(alertRecep))}
+            //@ts-ignores
             columns={mergedColumns}
             rowClassName="editable-row"
             pagination={{

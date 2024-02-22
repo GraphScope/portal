@@ -7,18 +7,9 @@ export type IalertInfo = {
   severity: string;
   status: string[];
 };
-export type IAlertRule = {
-  key: string;
-  name: number;
-  severity: string;
-  metric_type: string;
-  conditions_desription: string;
-  frequency: number;
-  enable: boolean;
-};
 
 export type IAlertRecep = {
-  key: string;
+  key?: string;
   message: string;
   receiver_id: string;
   webhook_url: string;
@@ -37,8 +28,6 @@ export type IStore<T> = T & {
   severityTypeOptions: { value: string; text: string }[];
   /** 警告信息类型选项  */
   metricTypeOptions: { value: string; text: string }[];
-  /** 警告规则 table */
-  alertRule: [];
   /** 警告接收 table */
   alertRecep: IAlertRecep[];
   isEditRecep: boolean;
@@ -51,7 +40,6 @@ export const initialStore: IStore<{}> = {
   /** 告警 currentType */
   currentType: 'info',
   alertInfo: [],
-  alertRule: [],
   alertRecep: [],
   isEditRecep: false,
   selectedRowKeys: [],
