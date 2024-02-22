@@ -4,8 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import type { BreadcrumbProps, TabsProps } from 'antd';
 
 interface ISectionProps {
-  title: string;
-  desc: string;
+  title?: string;
+  desc?: string;
   breadcrumb: BreadcrumbProps['items'];
   children?: React.ReactNode;
   items?: TabsProps['items'];

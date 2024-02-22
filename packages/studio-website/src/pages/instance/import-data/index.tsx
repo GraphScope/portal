@@ -1,79 +1,52 @@
 import React, { useEffect } from 'react';
 import { Row, Col, Card, Typography, Skeleton, Space, Flex, Divider } from 'antd';
-import { useContext } from './useContext';
+import { useContext, updateDataMap } from './useContext';
 import GraphView from './graph-view';
 import DataSource from './data-source/index';
 import { SOURCEDATA } from './source-data';
 import GraphTitle from './graph-title';
+import SourceTitle from './source-title';
 import Section from '@/components/section';
-import TabAction from './tab-action';
+import { cloneDeep } from 'lodash';
+
+import { getUrlParams } from './utils';
+import { getSchema } from './service';
+
 interface IImportDataProps {}
 
 const { Title, Text } = Typography;
 const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   const { store, updateStore } = useContext();
-  const {
-    currentType,
-    sourceList: { nodes, edges },
-    isReady,
-  } = store;
 
+  const { currentType, nodes, edges, isReady, graphName } = store;
   useEffect(() => {
-    getInportList().then(res => {
+    const { graph_name } = getUrlParams();
+    getSchema(graph_name).then(res => {
       updateStore(draft => {
         draft.isReady = true;
-        //@ts-ignore
-        draft.sourceList = res;
+        draft.nodes = res.nodes;
+        draft.edges = res.edges;
+        draft.graphName = graph_name;
+      });
+      updateDataMap(draft => {
+        res.nodes.map(item => {
+          draft[item.key as string] = cloneDeep(item);
+        });
+        res.edges.map(item => {
+          draft[item.key as string] = cloneDeep(item);
+        });
       });
     });
   }, []);
-  const getInportList = async () => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(SOURCEDATA);
-      }, 600);
-    });
-  };
-  const sourceData = currentType === 'node' ? nodes : edges;
 
   const bindNodeCount = nodes.filter(item => item.isBind).length;
   const bindEdgeCount = edges.filter(item => item.isBind).length;
 
-  /** 更新入口state数据 */
-  const handleChange = (val: any) => {
-    const { label, isBind, datatype, location, properties } = val;
-    updateStore(draft => {
-      if (currentType === 'node') {
-        draft.sourceList.nodes.forEach(item => {
-          if (item.label === label) {
-            item.label = label;
-            item.isBind = isBind;
-            item.datatype = datatype;
-            item.filelocation = location;
-            item.properties = properties;
-          }
-        });
-      }
-      if (currentType === 'edge') {
-        draft.sourceList.edges.forEach(item => {
-          if (item.label === label) {
-            item.label = label;
-            item.isBind = isBind;
-            item.datatype = datatype;
-            item.filelocation = location;
-            item.properties = properties;
-          }
-        });
-      }
-    });
-  };
-  const tabHandleChange = (val: string) => {
-    updateStore(draft => {
-      draft.currentType = val;
-    });
-  };
+  console.log('store....', graphName, store);
+
   return (
     <Section
+      title={graphName}
       breadcrumb={[
         {
           title: 'Graphs',
@@ -83,45 +56,43 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         },
       ]}
     >
-      <Flex justify="space-between" align="center">
-        <TabAction
-          items={[
-            { label: `Point Data Eource Binding（${bindNodeCount}/${nodes?.length}）`, value: 'node' },
-            { label: `Edge Data Eource Binding(${bindEdgeCount}/${edges?.length})`, value: 'edge' },
-          ]}
-          tabChange={tabHandleChange}
-        />
-        <GraphTitle />
-      </Flex>
-      <Divider style={{ margin: '0px 0px 16px' }} />
       <Row gutter={24}>
-        <Col span={15}>
+        <Col span={16}>
+          <SourceTitle />
+        </Col>
+        <Col span={8}>
+          <GraphTitle />
+        </Col>
+      </Row>
+
+      <Divider style={{ margin: '0px 0px 16px' }} />
+
+      <Row gutter={24}>
+        <Col span={16}>
           {!isReady && <Skeleton />}
           {/* 遍历需要绑定的数据源 */}
           <div style={{ border: '1px solid #ddd', borderRadius: '8px' }}>
             <header style={{ background: '#FCFCFC', borderRadius: '8px' }}>
               <Space size={29}>
-                <Title level={5} type="secondary" style={{ margin: '16px 0px 16px 48px' }}>
+                <Title level={5} type="secondary" style={{ margin: '16px 32px 16px 48px' }}>
                   Labels
-                </Title>{' '}
+                </Title>
                 <Title level={5} type="secondary" style={{ margin: '16px 0px' }}>
                   Datasource
                 </Title>
               </Space>
             </header>
-            {sourceData.map(item => {
-              return (
-                <DataSource
-                  key={item.key}
-                  //@ts-ignore
-                  data={item}
-                  handleChange={handleChange}
-                />
-              );
-            })}
+            {currentType === 'node' &&
+              nodes.map(item => {
+                return <DataSource id={item.key as string} />;
+              })}
+            {currentType === 'edge' &&
+              edges.map(item => {
+                return <DataSource id={item.key as string} />;
+              })}
           </div>
         </Col>
-        <Col span={9}>
+        <Col span={8}>
           <Card>
             <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
               目前绑定了{bindEdgeCount} 条边，{bindNodeCount}个点

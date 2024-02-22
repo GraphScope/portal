@@ -2,22 +2,23 @@ import { FunctionComponent, ReactNode } from 'react';
 import Graphin, { Utils } from '@antv/graphin';
 import '@antv/graphin-icons/dist/index.css';
 import { theme } from 'antd';
-import { PropertyType } from './useContext';
+import { BindingEdge, BindingNode } from './useContext';
+import { useDataMap, transformDataMap } from './useContext';
 const { useToken } = theme;
 interface Props {
   children?: ReactNode;
   viewdata: {
-    nodeLists: PropertyType[];
-    edgeLists: PropertyType[];
+    nodeLists: BindingNode[];
+    edgeLists: BindingEdge[];
   };
 }
 
 /** graphin 数据处理 */
-const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
-  const nodes = nodeList.map((item: PropertyType) => {
+const getVertexEdges = (source: any, token: any) => {
+  const nodes = source.nodes.map((item: BindingNode) => {
     const { key, label, isBind } = item;
     return {
-      id: label,
+      id: key,
       style: {
         label: {
           value: `${label} ${isBind ? '✅' : '☑️'}`,
@@ -34,7 +35,7 @@ const getVertexEdges = (nodeList: any[], edgeList: any[], token: any) => {
     };
   });
 
-  const edges = edgeList.map((item: PropertyType) => {
+  const edges = source.edges.map((item: BindingEdge) => {
     const { key, label, source, target, isBind } = item;
     return {
       id: key,
@@ -68,11 +69,14 @@ const GraphInsight: FunctionComponent<Props> = props => {
   const { children, viewdata } = props;
   const { token } = useToken();
   //@ts-ignore
-  const graphData = getVertexEdges(viewdata.nodeLists, viewdata.edgeLists, token);
+  const source = transformDataMap(useDataMap());
+  //@ts-ignore
+  const graphData = getVertexEdges(source, token);
 
   return (
     <>
       {children}
+      {/** @ts-ignore */}
       <Graphin data={graphData} layout={{ type: 'force2' }} fitView fitCenter style={{ paddingBottom: '3px' }} />
     </>
   );
