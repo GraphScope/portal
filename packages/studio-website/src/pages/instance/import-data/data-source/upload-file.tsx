@@ -1,47 +1,68 @@
 import React, { useState } from 'react';
-import { DeleteOutlined, PaperClipOutlined, UploadOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PaperClipOutlined, UploadOutlined, LoadingOutlined } from '@ant-design/icons';
 import type { UploadFile, UploadProps } from 'antd';
-import { Button, Upload, Typography, Flex, theme } from 'antd';
+import { Button, Upload, Typography, Flex, theme, Input, Tooltip } from 'antd';
 const { Text } = Typography;
 const { useToken } = theme;
+import { uploadFile } from '../service';
 type UploadFilesProps = {
-  onChange: (val:boolean) => void;
+  onChange: (filelocation: string) => void;
+  value?: string;
 };
 const UploadFiles: React.FC<UploadFilesProps> = props => {
   const { token } = useToken();
-  const { onChange } = props;
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const handleChange: UploadProps['onChange'] = info => {
-    let newFileList = [...info.fileList];
-    // 1. Limit the number of uploaded files
-    // Only to show two recent uploaded files, and old ones will be replaced by the new
-    newFileList = newFileList.slice(-2);
-    // 2. Read from response and show file link
-    newFileList = newFileList.map(file => {
-      if (file.response) {
-        // Component will show file.url as link
-        file.url = file.response.url;
-      }
-      return file;
-    });
-    setFileList(newFileList);
-  };
+  const { onChange, value } = props;
 
-  const prop = {
-    action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
-    onChange: handleChange,
+  const [state, updateState] = useState({
+    isLoading: false,
+    filelocation: value || '',
+  });
+  const { isLoading, filelocation } = state;
+
+  const customRequest: UploadProps['customRequest'] = async options => {
+    const { file } = options;
+
+    console.log(file);
+    updateState(preState => {
+      return {
+        ...preState,
+        isLoading: true,
+      };
+    });
+    const filelocation = (await uploadFile(file as File)) || '';
+    updateState(preState => {
+      return {
+        ...preState,
+        isLoading: false,
+        filelocation,
+      };
+    });
+    onChange && onChange(filelocation);
+  };
+  const deleteFile = () => {
+    updateState(preState => {
+      return {
+        ...preState,
+        isLoading: false,
+        filelocation: '',
+      };
+    });
+    onChange && onChange('');
   };
 
   return (
     <Flex justify="flex-start" align="center">
-      <Upload {...prop} showUploadList={false}>
-        <Button icon={<UploadOutlined />} onClick={()=>onChange(true)}>Upload</Button>
-      </Upload>
-      {fileList.length > 0 && (
-        <Text style={{ cursor: 'pointer', marginLeft: '12px', color: token.colorPrimary }}>
-          <PaperClipOutlined />
-          {fileList[0].name} <DeleteOutlined onClick={() => setFileList([])} />
-        </Text>
+      {!filelocation && (
+        <Upload showUploadList={false} customRequest={customRequest}>
+          <Button icon={<UploadOutlined />}>Please upload the local file to the server side</Button>
+        </Upload>
+      )}
+      {isLoading && <LoadingOutlined />}
+      {filelocation && <Input style={{ width: '400px' }} disabled value={filelocation} />}
+      {filelocation && (
+        <Tooltip title="delete and re-upload">
+          <DeleteOutlined onClick={deleteFile} style={{ marginLeft: '12px' }} />
+        </Tooltip>
       )}
     </Flex>
   );

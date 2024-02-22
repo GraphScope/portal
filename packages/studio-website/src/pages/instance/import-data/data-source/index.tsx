@@ -48,10 +48,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     });
   };
   /** 改变数据源地址 */
-  const onChangeValue = (e: any) => {
-    console.log('e', e.target.value);
-    const { value } = e.target;
-
+  const onChangeValue = (value: string) => {
     updateDataMap(draft => {
       draft[id].filelocation = value;
       draft[id].isBind = value !== '';
@@ -100,7 +97,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                 </Space>
               </Flex>
             </Space>
-            <Tooltip title={isBind ? '已绑定' : '未绑定'}>
+            <Tooltip title={isBind ? '已绑定数据源' : '未绑定数据源'}>
               <Button
                 type="text"
                 icon={<CheckCircleOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}

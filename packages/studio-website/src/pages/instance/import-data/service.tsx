@@ -1,4 +1,5 @@
-import { GraphApiFactory } from '@graphscope/studio-server';
+import { GraphApiFactory, UtilsApiFactory } from '@graphscope/studio-server';
+
 import type { BindingEdge, BindingNode } from './useContext';
 import { transformSchemaToOptions } from '@/components/utils/schema';
 
@@ -36,4 +37,15 @@ export const getSchema = async (graph_name: string): Promise<{ nodes: BindingNod
   console.log('schemaOption', schemaOption, nodes, edges);
 
   return { nodes, edges };
+};
+
+/** upload file */
+export const uploadFile = async (file: File) => {
+  return UtilsApiFactory(undefined, location.origin)
+    .uploadFile(file)
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
+    });
 };
