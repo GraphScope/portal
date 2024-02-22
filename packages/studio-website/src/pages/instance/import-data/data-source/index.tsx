@@ -14,7 +14,8 @@ interface IImportDataProps {
 }
 const { Text } = Typography;
 
-const ToggleIcon = ({ isEidtProperty, handleClick }) => {
+const ToggleIcon = (props: any) => {
+  const { isEidtProperty, handleClick } = props;
   if (isEidtProperty) {
     return <CaretDownOutlined onClick={handleClick} />;
   }
@@ -30,14 +31,10 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const { engineType, graph } = getUrlParams();
 
-  const saveBindData = () => {
-    updateDataMap(draft => {
-      draft[id].isEidtProperty = false;
-    });
-  };
   /** 折叠面板 */
   const handleToggle = () => {
     updateDataMap(draft => {
+      //@ts-ignore
       draft[id].isEidtProperty = !draft[id].isEidtProperty;
     });
   };
@@ -57,6 +54,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   /** 聚焦到数据源的时候 */
   const onFocus = () => {
     updateDataMap(draft => {
+      //@ts-ignore
       draft[id].isEidtProperty = true;
     });
   };
@@ -136,15 +134,11 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
             <Col span={24}>
               <Flex justify="end">
                 <Space>
-                  {engineType === 'groot' ? (
+                  {engineType === 'groot' && (
                     <>
                       <ImportPeriodic />
                       <ImportNow label={label} />
                     </>
-                  ) : (
-                    <Button onClick={saveBindData} size="small">
-                      Save Bind
-                    </Button>
                   )}
                 </Space>
               </Flex>
