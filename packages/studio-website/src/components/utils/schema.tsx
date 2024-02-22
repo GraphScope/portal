@@ -114,7 +114,7 @@ export function transformSchemaToOptions(originalSchema: DeepRequired<Schema>, d
           primaryKey: name === primary,
           disable,
           id: uuidv4(),
-          token: pIdx,
+          token: '',
         };
       }),
     };
@@ -134,7 +134,7 @@ export function transformSchemaToOptions(originalSchema: DeepRequired<Schema>, d
           type,
           disable,
           id: uuidv4(),
-          token: pIdx,
+          token: '',
         };
       }),
     };

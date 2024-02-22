@@ -7,6 +7,7 @@ interface ISwitchSourceProps {
   onChangeType: (e: any) => void;
   onChangeValue: (e: any) => void;
   onFocus: (e: any) => void;
+  onChangeDataFields: (value?: string[]) => void;
 }
 const SOURCEOPTIONS = [
   { label: 'csv', value: 'csv' },
@@ -14,7 +15,7 @@ const SOURCEOPTIONS = [
   { label: 'odps', value: 'odps', disabled: true },
 ];
 const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
-  const { filelocation, currentType, onChangeType, onChangeValue, onFocus } = props;
+  const { filelocation, currentType, onChangeType, onChangeValue, onFocus, onChangeDataFields } = props;
 
   return (
     <Space.Compact size="small">
@@ -42,7 +43,9 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
             onFocus={onFocus}
           />
         )}
-        {currentType === 'csv' && <UploadFiles value={filelocation} onChange={onChangeValue} />}
+        {currentType === 'csv' && (
+          <UploadFiles value={filelocation} onChange={onChangeValue} onChangeHeader={onChangeDataFields} />
+        )}
       </>
     </Space.Compact>
   );

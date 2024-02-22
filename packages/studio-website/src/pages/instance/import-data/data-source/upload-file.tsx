@@ -5,13 +5,15 @@ import { Button, Upload, Typography, Flex, theme, Input, Tooltip } from 'antd';
 const { Text } = Typography;
 const { useToken } = theme;
 import { uploadFile } from '../service';
+import { getDataFields } from '@/components/utils/getDataFields';
 type UploadFilesProps = {
   onChange: (filelocation: string) => void;
   value?: string;
+  onChangeHeader: (header?: string[]) => void;
 };
 const UploadFiles: React.FC<UploadFilesProps> = props => {
   const { token } = useToken();
-  const { onChange, value } = props;
+  const { onChange, value, onChangeHeader } = props;
 
   const [state, updateState] = useState({
     isLoading: false,
@@ -21,8 +23,6 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
 
   const customRequest: UploadProps['customRequest'] = async options => {
     const { file } = options;
-
-    console.log(file);
     updateState(preState => {
       return {
         ...preState,
@@ -30,6 +30,7 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
       };
     });
     const filelocation = (await uploadFile(file as File)) || '';
+    const headers = await getDataFields(file as File);
     updateState(preState => {
       return {
         ...preState,
@@ -37,8 +38,11 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
         filelocation,
       };
     });
+
     onChange && onChange(filelocation);
+    onChangeHeader && onChangeHeader(headers);
   };
+  /** 删除文件 */
   const deleteFile = () => {
     updateState(preState => {
       return {
@@ -48,6 +52,7 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
       };
     });
     onChange && onChange('');
+    onChangeHeader && onChangeHeader();
   };
 
   return (

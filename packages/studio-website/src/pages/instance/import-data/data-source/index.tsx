@@ -26,7 +26,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const dataMap = useDataMap();
   console.log('dataMap', dataMap, id);
   const data = dataMap[id] as BindingNode & { isEidtProperty: boolean };
-  const { isBind, filelocation, isEidtProperty, datatype, label, properties } = data;
+  const { isBind, filelocation, isEidtProperty, datatype, label, properties, dataFields } = data;
   const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const { engineType, graph } = getUrlParams();
@@ -49,6 +49,8 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     updateDataMap(draft => {
       draft[id].filelocation = value;
       draft[id].isBind = value !== '';
+      //@ts-ignore
+      draft[id].isEidtProperty = true;
     });
   };
   /** 聚焦到数据源的时候 */
@@ -62,6 +64,11 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const onChangeTable = (values: any) => {
     updateDataMap(draft => {
       draft[id].properties = values;
+    });
+  };
+  const onChangeDataFields = (values?: string[]) => {
+    updateDataMap(draft => {
+      draft[id].dataFields = values;
     });
   };
 
@@ -91,6 +98,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                     onChangeType={onChangeType}
                     onChangeValue={onChangeValue}
                     onFocus={onFocus}
+                    onChangeDataFields={onChangeDataFields}
                   />
                 </Space>
               </Flex>
@@ -129,6 +137,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                   ),
                 )}
                 onChange={onChangeTable}
+                dataFields={dataFields}
               />
             </Col>
             <Col span={24}>

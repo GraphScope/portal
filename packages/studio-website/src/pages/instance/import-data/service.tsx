@@ -21,7 +21,7 @@ export const getSchema = async (graph_name: string): Promise<{ nodes: BindingNod
   const nodes = schemaOption.nodes.map(item => {
     return {
       ...item,
-      datatype: 'location',
+      datatype: 'csv',
       filelocation: '',
       isBind: false,
     };
@@ -29,7 +29,7 @@ export const getSchema = async (graph_name: string): Promise<{ nodes: BindingNod
   const edges = schemaOption.edges.map(item => {
     return {
       ...item,
-      datatype: 'location',
+      datatype: 'csv',
       filelocation: '',
       isBind: false,
     };
