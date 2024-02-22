@@ -66,9 +66,10 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       draft[id].properties = values;
     });
   };
-  const onChangeDataFields = (values?: string[]) => {
+  const onChangeDataFields = (header?: { dataFields: string[]; delimiter: string }) => {
     updateDataMap(draft => {
-      draft[id].dataFields = values;
+      draft[id].dataFields = header?.dataFields;
+      draft[id].delimiter = header?.delimiter;
     });
   };
 

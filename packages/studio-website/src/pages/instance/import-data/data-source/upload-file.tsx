@@ -9,7 +9,7 @@ import { getDataFields } from '@/components/utils/getDataFields';
 type UploadFilesProps = {
   onChange: (filelocation: string) => void;
   value?: string;
-  onChangeHeader: (header?: string[]) => void;
+  onChangeHeader: (header?: { dataFields: string[]; delimiter: string }) => void;
 };
 const UploadFiles: React.FC<UploadFilesProps> = props => {
   const { token } = useToken();

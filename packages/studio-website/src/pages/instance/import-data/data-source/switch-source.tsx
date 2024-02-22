@@ -7,7 +7,7 @@ interface ISwitchSourceProps {
   onChangeType: (e: any) => void;
   onChangeValue: (e: any) => void;
   onFocus: (e: any) => void;
-  onChangeDataFields: (value?: string[]) => void;
+  onChangeDataFields: (header?: { dataFields: string[]; delimiter: string }) => void;
 }
 const SOURCEOPTIONS = [
   { label: 'csv', value: 'csv' },

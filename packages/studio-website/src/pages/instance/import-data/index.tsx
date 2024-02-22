@@ -3,7 +3,7 @@ import { Row, Col, Card, Typography, Skeleton, Space, Flex, Divider } from 'antd
 import { useContext, updateDataMap } from './useContext';
 import GraphView from './graph-view';
 import DataSource from './data-source/index';
-import { SOURCEDATA } from './source-data';
+
 import GraphTitle from './graph-title';
 import SourceTitle from './source-title';
 import Section from '@/components/section';
