@@ -123,6 +123,7 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
         <Skeleton />
       ) : (
         <Table
+          style={{ marginTop: '16px' }}
           // @ts-ignore
           rowSelection={rowSelection}
           // @ts-ignore
