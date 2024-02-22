@@ -5,10 +5,10 @@ import { useContext } from '../useContext';
 import { registerReceiver } from '../service';
 
 type FieldType = {
-  receiver: string;
-  webhookUrl: string;
-  id: string;
-  isAll: string;
+  type: string;
+  webhook_url: string;
+  at_user_ids: string;
+  is_at_all: string;
 };
 const RECEIVEROPTION = [{ label: 'WebHook', value: 'WebHook' }];
 const CreateRecep: React.FC = () => {
@@ -16,17 +16,18 @@ const CreateRecep: React.FC = () => {
   const { alertRecep } = store;
   const onFinish = async (values: any) => {
     console.log('Success:', values);
-    // await porstAlertReceiver(values);
+    const { at_user_ids } = values;
+    await registerReceiver(values);
     updateStore(draft => {
       draft.isEditRecep = false;
-      draft.alertRecep = [...alertRecep, { ...values, status: '激活' }];
+      draft.alertRecep = [...alertRecep, { ...values, at_user_ids: [at_user_ids], status: '激活' }];
     });
   };
   return (
     <Form name="basic" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }} onFinish={onFinish}>
       <Form.Item<FieldType>
         label={<FormattedMessage id="Receiver Type" />}
-        name="receiver"
+        name="type"
         rules={[{ required: true, message: 'Please input your Receiver!' }]}
       >
         <Select options={RECEIVEROPTION} />
@@ -34,16 +35,16 @@ const CreateRecep: React.FC = () => {
 
       <Form.Item<FieldType>
         label={<FormattedMessage id="WebHook URL" />}
-        name="webhookUrl"
+        name="webhook_url"
         rules={[{ required: true, message: 'Please input your WebHook URL!' }]}
       >
         <Input />
       </Form.Item>
-      <Form.Item<FieldType> label={<FormattedMessage id="At User Ids" />} name="id">
+      <Form.Item<FieldType> label={<FormattedMessage id="At User Ids" />} name="at_user_ids">
         <Input />
       </Form.Item>
 
-      <Form.Item<FieldType> label={<FormattedMessage id="Is At All" />} name="isAll" valuePropName="checked">
+      <Form.Item<FieldType> label={<FormattedMessage id="Is At All" />} name="is_at_all" valuePropName="checked">
         <Checkbox />
       </Form.Item>
 

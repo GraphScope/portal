@@ -19,10 +19,13 @@ export type IAlertRule = {
 
 export type IAlertRecep = {
   key: string;
-  webhookUrl: string;
-  id: number;
-  isAll: string;
-  status: string[];
+  message: string;
+  receiver_id: string;
+  webhook_url: string;
+  at_user_ids: string[];
+  is_at_all: boolean;
+  enable: boolean;
+  type: string;
 };
 
 export type IStore<T> = T & {

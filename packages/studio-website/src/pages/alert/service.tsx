@@ -1,6 +1,6 @@
-import { AlertApiFactory, UpdateAlertMessagesRequest } from '@graphscope/studio-server';
 import { message } from 'antd';
-
+import { AlertApiFactory, UpdateAlertMessagesRequest } from '@graphscope/studio-server';
+import type { AlertReceiver } from '@graphscope/studio-server';
 export type IAlertMessages = {
   type?: string;
   status?: 'unsolved' | 'solved' | 'dealing';
@@ -8,6 +8,25 @@ export type IAlertMessages = {
   startTime?: string;
   endTime?: string;
 };
+type IMessageType = {
+  key: string;
+  message_id: string;
+};
+type IAlertRules = {
+  key: string;
+  name: string;
+  severity: string;
+  metric_type: string;
+  conditions_desription: string;
+  frequency: number;
+  enable: true;
+};
+/**
+ *
+ * @param params
+ * 告警信息接口
+ * @returns
+ */
 export const listAlertMessages = async (params: IAlertMessages) => {
   const message = await AlertApiFactory(undefined, location.origin)
     .listAlertMessages(params)
@@ -17,8 +36,14 @@ export const listAlertMessages = async (params: IAlertMessages) => {
       }
       return [];
     });
-
-  return message;
+  const info = message.map((item: IAlertMessages & IMessageType) => {
+    const { message_id } = item;
+    return {
+      ...item,
+      key: message_id,
+    };
+  });
+  return info;
 };
 
 export const updateAlertMessages = async (params: UpdateAlertMessagesRequest) => {
@@ -33,22 +58,33 @@ export const updateAlertMessages = async (params: UpdateAlertMessagesRequest) =>
 
   return message;
 };
+/**
+ * 告警规则接口
+ * @returns
+ */
 export const listAlertRules = async () => {
   const rules = await AlertApiFactory(undefined, location.origin)
     .listAlertRules()
-    .then(res => {
+    .then((res: { status: number; data: any }) => {
       if (res.status === 200) {
         return res.data;
       }
       return [];
     });
 
-  return rules;
+  const info = rules.map((item: IAlertRules) => {
+    const { name } = item;
+    return {
+      ...item,
+      key: name,
+    };
+  });
+  return info;
 };
 export const deleteAlertRuleByName = async (params: string) => {
   const rules = await AlertApiFactory(undefined, location.origin)
     .deleteAlertRuleByName(params)
-    .then(res => {
+    .then((res: { status: number; data: any }) => {
       if (res.status === 200) {
         return res.data;
       }
@@ -60,7 +96,7 @@ export const deleteAlertRuleByName = async (params: string) => {
 export const updateAlertRuleByName = async (params: string) => {
   const rules = await AlertApiFactory(undefined, location.origin)
     .updateAlertRuleByName(params)
-    .then(res => {
+    .then((res: { status: number; data: any }) => {
       if (res.status === 200) {
         return res.data;
       }
@@ -69,47 +105,61 @@ export const updateAlertRuleByName = async (params: string) => {
 
   return rules;
 };
+/**
+ * 告警接收接口
+ * @returns
+ */
 export const listReceivers = async () => {
   const receivers = await AlertApiFactory(undefined, location.origin)
     .listReceivers()
-    .then(res => {
+    .then((res: { status: number; data: any }) => {
       if (res.status === 200) {
         return res.data;
       }
       return [];
     });
-
-  const info = receivers.map(item => {
-    const { name } = item;
+  const info = receivers.map((item: AlertReceiver & { key: string }) => {
+    const { receiver_id } = item;
     return {
-      webhookUrl: '',
-      id: '',
-      isAll: '',
-      status: '',
+      ...item,
+      key: receiver_id,
     };
   });
-
   return info;
 };
-export const registerReceiver = async () => {
+export const registerReceiver = async (params: AlertReceiver) => {
   const receivers = await AlertApiFactory(undefined, location.origin)
-    .registerReceiver()
-    .then(res => {
+    .registerReceiver(params)
+    .then((res: { status: number; data: any }) => {
       if (res.status === 200) {
         return res.data;
       }
       return [];
     });
 
-  const info = receivers.map(item => {
-    const { name } = item;
-    return {
-      webhookUrl: '',
-      id: '',
-      isAll: '',
-      status: '',
-    };
-  });
+  return receivers;
+};
+export const deleteReceiverById = async (receiverId: string) => {
+  const receivers = await AlertApiFactory(undefined, location.origin)
+    .deleteReceiverById(receiverId)
+    .then((res: { status: number; data: any }) => {
+      if (res.status === 200) {
+        return res.data;
+      }
+      return [];
+    });
 
-  return info;
+  return receivers;
+};
+export const updateReceiverById = async (receiverId: string, alertReceiver: AlertReceiver) => {
+  const receivers = await AlertApiFactory(undefined, location.origin)
+    .updateReceiverById(receiverId, alertReceiver)
+    .then((res: { status: number; data: any }) => {
+      if (res.status === 200) {
+        return res.data;
+      }
+      return [];
+    });
+
+  return receivers;
 };
