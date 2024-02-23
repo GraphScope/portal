@@ -78,4 +78,7 @@ export default {
   Submit: 'Submit',
   'Trigger Time': 'Trigger Time',
   Metric: 'Metric',
+  Reset: 'Reset',
+  Search: 'Search',
+  Time: 'Time',
 };

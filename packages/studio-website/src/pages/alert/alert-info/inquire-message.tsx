@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Typography, Form, Space, DatePicker, Divider, Segmented, Flex, Tooltip } from 'antd';
+import { Button, Typography, Form, Space, DatePicker, Segmented, Flex, Tooltip } from 'antd';
 import moment from 'moment';
 import { CheckSquareOutlined, CloseSquareOutlined } from '@ant-design/icons';
+import { FormattedMessage } from 'react-intl';
 import { useContext } from '../useContext';
 import { listAlertMessages, IAlertMessages, updateAlertMessages } from '../service';
 const { Text } = Typography;
@@ -76,7 +77,9 @@ const InquireMessage = (props: IInquireMessageProps) => {
               onClick={() => allDealingSolved('solved')}
             ></Button>
           </Tooltip>
-          <Text>时间：</Text>
+          <Text>
+            <FormattedMessage id="Time" />:
+          </Text>
           <Segmented
             value={segmentedValue}
             options={['1 Hour', '6 Hour', '12 Hour', '1 Day', '3 Day', '7 Day', '14 Day']}
@@ -95,10 +98,10 @@ const InquireMessage = (props: IInquireMessageProps) => {
               resetChange();
             }}
           >
-            reset
+            <FormattedMessage id="Reset" />
           </Button>
           <Button type="primary" onClick={handleSubmit}>
-            search
+            <FormattedMessage id="Search" />
           </Button>
         </Space>
       </Flex>

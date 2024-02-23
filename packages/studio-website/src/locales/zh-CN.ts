@@ -77,4 +77,7 @@ export default {
   Submit: '提交',
   'Trigger Time': '触发时间',
   Metric: '类型',
+  Reset: '重置',
+  Search: '查询',
+  Time: '时间',
 };
