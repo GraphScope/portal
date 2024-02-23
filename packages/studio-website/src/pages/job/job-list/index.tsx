@@ -7,6 +7,7 @@ import {
   MinusCircleOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
+import { FormattedMessage } from 'react-intl';
 // import Action from './action';
 import { listJobs, IJobType, deleteJobById } from '../service';
 
@@ -90,16 +91,16 @@ const InfoList: React.FunctionComponent<IInfoListProps> = props => {
   };
 
   const columns = [
-    { title: 'Job Id', dataIndex: 'job_id', key: 'job_id', ellipsis: true },
+    { title: <FormattedMessage id="Job ID" />, dataIndex: 'job_id', key: 'job_id', ellipsis: true },
     {
-      title: 'Type',
+      title: <FormattedMessage id="Type" />,
       dataIndex: 'type',
       key: 'type',
       filters: JOBOPTIONS,
       onFilter: (value: string, record: IJobType) => record.type.startsWith(value),
     },
     {
-      title: 'Status',
+      title: <FormattedMessage id="Status" />,
       dataIndex: 'status',
       key: 'status',
       filters: STATUSOPTIONS,
@@ -124,25 +125,25 @@ const InfoList: React.FunctionComponent<IInfoListProps> = props => {
       },
     },
     {
-      title: 'starttime',
+      title: <FormattedMessage id="Start Time" />,
       key: 'start_time',
       dataIndex: 'start_time',
       ellipsis: true,
     },
     {
-      title: 'endtime',
+      title: <FormattedMessage id="End Time" />,
       key: 'end_time',
       dataIndex: 'end_time',
       ellipsis: true,
     },
     {
-      title: 'Detail',
+      title: <FormattedMessage id="Detail" />,
       dataIndex: 'detail',
       key: 'detail',
       render: (record: any) => <Popover content={() => handleChange(record)}>查询详情</Popover>,
     },
     {
-      title: 'Action',
+      title: <FormattedMessage id="Action" />,
       key: 'actions',
       // render: (record: IJobType) => <Action {...record} onChange={() => getJobList()} />,
       render: (record: IJobType) => (

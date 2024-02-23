@@ -77,4 +77,9 @@ export default {
   Submit: '提交',
   'Trigger Time': '触发时间',
   Metric: '类型',
+  /** job */
+  'Job ID': 'Job ID',
+  'Start Time': '开始时间',
+  'End Time': '结束时间',
+  Detail: '详情',
 };

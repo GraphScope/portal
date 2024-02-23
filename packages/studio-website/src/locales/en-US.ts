@@ -78,4 +78,9 @@ export default {
   Submit: 'Submit',
   'Trigger Time': 'Trigger Time',
   Metric: 'Metric',
+  /** job */
+  'Job ID': 'Job ID',
+  'Start Time': 'Start Time',
+  'End Time': 'End Time',
+  Detail: 'Detail',
 };
