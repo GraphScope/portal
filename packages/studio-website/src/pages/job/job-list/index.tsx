@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Popover, Tag, Flex, Space } from 'antd';
+import { Table, Popover, Tag, Flex, Space, message, Button, Popconfirm } from 'antd';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
@@ -7,8 +7,8 @@ import {
   MinusCircleOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
-import Action from './action';
-import { listJobs, IJobType } from '../service';
+// import Action from './action';
+import { listJobs, IJobType, deleteJobById } from '../service';
 
 /** 定义状态选项 */
 const STATUSOPTIONS = [
@@ -63,6 +63,11 @@ const InfoList: React.FunctionComponent<IInfoListProps> = props => {
   const getJobList = async () => {
     const res = await listJobs();
     setJobsList(res);
+  };
+  /** 删除job */
+  const deleteJob = async (job_id: string) => {
+    const res = await deleteJobById(job_id);
+    message.success(res);
   };
   /** detail Popover 展示*/
   const handleChange = (detail: { [s: string]: unknown } | ArrayLike<unknown>) => {
@@ -138,7 +143,21 @@ const InfoList: React.FunctionComponent<IInfoListProps> = props => {
     {
       title: 'Action',
       key: 'actions',
-      render: (record: IJobType) => <Action {...record} onChange={() => getJobList()} />,
+      // render: (record: IJobType) => <Action {...record} onChange={() => getJobList()} />,
+      render: (record: IJobType) => (
+        <Popconfirm
+          placement="bottomRight"
+          title="确定删除？"
+          onConfirm={() => deleteJob(record.job_id)}
+          okText="Yes"
+          cancelText="No"
+          icon
+        >
+          <Button size="small" danger ghost>
+            Delete
+          </Button>
+        </Popconfirm>
+      ),
     },
   ];
   return (

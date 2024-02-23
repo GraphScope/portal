@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Popconfirm, Modal, Row, Col, Checkbox, message } from 'antd';
+import { Button, Popconfirm, Modal, Row, Col, Checkbox, message, Flex } from 'antd';
 import { deleteJobById, IJobType } from '../service';
 
 const Action: React.FunctionComponent<IJobType & { onChange(): void }> = props => {
@@ -74,22 +74,14 @@ const Action: React.FunctionComponent<IJobType & { onChange(): void }> = props =
         cancelText="Cancel"
         okText="Ok"
       >
-        <Row>
-          <Col span={4}></Col>
-          <Col span={20}>
-            <Checkbox checked={checkboxValue} onChange={() => handleModal(true)}>
-              Only this job
-            </Checkbox>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={4}></Col>
-          <Col span={20}>
-            <Checkbox checked={!checkboxValue} onChange={() => handleModal(false)}>
-              This job and follow-up jobs
-            </Checkbox>
-          </Col>
-        </Row>
+        <Flex vertical>
+          <Checkbox checked={checkboxValue} onChange={() => handleModal(true)}>
+            Only this job
+          </Checkbox>
+          <Checkbox checked={!checkboxValue} onChange={() => handleModal(false)}>
+            This job and follow-up jobs
+          </Checkbox>
+        </Flex>
       </Modal>
     </div>
   );
