@@ -14,7 +14,8 @@ interface IImportDataProps {
 }
 const { Text } = Typography;
 
-const ToggleIcon = ({ isEidtProperty, handleClick }) => {
+const ToggleIcon = (props: any) => {
+  const { isEidtProperty, handleClick } = props;
   if (isEidtProperty) {
     return <CaretDownOutlined onClick={handleClick} />;
   }
@@ -25,19 +26,15 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const dataMap = useDataMap();
   console.log('dataMap', dataMap, id);
   const data = dataMap[id] as BindingNode & { isEidtProperty: boolean };
-  const { isBind, filelocation, isEidtProperty, datatype, label, properties } = data;
+  const { isBind, filelocation, isEidtProperty, datatype, label, properties, dataFields } = data;
   const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const { engineType, graph } = getUrlParams();
 
-  const saveBindData = () => {
-    updateDataMap(draft => {
-      draft[id].isEidtProperty = false;
-    });
-  };
   /** 折叠面板 */
   const handleToggle = () => {
     updateDataMap(draft => {
+      //@ts-ignore
       draft[id].isEidtProperty = !draft[id].isEidtProperty;
     });
   };
@@ -48,18 +45,18 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     });
   };
   /** 改变数据源地址 */
-  const onChangeValue = (e: any) => {
-    console.log('e', e.target.value);
-    const { value } = e.target;
-
+  const onChangeValue = (value: string) => {
     updateDataMap(draft => {
       draft[id].filelocation = value;
       draft[id].isBind = value !== '';
+      //@ts-ignore
+      draft[id].isEidtProperty = true;
     });
   };
   /** 聚焦到数据源的时候 */
   const onFocus = () => {
     updateDataMap(draft => {
+      //@ts-ignore
       draft[id].isEidtProperty = true;
     });
   };
@@ -67,6 +64,12 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const onChangeTable = (values: any) => {
     updateDataMap(draft => {
       draft[id].properties = values;
+    });
+  };
+  const onChangeDataFields = (header?: { dataFields: string[]; delimiter: string }) => {
+    updateDataMap(draft => {
+      draft[id].dataFields = header?.dataFields;
+      draft[id].delimiter = header?.delimiter;
     });
   };
 
@@ -96,11 +99,12 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                     onChangeType={onChangeType}
                     onChangeValue={onChangeValue}
                     onFocus={onFocus}
+                    onChangeDataFields={onChangeDataFields}
                   />
                 </Space>
               </Flex>
             </Space>
-            <Tooltip title={isBind ? '已绑定' : '未绑定'}>
+            <Tooltip title={isBind ? '已绑定数据源' : '未绑定数据源'}>
               <Button
                 type="text"
                 icon={<CheckCircleOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}
@@ -134,20 +138,17 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                   ),
                 )}
                 onChange={onChangeTable}
+                dataFields={dataFields}
               />
             </Col>
             <Col span={24}>
               <Flex justify="end">
                 <Space>
-                  {engineType === 'groot' ? (
+                  {engineType === 'groot' && (
                     <>
                       <ImportPeriodic />
                       <ImportNow label={label} />
                     </>
-                  ) : (
-                    <Button onClick={saveBindData} size="small">
-                      Save Bind
-                    </Button>
                   )}
                 </Space>
               </Flex>

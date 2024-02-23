@@ -4,7 +4,7 @@ import { useContext, useDataMap, updateDataMap, BindingEdge, BindingNode } from 
 import { getUrlParams } from './utils';
 import { searchParamOf } from '@/components/utils';
 import TabAction from './tab-action';
-
+import { createDataloadingJob } from './service';
 type ISourceTitleProps = {};
 
 const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
@@ -12,10 +12,31 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
   const dataMap = useDataMap();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const engineType = searchParamOf('engineType');
+  const graph_name = searchParamOf('graph_name');
   console.log('engineType ', dataMap);
   const handleImport = () => {
     //@ts-ignore
-    const params = transform(dataMap);
+    const schema = transform(dataMap);
+    const FIRST_DATA = Object.values(dataMap)[0];
+    const { delimiter, datatype } = FIRST_DATA;
+
+    const params = {
+      graph: graph_name,
+      loading_config: {
+        data_source: {
+          scheme: datatype === 'odps' ? 'odps' : 'file',
+        },
+        import_option: 'init',
+        format: {
+          type: 'string',
+          metadata: {
+            delimiter,
+          },
+        },
+      },
+      ...schema,
+    };
+    createDataloadingJob(params as any);
     console.log('state', params, dataMap);
   };
   //@ts-ignore
@@ -81,16 +102,23 @@ function count(dataMap: BindingEdge | BindingNode) {
 function transform(dataMap: BindingEdge) {
   let vertex_mappings: any[] = [];
   let edge_mappings: any[] = [];
+  const NODE_LABEL_MAP: Record<string, string> = {};
+  const NODE_PRIMARY_MAP: Record<string, string> = {};
   Object.values(dataMap).forEach((item: BindingEdge & BindingNode) => {
-    const { key, properties, filelocation, label, source, target } = item;
+    const { key, properties, filelocation, label, source, target, primary } = item;
+    console.log('key>>>>', key);
     const isEdge = source && target;
+
     //NODE
     if (!isEdge) {
+      NODE_LABEL_MAP[key as string] = label;
+      NODE_PRIMARY_MAP[key as string] = primary;
       vertex_mappings.push({
         type_name: label,
         inputs: [filelocation],
         column_mappings: properties.map(p => {
           const { token, name } = p;
+
           const num = parseFloat(token as string);
           const isNumber = !isNaN(num);
           return {
@@ -107,8 +135,8 @@ function transform(dataMap: BindingEdge) {
       edge_mappings.push({
         type_triplet: {
           edge: label,
-          source_vertex: source,
-          destination_vertex: target,
+          source_vertex: NODE_LABEL_MAP[source],
+          destination_vertex: NODE_LABEL_MAP[target],
         },
         inputs: [filelocation],
         column_mappings: properties.map(p => {
@@ -117,7 +145,8 @@ function transform(dataMap: BindingEdge) {
           const isNumber = !isNaN(num);
           return {
             column: {
-              index: isNumber ? num : 0,
+              //HACK>>>>>>>>
+              index: isNumber ? num + 2 : 0,
               name: isNumber ? '' : token,
             },
             property: name,
@@ -128,15 +157,15 @@ function transform(dataMap: BindingEdge) {
           {
             column: {
               index: 0,
-              name: '',
+              name: NODE_PRIMARY_MAP[source],
             },
           },
         ],
         destination_vertex_mappings: [
           {
             column: {
-              index: 0,
-              name: '',
+              index: 1,
+              name: NODE_PRIMARY_MAP[target],
             },
           },
         ],

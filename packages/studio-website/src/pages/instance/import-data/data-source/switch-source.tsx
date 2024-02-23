@@ -7,14 +7,15 @@ interface ISwitchSourceProps {
   onChangeType: (e: any) => void;
   onChangeValue: (e: any) => void;
   onFocus: (e: any) => void;
+  onChangeDataFields: (header?: { dataFields: string[]; delimiter: string }) => void;
 }
 const SOURCEOPTIONS = [
-  { label: 'local file', value: 'file' },
+  { label: 'csv', value: 'csv' },
   { label: 'location', value: 'location' },
   { label: 'odps', value: 'odps', disabled: true },
 ];
 const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
-  const { filelocation, currentType, onChangeType, onChangeValue, onFocus } = props;
+  const { filelocation, currentType, onChangeType, onChangeValue, onFocus, onChangeDataFields } = props;
 
   return (
     <Space.Compact size="small">
@@ -24,8 +25,10 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
           <Input
             style={{ width: '400px' }}
             defaultValue={filelocation}
-            placeholder="/graphscope/modern_graph/user.csv"
-            onChange={onChangeValue}
+            placeholder="Please manually input the odps file location"
+            onChange={e => {
+              onChangeValue(e.target.value);
+            }}
             onFocus={onFocus}
           />
         )}
@@ -33,12 +36,16 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
           <Input
             style={{ width: '400px' }}
             defaultValue={filelocation}
-            placeholder="/graphscope/modern_graph/user.csv"
-            onChange={onChangeValue}
+            placeholder="Please manually input the server-side file location"
+            onChange={e => {
+              onChangeValue(e.target.value);
+            }}
             onFocus={onFocus}
           />
         )}
-        {currentType === 'file' && <UploadFiles onChange={onChangeValue} />}
+        {currentType === 'csv' && (
+          <UploadFiles value={filelocation} onChange={onChangeValue} onChangeHeader={onChangeDataFields} />
+        )}
       </>
     </Space.Compact>
   );

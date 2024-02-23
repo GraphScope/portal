@@ -8,6 +8,8 @@ export interface Extra {
   filelocation: string;
   /** 是否绑定 isBind */
   isBind: boolean;
+  dataFields?: string[];
+  delimiter?: string;
 }
 export type BindingNode = TransformedNode & Extra;
 export type BindingEdge = TransformedEdge & Extra;

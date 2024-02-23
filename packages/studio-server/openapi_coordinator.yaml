@@ -4,7 +4,7 @@ info:
   description: |-
     This is a specification for GraphScope FLEX HTTP service based on the OpenAPI 3.0 specification. You can find out more details about
     specification at [doc](https://swagger.io/specification/v3/).
-    
+
     Some useful links:
     - [GraphScope Repository](https://github.com/alibaba/GraphScope)
     - [The Source API definition for GraphScope Interactive](https://github.com/GraphScope/portal/tree/main/httpservice)
@@ -342,11 +342,11 @@ paths:
         - job
       operationId: create_dataloading_job
       parameters:
-      - name: graph_name
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -382,11 +382,11 @@ paths:
       description: Create a new stored procedure on a certain graph
       operationId: create_procedure
       parameters:
-      - name: graph_name
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -406,11 +406,11 @@ paths:
       description: List stored procedures on a certain graph
       operationId: list_procedures_by_graph
       parameters:
-      - name: graph_name
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Successful operation
@@ -424,19 +424,19 @@ paths:
     put:
       tags:
         - procedure
-      description:  Update srored procedure on a certain graph
+      description: Update srored procedure on a certain graph
       operationId: update_procedure
       parameters:
-      - name: graph_name
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: procedure_name
-        in : path
-        required: true
-        schema:
-          type: string
+        - name: graph_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: procedure_name
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -444,11 +444,11 @@ paths:
               $ref: '#/components/schemas/Procedure'
       responses:
         '200':
-           description: Successful operation
-           content:
-             application/json:
-               schema:
-                  $ref: '#/components/schemas/ApiResponse'
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
     delete:
       tags:
         - procedure
@@ -461,7 +461,7 @@ paths:
           schema:
             type: string
         - name: procedure_name
-          in : path
+          in: path
           required: true
           schema:
             type: string
@@ -823,6 +823,28 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
         '404':
           description: Reveiver not found
+  /api/v1/file/uploading:
+    post:
+      tags:
+        - utils
+      operationId: upload_file
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                filestorage:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
 components:
   schemas:
     ApiResponse:
@@ -834,18 +856,18 @@ components:
         coordinator_endpoint:
           type: string
     ConnectionStatus:
-        x-body-name: connection_status
-        type: object
-        properties:
-          status:
-            type: string
-            enum:
-              - CONNECTED
-          solution:
-            type: string
-            enum:
-              - INTERACTIVE
-              - GRAPHSCOPE_INSIGHT
+      x-body-name: connection_status
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - CONNECTED
+        solution:
+          type: string
+          enum:
+            - INTERACTIVE
+            - GRAPHSCOPE_INSIGHT
     Graph:
       x-body-name: graph
       type: object
@@ -966,8 +988,8 @@ components:
         type:
           type: string
           enum:
-           - cpp
-           - cypher
+            - cpp
+            - cypher
         query:
           type: string
         enable:
@@ -1005,6 +1027,24 @@ components:
             - KUBERNETES
         version:
           type: string
+        solution:
+          type: string
+          enum:
+            - INTERACTIVE
+            - GRAPHSCOPE_INSIGHT
+        graphs_info:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              name:
+                type: string
+              creation_time:
+                type: string
+              update_time:
+                type: string
+              last_dataloading_time:
+                type: string
     DeploymentStatus:
       x-body-name: deployment_status
       type: object
@@ -1173,7 +1213,7 @@ components:
                 scheme:
                   type: string
                   enum:
-                  - file
+                    - file
             import_option:
               type: string
               enum:

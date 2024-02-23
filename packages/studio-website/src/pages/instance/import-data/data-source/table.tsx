@@ -11,6 +11,7 @@ interface DataType {
 }
 type TableListProps = {
   tabledata: DataType[];
+  dataFields?: string[];
   onChange(val: DataType[]): void;
 };
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
@@ -19,11 +20,34 @@ const styles: React.CSSProperties = {
   fontSize: '12px',
   fontWeight: 400,
 };
+const MappingFields = (props: any) => {
+  const { dataFields, value, onChange } = props;
+  console.log('token>>>>>>>>>>>>>', value);
+
+  if (dataFields) {
+    const options = dataFields.map((item: string) => {
+      return {
+        value: item,
+        label: item,
+      };
+    });
+    return <Select size="small" options={options} value={value} onChange={onChange} style={{ width: '136px' }} />;
+  }
+  return (
+    <Input
+      size="small"
+      value={value}
+      onChange={e => {
+        onChange(e.target.value);
+      }}
+    />
+  );
+};
 
 const TableList: React.FC<TableListProps> = props => {
-  const { tabledata, onChange } = props;
+  const { tabledata, onChange, dataFields } = props;
   console.log('tabledata', tabledata);
-
+  const title = dataFields ? 'Mapping Fields' : 'ColumnIndex or Name';
   const handleChangeIndex = (value: any, all: any) => {
     console.log(value, all, tabledata);
     const { key } = all;
@@ -75,14 +99,21 @@ const TableList: React.FC<TableListProps> = props => {
     {
       title: (
         <Text type="secondary" style={styles}>
-          ColumnIndex or Name
+          {title}
         </Text>
       ),
       dataIndex: 'token',
       width: '35%',
       editable: true,
       render(token, all) {
-        return <Input size="small" value={token} onChange={e => handleChangeIndex(e.target.value, all)} />;
+        return (
+          <MappingFields
+            dataFields={dataFields}
+            value={token}
+            onChange={(value: string) => handleChangeIndex(value, all)}
+          />
+        );
+        // return <Input size="small" value={token} onChange={e => handleChangeIndex(e.target.value, all)} />;
       },
     },
   ];
