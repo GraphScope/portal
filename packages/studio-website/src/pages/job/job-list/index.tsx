@@ -68,6 +68,7 @@ const InfoList: React.FunctionComponent<IInfoListProps> = props => {
   const deleteJob = async (job_id: string) => {
     const res = await deleteJobById(job_id);
     message.success(res);
+    getJobList();
   };
   /** detail Popover 展示*/
   const handleChange = (detail: { [s: string]: unknown } | ArrayLike<unknown>) => {
