@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Typography, Form, Space, DatePicker, Segmented, Flex, Tooltip } from 'antd';
 import moment from 'moment';
 import { CheckSquareOutlined, CloseSquareOutlined } from '@ant-design/icons';
+import type { UpdateAlertMessagesRequest } from '@graphscope/studio-server';
 import { FormattedMessage } from 'react-intl';
 import { useContext } from '../useContext';
 import { listAlertMessages, IAlertMessages, updateAlertMessages } from '../service';
@@ -61,22 +62,26 @@ const InquireMessage = (props: IInquireMessageProps) => {
     <>
       <Flex justify="space-between" align="center">
         <Space>
-          <Tooltip title="Dealing">
-            <Button
-              type="text"
-              disabled={selectedRowKeys.length === 0}
-              icon={<CheckSquareOutlined />}
-              onClick={() => allDealingSolved('dealing')}
-            ></Button>
-          </Tooltip>
-          <Tooltip title="Solved">
-            <Button
-              type="text"
-              disabled={selectedRowKeys.length === 0}
-              icon={<CloseSquareOutlined />}
-              onClick={() => allDealingSolved('solved')}
-            ></Button>
-          </Tooltip>
+          {selectedRowKeys.length > 0 && (
+            <>
+              <Tooltip title="Dealing">
+                <Button
+                  type="text"
+                  disabled={selectedRowKeys.length === 0}
+                  icon={<CheckSquareOutlined />}
+                  onClick={() => allDealingSolved('dealing')}
+                ></Button>
+              </Tooltip>
+              <Tooltip title="Solved">
+                <Button
+                  type="text"
+                  disabled={selectedRowKeys.length === 0}
+                  icon={<CloseSquareOutlined />}
+                  onClick={() => allDealingSolved('solved')}
+                ></Button>
+              </Tooltip>
+            </>
+          )}
           <Text>
             <FormattedMessage id="Time" />:
           </Text>

@@ -8,11 +8,11 @@ export type IAlertMessages = {
   startTime?: string;
   endTime?: string;
 };
-type IMessageType = {
+export type IMessageType = {
   key: string;
   message_id: string;
 };
-type IAlertRules = {
+export type IAlertRules = {
   key: string;
   name: string;
   severity: string;

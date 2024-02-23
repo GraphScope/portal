@@ -3,7 +3,6 @@ import { Form, Input, Popconfirm, Table, Typography, Button, Switch, Space, Tool
 import { FormattedMessage } from 'react-intl';
 import { useContext } from '../useContext';
 import { listReceivers, deleteReceiverById, updateReceiverById } from '../service';
-
 interface Item {
   key: string;
   message: string;
@@ -12,8 +11,8 @@ interface Item {
   at_user_ids: string[];
   is_at_all: string;
   enable: string;
+  type?: string;
 }
-
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -23,7 +22,6 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   index: number;
   children: React.ReactNode;
 }
-
 const EditableCell: React.FC<EditableCellProps> = ({
   editing,
   dataIndex,
@@ -58,18 +56,29 @@ const { Link } = Typography;
 type IReceiversProps = {};
 const Receivers: React.FC<IReceiversProps> = props => {
   const [form] = Form.useForm();
-  const { store, updateStore } = useContext();
-  const { alertRecep, isReady } = store;
-  const [editingKey, setEditingKey] = useState('');
+  const { updateStore } = useContext();
+  const [state, updateState] = useState<{
+    alertRecep: Item[];
+    isReady: boolean;
+    editingKey: string;
+  }>({
+    alertRecep: [],
+    isReady: false,
+    editingKey: '',
+  });
+  const { isReady, alertRecep, editingKey } = state;
   useEffect(() => {
     getAlertReceivers();
   }, []);
   /** 获取告警接收数据 */
   const getAlertReceivers = async () => {
     const res = await listReceivers();
-    updateStore(draft => {
-      draft.alertRecep = res || [];
-      draft.isReady = true;
+    updateState(preset => {
+      return {
+        ...preset,
+        alertRecep: res || [],
+        isReady: true,
+      };
     });
   };
   /** 保存告警接收 */
@@ -78,7 +87,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
     const { at_user_ids } = form.getFieldsValue();
     const userid = Array.isArray(at_user_ids) ? at_user_ids : at_user_ids.split(',');
     const data = { ...val, ...form.getFieldsValue(), at_user_ids: userid };
-    setEditingKey('');
+    handleEditingKey('');
     const res = await updateReceiverById(receiver_id, data);
     await getAlertReceivers();
     await message.success(res);
@@ -100,7 +109,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
   const editStatus = (all: Partial<Item> & { key: React.Key }) => {
     const { receiver_id } = all;
     form.setFieldsValue({ webhook_url: '', at_user_ids: '', is_at_all: '', enable: '', ...all });
-    setEditingKey(receiver_id as string);
+    handleEditingKey(receiver_id as string);
   };
 
   const columns = [
@@ -151,7 +160,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
                 Save
               </Button>
             </Link>
-            <Popconfirm title="Sure to cancel?" onConfirm={() => setEditingKey('')}>
+            <Popconfirm title="Sure to cancel?" onConfirm={() => handleEditingKey('')}>
               <Button size="small">Cancel</Button>
             </Popconfirm>
           </span>
@@ -196,7 +205,15 @@ const Receivers: React.FC<IReceiversProps> = props => {
       },
     };
   });
-
+  /** 是否编辑 ''否 */
+  const handleEditingKey = (val: string) => {
+    updateState(preset => {
+      return {
+        ...preset,
+        editingKey: val,
+      };
+    });
+  };
   return (
     <>
       <Button style={{ position: 'absolute', top: '-55px', right: '0px' }} type="primary" onClick={handleChange}>
@@ -217,7 +234,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
             columns={mergedColumns}
             rowClassName="editable-row"
             pagination={{
-              onChange: () => setEditingKey(''),
+              onChange: () => handleEditingKey(''),
             }}
             size="middle"
           />

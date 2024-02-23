@@ -12,10 +12,8 @@ type FieldType = {
 };
 const RECEIVEROPTION = [{ label: 'WebHook', value: 'webhook' }];
 const CreateRecep: React.FC = () => {
-  const { store, updateStore } = useContext();
-  const { alertRecep } = store;
+  const { updateStore } = useContext();
   const onFinish = async (values: any) => {
-    console.log('Success:', values);
     const { at_user_ids } = values;
     await registerReceiver({ ...values, at_user_ids: [at_user_ids], enable: true });
     updateStore(draft => {

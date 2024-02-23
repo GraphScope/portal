@@ -1,17 +1,27 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Space, Table, Tag, Button, Skeleton } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { useContext } from '../useContext';
 import InquireMessage from './inquire-message';
 import { handleOptions } from '@/pages/utils';
 import { listAlertMessages, updateAlertMessages } from '../service';
+import type { UpdateAlertMessagesRequest } from '@graphscope/studio-server';
 
 type IAlertInfoProps = {};
-
+type IState = {
+  metricTypeOptions: { value: string; text: string }[];
+  severityTypeOptions: { value: string; text: string }[];
+  isReady: boolean;
+};
 const AlertInfo: React.FC<IAlertInfoProps> = () => {
   const { store, updateStore } = useContext();
-  const { selectedRowKeys, alertInfo, severityTypeOptions, metricTypeOptions, isReady } = store;
-
+  const { selectedRowKeys, alertInfo } = store;
+  const [state, updateState] = useState<IState>({
+    metricTypeOptions: [],
+    severityTypeOptions: [],
+    isReady: false,
+  });
+  const { metricTypeOptions, severityTypeOptions, isReady } = state;
   useEffect(() => {
     getListAlertMessages();
   }, []);
@@ -19,14 +29,17 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
     const data = await listAlertMessages({});
     updateStore(draft => {
       draft.alertInfo = data || [];
-      draft.severityTypeOptions = handleOptions(data, 'metric_type');
-      draft.metricTypeOptions = handleOptions(data, 'severity');
     });
-    await updateStore(draft => {
-      draft.isReady = true;
+    updateState(preset => {
+      return {
+        ...preset,
+        metricTypeOptions: handleOptions(data, 'severity'),
+        severityTypeOptions: handleOptions(data, 'metric_type'),
+        isReady: true,
+      };
     });
   };
-  const handleChange = async (params: { messages: any; batch_status: string; batch_delete: boolean }) => {
+  const handleChange = async (params: UpdateAlertMessagesRequest) => {
     await updateAlertMessages(params);
     getListAlertMessages();
   };
