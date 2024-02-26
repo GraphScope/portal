@@ -1,7 +1,5 @@
 # GraphScope Portal
 
-test ci。。。
-
 ## Perpare
 
 - install node.js : https://nodejs.org/en
@@ -43,7 +41,7 @@ Compile front-end assets
 `npm run ci`
 
 Initial deployment of the service:
-`npm run start --npm run deploy -- --proxy=http://x.x.x.x --port=8888`
+`npm run deploy -- --proxy=http://x.x.x.x --port=8888`
 
 explanation:
 
@@ -56,7 +54,7 @@ View logs:
 
 Re-deployment
 
-- `npm run start --npm run re-deploy -- --proxy=http://x.x.x.x --port=8888`
+- `npm run re-deploy -- --proxy=http://x.x.x.x --port=8888`
 
 ## others components
 
