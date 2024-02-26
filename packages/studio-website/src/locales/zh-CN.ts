@@ -73,11 +73,12 @@ export default {
   'At User Ids': '被@人的用户ID',
   'Receiver Type': 'Receiver 类型',
   'WebHook URL': 'WebHook URL',
-  'Create Alert Rules': '创建告警规则',
+  'Create Alert Recep': '创建告警接收',
   Submit: '提交',
   'Trigger Time': '触发时间',
   Metric: '类型',
   Reset: '重置',
   Search: '查询',
   Time: '时间',
+  'Eidt Alert Rule': '编辑规则',
 };

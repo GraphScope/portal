@@ -74,11 +74,12 @@ export default {
   'At User Ids': 'At User Ids',
   'Receiver Type': 'Receiver Type',
   'WebHook URL': 'WebHook URL',
-  'Create Alert Rules': 'Create Alert Rules',
+  'Create Alert Recep': 'Create Alert Recep',
   Submit: 'Submit',
   'Trigger Time': 'Trigger Time',
   Metric: 'Metric',
   Reset: 'Reset',
   Search: 'Search',
   Time: 'Time',
+  'Eidt Alert Rule': 'Eidt Alert Rule',
 };

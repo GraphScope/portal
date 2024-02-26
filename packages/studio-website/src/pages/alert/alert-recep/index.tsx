@@ -1,72 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Popconfirm, Table, Typography, Button, Switch, Space, Tooltip, Skeleton, message } from 'antd';
+import { Form, Popconfirm, Table, Button, Switch, Space, Tooltip, Skeleton, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { useContext } from '../useContext';
+import CreateRecep from './create-resep';
 import { listReceivers, deleteReceiverById, updateReceiverById } from '../service';
-interface Item {
+export interface Item {
   key: string;
   message: string;
   receiver_id: string;
   webhook_url: string;
   at_user_ids: string[];
-  is_at_all: string;
-  enable: string;
-  type?: string;
+  is_at_all: boolean;
+  enable: boolean;
+  type: string;
 }
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-  editing: boolean;
-  dataIndex: string;
-  title: any;
-  inputType: any;
-  record: Item;
-  index: number;
-  children: React.ReactNode;
-}
-const EditableCell: React.FC<EditableCellProps> = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const inputNode =
-    inputType === 'Switch' ? (
-      <Switch defaultChecked={record.enable == 'False' ? false : true} />
-    ) : inputType === 'Checkbox' ? (
-      <Switch defaultChecked={record.is_at_all == 'False' ? false : true} />
-    ) : (
-      <Input />
-    );
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item name={dataIndex} key={record.receiver_id} style={{ margin: 0 }}>
-          {inputNode}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
-};
-const { Link } = Typography;
+
 type IReceiversProps = {};
 const Receivers: React.FC<IReceiversProps> = props => {
   const [form] = Form.useForm();
-  const { updateStore } = useContext();
   const [state, updateState] = useState<{
     alertRecep: Item[];
     isReady: boolean;
-    editingKey: string;
+    isEditRecep: boolean;
+    editData: Item;
   }>({
     alertRecep: [],
     isReady: false,
-    editingKey: '',
+    isEditRecep: false,
+    //@ts-ignore
+    editData: {},
   });
-  const { isReady, alertRecep, editingKey } = state;
+  const { isReady, alertRecep, isEditRecep, editData } = state;
   useEffect(() => {
     getAlertReceivers();
   }, []);
@@ -87,7 +50,6 @@ const Receivers: React.FC<IReceiversProps> = props => {
     const { at_user_ids } = form.getFieldsValue();
     const userid = Array.isArray(at_user_ids) ? at_user_ids : at_user_ids.split(',');
     const data = { ...val, ...form.getFieldsValue(), at_user_ids: userid };
-    handleEditingKey('');
     const res = await updateReceiverById(receiver_id, data);
     await getAlertReceivers();
     await message.success(res);
@@ -100,16 +62,12 @@ const Receivers: React.FC<IReceiversProps> = props => {
   };
   /** 创建告警接收 */
   const handleChange = () => {
-    updateStore(draft => {
-      draft.isEditRecep = true;
+    updateState(preset => {
+      return {
+        ...preset,
+        isEditRecep: true,
+      };
     });
-  };
-  /** 是否允许编辑 */
-  const isEditing = (all: Item) => all.receiver_id === editingKey;
-  const editStatus = (all: Partial<Item> & { key: React.Key }) => {
-    const { receiver_id } = all;
-    form.setFieldsValue({ webhook_url: '', at_user_ids: '', is_at_all: '', enable: '', ...all });
-    handleEditingKey(receiver_id as string);
   };
 
   const columns = [
@@ -117,17 +75,20 @@ const Receivers: React.FC<IReceiversProps> = props => {
       title: <FormattedMessage id="Webhook Url" />,
       dataIndex: 'webhook_url',
       editable: true,
+      key: 'webhook_url',
     },
     {
       title: <FormattedMessage id="At User Ids" />,
       dataIndex: 'at_user_ids',
       editable: true,
+      key: 'at_user_ids',
       render: (record: string[]) => <span>{record?.join()}</span>,
     },
     {
       title: <FormattedMessage id="Is At All" />,
       dataIndex: 'is_at_all',
       editable: true,
+      key: 'is_at_all',
       render: (is_at_all: boolean) => {
         return <Switch checked={is_at_all} />;
       },
@@ -136,6 +97,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
       title: <FormattedMessage id="Status" />,
       dataIndex: 'enable',
       editable: true,
+      key: 'enable',
       render: (enable: boolean, all: any) => (
         <Space>
           <Switch checked={enable} />
@@ -150,27 +112,28 @@ const Receivers: React.FC<IReceiversProps> = props => {
     },
     {
       title: <FormattedMessage id="Action" />,
+      key: 'actions',
       render: (_: any, all: Item) => {
         const { receiver_id } = all;
-        const editable = isEditing(all);
-        return editable ? (
-          <span>
-            <Link onClick={() => saveRowReceiver(all)} style={{ marginRight: 8 }}>
-              <Button size="small" type="primary">
-                Save
-              </Button>
-            </Link>
-            <Popconfirm title="Sure to cancel?" onConfirm={() => handleEditingKey('')}>
-              <Button size="small">Cancel</Button>
-            </Popconfirm>
-          </span>
-        ) : (
+        console.log(all);
+        return (
           <Space>
-            <Link disabled={editingKey !== ''} onClick={() => editStatus(all)}>
-              <Button size="small" type="primary" ghost>
-                Edit
-              </Button>
-            </Link>
+            <Button
+              size="small"
+              type="primary"
+              ghost
+              onClick={() => {
+                updateState(preset => {
+                  return {
+                    ...preset,
+                    editData: all,
+                    isEditRecep: true,
+                  };
+                });
+              }}
+            >
+              Edit
+            </Button>
             <Popconfirm
               title="Sure to cancel?"
               onConfirm={(event: any) => delRowReceiver(receiver_id)}
@@ -188,57 +151,37 @@ const Receivers: React.FC<IReceiversProps> = props => {
     },
   ];
 
-  const mergedColumns = columns.map(col => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: (record: Item) => {
-        return {
-          record,
-          inputType: col.dataIndex === 'is_at_all' ? 'Checkbox' : col.dataIndex === 'enable' ? 'Switch' : 'text',
-          dataIndex: col.dataIndex,
-          title: col.title,
-          editing: isEditing(record),
-        };
-      },
-    };
-  });
-  /** 是否编辑 ''否 */
-  const handleEditingKey = (val: string) => {
-    updateState(preset => {
-      return {
-        ...preset,
-        editingKey: val,
-      };
-    });
-  };
   return (
     <>
       <Button style={{ position: 'absolute', top: '-55px', right: '0px' }} type="primary" onClick={handleChange}>
-        <FormattedMessage id="Create Alert Rules" />
+        <FormattedMessage id="Create Alert Recep" />
       </Button>
       {!isReady ? (
         <Skeleton />
       ) : (
-        <Form form={form} component={false}>
-          <Table
-            components={{
-              body: {
-                cell: EditableCell,
-              },
-            }}
-            dataSource={JSON.parse(JSON.stringify(alertRecep))}
-            //@ts-ignores
-            columns={mergedColumns}
-            rowClassName="editable-row"
-            pagination={{
-              onChange: () => handleEditingKey(''),
-            }}
-            size="middle"
-          />
-        </Form>
+        <Table
+          dataSource={alertRecep}
+          //@ts-ignores
+          columns={columns}
+          size="middle"
+        />
+      )}
+      {isEditRecep && (
+        <CreateRecep
+          isCreateRecep={isEditRecep}
+          editDatas={editData}
+          handelChange={(val: boolean) => {
+            //@ts-ignore
+            updateState(preset => {
+              return {
+                ...preset,
+                isEditRecep: val,
+                editData: {},
+              };
+            });
+            getAlertReceivers();
+          }}
+        />
       )}
     </>
   );

@@ -3,14 +3,10 @@ import Section from '@/components/section';
 import AlertInfo from './alert-info';
 import AlertRule from './alert-rules';
 import AlertRecep from './alert-recep';
-import CreateRecep from './alert-recep/create-alert';
-import { useContext } from './useContext';
 import { FormattedMessage } from 'react-intl';
 interface AlertModuleProps {}
 
 const AlertModule: React.FunctionComponent<AlertModuleProps> = props => {
-  const { store } = useContext();
-  const { isEditRecep } = store;
   const items = [
     {
       key: 'info',
@@ -24,14 +20,14 @@ const AlertModule: React.FunctionComponent<AlertModuleProps> = props => {
     },
     {
       key: 'recep',
-      children: !isEditRecep ? <AlertRecep /> : <CreateRecep />,
+      children: <AlertRecep />,
       label: <FormattedMessage id="Alert Recep" />,
     },
-    {
-      key: 'status',
-      children: <>部署状态</>,
-      label: <FormattedMessage id="Deployment Status" />,
-    },
+    // {
+    //   key: 'status',
+    //   children: <>部署状态</>,
+    //   label: <FormattedMessage id="Deployment Status" />,
+    // },
   ];
 
   return (

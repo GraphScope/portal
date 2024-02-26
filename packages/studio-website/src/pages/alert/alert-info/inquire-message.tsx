@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Typography, Form, Space, DatePicker, Segmented, Flex, Tooltip } from 'antd';
-import moment from 'moment';
 import { CheckSquareOutlined, CloseSquareOutlined } from '@ant-design/icons';
-import type { UpdateAlertMessagesRequest } from '@graphscope/studio-server';
 import { FormattedMessage } from 'react-intl';
+import dayjs from 'dayjs';
 import { useContext } from '../useContext';
 import { listAlertMessages, IAlertMessages, updateAlertMessages } from '../service';
 const { Text } = Typography;
@@ -15,7 +14,7 @@ const InquireMessage = (props: IInquireMessageProps) => {
   const { selectedRowKeys } = store;
   const [state, updateState] = useState({
     //@ts-ignore
-    timePeriod: [moment().subtract(1, 'Day'), moment()],
+    timePeriod: [dayjs().subtract('1', 'Hour'), dayjs()],
     segmentedValue: '1 Hour',
   });
   const { timePeriod, segmentedValue } = state;
@@ -33,14 +32,15 @@ const InquireMessage = (props: IInquireMessageProps) => {
       type,
       status,
       severity,
-      startTime: moment(timePeriod[0]).format('YYYY-MM-DD HH:mm'),
-      endTime: moment(timePeriod[1]).format('YYYY-MM-DD HH:mm'),
+      startTime: dayjs(timePeriod[0]).format('YYYY-MM-DD HH:mm'),
+      endTime: dayjs(timePeriod[1]).format('YYYY-MM-DD HH:mm'),
     };
     const res = await listAlertMessages(params);
     updateStore(draft => {
       draft.alertInfo = res || [];
     });
   };
+  /** 重置 */
   const resetChange = () => {
     updateStore(draft => {
       draft.defaultFilteredValue = 'All';
@@ -48,16 +48,28 @@ const InquireMessage = (props: IInquireMessageProps) => {
     });
     handleChange('1 Hour');
   };
+  /** 选择固定时间值 */
   const handleChange = (value: any) => {
     const time = value.split(' ');
+    const rangePicker = [dayjs().subtract(time[0], time[1]), dayjs()];
     updateState(preset => {
       return {
         ...preset,
-        timePeriod: [moment().subtract(time[0], time[1]), moment()],
+        timePeriod: rangePicker,
         segmentedValue: value,
       };
     });
   };
+  /** 日期选择 */
+  const rangePickerChange = (value: any, dateString: [string, string] | string) => {
+    updateState(preset => {
+      return {
+        ...preset,
+        timePeriod: value,
+      };
+    });
+  };
+
   return (
     <>
       <Flex justify="space-between" align="center">
@@ -95,6 +107,7 @@ const InquireMessage = (props: IInquireMessageProps) => {
             value={timePeriod}
             showTime={{ format: 'HH:mm' }}
             format="YYYY-MM-DD HH:mm"
+            onCalendarChange={rangePickerChange}
           />
         </Space>
         <Space>

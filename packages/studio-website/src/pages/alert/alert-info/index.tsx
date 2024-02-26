@@ -15,7 +15,7 @@ type IState = {
 };
 const AlertInfo: React.FC<IAlertInfoProps> = () => {
   const { store, updateStore } = useContext();
-  const { selectedRowKeys, alertInfo } = store;
+  const { selectedRowKeys, alertInfo, defaultFilteredValue } = store;
   const [state, updateState] = useState<IState>({
     metricTypeOptions: [],
     severityTypeOptions: [],
@@ -58,7 +58,8 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
       title: <FormattedMessage id="Severity" />,
       dataIndex: 'severity',
       key: 'severity',
-      defaultFilteredValue: 'All',
+      defaultFilteredValue: defaultFilteredValue,
+      filterMultiple: false,
       filters: severityTypeOptions,
       onFilter: (value: string, record: { severity: string | string[] }) => record.severity.indexOf(value) === 0,
     },
@@ -66,7 +67,8 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
       title: <FormattedMessage id="Metric" />,
       dataIndex: 'metric_type',
       key: 'metric_type',
-      defaultFilteredValue: 'All',
+      defaultFilteredValue: defaultFilteredValue,
+      filterMultiple: false,
       filters: metricTypeOptions,
       onFilter: (value: string, record: { metric_type: string | string[] }) => record.metric_type.indexOf(value) === 0,
     },
@@ -79,7 +81,8 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
       title: <FormattedMessage id="Status" />,
       key: 'status',
       dataIndex: 'status',
-      defaultFilteredValue: 'All',
+      defaultFilteredValue: defaultFilteredValue,
+      filterMultiple: false,
       filters: [
         { value: 'All', text: 'All' },
         { value: 'unsolved', text: 'Unsolved' },
