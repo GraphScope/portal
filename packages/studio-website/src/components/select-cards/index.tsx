@@ -49,7 +49,11 @@ const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
                         background: '#dddddd29',
                         cursor: 'not-allowed',
                       }
-                    : {}
+                    : isChecked
+                      ? {
+                          border: `1px solid ${token.colorPrimary}`,
+                        }
+                      : {}
                 }
               >
                 <Flex justify="space-between" align="">
