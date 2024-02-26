@@ -22,12 +22,15 @@ type IState = {
   alertInfo: IalertInfo[];
   /** 选中列表值 */
   selectedRowKeys: string[];
-  /** 重置列表值 */
-  defaultFilteredValue: string[];
+  filterValues: {
+    metric_type?: string[];
+    severity?: string[];
+    status?: string[];
+  };
 };
 /** 处理alert 属性options方法 */
 const handleOptions = (data: { [x: string]: string }[], type: string) => {
-  return [{ value: 'All', text: 'All' }].concat(
+  return [{ value: '', text: 'All' }].concat(
     data.map((item: { [x: string]: string }) => {
       const text = item[type].substring(0, 1).toUpperCase() + item[type].substring(1);
       return { value: item[type], text };
@@ -41,9 +44,13 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
     isReady: false,
     alertInfo: [],
     selectedRowKeys: [],
-    defaultFilteredValue: ['All'],
+    filterValues: {
+      metric_type: [''],
+      severity: [''],
+      status: [''],
+    },
   });
-  const { metricTypeOptions, severityTypeOptions, isReady, alertInfo, selectedRowKeys, defaultFilteredValue } = state;
+  const { metricTypeOptions, severityTypeOptions, isReady, alertInfo, selectedRowKeys, filterValues } = state;
   useEffect(() => {
     getListAlertMessages();
   }, []);
@@ -78,7 +85,7 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
       title: <FormattedMessage id="Severity" />,
       dataIndex: 'severity',
       key: 'severity',
-      defaultFilteredValue: defaultFilteredValue,
+      filteredValue: filterValues.severity || null,
       filterMultiple: false,
       filters: severityTypeOptions,
       onFilter: (value: string, record: { severity: string | string[] }) => record.severity.indexOf(value) === 0,
@@ -87,7 +94,7 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
       title: <FormattedMessage id="Metric" />,
       dataIndex: 'metric_type',
       key: 'metric_type',
-      defaultFilteredValue: defaultFilteredValue,
+      filteredValue: filterValues.metric_type || null,
       filterMultiple: false,
       filters: metricTypeOptions,
       onFilter: (value: string, record: { metric_type: string | string[] }) => record.metric_type.indexOf(value) === 0,
@@ -101,10 +108,10 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
       title: <FormattedMessage id="Status" />,
       key: 'status',
       dataIndex: 'status',
-      defaultFilteredValue: defaultFilteredValue,
+      filteredValue: filterValues.status || null,
       filterMultiple: false,
       filters: [
-        { value: 'All', text: 'All' },
+        { value: '', text: 'All' },
         { value: 'unsolved', text: 'Unsolved' },
         { value: 'solved', text: 'Solved' },
         { value: 'dealing', text: 'Dealing' },
@@ -177,6 +184,11 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
               ...preset,
               selectedRowKeys: [],
               defaultFilteredValue: '',
+              filterValues: {
+                metric_type: [''],
+                severity: [''],
+                status: [''],
+              },
             };
           });
         }}
@@ -192,6 +204,20 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
           columns={columns}
           dataSource={alertInfo}
           size="small"
+          onChange={(pagination, filters) => {
+            const { metric_type, severity, status } = filters;
+            //@ts-ignore
+            updateState(preset => {
+              return {
+                ...preset,
+                filterValues: {
+                  metric_type: metric_type,
+                  severity: severity,
+                  status: status,
+                },
+              };
+            });
+          }}
           pagination={{
             defaultCurrent: 1,
             defaultPageSize: 10,
