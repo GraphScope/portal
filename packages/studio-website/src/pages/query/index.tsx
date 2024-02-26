@@ -30,6 +30,8 @@ const QueryModule = () => {
       }}
     >
       <StudioQuery
+        //@ts-ignore
+
         /** 侧边栏展示的位置 */
         displaySidebarPosition="right"
         /** 是否启用绝对定位布局 */

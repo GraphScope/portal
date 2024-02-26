@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Row, Col, Card, Typography, Skeleton, Space, Flex, Divider } from 'antd';
-import { useContext, updateDataMap } from './useContext';
+import { useContext, updateDataMap, initialStore, initialDataMap, clearDataMap, clearStore } from './useContext';
 import GraphView from './graph-view';
 import DataSource from './data-source/index';
 
@@ -19,6 +19,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
   const { store, updateStore } = useContext();
 
   const { currentType, nodes, edges, isReady, graphName } = store;
+
   useEffect(() => {
     const { graph_name } = getUrlParams();
     getSchema(graph_name).then(res => {
@@ -37,12 +38,14 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         });
       });
     });
+    return () => {
+      clearDataMap();
+      clearStore();
+    };
   }, []);
 
   const bindNodeCount = nodes.filter(item => item.isBind).length;
   const bindEdgeCount = edges.filter(item => item.isBind).length;
-
-  console.log('store....', graphName, store);
 
   return (
     <Section

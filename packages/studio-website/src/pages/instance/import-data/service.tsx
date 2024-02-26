@@ -36,8 +36,8 @@ export const getSchema = async (graph_name: string): Promise<{ nodes: BindingNod
   });
   console.log('schemaOption', schemaOption, nodes, edges);
   const real = { nodes, edges };
-
-  return MOCK_DATA;
+  return real;
+  // return MOCK_DATA;
 };
 
 /** upload file */
@@ -95,7 +95,7 @@ export const MOCK_DATA = {
         },
       ],
       datatype: 'csv',
-      filelocation: '/home/graphscope/.graphscope/gs/dataset/person.csv',
+      filelocation: '/work/flex/interactive/examples/modern_graph/person.csv',
       isBind: true,
       isEidtProperty: true,
       dataFields: ['id', 'name', 'age'],
@@ -135,7 +135,7 @@ export const MOCK_DATA = {
         },
       ],
       datatype: 'csv',
-      filelocation: '/home/graphscope/.graphscope/gs/dataset/software.csv',
+      filelocation: '/work/flex/interactive/examples/modern_graph/software.csv',
       isBind: true,
       isEidtProperty: true,
       dataFields: ['id', 'name', 'lang'],
@@ -160,7 +160,7 @@ export const MOCK_DATA = {
         },
       ],
       datatype: 'csv',
-      filelocation: '/home/graphscope/.graphscope/gs/dataset/person_knows_person.csv',
+      filelocation: '/work/flex/interactive/examples/modern_graph/person_knows_person.csv',
       isBind: true,
       isEidtProperty: true,
       dataFields: ['person.id', 'person.id', 'weight'],
@@ -183,7 +183,7 @@ export const MOCK_DATA = {
         },
       ],
       datatype: 'csv',
-      filelocation: '/home/graphscope/.graphscope/gs/dataset/person_created_software.csv',
+      filelocation: '/work/flex/interactive/examples/modern_graph/person_created_software.csv',
       isBind: true,
       isEidtProperty: true,
       dataFields: ['person.id', 'software.id', 'weight'],
