@@ -3,7 +3,6 @@ import { Breadcrumb, Divider, Typography, Tabs } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import type { BreadcrumbProps, TabsProps } from 'antd';
 import { getSearchParams } from '../utils';
-import { log } from 'console';
 interface ISectionProps {
   title?: string;
   desc?: string;
