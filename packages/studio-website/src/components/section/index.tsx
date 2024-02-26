@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Breadcrumb, Divider, Typography, Tabs } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import type { BreadcrumbProps, TabsProps } from 'antd';
-
+import { getSearchParams } from '../utils';
 interface ISectionProps {
   title?: string;
   desc?: string;
@@ -14,8 +14,13 @@ interface ISectionProps {
 
 const Section: React.FunctionComponent<ISectionProps> = props => {
   const { title, desc, breadcrumb, children, items, style } = props;
+  const { path, searchParams } = getSearchParams(window.location);
+  console.log(path, '111111', searchParams);
+  const onChange = (key: string) => {
+    console.log(key);
 
-  const onChange = (key: string) => {};
+    searchParams.set('nav', key);
+  };
   const hasDivider = title && desc && !items;
   return (
     <section style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
