@@ -4,6 +4,7 @@ import Header from './header';
 import { Segmented } from 'antd';
 import { useContext } from '../context';
 import type { IStudioQueryProps } from '../context';
+import { PlayCircleOutlined } from '@ant-design/icons';
 import Empty from './empty';
 interface IContentProps {
   createStatements: IStudioQueryProps['createStatements'];
@@ -32,10 +33,11 @@ const Content: React.FunctionComponent<IContentProps> = props => {
 
   React.useEffect(() => {}, []);
 
-  const queryOptions = statements.map(item => {
+  const queryOptions = statements.map((item, index) => {
     return {
-      label: item.id,
+      label: `query-${index + 1}`, // item.id,
       value: item.id,
+      // icon: <PlayCircleOutlined />,
     };
   });
 

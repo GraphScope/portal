@@ -42,7 +42,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
           border: `2px solid ${token.colorPrimary}`,
         }
       : {
-          border: `1px solid ${token.colorBorder}`,
+          border: `1px solid  ${token.colorBorder}`,
         };
   const ContainerRef = useRef<HTMLDivElement>(null);
   const [state, updateState] = useState({

@@ -14,7 +14,7 @@ export interface Extra {
 export type BindingNode = TransformedNode & Extra;
 export type BindingEdge = TransformedEdge & Extra;
 
-export type IStore<T> = T & {
+export type IStore = {
   graphName: string;
   currentType: string;
   nodes: BindingNode[];
@@ -22,7 +22,7 @@ export type IStore<T> = T & {
   isReady: boolean;
 };
 
-export const initialStore: IStore<{}> = {
+export const initialStore: IStore = {
   /** 图名字 */
   graphName: '',
   /** 数据源 currentType */
@@ -36,19 +36,25 @@ export const initialStore: IStore<{}> = {
 export const initialDataMap: Record<string, BindingNode | BindingEdge> = {};
 
 type ContextType<T> = {
-  store: Snapshot<IStore<T>>;
-  updateStore: (fn: (draft: IStore<T>) => void) => void;
+  store: Snapshot<IStore>;
+  updateStore: (fn: (draft: IStore) => void) => void;
 };
 
+const proxyStore = proxy(initialStore);
 export function useContext<T>(): ContextType<T> {
-  const proxyStore = proxy(initialStore) as IStore<T>;
   const store = useSnapshot(proxyStore);
   return {
     store,
-    updateStore: (fn: (draft: IStore<T>) => void) => {
+    updateStore: (fn: (draft: IStore) => void) => {
       return fn(proxyStore);
     },
   };
+}
+export function clearStore() {
+  Object.keys(proxyStore).forEach(key => {
+    //@ts-ignore
+    proxyStore[key] = initialStore[key];
+  });
 }
 
 /** 节点和边的配置，每次改动会带来大量重绘，因此单独把数据拿出来，做成 data map */
@@ -59,6 +65,11 @@ export function useDataMap() {
 }
 export function updateDataMap(fn: (draft: Record<string, BindingNode | BindingEdge>) => void) {
   return fn(proxyDataMap);
+}
+export function clearDataMap() {
+  Object.keys(proxyDataMap).forEach(key => {
+    delete proxyDataMap[key];
+  });
 }
 
 export function transformDataMap(dataMap: BindingEdge | BindingNode) {

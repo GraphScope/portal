@@ -41,6 +41,12 @@ const styles: React.CSSProperties = {
   margin: '0px',
   color: '#404A54',
 };
+const STATUS_COLOR_MAP: Record<string, string> = {
+  stopped: 'red',
+  running: 'green',
+  undefined: 'green',
+};
+
 const InstaceCard: React.FC<InstaceCardType> = props => {
   const {
     updatetime,
@@ -102,7 +108,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     >
       <Flex justify="space-between">
         <Flex align="flex-start" vertical gap="middle">
-          <Tag color="green">{status}</Tag>
+          <Tag color={STATUS_COLOR_MAP[status]}>{status}</Tag>
           <Space direction="vertical" size={0}>
             <Text type="secondary">Uptime: {updatetime}</Text>
             <Text type="secondary">Last data import: {importtime}</Text>
@@ -130,7 +136,8 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
           <Button
             style={{ width: '150px' }}
             icon={<SearchOutlined />}
-            onClick={() => history.push(`/query?graph=movie`)}
+            disabled={status === 'stopped' ? true : false}
+            onClick={() => history.push(`/query?graph_name=${name}`)}
           >
             Query Graph
           </Button>

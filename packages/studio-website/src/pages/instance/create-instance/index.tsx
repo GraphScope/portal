@@ -95,7 +95,7 @@ const CreateInstance: React.FunctionComponent = () => {
     const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
     console.log('schemaJSON', schemaJSON);
     const data = {
-      name: engineInput,
+      name: String(engineInput).trim(),
       store_type: engineType,
       stored_procedures: {
         directory: 'plugins',

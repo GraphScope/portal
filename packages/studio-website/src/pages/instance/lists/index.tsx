@@ -57,20 +57,6 @@ const InstanceCard: React.FC = () => {
       desc="Listing all graphs on the cluster"
     >
       <Row gutter={[12, 12]}>
-        {instanceList.map((item, i) => (
-          <Col key={i} span={12}>
-            <InstaceCard {...item} handleDelete={handleDelete} handleStart={handleStart} />
-          </Col>
-        ))}
-        {!isReady && (
-          <Col span={12}>
-            <Card headStyle={{ fontSize: '30px' }} title={'Loading graph'} style={{ background: '#FCFCFC' }}>
-              <div style={{ display: 'flex', height: '164px', justifyContent: 'center', alignContent: 'center' }}>
-                <Skeleton />
-              </div>
-            </Card>
-          </Col>
-        )}
         <Col span={12}>
           <Card
             title={'New Graph'}
@@ -92,6 +78,20 @@ const InstanceCard: React.FC = () => {
             </div>
           </Card>
         </Col>
+        {instanceList.map((item, i) => (
+          <Col key={i} span={12}>
+            <InstaceCard {...item} handleDelete={handleDelete} handleStart={handleStart} />
+          </Col>
+        ))}
+        {!isReady && (
+          <Col span={12}>
+            <Card headStyle={{ fontSize: '30px' }} title={'Loading graph'} style={{ background: '#FCFCFC' }}>
+              <div style={{ display: 'flex', height: '164px', justifyContent: 'center', alignContent: 'center' }}>
+                <Skeleton />
+              </div>
+            </Card>
+          </Col>
+        )}
       </Row>
     </Section>
   );

@@ -111,7 +111,11 @@ export function processData(data: GraphinData, configMap: Map<string, ConfigItem
   const { nodes: Nodes, edges: Edges } = data;
   const nodes = Nodes.map(item => {
     const { id, label, properties } = item;
-    const match = configMap.get(label)!;
+    const match = configMap.get(label) || {
+      color: colors[1],
+      size: sizes[1],
+      caption: 'id',
+    };
     const { color, size, caption } = match;
     const displayLabel = (properties && properties[caption]) || id;
     nodesMap.set(id, item);
@@ -136,7 +140,11 @@ export function processData(data: GraphinData, configMap: Map<string, ConfigItem
 
   const edges = Edges.map(item => {
     const { id, label, source, target, properties } = item;
-    const match = configMap.get(label)!;
+    const match = configMap.get(label) || {
+      color: colors[1],
+      size: widths[1],
+      caption: 'id',
+    };
     const { color, size, caption } = match;
     const displayLabel = (properties && properties[caption]) || id;
     return {

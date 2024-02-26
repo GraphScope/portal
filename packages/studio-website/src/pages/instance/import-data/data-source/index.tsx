@@ -24,7 +24,7 @@ const ToggleIcon = (props: any) => {
 const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const { id } = props;
   const dataMap = useDataMap();
-  console.log('dataMap', dataMap, id);
+
   const data = dataMap[id] as BindingNode & { isEidtProperty: boolean };
   const { isBind, filelocation, isEidtProperty, datatype, label, properties, dataFields } = data;
   const { token } = useToken();
