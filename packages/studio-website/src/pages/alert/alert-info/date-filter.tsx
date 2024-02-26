@@ -3,15 +3,17 @@ import { Button, Typography, Form, Space, DatePicker, Segmented, Flex, Tooltip }
 import { CheckSquareOutlined, CloseSquareOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import dayjs from 'dayjs';
-import { useContext } from '../useContext';
 import { listAlertMessages, IAlertMessages, updateAlertMessages } from '../service';
 const { Text } = Typography;
 const { RangePicker } = DatePicker;
-type IInquireMessageProps = {};
-const InquireMessage = (props: IInquireMessageProps) => {
+type IInquireMessageProps = {
+  selectedRowKeys: string[];
+  searchChange(val: IAlertMessages): void;
+  resetChange(): void;
+};
+const DateFilter = (props: IInquireMessageProps) => {
   const [form] = Form.useForm();
-  const { store, updateStore } = useContext();
-  const { selectedRowKeys } = store;
+  const { selectedRowKeys, searchChange, resetChange } = props;
   const [state, updateState] = useState({
     //@ts-ignore
     timePeriod: [dayjs().subtract('1', 'Hour'), dayjs()],
@@ -36,18 +38,9 @@ const InquireMessage = (props: IInquireMessageProps) => {
       endTime: dayjs(timePeriod[1]).format('YYYY-MM-DD HH:mm'),
     };
     const res = await listAlertMessages(params);
-    updateStore(draft => {
-      draft.alertInfo = res || [];
-    });
+    searchChange(res);
   };
-  /** 重置 */
-  const resetChange = () => {
-    updateStore(draft => {
-      draft.defaultFilteredValue = 'All';
-      draft.selectedRowKeys = [];
-    });
-    handleChange('1 Hour');
-  };
+
   /** 选择固定时间值 */
   const handleChange = (value: any) => {
     const time = value.split(' ');
@@ -114,6 +107,7 @@ const InquireMessage = (props: IInquireMessageProps) => {
           <Button
             onClick={() => {
               resetChange();
+              handleChange('1 Hour');
             }}
           >
             <FormattedMessage id="Reset" />
@@ -126,4 +120,4 @@ const InquireMessage = (props: IInquireMessageProps) => {
     </>
   );
 };
-export default InquireMessage;
+export default DateFilter;

@@ -1,41 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import { Space, Table, Tag, Button, Skeleton } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { useContext } from '../useContext';
-import InquireMessage from './inquire-message';
-import { handleOptions } from '@/pages/utils';
+import DateFilter from './date-filter';
+import { handleOptions } from '@/components/utils';
 import { listAlertMessages, updateAlertMessages } from '../service';
 import type { UpdateAlertMessagesRequest } from '@graphscope/studio-server';
-
+export type IalertInfo = {
+  key: string;
+  info: string;
+  name: number;
+  severity: string;
+  status: string[];
+};
 type IAlertInfoProps = {};
 type IState = {
+  /** 属性选择 */
   metricTypeOptions: { value: string; text: string }[];
+  /** 严重性选择 */
   severityTypeOptions: { value: string; text: string }[];
   isReady: boolean;
+  /** 列表数据 */
+  alertInfo: IalertInfo[];
+  /** 选中列表值 */
+  selectedRowKeys: string[];
+  /** 重置列表值 */
+  defaultFilteredValue: string;
 };
 const AlertInfo: React.FC<IAlertInfoProps> = () => {
-  const { store, updateStore } = useContext();
-  const { selectedRowKeys, alertInfo, defaultFilteredValue } = store;
   const [state, updateState] = useState<IState>({
     metricTypeOptions: [],
     severityTypeOptions: [],
     isReady: false,
+    alertInfo: [],
+    selectedRowKeys: [],
+    defaultFilteredValue: '',
   });
-  const { metricTypeOptions, severityTypeOptions, isReady } = state;
+  const { metricTypeOptions, severityTypeOptions, isReady, alertInfo, selectedRowKeys, defaultFilteredValue } = state;
   useEffect(() => {
     getListAlertMessages();
   }, []);
   const getListAlertMessages = async () => {
     const data = await listAlertMessages({});
-    updateStore(draft => {
-      draft.alertInfo = data || [];
-    });
     updateState(preset => {
       return {
         ...preset,
         metricTypeOptions: handleOptions(data, 'severity'),
         severityTypeOptions: handleOptions(data, 'metric_type'),
         isReady: true,
+        alertInfo: data || [],
       };
     });
   };
@@ -126,15 +138,41 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
   const rowSelection = {
     selectedRowKeys,
     onChange: (newSelectedRowKeys: string[]) => {
-      updateStore(draft => {
-        draft.selectedRowKeys = newSelectedRowKeys;
+      updateState(preset => {
+        return {
+          ...preset,
+          selectedRowKeys: newSelectedRowKeys,
+        };
       });
     },
   };
 
   return (
     <>
-      <InquireMessage />
+      <DateFilter
+        selectedRowKeys={selectedRowKeys}
+        /** 查询修改列表 */
+        searchChange={val => {
+          console.log(val);
+          //@ts-ignore
+          updateState(preset => {
+            return {
+              ...preset,
+              alertInfo: val,
+            };
+          });
+        }}
+        /**查询重置 */
+        resetChange={() => {
+          updateState(preset => {
+            return {
+              ...preset,
+              selectedRowKeys: [],
+              defaultFilteredValue: '',
+            };
+          });
+        }}
+      />
       {!isReady ? (
         <Skeleton />
       ) : (
