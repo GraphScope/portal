@@ -1,9 +1,35 @@
 import * as React from 'react';
 import Section from '@/components/section';
-
+import AlertInfo from './alert-info';
+import AlertRule from './alert-rules';
+import AlertRecep from './alert-recep';
+import { FormattedMessage } from 'react-intl';
 interface AlertModuleProps {}
 
 const AlertModule: React.FunctionComponent<AlertModuleProps> = props => {
+  const items = [
+    {
+      key: 'info',
+      children: <AlertInfo />,
+      label: <FormattedMessage id="Alert Info" />,
+    },
+    {
+      key: 'rule',
+      children: <AlertRule />,
+      label: <FormattedMessage id="Alert Rules" />,
+    },
+    {
+      key: 'recep',
+      children: <AlertRecep />,
+      label: <FormattedMessage id="Alert Recep" />,
+    },
+    // {
+    //   key: 'status',
+    //   children: <>部署状态</>,
+    //   label: <FormattedMessage id="Deployment Status" />,
+    // },
+  ];
+
   return (
     <Section
       breadcrumb={[
@@ -16,9 +42,8 @@ const AlertModule: React.FunctionComponent<AlertModuleProps> = props => {
       ]}
       title="Alert"
       desc="Alert"
-    >
-      WIP...
-    </Section>
+      items={items}
+    ></Section>
   );
 };
 
