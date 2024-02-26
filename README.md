@@ -1,7 +1,5 @@
 # GraphScope Portal
 
-test ci。。。
-
 ## Perpare
 
 - install node.js : https://nodejs.org/en
@@ -34,6 +32,29 @@ npm run start
 ```
 
 ---
+
+## Deployment
+
+Execute this command in the root directory:
+
+Compile front-end assets
+`npm run ci`
+
+Initial deployment of the service:
+`npm run deploy -- --proxy=http://x.x.x.x --port=8888`
+
+explanation:
+
+- `proxy` is the deployment address of the graphscope engine, defaulting to `http://127.0.0.1:8080`.
+- `port` is the port of the service front-end, defaulting to `8888`.
+
+View logs:
+
+- `npm run logs`
+
+Re-deployment
+
+- `npm run re-deploy -- --proxy=http://x.x.x.x --port=8888`
 
 ## others components
 
