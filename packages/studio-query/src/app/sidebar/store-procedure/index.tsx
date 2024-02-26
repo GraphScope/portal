@@ -1,10 +1,14 @@
 import * as React from 'react';
 import { useContext } from '../../context';
 import List from '../saved-statements/list';
+import { Flex, Typography } from 'antd';
 
-interface IStoreProcedureProps {}
+interface IStoreProcedureProps {
+  deleteStatements: (ids: string[]) => void;
+}
 
 const StoreProcedure: React.FunctionComponent<IStoreProcedureProps> = props => {
+  const { deleteStatements } = props;
   const { store, updateStore } = useContext();
   const { storeProcedures } = store;
   const items = storeProcedures.map(item => {
@@ -21,11 +25,22 @@ const StoreProcedure: React.FunctionComponent<IStoreProcedureProps> = props => {
       }
     });
   };
-  const handleNav = () => {};
+
+  const handleDelete = async ids => {
+    deleteStatements(ids);
+    updateStore(draft => {
+      draft.storeProcedures = draft.savedStatements.filter(item => {
+        return ids.indexOf(item.id) === -1;
+      });
+    });
+  };
   return (
-    <div>
-      <List items={items} onClick={handleClick} />
-    </div>
+    <Flex vertical style={{ height: '100%', overflow: 'hidden' }}>
+      <Typography.Title level={4} style={{ margin: '0px', flexBasis: '30px', padding: '12px' }}>
+        Store Procedure
+      </Typography.Title>
+      <List items={items} onClick={handleClick} onDelete={handleDelete} />
+    </Flex>
   );
 };
 

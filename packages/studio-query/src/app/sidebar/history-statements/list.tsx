@@ -3,8 +3,6 @@ import { IStatement } from '../../context';
 import { Typography, Checkbox, Button, Flex } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-// var relativeTime = require('dayjs/plugin/relativeTime');
-// dayjs.extend(relativeTime);
 
 const { Text, Title } = Typography;
 
@@ -140,7 +138,7 @@ const List: React.FunctionComponent<IListProps> = props => {
                             textWrap: 'pretty',
                             padding: '6px 12px',
                             fontSize: '12px',
-                            margin: '2px 0px',
+                            margin: '2px 6px 2px 0px',
                             border: '1px solid #ddd',
                             borderRadius: '6px',
                             flex: 1,

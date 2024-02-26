@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Content from './content';
 import SavedStatements from './sidebar/saved-statements';
-import GPTStatements from './sidebar/gpt-statements';
+// import GPTStatements from './sidebar/gpt-statements';
 import RecommendedStatements from './sidebar/recommended-statements';
 import StoreProcedure from './sidebar/store-procedure';
 import HistoryStatements from './sidebar/history-statements';
@@ -50,7 +50,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       id: 'saved',
       name: 'saved',
       icon: <BookOutlined />,
-      children: <SavedStatements />,
+      children: <SavedStatements deleteStatements={ids => deleteStatements('saved', ids)} />,
     },
     {
       id: 'history',
@@ -62,14 +62,14 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       id: 'store-procedure',
       name: 'store-procedure',
       icon: <DatabaseOutlined />,
-      children: <StoreProcedure />,
+      children: <StoreProcedure deleteStatements={ids => deleteStatements('store-procedure', ids)} />,
     },
-    {
-      id: 'qwen',
-      name: 'qwen',
-      icon: <RedditOutlined />,
-      children: <GPTStatements />,
-    },
+    // {
+    //   id: 'qwen',
+    //   name: 'qwen',
+    //   icon: <RedditOutlined />,
+    //   children: <GPTStatements />,
+    // },
   ];
 
   useEffect(() => {
