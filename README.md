@@ -1,7 +1,5 @@
 # GraphScope Portal
 
-test ci。。。
-
 ## Perpare
 
 - install node.js : https://nodejs.org/en
