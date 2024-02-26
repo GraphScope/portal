@@ -35,6 +35,21 @@ npm run start
 
 ---
 
+## Deployment
+
+Execute this command in the root directory:
+
+compile front-end assets
+`npm run ci`
+
+initial deployment of the service:
+`npm run start --npm run re-deploy -- --proxy=http://x.x.x.x --port=8888`
+
+explanation:
+
+- `proxy` is the deployment address of the graphscope engine, defaulting to `http://127.0.0.1:8080`.
+- `port` is the port of the service front-end, defaulting to `8888`.
+
 ## others components
 
 - start components demo site
