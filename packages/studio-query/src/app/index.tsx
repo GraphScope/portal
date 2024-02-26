@@ -76,21 +76,21 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     (async () => {
       //@ts-ignore
 
-      const graphName = searchParamOf('graph_name');
+      const graph_name = searchParamOf('graph_name');
       const activeNavbar = searchParamOf('nav') || 'saved';
       const globalScript = searchParamOf('cypher') || 'Match (n) return n limit 10';
       const displayMode = searchParamOf('display_mode') || localStorage.getItem(localStorageVars.mode) || 'flow';
       const autoRun = searchParamOf('auto_run') === 'true' ? true : false;
-
       const info = await queryInfo();
-      const schemaData = await queryGraphSchema(info.name);
+      const graphName = graph_name || info?.name;
+      const schemaData = await queryGraphSchema(graphName);
       const historyStatements = await queryStatements('history');
       const savedStatements = await queryStatements('saved');
       const storeProcedures = await queryStatements('store-procedure');
 
       updateStore(draft => {
         draft.isReady = true;
-        draft.graphName = graphName || info.name;
+        draft.graphName = graphName;
         draft.schemaData = schemaData;
         draft.historyStatements = historyStatements;
         draft.savedStatements = savedStatements;
