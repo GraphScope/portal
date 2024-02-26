@@ -52,7 +52,7 @@ const statusColor = [
 ];
 
 interface IInfoListProps {}
-const InfoList: React.FunctionComponent<IInfoListProps> = props => {
+const JobsList: React.FunctionComponent<IInfoListProps> = props => {
   const [jobsList, setJobsList] = useState([]);
   useEffect(() => {
     getJobList();
@@ -183,4 +183,4 @@ const InfoList: React.FunctionComponent<IInfoListProps> = props => {
   );
 };
 
-export default InfoList;
+export default JobsList;

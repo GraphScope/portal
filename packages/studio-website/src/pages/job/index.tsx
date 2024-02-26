@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Section from '@/components/section';
 import type { TabsProps } from 'antd';
-import InfoList from './job-list';
+import JobsList from './job-list';
 interface IJobProps {}
 
 const Job: React.FunctionComponent<IJobProps> = props => {
@@ -9,7 +9,7 @@ const Job: React.FunctionComponent<IJobProps> = props => {
     {
       key: 'info',
       label: 'Job List',
-      children: <InfoList />,
+      children: <JobsList />,
     },
     // {
     //   key: 'import',
