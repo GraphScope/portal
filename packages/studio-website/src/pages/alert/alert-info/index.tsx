@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Space, Table, Tag, Button, Skeleton } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import DateFilter from './date-filter';
-import { handleOptions } from '@/components/utils';
 import { listAlertMessages, updateAlertMessages } from '../service';
 import type { UpdateAlertMessagesRequest } from '@graphscope/studio-server';
 export type IalertInfo = {
@@ -24,7 +23,16 @@ type IState = {
   /** 选中列表值 */
   selectedRowKeys: string[];
   /** 重置列表值 */
-  defaultFilteredValue: string;
+  defaultFilteredValue: string[];
+};
+/** 处理alert 属性options方法 */
+const handleOptions = (data: { [x: string]: string }[], type: string) => {
+  return [{ value: 'All', text: 'All' }].concat(
+    data.map((item: { [x: string]: string }) => {
+      const text = item[type].substring(0, 1).toUpperCase() + item[type].substring(1);
+      return { value: item[type], text };
+    }),
+  );
 };
 const AlertInfo: React.FC<IAlertInfoProps> = () => {
   const [state, updateState] = useState<IState>({
@@ -33,7 +41,7 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
     isReady: false,
     alertInfo: [],
     selectedRowKeys: [],
-    defaultFilteredValue: '',
+    defaultFilteredValue: ['All'],
   });
   const { metricTypeOptions, severityTypeOptions, isReady, alertInfo, selectedRowKeys, defaultFilteredValue } = state;
   useEffect(() => {

@@ -150,22 +150,8 @@ const Receivers: React.FC<IReceiversProps> = props => {
       },
     },
   ];
-
-  return (
+  let Content = (
     <>
-      <Button style={{ position: 'absolute', top: '-55px', right: '0px' }} type="primary" onClick={handleChange}>
-        <FormattedMessage id="Create Alert Recep" />
-      </Button>
-      {!isReady ? (
-        <Skeleton />
-      ) : (
-        <Table
-          dataSource={alertRecep}
-          //@ts-ignores
-          columns={columns}
-          size="middle"
-        />
-      )}
       {isEditRecep && (
         <CreateRecep
           isCreateRecep={isEditRecep}
@@ -181,6 +167,25 @@ const Receivers: React.FC<IReceiversProps> = props => {
             });
             getAlertReceivers();
           }}
+        />
+      )}
+    </>
+  );
+
+  return (
+    <>
+      {Content}
+      <Button style={{ position: 'absolute', top: '-55px', right: '0px' }} type="primary" onClick={handleChange}>
+        <FormattedMessage id="Create Alert Recep" />
+      </Button>
+      {!isReady ? (
+        <Skeleton />
+      ) : (
+        <Table
+          dataSource={alertRecep}
+          //@ts-ignores
+          columns={columns}
+          size="middle"
         />
       )}
     </>
