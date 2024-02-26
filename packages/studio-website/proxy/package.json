@@ -1,9 +1,10 @@
 {
   "scripts": {
     "prestart": "rm -rf package-lock.json && npm i",
-    "check": "bash check-deploy.sh",
-    "start": "npm run check &&  npm run status",
-    "status": " npx pm2 status"
+    "restart": "npx pm2 delete portal && npm run start --",
+    "start": "npx pm2 start index.js --name portal --",
+    "logs": "npx pm2 logs",
+    "status": "npx pm2 status"
   },
   "dependencies": {
     "express": "^4.18.2",

@@ -93,9 +93,12 @@ export function useContext<T>(): ContextType<T> {
 }
 
 export interface Info {
-  name: string;
-  connect_url: string;
-  home_url: string;
+  graph_name: string;
+  sdk_endpoints: {
+    cypher: string;
+    hqps: string;
+  };
+  status: string;
 }
 
 export interface IGraphData {

@@ -82,7 +82,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       const displayMode = searchParamOf('display_mode') || localStorage.getItem(localStorageVars.mode) || 'flow';
       const autoRun = searchParamOf('auto_run') === 'true' ? true : false;
       const info = await queryInfo();
-      const graphName = graph_name || info?.name;
+      const graphName = info?.graph_name || graph_name || '';
       const schemaData = await queryGraphSchema(graphName);
       const historyStatements = await queryStatements('history');
       const savedStatements = await queryStatements('saved');
