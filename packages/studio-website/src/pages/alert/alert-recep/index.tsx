@@ -44,16 +44,6 @@ const Receivers: React.FC<IReceiversProps> = props => {
       };
     });
   };
-  /** 保存告警接收 */
-  const saveRowReceiver = async (val: Item) => {
-    const { receiver_id } = val;
-    const { at_user_ids } = form.getFieldsValue();
-    const userid = Array.isArray(at_user_ids) ? at_user_ids : at_user_ids.split(',');
-    const data = { ...val, ...form.getFieldsValue(), at_user_ids: userid };
-    const res = await updateReceiverById(receiver_id, data);
-    await getAlertReceivers();
-    await message.success(res);
-  };
   /** 删除告警接收 */
   const delRowReceiver = async (receiver_id: string) => {
     const res = await deleteReceiverById(receiver_id);
@@ -90,7 +80,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
       editable: true,
       key: 'is_at_all',
       render: (is_at_all: boolean) => {
-        return <Switch checked={is_at_all} />;
+        return <Switch checked={is_at_all} disabled />;
       },
     },
     {
@@ -100,7 +90,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
       key: 'enable',
       render: (enable: boolean, all: any) => (
         <Space>
-          <Switch checked={enable} />
+          <Switch checked={enable} disabled />
           {!enable ? 'disable' : 'enable'}
           {all.error_msg ? (
             <Tooltip title={all.error_msg}>
