@@ -25,13 +25,13 @@ const items: MenuProps['items'] = [
     key: '/instance',
     icon: <DesktopOutlined />,
   },
+  // {
+  //   label: <FormattedMessage id="navbar.query" />,
+  //   key: '/query',
+  //   icon: <FileSearchOutlined />,
+  // },
   {
-    label: <FormattedMessage id="navbar.query" />,
-    key: '/query',
-    icon: <FileSearchOutlined />,
-  },
-  {
-    label: <FormattedMessage id="Query App" />,
+    label: <FormattedMessage id="Query" />,
     key: '/query-app',
     icon: <FileSearchOutlined />,
   },
