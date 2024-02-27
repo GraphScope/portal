@@ -63,4 +63,6 @@ export default {
   'Create Plugin': 'Create Plugin',
   'Edit Code': 'Edit Code',
   Action: 'Action',
+  Extensions: 'Extensions',
+  'Store Procedure': 'Store Procedure',
 };
