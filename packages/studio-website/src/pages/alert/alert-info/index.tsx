@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import DateFilter from './date-filter';
 import { listAlertMessages, updateAlertMessages } from '../service';
 import type { UpdateAlertMessagesRequest } from '@graphscope/studio-server';
+import { getSearchParams } from '@/components/utils';
 export type IalertInfo = {
   key: string;
   info: string;
@@ -38,6 +39,7 @@ const handleOptions = (data: { [x: string]: string }[], type: string) => {
   );
 };
 const AlertInfo: React.FC<IAlertInfoProps> = () => {
+  const { path, searchParams } = getSearchParams(window.location);
   const [state, updateState] = useState<IState>({
     metricTypeOptions: [],
     severityTypeOptions: [],
@@ -53,6 +55,8 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
   const { metricTypeOptions, severityTypeOptions, isReady, alertInfo, selectedRowKeys, filterValues } = state;
   useEffect(() => {
     getListAlertMessages();
+    searchParams.set('nav', 'info');
+    window.location.hash = `${path}?${searchParams.toString()}`;
   }, []);
   const getListAlertMessages = async () => {
     const data = await listAlertMessages({});

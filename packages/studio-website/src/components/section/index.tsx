@@ -15,11 +15,9 @@ interface ISectionProps {
 const Section: React.FunctionComponent<ISectionProps> = props => {
   const { title, desc, breadcrumb, children, items, style } = props;
   const { path, searchParams } = getSearchParams(window.location);
-  console.log(path, '111111', searchParams);
   const onChange = (key: string) => {
-    console.log(key);
-
     searchParams.set('nav', key);
+    window.location.hash = `${path}?${searchParams.toString()}`;
   };
   const hasDivider = title && desc && !items;
   return (
