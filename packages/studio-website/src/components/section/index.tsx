@@ -17,8 +17,11 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
   const { path, searchParams } = getSearchParams(window.location);
   useEffect(() => {
     if (items) {
-      searchParams.set('nav', items[0].key);
-      window.location.hash = `${path}?${searchParams.toString()}`;
+      const nav = searchParams.get('nav') || '';
+      if (nav === '') {
+        searchParams.set('nav', items[0].key);
+        window.location.hash = `${path}?${searchParams.toString()}`;
+      }
     }
   }, []);
   const onChange = (key: string) => {
