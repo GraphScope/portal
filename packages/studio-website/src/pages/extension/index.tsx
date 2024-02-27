@@ -1,8 +1,31 @@
 import * as React from 'react';
 import Section from '@/components/section';
+import Plugins from './plugins';
 interface ExtensionProps {}
 
 const Extension: React.FunctionComponent<ExtensionProps> = props => {
+  const items = [
+    {
+      key: 'Plugins',
+      children: <Plugins />,
+      label: '全部插件',
+    },
+    {
+      key: 'Store',
+      children: <>存储过程</>,
+      label: '存储过程',
+    },
+    {
+      key: 'Learn',
+      children: <>图学习</>,
+      label: '图学习',
+    },
+    {
+      key: 'analyse',
+      children: <>图分析</>,
+      label: '图分析',
+    },
+  ];
   return (
     <Section
       breadcrumb={[
@@ -15,9 +38,8 @@ const Extension: React.FunctionComponent<ExtensionProps> = props => {
       ]}
       title="Extensions"
       desc="Extensions"
-    >
-      WIP...
-    </Section>
+      items={items}
+    ></Section>
   );
 };
 
