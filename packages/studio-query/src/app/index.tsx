@@ -37,14 +37,14 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     enableImmediateQuery,
   } = props;
   const { store, updateStore } = useContext();
-  const { graphName, isReady, collapse, activeNavbar, statements } = store;
+  const { graphName, isReady, collapse, activeNavbar, statements, schemaData } = store;
   const enable = !!enableAbsolutePosition && statements.length > 0;
   const navbarOptions = [
     {
       id: 'recommended',
       name: 'recommended',
       icon: <DeploymentUnitOutlined />,
-      children: <RecommendedStatements />,
+      children: <RecommendedStatements schemaData={schemaData} schemaId={graphName} />,
     },
     {
       id: 'saved',
