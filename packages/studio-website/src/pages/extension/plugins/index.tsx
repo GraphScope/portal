@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Button, Space, Skeleton } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import CreatePlugins from './create-plugins';
+import { listProcedures } from '../service';
+import { log } from 'console';
 export interface Item {
   key: string;
   name: string;
@@ -9,30 +10,31 @@ export interface Item {
   instance: string;
 }
 
-type IPluginsProps = {};
+type IPluginsProps = {
+  handelChange(val: boolean): void;
+};
 const Plugins: React.FC<IPluginsProps> = props => {
+  const { handelChange } = props;
   const [state, updateState] = useState<{
     /** 插件列表数据 */
     pluginList: Item[];
     /** 控制骨架屏 */
     isReady: boolean;
-    /** 创建插件控制 */
-    isOpenCreatePlugin: boolean;
   }>({
     pluginList: [],
     isReady: true,
-    isOpenCreatePlugin: false,
   });
-  const { isReady, pluginList, isOpenCreatePlugin } = state;
+  const { isReady, pluginList } = state;
+  useEffect(() => {
+    getPlugins();
+  }, []);
   /** 获取插件列表数据 */
-  const getPlugins = async () => {};
-
-  /** 创建插件控制 */
-  const handleChange = () => {
+  const getPlugins = async () => {
+    const res = await listProcedures();
     updateState(preset => {
       return {
         ...preset,
-        isOpenCreatePlugin: true,
+        pluginList: res || [],
       };
     });
   };
@@ -72,29 +74,14 @@ const Plugins: React.FC<IPluginsProps> = props => {
       },
     },
   ];
-  let Content = (
-    <>
-      {isOpenCreatePlugin && (
-        <CreatePlugins
-          isCreateRecep={isOpenCreatePlugin}
-          handelChange={(val: boolean) => {
-            //@ts-ignore
-            updateState(preset => {
-              return {
-                ...preset,
-                isOpenCreatePlugin: val,
-              };
-            });
-          }}
-        />
-      )}
-    </>
-  );
 
   return (
     <>
-      {Content}
-      <Button style={{ position: 'absolute', top: '-55px', right: '0px' }} type="primary" onClick={handleChange}>
+      <Button
+        style={{ position: 'absolute', top: '-55px', right: '0px' }}
+        type="primary"
+        onClick={() => handelChange(true)}
+      >
         <FormattedMessage id="Create Plugin" />
       </Button>
       {!isReady ? (

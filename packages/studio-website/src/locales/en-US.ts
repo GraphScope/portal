@@ -62,4 +62,5 @@ export default {
   'Graph Instance': 'Graph Instance',
   'Create Plugin': 'Create Plugin',
   'Edit Code': 'Edit Code',
+  Action: 'Action',
 };

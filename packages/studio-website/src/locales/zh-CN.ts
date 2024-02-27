@@ -61,4 +61,5 @@ export default {
   'Graph Instance': '图实例',
   'Create Plugin': '创建插件',
   'Edit Code': '代码编辑',
+  Action: '操作',
 };

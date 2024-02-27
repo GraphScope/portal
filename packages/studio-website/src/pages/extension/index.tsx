@@ -1,13 +1,20 @@
 import * as React from 'react';
 import Section from '@/components/section';
 import Plugins from './plugins';
+import CreatePlugins from './plugins/create-plugins';
 interface ExtensionProps {}
-
+const { useState } = React;
 const Extension: React.FunctionComponent<ExtensionProps> = props => {
+  const [isCreatePlugin, setIsOpenCreatePlugin] = useState(false);
+  const handelChange = (val: boolean) => {
+    setIsOpenCreatePlugin(val);
+  };
   const items = [
     {
       key: 'Plugins',
-      children: <Plugins />,
+      children: (
+        <>{!isCreatePlugin ? <Plugins handelChange={handelChange} /> : <CreatePlugins handelChange={handelChange} />}</>
+      ),
       label: '全部插件',
     },
     {
