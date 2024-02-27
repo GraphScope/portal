@@ -49,12 +49,11 @@ const Plugins: React.FC<IPluginsProps> = props => {
       title: <FormattedMessage id="Plugin Type" />,
       dataIndex: 'type',
       key: 'type',
-      render: (record: string[]) => <span>{record?.join()}</span>,
     },
     {
       title: <FormattedMessage id="Graph Instance" />,
-      dataIndex: 'instance',
-      key: 'instance',
+      dataIndex: 'bound_graph',
+      key: 'bound_graph',
     },
     {
       title: <FormattedMessage id="Action" />,

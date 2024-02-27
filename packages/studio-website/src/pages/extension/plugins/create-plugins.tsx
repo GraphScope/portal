@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Select, Alert, Flex } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import CodeMirror from '@uiw/react-codemirror';
@@ -6,9 +6,10 @@ import UploadFiles from './upload-files';
 import { createProcedure } from '../service';
 
 type FieldType = {
-  type: string;
   name: string;
-  editcode: string;
+  type: string;
+  bound_graph: string;
+  query: string;
   instance: boolean;
 };
 const TYPEOPTION = [{ label: 'CPP', value: 'CPP' }];
@@ -19,43 +20,46 @@ type ICreateRecepProps = {
 const CreatePlugins: React.FC<ICreateRecepProps> = props => {
   const { handelChange } = props;
   const [form] = Form.useForm();
+  const [info, setInfo] = useState(null);
+
   const onFinish = async () => {
     console.log(form.getFieldsValue());
-    const { name } = form.getFieldsValue();
-    // {
-    //   "name": "string",
-    //   "bound_graph": "string",
-    //   "description": "string",
-    //   "type": "cpp",
-    //   "query": "string",
-    //   "enable": true,
-    //   "runnable": true,
-    //   "params": [
-    //     {
-    //       "name": "string",
-    //       "type": "string"
-    //     }
-    //   ],
-    //   "returns": [
-    //     {
-    //       "name": "string",
-    //       "type": "string"
-    //     }
-    //   ]
-    // }
-
-    // await createProcedure(name, form.getFieldsValue());
+    const { name, bound_graph, type, query } = form.getFieldsValue();
+    console.log(info);
+    const { file } = info;
+    const data = {
+      name,
+      bound_graph,
+      description: '',
+      type,
+      query,
+      enable: true,
+      runnable: true,
+      params: [
+        {
+          name: file.name,
+          type: '',
+        },
+      ],
+      returns: [
+        {
+          name: '',
+          type: '',
+        },
+      ],
+    };
+    await createProcedure(name, data);
     handelChange(false);
   };
   return (
     <Flex vertical gap="middle">
       <Alert message="如果您已有算法插件文件，可以上传至这里，这将帮助您快速创建插件." type="info" showIcon closable />
-      <UploadFiles />
+      <UploadFiles handleChange={val => setInfo(val)} />
       <Form name="basic" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }} form={form}>
         <Form.Item<FieldType>
           label={<FormattedMessage id="Name" />}
           name="name"
-          rules={[{ required: true, message: 'Please input your Receiver!' }]}
+          rules={[{ required: true, message: 'Please input your Graph Name!' }]}
         >
           <Input />
         </Form.Item>
@@ -63,18 +67,18 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
         <Form.Item<FieldType>
           label={<FormattedMessage id="Plugin Type" />}
           name="type"
-          rules={[{ required: true, message: 'Please input your WebHook URL!' }]}
+          rules={[{ required: true, message: 'Please input your Plugin Type!' }]}
         >
           <Select options={TYPEOPTION} />
         </Form.Item>
         <Form.Item<FieldType>
           label={<FormattedMessage id="Graph Instance" />}
-          name="instance"
-          rules={[{ required: true, message: 'Please input your WebHook URL!' }]}
+          name="bound_graph"
+          rules={[{ required: true, message: 'Please input your Graph Instance!' }]}
         >
           <Select options={INSTANCEOPTION} />
         </Form.Item>
-        <Form.Item<FieldType> label={<FormattedMessage id="Edit Code" />} name="editcode">
+        <Form.Item<FieldType> label={<FormattedMessage id="Edit Code" />} name="query">
           <CodeMirror height="150px" extensions={[]} />
         </Form.Item>
         <Form.Item>
