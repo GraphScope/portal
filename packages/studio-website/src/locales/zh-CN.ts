@@ -62,4 +62,6 @@ export default {
   'Create Plugin': '创建插件',
   'Edit Code': '代码编辑',
   Action: '操作',
+  Extensions: '扩展插件',
+  'Store Procedure': '存储过程',
 };

@@ -14,13 +14,14 @@ const UploadFiles: React.FC<IUploadFile> = ({ handleChange }) => {
     multiple: false,
     showUploadList: false,
     action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
-    onChange(info) {
+    async onChange(info) {
       const { status } = info.file;
       if (status !== 'uploading') {
         console.log(info.file, info.fileList);
       }
       if (status === 'done') {
-        handleChange(info);
+        const content = (await readFile(info.file.originFileObj)) as string;
+        handleChange(content);
         setUploadName(info.file.name);
         message.success(`${info.file.name} file uploaded successfully.`);
       } else if (status === 'error') {
@@ -30,6 +31,15 @@ const UploadFiles: React.FC<IUploadFile> = ({ handleChange }) => {
     onDrop(e) {
       console.log('Dropped files', e.dataTransfer.files);
     },
+  };
+  /** 转换上传文件 */
+  const readFile = (file: any) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsText(file);
+    });
   };
   let Content;
   if (uploadName) {
