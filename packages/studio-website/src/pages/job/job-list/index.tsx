@@ -84,22 +84,26 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
     const data = Object.entries(detail);
     return (
       <Flex vertical gap={2}>
-        {data.map(item => {
-          return (
-            <Tag style={{ display: 'block' }}>
-              <Space>
-                <span>{item[0]}:</span>
-                <span>{item[1]}</span>
-              </Space>
-            </Tag>
-          );
-        })}
+        {data.map(item => (
+          <span>{item[1]}</span>
+        ))}
       </Flex>
     );
   };
-
+  const hangdleJobid = (val: string) => (
+    <>
+      {val.substring(0, val.length / 2)}
+      <br />
+      {val.substring(val.length / 2)}
+    </>
+  );
   const columns = [
-    { title: <FormattedMessage id="Job ID" />, dataIndex: 'job_id', key: 'job_id', ellipsis: true },
+    {
+      title: <FormattedMessage id="Job ID" />,
+      dataIndex: 'job_id',
+      key: 'job_id',
+      render: (record: string) => <>{hangdleJobid(record)}</>,
+    },
     {
       title: <FormattedMessage id="Type" />,
       dataIndex: 'type',
@@ -138,19 +142,18 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       title: <FormattedMessage id="Start Time" />,
       key: 'start_time',
       dataIndex: 'start_time',
-      ellipsis: true,
     },
     {
       title: <FormattedMessage id="End Time" />,
       key: 'end_time',
       dataIndex: 'end_time',
-      ellipsis: true,
     },
     {
-      title: <FormattedMessage id="Detail" />,
+      title: <FormattedMessage id="Graph Name" />,
       dataIndex: 'detail',
       key: 'detail',
-      render: (record: any) => <Popover content={() => handleChange(record)}>查询详情</Popover>,
+      // render: (record: any) => <Popover content={() => handleChange(record)}>查询详情</Popover>,
+      render: (record: ArrayLike<unknown> | { [s: string]: unknown }) => <>{handleChange(record)}</>,
     },
     {
       title: <FormattedMessage id="Action" />,

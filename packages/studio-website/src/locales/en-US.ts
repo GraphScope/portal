@@ -56,4 +56,5 @@ export default {
   Properties: 'Properties',
   'Add Property': 'Add Property',
   'Map From File': 'Map From File',
+  'Graph Name': 'Graph Name',
 };
