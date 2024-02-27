@@ -11,10 +11,16 @@ interface ISectionProps {
   items?: TabsProps['items'];
   style?: React.CSSProperties;
 }
-
+const { useEffect } = React;
 const Section: React.FunctionComponent<ISectionProps> = props => {
   const { title, desc, breadcrumb, children, items, style } = props;
   const { path, searchParams } = getSearchParams(window.location);
+  useEffect(() => {
+    if (items) {
+      searchParams.set('nav', items[0].key);
+      window.location.hash = `${path}?${searchParams.toString()}`;
+    }
+  }, []);
   const onChange = (key: string) => {
     searchParams.set('nav', key);
     window.location.hash = `${path}?${searchParams.toString()}`;
