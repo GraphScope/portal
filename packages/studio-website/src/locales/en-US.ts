@@ -73,4 +73,6 @@ export default {
   'End Time': 'End Time',
   'Graph Name': 'Graph Name',
   Delete: 'Delete',
+  'GraphScope Interactive is designed to process as many graph queries as possible within a given timeframe, emphasizing a high query throughput rate.':
+    'GraphScope Interactive is designed to process as many graph queries as possible within a given timeframe, emphasizing a high query throughput rate. ',
 };

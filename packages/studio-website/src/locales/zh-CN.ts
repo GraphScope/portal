@@ -72,4 +72,6 @@ export default {
   'End Time': '结束时间',
   'Graph Name': '名称',
   Delete: '删除',
+  'GraphScope Interactive is designed to process as many graph queries as possible within a given timeframe, emphasizing a high query throughput rate.':
+    'GraphScope Interactive是针对超高吞吐图查询场景研发的图计算引擎，它能在一秒钟内处理成千上万的并发图查询。',
 };

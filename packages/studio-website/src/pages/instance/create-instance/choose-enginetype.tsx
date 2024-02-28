@@ -19,7 +19,9 @@ const engines = [
   {
     id: 'mutable_csr',
     title: 'Interactive',
-    desc: '（交互引擎）通常是指一种软件或硬件系统，它能够实时地响应用户的输入并生成相应的反馈，使得用户能够与其进行动态的、双向的互动交流。',
+    desc: (
+      <FormattedMessage id="GraphScope Interactive is designed to process as many graph queries as possible within a given timeframe, emphasizing a high query throughput rate." />
+    ),
   },
   // { id: 'insights', title: 'Insights', desc: 'Insights 引擎介绍', disabled: true },
   // { id: 'v6d', title: 'Vineyard', desc: 'Vineyard 引擎介绍', disabled: true },

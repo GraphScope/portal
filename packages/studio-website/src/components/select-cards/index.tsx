@@ -59,7 +59,9 @@ const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
                 <Flex justify="space-between" align="">
                   {avatar && <Avatar shape="square" size={45} />}
                   <div>
-                    <Title level={4}>{title}</Title>
+                    <Title level={4} style={{ marginTop: '0px' }}>
+                      {title}
+                    </Title>
                     <Text type="secondary">{desc}</Text>
                   </div>
                 </Flex>
