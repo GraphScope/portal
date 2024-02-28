@@ -26,7 +26,7 @@ export type IStore<T> = T & {
   // nav collapse
   collapse: boolean;
   // active navbar
-  activeNavbar: 'saved' | 'info' | 'gpt' | 'store_procedure';
+  activeNavbar: 'saved' | 'info' | 'gpt' | 'store_procedure' | 'recommended';
   /** 单击选中的语句,如果是 fLow 模式，则滚动定位到这条语句 ，如果是 Tabs 模式，则直接展示*/
   activeId: string;
   /** 保存的语句 */
@@ -51,7 +51,7 @@ const initialStore: IStore<{}> = {
   /** isReady */
   isReady: false,
   graphName: 'movie',
-  activeNavbar: 'saved',
+  activeNavbar: 'recommended',
   collapse: true,
   activeId: 'query-1',
   /** 全局语句 */
