@@ -201,25 +201,3 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
 };
 
 export default JobsList;
-
-function formatLog(log: string) {
-  // 使用正则表达式匹配时间戳和日志信息
-  const logRegex = /(\w+\s+\d+\s+\d+:\d+:\d+)\.\d+\s+(\d+)\s+([\s\S]*?)(?=\w+\s+\d+\s+\d+:\d+:\d+|$)/g;
-  const formattedLogs = [];
-
-  // 遍历匹配到的日志信息
-  let match;
-  while ((match = logRegex.exec(log)) !== null) {
-    const timestamp = match[1];
-    const processId = match[2];
-    const message = match[3].trim();
-    // 将格式化后的日志信息存储到数组中
-    formattedLogs.push({
-      timestamp: timestamp,
-      processId: processId,
-      message: message,
-    });
-  }
-
-  return formattedLogs;
-}
