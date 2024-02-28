@@ -124,7 +124,7 @@ const List: React.FunctionComponent<IListProps> = props => {
                     const checked = checkedSet.has(id);
 
                     return (
-                      <li key={item.id} style={styles.li}>
+                      <li key={item.id} style={styles.li} className="gs-query-list-item">
                         <Checkbox
                           checked={checked}
                           onChange={e => onChange(item.id, e.target.checked)}

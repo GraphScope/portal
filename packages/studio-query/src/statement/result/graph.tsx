@@ -5,7 +5,7 @@ interface IGraphViewProps {
   schemaData: any;
   graphName: string;
 }
-function transGraphSchema(schema) {
+export function transGraphSchema(schema) {
   return {
     nodes: schema.nodes.map(item => {
       const { properties, ...others } = item;

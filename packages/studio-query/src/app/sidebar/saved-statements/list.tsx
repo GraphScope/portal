@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { useContext } from '../../context';
-import { theme, Typography, Checkbox, Button } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { theme, Typography, Checkbox, Button, Empty, Flex } from 'antd';
+import { DeleteOutlined, BookOutlined } from '@ant-design/icons';
 const styles: Record<string, React.CSSProperties> = {
   ul: {
     paddingInlineStart: '0px',
-    padding: '12px',
+    padding: '0px 12px',
+    margin: '0px',
   },
   li: {
-    padding: '8px 16px',
+    padding: '6px 6px',
     cursor: 'pointer',
     listStyle: 'none',
     borderRadius: '8px',
-    margin: '8px 0px',
+    margin: '4px 0px',
+    boxSizing: 'border-box',
   },
 };
 interface IListProps {
@@ -61,7 +63,12 @@ const List: React.FunctionComponent<IListProps> = props => {
 
   return (
     <ul style={styles.ul}>
-      <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
+      <Checkbox
+        indeterminate={indeterminate}
+        onChange={onCheckAllChange}
+        checked={checkAll}
+        style={{ position: 'absolute', top: '14px', right: '0px' }}
+      >
         <Button
           icon={<DeleteOutlined />}
           size="small"
@@ -78,7 +85,7 @@ const List: React.FunctionComponent<IListProps> = props => {
                 // background: token.colorBgTextHover,
               }
             : {
-                background: token.colorBgTextHover,
+                // background: token.colorBgTextHover,
               };
         const checked = checkedSet.has(item.id);
 
@@ -94,7 +101,7 @@ const List: React.FunctionComponent<IListProps> = props => {
             <Checkbox
               checked={checked}
               onChange={e => onChange(item.id, e.target.checked)}
-              style={{ marginTop: '8px' }}
+              style={{ paddingRight: '4px' }}
             ></Checkbox>
             <Typography.Text>{item.name} </Typography.Text>
           </li>

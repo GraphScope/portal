@@ -26,16 +26,34 @@ export const getSchema = async (graph_name: string): Promise<{ nodes: BindingNod
       isBind: false,
     };
   });
+  /** 将 nodes 所属 primary 的 properties 信息拿到 */
+  const vertex_id_properties_map: Record<string, any> = nodes.reduce((acc, curr) => {
+    return {
+      ...acc,
+      [curr.key as string]: curr.properties.find(p => p.name === curr.primary),
+    };
+  }, {});
   const edges = schemaOption.edges.map(item => {
+    const { properties, source, target } = item;
+    const source_vertex = vertex_id_properties_map[source];
+    const target_vertex = vertex_id_properties_map[target];
     return {
       ...item,
       datatype: 'csv',
       filelocation: '',
       isBind: false,
+      properties: [
+        /** source 和 target 在后端不算做 properties ，但是在前端需要他俩作为属性，因此手动添加 */
+        { ...source_vertex, name: `#source.${source_vertex.name}` },
+        { ...target_vertex, name: `#target.${target_vertex.name}` },
+        ...properties,
+      ],
     };
   });
+
   console.log('schemaOption', schemaOption, nodes, edges);
   const real = { nodes, edges };
+
   return real;
   // return MOCK_DATA;
 };
