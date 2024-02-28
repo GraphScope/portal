@@ -20,7 +20,7 @@ const Detail: React.FunctionComponent<IDetail> = props => {
         ]}
       />
       <CodeMirror
-        style={{ margin: '12px 0px', height: 'calc(100%-30px)', overflow: 'scroll' }}
+        style={{ margin: '12px 0px', height: 'calc(100% - 30px)', overflow: 'scroll' }}
         value={detailData}
         readOnly={true}
       />
