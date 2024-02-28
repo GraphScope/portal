@@ -78,15 +78,22 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
 
       const graph_name = searchParamOf('graph_name');
       const activeNavbar = searchParamOf('nav') || 'saved';
-      const globalScript = searchParamOf('cypher') || 'Match (n) return n limit 10';
+      let globalScript = searchParamOf('cypher') || 'Match (n) return n limit 10';
       const displayMode = searchParamOf('display_mode') || localStorage.getItem(localStorageVars.mode) || 'flow';
-      const autoRun = searchParamOf('auto_run') === 'true' ? true : false;
+      let autoRun = searchParamOf('auto_run') === 'true' ? true : false;
       const info = await queryInfo();
-      const graphName = info?.graph_name || graph_name || '';
+      let graphName = info?.graph_name || graph_name || '';
       const schemaData = await queryGraphSchema(graphName);
       const historyStatements = await queryStatements('history');
       const savedStatements = await queryStatements('saved');
       const storeProcedures = await queryStatements('store-procedure');
+      const _hack = location.pathname === '/query-app' && location.search === '?graph_algo';
+      // 临时的需求，后续删除
+      if (_hack) {
+        globalScript = `MATCH (p)-[e]-(s) return p,e,s`;
+        autoRun = true;
+        graphName = `graph_algo`;
+      }
 
       updateStore(draft => {
         draft.isReady = true;

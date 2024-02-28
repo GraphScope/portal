@@ -76,6 +76,13 @@ export const createDataloadingJob = async (params: SchemaMapping) => {
       console.log('res', res);
     });
 };
+export const getDataloadingConfig = async (graph: string) => {
+  return JobApiFactory(undefined, location.origin)
+    .getDataloadingConfig(graph!)
+    .then(res => {
+      console.log('res', res);
+    });
+};
 
 export const MOCK_DATA = {
   nodes: [
