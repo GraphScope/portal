@@ -65,4 +65,12 @@ export default {
   Action: 'Action',
   Extensions: 'Extensions',
   'Store Procedure': 'Store Procedure',
+  /** job */
+  'Job ID': 'Job ID',
+  Type: 'Type',
+  Status: 'Status',
+  'Start Time': 'Start Time',
+  'End Time': 'End Time',
+  'Graph Name': 'Graph Name',
+  Delete: 'Delete',
 };
