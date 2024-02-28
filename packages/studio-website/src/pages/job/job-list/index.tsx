@@ -169,7 +169,7 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
           icon
         >
           <Button size="small" danger ghost>
-            Delete
+            <FormattedMessage id="Delete" />
           </Button>
         </Popconfirm>
       ),
