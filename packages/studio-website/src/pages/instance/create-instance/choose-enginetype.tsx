@@ -16,7 +16,11 @@ type ChooseEnginetypeProps = {
 };
 
 const engines = [
-  { id: 'mutable_csr', title: 'Interactive', desc: ' Interactive 引擎介绍' },
+  {
+    id: 'mutable_csr',
+    title: 'Interactive',
+    desc: '（交互引擎）通常是指一种软件或硬件系统，它能够实时地响应用户的输入并生成相应的反馈，使得用户能够与其进行动态的、双向的互动交流。',
+  },
   // { id: 'insights', title: 'Insights', desc: 'Insights 引擎介绍', disabled: true },
   // { id: 'v6d', title: 'Vineyard', desc: 'Vineyard 引擎介绍', disabled: true },
 ];
@@ -31,6 +35,19 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
     });
   };
   console.log('engineType', engineType, engines);
+  /** 合法输入验证 */
+  const validatePasswords = () => ({
+    validator(rule: any, value: string) {
+      /** 首字母英文 */
+      const regl = /^[A-Za-z]+$/;
+      /** 不包含非法字符 */
+      const reg = /[@/'"#%&^*]+/g;
+      if (!reg.test(value) && regl.test(value.charAt(0))) {
+        return Promise.resolve();
+      }
+      return Promise.reject('请输入合法字符且首字母为英文.');
+    },
+  });
 
   return (
     <Form name="basic" form={form} layout="vertical" style={{ marginTop: '24px' }}>
@@ -40,7 +57,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
         tooltip=" "
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 8 }}
-        rules={[{ required: true, message: '' }]}
+        rules={[{ required: true, message: '' }, validatePasswords]}
       >
         <Input
           placeholder="Please Enter Input Name."

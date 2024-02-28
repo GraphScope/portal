@@ -96,6 +96,7 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
     };
     // 定义rowSelection对象，用于多选功能
     const rowSelection = {
+      columnWidth: '48px',
       onChange: (selectedRowKeys, selectedRows) => {
         updateState(draft => {
           draft.selectedRows = selectedRows;
