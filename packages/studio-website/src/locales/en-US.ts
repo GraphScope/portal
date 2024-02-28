@@ -57,4 +57,13 @@ export default {
   'Add Property': 'Add Property',
   'Map From File': 'Map From File',
   'Graph Name': 'Graph Name',
+  /** plugins */
+  Name: 'Name',
+  'Plugin Type': 'Plugin Type',
+  'Graph Instance': 'Graph Instance',
+  'Create Plugin': 'Create Plugin',
+  'Edit Code': 'Edit Code',
+  Action: 'Action',
+  Extensions: 'Extensions',
+  'Store Procedure': 'Store Procedure',
 };

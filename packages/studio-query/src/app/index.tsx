@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Content from './content';
 import SavedStatements from './sidebar/saved-statements';
-// import GPTStatements from './sidebar/gpt-statements';
+import GPTStatements from './sidebar/gpt-statements';
 import RecommendedStatements from './sidebar/recommended-statements';
 import StoreProcedure from './sidebar/store-procedure';
 import HistoryStatements from './sidebar/history-statements';
@@ -37,14 +37,14 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     enableImmediateQuery,
   } = props;
   const { store, updateStore } = useContext();
-  const { graphName, isReady, collapse, activeNavbar, statements } = store;
+  const { graphName, isReady, collapse, activeNavbar, statements, schemaData } = store;
   const enable = !!enableAbsolutePosition && statements.length > 0;
   const navbarOptions = [
     {
       id: 'recommended',
       name: 'recommended',
       icon: <DeploymentUnitOutlined />,
-      children: <RecommendedStatements />,
+      children: <RecommendedStatements schemaData={schemaData} schemaId={graphName} />,
     },
     {
       id: 'saved',
@@ -64,12 +64,12 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       icon: <DatabaseOutlined />,
       children: <StoreProcedure deleteStatements={ids => deleteStatements('store-procedure', ids)} />,
     },
-    // {
-    //   id: 'qwen',
-    //   name: 'qwen',
-    //   icon: <RedditOutlined />,
-    //   children: <GPTStatements />,
-    // },
+    {
+      id: 'qwen',
+      name: 'qwen',
+      icon: <RedditOutlined />,
+      children: <GPTStatements schemaData={schemaData} />,
+    },
   ];
 
   useEffect(() => {

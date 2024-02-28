@@ -56,4 +56,13 @@ export default {
   'Add Property': '添加属性',
   'Map From File': '映射文件',
   'Graph Name': '名称',
+  /** plugins */
+  Name: '名称',
+  'Plugin Type': '插件类型',
+  'Graph Instance': '图实例',
+  'Create Plugin': '创建插件',
+  'Edit Code': '代码编辑',
+  Action: '操作',
+  Extensions: '扩展插件',
+  'Store Procedure': '存储过程',
 };
