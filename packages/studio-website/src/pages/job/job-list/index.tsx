@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Popover, Tag, Flex, Space, message, Button, Popconfirm } from 'antd';
+import { Table, Popover, Tag, Flex, message, Button, Popconfirm } from 'antd';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
@@ -51,8 +51,11 @@ const statusColor = [
   },
 ];
 
-interface IInfoListProps {}
+interface IInfoListProps {
+  handleDetail(val: { isShow: boolean; log: string }): void;
+}
 const JobsList: React.FunctionComponent<IInfoListProps> = props => {
+  const { handleDetail } = props;
   const [jobsList, setJobsList] = useState([]);
   useEffect(() => {
     getJobList();
@@ -97,6 +100,7 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       {val.substring(val.length / 2)}
     </>
   );
+
   const columns = [
     {
       title: <FormattedMessage id="Job ID" />,
@@ -156,6 +160,16 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       render: (record: ArrayLike<unknown> | { [s: string]: unknown }) => <>{handleChange(record)}</>,
     },
     {
+      title: <FormattedMessage id="Detail" />,
+      dataIndex: 'log',
+      key: 'log',
+      render: (record: any, all: { job_id: string; log: string }) => (
+        <Button type="text" onClick={() => handleDetail({ isShow: true, log: all.log })}>
+          查询详情
+        </Button>
+      ),
+    },
+    {
       title: <FormattedMessage id="Action" />,
       key: 'actions',
       // render: (record: IJobType) => <Action {...record} onChange={() => getJobList()} />,
@@ -187,3 +201,25 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
 };
 
 export default JobsList;
+
+function formatLog(log: string) {
+  // 使用正则表达式匹配时间戳和日志信息
+  const logRegex = /(\w+\s+\d+\s+\d+:\d+:\d+)\.\d+\s+(\d+)\s+([\s\S]*?)(?=\w+\s+\d+\s+\d+:\d+:\d+|$)/g;
+  const formattedLogs = [];
+
+  // 遍历匹配到的日志信息
+  let match;
+  while ((match = logRegex.exec(log)) !== null) {
+    const timestamp = match[1];
+    const processId = match[2];
+    const message = match[3].trim();
+    // 将格式化后的日志信息存储到数组中
+    formattedLogs.push({
+      timestamp: timestamp,
+      processId: processId,
+      message: message,
+    });
+  }
+
+  return formattedLogs;
+}

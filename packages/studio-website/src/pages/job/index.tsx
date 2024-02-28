@@ -2,14 +2,33 @@ import * as React from 'react';
 import Section from '@/components/section';
 import type { TabsProps } from 'antd';
 import JobsList from './job-list';
+import Detail from './job-list/detail';
 interface IJobProps {}
-
+const { useState } = React;
 const Job: React.FunctionComponent<IJobProps> = props => {
+  const [state, updateState] = useState({
+    isShowDetail: false,
+    detailData: '',
+  });
+  const { isShowDetail, detailData } = state;
   const items: TabsProps['items'] = [
     {
       key: 'info',
       label: 'Job List',
-      children: <JobsList />,
+      children: (
+        <JobsList
+          handleDetail={val => {
+            const { isShow, log } = val;
+            updateState(preset => {
+              return {
+                ...preset,
+                isShowDetail: isShow,
+                detailData: log,
+              };
+            });
+          }}
+        />
+      ),
     },
     // {
     //   key: 'import',
@@ -29,19 +48,25 @@ const Job: React.FunctionComponent<IJobProps> = props => {
   ];
 
   return (
-    <Section
-      breadcrumb={[
-        {
-          title: 'Home',
-        },
-        {
-          title: 'Jobs',
-        },
-      ]}
-      title="Jobs"
-      desc="Jobs"
-      items={items}
-    ></Section>
+    <>
+      {isShowDetail ? (
+        <Detail detailData={detailData} />
+      ) : (
+        <Section
+          breadcrumb={[
+            {
+              title: 'Home',
+            },
+            {
+              title: 'Jobs',
+            },
+          ]}
+          title="Jobs"
+          desc="Jobs"
+          items={items}
+        ></Section>
+      )}
+    </>
   );
 };
 
