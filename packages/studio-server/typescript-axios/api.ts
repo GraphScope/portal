@@ -184,7 +184,7 @@ export interface AlertRule {
      * @type {string}
      * @memberof AlertRule
      */
-    'conditions_desription'?: string;
+    'conditions_description'?: string;
     /**
      * (mins)
      * @type {number}
@@ -279,6 +279,25 @@ export type ConnectionStatusSolutionEnum = typeof ConnectionStatusSolutionEnum[k
 /**
  * 
  * @export
+ * @interface DataSource
+ */
+export interface DataSource {
+    /**
+     * 
+     * @type {Array<VertexDataSource>}
+     * @memberof DataSource
+     */
+    'vertices_datasource'?: Array<VertexDataSource>;
+    /**
+     * 
+     * @type {Array<EdgeDataSource>}
+     * @memberof DataSource
+     */
+    'edges_datasource'?: Array<EdgeDataSource>;
+}
+/**
+ * 
+ * @export
  * @interface DeploymentInfo
  */
 export interface DeploymentInfo {
@@ -306,6 +325,12 @@ export interface DeploymentInfo {
      * @memberof DeploymentInfo
      */
     'solution'?: DeploymentInfoSolutionEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeploymentInfo
+     */
+    'creation_time'?: string;
     /**
      * 
      * @type {{ [key: string]: DeploymentInfoGraphsInfoValue; }}
@@ -431,6 +456,69 @@ export interface DeploymentStatus {
      */
     'creation_time'?: string;
 }
+/**
+ * 
+ * @export
+ * @interface EdgeDataSource
+ */
+export interface EdgeDataSource {
+    /**
+     * 
+     * @type {string}
+     * @memberof EdgeDataSource
+     */
+    'data_source'?: EdgeDataSourceDataSourceEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof EdgeDataSource
+     */
+    'type_name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EdgeDataSource
+     */
+    'source_vertex'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EdgeDataSource
+     */
+    'destination_vertex'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EdgeDataSource
+     */
+    'location'?: string;
+    /**
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof EdgeDataSource
+     */
+    'source_pk_column_map'?: { [key: string]: any; };
+    /**
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof EdgeDataSource
+     */
+    'destination_pk_column_map'?: { [key: string]: any; };
+    /**
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof EdgeDataSource
+     */
+    'property_mapping'?: { [key: string]: any; };
+}
+
+export const EdgeDataSourceDataSourceEnum = {
+    Odps: 'ODPS',
+    File: 'FILE'
+} as const;
+
+export type EdgeDataSourceDataSourceEnum = typeof EdgeDataSourceDataSourceEnum[keyof typeof EdgeDataSourceDataSourceEnum];
+
 /**
  * 
  * @export
@@ -748,6 +836,12 @@ export interface GrootGraph {
     'name'?: string;
     /**
      * 
+     * @type {string}
+     * @memberof GrootGraph
+     */
+    'type'?: GrootGraphTypeEnum;
+    /**
+     * 
      * @type {boolean}
      * @memberof GrootGraph
      */
@@ -771,6 +865,13 @@ export interface GrootGraph {
      */
     'gremlin_interface'?: GrootGraphGremlinInterface;
 }
+
+export const GrootGraphTypeEnum = {
+    GrootGraph: 'GrootGraph'
+} as const;
+
+export type GrootGraphTypeEnum = typeof GrootGraphTypeEnum[keyof typeof GrootGraphTypeEnum];
+
 /**
  * 
  * @export
@@ -1332,6 +1433,45 @@ export const UpdateAlertMessagesRequestBatchStatusEnum = {
 } as const;
 
 export type UpdateAlertMessagesRequestBatchStatusEnum = typeof UpdateAlertMessagesRequestBatchStatusEnum[keyof typeof UpdateAlertMessagesRequestBatchStatusEnum];
+
+/**
+ * 
+ * @export
+ * @interface VertexDataSource
+ */
+export interface VertexDataSource {
+    /**
+     * 
+     * @type {string}
+     * @memberof VertexDataSource
+     */
+    'data_source'?: VertexDataSourceDataSourceEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof VertexDataSource
+     */
+    'type_name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof VertexDataSource
+     */
+    'location'?: string;
+    /**
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof VertexDataSource
+     */
+    'property_mapping'?: { [key: string]: any; };
+}
+
+export const VertexDataSourceDataSourceEnum = {
+    Odps: 'ODPS',
+    File: 'FILE'
+} as const;
+
+export type VertexDataSourceDataSourceEnum = typeof VertexDataSourceDataSourceEnum[keyof typeof VertexDataSourceDataSourceEnum];
 
 /**
  * 
@@ -2225,6 +2365,660 @@ export class ConnectionApi extends BaseAPI {
      */
     public connect(connection: Connection, options?: RawAxiosRequestConfig) {
         return ConnectionApiFp(this.configuration).connect(connection, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * DatasourceApi - axios parameter creator
+ * @export
+ */
+export const DatasourceApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Bind data source on edge type
+         * @param {string} graphName 
+         * @param {EdgeDataSource} edgeDataSource 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        bindEdgeDatasource: async (graphName: string, edgeDataSource: EdgeDataSource, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphName' is not null or undefined
+            assertParamExists('bindEdgeDatasource', 'graphName', graphName)
+            // verify required parameter 'edgeDataSource' is not null or undefined
+            assertParamExists('bindEdgeDatasource', 'edgeDataSource', edgeDataSource)
+            const localVarPath = `/api/v1/graph/{graph_name}/datasource/edge_datasource`
+                .replace(`{${"graph_name"}}`, encodeURIComponent(String(graphName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(edgeDataSource, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Bind data source on vertex type
+         * @param {string} graphName 
+         * @param {VertexDataSource} vertexDataSource 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        bindVertexDatasource: async (graphName: string, vertexDataSource: VertexDataSource, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphName' is not null or undefined
+            assertParamExists('bindVertexDatasource', 'graphName', graphName)
+            // verify required parameter 'vertexDataSource' is not null or undefined
+            assertParamExists('bindVertexDatasource', 'vertexDataSource', vertexDataSource)
+            const localVarPath = `/api/v1/graph/{graph_name}/datasource/vertex_datasource`
+                .replace(`{${"graph_name"}}`, encodeURIComponent(String(graphName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(vertexDataSource, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * List data source on graph
+         * @param {string} graphName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDatasource: async (graphName: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphName' is not null or undefined
+            assertParamExists('getDatasource', 'graphName', graphName)
+            const localVarPath = `/api/v1/graph/{graph_name}/datasource`
+                .replace(`{${"graph_name"}}`, encodeURIComponent(String(graphName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get edge data source
+         * @param {string} graphName 
+         * @param {string} typeName 
+         * @param {string} sourceVertexType 
+         * @param {string} destinationVertexType 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEdgeDatasource: async (graphName: string, typeName: string, sourceVertexType: string, destinationVertexType: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphName' is not null or undefined
+            assertParamExists('getEdgeDatasource', 'graphName', graphName)
+            // verify required parameter 'typeName' is not null or undefined
+            assertParamExists('getEdgeDatasource', 'typeName', typeName)
+            // verify required parameter 'sourceVertexType' is not null or undefined
+            assertParamExists('getEdgeDatasource', 'sourceVertexType', sourceVertexType)
+            // verify required parameter 'destinationVertexType' is not null or undefined
+            assertParamExists('getEdgeDatasource', 'destinationVertexType', destinationVertexType)
+            const localVarPath = `/api/v1/graph/{graph_name}/datasource/edge_datasource/{type_name}`
+                .replace(`{${"graph_name"}}`, encodeURIComponent(String(graphName)))
+                .replace(`{${"type_name"}}`, encodeURIComponent(String(typeName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (sourceVertexType !== undefined) {
+                localVarQueryParameter['source_vertex_type'] = sourceVertexType;
+            }
+
+            if (destinationVertexType !== undefined) {
+                localVarQueryParameter['destination_vertex_type'] = destinationVertexType;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get vertex data source
+         * @param {string} graphName 
+         * @param {string} typeName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getVertexDatasource: async (graphName: string, typeName: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphName' is not null or undefined
+            assertParamExists('getVertexDatasource', 'graphName', graphName)
+            // verify required parameter 'typeName' is not null or undefined
+            assertParamExists('getVertexDatasource', 'typeName', typeName)
+            const localVarPath = `/api/v1/graph/{graph_name}/datasource/vertex_datasource/{type_name}`
+                .replace(`{${"graph_name"}}`, encodeURIComponent(String(graphName)))
+                .replace(`{${"type_name"}}`, encodeURIComponent(String(typeName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Import data source in batch
+         * @param {string} graphName 
+         * @param {DataSource} dataSource 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        importDatasource: async (graphName: string, dataSource: DataSource, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphName' is not null or undefined
+            assertParamExists('importDatasource', 'graphName', graphName)
+            // verify required parameter 'dataSource' is not null or undefined
+            assertParamExists('importDatasource', 'dataSource', dataSource)
+            const localVarPath = `/api/v1/graph/{graph_name}/datasource`
+                .replace(`{${"graph_name"}}`, encodeURIComponent(String(graphName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(dataSource, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Unbind datasource on an edge type
+         * @param {string} graphName 
+         * @param {string} typeName 
+         * @param {string} sourceVertexType 
+         * @param {string} destinationVertexType 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        unbindEdgeDatasource: async (graphName: string, typeName: string, sourceVertexType: string, destinationVertexType: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphName' is not null or undefined
+            assertParamExists('unbindEdgeDatasource', 'graphName', graphName)
+            // verify required parameter 'typeName' is not null or undefined
+            assertParamExists('unbindEdgeDatasource', 'typeName', typeName)
+            // verify required parameter 'sourceVertexType' is not null or undefined
+            assertParamExists('unbindEdgeDatasource', 'sourceVertexType', sourceVertexType)
+            // verify required parameter 'destinationVertexType' is not null or undefined
+            assertParamExists('unbindEdgeDatasource', 'destinationVertexType', destinationVertexType)
+            const localVarPath = `/api/v1/graph/{graph_name}/datasource/edge_datasource/{type_name}`
+                .replace(`{${"graph_name"}}`, encodeURIComponent(String(graphName)))
+                .replace(`{${"type_name"}}`, encodeURIComponent(String(typeName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (sourceVertexType !== undefined) {
+                localVarQueryParameter['source_vertex_type'] = sourceVertexType;
+            }
+
+            if (destinationVertexType !== undefined) {
+                localVarQueryParameter['destination_vertex_type'] = destinationVertexType;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Unbind datasource on a vertex type
+         * @param {string} graphName 
+         * @param {string} typeName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        unbindVertexDatasource: async (graphName: string, typeName: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphName' is not null or undefined
+            assertParamExists('unbindVertexDatasource', 'graphName', graphName)
+            // verify required parameter 'typeName' is not null or undefined
+            assertParamExists('unbindVertexDatasource', 'typeName', typeName)
+            const localVarPath = `/api/v1/graph/{graph_name}/datasource/vertex_datasource/{type_name}`
+                .replace(`{${"graph_name"}}`, encodeURIComponent(String(graphName)))
+                .replace(`{${"type_name"}}`, encodeURIComponent(String(typeName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * DatasourceApi - functional programming interface
+ * @export
+ */
+export const DatasourceApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = DatasourceApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Bind data source on edge type
+         * @param {string} graphName 
+         * @param {EdgeDataSource} edgeDataSource 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async bindEdgeDatasource(graphName: string, edgeDataSource: EdgeDataSource, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.bindEdgeDatasource(graphName, edgeDataSource, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['DatasourceApi.bindEdgeDatasource']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * Bind data source on vertex type
+         * @param {string} graphName 
+         * @param {VertexDataSource} vertexDataSource 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async bindVertexDatasource(graphName: string, vertexDataSource: VertexDataSource, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.bindVertexDatasource(graphName, vertexDataSource, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['DatasourceApi.bindVertexDatasource']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * List data source on graph
+         * @param {string} graphName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getDatasource(graphName: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DataSource>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getDatasource(graphName, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['DatasourceApi.getDatasource']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * Get edge data source
+         * @param {string} graphName 
+         * @param {string} typeName 
+         * @param {string} sourceVertexType 
+         * @param {string} destinationVertexType 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getEdgeDatasource(graphName: string, typeName: string, sourceVertexType: string, destinationVertexType: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EdgeDataSource>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getEdgeDatasource(graphName, typeName, sourceVertexType, destinationVertexType, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['DatasourceApi.getEdgeDatasource']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * Get vertex data source
+         * @param {string} graphName 
+         * @param {string} typeName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getVertexDatasource(graphName: string, typeName: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<VertexDataSource>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getVertexDatasource(graphName, typeName, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['DatasourceApi.getVertexDatasource']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * Import data source in batch
+         * @param {string} graphName 
+         * @param {DataSource} dataSource 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async importDatasource(graphName: string, dataSource: DataSource, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.importDatasource(graphName, dataSource, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['DatasourceApi.importDatasource']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * Unbind datasource on an edge type
+         * @param {string} graphName 
+         * @param {string} typeName 
+         * @param {string} sourceVertexType 
+         * @param {string} destinationVertexType 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async unbindEdgeDatasource(graphName: string, typeName: string, sourceVertexType: string, destinationVertexType: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.unbindEdgeDatasource(graphName, typeName, sourceVertexType, destinationVertexType, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['DatasourceApi.unbindEdgeDatasource']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * Unbind datasource on a vertex type
+         * @param {string} graphName 
+         * @param {string} typeName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async unbindVertexDatasource(graphName: string, typeName: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.unbindVertexDatasource(graphName, typeName, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['DatasourceApi.unbindVertexDatasource']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * DatasourceApi - factory interface
+ * @export
+ */
+export const DatasourceApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = DatasourceApiFp(configuration)
+    return {
+        /**
+         * Bind data source on edge type
+         * @param {string} graphName 
+         * @param {EdgeDataSource} edgeDataSource 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        bindEdgeDatasource(graphName: string, edgeDataSource: EdgeDataSource, options?: any): AxiosPromise<string> {
+            return localVarFp.bindEdgeDatasource(graphName, edgeDataSource, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Bind data source on vertex type
+         * @param {string} graphName 
+         * @param {VertexDataSource} vertexDataSource 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        bindVertexDatasource(graphName: string, vertexDataSource: VertexDataSource, options?: any): AxiosPromise<string> {
+            return localVarFp.bindVertexDatasource(graphName, vertexDataSource, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * List data source on graph
+         * @param {string} graphName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDatasource(graphName: string, options?: any): AxiosPromise<DataSource> {
+            return localVarFp.getDatasource(graphName, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get edge data source
+         * @param {string} graphName 
+         * @param {string} typeName 
+         * @param {string} sourceVertexType 
+         * @param {string} destinationVertexType 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEdgeDatasource(graphName: string, typeName: string, sourceVertexType: string, destinationVertexType: string, options?: any): AxiosPromise<EdgeDataSource> {
+            return localVarFp.getEdgeDatasource(graphName, typeName, sourceVertexType, destinationVertexType, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get vertex data source
+         * @param {string} graphName 
+         * @param {string} typeName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getVertexDatasource(graphName: string, typeName: string, options?: any): AxiosPromise<VertexDataSource> {
+            return localVarFp.getVertexDatasource(graphName, typeName, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Import data source in batch
+         * @param {string} graphName 
+         * @param {DataSource} dataSource 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        importDatasource(graphName: string, dataSource: DataSource, options?: any): AxiosPromise<string> {
+            return localVarFp.importDatasource(graphName, dataSource, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Unbind datasource on an edge type
+         * @param {string} graphName 
+         * @param {string} typeName 
+         * @param {string} sourceVertexType 
+         * @param {string} destinationVertexType 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        unbindEdgeDatasource(graphName: string, typeName: string, sourceVertexType: string, destinationVertexType: string, options?: any): AxiosPromise<string> {
+            return localVarFp.unbindEdgeDatasource(graphName, typeName, sourceVertexType, destinationVertexType, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Unbind datasource on a vertex type
+         * @param {string} graphName 
+         * @param {string} typeName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        unbindVertexDatasource(graphName: string, typeName: string, options?: any): AxiosPromise<string> {
+            return localVarFp.unbindVertexDatasource(graphName, typeName, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * DatasourceApi - object-oriented interface
+ * @export
+ * @class DatasourceApi
+ * @extends {BaseAPI}
+ */
+export class DatasourceApi extends BaseAPI {
+    /**
+     * Bind data source on edge type
+     * @param {string} graphName 
+     * @param {EdgeDataSource} edgeDataSource 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasourceApi
+     */
+    public bindEdgeDatasource(graphName: string, edgeDataSource: EdgeDataSource, options?: RawAxiosRequestConfig) {
+        return DatasourceApiFp(this.configuration).bindEdgeDatasource(graphName, edgeDataSource, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Bind data source on vertex type
+     * @param {string} graphName 
+     * @param {VertexDataSource} vertexDataSource 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasourceApi
+     */
+    public bindVertexDatasource(graphName: string, vertexDataSource: VertexDataSource, options?: RawAxiosRequestConfig) {
+        return DatasourceApiFp(this.configuration).bindVertexDatasource(graphName, vertexDataSource, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * List data source on graph
+     * @param {string} graphName 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasourceApi
+     */
+    public getDatasource(graphName: string, options?: RawAxiosRequestConfig) {
+        return DatasourceApiFp(this.configuration).getDatasource(graphName, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get edge data source
+     * @param {string} graphName 
+     * @param {string} typeName 
+     * @param {string} sourceVertexType 
+     * @param {string} destinationVertexType 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasourceApi
+     */
+    public getEdgeDatasource(graphName: string, typeName: string, sourceVertexType: string, destinationVertexType: string, options?: RawAxiosRequestConfig) {
+        return DatasourceApiFp(this.configuration).getEdgeDatasource(graphName, typeName, sourceVertexType, destinationVertexType, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get vertex data source
+     * @param {string} graphName 
+     * @param {string} typeName 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasourceApi
+     */
+    public getVertexDatasource(graphName: string, typeName: string, options?: RawAxiosRequestConfig) {
+        return DatasourceApiFp(this.configuration).getVertexDatasource(graphName, typeName, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Import data source in batch
+     * @param {string} graphName 
+     * @param {DataSource} dataSource 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasourceApi
+     */
+    public importDatasource(graphName: string, dataSource: DataSource, options?: RawAxiosRequestConfig) {
+        return DatasourceApiFp(this.configuration).importDatasource(graphName, dataSource, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Unbind datasource on an edge type
+     * @param {string} graphName 
+     * @param {string} typeName 
+     * @param {string} sourceVertexType 
+     * @param {string} destinationVertexType 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasourceApi
+     */
+    public unbindEdgeDatasource(graphName: string, typeName: string, sourceVertexType: string, destinationVertexType: string, options?: RawAxiosRequestConfig) {
+        return DatasourceApiFp(this.configuration).unbindEdgeDatasource(graphName, typeName, sourceVertexType, destinationVertexType, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Unbind datasource on a vertex type
+     * @param {string} graphName 
+     * @param {string} typeName 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DatasourceApi
+     */
+    public unbindVertexDatasource(graphName: string, typeName: string, options?: RawAxiosRequestConfig) {
+        return DatasourceApiFp(this.configuration).unbindVertexDatasource(graphName, typeName, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -3226,6 +4020,39 @@ export const JobApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
+         * get dataloading configuration
+         * @param {string} graphName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDataloadingConfig: async (graphName: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphName' is not null or undefined
+            assertParamExists('getDataloadingConfig', 'graphName', graphName)
+            const localVarPath = `/api/v1/graph/{graph_name}/dataloading/config`
+                .replace(`{${"graph_name"}}`, encodeURIComponent(String(graphName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 
          * @param {string} jobId 
          * @param {*} [options] Override http request option.
@@ -3323,6 +4150,18 @@ export const JobApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
         },
         /**
+         * get dataloading configuration
+         * @param {string} graphName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getDataloadingConfig(graphName: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SchemaMapping>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getDataloadingConfig(graphName, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['JobApi.getDataloadingConfig']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
          * 
          * @param {string} jobId 
          * @param {*} [options] Override http request option.
@@ -3375,6 +4214,15 @@ export const JobApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.deleteJobById(jobId, options).then((request) => request(axios, basePath));
         },
         /**
+         * get dataloading configuration
+         * @param {string} graphName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDataloadingConfig(graphName: string, options?: any): AxiosPromise<Array<SchemaMapping>> {
+            return localVarFp.getDataloadingConfig(graphName, options).then((request) => request(axios, basePath));
+        },
+        /**
          * 
          * @param {string} jobId 
          * @param {*} [options] Override http request option.
@@ -3422,6 +4270,17 @@ export class JobApi extends BaseAPI {
      */
     public deleteJobById(jobId: string, options?: RawAxiosRequestConfig) {
         return JobApiFp(this.configuration).deleteJobById(jobId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * get dataloading configuration
+     * @param {string} graphName 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof JobApi
+     */
+    public getDataloadingConfig(graphName: string, options?: RawAxiosRequestConfig) {
+        return JobApiFp(this.configuration).getDataloadingConfig(graphName, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3494,11 +4353,11 @@ export const LegacyApiAxiosParamCreator = function (configuration?: Configuratio
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        importSchema: async (graphName: string, grootSchema: GrootSchema, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        importGrootSchema: async (graphName: string, grootSchema: GrootSchema, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'graphName' is not null or undefined
-            assertParamExists('importSchema', 'graphName', graphName)
+            assertParamExists('importGrootSchema', 'graphName', graphName)
             // verify required parameter 'grootSchema' is not null or undefined
-            assertParamExists('importSchema', 'grootSchema', grootSchema)
+            assertParamExists('importGrootSchema', 'grootSchema', grootSchema)
             const localVarPath = `/api/v1/groot/graph/{graph_name}/schema`
                 .replace(`{${"graph_name"}}`, encodeURIComponent(String(graphName)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -3584,10 +4443,10 @@ export const LegacyApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async importSchema(graphName: string, grootSchema: GrootSchema, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.importSchema(graphName, grootSchema, options);
+        async importGrootSchema(graphName: string, grootSchema: GrootSchema, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.importGrootSchema(graphName, grootSchema, options);
             const index = configuration?.serverIndex ?? 0;
-            const operationBasePath = operationServerMap['LegacyApi.importSchema']?.[index]?.url;
+            const operationBasePath = operationServerMap['LegacyApi.importGrootSchema']?.[index]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
         },
         /**
@@ -3627,8 +4486,8 @@ export const LegacyApiFactory = function (configuration?: Configuration, basePat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        importSchema(graphName: string, grootSchema: GrootSchema, options?: any): AxiosPromise<string> {
-            return localVarFp.importSchema(graphName, grootSchema, options).then((request) => request(axios, basePath));
+        importGrootSchema(graphName: string, grootSchema: GrootSchema, options?: any): AxiosPromise<string> {
+            return localVarFp.importGrootSchema(graphName, grootSchema, options).then((request) => request(axios, basePath));
         },
         /**
          * list groot graph
@@ -3667,8 +4526,8 @@ export class LegacyApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof LegacyApi
      */
-    public importSchema(graphName: string, grootSchema: GrootSchema, options?: RawAxiosRequestConfig) {
-        return LegacyApiFp(this.configuration).importSchema(graphName, grootSchema, options).then((request) => request(this.axios, this.basePath));
+    public importGrootSchema(graphName: string, grootSchema: GrootSchema, options?: RawAxiosRequestConfig) {
+        return LegacyApiFp(this.configuration).importGrootSchema(graphName, grootSchema, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3829,7 +4688,7 @@ export const ProcedureApiAxiosParamCreator = function (configuration?: Configura
             };
         },
         /**
-         * Update srored procedure on a certain graph
+         * Update stored procedure on a certain graph
          * @param {string} graphName 
          * @param {string} procedureName 
          * @param {Procedure} [procedure] 
@@ -3929,7 +4788,7 @@ export const ProcedureApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
         },
         /**
-         * Update srored procedure on a certain graph
+         * Update stored procedure on a certain graph
          * @param {string} graphName 
          * @param {string} procedureName 
          * @param {Procedure} [procedure] 
@@ -3990,7 +4849,7 @@ export const ProcedureApiFactory = function (configuration?: Configuration, base
             return localVarFp.listProceduresByGraph(graphName, options).then((request) => request(axios, basePath));
         },
         /**
-         * Update srored procedure on a certain graph
+         * Update stored procedure on a certain graph
          * @param {string} graphName 
          * @param {string} procedureName 
          * @param {Procedure} [procedure] 
@@ -4056,7 +4915,7 @@ export class ProcedureApi extends BaseAPI {
     }
 
     /**
-     * Update srored procedure on a certain graph
+     * Update stored procedure on a certain graph
      * @param {string} graphName 
      * @param {string} procedureName 
      * @param {Procedure} [procedure] 
