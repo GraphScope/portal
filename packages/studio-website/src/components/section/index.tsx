@@ -45,7 +45,7 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
       )}
       <div
         style={{
-          padding: '12px 24px',
+          padding: '0px 24px',
           flex: 1,
           ...style,
         }}

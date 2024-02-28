@@ -132,6 +132,49 @@ function transform(dataMap: BindingEdge) {
       });
     } else {
       //EDGE
+      const column_mappings: any[] = [];
+      const source_vertex_mappings: any[] = [];
+      const destination_vertex_mappings: any[] = [];
+      // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
+      properties.forEach(p => {
+        const { token, name } = p;
+        const isSource = name.startsWith('#source');
+        const isTarget = name.startsWith('#target');
+        const num = parseFloat(token as string);
+        const isNumber = !isNaN(num);
+        if (isSource) {
+          source_vertex_mappings.push({
+            column: {
+              index: 0,
+              name: NODE_PRIMARY_MAP[source],
+            },
+          });
+        } else if (isTarget) {
+          destination_vertex_mappings.push({
+            column: {
+              index: 1,
+              name: NODE_PRIMARY_MAP[target],
+            },
+          });
+        } else {
+          column_mappings.push({
+            column: {
+              index: isNumber ? num + 2 : 0,
+              name: isNumber ? '' : token,
+            },
+            property: name,
+          });
+        }
+        return {
+          column: {
+            //HACK>>>>>>>>
+            index: isNumber ? num + 2 : 0,
+            name: isNumber ? '' : token,
+          },
+          property: name,
+        };
+      });
+
       edge_mappings.push({
         type_triplet: {
           edge: label,
@@ -139,37 +182,9 @@ function transform(dataMap: BindingEdge) {
           destination_vertex: NODE_LABEL_MAP[target],
         },
         inputs: [filelocation],
-        column_mappings: properties.map(p => {
-          const { token, name } = p;
-          const num = parseFloat(token as string);
-          const isNumber = !isNaN(num);
-          return {
-            column: {
-              //HACK>>>>>>>>
-              index: isNumber ? num + 2 : 0,
-              name: isNumber ? '' : token,
-            },
-            property: name,
-          };
-        }),
-        /*** TODO */
-        source_vertex_mappings: [
-          {
-            column: {
-              index: 0,
-              name: NODE_PRIMARY_MAP[source],
-            },
-          },
-        ],
-        destination_vertex_mappings: [
-          {
-            column: {
-              index: 1,
-              name: NODE_PRIMARY_MAP[target],
-            },
-          },
-        ],
-        /*** TODO END */
+        column_mappings,
+        source_vertex_mappings,
+        destination_vertex_mappings,
       });
     }
   });
