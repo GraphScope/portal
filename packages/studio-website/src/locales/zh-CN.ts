@@ -64,4 +64,12 @@ export default {
   Action: '操作',
   Extensions: '扩展插件',
   'Store Procedure': '存储过程',
+  /** job */
+  'Job ID': 'Job ID',
+  Type: '类型',
+  Status: '状态',
+  'Start Time': '开始时间',
+  'End Time': '结束时间',
+  'Graph Name': '名称',
+  Delete: '删除',
 };
