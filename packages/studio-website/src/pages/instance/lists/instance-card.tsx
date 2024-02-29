@@ -137,7 +137,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
             style={{ width: '150px' }}
             icon={<SearchOutlined />}
             disabled={status === 'stopped' ? true : false}
-            onClick={() => history.push(`/query-app?graph_name=${name}`)}
+            onClick={() => history.push(`/query-app#?graph_name=${name}`)}
           >
             Query Graph
           </Button>
