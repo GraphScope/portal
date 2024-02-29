@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { useContext } from './useContext';
+import { theme } from 'antd';
+const { useToken } = theme;
 
 interface ContainerProps {
   sidebar: React.ReactNode;
@@ -11,16 +13,17 @@ const SideWidth = 150;
 const ContainerWidth = 1360;
 const Padding = 24;
 const CollapsedWidth = 60;
-
 const Container: React.FunctionComponent<ContainerProps> = props => {
   const { sidebar, content, footer } = props;
+  const { token } = useToken();
   const { store } = useContext();
   const { collapse } = store;
   return (
     <div
       className="gs-root"
       style={{
-        background: '#f5f7f9',
+        // background: '#f5f7f9',
+        background: token.colorBgBase,
         display: 'flex',
         alignItems: 'center',
         height: '100vh',

@@ -11,7 +11,7 @@ import locales from '../locales';
 import { useContext } from './useContext';
 export default function Layout() {
   const { store } = useContext();
-  const { locale, primaryColor } = store;
+  const { locale, primaryColor, mode } = store;
   //@ts-ignore
   const messages = locales[locale];
   return (
@@ -19,7 +19,7 @@ export default function Layout() {
       <ConfigProvider
         theme={{
           // 1. 单独使用暗色算法
-          algorithm: theme.defaultAlgorithm,
+          algorithm: mode === 'defaultAlgorithm' ? theme.defaultAlgorithm : theme.darkAlgorithm,
           components: {
             Menu: {
               itemBg: 'rgba(255, 255, 255, 0)',
@@ -34,14 +34,15 @@ export default function Layout() {
               titleMarginTop: '0.8em',
             },
             Table: {
-              headerBg: '#fff',
+              headerBg: mode === 'defaultAlgorithm' ? '#fff' : '#000',
               headerColor: '#C7C9CC',
-              headerSplitColor: '#fff',
+              headerSplitColor: mode === 'defaultAlgorithm' ? '#fff' : '#000',
             },
           },
           token: {
             borderRadius: 8,
             colorPrimary: primaryColor,
+            colorBgBase: mode === 'defaultAlgorithm' ? '#f5f7f9' : '#000',
           },
         }}
       >
