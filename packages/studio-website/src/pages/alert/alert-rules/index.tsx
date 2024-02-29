@@ -96,7 +96,8 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
       editable: true,
       render: (record: boolean) => (
         <>
-          <Switch checked={record} disabled /> {record ? 'disable' : 'enable'}
+          {/* <Switch checked={record} disabled /> {record ? 'disable' : 'enable'} */}
+          <Tag>{record ? 'enable' : 'disable'}</Tag>
         </>
       ),
     },
