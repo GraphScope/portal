@@ -1,8 +1,8 @@
 import { GraphApiFactory } from '@graphscope/studio-server';
 
-export const createGraph = async (graph: any) => {
+export const getSchema = async (graph: string) => {
   const graphs = await GraphApiFactory(undefined, location.origin)
-    .createGraph(graph)
+    .getSchema(graph)
     .then(res => {
       if (res.status === 200) {
         return res.data;

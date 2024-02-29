@@ -5,7 +5,7 @@ export default defineConfig({
     { path: '/instance', component: 'instance' },
     { path: '/setting', component: 'setting' },
     { path: '/instance/create', component: 'instance/create-instance' },
-    { path: '/instance/schema', component: 'instance/view-schema' },
+    { path: '/instance/view-schema', component: 'instance/view-schema' },
     { path: '/instance/import-data', component: 'instance/import-data' },
     { path: '/query', component: 'query' },
     { path: '/query-app', component: 'query/app', layout: false },
