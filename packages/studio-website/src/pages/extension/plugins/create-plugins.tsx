@@ -21,27 +21,29 @@ type ICreateRecepProps = {
 const CreatePlugins: React.FC<ICreateRecepProps> = props => {
   const { handelChange } = props;
   const [form] = Form.useForm();
-  const [info, setInfo] = useState(null);
+  const [state, updateState] = useState({
+    info: null,
+    editCode: '',
+  });
+  const { info, editCode } = state;
   useEffect(() => {
     form.setFieldsValue({ type: 'cpp' });
   }, []);
   info && form.setFieldsValue({ query: info });
   const onFinish = async () => {
     console.log(form.getFieldsValue());
-    const { name, bound_graph, type, query } = form.getFieldsValue();
-    console.log(info);
-    const { file } = info;
+    const { name, bound_graph, type } = form.getFieldsValue();
     const data = {
       name,
       bound_graph,
       description: '',
       type,
-      query,
+      query: editCode,
       enable: true,
       runnable: true,
       params: [
         {
-          name: file.name,
+          name: info?.file?.name,
           type: '',
         },
       ],
@@ -54,6 +56,15 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
     };
     await createProcedure(name, data);
     handelChange(false);
+  };
+  /** 获取editcode */
+  const handleCodeMirror = (val: string) => {
+    updateState(preset => {
+      return {
+        ...preset,
+        editCode: val,
+      };
+    });
   };
   return (
     <div style={{ padding: '14px 24px' }}>
@@ -78,7 +89,17 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
           showIcon
           closable
         />
-        <UploadFiles handleChange={val => setInfo(val)} />
+        <UploadFiles
+          handleChange={val => {
+            //@ts-ignore
+            updateState(preset => {
+              return {
+                ...preset,
+                info: val,
+              };
+            });
+          }}
+        />
         <Form name="basic" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }} form={form}>
           <Form.Item<FieldType>
             label={<FormattedMessage id="Name" />}
@@ -96,14 +117,16 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
             <Select options={TYPEOPTION} />
           </Form.Item>
           <Form.Item<FieldType>
-            label={<FormattedMessage id="Graph Instance" />}
+            label={<FormattedMessage id="Binding Graph" />}
             name="bound_graph"
             rules={[{ required: true, message: 'Please input your Graph Instance!' }]}
           >
             <Select options={INSTANCEOPTION} />
           </Form.Item>
           <Form.Item<FieldType> label={<FormattedMessage id="Edit Code" />} name="query">
-            <CodeMirror height="150px" />
+            <div style={{ borderRadius: '8px', overflow: 'hidden' }}>
+              <CodeMirror height="150px" value={editCode} onChange={e => handleCodeMirror(e)} />
+            </div>
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" onClick={() => onFinish()}>
