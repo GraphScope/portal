@@ -10,7 +10,7 @@ import Section from '@/components/section';
 import { cloneDeep } from 'lodash';
 
 import { getUrlParams } from './utils';
-import { getSchema } from './service';
+import { getSchema, getDataloadingConfig } from './service';
 
 interface IImportDataProps {}
 
@@ -22,6 +22,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
 
   useEffect(() => {
     const { graph_name } = getUrlParams();
+    getDataloadingConfig(graph_name).then(res => {});
     getSchema(graph_name).then(res => {
       updateStore(draft => {
         draft.isReady = true;

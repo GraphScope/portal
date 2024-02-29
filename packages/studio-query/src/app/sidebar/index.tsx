@@ -65,7 +65,7 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
   const { options, collapse, onChange, title, onBack } = props;
   const { token } = useToken();
   const { searchParams, path } = getSearchParams(window.location);
-  const nav = searchParams.get('nav') || 'saved';
+  const nav = searchParams.get('nav') || 'recommended';
   const activeOption = options.find(item => {
     return item.id === nav;
   });

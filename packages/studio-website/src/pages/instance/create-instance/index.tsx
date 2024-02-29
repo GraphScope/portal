@@ -1,6 +1,6 @@
 import React, { memo, useEffect } from 'react';
 import { history } from 'umi';
-import { Button, message, Steps, Alert, Breadcrumb, Form } from 'antd';
+import { Button, notification, Steps, Alert, Breadcrumb, Form } from 'antd';
 import { useContext } from '../create-instance/useContext';
 import ChooseEnginetype from './choose-enginetype';
 import CreateSchema from '../create-instance/create-schema';
@@ -79,6 +79,7 @@ const CreateInstance: React.FunctionComponent = () => {
   const { isAlert, currentStep, createInstaseResult, nodeList, edgeList, engineInput, engineType, engineDirected } =
     store;
   const [form] = Form.useForm();
+  const [api, contextHolder] = notification.useNotification();
   const next = () => {
     if (form.getFieldsValue().inputname) {
       updateStore(draft => {
@@ -102,13 +103,18 @@ const CreateInstance: React.FunctionComponent = () => {
       },
       schema: schemaJSON,
     };
-    createGraph(data).then(res => {
-      /** 成功true */
-      updateStore(draft => {
-        draft.currentStep = currentStep + 1;
-        draft.createInstaseResult = true;
+    createGraph(data)
+      .then(res => {
+        /** 成功true */
+        updateStore(draft => {
+          draft.currentStep = currentStep + 1;
+          draft.createInstaseResult = true;
+        });
+      })
+      .catch(error => {
+        console.log(error.message);
+        openNotification(error.message);
       });
-    });
   };
   const prev = () => {
     updateStore(draft => {
@@ -137,9 +143,16 @@ const CreateInstance: React.FunctionComponent = () => {
       });
     };
   }, []);
-
+  /** 图创建失败提示框 */
+  const openNotification = (result: string) => {
+    api.error({
+      message: 'Graph creation failed',
+      description: result,
+    });
+  };
   return (
     <div style={{ padding: '12px 24px' }}>
+      {contextHolder}
       <Breadcrumb
         items={[
           {

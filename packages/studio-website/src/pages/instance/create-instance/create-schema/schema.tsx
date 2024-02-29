@@ -18,16 +18,22 @@ type SchemaType = {
   updateStore: (fn: (draft: IStore<{}>) => void) => void;
   nodeOptions?: { label: string; value: string }[];
 };
+type configcolumnsType = {
+  title: string;
+  dataIndex?: string;
+  width?: string | number;
+  type?: string;
+  option?: { label: string; value: string }[];
+};
 const primitive_types = ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64', 'DT_DATE32'];
 
 /** 子项 [{title:'表头'，dataIndex:'绑定字段'，type:'字段对应编辑框'，option:'select配置选项',width:'表头宽度'}] */
-const configcolumns = [
-  { title: 'primary_name', dataIndex: 'name', width: '40%', type: 'INPUT' },
-  { title: 'primary_key', width: '25%' },
+const configcolumns: configcolumnsType[] = [
+  { title: 'primary_name', dataIndex: 'name', width: '200px', type: 'INPUT' },
+  { title: 'primary_key', width: '120px' },
   {
     title: 'primary_type',
     dataIndex: 'type',
-    width: '25%',
     type: 'SELECT',
     option: primitive_types.map(item => {
       return { label: item, value: item };
@@ -80,6 +86,20 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
       });
     }
   };
+  /**
+   *
+   * @param configcolumns
+   * currentType:node | edge
+   * edge 过滤主键选项
+   * @returns
+   */
+  const hangdleConfigcolumns = (configcolumns: configcolumnsType[]) => {
+    if (currentType === 'edge') {
+      return configcolumns.filter(item => item.title !== 'primary_key');
+    }
+    return configcolumns;
+  };
+
   return (
     <div
       style={
@@ -105,7 +125,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             />
           </Form.Item>
         </div>
-        {currentType !== 'node' ? (
+        {currentType === 'edge' ? (
           <>
             <Form.Item<FieldType>
               label={'Source Node Label'}
@@ -147,7 +167,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
         }}
         /**映射控制 */
         isMapFromFile={false}
-        tableConfig={configcolumns}
+        tableConfig={hangdleConfigcolumns(configcolumns)}
       />
     </div>
   );

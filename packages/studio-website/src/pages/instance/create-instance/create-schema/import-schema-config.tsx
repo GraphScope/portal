@@ -1,16 +1,15 @@
 import * as React from 'react';
-import { Space, Tooltip, Upload, Button, message } from 'antd';
+import { Space, Tooltip, Upload, Button, message, notification } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { download, transformSchema, transformSchemaToOptions, transOptionsToSchema } from './utils';
 import { useContext } from '../useContext';
 import yaml from 'js-yaml';
 import { cloneDeep } from 'lodash';
 interface IExportConfigProps {}
-
 const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
   const { store, updateStore } = useContext();
   const { edgeList, nodeList } = store;
-
+  const [api, contextHolder] = notification.useNotification();
   const handleUpload = async (file: any) => {
     try {
       const yamlContent = (await readFile(file)) as string;
@@ -35,7 +34,7 @@ const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
       });
     } catch (error) {
       console.error('解析 YAML 文件失败:', error);
-      message.error('解析文件失败，请确保上传的文件是有效的 YAML 格式');
+      openNotification();
     }
   };
   const readFile = (file: any) => {
@@ -53,9 +52,16 @@ const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
     const schemaYaml = yaml.dump(schemaJSON);
     download('schema.yaml', schemaYaml);
   };
-
+  /** 提示框 */
+  const openNotification = () => {
+    api.error({
+      message: `Import`,
+      description: '解析文件失败，请确保上传的文件是有效的 YAML 格式',
+    });
+  };
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      {contextHolder}
       <Space>
         <Upload
           onChange={info => {

@@ -1,10 +1,9 @@
 import React from 'react';
-import { Card, Tabs, Row, Col, Tooltip, Button, Space, Upload, Segmented } from 'antd';
+import { Card, Tabs, Row, Col, Image, Segmented } from 'antd';
 import { useContext } from '../useContext';
 import GraphInsight from './graph-view';
 import Schema from './schema';
 import AddLabel from './add-label';
-import { download, prop } from './utils';
 import { FormattedMessage } from 'react-intl';
 import { SegmentedValue } from 'antd/es/segmented';
 import EmptyInfo from './empty-info';
@@ -59,7 +58,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
         <Schema
           data={item}
           updateStore={updateStore}
-          currentType={currentType}
+          currentType="node"
           id={key}
           newActiveKey={key}
           shouldRender={nodeActiveKey === item.key}
@@ -77,7 +76,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
         <Schema
           nodeOptions={nodeOptions}
           updateStore={updateStore}
-          currentType={currentType}
+          currentType="edge"
           id={key}
           data={item}
           newActiveKey={key}
@@ -86,6 +85,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
       ),
     };
   });
+
   const IS_NODES_EMPTY = nodeList.length === 0;
   const IS_EDGES_EMPTY = edgeList.length === 0;
   const extra = (currentType == 'node' ? nodeList.length : edgeList.length) > 0 ? <AddLabel /> : null;
@@ -147,7 +147,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
       </Col>
       <Col span={8}>
         <Card
-          bodyStyle={{ padding: '0px', height: '500px', marginBottom: '18px', overflow: 'hidden' }}
+          bodyStyle={{ padding: '1px', height: '500px', overflow: 'hidden' }}
           title={<FormattedMessage id="Graph Model" />}
           extra={<ExportConfig />}
         >
