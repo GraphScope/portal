@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Table, Popover, Tag, Flex, message, Button, Popconfirm } from 'antd';
+import { Table, Tooltip, Tag, Flex, message, Button, Popconfirm } from 'antd';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   ExclamationCircleOutlined,
   MinusCircleOutlined,
   SyncOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 // import Action from './action';
@@ -160,16 +161,6 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       render: (record: ArrayLike<unknown> | { [s: string]: unknown }) => <>{handleChange(record)}</>,
     },
     {
-      title: <FormattedMessage id="Detail" />,
-      dataIndex: 'log',
-      key: 'log',
-      render: (record: any, all: { job_id: string; log: string }) => (
-        <Button type="text" onClick={() => handleDetail({ isShow: true, log: all.log })}>
-          查询详情
-        </Button>
-      ),
-    },
-    {
       title: <FormattedMessage id="Action" />,
       key: 'actions',
       // render: (record: IJobType) => <Action {...record} onChange={() => getJobList()} />,
@@ -182,19 +173,27 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
           cancelText="No"
           icon
         >
-          <Button size="small" danger ghost>
-            <FormattedMessage id="Delete" />
-          </Button>
+          <Tooltip title="Delete">
+            <Button size="small" danger ghost icon={<DeleteOutlined />} />
+          </Tooltip>
         </Popconfirm>
       ),
     },
   ];
+
   return (
     <div style={{ height: '100%', overflow: 'hidden' }}>
       <Table
         dataSource={jobsList}
         //@ts-ignores
         columns={columns}
+        onRow={record => {
+          return {
+            onClick: event => {
+              handleDetail({ isShow: true, log: record.log });
+            }, // 点击行
+          };
+        }}
       />
     </div>
   );
