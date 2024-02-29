@@ -18,11 +18,12 @@ type IPropertiesEditorProps = {
   isMapFromFile?: boolean;
   propertyType?: { type: string }[];
   tableConfig?: [];
+  isEditable?: boolean;
   locales: { properties: React.ReactNode; addProperty: React.ReactNode; mapFromFile: React.ReactNode };
 };
 const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
   forwardRef((props, ref) => {
-    const { properties = [], onChange, isMapFromFile, tableConfig, locales } = props;
+    const { properties = [], onChange, isMapFromFile, tableConfig, locales, isEditable = false } = props;
     const inputRef = useRef<HTMLInputElement>();
     // 使用useImmer创建一个可变状态对象
     const [state, updateState] = useImmer<{
@@ -227,6 +228,7 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
                   prop: {
                     value: record,
                   },
+                  disable: isEditable,
                 };
               },
             });
@@ -242,6 +244,7 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
                   prop: {
                     options: item.option,
                   },
+                  disable: isEditable,
                 };
               },
             });
@@ -252,9 +255,9 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
               key: 'operate',
               render: (_, record: any) =>
                 record?.primaryKey ? (
-                  <IconFont type="icon-yuechi" onClick={() => primaryKeyClick(record)} />
+                  <IconFont type="icon-yuechi" onClick={() => isEditable && primaryKeyClick(record)} />
                 ) : (
-                  <IconFont type="icon-yuechi1" onClick={() => primaryKeyClick(record)} />
+                  <IconFont type="icon-yuechi1" onClick={() => isEditable && primaryKeyClick(record)} />
                 ),
             });
             break;
