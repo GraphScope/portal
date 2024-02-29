@@ -84,7 +84,7 @@ const GraphView: FunctionComponent<Props> = props => {
           src="https://img.alicdn.com/imgextra/i3/O1CN01ioBjPd24ALzvMY66U_!!6000000007350-55-tps-915-866.svg"
         />
       ) : (
-        <Graphin data={graphData} layout={{ type: 'circular' }} fitView fitCenter style={{ paddingBottom: '3px' }} />
+        <Graphin data={graphData} layout={{ type: 'circular' }} fitCenter style={{ paddingBottom: '3px' }} />
       )}
     </>
   );
