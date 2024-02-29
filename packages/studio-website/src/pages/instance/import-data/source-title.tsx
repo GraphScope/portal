@@ -28,7 +28,7 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
         },
         import_option: 'init',
         format: {
-          type: 'string',
+          type: datatype === 'odps' ? 'odps' : 'csv',
           metadata: {
             delimiter,
           },
@@ -106,7 +106,7 @@ function transform(dataMap: BindingEdge) {
   const NODE_PRIMARY_MAP: Record<string, string> = {};
   Object.values(dataMap).forEach((item: BindingEdge & BindingNode) => {
     const { key, properties, filelocation, label, source, target, primary } = item;
-    console.log('key>>>>', key);
+
     const isEdge = source && target;
 
     //NODE
@@ -136,7 +136,7 @@ function transform(dataMap: BindingEdge) {
       const source_vertex_mappings: any[] = [];
       const destination_vertex_mappings: any[] = [];
       // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
-      properties.forEach(p => {
+      properties.forEach((p, pIdx) => {
         const { token, name } = p;
         const isSource = name.startsWith('#source');
         const isTarget = name.startsWith('#target');
@@ -159,20 +159,12 @@ function transform(dataMap: BindingEdge) {
         } else {
           column_mappings.push({
             column: {
-              index: isNumber ? num + 2 : 0,
+              index: pIdx, //isNumber ? num + 2 : 0,
               name: isNumber ? '' : token,
             },
             property: name,
           });
         }
-        return {
-          column: {
-            //HACK>>>>>>>>
-            index: isNumber ? num + 2 : 0,
-            name: isNumber ? '' : token,
-          },
-          property: name,
-        };
       });
 
       edge_mappings.push({

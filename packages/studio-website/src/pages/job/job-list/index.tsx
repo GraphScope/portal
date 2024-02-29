@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Popover, Tag, Flex, Space, message, Button, Popconfirm } from 'antd';
+import { Table, Popover, Tag, Flex, message, Button, Popconfirm } from 'antd';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
@@ -51,8 +51,11 @@ const statusColor = [
   },
 ];
 
-interface IInfoListProps {}
+interface IInfoListProps {
+  handleDetail(val: { isShow: boolean; log: string }): void;
+}
 const JobsList: React.FunctionComponent<IInfoListProps> = props => {
+  const { handleDetail } = props;
   const [jobsList, setJobsList] = useState([]);
   useEffect(() => {
     getJobList();
@@ -97,6 +100,7 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       {val.substring(val.length / 2)}
     </>
   );
+
   const columns = [
     {
       title: <FormattedMessage id="Job ID" />,
@@ -154,6 +158,16 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       key: 'detail',
       // render: (record: any) => <Popover content={() => handleChange(record)}>查询详情</Popover>,
       render: (record: ArrayLike<unknown> | { [s: string]: unknown }) => <>{handleChange(record)}</>,
+    },
+    {
+      title: <FormattedMessage id="Detail" />,
+      dataIndex: 'log',
+      key: 'log',
+      render: (record: any, all: { job_id: string; log: string }) => (
+        <Button type="text" onClick={() => handleDetail({ isShow: true, log: all.log })}>
+          查询详情
+        </Button>
+      ),
     },
     {
       title: <FormattedMessage id="Action" />,
