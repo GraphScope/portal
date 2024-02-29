@@ -73,4 +73,6 @@ export default {
   'End Time': 'End Time',
   'Graph Name': 'Graph Name',
   Delete: 'Delete',
+  'GraphScope transforms tasks like data import, analysis, and other long-processing tasks into jobs, which you can monitor and manage here.':
+    'GraphScope transforms tasks like data import, analysis, and other long-processing tasks into jobs, which you can monitor and manage here.',
 };

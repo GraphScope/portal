@@ -62,7 +62,7 @@ const Job: React.FunctionComponent<IJobProps> = props => {
             },
           ]}
           title="Jobs"
-          desc="Jobs"
+          desc="GraphScope transforms tasks like data import, analysis, and other long-processing tasks into jobs, which you can monitor and manage here."
           items={items}
         ></Section>
       )}
