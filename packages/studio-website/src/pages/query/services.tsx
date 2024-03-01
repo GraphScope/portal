@@ -33,7 +33,6 @@ export const queryInfo = async () => {
     .getServiceStatus()
     .then(res => handleResponse(res))
     .catch(error => handleError(error));
-  console.log('res', result);
 
   if (result) {
     const { cypher } = result.sdk_endpoints!;

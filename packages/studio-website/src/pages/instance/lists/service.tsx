@@ -13,7 +13,6 @@ export const listGraphs = async () => {
   const deployments = await DeploymentApiFactory(undefined, location.origin)
     .getDeploymentInfo()
     .then(res => {
-      console.log('res', res);
       return res.data;
     });
   console.log(status, deployments);
