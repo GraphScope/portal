@@ -138,6 +138,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
             Import Data
           </Button>
           <Button
+            type="primary"
             style={{ width: '150px' }}
             icon={<SearchOutlined />}
             disabled={status === 'stopped' ? true : false}
