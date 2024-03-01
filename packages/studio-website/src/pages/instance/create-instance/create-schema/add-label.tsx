@@ -66,7 +66,7 @@ const AddLabel: FunctionComponent = () => {
   if (IS_EMPTY) {
     return (
       <Button disabled={disabled} style={{ width: '100%' }} type="dashed" onClick={addLabel} icon={<PlusOutlined />}>
-        {currentType == 'node' ? <FormattedMessage id="Add Node" /> : <FormattedMessage id="Add Edge" />}
+        <FormattedMessage id="Add new" />
       </Button>
     );
   }
@@ -75,7 +75,7 @@ const AddLabel: FunctionComponent = () => {
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <Space>
         <Button onClick={addLabel} disabled={disabled} icon={<PlusOutlined />}>
-          {currentType == 'node' ? <FormattedMessage id="Add Node" /> : <FormattedMessage id="Add Edge" />}
+          <FormattedMessage id="Add new" />
         </Button>
         <Button
           disabled={disabled}
