@@ -5,14 +5,15 @@ import { message, Upload } from 'antd';
 
 const { Dragger } = Upload;
 type IUploadFile = {
-  handleChange(val: { name: string }): void;
+  handleChange(val: any): void;
 };
 const UploadFiles: React.FC<IUploadFile> = ({ handleChange }) => {
   const [uploadName, setUploadName] = useState('');
   const props: UploadProps = {
     name: 'file',
     multiple: false,
-    showUploadList: false,
+    maxCount: 1,
+    // showUploadList: false,
     action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
     async onChange(info) {
       const { status } = info.file;
@@ -20,7 +21,7 @@ const UploadFiles: React.FC<IUploadFile> = ({ handleChange }) => {
         console.log(info.file, info.fileList);
       }
       if (status === 'done') {
-        const content = (await readFile(info.file.originFileObj)) as string;
+        const content = await readFile(info.file.originFileObj);
         handleChange(content);
         setUploadName(info.file.name);
         message.success(`${info.file.name} file uploaded successfully.`);
@@ -42,21 +43,21 @@ const UploadFiles: React.FC<IUploadFile> = ({ handleChange }) => {
     });
   };
   let Content;
-  if (uploadName) {
-    Content = <p>{uploadName}</p>;
-  } else {
-    Content = (
-      <>
-        <p className="ant-upload-drag-icon">
-          <InboxOutlined />
-        </p>
-        <p className="ant-upload-text">Click or drag file to this area to upload</p>
-        <p className="ant-upload-hint">
-          Support for a single or bulk upload. Strictly prohibited from uploading company data or other banned files.
-        </p>
-      </>
-    );
-  }
+  // if (uploadName) {
+  //   Content = <p>{uploadName}</p>;
+  // } else {
+  Content = (
+    <>
+      <p className="ant-upload-drag-icon">
+        <InboxOutlined />
+      </p>
+      <p className="ant-upload-text">Click or drag file to this area to upload</p>
+      <p className="ant-upload-hint">
+        Support for a single or bulk upload. Strictly prohibited from uploading company data or other banned files.
+      </p>
+    </>
+  );
+  // }
 
   return <Dragger {...props}>{Content}</Dragger>;
 };

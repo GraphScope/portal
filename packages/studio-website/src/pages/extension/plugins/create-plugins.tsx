@@ -3,7 +3,8 @@ import { Button, Form, Input, Select, Alert, Flex, Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import CodeMirror from '@uiw/react-codemirror';
 import UploadFiles from './upload-files';
-import { createProcedure } from '../service';
+import { createProcedure, listProcedures, updateProcedure, listProceduresByGraph } from '../service';
+import { getSearchParams } from '@/pages/utils';
 
 type FieldType = {
   name: string;
@@ -13,35 +14,68 @@ type FieldType = {
   instance: boolean;
 };
 const TYPEOPTION = [{ label: 'CPP', value: 'cpp' }];
-/** 接口返回 */
-const INSTANCEOPTION = [{ label: 'DEFAULT Movies', value: 'DEFAULT Movies' }];
+
 type ICreateRecepProps = {
   handelChange(val: boolean): void;
 };
 const CreatePlugins: React.FC<ICreateRecepProps> = props => {
   const { handelChange } = props;
   const [form] = Form.useForm();
-  const [info, setInfo] = useState(null);
+  const { path, searchParams } = getSearchParams(window.location);
+  const edit = searchParams.get('bound_graph') || '';
+  const [state, updateState] = useState<{
+    editCode: string;
+    instanceOption: { label: string; value: string }[];
+  }>({
+    editCode: '',
+    instanceOption: [],
+  });
+  const { editCode, instanceOption } = state;
   useEffect(() => {
     form.setFieldsValue({ type: 'cpp' });
+    listProcedures().then(res => {
+      const INSTANCEOPTION = res.map(item => {
+        const { bound_graph } = item;
+        return {
+          label: bound_graph,
+          value: bound_graph,
+        };
+      });
+      //@ts-ignore
+      updateState(preset => {
+        return {
+          ...preset,
+          instanceOption: INSTANCEOPTION,
+        };
+      });
+    });
+    edit && getlistProceduresByGraph(edit);
   }, []);
-  info && form.setFieldsValue({ query: info });
+  const getlistProceduresByGraph = async (bound_graph: string) => {
+    const res = await listProceduresByGraph(bound_graph);
+    const { query } = res;
+    form.setFieldsValue(res);
+    updateState(preset => {
+      return {
+        ...preset,
+        editCode: query,
+      };
+    });
+  };
+  /** 创建插件 */
   const onFinish = async () => {
-    console.log(form.getFieldsValue());
-    const { name, bound_graph, type, query } = form.getFieldsValue();
-    console.log(info);
-    const { file } = info;
+    const { name, bound_graph, type } = form.getFieldsValue();
     const data = {
       name,
       bound_graph,
       description: '',
       type,
-      query,
+      query: editCode,
       enable: true,
       runnable: true,
       params: [
         {
-          name: file.name,
+          name: '',
           type: '',
         },
       ],
@@ -52,8 +86,22 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
         },
       ],
     };
-    await createProcedure(name, data);
+    /** 修改插件 */
+    if (edit === 'extension') {
+      await updateProcedure(bound_graph, name, data);
+    } else {
+      await createProcedure(name, data);
+    }
     handelChange(false);
+  };
+  /** 获取editcode */
+  const handleCodeMirror = (val: string) => {
+    updateState(preset => {
+      return {
+        ...preset,
+        editCode: val,
+      };
+    });
   };
   return (
     <div style={{ padding: '14px 24px' }}>
@@ -78,7 +126,17 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
           showIcon
           closable
         />
-        <UploadFiles handleChange={val => setInfo(val)} />
+        <UploadFiles
+          handleChange={val => {
+            //@ts-ignore
+            updateState(preset => {
+              return {
+                ...preset,
+                editCode: val,
+              };
+            });
+          }}
+        />
         <Form name="basic" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }} form={form}>
           <Form.Item<FieldType>
             label={<FormattedMessage id="Name" />}
@@ -96,14 +154,16 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
             <Select options={TYPEOPTION} />
           </Form.Item>
           <Form.Item<FieldType>
-            label={<FormattedMessage id="Graph Instance" />}
+            label={<FormattedMessage id="Binding Graph" />}
             name="bound_graph"
             rules={[{ required: true, message: 'Please input your Graph Instance!' }]}
           >
-            <Select options={INSTANCEOPTION} />
+            <Select options={instanceOption} />
           </Form.Item>
           <Form.Item<FieldType> label={<FormattedMessage id="Edit Code" />} name="query">
-            <CodeMirror height="150px" />
+            <div style={{ height: '200px', borderRadius: '8px', overflow: 'scroll' }}>
+              <CodeMirror value={editCode} onChange={e => handleCodeMirror(e)} />
+            </div>
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" onClick={() => onFinish()}>
