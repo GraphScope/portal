@@ -1,6 +1,6 @@
 import { ProcedureApiFactory } from '@graphscope/studio-server';
 import type { Procedure } from '@graphscope/studio-server';
-
+/** 获取插件列表 */
 export const listProcedures = async () => {
   const message = await ProcedureApiFactory(undefined, location.origin)
     .listProcedures()
@@ -18,9 +18,43 @@ export const listProcedures = async () => {
   });
   return info;
 };
+/** 创建插件 */
 export const createProcedure = async (graph_name: string, procedure: Procedure) => {
   return await ProcedureApiFactory(undefined, location.origin)
     .createProcedure(graph_name, procedure)
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
+      return [];
+    });
+};
+/** 删除插件 */
+export const deleteProcedure = async (graph_name: string, procedureName: string) => {
+  return await ProcedureApiFactory(undefined, location.origin)
+    .deleteProcedure(graph_name, procedureName)
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
+      return [];
+    });
+};
+/** 修改插件 */
+export const updateProcedure = async (graph_name: string, procedureName: string, procedure: Procedure) => {
+  return await ProcedureApiFactory(undefined, location.origin)
+    .updateProcedure(graph_name, procedureName, procedure)
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
+      return [];
+    });
+};
+/** 获取详情 */
+export const listProceduresByGraph = async (graph_name: string) => {
+  return await ProcedureApiFactory(undefined, location.origin)
+    .listProceduresByGraph(graph_name)
     .then(res => {
       if (res.status === 200) {
         return res.data;

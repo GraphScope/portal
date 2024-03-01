@@ -64,6 +64,7 @@ export default {
   'Edit Code': 'Edit Code',
   Action: 'Action',
   Extensions: 'Extensions',
+  Edit: 'Edit',
   'Store Procedure': 'Store Procedure',
   'GraphScope provides an extension plugin mechanism, allowing you to flexibly create various types of plugins such as graph learning, store procedures, and graph analysis according to business needs.':
     'GraphScope provides an extension plugin mechanism, allowing you to flexibly create various types of plugins such as graph learning, store procedures, and graph analysis according to business needs.',

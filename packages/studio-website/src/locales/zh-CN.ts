@@ -63,6 +63,7 @@ export default {
   'Edit Code': '代码编辑',
   Action: '操作',
   Extensions: '扩展插件',
+  Edit: '修改',
   'Store Procedure': '存储过程',
   'GraphScope provides an extension plugin mechanism, allowing you to flexibly create various types of plugins such as graph learning, store procedures, and graph analysis according to business needs.':
     'GraphScope 提供了一种扩展插件机制，您可以根据业务需求灵活创建图学习、存储过程、图分析等多种类型的插件。',

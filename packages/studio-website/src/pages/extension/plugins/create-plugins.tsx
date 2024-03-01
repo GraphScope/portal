@@ -3,7 +3,8 @@ import { Button, Form, Input, Select, Alert, Flex, Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import CodeMirror from '@uiw/react-codemirror';
 import UploadFiles from './upload-files';
-import { createProcedure, listProcedures } from '../service';
+import { createProcedure, listProcedures, updateProcedure, listProceduresByGraph } from '../service';
+import { getSearchParams } from '@/pages/utils';
 
 type FieldType = {
   name: string;
@@ -20,6 +21,8 @@ type ICreateRecepProps = {
 const CreatePlugins: React.FC<ICreateRecepProps> = props => {
   const { handelChange } = props;
   const [form] = Form.useForm();
+  const { path, searchParams } = getSearchParams(window.location);
+  const edit = searchParams.get('bound_graph') || '';
   const [state, updateState] = useState<{
     editCode: string;
     instanceOption: { label: string; value: string }[];
@@ -46,10 +49,21 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
         };
       });
     });
+    edit && getlistProceduresByGraph(edit);
   }, []);
+  const getlistProceduresByGraph = async (bound_graph: string) => {
+    const res = await listProceduresByGraph(bound_graph);
+    const { query } = res;
+    form.setFieldsValue(res);
+    updateState(preset => {
+      return {
+        ...preset,
+        editCode: query,
+      };
+    });
+  };
   /** 创建插件 */
   const onFinish = async () => {
-    console.log(form.getFieldsValue());
     const { name, bound_graph, type } = form.getFieldsValue();
     const data = {
       name,
@@ -72,7 +86,12 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
         },
       ],
     };
-    await createProcedure(name, data);
+    /** 修改插件 */
+    if (edit === 'extension') {
+      await updateProcedure(bound_graph, name, data);
+    } else {
+      await createProcedure(name, data);
+    }
     handelChange(false);
   };
   /** 获取editcode */

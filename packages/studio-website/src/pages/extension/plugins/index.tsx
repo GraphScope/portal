@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Space, Skeleton, Popconfirm } from 'antd';
+import { Table, Button, Space, Skeleton, Popconfirm, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { listProcedures } from '../service';
+import { listProcedures, deleteProcedure } from '../service';
+import { getSearchParams } from '@/pages/utils';
 export interface Item {
   key: string;
   name: string;
@@ -14,6 +15,7 @@ type IPluginsProps = {
 };
 const Plugins: React.FC<IPluginsProps> = props => {
   const { handelChange } = props;
+  const { path, searchParams } = getSearchParams(window.location);
   const [state, updateState] = useState<{
     /** 插件列表数据 */
     pluginList: Item[];
@@ -59,7 +61,7 @@ const Plugins: React.FC<IPluginsProps> = props => {
       title: <FormattedMessage id="Action" />,
       key: 'actions',
       render: (_: any, all: Item) => {
-        console.log(all);
+        const { bound_graph } = all;
         return (
           <Space>
             <Button size="small" type="primary" ghost>
@@ -67,6 +69,17 @@ const Plugins: React.FC<IPluginsProps> = props => {
             </Button>
             <Button type="primary" ghost size="small">
               立即查看
+            </Button>
+            <Button
+              size="small"
+              type="primary"
+              onClick={() => {
+                handelChange(true);
+                searchParams.set('bound_graph', bound_graph);
+                window.location.hash = `${path}?${searchParams.toString()}`;
+              }}
+            >
+              <FormattedMessage id="Edit" />
             </Button>
             <Popconfirm
               placement="bottomRight"
@@ -84,7 +97,12 @@ const Plugins: React.FC<IPluginsProps> = props => {
       },
     },
   ];
-  const deleteExtension = (all: {}) => {};
+  /** 删除插件 */
+  const deleteExtension = async (all: { name: string; bound_graph: string }) => {
+    const { bound_graph, name } = all;
+    const res = await deleteProcedure(bound_graph, name);
+    message.success(res);
+  };
   return (
     <>
       <Button
