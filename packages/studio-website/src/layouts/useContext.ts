@@ -10,6 +10,8 @@ export const initialStore = {
   collapse: false,
   /** 当前导航 */
   currentnNav: '',
+  /** 主题模式 */
+  mode: 'defaultAlgorithm',
 };
 
 export type IStore = typeof initialStore;
