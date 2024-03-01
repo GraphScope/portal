@@ -5,13 +5,14 @@ import { message, Upload } from 'antd';
 
 const { Dragger } = Upload;
 type IUploadFile = {
-  handleChange(val: { name: string }): void;
+  handleChange(val: any): void;
 };
 const UploadFiles: React.FC<IUploadFile> = ({ handleChange }) => {
   const [uploadName, setUploadName] = useState('');
   const props: UploadProps = {
     name: 'file',
     multiple: false,
+    maxCount: 1,
     // showUploadList: false,
     action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
     async onChange(info) {
@@ -20,7 +21,7 @@ const UploadFiles: React.FC<IUploadFile> = ({ handleChange }) => {
         console.log(info.file, info.fileList);
       }
       if (status === 'done') {
-        const content = (await readFile(info.file.originFileObj)) as string;
+        const content = await readFile(info.file.originFileObj);
         handleChange(content);
         setUploadName(info.file.name);
         message.success(`${info.file.name} file uploaded successfully.`);

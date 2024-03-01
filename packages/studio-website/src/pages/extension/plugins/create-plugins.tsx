@@ -21,25 +21,24 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
   const { handelChange } = props;
   const [form] = Form.useForm();
   const [state, updateState] = useState<{
-    info: string | null;
     editCode: string;
     instanceOption: { label: string; value: string }[];
   }>({
-    info: null,
     editCode: '',
     instanceOption: [],
   });
-  const { info, editCode, instanceOption } = state;
+  const { editCode, instanceOption } = state;
   useEffect(() => {
     form.setFieldsValue({ type: 'cpp' });
     listProcedures().then(res => {
       const INSTANCEOPTION = res.map(item => {
         const { bound_graph } = item;
         return {
-          label: bound_graph as string,
-          value: bound_graph as string,
+          label: bound_graph,
+          value: bound_graph,
         };
       });
+      //@ts-ignore
       updateState(preset => {
         return {
           ...preset,
@@ -48,7 +47,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
       });
     });
   }, []);
-  info && form.setFieldsValue({ query: info });
+  /** 创建插件 */
   const onFinish = async () => {
     console.log(form.getFieldsValue());
     const { name, bound_graph, type } = form.getFieldsValue();
@@ -62,7 +61,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
       runnable: true,
       params: [
         {
-          name: info?.file?.name,
+          name: '',
           type: '',
         },
       ],
@@ -114,7 +113,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
             updateState(preset => {
               return {
                 ...preset,
-                info: val,
+                editCode: val,
               };
             });
           }}
@@ -143,8 +142,8 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
             <Select options={instanceOption} />
           </Form.Item>
           <Form.Item<FieldType> label={<FormattedMessage id="Edit Code" />} name="query">
-            <div style={{ borderRadius: '8px', overflow: 'hidden' }}>
-              <CodeMirror height="150px" value={editCode} onChange={e => handleCodeMirror(e)} />
+            <div style={{ height: '200px', borderRadius: '8px', overflow: 'scroll' }}>
+              <CodeMirror value={editCode} onChange={e => handleCodeMirror(e)} />
             </div>
           </Form.Item>
           <Form.Item>

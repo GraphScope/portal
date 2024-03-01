@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Space, Skeleton } from 'antd';
+import { Table, Button, Space, Skeleton, Popconfirm } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { listProcedures } from '../service';
 export interface Item {
   key: string;
   name: string;
   type: string;
-  instance: string;
+  bound_graph: string;
 }
 
 type IPluginsProps = {
@@ -30,6 +30,7 @@ const Plugins: React.FC<IPluginsProps> = props => {
   /** 获取插件列表数据 */
   const getPlugins = async () => {
     const res = await listProcedures();
+    //@ts-ignore
     updateState(preset => {
       return {
         ...preset,
@@ -67,12 +68,23 @@ const Plugins: React.FC<IPluginsProps> = props => {
             <Button type="primary" ghost size="small">
               立即查看
             </Button>
+            <Popconfirm
+              placement="bottomRight"
+              title="确定删除？"
+              onConfirm={() => deleteExtension(all)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button size="small" danger ghost>
+                <FormattedMessage id="Delete" />
+              </Button>
+            </Popconfirm>
           </Space>
         );
       },
     },
   ];
-
+  const deleteExtension = (all: {}) => {};
   return (
     <>
       <Button
