@@ -10,7 +10,7 @@ import Section from '@/components/section';
 import { cloneDeep } from 'lodash';
 
 import { getUrlParams } from './utils';
-import { getDataloadingConfig } from './service';
+import { getDataloadingConfig, getSchema } from './service';
 
 interface IImportDataProps {}
 
@@ -20,25 +20,29 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
 
   const { currentType, nodes, edges, isReady, graphName } = store;
 
-  useEffect(() => {
+  const initMapping = async () => {
     const { graph_name } = getUrlParams();
-
-    getDataloadingConfig(graph_name).then(res => {
-      updateStore(draft => {
-        draft.isReady = true;
-        draft.nodes = res.nodes;
-        draft.edges = res.edges;
-        draft.graphName = graph_name;
+    const schema = await getSchema(graph_name);
+    const options = await getDataloadingConfig(graph_name, schema);
+    updateStore(draft => {
+      draft.isReady = true;
+      draft.nodes = options.nodes;
+      draft.edges = options.edges;
+      draft.graphName = graph_name;
+      draft.schema = schema;
+    });
+    updateDataMap(draft => {
+      options.nodes.map(item => {
+        draft[item.key as string] = cloneDeep(item);
       });
-      updateDataMap(draft => {
-        res.nodes.map(item => {
-          draft[item.key as string] = cloneDeep(item);
-        });
-        res.edges.map(item => {
-          draft[item.key as string] = cloneDeep(item);
-        });
+      options.edges.map(item => {
+        draft[item.key as string] = cloneDeep(item);
       });
     });
+  };
+
+  useEffect(() => {
+    initMapping();
     return () => {
       clearDataMap();
       clearStore();

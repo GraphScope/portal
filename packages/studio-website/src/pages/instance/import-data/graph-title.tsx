@@ -1,15 +1,20 @@
 import React from 'react';
 import { Typography, Flex, Button, Space, Upload, Tooltip, message } from 'antd';
-import { useContext } from './useContext';
-import { download, transOptionsToSchema, transformSchemaToOptions } from '../create-instance/create-schema/utils';
+import { useContext, updateDataMap, clearDataMap } from './useContext';
+import {
+  transformMappingSchemaToImportOptions,
+  transformImportOptionsToSchemaMapping,
+} from '@/components/utils/import';
+import { download } from '@/components/utils/index';
 import yaml from 'js-yaml';
 import { cloneDeep } from 'lodash';
+import { submitParams } from './source-title';
 
 type IGraphTitleProps = {};
 const { Text } = Typography;
 const GraphTitle: React.FunctionComponent<IGraphTitleProps> = () => {
   const { store, updateStore } = useContext();
-  const { sourceList } = store;
+  const { nodes, edges, schema, graphName } = store;
   const handleUpload = async (file: any) => {
     try {
       const yamlContent = (await readFile(file)) as string;
@@ -18,12 +23,25 @@ const GraphTitle: React.FunctionComponent<IGraphTitleProps> = () => {
       readFile(file).then(res => {
         console.log(yaml.load(yamlContent));
       });
-
       //@ts-ignore
-      const options = transformSchemaToOptions(parsedYaml.schema, false);
+      console.log('parsedYaml.schema, schema', parsedYaml, schema);
+      //@ts-ignore
+      const options = transformMappingSchemaToImportOptions(parsedYaml, schema);
       console.log(options);
       updateStore(draft => {
-        draft.sourceList = options;
+        draft.nodes = options.nodes;
+        draft.edges = options.edges;
+      });
+      clearDataMap();
+      updateDataMap(draft => {
+        options.nodes.forEach(item => {
+          //@ts-ignore
+          draft[item.key] = item;
+        });
+        options.edges.forEach(item => {
+          //@ts-ignore
+          draft[item.key] = item;
+        });
       });
     } catch (error) {
       console.error('解析 YAML 文件失败:', error);
@@ -40,9 +58,10 @@ const GraphTitle: React.FunctionComponent<IGraphTitleProps> = () => {
   };
   const Json2Yaml = () => {
     //@ts-ignore
-    const schemaJSON = transOptionsToSchema(cloneDeep(sourceList));
-    const schemaYaml = yaml.dump(schemaJSON);
-    download('schema.yaml', schemaYaml);
+    const schemaJSON = transformImportOptionsToSchemaMapping(cloneDeep({ nodes, edges }));
+    const params = submitParams(schemaJSON, graphName);
+    const yamlFile = yaml.dump(params);
+    download('schema.yaml', yamlFile);
   };
   return (
     <>

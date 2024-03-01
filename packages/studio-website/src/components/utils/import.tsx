@@ -156,6 +156,104 @@ export function transformMappingSchemaToImportOptions(
   };
 }
 
+export function transformDataMapToOptions(dataMap: any) {
+  const nodes: BindingNode[] = [];
+  const edges: BindingEdge[] = [];
+  Object.values(dataMap).forEach((item: any) => {
+    const { source, target } = item;
+    const isEdge = source && target;
+    if (isEdge) {
+      edges.push(item);
+    } else {
+      nodes.push(item);
+    }
+  });
+  return { nodes, edges };
+}
+export function transformImportOptionsToSchemaMapping(options: { nodes: BindingNode[]; edges: BindingEdge[] }) {
+  let vertex_mappings: any[] = [];
+  let edge_mappings: any[] = [];
+  const NODE_LABEL_MAP: Record<string, string> = {};
+  const NODE_PRIMARY_MAP: Record<string, string> = {};
+  options.nodes.forEach(item => {
+    const { key, properties, filelocation, label, primary } = item;
+    NODE_LABEL_MAP[key as string] = label;
+    NODE_PRIMARY_MAP[key as string] = primary;
+    vertex_mappings.push({
+      type_name: label,
+      inputs: [filelocation],
+      column_mappings: properties.map(p => {
+        const { token, name } = p;
+
+        const num = parseFloat(token as string);
+        const isNumber = !isNaN(num);
+        return {
+          column: {
+            index: isNumber ? num : 0,
+            name: isNumber ? '' : token,
+          },
+          property: name,
+        };
+      }),
+    });
+  });
+
+  options.edges.forEach(item => {
+    const { properties, filelocation, label, source, target } = item;
+    const column_mappings: any[] = [];
+    const source_vertex_mappings: any[] = [];
+    const destination_vertex_mappings: any[] = [];
+    // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
+    properties.forEach((p, pIdx) => {
+      const { token, name } = p;
+      const isSource = name.startsWith('#source');
+      const isTarget = name.startsWith('#target');
+      const num = parseFloat(token as string);
+      const isNumber = !isNaN(num);
+      if (isSource) {
+        source_vertex_mappings.push({
+          column: {
+            index: 0,
+            name: NODE_PRIMARY_MAP[source],
+          },
+        });
+      } else if (isTarget) {
+        destination_vertex_mappings.push({
+          column: {
+            index: 1,
+            name: NODE_PRIMARY_MAP[target],
+          },
+        });
+      } else {
+        column_mappings.push({
+          column: {
+            index: pIdx, //isNumber ? num + 2 : 0,
+            name: isNumber ? '' : token,
+          },
+          property: name,
+        });
+      }
+    });
+
+    edge_mappings.push({
+      type_triplet: {
+        edge: label,
+        source_vertex: NODE_LABEL_MAP[source],
+        destination_vertex: NODE_LABEL_MAP[target],
+      },
+      inputs: [filelocation],
+      column_mappings,
+      source_vertex_mappings,
+      destination_vertex_mappings,
+    });
+  });
+
+  return {
+    vertex_mappings,
+    edge_mappings,
+  };
+}
+
 export const MOCK_DATA = {
   nodes: [
     {

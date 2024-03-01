@@ -77,7 +77,7 @@ const GraphInsight: FunctionComponent<Props> = props => {
     <>
       {children}
       {/** @ts-ignore */}
-      <Graphin data={graphData} layout={{ type: 'force2' }} fitView fitCenter style={{ paddingBottom: '3px' }} />
+      <Graphin data={graphData} layout={{ type: 'force2' }} fitCenter style={{ paddingBottom: '3px' }} />
     </>
   );
 };

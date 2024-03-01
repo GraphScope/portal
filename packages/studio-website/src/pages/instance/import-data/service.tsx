@@ -17,11 +17,10 @@ export const uploadFile = async (file: File) => {
 export const createDataloadingJob = async (params: SchemaMapping) => {
   return JobApiFactory(undefined, location.origin)
     .createDataloadingJob(params.graph!, params)
-    .then(res => {
-      console.log('res', res);
-    });
+    .then(res => {});
 };
-export const getDataloadingConfig = async (graph_name: string) => {
+
+export const getSchema = async (graph_name: string) => {
   const schema = await GraphApiFactory(undefined, location.origin)
     .getSchema(graph_name)
     .then(res => {
@@ -30,7 +29,9 @@ export const getDataloadingConfig = async (graph_name: string) => {
       }
       return { nodes: [], edges: [] };
     });
-
+  return schema;
+};
+export const getDataloadingConfig = async (graph_name: string, schema: any) => {
   const schemaMapping = await JobApiFactory(undefined, location.origin)
     .getDataloadingConfig(graph_name!)
     .then(res => res.data)
