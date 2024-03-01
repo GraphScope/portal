@@ -42,7 +42,7 @@ export default function Layout() {
           token: {
             borderRadius: 8,
             colorPrimary: primaryColor,
-            colorBgBase: mode === 'defaultAlgorithm' ? '#f5f7f9' : '#000',
+            // colorBgBase: mode === 'defaultAlgorithm' ? '#fff' : '#000',
           },
         }}
       >

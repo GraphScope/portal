@@ -17,13 +17,13 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
   const { sidebar, content, footer } = props;
   const { token } = useToken();
   const { store } = useContext();
-  const { collapse } = store;
+  const { collapse, mode } = store;
   return (
     <div
       className="gs-root"
       style={{
         // background: '#f5f7f9',
-        background: token.colorBgBase,
+        background: mode === 'defaultAlgorithm' ? '#f5f7f9' : '#000',
         display: 'flex',
         alignItems: 'center',
         height: '100vh',
@@ -78,7 +78,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
               boxSizing: 'border-box',
               flex: 1,
               overflowY: 'scroll',
-              background: '#fff',
+              background: mode === 'defaultAlgorithm' ? '#fff' : '#000',
               borderRadius: '12px',
               position: 'relative',
             }}
