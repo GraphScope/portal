@@ -37,7 +37,9 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
           margin: 'auto',
           display: 'flex',
           padding: '24px',
+          // border: '1px solid #ddd',
           flexShrink: 0,
+          overflow: 'hidden',
           flexWrap: 'nowrap',
         }}
       >
@@ -49,9 +51,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
             boxSizing: 'border-box',
             overflow: 'hidden',
             flexWrap: 'nowrap',
-            position: 'fixed',
-            top: '24px',
-            bottom: '0px',
+            // border: '1px solid #ddd',
           }}
         >
           {sidebar}
@@ -61,10 +61,10 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
           style={{
             flex: 1,
             boxSizing: 'border-box',
-            marginLeft: collapse ? '80px' : `${SideWidth + 24}px`,
+            marginLeft: '24px',
             display: 'flex',
             flexDirection: 'column',
-            // overflow: 'scroll',
+            overflow: 'hidden',
             flexWrap: 'nowrap',
           }}
         >
@@ -72,6 +72,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
             style={{
               boxSizing: 'border-box',
               flex: 1,
+              overflowY: 'scroll',
               background: '#fff',
               borderRadius: '12px',
               position: 'relative',
