@@ -8,7 +8,7 @@ import { cloneDeep } from 'lodash';
 interface IExportConfigProps {}
 const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
   const { store, updateStore } = useContext();
-  const { edgeList, nodeList } = store;
+  const { edgeList, nodeList, mode } = store;
   const [api, contextHolder] = notification.useNotification();
   const handleUpload = async (file: any) => {
     try {
@@ -59,6 +59,7 @@ const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
       description: '解析文件失败，请确保上传的文件是有效的 YAML 格式',
     });
   };
+  const disabled = mode === 'view';
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       {contextHolder}
@@ -72,7 +73,7 @@ const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
           showUploadList={false}
         >
           <Tooltip title="导入提示，待确认">
-            <Button>
+            <Button disabled={disabled}>
               <FormattedMessage id="Import" />
             </Button>
           </Tooltip>

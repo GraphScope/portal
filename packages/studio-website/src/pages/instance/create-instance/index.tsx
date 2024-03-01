@@ -1,6 +1,6 @@
 import React, { memo, useEffect } from 'react';
 import { history } from 'umi';
-import { Button, notification, Steps, Alert, Breadcrumb, Form } from 'antd';
+import { Button, notification, Steps as AntdSteps, Alert, Breadcrumb, Form } from 'antd';
 import { useContext } from '../create-instance/useContext';
 import ChooseEnginetype from './choose-enginetype';
 import CreateSchema from '../create-instance/create-schema';
@@ -11,21 +11,20 @@ import { FormattedMessage } from 'react-intl';
 import { createGraph } from './service';
 import { transOptionsToSchema } from './create-schema/utils';
 import { cloneDeep } from 'lodash';
-import { initialStore } from './useContext';
-const steps = [
-  { title: <FormattedMessage id="Choose Engine Type" /> },
-  { title: <FormattedMessage id="Create Schema" /> },
-  { title: <FormattedMessage id="Preview" /> },
-  { title: <FormattedMessage id="Result" /> },
-];
+import { initialStore, useStore } from './useContext';
+
 /**
  * 左侧的操作按钮
  * @param props
  * @returns
  */
-const LeftButton = (props: { currentStep: any; handlePrev: any; createInstaseResult: any }) => {
-  const { currentStep, handlePrev, createInstaseResult } = props;
+const LeftButton = (props: { currentStep: any; handlePrev: any; createInstaseResult: any; mode: any }) => {
+  const { currentStep, handlePrev, createInstaseResult, mode } = props;
+
   if (currentStep === 0) {
+    return null;
+  }
+  if (currentStep === 1 && mode === 'view') {
     return null;
   }
   if (currentStep === 3 && !createInstaseResult) {
@@ -44,8 +43,8 @@ const LeftButton = (props: { currentStep: any; handlePrev: any; createInstaseRes
  * @param props
  * @returns
  */
-const RightButton = (props: { currentStep: any; handleNext: any; handleSubmit: any }) => {
-  const { currentStep, handleNext, handleSubmit } = props;
+const RightButton = (props: { currentStep: any; handleNext: any; handleSubmit: any; mode: 'create' | 'view' }) => {
+  const { currentStep, handleNext, handleSubmit, mode } = props;
   if (currentStep === 0 || currentStep === 1) {
     return (
       <Button type="primary" onClick={handleNext}>
@@ -54,11 +53,24 @@ const RightButton = (props: { currentStep: any; handleNext: any; handleSubmit: a
     );
   }
   if (currentStep === 2) {
-    return (
-      <Button type="primary" onClick={handleSubmit}>
-        <FormattedMessage id="Confirm Create" />
-      </Button>
-    );
+    if (mode === 'create') {
+      return (
+        <Button type="primary" onClick={handleSubmit}>
+          <FormattedMessage id="Confirm Create" />
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          type="primary"
+          onClick={() => {
+            history.push('/instance');
+          }}
+        >
+          <FormattedMessage id="Done" />
+        </Button>
+      );
+    }
   }
   if (currentStep === 3) {
     return (
@@ -72,31 +84,54 @@ const RightButton = (props: { currentStep: any; handleNext: any; handleSubmit: a
       </Button>
     );
   }
+  return null;
 };
 
-const CreateInstance: React.FunctionComponent = () => {
+export interface ICreateGraph {
+  mode?: 'view' | 'create';
+  engineType?: string;
+  currentStep?: number;
+  nodeList?: any;
+  edgeList?: any;
+  graphName: string;
+}
+
+const Steps: React.FunctionComponent<{ currentStep: number }> = () => {
+  const { currentStep, mode, engineType } = useStore();
+  let steps = [
+    { title: <FormattedMessage id="Graph Metadata" /> },
+    { title: <FormattedMessage id="Create Schema" /> },
+    { title: <FormattedMessage id="Preview" /> },
+    { title: <FormattedMessage id="Result" /> },
+  ];
+  if (mode === 'view' && engineType === 'interactive') {
+    steps = [{ title: <FormattedMessage id="View Schema" /> }, { title: <FormattedMessage id="Preview" /> }];
+  }
+  const items = steps.map(item => ({ key: item.title, title: item.title }));
+  return <AntdSteps current={currentStep} items={items} />;
+};
+
+const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   const { store, updateStore } = useContext();
-  const { isAlert, currentStep, createInstaseResult, nodeList, edgeList, engineInput, engineType, engineDirected } =
-    store;
+  const { currentStep, createInstaseResult, nodeList, edgeList, engineType, engineDirected, graphName, mode } = store;
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
+
   const next = () => {
-    if (form.getFieldsValue().inputname) {
+    if (form.getFieldsValue().graphName || mode === 'view') {
       updateStore(draft => {
         draft.currentStep = currentStep + 1;
       });
-    } else {
-      form.validateFields();
     }
   };
+
   // createGraph
   const handleSubmit = () => {
-    console.log(nodeList, edgeList, engineInput, engineType, engineDirected);
     //@ts-ignore
     const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
     console.log('schemaJSON', schemaJSON);
     const data = {
-      name: String(engineInput).trim(),
+      name: String(graphName).trim(),
       store_type: engineType,
       stored_procedures: {
         directory: 'plugins',
@@ -122,7 +157,6 @@ const CreateInstance: React.FunctionComponent = () => {
     });
   };
 
-  const items = steps.map(item => ({ key: item.title, title: item.title }));
   const itemStyle: React.CSSProperties = {
     display: 'none',
     padding: '12px 0px',
@@ -133,7 +167,20 @@ const CreateInstance: React.FunctionComponent = () => {
   };
 
   useEffect(() => {
-    console.log('unmount....');
+    if (props.mode === 'view') {
+      // 预览模式下，需要从props中把默认参数回填回来
+      const { nodeList, edgeList, graphName } = props;
+      updateStore(draft => {
+        Object.keys(props).forEach(key => {
+          //@ts-ignore
+          draft[key] = props[key];
+        });
+        draft.currentStep = 1;
+        draft.nodeActiveKey = nodeList[0].id;
+        draft.edgeActiveKey = edgeList[0].id;
+        draft.graphName = graphName;
+      });
+    }
     return () => {
       updateStore(draft => {
         Object.keys(initialStore).forEach(key => {
@@ -168,7 +215,17 @@ const CreateInstance: React.FunctionComponent = () => {
         ]}
       />
       <div style={{ padding: '24px 0px' }}>
-        <Steps current={currentStep} items={items} />
+        {engineType === 'interactive' && mode === 'view' && (
+          <Alert
+            message="您的图实例类型为 Interactive，一旦创建则不支持修改图模型，您可以选择新建图实例"
+            type="info"
+            showIcon
+            closable
+            style={{ margin: '16px 0' }}
+          />
+        )}
+        <Steps currentStep={currentStep} />
+
         <div>
           <div style={currentStep === 0 ? activeItemStyle : itemStyle}>
             <ChooseEnginetype form={form} />
@@ -184,24 +241,19 @@ const CreateInstance: React.FunctionComponent = () => {
           </div>
         </div>
         <div>
-          {isAlert ? (
-            <Alert
-              message="您的图实例类型为 Interactive，一旦创建则不支持修改图模型，您可以选择新建图实例"
-              type="info"
-              showIcon
-              closable
-              style={{ margin: '16px 0' }}
+          <div>
+            <LeftButton
+              currentStep={currentStep}
+              handlePrev={prev}
+              createInstaseResult={createInstaseResult}
+              mode={mode}
             />
-          ) : (
-            <div style={{}}>
-              <LeftButton currentStep={currentStep} handlePrev={prev} createInstaseResult={createInstaseResult} />
-              <RightButton currentStep={currentStep} handleNext={next} handleSubmit={handleSubmit} />
-            </div>
-          )}
+            <RightButton currentStep={currentStep} handleNext={next} handleSubmit={handleSubmit} mode={mode} />
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default memo(CreateInstance);
+export default CreateInstance;

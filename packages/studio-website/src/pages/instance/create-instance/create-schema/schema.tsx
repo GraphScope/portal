@@ -10,6 +10,8 @@ export type FieldType = {
   target?: string;
 };
 type SchemaType = {
+  mode: 'view' | 'create';
+  engineType: 'interactive' | 'groot';
   newActiveKey: string;
   data?: any;
   id: string;
@@ -42,11 +44,10 @@ const configcolumns: configcolumnsType[] = [
 ];
 
 const CreateSchema: React.FunctionComponent<SchemaType> = props => {
-  const { newActiveKey, data, currentType, updateStore, nodeOptions } = props;
+  const { newActiveKey, data, currentType, updateStore, nodeOptions, mode } = props;
   const [form] = Form.useForm();
-  const detail = false;
-  console.log(' data', currentType, data, newActiveKey, nodeOptions);
 
+  const disabled = mode === 'view';
   const propertyRef = useRef<any>();
   let cbRef = useRef();
 
@@ -120,7 +121,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             style={{ marginBottom: '0' }}
           >
             <Input
-              disabled={detail}
+              disabled={disabled}
               placeholder={`Please Enter ${currentType == 'node' ? 'Node Label.' : 'Edge Label.'}`}
             />
           </Form.Item>
@@ -136,7 +137,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
               rules={[{ required: true, message: '' }]}
               style={{ marginBottom: '0' }}
             >
-              <Select options={nodeOptions} disabled={detail} placeholder="Please Select Source Node Label." />
+              <Select options={nodeOptions} disabled={disabled} placeholder="Please Select Source Node Label." />
             </Form.Item>
             <Form.Item<FieldType>
               label={'Target Node Label'}
@@ -147,7 +148,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
               rules={[{ required: true, message: '' }]}
               style={{ marginBottom: '0' }}
             >
-              <Select options={nodeOptions} disabled={detail} placeholder="Please Select Target Node Label." />
+              <Select options={nodeOptions} disabled={disabled} placeholder="Please Select Target Node Label." />
             </Form.Item>
           </>
         ) : null}

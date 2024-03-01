@@ -123,7 +123,11 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
         </Flex>
         {/* <Flex justify="space-between" vertical align="end"> */}
         <Flex gap="middle" align="flex-end" vertical justify="end">
-          <Button style={{ width: '150px' }} icon={<DeploymentUnitOutlined />}>
+          <Button
+            style={{ width: '150px' }}
+            icon={<DeploymentUnitOutlined />}
+            onClick={() => history.push(`/instance/view-schema#?graph_name=${name}`)}
+          >
             Define Schema
           </Button>
           <Button
