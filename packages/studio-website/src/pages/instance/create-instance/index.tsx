@@ -113,7 +113,7 @@ const Steps: React.FunctionComponent<{ currentStep: number }> = () => {
 
 const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   const { store, updateStore } = useContext();
-  const { currentStep, createInstaseResult, nodeList, edgeList, engineType, engineDirected, graphName, mode } = store;
+  const { currentStep, createInstaseResult, nodeList, edgeList, engineType, storeType, graphName, mode } = store;
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
 
@@ -129,10 +129,10 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   const handleSubmit = () => {
     //@ts-ignore
     const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
-    console.log('schemaJSON', schemaJSON);
+
     const data = {
       name: String(graphName).trim(),
-      store_type: engineType,
+      store_type: storeType,
       stored_procedures: {
         directory: 'plugins',
       },
