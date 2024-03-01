@@ -71,7 +71,7 @@ const CreateRecep: React.FC<ICreateRecepProps> = props => {
         form.resetFields();
       }}
     >
-      <Form name="basic" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={form}>
+      <Form name="basic" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={form} style={{ marginTop: '24px' }}>
         <Form.Item<FieldType>
           label={<FormattedMessage id="Receiver Type" />}
           name="type"
