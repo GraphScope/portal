@@ -97,7 +97,7 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
       render: (record: boolean) => (
         <>
           {/* <Switch checked={record} disabled /> {record ? 'disable' : 'enable'} */}
-          <Tag>{record ? 'enable' : 'disable'}</Tag>
+          <Tag color={record ? 'green' : 'red'}>{record ? 'enable' : 'disable'}</Tag>
         </>
       ),
     },
@@ -109,8 +109,8 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
         return (
           <Space>
             <Button
+              type="link"
               size="small"
-              type="primary"
               ghost
               onClick={() =>
                 updateState(preset => {
@@ -131,7 +131,7 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
               okText={'yes'}
               cancelText={'no'}
             >
-              <Button danger size="small" style={{ width: '80px' }}>
+              <Button type="text" danger size="small" style={{ width: '80px' }}>
                 <FormattedMessage id="Delete" />
               </Button>
             </Popconfirm>
