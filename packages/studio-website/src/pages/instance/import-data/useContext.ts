@@ -20,6 +20,7 @@ export type IStore = {
   nodes: BindingNode[];
   edges: BindingEdge[];
   isReady: boolean;
+  schema: any;
 };
 
 export const initialStore: IStore = {
@@ -32,6 +33,10 @@ export const initialStore: IStore = {
   /** 边 */
   edges: [],
   isReady: false,
+  schema: {
+    nodes: [],
+    edges: [],
+  },
 };
 export const initialDataMap: Record<string, BindingNode | BindingEdge> = {};
 

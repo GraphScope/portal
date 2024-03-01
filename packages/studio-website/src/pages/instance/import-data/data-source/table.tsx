@@ -22,7 +22,6 @@ const styles: React.CSSProperties = {
 };
 const MappingFields = (props: any) => {
   const { dataFields, value, onChange } = props;
-  console.log('token>>>>>>>>>>>>>', value);
 
   if (dataFields) {
     const options = dataFields.map((item: string) => {
@@ -46,7 +45,7 @@ const MappingFields = (props: any) => {
 
 const TableList: React.FC<TableListProps> = props => {
   const { tabledata, onChange, dataFields } = props;
-  console.log('tabledata', tabledata);
+
   const title = dataFields ? 'Mapping Fields' : 'ColumnIndex or Name';
   const handleChangeIndex = (value: any, all: any) => {
     console.log(value, all, tabledata);
