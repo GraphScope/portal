@@ -5,7 +5,10 @@ import { cloneDeep } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useContext } from '../useContext';
-
+const index = {
+  edge: 0,
+  node: 0,
+};
 const AddLabel: FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, mode } = store;
@@ -16,17 +19,19 @@ const AddLabel: FunctionComponent = () => {
     updateStore(draft => {
       if (currentType == 'node') {
         draft.nodeActiveKey = id;
+        index.node = index.node + 1;
         draft.nodeList.push({
           key: id,
-          label: 'undefined',
+          label: `vlabel_${index.node}`,
           properties: [],
         });
       }
       if (currentType === 'edge') {
         draft.edgeActiveKey = id;
+        index.edge = index.edge + 1;
         draft.edgeList.push({
           key: id,
-          label: 'undefined',
+          label: `elabel_${index.edge}`,
           source: '',
           target: '',
           properties: [],
