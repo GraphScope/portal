@@ -11,16 +11,16 @@ const SideWidth = 150;
 const ContainerWidth = 1360;
 const Padding = 24;
 const CollapsedWidth = 60;
+
 const Container: React.FunctionComponent<ContainerProps> = props => {
   const { sidebar, content, footer } = props;
   const { store } = useContext();
-  const { collapse, mode } = store;
+  const { collapse } = store;
   return (
     <div
       className="gs-root"
       style={{
-        // background: '#f5f7f9',
-        background: mode === 'defaultAlgorithm' ? '#f5f7f9' : '#000',
+        background: '#f5f7f9',
         display: 'flex',
         alignItems: 'center',
         height: '100vh',
@@ -37,7 +37,9 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
           margin: 'auto',
           display: 'flex',
           padding: '24px',
+          // border: '1px solid #ddd',
           flexShrink: 0,
+          overflow: 'hidden',
           flexWrap: 'nowrap',
         }}
       >
@@ -49,9 +51,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
             boxSizing: 'border-box',
             overflow: 'hidden',
             flexWrap: 'nowrap',
-            position: 'fixed',
-            top: '24px',
-            bottom: '0px',
+            // border: '1px solid #ddd',
           }}
         >
           {sidebar}
@@ -61,19 +61,19 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
           style={{
             flex: 1,
             boxSizing: 'border-box',
-            marginLeft: collapse ? '80px' : `${SideWidth + 24}px`,
+            marginLeft: '24px',
             display: 'flex',
             flexDirection: 'column',
-            // overflow: 'scroll',
+            overflow: 'hidden',
             flexWrap: 'nowrap',
-            transition: 'all 0.3s ease',
           }}
         >
           <div
             style={{
               boxSizing: 'border-box',
               flex: 1,
-              background: mode === 'defaultAlgorithm' ? '#fff' : '#000',
+              overflowY: 'scroll',
+              background: '#fff',
               borderRadius: '12px',
               position: 'relative',
             }}
