@@ -66,6 +66,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
             flexDirection: 'column',
             // overflow: 'scroll',
             flexWrap: 'nowrap',
+            transition: 'all 0.3s ease',
           }}
         >
           <div
