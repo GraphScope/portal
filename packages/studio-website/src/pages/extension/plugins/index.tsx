@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Space, Skeleton } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { listProcedures } from '../service';
-import { log } from 'console';
 export interface Item {
   key: string;
   name: string;

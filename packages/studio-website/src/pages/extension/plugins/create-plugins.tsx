@@ -3,7 +3,7 @@ import { Button, Form, Input, Select, Alert, Flex, Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import CodeMirror from '@uiw/react-codemirror';
 import UploadFiles from './upload-files';
-import { createProcedure } from '../service';
+import { createProcedure, listProcedures } from '../service';
 
 type FieldType = {
   name: string;
@@ -13,21 +13,40 @@ type FieldType = {
   instance: boolean;
 };
 const TYPEOPTION = [{ label: 'CPP', value: 'cpp' }];
-/** 接口返回 */
-const INSTANCEOPTION = [{ label: 'DEFAULT Movies', value: 'DEFAULT Movies' }];
+
 type ICreateRecepProps = {
   handelChange(val: boolean): void;
 };
 const CreatePlugins: React.FC<ICreateRecepProps> = props => {
   const { handelChange } = props;
   const [form] = Form.useForm();
-  const [state, updateState] = useState({
+  const [state, updateState] = useState<{
+    info: string | null;
+    editCode: string;
+    instanceOption: { label: string; value: string }[];
+  }>({
     info: null,
     editCode: '',
+    instanceOption: [],
   });
-  const { info, editCode } = state;
+  const { info, editCode, instanceOption } = state;
   useEffect(() => {
     form.setFieldsValue({ type: 'cpp' });
+    listProcedures().then(res => {
+      const INSTANCEOPTION = res.map(item => {
+        const { bound_graph } = item;
+        return {
+          label: bound_graph as string,
+          value: bound_graph as string,
+        };
+      });
+      updateState(preset => {
+        return {
+          ...preset,
+          instanceOption: INSTANCEOPTION,
+        };
+      });
+    });
   }, []);
   info && form.setFieldsValue({ query: info });
   const onFinish = async () => {
@@ -121,7 +140,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
             name="bound_graph"
             rules={[{ required: true, message: 'Please input your Graph Instance!' }]}
           >
-            <Select options={INSTANCEOPTION} />
+            <Select options={instanceOption} />
           </Form.Item>
           <Form.Item<FieldType> label={<FormattedMessage id="Edit Code" />} name="query">
             <div style={{ borderRadius: '8px', overflow: 'hidden' }}>
