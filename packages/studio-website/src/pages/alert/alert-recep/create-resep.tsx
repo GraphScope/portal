@@ -71,7 +71,7 @@ const CreateRecep: React.FC<ICreateRecepProps> = props => {
         form.resetFields();
       }}
     >
-      <Form name="basic" labelCol={{ span: 5 }} wrapperCol={{ span: 18 }} form={form}>
+      <Form name="basic" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={form}>
         <Form.Item<FieldType>
           label={<FormattedMessage id="Receiver Type" />}
           name="type"
@@ -121,7 +121,7 @@ const CreateRecep: React.FC<ICreateRecepProps> = props => {
           </Tooltip>
         </Form.Item>
       </Form>
-      <Flex justify="center">
+      <Flex justify="end">
         <Button type="primary" htmlType="submit" onClick={() => onFinish()}>
           <FormattedMessage id="Submit" />
         </Button>

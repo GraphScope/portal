@@ -107,7 +107,11 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       title: <FormattedMessage id="Job ID" />,
       dataIndex: 'job_id',
       key: 'job_id',
-      render: (record: string) => <>{hangdleJobid(record)}</>,
+      render: (record: string, all: { log: string }) => (
+        <span style={{ cursor: 'pointer' }} onClick={() => handleDetail({ isShow: true, log: all.log })}>
+          {hangdleJobid(record)}
+        </span>
+      ),
     },
     {
       title: <FormattedMessage id="Type" />,
@@ -174,7 +178,7 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
           icon
         >
           <Tooltip title="Delete">
-            <Button size="small" danger ghost icon={<DeleteOutlined />} />
+            <Button type="text" size="small" danger ghost icon={<DeleteOutlined />} />
           </Tooltip>
         </Popconfirm>
       ),
@@ -187,13 +191,6 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
         dataSource={jobsList}
         //@ts-ignores
         columns={columns}
-        onRow={record => {
-          return {
-            onClick: event => {
-              handleDetail({ isShow: true, log: record.log });
-            }, // 点击行
-          };
-        }}
       />
     </div>
   );

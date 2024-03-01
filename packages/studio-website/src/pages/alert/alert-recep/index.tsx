@@ -79,16 +79,14 @@ const Receivers: React.FC<IReceiversProps> = props => {
       dataIndex: 'is_at_all',
       editable: true,
       key: 'is_at_all',
-      render: (is_at_all: boolean) => {
-        return <Tag>{is_at_all ? 'enable' : 'disable'}</Tag>;
-      },
+      render: (is_at_all: boolean) => <Tag color={is_at_all ? 'green' : 'red'}>{is_at_all ? 'enable' : 'disable'}</Tag>,
     },
     {
       title: <FormattedMessage id="Status" />,
       dataIndex: 'enable',
       editable: true,
       key: 'enable',
-      render: (enable: boolean) => <Tag>{enable ? 'enable' : 'disable'}</Tag>,
+      render: (enable: boolean) => <Tag color={enable ? 'green' : 'red'}>{enable ? 'enable' : 'disable'}</Tag>,
     },
     {
       title: <FormattedMessage id="Action" />,
@@ -100,8 +98,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
           <Space>
             <Button
               size="small"
-              type="primary"
-              ghost
+              type="link"
               onClick={() => {
                 updateState(preset => {
                   return {
@@ -121,7 +118,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
               okText={'yes'}
               cancelText={'no'}
             >
-              <Button danger size="small" style={{ width: '80px' }}>
+              <Button type="text" danger size="small" style={{ width: '80px' }}>
                 <FormattedMessage id="Delete" />
               </Button>
             </Popconfirm>
