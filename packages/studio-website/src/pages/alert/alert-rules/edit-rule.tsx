@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Button, Checkbox, Form, Input, Select, Modal, Flex, message, InputNumber } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Tooltip, Form, Input, Switch, Modal, Flex, message, InputNumber } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { updateAlertRuleByName } from '../service';
 
@@ -19,17 +19,19 @@ type ICreateRecepProps = {
 const EditRule: React.FC<ICreateRecepProps> = props => {
   const { isEditRules, handelChange, ruleData } = props;
   const [form] = Form.useForm();
+  const [status, setStatus] = useState(false);
   useEffect(() => {
     Object.keys(ruleData).length > 0 && form.setFieldsValue(ruleData);
   }, []);
   const onFinish = async () => {
     /** 编辑告警接收 */
     const { name } = ruleData;
-    const data = { ...form.getFieldsValue() };
+    const data = { ...form.getFieldsValue(), enable: status };
     const res = await updateAlertRuleByName(name, data);
     await message.success(res);
     handelChange(false);
   };
+
   return (
     <Modal
       title={<FormattedMessage id="Eidt Alert Rule" />}
@@ -79,7 +81,9 @@ const EditRule: React.FC<ICreateRecepProps> = props => {
           <InputNumber />
         </Form.Item>
         <Form.Item<FieldType> label={<FormattedMessage id="Status" />} name="enable" valuePropName="checked">
-          <Checkbox />
+          <Tooltip title={status ? 'enable' : 'disable'}>
+            <Switch onChange={e => setStatus(e)} />
+          </Tooltip>
         </Form.Item>
       </Form>
       <Flex justify="center">

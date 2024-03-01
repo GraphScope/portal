@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Popconfirm, Table, Button, Switch, Space, Tooltip, Skeleton, message } from 'antd';
+import { Form, Popconfirm, Table, Button, Switch, Space, Tag, Skeleton, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import CreateRecep from './create-resep';
 import { listReceivers, deleteReceiverById, updateReceiverById } from '../service';
@@ -80,7 +80,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
       editable: true,
       key: 'is_at_all',
       render: (is_at_all: boolean) => {
-        return <Switch checked={is_at_all} disabled />;
+        return <Tag>{is_at_all ? 'enable' : 'disable'}</Tag>;
       },
     },
     {
@@ -88,17 +88,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
       dataIndex: 'enable',
       editable: true,
       key: 'enable',
-      render: (enable: boolean, all: any) => (
-        <Space>
-          <Switch checked={enable} disabled />
-          {!enable ? 'disable' : 'enable'}
-          {all.error_msg ? (
-            <Tooltip title={all.error_msg}>
-              <span>⚠️</span>
-            </Tooltip>
-          ) : null}
-        </Space>
-      ),
+      render: (enable: boolean) => <Tag>{enable ? 'enable' : 'disable'}</Tag>,
     },
     {
       title: <FormattedMessage id="Action" />,
@@ -122,7 +112,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
                 });
               }}
             >
-              Edit
+              <FormattedMessage id="Edit" />
             </Button>
             <Popconfirm
               title="Sure to cancel?"
@@ -132,7 +122,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
               cancelText={'no'}
             >
               <Button danger size="small" style={{ width: '80px' }}>
-                delete
+                <FormattedMessage id="Delete" />
               </Button>
             </Popconfirm>
           </Space>

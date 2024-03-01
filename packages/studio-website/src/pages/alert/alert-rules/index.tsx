@@ -96,7 +96,8 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
       editable: true,
       render: (record: boolean) => (
         <>
-          <Switch checked={record} disabled /> {record ? 'disable' : 'enable'}
+          {/* <Switch checked={record} disabled /> {record ? 'disable' : 'enable'} */}
+          <Tag>{record ? 'enable' : 'disable'}</Tag>
         </>
       ),
     },
@@ -121,7 +122,7 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
                 })
               }
             >
-              Edit
+              <FormattedMessage id="Edit" />
             </Button>
             <Popconfirm
               title="Sure to cancel?"
@@ -131,7 +132,7 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
               cancelText={'no'}
             >
               <Button danger size="small" style={{ width: '80px' }}>
-                delete
+                <FormattedMessage id="Delete" />
               </Button>
             </Popconfirm>
           </Space>
