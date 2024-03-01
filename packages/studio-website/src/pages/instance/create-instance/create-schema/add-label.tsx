@@ -8,8 +8,8 @@ import { useContext } from '../useContext';
 
 const AddLabel: FunctionComponent = () => {
   const { store, updateStore } = useContext();
-  const { nodeList, edgeList, currentType, detail, nodeActiveKey, edgeActiveKey, nodeItems, edgeItems } = store;
-
+  const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, mode } = store;
+  const disabled = mode == 'view';
   /** 添加点边模版 */
   const addLabel = () => {
     const id = uuidv4();
@@ -60,7 +60,7 @@ const AddLabel: FunctionComponent = () => {
   /** 空的时候展示为一个 */
   if (IS_EMPTY) {
     return (
-      <Button disabled={detail} style={{ width: '100%' }} type="dashed" onClick={addLabel} icon={<PlusOutlined />}>
+      <Button disabled={disabled} style={{ width: '100%' }} type="dashed" onClick={addLabel} icon={<PlusOutlined />}>
         {currentType == 'node' ? <FormattedMessage id="Add Node" /> : <FormattedMessage id="Add Edge" />}
       </Button>
     );
@@ -69,10 +69,11 @@ const AddLabel: FunctionComponent = () => {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <Space>
-        <Button onClick={addLabel} disabled={detail} icon={<PlusOutlined />}>
+        <Button onClick={addLabel} disabled={disabled} icon={<PlusOutlined />}>
           {currentType == 'node' ? <FormattedMessage id="Add Node" /> : <FormattedMessage id="Add Edge" />}
         </Button>
         <Button
+          disabled={disabled}
           icon={<DeleteOutlined />}
           onClick={() => deleteLabel(currentType, currentType == 'node' ? nodeActiveKey : edgeActiveKey)}
         />

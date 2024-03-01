@@ -14,7 +14,7 @@ interface ICreateInstanceProps {
 }
 const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
   const { store, updateStore } = useContext();
-  const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, isAlert } = store;
+  const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, mode, engineType } = store;
 
   /** 点/边 切换 */
   const tabsChange = (key: string) => {
@@ -62,6 +62,8 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
           id={key}
           newActiveKey={key}
           shouldRender={nodeActiveKey === item.key}
+          mode={mode}
+          engineType={engineType}
         />
       ),
     };
@@ -81,6 +83,8 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
           data={item}
           newActiveKey={key}
           shouldRender={nodeActiveKey === key}
+          mode={mode}
+          engineType={engineType}
         />
       ),
     };
