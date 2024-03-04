@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Form, Popconfirm, Table, Button, Space, Tag, Skeleton, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import CreateRecep from './create-resep';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { listReceivers, deleteReceiverById, updateReceiverById } from '../service';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 export interface Item {
   key: string;
   message: string;
@@ -100,7 +101,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
             <Button
               size="small"
               type="link"
-              icon={<EditOutlined />}
+              icon={<FontAwesomeIcon icon={faPenToSquare} />}
               onClick={() => {
                 updateState(preset => {
                   return {
@@ -118,7 +119,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
               okText={<FormattedMessage id="Yes" />}
               cancelText={<FormattedMessage id="No" />}
             >
-              <Button type="text" danger size="small" icon={<DeleteOutlined />} />
+              <Button type="text" danger size="small" icon={<FontAwesomeIcon icon={faTrashCan} />} />
             </Popconfirm>
           </Space>
         );
