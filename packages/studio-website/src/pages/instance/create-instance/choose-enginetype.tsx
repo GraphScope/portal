@@ -1,5 +1,5 @@
 import React, { memo, useEffect } from 'react';
-import { Form, Input, Select } from 'antd';
+import { Form, Input, Select, Typography } from 'antd';
 
 import { FormattedMessage } from 'react-intl';
 import SelectCards from '@/components/select-cards';
@@ -19,7 +19,15 @@ const engines = [
   {
     id: 'mutable_csr',
     title: 'Interactive',
-    desc: 'Interactive engine is designed to handle concurrent graph queries at an impressive speed. Its primary goal is to process as many queries as possible within a given timeframe, emphasizing a high query throughput rate. More details.',
+    desc: (
+      <>
+        Interactive engine is designed to handle concurrent graph queries at an impressive speed. Its primary goal is to
+        process as many queries as possible within a given timeframe, emphasizing a high query throughput rate.{' '}
+        <Typography.Link href="https://graphscope.io/docs/interactive_engine/graphscope_interactive" target="_blank">
+          More details
+        </Typography.Link>
+      </>
+    ),
   },
   // { id: 'insights', title: 'Insights', desc: 'Insights 引擎介绍', disabled: true },
   // { id: 'v6d', title: 'Vineyard', desc: 'Vineyard 引擎介绍', disabled: true },
