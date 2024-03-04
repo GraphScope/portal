@@ -16,14 +16,15 @@ import { FormattedMessage } from 'react-intl';
 
 import { useContext } from './useContext';
 import Logo from '@/components/logo';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCoins, faMagnifyingGlass, faListCheck, faBell, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
 interface ISidebarProps {}
 
 const items: MenuProps['items'] = [
   {
     label: <FormattedMessage id="navbar.graphs" />,
     key: '/instance',
-    icon: <DesktopOutlined />,
+    icon: <FontAwesomeIcon icon={faCoins} />,
   },
   // {
   //   label: <FormattedMessage id="navbar.query" />,
@@ -33,7 +34,7 @@ const items: MenuProps['items'] = [
   {
     label: <FormattedMessage id="Query" />,
     key: '/query-app',
-    icon: <FileSearchOutlined />,
+    icon: <FontAwesomeIcon icon={faMagnifyingGlass} />,
   },
 ];
 
@@ -41,17 +42,17 @@ const otherItems: MenuProps['items'] = [
   {
     label: <FormattedMessage id="navbar.jobs" />,
     key: '/job',
-    icon: <OrderedListOutlined />,
+    icon: <FontAwesomeIcon icon={faListCheck} />,
   },
   {
     label: <FormattedMessage id="navbar.alert" />,
     key: '/alert',
-    icon: <DashboardOutlined />,
+    icon: <FontAwesomeIcon icon={faBell} />,
   },
   {
     label: <FormattedMessage id="navbar.extension" />,
     key: '/extension',
-    icon: <AppstoreAddOutlined />,
+    icon: <FontAwesomeIcon icon={faPuzzlePiece} />,
   },
 ];
 
