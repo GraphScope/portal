@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Space, Tooltip, Upload, Button, message, notification } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { download, transformSchema, transformSchemaToOptions, transOptionsToSchema } from './utils';
+import { download, transformSchema, transformSchemaToOptions } from './utils';
 import { useContext } from '../useContext';
 import yaml from 'js-yaml';
 import { cloneDeep } from 'lodash';
+import { transOptionsToSchema } from '@/components/utils/schema';
 interface IExportConfigProps {}
 const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
   const { store, updateStore } = useContext();
@@ -49,6 +50,7 @@ const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
   const Json2Yaml = () => {
     //@ts-ignore
     const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
+
     const schemaYaml = yaml.dump(schemaJSON);
     download('schema.yaml', schemaYaml);
   };
