@@ -24,13 +24,13 @@ const Editor: FunctionComponent<MapConfigParamsType & PropertyConfigParamsType> 
   const { mapConfigParams, propertyConfigParams } = props;
   return (
     <>
-      <Flex justify={'space-between'} style={{ padding: '12px 6px 6px 6px' }} align="center">
+      <Flex justify={'space-between'} style={{ padding: '12px 6px 4px 6px', height: '42px' }} align="center">
         <Typography.Text>{mapConfigParams.locales.properties}</Typography.Text>
         <>
           {propertyConfigParams?.selectedRows.length == 0 ? (
             <Space>
               <Tooltip title="Add property">
-                <Button icon={<PlusOutlined />} onClick={() => propertyConfigParams?.addNodeConfig()}>
+                <Button icon={<PlusOutlined />} onClick={() => propertyConfigParams?.addNodeConfig()} size="small">
                   {mapConfigParams.locales.addProperty}
                 </Button>
               </Tooltip>

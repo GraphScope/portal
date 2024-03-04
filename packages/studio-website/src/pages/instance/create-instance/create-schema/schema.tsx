@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, memo } from 'react';
-import { Empty, Form, Input, Select } from 'antd';
+import { Button, Empty, Form, Input, Select, Tooltip } from 'antd';
 import { PropertiesEditor } from '@graphscope/studio-importor';
 import { KeyOutlined } from '@ant-design/icons';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import type { IStore } from '../useContext';
 export type FieldType = {
@@ -22,7 +23,7 @@ type SchemaType = {
   nodeOptions?: { label: string; value: string }[];
 };
 type configcolumnsType = {
-  title: string;
+  title: string | React.ReactNode;
   dataIndex?: string;
   width?: string | number;
   type?: string;
@@ -32,16 +33,48 @@ const primitive_types = ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED
 
 /** 子项 [{title:'表头'，dataIndex:'绑定字段'，type:'字段对应编辑框'，option:'select配置选项',width:'表头宽度'}] */
 const configcolumns: configcolumnsType[] = [
-  { title: 'Name', dataIndex: 'name', width: '200px', type: 'INPUT' },
   {
-    title: 'Data type',
+    title: (
+      <>
+        Name
+        <Tooltip title="property name">
+          <QuestionCircleOutlined style={{ margin: '0px 4px' }} />
+        </Tooltip>
+      </>
+    ),
+    dataIndex: 'name',
+    width: '200px',
+    type: 'INPUT',
+  },
+  {
+    title: (
+      <>
+        Data type
+        <Tooltip title="data type">
+          <QuestionCircleOutlined style={{ margin: '0px 4px' }} />
+        </Tooltip>
+      </>
+    ),
     dataIndex: 'type',
     type: 'SELECT',
     option: primitive_types.map(item => {
       return { label: item, value: item };
     }),
   },
-  { title: <KeyOutlined />, width: '80px' },
+  {
+    title: (
+      <div>
+        <Tooltip title="primary key">
+          <Button
+            type="text"
+            icon={<KeyOutlined style={{ color: '#c6c8cb', fontWeight: 700 }} />}
+            size="small"
+          ></Button>
+        </Tooltip>
+      </div>
+    ),
+    width: '80px',
+  },
 ];
 
 const notFoundContent = (

@@ -1,5 +1,5 @@
 import React, { type FC, useEffect, forwardRef, useImperativeHandle, useRef, memo } from 'react';
-import { Checkbox } from 'antd';
+import { Button, Checkbox } from 'antd';
 import { uniqueId, cloneDeep } from 'lodash';
 import { useImmer } from '../use-immer';
 import {
@@ -11,6 +11,7 @@ import {
   IMapColumns,
 } from './interface';
 import { EditType, IconFont } from './mapdata';
+import { KeyOutlined } from '@ant-design/icons';
 import Editor from './editor';
 type IPropertiesEditorProps = {
   properties?: PropertyList[];
@@ -254,12 +255,27 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
             configcolumns.push({
               ...item,
               key: 'operate',
-              render: (_, record: any) =>
-                record?.primaryKey ? (
-                  <IconFont type="icon-yuechi" onClick={() => !isEditable && primaryKeyClick(record)} />
-                ) : (
-                  <IconFont type="icon-yuechi1" onClick={() => !isEditable && primaryKeyClick(record)} />
-                ),
+              render: (_, record: any) => (
+                <Button
+                  size="small"
+                  type={'text'}
+                  onClick={() => !isEditable && primaryKeyClick(record)}
+                  icon={
+                    <KeyOutlined
+                      style={
+                        record?.primaryKey
+                          ? {
+                              color: '#000',
+                              fontWeight: '600',
+                            }
+                          : {
+                              color: '#ddd',
+                            }
+                      }
+                    />
+                  }
+                ></Button>
+              ),
             });
             break;
         }
@@ -301,6 +317,7 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
       },
       [configList],
     );
+
     return <Editor mapConfigParams={mapConfigParams} propertyConfigParams={propertyConfigParams} />;
   }),
 );

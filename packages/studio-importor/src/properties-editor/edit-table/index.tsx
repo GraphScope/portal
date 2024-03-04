@@ -106,14 +106,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
               {record?.name} <EditOutlined />
             </span>
           ) : (
-            <Input ref={inputRef} {...prop} onBlur={() => inputBlur(record)} disabled={disable} />
+            <Input size="small" ref={inputRef} {...prop} onBlur={() => inputBlur(record)} disabled={disable} />
           )}
         </Form.Item>
       );
     } else if (inputType === EditType.SELECT) {
       childNode = (
         <Form.Item style={{ margin: 0 }} name={dataIndex} key={`col-select-${dataIndex}`}>
-          <Select {...prop} options={prop?.options} disabled={disable} />
+          <Select {...prop} options={prop?.options} disabled={disable} size="small" />
         </Form.Item>
       );
     } else {
@@ -138,6 +138,7 @@ export const EditTable: React.FC<{
   rowSelection?: any;
 }> = memo(({ columns, dataSource, onChange, rowKey, inputDoubleClick, inputBlur, ...props }) => {
   const data = dataSource;
+
   const components = {
     body: {
       row: EditableRow,
@@ -159,10 +160,12 @@ export const EditTable: React.FC<{
       }),
     };
   });
+  console.log('data', data, editColumns);
 
   return (
     <TableContext.Provider value={{ data, onChange, rowKey, inputDoubleClick, inputBlur }}>
       <Table
+        size="small"
         columns={editColumns}
         dataSource={data}
         components={components}
