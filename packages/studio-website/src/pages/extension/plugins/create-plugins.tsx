@@ -114,7 +114,9 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
           ]}
         />
         <Alert
-          message="如果您已有算法插件文件，可以上传至这里，这将帮助您快速创建插件."
+          message={
+            <FormattedMessage id="If you already have an algorithm plugin file, you can upload it here, which will help you quickly create a plugin." />
+          }
           type="info"
           showIcon
           closable
@@ -153,9 +155,9 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
           >
             <Select options={instanceOption} />
           </Form.Item>
-          <Form.Item<FieldType> label={<FormattedMessage id="Edit Code" />} name="query">
-            <div style={{ height: '200px', borderRadius: '8px', overflow: 'scroll' }}>
-              <CodeMirror value={editCode} onChange={e => handleCodeMirror(e)} />
+          <Form.Item<FieldType> label={<FormattedMessage id="Edit Code" />} name="query" style={{}}>
+            <div style={{ overflow: 'scroll', border: '1px solid #D9D9D9', borderRadius: '8px' }}>
+              <CodeMirror height="200px" value={editCode} onChange={e => handleCodeMirror(e)} />
             </div>
           </Form.Item>
           <Form.Item>

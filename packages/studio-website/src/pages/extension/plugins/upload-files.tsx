@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import { message, Upload } from 'antd';
+import { FormattedMessage } from 'react-intl';
 
 const { Dragger } = Upload;
 type IUploadFile = {
@@ -51,9 +52,11 @@ const UploadFiles: React.FC<IUploadFile> = ({ handleChange }) => {
       <p className="ant-upload-drag-icon">
         <InboxOutlined />
       </p>
-      <p className="ant-upload-text">Click or drag file to this area to upload</p>
+      <p className="ant-upload-text">
+        <FormattedMessage id="Click or drag file to this area to upload" />
+      </p>
       <p className="ant-upload-hint">
-        Support for a single or bulk upload. Strictly prohibited from uploading company data or other banned files.
+        <FormattedMessage id="Support for a single or bulk upload. Strictly prohibited from uploading company data or other banned files." />
       </p>
     </>
   );

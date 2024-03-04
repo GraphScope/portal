@@ -3,6 +3,8 @@ import Section from '@/components/section';
 import type { TabsProps } from 'antd';
 import JobsList from './job-list';
 import Detail from './job-list/detail';
+import { FormattedMessage } from 'react-intl';
+
 interface IJobProps {}
 const { useState } = React;
 const Job: React.FunctionComponent<IJobProps> = props => {
@@ -14,7 +16,7 @@ const Job: React.FunctionComponent<IJobProps> = props => {
   const items: TabsProps['items'] = [
     {
       key: 'info',
-      label: 'Job List',
+      label: <FormattedMessage id="Job List" />,
       children: (
         <JobsList
           handleDetail={val => {

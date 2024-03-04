@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Popconfirm, Table, Button, Switch, Space, Tag, Skeleton, message, Tooltip } from 'antd';
+import { Form, Popconfirm, Table, Button, Space, Tag, Skeleton, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { listAlertRules, deleteAlertRuleByName } from '../service';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
@@ -130,9 +130,7 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
               okText={<FormattedMessage id="Yes" />}
               cancelText={<FormattedMessage id="No" />}
             >
-              <Tooltip title="Delete">
-                <Button type="text" danger size="small" icon={<DeleteOutlined />} />
-              </Tooltip>
+              <Button type="text" danger size="small" icon={<DeleteOutlined />} />
             </Popconfirm>
           </Space>
         );

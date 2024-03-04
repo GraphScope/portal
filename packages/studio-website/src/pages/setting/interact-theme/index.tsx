@@ -3,6 +3,7 @@ import { Flex, Typography, Row, Col } from 'antd';
 import { useContext } from '@/layouts/useContext';
 import SelectCards from '@/components/select-cards';
 import dark from './img/dark.jpg';
+import { FormattedMessage } from 'react-intl';
 interface IInteractThemeProps {}
 const { Title, Text } = Typography;
 
@@ -39,9 +40,11 @@ const InteractTheme: React.FunctionComponent<IInteractThemeProps> = props => {
       <Col span={8}>
         <Flex vertical>
           <Title level={3} style={{ margin: '0px' }}>
-            Interact theme
+            <FormattedMessage id="Interact theme" />
           </Title>
-          <Text>Select or customize your UI theme</Text>
+          <Text>
+            <FormattedMessage id="Select or customize your UI theme" />
+          </Text>
         </Flex>
       </Col>
       <Col span={16}>
