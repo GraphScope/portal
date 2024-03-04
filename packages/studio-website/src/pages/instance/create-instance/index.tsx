@@ -32,7 +32,7 @@ const LeftButton = (props: { currentStep: any; handlePrev: any; createInstaseRes
   }
   if (currentStep > 0) {
     return (
-      <Button style={{ margin: '0 8px' }} onClick={handlePrev}>
+      <Button style={{ margin: '0 8px', minWidth: '100px' }} onClick={handlePrev}>
         <FormattedMessage id="Previous" />
       </Button>
     );
@@ -47,7 +47,7 @@ const RightButton = (props: { currentStep: any; handleNext: any; handleSubmit: a
   const { currentStep, handleNext, handleSubmit, mode } = props;
   if (currentStep === 0 || currentStep === 1) {
     return (
-      <Button type="primary" onClick={handleNext}>
+      <Button type="primary" onClick={handleNext} style={{ minWidth: '100px' }}>
         <FormattedMessage id="Next" />
       </Button>
     );
@@ -55,7 +55,7 @@ const RightButton = (props: { currentStep: any; handleNext: any; handleSubmit: a
   if (currentStep === 2) {
     if (mode === 'create') {
       return (
-        <Button type="primary" onClick={handleSubmit}>
+        <Button type="primary" onClick={handleSubmit} style={{ minWidth: '100px' }}>
           <FormattedMessage id="Confirm Create" />
         </Button>
       );
@@ -66,6 +66,7 @@ const RightButton = (props: { currentStep: any; handleNext: any; handleSubmit: a
           onClick={() => {
             history.push('/instance');
           }}
+          style={{ minWidth: '100px' }}
         >
           <FormattedMessage id="Done" />
         </Button>
@@ -79,6 +80,7 @@ const RightButton = (props: { currentStep: any; handleNext: any; handleSubmit: a
         onClick={() => {
           history.push('/instance');
         }}
+        style={{ minWidth: '100px' }}
       >
         <FormattedMessage id="Done" />
       </Button>
