@@ -17,8 +17,8 @@ interface ISelectCardsProps {
 }
 const iconStyle: React.CSSProperties = {
   position: 'absolute',
-  top: '5px',
-  right: '5px',
+  top: '10px',
+  right: '10px',
   fontSize: '20px',
 };
 const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
@@ -59,7 +59,9 @@ const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
                 <Flex justify="space-between" align="">
                   {avatar && <Avatar shape="square" size={45} />}
                   <div>
-                    <Title level={4}>{title}</Title>
+                    <Title level={4} style={{ margin: '0px' }}>
+                      {title}
+                    </Title>
                     <Text type="secondary">{desc}</Text>
                   </div>
                 </Flex>
