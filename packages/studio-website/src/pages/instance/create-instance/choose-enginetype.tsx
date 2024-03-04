@@ -36,7 +36,7 @@ const engines = [
 const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props => {
   const { form } = props;
   const { store, updateStore } = useContext();
-  const { engineType, graphName } = store;
+  const { engineType, graphName, storeType } = store;
   const chooseStoreType = (item: any) => {
     updateStore(draft => {
       draft.storeType = item.id;
@@ -87,7 +87,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
         tooltip=""
         rules={[{ required: true, message: '' }]}
       >
-        <SelectCards val={engineType} items={engines} onChange={chooseStoreType} />
+        <SelectCards val={storeType} items={engines} onChange={chooseStoreType} />
       </Form.Item>
       {/* <Form.Item<FieldType>
         label={<FormattedMessage id="Directed" />}

@@ -6,7 +6,7 @@ const { Title, Text } = Typography;
 export interface Card {
   id: string;
   title: string;
-  desc: string;
+  desc: string | React.ReactNode;
   avatar?: string;
   disabled?: boolean;
 }
