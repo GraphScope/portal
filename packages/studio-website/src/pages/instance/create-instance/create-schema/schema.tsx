@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, memo } from 'react';
 import { Form, Input, Select } from 'antd';
 import { PropertiesEditor } from '@graphscope/studio-importor';
+import { KeyOutlined } from '@ant-design/icons';
 
 import { FormattedMessage } from 'react-intl';
 import type { IStore } from '../useContext';
@@ -31,16 +32,16 @@ const primitive_types = ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED
 
 /** 子项 [{title:'表头'，dataIndex:'绑定字段'，type:'字段对应编辑框'，option:'select配置选项',width:'表头宽度'}] */
 const configcolumns: configcolumnsType[] = [
-  { title: 'primary_name', dataIndex: 'name', width: '200px', type: 'INPUT' },
-  { title: 'primary_key', width: '120px' },
+  { title: 'Name', dataIndex: 'name', width: '200px', type: 'INPUT' },
   {
-    title: 'primary_type',
+    title: 'Data type',
     dataIndex: 'type',
     type: 'SELECT',
     option: primitive_types.map(item => {
       return { label: item, value: item };
     }),
   },
+  { title: <KeyOutlined />, width: '80px' },
 ];
 
 const CreateSchema: React.FunctionComponent<SchemaType> = props => {
