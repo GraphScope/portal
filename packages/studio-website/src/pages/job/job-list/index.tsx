@@ -171,10 +171,10 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       render: (record: IJobType) => (
         <Popconfirm
           placement="bottomRight"
-          title="确定删除？"
+          title={<FormattedMessage id="Are you sure to delete this task?" />}
           onConfirm={() => deleteJob(record.job_id)}
-          okText="Yes"
-          cancelText="No"
+          okText={<FormattedMessage id="Yes" />}
+          cancelText={<FormattedMessage id="No" />}
           icon
         >
           <Tooltip title="Delete">

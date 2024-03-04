@@ -77,7 +77,7 @@ export default {
   'Graph Name': 'Graph Name',
   Delete: 'Delete',
 
-  /** 告警 */
+  /** alert */
   'Alert Info': 'Alert Info',
   'Alert Rules': 'Alert Rules',
   'Alert Recep': 'Alert Recep',
@@ -92,6 +92,7 @@ export default {
   'Is At All': 'Is At All',
   'Receiver Type': 'Receiver Type',
   'Create Alert Recep': 'Create Alert Recep',
+  'WebHook URL': 'WebHook URL',
   Reset: 'Reset',
   Search: 'Search',
   Time: 'Time',
@@ -99,4 +100,8 @@ export default {
 
   'GraphScope transforms tasks like data import, analysis, and other long-processing tasks into jobs, which you can monitor and manage here.':
     'GraphScope transforms tasks like data import, analysis, and other long-processing tasks into jobs, which you can monitor and manage here.',
+  /** popconfirm */
+  'Are you sure to delete this task?': 'Are you sure to delete this task?',
+  Yes: 'Yes',
+  No: 'No',
 };

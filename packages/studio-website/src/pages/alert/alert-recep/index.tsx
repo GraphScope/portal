@@ -112,11 +112,11 @@ const Receivers: React.FC<IReceiversProps> = props => {
               }}
             />
             <Popconfirm
-              title="Sure to cancel?"
+              title={<FormattedMessage id="Are you sure to delete this task?" />}
               onConfirm={(event: any) => delRowReceiver(receiver_id)}
               onCancel={() => {}}
-              okText={'yes'}
-              cancelText={'no'}
+              okText={<FormattedMessage id="Yes" />}
+              cancelText={<FormattedMessage id="No" />}
             >
               <Tooltip title="Delete">
                 <Button type="text" danger size="small" icon={<DeleteOutlined />} />

@@ -76,7 +76,7 @@ export default {
   'Graph Name': '名称',
   Delete: '删除',
 
-  /** 告警 */
+  /** alert */
   'Alert Info': '警报信息',
   'Alert Rules': '警报规则',
   'Alert Recep': '警报接收',
@@ -91,10 +91,15 @@ export default {
   'Is At All': '是否@所有人',
   'Receiver Type': 'Receiver 类型',
   'Create Alert Recep': '创建警报接收',
+  'WebHook URL': 'WebHook URL',
   Reset: '重置',
   Search: '搜索',
   Time: '时间',
-  Submit: 'Submit',
+  Submit: '提交',
   'GraphScope transforms tasks like data import, analysis, and other long-processing tasks into jobs, which you can monitor and manage here.':
     'GraphScope 将数据导入，分析等需要长时间处理的任务变为作业，您可以在这里查看',
+  /** popconfirm */
+  'Are you sure to delete this task?': '确定删除？',
+  Yes: '是',
+  No: '否',
 };
