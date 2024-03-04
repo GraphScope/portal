@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Popconfirm, Table, Button, Switch, Space, Tag, Skeleton, message } from 'antd';
+import { Form, Popconfirm, Table, Button, Tooltip, Space, Tag, Skeleton, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import CreateRecep from './create-resep';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { listReceivers, deleteReceiverById, updateReceiverById } from '../service';
 export interface Item {
   key: string;
@@ -99,6 +100,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
             <Button
               size="small"
               type="link"
+              icon={<EditOutlined />}
               onClick={() => {
                 updateState(preset => {
                   return {
@@ -108,9 +110,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
                   };
                 });
               }}
-            >
-              <FormattedMessage id="Edit" />
-            </Button>
+            />
             <Popconfirm
               title="Sure to cancel?"
               onConfirm={(event: any) => delRowReceiver(receiver_id)}
@@ -118,9 +118,9 @@ const Receivers: React.FC<IReceiversProps> = props => {
               okText={'yes'}
               cancelText={'no'}
             >
-              <Button type="text" danger size="small" style={{ width: '80px' }}>
-                <FormattedMessage id="Delete" />
-              </Button>
+              <Tooltip title="Delete">
+                <Button type="text" danger size="small" icon={<DeleteOutlined />} />
+              </Tooltip>
             </Popconfirm>
           </Space>
         );

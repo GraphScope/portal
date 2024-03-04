@@ -1,4 +1,4 @@
-import { ProcedureApiFactory } from '@graphscope/studio-server';
+import { ProcedureApiFactory, DeploymentApiFactory } from '@graphscope/studio-server';
 import type { Procedure } from '@graphscope/studio-server';
 /** 获取插件列表 */
 export const listProcedures = async () => {
@@ -61,4 +61,23 @@ export const listProceduresByGraph = async (graph_name: string) => {
       }
       return [];
     });
+};
+export const listGraphs = async () => {
+  const deployments = await DeploymentApiFactory(undefined, location.origin)
+    .getDeploymentInfo()
+    .then(res => {
+      return res.data;
+    });
+  const { graphs_info } = deployments;
+
+  const info = Object.values(graphs_info!).map(item => {
+    const { name } = item;
+
+    return {
+      label: name,
+      value: name,
+    };
+  });
+
+  return info;
 };
