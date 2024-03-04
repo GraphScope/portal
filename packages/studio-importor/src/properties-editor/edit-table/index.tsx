@@ -92,7 +92,12 @@ const EditableCell: React.FC<EditableCellProps> = ({
         >
           {record?.disable && record?.name ? (
             <span
-              style={{ height: '27px', backgroundColor: '#505156', color: '#fff', borderRadius: '8px', padding: '8px' }}
+              style={{
+                height: '27px',
+                // backgroundColor: '#505156', color: '#fff', borderRadius: '8px',
+                padding: '8px',
+                cursor: 'pointer',
+              }}
               onClick={async () => {
                 await inputDoubleClick(record);
                 await inputRef.current.focus();

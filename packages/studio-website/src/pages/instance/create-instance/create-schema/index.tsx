@@ -44,7 +44,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
 
   const nodeItems = nodeList.map(item => {
     const { key, label } = item;
-    const invalid = label === 'undefined' || label === '';
+    const invalid = label === '';
     if (!invalid) {
       nodeOptions.push({
         label,
@@ -110,7 +110,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
               <Segmented
                 value={currentType}
                 options={[
-                  { label: <FormattedMessage id="Node labels" />, value: 'node' },
+                  { label: <FormattedMessage id="Vertices labels" />, value: 'node' },
                   { label: <FormattedMessage id="Edge Labels" />, value: 'edge' },
                 ]}
                 onChange={(value: SegmentedValue) => nodeEdgeChange(value)}
@@ -124,7 +124,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
               ) : (
                 <Tabs
                   style={{ height: '500px', padding: '12px' }}
-                  tabBarStyle={{ borderLeft: 0, width: '80px' }}
+                  tabBarStyle={{ borderLeft: 0, width: '120px', borderRight: '1px solid #efefef' }}
                   tabPosition="left"
                   items={nodeItems}
                   activeKey={nodeActiveKey}
@@ -138,7 +138,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
               ) : (
                 <Tabs
                   style={{ height: '500px', padding: '12px' }}
-                  tabBarStyle={{ borderLeft: 0, width: '80px' }}
+                  tabBarStyle={{ borderLeft: 0, width: '120px', borderRight: '1px solid #efefef' }}
                   tabPosition="left"
                   items={edgeItems}
                   activeKey={edgeActiveKey}

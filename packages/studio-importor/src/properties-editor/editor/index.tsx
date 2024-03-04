@@ -1,5 +1,5 @@
 import React, { FunctionComponent, CSSProperties } from 'react';
-import { Button, Space, Tooltip, Popconfirm, Checkbox, Flex } from 'antd';
+import { Button, Space, Tooltip, Popconfirm, Checkbox, Flex, Typography } from 'antd';
 import { PlusOutlined, createFromIconfontCN } from '@ant-design/icons';
 import { EditTable } from '../edit-table';
 import { MapConfigParamsType, PropertyConfigParamsType } from '../interface';
@@ -24,14 +24,14 @@ const Editor: FunctionComponent<MapConfigParamsType & PropertyConfigParamsType> 
   const { mapConfigParams, propertyConfigParams } = props;
   return (
     <>
-      <Flex justify={'space-between'}>
-        <h4>{mapConfigParams.locales.properties}</h4>
+      <Flex justify={'space-between'} style={{ padding: '12px 6px 6px 6px' }} align="center">
+        <Typography.Text>{mapConfigParams.locales.properties}</Typography.Text>
         <>
           {propertyConfigParams?.selectedRows.length == 0 ? (
             <Space>
               <Tooltip title="Add property">
-                <Button icon={<PlusOutlined />} block onClick={() => propertyConfigParams?.addNodeConfig()}>
-                {mapConfigParams.locales.addProperty}
+                <Button icon={<PlusOutlined />} onClick={() => propertyConfigParams?.addNodeConfig()}>
+                  {mapConfigParams.locales.addProperty}
                 </Button>
               </Tooltip>
               {propertyConfigParams?.isMapFromFile ? (

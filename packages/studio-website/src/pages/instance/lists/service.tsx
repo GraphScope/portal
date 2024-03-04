@@ -15,6 +15,21 @@ export const listGraphs = async () => {
     .then(res => {
       return res.data;
     });
+
+  const graphs = await GraphApiFactory(undefined, location.origin)
+    .listGraphs()
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
+    });
+  const graphs_map = graphs?.reduce((acc, curr) => {
+    return {
+      ...acc,
+      [curr.name as string]: curr,
+    };
+  }, {});
+
   console.log(status, deployments);
   const { graphs_info, version, solution, cluster_type } = deployments;
 
@@ -22,6 +37,8 @@ export const listGraphs = async () => {
     const { name, creation_time, last_dataloading_time, update_time } = item;
     const { graph_name } = status;
     const isMatch = graph_name === name;
+    //@ts-ignore
+    const { schema, store_type, stored_procedures } = graphs_map[name];
 
     return {
       name: name,
@@ -34,6 +51,9 @@ export const listGraphs = async () => {
       server: isMatch ? status.sdk_endpoints?.cypher : '',
       status: isMatch ? status.status : 'stopped',
       hqps: isMatch ? status.sdk_endpoints?.hqps : '',
+      schema: schema,
+      store_type,
+      stored_procedures,
       // statistics: 'xxxx',
       // logs: 'xxxx',
     };

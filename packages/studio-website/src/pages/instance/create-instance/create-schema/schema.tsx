@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, memo } from 'react';
-import { Form, Input, Select } from 'antd';
+import { Empty, Form, Input, Select } from 'antd';
 import { PropertiesEditor } from '@graphscope/studio-importor';
+import { KeyOutlined } from '@ant-design/icons';
 
 import { FormattedMessage } from 'react-intl';
 import type { IStore } from '../useContext';
@@ -31,18 +32,29 @@ const primitive_types = ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED
 
 /** 子项 [{title:'表头'，dataIndex:'绑定字段'，type:'字段对应编辑框'，option:'select配置选项',width:'表头宽度'}] */
 const configcolumns: configcolumnsType[] = [
-  { title: 'primary_name', dataIndex: 'name', width: '200px', type: 'INPUT' },
-  { title: 'primary_key', width: '120px' },
+  { title: 'Name', dataIndex: 'name', width: '200px', type: 'INPUT' },
   {
-    title: 'primary_type',
+    title: 'Data type',
     dataIndex: 'type',
     type: 'SELECT',
     option: primitive_types.map(item => {
       return { label: item, value: item };
     }),
   },
+  { title: <KeyOutlined />, width: '80px' },
 ];
 
+const notFoundContent = (
+  <Empty
+    image={Empty.PRESENTED_IMAGE_SIMPLE}
+    description={
+      <>
+        Vertex type not defined yet.
+        <br /> Please define the vertex label first
+      </>
+    }
+  />
+);
 const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   const { newActiveKey, data, currentType, updateStore, nodeOptions, mode } = props;
   const [form] = Form.useForm();
@@ -112,7 +124,9 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
       <Form form={form} layout="vertical" onValuesChange={() => formChange()}>
         <div style={{ position: 'relative' }}>
           <Form.Item<FieldType>
-            label={currentType == 'node' ? <FormattedMessage id="Node Label" /> : <FormattedMessage id="Edge Label" />}
+            label={
+              currentType == 'node' ? <FormattedMessage id="Vertex Label" /> : <FormattedMessage id="Edge Label" />
+            }
             name="label"
             tooltip=" "
             labelCol={{ span: 8 }}
@@ -122,14 +136,14 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
           >
             <Input
               disabled={disabled}
-              placeholder={`Please Enter ${currentType == 'node' ? 'Node Label.' : 'Edge Label.'}`}
+              placeholder={`Please Enter ${currentType == 'node' ? 'Vertex Label.' : 'Edge Label.'}`}
             />
           </Form.Item>
         </div>
         {currentType === 'edge' ? (
           <>
             <Form.Item<FieldType>
-              label={'Source Node Label'}
+              label={'Source Vertex Label'}
               name="source"
               tooltip=" "
               labelCol={{ span: 8 }}
@@ -137,10 +151,15 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
               rules={[{ required: true, message: '' }]}
               style={{ marginBottom: '0' }}
             >
-              <Select options={nodeOptions} disabled={disabled} placeholder="Please Select Source Node Label." />
+              <Select
+                options={nodeOptions}
+                disabled={disabled}
+                placeholder="Please Select Source Vertex Label."
+                notFoundContent={notFoundContent}
+              />
             </Form.Item>
             <Form.Item<FieldType>
-              label={'Target Node Label'}
+              label={'Target Vertex Label'}
               name="target"
               tooltip=" "
               labelCol={{ span: 8 }}
@@ -148,7 +167,12 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
               rules={[{ required: true, message: '' }]}
               style={{ marginBottom: '0' }}
             >
-              <Select options={nodeOptions} disabled={disabled} placeholder="Please Select Target Node Label." />
+              <Select
+                options={nodeOptions}
+                disabled={disabled}
+                placeholder="Please Select Target Vertex Label."
+                notFoundContent={notFoundContent}
+              />
             </Form.Item>
           </>
         ) : null}
