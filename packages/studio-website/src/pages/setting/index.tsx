@@ -65,7 +65,7 @@ const Setting: React.FunctionComponent<ISettingProps> = props => {
           <Row>
             <Col span={8}>
               <Flex vertical>
-                <Title level={3}>
+                <Title level={3} style={{ margin: '0px' }}>
                   <FormattedMessage id="Rounded corners" />
                 </Title>
                 <Text>
@@ -73,15 +73,11 @@ const Setting: React.FunctionComponent<ISettingProps> = props => {
                 </Text>
               </Flex>
             </Col>
-            <Col span={16}>
-              <Row>
-                <Col span={4}>
-                  <InputNumber min={1} addonAfter="px" value={inputNumber} onChange={handleChange} />
-                </Col>
-                <Col span={12}>
-                  <Slider min={1} onChange={handleChange} value={typeof inputNumber === 'number' ? inputNumber : 0} />
-                </Col>
-              </Row>
+            <Col span={4}>
+              <InputNumber min={1} addonAfter="px" value={inputNumber} onChange={handleChange} />
+            </Col>
+            <Col span={8}>
+              <Slider min={1} onChange={handleChange} value={typeof inputNumber === 'number' ? inputNumber : 0} />
             </Col>
           </Row>
           <Divider />
