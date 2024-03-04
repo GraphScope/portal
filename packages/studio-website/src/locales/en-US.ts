@@ -117,4 +117,6 @@ export default {
   'Set the theme color': 'Set the theme color',
   'Interact theme': 'Interact theme',
   'Select or customize your UI theme': 'Select or customize your UI theme',
+  'Rounded corners': 'Rounded corners',
+  'Corner radians': 'Corner radians',
 };

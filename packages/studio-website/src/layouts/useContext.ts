@@ -12,6 +12,7 @@ export const initialStore = {
   currentnNav: '',
   /** 主题模式 */
   mode: 'defaultAlgorithm',
+  inputNumber: 6,
 };
 
 export type IStore = typeof initialStore;
