@@ -60,7 +60,7 @@ const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
                 }}
               >
                 <Flex justify="space-between" align="">
-                  {avatar && <Avatar shape="square" size={45} />}
+                  {avatar && <Avatar shape="square" size={45} src={avatar} />}
                   <div>
                     <Title level={4} style={{ margin: '0px 0px 10px 0px' }}>
                       {title}

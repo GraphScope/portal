@@ -11,7 +11,7 @@ import locales from '../locales';
 import { useContext } from './useContext';
 export default function Layout() {
   const { store } = useContext();
-  const { locale, primaryColor, mode } = store;
+  const { locale, primaryColor, mode, inputNumber } = store;
   //@ts-ignore
   const messages = locales[locale];
   return (
@@ -40,7 +40,7 @@ export default function Layout() {
             },
           },
           token: {
-            borderRadius: 8,
+            borderRadius: inputNumber,
             colorPrimary: primaryColor,
             // colorBgBase: mode === 'defaultAlgorithm' ? '#fff' : '#000',
           },

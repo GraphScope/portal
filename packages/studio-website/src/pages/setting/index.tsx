@@ -1,15 +1,23 @@
 import * as React from 'react';
-import { ColorPicker, Flex, Row, Col, Typography, Divider } from 'antd';
+import { ColorPicker, Flex, Row, Col, Typography, Divider, InputNumber, Slider } from 'antd';
 import { useContext } from '@/layouts/useContext';
 import Section from '@/components/section';
 import LocaleSwitch from '@/components/locale-switch';
 import InteractTheme from './interact-theme';
 import { FormattedMessage } from 'react-intl';
+import SelectColor from './select-color';
 interface ISettingProps {}
 const { Title, Text } = Typography;
 const Setting: React.FunctionComponent<ISettingProps> = props => {
   const { store, updateStore } = useContext();
-  const { primaryColor, locale } = store;
+  const { primaryColor, locale, inputNumber } = store;
+  const handleChange = val => {
+    console.log(val);
+
+    updateStore(draft => {
+      draft.inputNumber = val;
+    });
+  };
   return (
     <div>
       <Section
@@ -39,15 +47,37 @@ const Setting: React.FunctionComponent<ISettingProps> = props => {
               </Flex>
             </Col>
             <Col span={16}>
-              <ColorPicker
-                showText
-                value={primaryColor}
-                onChangeComplete={color => {
-                  updateStore(draft => {
-                    draft.primaryColor = color.toHexString();
-                  });
-                }}
-              />
+              <Flex align="center">
+                <ColorPicker
+                  showText
+                  value={primaryColor}
+                  onChangeComplete={color => {
+                    updateStore(draft => {
+                      draft.primaryColor = color.toHexString();
+                    });
+                  }}
+                />
+                <SelectColor color={primaryColor} />
+              </Flex>
+            </Col>
+          </Row>
+          <Divider />
+          <Row>
+            <Col span={8}>
+              <Flex vertical>
+                <Title level={3} style={{ margin: '0px' }}>
+                  <FormattedMessage id="Rounded corners" />
+                </Title>
+                <Text>
+                  <FormattedMessage id="Corner radians" />
+                </Text>
+              </Flex>
+            </Col>
+            <Col span={4}>
+              <InputNumber min={1} addonAfter="px" value={inputNumber} onChange={handleChange} />
+            </Col>
+            <Col span={8}>
+              <Slider min={1} onChange={handleChange} value={typeof inputNumber === 'number' ? inputNumber : 0} />
             </Col>
           </Row>
           <Divider />

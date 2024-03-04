@@ -9,23 +9,26 @@ const { Title, Text } = Typography;
 
 const engines = [
   {
-    id: 'System_preference',
-    title: 'System',
-    avatar: dark,
-    desc: 'System preference',
-  },
-  {
     id: 'defaultAlgorithm',
     title: 'Light',
-    avatar: dark,
-    desc: 'Daytime theme ',
+    avatar: 'https://gw.alipayobjects.com/zos/bmw-prod/ae669a89-0c65-46db-b14b-72d1c7dd46d6.svg',
+    desc: 'System preference',
+    primaryBGgColor: '#f5f7f9',
   },
   {
     id: 'darkAlgorithm',
     title: 'Dark',
-    avatar: dark,
+    avatar: 'https://gw.alipayobjects.com/zos/bmw-prod/0f93c777-5320-446b-9bb7-4d4b499f346d.svg',
     desc: 'Nighttime theme ',
+    primaryBGgColor: '#000',
   },
+  // {
+  //   id: 'Green',
+  //   title: 'Green',
+  //   avatar: 'https://gw.alipayobjects.com/zos/bmw-prod/3e899b2b-4eb4-4771-a7fc-14c7ff078aed.svg',
+  //   desc: 'Daytime theme ',
+  //   primaryBGgColor: '#6BC598',
+  // },
 ];
 const InteractTheme: React.FunctionComponent<IInteractThemeProps> = props => {
   const { store, updateStore } = useContext();
@@ -33,6 +36,7 @@ const InteractTheme: React.FunctionComponent<IInteractThemeProps> = props => {
   const changeEngineType = (item: any) => {
     updateStore(draft => {
       draft.mode = item.id;
+      draft.primaryColor = item.primaryBGgColor;
     });
   };
   return (

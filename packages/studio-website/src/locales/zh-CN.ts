@@ -115,4 +115,6 @@ export default {
   'Set the theme color': '设置主题颜色',
   'Interact theme': '主题交互',
   'Select or customize your UI theme': '选择或自定义 UI 主题',
+  'Rounded corners': '圆角',
+  'Corner radians': '圆角弧度',
 };
