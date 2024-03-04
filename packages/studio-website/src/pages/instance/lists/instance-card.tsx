@@ -132,22 +132,22 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
         {/* <Flex justify="space-between" vertical align="end"> */}
         <Flex gap="middle" align="flex-end" vertical justify="end">
           <Button
-            style={{ width: '150px' }}
+            style={{ width: '150px', textAlign: 'left' }}
             icon={<FontAwesomeIcon icon={faDiagramProject} />}
             onClick={() => history.push(`/instance/view-schema#?graph_name=${name}`)}
           >
             Define Schema
           </Button>
           <Button
-            style={{ width: '150px' }}
-            icon={<FontAwesomeIcon icon={faFileArrowUp} />}
+            style={{ width: '150px', textAlign: 'left' }}
+            icon={<FontAwesomeIcon icon={faFileArrowUp} style={{ marginLeft: '2px', marginRight: '4px' }} />}
             onClick={() => history.push(`/instance/import-data#?engineType=interactive&graph_name=${name}`)}
           >
             Import Data
           </Button>
           <Button
             type="primary"
-            style={{ width: '150px' }}
+            style={{ width: '150px', textAlign: 'left' }}
             icon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
             disabled={status === 'stopped' ? true : false}
             onClick={() => history.push(`/query-app#?graph_name=${name}`)}
