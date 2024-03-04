@@ -4,6 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import { listAlertRules, deleteAlertRuleByName } from '../service';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import EditRule from './edit-rule';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 export type IAlertRule = {
   key: string;
   name: string;
@@ -121,7 +123,7 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
                   };
                 })
               }
-              icon={<EditOutlined />}
+              icon={<FontAwesomeIcon icon={faPenToSquare} />}
             />
             <Popconfirm
               title={<FormattedMessage id="Are you sure to delete this task?" />}
@@ -130,7 +132,7 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
               okText={<FormattedMessage id="Yes" />}
               cancelText={<FormattedMessage id="No" />}
             >
-              <Button type="text" danger size="small" icon={<DeleteOutlined />} />
+              <Button type="text" danger size="small" icon={<FontAwesomeIcon icon={faTrashCan} />} />
             </Popconfirm>
           </Space>
         );

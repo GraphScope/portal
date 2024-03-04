@@ -9,6 +9,9 @@ import {
   DeleteOutlined,
 } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDiagramProject, faFileArrowUp, faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 // import Action from './action';
 import { listJobs, IJobType, deleteJobById } from '../service';
 
@@ -177,9 +180,7 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
           cancelText={<FormattedMessage id="No" />}
           icon
         >
-          <Tooltip title="Delete">
-            <Button type="text" size="small" danger ghost icon={<DeleteOutlined />} />
-          </Tooltip>
+          <Button type="text" size="small" danger ghost icon={<FontAwesomeIcon icon={faTrashCan} />} />
         </Popconfirm>
       ),
     },

@@ -3,6 +3,8 @@ import { Table, Button, Space, Skeleton, Popconfirm, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { listProcedures, deleteProcedure } from '../service';
 import { getSearchParams } from '@/pages/utils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 export interface Item {
   key: string;
   name: string;
@@ -79,7 +81,7 @@ const Plugins: React.FC<IPluginsProps> = props => {
                 window.location.hash = `${path}?${searchParams.toString()}`;
               }}
             >
-              <FormattedMessage id="Edit" />
+              <FontAwesomeIcon icon={faPenToSquare} />
             </Button>
             <Popconfirm
               placement="bottomRight"
@@ -89,7 +91,7 @@ const Plugins: React.FC<IPluginsProps> = props => {
               cancelText={<FormattedMessage id="No" />}
             >
               <Button size="small" danger ghost>
-                <FormattedMessage id="Delete" />
+                <FontAwesomeIcon icon={faTrashCan} />
               </Button>
             </Popconfirm>
           </Space>
