@@ -1,7 +1,8 @@
 import React from 'react';
-import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown } from 'antd';
+import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
 import { history } from 'umi';
+import dayjs from 'dayjs';
 const { Text, Link } = Typography;
 import {
   DeploymentUnitOutlined,
@@ -13,13 +14,8 @@ import {
   StarOutlined,
 } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faDiagramProject,
-  faFileArrowUp,
-  faMagnifyingGlass,
-  faPlayCircle,
-  faTrash,
-} from '@fortawesome/free-solid-svg-icons';
+import { faDiagramProject, faFileArrowUp, faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPlayCircle, faTrashCan, faCircleQuestion } from '@fortawesome/free-regular-svg-icons';
 
 export type InstaceCardType = {
   /** graph name */
@@ -32,8 +28,7 @@ export type InstaceCardType = {
   updatetime: string;
   /** createtime 创建时间 */
   importtime: string;
-  /** server 实例链接 */
-  server: string;
+
   /** 运行状态 */
   status: string;
   /** 路由 */
@@ -43,6 +38,13 @@ export type InstaceCardType = {
   /** events */
   handleDelete: (name: string) => void;
   handleStart: (name: string) => void;
+  schema: {
+    edge_types: any[];
+    vertex_types: any[];
+  };
+  /** server 实例链接 */
+  server?: string;
+  hqps?: string;
 };
 
 const styles: React.CSSProperties = {
@@ -68,12 +70,14 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     name,
     handleDelete,
     handleStart,
+    hqps,
+    schema = { edge_types: [], vertex_types: [] },
   } = props;
   const items: MenuProps['items'] = [
     {
       label: 'delete',
       key: 'delete',
-      icon: <FontAwesomeIcon icon={faTrash} />,
+      icon: <FontAwesomeIcon icon={faTrashCan} />,
     },
     {
       label: 'restart',
@@ -93,6 +97,34 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     }
   };
 
+  const currentTime = dayjs();
+  // 计算运行时间（以毫秒为单位）
+  const uptime = currentTime.diff(updatetime);
+  // 将毫秒转换为天、小时和分钟
+  const days = Math.floor(uptime / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((uptime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((uptime % (1000 * 60 * 60)) / (1000 * 60));
+  // 构建输出字符串
+  let uptimeString = '';
+  if (days > 0) {
+    uptimeString += `${days}day `;
+  }
+  if (hours > 0) {
+    uptimeString += `${hours}hrs `;
+  }
+  uptimeString += `${minutes}min`;
+
+  let Endpoints = '';
+  if (server) {
+    Endpoints = `Cypher: ${props.server}`;
+  }
+  if (hqps) {
+    Endpoints = Endpoints + `\n HQPS: ${hqps}`;
+  }
+  const Statistics = `
+  Graph Schema: ${schema.edge_types.length} types of Edges, ${schema.vertex_types.length} types of Vertices
+  `;
+
   return (
     <Card
       headStyle={{ fontSize: '30px' }}
@@ -107,7 +139,6 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
               handleStart(name);
             }}
           />
-          {/* <Button type="text" icon={<DeleteOutlined />} /> */}
           <Dropdown menu={{ items, onClick }}>
             <Button type="text" icon={<MoreOutlined />} />
           </Dropdown>
@@ -120,15 +151,21 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
             {status}
           </Tag>
           <Space direction="vertical" size={0}>
-            <Text type="secondary">Uptime: {updatetime}</Text>
+            <Text type="secondary">Uptime: {uptimeString}</Text>
             <Text type="secondary">Last data import: {importtime}</Text>
-            <Text type="secondary">Server from: {server}</Text>
+            <Text type="secondary">Served from: {createtime}</Text>
             <Text type="secondary">Created on：{createtime} </Text>
           </Space>
           <Space split={<Divider type="vertical" />} size={0}>
-            <Typography.Text type="secondary">Endpoints</Typography.Text>
-            <Typography.Text type="secondary">Statistics</Typography.Text>
-            <Typography.Text type="secondary">Logs</Typography.Text>
+            <Typography.Text type="secondary" style={{ cursor: 'pointer' }} disabled={!Endpoints}>
+              <Tooltip title={Endpoints}>
+                Endpoints <FontAwesomeIcon icon={faCircleQuestion} />
+              </Tooltip>
+            </Typography.Text>
+            <Typography.Text type="secondary" style={{ cursor: 'pointer' }}>
+              <Tooltip title={Statistics}>Statistics</Tooltip>
+            </Typography.Text>
+            {/* <Typography.Text type="secondary">Logs</Typography.Text> */}
           </Space>
         </Flex>
         {/* <Flex justify="space-between" vertical align="end"> */}
