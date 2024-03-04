@@ -116,7 +116,9 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     >
       <Flex justify="space-between">
         <Flex align="flex-start" vertical gap="middle">
-          <Tag color={STATUS_COLOR_MAP[status]}>{status}</Tag>
+          <Tag style={{ fontSize: '16px', lineHeight: '140%' }} color={STATUS_COLOR_MAP[status]}>
+            {status}
+          </Tag>
           <Space direction="vertical" size={0}>
             <Text type="secondary">Uptime: {updatetime}</Text>
             <Text type="secondary">Last data import: {importtime}</Text>
