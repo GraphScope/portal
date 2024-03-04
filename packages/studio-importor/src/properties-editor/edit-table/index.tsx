@@ -64,7 +64,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
     }
   }, [record]);
   if (editable) {
-    const { inputType, prop } = editorConfig(record);
+    //@ts-ignore
+    const { inputType, prop, disable } = editorConfig(record);
     const { inputDoubleClick, inputBlur } = useContext(TableContext)!;
     if (inputType === EditType.INPUT) {
       childNode = (
@@ -105,14 +106,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
               {record?.name} <EditOutlined />
             </span>
           ) : (
-            <Input ref={inputRef} {...prop} onBlur={() => inputBlur(record)} />
+            <Input ref={inputRef} {...prop} onBlur={() => inputBlur(record)} disabled={disable} />
           )}
         </Form.Item>
       );
     } else if (inputType === EditType.SELECT) {
       childNode = (
         <Form.Item style={{ margin: 0 }} name={dataIndex} key={`col-select-${dataIndex}`}>
-          <Select {...prop} options={prop?.options} />
+          <Select {...prop} options={prop?.options} disabled={disable} />
         </Form.Item>
       );
     } else {

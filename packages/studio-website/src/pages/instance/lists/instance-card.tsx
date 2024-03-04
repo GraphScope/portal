@@ -12,6 +12,14 @@ import {
   DeleteOutlined,
   StarOutlined,
 } from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faDiagramProject,
+  faFileArrowUp,
+  faMagnifyingGlass,
+  faPlayCircle,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons';
 
 export type InstaceCardType = {
   /** graph name */
@@ -65,7 +73,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     {
       label: 'delete',
       key: 'delete',
-      icon: <DeleteOutlined />,
+      icon: <FontAwesomeIcon icon={faTrash} />,
     },
     {
       label: 'restart',
@@ -94,7 +102,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
         <Space>
           <Button
             type="text"
-            icon={<PlayCircleOutlined />}
+            icon={<FontAwesomeIcon icon={faPlayCircle} />}
             onClick={() => {
               handleStart(name);
             }}
@@ -125,14 +133,14 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
         <Flex gap="middle" align="flex-end" vertical justify="end">
           <Button
             style={{ width: '150px' }}
-            icon={<DeploymentUnitOutlined />}
+            icon={<FontAwesomeIcon icon={faDiagramProject} />}
             onClick={() => history.push(`/instance/view-schema#?graph_name=${name}`)}
           >
             Define Schema
           </Button>
           <Button
             style={{ width: '150px' }}
-            icon={<DeploymentUnitOutlined />}
+            icon={<FontAwesomeIcon icon={faFileArrowUp} />}
             onClick={() => history.push(`/instance/import-data#?engineType=interactive&graph_name=${name}`)}
           >
             Import Data
@@ -140,7 +148,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
           <Button
             type="primary"
             style={{ width: '150px' }}
-            icon={<SearchOutlined />}
+            icon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
             disabled={status === 'stopped' ? true : false}
             onClick={() => history.push(`/query-app#?graph_name=${name}`)}
           >

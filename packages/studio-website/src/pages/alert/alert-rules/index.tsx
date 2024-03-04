@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Popconfirm, Table, Button, Switch, Space, Tag, Skeleton, message } from 'antd';
+import { Form, Popconfirm, Table, Button, Switch, Space, Tag, Skeleton, message, Tooltip } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { listAlertRules, deleteAlertRuleByName } from '../service';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import EditRule from './edit-rule';
 export type IAlertRule = {
   key: string;
@@ -97,7 +98,7 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
       render: (record: boolean) => (
         <>
           {/* <Switch checked={record} disabled /> {record ? 'disable' : 'enable'} */}
-          <Tag>{record ? 'enable' : 'disable'}</Tag>
+          <Tag color={record ? 'green' : 'red'}>{record ? 'enable' : 'disable'}</Tag>
         </>
       ),
     },
@@ -109,9 +110,8 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
         return (
           <Space>
             <Button
+              type="link"
               size="small"
-              type="primary"
-              ghost
               onClick={() =>
                 updateState(preset => {
                   return {
@@ -121,9 +121,8 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
                   };
                 })
               }
-            >
-              <FormattedMessage id="Edit" />
-            </Button>
+              icon={<EditOutlined />}
+            />
             <Popconfirm
               title="Sure to cancel?"
               onConfirm={(event: any) => delRowRules(name)}
@@ -131,9 +130,9 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
               okText={'yes'}
               cancelText={'no'}
             >
-              <Button danger size="small" style={{ width: '80px' }}>
-                <FormattedMessage id="Delete" />
-              </Button>
+              <Tooltip title="Delete">
+                <Button type="text" danger size="small" icon={<DeleteOutlined />} />
+              </Tooltip>
             </Popconfirm>
           </Space>
         );

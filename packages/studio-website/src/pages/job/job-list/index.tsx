@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Table, Popover, Tag, Flex, message, Button, Popconfirm } from 'antd';
+import { Table, Tooltip, Tag, Flex, message, Button, Popconfirm } from 'antd';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   ExclamationCircleOutlined,
   MinusCircleOutlined,
   SyncOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 // import Action from './action';
@@ -106,7 +107,11 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       title: <FormattedMessage id="Job ID" />,
       dataIndex: 'job_id',
       key: 'job_id',
-      render: (record: string) => <>{hangdleJobid(record)}</>,
+      render: (record: string, all: { log: string }) => (
+        <span style={{ cursor: 'pointer' }} onClick={() => handleDetail({ isShow: true, log: all.log })}>
+          {hangdleJobid(record)}
+        </span>
+      ),
     },
     {
       title: <FormattedMessage id="Type" />,
@@ -160,16 +165,6 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       render: (record: ArrayLike<unknown> | { [s: string]: unknown }) => <>{handleChange(record)}</>,
     },
     {
-      title: <FormattedMessage id="Detail" />,
-      dataIndex: 'log',
-      key: 'log',
-      render: (record: any, all: { job_id: string; log: string }) => (
-        <Button type="text" onClick={() => handleDetail({ isShow: true, log: all.log })}>
-          查询详情
-        </Button>
-      ),
-    },
-    {
       title: <FormattedMessage id="Action" />,
       key: 'actions',
       // render: (record: IJobType) => <Action {...record} onChange={() => getJobList()} />,
@@ -182,13 +177,14 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
           cancelText="No"
           icon
         >
-          <Button size="small" danger ghost>
-            <FormattedMessage id="Delete" />
-          </Button>
+          <Tooltip title="Delete">
+            <Button type="text" size="small" danger ghost icon={<DeleteOutlined />} />
+          </Tooltip>
         </Popconfirm>
       ),
     },
   ];
+
   return (
     <div style={{ height: '100%', overflow: 'hidden' }}>
       <Table

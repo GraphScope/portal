@@ -3,7 +3,7 @@ import { Button, Form, Input, Select, Alert, Flex, Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import CodeMirror from '@uiw/react-codemirror';
 import UploadFiles from './upload-files';
-import { createProcedure, listProcedures, updateProcedure, listProceduresByGraph } from '../service';
+import { createProcedure, updateProcedure, listProceduresByGraph, listGraphs } from '../service';
 import { getSearchParams } from '@/pages/utils';
 
 type FieldType = {
@@ -33,19 +33,12 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
   const { editCode, instanceOption } = state;
   useEffect(() => {
     form.setFieldsValue({ type: 'cpp' });
-    listProcedures().then(res => {
-      const INSTANCEOPTION = res.map(item => {
-        const { bound_graph } = item;
-        return {
-          label: bound_graph,
-          value: bound_graph,
-        };
-      });
+    listGraphs().then(res => {
       //@ts-ignore
       updateState(preset => {
         return {
           ...preset,
-          instanceOption: INSTANCEOPTION,
+          instanceOption: res,
         };
       });
     });
