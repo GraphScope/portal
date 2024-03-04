@@ -117,4 +117,8 @@ export default {
   'Select or customize your UI theme': '选择或自定义 UI 主题',
   'Rounded corners': '圆角',
   'Corner radians': '圆角弧度',
+  'Appearance Setting': '系统设置',
+  'Change how Untitled UI looks and feels in your browser': '您可以在这里自定义系统语言，主题样式等',
+  Light: '白天',
+  Dark: '黑夜',
 };

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CheckCircleTwoTone } from '@ant-design/icons';
 import { Card, Flex, Typography, theme, Avatar, Row, Col } from 'antd';
 const { Title, Text } = Typography;
+import { FormattedMessage } from 'react-intl';
 
 export interface Card {
   id: string;
@@ -63,7 +64,7 @@ const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
                   {avatar && <Avatar shape="square" size={45} src={avatar} />}
                   <div>
                     <Title level={4} style={{ margin: '0px 0px 10px 0px' }}>
-                      {title}
+                      {<FormattedMessage id={title} />}
                     </Title>
                     <Text type="secondary">{desc}</Text>
                   </div>
