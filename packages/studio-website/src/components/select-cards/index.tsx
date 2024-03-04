@@ -6,7 +6,7 @@ const { Title, Text } = Typography;
 export interface Card {
   id: string;
   title: string;
-  desc: string;
+  desc: string | React.ReactNode;
   avatar?: string;
   disabled?: boolean;
 }
@@ -26,7 +26,7 @@ const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
   const [current, setCurrent] = useState(value);
   const { useToken } = theme;
   const { token } = useToken();
-  console.log('value', value, props);
+
   return (
     <div>
       <Row gutter={16}>
@@ -55,11 +55,14 @@ const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
                         }
                       : {}
                 }
+                bodyStyle={{
+                  padding: '12px 24px',
+                }}
               >
                 <Flex justify="space-between" align="">
                   {avatar && <Avatar shape="square" size={45} />}
                   <div>
-                    <Title level={4} style={{ margin: '0px' }}>
+                    <Title level={4} style={{ margin: '0px 0px 10px 0px' }}>
                       {title}
                     </Title>
                     <Text type="secondary">{desc}</Text>
