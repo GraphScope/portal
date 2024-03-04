@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Popconfirm, Table, Button, Tooltip, Space, Tag, Skeleton, message } from 'antd';
+import { Form, Popconfirm, Table, Button, Space, Tag, Skeleton, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import CreateRecep from './create-resep';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
@@ -112,15 +112,13 @@ const Receivers: React.FC<IReceiversProps> = props => {
               }}
             />
             <Popconfirm
-              title="Sure to cancel?"
+              title={<FormattedMessage id="Are you sure to delete this task?" />}
               onConfirm={(event: any) => delRowReceiver(receiver_id)}
               onCancel={() => {}}
-              okText={'yes'}
-              cancelText={'no'}
+              okText={<FormattedMessage id="Yes" />}
+              cancelText={<FormattedMessage id="No" />}
             >
-              <Tooltip title="Delete">
-                <Button type="text" danger size="small" icon={<DeleteOutlined />} />
-              </Tooltip>
+              <Button type="text" danger size="small" icon={<DeleteOutlined />} />
             </Popconfirm>
           </Space>
         );

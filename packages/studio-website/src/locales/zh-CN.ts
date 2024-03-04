@@ -67,7 +67,13 @@ export default {
   'Store Procedure': '存储过程',
   'GraphScope provides an extension plugin mechanism, allowing you to flexibly create various types of plugins such as graph learning, store procedures, and graph analysis according to business needs.':
     'GraphScope 提供了一种扩展插件机制，您可以根据业务需求灵活创建图学习、存储过程、图分析等多种类型的插件。',
+  'If you already have an algorithm plugin file, you can upload it here, which will help you quickly create a plugin.':
+    '如果您已有算法插件文件，可以上传至这里，这将帮助您快速创建插件.',
+  'Click or drag file to this area to upload': '单击或拖动文件到此区域进行上传',
+  'Support for a single or bulk upload. Strictly prohibited from uploading company data or other banned files.':
+    '支持单次或批量上传。严禁上传公司数据或其他违禁文件。',
   /** job */
+  'Job List': '作业列表',
   'Job ID': 'Job ID',
   Type: '类型',
   Status: '状态',
@@ -76,7 +82,7 @@ export default {
   'Graph Name': '名称',
   Delete: '删除',
 
-  /** 告警 */
+  /** alert */
   'Alert Info': '警报信息',
   'Alert Rules': '警报规则',
   'Alert Recep': '警报接收',
@@ -91,10 +97,22 @@ export default {
   'Is At All': '是否@所有人',
   'Receiver Type': 'Receiver 类型',
   'Create Alert Recep': '创建警报接收',
+  'WebHook URL': 'WebHook URL',
   Reset: '重置',
   Search: '搜索',
   Time: '时间',
-  Submit: 'Submit',
+  Submit: '提交',
   'GraphScope transforms tasks like data import, analysis, and other long-processing tasks into jobs, which you can monitor and manage here.':
     'GraphScope 将数据导入，分析等需要长时间处理的任务变为作业，您可以在这里查看',
+  /** popconfirm */
+  'Are you sure to delete this task?': '确定删除？',
+  Yes: '是',
+  No: '否',
+  /** setting */
+  'Theme color': '主题颜色',
+  International: '国际化',
+  'Select national language': '选择国家语言',
+  'Set the theme color': '设置主题颜色',
+  'Interact theme': '主题交互',
+  'Select or customize your UI theme': '选择或自定义 UI 主题',
 };

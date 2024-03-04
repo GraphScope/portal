@@ -68,7 +68,13 @@ export default {
   'Store Procedure': 'Store Procedure',
   'GraphScope provides an extension plugin mechanism, allowing you to flexibly create various types of plugins such as graph learning, store procedures, and graph analysis according to business needs.':
     'GraphScope provides an extension plugin mechanism, allowing you to flexibly create various types of plugins such as graph learning, store procedures, and graph analysis according to business needs.',
+  'If you already have an algorithm plugin file, you can upload it here, which will help you quickly create a plugin.':
+    'If you already have an algorithm plugin file, you can upload it here, which will help you quickly create a plugin.',
+  'Click or drag file to this area to upload': 'Click or drag file to this area to upload',
+  'Support for a single or bulk upload. Strictly prohibited from uploading company data or other banned files.':
+    'Support for a single or bulk upload. Strictly prohibited from uploading company data or other banned files.',
   /** job */
+  'Job List': 'Job List',
   'Job ID': 'Job ID',
   Type: 'Type',
   Status: 'Status',
@@ -77,7 +83,7 @@ export default {
   'Graph Name': 'Graph Name',
   Delete: 'Delete',
 
-  /** 告警 */
+  /** alert */
   'Alert Info': 'Alert Info',
   'Alert Rules': 'Alert Rules',
   'Alert Recep': 'Alert Recep',
@@ -92,6 +98,7 @@ export default {
   'Is At All': 'Is At All',
   'Receiver Type': 'Receiver Type',
   'Create Alert Recep': 'Create Alert Recep',
+  'WebHook URL': 'WebHook URL',
   Reset: 'Reset',
   Search: 'Search',
   Time: 'Time',
@@ -99,4 +106,15 @@ export default {
 
   'GraphScope transforms tasks like data import, analysis, and other long-processing tasks into jobs, which you can monitor and manage here.':
     'GraphScope transforms tasks like data import, analysis, and other long-processing tasks into jobs, which you can monitor and manage here.',
+  /** popconfirm */
+  'Are you sure to delete this task?': 'Are you sure to delete this task?',
+  Yes: 'Yes',
+  No: 'No',
+  /** setting */
+  'Theme color': 'Theme color',
+  International: 'International',
+  'Select national language': 'Select national language',
+  'Set the theme color': 'Set the theme color',
+  'Interact theme': 'Interact theme',
+  'Select or customize your UI theme': 'Select or customize your UI theme',
 };

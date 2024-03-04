@@ -83,10 +83,10 @@ const Plugins: React.FC<IPluginsProps> = props => {
             </Button>
             <Popconfirm
               placement="bottomRight"
-              title="确定删除？"
+              title={<FormattedMessage id="Are you sure to delete this task?" />}
               onConfirm={() => deleteExtension(all)}
-              okText="Yes"
-              cancelText="No"
+              okText={<FormattedMessage id="Yes" />}
+              cancelText={<FormattedMessage id="No" />}
             >
               <Button size="small" danger ghost>
                 <FormattedMessage id="Delete" />
