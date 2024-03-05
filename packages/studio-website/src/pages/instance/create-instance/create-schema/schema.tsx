@@ -145,6 +145,8 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
     }
     return configcolumns;
   };
+  const nodeOrEdgeTitle =
+    currentType == 'node' ? <FormattedMessage id="Vertex Label" /> : <FormattedMessage id="Edge Label" />;
 
   return (
     <div
@@ -157,11 +159,9 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
       <Form form={form} layout="vertical" onValuesChange={() => formChange()}>
         <div style={{ position: 'relative' }}>
           <Form.Item<FieldType>
-            label={
-              currentType == 'node' ? <FormattedMessage id="Vertex Label" /> : <FormattedMessage id="Edge Label" />
-            }
+            label={nodeOrEdgeTitle}
             name="label"
-            tooltip=" "
+            tooltip={nodeOrEdgeTitle}
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
             rules={[{ required: true, message: '' }]}
@@ -178,7 +178,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             <Form.Item<FieldType>
               label={'Source Vertex Label'}
               name="source"
-              tooltip=" "
+              tooltip="Source Vertex Label"
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               rules={[{ required: true, message: '' }]}
@@ -194,7 +194,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             <Form.Item<FieldType>
               label={'Target Vertex Label'}
               name="target"
-              tooltip=" "
+              tooltip="Destination Vertex Label"
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               rules={[{ required: true, message: '' }]}
