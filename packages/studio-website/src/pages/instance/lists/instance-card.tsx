@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Tooltip } from 'antd';
+import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Popover } from 'antd';
 import type { MenuProps } from 'antd';
 import { history } from 'umi';
 import dayjs from 'dayjs';
@@ -158,12 +158,12 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
           </Space>
           <Space split={<Divider type="vertical" />} size={0}>
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }} disabled={!Endpoints}>
-              <Tooltip title={Endpoints}>
+              <Popover content={Endpoints}>
                 Endpoints <FontAwesomeIcon icon={faCircleQuestion} />
-              </Tooltip>
+              </Popover>
             </Typography.Text>
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }}>
-              <Tooltip title={Statistics}>Statistics</Tooltip>
+              <Popover content={Statistics}>Statistics</Popover>
             </Typography.Text>
             {/* <Typography.Text type="secondary">Logs</Typography.Text> */}
           </Space>
