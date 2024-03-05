@@ -10,12 +10,11 @@ const { useState } = React;
 const Job: React.FunctionComponent<IJobProps> = props => {
   const [state, updateState] = useState({
     isShowDetail: false,
-    detailData: '',
   });
-  const { isShowDetail, detailData } = state;
+  const { isShowDetail } = state;
   const items: TabsProps['items'] = [
     {
-      key: 'info',
+      key: 'jobs',
       label: <FormattedMessage id="Job List" />,
       children: (
         <JobsList
@@ -25,7 +24,6 @@ const Job: React.FunctionComponent<IJobProps> = props => {
               return {
                 ...preset,
                 isShowDetail: isShow,
-                detailData: log,
               };
             });
           }}
@@ -52,7 +50,7 @@ const Job: React.FunctionComponent<IJobProps> = props => {
   return (
     <>
       {isShowDetail ? (
-        <Detail detailData={detailData} />
+        <Detail />
       ) : (
         <Section
           breadcrumb={[
