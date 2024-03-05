@@ -1,7 +1,7 @@
 export default {
   'navbar.graphs': '图实例',
   'navbar.jobs': '作业管理',
-  'navbar.query': '图查询',
+  Query: '图查询',
   'navbar.extension': '扩展插件',
   'navbar.alert': '告警监控',
   'navbar.setting': '应用设置',
@@ -109,12 +109,16 @@ export default {
   Yes: '是',
   No: '否',
   /** setting */
-  'Theme color': '主题颜色',
+  'Primary color': '主题颜色',
   International: '国际化',
   'Select national language': '选择国家语言',
-  'Set the theme color': '设置主题颜色',
+  'Set the primary color': '设置主题颜色',
   'Interact theme': '主题交互',
   'Select or customize your UI theme': '选择或自定义 UI 主题',
   'Rounded corners': '圆角',
   'Corner radians': '圆角弧度',
+  'Appearance Setting': '系统设置',
+  'Change how Untitled UI looks and feels in your browser': '您可以在这里自定义系统语言，主题样式等',
+  Light: '白天',
+  Dark: '黑夜',
 };

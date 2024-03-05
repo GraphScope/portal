@@ -156,11 +156,17 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
   //@ts-ignore
   const vertex_types: VertexType[] = options.nodes.map((item, itemIdx) => {
     nodeMap[item.key] = item.label;
+
+    let primary_key = 'id';
     return {
-      primary_keys: [item.primary],
+      //@ts-ignore
+
       type_id: itemIdx, // item.key,
       type_name: item.label,
       properties: item.properties.map((p, pIdx) => {
+        if (p.primaryKey) {
+          primary_key = p.name;
+        }
         return {
           property_id: pIdx, // p.id,
           property_name: p.name,
@@ -169,6 +175,7 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
           },
         };
       }),
+      primary_keys: [primary_key],
     };
   });
   const edgeMap = new Map();

@@ -15,7 +15,7 @@ const Overview: React.FunctionComponent<IOverviewProps> = props => {
   return (
     <div>
       <Title level={5} style={{ marginTop: '0px' }}>
-        Node Labels
+        Vertex Labels
       </Title>
       <Flex vertical gap={12}>
         {nodes.map(item => {

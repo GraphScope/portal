@@ -109,6 +109,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
       updateStore(draft => {
         draft.nodeList.forEach(item => {
           if (item.key === newActiveKey) {
+            console.log('  cbRef.current', cbRef.current);
             //@ts-ignore
             item.properties = cbRef.current;
             item.label = label;
@@ -147,6 +148,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   };
   const nodeOrEdgeTitle =
     currentType == 'node' ? <FormattedMessage id="Vertex Label" /> : <FormattedMessage id="Edge Label" />;
+ 
 
   return (
     <div

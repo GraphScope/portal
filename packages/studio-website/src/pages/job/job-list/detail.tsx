@@ -7,15 +7,14 @@ import { getSearchParams } from '@/components/utils';
 type IDetail = {};
 const Detail: React.FunctionComponent<IDetail> = props => {
   const { searchParams } = getSearchParams(window.location);
-  const JobId: string = searchParams.get('JobID') || '';
+  const jobId: string = searchParams.get('jobId') || '';
   const [detailData, setDetailData] = useState('');
-  console.log(JobId);
   useEffect(() => {
     getJobByIdDetail();
   }, []);
   /** 获取详情job */
   const getJobByIdDetail = async () => {
-    const res = await getJobById(JobId);
+    const res = await getJobById(jobId);
     const { log } = res;
     setDetailData(log);
   };

@@ -1,6 +1,6 @@
 export default {
   'navbar.graphs': 'Graphs',
-  'navbar.query': 'Query',
+  Query: 'Query',
   'navbar.jobs': 'Jobs',
   'navbar.extension': 'Extension',
   'navbar.alert': 'Alert',
@@ -111,12 +111,14 @@ export default {
   Yes: 'Yes',
   No: 'No',
   /** setting */
-  'Theme color': 'Theme color',
+  'Primary color': 'Primary color',
   International: 'International',
   'Select national language': 'Select national language',
-  'Set the theme color': 'Set the theme color',
+  'Set the primary color': 'Set the primary color',
   'Interact theme': 'Interact theme',
   'Select or customize your UI theme': 'Select or customize your UI theme',
   'Rounded corners': 'Rounded corners',
   'Corner radians': 'Corner radians',
+  Light: 'Light',
+  Dark: 'Dark',
 };

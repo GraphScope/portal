@@ -17,7 +17,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDiagramProject, faFileArrowUp, faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faPlayCircle, faTrashCan, faCircleQuestion } from '@fortawesome/free-regular-svg-icons';
-
+import { QuestionCircleOutlined } from '@ant-design/icons';
 export type InstaceCardType = {
   /** graph name */
   name: string;
@@ -185,8 +185,9 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
                 }
                 content={Endpoints}
               >
-                Endpoints <FontAwesomeIcon icon={faCircleQuestion} />
+                Endpoints  <QuestionCircleOutlined style={{ marginLeft: '4px' }} />
               </Popover>
+ 
             </Typography.Text>
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }}>
               <Popover

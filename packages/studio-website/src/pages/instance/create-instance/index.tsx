@@ -9,7 +9,7 @@ import ResultFailed from './result/result-failed';
 import ResultSuccess from './result/result-success';
 import { FormattedMessage } from 'react-intl';
 import { createGraph } from './service';
-import { transOptionsToSchema } from './create-schema/utils';
+import { transOptionsToSchema } from '@/components/utils/schema';
 import { cloneDeep } from 'lodash';
 import { initialStore, useStore } from './useContext';
 
