@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography } from 'antd';
+import { Typography, Flex } from 'antd';
 const { Title } = Typography;
 
 import Legend from '../legend';
@@ -14,16 +14,22 @@ const Overview: React.FunctionComponent<IOverviewProps> = props => {
 
   return (
     <div>
-      <Title level={5} style={{ marginTop: '12px' }}>
-        Node Labels
+      <Title level={5} style={{ marginTop: '0px' }}>
+        Vertex Labels
       </Title>
-      {nodes.map(item => {
-        return <Legend key={item.label} {...item} type="node" onChange={onChange} />;
-      })}
-      <Title level={5}>Relationship Labels</Title>
-      {edges.map(item => {
-        return <Legend key={item.label} {...item} type="edge" onChange={onChange} />;
-      })}
+      <Flex vertical gap={12}>
+        {nodes.map(item => {
+          return <Legend key={item.label} {...item} type="node" onChange={onChange} />;
+        })}
+      </Flex>
+      <Title level={5} style={{ marginTop: '8px' }}>
+        Relationship Labels
+      </Title>
+      <Flex vertical gap={12}>
+        {edges.map(item => {
+          return <Legend key={item.label} {...item} type="edge" onChange={onChange} />;
+        })}
+      </Flex>
     </div>
   );
 };
