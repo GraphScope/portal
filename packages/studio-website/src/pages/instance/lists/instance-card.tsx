@@ -3,7 +3,8 @@ import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Popover 
 import type { MenuProps } from 'antd';
 import { history } from 'umi';
 import dayjs from 'dayjs';
-const { Text, Link } = Typography;
+import { useContext } from '@/layouts/useContext';
+const { Text, Link, Title, Paragraph } = Typography;
 import {
   DeploymentUnitOutlined,
   SearchOutlined,
@@ -73,6 +74,8 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     hqps,
     schema = { edge_types: [], vertex_types: [] },
   } = props;
+  const { store } = useContext();
+  const { mode } = store;
   const items: MenuProps['items'] = [
     {
       label: 'delete',
@@ -114,22 +117,38 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   }
   uptimeString += `${minutes}min`;
 
-  let Endpoints = '';
+  let Endpoints = <></>;
   if (server) {
-    Endpoints = `Cypher: ${props.server}`;
+    Endpoints = (
+      <>
+        <Text>Cypher:</Text>
+        <Paragraph copyable style={{ display: 'inline-block', marginBottom: '6px' }}>
+          {props.server}
+        </Paragraph>
+      </>
+    );
   }
   if (hqps) {
-    Endpoints = Endpoints + `\n HQPS: ${hqps}`;
+    Endpoints = (
+      <>
+        {Endpoints} <br /> <Text>HQPS:</Text>
+        <Paragraph copyable style={{ display: 'inline-block' }}>
+          {hqps}
+        </Paragraph>
+      </>
+    );
   }
-  const Statistics = `
-  Graph Schema: ${schema.edge_types.length} types of Edges, ${schema.vertex_types.length} types of Vertices
-  `;
+  const Statistics = (
+    <>
+      {schema.edge_types.length} types of Edges <br /> {schema.vertex_types.length} types of Vertices
+    </>
+  );
 
   return (
     <Card
       headStyle={{ fontSize: '30px' }}
       title={name}
-      style={{ background: '#FCFCFC' }}
+      style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
       extra={
         <Space>
           <Button
@@ -158,12 +177,28 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
           </Space>
           <Space split={<Divider type="vertical" />} size={0}>
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }} disabled={!Endpoints}>
-              <Popover content={Endpoints}>
+              <Popover
+                title={
+                  <Title level={4} style={{ margin: '0px' }}>
+                    Endpoints
+                  </Title>
+                }
+                content={Endpoints}
+              >
                 Endpoints <FontAwesomeIcon icon={faCircleQuestion} />
               </Popover>
             </Typography.Text>
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }}>
-              <Popover content={Statistics}>Statistics</Popover>
+              <Popover
+                title={
+                  <Title level={4} style={{ margin: '0px' }}>
+                    Graph Schema
+                  </Title>
+                }
+                content={Statistics}
+              >
+                Statistics
+              </Popover>
             </Typography.Text>
             {/* <Typography.Text type="secondary">Logs</Typography.Text> */}
           </Space>

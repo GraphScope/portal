@@ -4,11 +4,14 @@ import { history } from 'umi';
 import InstaceCard, { InstaceCardType } from './instance-card';
 import Section from '@/components/section';
 import { PlusOutlined } from '@ant-design/icons';
+import { useContext } from '@/layouts/useContext';
 import { GraphApiFactory, ServiceApiFactory, ServiceApi } from '@graphscope/studio-server';
 import { listGraphs, deleteGraph, startService, stopService } from './service';
 
 const InstanceCard: React.FC = () => {
   const [form] = Form.useForm();
+  const { store } = useContext();
+  const { mode } = store;
   const [state, updateState] = useState<{ isReady: boolean; instanceList: InstaceCardType[] }>({
     instanceList: [],
     isReady: false,
@@ -79,7 +82,7 @@ const InstanceCard: React.FC = () => {
           <Card
             title={'New Graph'}
             headStyle={{ fontSize: '30px', color: '#ccc' }}
-            style={{ background: '#FCFCFC' }}
+            style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
             bodyStyle={{ width: '100%' }}
           >
             <div
