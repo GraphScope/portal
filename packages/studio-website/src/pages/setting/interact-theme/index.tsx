@@ -22,13 +22,6 @@ const engines = [
     desc: 'Nighttime theme ',
     primaryBGgColor: '#000',
   },
-  // {
-  //   id: 'Green',
-  //   title: 'Green',
-  //   avatar: 'https://gw.alipayobjects.com/zos/bmw-prod/3e899b2b-4eb4-4771-a7fc-14c7ff078aed.svg',
-  //   desc: 'Daytime theme ',
-  //   primaryBGgColor: '#6BC598',
-  // },
 ];
 const InteractTheme: React.FunctionComponent<IInteractThemeProps> = props => {
   const { store, updateStore } = useContext();

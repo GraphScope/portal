@@ -109,10 +109,10 @@ export default {
   Yes: '是',
   No: '否',
   /** setting */
-  'Theme color': '主题颜色',
+  'Primary color': '主题颜色',
   International: '国际化',
   'Select national language': '选择国家语言',
-  'Set the theme color': '设置主题颜色',
+  'Set the primary color': '设置主题颜色',
   'Interact theme': '主题交互',
   'Select or customize your UI theme': '选择或自定义 UI 主题',
   'Rounded corners': '圆角',
