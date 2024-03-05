@@ -29,7 +29,6 @@ const InteractTheme: React.FunctionComponent<IInteractThemeProps> = props => {
   const changeEngineType = (item: any) => {
     updateStore(draft => {
       draft.mode = item.id;
-      draft.primaryColor = item.primaryBGgColor;
     });
   };
   return (
