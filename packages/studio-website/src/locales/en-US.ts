@@ -121,4 +121,18 @@ export default {
   'Corner radians': 'Corner radians',
   Light: 'Light',
   Dark: 'Dark',
+  /** import data */
+  Labels: 'Labels',
+  Datasource: 'Datasource',
+  Vertexs: 'Vertexs',
+  Edges: 'Edges',
+  'Import Data': 'Import Data',
+  'Currently bound': 'Currently bound',
+  'Bind source': 'Bind source',
+  'Unbound source': 'Unbound source',
+  'Import Periodic': 'Import Periodic',
+  'Periodic Import From ODPS': 'Periodic Import From ODPS',
+  'Periodic Import From Dataworks': 'Periodic Import From Dataworks',
+  'Import Now': 'Import Now',
+  'importing, for more information, see Tasks': 'importing, for more information, see Tasks',
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Button, notification, Typography, Flex, Space } from 'antd';
 interface IImportNowProps {
   label: string;
@@ -14,7 +15,8 @@ const ImportNow: React.FunctionComponent<IImportNowProps> = props => {
         <>
           {/** 这里的值应该都是变量： */}
           <Text>
-            {label}类型的节点正在导入中，详情查看任务 {}
+            {label}
+            <FormattedMessage id="importing, for more information, see Tasks" /> {}
           </Text>
           <Flex justify="flex-end">
             <Space>
@@ -33,7 +35,7 @@ const ImportNow: React.FunctionComponent<IImportNowProps> = props => {
   return (
     <>
       <Button onClick={openNotification} size="small">
-        Import Now
+        <FormattedMessage id="Import Now" />
       </Button>
       {contextHolder}
     </>
