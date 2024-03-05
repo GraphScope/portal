@@ -1,7 +1,7 @@
 export default {
   'navbar.graphs': '图实例',
   'navbar.jobs': '作业管理',
-  'navbar.query': '图查询',
+  Query: '图查询',
   'navbar.extension': '扩展插件',
   'navbar.alert': '告警监控',
   'navbar.setting': '应用设置',
@@ -117,4 +117,8 @@ export default {
   'Select or customize your UI theme': '选择或自定义 UI 主题',
   'Rounded corners': '圆角',
   'Corner radians': '圆角弧度',
+  'Appearance Setting': '系统设置',
+  'Change how Untitled UI looks and feels in your browser': '您可以在这里自定义系统语言，主题样式等',
+  Light: '白天',
+  Dark: '黑夜',
 };
