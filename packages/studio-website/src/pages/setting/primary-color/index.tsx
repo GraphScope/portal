@@ -16,7 +16,7 @@ const PrimaryColor: React.FunctionComponent<IPrimaryColorProps> = props => {
             <FormattedMessage id="Primary color" />
           </Title>
           <Text>
-            <FormattedMessage id="Set the Primary color" />
+            <FormattedMessage id="Set the primary color" />
           </Text>
         </Flex>
       </Col>
