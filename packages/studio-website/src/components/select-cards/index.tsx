@@ -57,7 +57,7 @@ const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
                       : {}
                 }
                 bodyStyle={{
-                  padding: '12px 24px',
+                  padding: '24px',
                 }}
               >
                 <Flex justify="space-between" align="">
