@@ -116,7 +116,7 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
           style={{ cursor: 'pointer' }}
           onClick={() => {
             handleDetail({ isShow: true, log: all.log });
-            searchParams.set('JobID', record);
+            searchParams.set('jobId', record);
             window.location.hash = `${path}?${searchParams.toString()}`;
           }}
         >
