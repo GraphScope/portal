@@ -44,13 +44,13 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const navbarOptions = [
     {
       id: 'recommended',
-      name: 'recommended',
+      name: 'Schema',
       icon: <DeploymentUnitOutlined />,
       children: <RecommendedStatements schemaData={schemaData} schemaId={graphName} />,
     },
     {
       id: 'saved',
-      name: 'saved',
+      name: 'Saved',
       icon: <BookOutlined />,
       children: <SavedStatements deleteStatements={ids => deleteStatements('saved', ids)} />,
     },
@@ -68,7 +68,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     },
     {
       id: 'qwen',
-      name: 'qwen',
+      name: 'Copilot',
       icon: <RedditOutlined />,
       children: <GPTStatements schemaData={schemaData} />,
     },

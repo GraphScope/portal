@@ -49,6 +49,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   li: {
     display: 'flex',
+    flexDirection: 'column',
     width: '100%',
     height: '34px',
     margin: '24px 0px',
@@ -106,6 +107,19 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
                   fontWeight: '600',
                 }
               : {};
+            const activeText = isActive
+              ? {
+                  fontSize: '10px',
+                  color: token.colorPrimary,
+                  fontWeight: '600',
+                  textAlign: 'center',
+                  padding: '0px 5px',
+                }
+              : {
+                  fontSize: '10px',
+                  textAlign: 'center',
+                  padding: '0px 5px',
+                };
 
             return (
               <li
@@ -118,6 +132,7 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
                 }}
               >
                 <span style={activeIcon}>{icon}</span>
+                <span style={activeText}>{name}</span>
               </li>
             );
           })}
