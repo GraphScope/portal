@@ -22,7 +22,9 @@ export default defineConfig({
   },
   proxy: {
     '/api': {
-      target: 'http://47.242.172.5:8080', //'http://54.157.222.57',
+      target: 'http://47.242.172.5:8080',
+      // 'https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/0.9.1',
+      //'http://54.157.222.57',
       changeOrigin: true,
     },
   },
