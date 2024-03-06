@@ -76,13 +76,11 @@ const GraphTitle: React.FunctionComponent<IGraphTitleProps> = () => {
             showUploadList={false}
           >
             <Tooltip placement="topRight" title="导入「数据导入」的配置文件">
-              <Button type="text">Import Config</Button>
+              <Button>Import</Button>
             </Tooltip>
           </Upload>
           <Tooltip placement="topRight" title="导出「数据导入」的配置文件">
-            <Button type="text" onClick={Json2Yaml}>
-              Export Config
-            </Button>
+            <Button onClick={Json2Yaml}>Export</Button>
           </Tooltip>
         </Space>
       </Flex>

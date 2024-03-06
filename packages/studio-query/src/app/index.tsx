@@ -35,6 +35,8 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     deleteStatements,
     createStatements,
     enableImmediateQuery,
+    enableCollapseSidebar,
+    logo,
   } = props;
   const { store, updateStore } = useContext();
   const { graphName, isReady, collapse, activeNavbar, statements, schemaData } = store;
@@ -42,13 +44,13 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const navbarOptions = [
     {
       id: 'recommended',
-      name: 'recommended',
+      name: 'Schema',
       icon: <DeploymentUnitOutlined />,
       children: <RecommendedStatements schemaData={schemaData} schemaId={graphName} />,
     },
     {
       id: 'saved',
-      name: 'saved',
+      name: 'Saved',
       icon: <BookOutlined />,
       children: <SavedStatements deleteStatements={ids => deleteStatements('saved', ids)} />,
     },
@@ -66,7 +68,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     },
     {
       id: 'qwen',
-      name: 'qwen',
+      name: 'Copilot',
       icon: <RedditOutlined />,
       children: <GPTStatements schemaData={schemaData} />,
     },
@@ -141,6 +143,8 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     /** 正式查询 */
     return queryGraphData(params);
   };
+  if (enableCollapseSidebar) {
+  }
 
   if (isReady) {
     return (
@@ -149,10 +153,11 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         enableAbsolutePosition={enable}
         sidebar={
           <Sidebar
+            logo={logo}
             title={graphName}
             options={navbarOptions}
             value={activeNavbar}
-            collapse={collapse}
+            collapse={enableCollapseSidebar && collapse}
             onChange={handleChangeNavbar}
             onBack={onBack}
           />
@@ -164,7 +169,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
             enableImmediateQuery={enableImmediateQuery}
           />
         }
-        collapse={collapse}
+        collapse={enableCollapseSidebar && collapse}
       ></Container>
     );
   }

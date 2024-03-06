@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  DesktopOutlined,
-  FileSearchOutlined,
-  DashboardOutlined,
-  OrderedListOutlined,
-  AppstoreAddOutlined,
-  SettingFilled,
-  LayoutOutlined,
-} from '@ant-design/icons';
+import { SettingFilled, LayoutOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu, Divider, ColorPicker, Space } from 'antd';
 import styles from './styles';
@@ -73,10 +65,13 @@ let currentPath = window.location.pathname;
 export const SideWidth = 150;
 const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
   const location = useLocation();
-  console.log('location', location.pathname);
+  let defaultPath = '/' + location.pathname.split('/')[1];
+  if (defaultPath === '/') {
+    defaultPath = '/instance';
+  }
   const { store, updateStore } = useContext();
   const { locale, primaryColor, collapse } = store;
-  const [current, setCurrent] = useState(location.pathname);
+  const [current, setCurrent] = useState(defaultPath);
 
   const onClick: MenuProps['onClick'] = e => {
     if (e.key === '/layout') {
