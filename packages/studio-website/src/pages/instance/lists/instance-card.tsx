@@ -4,16 +4,8 @@ import type { MenuProps } from 'antd';
 import { history } from 'umi';
 import dayjs from 'dayjs';
 import { useContext } from '@/layouts/useContext';
-const { Text, Link, Title, Paragraph } = Typography;
-import {
-  DeploymentUnitOutlined,
-  SearchOutlined,
-  MoreOutlined,
-  PlusOutlined,
-  PlayCircleOutlined,
-  DeleteOutlined,
-  StarOutlined,
-} from '@ant-design/icons';
+const { Text, Title, Paragraph } = Typography;
+import { MoreOutlined, StarOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDiagramProject, faFileArrowUp, faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faPlayCircle, faTrashCan, faCircleQuestion } from '@fortawesome/free-regular-svg-icons';
@@ -91,7 +83,6 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
 
   const handleRestart = () => {};
   const onClick: MenuProps['onClick'] = ({ key }) => {
-    console.log('key', key, name);
     if (key === 'delete') {
       handleDelete(name);
     }
@@ -117,7 +108,11 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   }
   uptimeString += `${minutes}min`;
 
-  let Endpoints = <></>;
+  let Endpoints: React.ReactNode = (
+    <>
+      No available services. <br /> Please click the <FontAwesomeIcon icon={faPlayCircle} /> button to start the service
+    </>
+  );
   if (server) {
     Endpoints = (
       <>
@@ -143,6 +138,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
       {schema.edge_types.length} types of Edges <br /> {schema.vertex_types.length} types of Vertices
     </>
   );
+  console.log('!Endpoints', !Endpoints, Endpoints);
 
   return (
     <Card
@@ -185,10 +181,10 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
                 }
                 content={Endpoints}
               >
-                Endpoints  <QuestionCircleOutlined style={{ marginLeft: '4px' }} />
+                Endpoints <QuestionCircleOutlined style={{ marginLeft: '4px' }} />
               </Popover>
- 
             </Typography.Text>
+
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }}>
               <Popover
                 title={
