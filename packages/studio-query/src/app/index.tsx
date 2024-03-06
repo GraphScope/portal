@@ -35,6 +35,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     deleteStatements,
     createStatements,
     enableImmediateQuery,
+    enableCollapseSidebar,
   } = props;
   const { store, updateStore } = useContext();
   const { graphName, isReady, collapse, activeNavbar, statements, schemaData } = store;
@@ -141,6 +142,8 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     /** 正式查询 */
     return queryGraphData(params);
   };
+  if (enableCollapseSidebar) {
+  }
 
   if (isReady) {
     return (
@@ -152,7 +155,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
             title={graphName}
             options={navbarOptions}
             value={activeNavbar}
-            collapse={collapse}
+            collapse={enableCollapseSidebar && collapse}
             onChange={handleChangeNavbar}
             onBack={onBack}
           />
@@ -164,7 +167,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
             enableImmediateQuery={enableImmediateQuery}
           />
         }
-        collapse={collapse}
+        collapse={enableCollapseSidebar && collapse}
       ></Container>
     );
   }

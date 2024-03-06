@@ -4,7 +4,7 @@ interface ContainerProps {
   sidebar: React.ReactNode;
   content: React.ReactNode;
   footer?: React.ReactNode;
-  collapse: boolean;
+  collapse: boolean | undefined;
   displaySidebarPosition: 'right' | 'left';
   enableAbsolutePosition: boolean;
 }
