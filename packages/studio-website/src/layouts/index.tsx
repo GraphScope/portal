@@ -38,10 +38,10 @@ export default function Layout() {
               headerColor: '#C7C9CC',
               headerSplitColor: mode === 'defaultAlgorithm' ? '#fff' : '#000',
             },
-            Tooltip: {
-              colorTextLightSolid: '#000',
-              colorBgSpotlight: '#fff',
-            },
+            // Tooltip: {
+            //   colorTextLightSolid: '#000',
+            //   colorBgSpotlight: '#fff',
+            // },
           },
           token: {
             borderRadius: inputNumber,
