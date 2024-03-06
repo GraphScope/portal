@@ -36,6 +36,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     createStatements,
     enableImmediateQuery,
     enableCollapseSidebar,
+    logo,
   } = props;
   const { store, updateStore } = useContext();
   const { graphName, isReady, collapse, activeNavbar, statements, schemaData } = store;
@@ -152,6 +153,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         enableAbsolutePosition={enable}
         sidebar={
           <Sidebar
+            logo={logo}
             title={graphName}
             options={navbarOptions}
             value={activeNavbar}

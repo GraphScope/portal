@@ -2,7 +2,7 @@
 import React, { memo } from 'react';
 import { getSearchParams, searchParamOf } from '../utils';
 import { RollbackOutlined, PicLeftOutlined, SlidersOutlined } from '@ant-design/icons';
-import { Space, Button, theme } from 'antd';
+import { Space, Button, theme, Flex, Typography } from 'antd';
 const { useToken } = theme;
 
 interface Option {
@@ -21,6 +21,7 @@ interface SidebarProps {
   collapse?: boolean;
   onChange: (option: Option) => void;
   onBack: () => void;
+  logo?: React.ReactNode;
 }
 
 const styles: Record<string, React.CSSProperties> = {
@@ -62,7 +63,7 @@ const styles: Record<string, React.CSSProperties> = {
 const collapsedWidth = 50;
 const width = 300;
 const Sidebar: React.FunctionComponent<SidebarProps> = props => {
-  const { options, collapse, onChange, title, onBack } = props;
+  const { options, collapse, onChange, title, onBack, logo } = props;
   const { token } = useToken();
   const { searchParams, path } = getSearchParams(window.location);
   const nav = searchParams.get('nav') || 'recommended';
@@ -79,10 +80,15 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
       }}
     >
       {onBack && (
-        <div style={styles.header}>
+        <Flex justify="space-between" align="center" style={styles.header}>
+          <Flex align="center">
+            {logo}
+            <Typography.Title level={5} style={{ margin: '0px' }}>
+              {title}
+            </Typography.Title>
+          </Flex>
           <Button type="text" style={{ margin: '0px 10px' }} icon={<RollbackOutlined />} onClick={onBack} />
-          <span style={{ padding: '0px 12px' }}>{title}</span>
-        </div>
+        </Flex>
       )}
       <div style={styles.container}>
         <ul style={styles.ul}>

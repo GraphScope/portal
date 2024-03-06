@@ -141,4 +141,5 @@ export interface IStudioQueryProps {
   enableImmediateQuery: boolean;
   /** 启动折叠侧边栏 */
   enableCollapseSidebar?: boolean;
+  logo?: React.ReactNode;
 }
