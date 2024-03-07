@@ -30,17 +30,23 @@ const items: MenuProps['items'] = [
   },
 ];
 
+const AlertModule =
+  window.GS_ENGINE_TYPE === 'groot'
+    ? [
+        {
+          label: <FormattedMessage id="navbar.alert" />,
+          key: '/alert',
+          icon: <FontAwesomeIcon icon={faBell} />,
+        },
+      ]
+    : [];
 const otherItems: MenuProps['items'] = [
   {
     label: <FormattedMessage id="navbar.jobs" />,
     key: '/job',
     icon: <FontAwesomeIcon icon={faListCheck} />,
   },
-  {
-    label: <FormattedMessage id="navbar.alert" />,
-    key: '/alert',
-    icon: <FontAwesomeIcon icon={faBell} />,
-  },
+  ...AlertModule,
   {
     label: <FormattedMessage id="navbar.extension" />,
     key: '/extension',
