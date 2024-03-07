@@ -107,11 +107,11 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
                   fontWeight: '600',
                 }
               : {};
-            const activeText = isActive
+            const activeText: React.CSSProperties = isActive
               ? {
                   fontSize: '10px',
                   color: token.colorPrimary,
-                  fontWeight: '600',
+                  fontWeight: 600,
                   textAlign: 'center',
                   padding: '0px 5px',
                 }
