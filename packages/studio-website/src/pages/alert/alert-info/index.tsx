@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Space, Table, Tag, Button, Skeleton } from 'antd';
 import { FormattedMessage } from 'react-intl';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFlag, faCircleCheck, faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 import DateFilter from './date-filter';
 import { listAlertMessages, updateAlertMessages } from '../service';
 import type { UpdateAlertMessagesRequest } from '@graphscope/studio-server';
+
 export type IalertInfo = {
   key: string;
   info: string;
@@ -133,16 +136,32 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
         return (
           <Space size="middle">
             {record.status !== 'dealing' && (
-              <Button type="primary" ghost onClick={() => handleChange({ ...record, status: 'dealing' })}>
-                Dealing
+              <Button
+                type="link"
+                ghost
+                onClick={() => handleChange({ ...record, status: 'dealing' })}
+                icon={<FontAwesomeIcon icon={faFlag} />}
+              >
+                {/* Dealing */}
               </Button>
             )}
             {record.status !== 'solved' && (
-              <Button onClick={() => handleChange({ ...record, status: 'solved' })}>Solved</Button>
+              <Button
+                type="text"
+                onClick={() => handleChange({ ...record, status: 'solved' })}
+                icon={<FontAwesomeIcon icon={faCircleCheck} />}
+              >
+                {/* Solved */}
+              </Button>
             )}
             {record.status !== 'unsolved' && (
-              <Button danger onClick={() => handleChange({ ...record, status: 'unsolved' })}>
-                Unsolved
+              <Button
+                type="text"
+                danger
+                onClick={() => handleChange({ ...record, status: 'unsolved' })}
+                icon={<FontAwesomeIcon icon={faCircleXmark} />}
+              >
+                {/* Unsolved */}
               </Button>
             )}
           </Space>

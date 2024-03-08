@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Typography, Form, Space, DatePicker, Segmented, Flex, Tooltip } from 'antd';
-import { CheckSquareOutlined, CloseSquareOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFlag, faCircleCheck } from '@fortawesome/free-regular-svg-icons';
+import { Button, Typography, Form, Space, DatePicker, Segmented, Flex, Tooltip } from 'antd';
 import dayjs from 'dayjs';
 import { listAlertMessages, IAlertMessages, updateAlertMessages } from '../service';
 const { Text } = Typography;
@@ -73,7 +74,7 @@ const DateFilter = (props: IInquireMessageProps) => {
                 <Button
                   type="text"
                   disabled={selectedRowKeys.length === 0}
-                  icon={<CheckSquareOutlined />}
+                  icon={<FontAwesomeIcon icon={faFlag} />}
                   onClick={() => allDealingSolved('dealing')}
                 ></Button>
               </Tooltip>
@@ -81,7 +82,7 @@ const DateFilter = (props: IInquireMessageProps) => {
                 <Button
                   type="text"
                   disabled={selectedRowKeys.length === 0}
-                  icon={<CloseSquareOutlined />}
+                  icon={<FontAwesomeIcon icon={faCircleCheck} />}
                   onClick={() => allDealingSolved('solved')}
                 ></Button>
               </Tooltip>
