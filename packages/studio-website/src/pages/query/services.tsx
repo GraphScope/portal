@@ -1,4 +1,4 @@
-import { CypherDriver, CypherSchemaData } from '@graphscope/studio-query';
+import { CypherDriver, CypherSchemaData, MockDriver } from '@graphscope/studio-query';
 import type { IStudioQueryProps } from '@graphscope/studio-query';
 import localforage from 'localforage';
 import { v4 as uuidv4 } from 'uuid';
@@ -36,8 +36,13 @@ export const queryInfo = async () => {
 
   if (result) {
     const { cypher } = result.sdk_endpoints!;
+
     if (cypher && !driver) {
-      driver = new CypherDriver(cypher);
+      if (cypher === 'neo4j://mock.api.cypher:7676') {
+        driver = new MockDriver(cypher);
+      } else {
+        driver = new CypherDriver(cypher);
+      }
     }
   }
 
