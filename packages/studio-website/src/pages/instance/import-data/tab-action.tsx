@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Space, Typography, theme } from 'antd';
 type ITabActionProps = {
   items: {
-    label: string;
+    label: string | React.ReactNode;
     value: string;
   }[];
   tabChange(val: string): void;

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Row, Col, Card, Typography, Skeleton, Space, Flex, Divider } from 'antd';
 import { useContext, updateDataMap, initialStore, initialDataMap, clearDataMap, clearStore } from './useContext';
 import GraphView from './graph-view';
@@ -79,10 +80,10 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
             <header style={{ background: '#FCFCFC', borderRadius: '8px' }}>
               <Space size={29}>
                 <Title level={5} type="secondary" style={{ margin: '16px 32px 16px 48px' }}>
-                  Labels
+                  <FormattedMessage id="Labels" />
                 </Title>
                 <Title level={5} type="secondary" style={{ margin: '16px 0px' }}>
-                  Datasource
+                  <FormattedMessage id="Datasource" />
                 </Title>
               </Space>
             </header>
@@ -99,7 +100,9 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         <Col span={8}>
           <Card title="Preview" extra={<GraphTitle />}>
             <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
-              目前绑定了{bindEdgeCount} 条边，{bindNodeCount}个点
+              <FormattedMessage id="Currently bound" />
+              {bindEdgeCount} <FormattedMessage id="Edges" />，{bindNodeCount}
+              <FormattedMessage id="Vertexs" />
             </Text>
             {!isReady && <Skeleton />}
             <GraphView

@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Segmented, Flex, Button, theme, notification, Typography } from 'antd';
 import { useContext, useDataMap, updateDataMap, BindingEdge, BindingNode } from './useContext';
 import { getUrlParams } from './utils';
@@ -53,14 +54,30 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
       <Flex gap="middle" justify="space-between">
         <TabAction
           items={[
-            { label: `Vertexs（${nodeBind}/${nodeCount}）`, value: 'node' },
-            { label: `Edges (${edgeBind}/${edgeCount})`, value: 'edge' },
+            {
+              label: (
+                <>
+                  <FormattedMessage id="Vertexs" />
+                  {`(${nodeBind}/${nodeCount}）`}
+                </>
+              ),
+              value: 'node',
+            },
+            {
+              label: (
+                <>
+                  <FormattedMessage id="Edges" />
+                  {`(${edgeBind}/${edgeCount})`}
+                </>
+              ),
+              value: 'edge',
+            },
           ]}
           tabChange={handleChangeTabs}
         />
         {engineType !== 'groot' && (
           <Button type={isBind ? 'primary' : 'default'} onClick={handleImport} disabled={!isBind}>
-            Import Data
+            <FormattedMessage id="Import Data" />
           </Button>
         )}
       </Flex>

@@ -121,4 +121,18 @@ export default {
   'Change how Untitled UI looks and feels in your browser': '您可以在这里自定义系统语言，主题样式等',
   Light: '白天',
   Dark: '黑夜',
+  /** import data */
+  Labels: '标签',
+  Datasource: '数据源',
+  Vertexs: '节点',
+  Edges: '边',
+  'Import Data': '导入数据',
+  'Currently bound': '目前绑定了',
+  'Bind source': '已绑定数据源',
+  'Unbound source': '未绑定数据源',
+  'Import Periodic': '周期导入',
+  'Periodic Import From ODPS': '周期性导入 ODPS 表',
+  'Periodic Import From Dataworks': 'Dataworks 上构建数据导入流程',
+  'Import Now': '立即导入',
+  'importing, for more information, see Tasks': '类型的节点正在导入中，详情查看任务',
 };

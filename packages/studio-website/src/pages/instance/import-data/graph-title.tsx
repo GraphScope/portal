@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Typography, Flex, Button, Space, Upload, Tooltip, message } from 'antd';
 import { useContext, updateDataMap, clearDataMap } from './useContext';
 import {
@@ -76,11 +77,16 @@ const GraphTitle: React.FunctionComponent<IGraphTitleProps> = () => {
             showUploadList={false}
           >
             <Tooltip placement="topRight" title="导入「数据导入」的配置文件">
-              <Button>Import</Button>
+              <Button type="text">
+                <FormattedMessage id="Import Config" />
+              </Button>
             </Tooltip>
           </Upload>
           <Tooltip placement="topRight" title="导出「数据导入」的配置文件">
-            <Button onClick={Json2Yaml}>Export</Button>
+            <Button type="text" onClick={Json2Yaml}>
+              <FormattedMessage id="Export Config" />
+            </Button>
+
           </Tooltip>
         </Space>
       </Flex>
