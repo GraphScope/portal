@@ -1,11 +1,10 @@
 import React from 'react';
-import { Segmented, Flex, Button, theme, notification, Typography } from 'antd';
-import { useContext, useDataMap, updateDataMap, BindingEdge, BindingNode } from './useContext';
-import { getUrlParams } from './utils';
+import { FormattedMessage } from 'react-intl';
+import { Flex, Button, notification, Typography } from 'antd';
+import { useContext, useDataMap, BindingEdge, BindingNode } from './useContext';
 import { searchParamOf } from '@/components/utils';
 import TabAction from './tab-action';
 import { createDataloadingJob } from './service';
-import { history } from 'umi';
 import { transformDataMapToOptions, transformImportOptionsToSchemaMapping } from '@/components/utils/import';
 type ISourceTitleProps = {};
 
@@ -60,7 +59,7 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
         />
         {engineType !== 'groot' && (
           <Button type={isBind ? 'primary' : 'default'} onClick={handleImport} disabled={!isBind}>
-            Import Data
+            <FormattedMessage id="Import Data" />
           </Button>
         )}
       </Flex>

@@ -27,6 +27,8 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
 
   const data = dataMap[id] as BindingNode & { isEidtProperty: boolean };
   const { isBind, filelocation, isEidtProperty, datatype, label, properties, dataFields } = data;
+  console.log(properties);
+
   const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const { engineType, graph } = getUrlParams();
@@ -138,7 +140,8 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                   ),
                 )}
                 onChange={onChangeTable}
-                dataFields={dataFields}
+                //@ts-ignore
+                dataFields={dataFields || (properties.length && properties.map(item => `name:${item.name}`))}
               />
             </Col>
             <Col span={24}>

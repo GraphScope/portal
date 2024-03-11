@@ -121,4 +121,6 @@ export default {
   'Change how Untitled UI looks and feels in your browser': '您可以在这里自定义系统语言，主题样式等',
   Light: '白天',
   Dark: '黑夜',
+  /** Import Data */
+  'Import Data': '导入数据',
 };

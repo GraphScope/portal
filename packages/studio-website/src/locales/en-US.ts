@@ -121,4 +121,6 @@ export default {
   'Corner radians': 'Corner radians',
   Light: 'Light',
   Dark: 'Dark',
+  /** Import Data */
+  'Import Data': 'Import Data',
 };

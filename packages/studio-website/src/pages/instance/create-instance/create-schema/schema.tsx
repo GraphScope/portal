@@ -148,7 +148,6 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   };
   const nodeOrEdgeTitle =
     currentType == 'node' ? <FormattedMessage id="Vertex Label" /> : <FormattedMessage id="Edge Label" />;
- 
 
   return (
     <div
@@ -227,6 +226,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
         }}
         /**映射控制 */
         isMapFromFile={false}
+        isEditable={disabled}
         tableConfig={hangdleConfigcolumns(configcolumns)}
       />
     </div>
