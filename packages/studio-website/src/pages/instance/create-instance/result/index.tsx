@@ -53,7 +53,7 @@ const Result: React.FunctionComponent<IImportDataProps> = props => {
           />
         }
       >
-        {Content}
+        <div style={{ height: '60vh', overflow: 'scroll' }}>{Content}</div>
       </Card>
     </div>
   );

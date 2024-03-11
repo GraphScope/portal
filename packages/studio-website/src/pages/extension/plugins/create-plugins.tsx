@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Select, Alert, Flex, Breadcrumb } from 'antd';
+import { Button, Form, Input, Select, Alert, Flex, Breadcrumb, theme } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import CodeMirror from '@uiw/react-codemirror';
 import { createTheme } from '@uiw/codemirror-themes';
@@ -7,7 +7,7 @@ import UploadFiles from './upload-files';
 import { createProcedure, updateProcedure, listProceduresByGraph, listGraphs } from '../service';
 import { getSearchParams } from '@/pages/utils';
 import { useContext } from '@/layouts/useContext';
-
+const { useToken } = theme;
 type FieldType = {
   name: string;
   type: string;
@@ -25,6 +25,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
   const [form] = Form.useForm();
   const { store } = useContext();
   const { mode } = store;
+  const { token } = useToken();
   //@ts-ignore
   const myTheme = createTheme({
     theme: mode === 'defaultAlgorithm' ? 'light' : 'dark',
@@ -168,7 +169,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
             <Select options={instanceOption} />
           </Form.Item>
           <Form.Item<FieldType> label={<FormattedMessage id="Edit Code" />} name="query" style={{}}>
-            <div style={{ overflow: 'scroll', border: '1px solid #D9D9D9', borderRadius: '8px' }}>
+            <div style={{ overflow: 'scroll', border: `1px solid ${token.colorBorder}`, borderRadius: '8px' }}>
               <CodeMirror height="200px" theme={myTheme} value={editCode} onChange={e => handleCodeMirror(e)} />
             </div>
           </Form.Item>

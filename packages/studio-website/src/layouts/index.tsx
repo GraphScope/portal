@@ -42,6 +42,7 @@ export default function Layout() {
           token: {
             borderRadius: inputNumber,
             colorPrimary: primaryColor,
+            colorBorder: mode === 'defaultAlgorithm' ? '#F0F0F0' : '#303030',
             // colorBgBase: mode === 'defaultAlgorithm' ? '#fff' : '#000',
           },
         }}

@@ -82,7 +82,12 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         <Col span={16}>
           {!isReady && <Skeleton />}
           {/* 遍历需要绑定的数据源 */}
-          <div style={{ border: '1px solid #ddd', borderRadius: '8px' }}>
+          <div
+            style={{
+              border: mode === 'defaultAlgorithm' ? '1px solid #F0F0F0' : '1px solid #303030',
+              borderRadius: '8px',
+            }}
+          >
             <header style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : 'none', borderRadius: '8px' }}>
               <Space size={29}>
                 <Title level={5} type="secondary" style={{ margin: '16px 32px 16px 48px' }}>
