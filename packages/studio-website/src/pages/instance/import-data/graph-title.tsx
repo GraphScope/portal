@@ -86,6 +86,7 @@ const GraphTitle: React.FunctionComponent<IGraphTitleProps> = () => {
             <Button type="text" onClick={Json2Yaml}>
               <FormattedMessage id="Export Config" />
             </Button>
+
           </Tooltip>
         </Space>
       </Flex>

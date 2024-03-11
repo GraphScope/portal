@@ -66,18 +66,14 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       ]}
     >
       <Row gutter={24}>
-        <Col span={16}>
-          <SourceTitle />
-        </Col>
-        <Col span={8}>
-          <GraphTitle />
-        </Col>
+        <Col span={16}></Col>
+        <Col span={8}></Col>
       </Row>
-
-      <Divider style={{ margin: '0px 0px 16px' }} />
 
       <Row gutter={24}>
         <Col span={16}>
+          <SourceTitle />
+          <Divider style={{ margin: '0px 0px 16px' }} />
           {!isReady && <Skeleton />}
           {/* 遍历需要绑定的数据源 */}
           <div style={{ border: '1px solid #ddd', borderRadius: '8px' }}>
@@ -102,7 +98,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           </div>
         </Col>
         <Col span={8}>
-          <Card>
+          <Card title="Preview" extra={<GraphTitle />}>
             <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
               <FormattedMessage id="Currently bound" />
               {bindEdgeCount} <FormattedMessage id="Edges" />，{bindNodeCount}

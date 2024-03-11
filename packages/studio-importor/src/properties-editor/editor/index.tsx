@@ -70,8 +70,10 @@ const Editor: FunctionComponent<MapConfigParamsType & PropertyConfigParamsType> 
           {selectedRows.length == 0 ? (
             <Space>
               <Tooltip title="Add property">
+
                 <Button icon={<PlusOutlined />} onClick={() => addNodeConfig()} size="small">
                   {locales.addProperty}
+
                 </Button>
               </Tooltip>
               {MapFromFile}
