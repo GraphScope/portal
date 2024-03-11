@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Select, Alert, Flex, Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import CodeMirror from '@uiw/react-codemirror';
+import { createTheme } from '@uiw/codemirror-themes';
 import UploadFiles from './upload-files';
 import { createProcedure, updateProcedure, listProceduresByGraph, listGraphs } from '../service';
 import { getSearchParams } from '@/pages/utils';
+import { useContext } from '@/layouts/useContext';
 
 type FieldType = {
   name: string;
@@ -21,6 +23,16 @@ type ICreateRecepProps = {
 const CreatePlugins: React.FC<ICreateRecepProps> = props => {
   const { handelChange } = props;
   const [form] = Form.useForm();
+  const { store } = useContext();
+  const { mode } = store;
+  //@ts-ignore
+  const myTheme = createTheme({
+    theme: mode === 'defaultAlgorithm' ? 'light' : 'dark',
+    settings: {
+      background: mode === 'defaultAlgorithm' ? '#fff' : '#202020',
+      foreground: mode === 'defaultAlgorithm' ? '#202020' : '#fff',
+    },
+  });
   const { path, searchParams } = getSearchParams(window.location);
   const edit = searchParams.get('bound_graph') || '';
   const [state, updateState] = useState<{
@@ -157,7 +169,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
           </Form.Item>
           <Form.Item<FieldType> label={<FormattedMessage id="Edit Code" />} name="query" style={{}}>
             <div style={{ overflow: 'scroll', border: '1px solid #D9D9D9', borderRadius: '8px' }}>
-              <CodeMirror height="200px" value={editCode} onChange={e => handleCodeMirror(e)} />
+              <CodeMirror height="200px" theme={myTheme} value={editCode} onChange={e => handleCodeMirror(e)} />
             </div>
           </Form.Item>
           <Form.Item>

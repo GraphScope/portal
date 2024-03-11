@@ -7,7 +7,7 @@ import ImportPeriodic from './import-periodic';
 import ImportNow from './import-now';
 import TableList from './table';
 import { getUrlParams } from '@/components/utils';
-import { useContext } from '../useContext';
+import { useContext } from '@/layouts/useContext';
 const { useToken } = theme;
 interface IImportDataProps {
   id: string;
@@ -30,7 +30,9 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const { engineType, graph } = getUrlParams();
+  const { store } = useContext();
 
+  const { mode } = store;
   /** 折叠面板 */
   const handleToggle = () => {
     updateDataMap(draft => {
@@ -72,7 +74,8 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       draft[id].delimiter = header?.delimiter;
     });
   };
-
+  /** 融合判断 是否编辑或主题 dark  */
+  const primaryColor = mode !== 'defaultAlgorithm' || isEidtProperty;
   return (
     <>
       <div>
@@ -80,7 +83,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
           style={{
             padding: '8px',
             borderTop: `1px solid ${token.colorBorder}`,
-            background: isEidtProperty ? 'none' : '#FCFCFC',
+            background: primaryColor ? 'none' : '#FCFCFC',
             borderRadius: '0px 0px 8px 8px',
           }}
         >

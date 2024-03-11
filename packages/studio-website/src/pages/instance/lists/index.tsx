@@ -4,6 +4,7 @@ import { history } from 'umi';
 import InstaceCard, { InstaceCardType } from './instance-card';
 import Section from '@/components/section';
 import { PlusOutlined } from '@ant-design/icons';
+import { useContext } from '@/layouts/useContext';
 import { GraphApiFactory, ServiceApiFactory, ServiceApi } from '@graphscope/studio-server';
 import { listGraphs, deleteGraph, startService, stopService } from './service';
 
@@ -14,7 +15,8 @@ const InstanceCard: React.FC = () => {
     isReady: false,
   });
   const { instanceList, isReady } = state;
-
+  const { store } = useContext();
+  const { mode } = store;
   useEffect(() => {
     fetchLists();
   }, []);
@@ -67,7 +69,7 @@ const InstanceCard: React.FC = () => {
             <Card
               headStyle={{ fontSize: '30px' }}
               title={<Skeleton.Button style={{ marginTop: '-10px', width: '120px' }} active />}
-              style={{ background: '#FCFCFC' }}
+              style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
             >
               <div style={{ display: 'flex', height: '164px', justifyContent: 'center', alignContent: 'center' }}>
                 <Skeleton active />
@@ -79,7 +81,7 @@ const InstanceCard: React.FC = () => {
           <Card
             title={'New Graph'}
             headStyle={{ fontSize: '30px', color: '#ccc' }}
-            style={{ background: '#FCFCFC' }}
+            style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
             bodyStyle={{ width: '100%' }}
           >
             <div

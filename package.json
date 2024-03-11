@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@uiw/codemirror-themes": "^4.21.24",
     "antd": "^5.x",
     "buffer": "^6.0.3",
     "buffer-browserify": "^0.2.5",

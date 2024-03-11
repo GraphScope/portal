@@ -3,6 +3,7 @@ import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Tooltip 
 import type { MenuProps } from 'antd';
 import { history } from 'umi';
 import dayjs from 'dayjs';
+import { useContext } from '@/layouts/useContext';
 const { Text, Link } = Typography;
 import {
   DeploymentUnitOutlined,
@@ -73,6 +74,8 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     hqps,
     schema = { edge_types: [], vertex_types: [] },
   } = props;
+  const { store } = useContext();
+  const { mode } = store;
   const items: MenuProps['items'] = [
     {
       label: 'delete',
@@ -129,7 +132,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     <Card
       headStyle={{ fontSize: '30px' }}
       title={name}
-      style={{ background: '#FCFCFC' }}
+      style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
       extra={
         <Space>
           <Button
