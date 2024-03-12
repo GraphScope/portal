@@ -21,7 +21,8 @@ const DateFilter = (props: IInquireMessageProps) => {
     segmentedValue: '1 Hour',
   });
   const { timePeriod, segmentedValue } = state;
-  const allDealingSolved = async (val: string) => {
+  /** 批量设置选中告警信息状态 */
+  const allDealingSolved = async (val: 'dealing' | 'solved') => {
     const params = {
       messages: selectedRowKeys,
       batch_status: val,
@@ -29,6 +30,7 @@ const DateFilter = (props: IInquireMessageProps) => {
     };
     await updateAlertMessages(params);
   };
+  /** 查询操作 */
   const handleSubmit = async () => {
     const { severity, type, status } = form.getFieldsValue();
     const params: IAlertMessages = {

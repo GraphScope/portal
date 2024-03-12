@@ -44,6 +44,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
     });
     edit && getlistProceduresByGraph(edit);
   }, []);
+  /** 获取插件信息并回填 */
   const getlistProceduresByGraph = async (bound_graph: string) => {
     const res = await listProceduresByGraph(bound_graph);
     const { query } = res;

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Form, Popconfirm, Table, Button, Space, Tag, Skeleton, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { listAlertRules, deleteAlertRuleByName } from '../service';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import EditRule from './edit-rule';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';

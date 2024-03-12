@@ -126,6 +126,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
       },
     },
   ];
+  /** 创建告警接收 */
   let Content = (
     <>
       {isEditRecep && (

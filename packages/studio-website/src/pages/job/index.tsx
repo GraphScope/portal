@@ -1,7 +1,9 @@
 import * as React from 'react';
 import Section from '@/components/section';
 import type { TabsProps } from 'antd';
+/** 作业列表 */
 import JobsList from './job-list';
+/** 作业详情 */
 import Detail from './job-list/detail';
 import { FormattedMessage } from 'react-intl';
 

@@ -1,12 +1,15 @@
 import * as React from 'react';
 import Section from '@/components/section';
+/** 拓展插件列表 */
 import Plugins from './plugins';
+/** 创建插件 */
 import CreatePlugins from './plugins/create-plugins';
 import { FormattedMessage } from 'react-intl';
 interface ExtensionProps {}
 const { useState } = React;
 const Extension: React.FunctionComponent<ExtensionProps> = props => {
   const [isCreatePlugin, setIsOpenCreatePlugin] = useState(false);
+  /** 操作插件打开，关闭 */
   const handelChange = (val: boolean) => {
     setIsOpenCreatePlugin(val);
   };

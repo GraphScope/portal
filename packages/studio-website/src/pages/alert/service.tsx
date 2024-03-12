@@ -45,7 +45,7 @@ export const listAlertMessages = async (params: IAlertMessages) => {
   });
   return info;
 };
-
+/** 修改告警信息 */
 export const updateAlertMessages = async (params: UpdateAlertMessagesRequest) => {
   const message = await AlertApiFactory(undefined, location.origin)
     .updateAlertMessages(params)
@@ -81,6 +81,7 @@ export const listAlertRules = async () => {
   });
   return info;
 };
+/** 删除告警规则 */
 export const deleteAlertRuleByName = async (params: string) => {
   const rules = await AlertApiFactory(undefined, location.origin)
     .deleteAlertRuleByName(params)
@@ -93,6 +94,7 @@ export const deleteAlertRuleByName = async (params: string) => {
 
   return rules;
 };
+/** 修改告警规则 */
 export const updateAlertRuleByName = async (params: string, alertRule: AlertRule) => {
   const rules = await AlertApiFactory(undefined, location.origin)
     .updateAlertRuleByName(params, alertRule)
@@ -127,6 +129,7 @@ export const listReceivers = async () => {
   });
   return info;
 };
+/** 创建告警接收 */
 export const registerReceiver = async (params: AlertReceiver) => {
   const receivers = await AlertApiFactory(undefined, location.origin)
     .registerReceiver(params)
@@ -139,6 +142,7 @@ export const registerReceiver = async (params: AlertReceiver) => {
 
   return receivers;
 };
+/** 删除告警接收 */
 export const deleteReceiverById = async (receiverId: string) => {
   const receivers = await AlertApiFactory(undefined, location.origin)
     .deleteReceiverById(receiverId)
@@ -151,6 +155,7 @@ export const deleteReceiverById = async (receiverId: string) => {
 
   return receivers;
 };
+/** 修改告警接收 */
 export const updateReceiverById = async (receiverId: string, alertReceiver: AlertReceiver) => {
   const receivers = await AlertApiFactory(undefined, location.origin)
     .updateReceiverById(receiverId, alertReceiver)

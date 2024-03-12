@@ -11,7 +11,12 @@ export interface Item {
   type: string;
   bound_graph: string;
 }
-
+type TableColumns = {
+  title: React.ReactNode;
+  dataIndex?: string;
+  key: string;
+  render?: (_: any, all: Item) => React.ReactNode;
+};
 type IPluginsProps = {
   handelChange(val: boolean): void;
 };
@@ -28,6 +33,7 @@ const Plugins: React.FC<IPluginsProps> = props => {
     isReady: true,
   });
   const { isReady, pluginList } = state;
+  /** 获取插件列表数据 */
   useEffect(() => {
     getPlugins();
   }, []);
@@ -43,7 +49,7 @@ const Plugins: React.FC<IPluginsProps> = props => {
     });
   };
 
-  const columns = [
+  const columns: TableColumns[] = [
     {
       title: <FormattedMessage id="Name" />,
       dataIndex: 'name',

@@ -27,7 +27,7 @@ const STATUSOPTIONS = [
 /** 定义job类型 */
 let JOBOPTIONS = [{ value: '', text: 'All' }];
 /** job状态显示图标 */
-const statusColor = [
+const statusColor: { type: string; color: string; icon: React.ReactNode }[] = [
   {
     type: 'RUNNING',
     color: 'blue',
@@ -98,6 +98,7 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       </Flex>
     );
   };
+  /** jobId 换行 */
   const hangdleJobid = (val: string) => (
     <>
       {val.substring(0, val.length / 2)}

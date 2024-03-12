@@ -20,11 +20,12 @@ const EditRule: React.FC<ICreateRecepProps> = props => {
   const { isEditRules, handelChange, ruleData } = props;
   const [form] = Form.useForm();
   const [status, setStatus] = useState(false);
+  /** 回填告警规则 */
   useEffect(() => {
     Object.keys(ruleData).length > 0 && form.setFieldsValue(ruleData);
   }, []);
+  /** 编辑告警接收 */
   const onFinish = async () => {
-    /** 编辑告警接收 */
     const { name } = ruleData;
     const data = { ...form.getFieldsValue(), enable: status };
     const res = await updateAlertRuleByName(name, data);

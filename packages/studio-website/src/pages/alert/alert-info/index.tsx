@@ -57,6 +57,7 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
   useEffect(() => {
     getListAlertMessages();
   }, []);
+  /** 获取告警信息列表数据 */
   const getListAlertMessages = async () => {
     const data = await listAlertMessages({});
     updateState(preset => {
@@ -69,6 +70,7 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
       };
     });
   };
+  /** 改变告警信息状态 */
   const handleChange = async (params: UpdateAlertMessagesRequest) => {
     await updateAlertMessages(params);
     getListAlertMessages();
@@ -169,6 +171,7 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
       },
     },
   ];
+  /** 选中告警信息 */
   const rowSelection = {
     selectedRowKeys,
     onChange: (newSelectedRowKeys: string[]) => {

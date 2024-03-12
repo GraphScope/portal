@@ -1,7 +1,10 @@
 import * as React from 'react';
 import Section from '@/components/section';
+/** 告警信息 */
 import AlertInfo from './alert-info';
+/** 告警规则 */
 import AlertRule from './alert-rules';
+/** 告警接收 */
 import AlertRecep from './alert-recep';
 import { FormattedMessage } from 'react-intl';
 interface AlertModuleProps {}

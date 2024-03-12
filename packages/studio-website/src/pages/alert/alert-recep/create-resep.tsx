@@ -25,6 +25,7 @@ const CreateRecep: React.FC<ICreateRecepProps> = props => {
     is_at_all: false,
   });
   const { status, is_at_all } = state;
+  /** 首次查询并回填告警接收数据 */
   useEffect(() => {
     if (Object.keys(editDatas).length > 0) {
       const { enable, is_at_all } = editDatas;
@@ -38,6 +39,7 @@ const CreateRecep: React.FC<ICreateRecepProps> = props => {
       });
     }
   }, []);
+  /** 创建｜编辑 告警接收 */
   const onFinish = async () => {
     /** 编辑告警接收 */
     if (Object.keys(editDatas).length > 0) {
