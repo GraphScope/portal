@@ -2,7 +2,6 @@ import React, { useEffect, useRef, memo } from 'react';
 import { Button, Empty, Form, Input, Select, Tooltip } from 'antd';
 import { PropertiesEditor } from '@graphscope/studio-importor';
 import { KeyOutlined } from '@ant-design/icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import type { IStore } from '../useContext';

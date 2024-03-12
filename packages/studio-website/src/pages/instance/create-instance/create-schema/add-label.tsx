@@ -1,7 +1,6 @@
 import { FunctionComponent } from 'react';
 import { Button, Space } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
-import { cloneDeep } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useContext } from '../useContext';

@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { history } from 'umi';
 import { Button, notification, Steps as AntdSteps, Alert, Breadcrumb, Form } from 'antd';
 import { useContext } from '../create-instance/useContext';

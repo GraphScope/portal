@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Tabs, Row, Col, Image, Segmented } from 'antd';
+import { Card, Tabs, Row, Col, Segmented } from 'antd';
 import { useContext } from '../useContext';
 import GraphInsight from './graph-view';
 import Schema from './schema';

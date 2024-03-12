@@ -1,4 +1,4 @@
-import { useEffect, memo, FunctionComponent } from 'react';
+import { memo, FunctionComponent } from 'react';
 import Graphin, { Utils } from '@antv/graphin';
 import { useContext, NodeSchema, EdgeSchema } from '../useContext';
 import { theme, Image } from 'antd';

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { Row, Col, Card, Typography, Skeleton, Space, Flex, Divider } from 'antd';
-import { useContext, updateDataMap, initialStore, initialDataMap, clearDataMap, clearStore } from './useContext';
+import { Row, Col, Card, Typography, Skeleton, Space, Divider } from 'antd';
+import { useContext, updateDataMap, clearDataMap, clearStore } from './useContext';
 import GraphView from './graph-view';
 import DataSource from './data-source/index';
 

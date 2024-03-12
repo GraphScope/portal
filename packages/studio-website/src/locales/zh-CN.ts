@@ -60,6 +60,7 @@ export default {
   'Graph Metadata': '图数据',
   'Vertex labels': '点标题',
   'Add new': '新建',
+  'New Graph': '新建实例',
   /** plugins */
   Name: '名称',
   'Plugin Type': '插件类型',

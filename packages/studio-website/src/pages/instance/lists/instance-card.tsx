@@ -4,7 +4,7 @@ import type { MenuProps } from 'antd';
 import { history } from 'umi';
 import dayjs from 'dayjs';
 import { useContext } from '@/layouts/useContext';
-const { Text, Link, Title, Paragraph } = Typography;
+const { Text, Title, Paragraph } = Typography;
 import {
   DeploymentUnitOutlined,
   SearchOutlined,
@@ -185,9 +185,8 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
                 }
                 content={Endpoints}
               >
-                Endpoints  <QuestionCircleOutlined style={{ marginLeft: '4px' }} />
+                Endpoints <QuestionCircleOutlined style={{ marginLeft: '4px' }} />
               </Popover>
- 
             </Typography.Text>
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }}>
               <Popover

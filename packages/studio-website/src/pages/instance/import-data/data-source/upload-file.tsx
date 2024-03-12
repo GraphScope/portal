@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { DeleteOutlined, PaperClipOutlined, UploadOutlined, LoadingOutlined } from '@ant-design/icons';
-import type { UploadFile, UploadProps } from 'antd';
-import { Button, Upload, Typography, Flex, theme, Input, Tooltip } from 'antd';
-const { Text } = Typography;
+import { DeleteOutlined, UploadOutlined, LoadingOutlined } from '@ant-design/icons';
+import type { UploadProps } from 'antd';
+import { Button, Upload, Flex, theme, Input, Tooltip } from 'antd';
 const { useToken } = theme;
 import { uploadFile } from '../service';
 import { getDataFields } from '@/components/utils/getDataFields';

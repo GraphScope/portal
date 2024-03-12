@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useContext } from '../useContext';
-import { Segmented, Tag, Card } from 'antd';
+import { Segmented, Card } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import TableList from './table';
 import ReactJsonView from './react-json-view';

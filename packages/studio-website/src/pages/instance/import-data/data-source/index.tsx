@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import { Button, Flex, Row, Col, Space, Typography, theme, Tooltip } from 'antd';
-import { BindingEdge, BindingNode, useDataMap, updateDataMap } from '../useContext';
+import { BindingNode, useDataMap, updateDataMap } from '../useContext';
 import SwitchSource from './switch-source';
 import ImportPeriodic from './import-periodic';
 import ImportNow from './import-now';
 import TableList from './table';
 import { getUrlParams } from '@/components/utils';
-import { useContext } from '../useContext';
 const { useToken } = theme;
 interface IImportDataProps {
   id: string;

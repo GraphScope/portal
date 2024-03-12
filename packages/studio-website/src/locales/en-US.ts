@@ -61,6 +61,7 @@ export default {
   'Graph Metadata': 'Graph Metadata',
   'Vertex labels': 'Vertex labels',
   'Add new': 'Add new',
+  'New Graph': 'New Graph',
   /** plugins */
   Name: 'Name',
   'Plugin Type': 'Plugin Type',

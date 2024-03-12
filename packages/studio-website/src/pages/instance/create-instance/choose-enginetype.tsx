@@ -1,5 +1,5 @@
 import React, { memo, useEffect } from 'react';
-import { Form, Input, Select, Typography } from 'antd';
+import { Form, Input, Typography } from 'antd';
 
 import { FormattedMessage } from 'react-intl';
 import SelectCards from '@/components/select-cards';
@@ -29,8 +29,6 @@ const engines = [
       </>
     ),
   },
-  // { id: 'insights', title: 'Insights', desc: 'Insights 引擎介绍', disabled: true },
-  // { id: 'v6d', title: 'Vineyard', desc: 'Vineyard 引擎介绍', disabled: true },
 ];
 
 const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Select, Input, Space } from 'antd';
+import { Select, Input, Space } from 'antd';
 import UploadFiles from './upload-file';
 interface ISwitchSourceProps {
   filelocation?: string;

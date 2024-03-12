@@ -1,11 +1,11 @@
 import React, { useEffect, useState, memo } from 'react';
-import { Row, Col, Form, Card, Skeleton, Typography } from 'antd';
+import { Row, Col, Form, Card, Skeleton } from 'antd';
 import { history } from 'umi';
 import InstaceCard, { InstaceCardType } from './instance-card';
 import Section from '@/components/section';
 import { PlusOutlined } from '@ant-design/icons';
+import { FormattedMessage } from 'react-intl';
 import { useContext } from '@/layouts/useContext';
-import { GraphApiFactory, ServiceApiFactory, ServiceApi } from '@graphscope/studio-server';
 import { listGraphs, deleteGraph, startService, stopService } from './service';
 
 const InstanceCard: React.FC = () => {
@@ -80,7 +80,7 @@ const InstanceCard: React.FC = () => {
         )}
         <Col span={12}>
           <Card
-            title={'New Graph'}
+            title={<FormattedMessage id="New Graph" />}
             headStyle={{ fontSize: '30px', color: '#ccc' }}
             style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
             bodyStyle={{ width: '100%' }}
