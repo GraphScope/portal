@@ -1,9 +1,24 @@
 import * as React from 'react';
+import Section from '@/components/section';
+import DeploymentList from './deployment-list';
 
-interface DeploymentProps {}
-
-const Deployment: React.FunctionComponent<DeploymentProps> = props => {
-  return <div> Deployment</div>;
+interface IDeploymentProps {}
+const Deployment: React.FunctionComponent<IDeploymentProps> = props => {
+  return (
+    <Section
+      breadcrumb={[
+        {
+          title: 'Home',
+        },
+        {
+          title: 'Deployment',
+        },
+      ]}
+      title="Deployment"
+      desc="Deployment"
+      children={<DeploymentList />}
+    ></Section>
+  );
 };
 
 export default Deployment;
