@@ -1,6 +1,7 @@
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
-
+import { getLocalData } from '@/components/utils/localStorage';
+const themeColor = getLocalData('themeColor');
 export const initialStore = {
   /** 语言 */
   locale: 'en-US',
@@ -11,7 +12,7 @@ export const initialStore = {
   /** 当前导航 */
   currentnNav: '',
   /** 主题模式 */
-  mode: 'defaultAlgorithm',
+  mode: themeColor || 'defaultAlgorithm',
   inputNumber: 6,
 };
 
