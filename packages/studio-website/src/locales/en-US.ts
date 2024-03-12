@@ -56,6 +56,11 @@ export default {
   Properties: 'Properties',
   'Add Property': 'Add Property',
   'Map From File': 'Map From File',
+  'Graph instance name': 'Graph instance name',
+  'Graph store type': 'Graph store type',
+  'Graph Metadata': 'Graph Metadata',
+  'Vertex labels': 'Vertex labels',
+  'Add new': 'Add new',
   /** plugins */
   Name: 'Name',
   'Plugin Type': 'Plugin Type',

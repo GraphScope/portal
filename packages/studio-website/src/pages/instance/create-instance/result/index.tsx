@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { cloneDeep } from 'lodash';
 import { useContext } from '../useContext';
 import { Segmented, Tag, Card } from 'antd';
 import { FormattedMessage } from 'react-intl';
@@ -9,7 +8,7 @@ import GraphInsight from '../create-schema/graph-view';
 interface IImportDataProps {}
 const Result: React.FunctionComponent<IImportDataProps> = props => {
   const { store, updateStore } = useContext();
-  const { checked, nodeList, edgeList } = store;
+  const { checked, nodeList, edgeList, graphName } = store;
 
   const handleChange = (value: any) => {
     updateStore(draft => {
@@ -38,7 +37,7 @@ const Result: React.FunctionComponent<IImportDataProps> = props => {
       <Card
         title={
           <p>
-            <FormattedMessage id="Instance Name" />：{'My GRAPH'}
+            <FormattedMessage id="Instance Name" />: {graphName}
           </p>
         }
         // 'Table', 'Json', 'Graph'

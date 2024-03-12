@@ -32,7 +32,7 @@ const LeftButton = (props: { currentStep: any; handlePrev: any; createInstaseRes
   }
   if (currentStep > 0) {
     return (
-      <Button style={{ margin: '0 8px', minWidth: '100px' }} onClick={handlePrev}>
+      <Button style={{ marginRight: '8px', minWidth: '100px' }} onClick={handlePrev}>
         <FormattedMessage id="Previous" />
       </Button>
     );
@@ -223,12 +223,12 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
             type="info"
             showIcon
             closable
-            style={{ margin: '16px 0' }}
+            style={{ margin: '0px 0px 16px' }}
           />
         )}
         <Steps currentStep={currentStep} />
 
-        <div>
+        <div style={{ height: 'calc(100vh - 260px)', overflowY: 'scroll' }}>
           <div style={currentStep === 0 ? activeItemStyle : itemStyle}>
             <ChooseEnginetype form={form} />
           </div>
@@ -243,15 +243,13 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
           </div>
         </div>
         <div>
-          <div>
-            <LeftButton
-              currentStep={currentStep}
-              handlePrev={prev}
-              createInstaseResult={createInstaseResult}
-              mode={mode}
-            />
-            <RightButton currentStep={currentStep} handleNext={next} handleSubmit={handleSubmit} mode={mode} />
-          </div>
+          <LeftButton
+            currentStep={currentStep}
+            handlePrev={prev}
+            createInstaseResult={createInstaseResult}
+            mode={mode}
+          />
+          <RightButton currentStep={currentStep} handleNext={next} handleSubmit={handleSubmit} mode={mode} />
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import CodeMirror from '@uiw/react-codemirror';
 import UploadFiles from './upload-files';
 import { createProcedure, updateProcedure, listProceduresByGraph, listGraphs } from '../service';
-import { getSearchParams } from '@/pages/utils';
+import { getSearchParams } from '@/components/utils';
 
 type FieldType = {
   name: string;
