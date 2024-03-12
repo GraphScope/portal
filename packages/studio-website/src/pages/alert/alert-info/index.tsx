@@ -34,10 +34,17 @@ type IState = {
 /** 处理alert 属性options方法 */
 const handleOptions = (data: { [x: string]: string }[], type: string) => {
   return [{ value: '', text: 'All' }].concat(
-    data.map((item: { [x: string]: string }) => {
-      const text = item[type].substring(0, 1).toUpperCase() + item[type].substring(1);
-      return { value: item[type], text };
-    }),
+    data
+      .map((item: { [x: string]: string }) => {
+        const text = item[type].substring(0, 1).toUpperCase() + item[type].substring(1);
+        return { value: item[type], text };
+      })
+      .reduce((acc, curr) => {
+        if (!acc.find(item => item.value === curr.value)) {
+          acc.push(curr);
+        }
+        return acc;
+      }, []),
   );
 };
 const AlertInfo: React.FC<IAlertInfoProps> = () => {
@@ -63,8 +70,8 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
     updateState(preset => {
       return {
         ...preset,
-        metricTypeOptions: handleOptions(data, 'severity'),
-        severityTypeOptions: handleOptions(data, 'metric_type'),
+        metricTypeOptions: handleOptions(data, 'metric_type'),
+        severityTypeOptions: handleOptions(data, 'severity'),
         isReady: true,
         alertInfo: data || [],
       };

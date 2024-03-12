@@ -72,9 +72,6 @@ const Plugins: React.FC<IPluginsProps> = props => {
         const { bound_graph } = all;
         return (
           <Space>
-            <Button size="small" type="primary" ghost>
-              Notebook
-            </Button>
             <Button type="primary" ghost size="small">
               立即查看
             </Button>
