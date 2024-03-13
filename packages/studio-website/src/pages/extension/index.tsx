@@ -3,12 +3,15 @@ import Section from '@/components/section';
 import Plugins from './plugins';
 import CreatePlugins from './plugins/create-plugins';
 import { FormattedMessage } from 'react-intl';
+import localStorage from '@/components/utils/localStorage';
 interface ExtensionProps {}
 const { useState } = React;
 const Extension: React.FunctionComponent<ExtensionProps> = props => {
-  const [isCreatePlugin, setIsOpenCreatePlugin] = useState(false);
+  const { setItem, getItem } = localStorage;
+  const [isCreatePlugin, setIsOpenCreatePlugin] = useState(getItem('createPlugin') || false);
   const handelChange = (val: boolean) => {
     setIsOpenCreatePlugin(val);
+    setItem('createPlugin', val);
   };
   const items = [
     // {

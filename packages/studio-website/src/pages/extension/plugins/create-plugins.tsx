@@ -103,7 +103,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
           items={[
             {
               title: (
-                <a href="/extension">
+                <a href="/extension" onClick={() => handelChange(false)}>
                   <FormattedMessage id="Extensions" />
                 </a>
               ),
@@ -134,6 +134,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
         />
         <Form name="basic" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }} form={form}>
           <Form.Item<FieldType>
+            style={{ marginBottom: '12px' }}
             label={<FormattedMessage id="Name" />}
             name="name"
             rules={[{ required: true, message: 'Please input your Graph Name!' }]}
@@ -142,6 +143,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
           </Form.Item>
 
           <Form.Item<FieldType>
+            style={{ marginBottom: '12px' }}
             label={<FormattedMessage id="Plugin Type" />}
             name="type"
             rules={[{ required: true, message: 'Please input your Plugin Type!' }]}
@@ -149,13 +151,18 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
             <Select options={TYPEOPTION} />
           </Form.Item>
           <Form.Item<FieldType>
+            style={{ marginBottom: '12px' }}
             label={<FormattedMessage id="Binding Graph" />}
             name="bound_graph"
             rules={[{ required: true, message: 'Please input your Graph Instance!' }]}
           >
             <Select options={instanceOption} />
           </Form.Item>
-          <Form.Item<FieldType> label={<FormattedMessage id="Edit Code" />} name="query" style={{}}>
+          <Form.Item<FieldType>
+            style={{ marginBottom: '12px' }}
+            label={<FormattedMessage id="Edit Code" />}
+            name="query"
+          >
             <div style={{ overflow: 'scroll', border: '1px solid #D9D9D9', borderRadius: '8px' }}>
               <CodeMirror height="200px" value={editCode} onChange={e => handleCodeMirror(e)} />
             </div>
