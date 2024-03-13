@@ -102,7 +102,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
             <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
               <FormattedMessage id="Currently bound" />
               {bindEdgeCount} <FormattedMessage id="Edges" />，{bindNodeCount}
-              <FormattedMessage id="Vertexs" />
+              <FormattedMessage id="Vertices" />
             </Text>
             {!isReady && <Skeleton />}
             <GraphView
