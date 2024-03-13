@@ -4,14 +4,14 @@ export default {
   setItem(key: string, val: any) {
     try {
       if (!key) return;
-      return localStorage.setItem(key, JSON.stringify(val));
+      return localStorage.setItem(`GS_STUDIO_${key}`, JSON.stringify(val));
     } catch (err) {}
   },
   //获取值
   getItem(key: string) {
     try {
       if (!key) return '';
-      return JSON.parse(localStorage.getItem(key) || '');
+      return JSON.parse(localStorage.getItem(`GS_STUDIO_${key}`) || '');
     } catch (err) {
       return '';
     }
@@ -20,7 +20,7 @@ export default {
   clearItem(key: string) {
     try {
       if (typeof key === 'undefined') return localStorage.clear();
-      return localStorage.removeItem(key);
+      return localStorage.removeItem(`GS_STUDIO_${key}`);
     } catch (err) {
       return false;
     }
