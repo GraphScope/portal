@@ -1,5 +1,5 @@
 import React, { useEffect, useState, memo } from 'react';
-import { Row, Col, Form, Card, Skeleton, Typography } from 'antd';
+import { Row, Col, Form, Card, Skeleton, Typography, message } from 'antd';
 import { history } from 'umi';
 import InstaceCard, { InstaceCardType } from './instance-card';
 import Section from '@/components/section';
@@ -12,11 +12,12 @@ const InstanceCard: React.FC = () => {
   const [form] = Form.useForm();
   const { store } = useContext();
   const { mode } = store;
-  const [state, updateState] = useState<{ isReady: boolean; instanceList: InstaceCardType[] }>({
+  const [state, updateState] = useState<{ isReady: boolean; graphName: string; instanceList: InstaceCardType[] }>({
     instanceList: [],
     isReady: false,
+    graphName: '',
   });
-  const { instanceList, isReady } = state;
+  const { instanceList, isReady, graphName } = state;
 
   useEffect(() => {
     fetchLists();
@@ -43,8 +44,35 @@ const InstanceCard: React.FC = () => {
       fetchLists();
     }
   };
-  const handleStart = async (name: string) => {
-    await startService(name);
+  const handleStart = async (name: string, status: string) => {
+    await updateState(preState => {
+      return {
+        ...preState,
+        graphName: name,
+      };
+    });
+    let res;
+    /** running->stopService,stoped->startService */
+    if (status === 'running') {
+      try {
+        res = await stopService(name);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        res = await startService(name);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    await fetchLists();
+    await updateState(preState => {
+      return {
+        ...preState,
+        graphName: '',
+      };
+    });
   };
   return (
     <Section
@@ -62,7 +90,12 @@ const InstanceCard: React.FC = () => {
       <Row gutter={[12, 12]}>
         {instanceList.map((item, i) => (
           <Col key={i} span={12}>
-            <InstaceCard {...item} handleDelete={handleDelete} handleStart={handleStart} />
+            <InstaceCard
+              {...item}
+              isLoading={item.name === graphName}
+              handleDelete={handleDelete}
+              handleStart={handleStart}
+            />
           </Col>
         ))}
         {!isReady && (

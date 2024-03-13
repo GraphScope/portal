@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Popover } from 'antd';
+import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Popover, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
 import { history } from 'umi';
 import dayjs from 'dayjs';
@@ -15,7 +15,13 @@ import {
   StarOutlined,
 } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDiagramProject, faFileArrowUp, faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
+import {
+  faDiagramProject,
+  faFileArrowUp,
+  faMagnifyingGlass,
+  faTrash,
+  faPause,
+} from '@fortawesome/free-solid-svg-icons';
 import { faPlayCircle, faTrashCan, faCircleQuestion } from '@fortawesome/free-regular-svg-icons';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 export type InstaceCardType = {
@@ -38,7 +44,7 @@ export type InstaceCardType = {
   actions: React.ReactNode;
   /** events */
   handleDelete: (name: string) => void;
-  handleStart: (name: string) => void;
+  handleStart: (name: string, status: string) => void;
   schema: {
     edge_types: any[];
     vertex_types: any[];
@@ -46,6 +52,7 @@ export type InstaceCardType = {
   /** server 实例链接 */
   server?: string;
   hqps?: string;
+  isLoading: boolean;
 };
 
 const styles: React.CSSProperties = {
@@ -72,6 +79,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     handleDelete,
     handleStart,
     hqps,
+    isLoading,
     schema = { edge_types: [], vertex_types: [] },
   } = props;
   const { store } = useContext();
@@ -151,13 +159,16 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
       style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
       extra={
         <Space>
-          <Button
-            type="text"
-            icon={<FontAwesomeIcon icon={faPlayCircle} />}
-            onClick={() => {
-              handleStart(name);
-            }}
-          />
+          <Tooltip title={status == 'stopped' ? 'Start Service' : 'Pause Service'}>
+            <Button
+              type="text"
+              icon={<FontAwesomeIcon icon={status == 'stopped' ? faPlayCircle : faPause} />}
+              loading={isLoading}
+              onClick={() => {
+                handleStart(name, status);
+              }}
+            />
+          </Tooltip>
           <Dropdown menu={{ items, onClick }}>
             <Button type="text" icon={<MoreOutlined />} />
           </Dropdown>
@@ -185,9 +196,8 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
                 }
                 content={Endpoints}
               >
-                Endpoints  <QuestionCircleOutlined style={{ marginLeft: '4px' }} />
+                Endpoints <QuestionCircleOutlined style={{ marginLeft: '4px' }} />
               </Popover>
- 
             </Typography.Text>
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }}>
               <Popover
