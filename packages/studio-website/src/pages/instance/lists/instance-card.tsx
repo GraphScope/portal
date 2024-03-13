@@ -188,26 +188,12 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
           </Space>
           <Space split={<Divider type="vertical" />} size={0}>
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }} disabled={!Endpoints}>
-              <Popover
-                title={
-                  <Title level={4} style={{ margin: '0px' }}>
-                    Endpoints
-                  </Title>
-                }
-                content={Endpoints}
-              >
+              <Popover title="Endpoints" content={Endpoints}>
                 Endpoints <QuestionCircleOutlined style={{ marginLeft: '4px' }} />
               </Popover>
             </Typography.Text>
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }}>
-              <Popover
-                title={
-                  <Title level={4} style={{ margin: '0px' }}>
-                    Graph Schema
-                  </Title>
-                }
-                content={Statistics}
-              >
+              <Popover title="Graph Schema" content={Statistics}>
                 Statistics
               </Popover>
             </Typography.Text>
