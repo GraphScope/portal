@@ -64,7 +64,7 @@ const Plugins: React.FC<IPluginsProps> = props => {
           <Space>
             <Button
               size="small"
-              type="primary"
+              type="text"
               onClick={() => {
                 history.push(`/extension/edit#?graph_name=${bound_graph}`);
               }}
@@ -78,7 +78,7 @@ const Plugins: React.FC<IPluginsProps> = props => {
               okText={<FormattedMessage id="Yes" />}
               cancelText={<FormattedMessage id="No" />}
             >
-              <Button size="small" danger ghost>
+              <Button type="text" size="small" danger ghost>
                 <FontAwesomeIcon icon={faTrashCan} />
               </Button>
             </Popconfirm>
