@@ -3,11 +3,10 @@ import { Breadcrumb } from 'antd';
 import CodeMirror from '@uiw/react-codemirror';
 import { FormattedMessage } from 'react-intl';
 import { getJobById } from '../service';
-import { getSearchParams } from '@/components/utils';
+import { searchParamOf } from '@/components/utils';
 type IDetail = {};
 const Detail: React.FunctionComponent<IDetail> = props => {
-  const { searchParams } = getSearchParams(window.location);
-  const jobId: string = searchParams.get('jobId') || '';
+  const jobId: string = searchParamOf('jobId') || '';
   const [detailData, setDetailData] = useState('');
   useEffect(() => {
     getJobByIdDetail();

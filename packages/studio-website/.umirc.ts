@@ -10,6 +10,7 @@ export default defineConfig({
     { path: '/query', component: 'query' },
     { path: '/query-app', component: 'query/app', layout: false },
     { path: '/job', component: 'job' },
+    { path: '/job/detail', component: 'job/job-list/detail' },
     { path: '/extension', component: 'extension' },
     { path: '/alert', component: 'alert' },
     { path: '/deployment', component: 'deployment' },

@@ -8,6 +8,7 @@ import {
   SyncOutlined,
 } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
+import { history } from 'umi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 // import Action from './action';
@@ -115,9 +116,10 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
         <span
           style={{ cursor: 'pointer' }}
           onClick={() => {
-            handleDetail({ isShow: true, log: all.log });
-            searchParams.set('jobId', record);
-            window.location.hash = `${path}?${searchParams.toString()}`;
+            // handleDetail({ isShow: true, log: all.log });
+            // searchParams.set('jobId', record);
+            // window.location.hash = `${path}?${searchParams.toString()}`;
+            history.push(`/job/detail#?jobId=${record}`);
           }}
         >
           {hangdleJobid(record)}
