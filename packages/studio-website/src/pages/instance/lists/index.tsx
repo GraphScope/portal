@@ -17,7 +17,8 @@ const InstanceCard: React.FC = () => {
     isReady: false,
   });
   const { instanceList, isReady } = state;
-
+  const { store } = useContext();
+  const { mode } = store;
   useEffect(() => {
     fetchLists();
   }, []);
@@ -70,7 +71,7 @@ const InstanceCard: React.FC = () => {
             <Card
               headStyle={{ fontSize: '30px' }}
               title={<Skeleton.Button style={{ marginTop: '-10px', width: '120px' }} active />}
-              style={{ background: '#FCFCFC' }}
+              style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
             >
               <div style={{ display: 'flex', height: '164px', justifyContent: 'center', alignContent: 'center' }}>
                 <Skeleton active />
