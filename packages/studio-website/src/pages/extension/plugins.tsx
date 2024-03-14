@@ -58,6 +58,7 @@ const Plugins: React.FC<IPluginsProps> = props => {
     {
       title: <FormattedMessage id="Action" />,
       key: 'actions',
+      width: 60,
       render: (_: any, all: Item) => {
         const { bound_graph } = all;
         return (
