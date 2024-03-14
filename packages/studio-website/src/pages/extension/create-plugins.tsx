@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Select, Alert, Flex, Breadcrumb, theme } from 'antd';
+import { Button, Form, Input, Select, Flex, Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
+import { history } from 'umi';
+import { searchParamOf } from '@/components/utils/index';
 import CodeMirror from '@uiw/react-codemirror';
-import { createTheme } from '@uiw/codemirror-themes';
 import UploadFiles from './upload-files';
-import { createProcedure, updateProcedure, listProceduresByGraph, listGraphs } from '../service';
-import { getSearchParams } from '@/pages/utils';
-import { useContext } from '@/layouts/useContext';
-const { useToken } = theme;
+import { createProcedure, updateProcedure, listProceduresByGraph, listGraphs } from './service';
+
 type FieldType = {
   name: string;
   type: string;
@@ -17,25 +16,12 @@ type FieldType = {
 };
 const TYPEOPTION = [{ label: 'CPP', value: 'cpp' }];
 
-type ICreateRecepProps = {
-  handelChange(val: boolean): void;
-};
+type ICreateRecepProps = {};
 const CreatePlugins: React.FC<ICreateRecepProps> = props => {
-  const { handelChange } = props;
   const [form] = Form.useForm();
-  const { store } = useContext();
-  const { mode } = store;
-  const { token } = useToken();
-  //@ts-ignore
-  const myTheme = createTheme({
-    theme: mode === 'defaultAlgorithm' ? 'light' : 'dark',
-    settings: {
-      background: mode === 'defaultAlgorithm' ? '#fff' : '#202020',
-      foreground: mode === 'defaultAlgorithm' ? '#202020' : '#fff',
-    },
-  });
-  const { path, searchParams } = getSearchParams(window.location);
-  const edit = searchParams.get('bound_graph') || '';
+  const graph_name = searchParamOf('graph_name') || '';
+  console.log(graph_name);
+
   const [state, updateState] = useState<{
     editCode: string;
     instanceOption: { label: string; value: string }[];
@@ -55,10 +41,12 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
         };
       });
     });
-    edit && getlistProceduresByGraph(edit);
+    graph_name && getlistProceduresByGraph(graph_name);
   }, []);
   const getlistProceduresByGraph = async (bound_graph: string) => {
     const res = await listProceduresByGraph(bound_graph);
+    console.log(res);
+
     const { query } = res;
     form.setFieldsValue(res);
     updateState(preset => {
@@ -68,6 +56,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
       };
     });
   };
+
   /** 创建插件 */
   const onFinish = async () => {
     const { name, bound_graph, type } = form.getFieldsValue();
@@ -92,13 +81,14 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
         },
       ],
     };
-    /** 修改插件 */
-    if (edit === 'extension') {
+    if (graph_name) {
+      /** 修改插件 */
       await updateProcedure(bound_graph, name, data);
     } else {
+      /** 新建插件 */
       await createProcedure(name, data);
     }
-    handelChange(false);
+    history.push('/extension');
   };
   /** 获取editcode */
   const handleCodeMirror = (val: string) => {
@@ -126,14 +116,6 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
             },
           ]}
         />
-        <Alert
-          message={
-            <FormattedMessage id="If you already have an algorithm plugin file, you can upload it here, which will help you quickly create a plugin." />
-          }
-          type="info"
-          showIcon
-          closable
-        />
         <UploadFiles
           handleChange={val => {
             //@ts-ignore
@@ -145,8 +127,9 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
             });
           }}
         />
-        <Form name="basic" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }} form={form}>
+        <Form name="basic" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }} form={form} onFinish={() => onFinish()}>
           <Form.Item<FieldType>
+            style={{ marginBottom: '12px' }}
             label={<FormattedMessage id="Name" />}
             name="name"
             rules={[{ required: true, message: 'Please input your Graph Name!' }]}
@@ -155,6 +138,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
           </Form.Item>
 
           <Form.Item<FieldType>
+            style={{ marginBottom: '12px' }}
             label={<FormattedMessage id="Plugin Type" />}
             name="type"
             rules={[{ required: true, message: 'Please input your Plugin Type!' }]}
@@ -162,19 +146,24 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
             <Select options={TYPEOPTION} />
           </Form.Item>
           <Form.Item<FieldType>
+            style={{ marginBottom: '12px' }}
             label={<FormattedMessage id="Binding Graph" />}
             name="bound_graph"
             rules={[{ required: true, message: 'Please input your Graph Instance!' }]}
           >
             <Select options={instanceOption} />
           </Form.Item>
-          <Form.Item<FieldType> label={<FormattedMessage id="Edit Code" />} name="query" style={{}}>
-            <div style={{ overflow: 'scroll', border: `1px solid ${token.colorBorder}`, borderRadius: '8px' }}>
-              <CodeMirror height="200px" theme={myTheme} value={editCode} onChange={e => handleCodeMirror(e)} />
+          <Form.Item<FieldType>
+            style={{ marginBottom: '12px' }}
+            label={<FormattedMessage id="Edit Code" />}
+            name="query"
+          >
+            <div style={{ overflow: 'scroll', border: '1px solid #D9D9D9', borderRadius: '8px' }}>
+              <CodeMirror height="200px" value={editCode} onChange={e => handleCodeMirror(e)} />
             </div>
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" onClick={() => onFinish()}>
+            <Button type="primary" htmlType="submit">
               <FormattedMessage id="Create Plugin" />
             </Button>
           </Form.Item>

@@ -13,6 +13,7 @@ export default defineConfig({
     { path: '/job', component: 'job' },
     { path: '/job/detail', component: 'job/detail' },
     { path: '/extension', component: 'extension' },
+    { path: '/extension/:name', component: 'extension/create-plugins' },
     { path: '/alert', component: 'alert' },
     { path: '/deployment', component: 'deployment' },
   ],

@@ -1,15 +1,9 @@
 import * as React from 'react';
 import Section from '@/components/section';
 import Plugins from './plugins';
-import CreatePlugins from './plugins/create-plugins';
 import { FormattedMessage } from 'react-intl';
 interface ExtensionProps {}
-const { useState } = React;
 const Extension: React.FunctionComponent<ExtensionProps> = props => {
-  const [isCreatePlugin, setIsOpenCreatePlugin] = useState(false);
-  const handelChange = (val: boolean) => {
-    setIsOpenCreatePlugin(val);
-  };
   const items = [
     // {
     //   key: 'Plugins',
@@ -18,7 +12,7 @@ const Extension: React.FunctionComponent<ExtensionProps> = props => {
     // },
     {
       key: 'Store',
-      children: <Plugins handelChange={handelChange} />,
+      children: <Plugins />,
       label: <FormattedMessage id="Store Procedure" />,
     },
     // {
@@ -34,23 +28,19 @@ const Extension: React.FunctionComponent<ExtensionProps> = props => {
   ];
   return (
     <>
-      {!isCreatePlugin ? (
-        <Section
-          breadcrumb={[
-            {
-              title: 'Home',
-            },
-            {
-              title: 'Extensions',
-            },
-          ]}
-          title="Extensions"
-          desc="GraphScope provides an extension plugin mechanism, allowing you to flexibly create various types of plugins such as graph learning, store procedures, and graph analysis according to business needs."
-          items={items}
-        ></Section>
-      ) : (
-        <CreatePlugins handelChange={handelChange} />
-      )}
+      <Section
+        breadcrumb={[
+          {
+            title: 'Home',
+          },
+          {
+            title: 'Extensions',
+          },
+        ]}
+        title="Extensions"
+        desc="GraphScope provides an extension plugin mechanism, allowing you to flexibly create various types of plugins such as graph learning, store procedures, and graph analysis according to business needs."
+        items={items}
+      ></Section>
     </>
   );
 };
