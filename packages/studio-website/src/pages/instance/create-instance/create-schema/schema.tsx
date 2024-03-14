@@ -148,7 +148,6 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   };
   const nodeOrEdgeTitle =
     currentType == 'node' ? <FormattedMessage id="Vertex Label" /> : <FormattedMessage id="Edge Label" />;
- 
 
   return (
     <div
@@ -164,10 +163,8 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             label={nodeOrEdgeTitle}
             name="label"
             tooltip={nodeOrEdgeTitle}
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
             rules={[{ required: true, message: '' }]}
-            style={{ marginBottom: '0' }}
+            style={{ marginBottom: '8px' }}
           >
             <Input
               disabled={disabled}
@@ -181,10 +178,8 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
               label={'Source Vertex Label'}
               name="source"
               tooltip="Source Vertex Label"
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
               rules={[{ required: true, message: '' }]}
-              style={{ marginBottom: '0' }}
+              style={{ marginBottom: '8px' }}
             >
               <Select
                 options={nodeOptions}
@@ -197,10 +192,8 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
               label={'Target Vertex Label'}
               name="target"
               tooltip="Destination Vertex Label"
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
               rules={[{ required: true, message: '' }]}
-              style={{ marginBottom: '0' }}
+              style={{ marginBottom: '8px' }}
             >
               <Select
                 options={nodeOptions}
