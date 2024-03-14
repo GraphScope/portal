@@ -1,28 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Popover, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
 import { history } from 'umi';
 import dayjs from 'dayjs';
 import { useContext } from '@/layouts/useContext';
-const { Text, Link, Title, Paragraph } = Typography;
-import {
-  DeploymentUnitOutlined,
-  SearchOutlined,
-  MoreOutlined,
-  PlusOutlined,
-  PlayCircleOutlined,
-  DeleteOutlined,
-  StarOutlined,
-} from '@ant-design/icons';
+import { deleteGraph, startService, stopService } from './service';
+
+const { Text, Paragraph } = Typography;
+import { MoreOutlined, StarOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faDiagramProject,
-  faFileArrowUp,
-  faMagnifyingGlass,
-  faTrash,
-  faPause,
-} from '@fortawesome/free-solid-svg-icons';
-import { faPlayCircle, faTrashCan, faCircleQuestion } from '@fortawesome/free-regular-svg-icons';
+import { faDiagramProject, faFileArrowUp, faMagnifyingGlass, faPause } from '@fortawesome/free-solid-svg-icons';
+import { faPlayCircle, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 export type InstaceCardType = {
   /** graph name */
@@ -42,9 +30,6 @@ export type InstaceCardType = {
   routes: React.ReactNode;
   /** 操作 */
   actions: React.ReactNode;
-  /** events */
-  handleDelete: (name: string) => void;
-  handleStart: (name: string, status: string) => void;
   schema: {
     edge_types: any[];
     vertex_types: any[];
@@ -52,7 +37,7 @@ export type InstaceCardType = {
   /** server 实例链接 */
   server?: string;
   hqps?: string;
-  isLoading: boolean;
+  handleChange: () => void;
 };
 
 const styles: React.CSSProperties = {
@@ -76,14 +61,13 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     actions,
     status,
     name,
-    handleDelete,
-    handleStart,
     hqps,
-    isLoading,
+    handleChange,
     schema = { edge_types: [], vertex_types: [] },
   } = props;
   const { store } = useContext();
   const { mode } = store;
+  const [isLoading, updateIsLoading] = useState(false);
   const items: MenuProps['items'] = [
     {
       label: 'delete',
@@ -151,7 +135,33 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
       {schema.edge_types.length} types of Edges <br /> {schema.vertex_types.length} types of Vertices
     </>
   );
+  /** 删除graph */
+  const handleDelete = async (name: string) => {
+    await deleteGraph(name);
+    handleChange && handleChange();
+  };
 
+  const handleClick = async (name: string, status: string) => {
+    updateIsLoading(true);
+    /** running->stopService */
+    if (status === 'running') {
+      await stopService(name);
+    }
+    /** stoped->startService */
+    if (status === 'stopped') {
+      await startService(name);
+    }
+    updateIsLoading(false);
+    handleChange && handleChange();
+  };
+  /** Start|Pause 提示 */
+  let tooltipContext = '';
+  if (status == 'stopped') tooltipContext = 'Start Service';
+  if (status == 'running') tooltipContext = 'Pause Service';
+  /** Start|Pause icon */
+  let btnIcon;
+  if (status == 'stopped') btnIcon = faPlayCircle;
+  if (status == 'running') btnIcon = faPause;
   return (
     <Card
       headStyle={{ fontSize: '30px' }}
@@ -159,13 +169,13 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
       style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
       extra={
         <Space>
-          <Tooltip title={status == 'stopped' ? 'Start Service' : 'Pause Service'}>
+          <Tooltip title={tooltipContext}>
             <Button
               type="text"
-              icon={<FontAwesomeIcon icon={status == 'stopped' ? faPlayCircle : faPause} />}
+              icon={<FontAwesomeIcon icon={btnIcon} />}
               loading={isLoading}
               onClick={() => {
-                handleStart(name, status);
+                handleClick(name, status);
               }}
             />
           </Tooltip>
