@@ -3,7 +3,7 @@ import { useContext } from '../../context';
 import List from './list';
 import { Flex, Typography, Empty } from 'antd';
 import { BookOutlined } from '@ant-design/icons';
-import './index.less';
+import './index.css';
 interface ISavedStatementsProps {
   deleteStatements: (ids: string[]) => void;
 }

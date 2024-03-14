@@ -109,6 +109,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
       updateStore(draft => {
         draft.nodeList.forEach(item => {
           if (item.key === newActiveKey) {
+            console.log('  cbRef.current', cbRef.current);
             //@ts-ignore
             item.properties = cbRef.current;
             item.label = label;
@@ -145,6 +146,8 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
     }
     return configcolumns;
   };
+  const nodeOrEdgeTitle =
+    currentType == 'node' ? <FormattedMessage id="Vertex Label" /> : <FormattedMessage id="Edge Label" />;
 
   return (
     <div
@@ -157,15 +160,11 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
       <Form form={form} layout="vertical" onValuesChange={() => formChange()}>
         <div style={{ position: 'relative' }}>
           <Form.Item<FieldType>
-            label={
-              currentType == 'node' ? <FormattedMessage id="Vertex Label" /> : <FormattedMessage id="Edge Label" />
-            }
+            label={nodeOrEdgeTitle}
             name="label"
-            tooltip=" "
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
+            tooltip={nodeOrEdgeTitle}
             rules={[{ required: true, message: '' }]}
-            style={{ marginBottom: '0' }}
+            style={{ marginBottom: '8px' }}
           >
             <Input
               disabled={disabled}
@@ -178,11 +177,9 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             <Form.Item<FieldType>
               label={'Source Vertex Label'}
               name="source"
-              tooltip=" "
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
+              tooltip="Source Vertex Label"
               rules={[{ required: true, message: '' }]}
-              style={{ marginBottom: '0' }}
+              style={{ marginBottom: '8px' }}
             >
               <Select
                 options={nodeOptions}
@@ -194,11 +191,9 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             <Form.Item<FieldType>
               label={'Target Vertex Label'}
               name="target"
-              tooltip=" "
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
+              tooltip="Destination Vertex Label"
               rules={[{ required: true, message: '' }]}
-              style={{ marginBottom: '0' }}
+              style={{ marginBottom: '8px' }}
             >
               <Select
                 options={nodeOptions}

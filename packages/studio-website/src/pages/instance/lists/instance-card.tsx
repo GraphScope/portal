@@ -1,22 +1,19 @@
-import React from 'react';
-import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Tooltip } from 'antd';
+import React, { useState } from 'react';
+import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Popover, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
 import { history } from 'umi';
 import dayjs from 'dayjs';
-const { Text, Link } = Typography;
-import {
-  DeploymentUnitOutlined,
-  SearchOutlined,
-  MoreOutlined,
-  PlusOutlined,
-  PlayCircleOutlined,
-  DeleteOutlined,
-  StarOutlined,
-} from '@ant-design/icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDiagramProject, faFileArrowUp, faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { faPlayCircle, faTrashCan, faCircleQuestion } from '@fortawesome/free-regular-svg-icons';
+import { useContext } from '@/layouts/useContext';
+ 
+import { deleteGraph, startService, stopService } from './service';
 
+const { Text, Paragraph } = Typography;
+import { MoreOutlined, StarOutlined } from '@ant-design/icons';
+ 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDiagramProject, faFileArrowUp, faMagnifyingGlass, faPause } from '@fortawesome/free-solid-svg-icons';
+import { faPlayCircle, faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 export type InstaceCardType = {
   /** graph name */
   name: string;
@@ -35,9 +32,6 @@ export type InstaceCardType = {
   routes: React.ReactNode;
   /** 操作 */
   actions: React.ReactNode;
-  /** events */
-  handleDelete: (name: string) => void;
-  handleStart: (name: string) => void;
   schema: {
     edge_types: any[];
     vertex_types: any[];
@@ -45,6 +39,7 @@ export type InstaceCardType = {
   /** server 实例链接 */
   server?: string;
   hqps?: string;
+  handleChange: () => void;
 };
 
 const styles: React.CSSProperties = {
@@ -68,11 +63,13 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     actions,
     status,
     name,
-    handleDelete,
-    handleStart,
     hqps,
+    handleChange,
     schema = { edge_types: [], vertex_types: [] },
   } = props;
+  const { store } = useContext();
+  const { mode } = store;
+  const [isLoading, updateIsLoading] = useState(false);
   const items: MenuProps['items'] = [
     {
       label: 'delete',
@@ -88,7 +85,6 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
 
   const handleRestart = () => {};
   const onClick: MenuProps['onClick'] = ({ key }) => {
-    console.log('key', key, name);
     if (key === 'delete') {
       handleDelete(name);
     }
@@ -114,31 +110,82 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   }
   uptimeString += `${minutes}min`;
 
-  let Endpoints = '';
+  let Endpoints: React.ReactNode = (
+    <>
+      No available services. <br /> Please click the <FontAwesomeIcon icon={faPlayCircle} /> button to start the service
+    </>
+  );
   if (server) {
-    Endpoints = `Cypher: ${props.server}`;
+    Endpoints = (
+      <>
+        <Text>Cypher:</Text>
+        <Paragraph copyable style={{ display: 'inline-block', marginBottom: '6px' }}>
+          {props.server}
+        </Paragraph>
+      </>
+    );
   }
   if (hqps) {
-    Endpoints = Endpoints + `\n HQPS: ${hqps}`;
+    Endpoints = (
+      <>
+        {Endpoints} <br /> <Text>HQPS:</Text>
+        <Paragraph copyable style={{ display: 'inline-block' }}>
+          {hqps}
+        </Paragraph>
+      </>
+    );
   }
-  const Statistics = `
-  Graph Schema: ${schema.edge_types.length} types of Edges, ${schema.vertex_types.length} types of Vertices
-  `;
+  const Statistics = (
+    <>
+      {schema.edge_types.length} types of Edges <br /> {schema.vertex_types.length} types of Vertices
+    </>
+  );
+ 
+  /** 删除graph */
+  const handleDelete = async (name: string) => {
+    await deleteGraph(name);
+    handleChange && handleChange();
+  };
+ 
 
+  const handleClick = async (name: string, status: string) => {
+    updateIsLoading(true);
+    /** running->stopService */
+    if (status === 'running') {
+      await stopService(name);
+    }
+    /** stoped->startService */
+    if (status === 'stopped') {
+      await startService(name);
+    }
+    updateIsLoading(false);
+    handleChange && handleChange();
+  };
+  /** Start|Pause 提示 */
+  let tooltipContext = '';
+  if (status == 'stopped') tooltipContext = 'Start Service';
+  if (status == 'running') tooltipContext = 'Pause Service';
+  /** Start|Pause icon */
+  let btnIcon;
+  if (status == 'stopped') btnIcon = faPlayCircle;
+  if (status == 'running') btnIcon = faPause;
   return (
     <Card
       headStyle={{ fontSize: '30px' }}
       title={name}
-      style={{ background: '#FCFCFC' }}
+      style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
       extra={
         <Space>
-          <Button
-            type="text"
-            icon={<FontAwesomeIcon icon={faPlayCircle} />}
-            onClick={() => {
-              handleStart(name);
-            }}
-          />
+          <Tooltip title={tooltipContext}>
+            <Button
+              type="text"
+              icon={<FontAwesomeIcon icon={btnIcon} />}
+              loading={isLoading}
+              onClick={() => {
+                handleClick(name, status);
+              }}
+            />
+          </Tooltip>
           <Dropdown menu={{ items, onClick }}>
             <Button type="text" icon={<MoreOutlined />} />
           </Dropdown>
@@ -158,12 +205,17 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
           </Space>
           <Space split={<Divider type="vertical" />} size={0}>
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }} disabled={!Endpoints}>
-              <Tooltip title={Endpoints}>
-                Endpoints <FontAwesomeIcon icon={faCircleQuestion} />
-              </Tooltip>
+
+              <Popover title="Endpoints" content={Endpoints}>
+ 
+                Endpoints <QuestionCircleOutlined style={{ marginLeft: '4px' }} />
+              </Popover>
             </Typography.Text>
+
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }}>
-              <Tooltip title={Statistics}>Statistics</Tooltip>
+              <Popover title="Graph Schema" content={Statistics}>
+                Statistics
+              </Popover>
             </Typography.Text>
             {/* <Typography.Text type="secondary">Logs</Typography.Text> */}
           </Space>

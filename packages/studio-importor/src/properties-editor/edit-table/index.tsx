@@ -25,6 +25,8 @@ const TableContext = createContext<{
 const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
   const [form] = Form.useForm();
   const { onChange, data, rowKey } = useContext(TableContext)!;
+  console.log(data);
+
   return (
     <Form
       form={form}
@@ -94,7 +96,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
             <span
               style={{
                 height: '27px',
-                // backgroundColor: '#505156', color: '#fff', borderRadius: '8px',
                 padding: '8px',
                 cursor: 'pointer',
               }}
@@ -160,7 +161,6 @@ export const EditTable: React.FC<{
       }),
     };
   });
-  console.log('data', data, editColumns);
 
   return (
     <TableContext.Provider value={{ data, onChange, rowKey, inputDoubleClick, inputBlur }}>
@@ -173,7 +173,6 @@ export const EditTable: React.FC<{
         pagination={false}
         {...props}
         scroll={{ y: 300 }}
-        // className={styles[`table-container`]}
       />
     </TableContext.Provider>
   );

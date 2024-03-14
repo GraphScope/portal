@@ -9,3 +9,9 @@ If the network speed is slow during dependency installation, you can set Alibaba
 ```
 npm run start
 ```
+
+- global env variable
+
+```js
+window.GS_ENGINE_TYPE = 'interactive'; // or "groot"
+```

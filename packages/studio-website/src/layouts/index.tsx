@@ -11,7 +11,7 @@ import locales from '../locales';
 import { useContext } from './useContext';
 export default function Layout() {
   const { store } = useContext();
-  const { locale, primaryColor, mode } = store;
+  const { locale, primaryColor, mode, inputNumber } = store;
   //@ts-ignore
   const messages = locales[locale];
   return (
@@ -38,10 +38,15 @@ export default function Layout() {
               headerColor: '#C7C9CC',
               headerSplitColor: mode === 'defaultAlgorithm' ? '#fff' : '#000',
             },
+            // Tooltip: {
+            //   colorTextLightSolid: '#000',
+            //   colorBgSpotlight: '#fff',
+            // },
           },
           token: {
-            borderRadius: 8,
+            borderRadius: inputNumber,
             colorPrimary: primaryColor,
+            colorBorder: mode === 'defaultAlgorithm' ? '#F0F0F0' : '#303030',
             // colorBgBase: mode === 'defaultAlgorithm' ? '#fff' : '#000',
           },
         }}

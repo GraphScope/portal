@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Breadcrumb } from 'antd';
 import CodeMirror from '@uiw/react-codemirror';
 import { FormattedMessage } from 'react-intl';
-type IDetail = {
-  detailData: string;
-};
+import { getJobById } from './service';
+import { searchParamOf } from '@/components/utils';
+type IDetail = {};
 const Detail: React.FunctionComponent<IDetail> = props => {
-  const { detailData } = props;
+  const jobId: string = searchParamOf('jobId') || '';
+  const [detailData, setDetailData] = useState('');
+  useEffect(() => {
+    getJobByIdDetail();
+  }, []);
+  /** 获取详情job */
+  const getJobByIdDetail = async () => {
+    const res = await getJobById(jobId);
+    const { log } = res;
+    setDetailData(log);
+  };
   return (
     <div style={{ padding: '12px 24px' }}>
       <Breadcrumb

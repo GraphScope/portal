@@ -1,17 +1,25 @@
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
+import localStorage from '@/components/utils/localStorage';
+const { getItem } = localStorage;
+const themeColor = getItem('themeColor');
+const primaryColor = getItem('primaryColor');
+const corner = getItem('corner');
+const locale = getItem('locale');
+console.log(themeColor);
 
 export const initialStore = {
   /** 语言 */
-  locale: 'en-US',
+  locale: locale || 'en-US',
   /** 主题色 */
-  primaryColor: '#1677ff',
+  primaryColor: primaryColor || '#1677ff',
   /** 收起导航 */
   collapse: false,
   /** 当前导航 */
   currentnNav: '',
   /** 主题模式 */
-  mode: 'defaultAlgorithm',
+  mode: themeColor || 'defaultAlgorithm',
+  inputNumber: corner || 6,
 };
 
 export type IStore = typeof initialStore;

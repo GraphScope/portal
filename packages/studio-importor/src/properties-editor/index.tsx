@@ -1,4 +1,4 @@
-import React, { type FC, useEffect, forwardRef, useImperativeHandle, useRef, memo } from 'react';
+import React, { type FC, useEffect, forwardRef, useImperativeHandle, memo } from 'react';
 import { Button, Checkbox } from 'antd';
 import { uniqueId, cloneDeep } from 'lodash';
 import { useImmer } from '../use-immer';
@@ -10,7 +10,7 @@ import {
   PropertyConfigParamsType,
   IMapColumns,
 } from './interface';
-import { EditType, IconFont } from './mapdata';
+import { EditType } from './mapdata';
 import { KeyOutlined } from '@ant-design/icons';
 import Editor from './editor';
 type IPropertiesEditorProps = {
@@ -26,7 +26,6 @@ type IPropertiesEditorProps = {
 const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
   forwardRef((props, ref) => {
     const { properties = [], onChange, isMapFromFile, tableConfig, locales, isEditable = false } = props;
-    const inputRef = useRef<HTMLInputElement>();
     // 使用useImmer创建一个可变状态对象
     const [state, updateState] = useImmer<{
       selectedRows: string[];
@@ -87,11 +86,14 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
     // 定义addNodeConfig函数，用于添加新的表格行
     const addNodeConfig = () => {
       const list: PropertyList[] = [...configList];
-      if (!list?.length) {
-        list.push({ id: uniqueId(`index_`), name: '', type: '', token: '', primaryKey: true, disable: false });
-      } else {
-        list.push({ id: uniqueId(`index_`), name: '', type: '', token: '', primaryKey: false, disable: false });
-      }
+      list.push({
+        id: uniqueId(`index_`),
+        name: '',
+        type: '',
+        token: '',
+        primaryKey: !list?.length ? true : false,
+        disable: false,
+      });
       updateState(draft => {
         draft.configList = list;
       });
@@ -119,12 +121,13 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
         });
       }
     };
-
+    /** map from file table选中数据 */
     const handleSelectRow = selectedRowKeys => {
       updateState(draft => {
         draft.selectedMapRowKeys = selectedRowKeys;
       });
     };
+    /** map from file 表格配置 */
     const mapcolumns: IMapColumns[] = [
       {
         dataIndex: 'name',
@@ -162,6 +165,7 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
       });
       onChange(newDataSource);
     };
+    /** 修改table设置新值 */
     const setConfigList = val => {
       updateState(draft => {
         draft.configList = val;
@@ -174,43 +178,33 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
         draft.selectedMapRowKeys = []; // 映射数据前清空上次选中值
       });
       let data = cloneDeep(mapfromfileList);
-      data = data.filter(item => selectedMapRowKeys.includes(item?.name));
+      data.filter(item => selectedMapRowKeys.includes(item?.name));
       updateState(draft => {
         draft.configList = data;
       });
       onChange(data);
     };
-    const inputDoubleClick: (val: { id: string }) => void = async val => {
-      let reasult = cloneDeep(configList);
-      const modifiedArray = await reasult.map(item => {
-        if (item.id == val.id) {
+    /** 点击可编辑属性名称 */
+    const inputDoubleClick: (val: { id: string }) => void = val => {
+      updateState(draft => {
+        draft.configList = configList.map(item => {
           return {
             ...item,
-            disable: false,
-          };
-        } else {
-          return {
-            ...item,
-            disable: true,
-          };
-        }
-      });
-      await updateState(draft => {
-        draft.configList = modifiedArray;
-      });
-      await inputRef?.current?.focus();
-    };
-    const inputBlur: (val: { disable: boolean }) => void = val => {
-      if (!val.disable) {
-        let reasult = cloneDeep(configList);
-        const modifiedArray = reasult.map(item => {
-          return {
-            ...item,
-            disable: true,
+            disable: item.id !== val.id,
           };
         });
+      });
+    };
+    /** 编辑属性名称及时修改数据源 */
+    const inputBlur: (val: { disable: boolean }) => void = val => {
+      if (!val.disable) {
         updateState(draft => {
-          draft.configList = modifiedArray;
+          draft.configList = configList.map(item => {
+            return {
+              ...item,
+              disable: true,
+            };
+          });
         });
       }
     };
@@ -286,7 +280,6 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
     const mapConfigParams: MapConfigParamsType['mapConfigParams'] = {
       dataSource: properties,
       columns: mapcolumns,
-      showHeader: false,
       selectedMapRowKeys: selectedMapRowKeys,
       handleSelectAll: handleSelectAll,
       handleSelectRow: handleSelectRow,
@@ -296,7 +289,6 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
     const propertyConfigParams: PropertyConfigParamsType['propertyConfigParams'] = {
       dataSource: configList,
       columns: getConfigColumns(),
-      bordered: true,
       rowSelection: rowSelection,
       setConfigList: setConfigList,
       selectedRows: selectedRows,

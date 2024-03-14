@@ -1,14 +1,16 @@
 import React, { useEffect, useState, memo } from 'react';
-import { Row, Col, Form, Card, Skeleton, Typography } from 'antd';
+import { Row, Col, Form, Card, Skeleton } from 'antd';
 import { history } from 'umi';
 import InstaceCard, { InstaceCardType } from './instance-card';
 import Section from '@/components/section';
 import { PlusOutlined } from '@ant-design/icons';
-import { GraphApiFactory, ServiceApiFactory, ServiceApi } from '@graphscope/studio-server';
-import { listGraphs, deleteGraph, startService, stopService } from './service';
+import { useContext } from '@/layouts/useContext';
+import { listGraphs } from './service';
 
 const InstanceCard: React.FC = () => {
   const [form] = Form.useForm();
+  const { store } = useContext();
+  const { mode } = store;
   const [state, updateState] = useState<{ isReady: boolean; instanceList: InstaceCardType[] }>({
     instanceList: [],
     isReady: false,
@@ -34,15 +36,7 @@ const InstanceCard: React.FC = () => {
   const handleCreate = () => {
     history.push('/instance/create');
   };
-  const handleDelete = async (name: string) => {
-    const isSuccess = await deleteGraph(name);
-    if (isSuccess) {
-      fetchLists();
-    }
-  };
-  const handleStart = async (name: string) => {
-    await startService(name);
-  };
+
   return (
     <Section
       breadcrumb={[
@@ -59,7 +53,7 @@ const InstanceCard: React.FC = () => {
       <Row gutter={[12, 12]}>
         {instanceList.map((item, i) => (
           <Col key={i} span={12}>
-            <InstaceCard {...item} handleDelete={handleDelete} handleStart={handleStart} />
+            <InstaceCard {...item} handleChange={() => fetchLists()} />
           </Col>
         ))}
         {!isReady && (
@@ -67,7 +61,7 @@ const InstanceCard: React.FC = () => {
             <Card
               headStyle={{ fontSize: '30px' }}
               title={<Skeleton.Button style={{ marginTop: '-10px', width: '120px' }} active />}
-              style={{ background: '#FCFCFC' }}
+              style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
             >
               <div style={{ display: 'flex', height: '164px', justifyContent: 'center', alignContent: 'center' }}>
                 <Skeleton active />
@@ -79,7 +73,7 @@ const InstanceCard: React.FC = () => {
           <Card
             title={'New Graph'}
             headStyle={{ fontSize: '30px', color: '#ccc' }}
-            style={{ background: '#FCFCFC' }}
+            style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
             bodyStyle={{ width: '100%' }}
           >
             <div

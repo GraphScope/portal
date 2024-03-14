@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import { Button, Flex, Row, Col, Space, Typography, theme, Tooltip } from 'antd';
 import { BindingEdge, BindingNode, useDataMap, updateDataMap } from '../useContext';
@@ -7,7 +8,7 @@ import ImportPeriodic from './import-periodic';
 import ImportNow from './import-now';
 import TableList from './table';
 import { getUrlParams } from '@/components/utils';
-import { useContext } from '../useContext';
+import { useContext } from '@/layouts/useContext';
 const { useToken } = theme;
 interface IImportDataProps {
   id: string;
@@ -30,7 +31,9 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const { engineType, graph } = getUrlParams();
+  const { store } = useContext();
 
+  const { mode } = store;
   /** 折叠面板 */
   const handleToggle = () => {
     updateDataMap(draft => {
@@ -72,7 +75,8 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       draft[id].delimiter = header?.delimiter;
     });
   };
-
+  /** 融合判断 是否编辑或主题 dark  */
+  const primaryColor = mode !== 'defaultAlgorithm' || isEidtProperty;
   return (
     <>
       <div>
@@ -80,7 +84,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
           style={{
             padding: '8px',
             borderTop: `1px solid ${token.colorBorder}`,
-            background: isEidtProperty ? 'none' : '#FCFCFC',
+            background: primaryColor ? 'none' : '#FCFCFC',
             borderRadius: '0px 0px 8px 8px',
           }}
         >
@@ -104,7 +108,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                 </Space>
               </Flex>
             </Space>
-            <Tooltip title={isBind ? '已绑定数据源' : '未绑定数据源'}>
+            <Tooltip title={isBind ? <FormattedMessage id="Bind source" /> : <FormattedMessage id="Unbound source" />}>
               <Button
                 type="text"
                 icon={<CheckCircleOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}

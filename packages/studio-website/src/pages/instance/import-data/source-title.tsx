@@ -1,10 +1,12 @@
 import React from 'react';
-import { Segmented, Flex, Button, theme } from 'antd';
+import { FormattedMessage } from 'react-intl';
+import { Segmented, Flex, Button, theme, notification, Typography } from 'antd';
 import { useContext, useDataMap, updateDataMap, BindingEdge, BindingNode } from './useContext';
 import { getUrlParams } from './utils';
 import { searchParamOf } from '@/components/utils';
 import TabAction from './tab-action';
-// import { createDataloadingJob } from './service';
+import { createDataloadingJob } from './service';
+import { history } from 'umi';
 import { transformDataMapToOptions, transformImportOptionsToSchemaMapping } from '@/components/utils/import';
 type ISourceTitleProps = {};
 
@@ -15,13 +17,27 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
   const engineType = searchParamOf('engineType');
   const graph_name = searchParamOf('graph_name') || '';
 
-  const handleImport = () => {
+  const handleImport = async () => {
     //@ts-ignore
     const options = transformDataMapToOptions(dataMap);
     const schema = transformImportOptionsToSchemaMapping(options);
     const params = submitParams(schema, graph_name);
-    // createDataloadingJob(params as any);
-    console.log('state', params, dataMap);
+    const jobId = await createDataloadingJob(params as any);
+    if (jobId) {
+      notification.success({
+        message: 'Create DataImport Job Success',
+        description: (
+          <>
+            Now navigate to the Job page to view the &nbsp;
+            <Typography.Link href={`/job#?jobId=${jobId}`}>details</Typography.Link>
+          </>
+        ),
+      });
+    } else {
+      notification.error({
+        message: 'Create DataImport Job Failed',
+      });
+    }
   };
   //@ts-ignore
   const { nodeBind, nodeCount, edgeBind, edgeCount } = count(dataMap);
@@ -38,14 +54,30 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
       <Flex gap="middle" justify="space-between">
         <TabAction
           items={[
-            { label: `Vertexs（${nodeBind}/${nodeCount}）`, value: 'node' },
-            { label: `Edges (${edgeBind}/${edgeCount})`, value: 'edge' },
+            {
+              label: (
+                <>
+                  <FormattedMessage id="Vertices" />
+                  {`(${nodeBind}/${nodeCount}）`}
+                </>
+              ),
+              value: 'node',
+            },
+            {
+              label: (
+                <>
+                  <FormattedMessage id="Edges" />
+                  {`(${edgeBind}/${edgeCount})`}
+                </>
+              ),
+              value: 'edge',
+            },
           ]}
           tabChange={handleChangeTabs}
         />
         {engineType !== 'groot' && (
           <Button type={isBind ? 'primary' : 'default'} onClick={handleImport} disabled={!isBind}>
-            Import Data
+            <FormattedMessage id="Import Data" />
           </Button>
         )}
       </Flex>
