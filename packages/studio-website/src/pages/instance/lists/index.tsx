@@ -17,8 +17,7 @@ const InstanceCard: React.FC = () => {
     isReady: false,
   });
   const { instanceList, isReady } = state;
-  const { store } = useContext();
-  const { mode } = store;
+
   useEffect(() => {
     fetchLists();
   }, []);
