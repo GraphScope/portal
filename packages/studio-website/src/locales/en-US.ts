@@ -124,7 +124,7 @@ export default {
   /** import data */
   Labels: 'Labels',
   Datasource: 'Datasource',
-  Vertexs: 'Vertexs',
+  Vertices: 'Vertices',
   Edges: 'Edges',
   'Import Data': 'Import Data',
   'Currently bound': 'Currently bound',
