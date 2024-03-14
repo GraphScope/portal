@@ -11,7 +11,7 @@ export default defineConfig({
     { path: '/query-app', component: 'query/app', layout: false },
     { path: '/job', component: 'job' },
     { path: '/extension', component: 'extension' },
-    { path: '/extension/:name', component: 'extension/plugins/create-plugins' },
+    { path: '/extension/:name', component: 'extension/create-plugins' },
     { path: '/alert', component: 'alert' },
     { path: '/deployment', component: 'deployment' },
   ],

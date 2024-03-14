@@ -5,7 +5,7 @@ import { history } from 'umi';
 import { searchParamOf } from '@/components/utils/index';
 import CodeMirror from '@uiw/react-codemirror';
 import UploadFiles from './upload-files';
-import { createProcedure, updateProcedure, listProceduresByGraph, listGraphs } from '../service';
+import { createProcedure, updateProcedure, listProceduresByGraph, listGraphs } from './service';
 
 type FieldType = {
   name: string;
