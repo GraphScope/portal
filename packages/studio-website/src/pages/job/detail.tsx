@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Breadcrumb } from 'antd';
 import CodeMirror from '@uiw/react-codemirror';
 import { FormattedMessage } from 'react-intl';
-import { getJobById } from '../service';
+import { getJobById } from './service';
 import { searchParamOf } from '@/components/utils';
 type IDetail = {};
 const Detail: React.FunctionComponent<IDetail> = props => {

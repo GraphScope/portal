@@ -12,7 +12,7 @@ import { history } from 'umi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 // import Action from './action';
-import { listJobs, IJobType, deleteJobById } from '../service';
+import { listJobs, IJobType, deleteJobById } from './service';
 import { getSearchParams } from '@/components/utils';
 import dayjs from 'dayjs';
 
@@ -56,11 +56,8 @@ const statusColor = [
   },
 ];
 
-interface IInfoListProps {
-  handleDetail(val: { isShow: boolean; log: string }): void;
-}
+interface IInfoListProps {}
 const JobsList: React.FunctionComponent<IInfoListProps> = props => {
-  const { handleDetail } = props;
   const [jobsList, setJobsList] = useState([]);
   const { path, searchParams } = getSearchParams(window.location);
   useEffect(() => {
@@ -116,9 +113,6 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
         <span
           style={{ cursor: 'pointer' }}
           onClick={() => {
-            // handleDetail({ isShow: true, log: all.log });
-            // searchParams.set('jobId', record);
-            // window.location.hash = `${path}?${searchParams.toString()}`;
             history.push(`/job/detail#?jobId=${record}`);
           }}
         >

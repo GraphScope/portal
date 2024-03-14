@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Popconfirm, Modal, Row, Col, Checkbox, message, Flex } from 'antd';
-import { deleteJobById, IJobType } from '../service';
+import { deleteJobById, IJobType } from './service';
 
 const Action: React.FunctionComponent<IJobType & { onChange(): void }> = props => {
   const { status, job_id, onChange } = props;
