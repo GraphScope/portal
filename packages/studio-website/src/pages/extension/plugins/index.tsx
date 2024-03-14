@@ -108,29 +108,7 @@ const Plugins: React.FC<IPluginsProps> = props => {
         <Skeleton />
       ) : (
         <Table
-          dataSource={[
-            {
-              name: 'string',
-              bound_graph: 'string',
-              description: 'string',
-              type: 'cpp',
-              query: 'string',
-              enable: true,
-              runnable: true,
-              params: [
-                {
-                  name: 'string',
-                  type: 'string',
-                },
-              ],
-              returns: [
-                {
-                  name: 'string',
-                  type: 'string',
-                },
-              ],
-            },
-          ]}
+          dataSource={pluginList}
           //@ts-ignores
           columns={columns}
           size="middle"
