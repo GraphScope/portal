@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import { Button, Flex, Row, Col, Space, Typography, theme, Tooltip } from 'antd';
 import { BindingEdge, BindingNode, useDataMap, updateDataMap } from '../useContext';
@@ -107,7 +108,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                 </Space>
               </Flex>
             </Space>
-            <Tooltip title={isBind ? '已绑定数据源' : '未绑定数据源'}>
+            <Tooltip title={isBind ? <FormattedMessage id="Bind source" /> : <FormattedMessage id="Unbound source" />}>
               <Button
                 type="text"
                 icon={<CheckCircleOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}

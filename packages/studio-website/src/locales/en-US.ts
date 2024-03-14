@@ -1,6 +1,6 @@
 export default {
   'navbar.graphs': 'Graphs',
-  'navbar.query': 'Query',
+  Query: 'Query',
   'navbar.jobs': 'Jobs',
   'navbar.extension': 'Extension',
   'navbar.alert': 'Alert',
@@ -119,4 +119,20 @@ export default {
   'Select or customize your UI theme': 'Select or customize your UI theme',
   'Rounded corners': 'Rounded corners',
   'Corner radians': 'Corner radians',
+  Light: 'Light',
+  Dark: 'Dark',
+  /** import data */
+  Labels: 'Labels',
+  Datasource: 'Datasource',
+  Vertices: 'Vertices',
+  Edges: 'Edges',
+  'Import Data': 'Import Data',
+  'Currently bound': 'Currently bound',
+  'Bind source': 'Bind source',
+  'Unbound source': 'Unbound source',
+  'Import Periodic': 'Import Periodic',
+  'Periodic Import From ODPS': 'Periodic Import From ODPS',
+  'Periodic Import From Dataworks': 'Periodic Import From Dataworks',
+  'Import Now': 'Import Now',
+  'importing, for more information, see Tasks': 'importing, for more information, see Tasks',
 };

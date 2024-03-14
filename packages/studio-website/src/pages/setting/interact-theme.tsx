@@ -12,14 +12,14 @@ const engines = [
     id: 'defaultAlgorithm',
     title: 'Light',
     avatar: 'https://gw.alipayobjects.com/zos/bmw-prod/ae669a89-0c65-46db-b14b-72d1c7dd46d6.svg',
-    desc: 'System preference',
+    desc: <FormattedMessage id="Lighttime theme" />,
     primaryBGgColor: '#f5f7f9',
   },
   {
     id: 'darkAlgorithm',
     title: 'Dark',
     avatar: 'https://gw.alipayobjects.com/zos/bmw-prod/0f93c777-5320-446b-9bb7-4d4b499f346d.svg',
-    desc: 'Nighttime theme ',
+    desc: <FormattedMessage id="Nighttime theme" />,
     primaryBGgColor: '#000',
   },
 ];

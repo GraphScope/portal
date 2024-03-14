@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Table, Tooltip, Tag, Flex, message, Button, Popconfirm } from 'antd';
+import { Table, Tag, Flex, message, Button, Popconfirm } from 'antd';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   ExclamationCircleOutlined,
   MinusCircleOutlined,
   SyncOutlined,
-  DeleteOutlined,
 } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDiagramProject, faFileArrowUp, faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 // import Action from './action';
 import { listJobs, IJobType, deleteJobById } from '../service';
+import { getSearchParams } from '@/components/utils';
+import dayjs from 'dayjs';
 
 /** 定义状态选项 */
 const STATUSOPTIONS = [
@@ -61,6 +61,7 @@ interface IInfoListProps {
 const JobsList: React.FunctionComponent<IInfoListProps> = props => {
   const { handleDetail } = props;
   const [jobsList, setJobsList] = useState([]);
+  const { path, searchParams } = getSearchParams(window.location);
   useEffect(() => {
     getJobList();
   }, []);
@@ -111,7 +112,14 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       dataIndex: 'job_id',
       key: 'job_id',
       render: (record: string, all: { log: string }) => (
-        <span style={{ cursor: 'pointer' }} onClick={() => handleDetail({ isShow: true, log: all.log })}>
+        <span
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            handleDetail({ isShow: true, log: all.log });
+            searchParams.set('jobId', record);
+            window.location.hash = `${path}?${searchParams.toString()}`;
+          }}
+        >
           {hangdleJobid(record)}
         </span>
       ),
@@ -154,11 +162,15 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       title: <FormattedMessage id="Start Time" />,
       key: 'start_time',
       dataIndex: 'start_time',
+      sorter: (a: { start_time: string }, b: { start_time: string }) =>
+        dayjs(a.start_time).valueOf() - dayjs(b.start_time).valueOf(),
     },
     {
       title: <FormattedMessage id="End Time" />,
       key: 'end_time',
       dataIndex: 'end_time',
+      sorter: (a: { end_time: string }, b: { end_time: string }) =>
+        dayjs(a.end_time).valueOf() - dayjs(b.end_time).valueOf(),
     },
     {
       title: <FormattedMessage id="Graph Name" />,
@@ -187,7 +199,7 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
   ];
 
   return (
-    <div style={{ height: '100%', overflow: 'hidden' }}>
+    <div style={{ marginTop: '-10px', height: '100%', overflow: 'hidden' }}>
       <Table
         dataSource={jobsList}
         //@ts-ignores

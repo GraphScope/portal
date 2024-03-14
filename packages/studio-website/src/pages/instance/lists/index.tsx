@@ -10,6 +10,8 @@ import { listGraphs, deleteGraph, startService, stopService } from './service';
 
 const InstanceCard: React.FC = () => {
   const [form] = Form.useForm();
+  const { store } = useContext();
+  const { mode } = store;
   const [state, updateState] = useState<{ isReady: boolean; instanceList: InstaceCardType[] }>({
     instanceList: [],
     isReady: false,

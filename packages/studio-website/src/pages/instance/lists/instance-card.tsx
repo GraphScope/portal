@@ -1,23 +1,17 @@
 import React from 'react';
-import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Tooltip } from 'antd';
+import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Popover } from 'antd';
 import type { MenuProps } from 'antd';
 import { history } from 'umi';
 import dayjs from 'dayjs';
 import { useContext } from '@/layouts/useContext';
-const { Text, Link } = Typography;
-import {
-  DeploymentUnitOutlined,
-  SearchOutlined,
-  MoreOutlined,
-  PlusOutlined,
-  PlayCircleOutlined,
-  DeleteOutlined,
-  StarOutlined,
-} from '@ant-design/icons';
+
+const { Text, Title, Paragraph } = Typography;
+import { MoreOutlined, StarOutlined } from '@ant-design/icons';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDiagramProject, faFileArrowUp, faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faPlayCircle, faTrashCan, faCircleQuestion } from '@fortawesome/free-regular-svg-icons';
-
+import { QuestionCircleOutlined } from '@ant-design/icons';
 export type InstaceCardType = {
   /** graph name */
   name: string;
@@ -91,7 +85,6 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
 
   const handleRestart = () => {};
   const onClick: MenuProps['onClick'] = ({ key }) => {
-    console.log('key', key, name);
     if (key === 'delete') {
       handleDelete(name);
     }
@@ -117,16 +110,37 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   }
   uptimeString += `${minutes}min`;
 
-  let Endpoints = '';
+  let Endpoints: React.ReactNode = (
+    <>
+      No available services. <br /> Please click the <FontAwesomeIcon icon={faPlayCircle} /> button to start the service
+    </>
+  );
   if (server) {
-    Endpoints = `Cypher: ${props.server}`;
+    Endpoints = (
+      <>
+        <Text>Cypher:</Text>
+        <Paragraph copyable style={{ display: 'inline-block', marginBottom: '6px' }}>
+          {props.server}
+        </Paragraph>
+      </>
+    );
   }
   if (hqps) {
-    Endpoints = Endpoints + `\n HQPS: ${hqps}`;
+    Endpoints = (
+      <>
+        {Endpoints} <br /> <Text>HQPS:</Text>
+        <Paragraph copyable style={{ display: 'inline-block' }}>
+          {hqps}
+        </Paragraph>
+      </>
+    );
   }
-  const Statistics = `
-  Graph Schema: ${schema.edge_types.length} types of Edges, ${schema.vertex_types.length} types of Vertices
-  `;
+  const Statistics = (
+    <>
+      {schema.edge_types.length} types of Edges <br /> {schema.vertex_types.length} types of Vertices
+    </>
+  );
+  console.log('!Endpoints', !Endpoints, Endpoints);
 
   return (
     <Card
@@ -161,12 +175,29 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
           </Space>
           <Space split={<Divider type="vertical" />} size={0}>
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }} disabled={!Endpoints}>
-              <Tooltip title={Endpoints}>
-                Endpoints <FontAwesomeIcon icon={faCircleQuestion} />
-              </Tooltip>
+              <Popover
+                title={
+                  <Title level={4} style={{ margin: '0px' }}>
+                    Endpoints
+                  </Title>
+                }
+                content={Endpoints}
+              >
+                Endpoints <QuestionCircleOutlined style={{ marginLeft: '4px' }} />
+              </Popover>
             </Typography.Text>
+
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }}>
-              <Tooltip title={Statistics}>Statistics</Tooltip>
+              <Popover
+                title={
+                  <Title level={4} style={{ margin: '0px' }}>
+                    Graph Schema
+                  </Title>
+                }
+                content={Statistics}
+              >
+                Statistics
+              </Popover>
             </Typography.Text>
             {/* <Typography.Text type="secondary">Logs</Typography.Text> */}
           </Space>

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Row, Col, Card, Typography, Skeleton, Space, Flex, Divider } from 'antd';
 import { useContext, updateDataMap, initialStore, initialDataMap, clearDataMap, clearStore } from './useContext';
 import GraphView from './graph-view';
@@ -68,18 +69,14 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       ]}
     >
       <Row gutter={24}>
-        <Col span={16}>
-          <SourceTitle />
-        </Col>
-        <Col span={8}>
-          <GraphTitle />
-        </Col>
+        <Col span={16}></Col>
+        <Col span={8}></Col>
       </Row>
-
-      <Divider style={{ margin: '0px 0px 16px' }} />
 
       <Row gutter={24}>
         <Col span={16}>
+          <SourceTitle />
+          <Divider style={{ margin: '0px 0px 16px' }} />
           {!isReady && <Skeleton />}
           {/* 遍历需要绑定的数据源 */}
           <div
@@ -91,10 +88,10 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
             <header style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : 'none', borderRadius: '8px' }}>
               <Space size={29}>
                 <Title level={5} type="secondary" style={{ margin: '16px 32px 16px 48px' }}>
-                  Labels
+                  <FormattedMessage id="Labels" />
                 </Title>
                 <Title level={5} type="secondary" style={{ margin: '16px 0px' }}>
-                  Datasource
+                  <FormattedMessage id="Datasource" />
                 </Title>
               </Space>
             </header>
@@ -109,9 +106,11 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           </div>
         </Col>
         <Col span={8}>
-          <Card>
+          <Card title="Preview" extra={<GraphTitle />}>
             <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
-              目前绑定了{bindEdgeCount} 条边，{bindNodeCount}个点
+              <FormattedMessage id="Currently bound" />
+              {bindEdgeCount} <FormattedMessage id="Edges" />，{bindNodeCount}
+              <FormattedMessage id="Vertices" />
             </Text>
             {!isReady && <Skeleton />}
             <GraphView

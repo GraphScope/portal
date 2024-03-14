@@ -24,7 +24,7 @@ export type IStore<T> = T & {
   /** graph name */
   graphName: string;
   // nav collapse
-  collapse: boolean;
+  collapse: boolean | undefined;
   // active navbar
   activeNavbar: 'saved' | 'info' | 'gpt' | 'store_procedure' | 'recommended';
   /** 单击选中的语句,如果是 fLow 模式，则滚动定位到这条语句 ，如果是 Tabs 模式，则直接展示*/
@@ -139,4 +139,7 @@ export interface IStudioQueryProps {
   enableAbsolutePosition?: boolean;
   /**  启用立刻查询 */
   enableImmediateQuery: boolean;
+  /** 启动折叠侧边栏 */
+  enableCollapseSidebar?: boolean;
+  logo?: React.ReactNode;
 }

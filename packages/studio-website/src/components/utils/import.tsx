@@ -68,6 +68,7 @@ export function transformMappingSchemaToImportOptions(
   const { type, metadata } = loading_config?.format || { type: 'csv' };
   const label_mappings: Record<string, VertexMapping | EdgeMapping> = {};
   /** 先将后端数据或者yaml返回的mapping数据做一次Map存储，方便与后续的schema整合取数 */
+
   vertex_mappings.forEach(item => {
     const { column_mappings, type_name } = item;
     label_mappings[type_name] = {
