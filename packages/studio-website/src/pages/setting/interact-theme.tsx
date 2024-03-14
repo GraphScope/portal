@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Flex, Typography, Row, Col } from 'antd';
 import { useContext } from '@/layouts/useContext';
 import SelectCards from '@/components/select-cards';
-import dark from './img/dark.jpg';
 import { FormattedMessage } from 'react-intl';
+import localStorage from '@/components/utils/localStorage';
 interface IInteractThemeProps {}
 const { Title, Text } = Typography;
 
@@ -26,9 +26,12 @@ const engines = [
 const InteractTheme: React.FunctionComponent<IInteractThemeProps> = props => {
   const { store, updateStore } = useContext();
   const { mode } = store;
+  const { setItem, getItem } = localStorage;
   const changeEngineType = (item: any) => {
+    setItem('themeColor', item.id);
+    const themeColor = getItem('themeColor');
     updateStore(draft => {
-      draft.mode = item.id;
+      draft.mode = themeColor;
     });
   };
   return (

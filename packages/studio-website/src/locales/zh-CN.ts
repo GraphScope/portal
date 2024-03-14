@@ -124,7 +124,7 @@ export default {
   /** import data */
   Labels: '标签',
   Datasource: '数据源',
-  Vertexs: '节点',
+  Vertices: '节点',
   Edges: '边',
   'Import Data': '导入数据',
   'Currently bound': '目前绑定了',

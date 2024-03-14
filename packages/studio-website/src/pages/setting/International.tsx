@@ -3,11 +3,21 @@ import { FormattedMessage } from 'react-intl';
 import { Flex, Row, Col, Typography } from 'antd';
 import { useContext } from '@/layouts/useContext';
 import LocaleSwitch from '@/components/locale-switch';
+import localStorage from '@/components/utils/localStorage';
+
 const { Title, Text } = Typography;
 type IInternationalProps = {};
 const International: React.FunctionComponent<IInternationalProps> = props => {
   const { store, updateStore } = useContext();
   const { locale } = store;
+  const { setItem, getItem } = localStorage;
+  const handleLocale = (value: string) => {
+    setItem('locale', value);
+    const locale = getItem('locale');
+    updateStore(draft => {
+      draft.locale = locale;
+    });
+  };
   return (
     <Row>
       <Col span={8}>
@@ -21,14 +31,7 @@ const International: React.FunctionComponent<IInternationalProps> = props => {
         </Flex>
       </Col>
       <Col span={8}>
-        <LocaleSwitch
-          value={locale}
-          onChange={value => {
-            updateStore(draft => {
-              draft.locale = value;
-            });
-          }}
-        ></LocaleSwitch>
+        <LocaleSwitch value={locale} onChange={value => handleLocale(value)}></LocaleSwitch>
       </Col>
     </Row>
   );

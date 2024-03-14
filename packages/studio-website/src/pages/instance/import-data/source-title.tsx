@@ -57,7 +57,7 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
             {
               label: (
                 <>
-                  <FormattedMessage id="Vertexs" />
+                  <FormattedMessage id="Vertices" />
                   {`(${nodeBind}/${nodeCount}）`}
                 </>
               ),

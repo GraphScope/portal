@@ -99,7 +99,6 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
       <Col span={16}>
         <div
           style={{
-            backgroundColor: '#fff',
             marginRight: '12px',
             overflow: 'hidden',
           }}
