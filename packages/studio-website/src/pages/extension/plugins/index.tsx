@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Space, Skeleton, Popconfirm, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
+import { history } from 'umi';
 import { listProcedures, deleteProcedure } from '../service';
 import { getSearchParams } from '@/pages/utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,11 +13,8 @@ export interface Item {
   bound_graph: string;
 }
 
-type IPluginsProps = {
-  handelChange(val: boolean): void;
-};
+type IPluginsProps = {};
 const Plugins: React.FC<IPluginsProps> = props => {
-  const { handelChange } = props;
   const { path, searchParams } = getSearchParams(window.location);
   const [state, updateState] = useState<{
     /** 插件列表数据 */
@@ -66,16 +64,13 @@ const Plugins: React.FC<IPluginsProps> = props => {
         const { bound_graph } = all;
         return (
           <Space>
-            <Button type="primary" ghost size="small">
-              立即查看
-            </Button>
             <Button
               size="small"
               type="primary"
               onClick={() => {
-                handelChange(true);
-                searchParams.set('bound_graph', bound_graph);
-                window.location.hash = `${path}?${searchParams.toString()}`;
+                searchParams.set('graph_name', bound_graph);
+                // window.location.hash = `${path}?${searchParams.toString()}`;
+                history.push(`/extension/edit?${searchParams.toString()}`);
               }}
             >
               <FontAwesomeIcon icon={faPenToSquare} />
@@ -107,7 +102,9 @@ const Plugins: React.FC<IPluginsProps> = props => {
       <Button
         style={{ position: 'absolute', top: '-55px', right: '0px' }}
         type="primary"
-        onClick={() => handelChange(true)}
+        onClick={() => {
+          history.push('/extension/create');
+        }}
       >
         <FormattedMessage id="Create Plugin" />
       </Button>
@@ -115,7 +112,29 @@ const Plugins: React.FC<IPluginsProps> = props => {
         <Skeleton />
       ) : (
         <Table
-          dataSource={pluginList}
+          dataSource={[
+            {
+              name: 'string',
+              bound_graph: 'string',
+              description: 'string',
+              type: 'cpp',
+              query: 'string',
+              enable: true,
+              runnable: true,
+              params: [
+                {
+                  name: 'string',
+                  type: 'string',
+                },
+              ],
+              returns: [
+                {
+                  name: 'string',
+                  type: 'string',
+                },
+              ],
+            },
+          ]}
           //@ts-ignores
           columns={columns}
           size="middle"

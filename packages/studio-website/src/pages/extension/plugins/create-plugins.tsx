@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Select, Alert, Flex, Breadcrumb } from 'antd';
+import { Button, Form, Input, Select, Flex, Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
+import { history } from 'umi';
 import CodeMirror from '@uiw/react-codemirror';
 import UploadFiles from './upload-files';
 import { createProcedure, updateProcedure, listProceduresByGraph, listGraphs } from '../service';
-import { getSearchParams } from '@/pages/utils';
 
 type FieldType = {
   name: string;
@@ -15,14 +15,11 @@ type FieldType = {
 };
 const TYPEOPTION = [{ label: 'CPP', value: 'cpp' }];
 
-type ICreateRecepProps = {
-  handelChange(val: boolean): void;
-};
+type ICreateRecepProps = {};
 const CreatePlugins: React.FC<ICreateRecepProps> = props => {
-  const { handelChange } = props;
   const [form] = Form.useForm();
-  const { path, searchParams } = getSearchParams(window.location);
-  const edit = searchParams.get('bound_graph') || '';
+  const getSearchParams = new URLSearchParams(window.location.href.split('?')[1]);
+  const graph_name = getSearchParams.get('graph_name');
   const [state, updateState] = useState<{
     editCode: string;
     instanceOption: { label: string; value: string }[];
@@ -42,10 +39,12 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
         };
       });
     });
-    edit && getlistProceduresByGraph(edit);
+    graph_name && getlistProceduresByGraph(graph_name);
   }, []);
   const getlistProceduresByGraph = async (bound_graph: string) => {
     const res = await listProceduresByGraph(bound_graph);
+    console.log(res);
+
     const { query } = res;
     form.setFieldsValue(res);
     updateState(preset => {
@@ -55,6 +54,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
       };
     });
   };
+
   /** 创建插件 */
   const onFinish = async () => {
     const { name, bound_graph, type } = form.getFieldsValue();
@@ -79,13 +79,14 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
         },
       ],
     };
-    /** 修改插件 */
-    if (edit === 'extension') {
+    if (graph_name) {
+      /** 修改插件 */
       await updateProcedure(bound_graph, name, data);
     } else {
+      /** 新建插件 */
       await createProcedure(name, data);
     }
-    handelChange(false);
+    history.push('/extension');
   };
   /** 获取editcode */
   const handleCodeMirror = (val: string) => {
@@ -103,7 +104,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
           items={[
             {
               title: (
-                <a href="/extension" onClick={() => handelChange(false)}>
+                <a href="/extension">
                   <FormattedMessage id="Extensions" />
                 </a>
               ),
@@ -112,14 +113,6 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
               title: <FormattedMessage id="Create Plugin" />,
             },
           ]}
-        />
-        <Alert
-          message={
-            <FormattedMessage id="If you already have an algorithm plugin file, you can upload it here, which will help you quickly create a plugin." />
-          }
-          type="info"
-          showIcon
-          closable
         />
         <UploadFiles
           handleChange={val => {
@@ -132,7 +125,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
             });
           }}
         />
-        <Form name="basic" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }} form={form}>
+        <Form name="basic" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }} form={form} onFinish={() => onFinish()}>
           <Form.Item<FieldType>
             style={{ marginBottom: '12px' }}
             label={<FormattedMessage id="Name" />}
@@ -168,7 +161,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
             </div>
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" onClick={() => onFinish()}>
+            <Button type="primary" htmlType="submit">
               <FormattedMessage id="Create Plugin" />
             </Button>
           </Form.Item>
