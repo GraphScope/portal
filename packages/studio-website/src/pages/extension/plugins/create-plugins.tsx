@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Select, Flex, Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { history } from 'umi';
+import { searchParamOf } from '@/components/utils/index';
 import CodeMirror from '@uiw/react-codemirror';
 import UploadFiles from './upload-files';
 import { createProcedure, updateProcedure, listProceduresByGraph, listGraphs } from '../service';
@@ -18,8 +19,9 @@ const TYPEOPTION = [{ label: 'CPP', value: 'cpp' }];
 type ICreateRecepProps = {};
 const CreatePlugins: React.FC<ICreateRecepProps> = props => {
   const [form] = Form.useForm();
-  const getSearchParams = new URLSearchParams(window.location.href.split('?')[1]);
-  const graph_name = getSearchParams.get('graph_name');
+  const graph_name = searchParamOf('graph_name') || '';
+  console.log(graph_name);
+
   const [state, updateState] = useState<{
     editCode: string;
     instanceOption: { label: string; value: string }[];

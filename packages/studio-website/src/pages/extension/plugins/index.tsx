@@ -3,7 +3,6 @@ import { Table, Button, Space, Skeleton, Popconfirm, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { history } from 'umi';
 import { listProcedures, deleteProcedure } from '../service';
-import { getSearchParams } from '@/pages/utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 export interface Item {
@@ -15,7 +14,6 @@ export interface Item {
 
 type IPluginsProps = {};
 const Plugins: React.FC<IPluginsProps> = props => {
-  const { path, searchParams } = getSearchParams(window.location);
   const [state, updateState] = useState<{
     /** 插件列表数据 */
     pluginList: Item[];
@@ -68,9 +66,7 @@ const Plugins: React.FC<IPluginsProps> = props => {
               size="small"
               type="primary"
               onClick={() => {
-                searchParams.set('graph_name', bound_graph);
-                // window.location.hash = `${path}?${searchParams.toString()}`;
-                history.push(`/extension/edit?${searchParams.toString()}`);
+                history.push(`/extension/edit#?graph_name=${bound_graph}`);
               }}
             >
               <FontAwesomeIcon icon={faPenToSquare} />
