@@ -28,7 +28,7 @@
     "dayjs": "^1.11.10",
     "@antv/graphin": "latest",
     "valtio": "^1.12.1",
-    "@graphscope/_test_gremlin_": "0.1.0",
+    "@graphscope/_test_gremlin_": "^0.1.2",
     "neo4j-driver": "^5.12.0",
     "@difizen/cofine-editor-core": "^0.0.1-alpha.6",
     "@difizen/cofine-language-cypher": "^0.0.1-alpha.6"
