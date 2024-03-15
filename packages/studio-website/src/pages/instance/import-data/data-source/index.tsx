@@ -27,7 +27,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const dataMap = useDataMap();
 
   const data = dataMap[id] as BindingNode & { isEidtProperty: boolean };
-  const { isBind, filelocation, isEidtProperty, datatype, label, properties, dataFields } = data;
+  const { isBind, filelocation, isEidtProperty, isEidtInput, datatype, label, properties, dataFields } = data;
   const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const { engineType, graph } = getUrlParams();
@@ -59,6 +59,13 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     updateDataMap(draft => {
       //@ts-ignore
       draft[id].isEidtProperty = true;
+      draft[id].isEidtInput = true;
+    });
+  };
+  /** 失去焦点的时候禁止编辑 */
+  const onBlur = (e: { target: { value: string } }) => {
+    updateDataMap(draft => {
+      draft[id].isEidtInput = false;
     });
   };
   /** 改变表格映射字段 */
@@ -73,7 +80,12 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       draft[id].delimiter = header?.delimiter;
     });
   };
-
+  /** 是否允许输入 */
+  const handleIsEdit = (val: boolean) => {
+    updateDataMap(draft => {
+      draft[id].isEidtInput = val;
+    });
+  };
   return (
     <>
       <div>
@@ -97,10 +109,13 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                   <SwitchSource
                     filelocation={filelocation}
                     currentType={datatype}
+                    isEidtInput={isEidtInput}
                     onChangeType={onChangeType}
                     onChangeValue={onChangeValue}
                     onFocus={onFocus}
+                    onBlur={onBlur}
                     onChangeDataFields={onChangeDataFields}
+                    handleIsEdit={handleIsEdit}
                   />
                 </Space>
               </Flex>

@@ -10,6 +10,7 @@ export interface Extra {
   isBind: boolean;
   dataFields?: string[];
   delimiter?: string;
+  isEidtInput?: boolean;
 }
 export type BindingNode = TransformedNode & Extra;
 export type BindingEdge = TransformedEdge & Extra;
