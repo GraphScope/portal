@@ -76,34 +76,34 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       <Row gutter={24}>
         <Col span={16}>
           <SourceTitle />
-          <Divider style={{ margin: '0px 0px 16px' }} />
-          {!isReady && <Skeleton />}
-          {/* 遍历需要绑定的数据源 */}
-          <div
-            style={{
-              border: mode === 'defaultAlgorithm' ? '1px solid #F0F0F0' : '1px solid #303030',
-              borderRadius: '8px',
-            }}
+          <Card
+            styles={{ body: { padding: '1px' } }}
+            title={<SourceTitle type="title" />}
+            extra={<SourceTitle type="import" />}
           >
-            <header style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : 'none', borderRadius: '8px' }}>
-              <Space size={29}>
-                <Title level={5} type="secondary" style={{ margin: '16px 32px 16px 48px' }}>
-                  <FormattedMessage id="Labels" />
-                </Title>
-                <Title level={5} type="secondary" style={{ margin: '16px 0px' }}>
-                  <FormattedMessage id="Datasource" />
-                </Title>
-              </Space>
-            </header>
-            {currentType === 'node' &&
-              nodes.map(item => {
-                return <DataSource id={item.key as string} />;
-              })}
-            {currentType === 'edge' &&
-              edges.map(item => {
-                return <DataSource id={item.key as string} />;
-              })}
-          </div>
+            {!isReady && <Skeleton />}
+            {/* 遍历需要绑定的数据源 */}
+            <div>
+              <header style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : 'none' }}>
+                <Space size={29}>
+                  <Title level={5} type="secondary" style={{ margin: '16px 32px 16px 48px' }}>
+                    <FormattedMessage id="Labels" />
+                  </Title>
+                  <Title level={5} type="secondary" style={{ margin: '16px 0px' }}>
+                    <FormattedMessage id="Datasource" />
+                  </Title>
+                </Space>
+              </header>
+              {currentType === 'node' &&
+                nodes.map(item => {
+                  return <DataSource id={item.key as string} />;
+                })}
+              {currentType === 'edge' &&
+                edges.map(item => {
+                  return <DataSource id={item.key as string} />;
+                })}
+            </div>
+          </Card>
         </Col>
         <Col span={8}>
           <Card title="Preview" extra={<GraphTitle />}>
