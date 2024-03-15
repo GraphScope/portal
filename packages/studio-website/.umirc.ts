@@ -16,10 +16,13 @@ export default defineConfig({
     { path: '/alert', component: 'alert' },
     { path: '/deployment', component: 'deployment' },
   ],
+
+  chainWebpack(memo) {},
   npmClient: 'pnpm',
   monorepoRedirect: {},
   externals: {
     '@antv/g2': 'G2',
+    '@graphscope/_test_gremlin_': 'GS_GREMLIN',
     // react: 'React', 'react-dom': 'ReactDOM'
   },
   proxy: {
