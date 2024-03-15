@@ -19,13 +19,14 @@ const getVertexEdges = (nodeList: NodeSchema[], edgeList: EdgeSchema[], token: a
       style: {
         label: {
           value: label,
+          position: 'center',
         },
         fontSize: 14,
         keyshape: {
           size: 50,
-          stroke: token.colorPrimary,
+          stroke: '#000',
           fillOpacity: 1,
-          fill: token.colorPrimary,
+          fill: '#fff',
         },
       },
     };
@@ -42,7 +43,7 @@ const getVertexEdges = (nodeList: NodeSchema[], edgeList: EdgeSchema[], token: a
         style: {
           label: {
             value: label,
-            fill: token.colorPrimary,
+            fill: '#000',
             offset: [0, 0],
           },
         },
