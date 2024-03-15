@@ -17,7 +17,7 @@ args.forEach(arg => {
 
 const WORKSPACE = path.dirname(__dirname);
 
-const { port = 8888, proxy = 'http://127.0.0.1:8080' } = params;
+const { port = 8888, proxy = 'http://127.0.0.1:8080', cypher_endpoint, gremlin_endpoint } = params;
 
 // static
 app.use(express.static(WORKSPACE + '/dist'));
@@ -29,6 +29,13 @@ app.use(
     changeOrigin: true,
   }),
 );
+
+app.get('/query_endpoint', (req, res) => {
+  res.send({
+    success: true,
+    data: { cypher_endpoint, gremlin_endpoint },
+  });
+});
 
 // 对于其他路由，返回 React 应用的入口文件
 app.get('*', (req, res) => {
