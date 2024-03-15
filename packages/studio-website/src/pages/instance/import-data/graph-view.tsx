@@ -23,8 +23,7 @@ const getVertexEdges = (source: any, token: any) => {
       style: {
         label: {
           value: `${label} ${isBind ? '✅' : '☑️'}`,
-          position: 'center',
-          offset: [8, 5],
+          fill: token.colorPrimary,
         },
         fontSize: 14,
         keyshape: {
