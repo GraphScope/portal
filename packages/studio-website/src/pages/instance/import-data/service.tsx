@@ -40,7 +40,9 @@ export const getDataloadingConfig = async (graph_name: string, schema: any) => {
   const schemaMapping = await JobApiFactory(undefined, location.origin)
     .getDataloadingConfig(graph_name!)
     .then(res => res.data)
-    .catch(error => {});
+    .catch(error => {
+      return {};
+    });
 
   if (JSON.stringify(schemaMapping) === '{}') {
     //@ts-ignore

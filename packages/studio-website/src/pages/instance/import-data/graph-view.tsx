@@ -4,6 +4,7 @@ import '@antv/graphin-icons/dist/index.css';
 import { theme } from 'antd';
 import { BindingEdge, BindingNode } from './useContext';
 import { useDataMap, transformDataMap } from './useContext';
+import { useContext } from '@/layouts/useContext';
 const { useToken } = theme;
 interface Props {
   children?: ReactNode;
@@ -67,6 +68,8 @@ const getVertexEdges = (source: any, token: any) => {
 // 改名为 graphview
 const GraphInsight: FunctionComponent<Props> = props => {
   const { children, viewdata } = props;
+  const { store } = useContext();
+  const { mode } = store;
   const { token } = useToken();
   //@ts-ignore
   const source = transformDataMap(useDataMap());
@@ -77,7 +80,13 @@ const GraphInsight: FunctionComponent<Props> = props => {
     <>
       {children}
       {/** @ts-ignore */}
-      <Graphin data={graphData} layout={{ type: 'force2' }} fitCenter style={{ paddingBottom: '3px' }} />
+      <Graphin
+        theme={{ mode: mode === 'defaultAlgorithm' ? 'light' : 'dark' }}
+        data={graphData}
+        layout={{ type: 'force2' }}
+        fitCenter
+        style={{ paddingBottom: '3px' }}
+      />
     </>
   );
 };

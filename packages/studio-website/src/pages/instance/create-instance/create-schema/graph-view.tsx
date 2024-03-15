@@ -1,6 +1,7 @@
 import { useEffect, memo, FunctionComponent } from 'react';
 import Graphin, { Utils } from '@antv/graphin';
 import { useContext, NodeSchema, EdgeSchema } from '../useContext';
+import { useContext as useMode } from '@/layouts/useContext';
 import { theme, Image } from 'antd';
 const { useToken } = theme;
 interface Props {
@@ -71,6 +72,10 @@ const GraphView: FunctionComponent<Props> = props => {
   const { token } = useToken();
   const { store } = useContext();
   const { nodeList, edgeList } = store;
+  /** 主题背景 */
+  const {
+    store: { mode },
+  } = useMode();
   //@ts-ignore
   const graphData = getVertexEdges(nodeList, edgeList, token);
 
@@ -84,7 +89,13 @@ const GraphView: FunctionComponent<Props> = props => {
           src="https://img.alicdn.com/imgextra/i3/O1CN01ioBjPd24ALzvMY66U_!!6000000007350-55-tps-915-866.svg"
         />
       ) : (
-        <Graphin data={graphData} layout={{ type: 'circular' }} fitCenter style={{ paddingBottom: '3px' }} />
+        <Graphin
+          theme={{ mode: mode === 'defaultAlgorithm' ? 'light' : 'dark' }}
+          data={graphData}
+          layout={{ type: 'circular' }}
+          fitCenter
+          style={{ paddingBottom: '3px' }}
+        />
       )}
     </>
   );

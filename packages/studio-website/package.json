@@ -3,11 +3,15 @@
   "name": "@graphscope/studio-site",
   "author": "pomelo-nwu <czynwu@outlook.com>",
   "scripts": {
-    "dev": "umi dev",
-    "build": "umi build",
     "postinstall": "umi setup",
     "setup": "umi setup",
-    "start": "npm run dev"
+    "start": "umi dev --engineType=interactive",
+    "start:interactive": "umi dev --engineType=interactive",
+    "start:groot": "umi dev --engineType=groot",
+    "build": "umi build --engineType=interactive",
+    "build:interactive": "umi build  --engineType=interactive",
+    "build:groot": "umi build --engineType=groot",
+    "lint": "umi lint"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",
@@ -30,6 +34,8 @@
     "@fortawesome/free-regular-svg-icons": "latest"
   },
   "devDependencies": {
+    "eslint": "latest",
+    "@umijs/lint": "latest",
     "@types/js-yaml": "^4.0.9",
     "@types/lodash": "^4.14.202",
     "@types/react": "^18.2.45",

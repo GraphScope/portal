@@ -1,16 +1,7 @@
 import React, { useState } from 'react';
-import {
-  DesktopOutlined,
-  FileSearchOutlined,
-  DashboardOutlined,
-  OrderedListOutlined,
-  AppstoreAddOutlined,
-  SettingFilled,
-  LayoutOutlined,
-} from '@ant-design/icons';
+import { SettingFilled, GithubOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Menu, Divider, ColorPicker, Space } from 'antd';
-import styles from './styles';
+import { Menu, Flex, Button, theme } from 'antd';
 import { history, useLocation } from 'umi';
 import { FormattedMessage } from 'react-intl';
 
@@ -18,6 +9,8 @@ import { useContext } from './useContext';
 import Logo from '@/components/logo';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins, faMagnifyingGlass, faListCheck, faBell, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
+
+const { useToken } = theme;
 interface ISidebarProps {}
 
 const items: MenuProps['items'] = [
@@ -38,17 +31,23 @@ const items: MenuProps['items'] = [
   },
 ];
 
+const AlertModule =
+  window.GS_ENGINE_TYPE === 'groot'
+    ? [
+        {
+          label: <FormattedMessage id="navbar.alert" />,
+          key: '/alert',
+          icon: <FontAwesomeIcon icon={faBell} />,
+        },
+      ]
+    : [];
 const otherItems: MenuProps['items'] = [
   {
     label: <FormattedMessage id="navbar.jobs" />,
     key: '/job',
     icon: <FontAwesomeIcon icon={faListCheck} />,
   },
-  {
-    label: <FormattedMessage id="navbar.alert" />,
-    key: '/alert',
-    icon: <FontAwesomeIcon icon={faBell} />,
-  },
+  ...AlertModule,
   {
     label: <FormattedMessage id="navbar.extension" />,
     key: '/extension',
@@ -57,15 +56,15 @@ const otherItems: MenuProps['items'] = [
 ];
 
 const settingMenu: MenuProps['items'] = [
+  // {
+  //   label: <FormattedMessage id="collasped sidebar" />,
+  //   key: '/layout',
+  //   icon: <LayoutOutlined />,
+  // },
   {
     label: <FormattedMessage id="navbar.setting" />,
     key: '/setting',
     icon: <SettingFilled />,
-  },
-  {
-    label: <FormattedMessage id="collasped sidebar" />,
-    key: '/layout',
-    icon: <LayoutOutlined />,
   },
 ];
 
@@ -73,10 +72,14 @@ let currentPath = window.location.pathname;
 export const SideWidth = 150;
 const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
   const location = useLocation();
-  console.log('location', location.pathname);
+  let defaultPath = '/' + location.pathname.split('/')[1];
+  if (defaultPath === '/') {
+    defaultPath = '/instance';
+  }
+  const { token } = useToken();
   const { store, updateStore } = useContext();
-  const { locale, primaryColor, collapse } = store;
-  const [current, setCurrent] = useState(location.pathname);
+  const { collapse } = store;
+  const [current, setCurrent] = useState(defaultPath);
 
   const onClick: MenuProps['onClick'] = e => {
     if (e.key === '/layout') {
@@ -87,6 +90,9 @@ const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
     }
     setCurrent(e.key);
     history.push(`${e.key}`);
+  };
+  const iconStyle = {
+    color: token.colorBgTextActive,
   };
 
   return (
@@ -115,7 +121,7 @@ const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
           style={{ borderInlineEnd: 'none' }}
         />
 
-        <div style={{}}>
+        <div style={{ marginBottom: '16px' }}>
           <Menu
             inlineCollapsed={collapse}
             onClick={onClick}
@@ -125,6 +131,11 @@ const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
             mode="vertical"
             style={{ borderInlineEnd: 'none' }}
           />
+          <Flex gap={12} style={{ padding: '0px 12px' }}>
+            <Button icon={<GithubOutlined style={iconStyle} />} type="text"></Button>
+            <Button icon={<GithubOutlined style={iconStyle} />} type="text"></Button>
+            <Button icon={<GithubOutlined style={iconStyle} />} type="text"></Button>
+          </Flex>
         </div>
       </div>
     </div>

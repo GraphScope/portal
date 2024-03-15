@@ -1,5 +1,14 @@
 import { IApi } from 'umi';
 
+const args = process.argv.slice(2);
+
+// 解析参数
+const params: Record<string, any> = {};
+args.forEach(arg => {
+  const [key, value] = arg.split('=');
+  //@ts-ignore
+  params[key.slice(2)] = value;
+});
 export default (api: IApi) => {
   api.modifyHTML($ => {
     $('head').append([
@@ -9,6 +18,9 @@ export default (api: IApi) => {
         height:100vh
        }
       </style>
+      <script>
+       window.GS_ENGINE_TYPE="${params.engineType}";
+      </script>
       `,
     ]);
     return $;

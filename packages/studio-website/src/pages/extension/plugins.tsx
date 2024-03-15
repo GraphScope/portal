@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Space, Skeleton, Popconfirm, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { listProcedures, deleteProcedure } from '../service';
-import { getSearchParams } from '@/pages/utils';
+import { history } from 'umi';
+import { listProcedures, deleteProcedure } from './service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 export interface Item {
@@ -12,12 +12,8 @@ export interface Item {
   bound_graph: string;
 }
 
-type IPluginsProps = {
-  handelChange(val: boolean): void;
-};
+type IPluginsProps = {};
 const Plugins: React.FC<IPluginsProps> = props => {
-  const { handelChange } = props;
-  const { path, searchParams } = getSearchParams(window.location);
   const [state, updateState] = useState<{
     /** 插件列表数据 */
     pluginList: Item[];
@@ -62,23 +58,16 @@ const Plugins: React.FC<IPluginsProps> = props => {
     {
       title: <FormattedMessage id="Action" />,
       key: 'actions',
+      width: 60,
       render: (_: any, all: Item) => {
         const { bound_graph } = all;
         return (
           <Space>
-            <Button size="small" type="primary" ghost>
-              Notebook
-            </Button>
-            <Button type="primary" ghost size="small">
-              立即查看
-            </Button>
             <Button
               size="small"
-              type="primary"
+              type="text"
               onClick={() => {
-                handelChange(true);
-                searchParams.set('bound_graph', bound_graph);
-                window.location.hash = `${path}?${searchParams.toString()}`;
+                history.push(`/extension/edit#?graph_name=${bound_graph}`);
               }}
             >
               <FontAwesomeIcon icon={faPenToSquare} />
@@ -90,7 +79,7 @@ const Plugins: React.FC<IPluginsProps> = props => {
               okText={<FormattedMessage id="Yes" />}
               cancelText={<FormattedMessage id="No" />}
             >
-              <Button size="small" danger ghost>
+              <Button type="text" size="small" danger ghost>
                 <FontAwesomeIcon icon={faTrashCan} />
               </Button>
             </Popconfirm>
@@ -110,7 +99,9 @@ const Plugins: React.FC<IPluginsProps> = props => {
       <Button
         style={{ position: 'absolute', top: '-55px', right: '0px' }}
         type="primary"
-        onClick={() => handelChange(true)}
+        onClick={() => {
+          history.push('/extension/create');
+        }}
       >
         <FormattedMessage id="Create Plugin" />
       </Button>

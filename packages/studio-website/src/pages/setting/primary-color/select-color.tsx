@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Space, theme } from 'antd';
 const { useToken } = theme;
 import { useContext } from '@/layouts/useContext';
+import localStorage from '@/components/utils/localStorage';
 export type ISelectColorProps = {
   color: string;
 };
@@ -31,8 +32,16 @@ const SelectColor: React.FunctionComponent<ISelectColorProps> = props => {
   const { color } = props;
   const { token } = useToken();
   const { updateStore } = useContext();
-
+  const { setItem, getItem } = localStorage;
   const activeStyle = `2px solid blue`;
+  /** 修改主题颜色 */
+  const handlePrimaryColor = (item: string) => {
+    setItem('primaryColor', item);
+    const primaryColor = getItem('primaryColor');
+    updateStore(draft => {
+      draft.primaryColor = primaryColor;
+    });
+  };
   return (
     <Space style={{ marginLeft: '16px' }}>
       {colors.map(item => {
@@ -41,9 +50,7 @@ const SelectColor: React.FunctionComponent<ISelectColorProps> = props => {
           <span
             key={item}
             onClick={() => {
-              updateStore(draft => {
-                draft.primaryColor = item;
-              });
+              handlePrimaryColor(item);
             }}
             style={{
               ...styles.color,
