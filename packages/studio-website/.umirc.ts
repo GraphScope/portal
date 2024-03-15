@@ -22,18 +22,22 @@ export default defineConfig({
   monorepoRedirect: {},
   externals: {
     '@antv/g2': 'G2',
-    '@graphscope/_test_gremlin_': 'GS_GREMLIN',
+    'node:os': 'commonjs2 node:os',
+    // '@graphscope/_test_gremlin_': 'GS_GREMLIN',
     // react: 'React', 'react-dom': 'ReactDOM'
   },
+
   proxy: {
     '/api': {
       target:
-        // 'http://47.242.172.5:8080',
-        // 'https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/0.9.1',
-        'http://54.157.222.57',
+        // 'http://47.242.172.5:8080',//interactive
+        'http://47.242.172.5:8081/', //groot
+      // 'https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/0.9.1',
+      // 'http://54.157.222.57',
       changeOrigin: true,
     },
   },
+
   headScripts: [
     'https://gw.alipayobjects.com/os/lib/antv/g2/5.1.14/dist/g2.min.js',
     //   'https://gw.alipayobjects.com/os/lib/react/18.2.0/umd/react.production.min.js',
