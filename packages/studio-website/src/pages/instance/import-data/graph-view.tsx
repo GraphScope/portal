@@ -22,14 +22,15 @@ const getVertexEdges = (source: any, token: any) => {
       style: {
         label: {
           value: `${label} ${isBind ? '✅' : '☑️'}`,
-          fill: token.colorPrimary,
+          position: 'center',
+          offset: [8, 0],
         },
         fontSize: 14,
         keyshape: {
           size: 50,
-          stroke: token.colorPrimary,
+          stroke: '#000',
           fillOpacity: 1,
-          fill: token.colorPrimary,
+          fill: '#fff',
         },
       },
     };
@@ -45,7 +46,7 @@ const getVertexEdges = (source: any, token: any) => {
       style: {
         label: {
           value: `${label} ${isBind ? '✅' : '☑️'}`,
-          fill: token.colorPrimary,
+          fill: '#000',
           offset: [0, 0],
         },
       },
