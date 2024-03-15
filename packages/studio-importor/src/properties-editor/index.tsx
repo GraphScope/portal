@@ -11,7 +11,8 @@ import {
   IMapColumns,
 } from './interface';
 import { EditType } from './mapdata';
-import { KeyOutlined } from '@ant-design/icons';
+import PrimaryKey from './icons/primary-key';
+import PrimaryKeySelect from './icons/primary-key-select';
 import Editor from './editor';
 type IPropertiesEditorProps = {
   properties?: PropertyList[];
@@ -254,20 +255,7 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
                   size="small"
                   type={'text'}
                   onClick={() => !isEditable && primaryKeyClick(record)}
-                  icon={
-                    <KeyOutlined
-                      style={
-                        record?.primaryKey
-                          ? {
-                              color: '#000',
-                              fontWeight: '600',
-                            }
-                          : {
-                              color: '#ddd',
-                            }
-                      }
-                    />
-                  }
+                  icon={record?.primaryKey ? <PrimaryKeySelect /> : <PrimaryKey />}
                 ></Button>
               ),
             });
