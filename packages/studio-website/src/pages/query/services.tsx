@@ -1,4 +1,4 @@
-import { CypherDriver, CypherSchemaData, MockDriver } from '@graphscope/studio-query';
+import { CypherDriver, CypherSchemaData, MockDriver, GremlinDriver } from '@graphscope/studio-query';
 import type { IStudioQueryProps } from '@graphscope/studio-query';
 import localforage from 'localforage';
 import { v4 as uuidv4 } from 'uuid';
@@ -27,6 +27,16 @@ export interface IStatement {
   id: string;
   script: string;
 }
+export const queryEndpoint = async (): Promise<{
+  cypher_endpoint: string;
+  gremlin_endpoint: string;
+}> => {
+  return fetch('/query_endpoint')
+    .then(res => {
+      return res.json();
+    })
+    .then(res => res.data);
+};
 
 export const queryInfo = async () => {
   const result = await ServiceApiFactory(undefined, location.origin)
@@ -34,17 +44,29 @@ export const queryInfo = async () => {
     .then(res => handleResponse(res))
     .catch(error => handleError(error));
 
+  const { cypher_endpoint, gremlin_endpoint } = await queryEndpoint();
+
   if (result) {
-    const { cypher } = result.sdk_endpoints!;
+    const { cypher, gremlin } = result.sdk_endpoints!;
 
     if (cypher && !driver) {
       if (cypher === 'neo4j://mock.api.cypher:7676') {
-        driver = new MockDriver(cypher);
+        driver = new MockDriver(cypher_endpoint);
       } else {
-        driver = new CypherDriver(cypher);
+        driver = new CypherDriver(cypher_endpoint);
+      }
+    }
+    if (gremlin && !driver) {
+      if (gremlin === 'neo4j://mock.api.cypher:7676') {
+        driver = new MockDriver(gremlin_endpoint);
+      } else {
+        driver = new GremlinDriver(gremlin_endpoint);
       }
     }
   }
+
+  console.log('gremlin', 'ws://127.0.0.1:12312/gremlin');
+  driver = new GremlinDriver('ws://127.0.0.1:12312/gremlin');
 
   return result;
 };
@@ -119,5 +141,5 @@ export const createStatements: IStudioQueryProps['createStatements'] = async (ty
 
 export const queryGraphData = async (params: IStatement) => {
   createStatements('history', params);
-  return driver && driver.queryCypher(params.script);
+  return driver && driver.query(params.script);
 };

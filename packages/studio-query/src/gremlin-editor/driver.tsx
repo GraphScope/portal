@@ -1,5 +1,6 @@
 import { notification } from 'antd';
 import gremlin from '@graphscope/_test_gremlin_';
+
 console.log('gremlin', gremlin);
 
 export interface GraphNode {
@@ -29,9 +30,10 @@ export interface Table {
 class CypherDriver {
   private driver: any;
 
-  constructor(uri: string, username?: string, password?: string) {
+  constructor(uri: string, username: string = 'admin', password: string = 'password') {
     try {
-      const authenticator = new gremlin.driver.auth.PlainTextSaslAuthenticator((username = ''), (password = ''));
+      const authenticator = new gremlin.driver.auth.PlainTextSaslAuthenticator(username, password);
+      console.log('authenticator', authenticator);
       const client = new gremlin.driver.Client(uri, {
         traversalSource: 'g',
         authenticator,
@@ -102,11 +104,10 @@ class CypherDriver {
    */
   async query(cypher: string): Promise<Graph | Table> {
     try {
-      const result = await this.driver.submit(cypher);
       console.log('%c[Query] 查询语句', 'color:blue', cypher);
+      const result = await this.driver.submit(cypher);
       console.log('%c[Query] 查询结果', 'color:green', result);
-      this.driver.close();
-      return processResult(result);
+      return processResult(result.toArray());
     } catch (error: any) {
       console.log(error);
       notification.error({
@@ -138,6 +139,11 @@ export default CypherDriver;
  * @returns 如果能够转化为图结构，返回图结构，否则返回table结构
  */
 export function processResult(result) {
+  console.log('result', result);
+  for (const value of result) {
+    console.log('value', value);
+  }
+
   const nodes: GraphNode[] = [];
   const edges: GraphEdge[] = [];
   const table: any[] = [];
