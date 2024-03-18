@@ -39,7 +39,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     logo,
   } = props;
   const { store, updateStore } = useContext();
-  const { graphName, isReady, collapse, activeNavbar, statements, schemaData } = store;
+  const { graphName, isReady, collapse, activeNavbar, statements, schemaData, language } = store;
   const enable = !!enableAbsolutePosition && statements.length > 0;
   const navbarOptions = [
     {
@@ -127,13 +127,14 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     /** 查询的时候，就可以存储历史记录了 */
     //@ts-ignore
 
-    const { script, id: statementId } = value;
+    const { script, id: statementId, language } = value;
     const queryId = uuidv4();
     const timestamp = new Date().getTime();
     const params = {
       id: queryId,
       timestamp,
       script,
+      language,
     };
 
     console.log('newParams', params);

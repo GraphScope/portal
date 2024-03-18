@@ -34,6 +34,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
     enableImmediateQuery,
     graphName,
     timestamp,
+    language,
   } = props;
   const { token } = useToken();
   const borderStyle =
@@ -96,6 +97,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
       }}
     >
       <Editor
+        language={language}
         timestamp={timestamp}
         schemaData={schemaData}
         saved={saved}

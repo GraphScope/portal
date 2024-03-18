@@ -28,6 +28,7 @@ const Editor: React.FunctionComponent<
     saved,
     schemaData,
     timestamp,
+    language,
   } = props;
   const editorRef = useRef<any>(null);
   const [queryTime, setQueryTime] = React.useState(timestamp);
@@ -39,6 +40,7 @@ const Editor: React.FunctionComponent<
     onQuery({
       id,
       script: value,
+      language,
     });
   };
 
@@ -50,6 +52,7 @@ const Editor: React.FunctionComponent<
         id,
         script: value,
         name,
+        language,
       });
   };
   const handleClose = () => {
@@ -60,7 +63,7 @@ const Editor: React.FunctionComponent<
     <div style={{}}>
       <Flex justify="space-between">
         <Space>
-          <Tag>Cypher</Tag>
+          <Tag>{language}</Tag>
           <Typography.Text type="secondary" style={{ fontSize: '12px', textAlign: 'center' }}>
             {queryTime}
           </Typography.Text>
@@ -85,6 +88,7 @@ const Editor: React.FunctionComponent<
       </Flex>
 
       <CypherEdit
+        language={language}
         schemaData={schemaData}
         ref={editorRef}
         value={script}

@@ -73,6 +73,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
             id,
             name: id,
             script: value,
+            language: language,
           },
           ...draft.statements,
         ];

@@ -10,6 +10,8 @@ export interface IStatement {
   timestamp?: number;
   /** 语句名称 */
   name?: string;
+  /** 查询的语言 */
+  language?: 'gremlin' | 'cypher';
 }
 
 export const localStorageVars = {
@@ -128,8 +130,6 @@ export interface IStudioQueryProps {
   /** 删除语句 */
   deleteStatements: (type: StatementType, ids: string[]) => Promise<boolean>;
 
-  /** 语句的类型 */
-  type: 'gremlin' | 'cypher' | 'iso_gql';
   /** 返回按钮 */
   onBack: () => {};
   /** 自定义配置 */
