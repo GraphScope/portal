@@ -14,9 +14,8 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
   const { onChange, value, onChangeHeader } = props;
   const [state, updateState] = useState({
     isLoading: false,
-    filelocation: value || '',
   });
-  const { isLoading, filelocation } = state;
+  const { isLoading } = state;
 
   const customRequest: UploadProps['customRequest'] = async options => {
     const { file } = options;
@@ -32,7 +31,6 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
       return {
         ...preState,
         isLoading: false,
-        filelocation,
       };
     });
 
@@ -45,7 +43,6 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
       return {
         ...preState,
         isLoading: false,
-        filelocation: '',
       };
     });
     onChange && onChange('');

@@ -49,7 +49,6 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   };
   /** 改变数据源地址 */
   const onChangeValue = (value: string) => {
-    console.log(value);
     updateDataMap(draft => {
       draft[id].filelocation = value;
       draft[id].isBind = value !== '';
@@ -103,7 +102,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                     currentType={datatype}
                     onChangeType={onChangeType}
                     onChangeValue={onChangeValue}
-                    onFocus={onFocus}
+                    handleFocus={onFocus}
                     onChangeDataFields={onChangeDataFields}
                   />
                 </Space>
