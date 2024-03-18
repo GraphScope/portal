@@ -19,6 +19,8 @@ const getVertexEdges = (nodeList: NodeSchema[], edgeList: EdgeSchema[], token: a
       style: {
         label: {
           value: label,
+          position: 'center',
+          offset: [0, 5],
         },
         fontSize: 14,
         keyshape: {
@@ -66,7 +68,6 @@ const getVertexEdges = (nodeList: NodeSchema[], edgeList: EdgeSchema[], token: a
 
   return { nodes, edges: processEdges };
 };
-
 const GraphView: FunctionComponent<Props> = props => {
   const {} = props;
   const { token } = useToken();

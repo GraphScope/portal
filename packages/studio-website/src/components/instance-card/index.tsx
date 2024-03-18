@@ -1,11 +1,7 @@
 import React from 'react';
 import { Flex, Card, Tag, message } from 'antd';
 import copy from 'copy-to-clipboard';
-import { createFromIconfontCN, CopyOutlined } from '@ant-design/icons';
-
-const IconFont = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/a/font_4377140_8fiw2wn073a.js',
-});
+import { CopyOutlined } from '@ant-design/icons';
 
 export type InstaceCardType = {
   /** user 用户名 */
@@ -28,14 +24,14 @@ const styles: React.CSSProperties = {
   margin: '6px 0px',
 };
 const InstaceCard: React.FC<InstaceCardType> = props => {
-  const { user, version, createtime, connecturl, routes, actions, status} = props;
+  const { user, version, createtime, connecturl, routes, actions, status } = props;
   return (
     <Card>
       <Flex gap="middle" justify="space-between">
         <Flex gap="middle" align="flex-start" vertical>
           <div>
             <p style={{ margin: '0px 0px 12px' }}>My Graph Instance</p>
-            <Tag color={status =='running' ? "green" :'red'}>{status}</Tag>
+            <Tag color={status == 'running' ? 'green' : 'red'}>{status}</Tag>
           </div>
           <div>
             <p style={styles}>Sharing User：{user}</p>

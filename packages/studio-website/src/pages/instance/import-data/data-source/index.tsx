@@ -30,9 +30,9 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const { isBind, filelocation, isEidtProperty, datatype, label, properties, dataFields } = data;
   const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
-  const { engineType, graph } = getUrlParams();
+  const { graph } = getUrlParams();
   const { store } = useContext();
-
+  const engineType = window.GS_ENGINE_TYPE;
   const { mode } = store;
   /** 折叠面板 */
   const handleToggle = () => {
