@@ -57,7 +57,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     });
   };
   /** 聚焦到数据源的时候 */
-  const onFocus = () => {
+  const onChangeFocus = () => {
     updateDataMap(draft => {
       //@ts-ignore
       draft[id].isEidtProperty = true;
@@ -102,7 +102,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                     currentType={datatype}
                     onChangeType={onChangeType}
                     onChangeValue={onChangeValue}
-                    onChangeFocus={onFocus}
+                    onChangeFocus={onChangeFocus}
                     onChangeDataFields={onChangeDataFields}
                   />
                 </Space>
