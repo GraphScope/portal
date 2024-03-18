@@ -16,8 +16,7 @@ export default defineConfig({
     { path: '/alert', component: 'alert' },
     { path: '/deployment', component: 'deployment' },
   ],
-
-  chainWebpack(memo) {},
+  jsMinifier: 'terser',
   npmClient: 'pnpm',
   monorepoRedirect: {},
   externals: {
