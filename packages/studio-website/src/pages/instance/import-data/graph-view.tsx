@@ -24,14 +24,17 @@ const getVertexEdges = (source: any, token: any) => {
         label: {
           value: `${label} ${isBind ? '✅' : '☑️'}`,
           position: 'center',
-          offset: [8, 5],
+          offset: [10, 5],
+          stroke: 1,
+          fontSize: 14,
         },
-        fontSize: 14,
+
         keyshape: {
           size: 50,
           stroke: '#5F646B',
           fillOpacity: 1,
           fill: '#fff',
+          lineWidth: 3,
         },
       },
     };
@@ -48,10 +51,12 @@ const getVertexEdges = (source: any, token: any) => {
         label: {
           value: `${label} ${isBind ? '✅' : '☑️'}`,
           fill: '#1C1D1F',
+          stroke: 1,
         },
         keyshape: {
           stroke: '#5F646B',
           fill: '#fff',
+          lineWidth: 2,
         },
       },
     };
