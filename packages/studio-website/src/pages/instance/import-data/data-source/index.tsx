@@ -27,7 +27,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const dataMap = useDataMap();
 
   const data = dataMap[id] as BindingNode & { isEidtProperty: boolean };
-  const { isBind, filelocation, isEidtProperty, isEidtInput, datatype, label, properties, dataFields } = data;
+  const { isBind, filelocation, isEidtProperty, datatype, label, properties, dataFields } = data;
   const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const { engineType, graph } = getUrlParams();
@@ -49,6 +49,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   };
   /** 改变数据源地址 */
   const onChangeValue = (value: string) => {
+    console.log(value);
     updateDataMap(draft => {
       draft[id].filelocation = value;
       draft[id].isBind = value !== '';
@@ -61,13 +62,6 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     updateDataMap(draft => {
       //@ts-ignore
       draft[id].isEidtProperty = true;
-      draft[id].isEidtInput = true;
-    });
-  };
-  /** 失去焦点的时候禁止编辑 */
-  const onBlur = (e: { target: { value: string } }) => {
-    updateDataMap(draft => {
-      draft[id].isEidtInput = false;
     });
   };
   /** 改变表格映射字段 */
@@ -83,12 +77,6 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     });
   };
 
-  /** 是否允许输入 */
-  const handleIsEdit = (val: boolean) => {
-    updateDataMap(draft => {
-      draft[id].isEidtInput = val;
-    });
-  };
   /** 融合判断 是否编辑或主题 dark  */
   const primaryColor = mode !== 'defaultAlgorithm' || isEidtProperty;
   return (
@@ -114,13 +102,11 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                   <SwitchSource
                     filelocation={filelocation}
                     currentType={datatype}
-                    isEidtInput={isEidtInput}
                     onChangeType={onChangeType}
-                    onChangeValue={onChangeValue}
                     onFocus={onFocus}
-                    onBlur={onBlur}
+                    onBlur={onChangeValue}
                     onChangeDataFields={onChangeDataFields}
-                    handleIsEdit={handleIsEdit}
+                    // handleIsEdit={handleIsEdit}
                   />
                 </Space>
               </Flex>

@@ -7,12 +7,11 @@ import { getDataFields } from '@/components/utils/getDataFields';
 type UploadFilesProps = {
   onChange: (filelocation: string) => void;
   value?: string;
-  isEidtInput?: boolean;
   onChangeHeader: (header?: { dataFields: string[]; delimiter: string }) => void;
-  handleChange: (val: boolean) => void;
+  handleChange?: (val: boolean) => void;
 };
 const UploadFiles: React.FC<UploadFilesProps> = props => {
-  const { onChange, value, isEidtInput, onChangeHeader, handleChange } = props;
+  const { onChange, value, onChangeHeader } = props;
   const [state, updateState] = useState({
     isLoading: false,
     filelocation: value || '',
@@ -39,7 +38,6 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
 
     onChange && onChange(filelocation);
     onChangeHeader && onChangeHeader(headers);
-    handleChange && handleChange(false);
   };
   /** 删除文件 */
   const deleteFile = () => {
@@ -52,7 +50,6 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
     });
     onChange && onChange('');
     onChangeHeader && onChangeHeader();
-    handleChange && handleChange(true);
   };
 
   return (
@@ -62,9 +59,9 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
         <Upload showUploadList={false} customRequest={customRequest}>
           <Button icon={<UploadOutlined />}>Upload</Button>
         </Upload>
-        {!isEidtInput && <Input style={{ width: '400px' }} disabled value={value} />}
+        {value && <Input style={{ width: '400px' }} disabled value={value} />}
       </Space.Compact>
-      {!isEidtInput && (
+      {value && (
         <Tooltip title="delete and re-upload">
           <DeleteOutlined onClick={deleteFile} style={{ marginLeft: '12px' }} />
         </Tooltip>
