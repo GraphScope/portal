@@ -25,7 +25,6 @@ const getVertexEdges = (source: any, token: any) => {
           value: `${label} ${isBind ? '✅' : '☑️'}`,
           position: 'center',
           offset: [10, 5],
-          stroke: 1,
           fontSize: 14,
         },
 
@@ -51,7 +50,6 @@ const getVertexEdges = (source: any, token: any) => {
         label: {
           value: `${label} ${isBind ? '✅' : '☑️'}`,
           fill: '#1C1D1F',
-          stroke: 1,
         },
         keyshape: {
           stroke: '#5F646B',
