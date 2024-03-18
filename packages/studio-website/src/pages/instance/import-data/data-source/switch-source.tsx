@@ -6,11 +6,11 @@ interface ISwitchSourceProps {
   currentType?: string;
   onChangeType: (e: any) => void;
   onChangeValue: (e: any) => void;
-  handleFocus: (e: any) => void;
+  onChangeFocus: (e: any) => void;
   onChangeDataFields: (header?: { dataFields: string[]; delimiter: string }) => void;
 }
 const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
-  const { filelocation, handleFocus, onChangeValue, onChangeDataFields } = props;
+  const { filelocation, onChangeFocus, onChangeValue, onChangeDataFields } = props;
   return (
     <Space.Compact size="small">
       <>
@@ -23,7 +23,7 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
             onBlur={e => {
               onChangeValue(e.target.value);
             }}
-            onFocus={handleFocus}
+            onFocus={onChangeFocus}
           />
         )}
       </>
