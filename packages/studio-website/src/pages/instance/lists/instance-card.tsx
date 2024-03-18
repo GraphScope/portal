@@ -209,7 +209,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
               <FormattedMessage id="Served from" />: {createtime}
             </Text>
             <Text type="secondary">
-              <FormattedMessage id="Created on" />：{createtime}{' '}
+              <FormattedMessage id="Created on" />: {createtime}
             </Text>
           </Space>
           <Space split={<Divider type="vertical" />} size={0}>

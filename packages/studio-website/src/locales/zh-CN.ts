@@ -156,10 +156,11 @@ export default {
   'Graph Metadata': '模型数据',
   'Graph instance name': '实例名称',
   'Graph store type': '存储类型',
-  'Interactive engine is designed to handle concurrent graph queries at an impressive speed. Its primary goal is to process as many queries as possible within a given timeframe, emphasizing a high query throughput rate.':
+  'graphs.engine.interactive.desc':
     '交互式引擎旨在以惊人的速度处理并发图形查询。其主要目标是在给定的时间范围内处理尽可能多的查询，强调高查询吞吐率。',
   'More details': '更多详情',
   'Add new': '新建',
   Interactive: '交互',
   'View Schema': '查看模型',
+  Upload: '上传',
 };

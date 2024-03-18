@@ -4,6 +4,7 @@ import { Form, Input, Typography } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import SelectCards from '@/components/select-cards';
 import { useContext } from './useContext';
+import { useContext as useContextMap } from '@/layouts/useContext';
 
 export type FieldType = {
   graphName?: string;
@@ -21,10 +22,7 @@ const engines = [
     title: 'Interactive',
     desc: (
       <>
-        <FormattedMessage
-          id="Interactive engine is designed to handle concurrent graph queries at an impressive speed. Its primary goal is to
-        process as many queries as possible within a given timeframe, emphasizing a high query throughput rate."
-        />
+        <FormattedMessage id="graphs.engine.interactive.desc" />
         <br />
         <Typography.Link href="https://graphscope.io/docs/interactive_engine/graphscope_interactive" target="_blank">
           <FormattedMessage id="More details" />
@@ -38,6 +36,10 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
   const { form } = props;
   const { store, updateStore } = useContext();
   const { engineType, graphName, storeType } = store;
+  const {
+    store: { locale },
+  } = useContextMap();
+
   const chooseStoreType = (item: any) => {
     updateStore(draft => {
       draft.storeType = item.id;
@@ -71,7 +73,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
         rules={[{ required: true, message: '' }, validatePasswords]}
       >
         <Input
-          placeholder="please name your graph instance"
+          placeholder={locale === 'zh-CN' ? '请为您的模型实例命名' : 'please name your graph instance'}
           onChange={e =>
             updateStore(draft => {
               draft.graphName = String(e.target.value || 'unkown');

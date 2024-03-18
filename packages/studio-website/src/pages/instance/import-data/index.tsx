@@ -69,11 +69,6 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       ]}
     >
       <Row gutter={24}>
-        <Col span={16}></Col>
-        <Col span={8}></Col>
-      </Row>
-
-      <Row gutter={24}>
         <Col span={16}>
           <SourceTitle />
           <Card

@@ -156,10 +156,11 @@ export default {
   'Graph Metadata': 'Graph Metadata',
   'Graph instance name': 'Graph instance name',
   'Graph store type': 'Graph store type',
-  'Interactive engine is designed to handle concurrent graph queries at an impressive speed. Its primary goal is to process as many queries as possible within a given timeframe, emphasizing a high query throughput rate.':
+  'graphs.engine.interactive.desc':
     'Interactive engine is designed to handle concurrent graph queries at an impressive speed. Its primary goal is to process as many queries as possible within a given timeframe, emphasizing a high query throughput rate.',
   'More details': 'More details',
   'Add new': 'Add new',
   Interactive: 'Interactive',
   'View Schema': 'View Schema',
+  Upload: 'Upload',
 };
