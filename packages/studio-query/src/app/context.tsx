@@ -117,6 +117,9 @@ export interface IGraphSchema {
 export type StatementType = 'saved' | 'history' | 'store-procedure';
 
 export interface IStudioQueryProps {
+  language: 'cypher' | 'gremlin';
+
+  globalScript?: string;
   queryInfo: () => Promise<Info>;
   /** 查询图数据 */
   queryGraphData: (params: IStatement) => Promise<IGraphData>;

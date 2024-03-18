@@ -142,6 +142,7 @@ export const getDriver = async (language: 'cypher' | 'gremlin' = 'cypher') => {
 export const queryGraphData = async (params: IStatement) => {
   createStatements('history', params);
   const { language } = params;
+  console.log('params', params);
   const driver = await getDriver(language);
   //@ts-ignore
   return driver.query(params.script);

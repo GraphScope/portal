@@ -80,7 +80,8 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
 
       const graph_name = searchParamOf('graph_name');
       const activeNavbar = searchParamOf('nav') || 'saved';
-      let globalScript = searchParamOf('cypher') || 'Match (n) return n limit 10';
+      const language = searchParamOf('language') || props.language;
+      let globalScript = searchParamOf('global_script') || props.globalScript;
       const displayMode = searchParamOf('display_mode') || localStorage.getItem(localStorageVars.mode) || 'flow';
       let autoRun = searchParamOf('auto_run') === 'true' ? true : false;
       const info = await queryInfo();
@@ -109,6 +110,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         draft.autoRun = autoRun;
         draft.globalScript = formatCypherStatement(globalScript);
         draft.mode = displayMode as 'flow' | 'tabs';
+        draft.language = language as 'gremlin' | 'cypher';
       });
     })();
   }, []);
@@ -137,7 +139,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       language,
     };
 
-    console.log('newParams', params);
+    console.log('newParams', params, value);
     updateStore(draft => {
       draft.historyStatements.push(params);
     });

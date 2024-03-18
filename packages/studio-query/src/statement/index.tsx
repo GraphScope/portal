@@ -77,8 +77,8 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
   };
   useEffect(() => {
     if (enableImmediateQuery) {
-      console.log('enableImmediateQuery script', enableImmediateQuery, script);
-      handleQuery({ id, script });
+      console.log('enableImmediateQuery script', enableImmediateQuery, script, language);
+      handleQuery({ id, script, language });
     }
   }, [enableImmediateQuery]);
 
