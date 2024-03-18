@@ -47,7 +47,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
     lineCount: 1,
     clear: false,
   });
-  const { globalScript, autoRun } = store;
+  const { globalScript, autoRun, language } = store;
 
   const handleChange = value => {};
   const onChangeContent = line => {
@@ -87,6 +87,11 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       });
     }
   };
+  const handleChangeLanguage = value => {
+    updateStore(draft => {
+      draft.language = value;
+    });
+  };
 
   const minRows = countLines(globalScript);
   const isShowCypherSwitch = state.lineCount === 1 && minRows === 1;
@@ -107,12 +112,12 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       {isShowCypherSwitch && (
         <Select
           style={{ marginRight: '-32px', zIndex: 999 }}
-          defaultValue="Cypher"
+          defaultValue={language}
           options={[
-            { value: 'Cypher', label: 'Cypher' },
-            { value: 'Gremlin', label: 'Gremlin', disabled: true },
-            { value: 'ISO-GQL', label: 'ISO-GQL', disabled: true },
+            { value: 'cypher', label: 'Cypher' },
+            { value: 'gremlin', label: 'Gremlin' },
           ]}
+          onChange={handleChangeLanguage}
         />
       )}
       {isShowCypherSwitch && (
@@ -140,6 +145,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
         }}
       >
         <CypherEditor
+          language={language}
           onChangeContent={onChangeContent}
           value={globalScript}
           ref={editorRef}

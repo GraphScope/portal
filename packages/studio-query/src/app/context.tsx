@@ -45,6 +45,7 @@ export type IStore<T> = T & {
   /** 全局的语句 */
   globalScript: string;
   autoRun: boolean;
+  language: 'gremlin' | 'cypher';
 };
 
 const initialStore: IStore<{}> = {
@@ -74,6 +75,7 @@ const initialStore: IStore<{}> = {
   storeProcedures: [],
   mode: 'flow',
   enableImmediateQuery: false,
+  language: 'gremlin',
 };
 
 type ContextType<T> = {

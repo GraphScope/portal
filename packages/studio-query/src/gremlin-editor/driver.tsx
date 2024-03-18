@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { notification } from 'antd';
 import gremlin from '@graphscope/_test_gremlin_';
 
