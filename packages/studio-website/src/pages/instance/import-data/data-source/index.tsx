@@ -76,7 +76,6 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       draft[id].delimiter = header?.delimiter;
     });
   };
-
   /** 融合判断 是否编辑或主题 dark  */
   const primaryColor = mode !== 'defaultAlgorithm' || isEidtProperty;
   return (
