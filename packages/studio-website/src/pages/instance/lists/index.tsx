@@ -4,6 +4,7 @@ import { history } from 'umi';
 import InstaceCard, { InstaceCardType } from './instance-card';
 import Section from '@/components/section';
 import { PlusOutlined } from '@ant-design/icons';
+import { FormattedMessage } from 'react-intl';
 import { useContext } from '@/layouts/useContext';
 import { listGraphs } from './service';
 
@@ -71,7 +72,7 @@ const InstanceCard: React.FC = () => {
         )}
         <Col span={12}>
           <Card
-            title={'New Graph'}
+            title={<FormattedMessage id="New Graph" />}
             headStyle={{ fontSize: '30px', color: '#ccc' }}
             style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
             bodyStyle={{ width: '100%' }}
