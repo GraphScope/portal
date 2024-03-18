@@ -104,9 +104,8 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                     currentType={datatype}
                     onChangeType={onChangeType}
                     onFocus={onFocus}
-                    onBlur={onChangeValue}
+                    onChangeValue={onChangeValue}
                     onChangeDataFields={onChangeDataFields}
-                    // handleIsEdit={handleIsEdit}
                   />
                 </Space>
               </Flex>
