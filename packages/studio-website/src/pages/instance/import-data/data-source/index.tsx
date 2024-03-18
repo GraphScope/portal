@@ -103,8 +103,8 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                     filelocation={filelocation}
                     currentType={datatype}
                     onChangeType={onChangeType}
-                    onFocus={onFocus}
                     onChangeValue={onChangeValue}
+                    onFocus={onFocus}
                     onChangeDataFields={onChangeDataFields}
                   />
                 </Space>
