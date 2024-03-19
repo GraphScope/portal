@@ -3,7 +3,7 @@ import Statement from '../../statement';
 import Header from './header';
 import { Segmented } from 'antd';
 import { useContext } from '../context';
-import type { IStudioQueryProps } from '../context';
+import type { IStatement, IStudioQueryProps } from '../context';
 import { PlayCircleOutlined } from '@ant-design/icons';
 import Empty from './empty';
 interface IContentProps {
@@ -15,7 +15,7 @@ interface IContentProps {
 const Content: React.FunctionComponent<IContentProps> = props => {
   const { createStatements, queryGraphData, enableImmediateQuery } = props;
   const { store, updateStore } = useContext();
-  const { activeId, mode, statements, savedStatements, schemaData, graphName } = store;
+  const { activeId, mode, statements, savedStatements, schemaData, graphName, language } = store;
   const savedIds = savedStatements.map(item => item.id);
 
   const statementStyles =
@@ -41,7 +41,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
     };
   });
 
-  const onSave = ({ id, script, name }) => {
+  const onSave = ({ id, script, name, language }: IStatement) => {
     updateStore(draft => {
       const saveIds = draft.savedStatements.map(item => item.id);
       const HAS_SAVED = saveIds.indexOf(id) !== -1;
@@ -52,9 +52,9 @@ const Content: React.FunctionComponent<IContentProps> = props => {
           }
         });
       } else {
-        draft.savedStatements.push({ id, script, name });
+        draft.savedStatements.push({ id, script, name, language });
         // fetch server
-        createStatements && createStatements('saved', { id, script, name });
+        createStatements && createStatements('saved', { id, script, name, language });
       }
     });
   };
@@ -87,7 +87,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
       <div style={{ overflowY: 'scroll', flex: '1', position: 'relative' }}>
         {isEmpty && <Empty />}
         {statements.map(item => {
-          const { id, script, timestamp } = item;
+          const { id, script, timestamp, language } = item;
           return (
             <div
               key={id}
@@ -98,6 +98,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
               }}
             >
               <Statement
+                language={language}
                 enableImmediateQuery={enableImmediateQuery}
                 mode={mode}
                 active={id === activeId}

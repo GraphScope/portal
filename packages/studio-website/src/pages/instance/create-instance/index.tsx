@@ -97,9 +97,10 @@ export interface ICreateGraph {
   edgeList?: any;
   graphName: string;
 }
+const engineType = window.GS_ENGINE_TYPE;
 
 const Steps: React.FunctionComponent<{ currentStep: number }> = () => {
-  const { currentStep, mode, engineType } = useStore();
+  const { currentStep, mode } = useStore();
   let steps = [
     { title: <FormattedMessage id="Graph Metadata" /> },
     { title: <FormattedMessage id="Create Schema" /> },

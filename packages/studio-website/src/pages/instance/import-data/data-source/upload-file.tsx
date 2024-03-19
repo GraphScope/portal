@@ -1,25 +1,22 @@
 import React, { useState } from 'react';
-import { DeleteOutlined, PaperClipOutlined, UploadOutlined, LoadingOutlined } from '@ant-design/icons';
-import type { UploadFile, UploadProps } from 'antd';
-import { Button, Upload, Typography, Flex, theme, Input, Tooltip } from 'antd';
-const { Text } = Typography;
-const { useToken } = theme;
+import { DeleteOutlined, UploadOutlined, LoadingOutlined } from '@ant-design/icons';
+import type { UploadProps } from 'antd';
+import { Button, Upload, Flex, Input, Tooltip, Space } from 'antd';
+import { FormattedMessage } from 'react-intl';
 import { uploadFile } from '../service';
 import { getDataFields } from '@/components/utils/getDataFields';
 type UploadFilesProps = {
   onChange: (filelocation: string) => void;
   value?: string;
   onChangeHeader: (header?: { dataFields: string[]; delimiter: string }) => void;
+  handleChange?: (val: boolean) => void;
 };
 const UploadFiles: React.FC<UploadFilesProps> = props => {
-  const { token } = useToken();
   const { onChange, value, onChangeHeader } = props;
-
   const [state, updateState] = useState({
     isLoading: false,
-    filelocation: value || '',
   });
-  const { isLoading, filelocation } = state;
+  const { isLoading } = state;
 
   const customRequest: UploadProps['customRequest'] = async options => {
     const { file } = options;
@@ -35,7 +32,6 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
       return {
         ...preState,
         isLoading: false,
-        filelocation,
       };
     });
 
@@ -48,7 +44,6 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
       return {
         ...preState,
         isLoading: false,
-        filelocation: '',
       };
     });
     onChange && onChange('');
@@ -57,14 +52,18 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
 
   return (
     <Flex justify="flex-start" align="center">
-      {!filelocation && (
-        <Upload showUploadList={false} customRequest={customRequest}>
-          <Button icon={<UploadOutlined />}>please upload the local file to the server side</Button>
-        </Upload>
-      )}
       {isLoading && <LoadingOutlined />}
-      {filelocation && <Input style={{ width: '400px' }} disabled value={filelocation} />}
-      {filelocation && (
+      <Space.Compact size="small">
+        <Upload showUploadList={false} customRequest={customRequest}>
+          <Button icon={<UploadOutlined style={{ marginRight: '2px' }} />}>
+            <span style={{ fontSize: '12px' }}>
+              <FormattedMessage id="Upload" />
+            </span>
+          </Button>
+        </Upload>
+        {value && <Input style={{ width: '400px' }} disabled value={value} />}
+      </Space.Compact>
+      {value && (
         <Tooltip title="delete and re-upload">
           <DeleteOutlined onClick={deleteFile} style={{ marginLeft: '12px' }} />
         </Tooltip>

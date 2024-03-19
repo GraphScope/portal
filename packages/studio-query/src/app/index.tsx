@@ -39,7 +39,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     logo,
   } = props;
   const { store, updateStore } = useContext();
-  const { graphName, isReady, collapse, activeNavbar, statements, schemaData } = store;
+  const { graphName, isReady, collapse, activeNavbar, statements, schemaData, language } = store;
   const enable = !!enableAbsolutePosition && statements.length > 0;
   const navbarOptions = [
     {
@@ -80,7 +80,8 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
 
       const graph_name = searchParamOf('graph_name');
       const activeNavbar = searchParamOf('nav') || 'saved';
-      let globalScript = searchParamOf('cypher') || 'Match (n) return n limit 10';
+      const language = searchParamOf('language') || props.language;
+      let globalScript = searchParamOf('global_script') || props.globalScript;
       const displayMode = searchParamOf('display_mode') || localStorage.getItem(localStorageVars.mode) || 'flow';
       let autoRun = searchParamOf('auto_run') === 'true' ? true : false;
       const info = await queryInfo();
@@ -109,6 +110,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         draft.autoRun = autoRun;
         draft.globalScript = formatCypherStatement(globalScript);
         draft.mode = displayMode as 'flow' | 'tabs';
+        draft.language = language as 'gremlin' | 'cypher';
       });
     })();
   }, []);
@@ -127,16 +129,17 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     /** 查询的时候，就可以存储历史记录了 */
     //@ts-ignore
 
-    const { script, id: statementId } = value;
+    const { script, id: statementId, language } = value;
     const queryId = uuidv4();
     const timestamp = new Date().getTime();
     const params = {
       id: queryId,
       timestamp,
       script,
+      language,
     };
 
-    console.log('newParams', params);
+    console.log('newParams', params, value);
     updateStore(draft => {
       draft.historyStatements.push(params);
     });

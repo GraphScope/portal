@@ -30,9 +30,9 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const { isBind, filelocation, isEidtProperty, datatype, label, properties, dataFields } = data;
   const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
-  const { engineType, graph } = getUrlParams();
+  const { graph } = getUrlParams();
   const { store } = useContext();
-
+  const engineType = window.GS_ENGINE_TYPE;
   const { mode } = store;
   /** 折叠面板 */
   const handleToggle = () => {
@@ -57,7 +57,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     });
   };
   /** 聚焦到数据源的时候 */
-  const onFocus = () => {
+  const onChangeFocus = () => {
     updateDataMap(draft => {
       //@ts-ignore
       draft[id].isEidtProperty = true;
@@ -102,7 +102,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                     currentType={datatype}
                     onChangeType={onChangeType}
                     onChangeValue={onChangeValue}
-                    onFocus={onFocus}
+                    onChangeFocus={onChangeFocus}
                     onChangeDataFields={onChangeDataFields}
                   />
                 </Space>

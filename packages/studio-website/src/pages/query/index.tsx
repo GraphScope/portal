@@ -12,6 +12,9 @@ import {
 } from './services';
 
 const QueryModule = () => {
+  const { GS_ENGINE_TYPE } = window;
+  const language = GS_ENGINE_TYPE === 'groot' ? 'gremlin' : 'cypher';
+  const globalScript = GS_ENGINE_TYPE === 'groot' ? 'g.V().limit 10' : 'Match (n) return n limit 10';
   return (
     <Section
       breadcrumb={[
@@ -39,7 +42,8 @@ const QueryModule = () => {
         /** 语句默认展示的模式 */
         dispalyMode="flow"
         /** 查询类型 */
-        type="cypher"
+        globalScript={globalScript}
+        language={language}
         //@ts-ignore
         queryInfo={queryInfo}
         /** 语句服务  */

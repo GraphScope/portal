@@ -12,9 +12,10 @@ interface ICreateInstanceProps {
   graphData?: any;
   isAlert?: boolean;
 }
+const engineType = window.GS_ENGINE_TYPE;
 const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
   const { store, updateStore } = useContext();
-  const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, mode, engineType } = store;
+  const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, mode } = store;
 
   /** 点/边 切换 */
   const tabsChange = (key: string) => {

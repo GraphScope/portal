@@ -34,6 +34,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
     enableImmediateQuery,
     graphName,
     timestamp,
+    language,
   } = props;
   const { token } = useToken();
   const borderStyle =
@@ -76,8 +77,8 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
   };
   useEffect(() => {
     if (enableImmediateQuery) {
-      console.log('enableImmediateQuery script', enableImmediateQuery, script);
-      handleQuery({ id, script });
+      console.log('enableImmediateQuery script', enableImmediateQuery, script, language);
+      handleQuery({ id, script, language });
     }
   }, [enableImmediateQuery]);
 
@@ -96,6 +97,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
       }}
     >
       <Editor
+        language={language}
         timestamp={timestamp}
         schemaData={schemaData}
         saved={saved}

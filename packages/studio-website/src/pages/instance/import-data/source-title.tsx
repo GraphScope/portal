@@ -8,13 +8,16 @@ import TabAction from './tab-action';
 import { createDataloadingJob } from './service';
 import { history } from 'umi';
 import { transformDataMapToOptions, transformImportOptionsToSchemaMapping } from '@/components/utils/import';
-type ISourceTitleProps = {};
+type ISourceTitleProps = {
+  type?: string;
+};
 
-const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
+const SourceTitle: React.FunctionComponent<ISourceTitleProps> = props => {
+  const { type } = props;
   const { updateStore } = useContext();
   const dataMap = useDataMap();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
-  const engineType = searchParamOf('engineType');
+  const engineType = window.GS_ENGINE_TYPE;
   const graph_name = searchParamOf('graph_name') || '';
 
   const handleImport = async () => {
@@ -52,30 +55,32 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = () => {
   return (
     <>
       <Flex gap="middle" justify="space-between">
-        <TabAction
-          items={[
-            {
-              label: (
-                <>
-                  <FormattedMessage id="Vertices" />
-                  {`(${nodeBind}/${nodeCount}）`}
-                </>
-              ),
-              value: 'node',
-            },
-            {
-              label: (
-                <>
-                  <FormattedMessage id="Edges" />
-                  {`(${edgeBind}/${edgeCount})`}
-                </>
-              ),
-              value: 'edge',
-            },
-          ]}
-          tabChange={handleChangeTabs}
-        />
-        {engineType !== 'groot' && (
+        {type === 'title' && (
+          <Segmented
+            options={[
+              {
+                label: (
+                  <>
+                    <FormattedMessage id="Vertices" />
+                    {`(${nodeBind}/${nodeCount}）`}
+                  </>
+                ),
+                value: 'node',
+              },
+              {
+                label: (
+                  <>
+                    <FormattedMessage id="Edges" />
+                    {`(${edgeBind}/${edgeCount})`}
+                  </>
+                ),
+                value: 'edge',
+              },
+            ]}
+            onChange={handleChangeTabs}
+          />
+        )}
+        {type === 'import' && engineType !== 'groot' && (
           <Button type={isBind ? 'primary' : 'default'} onClick={handleImport} disabled={!isBind}>
             <FormattedMessage id="Import Data" />
           </Button>
