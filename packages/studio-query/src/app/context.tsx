@@ -10,6 +10,8 @@ export interface IStatement {
   timestamp?: number;
   /** 语句名称 */
   name?: string;
+  /** 查询的语言 */
+  language?: 'gremlin' | 'cypher';
 }
 
 export const localStorageVars = {
@@ -45,6 +47,7 @@ export type IStore<T> = T & {
   /** 全局的语句 */
   globalScript: string;
   autoRun: boolean;
+  language: 'gremlin' | 'cypher';
 };
 
 const initialStore: IStore<{}> = {
@@ -74,6 +77,7 @@ const initialStore: IStore<{}> = {
   storeProcedures: [],
   mode: 'flow',
   enableImmediateQuery: false,
+  language: 'gremlin',
 };
 
 type ContextType<T> = {
@@ -113,6 +117,9 @@ export interface IGraphSchema {
 export type StatementType = 'saved' | 'history' | 'store-procedure';
 
 export interface IStudioQueryProps {
+  language: 'cypher' | 'gremlin';
+
+  globalScript?: string;
   queryInfo: () => Promise<Info>;
   /** 查询图数据 */
   queryGraphData: (params: IStatement) => Promise<IGraphData>;
@@ -126,8 +133,6 @@ export interface IStudioQueryProps {
   /** 删除语句 */
   deleteStatements: (type: StatementType, ids: string[]) => Promise<boolean>;
 
-  /** 语句的类型 */
-  type: 'gremlin' | 'cypher' | 'iso_gql';
   /** 返回按钮 */
   onBack: () => {};
   /** 自定义配置 */

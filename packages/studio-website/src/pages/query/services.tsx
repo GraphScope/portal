@@ -1,5 +1,5 @@
-import { CypherDriver, CypherSchemaData, MockDriver } from '@graphscope/studio-query';
-import type { IStudioQueryProps } from '@graphscope/studio-query';
+import { CypherDriver, CypherSchemaData, MockDriver, GremlinDriver } from '@graphscope/studio-query';
+import type { IStudioQueryProps, IStatement } from '@graphscope/studio-query';
 import localforage from 'localforage';
 import { v4 as uuidv4 } from 'uuid';
 import { GraphApiFactory, GraphApi, GraphApiFp, ServiceApiFactory } from '@graphscope/studio-server';
@@ -21,30 +21,28 @@ export async function deleteHistoryStatements(ids: string[]) {
   return;
 }
 
-let driver: any;
-
-export interface IStatement {
-  id: string;
-  script: string;
-}
+export const queryEndpoint = async (): Promise<{
+  cypher_endpoint: string;
+  gremlin_endpoint: string;
+}> => {
+  return fetch('/query_endpoint')
+    .then(res => {
+      return res.json();
+    })
+    .then(res => res.data)
+    .catch(error => {
+      return {
+        cypher_endpoint: 'mock',
+        gremlin_endpoint: 'mock',
+      };
+    });
+};
 
 export const queryInfo = async () => {
   const result = await ServiceApiFactory(undefined, location.origin)
     .getServiceStatus()
     .then(res => handleResponse(res))
     .catch(error => handleError(error));
-
-  if (result) {
-    const { cypher } = result.sdk_endpoints!;
-
-    if (cypher && !driver) {
-      if (cypher === 'neo4j://mock.api.cypher:7676') {
-        driver = new MockDriver(cypher);
-      } else {
-        driver = new CypherDriver(cypher);
-      }
-    }
-  }
 
   return result;
 };
@@ -117,7 +115,35 @@ export const createStatements: IStudioQueryProps['createStatements'] = async (ty
   return false;
 };
 
+const driver_config: Record<string, any> = {};
+
+export const getDriver = async (language: 'cypher' | 'gremlin' = 'cypher') => {
+  if (Object.keys(driver_config).length === 0) {
+    const { cypher_endpoint, gremlin_endpoint } = await queryEndpoint();
+    driver_config.cypher_endpoint = cypher_endpoint;
+    driver_config.gremlin_endpoint = gremlin_endpoint;
+  }
+  const { gremlin_endpoint, cypher_endpoint, gremlin_driver, cypher_driver } = driver_config;
+
+  if (cypher_endpoint === 'mock' && gremlin_endpoint === 'mock') {
+    return new MockDriver(cypher_endpoint);
+  }
+  if (cypher_endpoint && !cypher_driver) {
+    driver_config.cypher_driver = new CypherDriver(cypher_endpoint);
+  }
+  if (gremlin_endpoint && !gremlin_driver) {
+    driver_config.gremlin_driver = new GremlinDriver(gremlin_endpoint);
+  }
+  if (language === 'cypher') {
+    return driver_config.cypher_driver;
+  }
+  return driver_config.gremlin_driver;
+};
 export const queryGraphData = async (params: IStatement) => {
   createStatements('history', params);
-  return driver && driver.queryCypher(params.script);
+  const { language } = params;
+  console.log('params', params);
+  const driver = await getDriver(language);
+  //@ts-ignore
+  return driver.query(params.script);
 };

@@ -105,7 +105,7 @@ class CypherDriver {
    * @param cypher cypher语句
    * @returns 如果能够转化为图结构，返回图结构，否则返回table结构
    */
-  async queryCypher(cypher: string): Promise<Graph | Table> {
+  async query(cypher: string): Promise<Graph | Table> {
     try {
       const session = await this.getSession();
       if (!session) {

@@ -1,8 +1,8 @@
 //@ts-nocheck
 import React, { forwardRef } from 'react';
 import { MonacoEnvironment, EditorProvider } from '@difizen/cofine-editor-core';
-
 import cypherLanguage, { registerOptions } from '@difizen/cofine-language-cypher';
+import gremlinLanguage from '@difizen/cofine-language-gremlin';
 import './index.css';
 
 export interface ItemSchema {
@@ -37,6 +37,14 @@ function countLines(str) {
   return (str.match(/\r?\n/g) || []).length + 1;
 }
 
+const LANGUAGE = {
+  cypher: 'cypher',
+  gremlin: 'Gremlin',
+};
+const THEMES = {
+  cypher: 'cypherTheme',
+  gremlin: 'GremlinTheme',
+};
 const Editor = forwardRef<any, any>((props, editorRef) => {
   const {
     value,
@@ -55,22 +63,30 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
   // 监听事件
   let erdElement: HTMLElement | null;
   const MAGIC_NUMBER = onChangeContent ? 0 : 1;
-
+  console.log('language', language, THEMES[language], LANGUAGE[language]);
   React.useEffect(() => {
     MonacoEnvironment.loadModule(async (container: { load: (arg0: Syringe.Module) => void }) => {
       // const dsl = await import('@difizen/cofine-language-cypher');
       container.load(cypherLanguage);
+      container.load(gremlinLanguage);
+      // if (language === 'cypher') {
+      //   container.load(cypherLanguage);
+      // }
+      // if (language === 'gremlin') {
+      //   container.load(gremlinLanguage);
+      // }
     });
     MonacoEnvironment.init().then(async () => {
+      console.log('init....', language);
       if (editorRef && editorRef.current) {
         if (countLines(value) <= maxRows) {
           editorRef.current.style.height = countLines(value) * 20 + 'px';
         }
         const editorProvider = MonacoEnvironment.container.get<EditorProvider>(EditorProvider);
         const editor = editorProvider.create(editorRef.current, {
-          language,
+          language: LANGUAGE[language],
           value,
-          theme: 'cypherTheme',
+          theme: THEMES[language],
           suggestLineHeight: 20,
           suggestLineHeight: 20,
           automaticLayout: true,
@@ -153,7 +169,7 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
         codeEditor.dispose();
       }
     };
-  }, [editorRef, value]);
+  }, [editorRef, value, language]);
   React.useEffect(() => {
     if (clear && editorRef && editorRef.current && editorRef.current.codeEditor) {
       editorRef.current.codeEditor.setValue('');
