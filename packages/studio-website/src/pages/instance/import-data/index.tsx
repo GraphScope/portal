@@ -69,11 +69,6 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       ]}
     >
       <Row gutter={24}>
-        <Col span={16}></Col>
-        <Col span={8}></Col>
-      </Row>
-
-      <Row gutter={24}>
         <Col span={16}>
           <SourceTitle />
           <Card
@@ -106,7 +101,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
           </Card>
         </Col>
         <Col span={8}>
-          <Card title="Preview" extra={<GraphTitle />}>
+          <Card title={<FormattedMessage id="Preview" />} extra={<GraphTitle />}>
             <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
               <FormattedMessage id="Currently bound" />
               {bindEdgeCount} <FormattedMessage id="Edges" />，{bindNodeCount}

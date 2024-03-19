@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { DeleteOutlined, UploadOutlined, LoadingOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import { Button, Upload, Flex, Input, Tooltip, Space } from 'antd';
+import { FormattedMessage } from 'react-intl';
 import { uploadFile } from '../service';
 import { getDataFields } from '@/components/utils/getDataFields';
 type UploadFilesProps = {
@@ -54,7 +55,11 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
       {isLoading && <LoadingOutlined />}
       <Space.Compact size="small">
         <Upload showUploadList={false} customRequest={customRequest}>
-          <Button icon={<UploadOutlined />}>Upload</Button>
+          <Button icon={<UploadOutlined style={{ marginRight: '2px' }} />}>
+            <span style={{ fontSize: '12px' }}>
+              <FormattedMessage id="Upload" />
+            </span>
+          </Button>
         </Upload>
         {value && <Input style={{ width: '400px' }} disabled value={value} />}
       </Space.Compact>

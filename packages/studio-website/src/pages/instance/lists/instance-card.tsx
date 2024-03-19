@@ -4,16 +4,17 @@ import type { MenuProps } from 'antd';
 import { history } from 'umi';
 import dayjs from 'dayjs';
 import { useContext } from '@/layouts/useContext';
- 
+
 import { deleteGraph, startService, stopService } from './service';
 
 const { Text, Paragraph } = Typography;
 import { MoreOutlined, StarOutlined } from '@ant-design/icons';
- 
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDiagramProject, faFileArrowUp, faMagnifyingGlass, faPause } from '@fortawesome/free-solid-svg-icons';
 import { faPlayCircle, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { FormattedMessage } from 'react-intl';
 export type InstaceCardType = {
   /** graph name */
   name: string;
@@ -76,11 +77,11 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
       key: 'delete',
       icon: <FontAwesomeIcon icon={faTrashCan} />,
     },
-    {
-      label: 'restart',
-      key: 'restart',
-      icon: <StarOutlined />,
-    },
+    // {
+    //   label: 'restart',
+    //   key: 'restart',
+    //   icon: <StarOutlined />,
+    // },
   ];
 
   const handleRestart = () => {};
@@ -137,16 +138,16 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   }
   const Statistics = (
     <>
-      {schema.edge_types.length} types of Edges <br /> {schema.vertex_types.length} types of Vertices
+      {schema.edge_types.length} <FormattedMessage id="types of Edges" /> <br /> {schema.vertex_types.length}{' '}
+      <FormattedMessage id="types of Vertices" />
     </>
   );
- 
+
   /** 删除graph */
   const handleDelete = async (name: string) => {
     await deleteGraph(name);
     handleChange && handleChange();
   };
- 
 
   const handleClick = async (name: string, status: string) => {
     updateIsLoading(true);
@@ -162,9 +163,9 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     handleChange && handleChange();
   };
   /** Start|Pause 提示 */
-  let tooltipContext = '';
-  if (status == 'stopped') tooltipContext = 'Start Service';
-  if (status == 'running') tooltipContext = 'Pause Service';
+  let tooltipContext;
+  if (status == 'stopped') tooltipContext = <FormattedMessage id="Start Service" />;
+  if (status == 'running') tooltipContext = <FormattedMessage id="Pause Service" />;
   /** Start|Pause icon */
   let btnIcon;
   if (status == 'stopped') btnIcon = faPlayCircle;
@@ -195,26 +196,34 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
       <Flex justify="space-between">
         <Flex align="flex-start" vertical gap="middle">
           <Tag style={{ fontSize: '16px', lineHeight: '140%' }} color={STATUS_COLOR_MAP[status]}>
-            {status}
+            <FormattedMessage id={status} />
           </Tag>
           <Space direction="vertical" size={0}>
-            <Text type="secondary">Uptime: {uptimeString}</Text>
-            <Text type="secondary">Last data import: {importtime}</Text>
-            <Text type="secondary">Served from: {createtime}</Text>
-            <Text type="secondary">Created on：{createtime} </Text>
+            <Text type="secondary">
+              <FormattedMessage id="Uptime" />: {uptimeString}
+            </Text>
+            <Text type="secondary">
+              <FormattedMessage id="Last data import" />: {importtime}
+            </Text>
+            <Text type="secondary">
+              <FormattedMessage id="Served from" />: {createtime}
+            </Text>
+            <Text type="secondary">
+              <FormattedMessage id="Created on" />: {createtime}
+            </Text>
           </Space>
           <Space split={<Divider type="vertical" />} size={0}>
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }} disabled={!Endpoints}>
-
-              <Popover title="Endpoints" content={Endpoints}>
- 
-                Endpoints <QuestionCircleOutlined style={{ marginLeft: '4px' }} />
+              <Popover title={<FormattedMessage id="Endpoints" />} content={Endpoints}>
+                <FormattedMessage id="Endpoints" /> <QuestionCircleOutlined style={{ marginLeft: '4px' }} />
               </Popover>
             </Typography.Text>
 
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }}>
-              <Popover title="Graph Schema" content={Statistics}>
-                Statistics
+              <Popover title={<FormattedMessage id="Graph Schema" />} content={Statistics}>
+                <span>
+                  <FormattedMessage id="Statistics" />
+                </span>
               </Popover>
             </Typography.Text>
             {/* <Typography.Text type="secondary">Logs</Typography.Text> */}
@@ -224,26 +233,26 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
         <Flex gap="middle" align="flex-end" vertical justify="end">
           <Button
             style={{ width: '150px', textAlign: 'left' }}
-            icon={<FontAwesomeIcon icon={faDiagramProject} />}
+            icon={<FontAwesomeIcon icon={faDiagramProject} style={{ marginRight: '4px' }} />}
             onClick={() => history.push(`/instance/view-schema#?graph_name=${name}`)}
           >
-            Define Schema
+            <FormattedMessage id="Define Schema" />
           </Button>
           <Button
             style={{ width: '150px', textAlign: 'left' }}
             icon={<FontAwesomeIcon icon={faFileArrowUp} style={{ marginLeft: '2px', marginRight: '4px' }} />}
             onClick={() => history.push(`/instance/import-data#?engineType=interactive&graph_name=${name}`)}
           >
-            Import Data
+            <FormattedMessage id="Import Data" />
           </Button>
           <Button
             type="primary"
             style={{ width: '150px', textAlign: 'left' }}
-            icon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
+            icon={<FontAwesomeIcon icon={faMagnifyingGlass} style={{ marginRight: '4px' }} />}
             disabled={status === 'stopped' ? true : false}
             onClick={() => history.push(`/query-app#?graph_name=${name}`)}
           >
-            Query Graph
+            <FormattedMessage id="Query Graph" />
           </Button>
         </Flex>
         {/* <Flex wrap="wrap" align="end">

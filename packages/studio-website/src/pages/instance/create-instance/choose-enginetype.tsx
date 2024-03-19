@@ -1,9 +1,10 @@
 import React, { memo, useEffect } from 'react';
-import { Form, Input, Select, Typography } from 'antd';
+import { Form, Input, Typography } from 'antd';
 
 import { FormattedMessage } from 'react-intl';
 import SelectCards from '@/components/select-cards';
 import { useContext } from './useContext';
+import { useContext as useContextMap } from '@/layouts/useContext';
 
 export type FieldType = {
   graphName?: string;
@@ -21,22 +22,24 @@ const engines = [
     title: 'Interactive',
     desc: (
       <>
-        Interactive engine is designed to handle concurrent graph queries at an impressive speed. Its primary goal is to
-        process as many queries as possible within a given timeframe, emphasizing a high query throughput rate.{' '}
+        <FormattedMessage id="graphs.engine.interactive.desc" />
+        <br />
         <Typography.Link href="https://graphscope.io/docs/interactive_engine/graphscope_interactive" target="_blank">
-          More details
+          <FormattedMessage id="More details" />
         </Typography.Link>
       </>
     ),
   },
-  // { id: 'insights', title: 'Insights', desc: 'Insights 引擎介绍', disabled: true },
-  // { id: 'v6d', title: 'Vineyard', desc: 'Vineyard 引擎介绍', disabled: true },
 ];
 
 const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props => {
   const { form } = props;
   const { store, updateStore } = useContext();
   const { engineType, graphName, storeType } = store;
+  const {
+    store: { locale },
+  } = useContextMap();
+
   const chooseStoreType = (item: any) => {
     updateStore(draft => {
       draft.storeType = item.id;
@@ -66,13 +69,11 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
       <Form.Item<FieldType>
         label={<FormattedMessage id="Graph instance name" />}
         name="graphName"
-        tooltip=" "
-        labelCol={{ span: 8 }}
         wrapperCol={{ span: 8 }}
         rules={[{ required: true, message: '' }, validatePasswords]}
       >
         <Input
-          placeholder="please name your graph instance"
+          placeholder={locale === 'zh-CN' ? '请为您的模型实例命名' : 'please name your graph instance'}
           onChange={e =>
             updateStore(draft => {
               draft.graphName = String(e.target.value || 'unkown');
@@ -89,26 +90,6 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
       >
         <SelectCards val={storeType} items={engines} onChange={chooseStoreType} />
       </Form.Item>
-      {/* <Form.Item<FieldType>
-        label={<FormattedMessage id="Directed" />}
-        name="directed"
-        tooltip=" "
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 8 }}
-        rules={[{ required: true, message: '' }]}
-      >
-        <Select
-          options={[
-            { value: true, label: 'true' },
-            { value: false, label: 'false' },
-          ]}
-          onChange={checked =>
-            updateStore(draft => {
-              draft.engineDirected = checked;
-            })
-          }
-        />
-      </Form.Item> */}
     </Form>
   );
 };
