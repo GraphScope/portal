@@ -4,6 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import { history } from 'umi';
 import { searchParamOf } from '@/components/utils/index';
 import CodeMirror from '@uiw/react-codemirror';
+import { createTheme } from '@uiw/codemirror-themes';
+import { useContext } from '@/layouts/useContext';
 import UploadFiles from './upload-files';
 import { createProcedure, updateProcedure, listProceduresByGraph, listGraphs } from './service';
 
@@ -20,8 +22,6 @@ type ICreateRecepProps = {};
 const CreatePlugins: React.FC<ICreateRecepProps> = props => {
   const [form] = Form.useForm();
   const graph_name = searchParamOf('graph_name') || '';
-  console.log(graph_name);
-
   const [state, updateState] = useState<{
     editCode: string;
     instanceOption: { label: string; value: string }[];
@@ -30,6 +30,18 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
     instanceOption: [],
   });
   const { editCode, instanceOption } = state;
+  const { store } = useContext();
+  const { mode } = store;
+  //@ts-ignore
+  const myTheme = createTheme({
+    theme: mode === 'defaultAlgorithm' ? 'light' : 'dark',
+    settings: {
+      background: mode === 'defaultAlgorithm' ? '#fff' : '#000',
+      backgroundImage: '',
+      foreground: mode === 'defaultAlgorithm' ? '#212121' : '#FFF',
+      gutterBackground: mode === 'defaultAlgorithm' ? '#fff' : '#000',
+    },
+  });
   useEffect(() => {
     form.setFieldsValue({ type: 'cpp' });
     listGraphs().then(res => {
@@ -158,8 +170,14 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
             label={<FormattedMessage id="Edit Code" />}
             name="query"
           >
-            <div style={{ overflow: 'scroll', border: '1px solid #D9D9D9', borderRadius: '8px' }}>
-              <CodeMirror height="200px" value={editCode} onChange={e => handleCodeMirror(e)} />
+            <div
+              style={{
+                overflow: 'scroll',
+                border: `1px solid ${mode === 'defaultAlgorithm' ? '#efefef' : '#323232'}`,
+                borderRadius: '8px',
+              }}
+            >
+              <CodeMirror height="200px" value={editCode} onChange={e => handleCodeMirror(e)} theme={myTheme} />
             </div>
           </Form.Item>
           <Form.Item>

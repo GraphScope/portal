@@ -174,9 +174,9 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
         {currentType === 'edge' ? (
           <>
             <Form.Item<FieldType>
-              label={'Source Vertex Label'}
+              label={<FormattedMessage id="Source Vertex Label" />}
               name="source"
-              tooltip="Source Vertex Label"
+              tooltip={<FormattedMessage id="Source Vertex Label" />}
               rules={[{ required: true, message: '' }]}
               style={{ marginBottom: '8px' }}
             >
@@ -188,9 +188,9 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
               />
             </Form.Item>
             <Form.Item<FieldType>
-              label={'Target Vertex Label'}
+              label={<FormattedMessage id="Target Vertex Label" />}
               name="target"
-              tooltip="Destination Vertex Label"
+              tooltip={<FormattedMessage id="Destination Vertex Label" />}
               rules={[{ required: true, message: '' }]}
               style={{ marginBottom: '8px' }}
             >

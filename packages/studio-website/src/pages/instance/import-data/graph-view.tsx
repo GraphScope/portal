@@ -16,6 +16,8 @@ interface Props {
 
 /** graphin 数据处理 */
 const getVertexEdges = (source: any, token: any) => {
+  const { store } = useContext();
+  const { mode } = store;
   const nodes = source.nodes.map((item: BindingNode) => {
     const { key, label, isBind } = item;
     return {
@@ -32,7 +34,7 @@ const getVertexEdges = (source: any, token: any) => {
           size: 50,
           stroke: '#5F646B',
           fillOpacity: 1,
-          fill: '#fff',
+          fill: mode === 'defaultAlgorithm' ? '#fff' : '#212121',
           lineWidth: 3,
         },
       },
@@ -49,11 +51,11 @@ const getVertexEdges = (source: any, token: any) => {
       style: {
         label: {
           value: `${label} ${isBind ? '✅' : '☑️'}`,
-          fill: '#1C1D1F',
+          fill: mode === 'defaultAlgorithm' ? '#1C1D1F' : '#fff',
         },
         keyshape: {
           stroke: '#5F646B',
-          fill: '#fff',
+          fill: mode === 'defaultAlgorithm' ? '#fff' : '#212121',
           lineWidth: 2,
         },
       },
