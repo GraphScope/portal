@@ -36,8 +36,8 @@ const configcolumns: configcolumnsType[] = [
   {
     title: (
       <>
-        Name
-        <Tooltip title="property name">
+        <FormattedMessage id="Name" />
+        <Tooltip title={<FormattedMessage id="property name" />}>
           <QuestionCircleOutlined style={{ margin: '0px 4px' }} />
         </Tooltip>
       </>
@@ -49,8 +49,8 @@ const configcolumns: configcolumnsType[] = [
   {
     title: (
       <>
-        Data type
-        <Tooltip title="data type">
+        <FormattedMessage id="Data type" />
+        <Tooltip title={<FormattedMessage id="Data type" />}>
           <QuestionCircleOutlined style={{ margin: '0px 4px' }} />
         </Tooltip>
       </>
@@ -64,7 +64,7 @@ const configcolumns: configcolumnsType[] = [
   {
     title: (
       <div>
-        <Tooltip title="primary key">
+        <Tooltip title={<FormattedMessage id="Primary key" />}>
           <Button type="text" icon={<PrimaryKey style={{ color: '#c6c8cb' }} />} size="small"></Button>
         </Tooltip>
       </div>

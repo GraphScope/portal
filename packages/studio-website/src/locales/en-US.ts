@@ -167,4 +167,7 @@ export default {
   'Source Vertex Label': 'Source Vertex Label',
   'Target Vertex Label': 'Target Vertex Label',
   'Destination Vertex Label': 'Destination Vertex Label',
+  'property name': 'property name',
+  'Data type': 'Data type',
+  'Primary key': 'Primary key',
 };

@@ -167,4 +167,7 @@ export default {
   'Source Vertex Label': '源点标签',
   'Target Vertex Label': '目标点标签',
   'Destination Vertex Label': '目标点标签',
+  'property name': '属性名称',
+  'Data type': '数据类型',
+  'Primary key': '主键',
 };
