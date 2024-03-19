@@ -151,14 +151,14 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
       : `Please Enter ${currentType == 'node' ? 'Vertex Label.' : 'Edge Label.'}`;
   let sourceVertexLabel = locale === 'zh-CN' ? '请选择源点标签。' : 'Please Select Source Vertex Label.';
   let targetVertexLabel = locale === 'zh-CN' ? '请选择目标点标签。' : 'Please Select Target Vertex Label.';
+  /** 添加属性标题国际化 */
+  let locales = {
+    properties: locale === 'zh-CN' ? '属性' : 'Properties',
+    addProperty: locale === 'zh-CN' ? '添加属性' : 'Add Property',
+    mapFromFile: locale === 'zh-CN' ? '映射文件' : 'Map From File',
+  };
   return (
-    <div
-      style={
-        {
-          // padding: '12px'
-        }
-      }
-    >
+    <div>
       <Form form={form} layout="vertical" onValuesChange={() => formChange()}>
         <div style={{ position: 'relative' }}>
           <Form.Item<FieldType>
@@ -207,11 +207,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
       <PropertiesEditor
         //@ts-ignore
         ref={propertyRef}
-        locales={{
-          properties: 'Properties',
-          addProperty: 'Add Property',
-          mapFromFile: 'Map From File',
-        }}
+        locales={locales}
         properties={data?.properties || []}
         onChange={(values: any) => {
           cbRef.current = values;

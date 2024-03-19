@@ -1,7 +1,6 @@
 import React, { FunctionComponent, CSSProperties } from 'react';
 import { Button, Space, Tooltip, Popconfirm, Checkbox, Flex, Typography } from 'antd';
 import { PlusOutlined, createFromIconfontCN } from '@ant-design/icons';
-import { FormattedMessage } from 'react-intl';
 import { EditTable } from '../edit-table';
 import { MapConfigParamsType, PropertyConfigParamsType } from '../interface';
 // 使用createFromIconfontCN创建一个IconFont组件，加载自定义图标库
@@ -66,15 +65,13 @@ const Editor: FunctionComponent<MapConfigParamsType & PropertyConfigParamsType> 
   return (
     <>
       <Flex justify={'space-between'} style={{ padding: '12px 6px 4px 6px', height: '42px' }} align="center">
-        <Typography.Text>
-          <FormattedMessage id={locales.properties} />
-        </Typography.Text>
+        <Typography.Text>{locales.properties}</Typography.Text>
         <>
           {selectedRows.length == 0 ? (
             <Space>
-              <Tooltip title={<FormattedMessage id="Add property" />}>
+              <Tooltip title={locales.addProperty}>
                 <Button icon={<PlusOutlined />} onClick={() => addNodeConfig()} size="small">
-                  <FormattedMessage id={locales.addProperty} />
+                  {locales.addProperty}
                 </Button>
               </Tooltip>
               {MapFromFile}
