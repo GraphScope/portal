@@ -6,7 +6,6 @@ const themeColor = getItem('themeColor');
 const primaryColor = getItem('primaryColor');
 const corner = getItem('corner');
 const locale = getItem('locale');
-console.log(themeColor);
 
 export const initialStore = {
   /** 语言 */

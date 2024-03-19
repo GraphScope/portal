@@ -31,48 +31,6 @@ type configcolumnsType = {
 };
 const primitive_types = ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64', 'DT_DATE32'];
 
-/** 子项 [{title:'表头'，dataIndex:'绑定字段'，type:'字段对应编辑框'，option:'select配置选项',width:'表头宽度'}] */
-const configcolumns: configcolumnsType[] = [
-  {
-    title: (
-      <>
-        Name
-        <Tooltip title="property name">
-          <QuestionCircleOutlined style={{ margin: '0px 4px' }} />
-        </Tooltip>
-      </>
-    ),
-    dataIndex: 'name',
-    width: '200px',
-    type: 'INPUT',
-  },
-  {
-    title: (
-      <>
-        Data type
-        <Tooltip title="data type">
-          <QuestionCircleOutlined style={{ margin: '0px 4px' }} />
-        </Tooltip>
-      </>
-    ),
-    dataIndex: 'type',
-    type: 'SELECT',
-    option: primitive_types.map(item => {
-      return { label: item, value: item };
-    }),
-  },
-  {
-    title: (
-      <div>
-        <Tooltip title="primary key">
-          <Button type="text" icon={<PrimaryKey style={{ color: '#c6c8cb' }} />} size="small"></Button>
-        </Tooltip>
-      </div>
-    ),
-    width: '80px',
-  },
-];
-
 const notFoundContent = (
   <Empty
     image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -92,7 +50,48 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   const disabled = mode === 'view';
   const propertyRef = useRef<any>();
   let cbRef = useRef();
-
+  let themeColor = store.mode === 'defaultAlgorithm' ? '#c6c8cb' : '#fff';
+  /** 子项 [{title:'表头'，dataIndex:'绑定字段'，type:'字段对应编辑框'，option:'select配置选项',width:'表头宽度'}] */
+  const configcolumns: configcolumnsType[] = [
+    {
+      title: (
+        <>
+          Name
+          <Tooltip title="property name">
+            <QuestionCircleOutlined style={{ margin: '0px 4px' }} />
+          </Tooltip>
+        </>
+      ),
+      dataIndex: 'name',
+      width: '200px',
+      type: 'INPUT',
+    },
+    {
+      title: (
+        <>
+          Data type
+          <Tooltip title="Data type">
+            <QuestionCircleOutlined style={{ margin: '0px 4px' }} />
+          </Tooltip>
+        </>
+      ),
+      dataIndex: 'type',
+      type: 'SELECT',
+      option: primitive_types.map(item => {
+        return { label: item, value: item };
+      }),
+    },
+    {
+      title: (
+        <div>
+          <Tooltip title="primary key">
+            <Button type="text" icon={<PrimaryKey style={{ color: themeColor }} />} size="small"></Button>
+          </Tooltip>
+        </div>
+      ),
+      width: '80px',
+    },
+  ];
   /** 用户数据的默认回填 */
   useEffect(() => {
     if (data) {
@@ -152,13 +151,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   let sourceVertexLabel = locale === 'zh-CN' ? '请选择源点标签。' : 'Please Select Source Vertex Label.';
   let targetVertexLabel = locale === 'zh-CN' ? '请选择目标点标签。' : 'Please Select Target Vertex Label.';
   return (
-    <div
-      style={
-        {
-          // padding: '12px'
-        }
-      }
-    >
+    <div>
       <Form form={form} layout="vertical" onValuesChange={() => formChange()}>
         <div style={{ position: 'relative' }}>
           <Form.Item<FieldType>
@@ -212,6 +205,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
           addProperty: 'Add Property',
           mapFromFile: 'Map From File',
         }}
+        mode={store.mode}
         properties={data?.properties || []}
         onChange={(values: any) => {
           cbRef.current = values;

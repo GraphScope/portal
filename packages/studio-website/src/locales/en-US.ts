@@ -20,7 +20,7 @@ export default {
   Result: 'Result',
   'Input Name': 'Input Name',
   Directed: 'Directed',
-  'Node Label': 'Node Label',
+  'Vertex Label': 'Vertex Label',
   'Edge Label': 'Edge Label',
   'Source Node Label': 'Source Node Label',
   'Target Node Label': 'Target Node Label',
@@ -163,4 +163,8 @@ export default {
   Interactive: 'Interactive',
   'View Schema': 'View Schema',
   Upload: 'Upload',
+  /** schema */
+  'Data type': 'Data type',
+  'property name': 'property name',
+  'primary key': 'primary key',
 };

@@ -22,11 +22,13 @@ type IPropertiesEditorProps = {
   tableConfig?: [];
   /** 控制表格是否编辑 */
   isEditable: boolean;
-  locales: { properties: React.ReactNode; addProperty: React.ReactNode; mapFromFile: React.ReactNode };
+  locales: { properties: string; addProperty: string; mapFromFile: string };
+  /** 选中主题状态 defaultAlgorithm ｜darkAlgorithm */
+  mode: string;
 };
 const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
   forwardRef((props, ref) => {
-    const { properties = [], onChange, isMapFromFile, tableConfig, locales, isEditable = false } = props;
+    const { properties = [], onChange, isMapFromFile, tableConfig, locales, isEditable = false, mode } = props;
     // 使用useImmer创建一个可变状态对象
     const [state, updateState] = useImmer<{
       selectedRows: string[];
@@ -209,6 +211,10 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
         });
       }
     };
+    /** 根据主题 选中颜色 */
+    let primaryKeySelectColor = mode === 'defaultAlgorithm' ? '#515151' : '#e6e6e6';
+    /** 根据主题 未选中颜色 */
+    let primaryKeyColor = mode === 'defaultAlgorithm' ? '#e6e6e6' : '#515151';
     /** 初始化表格下拉选项及映射列表值*/
     const getConfigColumns = () => {
       let configcolumns: ConfigColumns[] = [];
@@ -255,7 +261,13 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
                   size="small"
                   type={'text'}
                   onClick={() => !isEditable && primaryKeyClick(record)}
-                  icon={record?.primaryKey ? <PrimaryKeySelect /> : <PrimaryKey />}
+                  icon={
+                    record?.primaryKey ? (
+                      <PrimaryKeySelect style={{ color: primaryKeySelectColor }} />
+                    ) : (
+                      <PrimaryKey style={{ color: primaryKeyColor }} />
+                    )
+                  }
                 ></Button>
               ),
             });
