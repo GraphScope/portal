@@ -219,6 +219,8 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
         }}
         /**映射控制 */
         isMapFromFile={false}
+        mode={store.mode}
+        //@ts-ignore
         tableConfig={hangdleConfigcolumns(configcolumns)}
       />
     </div>
