@@ -19,6 +19,7 @@ const AddLabel: FunctionComponent = () => {
     updateStore(draft => {
       if (currentType == 'node') {
         draft.nodeActiveKey = id;
+        /** 二次进入创建点未重置上次顺序 */
         index.node = nodeList.length === 0 ? 1 : index.node + 1;
         draft.nodeList.push({
           key: id,
@@ -28,6 +29,7 @@ const AddLabel: FunctionComponent = () => {
       }
       if (currentType === 'edge') {
         draft.edgeActiveKey = id;
+        /** 二次进入创建边未重置上次顺序 */
         index.edge = edgeList.length === 0 ? 1 : index.edge + 1;
         draft.edgeList.push({
           key: id,
