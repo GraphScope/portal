@@ -39,6 +39,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
           padding: '24px',
           flexShrink: 0,
           flexWrap: 'nowrap',
+          overflowY: 'scroll',
         }}
       >
         <div
@@ -76,7 +77,6 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
               background: mode === 'defaultAlgorithm' ? '#fff' : '#000',
               borderRadius: '12px',
               position: 'relative',
-              overflowY: 'scroll',
             }}
             className="gs-content"
           >
