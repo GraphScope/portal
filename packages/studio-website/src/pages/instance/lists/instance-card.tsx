@@ -3,6 +3,7 @@ import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Popover,
 import type { MenuProps } from 'antd';
 import { history } from 'umi';
 import dayjs from 'dayjs';
+import { PauseCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { useContext } from '@/layouts/useContext';
 
 import { deleteGraph, startService, stopService } from './service';
@@ -69,7 +70,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     schema = { edge_types: [], vertex_types: [] },
   } = props;
   const { store } = useContext();
-  const { mode } = store;
+  const { mode, locale } = store;
   const [isLoading, updateIsLoading] = useState(false);
   const items: MenuProps['items'] = [
     {
@@ -168,8 +169,10 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   if (status == 'running') tooltipContext = <FormattedMessage id="Pause Service" />;
   /** Start|Pause icon */
   let btnIcon;
-  if (status == 'stopped') btnIcon = faPlayCircle;
-  if (status == 'running') btnIcon = faPause;
+  if (status == 'stopped') btnIcon = <PlayCircleOutlined />;
+  if (status == 'running') btnIcon = <PauseCircleOutlined />;
+  /** 按钮中英文宽度 */
+  let btnWidth = locale === 'zh-CN' ? '115px' : '150px';
   return (
     <Card
       headStyle={{ fontSize: '30px' }}
@@ -180,7 +183,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
           <Tooltip title={tooltipContext}>
             <Button
               type="text"
-              icon={<FontAwesomeIcon icon={btnIcon} />}
+              icon={btnIcon}
               loading={isLoading}
               onClick={() => {
                 handleClick(name, status);
@@ -232,23 +235,23 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
         {/* <Flex justify="space-between" vertical align="end"> */}
         <Flex gap="middle" align="flex-end" vertical justify="end">
           <Button
-            style={{ width: '150px', textAlign: 'left' }}
-            icon={<FontAwesomeIcon icon={faDiagramProject} style={{ marginRight: '4px' }} />}
+            style={{ width: btnWidth, textAlign: 'left' }}
+            icon={<FontAwesomeIcon icon={faDiagramProject} style={{ marginRight: '8px' }} />}
             onClick={() => history.push(`/instance/view-schema#?graph_name=${name}`)}
           >
             <FormattedMessage id="Define Schema" />
           </Button>
           <Button
-            style={{ width: '150px', textAlign: 'left' }}
-            icon={<FontAwesomeIcon icon={faFileArrowUp} style={{ marginLeft: '2px', marginRight: '4px' }} />}
+            style={{ width: btnWidth, textAlign: 'left' }}
+            icon={<FontAwesomeIcon icon={faFileArrowUp} style={{ marginLeft: '2px', marginRight: '8px' }} />}
             onClick={() => history.push(`/instance/import-data#?engineType=interactive&graph_name=${name}`)}
           >
             <FormattedMessage id="Import Data" />
           </Button>
           <Button
             type="primary"
-            style={{ width: '150px', textAlign: 'left' }}
-            icon={<FontAwesomeIcon icon={faMagnifyingGlass} style={{ marginRight: '4px' }} />}
+            style={{ width: btnWidth, textAlign: 'left' }}
+            icon={<FontAwesomeIcon icon={faMagnifyingGlass} style={{ marginRight: '8px' }} />}
             disabled={status === 'stopped' ? true : false}
             onClick={() => history.push(`/query-app#?graph_name=${name}`)}
           >

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, Tabs, Row, Col, Image, Segmented } from 'antd';
 import { useContext } from '../useContext';
 import GraphInsight from './graph-view';
@@ -16,7 +16,15 @@ const engineType = window.GS_ENGINE_TYPE;
 const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
   const { store, updateStore } = useContext();
   const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, mode } = store;
-
+  /** 初始化清空数据 */
+  useEffect(() => {
+    updateStore(draft => {
+      draft.nodeList = [];
+      draft.edgeList = [];
+      draft.nodeActiveKey = '';
+      draft.edgeActiveKey = '';
+    });
+  }, []);
   /** 点/边 切换 */
   const tabsChange = (key: string) => {
     if (currentType == 'node') {

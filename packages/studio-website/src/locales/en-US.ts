@@ -170,4 +170,6 @@ export default {
   'property name': 'property name',
   'Data type': 'Data type',
   'Primary key': 'Primary key',
+  "Congratulations on the successful creation of the model, now let's start to guide the data.":
+    "Congratulations on the successful creation of the model, now let's start to guide the data.",
 };

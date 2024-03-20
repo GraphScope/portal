@@ -20,11 +20,12 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
       className="gs-root"
       style={{
         // background: '#f5f7f9',
-        background: mode === 'defaultAlgorithm' ? '#f5f7f9' : '#000',
+        background: mode === 'defaultAlgorithm' ? '#f5f7f9' : '#020202',
         display: 'flex',
         alignItems: 'center',
         height: '100vh',
         boxSizing: 'border-box',
+        overflowY: 'scroll',
       }}
     >
       <div
@@ -39,7 +40,6 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
           padding: '24px',
           flexShrink: 0,
           flexWrap: 'nowrap',
-          overflowY: 'scroll',
         }}
       >
         <div
@@ -74,7 +74,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
             style={{
               boxSizing: 'border-box',
               flex: 1,
-              background: mode === 'defaultAlgorithm' ? '#fff' : '#000',
+              background: mode === 'defaultAlgorithm' ? '#fff' : '#161616',
               borderRadius: '12px',
               position: 'relative',
             }}

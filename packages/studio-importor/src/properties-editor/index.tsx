@@ -110,6 +110,9 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
           draft.proSelectKey = selectedRowKeys;
         });
       },
+      getCheckboxProps: record => {
+        return { disabled: isEditable };
+      },
     };
     // 定义handleSelectAll、handleSelectRow、mapcolumns等其他辅助函数和变量
     const handleSelectAll = e => {

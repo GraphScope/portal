@@ -197,6 +197,7 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
   return (
     <div style={{ marginTop: '-10px', height: '100%', overflow: 'hidden' }}>
       <Table
+        style={{ marginTop: '-12px' }}
         dataSource={jobsList}
         //@ts-ignores
         columns={columns}

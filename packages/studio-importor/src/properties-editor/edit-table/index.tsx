@@ -92,7 +92,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
             },
           ]}
         >
-          {record?.disable && record?.name ? (
+          {record?.disable && record?.name && !disable ? (
             <span
               style={{
                 height: '27px',

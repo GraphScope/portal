@@ -8,7 +8,7 @@ export default () => {
       viewBox="0 0 1024 1024"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ marginTop: '8px' }}
+      style={{ paddingTop: '3px' }}
     >
       <path
         fill="#e6e6e6"

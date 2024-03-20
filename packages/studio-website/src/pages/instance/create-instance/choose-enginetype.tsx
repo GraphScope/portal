@@ -73,7 +73,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
         rules={[{ required: true, message: '' }, validatePasswords]}
       >
         <Input
-          placeholder={locale === 'zh-CN' ? '请为您的模型实例命名' : 'please name your graph instance'}
+          placeholder={locale === 'zh-CN' ? '请输入图实例名称' : 'please name your graph instance'}
           onChange={e =>
             updateStore(draft => {
               draft.graphName = String(e.target.value || 'unkown');

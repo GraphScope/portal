@@ -1,7 +1,15 @@
 import React from 'react';
-import { Result } from 'antd';
+import { Flex, Typography } from 'antd';
+import { FormattedMessage } from 'react-intl';
+import Result from '@/components/icons/result';
+const { Text } = Typography;
 const ResultSuccess: React.FC = () => (
-  <Result status="success" subTitle="恭喜模型创建成功，现在让我们开始导数据啦～" />
+  <Flex vertical style={{ marginTop: '10%' }}>
+    <Result style={{}} />
+    <Text style={{ textAlign: 'center', marginTop: '12px' }}>
+      <FormattedMessage id="Congratulations on the successful creation of the model, now let's start to guide the data." />
+    </Text>
+  </Flex>
 );
 
 export default ResultSuccess;
