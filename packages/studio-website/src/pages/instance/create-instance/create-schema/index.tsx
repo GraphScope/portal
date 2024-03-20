@@ -124,7 +124,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
               ) : (
                 <Tabs
                   style={{ height: '500px', padding: '12px' }}
-                  tabBarStyle={{ borderLeft: 0, width: '120px', borderRight: '1px solid #efefef' }}
+                  tabBarStyle={{ borderLeft: 0, width: '120px' }}
                   tabPosition="left"
                   items={nodeItems}
                   activeKey={nodeActiveKey}
@@ -138,7 +138,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
               ) : (
                 <Tabs
                   style={{ height: '500px', padding: '12px' }}
-                  tabBarStyle={{ borderLeft: 0, width: '120px', borderRight: '1px solid #efefef' }}
+                  tabBarStyle={{ borderLeft: 0, width: '120px' }}
                   tabPosition="left"
                   items={edgeItems}
                   activeKey={edgeActiveKey}
