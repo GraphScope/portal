@@ -42,7 +42,7 @@ const GraphView: React.FunctionComponent<GraphViewProps> = props => {
           type: 'concentric',
         },
       }}
-      style={{ height: '480px', minHeight: '480px', background: '#f8fcfe' }}
+      style={{ height: '480px', minHeight: '480px', background: '#f4f5f5' }}
     >
       {/** @ts-ignore */}
       <Panel overview={overview} onChange={onChange}></Panel>
