@@ -10,6 +10,9 @@ interface Props {
 
 /** graphin 数据处理 */
 const getVertexEdges = (nodeList: NodeSchema[], edgeList: EdgeSchema[], token: any) => {
+  /** 主题背景 */
+  const { store } = useMode();
+  const { mode } = store;
   const nodesMap = new Map();
   const nodes = nodeList.map(item => {
     const { key, label } = item;
@@ -21,13 +24,14 @@ const getVertexEdges = (nodeList: NodeSchema[], edgeList: EdgeSchema[], token: a
           value: label,
           position: 'center',
           offset: [0, 5],
+          fontSize: 14,
         },
-        fontSize: 14,
         keyshape: {
           size: 50,
-          stroke: token.colorPrimary,
+          stroke: '#5F646B',
           fillOpacity: 1,
-          fill: token.colorPrimary,
+          fill: mode === 'defaultAlgorithm' ? '#fff' : '#212121',
+          lineWidth: 3,
         },
       },
     };
@@ -44,8 +48,13 @@ const getVertexEdges = (nodeList: NodeSchema[], edgeList: EdgeSchema[], token: a
         style: {
           label: {
             value: label,
-            fill: token.colorPrimary,
+            fill: mode === 'defaultAlgorithm' ? '#1C1D1F' : '#fff',
             offset: [0, 0],
+          },
+          keyshape: {
+            stroke: '#5F646B',
+            fill: mode === 'defaultAlgorithm' ? '#fff' : '#212121',
+            lineWidth: 2,
           },
         },
       };

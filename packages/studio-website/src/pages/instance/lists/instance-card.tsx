@@ -73,7 +73,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   const [isLoading, updateIsLoading] = useState(false);
   const items: MenuProps['items'] = [
     {
-      label: 'delete',
+      label: <FormattedMessage id="delete" />,
       key: 'delete',
       icon: <FontAwesomeIcon icon={faTrashCan} />,
     },
