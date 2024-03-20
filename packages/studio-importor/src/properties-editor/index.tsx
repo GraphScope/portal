@@ -23,10 +23,11 @@ type IPropertiesEditorProps = {
   /** 控制表格是否编辑 */
   isEditable: boolean;
   locales: { properties: React.ReactNode; addProperty: React.ReactNode; mapFromFile: React.ReactNode };
+  mode: string;
 };
 const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
   forwardRef((props, ref) => {
-    const { properties = [], onChange, isMapFromFile, tableConfig, locales, isEditable = false } = props;
+    const { properties = [], onChange, isMapFromFile, tableConfig, locales, isEditable = false, mode } = props;
     // 使用useImmer创建一个可变状态对象
     const [state, updateState] = useImmer<{
       selectedRows: string[];
@@ -209,6 +210,9 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
         });
       }
     };
+    /** 不同主题 主键选中颜色 */
+    let PrimaryKeySelectColor = mode === 'defaultAlgorithm' ? <PrimaryKeySelect /> : <PrimaryKey />;
+    let PrimaryKeyColor = mode === 'defaultAlgorithm' ? <PrimaryKey /> : <PrimaryKeySelect />;
     /** 初始化表格下拉选项及映射列表值*/
     const getConfigColumns = () => {
       let configcolumns: ConfigColumns[] = [];
@@ -255,7 +259,7 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
                   size="small"
                   type={'text'}
                   onClick={() => !isEditable && primaryKeyClick(record)}
-                  icon={record?.primaryKey ? <PrimaryKeySelect /> : <PrimaryKey />}
+                  icon={record?.primaryKey ? PrimaryKeySelectColor : PrimaryKeyColor}
                 ></Button>
               ),
             });
