@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useContext } from '../../context';
-import List from './list';
+import List from '../statement-list';
 import { Flex, Typography, Empty } from 'antd';
 import { BookOutlined } from '@ant-design/icons';
-import './index.css';
+
 interface ISavedStatementsProps {
   deleteStatements: (ids: string[]) => void;
 }
@@ -41,7 +41,7 @@ const SavedStatements: React.FunctionComponent<ISavedStatementsProps> = props =>
   const isEmpty = items.length === 0;
   return (
     <Flex vertical style={{ height: '100%', overflow: 'hidden' }}>
-      <Typography.Title level={4} style={{ margin: '0px', flexBasis: '30px', padding: '12px' }}>
+      <Typography.Title level={5} style={{ margin: '0px', flexBasis: '30px', padding: '12px' }}>
         Saved
       </Typography.Title>
       {isEmpty && (

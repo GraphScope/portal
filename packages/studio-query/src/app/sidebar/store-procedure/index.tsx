@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useContext } from '../../context';
-import List from '../saved-statements/list';
+import List from '../statement-list';
 import { Flex, Typography, Empty } from 'antd';
 
 interface IStoreProcedureProps {
@@ -38,7 +38,7 @@ const StoreProcedure: React.FunctionComponent<IStoreProcedureProps> = props => {
 
   return (
     <Flex vertical style={{ height: '100%', overflow: 'hidden' }}>
-      <Typography.Title level={4} style={{ margin: '0px', flexBasis: '30px', padding: '12px' }}>
+      <Typography.Title level={5} style={{ margin: '0px', flexBasis: '30px', padding: '12px' }}>
         Store Procedure
       </Typography.Title>
       {isEmpty && (

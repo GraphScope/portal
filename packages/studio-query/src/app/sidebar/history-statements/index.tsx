@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useContext } from '../../context';
-import List from './list';
+import List from '../statement-list';
 import { Typography, Flex } from 'antd';
 
 const HistoryStatements = props => {
@@ -28,7 +28,7 @@ const HistoryStatements = props => {
   });
   return (
     <Flex vertical style={{ height: '100%', overflow: 'hidden' }}>
-      <Typography.Title level={4} style={{ margin: '0px', flexBasis: '30px', padding: '12px' }}>
+      <Typography.Title level={5} style={{ margin: '0px', flexBasis: '30px', padding: '12px' }}>
         History
       </Typography.Title>
       <List items={items} onClick={handleClick} onDelete={handleDelete} />

@@ -116,10 +116,10 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
   return (
     <Flex vertical style={{ height: '100%', overflow: 'hidden', padding: '0px 12px' }} justify="space-between">
       <div style={{ overflowY: 'scroll' }}>
-        <Typography.Title level={4} style={{ margin: '0px', flexBasis: '30px', padding: '6px 0px' }}>
+        <Typography.Title level={5} style={{ margin: '0px', flexBasis: '30px', padding: '12px 0px' }}>
           Copilot
         </Typography.Title>
-        <Setting onChange={handleSave} style={{ position: 'absolute', right: '4px', top: '4px' }} />
+        <Setting onChange={handleSave} style={{ position: 'absolute', right: '6px', top: '8px' }} />
 
         <div>
           {messages

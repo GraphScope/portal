@@ -2,7 +2,7 @@
 import React, { memo } from 'react';
 import { getSearchParams, searchParamOf } from '../utils';
 import { RollbackOutlined, PicLeftOutlined, SlidersOutlined } from '@ant-design/icons';
-import { Space, Button, theme, Flex, Typography } from 'antd';
+import { Space, Button, theme, Flex, Typography, Tooltip, Divider, Tag } from 'antd';
 const { useToken } = theme;
 
 interface Option {
@@ -51,12 +51,13 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-    height: '34px',
-    margin: '24px 0px',
+    // height: '34px',
+    margin: '12px 0px',
     cursor: 'pointer',
     listStyle: 'none',
     justifyContent: 'center',
     alignItems: 'center',
+    boxSizing: 'border-box',
   },
   content: {},
 };
@@ -71,7 +72,7 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
   const activeOption = options.find(item => {
     return item.id === nav;
   });
-
+  console.log('token.colorBgBlur', token.colorBgBlur, token);
   return (
     <div
       style={{
@@ -83,12 +84,10 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
       {onBack && (
         <Flex justify="space-between" align="center" style={styles.header}>
           <Flex align="center">
-            {logo}
-            <Typography.Title level={5} style={{ margin: '0px' }}>
-              {title}
-            </Typography.Title>
+            <div onClick={onBack} style={{ cursor: 'pointer' }}>
+              {logo}
+            </div>
           </Flex>
-          <Button type="text" style={{ margin: '0px 10px' }} icon={<RollbackOutlined />} onClick={onBack} />
         </Flex>
       )}
       <div style={styles.container}>
@@ -98,13 +97,14 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
             const isActive = id === nav;
             const activeLi = isActive
               ? {
-                  borderRight: `1px solid ${token.colorPrimary}`,
+                  // borderLeft: `2px solid ${token.colorPrimary}`,
                 }
               : {};
             const activeIcon = isActive
               ? {
-                  color: token.colorPrimary,
                   fontWeight: '600',
+                  background: token.colorPrimaryBg,
+                  color: token.colorPrimary,
                 }
               : {};
             const activeText: React.CSSProperties = isActive
@@ -131,8 +131,11 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
                   onChange(opt);
                 }}
               >
-                <span style={activeIcon}>{icon}</span>
-                <span style={activeText}>{name}</span>
+                <Tooltip title={name} placement="right">
+                  <Button type={'text'} icon={icon} style={activeIcon} size="large"></Button>
+                </Tooltip>
+                {/* <span style={activeIcon}>{icon}</span> */}
+                {/* <span style={activeText}>{name}</span> */}
               </li>
             );
           })}

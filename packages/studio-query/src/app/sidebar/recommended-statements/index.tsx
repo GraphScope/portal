@@ -3,7 +3,7 @@ import { Tag, Typography, Flex } from 'antd';
 import { transGraphSchema } from '../../../statement/result/graph';
 import { getConfig } from '../../../graph/utils';
 import { useContext } from '../../context';
-const { Title } = Typography;
+const { Title, Text } = Typography;
 interface IRecommendedStatementsProps {
   schemaData: any;
   schemaId: string;
@@ -21,6 +21,14 @@ const getPropertyKeys = schema => {
     });
   });
   return [...keys.values()] as string[];
+};
+
+const styles = {
+  title: {
+    marginTop: '12px',
+    fontSize: '14px',
+    fontWeight: 400,
+  },
 };
 const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps> = props => {
   const { schemaData, schemaId } = props;
@@ -49,12 +57,12 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
   };
   return (
     <Flex vertical style={{ height: '100%', overflow: 'hidden' }}>
-      <Typography.Title level={4} style={{ margin: '0px', flexBasis: '30px', padding: '12px' }}>
+      <Typography.Title level={5} style={{ margin: '0px', flexBasis: '30px', padding: '12px' }}>
         Recommended
       </Typography.Title>
       <div style={{ padding: '0px 12px' }}>
-        <Title level={5} style={{ marginTop: '12px' }}>
-          Node Labels
+        <Title level={5} style={styles.title}>
+          Vertex Labels
         </Title>
         {nodes.map(item => {
           const { label } = item;
@@ -71,7 +79,9 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
             </Tag>
           );
         })}
-        <Title level={5}>Relationship Labels</Title>
+        <Title level={5} style={styles.title}>
+          Edge Labels
+        </Title>
         {edges.map(item => {
           const { label } = item;
           const { color } = configMap.get(label) || { color: '#ddd' };
@@ -87,7 +97,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
             </Tag>
           );
         })}
-        <Title level={5}>Property Keys</Title>
+        <Title style={styles.title}>Property Keys</Title>
         {keys.map(item => {
           return (
             <Tag
