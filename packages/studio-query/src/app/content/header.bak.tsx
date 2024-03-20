@@ -1,12 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import {
-  InsertRowAboveOutlined,
-  OrderedListOutlined,
-  PlusOutlined,
-  PlayCircleOutlined,
-  PoweroffOutlined,
-} from '@ant-design/icons';
-import { Tooltip, Segmented, Button, Space, Select, Flex, Typography } from 'antd';
+import { InsertRowAboveOutlined, OrderedListOutlined, PlusOutlined, PlayCircleOutlined } from '@ant-design/icons';
+import { Tooltip, Segmented, Button, Space, Select, Flex } from 'antd';
 import { localStorageVars } from '../context';
 import { useContext } from '../context';
 import CypherEditor from '../../cypher-editor';
@@ -45,28 +39,6 @@ const ModeSwitch = () => {
     />
   );
 };
-const LanguageSwitch = () => {
-  const { updateStore, store } = useContext();
-  const { language } = store;
-  const onChange = value => {
-    updateStore(draft => {
-      draft.language = value;
-    });
-  };
-  return (
-    <Segmented
-      value={language}
-      options={[
-        {
-          label: 'Gremlin',
-          value: 'gremlin',
-        },
-        { label: 'Cypher', value: 'cypher' },
-      ]}
-      onChange={onChange}
-    />
-  );
-};
 
 const Header: React.FunctionComponent<IHeaderProps> = props => {
   const { updateStore, store } = useContext();
@@ -75,7 +47,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
     lineCount: 1,
     clear: false,
   });
-  const { globalScript, autoRun, language, graphName } = store;
+  const { globalScript, autoRun, language } = store;
 
   const handleChange = value => {};
   const onChangeContent = line => {
@@ -128,66 +100,71 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
   return (
     <div
       style={{
-        width: '100%',
-        padding: '8px 0px',
+        flex: 1,
+        display: 'flex',
+        border: '1px solid #ddd',
+        borderRadius: '6px',
+        padding: '3px',
+        justifyItems: 'start',
+        alignItems: 'start',
+        margin: '5px 0px',
       }}
     >
-      <Flex justify="space-between" align="center">
-        <LanguageSwitch />
-
-        <Typography.Text>
-          <span
-            style={{
-              background: 'green',
-              width: '10px',
-              height: '10px',
-              borderRadius: '50%',
-              display: 'inline-block',
-              marginRight: '3px',
-            }}
-          />
-          {graphName}
-        </Typography.Text>
-        <Space>
-          <ModeSwitch />
-        </Space>
-      </Flex>
-      <Flex justify="space-between" style={{ marginTop: '8px' }}>
-        <div
+      {isShowCypherSwitch && (
+        <Select
+          style={{ marginRight: '-32px', zIndex: 999 }}
+          defaultValue={language}
+          options={[
+            { value: 'cypher', label: 'Cypher' },
+            { value: 'gremlin', label: 'Gremlin' },
+          ]}
+          onChange={handleChangeLanguage}
+        />
+      )}
+      {isShowCypherSwitch && (
+        <span
           style={{
-            flex: 1,
-            display: 'block',
-            overflow: 'hidden',
-            border: '1px solid rgb(187, 190, 195)',
-            borderRadius: '6px',
+            position: 'absolute',
+            top: '11px',
+            left: '99px',
+            height: '28px',
+            width: '28px',
+            lineHeight: '28px',
+            // background: '#',
+            zIndex: 9999,
+            textAlign: 'center',
           }}
-        >
-          <CypherEditor
-            language={language}
-            onChangeContent={onChangeContent}
-            value={globalScript}
-            ref={editorRef}
-            onChange={handleChange}
-            onInit={(initEditor: any) => {
-              if (autoRun) {
-                handleQuery();
-              }
-            }}
-            maxRows={25}
-            minRows={minRows}
-            clear={state.clear}
-          />
-        </div>
-        <div style={{ flexBasis: '48px', flexShrink: 0 }}>
-          <Button
-            style={{ marginLeft: '10px' }}
-            type="text"
-            icon={<PlayCircleOutlined style={{ fontSize: '24px' }} />}
-            onClick={handleQuery}
-            size="large"
-          />
-        </div>
-      </Flex>
+        ></span>
+      )}
+      <div
+        style={{
+          // height: '100%',
+          flex: 1,
+          width: '400px',
+          display: 'block',
+          overflow: 'hidden',
+        }}
+      >
+        <CypherEditor
+          language={language}
+          onChangeContent={onChangeContent}
+          value={globalScript}
+          ref={editorRef}
+          onChange={handleChange}
+          onInit={(initEditor: any) => {
+            if (autoRun) {
+              handleQuery();
+            }
+          }}
+          maxRows={25}
+          minRows={minRows}
+          clear={state.clear}
+        />
+      </div>
+      <Space>
+        <Button type="text" icon={<PlayCircleOutlined />} onClick={handleQuery} />
+        <ModeSwitch />
+      </Space>
     </div>
   );
 };

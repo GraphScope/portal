@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useContext } from '../../context';
-import List from './list';
+import List from '../statement-list';
 import { Flex, Typography, Empty } from 'antd';
 import { BookOutlined } from '@ant-design/icons';
-import './index.css';
+import Section from '../section';
 interface ISavedStatementsProps {
   deleteStatements: (ids: string[]) => void;
 }
@@ -21,6 +21,7 @@ const SavedStatements: React.FunctionComponent<ISavedStatementsProps> = props =>
     const { id, script } = value;
     updateStore(draft => {
       draft.globalScript = script;
+      draft.autoRun = true;
       // const queryIds = draft.statements.map(item => item.id);
       // const HAS_QUERY = queryIds.indexOf(id) !== -1;
       // draft.activeId = id;
@@ -38,27 +39,22 @@ const SavedStatements: React.FunctionComponent<ISavedStatementsProps> = props =>
       });
     });
   };
-  const isEmpty = items.length === 0;
+
   return (
-    <Flex vertical style={{ height: '100%', overflow: 'hidden' }}>
-      <Typography.Title level={4} style={{ margin: '0px', flexBasis: '30px', padding: '12px' }}>
-        Saved
-      </Typography.Title>
-      {isEmpty && (
-        <div style={{ padding: '120px 0px' }}>
-          <Empty
-            description={
-              <Typography.Text style={{ fontSize: '12px' }}>
-                暂无语句 <br />
-                您可以点击 <BookOutlined /> 保存语句
-                <br />
-              </Typography.Text>
-            }
-          ></Empty>
-        </div>
-      )}
-      {!isEmpty && <List items={items} onClick={handleClick} onDelete={handleDelete} />}
-    </Flex>
+    <Section title="Saved">
+      <List
+        items={items}
+        onClick={handleClick}
+        onDelete={handleDelete}
+        placeholder={
+          <>
+            暂无语句 <br />
+            您可以点击 <BookOutlined /> 保存语句
+            <br />
+          </>
+        }
+      />
+    </Section>
   );
 };
 

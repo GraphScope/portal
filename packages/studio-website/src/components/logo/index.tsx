@@ -115,7 +115,7 @@ export const LogoText = ({ style }: { style: React.CSSProperties }) => {
   );
 };
 
-const Logo = (props: { style: any; onlyIcon: boolean }) => {
+const Logo = (props: { style: any; onlyIcon?: boolean }) => {
   const { style, onlyIcon } = props;
 
   const textStyle = onlyIcon

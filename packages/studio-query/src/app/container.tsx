@@ -50,6 +50,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
         display: 'flex',
         flexWrap: 'nowrap',
         overflow: 'hidden',
+        background: '#fff',
         ...positionStyle,
       }}
     >
@@ -68,7 +69,8 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
             boxSizing: 'border-box',
             flex: 1,
             overflowY: 'scroll',
-            background: '#fff',
+            // background: '#fff',
+            background: '#f4f5f5',
             borderRadius: '12px',
           }}
           className="gs-content"

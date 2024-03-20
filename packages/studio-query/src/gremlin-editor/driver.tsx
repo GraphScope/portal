@@ -31,7 +31,7 @@ export interface Table {
 
 class CypherDriver {
   private driver: any;
-
+  private uri: string;
   constructor(uri: string, username: string = 'admin', password: string = 'password') {
     try {
       const authenticator = new gremlin.driver.auth.PlainTextSaslAuthenticator(username, password);
@@ -40,6 +40,7 @@ class CypherDriver {
         traversalSource: 'g',
         authenticator,
       });
+      this.uri = uri;
       this.driver = client;
     } catch (error) {
       console.log(error);
@@ -75,15 +76,11 @@ class CypherDriver {
       result = await this.driver.submit(cypher);
       console.log('%c[Query] 查询结果', 'color:green', result);
     } catch (error: any) {
-      console.log(error);
-      notification.error({
-        message: 'Cypher 查询出错',
-        description: error.toString(),
-      });
-
       return {
         nodes: [],
         edges: [],
+        raw: error,
+        mode: 'error',
       };
     }
 
@@ -131,7 +128,7 @@ class CypherDriver {
       const vertexPropertyMap = await this.queryNodesProperties([...nodeIds]);
       for (let key in vertexPropertyMap) {
         if (key in nodeItemsMapping) {
-          nodeItemsMapping[key].data = vertexPropertyMap[key];
+          nodeItemsMapping[key].properties = vertexPropertyMap[key];
         }
       }
     }
@@ -153,16 +150,11 @@ class CypherDriver {
         tableResult,
       });
       return {
-        success: true,
-        code: 200,
-        message: 'Gremlin 查询成功',
+        nodes,
+        edges,
         mode,
-        data: {
-          nodes,
-          edges,
-          mode,
-          tableResult,
-        },
+        table: tableResult,
+        raw: result,
       };
     }
   }
@@ -215,7 +207,7 @@ class CypherDriver {
           elementProp[`${key}`] = currentProp[0].value;
         }
       }
-      obj.data = elementProp;
+      obj.properties = elementProp;
     }
     // edge also need src/dst information
     if (value instanceof gremlin.structure.Edge) {
