@@ -96,6 +96,9 @@ class CypherDriver {
       return {
         nodes: [],
         edges: [],
+        //@ts-ignore
+        raw: error,
+        mode: 'error',
       };
     }
   }
@@ -123,14 +126,12 @@ class CypherDriver {
       session.close();
       return processResult(result);
     } catch (error: any) {
-      console.log(error);
-      notification.error({
-        message: 'Cypher 查询出错',
-        description: error.toString(),
-      });
       return {
         nodes: [],
         edges: [],
+        //@ts-ignore
+        raw: error,
+        mode: 'error',
       };
     }
   }
@@ -242,7 +243,7 @@ export function processResult(result) {
   });
 
   console.log({ nodes: deduplicateNodes(nodes), edges, table });
-  return { nodes: deduplicateNodes(nodes), edges, table };
+  return { nodes: deduplicateNodes(nodes), edges, table, raw: result };
 }
 
 export function deduplicateNodes(nodes) {

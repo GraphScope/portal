@@ -1,7 +1,7 @@
 import React, { useState, memo, useRef, useEffect } from 'react';
 import { Space, Button, theme, Skeleton } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
-
+import dayjs from 'dayjs';
 import Editor from './editor';
 import Result from './result';
 
@@ -40,7 +40,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
   const borderStyle =
     active && mode === 'flow'
       ? {
-          border: `2px solid ${token.colorPrimary}`,
+          border: `1px solid ${token.colorBorder}`,
         }
       : {
           border: `1px solid  ${token.colorBorder}`,
@@ -49,8 +49,11 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
   const [state, updateState] = useState({
     data: null,
     isFetching: false,
+    startTime: 0,
+    endTime: 0,
+    abort: false,
   });
-  const { data, isFetching } = state;
+  const { data, isFetching, startTime, endTime } = state;
   useEffect(() => {
     if (ContainerRef.current && active && mode === 'flow') {
       ContainerRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -62,6 +65,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
       return {
         ...preState,
         isFetching: true,
+        startTime: new Date().getTime(),
       };
     });
 
@@ -72,6 +76,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
         ...preState,
         data: res,
         isFetching: false,
+        endTime: new Date().getTime(),
       };
     });
   };
@@ -82,6 +87,11 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
     }
   }, [enableImmediateQuery]);
 
+  const isRunning = endTime - startTime < 0;
+  const message = isRunning
+    ? `query submmited on ${dayjs(startTime).format('HH:mm:ss YYYY-MM-DD')}. It's running ... `
+    : `query submmited on ${dayjs(startTime).format('HH:mm:ss YYYY-MM-DD')}. Running ${endTime - startTime} ms`;
+
   return (
     <div
       ref={ContainerRef}
@@ -90,13 +100,14 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
         flexDirection: 'column',
         flex: 1,
         margin: '12px',
-        padding: '8px',
-        background: '#fff',
+        padding: '8px 16px',
         borderRadius: '8px',
         ...borderStyle,
+        background: '#fff',
       }}
     >
       <Editor
+        message={message}
         language={language}
         timestamp={timestamp}
         schemaData={schemaData}
