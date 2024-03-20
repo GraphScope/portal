@@ -44,7 +44,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const navbarOptions = [
     {
       id: 'recommended',
-      name: 'Schema',
+      name: 'Recommended',
       icon: <DeploymentUnitOutlined />,
       children: <RecommendedStatements schemaData={schemaData} schemaId={graphName} />,
     },
@@ -62,7 +62,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     },
     {
       id: 'store-procedure',
-      name: 'store-procedure',
+      name: 'Store Procedure',
       icon: <DatabaseOutlined />,
       children: <StoreProcedure deleteStatements={ids => deleteStatements('store-procedure', ids)} />,
     },

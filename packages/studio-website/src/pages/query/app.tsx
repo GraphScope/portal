@@ -1,6 +1,6 @@
 import * as React from 'react';
 import StudioQuery from '@graphscope/studio-query';
-import { LogoImage } from '@/components/logo';
+import Logo from '@/components/logo';
 import { history } from 'umi';
 import {
   queryGraphData,
@@ -43,7 +43,7 @@ const QueryModule = () => {
       queryGraphData={queryGraphData}
       //@ts-ignore
       queryGraphSchema={queryGraphSchema}
-      logo={<LogoImage style={{ width: '50px', height: '30px' }} />}
+      logo={<Logo style={{ width: '140px', marginLeft: '16px' }} />}
     />
   );
 };
