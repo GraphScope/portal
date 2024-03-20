@@ -4,6 +4,7 @@ import { transGraphSchema } from '../../../statement/result/graph';
 import { getConfig } from '../../../graph/utils';
 import { useContext } from '../../context';
 const { Title, Text } = Typography;
+import Section from '../section';
 interface IRecommendedStatementsProps {
   schemaData: any;
   schemaId: string;
@@ -39,7 +40,6 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
   const keys = getPropertyKeys(graphSchema);
 
   const handleClick = (label: string, type: 'nodes' | 'edges' | 'property') => {
-    console.log(type, label);
     let script = '';
     if (type === 'nodes') {
       script = `MATCH (n:${label}) RETURN n LIMIT 25`;
@@ -56,10 +56,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
     });
   };
   return (
-    <Flex vertical style={{ height: '100%', overflow: 'hidden' }}>
-      <Typography.Title level={5} style={{ margin: '0px', flexBasis: '30px', padding: '12px' }}>
-        Recommended
-      </Typography.Title>
+    <Section title="Recommended">
       <div style={{ padding: '0px 12px' }}>
         <Title level={5} style={styles.title}>
           Vertex Labels
@@ -112,7 +109,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
           );
         })}
       </div>
-    </Flex>
+    </Section>
   );
 };
 

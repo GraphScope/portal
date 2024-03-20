@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IStatement } from '../../context';
-import { Typography, Checkbox, Button, Flex, theme } from 'antd';
+import { Typography, Checkbox, Button, Flex, theme, Empty } from 'antd';
 import { DeleteOutlined, EditOutlined, MoreOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
@@ -38,6 +38,7 @@ interface IListProps {
   onDelete: (ids: string[]) => void;
   actionStyle?: React.CSSProperties;
   group?: boolean;
+  placeholder?: React.ReactNode;
 }
 
 export function convertTimestamps(timestamps) {
@@ -151,7 +152,7 @@ const GroupList = props => {
 };
 
 const StatementList: React.FunctionComponent<IListProps> = props => {
-  const { items, onClick, onDelete, actionStyle, group } = props;
+  const { items, onClick, onDelete, actionStyle, group, placeholder } = props;
 
   const [state, updateState] = useState({
     checkedSet: new Set<string>(),
@@ -187,7 +188,18 @@ const StatementList: React.FunctionComponent<IListProps> = props => {
     }
     updateCheckedSet(checkedSet);
   };
-  console.log('items', items);
+
+  const isEmpty = items.length == 0;
+  if (isEmpty && placeholder) {
+    return (
+      <div style={{ padding: '120px 0px' }}>
+        <Empty
+          imageStyle={{ height: '80px' }}
+          description={<Typography.Text style={{ fontSize: '12px' }}>{placeholder}</Typography.Text>}
+        ></Empty>
+      </div>
+    );
+  }
   return (
     <>
       <div style={{ position: 'absolute', top: '14px', right: '8px', ...actionStyle }}>

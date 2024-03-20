@@ -19,7 +19,8 @@ const CypherMessage = ({ content, onQuery }) => {
           style={{ position: 'absolute', bottom: '2px', right: '2px' }}
           onClick={handleClick}
           size="small"
-          icon={<PlayCircleOutlined />}
+          icon={<PlayCircleOutlined style={{ color: '#52c41a' }} />}
+          type="text"
         ></Button>
       </Tooltip>
     </div>
@@ -45,7 +46,6 @@ const Message: React.FunctionComponent<CMessage & { onQuery: (value: string) => 
     return (
       <Flex align="start" justify="flex-end" gap={4} style={{ margin: '6px 0px' }}>
         <TextMessage content={content} role={role} />
-        <UserOutlined />
       </Flex>
     );
   }
