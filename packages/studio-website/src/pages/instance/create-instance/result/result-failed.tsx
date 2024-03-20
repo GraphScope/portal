@@ -10,8 +10,10 @@ const ResultFailed: React.FunctionComponent = () => {
   const myTheme = createTheme({
     theme: mode === 'defaultAlgorithm' ? 'light' : 'dark',
     settings: {
-      background: mode === 'defaultAlgorithm' ? '#fff' : '#202020',
-      foreground: mode === 'defaultAlgorithm' ? '#202020' : '#fff',
+      background: mode === 'defaultAlgorithm' ? '#fff' : '#151515',
+      backgroundImage: '',
+      foreground: mode === 'defaultAlgorithm' ? '#212121' : '#FFF',
+      gutterBackground: mode === 'defaultAlgorithm' ? '#fff' : '#151515',
     },
   });
   return (

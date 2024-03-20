@@ -36,10 +36,10 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
   const myTheme = createTheme({
     theme: mode === 'defaultAlgorithm' ? 'light' : 'dark',
     settings: {
-      background: mode === 'defaultAlgorithm' ? '#fff' : '#000',
+      background: mode === 'defaultAlgorithm' ? '#fff' : '#151515',
       backgroundImage: '',
       foreground: mode === 'defaultAlgorithm' ? '#212121' : '#FFF',
-      gutterBackground: mode === 'defaultAlgorithm' ? '#fff' : '#000',
+      gutterBackground: mode === 'defaultAlgorithm' ? '#fff' : '#151515',
     },
   });
   useEffect(() => {
