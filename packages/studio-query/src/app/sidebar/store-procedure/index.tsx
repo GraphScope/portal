@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useContext } from '../../context';
-import List from '../saved-statements/list';
+import List from '../statement-list';
 import { Flex, Typography, Empty } from 'antd';
-
+import Section from '../section';
 interface IStoreProcedureProps {
   deleteStatements: (ids: string[]) => void;
 }
@@ -34,27 +34,21 @@ const StoreProcedure: React.FunctionComponent<IStoreProcedureProps> = props => {
       });
     });
   };
-  const isEmpty = items.length === 0;
 
   return (
-    <Flex vertical style={{ height: '100%', overflow: 'hidden' }}>
-      <Typography.Title level={4} style={{ margin: '0px', flexBasis: '30px', padding: '12px' }}>
-        Store Procedure
-      </Typography.Title>
-      {isEmpty && (
-        <div style={{ padding: '120px 0px' }}>
-          <Empty
-            description={
-              <Typography.Text style={{ fontSize: '12px' }}>
-                暂无存储过程 <br />
-                快去「插件市场」<Typography.Link style={{ fontSize: '12px' }}>创建</Typography.Link>一个吧
-              </Typography.Text>
-            }
-          ></Empty>
-        </div>
-      )}
-      {!isEmpty && <List items={items} onClick={handleClick} onDelete={handleDelete} />}
-    </Flex>
+    <Section title="Store Procedure">
+      <List
+        items={items}
+        onClick={handleClick}
+        onDelete={handleDelete}
+        placeholder={
+          <>
+            暂无存储过程 <br />
+            快去「插件市场」<Typography.Link style={{ fontSize: '12px' }}>创建</Typography.Link>一个吧
+          </>
+        }
+      />
+    </Section>
   );
 };
 

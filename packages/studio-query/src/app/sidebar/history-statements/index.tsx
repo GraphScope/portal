@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useContext } from '../../context';
-import List from './list';
-import { Typography, Flex } from 'antd';
+import List from '../statement-list';
+import Section from '../section';
 
 const HistoryStatements = props => {
   const { deleteHistoryStatements } = props;
@@ -12,6 +12,7 @@ const HistoryStatements = props => {
     const { id, script } = value;
     updateStore(draft => {
       draft.globalScript = script;
+      draft.autoRun = false;
     });
   };
 
@@ -27,12 +28,19 @@ const HistoryStatements = props => {
     return item;
   });
   return (
-    <Flex vertical style={{ height: '100%', overflow: 'hidden' }}>
-      <Typography.Title level={4} style={{ margin: '0px', flexBasis: '30px', padding: '12px' }}>
-        History
-      </Typography.Title>
-      <List items={items} onClick={handleClick} onDelete={handleDelete} />
-    </Flex>
+    <Section title="History">
+      <List
+        items={items}
+        onClick={handleClick}
+        onDelete={handleDelete}
+        placeholder={
+          <>
+            No query history available
+            <br />
+          </>
+        }
+      />
+    </Section>
   );
 };
 

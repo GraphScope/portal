@@ -21,6 +21,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { getSearchParams, searchParamOf, formatCypherStatement } from './utils';
 
 import Container from './container';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBookmark, faClockFour, faDatabase, faRobot, faLightbulb } from '@fortawesome/free-solid-svg-icons';
 
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const {
@@ -45,31 +47,31 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     {
       id: 'recommended',
       name: 'Recommended',
-      icon: <DeploymentUnitOutlined />,
+      icon: <FontAwesomeIcon icon={faLightbulb} />, //<DeploymentUnitOutlined />,
       children: <RecommendedStatements schemaData={schemaData} schemaId={graphName} />,
     },
     {
       id: 'saved',
       name: 'Saved',
-      icon: <BookOutlined />,
+      icon: <FontAwesomeIcon icon={faBookmark} />, //  <BookOutlined />,
       children: <SavedStatements deleteStatements={ids => deleteStatements('saved', ids)} />,
     },
     {
       id: 'history',
       name: 'History',
-      icon: <HistoryOutlined />,
+      icon: <FontAwesomeIcon icon={faClockFour} />, //<HistoryOutlined />,//<FontAwesomeIcon icon={faTimesCircle} />
       children: <HistoryStatements deleteHistoryStatements={ids => deleteStatements('history', ids)} />,
     },
     {
       id: 'store-procedure',
       name: 'Store Procedure',
-      icon: <DatabaseOutlined />,
+      icon: <FontAwesomeIcon icon={faDatabase} />, //<DatabaseOutlined />,
       children: <StoreProcedure deleteStatements={ids => deleteStatements('store-procedure', ids)} />,
     },
     {
       id: 'qwen',
       name: 'Copilot',
-      icon: <RedditOutlined />,
+      icon: <FontAwesomeIcon icon={faRobot} />, //<RedditOutlined />,
       children: <GPTStatements schemaData={schemaData} />,
     },
   ];
