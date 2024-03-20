@@ -22,7 +22,7 @@ type IPropertiesEditorProps = {
   tableConfig?: [];
   /** 控制表格是否编辑 */
   isEditable: boolean;
-  locales: { properties: string; addProperty: string; mapFromFile: string };
+  locales: { properties: React.ReactNode; addProperty: React.ReactNode; mapFromFile: React.ReactNode };
   mode: string;
 };
 const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
