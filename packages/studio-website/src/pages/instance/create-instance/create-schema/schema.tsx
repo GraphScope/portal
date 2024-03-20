@@ -65,7 +65,11 @@ const configcolumns: configcolumnsType[] = [
     title: (
       <div>
         <Tooltip title={<FormattedMessage id="Primary key" />}>
-          <Button type="text" icon={<PrimaryKey style={{ color: '#c6c8cb' }} />} size="small"></Button>
+          <Button
+            type="text"
+            icon={<PrimaryKey style={{ color: '#c6c8cb', paddingTop: '3px' }} />}
+            size="small"
+          ></Button>
         </Tooltip>
       </div>
     ),
@@ -213,6 +217,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
           cbRef.current = values;
           formChange();
         }}
+        isEditable={disabled}
         /**映射控制 */
         isMapFromFile={false}
         mode={store.mode}

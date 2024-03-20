@@ -109,6 +109,7 @@ const Plugins: React.FC<IPluginsProps> = props => {
         <Skeleton />
       ) : (
         <Table
+          style={{ marginTop: '-12px' }}
           dataSource={pluginList}
           //@ts-ignores
           columns={columns}

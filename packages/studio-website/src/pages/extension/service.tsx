@@ -70,14 +70,14 @@ export const listGraphs = async () => {
     });
   const { graphs_info } = deployments;
 
-  const info = Object.values(graphs_info!).map(item => {
+  let info = Object.values(graphs_info!).map(item => {
     const { name } = item;
-
     return {
       label: name,
       value: name,
     };
   });
-
+  /** 过滤相同属性 */
+  info = info.filter((item, index) => info.findIndex(i => i.value === item.value) === index);
   return info;
 };

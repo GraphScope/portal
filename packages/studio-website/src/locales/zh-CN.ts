@@ -141,7 +141,7 @@ export default {
   'Graph Schema': '图模型',
   'types of Edges': '个边类型',
   'types of Vertices': '个点类型',
-  Endpoints: '服务',
+  Endpoints: '服务地址',
   Statistics: '统计',
   'New Graph': '新建实例',
   'Pause Service': '暂停服务',
@@ -153,14 +153,14 @@ export default {
   running: '运行中',
   stopped: '已停止 ',
   /** instance  */
-  'Graph Metadata': '模型数据',
+  'Graph Metadata': '选择引擎',
   'Graph instance name': '实例名称',
   'Graph store type': '存储类型',
   'graphs.engine.interactive.desc':
-    '交互式引擎旨在以惊人的速度处理并发图形查询。其主要目标是在给定的时间范围内处理尽可能多的查询，强调高查询吞吐率。',
+    'Interactive 旨在以惊人的速度处理并发图形查询。其主要目标是在给定的时间范围内处理尽可能多的查询，强调高查询吞吐率。',
   'More details': '更多详情',
   'Add new': '新建',
-  Interactive: '交互',
+  Interactive: 'Interactive',
   'View Schema': '查看模型',
   Upload: '上传',
   delete: '删除',
@@ -170,4 +170,6 @@ export default {
   'property name': '属性名称',
   'Data type': '数据类型',
   'Primary key': '主键',
+  "Congratulations on the successful creation of the model, now let's start to guide the data.":
+    '恭喜模型创建成功，现在让我们开始导数据啦。',
 };

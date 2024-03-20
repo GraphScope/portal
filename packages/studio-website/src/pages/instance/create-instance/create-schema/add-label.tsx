@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import { Button, Space } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { cloneDeep } from 'lodash';
@@ -19,7 +19,7 @@ const AddLabel: FunctionComponent = () => {
     updateStore(draft => {
       if (currentType == 'node') {
         draft.nodeActiveKey = id;
-        index.node = index.node + 1;
+        index.node = nodeList.length === 0 ? 1 : index.node + 1;
         draft.nodeList.push({
           key: id,
           label: `vlabel_${index.node}`,
@@ -28,7 +28,7 @@ const AddLabel: FunctionComponent = () => {
       }
       if (currentType === 'edge') {
         draft.edgeActiveKey = id;
-        index.edge = index.edge + 1;
+        index.edge = edgeList.length === 0 ? 1 : index.edge + 1;
         draft.edgeList.push({
           key: id,
           label: `elabel_${index.edge}`,

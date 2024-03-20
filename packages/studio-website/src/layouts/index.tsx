@@ -34,9 +34,9 @@ export default function Layout() {
               titleMarginTop: '0.8em',
             },
             Table: {
-              headerBg: mode === 'defaultAlgorithm' ? '#fff' : '#000',
-              headerColor: '#C7C9CC',
-              headerSplitColor: mode === 'defaultAlgorithm' ? '#fff' : '#000',
+              headerBg: mode === 'defaultAlgorithm' ? '#fff' : '#161616',
+              headerColor: mode === 'defaultAlgorithm' ? 'rgba(0, 0, 0, 0.45)' : '#DBDBDB',
+              headerSplitColor: mode === 'defaultAlgorithm' ? '#fff' : '#161616',
             },
             // Tooltip: {
             //   colorTextLightSolid: '#000',
