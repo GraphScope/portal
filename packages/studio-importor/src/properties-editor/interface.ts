@@ -71,6 +71,7 @@ export type MapConfigParamsType = {
     mapFromFileConfirm: () => void;
     handleSelectRow?: (selectedRowKeys: any) => void;
     locales: { properties: React.ReactNode; addProperty: React.ReactNode; mapFromFile: React.ReactNode };
+    isEditable: boolean;
   };
 };
 export type PropertyConfigParamsType = {
