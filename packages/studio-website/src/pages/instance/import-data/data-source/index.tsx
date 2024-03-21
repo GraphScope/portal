@@ -151,7 +151,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                   {engineType === 'groot' && (
                     <>
                       <ImportPeriodic />
-                      <ImportNow label={label} />
+                      <ImportNow label={label} filelocation={filelocation} />
                     </>
                   )}
                 </Space>

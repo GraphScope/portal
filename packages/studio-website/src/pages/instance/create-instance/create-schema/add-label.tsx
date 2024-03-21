@@ -9,10 +9,11 @@ const index = {
   edge: 0,
   node: 0,
 };
+const { GS_ENGINE_TYPE } = window;
 const AddLabel: FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, mode } = store;
-  const disabled = mode == 'view';
+  const disabled = mode == 'view' && GS_ENGINE_TYPE === 'interactive';
   /** 添加点边模版 */
   const addLabel = () => {
     const id = uuidv4();
@@ -25,6 +26,7 @@ const AddLabel: FunctionComponent = () => {
           key: id,
           label: `vlabel_${index.node}`,
           properties: [],
+          isAdd: true,
         });
       }
       if (currentType === 'edge') {
@@ -37,6 +39,7 @@ const AddLabel: FunctionComponent = () => {
           source: '',
           target: '',
           properties: [],
+          isAdd: true,
         });
       }
     });

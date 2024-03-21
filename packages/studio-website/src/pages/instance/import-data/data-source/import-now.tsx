@@ -3,10 +3,11 @@ import { FormattedMessage } from 'react-intl';
 import { Button, notification, Typography, Flex, Space } from 'antd';
 interface IImportNowProps {
   label: string;
+  filelocation: string;
 }
 const { Text } = Typography;
 const ImportNow: React.FunctionComponent<IImportNowProps> = props => {
-  const { label } = props;
+  const { label, filelocation } = props;
   const [api, contextHolder] = notification.useNotification();
   const openNotification = () => {
     api.open({
@@ -34,7 +35,7 @@ const ImportNow: React.FunctionComponent<IImportNowProps> = props => {
   };
   return (
     <>
-      <Button onClick={openNotification} size="small">
+      <Button onClick={openNotification} size="small" disabled={!filelocation}>
         <FormattedMessage id="Import Now" />
       </Button>
       {contextHolder}

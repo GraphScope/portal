@@ -7,7 +7,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import { useContext } from '@/layouts/useContext';
 import { listGraphs } from './service';
-
+const { GS_ENGINE_TYPE } = window;
 const InstanceCard: React.FC = () => {
   const [form] = Form.useForm();
   const { store } = useContext();
@@ -70,27 +70,29 @@ const InstanceCard: React.FC = () => {
             </Card>
           </Col>
         )}
-        <Col span={12}>
-          <Card
-            title={<FormattedMessage id="New Graph" />}
-            headStyle={{ fontSize: '30px', color: '#ccc' }}
-            style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
-            bodyStyle={{ width: '100%' }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                height: '164px',
-                justifyContent: 'center',
-                alignContent: 'center',
-                cursor: 'pointer',
-              }}
-              onClick={handleCreate}
+        {GS_ENGINE_TYPE === 'interactive' && (
+          <Col span={12}>
+            <Card
+              title={<FormattedMessage id="New Graph" />}
+              headStyle={{ fontSize: '30px', color: '#ccc' }}
+              style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
+              bodyStyle={{ width: '100%' }}
             >
-              <PlusOutlined style={{ fontSize: '80px', color: '#ccc' }} />
-            </div>
-          </Card>
-        </Col>
+              <div
+                style={{
+                  display: 'flex',
+                  height: '164px',
+                  justifyContent: 'center',
+                  alignContent: 'center',
+                  cursor: 'pointer',
+                }}
+                onClick={handleCreate}
+              >
+                <PlusOutlined style={{ fontSize: '80px', color: '#ccc' }} />
+              </div>
+            </Card>
+          </Col>
+        )}
       </Row>
     </Section>
   );

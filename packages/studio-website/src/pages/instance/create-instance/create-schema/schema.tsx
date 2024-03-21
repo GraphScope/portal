@@ -93,7 +93,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   const [form] = Form.useForm();
   const { store } = useContext();
   const { locale } = store;
-  const disabled = mode === 'view';
+  const disabled = mode === 'view' && !data?.isAdd;
   const propertyRef = useRef<any>();
   let cbRef = useRef();
 

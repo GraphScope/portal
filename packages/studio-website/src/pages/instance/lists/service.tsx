@@ -1,4 +1,10 @@
-import { GraphApiFactory, ServiceApiFactory, ServiceApi, DeploymentApiFactory } from '@graphscope/studio-server';
+import {
+  GraphApiFactory,
+  ServiceApiFactory,
+  ServiceApi,
+  DeploymentApiFactory,
+  LegacyApiFactory,
+} from '@graphscope/studio-server';
 import { message } from 'antd';
 
 export const listGraphs = async () => {
@@ -15,14 +21,28 @@ export const listGraphs = async () => {
     .then(res => {
       return res.data;
     });
+  const { GS_ENGINE_TYPE } = window;
+  let graphs;
+  if (GS_ENGINE_TYPE === 'interactive') {
+    graphs = await GraphApiFactory(undefined, location.origin)
+      .listGraphs()
+      .then(res => {
+        if (res.status === 200) {
+          return res.data;
+        }
+      });
+  }
 
-  const graphs = await GraphApiFactory(undefined, location.origin)
-    .listGraphs()
-    .then(res => {
-      if (res.status === 200) {
-        return res.data;
-      }
-    });
+  if (GS_ENGINE_TYPE === 'groot') {
+    graphs = await LegacyApiFactory(undefined, location.origin)
+      .listGrootGraph()
+      .then(res => {
+        if (res.status === 200) {
+          return res.data;
+        }
+      });
+  }
+
   const graphs_map = graphs?.reduce((acc, curr) => {
     return {
       ...acc,
