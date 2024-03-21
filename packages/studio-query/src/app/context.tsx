@@ -117,6 +117,11 @@ export interface IGraphSchema {
 export type StatementType = 'saved' | 'history' | 'store-procedure';
 
 export interface IStudioQueryProps {
+  theme: {
+    primaryColor: string;
+    mode: 'darkAlgorithm' | 'lightAlgorithm';
+  };
+  locale: 'zh-CN' | 'en-US';
   language: 'cypher' | 'gremlin';
 
   globalScript?: string;

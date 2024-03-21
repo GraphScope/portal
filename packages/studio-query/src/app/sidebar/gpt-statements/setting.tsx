@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
-import { Input, Button, Modal } from 'antd';
+import { Input, Button, Modal, Flex, Typography } from 'antd';
 import { SettingOutlined } from '@ant-design/icons';
+import { FormattedMessage, useIntl } from 'react-intl';
 interface ISettingProps {
   onChange: (value: string) => void;
   style?: React.CSSProperties;
@@ -10,6 +11,7 @@ const Setting: React.FunctionComponent<ISettingProps> = props => {
   const { onChange, style } = props;
   const [isModalOpen, setIsModalOpen] = useState(!localStorage.getItem('OPENAI_KEY_FOR_GS'));
   const InputRef = useRef(null);
+  const intl = useIntl();
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -33,10 +35,21 @@ const Setting: React.FunctionComponent<ISettingProps> = props => {
   return (
     <>
       <Button icon={<SettingOutlined />} type="text" onClick={showModal} style={style}></Button>
-      <Modal title="Setting OPENAI KEY" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <div>
-          <Input ref={InputRef} placeholder="please setting openai key" defaultValue={defaultValue}></Input>
-        </div>
+      <Modal title={<FormattedMessage id="Setting" />} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <Flex vertical gap={12}>
+          <Typography.Text strong>
+            <FormattedMessage id="Privacy Security Notice" />
+          </Typography.Text>
+          <Typography.Text>
+            <FormattedMessage id="query.app.sidebar.gpt.setting.security" />
+          </Typography.Text>
+          <Typography.Text strong>OpenAI API key</Typography.Text>
+          <Input
+            ref={InputRef}
+            placeholder={intl.formatMessage({ id: 'OpenAI API key is only stored locally in your browser' })}
+            defaultValue={defaultValue}
+          ></Input>
+        </Flex>
       </Modal>
     </>
   );

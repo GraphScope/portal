@@ -9,14 +9,15 @@ import { extractTextWithPlaceholders } from './utils/extractTextWithPlaceholders
 import { PlayCircleOutlined, ClearOutlined, SearchOutlined, BulbOutlined, SettingOutlined } from '@ant-design/icons';
 import MessageItem from './message';
 import Setting from './setting';
+import { useIntl } from 'react-intl';
 interface IGPTStatementsProps {
   prompt?: string;
   welcome?: string;
   schemaData: any;
 }
-const recommended_messages = ['帮我推荐5个有趣的查询语句吧', '帮我查看图中节点类型的统计分布', '帮我任意查询一个子图'];
+
 const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
-  const { schemaData, welcome = defaultWelcome, prompt = defaultPrompt } = props;
+  const { schemaData, prompt = defaultPrompt } = props;
   const [state, updateState] = useState<{ messages: Message[]; isLoading: boolean; OPENAI_KEY_FOR_GS: string | null }>({
     messages: [],
     isLoading: false,
@@ -24,9 +25,24 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
   });
   const { messages, isLoading, OPENAI_KEY_FOR_GS } = state;
   const InputRef = useRef(null);
-  const SettingRef = useRef(null);
+
   const controller = useController();
   const { updateStore } = useContext();
+  const intl = useIntl();
+  const recommended_messages = [
+    intl.formatMessage({
+      id: 'recommend 5 interesting query statements',
+    }),
+    intl.formatMessage({
+      id: 'query any subgraph',
+    }),
+    intl.formatMessage({
+      id: 'insight the statistical distribution of vertex labels in the graph',
+    }),
+  ];
+  const welcome = intl.formatMessage({
+    id: 'query.copilot.welcome',
+  });
 
   useEffect(() => {
     if (schemaData) {
