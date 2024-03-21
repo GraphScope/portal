@@ -1,6 +1,7 @@
 import React from 'react';
 import { Input, Space } from 'antd';
 import UploadFiles from './upload-file';
+import { useIntl } from 'react-intl';
 import { useContext } from '@/layouts/useContext';
 interface ISwitchSourceProps {
   filelocation?: string;
@@ -12,6 +13,7 @@ interface ISwitchSourceProps {
 }
 const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
   const { filelocation, onChangeFocus, onChangeValue, onChangeDataFields } = props;
+  const intl = useIntl();
   const { store } = useContext();
   const { locale } = store;
   let placeholder =
@@ -26,7 +28,7 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
           <Input
             style={{ width: '400px' }}
             defaultValue={filelocation}
-            placeholder={placeholder}
+            placeholder={intl.formatMessage({ id: 'Please manually input the odps file location' })}
             onBlur={e => {
               onChangeValue(e.target.value);
             }}
