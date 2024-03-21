@@ -280,6 +280,7 @@ const PropertiesEditor: FC<IPropertiesEditorProps> = memo(
       handleSelectRow: handleSelectRow,
       mapFromFileConfirm: mapFromFileConfirm,
       locales: locales,
+      isEditable: isEditable,
     };
     const propertyConfigParams: PropertyConfigParamsType['propertyConfigParams'] = {
       dataSource: configList,

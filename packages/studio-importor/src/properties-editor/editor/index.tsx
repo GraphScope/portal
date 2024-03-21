@@ -22,7 +22,8 @@ const styles: { [x: string]: CSSProperties } = {
 const Editor: FunctionComponent<MapConfigParamsType & PropertyConfigParamsType> = props => {
   // 解构props中的mapConfigParams和propertyConfigParams
   const { mapConfigParams, propertyConfigParams } = props;
-  const { locales, selectedMapRowKeys, columns, dataSource, handleSelectAll, mapFromFileConfirm } = mapConfigParams;
+  const { locales, selectedMapRowKeys, columns, dataSource, handleSelectAll, mapFromFileConfirm, isEditable } =
+    mapConfigParams;
   const { selectedRows, setConfigList, isMapFromFile, addNodeConfig, delEditTable } = propertyConfigParams;
   /** Map from file模块 */
   let MapFromFile = isMapFromFile && (
@@ -70,7 +71,7 @@ const Editor: FunctionComponent<MapConfigParamsType & PropertyConfigParamsType> 
           {selectedRows.length == 0 ? (
             <Space>
               <Tooltip title={locales.addProperty}>
-                <Button icon={<PlusOutlined />} onClick={() => addNodeConfig()} size="small">
+                <Button icon={<PlusOutlined />} onClick={() => addNodeConfig()} size="small" disabled={isEditable}>
                   {locales.addProperty}
                 </Button>
               </Tooltip>
