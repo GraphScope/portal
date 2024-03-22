@@ -179,4 +179,8 @@ export default {
   'Please Select Source Vertex Label.': 'Please Select Source Vertex Label.',
   'Please Select Target Vertex Label.': 'Please Select Target Vertex Label.',
   'Please manually input the odps file location': 'Please manually input the odps file location',
+  /** sidebar */
+  docs: 'docs',
+  graphscope: 'graphscope',
+  github: 'github',
 };
