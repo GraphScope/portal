@@ -118,12 +118,34 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   const { store, updateStore } = useContext();
   const { currentStep, createInstaseResult, nodeList, edgeList, storeType, graphName, mode } = store;
   useEffect(() => {
-    /** groot 查询数据回填 */
-    const { nodeList, edgeList } = props;
+    const { nodeList, edgeList, graphName, mode = 'create' } = props;
+    const isEmpty = nodeList && nodeList.length === 0;
+    let stepIndex = 1;
+    if (isEmpty || props.mode === 'create') {
+      // 如果是空Schema或者是创建模式，才从第一步开始
+      stepIndex = 0;
+    }
     updateStore(draft => {
+      draft.storeType = storeType;
+      draft.mode = mode;
+      draft.currentStep = stepIndex;
+      draft.nodeActiveKey = isEmpty ? '' : nodeList[0].id;
+      draft.edgeActiveKey = isEmpty ? '' : edgeList[0].id;
+      draft.graphName = graphName;
+      /** groot 查询数据回填 */
       draft.nodeList = nodeList;
       draft.edgeList = edgeList;
     });
+
+    return () => {
+      console.log('clear............');
+      updateStore(draft => {
+        Object.keys(initialStore).forEach(key => {
+          //@ts-ignore
+          draft[key] = initialStore[key];
+        });
+      });
+    };
   }, []);
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
@@ -186,33 +208,6 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
     display: 'block',
   };
 
-  useEffect(() => {
-    const { nodeList, edgeList, graphName, mode = 'create' } = props;
-    const isEmpty = nodeList && nodeList.length === 0;
-    let stepIndex = 1;
-    if (isEmpty || props.mode === 'create') {
-      // 如果是空Schema或者是创建模式，才从第一步开始
-      stepIndex = 0;
-    }
-    updateStore(draft => {
-      draft.storeType = storeType;
-      draft.mode = mode;
-      draft.currentStep = stepIndex;
-      draft.nodeActiveKey = isEmpty ? '' : nodeList[0].id;
-      draft.edgeActiveKey = isEmpty ? '' : edgeList[0].id;
-      draft.graphName = graphName;
-    });
-
-    return () => {
-      console.log('clear............');
-      updateStore(draft => {
-        Object.keys(initialStore).forEach(key => {
-          //@ts-ignore
-          draft[key] = initialStore[key];
-        });
-      });
-    };
-  }, []);
   /** 图创建失败提示框 */
   const openNotification = (result: string) => {
     api.error({

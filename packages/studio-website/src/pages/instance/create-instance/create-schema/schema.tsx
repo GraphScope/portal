@@ -152,8 +152,10 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   };
   const nodeOrEdgeTitle =
     currentType == 'node' ? <FormattedMessage id="Vertex Label" /> : <FormattedMessage id="Edge Label" />;
-  let vertexLabel = locale === 'zh-CN' ? '点标题' : 'Vertex Label.';
-  let edgeLabel = locale === 'zh-CN' ? '边标题' : 'Edge Label.';
+  let label =
+    currentType == 'node'
+      ? intl.formatMessage({ id: 'node.label.type' })
+      : intl.formatMessage({ id: 'edge.label.type' });
   /** 添加属性标题国际化 */
   let locales = {
     properties: intl.formatMessage({ id: 'Properties' }),
@@ -171,13 +173,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             rules={[{ required: true, message: '' }]}
             style={{ marginBottom: '8px' }}
           >
-            <Input
-              disabled={disabled}
-              placeholder={intl.formatMessage(
-                { id: 'label.type' },
-                { label: currentType == 'node' ? vertexLabel : edgeLabel },
-              )}
-            />
+            <Input disabled={disabled} placeholder={label} />
           </Form.Item>
         </div>
         {currentType === 'edge' ? (

@@ -2,7 +2,6 @@ import React from 'react';
 import { Input, Space } from 'antd';
 import UploadFiles from './upload-file';
 import { useIntl } from 'react-intl';
-import { useContext } from '@/layouts/useContext';
 interface ISwitchSourceProps {
   filelocation?: string;
   currentType?: string;
@@ -14,12 +13,6 @@ interface ISwitchSourceProps {
 const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
   const { filelocation, onChangeFocus, onChangeValue, onChangeDataFields } = props;
   const intl = useIntl();
-  const { store } = useContext();
-  const { locale } = store;
-  let placeholder =
-    locale === 'zh-CN'
-      ? '请手动输入文件地址，也可直接上传本地 CSV 文件'
-      : 'Please manually input the odps file location';
   return (
     <Space.Compact size="small">
       <>

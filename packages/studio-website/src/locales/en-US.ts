@@ -175,7 +175,9 @@ export default {
   "Congratulations on the successful creation of the model, now let's start to guide the data.":
     "Congratulations on the successful creation of the model, now let's start to guide the data.",
   'please name your graph instance.': 'please name your graph instance.',
-  'label.type': 'Please Enter {label}',
+  'Please Enter {label}': 'Please Enter {label}',
+  'node.label.type': 'Please Enter Vertex Label.',
+  'edge.label.type': 'Please Enter Edge Label.',
   'Please Select Source Vertex Label.': 'Please Select Source Vertex Label.',
   'Please Select Target Vertex Label.': 'Please Select Target Vertex Label.',
   'Please manually input the odps file location': 'Please manually input the odps file location',

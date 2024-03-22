@@ -174,7 +174,8 @@ export default {
   "Congratulations on the successful creation of the model, now let's start to guide the data.":
     '恭喜模型创建成功，现在让我们开始导数据啦。',
   'please name your graph instance.': '请输入图实例名称。',
-  'label.type': '请输入{label}',
+  'node.label.type': '请输入点标题',
+  'edge.label.type': '请输入边标题',
   'Please Select Source Vertex Label.': '请选择源点标签。',
   'Please Select Target Vertex Label.': '请选择目标点标签。',
   'Please manually input the odps file location': '请手动输入文件地址，也可直接上传本地 CSV 文件',
