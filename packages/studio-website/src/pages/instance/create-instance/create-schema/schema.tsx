@@ -6,6 +6,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import type { IStore } from '../useContext';
 import { useContext } from '@/layouts/useContext';
+import { getPrimitiveTypes } from '../service';
 export type FieldType = {
   label?: string;
   source?: string;
@@ -29,7 +30,8 @@ type configcolumnsType = {
   type?: string;
   option?: { label: string; value: string }[];
 };
-const primitive_types = ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64', 'DT_DATE32'];
+
+const primitive_types = getPrimitiveTypes();
 
 /** 子项 [{title:'表头'，dataIndex:'绑定字段'，type:'字段对应编辑框'，option:'select配置选项',width:'表头宽度'}] */
 const configcolumns: configcolumnsType[] = [

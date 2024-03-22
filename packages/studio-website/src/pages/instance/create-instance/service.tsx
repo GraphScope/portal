@@ -27,3 +27,13 @@ export const createGraph = async (graph: any) => {
   }
   return graphs;
 };
+
+export const getPrimitiveTypes = () => {
+  if (GS_ENGINE_TYPE === 'groot') {
+    return ['STRING', 'LONG', 'DOUBLE'];
+  }
+  if (GS_ENGINE_TYPE === 'interactive') {
+    return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64', 'DT_DATE32'];
+  }
+  return [''];
+};
