@@ -1,17 +1,12 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import {
-  InsertRowAboveOutlined,
-  OrderedListOutlined,
-  PlusOutlined,
-  PlayCircleOutlined,
-  PoweroffOutlined,
-} from '@ant-design/icons';
-import { Tooltip, Segmented, Button, Space, Select, Flex, Typography } from 'antd';
+import React, { useRef, useState } from 'react';
+import { InsertRowAboveOutlined, OrderedListOutlined, PlayCircleOutlined } from '@ant-design/icons';
+import { Tooltip, Segmented, Button, Space, Flex, Typography } from 'antd';
 import { localStorageVars } from '../context';
 import { useContext } from '../context';
 import CypherEditor from '../../cypher-editor';
 import { countLines } from '../utils';
 import { v4 as uuidv4 } from 'uuid';
+
 interface IHeaderProps {}
 
 const options = [
@@ -75,6 +70,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
     lineCount: 1,
     clear: false,
   });
+
   const { globalScript, autoRun, language, graphName } = store;
 
   const handleChange = value => {};

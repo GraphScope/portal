@@ -1,7 +1,7 @@
 import React, { useState, memo } from 'react';
 import Statement from '../../statement';
 import Header from './header';
-import { Segmented } from 'antd';
+import { Segmented, theme } from 'antd';
 import { useContext } from '../context';
 import type { IStatement, IStudioQueryProps } from '../context';
 import { PlayCircleOutlined } from '@ant-design/icons';
@@ -11,12 +11,14 @@ interface IContentProps {
   queryGraphData: IStudioQueryProps['queryGraphData'];
   enableImmediateQuery: boolean;
 }
+const { useToken } = theme;
 
 const Content: React.FunctionComponent<IContentProps> = props => {
   const { createStatements, queryGraphData, enableImmediateQuery } = props;
   const { store, updateStore } = useContext();
   const { activeId, mode, statements, savedStatements, schemaData, graphName, language } = store;
   const savedIds = savedStatements.map(item => item.id);
+  const { token } = useToken();
 
   const statementStyles =
     mode === 'tabs'
@@ -75,7 +77,14 @@ const Content: React.FunctionComponent<IContentProps> = props => {
         height: '100%',
       }}
     >
-      <div style={{ minHeight: '50px', background: '#fff', padding: '0px 12px', borderBottom: '1px solid #ddd' }}>
+      <div
+        style={{
+          minHeight: '50px',
+          background: token.colorBgBase,
+          padding: '0px 12px',
+          borderBottom: `1px solid ${token.colorBorder}`,
+        }}
+      >
         <Header />
         {mode === 'tabs' && queryOptions.length !== 0 && (
           <div style={{ padding: '8px 0px' }}>

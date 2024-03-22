@@ -88,7 +88,7 @@ const List = props => {
 
             <pre
               style={{
-                background: '#f4f5f5',
+                background: token.colorBgLayout,
                 overflow: 'hidden',
                 textWrap: 'pretty',
                 padding: '6px 14px',

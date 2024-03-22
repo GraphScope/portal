@@ -103,7 +103,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
         padding: '8px 16px',
         borderRadius: '8px',
         ...borderStyle,
-        background: '#fff',
+        background: token.colorBgBase,
       }}
     >
       <Editor

@@ -8,21 +8,24 @@ export default function Provider(props) {
   const { primaryColor, mode, inputNumber = '6px' } = theme;
   //@ts-ignore
   const messages = locales[locale];
+  const isLightMode = mode === 'defaultAlgorithm';
   return (
     <IntlProvider messages={messages} locale={locale}>
       <ConfigProvider
         theme={{
           // 1. 单独使用暗色算法
-          algorithm: mode === 'defaultAlgorithm' ? AntdTheme.defaultAlgorithm : AntdTheme.darkAlgorithm,
+          algorithm: isLightMode ? AntdTheme.defaultAlgorithm : AntdTheme.darkAlgorithm,
           components: {
             Table: {
-              headerBg: mode === 'defaultAlgorithm' ? '#fff' : '#161616',
-              headerColor: mode === 'defaultAlgorithm' ? 'rgba(0, 0, 0, 0.45)' : '#DBDBDB',
-              headerSplitColor: mode === 'defaultAlgorithm' ? '#fff' : '#161616',
+              headerBg: isLightMode ? '#fff' : '#161616',
+              headerColor: isLightMode ? 'rgba(0, 0, 0, 0.45)' : '#DBDBDB',
+              headerSplitColor: isLightMode ? '#fff' : '#161616',
             },
           },
           token: {
             colorPrimary: primaryColor,
+            /** custom */
+            colorBgLayout: isLightMode ? '#f5f7f9' : '#161616',
           },
         }}
       >

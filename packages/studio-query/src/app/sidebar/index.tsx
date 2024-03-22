@@ -24,44 +24,6 @@ interface SidebarProps {
   logo?: React.ReactNode;
 }
 
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-    height: '100%',
-  },
-  header: {
-    height: '50px',
-    lineHeight: '50px',
-    width: '100%',
-    transition: 'width ease 0.3s',
-    borderBottom: '1px solid #ddd',
-    overflow: 'hidden',
-  },
-  ul: {
-    flexBasis: '50px',
-    width: '50px',
-    height: '100%',
-    borderRight: '1px solid #ddd',
-    margin: '0px',
-    paddingInlineStart: '0px',
-    flexShrink: 0,
-  },
-  li: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%',
-    // height: '34px',
-    margin: '12px 0px',
-    cursor: 'pointer',
-    listStyle: 'none',
-    justifyContent: 'center',
-    alignItems: 'center',
-    boxSizing: 'border-box',
-  },
-  content: {},
-};
-
 const collapsedWidth = 50;
 const width = 300;
 const Sidebar: React.FunctionComponent<SidebarProps> = props => {
@@ -72,7 +34,43 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
   const activeOption = options.find(item => {
     return item.id === nav;
   });
-  console.log('token.colorBgBlur', token.colorBgBlur, token);
+
+  const styles: Record<string, React.CSSProperties> = {
+    container: {
+      display: 'flex',
+      flexDirection: 'row',
+      height: '100%',
+    },
+    header: {
+      height: '50px',
+      lineHeight: '50px',
+      width: '100%',
+      transition: 'width ease 0.3s',
+      borderBottom: `1px solid ${token.colorBorder}`,
+      overflow: 'hidden',
+    },
+    ul: {
+      flexBasis: '50px',
+      width: '50px',
+      height: '100%',
+      borderRight: `1px solid ${token.colorBorder}`,
+      margin: '0px',
+      paddingInlineStart: '0px',
+      flexShrink: 0,
+    },
+    li: {
+      display: 'flex',
+      flexDirection: 'column',
+      width: '100%',
+      margin: '12px 0px',
+      cursor: 'pointer',
+      listStyle: 'none',
+      justifyContent: 'center',
+      alignItems: 'center',
+      boxSizing: 'border-box',
+    },
+    content: {},
+  };
   return (
     <div
       style={{
