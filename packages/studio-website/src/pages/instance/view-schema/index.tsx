@@ -16,10 +16,13 @@ const ViewSchema: React.FunctionComponent<ICreateGraph> = props => {
     nodes: [],
     edges: [],
   });
+
   const graphName = searchParamOf('graph_name') || '';
+
   React.useEffect(() => {
     getSchema(graphName).then(res => {
-      const { nodes, edges } = transformSchemaToOptions(res as any, true);
+      //@ts-ignore
+      const { nodes, edges } = res;
       updateState(preState => {
         return {
           ...preState,
@@ -32,9 +35,7 @@ const ViewSchema: React.FunctionComponent<ICreateGraph> = props => {
   }, []);
   const { nodes, edges, isReady } = state;
   if (isReady) {
-    return (
-      <CreateInstance mode="view" nodeList={nodes} edgeList={edges} engineType="interactive" graphName={graphName} />
-    );
+    return <CreateInstance mode="view" nodeList={nodes} edgeList={edges} graphName={graphName} />;
   }
   return <Skeleton />;
 };

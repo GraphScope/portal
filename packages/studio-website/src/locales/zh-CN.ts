@@ -9,6 +9,7 @@ export default {
   'collasped sidebar': '收起边栏',
   /** graphs */
   'Listing all graphs on the cluster': '展示集群中所有的图',
+  '{vertices} types of Vertices {br} {edges} types of Edges': '{vertices} 种类型的点 {br} {edges} 种类型的边',
   /** create instance */
   'Create Instance': '创建图实例',
   Previous: '上一步',

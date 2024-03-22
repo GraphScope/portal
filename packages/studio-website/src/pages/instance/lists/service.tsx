@@ -59,6 +59,7 @@ export const listGraphs = async () => {
     const isMatch = graph_name === name;
     //@ts-ignore
     const { schema, store_type, stored_procedures } = graphs_map[name];
+    const { vertex_types, edges_types, vertices, edges } = schema;
 
     return {
       name: name,
@@ -71,7 +72,10 @@ export const listGraphs = async () => {
       server: isMatch ? status.sdk_endpoints?.cypher : '',
       status: isMatch ? status.status : 'stopped',
       hqps: isMatch ? status.sdk_endpoints?.hqps : '',
-      schema: schema,
+      schema: {
+        vertices: (vertices && vertices.length) || (vertex_types && vertex_types.length),
+        edges: (edges && edges.length) || (edges_types && edges_types.length),
+      },
       store_type,
       stored_procedures,
       // statistics: 'xxxx',

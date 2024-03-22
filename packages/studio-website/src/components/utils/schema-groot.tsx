@@ -1,5 +1,19 @@
-import type { VertexType } from '@graphscope/studio-server';
+import type { VertexType, GrootSchema } from '@graphscope/studio-server';
 import { DeepRequired, TransformedSchema } from './schema';
+
+export function transformGrootSchemaToOptions(schema: GrootSchema | undefined): TransformedSchema {
+  if (!schema) {
+    return {
+      nodes: [],
+      edges: [],
+    };
+  }
+  // todo someting
+  return {
+    nodes: [],
+    edges: [],
+  };
+}
 
 /**
  * groot

@@ -179,7 +179,7 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   };
 
   useEffect(() => {
-    if (props.mode === 'view') {
+    if (props.mode === 'view' && window.GS_ENGINE_TYPE === 'interactive') {
       // 预览模式下，需要从props中把默认参数回填回来
       const { nodeList, edgeList, graphName } = props;
       updateStore(draft => {

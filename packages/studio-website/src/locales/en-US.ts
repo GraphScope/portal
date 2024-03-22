@@ -10,6 +10,8 @@ export default {
   'Query App': 'Query App',
   /** graphs */
   'Listing all graphs on the cluster': 'Listing all graphs on the cluster',
+  '{vertices} types of Vertices {br} {edges} types of Edges':
+    '{vertices} types of Vertices {br} {edges} types of Edges',
   /** create instance */
   'Create Instance': 'Create Instance',
   Previous: 'Previous',
@@ -146,7 +148,7 @@ export default {
   'New Graph': 'New Graph',
   'Pause Service': 'Pause Service',
   'Start Service': 'Start Service',
-  Uptime: 'upTime',
+  Uptime: 'UpTime',
   'Last data import': 'Last data import',
   'Served from': 'Served from',
   'Created on': 'Created on',
