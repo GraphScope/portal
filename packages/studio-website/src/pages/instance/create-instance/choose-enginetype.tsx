@@ -1,7 +1,7 @@
 import React, { memo, useEffect } from 'react';
 import { Form, Input, Typography } from 'antd';
 
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import SelectCards from '@/components/select-cards';
 import { useContext } from './useContext';
 import { useContext as useContextMap } from '@/layouts/useContext';
@@ -39,7 +39,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
   const {
     store: { locale },
   } = useContextMap();
-
+  const intl = useIntl();
   const chooseStoreType = (item: any) => {
     updateStore(draft => {
       draft.storeType = item.id;
@@ -73,7 +73,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
         rules={[{ required: true, message: '' }, validatePasswords]}
       >
         <Input
-          placeholder={locale === 'zh-CN' ? '请输入图实例名称' : 'please name your graph instance'}
+          placeholder={intl.formatMessage({ id: 'please name your graph instance.' })}
           onChange={e =>
             updateStore(draft => {
               draft.graphName = String(e.target.value || 'unkown');
