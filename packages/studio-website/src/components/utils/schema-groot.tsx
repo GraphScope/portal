@@ -1,6 +1,14 @@
 import type { VertexType, GrootSchema } from '@graphscope/studio-server';
-import { DeepRequired, TransformedSchema } from './schema';
-
+import { DeepRequired, TransformedSchema, Properties } from './schema';
+import { v4 as uuidv4 } from 'uuid';
+export interface TransformedNode {
+  /** 节点类型 */
+  label: string;
+  /** 节点属性 */
+  properties: Properties[];
+  /** 唯一标识 */
+  key?: string;
+}
 export function transformGrootSchemaToOptions(schema: GrootSchema | undefined): TransformedSchema {
   if (!schema) {
     return {
@@ -8,10 +16,58 @@ export function transformGrootSchemaToOptions(schema: GrootSchema | undefined): 
       edges: [],
     };
   }
-  // todo someting
+  const nodeMap: Record<string, string> = {};
+  //@ts-ignore
+  const nodes = schema.vertices.map(item => {
+    const { properties, label, ...others } = item;
+    const key = uuidv4();
+    nodeMap[label] = key;
+    return {
+      ...others,
+      label,
+      key,
+      //@ts-ignore
+      properties: properties.map((p, pIdx) => {
+        const { id, name, type, is_primary_key } = p;
+        return {
+          name,
+          type,
+          primaryKey: is_primary_key,
+          disable: false,
+          id,
+          token: '',
+        };
+      }),
+    };
+  });
+  //@ts-ignore
+  const edges = schema.edges.map(item => {
+    const { label, properties, relations, ...others } = item;
+    const key = uuidv4();
+    const { src_label, dst_label } = relations[0];
+    return {
+      ...others,
+      label,
+      key,
+      source: nodeMap[src_label],
+      target: nodeMap[dst_label],
+      properties: properties.map((p, pIdx) => {
+        const { id, name, type, is_primary_key } = p;
+        return {
+          name,
+          type,
+          primaryKey: is_primary_key,
+          disable: false,
+          id,
+          token: '',
+        };
+      }),
+    };
+  });
+
   return {
-    nodes: [],
-    edges: [],
+    nodes,
+    edges,
   };
 }
 
@@ -66,6 +122,37 @@ export function transOptionsToGrootSchema(options: DeepRequired<TransformedSchem
           };
         }),
         relations: [constraint],
+      });
+    }
+  });
+  const edges = [...edgeMap.values()];
+
+  return {
+    vertices,
+    edges,
+  };
+}
+
+export function transOptionsToGrootDataloading(options: DeepRequired<TransformedSchema>) {
+  const nodeMap: Record<string, string> = {};
+  //@ts-ignore
+  const vertices: VertexType[] = options.nodes.map((item, itemIdx) => {
+    nodeMap[item.key] = item.label;
+    return item.label;
+  });
+  const edgeMap = new Map();
+  options.edges.forEach(item => {
+    const { label, source: sourceID, target: targetID } = item;
+    const source = nodeMap[sourceID];
+    const target = nodeMap[targetID];
+    const current = edgeMap.get(label);
+    if (current) {
+      edgeMap.set(label, current);
+    } else {
+      edgeMap.set(label, {
+        label: label,
+        dst_label: target,
+        src_label: source,
       });
     }
   });

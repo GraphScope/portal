@@ -97,7 +97,6 @@ export interface ICreateGraph {
   nodeList?: any;
   edgeList?: any;
   graphName: string;
-  storeType: 'groot_store' | 'mutable_csr';
 }
 
 const Steps: React.FunctionComponent<{ currentStep: number }> = () => {
@@ -118,6 +117,14 @@ const Steps: React.FunctionComponent<{ currentStep: number }> = () => {
 const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   const { store, updateStore } = useContext();
   const { currentStep, createInstaseResult, nodeList, edgeList, storeType, graphName, mode } = store;
+  useEffect(() => {
+    /** groot 查询数据回填 */
+    const { nodeList, edgeList } = props;
+    updateStore(draft => {
+      draft.nodeList = nodeList;
+      draft.edgeList = edgeList;
+    });
+  }, []);
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
   const next = () => {
@@ -180,7 +187,7 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   };
 
   useEffect(() => {
-    const { nodeList, edgeList, graphName, mode = 'create', storeType } = props;
+    const { nodeList, edgeList, graphName, mode = 'create' } = props;
     const isEmpty = nodeList && nodeList.length === 0;
     let stepIndex = 1;
     if (isEmpty || props.mode === 'create') {

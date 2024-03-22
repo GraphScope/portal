@@ -1,13 +1,25 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button, notification, Typography, Flex, Space } from 'antd';
+import { useContext } from '../useContext';
+import { transOptionsToGrootDataloading } from '@/components/utils/schema-groot';
 interface IImportNowProps {
-  label: string;
-  filelocation: string;
+  nodes: any;
 }
 const { Text } = Typography;
 const ImportNow: React.FunctionComponent<IImportNowProps> = props => {
-  const { label, filelocation } = props;
+  const { nodes } = props;
+  const { label, filelocation } = nodes;
+  const { store } = useContext();
+  const { edges } = store;
+  /** 立即导入参数 */
+  const params = {
+    ...transOptionsToGrootDataloading({ nodes: [nodes], edges }),
+    schedule: filelocation,
+    repeat: 'once',
+  };
+  console.log(params);
+
   const [api, contextHolder] = notification.useNotification();
   const openNotification = () => {
     api.open({
