@@ -172,4 +172,9 @@ export default {
   'Primary key': 'Primary key',
   "Congratulations on the successful creation of the model, now let's start to guide the data.":
     "Congratulations on the successful creation of the model, now let's start to guide the data.",
+  'please name your graph instance.': 'please name your graph instance.',
+  'label.type': 'Please Enter {label}',
+  'Please Select Source Vertex Label.': 'Please Select Source Vertex Label.',
+  'Please Select Target Vertex Label.': 'Please Select Target Vertex Label.',
+  'Please manually input the odps file location': 'Please manually input the odps file location',
 };

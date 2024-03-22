@@ -3,6 +3,7 @@ import { useContext } from '../../context';
 import List from '../statement-list';
 import { Flex, Typography, Empty } from 'antd';
 import Section from '../section';
+import { FormattedMessage } from 'react-intl';
 interface IStoreProcedureProps {
   deleteStatements: (ids: string[]) => void;
 }
@@ -43,8 +44,17 @@ const StoreProcedure: React.FunctionComponent<IStoreProcedureProps> = props => {
         onDelete={handleDelete}
         placeholder={
           <>
-            暂无存储过程 <br />
-            快去「插件市场」<Typography.Link style={{ fontSize: '12px' }}>创建</Typography.Link>一个吧
+            <FormattedMessage
+              id="No stored procedures available. {br} Go to the <a>Extension</a> and create one now!"
+              values={{
+                a: chunks => (
+                  <Typography.Link style={{ fontSize: '12px' }} href="/extension/create" target="_blank">
+                    {chunks}
+                  </Typography.Link>
+                ),
+                br: <br />,
+              }}
+            />
           </>
         }
       />

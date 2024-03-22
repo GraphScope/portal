@@ -3,7 +3,7 @@ import { Button, Empty, Form, Input, Select, Tooltip } from 'antd';
 import { PropertiesEditor } from '@graphscope/studio-importor';
 import PrimaryKey from '@/components/icons/primary-key';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import type { IStore } from '../useContext';
 import { useContext } from '@/layouts/useContext';
 export type FieldType = {
@@ -94,6 +94,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   const { store } = useContext();
   const { locale } = store;
   const disabled = mode === 'view' && !data?.isAdd;
+  const intl = useIntl();
   const propertyRef = useRef<any>();
   let cbRef = useRef();
 
@@ -149,17 +150,13 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   };
   const nodeOrEdgeTitle =
     currentType == 'node' ? <FormattedMessage id="Vertex Label" /> : <FormattedMessage id="Edge Label" />;
-  let labelPlaceholder =
-    locale === 'zh-CN'
-      ? `请输入 ${currentType == 'node' ? '点标题。' : '边标题。'}`
-      : `Please Enter ${currentType == 'node' ? 'Vertex Label.' : 'Edge Label.'}`;
-  let sourceVertexLabel = locale === 'zh-CN' ? '请选择源点标签。' : 'Please Select Source Vertex Label.';
-  let targetVertexLabel = locale === 'zh-CN' ? '请选择目标点标签。' : 'Please Select Target Vertex Label.';
+  let vertexLabel = locale === 'zh-CN' ? '点标题' : 'Vertex Label.';
+  let edgeLabel = locale === 'zh-CN' ? '边标题' : 'Edge Label.';
   /** 添加属性标题国际化 */
   let locales = {
-    properties: locale === 'zh-CN' ? '属性' : 'Properties',
-    addProperty: locale === 'zh-CN' ? '添加属性' : 'Add Property',
-    mapFromFile: locale === 'zh-CN' ? '映射文件' : 'Map From File',
+    properties: intl.formatMessage({ id: 'Properties' }),
+    addProperty: intl.formatMessage({ id: 'Add Property' }),
+    mapFromFile: intl.formatMessage({ id: 'Map From File' }),
   };
   return (
     <div>
@@ -172,7 +169,13 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             rules={[{ required: true, message: '' }]}
             style={{ marginBottom: '8px' }}
           >
-            <Input disabled={disabled} placeholder={labelPlaceholder} />
+            <Input
+              disabled={disabled}
+              placeholder={intl.formatMessage(
+                { id: 'label.type' },
+                { label: currentType == 'node' ? vertexLabel : edgeLabel },
+              )}
+            />
           </Form.Item>
         </div>
         {currentType === 'edge' ? (
@@ -187,7 +190,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
               <Select
                 options={nodeOptions}
                 disabled={disabled}
-                placeholder={sourceVertexLabel}
+                placeholder={intl.formatMessage({ id: 'Please Select Source Vertex Label.' })}
                 notFoundContent={notFoundContent}
               />
             </Form.Item>
@@ -201,7 +204,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
               <Select
                 options={nodeOptions}
                 disabled={disabled}
-                placeholder={targetVertexLabel}
+                placeholder={intl.formatMessage({ id: 'Please Select Target Vertex Label.' })}
                 notFoundContent={notFoundContent}
               />
             </Form.Item>

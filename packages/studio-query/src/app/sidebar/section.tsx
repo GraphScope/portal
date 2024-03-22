@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Typography, Flex } from 'antd';
+import { FormattedMessage } from 'react-intl';
 
 interface IContainerProps {
   children: React.ReactNode;
@@ -13,7 +14,7 @@ const Section: React.FunctionComponent<IContainerProps> = props => {
   return (
     <Flex vertical style={{ height: '100%', overflow: 'hidden' }}>
       <Typography.Title level={5} style={{ margin: '0px', flexBasis: '30px', padding: '12px' }}>
-        {title}
+        <FormattedMessage id={title} />
       </Typography.Title>
       {children}
     </Flex>

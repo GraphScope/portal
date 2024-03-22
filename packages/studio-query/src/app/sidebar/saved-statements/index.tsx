@@ -4,6 +4,7 @@ import List from '../statement-list';
 import { Flex, Typography, Empty } from 'antd';
 import { BookOutlined } from '@ant-design/icons';
 import Section from '../section';
+import { FormattedMessage } from 'react-intl';
 interface ISavedStatementsProps {
   deleteStatements: (ids: string[]) => void;
 }
@@ -48,9 +49,13 @@ const SavedStatements: React.FunctionComponent<ISavedStatementsProps> = props =>
         onDelete={handleDelete}
         placeholder={
           <>
-            暂无语句 <br />
-            您可以点击 <BookOutlined /> 保存语句
-            <br />
+            <FormattedMessage
+              id="No saved query statements {br} You can click {icon} to save."
+              values={{
+                icon: <BookOutlined />,
+                br: <br />,
+              }}
+            />
           </>
         }
       />

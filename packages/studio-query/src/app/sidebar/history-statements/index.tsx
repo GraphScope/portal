@@ -2,7 +2,7 @@ import React from 'react';
 import { useContext } from '../../context';
 import List from '../statement-list';
 import Section from '../section';
-
+import { FormattedMessage } from 'react-intl';
 const HistoryStatements = props => {
   const { deleteHistoryStatements } = props;
   const { store, updateStore } = useContext();
@@ -33,12 +33,7 @@ const HistoryStatements = props => {
         items={items}
         onClick={handleClick}
         onDelete={handleDelete}
-        placeholder={
-          <>
-            No query history available
-            <br />
-          </>
-        }
+        placeholder={<FormattedMessage id="No query history available" />}
       />
     </Section>
   );

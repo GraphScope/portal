@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Typography } from 'antd';
+import { FormattedMessage } from 'react-intl';
+import { PlayCircleOutlined } from '@ant-design/icons';
 interface IEmptyProps {}
 
 const Empty: React.FunctionComponent<IEmptyProps> = props => {
@@ -18,7 +20,14 @@ const Empty: React.FunctionComponent<IEmptyProps> = props => {
         backgroundPosition: 'center',
       }}
     >
-      <Typography.Text type="secondary">please input your statements and query graph data</Typography.Text>
+      <Typography.Text type="secondary">
+        <FormattedMessage
+          id="You can write cypher or gremlin queries, and then click the {icon} button to query data"
+          values={{
+            icon: <PlayCircleOutlined />,
+          }}
+        />
+      </Typography.Text>
     </div>
   );
 };
