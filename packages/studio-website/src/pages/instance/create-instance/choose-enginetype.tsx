@@ -16,10 +16,25 @@ type ChooseEnginetypeProps = {
   form: any;
 };
 
-const engines = [
+const gs_all_engines = [
   {
     id: 'mutable_csr',
-    title: 'Interactive',
+    title: 'Interactive Engine',
+    value: 'interactive',
+    desc: (
+      <>
+        <FormattedMessage id="graphs.engine.interactive.desc" />
+        <br />
+        <Typography.Link href="https://graphscope.io/docs/interactive_engine/graphscope_interactive" target="_blank">
+          <FormattedMessage id="More details" />
+        </Typography.Link>
+      </>
+    ),
+  },
+  {
+    id: 'xxxxxxx',
+    title: 'Groot Engine',
+    value: 'groot',
     desc: (
       <>
         <FormattedMessage id="graphs.engine.interactive.desc" />
@@ -31,6 +46,10 @@ const engines = [
     ),
   },
 ];
+
+const engines = gs_all_engines.filter(item => {
+  return item.value === window.GS_ENGINE_TYPE;
+});
 
 const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props => {
   const { form } = props;
