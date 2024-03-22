@@ -32,7 +32,7 @@ const gs_all_engines = [
     ),
   },
   {
-    id: 'xxxxxxx',
+    id: 'groot_store',
     title: 'Groot Engine',
     value: 'groot',
     desc: (
@@ -54,7 +54,7 @@ const engines = gs_all_engines.filter(item => {
 const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props => {
   const { form } = props;
   const { store, updateStore } = useContext();
-  const { engineType, graphName, storeType } = store;
+  const { graphName, storeType } = store;
   const {
     store: { locale },
   } = useContextMap();
@@ -80,8 +80,10 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
     },
   });
   useEffect(() => {
-    form.setFieldsValue({ graphName: graphName });
-  }, []);
+    form.setFieldsValue({ graphName, storeType });
+  }, [graphName, storeType]);
+
+  console.log(graphName, storeType);
 
   return (
     <Form name="basic" form={form} layout="vertical" style={{ marginTop: '24px' }}>
@@ -92,7 +94,9 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
         rules={[{ required: true, message: '' }, validatePasswords]}
       >
         <Input
+          defaultValue={graphName}
           placeholder={intl.formatMessage({ id: 'please name your graph instance.' })}
+          disabled={window.GS_ENGINE_TYPE === 'groot'}
           onChange={e =>
             updateStore(draft => {
               draft.graphName = String(e.target.value || 'unkown');

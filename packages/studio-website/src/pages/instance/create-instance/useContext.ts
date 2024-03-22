@@ -19,13 +19,13 @@ export interface EdgeSchema {
 }
 export type IStore = {
   mode: 'create' | 'view';
-  engineType: 'interactive' | 'groot';
+
   currentStep: number;
   /********* STEP 1 *************/
   /** 图名称 */
   graphName: string;
   /** 存储类型 */
-  storeType: 'mutable_csr';
+  storeType: 'mutable_csr' | 'groot_store';
   /** 引擎Directed */
   engineDirected: boolean;
   /********* STEP 2 *************/
@@ -47,7 +47,7 @@ export type IStore = {
 
 export const initialStore: IStore = {
   /** 引擎类型 */
-  engineType: 'interactive',
+
   mode: 'create',
   storeType: 'mutable_csr',
   /** 图名称 */

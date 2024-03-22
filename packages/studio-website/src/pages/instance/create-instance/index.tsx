@@ -179,9 +179,9 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   };
 
   useEffect(() => {
+    const { nodeList, edgeList, graphName } = props;
     if (props.mode === 'view' && window.GS_ENGINE_TYPE === 'interactive') {
       // 预览模式下，需要从props中把默认参数回填回来
-      const { nodeList, edgeList, graphName } = props;
       updateStore(draft => {
         Object.keys(props).forEach(key => {
           //@ts-ignore
@@ -193,7 +193,14 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
         draft.graphName = graphName;
       });
     }
+    if (window.GS_ENGINE_TYPE === 'groot') {
+      updateStore(draft => {
+        draft.graphName = graphName;
+        draft.storeType = 'groot_store';
+      });
+    }
     return () => {
+      console.log('clear............');
       updateStore(draft => {
         Object.keys(initialStore).forEach(key => {
           //@ts-ignore
