@@ -6,6 +6,8 @@ import { useContext } from '../useContext';
 import yaml from 'js-yaml';
 import { cloneDeep } from 'lodash';
 import { transOptionsToSchema } from '@/components/utils/schema';
+import FileExportIcon from '@/components/icons/file-export';
+import FileImportIcon from '@/components/icons/file-import';
 interface IExportConfigProps {}
 const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
   const { store, updateStore } = useContext();
@@ -74,16 +76,12 @@ const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
           }}
           showUploadList={false}
         >
-          <Tooltip title="导入提示，待确认">
-            <Button disabled={disabled}>
-              <FormattedMessage id="Import" />
-            </Button>
+          <Tooltip title={<FormattedMessage id="Import" />}>
+            <Button type="text" disabled={disabled} icon={<FileImportIcon />}></Button>
           </Tooltip>
         </Upload>
-        <Tooltip title="导出提示，待确认">
-          <Button onClick={Json2Yaml}>
-            <FormattedMessage id="Export" />
-          </Button>
+        <Tooltip title={<FormattedMessage id="Export" />}>
+          <Button type="text" onClick={Json2Yaml} icon={<FileExportIcon />}></Button>
         </Tooltip>
       </Space>
     </div>

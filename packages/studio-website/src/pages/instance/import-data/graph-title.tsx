@@ -10,7 +10,11 @@ import { download } from '@/components/utils/index';
 import yaml from 'js-yaml';
 import { cloneDeep } from 'lodash';
 import { submitParams } from './source-title';
-
+import { ImportOutlined, ExportOutlined } from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFileExport, faFileImport } from '@fortawesome/free-solid-svg-icons';
+import FileExportIcon from '@/components/icons/file-export';
+import FileImportIcon from '@/components/icons/file-import';
 type IGraphTitleProps = {};
 const { Text } = Typography;
 const GraphTitle: React.FunctionComponent<IGraphTitleProps> = () => {
@@ -76,16 +80,12 @@ const GraphTitle: React.FunctionComponent<IGraphTitleProps> = () => {
             }}
             showUploadList={false}
           >
-            <Tooltip placement="topRight" title="导入「数据导入」的配置文件">
-              <Button type="text">
-                <FormattedMessage id="Import" />
-              </Button>
+            <Tooltip placement="topRight" title={<FormattedMessage id="Import" />}>
+              <Button type="text" icon={<FileImportIcon />}></Button>
             </Tooltip>
           </Upload>
-          <Tooltip placement="topRight" title="导出「数据导入」的配置文件">
-            <Button type="text" onClick={Json2Yaml}>
-              <FormattedMessage id="Export" />
-            </Button>
+          <Tooltip placement="topRight" title={<FormattedMessage id="Export" />}>
+            <Button type="text" onClick={Json2Yaml} icon={<FileExportIcon />}></Button>
           </Tooltip>
         </Space>
       </Flex>
