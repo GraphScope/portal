@@ -97,6 +97,7 @@ export interface ICreateGraph {
   nodeList?: any;
   edgeList?: any;
   graphName: string;
+  storeType: 'groot_store' | 'mutable_csr';
 }
 
 const Steps: React.FunctionComponent<{ currentStep: number }> = () => {
@@ -179,26 +180,22 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   };
 
   useEffect(() => {
-    const { nodeList, edgeList, graphName } = props;
-    if (props.mode === 'view' && window.GS_ENGINE_TYPE === 'interactive') {
-      // 预览模式下，需要从props中把默认参数回填回来
-      updateStore(draft => {
-        Object.keys(props).forEach(key => {
-          //@ts-ignore
-          draft[key] = props[key];
-        });
-        draft.currentStep = 1;
-        draft.nodeActiveKey = nodeList[0].id;
-        draft.edgeActiveKey = edgeList[0].id;
-        draft.graphName = graphName;
-      });
+    const { nodeList, edgeList, graphName, mode = 'create', storeType } = props;
+    const isEmpty = nodeList && nodeList.length === 0;
+    let stepIndex = 1;
+    if (isEmpty || props.mode === 'create') {
+      // 如果是空Schema或者是创建模式，才从第一步开始
+      stepIndex = 0;
     }
-    if (window.GS_ENGINE_TYPE === 'groot') {
-      updateStore(draft => {
-        draft.graphName = graphName;
-        draft.storeType = 'groot_store';
-      });
-    }
+    updateStore(draft => {
+      draft.storeType = storeType;
+      draft.mode = mode;
+      draft.currentStep = stepIndex;
+      draft.nodeActiveKey = isEmpty ? '' : nodeList[0].id;
+      draft.edgeActiveKey = isEmpty ? '' : edgeList[0].id;
+      draft.graphName = graphName;
+    });
+
     return () => {
       console.log('clear............');
       updateStore(draft => {
