@@ -178,4 +178,8 @@ export default {
   'Please Select Source Vertex Label.': '请选择源点标签。',
   'Please Select Target Vertex Label.': '请选择目标点标签。',
   'Please manually input the odps file location': '请手动输入文件地址，也可直接上传本地 CSV 文件',
+  /** sidebar */
+  docs: '文档',
+  graphscope: 'graphscope',
+  github: '仓库',
 };

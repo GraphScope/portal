@@ -6,7 +6,7 @@ import { getSearchParams } from '../utils';
 interface ISectionProps {
   title?: string;
   desc?: string;
-  breadcrumb: BreadcrumbProps['items'];
+  breadcrumb?: BreadcrumbProps['items'];
   children?: React.ReactNode;
   items?: TabsProps['items'];
   style?: React.CSSProperties;
@@ -32,7 +32,7 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
   return (
     <section style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div style={{ padding: '12px 24px' }}>
-        <Breadcrumb items={breadcrumb} />
+        {breadcrumb && <Breadcrumb items={breadcrumb} />}
         {title && (
           <Typography.Title level={1} style={{ fontSize: 40 }}>
             <FormattedMessage id={title} />

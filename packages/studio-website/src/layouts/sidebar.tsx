@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { SettingFilled, GithubOutlined } from '@ant-design/icons';
+import { SettingFilled, GithubOutlined, ReadOutlined, LinkOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Menu, Flex, Button, theme } from 'antd';
+import { Menu, Flex, Button, theme, Tooltip } from 'antd';
 import { history, useLocation } from 'umi';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { useContext } from './useContext';
 import Logo from '@/components/logo';
@@ -53,6 +53,11 @@ const otherItems: MenuProps['items'] = [
     key: '/extension',
     icon: <FontAwesomeIcon icon={faPuzzlePiece} />,
   },
+  {
+    label: <FormattedMessage id="navbar.setting" />,
+    key: '/setting',
+    icon: <SettingFilled />,
+  },
 ];
 
 const settingMenu: MenuProps['items'] = [
@@ -61,17 +66,18 @@ const settingMenu: MenuProps['items'] = [
   //   key: '/layout',
   //   icon: <LayoutOutlined />,
   // },
-  {
-    label: <FormattedMessage id="navbar.setting" />,
-    key: '/setting',
-    icon: <SettingFilled />,
-  },
+  // {
+  //   label: <FormattedMessage id="navbar.setting" />,
+  //   key: '/setting',
+  //   icon: <SettingFilled />,
+  // },
 ];
 
 let currentPath = window.location.pathname;
 export const SideWidth = 150;
 const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
   const location = useLocation();
+  const intl = useIntl();
   let defaultPath = '/' + location.pathname.split('/')[1];
   if (defaultPath === '/') {
     defaultPath = '/instance';
@@ -132,9 +138,45 @@ const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
             style={{ borderInlineEnd: 'none' }}
           />
           <Flex gap={12} style={{ padding: '0px 12px' }}>
-            <Button icon={<GithubOutlined style={iconStyle} />} type="text"></Button>
-            <Button icon={<GithubOutlined style={iconStyle} />} type="text"></Button>
-            <Button icon={<GithubOutlined style={iconStyle} />} type="text"></Button>
+            <Tooltip
+              title={intl.formatMessage({
+                id: 'docs',
+              })}
+            >
+              <Button
+                onClick={() => {
+                  window.open('https://graphscope.io/', '_blank');
+                }}
+                icon={<ReadOutlined style={iconStyle} />}
+                type="text"
+              ></Button>
+            </Tooltip>
+            <Tooltip
+              title={intl.formatMessage({
+                id: 'github',
+              })}
+            >
+              <Button
+                onClick={() => {
+                  window.open('https://github.com/GraphScope/portal', '_blank');
+                }}
+                icon={<GithubOutlined style={iconStyle} />}
+                type="text"
+              ></Button>
+            </Tooltip>
+            <Tooltip
+              title={intl.formatMessage({
+                id: 'graphscope',
+              })}
+            >
+              <Button
+                onClick={() => {
+                  window.open('https://github.com/alibaba/graphscope', '_blank');
+                }}
+                icon={<LinkOutlined style={iconStyle} />}
+                type="text"
+              ></Button>
+            </Tooltip>
           </Flex>
         </div>
       </div>
