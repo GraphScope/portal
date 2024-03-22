@@ -5,6 +5,7 @@ import { getConfig } from '../../../graph/utils';
 import { useContext } from '../../context';
 const { Title, Text } = Typography;
 import Section from '../section';
+import { FormattedMessage } from 'react-intl';
 interface IRecommendedStatementsProps {
   schemaData: any;
   schemaId: string;
@@ -59,7 +60,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
     <Section title="Recommended">
       <div style={{ padding: '0px 12px' }}>
         <Title level={5} style={styles.title}>
-          Vertex Labels
+          <FormattedMessage id="Vertex Labels" />
         </Title>
         {nodes.map(item => {
           const { label } = item;
@@ -77,7 +78,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
           );
         })}
         <Title level={5} style={styles.title}>
-          Edge Labels
+          <FormattedMessage id="Edge Labels" />
         </Title>
         {edges.map(item => {
           const { label } = item;
@@ -94,7 +95,9 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
             </Tag>
           );
         })}
-        <Title style={styles.title}>Property Keys</Title>
+        <Title style={styles.title}>
+          <FormattedMessage id="Property Keys" />
+        </Title>
         {keys.map(item => {
           return (
             <Tag

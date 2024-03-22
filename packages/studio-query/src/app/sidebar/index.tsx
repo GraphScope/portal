@@ -11,7 +11,7 @@ interface Option {
   /** 导航ID */
   id: string;
   /** 导航名称 */
-  name: string;
+  name: string | React.ReactNode;
   children: React.ReactNode;
 }
 interface SidebarProps {

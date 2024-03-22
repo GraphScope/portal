@@ -9,6 +9,8 @@ import './index.css';
 import { useContext, localStorageVars } from './context';
 import type { IStatement } from './context';
 import Sidebar from './sidebar';
+import Provider from './provider';
+import { FormattedMessage } from 'react-intl';
 import {
   RedditOutlined,
   DeploymentUnitOutlined,
@@ -39,6 +41,8 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     enableImmediateQuery,
     enableCollapseSidebar,
     logo,
+    locale = 'zh-CN',
+    theme,
   } = props;
   const { store, updateStore } = useContext();
   const { graphName, isReady, collapse, activeNavbar, statements, schemaData, language } = store;
@@ -46,31 +50,31 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const navbarOptions = [
     {
       id: 'recommended',
-      name: 'Recommended',
+      name: <FormattedMessage id="Recommended" />,
       icon: <FontAwesomeIcon icon={faLightbulb} />, //<DeploymentUnitOutlined />,
       children: <RecommendedStatements schemaData={schemaData} schemaId={graphName} />,
     },
     {
       id: 'saved',
-      name: 'Saved',
+      name: <FormattedMessage id="Saved" />,
       icon: <FontAwesomeIcon icon={faBookmark} />, //  <BookOutlined />,
       children: <SavedStatements deleteStatements={ids => deleteStatements('saved', ids)} />,
     },
     {
       id: 'history',
-      name: 'History',
+      name: <FormattedMessage id="History" />,
       icon: <FontAwesomeIcon icon={faClockFour} />, //<HistoryOutlined />,//<FontAwesomeIcon icon={faTimesCircle} />
       children: <HistoryStatements deleteHistoryStatements={ids => deleteStatements('history', ids)} />,
     },
     {
       id: 'store-procedure',
-      name: 'Store Procedure',
+      name: <FormattedMessage id="Store Procedure" />,
       icon: <FontAwesomeIcon icon={faDatabase} />, //<DatabaseOutlined />,
       children: <StoreProcedure deleteStatements={ids => deleteStatements('store-procedure', ids)} />,
     },
     {
-      id: 'qwen',
-      name: 'Copilot',
+      id: 'copilot',
+      name: <FormattedMessage id="Copilot" />,
       icon: <FontAwesomeIcon icon={faRobot} />, //<RedditOutlined />,
       children: <GPTStatements schemaData={schemaData} />,
     },
@@ -153,29 +157,31 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
 
   if (isReady) {
     return (
-      <Container
-        displaySidebarPosition={displaySidebarPosition}
-        enableAbsolutePosition={enable}
-        sidebar={
-          <Sidebar
-            logo={logo}
-            title={graphName}
-            options={navbarOptions}
-            value={activeNavbar}
-            collapse={enableCollapseSidebar && collapse}
-            onChange={handleChangeNavbar}
-            onBack={onBack}
-          />
-        }
-        content={
-          <Content
-            createStatements={createStatements}
-            queryGraphData={handleQuery}
-            enableImmediateQuery={enableImmediateQuery}
-          />
-        }
-        collapse={enableCollapseSidebar && collapse}
-      ></Container>
+      <Provider locale={locale} theme={theme}>
+        <Container
+          displaySidebarPosition={displaySidebarPosition}
+          enableAbsolutePosition={enable}
+          sidebar={
+            <Sidebar
+              logo={logo}
+              title={graphName}
+              options={navbarOptions}
+              value={activeNavbar}
+              collapse={enableCollapseSidebar && collapse}
+              onChange={handleChangeNavbar}
+              onBack={onBack}
+            />
+          }
+          content={
+            <Content
+              createStatements={createStatements}
+              queryGraphData={handleQuery}
+              enableImmediateQuery={enableImmediateQuery}
+            />
+          }
+          collapse={enableCollapseSidebar && collapse}
+        ></Container>
+      </Provider>
     );
   }
   return null;

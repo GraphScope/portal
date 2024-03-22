@@ -1,7 +1,7 @@
 import * as React from 'react';
 import StudioQuery from '@graphscope/studio-query';
 import Section from '@/components/section';
-
+import storage from '@/components/utils/localStorage';
 import {
   queryGraphData,
   queryGraphSchema,
@@ -15,6 +15,9 @@ const QueryModule = () => {
   const { GS_ENGINE_TYPE } = window;
   const language = GS_ENGINE_TYPE === 'groot' ? 'gremlin' : 'cypher';
   const globalScript = GS_ENGINE_TYPE === 'groot' ? 'g.V().limit 10' : 'Match (n) return n limit 10';
+  const locale = storage.getItem('locale');
+  const primaryColor = storage.getItem('primaryColor');
+  const themeMode = storage.getItem('themeColor');
   return (
     <Section
       breadcrumb={[
@@ -34,7 +37,10 @@ const QueryModule = () => {
     >
       <StudioQuery
         //@ts-ignore
-
+        /** 主题相关 */
+        theme={{ mode: themeMode, primaryColor }}
+        /** 国际化 */
+        locale={locale}
         /** 侧边栏展示的位置 */
         displaySidebarPosition="right"
         /** 是否启用绝对定位布局 */

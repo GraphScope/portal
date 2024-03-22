@@ -2,6 +2,8 @@ import * as React from 'react';
 import StudioQuery from '@graphscope/studio-query';
 import Logo from '@/components/logo';
 import { history } from 'umi';
+
+import storage from '@/components/utils/localStorage';
 import {
   queryGraphData,
   queryGraphSchema,
@@ -15,8 +17,17 @@ const QueryModule = () => {
   const { GS_ENGINE_TYPE } = window;
   const language = GS_ENGINE_TYPE === 'groot' ? 'gremlin' : 'cypher';
   const globalScript = GS_ENGINE_TYPE === 'groot' ? 'g.V().limit 10' : 'Match (n) return n limit 10';
+
+  const locale = storage.getItem('locale');
+  const primaryColor = storage.getItem('primaryColor');
+  const themeMode = storage.getItem('themeColor');
+
   return (
     <StudioQuery
+      /** 主题相关 */
+      theme={{ mode: themeMode, primaryColor }}
+      /** 国际化 */
+      locale={locale}
       /** 返回导航 */
       //@ts-ignore
       onBack={() => {

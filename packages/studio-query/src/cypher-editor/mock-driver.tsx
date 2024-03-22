@@ -64,11 +64,11 @@ class MockDriver {
 
     return {
       mock: this.mock,
-      queryCypher: this.queryCypher,
+      query: this.query,
     };
   }
 
-  async queryCypher(cypher: string): Promise<any> {
+  async query(cypher: string): Promise<any> {
     try {
       if (timer) {
         clearTimeout(timer);
