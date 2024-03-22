@@ -3,6 +3,7 @@ import Graphin, { GraphinData } from '@antv/graphin';
 import Panel from './panel';
 import { processData, calcOverview, storage, getConfig } from './utils';
 import type { ISchema } from './typing';
+import { theme } from 'antd';
 
 interface GraphViewProps {
   data: GraphinData;
@@ -18,6 +19,7 @@ const GraphView: React.FunctionComponent<GraphViewProps> = props => {
       configMap,
     };
   });
+  const { token } = theme.useToken();
 
   const { configMap } = state;
   const newData = processData(data, configMap);
@@ -42,7 +44,7 @@ const GraphView: React.FunctionComponent<GraphViewProps> = props => {
           type: 'concentric',
         },
       }}
-      style={{ height: '480px', minHeight: '480px', background: '#f4f5f5' }}
+      style={{ height: '480px', minHeight: '480px', background: token.colorBgLayout }}
     >
       {/** @ts-ignore */}
       <Panel overview={overview} onChange={onChange}></Panel>

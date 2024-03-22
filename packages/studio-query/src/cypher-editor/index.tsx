@@ -66,15 +66,8 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
   console.log('language', language, THEMES[language], LANGUAGE[language]);
   React.useEffect(() => {
     MonacoEnvironment.loadModule(async (container: { load: (arg0: Syringe.Module) => void }) => {
-      // const dsl = await import('@difizen/cofine-language-cypher');
       container.load(cypherLanguage);
       container.load(gremlinLanguage);
-      // if (language === 'cypher') {
-      //   container.load(cypherLanguage);
-      // }
-      // if (language === 'gremlin') {
-      //   container.load(gremlinLanguage);
-      // }
     });
     MonacoEnvironment.init().then(async () => {
       console.log('init....', language);
@@ -82,11 +75,14 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
         if (countLines(value) <= maxRows) {
           editorRef.current.style.height = countLines(value) * 20 + 'px';
         }
+        //@TODO hard code
+        const isDark = JSON.parse(localStorage.getItem('GS_STUDIO_themeColor') || '') === 'darkAlgorithm';
+
         const editorProvider = MonacoEnvironment.container.get<EditorProvider>(EditorProvider);
         const editor = editorProvider.create(editorRef.current, {
           language: LANGUAGE[language],
           value,
-          theme: THEMES[language],
+          theme: isDark ? 'darkTheme' : THEMES[language],
           suggestLineHeight: 20,
           suggestLineHeight: 20,
           automaticLayout: true,
@@ -110,6 +106,7 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
           scrollBeyondLastLine: false, // 不允许在内容的下方滚动
           scrollBeyondLastColumn: false, // 不允许在内容的右侧滚动
         });
+
         editorRef.current.codeEditor = codeEditor = editor.codeEditor;
         if (onInit) {
           onInit(editorRef.current.codeEditor);
