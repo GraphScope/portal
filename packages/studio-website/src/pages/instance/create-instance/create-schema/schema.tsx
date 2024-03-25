@@ -7,6 +7,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import type { IStore } from '../useContext';
 import { useContext } from '@/layouts/useContext';
 import { getPrimitiveTypes } from '../service';
+import { createVertexType, createEdgeType } from './service';
 export type FieldType = {
   label?: string;
   source?: string;
@@ -22,6 +23,8 @@ type SchemaType = {
   currentType: 'node' | 'edge';
   updateStore: (fn: (draft: IStore<{}>) => void) => void;
   nodeOptions?: { label: string; value: string }[];
+  graphName: string;
+  nodeList: any;
 };
 type configcolumnsType = {
   title: string | React.ReactNode;
@@ -75,6 +78,7 @@ const configcolumns: configcolumnsType[] = [
         </Tooltip>
       </div>
     ),
+    type: 'primary_key',
     width: '80px',
   },
 ];
@@ -91,7 +95,7 @@ const notFoundContent = (
   />
 );
 const CreateSchema: React.FunctionComponent<SchemaType> = props => {
-  const { newActiveKey, data, currentType, updateStore, nodeOptions, mode } = props;
+  const { newActiveKey, data, currentType, updateStore, nodeOptions, mode, graphName, nodeList } = props;
   const [form] = Form.useForm();
   const { store } = useContext();
   const { locale } = store;
@@ -146,7 +150,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
    */
   const hangdleConfigcolumns = (configcolumns: configcolumnsType[]) => {
     if (currentType === 'edge') {
-      return configcolumns.filter(item => item.title !== 'primary_key');
+      return configcolumns.filter(item => item.type !== 'primary_key');
     }
     return configcolumns;
   };
@@ -161,6 +165,26 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
     properties: intl.formatMessage({ id: 'Properties' }),
     addProperty: intl.formatMessage({ id: 'Add Property' }),
     mapFromFile: intl.formatMessage({ id: 'Map From File' }),
+  };
+  /** groot 创建点/边  */
+  const hangdleSubmit = async () => {
+    if (currentType == 'node') {
+      await createVertexType(graphName, form.getFieldsValue(), cbRef.current);
+    }
+    if (currentType == 'edge') {
+      await createEdgeType(graphName, nodeList, form.getFieldsValue(), cbRef.current);
+    }
+  };
+  let SaveGrootType = () => {
+    if (window.GS_ENGINE_TYPE === 'groot' && data?.isAdd) {
+      return (
+        <Button type="primary" onClick={hangdleSubmit}>
+          <FormattedMessage id="Submit" />
+        </Button>
+      );
+    } else {
+      return null;
+    }
   };
   return (
     <div>
@@ -225,6 +249,9 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
         //@ts-ignore
         tableConfig={hangdleConfigcolumns(configcolumns)}
       />
+      <div style={{ textAlign: 'right', marginTop: '24px' }}>
+        <SaveGrootType />
+      </div>
     </div>
   );
 };

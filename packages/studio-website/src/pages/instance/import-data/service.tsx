@@ -1,7 +1,11 @@
-import { GraphApiFactory, UtilsApiFactory, JobApiFactory } from '@graphscope/studio-server';
+import { GraphApiFactory, UtilsApiFactory, JobApiFactory, DatasourceApiFactory } from '@graphscope/studio-server';
 import type { EdgeMapping, SchemaMapping, VertexMapping } from '@graphscope/studio-server';
 
-import { transformMappingSchemaToImportOptions, transformSchemaToImportOptions } from '@/components/utils/import';
+import {
+  transformMappingSchemaToImportOptions,
+  transformSchemaToImportOptions,
+  transformGrootMappingSchemaToImportOptions,
+} from '@/components/utils/import';
 
 /** upload file */
 export const uploadFile = async (file: File) => {
@@ -37,17 +41,36 @@ export const getSchema = async (graph_name: string) => {
   return schema;
 };
 export const getDataloadingConfig = async (graph_name: string, schema: any) => {
-  const schemaMapping = await JobApiFactory(undefined, location.origin)
-    .getDataloadingConfig(graph_name!)
-    .then(res => res.data)
-    .catch(error => {
-      return {};
-    });
+  let schemaMapping;
+  if (window.GS_ENGINE_TYPE === 'interactive') {
+    schemaMapping = await JobApiFactory(undefined, location.origin)
+      .getDataloadingConfig(graph_name!)
+      .then(res => res.data)
+      .catch(error => {
+        return {};
+      });
 
-  if (JSON.stringify(schemaMapping) === '{}') {
+    if (JSON.stringify(schemaMapping) === '{}') {
+      //@ts-ignore
+      return transformSchemaToImportOptions(schema);
+    }
     //@ts-ignore
-    return transformSchemaToImportOptions(schema);
+    return transformMappingSchemaToImportOptions(schemaMapping, schema);
   }
-  //@ts-ignore
-  return transformMappingSchemaToImportOptions(schemaMapping, schema);
+  if (window.GS_ENGINE_TYPE === 'groot') {
+    schemaMapping = await DatasourceApiFactory(undefined, location.origin)
+      .getDatasource(graph_name!)
+      .then(res => res.data)
+      .catch(error => {
+        return {};
+      });
+  }
+  console.log('schemaMapping', schemaMapping);
+
+  // if (JSON.stringify(schemaMapping) === '{}') {
+  //   //@ts-ignore
+  //   return transformSchemaToImportOptions(schema);
+  // }
+  // //@ts-ignore
+  // return transformGrootMappingSchemaToImportOptions(schemaMapping, schema);
 };

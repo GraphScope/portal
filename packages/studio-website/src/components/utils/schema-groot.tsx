@@ -163,3 +163,96 @@ export function transOptionsToGrootDataloading(options: DeepRequired<Transformed
     edges,
   };
 }
+/** groot 删除边参数 */
+export function transformGrootDeleteEdgeToOptions(schema: { nodes: any[]; edges: any[] }) {
+  const nodeMap: Record<string, string> = {};
+  //@ts-ignore
+  schema.nodes.map(item => {
+    nodeMap[item.key] = item.label;
+  });
+  const edgeMap = new Map();
+  schema.edges.forEach(item => {
+    const { label, source: sourceID, target: targetID } = item;
+    const source = nodeMap[sourceID];
+    const target = nodeMap[targetID];
+    const current = edgeMap.get(label);
+    if (current) {
+      edgeMap.set(label, current);
+    } else {
+      edgeMap.set(label, {
+        typeName: label,
+        sourceVertexType: source,
+        destinationVertexType: target,
+      });
+    }
+  });
+  return [...edgeMap.values()];
+}
+/** groot 创建点参数 */
+export function transformGrootCreateVertexToOptions(
+  schema: { label: string },
+  property: { id: string; name: string; primaryKey: boolean; type: string }[],
+) {
+  const { label } = schema;
+  let primary_keys;
+  const propertyMap = new Map();
+  property.forEach((item, index) => {
+    const { name, primaryKey, type } = item;
+    if (primaryKey) {
+      primary_keys = [name];
+    }
+    propertyMap.set(item.name, {
+      property_id: index,
+      property_name: name,
+      property_type: {
+        primitive_type: type,
+      },
+    });
+  });
+  const properties = [...propertyMap.values()];
+  return {
+    type_id: 0,
+    type_name: label,
+    primary_keys,
+    properties,
+  };
+}
+export function transformGrootCreateEdgeToOptions(
+  nodeList: any[],
+  schema: { label: string; source: string; target: string },
+  property: { id: string; name: string; primaryKey: boolean; type: string }[],
+) {
+  const nodeMap: Record<string, string> = {};
+  //@ts-ignore
+  nodeList.map((item, itemIdx) => {
+    nodeMap[item.key] = item.label;
+    return item.label;
+  });
+  const { label, source: sourceID, target: targetID } = schema;
+  const source = nodeMap[sourceID];
+  const target = nodeMap[targetID];
+  const propertyMap = new Map();
+  property.forEach((item, index) => {
+    const { name, primaryKey, type } = item;
+    propertyMap.set(item.name, {
+      property_id: index,
+      property_name: name,
+      property_type: {
+        primitive_type: type,
+      },
+    });
+  });
+  const properties = [...propertyMap.values()];
+  return {
+    type_id: 0,
+    type_name: label,
+    vertex_type_pair_relations: [
+      {
+        source_vertex: source,
+        destination_vertex: target,
+        relation: 'MANY_TO_MANY',
+      },
+    ],
+    properties,
+  };
+}

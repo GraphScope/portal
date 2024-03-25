@@ -15,7 +15,7 @@ interface ICreateInstanceProps {
 const engineType = window.GS_ENGINE_TYPE;
 const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
   const { store, updateStore } = useContext();
-  const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, mode } = store;
+  const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, mode, graphName } = store;
   /** 初始化清空数据 */
   useEffect(() => {
     updateStore(draft => {
@@ -73,6 +73,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
           shouldRender={nodeActiveKey === item.key}
           mode={mode}
           engineType={engineType}
+          graphName={graphName}
         />
       ),
     };
@@ -94,6 +95,8 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
           shouldRender={nodeActiveKey === key}
           mode={mode}
           engineType={engineType}
+          graphName={graphName}
+          nodeList={nodeList}
         />
       ),
     };
