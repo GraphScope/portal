@@ -67,6 +67,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
           const { color } = configMap.get(label) || { color: '#ddd' };
           return (
             <Tag
+              key={label}
               style={{ borderRadius: '8px', backgroundColor: color, cursor: 'pointer', margin: '4px' }}
               bordered={false}
               onClick={() => {
@@ -85,6 +86,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
           const { color } = configMap.get(label) || { color: '#ddd' };
           return (
             <Tag
+              key={label}
               style={{ borderRadius: '8px', backgroundColor: color, cursor: 'pointer', margin: '4px' }}
               bordered={false}
               onClick={() => {
@@ -101,6 +103,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
         {keys.map(item => {
           return (
             <Tag
+              key={item}
               style={{ borderRadius: '8px', backgroundColor: '#000', cursor: 'pointer', margin: '4px', color: '#fff' }}
               bordered={false}
               onClick={() => {

@@ -9,12 +9,13 @@ import Empty from './empty';
 interface IContentProps {
   createStatements: IStudioQueryProps['createStatements'];
   queryGraphData: IStudioQueryProps['queryGraphData'];
+  handleCancelQuery: IStudioQueryProps['handleCancelQuery'];
   enableImmediateQuery: boolean;
 }
 const { useToken } = theme;
 
 const Content: React.FunctionComponent<IContentProps> = props => {
-  const { createStatements, queryGraphData, enableImmediateQuery } = props;
+  const { createStatements, queryGraphData, enableImmediateQuery, handleCancelQuery } = props;
   const { store, updateStore } = useContext();
   const { activeId, mode, statements, savedStatements, schemaData, graphName, language } = store;
   const savedIds = savedStatements.map(item => item.id);
@@ -118,6 +119,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
                 schemaData={schemaData}
                 script={script}
                 onQuery={queryGraphData}
+                onCancel={handleCancelQuery}
                 onClose={onClose}
                 onSave={onSave}
               />

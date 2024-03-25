@@ -64,11 +64,11 @@ const Message: React.FunctionComponent<CMessage & { onQuery: (value: string) => 
           }}
         />
         <div>
-          {info.map(item => {
+          {info.map((item, index) => {
             if (item.type === 'cypher') {
-              return <CypherMessage content={item.content} onQuery={onQuery} />;
+              return <CypherMessage key={index} content={item.content} onQuery={onQuery} />;
             }
-            return <TextMessage content={item.content} role={role} />;
+            return <TextMessage key={index} content={item.content} role={role} />;
           })}
         </div>
       </Space>

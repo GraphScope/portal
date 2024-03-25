@@ -24,6 +24,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
   const {
     onQuery,
     onClose,
+    onCancel,
     onSave,
     script,
     id,
@@ -61,6 +62,18 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
   }, [active]);
 
   const handleQuery = async params => {
+    console.log('isFetching...', isFetching);
+    if (isFetching) {
+      onCancel && onCancel(params);
+      updateState(preState => {
+        return {
+          ...preState,
+          isFetching: false,
+          data: null,
+        };
+      });
+      return;
+    }
     updateState(preState => {
       return {
         ...preState,

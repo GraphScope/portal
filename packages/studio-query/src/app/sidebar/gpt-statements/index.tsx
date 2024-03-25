@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Message } from './utils/message';
 import { proxy, useSnapshot } from 'valtio';
 import { getWelcomeMessage, prompt as defaultPrompt, defaultWelcome } from './utils/prompt';
-import { Input, Button, Flex, Typography, Space, Skeleton } from 'antd';
+import { Input, Button, Flex, Typography, Space, Skeleton, theme } from 'antd';
 import { useController } from './useController';
 import { useContext } from '../../context';
 import { extractTextWithPlaceholders } from './utils/extractTextWithPlaceholders';
@@ -16,6 +16,7 @@ interface IGPTStatementsProps {
   schemaData: any;
 }
 
+const { useToken } = theme;
 const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
   const { schemaData, prompt = defaultPrompt } = props;
   const [state, updateState] = useState<{ messages: Message[]; isLoading: boolean; OPENAI_KEY_FOR_GS: string | null }>({
@@ -25,6 +26,7 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
   });
   const { messages, isLoading, OPENAI_KEY_FOR_GS } = state;
   const InputRef = useRef(null);
+  const { token } = useToken();
 
   const controller = useController();
   const { updateStore } = useContext();
@@ -150,9 +152,10 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
         {recommended_messages.map((item, index) => {
           return (
             <div
+              key={index}
               style={{
                 cursor: 'pointer',
-                background: 'rgba(221,221,221,0.3)',
+                background: token.colorBgLayout,
                 padding: '4px',
                 borderRadius: '6px',
                 margin: '6px 0px',

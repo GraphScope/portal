@@ -306,7 +306,7 @@ class CypherDriver {
     }
     // gremlin
     const gremlinCode = `g.V(${nodeIds.join(',')}).elementMap()`;
-    console.log(`Execute query ${gremlinCode}`);
+
     const allVertexPropertyResult = await this.driver.submit(gremlinCode);
     // parse result
     for (let properties of allVertexPropertyResult) {

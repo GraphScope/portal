@@ -21,6 +21,10 @@ export default function Provider(props) {
               headerColor: isLightMode ? 'rgba(0, 0, 0, 0.45)' : '#DBDBDB',
               headerSplitColor: isLightMode ? '#fff' : '#161616',
             },
+            Result: {
+              iconFontSize: 62,
+              titleFontSize: 20,
+            },
           },
           token: {
             colorPrimary: primaryColor,

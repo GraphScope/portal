@@ -147,3 +147,10 @@ export const queryGraphData = async (params: IStatement) => {
   //@ts-ignore
   return driver.query(params.script);
 };
+export const handleCancelQuery = async (params: IStatement) => {
+  const { language } = params;
+  const driver = await getDriver(language);
+
+  driver.close();
+  console.log('driver', driver);
+};
