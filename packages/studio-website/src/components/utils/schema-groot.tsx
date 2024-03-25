@@ -202,7 +202,6 @@ export function transformGrootCreateVertexToOptions(
       primary_keys = [name];
     }
     propertyMap.set(item.name, {
-      property_id: index,
       property_name: name,
       property_type: {
         primitive_type: type,
@@ -211,7 +210,6 @@ export function transformGrootCreateVertexToOptions(
   });
   const properties = [...propertyMap.values()];
   return {
-    type_id: 0,
     type_name: label,
     primary_keys,
     properties,
@@ -235,7 +233,6 @@ export function transformGrootCreateEdgeToOptions(
   property.forEach((item, index) => {
     const { name, primaryKey, type } = item;
     propertyMap.set(item.name, {
-      property_id: index,
       property_name: name,
       property_type: {
         primitive_type: type,
@@ -244,7 +241,6 @@ export function transformGrootCreateEdgeToOptions(
   });
   const properties = [...propertyMap.values()];
   return {
-    type_id: 0,
     type_name: label,
     vertex_type_pair_relations: [
       {
