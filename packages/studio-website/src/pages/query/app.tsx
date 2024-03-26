@@ -11,6 +11,7 @@ import {
   queryStatements,
   deleteStatements,
   createStatements,
+  handleCancelQuery,
 } from './services';
 
 const QueryModule = () => {
@@ -52,6 +53,7 @@ const QueryModule = () => {
       /** 查询图数据 */
       //@ts-ignore
       queryGraphData={queryGraphData}
+      handleCancelQuery={handleCancelQuery}
       //@ts-ignore
       queryGraphSchema={queryGraphSchema}
       logo={<Logo style={{ width: '140px', marginLeft: '16px' }} />}

@@ -128,6 +128,8 @@ export interface IStudioQueryProps {
   queryInfo: () => Promise<Info>;
   /** 查询图数据 */
   queryGraphData: (params: IStatement) => Promise<IGraphData>;
+  /** 取消查询 */
+  handleCancelQuery: (params: IStatement) => Promise<IGraphData>;
   /** 查询Schema */
   queryGraphSchema: (id: string) => Promise<IGraphSchema>;
 

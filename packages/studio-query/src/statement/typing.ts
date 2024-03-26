@@ -7,6 +7,7 @@ export interface IEditorProps {
   schemaData?: CypherSchemaData;
   functions?: any;
   onClose?: (id: string) => void;
+  onCancel?: (value: IStatement) => void;
   onQuery: (value: IStatement) => void;
   onSave?: (value: IStatement) => void;
 }

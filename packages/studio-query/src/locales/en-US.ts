@@ -27,4 +27,8 @@ export default {
   'OpenAI API key is only stored locally in your browser': 'OpenAI API key is only stored locally in your browser',
   'query.copilot.welcome':
     "Hello! I'm the GraphScope Query Assistant. Feel free to ask me any questions about Cypher or Gremlin queries.",
+  'recommend 5 interesting query statements': 'recommend 5 interesting query statements',
+  'query any subgraph': 'query any subgraph',
+  'insight the statistical distribution of vertex labels in the graph':
+    'insight the statistical distribution of vertex labels in the graph',
 };
