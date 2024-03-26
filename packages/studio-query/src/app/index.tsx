@@ -30,6 +30,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const {
     queryInfo,
     queryGraphData,
+    handleCancelQuery,
     queryGraphSchema,
     onBack,
     displaySidebarPosition = 'left',
@@ -174,6 +175,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
           }
           content={
             <Content
+              handleCancelQuery={handleCancelQuery}
               createStatements={createStatements}
               queryGraphData={handleQuery}
               enableImmediateQuery={enableImmediateQuery}
