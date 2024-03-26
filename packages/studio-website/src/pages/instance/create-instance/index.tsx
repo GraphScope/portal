@@ -23,9 +23,9 @@ const LeftButton = (props: { currentStep: any; handlePrev: any; createInstaseRes
   if (currentStep === 0) {
     return null;
   }
-  if (currentStep === 1 && mode === 'view') {
-    return null;
-  }
+  // if (currentStep === 1 && mode === 'view') {
+  //   return null;
+  // }
   if (currentStep === 3 && !createInstaseResult) {
     return null;
   }
@@ -104,9 +104,9 @@ const Steps: React.FunctionComponent<{ currentStep: number }> = () => {
     { title: <FormattedMessage id="Preview" /> },
     { title: <FormattedMessage id="Result" /> },
   ];
-  if (mode === 'view' && GS_ENGINE_TYPE === 'interactive') {
-    steps = [{ title: <FormattedMessage id="View Schema" /> }, { title: <FormattedMessage id="Preview" /> }];
-  }
+  // if (mode === 'view' && GS_ENGINE_TYPE === 'interactive') {
+  //   steps = [{ title: <FormattedMessage id="View Schema" /> }, { title: <FormattedMessage id="Preview" /> }];
+  // }
   const items = steps.map(item => ({ key: item.title, title: item.title }));
   return <AntdSteps current={currentStep} items={items} />;
 };
@@ -117,7 +117,7 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   const { nodeList = [], edgeList = [], graphName = '', mode = 'create' } = props;
   useEffect(() => {
     let stepIndex = 1;
-    if (props.mode === 'create') {
+    if (mode === 'create') {
       // 如果是空Schema或者是创建模式，才从第一步开始
       stepIndex = 0;
     }
@@ -143,9 +143,10 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
         });
       });
     };
-  }, [nodeList, edgeList]);
+  }, []);
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
+
   const next = () => {
     if (form.getFieldsValue().graphName || mode === 'view') {
       updateStore(draft => {
