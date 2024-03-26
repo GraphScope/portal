@@ -34,9 +34,14 @@ const ViewSchema: React.FunctionComponent<ICreateGraph> = props => {
     });
   }, []);
   const { nodes, edges, isReady } = state;
+  const isEmpty = nodes.length === 0 && edges.length === 0;
   if (isReady) {
+    if (isEmpty) {
+      <CreateInstance mode="create" nodeList={nodes} edgeList={edges} graphName={graphName} />;
+    }
     return <CreateInstance mode="view" nodeList={nodes} edgeList={edges} graphName={graphName} />;
   }
+
   return <Skeleton />;
 };
 
