@@ -16,10 +16,25 @@ type ChooseEnginetypeProps = {
   form: any;
 };
 
-const engines = [
+const gs_all_engines = [
   {
     id: 'mutable_csr',
-    title: 'Interactive',
+    title: 'Interactive Engine',
+    value: 'interactive',
+    desc: (
+      <>
+        <FormattedMessage id="graphs.engine.interactive.desc" />
+        <br />
+        <Typography.Link href="https://graphscope.io/docs/interactive_engine/graphscope_interactive" target="_blank">
+          <FormattedMessage id="More details" />
+        </Typography.Link>
+      </>
+    ),
+  },
+  {
+    id: 'groot_store',
+    title: 'Groot Engine',
+    value: 'groot',
     desc: (
       <>
         <FormattedMessage id="graphs.engine.interactive.desc" />
@@ -32,10 +47,14 @@ const engines = [
   },
 ];
 
+const engines = gs_all_engines.filter(item => {
+  return item.value === window.GS_ENGINE_TYPE;
+});
+
 const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props => {
   const { form } = props;
   const { store, updateStore } = useContext();
-  const { engineType, graphName, storeType } = store;
+  const { graphName, storeType } = store;
   const {
     store: { locale },
   } = useContextMap();
@@ -61,8 +80,10 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
     },
   });
   useEffect(() => {
-    form.setFieldsValue({ graphName: graphName });
-  }, []);
+    form.setFieldsValue({ graphName, storeType });
+  }, [graphName, storeType]);
+
+  console.log(graphName, storeType);
 
   return (
     <Form name="basic" form={form} layout="vertical" style={{ marginTop: '24px' }}>
@@ -73,7 +94,9 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
         rules={[{ required: true, message: '' }, validatePasswords]}
       >
         <Input
+          defaultValue={graphName}
           placeholder={intl.formatMessage({ id: 'please name your graph instance.' })}
+          disabled={window.GS_ENGINE_TYPE === 'groot'}
           onChange={e =>
             updateStore(draft => {
               draft.graphName = String(e.target.value || 'unkown');

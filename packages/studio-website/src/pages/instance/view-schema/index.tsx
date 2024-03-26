@@ -3,7 +3,6 @@ import CreateInstance from '../create-instance';
 import type { ICreateGraph } from '../create-instance';
 import { getSchema } from './service';
 import { searchParamOf } from '@/components/utils/index';
-import { transformSchemaToOptions } from '@/components/utils/schema';
 import { Skeleton } from 'antd';
 
 const ViewSchema: React.FunctionComponent<ICreateGraph> = props => {
@@ -16,10 +15,13 @@ const ViewSchema: React.FunctionComponent<ICreateGraph> = props => {
     nodes: [],
     edges: [],
   });
+
   const graphName = searchParamOf('graph_name') || '';
+
   React.useEffect(() => {
     getSchema(graphName).then(res => {
-      const { nodes, edges } = transformSchemaToOptions(res as any, true);
+      //@ts-ignore
+      const { nodes, edges } = res;
       updateState(preState => {
         return {
           ...preState,
@@ -31,12 +33,20 @@ const ViewSchema: React.FunctionComponent<ICreateGraph> = props => {
     });
   }, []);
   const { nodes, edges, isReady } = state;
-  if (isReady) {
+  const isEmpty = nodes.length === 0 && edges.length === 0;
+  if (!isReady) {
     return (
-      <CreateInstance mode="view" nodeList={nodes} edgeList={edges} engineType="interactive" graphName={graphName} />
+      <div style={{ padding: '12px 24px' }}>
+        <Skeleton.Button />
+        <Skeleton />
+        <Skeleton />
+      </div>
     );
   }
-  return <Skeleton />;
+  if (isEmpty) {
+    return <CreateInstance mode="create" nodeList={nodes} edgeList={edges} graphName={graphName} />;
+  }
+  return <CreateInstance mode="view" nodeList={nodes} edgeList={edges} graphName={graphName} />;
 };
 
 export default ViewSchema;

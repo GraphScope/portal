@@ -156,6 +156,109 @@ export function transformMappingSchemaToImportOptions(
     edges: _edges,
   };
 }
+/**
+ * 将后端groot 标准的 MappingSchema 和 GrahSchema 转化为 Importor 需要的 Options
+ * @param schemaMapping  后端标准的 MappingSchema
+ * @param schema 后端标准的  GraphSchema
+ * @returns
+ */
+export function transformGrootMappingSchemaToImportOptions(schemaMapping: any, schema: any) {
+  const schemaOptions = transformSchemaToImportOptions(schema);
+  console.log(schemaMapping);
+
+  const { nodes, edges } = schemaOptions;
+  const { loading_config, vertices_datasource, edges_datasource } = schemaMapping;
+  const { type, metadata } = loading_config?.format || { type: 'csv' };
+  const label_mappings: Record<string, VertexMapping | EdgeMapping> = {};
+  /** 先将后端数据或者yaml返回的mapping数据做一次Map存储，方便与后续的schema整合取数 */
+
+  vertices_datasource.forEach(item => {
+    const { property_mapping, type_name } = item;
+    label_mappings[type_name] = {
+      ...item,
+      //@ts-ignore
+      properties_mappings: property_mapping?.reduce((acc, curr) => {
+        return {
+          ...acc,
+          [curr.property]: curr.column,
+        };
+      }, {}),
+    };
+  });
+  edges_datasource.forEach(item => {
+    const { property_mapping, type_triplet, destination_pk_column_map, source_pk_column_map } = item;
+    const { edge } = type_triplet;
+    const sourceField = source_pk_column_map[0].column;
+    const targetField = destination_pk_column_map[0].column;
+    label_mappings[edge] = {
+      ...item,
+      //@ts-ignore
+      properties_mappings: {
+        [`#source.${sourceField.name}`]: sourceField,
+        [`#target.${targetField.name}`]: targetField,
+        ...property_mapping?.reduce((acc, curr) => {
+          return {
+            ...acc,
+            [curr.property]: curr.column,
+          };
+        }, {}),
+      },
+    };
+  });
+  /** 基于schema 进行 properties 中 token 字段的回填*/
+  const _nodes = nodes.map(item => {
+    const { label, properties } = item;
+    const mapping = label_mappings[label];
+    const filelocation = (mapping && mapping.inputs && mapping.inputs[0]) || '';
+    return {
+      ...item,
+      datatype: type,
+      filelocation,
+      isBind: !!filelocation,
+      isEidtProperty: true,
+      delimiter: metadata.delimiter || ',',
+      properties: properties.map(p => {
+        const { name } = p;
+        //@ts-ignore
+        const match = mapping.properties_mappings[name];
+        console.log('match', match, name);
+        return {
+          ...p,
+          // 只支持 name 不支持 index
+          token: match.name,
+        };
+      }),
+    };
+  });
+  const _edges = edges.map(item => {
+    const { label, properties } = item;
+    const mapping = label_mappings[label];
+    const filelocation = (mapping && mapping.inputs && mapping.inputs[0]) || '';
+    return {
+      ...item,
+      datatype: type,
+      filelocation,
+      isBind: !!filelocation,
+      isEidtProperty: true,
+      delimiter: metadata.delimiter || ',',
+      properties: properties.map(p => {
+        const { name } = p;
+        //@ts-ignore
+        const match = mapping.properties_mappings[name];
+        console.log('match', match, name);
+        return {
+          ...p,
+          // 只支持 name 不支持 index
+          token: match.name,
+        };
+      }),
+    };
+  });
+  return {
+    nodes: _nodes,
+    edges: _edges,
+  };
+}
 
 export function transformDataMapToOptions(dataMap: any) {
   const nodes: BindingNode[] = [];

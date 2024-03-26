@@ -9,6 +9,9 @@ export default {
   'collasped sidebar': '收起边栏',
   /** graphs */
   'Listing all graphs on the cluster': '展示集群中所有的图',
+  '{vertices} types of Vertices {br} {edges} types of Edges': '{vertices} 种类型的点 {br} {edges} 种类型的边',
+  'Delete the label?': '确认删除',
+  'Are you sure to delete this label?': '您确认删除该类型吗',
   /** create instance */
   'Create Instance': '创建图实例',
   Previous: '上一步',
@@ -173,8 +176,13 @@ export default {
   "Congratulations on the successful creation of the model, now let's start to guide the data.":
     '恭喜模型创建成功，现在让我们开始导数据啦。',
   'please name your graph instance.': '请输入图实例名称。',
-  'label.type': '请输入{label}',
+  'Please Enter Vertex Label.': '请输入点标题',
+  'Please Enter Edge Label.': '请输入边标题',
   'Please Select Source Vertex Label.': '请选择源点标签。',
   'Please Select Target Vertex Label.': '请选择目标点标签。',
   'Please manually input the odps file location': '请手动输入文件地址，也可直接上传本地 CSV 文件',
+  /** sidebar */
+  docs: '文档',
+  graphscope: 'graphscope',
+  github: '仓库',
 };

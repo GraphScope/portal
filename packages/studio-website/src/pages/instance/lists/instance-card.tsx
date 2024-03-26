@@ -35,8 +35,8 @@ export type InstaceCardType = {
   /** 操作 */
   actions: React.ReactNode;
   schema: {
-    edge_types: any[];
-    vertex_types: any[];
+    edges: number;
+    vertices: number;
   };
   /** server 实例链接 */
   server?: string;
@@ -67,7 +67,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     name,
     hqps,
     handleChange,
-    schema = { edge_types: [], vertex_types: [] },
+    schema = { edges: 0, vertices: 0 },
   } = props;
   const { store } = useContext();
   const { mode, locale } = store;
@@ -139,8 +139,14 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   }
   const Statistics = (
     <>
-      {schema.edge_types.length} <FormattedMessage id="types of Edges" /> <br /> {schema.vertex_types.length}{' '}
-      <FormattedMessage id="types of Vertices" />
+      <FormattedMessage
+        id="{vertices} types of Vertices {br} {edges} types of Edges"
+        values={{
+          vertices: schema.vertices,
+          edges: schema.edges,
+          br: <br />,
+        }}
+      />
     </>
   );
 

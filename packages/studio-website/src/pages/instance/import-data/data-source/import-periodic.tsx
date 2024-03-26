@@ -17,7 +17,7 @@ const ImportPeriodic: React.FunctionComponent<IImportPeriodicProps> = props => {
       >
         <FormattedMessage id="Import Periodic" />
       </Button>
-      <Modal width={'75%'} open={visible} footer={null}>
+      <Modal width={'45%'} open={visible} onCancel={() => setVisible(false)} footer={null}>
         <StagesImportPackages
           onChange={(val: boolean) => {
             setVisible(val);

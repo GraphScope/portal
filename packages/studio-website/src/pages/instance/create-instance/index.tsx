@@ -9,9 +9,8 @@ import ResultFailed from './result/result-failed';
 import ResultSuccess from './result/result-success';
 import { FormattedMessage } from 'react-intl';
 import { createGraph } from './service';
-import { transOptionsToSchema } from '@/components/utils/schema';
-import { cloneDeep } from 'lodash';
 import { initialStore, useStore } from './useContext';
+const { GS_ENGINE_TYPE } = window;
 
 /**
  * 左侧的操作按钮
@@ -53,7 +52,7 @@ const RightButton = (props: { currentStep: any; handleNext: any; handleSubmit: a
     );
   }
   if (currentStep === 2) {
-    if (mode === 'create') {
+    if (mode === 'create' || GS_ENGINE_TYPE === 'groot') {
       return (
         <Button type="primary" onClick={handleSubmit} style={{ minWidth: '100px' }}>
           <FormattedMessage id="Confirm Create" />
@@ -91,13 +90,11 @@ const RightButton = (props: { currentStep: any; handleNext: any; handleSubmit: a
 
 export interface ICreateGraph {
   mode?: 'view' | 'create';
-  engineType?: string;
   currentStep?: number;
   nodeList?: any;
   edgeList?: any;
   graphName: string;
 }
-const engineType = window.GS_ENGINE_TYPE;
 
 const Steps: React.FunctionComponent<{ currentStep: number }> = () => {
   const { currentStep, mode } = useStore();
@@ -107,7 +104,7 @@ const Steps: React.FunctionComponent<{ currentStep: number }> = () => {
     { title: <FormattedMessage id="Preview" /> },
     { title: <FormattedMessage id="Result" /> },
   ];
-  if (mode === 'view' && engineType === 'interactive') {
+  if (mode === 'view' && GS_ENGINE_TYPE === 'interactive') {
     steps = [{ title: <FormattedMessage id="View Schema" /> }, { title: <FormattedMessage id="Preview" /> }];
   }
   const items = steps.map(item => ({ key: item.title, title: item.title }));
@@ -116,10 +113,39 @@ const Steps: React.FunctionComponent<{ currentStep: number }> = () => {
 
 const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   const { store, updateStore } = useContext();
-  const { currentStep, createInstaseResult, nodeList, edgeList, engineType, storeType, graphName, mode } = store;
+  const { currentStep, createInstaseResult, storeType } = store;
+  const { nodeList = [], edgeList = [], graphName = '', mode = 'create' } = props;
+  useEffect(() => {
+    let stepIndex = 1;
+    if (props.mode === 'create') {
+      // 如果是空Schema或者是创建模式，才从第一步开始
+      stepIndex = 0;
+    }
+    updateStore(draft => {
+      draft.storeType = storeType;
+      draft.mode = mode;
+      draft.currentStep = stepIndex;
+      draft.nodeActiveKey = nodeList.length && nodeList[0].id;
+      draft.edgeActiveKey = edgeList.length && edgeList[0].id;
+      draft.graphName = graphName;
+      /** groot 查询数据回填 */
+      draft.nodeList = nodeList;
+      draft.edgeList = edgeList;
+    });
+    console.log(props);
+
+    return () => {
+      console.log('clear............');
+      updateStore(draft => {
+        Object.keys(initialStore).forEach(key => {
+          //@ts-ignore
+          draft[key] = initialStore[key];
+        });
+      });
+    };
+  }, [nodeList, edgeList]);
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
-
   const next = () => {
     if (form.getFieldsValue().graphName || mode === 'view') {
       updateStore(draft => {
@@ -131,17 +157,7 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   // createGraph
   const handleSubmit = () => {
     //@ts-ignore
-    const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
-
-    const data = {
-      name: String(graphName).trim(),
-      store_type: storeType,
-      stored_procedures: {
-        directory: 'plugins',
-      },
-      schema: schemaJSON,
-    };
-    createGraph(data)
+    createGraph(graphName, storeType, nodeList, edgeList)
       .then(res => {
         /** 成功true */
         updateStore(draft => {
@@ -169,30 +185,6 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
     display: 'block',
   };
 
-  useEffect(() => {
-    if (props.mode === 'view') {
-      // 预览模式下，需要从props中把默认参数回填回来
-      const { nodeList, edgeList, graphName } = props;
-      updateStore(draft => {
-        Object.keys(props).forEach(key => {
-          //@ts-ignore
-          draft[key] = props[key];
-        });
-        draft.currentStep = 1;
-        draft.nodeActiveKey = nodeList[0].id;
-        draft.edgeActiveKey = edgeList[0].id;
-        draft.graphName = graphName;
-      });
-    }
-    return () => {
-      updateStore(draft => {
-        Object.keys(initialStore).forEach(key => {
-          //@ts-ignore
-          draft[key] = initialStore[key];
-        });
-      });
-    };
-  }, []);
   /** 图创建失败提示框 */
   const openNotification = (result: string) => {
     api.error({
@@ -218,9 +210,9 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
         ]}
       />
       <div style={{ padding: '24px 0px' }}>
-        {engineType === 'interactive' && mode === 'view' && (
+        {GS_ENGINE_TYPE === 'interactive' && mode === 'view' && (
           <Alert
-            message="您的图实例类型为 Interactive，一旦创建则不支持修改图模型，您可以选择新建图实例"
+            message="您的图实例类型为 Interactive，一旦创建则不支持修改图模型，您可以选择新建图实例。"
             type="info"
             showIcon
             closable

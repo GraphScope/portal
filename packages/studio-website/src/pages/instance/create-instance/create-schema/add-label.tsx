@@ -1,18 +1,19 @@
-import { FunctionComponent, useEffect } from 'react';
+import { FunctionComponent } from 'react';
 import { Button, Space } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
-import { cloneDeep } from 'lodash';
 import { FormattedMessage } from 'react-intl';
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { useContext } from '../useContext';
+import DeleteLabel from './delete-label';
 const index = {
   edge: 0,
   node: 0,
 };
+const { GS_ENGINE_TYPE } = window;
 const AddLabel: FunctionComponent = () => {
   const { store, updateStore } = useContext();
-  const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, mode } = store;
-  const disabled = mode == 'view';
+  const { nodeList, edgeList, currentType, mode } = store;
+  const disabled = mode == 'view' && GS_ENGINE_TYPE === 'interactive';
   /** 添加点边模版 */
   const addLabel = () => {
     const id = uuidv4();
@@ -25,6 +26,7 @@ const AddLabel: FunctionComponent = () => {
           key: id,
           label: `vlabel_${index.node}`,
           properties: [],
+          isDraft: true,
         });
       }
       if (currentType === 'edge') {
@@ -37,27 +39,8 @@ const AddLabel: FunctionComponent = () => {
           source: '',
           target: '',
           properties: [],
+          isDraft: true,
         });
-      }
-    });
-  };
-
-  /** 删除点边模版 */
-  const deleteLabel = (type: string, key: string) => {
-    const data = type == 'node' ? nodeList : edgeList;
-    const newPanes = data.filter(pane => pane.key !== key);
-    const activeKey = newPanes.length > 0 ? newPanes[newPanes.length - 1].key : '';
-
-    updateStore(draft => {
-      if (type === 'node') {
-        //@ts-ignore
-        draft.nodeList = newPanes;
-        draft.nodeActiveKey = activeKey;
-      }
-      if (type === 'edge') {
-        //@ts-ignore
-        draft.edgeList = newPanes;
-        draft.edgeActiveKey = activeKey;
       }
     });
   };
@@ -79,11 +62,7 @@ const AddLabel: FunctionComponent = () => {
         <Button onClick={addLabel} disabled={disabled} icon={<PlusOutlined />}>
           <FormattedMessage id="Add new" />
         </Button>
-        <Button
-          disabled={disabled}
-          icon={<DeleteOutlined />}
-          onClick={() => deleteLabel(currentType, currentType == 'node' ? nodeActiveKey : edgeActiveKey)}
-        />
+        <DeleteLabel />
       </Space>
     </div>
   );

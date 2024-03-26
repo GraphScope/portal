@@ -10,6 +10,10 @@ export default {
   'Query App': 'Query App',
   /** graphs */
   'Listing all graphs on the cluster': 'Listing all graphs on the cluster',
+  '{vertices} types of Vertices {br} {edges} types of Edges':
+    '{vertices} types of Vertices {br} {edges} types of Edges',
+  'Delete the label?': 'Delete the label?',
+  'Are you sure to delete this label?': 'Are you sure to delete this label?',
   /** create instance */
   'Create Instance': 'Create Instance',
   Previous: 'Previous',
@@ -146,7 +150,7 @@ export default {
   'New Graph': 'New Graph',
   'Pause Service': 'Pause Service',
   'Start Service': 'Start Service',
-  Uptime: 'upTime',
+  Uptime: 'UpTime',
   'Last data import': 'Last data import',
   'Served from': 'Served from',
   'Created on': 'Created on',
@@ -173,8 +177,14 @@ export default {
   "Congratulations on the successful creation of the model, now let's start to guide the data.":
     "Congratulations on the successful creation of the model, now let's start to guide the data.",
   'please name your graph instance.': 'please name your graph instance.',
-  'label.type': 'Please Enter {label}',
+  'Please Enter {label}': 'Please Enter {label}',
+  'Please Enter Vertex Label.': 'Please Enter Vertex Label.',
+  'Please Enter Edge Label.': 'Please Enter Edge Label.',
   'Please Select Source Vertex Label.': 'Please Select Source Vertex Label.',
   'Please Select Target Vertex Label.': 'Please Select Target Vertex Label.',
   'Please manually input the odps file location': 'Please manually input the odps file location',
+  /** sidebar */
+  docs: 'docs',
+  graphscope: 'graphscope',
+  github: 'github',
 };

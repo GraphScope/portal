@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, memo } from 'react';
+import React, { useEffect, useRef, memo, useState } from 'react';
 import { Button, Empty, Form, Input, Select, Tooltip } from 'antd';
 import { PropertiesEditor } from '@graphscope/studio-importor';
 import PrimaryKey from '@/components/icons/primary-key';
@@ -6,6 +6,9 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import type { IStore } from '../useContext';
 import { useContext } from '@/layouts/useContext';
+import { getPrimitiveTypes } from '../service';
+import { createVertexOrEdgeType } from './service';
+import { getSchema } from '../../view-schema/service';
 export type FieldType = {
   label?: string;
   source?: string;
@@ -21,6 +24,8 @@ type SchemaType = {
   currentType: 'node' | 'edge';
   updateStore: (fn: (draft: IStore<{}>) => void) => void;
   nodeOptions?: { label: string; value: string }[];
+  graphName: string;
+  nodeList?: any;
 };
 type configcolumnsType = {
   title: string | React.ReactNode;
@@ -29,7 +34,8 @@ type configcolumnsType = {
   type?: string;
   option?: { label: string; value: string }[];
 };
-const primitive_types = ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64', 'DT_DATE32'];
+
+const primitive_types = getPrimitiveTypes();
 
 /** 子项 [{title:'表头'，dataIndex:'绑定字段'，type:'字段对应编辑框'，option:'select配置选项',width:'表头宽度'}] */
 const configcolumns: configcolumnsType[] = [
@@ -73,6 +79,7 @@ const configcolumns: configcolumnsType[] = [
         </Tooltip>
       </div>
     ),
+    type: 'primary_key',
     width: '80px',
   },
 ];
@@ -89,12 +96,11 @@ const notFoundContent = (
   />
 );
 const CreateSchema: React.FunctionComponent<SchemaType> = props => {
-  const { newActiveKey, data, currentType, updateStore, nodeOptions, mode } = props;
+  const { newActiveKey, data, currentType, updateStore, nodeOptions, mode, graphName, nodeList } = props;
   const [form] = Form.useForm();
   const { store } = useContext();
-  const { locale } = store;
   const intl = useIntl();
-  const disabled = mode === 'view';
+  const disabled = mode === 'view' && !data?.isDraft;
   const propertyRef = useRef<any>();
   let cbRef = useRef();
 
@@ -144,19 +150,50 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
    */
   const hangdleConfigcolumns = (configcolumns: configcolumnsType[]) => {
     if (currentType === 'edge') {
-      return configcolumns.filter(item => item.title !== 'primary_key');
+      return configcolumns.filter(item => item.type !== 'primary_key');
     }
     return configcolumns;
   };
   const nodeOrEdgeTitle =
     currentType == 'node' ? <FormattedMessage id="Vertex Label" /> : <FormattedMessage id="Edge Label" />;
-  let vertexLabel = locale === 'zh-CN' ? '点标题' : 'Vertex Label.';
-  let edgeLabel = locale === 'zh-CN' ? '边标题' : 'Edge Label.';
+  let label =
+    currentType == 'node'
+      ? intl.formatMessage({ id: 'Please Enter Vertex Label.' })
+      : intl.formatMessage({ id: 'Please Enter Edge Label.' });
   /** 添加属性标题国际化 */
   let locales = {
     properties: intl.formatMessage({ id: 'Properties' }),
     addProperty: intl.formatMessage({ id: 'Add Property' }),
     mapFromFile: intl.formatMessage({ id: 'Map From File' }),
+  };
+  /** groot 创建点/边  */
+  const hangdleSubmit = () => {
+    const property = cbRef.current || [];
+    createVertexOrEdgeType(currentType, graphName, nodeList, form.getFieldsValue(), property).then(res => {
+      if (res[0].status === 200) {
+        getSchema(graphName).then(data => {
+          //@ts-ignore
+          const { nodes, edges } = data;
+          updateStore(draft => {
+            draft.nodeList = nodes;
+            draft.edgeList = edges;
+            draft.nodeActiveKey = nodes.length && nodes[nodes.length - 1].key;
+            draft.edgeActiveKey = edges.length && edges[edges.length - 1].key;
+          });
+        });
+      }
+    });
+  };
+  let SaveGrootType = () => {
+    if (window.GS_ENGINE_TYPE === 'groot' && data?.isDraft) {
+      return (
+        <Button type="primary" style={{ minWidth: '100px' }} onClick={hangdleSubmit}>
+          <FormattedMessage id="Submit" />
+        </Button>
+      );
+    } else {
+      return null;
+    }
   };
   return (
     <div>
@@ -169,13 +206,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             rules={[{ required: true, message: '' }]}
             style={{ marginBottom: '8px' }}
           >
-            <Input
-              disabled={disabled}
-              placeholder={intl.formatMessage(
-                { id: 'label.type' },
-                { label: currentType == 'node' ? vertexLabel : edgeLabel },
-              )}
-            />
+            <Input disabled={disabled} placeholder={label} />
           </Form.Item>
         </div>
         {currentType === 'edge' ? (
@@ -227,6 +258,9 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
         //@ts-ignore
         tableConfig={hangdleConfigcolumns(configcolumns)}
       />
+      <div style={{ textAlign: 'right', marginTop: '24px' }}>
+        <SaveGrootType />
+      </div>
     </div>
   );
 };
