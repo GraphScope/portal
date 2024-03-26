@@ -73,8 +73,16 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
   const { table = [], nodes = [], edges = [] } = props.data;
   const nodeCount = nodes.length;
   const edgeCount = edges.length;
-  const totalCount = nodeCount + edgeCount;
-  const description = `A total of ${totalCount} records were retrieved, including ${nodes.length} nodes and  ${edges.length} edges.`;
+  const totalCount = table.length;
+  let description: string;
+  if (nodeCount === 0 && edgeCount === 0 && totalCount !== 0) {
+    description = `A total of ${totalCount} records were retrieved`;
+  } else {
+    description = `A total of ${
+      nodeCount + edgeCount
+    } records were retrieved, including ${nodeCount} nodes and  ${edgeCount} edges.`;
+  }
+
   const [mode, setMode] = useState<'table' | 'chart'>('table');
 
   return (

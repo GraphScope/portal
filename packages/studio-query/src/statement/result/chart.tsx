@@ -142,7 +142,7 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
 
   const handleChange = () => {};
   return (
-    <div style={{ width: '100%', padding: '16px' }}>
+    <div style={{ padding: '16px', overflowX: 'hidden' }}>
       <Space style={{ paddingBottom: '16px' }}>
         Type:
         <Select
