@@ -191,11 +191,12 @@ export function transformGrootDeleteEdgeToOptions(schema: { nodes: any[]; edges:
 /** groot 创建点参数 */
 export function transformGrootCreateVertexToOptions(
   schema: { label: string },
-  property: { id: string; name: string; primaryKey: boolean; type: string }[],
+  property?: { id: string; name: string; primaryKey: boolean; type: string }[],
 ) {
   const { label } = schema;
   let primary_keys;
   const propertyMap = new Map();
+  //@ts-ignore
   property.length &&
     property.forEach((item, index) => {
       const { name, primaryKey, type } = item;
@@ -219,7 +220,7 @@ export function transformGrootCreateVertexToOptions(
 export function transformGrootCreateEdgeToOptions(
   nodeList: any[],
   schema: { label: string; source: string; target: string },
-  property: { id: string; name: string; primaryKey: boolean; type: string }[],
+  property?: { id: string; name: string; primaryKey: boolean; type: string }[],
 ) {
   const nodeMap: Record<string, string> = {};
   //@ts-ignore
@@ -231,6 +232,7 @@ export function transformGrootCreateEdgeToOptions(
   const source = nodeMap[sourceID];
   const target = nodeMap[targetID];
   const propertyMap = new Map();
+  //@ts-ignore
   property.length &&
     property.forEach((item, index) => {
       const { name, primaryKey, type } = item;

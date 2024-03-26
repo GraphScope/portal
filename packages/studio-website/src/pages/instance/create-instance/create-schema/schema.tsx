@@ -168,7 +168,8 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   };
   /** groot 创建点/边  */
   const hangdleSubmit = async () => {
-    await createVertexOrEdgeType(currentType, graphName, nodeList, form.getFieldsValue(), cbRef.current);
+    const property = cbRef.current || [];
+    await createVertexOrEdgeType(currentType, graphName, nodeList, form.getFieldsValue(), property);
   };
   let SaveGrootType = () => {
     if (window.GS_ENGINE_TYPE === 'groot' && data?.isDraft) {
