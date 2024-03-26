@@ -116,7 +116,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
           }}
         >
           <Card
-            bodyStyle={{ height: '500px', padding: '0px' }}
+            bodyStyle={{ minHeight: '550px', height: 'cacl(100vh - 150px)', padding: '0px' }}
             title={
               <Segmented
                 value={currentType}
@@ -134,7 +134,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
                 <EmptyInfo />
               ) : (
                 <Tabs
-                  style={{ height: '500px', padding: '12px' }}
+                  style={{ height: '100%', padding: '12px' }}
                   tabBarStyle={{ borderLeft: 0, width: '120px' }}
                   tabPosition="left"
                   items={nodeItems}
@@ -148,7 +148,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
                 <EmptyInfo />
               ) : (
                 <Tabs
-                  style={{ height: '500px', padding: '12px' }}
+                  style={{ height: '100%', padding: '12px' }}
                   tabBarStyle={{ borderLeft: 0, width: '120px' }}
                   tabPosition="left"
                   items={edgeItems}
@@ -162,7 +162,12 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
       </Col>
       <Col span={8}>
         <Card
-          bodyStyle={{ padding: '1px', height: '500px', overflow: 'hidden' }}
+          bodyStyle={{
+            padding: '1px',
+            minHeight: '550px',
+            height: 'cacl(100vh - 150px)',
+            overflow: 'hidden',
+          }}
           title={<FormattedMessage id="Graph Model" />}
           extra={<ExportConfig />}
         >

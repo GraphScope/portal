@@ -173,7 +173,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   let SaveGrootType = () => {
     if (window.GS_ENGINE_TYPE === 'groot' && data?.isDraft) {
       return (
-        <Button type="primary" onClick={hangdleSubmit}>
+        <Button type="primary" style={{ minWidth: '100px' }} onClick={hangdleSubmit}>
           <FormattedMessage id="Submit" />
         </Button>
       );
