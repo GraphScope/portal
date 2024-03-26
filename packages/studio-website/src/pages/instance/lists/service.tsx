@@ -59,7 +59,7 @@ export const listGraphs = async () => {
     const isMatch = graph_name === name;
     //@ts-ignore
     const { schema, store_type, stored_procedures } = graphs_map[name];
-    const { vertex_types, edges_types, vertices, edges } = schema;
+    const { vertex_types, edge_types, vertices, edges } = schema;
 
     return {
       name: name,
@@ -74,7 +74,7 @@ export const listGraphs = async () => {
       hqps: isMatch ? status.sdk_endpoints?.hqps : '',
       schema: {
         vertices: (vertices && vertices.length) || (vertex_types && vertex_types.length),
-        edges: (edges && edges.length) || (edges_types && edges_types.length),
+        edges: (edges && edges.length) || (edge_types && edge_types.length),
       },
       store_type,
       stored_procedures,

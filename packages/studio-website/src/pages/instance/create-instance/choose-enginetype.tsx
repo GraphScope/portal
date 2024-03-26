@@ -54,7 +54,7 @@ const engines = gs_all_engines.filter(item => {
 const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props => {
   const { form } = props;
   const { store, updateStore } = useContext();
-  const { graphName, storeType } = store;
+  const { graphName, storeType, mode } = store;
   const {
     store: { locale },
   } = useContextMap();
@@ -96,7 +96,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
         <Input
           defaultValue={graphName}
           placeholder={intl.formatMessage({ id: 'please name your graph instance.' })}
-          disabled={window.GS_ENGINE_TYPE === 'groot'}
+          disabled={mode === 'view'}
           onChange={e =>
             updateStore(draft => {
               draft.graphName = String(e.target.value || 'unkown');
