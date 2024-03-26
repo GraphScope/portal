@@ -7,7 +7,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import type { IStore } from '../useContext';
 import { useContext } from '@/layouts/useContext';
 import { getPrimitiveTypes } from '../service';
-import { createVertexType, createEdgeType } from './service';
+import { createVertexOrEdgeType } from './service';
 export type FieldType = {
   label?: string;
   source?: string;
@@ -99,7 +99,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   const [form] = Form.useForm();
   const { store } = useContext();
   const { locale } = store;
-  const disabled = mode === 'view' && !data?.isAdd;
+  const disabled = mode === 'view' && !data?.isDraft;
   const intl = useIntl();
   const propertyRef = useRef<any>();
   let cbRef = useRef();
@@ -158,8 +158,8 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
     currentType == 'node' ? <FormattedMessage id="Vertex Label" /> : <FormattedMessage id="Edge Label" />;
   let label =
     currentType == 'node'
-      ? intl.formatMessage({ id: 'node.label.type' })
-      : intl.formatMessage({ id: 'edge.label.type' });
+      ? intl.formatMessage({ id: 'Please Enter Vertex Label.' })
+      : intl.formatMessage({ id: 'Please Enter Edge Label.' });
   /** 添加属性标题国际化 */
   let locales = {
     properties: intl.formatMessage({ id: 'Properties' }),
@@ -168,15 +168,10 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   };
   /** groot 创建点/边  */
   const hangdleSubmit = async () => {
-    if (currentType == 'node') {
-      await createVertexType(graphName, form.getFieldsValue(), cbRef.current);
-    }
-    if (currentType == 'edge') {
-      await createEdgeType(graphName, nodeList, form.getFieldsValue(), cbRef.current);
-    }
+    await createVertexOrEdgeType(currentType, graphName, nodeList, form.getFieldsValue(), cbRef.current);
   };
   let SaveGrootType = () => {
-    if (window.GS_ENGINE_TYPE === 'groot' && data?.isAdd) {
+    if (window.GS_ENGINE_TYPE === 'groot' && data?.isDraft) {
       return (
         <Button type="primary" onClick={hangdleSubmit}>
           <FormattedMessage id="Submit" />

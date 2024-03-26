@@ -12,6 +12,8 @@ export default {
   'Listing all graphs on the cluster': 'Listing all graphs on the cluster',
   '{vertices} types of Vertices {br} {edges} types of Edges':
     '{vertices} types of Vertices {br} {edges} types of Edges',
+  'Delete the task?': 'Delete the task?',
+  'Are you sure to delete this task?': 'Are you sure to delete this task?',
   /** create instance */
   'Create Instance': 'Create Instance',
   Previous: 'Previous',
@@ -176,8 +178,8 @@ export default {
     "Congratulations on the successful creation of the model, now let's start to guide the data.",
   'please name your graph instance.': 'please name your graph instance.',
   'Please Enter {label}': 'Please Enter {label}',
-  'node.label.type': 'Please Enter Vertex Label.',
-  'edge.label.type': 'Please Enter Edge Label.',
+  'Please Enter Vertex Label.': 'Please Enter Vertex Label.',
+  'Please Enter Edge Label.': 'Please Enter Edge Label.',
   'Please Select Source Vertex Label.': 'Please Select Source Vertex Label.',
   'Please Select Target Vertex Label.': 'Please Select Target Vertex Label.',
   'Please manually input the odps file location': 'Please manually input the odps file location',

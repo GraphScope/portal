@@ -9,9 +9,6 @@ import ResultFailed from './result/result-failed';
 import ResultSuccess from './result/result-success';
 import { FormattedMessage } from 'react-intl';
 import { createGraph } from './service';
-import { transOptionsToSchema } from '@/components/utils/schema';
-import { transOptionsToGrootSchema } from '@/components/utils/schema-groot';
-import { cloneDeep } from 'lodash';
 import { initialStore, useStore } from './useContext';
 const { GS_ENGINE_TYPE } = window;
 
@@ -160,27 +157,7 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   // createGraph
   const handleSubmit = () => {
     //@ts-ignore
-    const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
-    //@ts-ignore
-    const schemagrootJSON = transOptionsToGrootSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
-    let data;
-    if (GS_ENGINE_TYPE === 'interactive') {
-      data = {
-        name: String(graphName).trim(),
-        store_type: storeType,
-        stored_procedures: {
-          directory: 'plugins',
-        },
-        schema: schemaJSON,
-      };
-    }
-    if (GS_ENGINE_TYPE === 'groot') {
-      data = {
-        name: String(graphName).trim(),
-        schema: schemagrootJSON,
-      };
-    }
-    createGraph(data)
+    createGraph(graphName, storeType, nodeList, edgeList)
       .then(res => {
         /** 成功true */
         updateStore(draft => {

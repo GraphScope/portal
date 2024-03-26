@@ -1,27 +1,54 @@
 import { GraphApiFactory, LegacyApiFactory } from '@graphscope/studio-server';
+import { transOptionsToSchema } from '@/components/utils/schema';
+import { transOptionsToGrootSchema } from '@/components/utils/schema-groot';
+import { cloneDeep } from 'lodash';
+import { notification } from 'antd';
 const { GS_ENGINE_TYPE } = window;
 
-export const createGraph = async (graph: any) => {
+export const createGraph = async (graphName: string, storeType: string, nodeList: any[], edgeList: any[]) => {
   let graphs;
   if (GS_ENGINE_TYPE === 'interactive') {
+    const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
+    const data = {
+      name: String(graphName).trim(),
+      store_type: storeType,
+      stored_procedures: {
+        directory: 'plugins',
+      },
+      schema: schemaJSON,
+    };
     graphs = await GraphApiFactory(undefined, location.origin)
-      .createGraph(graph)
+      .createGraph(data)
       .then(res => {
         if (res.status === 200) {
           return res.data;
         }
         return [];
+      })
+      .catch(error => {
+        notification.error({
+          message: '创建图模型失败',
+          description: error.toString(),
+        });
+        return [];
       });
   }
   /** groot 创建 */
   if (GS_ENGINE_TYPE === 'groot') {
-    const { name, schema } = graph;
+    const schemagrootJSON = transOptionsToGrootSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
     graphs = await LegacyApiFactory(undefined, location.origin)
-      .importGrootSchema(name, schema)
+      .importGrootSchema(String(graphName).trim(), schemagrootJSON)
       .then(res => {
         if (res.status === 200) {
           return res.data;
         }
+        return [];
+      })
+      .catch(error => {
+        notification.error({
+          message: '创建图模型失败',
+          description: error.toString(),
+        });
         return [];
       });
   }

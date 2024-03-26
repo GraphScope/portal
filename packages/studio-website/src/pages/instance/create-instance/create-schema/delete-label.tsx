@@ -2,10 +2,10 @@ import { FunctionComponent } from 'react';
 import { Button, Popconfirm } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useContext } from '../useContext';
-import { deleteVertexType, deleteEdgeType } from './service';
+import { deleteVertexOrEdge } from './service';
 const { GS_ENGINE_TYPE } = window;
 type IDeleteGrootLabel = {};
-const DeleteGrootLabel: FunctionComponent<IDeleteGrootLabel> = props => {
+const DeleteLabel: FunctionComponent<IDeleteGrootLabel> = props => {
   const { store, updateStore } = useContext();
   const {
     mode,
@@ -23,13 +23,12 @@ const DeleteGrootLabel: FunctionComponent<IDeleteGrootLabel> = props => {
     const data = currentType == 'node' ? nodeList : edgeList;
     const newPanes = data.filter(pane => pane.key !== key);
     const activeKey = newPanes.length > 0 ? newPanes[newPanes.length - 1].key : '';
-    if (GS_ENGINE_TYPE === 'groot' && currentType === 'node') {
-      const typeName = data.filter(pane => pane.key == key)[0].label;
-      await deleteVertexType(graphName, typeName);
-    }
-    if (GS_ENGINE_TYPE === 'groot' && currentType === 'edge') {
-      const options = data.filter(pane => pane.key == key);
-      await deleteEdgeType(graphName, { nodes: nodeList, edges: options });
+    const options = data.filter(pane => pane.key == key);
+    const typeName = data.filter(pane => pane.key == key)[0].label;
+    /** isDraft===true 新建 */
+    const isDraft = options && options[0].isDraft;
+    if (!isDraft) {
+      await deleteVertexOrEdge(currentType, graphName, { typeName, nodes: nodeList, edges: options });
     }
     await updateStore(draft => {
       if (currentType === 'node') {
@@ -62,4 +61,4 @@ const DeleteGrootLabel: FunctionComponent<IDeleteGrootLabel> = props => {
     return <Button disabled={disabled} icon={<DeleteOutlined />} onClick={deleteLabel} />;
   }
 };
-export default DeleteGrootLabel;
+export default DeleteLabel;

@@ -6,7 +6,7 @@ export interface NodeSchema {
   key: string;
   label: string;
   properties: any[];
-  isAdd?: boolean;
+  isDraft?: boolean;
 }
 export interface EdgeSchema {
   key: string;
@@ -14,8 +14,8 @@ export interface EdgeSchema {
   source: string;
   target: string;
   properties: any[];
-  /** true | false 判断是否为groot 新建类型*/
-  isAdd?: boolean;
+  /** 判断是否为新建类型 true | false */
+  isDraft?: boolean;
 }
 export type IStore = {
   mode: 'create' | 'view';

@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { FormattedMessage } from 'react-intl';
 import { PlusOutlined } from '@ant-design/icons';
 import { useContext } from '../useContext';
-import DeleteGrootLabel from './delete-groot-label';
+import DeleteLabel from './delete-label';
 const index = {
   edge: 0,
   node: 0,
@@ -26,7 +26,7 @@ const AddLabel: FunctionComponent = () => {
           key: id,
           label: `vlabel_${index.node}`,
           properties: [],
-          isAdd: true,
+          isDraft: true,
         });
       }
       if (currentType === 'edge') {
@@ -39,7 +39,7 @@ const AddLabel: FunctionComponent = () => {
           source: '',
           target: '',
           properties: [],
-          isAdd: true,
+          isDraft: true,
         });
       }
     });
@@ -62,7 +62,7 @@ const AddLabel: FunctionComponent = () => {
         <Button onClick={addLabel} disabled={disabled} icon={<PlusOutlined />}>
           <FormattedMessage id="Add new" />
         </Button>
-        <DeleteGrootLabel />
+        <DeleteLabel />
       </Space>
     </div>
   );
