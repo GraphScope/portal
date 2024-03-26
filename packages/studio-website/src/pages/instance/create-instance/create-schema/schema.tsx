@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, memo } from 'react';
+import React, { useEffect, useRef, memo, useState } from 'react';
 import { Button, Empty, Form, Input, Select, Tooltip } from 'antd';
 import { PropertiesEditor } from '@graphscope/studio-importor';
 import PrimaryKey from '@/components/icons/primary-key';
@@ -8,6 +8,7 @@ import type { IStore } from '../useContext';
 import { useContext } from '@/layouts/useContext';
 import { getPrimitiveTypes } from '../service';
 import { createVertexOrEdgeType } from './service';
+import { getSchema } from '../../view-schema/service';
 export type FieldType = {
   label?: string;
   source?: string;
@@ -24,7 +25,7 @@ type SchemaType = {
   updateStore: (fn: (draft: IStore<{}>) => void) => void;
   nodeOptions?: { label: string; value: string }[];
   graphName: string;
-  nodeList: any;
+  nodeList?: any;
 };
 type configcolumnsType = {
   title: string | React.ReactNode;
@@ -98,9 +99,8 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   const { newActiveKey, data, currentType, updateStore, nodeOptions, mode, graphName, nodeList } = props;
   const [form] = Form.useForm();
   const { store } = useContext();
-  const { locale } = store;
-  const disabled = mode === 'view' && !data?.isDraft;
   const intl = useIntl();
+  const disabled = mode === 'view' && !data?.isDraft;
   const propertyRef = useRef<any>();
   let cbRef = useRef();
 
@@ -167,9 +167,22 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
     mapFromFile: intl.formatMessage({ id: 'Map From File' }),
   };
   /** groot 创建点/边  */
-  const hangdleSubmit = async () => {
+  const hangdleSubmit = () => {
     const property = cbRef.current || [];
-    await createVertexOrEdgeType(currentType, graphName, nodeList, form.getFieldsValue(), property);
+    createVertexOrEdgeType(currentType, graphName, nodeList, form.getFieldsValue(), property).then(res => {
+      if (res[0].status === 200) {
+        getSchema(graphName).then(data => {
+          //@ts-ignore
+          const { nodes, edges } = data;
+          updateStore(draft => {
+            draft.nodeList = nodes;
+            draft.edgeList = edges;
+            draft.nodeActiveKey = nodes.length && nodes[nodes.length - 1].key;
+            draft.edgeActiveKey = edges.length && edges[edges.length - 1].key;
+          });
+        });
+      }
+    });
   };
   let SaveGrootType = () => {
     if (window.GS_ENGINE_TYPE === 'groot' && data?.isDraft) {

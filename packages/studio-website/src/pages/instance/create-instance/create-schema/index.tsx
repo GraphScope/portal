@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Card, Tabs, Row, Col, Image, Segmented } from 'antd';
+import { Card, Tabs, Row, Col, Segmented } from 'antd';
 import { useContext } from '../useContext';
 import GraphInsight from './graph-view';
 import Schema from './schema';
@@ -13,7 +13,7 @@ interface ICreateInstanceProps {
   isAlert?: boolean;
 }
 const engineType = window.GS_ENGINE_TYPE;
-const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
+const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
   const { store, updateStore } = useContext();
   const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, mode, graphName } = store;
   /** 初始化清空数据 */
@@ -51,7 +51,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
 
   let nodeOptions: { label: string; value: string }[] = [];
 
-  const nodeItems = nodeList.map(item => {
+  const nodeItems = nodeList?.map(item => {
     const { key, label } = item;
     const invalid = label === '';
     if (!invalid) {
@@ -105,7 +105,6 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
   const IS_NODES_EMPTY = nodeList.length === 0;
   const IS_EDGES_EMPTY = edgeList.length === 0;
   const extra = (currentType == 'node' ? nodeList.length : edgeList.length) > 0 ? <AddLabel /> : null;
-
   return (
     <Row style={{ marginTop: '16px' }}>
       <Col span={16}>
@@ -134,7 +133,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
                 <EmptyInfo />
               ) : (
                 <Tabs
-                  style={{ height: '100%', padding: '12px' }}
+                  style={{ minHeight: '550px', height: 'cacl(100vh - 150px)', padding: '12px' }}
                   tabBarStyle={{ borderLeft: 0, width: '120px' }}
                   tabPosition="left"
                   items={nodeItems}
@@ -148,7 +147,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = () => {
                 <EmptyInfo />
               ) : (
                 <Tabs
-                  style={{ height: '100%', padding: '12px' }}
+                  style={{ minHeight: '550px', height: 'cacl(100vh - 150px)', padding: '12px' }}
                   tabBarStyle={{ borderLeft: 0, width: '120px' }}
                   tabPosition="left"
                   items={edgeItems}

@@ -10,8 +10,8 @@ export default {
   /** graphs */
   'Listing all graphs on the cluster': '展示集群中所有的图',
   '{vertices} types of Vertices {br} {edges} types of Edges': '{vertices} 种类型的点 {br} {edges} 种类型的边',
-  'Delete the task': '确认删除',
-  'Are you sure to delete this task?': '您确认删除该类型吗',
+  'Delete the label?': '确认删除',
+  'Are you sure to delete this label?': '您确认删除该类型吗',
   /** create instance */
   'Create Instance': '创建图实例',
   Previous: '上一步',

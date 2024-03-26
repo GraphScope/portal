@@ -57,7 +57,7 @@ export const createGraph = async (graphName: string, storeType: string, nodeList
 
 export const getPrimitiveTypes = () => {
   if (GS_ENGINE_TYPE === 'groot') {
-    return ['STRING', 'LONG', 'DOUBLE'];
+    return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'];
   }
   if (GS_ENGINE_TYPE === 'interactive') {
     return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64', 'DT_DATE32'];

@@ -49,7 +49,7 @@ const getVertexEdges = (nodeList: NodeSchema[], edgeList: EdgeSchema[], token: a
           label: {
             value: label,
             fill: mode === 'defaultAlgorithm' ? '#1C1D1F' : '#fff',
-            offset: [0, 0],
+            // offset: [0, 0],
           },
           keyshape: {
             stroke: '#5F646B',
@@ -88,6 +88,7 @@ const GraphView: FunctionComponent<Props> = props => {
   } = useMode();
   //@ts-ignore
   const graphData = getVertexEdges(nodeList, edgeList, token);
+  console.log(graphData);
 
   return (
     <>

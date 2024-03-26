@@ -3,7 +3,6 @@ import CreateInstance from '../create-instance';
 import type { ICreateGraph } from '../create-instance';
 import { getSchema } from './service';
 import { searchParamOf } from '@/components/utils/index';
-import { transformSchemaToOptions } from '@/components/utils/schema';
 import { Skeleton } from 'antd';
 
 const ViewSchema: React.FunctionComponent<ICreateGraph> = props => {
@@ -35,14 +34,19 @@ const ViewSchema: React.FunctionComponent<ICreateGraph> = props => {
   }, []);
   const { nodes, edges, isReady } = state;
   const isEmpty = nodes.length === 0 && edges.length === 0;
-  if (isReady) {
-    if (isEmpty) {
-      <CreateInstance mode="create" nodeList={nodes} edgeList={edges} graphName={graphName} />;
-    }
-    return <CreateInstance mode="view" nodeList={nodes} edgeList={edges} graphName={graphName} />;
+  if (!isReady) {
+    return (
+      <div style={{ padding: '12px 24px' }}>
+        <Skeleton.Button />
+        <Skeleton />
+        <Skeleton />
+      </div>
+    );
   }
-
-  return <Skeleton />;
+  if (isEmpty) {
+    return <CreateInstance mode="create" nodeList={nodes} edgeList={edges} graphName={graphName} />;
+  }
+  return <CreateInstance mode="view" nodeList={nodes} edgeList={edges} graphName={graphName} />;
 };
 
 export default ViewSchema;

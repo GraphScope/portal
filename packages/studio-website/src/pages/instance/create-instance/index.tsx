@@ -113,13 +113,11 @@ const Steps: React.FunctionComponent<{ currentStep: number }> = () => {
 
 const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   const { store, updateStore } = useContext();
-  const { currentStep, createInstaseResult, nodeList, edgeList, storeType, graphName, mode } = store;
+  const { currentStep, createInstaseResult, storeType } = store;
+  const { nodeList = [], edgeList = [], graphName = '', mode = 'create' } = props;
   useEffect(() => {
-    const { nodeList, edgeList, graphName, mode = 'create' } = props;
-    const isNodeEmpty = nodeList && nodeList.length === 0;
-    const isEdgeEmpty = edgeList && edgeList.length === 0;
     let stepIndex = 1;
-    if (isNodeEmpty || props.mode === 'create') {
+    if (props.mode === 'create') {
       // 如果是空Schema或者是创建模式，才从第一步开始
       stepIndex = 0;
     }
@@ -127,13 +125,14 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
       draft.storeType = storeType;
       draft.mode = mode;
       draft.currentStep = stepIndex;
-      draft.nodeActiveKey = isNodeEmpty ? '' : nodeList[0].id;
-      draft.edgeActiveKey = isEdgeEmpty ? '' : edgeList[0].id;
+      draft.nodeActiveKey = nodeList.length && nodeList[0].id;
+      draft.edgeActiveKey = edgeList.length && edgeList[0].id;
       draft.graphName = graphName;
       /** groot 查询数据回填 */
       draft.nodeList = nodeList;
       draft.edgeList = edgeList;
     });
+    console.log(props);
 
     return () => {
       console.log('clear............');
@@ -144,7 +143,7 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
         });
       });
     };
-  }, []);
+  }, [nodeList, edgeList]);
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
   const next = () => {

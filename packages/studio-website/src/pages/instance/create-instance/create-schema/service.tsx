@@ -11,19 +11,23 @@ export const deleteVertexType = async (graphName: string, typeName: string) => {
   const graphs = await GraphApiFactory(undefined, location.origin)
     .deleteVertexType(graphName, typeName)
     .then(res => {
-      if (res.status === 200) {
-        return res.data;
+      if (res.status >= 200 || res.status <= 300) {
+        notification.success({
+          message: 'Delete the point type',
+          description: 'operation successful',
+        });
+        // @TODO 等后端返回
+        return [{ status: 200 }];
       }
       return [];
     })
     .catch(error => {
       notification.error({
-        message: '删除点类型失败',
+        message: 'Failed to delete the point type',
         description: error.toString(),
       });
-      return [];
+      return [{ status: 500 }];
     });
-
   return graphs;
 };
 /** 删除边类型 */
@@ -33,17 +37,22 @@ export const deleteEdgeType = async (graphName: string, options: any) => {
   const graphs = await GraphApiFactory(undefined, location.origin)
     .deleteEdgeType(graphName, typeName, sourceVertexType, destinationVertexType)
     .then(res => {
-      if (res.status === 200) {
-        return res.data;
+      if (res.status >= 200 || res.status <= 300) {
+        notification.success({
+          message: 'Delete the edge type',
+          description: 'operation successful',
+        });
+        // @TODO 等后端返回
+        return [{ status: 200 }];
       }
       return [];
     })
     .catch(error => {
       notification.error({
-        message: '删除边类型失败',
+        message: 'Failed to delete edge type',
         description: error.toString(),
       });
-      return [];
+      return [{ status: 500 }];
     });
 
   return graphs;
@@ -56,10 +65,10 @@ export const deleteVertexOrEdge = (
 ) => {
   const { typeName, nodes, edges } = options;
   if (type === 'node') {
-    deleteVertexType(graphName, typeName!);
+    return deleteVertexType(graphName, typeName!);
   }
   if (type === 'edge') {
-    deleteEdgeType(graphName, { nodes, edges });
+    return deleteEdgeType(graphName, { nodes, edges });
   }
 };
 /** 创建点类型 */
@@ -68,17 +77,22 @@ export const createVertexType = async (graphName: string, schema: { label: strin
   const graphs = await GraphApiFactory(undefined, location.origin)
     .createVertexType(graphName, vertexType)
     .then(res => {
-      if (res.status === 200) {
-        return res.data;
+      if (res.status >= 200 || res.status <= 300) {
+        notification.success({
+          message: 'Create a point type',
+          description: 'operation successful',
+        });
+        // @TODO 等后端返回
+        return [{ status: 200 }];
       }
       return [];
     })
     .catch(error => {
       notification.error({
-        message: '创建边点型失败',
+        message: 'Failed to create a point type',
         description: error.toString(),
       });
-      return [];
+      return [{ status: 500 }];
     });
   return graphs;
 };
@@ -88,17 +102,23 @@ export const createEdgeType = async (graphName: string, nodeList: any[], schema:
   const graphs = await GraphApiFactory(undefined, location.origin)
     .createEdgeType(graphName, edgeType)
     .then(res => {
-      if (res.status === 200) {
-        return res.data;
+      if (res.status >= 200 || res.status <= 300) {
+        notification.success({
+          message: 'Create a edge type',
+          description: 'operation successful',
+        });
+        // @TODO 等后端返回
+        return [{ status: 200 }];
       }
       return [];
     })
     .catch(error => {
       notification.error({
-        message: '创建边类型失败',
+        message: 'Failed to create an edge type',
         description: error.toString(),
       });
-      return [];
+      // @TODO 等后端返回
+      return [{ status: 500 }];
     });
 
   return graphs;
@@ -112,9 +132,9 @@ export const createVertexOrEdgeType = async (
   options: any,
 ) => {
   if (type === 'node') {
-    createVertexType(graphName, schema, options);
+    return createVertexType(graphName, schema, options);
   }
   if (type === 'edge') {
-    createEdgeType(graphName, nodeList, schema, options);
+    return createEdgeType(graphName, nodeList, schema, options);
   }
 };

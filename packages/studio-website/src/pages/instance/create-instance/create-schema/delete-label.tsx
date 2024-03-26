@@ -18,43 +18,53 @@ const DeleteLabel: FunctionComponent<IDeleteGrootLabel> = props => {
   } = store;
   const disabled = mode == 'view' && GS_ENGINE_TYPE === 'interactive';
   /** 删除点边模版 */
+  const data = currentType == 'node' ? nodeList : edgeList;
+  const key = currentType == 'node' ? nodeActiveKey : edgeActiveKey;
+  const options = data.filter(pane => pane.key == key);
+  const isDraft = options.length && options[0].isDraft;
   const deleteLabel = async () => {
-    const key = currentType == 'node' ? nodeActiveKey : edgeActiveKey;
-    const data = currentType == 'node' ? nodeList : edgeList;
     const newPanes = data.filter(pane => pane.key !== key);
-    const activeKey = newPanes.length > 0 ? newPanes[newPanes.length - 1].key : '';
-    const options = data.filter(pane => pane.key == key);
     const typeName = data.filter(pane => pane.key == key)[0].label;
+    const activeKey = newPanes.length > 0 ? newPanes[newPanes.length - 1].key : '';
+    let isDelete = false;
     /** isDraft===true 新建 */
-    const isDraft = options && options[0].isDraft;
     if (!isDraft) {
-      await deleteVertexOrEdge(currentType, graphName, { typeName, nodes: nodeList, edges: options });
+      const res = await deleteVertexOrEdge(currentType, graphName, { typeName, nodes: nodeList, edges: options });
+      isDelete = (res && res[0].status === 500) || false;
     }
-    await updateStore(draft => {
-      if (currentType === 'node') {
-        //@ts-ignore
-        draft.nodeList = newPanes;
-        draft.nodeActiveKey = activeKey;
-      }
-      if (currentType === 'edge') {
-        //@ts-ignore
-        draft.edgeList = newPanes;
-        draft.edgeActiveKey = activeKey;
-      }
-    });
+
+    !isDelete &&
+      (await updateStore(draft => {
+        if (currentType === 'node') {
+          //@ts-ignore
+          draft.nodeList = newPanes;
+          draft.nodeActiveKey = activeKey;
+        }
+        if (currentType === 'edge') {
+          //@ts-ignore
+          draft.edgeList = newPanes;
+          draft.edgeActiveKey = activeKey;
+        }
+      }));
   };
   if (GS_ENGINE_TYPE === 'groot') {
     return (
-      <Popconfirm
-        title="Delete the task"
-        description="Are you sure to delete this task?"
-        onConfirm={deleteLabel}
-        onCancel={() => {}}
-        okText="Yes"
-        cancelText="No"
-      >
-        <Button disabled={disabled} icon={<DeleteOutlined />} />
-      </Popconfirm>
+      <>
+        {isDraft ? (
+          <Button disabled={disabled} icon={<DeleteOutlined />} onClick={deleteLabel} />
+        ) : (
+          <Popconfirm
+            title="Delete the label?"
+            description="Are you sure to delete this label?"
+            onConfirm={deleteLabel}
+            onCancel={() => {}}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button disabled={disabled} icon={<DeleteOutlined />} />
+          </Popconfirm>
+        )}
+      </>
     );
   }
   if (GS_ENGINE_TYPE === 'interactive') {

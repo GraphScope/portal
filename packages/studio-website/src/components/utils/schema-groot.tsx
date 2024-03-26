@@ -224,7 +224,7 @@ export function transformGrootCreateEdgeToOptions(
 ) {
   const nodeMap: Record<string, string> = {};
   //@ts-ignore
-  nodeList.map((item, itemIdx) => {
+  nodeList.map(item => {
     nodeMap[item.key] = item.label;
     return item.label;
   });
@@ -234,8 +234,8 @@ export function transformGrootCreateEdgeToOptions(
   const propertyMap = new Map();
   //@ts-ignore
   property.length &&
-    property.forEach((item, index) => {
-      const { name, primaryKey, type } = item;
+    property.forEach(item => {
+      const { name, type } = item;
       propertyMap.set(item.name, {
         property_name: name,
         property_type: {

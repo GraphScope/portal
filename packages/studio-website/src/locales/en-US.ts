@@ -12,8 +12,8 @@ export default {
   'Listing all graphs on the cluster': 'Listing all graphs on the cluster',
   '{vertices} types of Vertices {br} {edges} types of Edges':
     '{vertices} types of Vertices {br} {edges} types of Edges',
-  'Delete the task?': 'Delete the task?',
-  'Are you sure to delete this task?': 'Are you sure to delete this task?',
+  'Delete the label?': 'Delete the label?',
+  'Are you sure to delete this label?': 'Are you sure to delete this label?',
   /** create instance */
   'Create Instance': 'Create Instance',
   Previous: 'Previous',
