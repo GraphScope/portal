@@ -3,7 +3,7 @@ import { Select, Space } from 'antd';
 import { Chart } from '@antv/g2';
 
 interface ITableViewProps {
-  data: any;
+  table: any;
 }
 
 export const calc = data => {
@@ -60,7 +60,7 @@ export const calc = data => {
 };
 
 const ChartView: React.FunctionComponent<ITableViewProps> = props => {
-  const { table } = props.data;
+  const { table } = props;
   const ChartRef = useRef(null);
 
   const [state, setState] = React.useState<{
@@ -142,8 +142,8 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
 
   const handleChange = () => {};
   return (
-    <div style={{ width: '100%' }}>
-      <Space>
+    <div style={{ width: '100%', padding: '16px' }}>
+      <Space style={{ paddingBottom: '16px' }}>
         Type:
         <Select
           size="small"
