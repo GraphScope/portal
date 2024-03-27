@@ -21,7 +21,9 @@ const EditRule: React.FC<ICreateRecepProps> = props => {
   const [form] = Form.useForm();
   const [status, setStatus] = useState(false);
   useEffect(() => {
+    const { enable } = ruleData;
     Object.keys(ruleData).length > 0 && form.setFieldsValue(ruleData);
+    setStatus(enable);
   }, []);
   const onFinish = async () => {
     /** 编辑告警接收 */
@@ -82,7 +84,7 @@ const EditRule: React.FC<ICreateRecepProps> = props => {
         </Form.Item>
         <Form.Item<FieldType> label={<FormattedMessage id="Status" />} name="enable" valuePropName="checked">
           <Tooltip title={status ? 'enable' : 'disable'}>
-            <Switch onChange={e => setStatus(e)} />
+            <Switch value={status} onChange={e => setStatus(e)} />
           </Tooltip>
         </Form.Item>
       </Form>
