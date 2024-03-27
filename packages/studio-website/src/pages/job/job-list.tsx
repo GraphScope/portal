@@ -158,6 +158,7 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       title: <FormattedMessage id="Start Time" />,
       key: 'start_time',
       dataIndex: 'start_time',
+      width: 130,
       sorter: (a: { start_time: string }, b: { start_time: string }) =>
         dayjs(a.start_time).valueOf() - dayjs(b.start_time).valueOf(),
     },
@@ -165,6 +166,7 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       title: <FormattedMessage id="End Time" />,
       key: 'end_time',
       dataIndex: 'end_time',
+      width: 130,
       sorter: (a: { end_time: string }, b: { end_time: string }) =>
         dayjs(a.end_time).valueOf() - dayjs(b.end_time).valueOf(),
     },
