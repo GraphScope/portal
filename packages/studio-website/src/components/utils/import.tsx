@@ -358,6 +358,58 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
   };
 }
 
+export function transformDataMapToSchema(dataMap: any) {
+  const vertex_types: { type_name: string; properties: any; primary_keys: undefined[] }[] = [];
+  const edge_types: {
+    type_name: string;
+    properties: any;
+    vertex_type_pair_relations: { destination_vertex: any; relation: string; source_vertex: any }[];
+  }[] = [];
+  const { vertices, edges } = dataMap;
+  vertices.length &&
+    vertices.forEach((item: { label: string; properties: any }) => {
+      const { label, properties } = item;
+      let primaryKey;
+      vertex_types.push({
+        type_name: label,
+        properties: properties.map((p: { id: any; is_primary_key: any; name: any; type: any }) => {
+          const { id, is_primary_key, name, type } = p;
+          primaryKey = is_primary_key;
+          return {
+            property_id: id,
+            property_name: name,
+            property_type: { primitive_type: type },
+          };
+        }),
+        primary_keys: [primaryKey],
+      });
+    });
+  edges.length &&
+    edges.forEach((item: { label: string; properties: any }) => {
+      const { label, source, target, properties } = item;
+      edge_types.push({
+        type_name: label,
+        properties: properties.map((p: { id: any; name: any; type: any }) => {
+          const { id, name, type } = p;
+          return {
+            property_id: id,
+            property_name: name,
+            property_type: { primitive_type: type },
+          };
+        }),
+        vertex_type_pair_relations: [
+          {
+            destination_vertex: source,
+            relation: 'MANY_TO_MANY',
+            source_vertex: target,
+          },
+        ],
+      });
+    });
+
+  return { vertex_types, edge_types };
+}
+
 export const MOCK_DATA = {
   nodes: [
     {

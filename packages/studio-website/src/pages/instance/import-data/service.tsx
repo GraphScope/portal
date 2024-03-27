@@ -1,10 +1,16 @@
-import { GraphApiFactory, UtilsApiFactory, JobApiFactory, DatasourceApiFactory } from '@graphscope/studio-server';
-import type { EdgeMapping, SchemaMapping, VertexMapping } from '@graphscope/studio-server';
+import {
+  GraphApiFactory,
+  UtilsApiFactory,
+  JobApiFactory,
+  DatasourceApiFactory,
+  LegacyApiFactory,
+} from '@graphscope/studio-server';
+import type { SchemaMapping } from '@graphscope/studio-server';
 
 import {
-  transformMappingSchemaToImportOptions,
   transformSchemaToImportOptions,
   transformGrootMappingSchemaToImportOptions,
+  transformDataMapToSchema,
 } from '@/components/utils/import';
 
 /** upload file */
@@ -30,14 +36,29 @@ export const createDataloadingJob = async (params: SchemaMapping) => {
 };
 
 export const getSchema = async (graph_name: string) => {
-  const schema = await GraphApiFactory(undefined, location.origin)
-    .getSchema(graph_name)
-    .then(res => {
-      if (res.status === 200) {
-        return res.data;
-      }
-      return { nodes: [], edges: [] };
-    });
+  let schema;
+  if (window.GS_ENGINE_TYPE === 'interactive') {
+    schema = await GraphApiFactory(undefined, location.origin)
+      .getSchema(graph_name)
+      .then(res => {
+        if (res.status === 200) {
+          return res.data;
+        }
+        return { nodes: [], edges: [] };
+      });
+  }
+  if (window.GS_ENGINE_TYPE === 'groot') {
+    schema = await LegacyApiFactory(undefined, location.origin)
+      .getGrootSchema(graph_name)
+      .then(res => {
+        if (res.status === 200) {
+          return res.data;
+        }
+        return { nodes: [], edges: [] };
+      });
+    schema = transformDataMapToSchema(JSON.parse(JSON.stringify(schema)));
+  }
+
   return schema;
 };
 export const getDataloadingConfig = async (graph_name: string, schema: any) => {
