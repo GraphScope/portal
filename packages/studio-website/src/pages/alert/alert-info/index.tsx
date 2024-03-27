@@ -20,8 +20,10 @@ type IState = {
   isReady: boolean;
   /** 列表数据 */
   alertInfo: IalertInfo[];
-  /** 选中列表值 */
+  /** 选中列表值ID */
   selectedRowKeys: string[];
+  /** 选中列表值 */
+  selectedRows: string[];
   filterValues: {
     metric_type?: string[];
     severity?: string[];
@@ -44,13 +46,15 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
     isReady: false,
     alertInfo: [],
     selectedRowKeys: [],
+    selectedRows: [],
     filterValues: {
       metric_type: [''],
       severity: [''],
       status: [''],
     },
   });
-  const { metricTypeOptions, severityTypeOptions, isReady, alertInfo, selectedRowKeys, filterValues } = state;
+  const { metricTypeOptions, severityTypeOptions, isReady, alertInfo, selectedRowKeys, selectedRows, filterValues } =
+    state;
   useEffect(() => {
     getListAlertMessages();
   }, []);
@@ -67,7 +71,16 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
     });
   };
   const handleChange = async (params: UpdateAlertMessagesRequest) => {
-    await updateAlertMessages(params);
+    const data = {
+      messages: [
+        {
+          ...params,
+        },
+      ],
+      batch_status: params.batch_status,
+      batch_delete: false,
+    };
+    await updateAlertMessages(data);
     getListAlertMessages();
   };
   const columns = [
@@ -133,15 +146,15 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
         return (
           <Space size="middle">
             {record.status !== 'dealing' && (
-              <Button type="primary" ghost onClick={() => handleChange({ ...record, status: 'dealing' })}>
+              <Button type="primary" ghost onClick={() => handleChange({ ...record, batch_status: 'dealing' })}>
                 Dealing
               </Button>
             )}
             {record.status !== 'solved' && (
-              <Button onClick={() => handleChange({ ...record, status: 'solved' })}>Solved</Button>
+              <Button onClick={() => handleChange({ ...record, batch_status: 'solved' })}>Solved</Button>
             )}
             {record.status !== 'unsolved' && (
-              <Button danger onClick={() => handleChange({ ...record, status: 'unsolved' })}>
+              <Button danger onClick={() => handleChange({ ...record, batch_status: 'unsolved' })}>
                 Unsolved
               </Button>
             )}
@@ -152,11 +165,12 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
   ];
   const rowSelection = {
     selectedRowKeys,
-    onChange: (newSelectedRowKeys: string[]) => {
+    onChange: (newSelectedRowKeys: string[], selectedRows: any) => {
       updateState(preset => {
         return {
           ...preset,
           selectedRowKeys: newSelectedRowKeys,
+          selectedRows,
         };
       });
     },
@@ -166,6 +180,7 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
     <>
       <DateFilter
         selectedRowKeys={selectedRowKeys}
+        selectedRows={selectedRows}
         /** 查询修改列表 */
         searchChange={val => {
           console.log(val);
@@ -191,6 +206,7 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
               },
             };
           });
+          getListAlertMessages();
         }}
       />
       {!isReady ? (
