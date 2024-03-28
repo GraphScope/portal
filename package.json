@@ -7,6 +7,7 @@
     "ci": "pnpm i && rm -rf package-lock.json && npm run build && npm run build:site",
     "build": "turbo run build:esm && turbo run build:cjs",
     "build:site": "cd packages/studio-website && npm run build",
+    "deploy:dev": "cd packages/studio-website/proxy && npm run dev --",
     "deploy": "cd packages/studio-website/proxy && npm run start --",
     "re-deploy": "cd packages/studio-website/proxy && npm run restart --",
     "logs": "cd packages/studio-website/proxy && npm run logs",

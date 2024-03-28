@@ -1,11 +1,8 @@
 {
-  "buildCommand": "npm run ci",
+  "installCommand": "pnpm i pnpm -g",
+  "buildCommand": "npm run ci && npm run deploy:dev",
+  "outputDirectory": "packages/studio-website/dist",
   "framework": null,
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/0.9.1/api/$1"
-    },
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
+  "nodeVersion": "18.x",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
