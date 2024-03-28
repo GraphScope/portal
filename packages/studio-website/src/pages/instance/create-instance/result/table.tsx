@@ -1,60 +1,87 @@
-import * as React from 'react';
-import { Table, Tag } from 'antd';
-import { FormattedMessage } from 'react-intl';
+import React from 'react';
+import { Table, theme, Typography } from 'antd';
+
+import type { NodeSchema, EdgeSchema } from '../useContext';
+const { useToken } = theme;
 interface IImportDataProps {
-  data: { type?: string; label_name: string; property_name?: string; property_type?: string; primary_keys?: boolean }[];
+  data: { nodes: NodeSchema[]; edges: EdgeSchema[] };
 }
-interface DataType {
-  key: string;
-  title: React.ReactNode;
-  dataIndex?: string;
-  render?: (val: { type: string; label_name: string }) => any;
-}
+
 const TableList: React.FunctionComponent<IImportDataProps> = props => {
   const { data } = props;
-  const columns: DataType[] = [
-    {
-      title: <FormattedMessage id="label_name" />,
-      key: 'label_name',
-      render: record => {
-        return (
-          <>
-            {record?.type &&
-              (record?.type == 'Node' ? (
-                <Tag color="magenta">{record?.type}</Tag>
-              ) : (
-                <Tag color="green">{record?.type}</Tag>
-              ))}
-            {record?.label_name}
-          </>
-        );
-      },
-    },
-    {
-      title: <FormattedMessage id="property_name" />,
-      dataIndex: 'property_name',
-      key: 'property_name',
-    },
-    {
-      title: <FormattedMessage id="property_type" />,
-      dataIndex: 'property_type',
-      key: 'property_type',
-    },
-    {
-      title: <FormattedMessage id="property_keys" />,
-      dataIndex: 'primary_keys',
-      key: 'primary_keys',
-    },
-  ];
+  const items = getItems(data);
+  const { token } = useToken();
+
   return (
-    <Table
-      style={{ marginTop: '-22px' }}
-      columns={columns}
-      dataSource={data}
-      pagination={false}
-      scroll={{ y: '60vh' }}
-    />
+    <>
+      {items.map(item => {
+        const { label, properties } = item;
+        return (
+          <div
+            key={item.key}
+            style={{
+              border: `1px solid ${token.colorBorder}`,
+              padding: '16px 16px',
+              marginBottom: '16px',
+              borderRadius: '8px',
+            }}
+          >
+            <div style={{ padding: '0px 8px 12px 8px' }}>
+              <Typography.Text strong style={{ fontSize: '20px' }}>
+                {label}
+              </Typography.Text>
+            </div>
+            <Table
+              // bordered
+              pagination={false}
+              columns={[
+                {
+                  title: 'property_name',
+                  dataIndex: 'name',
+                  key: 'name',
+                },
+                {
+                  title: 'property_type',
+                  dataIndex: 'type',
+                  key: 'type',
+                },
+              ]}
+              dataSource={properties}
+            ></Table>
+          </div>
+        );
+      })}
+    </>
   );
 };
 
 export default TableList;
+
+export function getItems(data: IImportDataProps['data']) {
+  const { nodes, edges } = data;
+  const dataMap = new Map();
+  nodes.forEach(item => {
+    const { label, key, properties } = item;
+    dataMap.set(key, {
+      type: 'vertex',
+      key,
+      label,
+      properties: properties,
+    });
+  });
+  edges.forEach(item => {
+    const { label, key, properties, source, target } = item;
+    const source_label = dataMap.get(source).label;
+    const target_label = dataMap.get(target).label;
+    console.log(source_label, target_label);
+    const edge_label = `(${source_label})-[${label}]-(${target_label})`;
+    dataMap.set(key, {
+      type: 'edge',
+      key,
+      label: edge_label,
+      properties: properties,
+    });
+  });
+  const items = [...dataMap.values()];
+  return items;
+}
