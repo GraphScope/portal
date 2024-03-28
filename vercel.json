@@ -1,6 +1,6 @@
 {
   "installCommand": "pnpm i pnpm -g",
-  "buildCommand": "npm run ci && npm run deploy:dev",
+  "buildCommand": "npm run ci",
   "outputDirectory": "packages/studio-website/dist",
   "framework": null,
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
