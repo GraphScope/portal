@@ -12,7 +12,15 @@ const { Text, Paragraph } = Typography;
 import { MoreOutlined, StarOutlined } from '@ant-design/icons';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDiagramProject, faFileArrowUp, faMagnifyingGlass, faPause } from '@fortawesome/free-solid-svg-icons';
+import {
+  faDiagramProject,
+  faFileArrowUp,
+  faMagnifyingGlass,
+  faPause,
+  faFileImport,
+  faNetworkWired,
+  faFileArchive,
+} from '@fortawesome/free-solid-svg-icons';
 import { faPlayCircle, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
@@ -242,14 +250,14 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
         <Flex gap="middle" align="flex-end" vertical justify="end">
           <Button
             style={{ width: btnWidth, textAlign: 'left' }}
-            icon={<FontAwesomeIcon icon={faDiagramProject} style={{ marginRight: '8px' }} />}
+            icon={<FontAwesomeIcon icon={faNetworkWired} style={{ marginRight: '8px' }} />}
             onClick={() => history.push(`/instance/view-schema#?graph_name=${name}`)}
           >
             <FormattedMessage id="Define Schema" />
           </Button>
           <Button
             style={{ width: btnWidth, textAlign: 'left' }}
-            icon={<FontAwesomeIcon icon={faFileArrowUp} style={{ marginLeft: '2px', marginRight: '8px' }} />}
+            icon={<FontAwesomeIcon icon={faFileImport} style={{ marginRight: '10px' }} />}
             onClick={() => history.push(`/instance/import-data#?engineType=interactive&graph_name=${name}`)}
           >
             <FormattedMessage id="Import Data" />
