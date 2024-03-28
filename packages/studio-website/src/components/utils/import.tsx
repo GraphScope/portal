@@ -113,16 +113,16 @@ export function transformMappingSchemaToImportOptions(
       filelocation,
       isBind: !!filelocation,
       isEidtProperty: true,
-      delimiter: metadata.delimiter || ',',
+      delimiter: (metadata && metadata.delimiter) || ',',
       properties: properties.map(p => {
         const { name } = p;
         //@ts-ignore
-        const match = mapping.properties_mappings[name];
+        const match = mapping && mapping.properties_mappings[name];
         console.log('match', match, name);
         return {
           ...p,
           // 只支持 name 不支持 index
-          token: match.name,
+          token: match && match.name,
         };
       }),
     };
@@ -137,16 +137,16 @@ export function transformMappingSchemaToImportOptions(
       filelocation,
       isBind: !!filelocation,
       isEidtProperty: true,
-      delimiter: metadata.delimiter || ',',
+      delimiter: (metadata && metadata.delimiter) || ',',
       properties: properties.map(p => {
         const { name } = p;
         //@ts-ignore
-        const match = mapping.properties_mappings[name];
+        const match = mapping && mapping.properties_mappings[name];
         console.log('match', match, name);
         return {
           ...p,
           // 只支持 name 不支持 index
-          token: match.name,
+          token: match && match.name,
         };
       }),
     };
@@ -358,7 +358,7 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
   };
 }
 
-export function transformDataMapToSchema(dataMap: any) {
+export function transformDataMapToGrootSchema(dataMap: any) {
   const vertex_types: { type_name: string; properties: any; primary_keys: undefined[] }[] = [];
   const edge_types: {
     type_name: string;
@@ -374,7 +374,9 @@ export function transformDataMapToSchema(dataMap: any) {
         type_name: label,
         properties: properties.map((p: { id: any; is_primary_key: any; name: any; type: any }) => {
           const { id, is_primary_key, name, type } = p;
-          primaryKey = is_primary_key;
+          if (is_primary_key) {
+            primaryKey = name;
+          }
           return {
             property_id: id,
             property_name: name,
@@ -385,8 +387,9 @@ export function transformDataMapToSchema(dataMap: any) {
       });
     });
   edges.length &&
-    edges.forEach((item: { label: string; properties: any }) => {
-      const { label, source, target, properties } = item;
+    edges.forEach((item: { label: string; relations: { src_label: string; dst_label: string }[]; properties: any }) => {
+      const { label, relations, properties } = item;
+      const { src_label, dst_label } = relations[0];
       edge_types.push({
         type_name: label,
         properties: properties.map((p: { id: any; name: any; type: any }) => {
@@ -399,9 +402,9 @@ export function transformDataMapToSchema(dataMap: any) {
         }),
         vertex_type_pair_relations: [
           {
-            destination_vertex: source,
+            destination_vertex: dst_label,
             relation: 'MANY_TO_MANY',
-            source_vertex: target,
+            source_vertex: src_label,
           },
         ],
       });

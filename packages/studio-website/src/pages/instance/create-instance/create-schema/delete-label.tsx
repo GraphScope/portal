@@ -28,7 +28,7 @@ const DeleteLabel: FunctionComponent<IDeleteGrootLabel> = props => {
     const activeKey = newPanes.length > 0 ? newPanes[newPanes.length - 1].key : '';
     let isDelete = false;
     /** isDraft===true 新建 */
-    if (!isDraft) {
+    if (!isDraft && GS_ENGINE_TYPE === 'groot') {
       const res = await deleteVertexOrEdge(currentType, graphName, { typeName, nodes: nodeList, edges: options });
       isDelete = (res && res[0].status === 500) || false;
     }

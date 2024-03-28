@@ -65,7 +65,7 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
       </Space.Compact>
       {value && (
         <Tooltip title="delete and re-upload">
-          <DeleteOutlined onClick={deleteFile} style={{ marginLeft: '12px' }} />
+          <DeleteOutlined onClick={deleteFile} style={{ margin: '0px 12px' }} />
         </Tooltip>
       )}
     </Flex>
