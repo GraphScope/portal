@@ -9,7 +9,7 @@ import type { SchemaMapping } from '@graphscope/studio-server';
 
 import {
   transformSchemaToImportOptions,
-  transformGrootMappingSchemaToImportOptions,
+  transformMappingSchemaToImportOptions,
   transformDataMapToSchema,
 } from '@/components/utils/import';
 
