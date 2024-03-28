@@ -3,6 +3,5 @@
   "buildCommand": "npm run ci && npm run deploy:dev",
   "outputDirectory": "packages/studio-website/dist",
   "framework": null,
-  "nodeVersion": "18.x",
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
