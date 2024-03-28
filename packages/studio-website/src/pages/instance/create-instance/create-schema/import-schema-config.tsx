@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Space, Tooltip, Upload, Button, message, notification } from 'antd';
+import type { UploadProps } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { download, transformSchema, transformSchemaToOptions } from './utils';
 import { useContext } from '../useContext';
@@ -8,6 +9,7 @@ import { cloneDeep } from 'lodash';
 import { transOptionsToSchema } from '@/components/utils/schema';
 import FileExportIcon from '@/components/icons/file-export';
 import FileImportIcon from '@/components/icons/file-import';
+import { error } from 'console';
 interface IExportConfigProps {}
 const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
   const { store, updateStore } = useContext();
@@ -52,7 +54,6 @@ const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
   const Json2Yaml = () => {
     //@ts-ignore
     const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
-
     const schemaYaml = yaml.dump(schemaJSON);
     download('schema.yaml', schemaYaml);
   };
@@ -64,18 +65,17 @@ const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
     });
   };
   const disabled = mode === 'view';
+
+  const customRequest: UploadProps['customRequest'] = async options => {
+    const { file } = options;
+    handleUpload(file);
+  };
+
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       {contextHolder}
       <Space>
-        <Upload
-          onChange={info => {
-            if (info.file.status === 'done') {
-              handleUpload(info.file.originFileObj);
-            }
-          }}
-          showUploadList={false}
-        >
+        <Upload customRequest={customRequest} showUploadList={false}>
           <Tooltip title={<FormattedMessage id="Import" />}>
             <Button type="text" disabled={disabled} icon={<FileImportIcon />}></Button>
           </Tooltip>
