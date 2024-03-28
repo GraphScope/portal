@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "predev": "rm -rf package-lock.json && npm i",
     "dev": "node index.js --",
     "prestart": "rm -rf package-lock.json && npm i",
     "restart": "npx pm2 delete portal && npm run start --",
