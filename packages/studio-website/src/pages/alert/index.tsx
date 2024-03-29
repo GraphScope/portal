@@ -11,17 +11,17 @@ const AlertModule: React.FunctionComponent<AlertModuleProps> = props => {
     {
       key: 'info',
       children: <AlertInfo />,
-      label: <FormattedMessage id="Alert Info" />,
+      label: <FormattedMessage id="Alert info" />,
     },
     {
       key: 'rule',
       children: <AlertRule />,
-      label: <FormattedMessage id="Alert Rules" />,
+      label: <FormattedMessage id="Alert rules" />,
     },
     {
       key: 'recep',
       children: <AlertRecep />,
-      label: <FormattedMessage id="Alert Recep" />,
+      label: <FormattedMessage id="Alert receiver" />,
     },
     // {
     //   key: 'status',

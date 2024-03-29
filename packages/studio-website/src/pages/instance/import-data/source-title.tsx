@@ -82,7 +82,7 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = props => {
         )}
         {type === 'import' && engineType !== 'groot' && (
           <Button type={isBind ? 'primary' : 'default'} onClick={handleImport} disabled={!isBind}>
-            <FormattedMessage id="Import Data" />
+            <FormattedMessage id="Importing graph data" />
           </Button>
         )}
       </Flex>
