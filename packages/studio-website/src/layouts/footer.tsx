@@ -7,11 +7,11 @@ const Footer: React.FunctionComponent<IFooterProps> = props => {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', justifyItems: 'center' }}>
       <Space split={<Divider type="vertical" />} size={0}>
-        <span>docs</span>
+        {/* <span>docs</span>
         <span>website</span>
-        <span>github</span>
+        <span>github</span> */}
       </Space>
-      <div> Copyright 2024@ Alibaba</div>
+      {/* <div> Copyright 2024@ Alibaba</div> */}
     </div>
   );
 };

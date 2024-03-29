@@ -34,9 +34,14 @@ export default function Layout() {
               titleMarginTop: '0.8em',
             },
             Table: {
-              headerBg: mode === 'defaultAlgorithm' ? '#fff' : '#161616',
-              headerColor: mode === 'defaultAlgorithm' ? 'rgba(0, 0, 0, 0.45)' : '#DBDBDB',
-              headerSplitColor: mode === 'defaultAlgorithm' ? '#fff' : '#161616',
+              // headerBg: mode === 'defaultAlgorithm' ? '#fff' : '#161616',
+              // headerColor: mode === 'defaultAlgorithm' ? 'rgba(0, 0, 0, 0.45)' : '#DBDBDB',
+              // headerSplitColor: mode === 'defaultAlgorithm' ? '#fff' : '#161616',
+              cellPaddingBlock: 4, //	单元格纵向内间距
+              cellPaddingInline: 8, //单元格横向内间距（默认大尺寸）
+            },
+            Pagination: {
+              itemSize: 20,
             },
             // Tooltip: {
             //   colorTextLightSolid: '#000',

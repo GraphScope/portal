@@ -113,21 +113,16 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                 </Space>
               </Flex>
             </Space>
-            <Space>
-              {filelocation && (
-                <Tooltip title="delete and re-upload">
-                  <Button type="text" icon={<DeleteOutlined onClick={deleteFile} />}></Button>
-                </Tooltip>
-              )}
-              <Tooltip
-                title={isBind ? <FormattedMessage id="Bind source" /> : <FormattedMessage id="Unbound source" />}
-              >
-                <Button
-                  type="text"
-                  icon={<CheckCircleOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}
-                ></Button>
-              </Tooltip>
-            </Space>
+            <Tooltip
+              title={
+                isBind ? <FormattedMessage id="Bound data source" /> : <FormattedMessage id="Unbound data source" />
+              }
+            >
+              <Button
+                type="text"
+                icon={<CheckCircleOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}
+              ></Button>
+            </Tooltip>
           </Flex>
         </div>
         {isEidtProperty && (

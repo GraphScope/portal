@@ -46,7 +46,7 @@ const MappingFields = (props: any) => {
 const TableList: React.FC<TableListProps> = props => {
   const { tabledata, onChange, dataFields } = props;
 
-  const title = dataFields ? 'Mapping Fields' : 'ColumnIndex or Name';
+  const title = dataFields ? 'Mapping Fields' : 'Column';
   const handleChangeIndex = (value: any, all: any) => {
     console.log(value, all, tabledata);
     const { key } = all;

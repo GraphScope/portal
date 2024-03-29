@@ -23,8 +23,8 @@ const StagesImportPackages: React.FunctionComponent<StagesImportPackagesProps> =
     <>
       <Segmented
         options={[
-          { label: <FormattedMessage id="Periodic Import From Dataworks" />, value: 'dataworks' },
-          { label: <FormattedMessage id="Periodic Import From ODPS" />, value: 'stage' },
+          { label: <FormattedMessage id="Periodic import from Dataworks" />, value: 'dataworks' },
+          { label: <FormattedMessage id="Periodic import from ODPS" />, value: 'stage' },
         ]}
         onChange={handleChange}
       />

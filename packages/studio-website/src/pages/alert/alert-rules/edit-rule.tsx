@@ -21,7 +21,9 @@ const EditRule: React.FC<ICreateRecepProps> = props => {
   const [form] = Form.useForm();
   const [status, setStatus] = useState(false);
   useEffect(() => {
+    const { enable } = ruleData;
     Object.keys(ruleData).length > 0 && form.setFieldsValue(ruleData);
+    setStatus(enable);
   }, []);
   const onFinish = async () => {
     /** 编辑告警接收 */
@@ -45,7 +47,7 @@ const EditRule: React.FC<ICreateRecepProps> = props => {
     >
       <Form name="basic" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={form}>
         <Form.Item<FieldType>
-          label={<FormattedMessage id="Alert Name" />}
+          label={<FormattedMessage id="Alert name" />}
           name="name"
           rules={[{ required: true, message: 'Please input your Rules!' }]}
         >
@@ -62,19 +64,19 @@ const EditRule: React.FC<ICreateRecepProps> = props => {
         <Form.Item<FieldType>
           label={<FormattedMessage id="Type" />}
           name="metric_type"
-          rules={[{ required: true, message: 'Please input your Metric Type!' }]}
+          rules={[{ required: true, message: 'Please input your Metrics Type!' }]}
         >
           <Input />
         </Form.Item>
         <Form.Item<FieldType>
-          label={<FormattedMessage id="Alert Conditions" />}
+          label={<FormattedMessage id="Alert conditions" />}
           name="conditions_desription"
-          rules={[{ required: true, message: 'Please input your Alert Conditions!' }]}
+          rules={[{ required: true, message: 'Please input your Alert conditions!' }]}
         >
           <Input />
         </Form.Item>
         <Form.Item<FieldType>
-          label={<FormattedMessage id="Alert Frequency" />}
+          label={<FormattedMessage id="Alert frequency" />}
           name="frequency"
           rules={[{ required: true, message: 'Please input your MetricType!' }]}
         >
@@ -82,7 +84,7 @@ const EditRule: React.FC<ICreateRecepProps> = props => {
         </Form.Item>
         <Form.Item<FieldType> label={<FormattedMessage id="Status" />} name="enable" valuePropName="checked">
           <Tooltip title={status ? 'enable' : 'disable'}>
-            <Switch onChange={e => setStatus(e)} />
+            <Switch value={status} onChange={e => setStatus(e)} />
           </Tooltip>
         </Form.Item>
       </Form>
