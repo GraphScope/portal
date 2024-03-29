@@ -7,12 +7,12 @@ const SearchForm = props => {
       <Row>
         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', paddingRight: '24px' }}>
           <Col span={8}>
-            <Form.Item label="Start Time" name="start_date">
+            <Form.Item label="Start time" name="start_date">
               <DatePicker placeholder="" style={{ width: '100%' }} format="YYYY-MM-DD" />
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item label="End Time" name="end_date">
+            <Form.Item label="End time" name="end_date">
               <DatePicker placeholder="" style={{ width: '100%' }} format="YYYY-MM-DD" />
             </Form.Item>
           </Col>

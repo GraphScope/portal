@@ -51,7 +51,7 @@ const Plugins: React.FC<IPluginsProps> = props => {
       key: 'type',
     },
     {
-      title: <FormattedMessage id="Binding Graph" />,
+      title: <FormattedMessage id="Binding graph" />,
       dataIndex: 'bound_graph',
       key: 'bound_graph',
     },

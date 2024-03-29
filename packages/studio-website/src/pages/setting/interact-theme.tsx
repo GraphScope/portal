@@ -39,7 +39,7 @@ const InteractTheme: React.FunctionComponent<IInteractThemeProps> = props => {
       <Col span={8}>
         <Flex vertical>
           <Title level={3} style={{ margin: '0px' }}>
-            <FormattedMessage id="Interact theme" />
+            <FormattedMessage id="Select theme" />
           </Title>
           <Text>
             <FormattedMessage id="Select or customize your UI theme" />

@@ -140,7 +140,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   const Statistics = (
     <>
       <FormattedMessage
-        id="{vertices} types of Vertices {br} {edges} types of Edges"
+        id="{vertices} types of vertices {br} {edges} types of edges"
         values={{
           vertices: schema.vertices,
           edges: schema.edges,
@@ -171,8 +171,8 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   };
   /** Start|Pause 提示 */
   let tooltipContext;
-  if (status == 'stopped') tooltipContext = <FormattedMessage id="Start Service" />;
-  if (status == 'running') tooltipContext = <FormattedMessage id="Pause Service" />;
+  if (status == 'stopped') tooltipContext = <FormattedMessage id="Start graph service" />;
+  if (status == 'running') tooltipContext = <FormattedMessage id="Pause graph service" />;
   /** Start|Pause icon */
   let btnIcon;
   if (status == 'stopped') btnIcon = <PlayCircleOutlined />;
@@ -229,7 +229,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
             </Typography.Text>
 
             <Typography.Text type="secondary" style={{ cursor: 'pointer' }}>
-              <Popover title={<FormattedMessage id="Graph Schema" />} content={Statistics}>
+              <Popover title={<FormattedMessage id="Graph schema" />} content={Statistics}>
                 <span>
                   <FormattedMessage id="Statistics" />
                 </span>
@@ -245,14 +245,14 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
             icon={<FontAwesomeIcon icon={faDiagramProject} style={{ marginRight: '8px' }} />}
             onClick={() => history.push(`/instance/view-schema#?graph_name=${name}`)}
           >
-            <FormattedMessage id="Define Schema" />
+            <FormattedMessage id="Define schema" />
           </Button>
           <Button
             style={{ width: btnWidth, textAlign: 'left' }}
             icon={<FontAwesomeIcon icon={faFileArrowUp} style={{ marginLeft: '2px', marginRight: '8px' }} />}
             onClick={() => history.push(`/instance/import-data#?engineType=interactive&graph_name=${name}`)}
           >
-            <FormattedMessage id="Import Data" />
+            <FormattedMessage id="Importing graph data" />
           </Button>
           <Button
             type="primary"
@@ -261,7 +261,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
             disabled={status === 'stopped' ? true : false}
             onClick={() => history.push(`/query-app#?graph_name=${name}`)}
           >
-            <FormattedMessage id="Query Graph" />
+            <FormattedMessage id="Query graph" />
           </Button>
         </Flex>
         {/* <Flex wrap="wrap" align="end">

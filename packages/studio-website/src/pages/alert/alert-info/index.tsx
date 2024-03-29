@@ -85,12 +85,12 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
   };
   const columns = [
     {
-      title: <FormattedMessage id="Alert Information" />,
+      title: <FormattedMessage id="Alert information" />,
       dataIndex: 'message',
       key: 'message',
     },
     {
-      title: <FormattedMessage id="Alert Name" />,
+      title: <FormattedMessage id="Alert name" />,
       dataIndex: 'alert_name',
       key: 'alert_name',
     },
@@ -104,7 +104,7 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
       onFilter: (value: string, record: { severity: string | string[] }) => record.severity.indexOf(value) === 0,
     },
     {
-      title: <FormattedMessage id="Metric" />,
+      title: <FormattedMessage id="Metrics" />,
       dataIndex: 'metric_type',
       key: 'metric_type',
       filteredValue: filterValues.metric_type || null,

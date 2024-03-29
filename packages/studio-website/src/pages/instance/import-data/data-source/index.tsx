@@ -108,7 +108,11 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                 </Space>
               </Flex>
             </Space>
-            <Tooltip title={isBind ? <FormattedMessage id="Bind source" /> : <FormattedMessage id="Unbound source" />}>
+            <Tooltip
+              title={
+                isBind ? <FormattedMessage id="Bound data source" /> : <FormattedMessage id="Unbound data source" />
+              }
+            >
               <Button
                 type="text"
                 icon={<CheckCircleOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}

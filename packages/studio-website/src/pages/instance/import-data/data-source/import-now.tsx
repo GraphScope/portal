@@ -48,7 +48,7 @@ const ImportNow: React.FunctionComponent<IImportNowProps> = props => {
   return (
     <>
       <Button onClick={openNotification} size="small" disabled={!filelocation}>
-        <FormattedMessage id="Import Now" />
+        <FormattedMessage id="Import now" />
       </Button>
       {contextHolder}
     </>
