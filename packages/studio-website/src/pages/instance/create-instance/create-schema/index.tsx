@@ -121,7 +121,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
                 value={currentType}
                 options={[
                   { label: <FormattedMessage id="Vertex labels" />, value: 'node' },
-                  { label: <FormattedMessage id="Edge Labels" />, value: 'edge' },
+                  { label: <FormattedMessage id="Edge labels" />, value: 'edge' },
                 ]}
                 onChange={(value: SegmentedValue) => nodeEdgeChange(value)}
               />

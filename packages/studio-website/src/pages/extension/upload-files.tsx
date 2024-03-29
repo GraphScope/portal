@@ -53,7 +53,7 @@ const UploadFiles: React.FC<IUploadFile> = ({ handleChange }) => {
         <FormattedMessage id="Click or drag file to this area to upload" />
       </p>
       <p className="ant-upload-hint">
-        <FormattedMessage id="Support for a single or bulk upload. Strictly prohibited from uploading company data or other banned files." />
+        <FormattedMessage id="Your data may be passed to a third party (e.g., OpenAI) for AI processing. Consider the risks carefully when handling sensitive data." />
       </p>
     </>
   );

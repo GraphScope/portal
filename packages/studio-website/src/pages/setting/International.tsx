@@ -26,7 +26,7 @@ const International: React.FunctionComponent<IInternationalProps> = props => {
             <FormattedMessage id="International" />
           </Title>
           <Text>
-            <FormattedMessage id="Select national language" />
+            <FormattedMessage id="Select language" />
           </Text>
         </Flex>
       </Col>

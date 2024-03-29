@@ -79,7 +79,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
           );
         })}
         <Title level={5} style={styles.title}>
-          <FormattedMessage id="Edge Labels" />
+          <FormattedMessage id="Edge labels" />
         </Title>
         {edges.map(item => {
           const { label } = item;

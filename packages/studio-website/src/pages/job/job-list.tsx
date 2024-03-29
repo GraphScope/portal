@@ -155,21 +155,21 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       },
     },
     {
-      title: <FormattedMessage id="Start Time" />,
+      title: <FormattedMessage id="Start time" />,
       key: 'start_time',
       dataIndex: 'start_time',
       sorter: (a: { start_time: string }, b: { start_time: string }) =>
         dayjs(a.start_time).valueOf() - dayjs(b.start_time).valueOf(),
     },
     {
-      title: <FormattedMessage id="End Time" />,
+      title: <FormattedMessage id="End time" />,
       key: 'end_time',
       dataIndex: 'end_time',
       sorter: (a: { end_time: string }, b: { end_time: string }) =>
         dayjs(a.end_time).valueOf() - dayjs(b.end_time).valueOf(),
     },
     {
-      title: <FormattedMessage id="Graph Name" />,
+      title: <FormattedMessage id="Graph name" />,
       dataIndex: 'detail',
       key: 'detail',
       // render: (record: any) => <Popover content={() => handleChange(record)}>查询详情</Popover>,

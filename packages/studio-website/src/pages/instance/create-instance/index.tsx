@@ -55,7 +55,7 @@ const RightButton = (props: { currentStep: any; handleNext: any; handleSubmit: a
     if (mode === 'create' || GS_ENGINE_TYPE === 'groot') {
       return (
         <Button type="primary" onClick={handleSubmit} style={{ minWidth: '100px' }}>
-          <FormattedMessage id="Confirm Create" />
+          <FormattedMessage id="Confirm and create" />
         </Button>
       );
     } else {
@@ -100,12 +100,12 @@ const Steps: React.FunctionComponent<{ currentStep: number }> = () => {
   const { currentStep, mode } = useStore();
   let steps = [
     { title: <FormattedMessage id="Graph Metadata" /> },
-    { title: <FormattedMessage id="Create Schema" /> },
+    { title: <FormattedMessage id="Define graph schema" /> },
     { title: <FormattedMessage id="Preview" /> },
     { title: <FormattedMessage id="Result" /> },
   ];
   // if (mode === 'view' && GS_ENGINE_TYPE === 'interactive') {
-  //   steps = [{ title: <FormattedMessage id="View Schema" /> }, { title: <FormattedMessage id="Preview" /> }];
+  //   steps = [{ title: <FormattedMessage id="View schema" /> }, { title: <FormattedMessage id="Preview" /> }];
   // }
   const items = steps.map(item => ({ key: item.title, title: item.title }));
   return <AntdSteps current={currentStep} items={items} />;
@@ -206,7 +206,7 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
             ),
           },
           {
-            title: <FormattedMessage id="Create Instance" />,
+            title: <FormattedMessage id="Creating a new graph" />,
           },
         ]}
       />

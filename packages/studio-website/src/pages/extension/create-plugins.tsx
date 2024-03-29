@@ -144,7 +144,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
             style={{ marginBottom: '12px' }}
             label={<FormattedMessage id="Name" />}
             name="name"
-            rules={[{ required: true, message: 'Please input your Graph Name!' }]}
+            rules={[{ required: true, message: 'Please input your Graph name!' }]}
           >
             <Input />
           </Form.Item>
@@ -159,7 +159,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
           </Form.Item>
           <Form.Item<FieldType>
             style={{ marginBottom: '12px' }}
-            label={<FormattedMessage id="Binding Graph" />}
+            label={<FormattedMessage id="Binding graph" />}
             name="bound_graph"
             rules={[{ required: true, message: 'Please input your Graph Instance!' }]}
           >
@@ -167,7 +167,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
           </Form.Item>
           <Form.Item<FieldType>
             style={{ marginBottom: '12px' }}
-            label={<FormattedMessage id="Edit Code" />}
+            label={<FormattedMessage id="Edit code" />}
             name="query"
           >
             <div

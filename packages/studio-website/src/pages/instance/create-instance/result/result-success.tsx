@@ -7,7 +7,7 @@ const ResultSuccess: React.FC = () => (
   <Flex vertical style={{ marginTop: '10%' }}>
     <Result style={{}} />
     <Text style={{ textAlign: 'center', marginTop: '12px' }}>
-      <FormattedMessage id="Congratulations on the successful creation of the model, now let's start to guide the data." />
+      <FormattedMessage id="Congratulations on successfully creating the graph! You are now encouraged to bind and import the graph data." />
     </Text>
   </Flex>
 );

@@ -62,7 +62,7 @@ const CreateRecep: React.FC<ICreateRecepProps> = props => {
   };
   return (
     <Modal
-      title={<FormattedMessage id="Create Alert Recep" />}
+      title={<FormattedMessage id="Create alert receiver" />}
       width="35%"
       open={isCreateRecep}
       footer={null}
@@ -73,7 +73,7 @@ const CreateRecep: React.FC<ICreateRecepProps> = props => {
     >
       <Form name="basic" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={form} style={{ marginTop: '24px' }}>
         <Form.Item<FieldType>
-          label={<FormattedMessage id="Receiver Type" />}
+          label={<FormattedMessage id="Receiver type" />}
           name="type"
           rules={[{ required: true, message: 'Please input your Receiver!' }]}
         >
@@ -87,10 +87,10 @@ const CreateRecep: React.FC<ICreateRecepProps> = props => {
         >
           <Input />
         </Form.Item>
-        <Form.Item<FieldType> label={<FormattedMessage id="At User Ids" />} name="at_user_ids">
+        <Form.Item<FieldType> label={<FormattedMessage id="@user IDs" />} name="at_user_ids">
           <Input />
         </Form.Item>
-        <Form.Item<FieldType> label={<FormattedMessage id="Is At All" />} name="is_at_all" valuePropName="checked">
+        <Form.Item<FieldType> label={<FormattedMessage id="@all?" />} name="is_at_all" valuePropName="checked">
           <Tooltip title={is_at_all ? 'enable' : 'disable'}>
             <Switch
               value={is_at_all}

@@ -70,14 +70,14 @@ const Receivers: React.FC<IReceiversProps> = props => {
       key: 'webhook_url',
     },
     {
-      title: <FormattedMessage id="At User Ids" />,
+      title: <FormattedMessage id="@user IDs" />,
       dataIndex: 'at_user_ids',
       editable: true,
       key: 'at_user_ids',
       render: (record: string[]) => <span>{record?.join()}</span>,
     },
     {
-      title: <FormattedMessage id="Is At All" />,
+      title: <FormattedMessage id="@all?" />,
       dataIndex: 'is_at_all',
       editable: true,
       key: 'is_at_all',
@@ -152,7 +152,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
     <>
       {Content}
       <Button style={{ position: 'absolute', top: '-55px', right: '0px' }} type="primary" onClick={handleChange}>
-        <FormattedMessage id="Create Alert Recep" />
+        <FormattedMessage id="Create alert receiver" />
       </Button>
       {!isReady ? (
         <Skeleton />
