@@ -73,7 +73,7 @@ const InstanceCard: React.FC = () => {
         {GS_ENGINE_TYPE === 'interactive' && (
           <Col span={12}>
             <Card
-              title={<FormattedMessage id="New Graph" />}
+              title={<FormattedMessage id="New graph" />}
               headStyle={{ fontSize: '30px', color: '#ccc' }}
               style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
               bodyStyle={{ width: '100%' }}

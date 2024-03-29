@@ -155,16 +155,16 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
     return configcolumns;
   };
   const nodeOrEdgeTitle =
-    currentType == 'node' ? <FormattedMessage id="Vertex Label" /> : <FormattedMessage id="Edge Label" />;
+    currentType == 'node' ? <FormattedMessage id="Vertex label" /> : <FormattedMessage id="Edge Label" />;
   let label =
     currentType == 'node'
-      ? intl.formatMessage({ id: 'Please Enter Vertex Label.' })
-      : intl.formatMessage({ id: 'Please Enter Edge Label.' });
+      ? intl.formatMessage({ id: 'Please enter vertex label.' })
+      : intl.formatMessage({ id: 'Please enter edge label.' });
   /** 添加属性标题国际化 */
   let locales = {
     properties: intl.formatMessage({ id: 'Properties' }),
-    addProperty: intl.formatMessage({ id: 'Add Property' }),
-    mapFromFile: intl.formatMessage({ id: 'Map From File' }),
+    addProperty: intl.formatMessage({ id: 'Add property' }),
+    mapFromFile: intl.formatMessage({ id: 'Mapping from file' }),
   };
   /** groot 创建点/边  */
   const hangdleSubmit = () => {
@@ -212,30 +212,30 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
         {currentType === 'edge' ? (
           <>
             <Form.Item<FieldType>
-              label={<FormattedMessage id="Source Vertex Label" />}
+              label={<FormattedMessage id="Source vertex label" />}
               name="source"
-              tooltip={<FormattedMessage id="Source Vertex Label" />}
+              tooltip={<FormattedMessage id="Source vertex label" />}
               rules={[{ required: true, message: '' }]}
               style={{ marginBottom: '8px' }}
             >
               <Select
                 options={nodeOptions}
                 disabled={disabled}
-                placeholder={intl.formatMessage({ id: 'Please Select Source Vertex Label.' })}
+                placeholder={intl.formatMessage({ id: 'Please select source vertex label.' })}
                 notFoundContent={notFoundContent}
               />
             </Form.Item>
             <Form.Item<FieldType>
-              label={<FormattedMessage id="Target Vertex Label" />}
+              label={<FormattedMessage id="Target vertex label" />}
               name="target"
-              tooltip={<FormattedMessage id="Destination Vertex Label" />}
+              tooltip={<FormattedMessage id="Destination vertex label" />}
               rules={[{ required: true, message: '' }]}
               style={{ marginBottom: '8px' }}
             >
               <Select
                 options={nodeOptions}
                 disabled={disabled}
-                placeholder={intl.formatMessage({ id: 'Please Select Target Vertex Label.' })}
+                placeholder={intl.formatMessage({ id: 'Please select target vertex label.' })}
                 notFoundContent={notFoundContent}
               />
             </Form.Item>

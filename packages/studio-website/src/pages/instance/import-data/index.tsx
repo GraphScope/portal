@@ -87,7 +87,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
                     <FormattedMessage id="Labels" />
                   </Title>
                   <Title level={5} type="secondary" style={{ margin: '16px 0px' }}>
-                    <FormattedMessage id="Datasource" />
+                    <FormattedMessage id="Data sources" />
                   </Title>
                 </Space>
               </header>
@@ -105,7 +105,7 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
         <Col span={8}>
           <Card title={<FormattedMessage id="Preview" />} extra={<GraphTitle />}>
             <Text type="secondary" style={{ display: 'block', textAlign: 'center', margin: '0px' }}>
-              <FormattedMessage id="Currently bound" />
+              <FormattedMessage id="Existing data bindings" />
               {bindEdgeCount} <FormattedMessage id="Edges" />，{bindNodeCount}
               <FormattedMessage id="Vertices" />
             </Text>

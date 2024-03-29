@@ -54,7 +54,7 @@ const DeleteLabel: FunctionComponent<IDeleteGrootLabel> = props => {
           <Button disabled={disabled} icon={<DeleteOutlined />} onClick={deleteLabel} />
         ) : (
           <Popconfirm
-            title="Delete the label?"
+            title="Deleting a label"
             description="Are you sure to delete this label?"
             onConfirm={deleteLabel}
             onCancel={() => {}}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Typography, Flex, Button, Space, Upload, Tooltip, message } from 'antd';
+import type { UploadProps } from 'antd';
 import { useContext, updateDataMap, clearDataMap } from './useContext';
 import {
   transformMappingSchemaToImportOptions,
@@ -10,9 +11,6 @@ import { download } from '@/components/utils/index';
 import yaml from 'js-yaml';
 import { cloneDeep } from 'lodash';
 import { submitParams } from './source-title';
-import { ImportOutlined, ExportOutlined } from '@ant-design/icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileExport, faFileImport } from '@fortawesome/free-solid-svg-icons';
 import FileExportIcon from '@/components/icons/file-export';
 import FileImportIcon from '@/components/icons/file-import';
 type IGraphTitleProps = {};
@@ -68,18 +66,16 @@ const GraphTitle: React.FunctionComponent<IGraphTitleProps> = () => {
     const yamlFile = yaml.dump(params);
     download('schema.yaml', yamlFile);
   };
+  const customRequest: UploadProps['customRequest'] = async options => {
+    const { file } = options;
+    handleUpload(file);
+  };
+
   return (
     <>
       <Flex gap="middle" justify="end" align="center">
         <Space>
-          <Upload
-            onChange={info => {
-              if (info.file.status === 'done') {
-                handleUpload(info.file.originFileObj);
-              }
-            }}
-            showUploadList={false}
-          >
+          <Upload customRequest={customRequest} showUploadList={false}>
             <Tooltip placement="topRight" title={<FormattedMessage id="Import" />}>
               <Button type="text" icon={<FileImportIcon />}></Button>
             </Tooltip>

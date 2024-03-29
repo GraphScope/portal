@@ -55,7 +55,7 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
 
   const columns = [
     {
-      title: <FormattedMessage id="Alert Name" />,
+      title: <FormattedMessage id="Alert name" />,
       dataIndex: 'name',
       key: 'name',
       editable: true,
@@ -81,13 +81,13 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
       editable: true,
     },
     {
-      title: <FormattedMessage id="Alert Conditions" />,
+      title: <FormattedMessage id="Alert conditions" />,
       dataIndex: 'conditions_desription',
       key: 'conditions_desription',
       editable: true,
     },
     {
-      title: <FormattedMessage id="Alert Frequency" />,
+      title: <FormattedMessage id="Alert frequency" />,
       dataIndex: 'frequency',
       key: 'frequency',
       editable: true,

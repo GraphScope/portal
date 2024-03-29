@@ -8,12 +8,13 @@ const { Text } = Typography;
 const { RangePicker } = DatePicker;
 type IInquireMessageProps = {
   selectedRowKeys: string[];
+  selectedRows: string[];
   searchChange(val: IAlertMessages): void;
   resetChange(): void;
 };
 const DateFilter = (props: IInquireMessageProps) => {
   const [form] = Form.useForm();
-  const { selectedRowKeys, searchChange, resetChange } = props;
+  const { selectedRowKeys, selectedRows, searchChange, resetChange } = props;
   const [state, updateState] = useState({
     //@ts-ignore
     timePeriod: [dayjs().subtract('1', 'Hour'), dayjs()],
@@ -22,11 +23,12 @@ const DateFilter = (props: IInquireMessageProps) => {
   const { timePeriod, segmentedValue } = state;
   const allDealingSolved = async (val: string) => {
     const params = {
-      messages: selectedRowKeys,
+      messages: selectedRows,
       batch_status: val,
       batch_delete: false,
     };
     await updateAlertMessages(params);
+    resetChange();
   };
   const handleSubmit = async () => {
     const { severity, type, status } = form.getFieldsValue();
