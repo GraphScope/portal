@@ -24,7 +24,7 @@ const Stage: React.FunctionComponent<StageProps> = props => {
   const { onChange } = props;
   const saveStage = () => {
     console.log(form.getFieldsValue());
-    onChange && onChange(false);
+    onChange(false);
   };
   return (
     <Card style={{ marginTop: '18px' }} styles={{ body: { padding: '16px 24px 24px' } }}>

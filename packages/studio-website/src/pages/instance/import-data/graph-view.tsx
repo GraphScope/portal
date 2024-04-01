@@ -1,11 +1,9 @@
 import { FunctionComponent, ReactNode } from 'react';
 import Graphin, { Utils } from '@antv/graphin';
 import '@antv/graphin-icons/dist/index.css';
-import { theme } from 'antd';
 import { BindingEdge, BindingNode } from './useContext';
 import { useDataMap, transformDataMap } from './useContext';
 import { useContext } from '@/layouts/useContext';
-const { useToken } = theme;
 interface Props {
   children?: ReactNode;
   viewdata: {
@@ -15,9 +13,7 @@ interface Props {
 }
 
 /** graphin 数据处理 */
-const getVertexEdges = (source: any, token: any) => {
-  const { store } = useContext();
-  const { mode } = store;
+const getVertexEdges = (source: any, mode: string) => {
   const nodes = source.nodes.map((item: BindingNode) => {
     const { key, label, isBind } = item;
     return {
@@ -76,14 +72,13 @@ const getVertexEdges = (source: any, token: any) => {
 
 // 改名为 graphview
 const GraphInsight: FunctionComponent<Props> = props => {
-  const { children, viewdata } = props;
+  const { children } = props;
   const { store } = useContext();
   const { mode } = store;
-  const { token } = useToken();
   //@ts-ignore
   const source = transformDataMap(useDataMap());
   //@ts-ignore
-  const graphData = getVertexEdges(source, token);
+  const graphData = getVertexEdges(source, mode);
 
   return (
     <>

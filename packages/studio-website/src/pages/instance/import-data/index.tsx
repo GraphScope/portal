@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Row, Col, Card, Typography, Skeleton, Space, Flex, Divider } from 'antd';
-import { useContext, updateDataMap, initialStore, initialDataMap, clearDataMap, clearStore } from './useContext';
+import { Row, Col, Card, Typography, Skeleton, Space } from 'antd';
+import { useContext, updateDataMap, clearDataMap, clearStore } from './useContext';
 import GraphView from './graph-view';
 import DataSource from './data-source/index';
 import GraphTitle from './graph-title';
@@ -13,10 +13,10 @@ import { getUrlParams } from './utils';
 import { getDataloadingConfig, getSchema } from './service';
 import { useContext as useMode } from '@/layouts/useContext';
 
-interface IImportDataProps {}
+// interface IImportDataProps {}
 
 const { Title, Text } = Typography;
-const ImportData: React.FunctionComponent<IImportDataProps> = props => {
+const ImportData: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
 
   const { currentType, nodes, edges, isReady, graphName } = store;
@@ -36,10 +36,10 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
       draft.schema = schema;
     });
     updateDataMap(draft => {
-      options.nodes.map(item => {
+      options.nodes.forEach(item => {
         draft[item.key as string] = cloneDeep(item);
       });
-      options.edges.map(item => {
+      options.edges.forEach(item => {
         draft[item.key as string] = cloneDeep(item);
       });
     });
@@ -93,11 +93,11 @@ const ImportData: React.FunctionComponent<IImportDataProps> = props => {
               </header>
               {currentType === 'node' &&
                 nodes.map(item => {
-                  return <DataSource id={item.key as string} />;
+                  return <DataSource key={item.key} id={item.key as string} />;
                 })}
               {currentType === 'edge' &&
                 edges.map(item => {
-                  return <DataSource id={item.key as string} />;
+                  return <DataSource key={item.key} id={item.key as string} />;
                 })}
             </div>
           </Card>

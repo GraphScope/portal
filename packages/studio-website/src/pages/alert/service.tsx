@@ -1,4 +1,3 @@
-import { message } from 'antd';
 import { AlertApiFactory, UpdateAlertMessagesRequest } from '@graphscope/studio-server';
 import type { AlertReceiver, AlertRule } from '@graphscope/studio-server';
 export type IAlertMessages = {

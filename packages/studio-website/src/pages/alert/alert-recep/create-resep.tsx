@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, Form, Input, Select, Modal, Flex, message, Tooltip, Switch } from 'antd';
+import { Button, Form, Input, Select, Modal, Flex, message, Tooltip, Switch } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { registerReceiver, updateReceiverById } from '../service';
 import { Item } from './index';

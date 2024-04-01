@@ -5,8 +5,8 @@ import InteractTheme from './interact-theme';
 import PrimaryColor from './primary-color';
 import RoundedCorner from './rounded-corner';
 import International from './International';
-interface ISettingProps {}
-const Setting: React.FunctionComponent<ISettingProps> = props => {
+
+const Setting: React.FunctionComponent = () => {
   return (
     <div>
       <Section

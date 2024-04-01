@@ -4,8 +4,8 @@ import { useContext } from '@/layouts/useContext';
 import localStorage from '@/components/utils/localStorage';
 import { Flex, Row, Col, InputNumber, Slider, Typography } from 'antd';
 const { Title, Text } = Typography;
-type IRoundedCornerProps = {};
-const RoundedCorner: React.FunctionComponent<IRoundedCornerProps> = props => {
+// type IRoundedCornerProps = {};
+const RoundedCorner: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { inputNumber } = store;
   const { setItem, getItem } = localStorage;

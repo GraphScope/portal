@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { InboxOutlined } from '@ant-design/icons';
+import React from 'react';
 import type { UploadProps } from 'antd';
 import { message, Upload } from 'antd';
 import { FormattedMessage } from 'react-intl';
@@ -9,7 +8,16 @@ type IUploadFile = {
   handleChange(val: any): void;
 };
 const UploadFiles: React.FC<IUploadFile> = ({ handleChange }) => {
-  const [uploadName, setUploadName] = useState('');
+  // const [uploadName, setUploadName] = useState('');
+  /** 转换上传文件 */
+  const readFile = (file: any) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsText(file);
+    });
+  };
   const props: UploadProps = {
     name: 'file',
     multiple: false,
@@ -24,7 +32,7 @@ const UploadFiles: React.FC<IUploadFile> = ({ handleChange }) => {
       if (status === 'done') {
         const content = await readFile(info.file.originFileObj);
         handleChange(content);
-        setUploadName(info.file.name);
+        // setUploadName(info.file.name);
         message.success(`${info.file.name} file uploaded successfully.`);
       } else if (status === 'error') {
         message.error(`${info.file.name} file upload failed.`);
@@ -34,15 +42,7 @@ const UploadFiles: React.FC<IUploadFile> = ({ handleChange }) => {
       console.log('Dropped files', e.dataTransfer.files);
     },
   };
-  /** 转换上传文件 */
-  const readFile = (file: any) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsText(file);
-    });
-  };
+
   let Content;
   // if (uploadName) {
   //   Content = <p>{uploadName}</p>;

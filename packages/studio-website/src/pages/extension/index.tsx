@@ -2,8 +2,8 @@ import * as React from 'react';
 import Section from '@/components/section';
 import Plugins from './plugins';
 import { FormattedMessage } from 'react-intl';
-interface ExtensionProps {}
-const Extension: React.FunctionComponent<ExtensionProps> = props => {
+
+const Extension: React.FunctionComponent = () => {
   const items = [
     // {
     //   key: 'Plugins',

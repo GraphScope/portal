@@ -1,10 +1,4 @@
-import {
-  GraphApiFactory,
-  UtilsApiFactory,
-  JobApiFactory,
-  DatasourceApiFactory,
-  LegacyApiFactory,
-} from '@graphscope/studio-server';
+import { GraphApiFactory, UtilsApiFactory, JobApiFactory, LegacyApiFactory } from '@graphscope/studio-server';
 import type { SchemaMapping } from '@graphscope/studio-server';
 
 import {
@@ -32,7 +26,9 @@ export const createDataloadingJob = async (params: SchemaMapping) => {
         return res.data;
       }
     })
-    .catch(error => {});
+    .catch(error => {
+      console.log(error);
+    });
 };
 
 export const getSchema = async (graph_name: string) => {
@@ -66,6 +62,7 @@ export const getDataloadingConfig = async (graph_name: string, schema: any) => {
     .getDataloadingConfig(graph_name!)
     .then(res => res.data)
     .catch(error => {
+      console.log(error);
       return {};
     });
   console.log(schemaMapping);
@@ -82,6 +79,7 @@ export const createGrootDataloadingJob = async (graph_name: any) => {
     .createGrootDataloadingJob(graph_name!)
     .then(res => res.data)
     .catch(error => {
+      console.log(error);
       return {};
     });
   return grootDataloading;

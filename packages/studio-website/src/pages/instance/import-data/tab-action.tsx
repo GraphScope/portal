@@ -28,10 +28,10 @@ const TabAction: React.FC<ITabActionProps> = props => {
   };
   return (
     <Space>
-      {items.map(item => {
+      {items.map((item, index) => {
         const { label, value } = item;
         return (
-          <Text style={currentType === value ? styles : activeStyles} onClick={() => handleChange(value)}>
+          <Text key={index} style={currentType === value ? styles : activeStyles} onClick={() => handleChange(value)}>
             {label}
           </Text>
         );

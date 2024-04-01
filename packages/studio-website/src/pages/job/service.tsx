@@ -9,7 +9,7 @@ export type IJobType = {
   end_time: string;
   log: string;
   detail: {
-    additionalProp1: {};
+    additionalProp1: object;
   };
 };
 export const listJobs = async () => {

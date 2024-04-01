@@ -1,8 +1,6 @@
 import * as React from 'react';
 
-interface IOverviewProps {}
-
-const Overview: React.FunctionComponent<IOverviewProps> = props => {
+const Overview: React.FunctionComponent = () => {
   return <div>Overview</div>;
 };
 

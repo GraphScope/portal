@@ -4,7 +4,6 @@ import { Form, Input, Typography } from 'antd';
 import { FormattedMessage, useIntl } from 'react-intl';
 import SelectCards from '@/components/select-cards';
 import { useContext } from './useContext';
-import { useContext as useContextMap } from '@/layouts/useContext';
 
 export type FieldType = {
   graphName?: string;
@@ -55,9 +54,6 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
   const { form } = props;
   const { store, updateStore } = useContext();
   const { graphName, storeType, mode } = store;
-  const {
-    store: { locale },
-  } = useContextMap();
   const intl = useIntl();
   const chooseStoreType = (item: any) => {
     updateStore(draft => {

@@ -6,6 +6,34 @@ const { useToken } = theme;
 interface IImportDataProps {
   data: { nodes: NodeSchema[]; edges: EdgeSchema[] };
 }
+export function getItems(data: IImportDataProps['data']) {
+  const { nodes, edges } = data;
+  const dataMap = new Map();
+  nodes.forEach(item => {
+    const { label, key, properties } = item;
+    dataMap.set(key, {
+      type: 'vertex',
+      key,
+      label,
+      properties: properties,
+    });
+  });
+  edges.forEach(item => {
+    const { label, key, properties, source, target } = item;
+    const source_label = dataMap.get(source).label;
+    const target_label = dataMap.get(target).label;
+    console.log(source_label, target_label);
+    const edge_label = `(${source_label})-[${label}]-(${target_label})`;
+    dataMap.set(key, {
+      type: 'edge',
+      key,
+      label: edge_label,
+      properties: properties,
+    });
+  });
+  const items = [...dataMap.values()];
+  return items;
+}
 
 const TableList: React.FunctionComponent<IImportDataProps> = props => {
   const { data } = props;
@@ -56,32 +84,3 @@ const TableList: React.FunctionComponent<IImportDataProps> = props => {
 };
 
 export default TableList;
-
-export function getItems(data: IImportDataProps['data']) {
-  const { nodes, edges } = data;
-  const dataMap = new Map();
-  nodes.forEach(item => {
-    const { label, key, properties } = item;
-    dataMap.set(key, {
-      type: 'vertex',
-      key,
-      label,
-      properties: properties,
-    });
-  });
-  edges.forEach(item => {
-    const { label, key, properties, source, target } = item;
-    const source_label = dataMap.get(source).label;
-    const target_label = dataMap.get(target).label;
-    console.log(source_label, target_label);
-    const edge_label = `(${source_label})-[${label}]-(${target_label})`;
-    dataMap.set(key, {
-      type: 'edge',
-      key,
-      label: edge_label,
-      properties: properties,
-    });
-  });
-  const items = [...dataMap.values()];
-  return items;
-}

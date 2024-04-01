@@ -1,8 +1,7 @@
 import * as React from 'react';
 import AddLabel from './add-label';
-interface IEmptyInfoProps {}
 
-const EmptyInfo: React.FunctionComponent<IEmptyInfoProps> = props => {
+const EmptyInfo: React.FunctionComponent = () => {
   return (
     <div style={{ padding: '24px' }}>
       <AddLabel />

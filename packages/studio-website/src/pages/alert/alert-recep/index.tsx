@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Popconfirm, Table, Button, Space, Tag, Skeleton, message } from 'antd';
+import { Popconfirm, Table, Button, Space, Tag, Skeleton, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import CreateRecep from './create-resep';
-import { listReceivers, deleteReceiverById, updateReceiverById } from '../service';
+import { listReceivers, deleteReceiverById } from '../service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 export interface Item {
@@ -16,9 +16,7 @@ export interface Item {
   type: string;
 }
 
-type IReceiversProps = {};
-const Receivers: React.FC<IReceiversProps> = props => {
-  const [form] = Form.useForm();
+const Receivers: React.FC = () => {
   const [state, updateState] = useState<{
     alertRecep: Item[];
     isReady: boolean;
@@ -32,9 +30,6 @@ const Receivers: React.FC<IReceiversProps> = props => {
     editData: {},
   });
   const { isReady, alertRecep, isEditRecep, editData } = state;
-  useEffect(() => {
-    getAlertReceivers();
-  }, []);
   /** 获取告警接收数据 */
   const getAlertReceivers = async () => {
     const res = await listReceivers();
@@ -61,7 +56,9 @@ const Receivers: React.FC<IReceiversProps> = props => {
       };
     });
   };
-
+  useEffect(() => {
+    getAlertReceivers();
+  }, []);
   const columns = [
     {
       title: <FormattedMessage id="Webhook Url" />,
@@ -114,7 +111,7 @@ const Receivers: React.FC<IReceiversProps> = props => {
             />
             <Popconfirm
               title={<FormattedMessage id="Are you sure to delete this task?" />}
-              onConfirm={(event: any) => delRowReceiver(receiver_id)}
+              onConfirm={() => delRowReceiver(receiver_id)}
               onCancel={() => {}}
               okText={<FormattedMessage id="Yes" />}
               cancelText={<FormattedMessage id="No" />}

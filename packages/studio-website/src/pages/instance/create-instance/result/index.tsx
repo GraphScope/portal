@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { cloneDeep } from 'lodash';
 import { useContext } from '../useContext';
 import { Card, Row, Col } from 'antd';
 import TableList from './table';
 import GraphInsight from '../create-schema/graph-view';
 
-interface IImportDataProps {}
-const Result: React.FunctionComponent<IImportDataProps> = props => {
+const Result: React.FunctionComponent = () => {
   const { store } = useContext();
   const { nodeList, edgeList } = store;
 

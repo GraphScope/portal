@@ -4,9 +4,8 @@ import AlertInfo from './alert-info';
 import AlertRule from './alert-rules';
 import AlertRecep from './alert-recep';
 import { FormattedMessage } from 'react-intl';
-interface AlertModuleProps {}
 
-const AlertModule: React.FunctionComponent<AlertModuleProps> = props => {
+const AlertModule: React.FunctionComponent = () => {
   const items = [
     {
       key: 'info',

@@ -366,7 +366,7 @@ export function transformDataMapToGrootSchema(dataMap: any) {
     vertex_type_pair_relations: { destination_vertex: any; relation: string; source_vertex: any }[];
   }[] = [];
   const { vertices, edges } = dataMap;
-  vertices.length &&
+  if (vertices.length) {
     vertices.forEach((item: { label: string; properties: any }) => {
       const { label, properties } = item;
       let primaryKey;
@@ -386,7 +386,8 @@ export function transformDataMapToGrootSchema(dataMap: any) {
         primary_keys: [primaryKey],
       });
     });
-  edges.length &&
+  }
+  if (edges.length) {
     edges.forEach((item: { label: string; relations: { src_label: string; dst_label: string }[]; properties: any }) => {
       const { label, relations, properties } = item;
       const { src_label, dst_label } = relations[0];
@@ -409,6 +410,7 @@ export function transformDataMapToGrootSchema(dataMap: any) {
         ],
       });
     });
+  }
 
   return { vertex_types, edge_types };
 }

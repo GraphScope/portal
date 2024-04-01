@@ -7,7 +7,7 @@ import SwitchSource from './switch-source';
 // import ImportPeriodic from './import-periodic';
 import ImportNow from './import-now';
 import TableList from './table';
-import { getUrlParams } from '@/components/utils';
+// import { getUrlParams } from '@/components/utils';
 import { useContext } from '@/layouts/useContext';
 import { transformDataMapToScheduledImportOptions } from '@/components/utils/import';
 // import { createGrootDataloadingJob } from '../service';
@@ -33,7 +33,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const { isBind, filelocation, isEidtProperty, datatype, label, properties, dataFields } = data;
   const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
-  const { graph } = getUrlParams();
+  // const { graph } = getUrlParams();
   const { store } = useContext();
   const engineType = window.GS_ENGINE_TYPE;
   const { mode } = store;

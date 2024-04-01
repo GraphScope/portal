@@ -9,12 +9,32 @@ import { cloneDeep } from 'lodash';
 import { transOptionsToSchema } from '@/components/utils/schema';
 import FileExportIcon from '@/components/icons/file-export';
 import FileImportIcon from '@/components/icons/file-import';
-import { error } from 'console';
-interface IExportConfigProps {}
-const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
+
+const ExportConfig: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { edgeList, nodeList, mode } = store;
   const [api, contextHolder] = notification.useNotification();
+  const readFile = (file: any) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsText(file);
+    });
+  };
+  const Json2Yaml = () => {
+    //@ts-ignore
+    const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
+    const schemaYaml = yaml.dump(schemaJSON);
+    download('schema.yaml', schemaYaml);
+  };
+  /** 提示框 */
+  const openNotification = () => {
+    api.error({
+      message: `Import`,
+      description: '解析文件失败，请确保上传的文件是有效的 YAML 格式',
+    });
+  };
   const handleUpload = async (file: any) => {
     try {
       const yamlContent = (await readFile(file)) as string;
@@ -42,28 +62,7 @@ const ExportConfig: React.FunctionComponent<IExportConfigProps> = props => {
       openNotification();
     }
   };
-  const readFile = (file: any) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsText(file);
-    });
-  };
 
-  const Json2Yaml = () => {
-    //@ts-ignore
-    const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
-    const schemaYaml = yaml.dump(schemaJSON);
-    download('schema.yaml', schemaYaml);
-  };
-  /** 提示框 */
-  const openNotification = () => {
-    api.error({
-      message: `Import`,
-      description: '解析文件失败，请确保上传的文件是有效的 YAML 格式',
-    });
-  };
   const disabled = mode === 'view';
 
   const customRequest: UploadProps['customRequest'] = async options => {

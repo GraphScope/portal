@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { history } from 'umi';
 import { Button, notification, Steps as AntdSteps, Alert, Breadcrumb, Form } from 'antd';
 import { useContext } from '../create-instance/useContext';
@@ -17,15 +17,12 @@ const { GS_ENGINE_TYPE } = window;
  * @param props
  * @returns
  */
-const LeftButton = (props: { currentStep: any; handlePrev: any; createInstaseResult: any; mode: any }) => {
-  const { currentStep, handlePrev, createInstaseResult, mode } = props;
+const LeftButton = (props: { currentStep: any; handlePrev: any; createInstaseResult: any }) => {
+  const { currentStep, handlePrev, createInstaseResult } = props;
 
   if (currentStep === 0) {
     return null;
   }
-  // if (currentStep === 1 && mode === 'view') {
-  //   return null;
-  // }
   if (currentStep === 3 && !createInstaseResult) {
     return null;
   }
@@ -97,7 +94,7 @@ export interface ICreateGraph {
 }
 
 const Steps: React.FunctionComponent<{ currentStep: number }> = () => {
-  const { currentStep, mode } = useStore();
+  const { currentStep } = useStore();
   let steps = [
     { title: <FormattedMessage id="Graph Metadata" /> },
     { title: <FormattedMessage id="Define graph schema" /> },
@@ -146,7 +143,13 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   }, []);
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
-
+  /** 图创建失败提示框 */
+  const openNotification = (result: string) => {
+    api.error({
+      message: 'Graph creation failed',
+      description: result,
+    });
+  };
   const next = () => {
     if (form.getFieldsValue().graphName || mode === 'view') {
       updateStore(draft => {
@@ -159,7 +162,7 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   const handleSubmit = () => {
     //@ts-ignore
     createGraph(graphName, storeType, nodeList, edgeList)
-      .then(res => {
+      .then(() => {
         /** 成功true */
         updateStore(draft => {
           draft.currentStep = currentStep + 1;
@@ -186,13 +189,6 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
     display: 'block',
   };
 
-  /** 图创建失败提示框 */
-  const openNotification = (result: string) => {
-    api.error({
-      message: 'Graph creation failed',
-      description: result,
-    });
-  };
   return (
     <div style={{ padding: '12px 24px' }}>
       {contextHolder}

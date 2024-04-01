@@ -12,8 +12,7 @@ export interface Item {
   bound_graph: string;
 }
 
-type IPluginsProps = {};
-const Plugins: React.FC<IPluginsProps> = props => {
+const Plugins: React.FC = () => {
   const [state, updateState] = useState<{
     /** 插件列表数据 */
     pluginList: Item[];
@@ -24,9 +23,6 @@ const Plugins: React.FC<IPluginsProps> = props => {
     isReady: true,
   });
   const { isReady, pluginList } = state;
-  useEffect(() => {
-    getPlugins();
-  }, []);
   /** 获取插件列表数据 */
   const getPlugins = async () => {
     const res = await listProcedures();
@@ -38,6 +34,16 @@ const Plugins: React.FC<IPluginsProps> = props => {
       };
     });
   };
+  /** 删除插件 */
+  const deleteExtension = async (all: { name: string; bound_graph: string }) => {
+    const { bound_graph, name } = all;
+    const res = await deleteProcedure(bound_graph, name);
+    message.success(res);
+  };
+
+  useEffect(() => {
+    getPlugins();
+  }, []);
 
   const columns = [
     {
@@ -88,12 +94,7 @@ const Plugins: React.FC<IPluginsProps> = props => {
       },
     },
   ];
-  /** 删除插件 */
-  const deleteExtension = async (all: { name: string; bound_graph: string }) => {
-    const { bound_graph, name } = all;
-    const res = await deleteProcedure(bound_graph, name);
-    message.success(res);
-  };
+
   return (
     <>
       <Button
