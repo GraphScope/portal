@@ -1,4 +1,5 @@
 import type { Schema, VertexType } from '@graphscope/studio-server';
+import { String } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface Properties {
@@ -56,35 +57,43 @@ export function transformSchema(originalSchema: DeepRequired<Schema>): Transform
 
   const transformNode = (vertexType: DeepRequired<VertexType>): TransformedNode => ({
     label: vertexType.type_name,
-    properties: vertexType.properties.map(item => {
-      const { property_name, property_type } = item;
-      return {
-        name: property_name,
-        type: property_type.primitive_type,
-      };
-    }),
+    properties: vertexType.properties.map(
+      (item: { property_name: string; property_type: { primitive_type: string } }) => {
+        const { property_name, property_type } = item;
+        return {
+          name: property_name,
+          type: property_type.primitive_type,
+        };
+      },
+    ),
     primary: vertexType.primary_keys[0],
   });
 
   /** Edges  */
   const edges: TransformedEdge[] = [];
-  edge_types.forEach(edge => {
-    const { type_name, properties, vertex_type_pair_relations } = edge;
-    vertex_type_pair_relations.forEach(c => {
-      const { destination_vertex, source_vertex, relation } = c;
-      edges.push({
-        label: type_name,
-        properties: (properties || []).map(({ property_name, property_type }) => ({
-          name: property_name,
-          type: property_type.primitive_type,
-        })),
+  edge_types.forEach(
+    (edge: {
+      type_name: string;
+      properties: { property_name: string; property_type: { primitive_type: string } }[];
+      vertex_type_pair_relations: { destination_vertex: string; source_vertex: string; relation: any }[];
+    }) => {
+      const { type_name, properties, vertex_type_pair_relations } = edge;
+      vertex_type_pair_relations.forEach(c => {
+        const { destination_vertex, source_vertex, relation } = c;
+        edges.push({
+          label: type_name,
+          properties: (properties || []).map(({ property_name, property_type }) => ({
+            name: property_name,
+            type: property_type.primitive_type,
+          })),
 
-        source: source_vertex,
-        target: destination_vertex,
-        relation,
+          source: source_vertex,
+          target: destination_vertex,
+          relation,
+        });
       });
-    });
-  });
+    },
+  );
 
   const transformedSchema: TransformedSchema = {
     nodes: vertex_types.map(transformNode),
@@ -159,8 +168,6 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
 
     let primary_key = 'id';
     return {
-      //@ts-ignore
-
       type_id: itemIdx, // item.key,
       type_name: item.label,
       properties: item.properties.map((p, pIdx) => {

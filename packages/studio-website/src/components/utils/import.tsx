@@ -3,6 +3,11 @@ import type { BindingEdge, BindingNode } from '../../pages/instance/import-data/
 import { transformSchemaToOptions } from '@/components/utils/schema';
 import type { DeepRequired } from '@/components/utils/schema';
 
+export interface ItemType {
+  property_mapping: { [x: string]: string }[];
+  destination_pk_column_map: { column: { name: string } }[];
+  source_pk_column_map: { column: { name: string } }[];
+}
 /**
  * 将后端标准的 Schema 结构转化为 Importor 组件需要的 Options
  * @param schema GraphSchema
@@ -172,7 +177,7 @@ export function transformGrootMappingSchemaToImportOptions(schemaMapping: any, s
   const label_mappings: Record<string, VertexMapping | EdgeMapping> = {};
   /** 先将后端数据或者yaml返回的mapping数据做一次Map存储，方便与后续的schema整合取数 */
 
-  vertices_datasource.forEach(item => {
+  vertices_datasource.forEach((item: ItemType & { type_name: string }) => {
     const { property_mapping, type_name } = item;
     label_mappings[type_name] = {
       ...item,
@@ -185,7 +190,7 @@ export function transformGrootMappingSchemaToImportOptions(schemaMapping: any, s
       }, {}),
     };
   });
-  edges_datasource.forEach(item => {
+  edges_datasource.forEach((item: ItemType & { type_triplet: { edge: string } }) => {
     const { property_mapping, type_triplet, destination_pk_column_map, source_pk_column_map } = item;
     const { edge } = type_triplet;
     const sourceField = source_pk_column_map[0].column;
