@@ -61,7 +61,7 @@ const PeriodicImportDataworks = (props: { setState?: any; configLpading?: any; t
       />
       {/* </Card> */}
       <div style={{ textAlign: 'center' }}>
-        <Button type="primary" onClick={() => sparkDownload()}>
+        <Button type="primary" style={{ width: '108px' }} onClick={() => sparkDownload()}>
           download
         </Button>
       </div>

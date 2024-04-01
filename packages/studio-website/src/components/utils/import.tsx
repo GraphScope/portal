@@ -413,6 +413,24 @@ export function transformDataMapToGrootSchema(dataMap: any) {
   return { vertex_types, edge_types };
 }
 
+/**
+ * 周期导入接口参数转换
+ * @param options
+ * @returns
+ */
+export function transformDataMapToScheduledImportOptions(options: any) {
+  const { dataMap, data } = options;
+  let edge_mappings: { type_name: any; source_vertex: any; destination_vertex: any }[] = [];
+  const { label, source, target } = data;
+  edge_mappings.push({
+    type_name: source && target ? label : '',
+    source_vertex: source ? dataMap[source].label : '',
+    destination_vertex: target ? dataMap[target].label : '',
+  });
+
+  return edge_mappings;
+}
+
 export const MOCK_DATA = {
   nodes: [
     {

@@ -1,14 +1,17 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined, DeleteOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 import { Button, Flex, Row, Col, Space, Typography, theme, Tooltip } from 'antd';
-import { BindingEdge, BindingNode, useDataMap, updateDataMap } from '../useContext';
+import { BindingNode, useDataMap, updateDataMap } from '../useContext';
 import SwitchSource from './switch-source';
-import ImportPeriodic from './import-periodic';
+// import ImportPeriodic from './import-periodic';
 import ImportNow from './import-now';
 import TableList from './table';
 import { getUrlParams } from '@/components/utils';
 import { useContext } from '@/layouts/useContext';
+import { transformDataMapToScheduledImportOptions } from '@/components/utils/import';
+// import { createGrootDataloadingJob } from '../service';
+
 const { useToken } = theme;
 interface IImportDataProps {
   id: string;
@@ -75,10 +78,19 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       draft[id].delimiter = header?.delimiter;
     });
   };
-  /** 删除文件 */
-  const deleteFile = () => {
-    onChangeValue('');
-    onChangeDataFields();
+  /** 周期导入 */
+  const handleSubmit = () => {
+    //@ts-ignore
+    const { label, source, target } = data;
+    const edgesOptions = transformDataMapToScheduledImportOptions({ dataMap, data });
+    const params = {
+      vertices: source && target ? [''] : [label],
+      edges: edgesOptions,
+      schedule: '',
+      repeat: 'once',
+    };
+    console.log(params);
+    // createGrootDataloadingJob(params);
   };
   /** 融合判断 是否编辑或主题 dark  */
   const primaryColor = mode !== 'defaultAlgorithm' || isEidtProperty;
@@ -159,7 +171,10 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                 <Space>
                   {engineType === 'groot' && (
                     <>
-                      <ImportPeriodic />
+                      {/* <ImportPeriodic handleSubmit={handleSubmit} /> */}
+                      <Button size="small" onClick={handleSubmit}>
+                        Scheduled import
+                      </Button>
                       <ImportNow nodes={data} />
                     </>
                   )}

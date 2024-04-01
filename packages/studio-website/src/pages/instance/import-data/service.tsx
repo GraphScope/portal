@@ -77,3 +77,12 @@ export const getDataloadingConfig = async (graph_name: string, schema: any) => {
   //@ts-ignore
   return transformMappingSchemaToImportOptions(schemaMapping, schema);
 };
+export const createGrootDataloadingJob = async (graph_name: any) => {
+  const grootDataloading = await LegacyApiFactory(undefined, location.origin)
+    .createGrootDataloadingJob(graph_name!)
+    .then(res => res.data)
+    .catch(error => {
+      return {};
+    });
+  return grootDataloading;
+};
