@@ -1,5 +1,4 @@
 import type { Schema, VertexType } from '@graphscope/studio-server';
-import { String } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface Properties {
