@@ -130,10 +130,10 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                 </Space>
               </Flex>
             </Space>
-            <Space>
+            <Space size={0}>
               {filelocation && (
                 <Tooltip title="delete and re-upload">
-                  <Button type="text" icon={<DeleteOutlined onClick={deleteFile} />}></Button>
+                  <Button type="text" size="small" icon={<DeleteOutlined onClick={deleteFile} />}></Button>
                 </Tooltip>
               )}
               <Tooltip
@@ -143,6 +143,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
               >
                 <Button
                   type="text"
+                  size="small"
                   icon={<CheckCircleOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}
                 ></Button>
               </Tooltip>
