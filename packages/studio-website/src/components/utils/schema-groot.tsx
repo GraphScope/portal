@@ -10,7 +10,6 @@ export interface TransformedNode {
   key?: string;
 }
 export interface TransformedNodeOrEdges {
-  [x: string]: any;
   label: string;
   properties: { id: string; name: string; type: string; is_primary_key: boolean }[];
   relations: { src_label: string; dst_label: string }[];
