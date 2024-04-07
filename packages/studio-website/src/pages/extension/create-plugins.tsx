@@ -21,6 +21,9 @@ const TYPEOPTION = [{ label: 'CPP', value: 'cpp' }];
 const CreatePlugins: React.FC = () => {
   const [form] = Form.useForm();
   const graph_name = searchParamOf('graph_name') || '';
+  const procedure_name = searchParamOf('procedure_name') || '';
+  console.log(graph_name, procedure_name);
+
   const [state, updateState] = useState<{
     editCode: string;
     instanceOption: { label: string; value: string }[];
@@ -110,7 +113,7 @@ const CreatePlugins: React.FC = () => {
       });
     });
     if (graph_name) {
-      getlistProceduresByGraph(graph_name);
+      // getlistProceduresByGraph(graph_name, procedure_name);
     }
   }, []);
   return (
