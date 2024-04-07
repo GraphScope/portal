@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Button, Flex, Row, Col, Space, Typography, theme, Tooltip } from 'antd';
 import { BindingNode, useDataMap, updateDataMap } from '../useContext';
 import SwitchSource from './switch-source';
@@ -92,6 +92,11 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     console.log(params);
     // createGrootDataloadingJob(params);
   };
+  /** 删除文件 */
+  const deleteFile = () => {
+    onChangeValue('');
+    onChangeDataFields();
+  };
   /** 融合判断 是否编辑或主题 dark  */
   const primaryColor = mode !== 'defaultAlgorithm' || isEidtProperty;
   return (
@@ -125,16 +130,23 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                 </Space>
               </Flex>
             </Space>
-            <Tooltip
-              title={
-                isBind ? <FormattedMessage id="Bound data source" /> : <FormattedMessage id="Unbound data source" />
-              }
-            >
-              <Button
-                type="text"
-                icon={<CheckCircleOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}
-              ></Button>
-            </Tooltip>
+            <Space>
+              {filelocation && (
+                <Tooltip title="delete and re-upload">
+                  <Button type="text" icon={<DeleteOutlined onClick={deleteFile} />}></Button>
+                </Tooltip>
+              )}
+              <Tooltip
+                title={
+                  isBind ? <FormattedMessage id="Bound data source" /> : <FormattedMessage id="Unbound data source" />
+                }
+              >
+                <Button
+                  type="text"
+                  icon={<CheckCircleOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}
+                ></Button>
+              </Tooltip>
+            </Space>
           </Flex>
         </div>
         {isEidtProperty && (
