@@ -100,7 +100,16 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   const [form] = Form.useForm();
   const { store } = useContext();
   const intl = useIntl();
-  const disabled = mode === 'view' && !data?.isDraft;
+  // const disabled = mode === 'view' && !data?.isDraft;
+  let disabled = false;
+  /** groot 根据 isDraft判断是否新建 */
+  if (window.GS_ENGINE_TYPE === 'groot' && !data?.isDraft) {
+    disabled = !data?.isDraft;
+  }
+  /** interactive 只有查看不能编辑 */
+  if (window.GS_ENGINE_TYPE === 'interactive' && mode === 'view') {
+    disabled = mode === 'view';
+  }
   const propertyRef = useRef<any>();
   let cbRef = useRef();
 
@@ -197,7 +206,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   };
   return (
     <div>
-      <Form form={form} layout="vertical" onValuesChange={() => formChange()}>
+      <Form form={form} layout="vertical" onValuesChange={() => formChange()} disabled={disabled}>
         <div style={{ position: 'relative' }}>
           <Form.Item<FieldType>
             label={nodeOrEdgeTitle}
@@ -206,7 +215,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             rules={[{ required: true, message: '' }]}
             style={{ marginBottom: '8px' }}
           >
-            <Input disabled={disabled} placeholder={label} />
+            <Input placeholder={label} />
           </Form.Item>
         </div>
         {currentType === 'edge' ? (
@@ -220,7 +229,6 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             >
               <Select
                 options={nodeOptions}
-                disabled={disabled}
                 placeholder={intl.formatMessage({ id: 'Please select source vertex label.' })}
                 notFoundContent={notFoundContent}
               />
@@ -234,7 +242,6 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
             >
               <Select
                 options={nodeOptions}
-                disabled={disabled}
                 placeholder={intl.formatMessage({ id: 'Please select target vertex label.' })}
                 notFoundContent={notFoundContent}
               />

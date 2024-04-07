@@ -79,8 +79,6 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
     form.setFieldsValue({ graphName, storeType });
   }, [graphName, storeType]);
 
-  console.log(graphName, storeType);
-
   return (
     <Form name="basic" form={form} layout="vertical" style={{ marginTop: '24px' }}>
       <Form.Item<FieldType>
