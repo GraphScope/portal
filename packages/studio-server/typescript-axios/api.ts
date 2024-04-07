@@ -4765,6 +4765,43 @@ export const ProcedureApiAxiosParamCreator = function (configuration?: Configura
             };
         },
         /**
+         * Get a procedure by name
+         * @param {string} graphName 
+         * @param {string} procedureName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getProcedure: async (graphName: string, procedureName: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphName' is not null or undefined
+            assertParamExists('getProcedure', 'graphName', graphName)
+            // verify required parameter 'procedureName' is not null or undefined
+            assertParamExists('getProcedure', 'procedureName', procedureName)
+            const localVarPath = `/api/v1/graph/{graph_name}/procedure/{procedure_name}`
+                .replace(`{${"graph_name"}}`, encodeURIComponent(String(graphName)))
+                .replace(`{${"procedure_name"}}`, encodeURIComponent(String(procedureName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * List all the stored procedures
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4904,6 +4941,19 @@ export const ProcedureApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
         },
         /**
+         * Get a procedure by name
+         * @param {string} graphName 
+         * @param {string} procedureName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getProcedure(graphName: string, procedureName: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Procedure>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getProcedure(graphName, procedureName, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['ProcedureApi.getProcedure']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
          * List all the stored procedures
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4971,6 +5021,16 @@ export const ProcedureApiFactory = function (configuration?: Configuration, base
             return localVarFp.deleteProcedure(graphName, procedureName, options).then((request) => request(axios, basePath));
         },
         /**
+         * Get a procedure by name
+         * @param {string} graphName 
+         * @param {string} procedureName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getProcedure(graphName: string, procedureName: string, options?: any): AxiosPromise<Procedure> {
+            return localVarFp.getProcedure(graphName, procedureName, options).then((request) => request(axios, basePath));
+        },
+        /**
          * List all the stored procedures
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5030,6 +5090,18 @@ export class ProcedureApi extends BaseAPI {
      */
     public deleteProcedure(graphName: string, procedureName: string, options?: RawAxiosRequestConfig) {
         return ProcedureApiFp(this.configuration).deleteProcedure(graphName, procedureName, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get a procedure by name
+     * @param {string} graphName 
+     * @param {string} procedureName 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProcedureApi
+     */
+    public getProcedure(graphName: string, procedureName: string, options?: RawAxiosRequestConfig) {
+        return ProcedureApiFp(this.configuration).getProcedure(graphName, procedureName, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
