@@ -35,8 +35,8 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
       };
     });
 
-    onChange && onChange(filelocation);
-    onChangeHeader && onChangeHeader(headers);
+    onChange(filelocation);
+    onChangeHeader(headers);
   };
   return (
     <Flex justify="flex-start" align="center">

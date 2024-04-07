@@ -1,12 +1,11 @@
 import { Outlet } from 'umi';
-import { ConfigProvider, Space, Input, ColorPicker, Divider, theme } from 'antd';
+import { ConfigProvider, theme } from 'antd';
 import './index.less';
 import Sidebar from './sidebar';
 import Container from './container';
 
 import Footer from './footer';
-import { useState } from 'react';
-import { IntlProvider, FormattedMessage, FormattedNumber } from 'react-intl';
+import { IntlProvider } from 'react-intl';
 import locales from '../locales';
 import { useContext } from './useContext';
 export default function Layout() {

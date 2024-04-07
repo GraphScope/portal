@@ -6,8 +6,8 @@ import LocaleSwitch from '@/components/locale-switch';
 import localStorage from '@/components/utils/localStorage';
 
 const { Title, Text } = Typography;
-type IInternationalProps = {};
-const International: React.FunctionComponent<IInternationalProps> = props => {
+
+const International: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { locale } = store;
   const { setItem, getItem } = localStorage;

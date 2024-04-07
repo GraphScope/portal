@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Row, Col, DatePicker, Space, Button } from 'antd';
-const SearchForm = props => {
+const SearchForm = () => {
   const [form] = Form.useForm();
   return (
     <Form name="basic" wrapperCol={{ span: 24 }} labelCol={{ flex: '100px' }} labelAlign="right" form={form}>

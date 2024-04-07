@@ -4,21 +4,22 @@ import { FormattedMessage } from 'react-intl';
 import { getJobById } from './service';
 import { searchParamOf } from '@/components/utils';
 import { useContext } from '@/layouts/useContext';
-type IDetail = {};
-const Detail: React.FunctionComponent<IDetail> = props => {
+
+const Detail: React.FunctionComponent = () => {
   const jobId: string = searchParamOf('jobId') || '';
   const [detailData, setDetailData] = useState('');
   const { store } = useContext();
   const { mode } = store;
-  useEffect(() => {
-    getJobByIdDetail();
-  }, []);
   /** 获取详情job */
   const getJobByIdDetail = async () => {
     const res = await getJobById(jobId);
     const { log } = res;
     setDetailData(log);
   };
+
+  useEffect(() => {
+    getJobByIdDetail();
+  }, []);
 
   return (
     <div style={{ padding: '12px 24px' }}>

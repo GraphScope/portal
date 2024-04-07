@@ -1,8 +1,6 @@
 import * as React from 'react';
 
-interface DeploymentProps {}
-
-const Deployment: React.FunctionComponent<DeploymentProps> = props => {
+const Deployment: React.FunctionComponent = () => {
   return <div> Deployment</div>;
 };
 

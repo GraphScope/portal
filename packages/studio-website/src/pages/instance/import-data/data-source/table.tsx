@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Table, Select, Checkbox, Input, Typography } from 'antd';
 type EditableTableProps = Parameters<typeof Table>[0];
 const { Text } = Typography;
@@ -56,7 +56,7 @@ const TableList: React.FC<TableListProps> = props => {
         item.token = value;
       }
     });
-    onChange && onChange(tabledata);
+    onChange(tabledata);
   };
   const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex?: string })[] = [
     {

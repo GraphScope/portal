@@ -40,13 +40,13 @@ export const initialStore: IStore = {
 };
 export const initialDataMap: Record<string, BindingNode | BindingEdge> = {};
 
-type ContextType<T> = {
+type ContextType = {
   store: Snapshot<IStore>;
   updateStore: (fn: (draft: IStore) => void) => void;
 };
 
 const proxyStore = proxy(initialStore);
-export function useContext<T>(): ContextType<T> {
+export function useContext(): ContextType {
   const store = useSnapshot(proxyStore);
   return {
     store,

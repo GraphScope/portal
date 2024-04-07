@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Popconfirm, Modal, Row, Col, Checkbox, message, Flex } from 'antd';
+import { Button, Popconfirm, Modal, Checkbox, message, Flex } from 'antd';
 import { deleteJobById, IJobType } from './service';
 
 const Action: React.FunctionComponent<IJobType & { onChange(): void }> = props => {
@@ -9,16 +9,37 @@ const Action: React.FunctionComponent<IJobType & { onChange(): void }> = props =
     checkboxValue: false,
   });
   const { isModalOpen, checkboxValue } = state;
+  /** 操作modal */
+  const handleModal = (value: boolean) => {
+    updateState(preset => {
+      return {
+        ...preset,
+        isModalOpen: value,
+      };
+    });
+  };
+  /** 删除job */
+  const deleteJob = async () => {
+    const res = await deleteJobById(job_id);
+    message.success(res);
+    onChange();
+    updateState(preset => {
+      return {
+        ...preset,
+        isModalOpen: false,
+      };
+    });
+  };
   /** CANCELLED | SUCCESS | FAILED 不可删除，RUNNING ｜ WAITING 可以删除*/
   let Content;
-  if (status == 'CANCELLED' || status == 'SUCCESS' || status == 'FAILED') {
+  if (status === 'CANCELLED' || status === 'SUCCESS' || status === 'FAILED') {
     Content = (
       <Button size="small" disabled>
         删除
       </Button>
     );
   }
-  if (status == 'RUNNING') {
+  if (status === 'RUNNING') {
     Content = (
       <Popconfirm
         placement="bottomRight"
@@ -35,34 +56,14 @@ const Action: React.FunctionComponent<IJobType & { onChange(): void }> = props =
       </Popconfirm>
     );
   }
-  if (status == 'WAITING') {
+  if (status === 'WAITING') {
     Content = (
       <Button size="small" danger onClick={() => handleModal(true)}>
         删除
       </Button>
     );
   }
-  /** 删除job */
-  const deleteJob = async () => {
-    const res = await deleteJobById(job_id);
-    message.success(res);
-    onChange();
-    updateState(preset => {
-      return {
-        ...preset,
-        isModalOpen: false,
-      };
-    });
-  };
-  /** 操作modal */
-  const handleModal = (value: boolean) => {
-    updateState(preset => {
-      return {
-        ...preset,
-        isModalOpen: value,
-      };
-    });
-  };
+
   return (
     <div key={job_id}>
       {Content}

@@ -22,7 +22,9 @@ const EditRule: React.FC<ICreateRecepProps> = props => {
   const [status, setStatus] = useState(false);
   useEffect(() => {
     const { enable } = ruleData;
-    Object.keys(ruleData).length > 0 && form.setFieldsValue(ruleData);
+    if (Object.keys(ruleData).length > 0) {
+      form.setFieldsValue(ruleData);
+    }
     setStatus(enable);
   }, []);
   const onFinish = async () => {

@@ -1,18 +1,14 @@
-import { useEffect, memo, FunctionComponent } from 'react';
+import { memo, FunctionComponent } from 'react';
 import Graphin, { Utils } from '@antv/graphin';
 import { useContext, NodeSchema, EdgeSchema } from '../useContext';
 import { useContext as useMode } from '@/layouts/useContext';
-import { theme, Image } from 'antd';
-const { useToken } = theme;
+import { Image } from 'antd';
 interface Props {
   children?: JSX.Element;
 }
 
 /** graphin 数据处理 */
-const getVertexEdges = (nodeList: NodeSchema[], edgeList: EdgeSchema[], token: any) => {
-  /** 主题背景 */
-  const { store } = useMode();
-  const { mode } = store;
+const getVertexEdges = (nodeList: NodeSchema[], edgeList: EdgeSchema[], mode: string) => {
   const nodesMap = new Map();
   const nodes = nodeList.map(item => {
     const { key, label } = item;
@@ -53,7 +49,6 @@ const getVertexEdges = (nodeList: NodeSchema[], edgeList: EdgeSchema[], token: a
           },
           keyshape: {
             stroke: '#5F646B',
-            fill: mode === 'defaultAlgorithm' ? '#fff' : '#212121',
             lineWidth: 2,
           },
         },
@@ -79,7 +74,6 @@ const getVertexEdges = (nodeList: NodeSchema[], edgeList: EdgeSchema[], token: a
 };
 const GraphView: FunctionComponent<Props> = props => {
   const {} = props;
-  const { token } = useToken();
   const { store } = useContext();
   const { nodeList, edgeList } = store;
   /** 主题背景 */
@@ -87,8 +81,7 @@ const GraphView: FunctionComponent<Props> = props => {
     store: { mode },
   } = useMode();
   //@ts-ignore
-  const graphData = getVertexEdges(nodeList, edgeList, token);
-  console.log(graphData);
+  const graphData = getVertexEdges(nodeList, edgeList, mode);
 
   return (
     <>

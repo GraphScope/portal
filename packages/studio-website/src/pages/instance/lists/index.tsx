@@ -1,5 +1,5 @@
 import React, { useEffect, useState, memo } from 'react';
-import { Row, Col, Form, Card, Skeleton } from 'antd';
+import { Row, Col, Card, Skeleton } from 'antd';
 import { history } from 'umi';
 import InstaceCard, { InstaceCardType } from './instance-card';
 import Section from '@/components/section';
@@ -9,7 +9,6 @@ import { useContext } from '@/layouts/useContext';
 import { listGraphs } from './service';
 const { GS_ENGINE_TYPE } = window;
 const InstanceCard: React.FC = () => {
-  const [form] = Form.useForm();
   const { store } = useContext();
   const { mode } = store;
   const [state, updateState] = useState<{ isReady: boolean; instanceList: InstaceCardType[] }>({
@@ -17,11 +16,6 @@ const InstanceCard: React.FC = () => {
     isReady: false,
   });
   const { instanceList, isReady } = state;
-
-  useEffect(() => {
-    fetchLists();
-  }, []);
-
   const fetchLists = async () => {
     const res = await listGraphs();
     //@ts-ignore
@@ -33,6 +27,9 @@ const InstanceCard: React.FC = () => {
       };
     });
   };
+  useEffect(() => {
+    fetchLists();
+  }, []);
 
   const handleCreate = () => {
     history.push('/instance/create');

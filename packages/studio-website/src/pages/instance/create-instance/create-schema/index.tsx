@@ -8,12 +8,9 @@ import { FormattedMessage } from 'react-intl';
 import { SegmentedValue } from 'antd/es/segmented';
 import EmptyInfo from './empty-info';
 import ExportConfig from './import-schema-config';
-interface ICreateInstanceProps {
-  graphData?: any;
-  isAlert?: boolean;
-}
+
 const engineType = window.GS_ENGINE_TYPE;
-const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
+const CreateInstance: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { nodeList, edgeList, currentType, nodeActiveKey, edgeActiveKey, mode, graphName } = store;
   /** 初始化清空数据 */
@@ -27,7 +24,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
   }, []);
   /** 点/边 切换 */
   const tabsChange = (key: string) => {
-    if (currentType == 'node') {
+    if (currentType === 'node') {
       updateStore(draft => {
         draft.nodeActiveKey = key;
       });
@@ -42,7 +39,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
     updateStore(draft => {
       draft.currentType = val as 'node' | 'edge';
     });
-    if (currentType == 'edge') {
+    if (currentType === 'edge') {
       updateStore(draft => {
         draft.edgeActiveKey = edgeList[0]?.key;
       });
@@ -104,7 +101,7 @@ const CreateInstance: React.FunctionComponent<ICreateInstanceProps> = props => {
 
   const IS_NODES_EMPTY = nodeList.length === 0;
   const IS_EDGES_EMPTY = edgeList.length === 0;
-  const extra = (currentType == 'node' ? nodeList.length : edgeList.length) > 0 ? <AddLabel /> : null;
+  const extra = (currentType === 'node' ? nodeList.length : edgeList.length) > 0 ? <AddLabel /> : null;
   return (
     <Row style={{ marginTop: '16px' }}>
       <Col span={16}>

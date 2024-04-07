@@ -27,7 +27,7 @@ export function transformGrootSchemaToOptions(schema: GrootSchema | undefined): 
       label,
       key,
       //@ts-ignore
-      properties: properties.map((p, pIdx) => {
+      properties: properties.map(p => {
         const { id, name, type, is_primary_key } = p;
         return {
           name,
@@ -51,7 +51,7 @@ export function transformGrootSchemaToOptions(schema: GrootSchema | undefined): 
       key,
       source: nodeMap[src_label],
       target: nodeMap[dst_label],
-      properties: properties.map((p, pIdx) => {
+      properties: properties.map(p => {
         const { id, name, type, is_primary_key } = p;
         return {
           name,
@@ -79,7 +79,7 @@ export function transformGrootSchemaToOptions(schema: GrootSchema | undefined): 
 export function transOptionsToGrootSchema(options: DeepRequired<TransformedSchema>) {
   const nodeMap: Record<string, string> = {};
   //@ts-ignore
-  const vertices: VertexType[] = options.nodes.map((item, itemIdx) => {
+  const vertices: VertexType[] = options.nodes.map(item => {
     nodeMap[item.key] = item.label;
     return {
       label: item.label,
@@ -95,8 +95,8 @@ export function transOptionsToGrootSchema(options: DeepRequired<TransformedSchem
   });
   const edgeMap = new Map();
 
-  options.edges.forEach((item, itemIdx) => {
-    const { label, source: sourceID, target: targetID, relation, properties, key } = item;
+  options.edges.forEach(item => {
+    const { label, source: sourceID, target: targetID, properties } = item;
     const source = nodeMap[sourceID];
     const target = nodeMap[targetID];
     const constraint = {
@@ -136,7 +136,7 @@ export function transOptionsToGrootSchema(options: DeepRequired<TransformedSchem
 export function transOptionsToGrootDataloading(options: DeepRequired<TransformedSchema>) {
   const nodeMap: Record<string, string> = {};
   //@ts-ignore
-  const vertices: VertexType[] = options.nodes.map((item, itemIdx) => {
+  const vertices: VertexType[] = options.nodes.map(item => {
     nodeMap[item.key] = item.label;
     return item.label;
   });
@@ -167,7 +167,7 @@ export function transOptionsToGrootDataloading(options: DeepRequired<Transformed
 export function transformGrootDeleteEdgeToOptions(schema: { nodes: any[]; edges: any[] }) {
   const nodeMap: Record<string, string> = {};
   //@ts-ignore
-  schema.nodes.map(item => {
+  schema.nodes.forEach(item => {
     nodeMap[item.key] = item.label;
   });
   const edgeMap = new Map();
@@ -197,8 +197,9 @@ export function transformGrootCreateVertexToOptions(
   let primary_keys;
   const propertyMap = new Map();
   //@ts-ignore
-  property.length &&
-    property.forEach((item, index) => {
+  if (property.length) {
+    //@ts-ignore
+    property.forEach(item => {
       const { name, primaryKey, type } = item;
       if (primaryKey) {
         primary_keys = [name];
@@ -210,6 +211,7 @@ export function transformGrootCreateVertexToOptions(
         },
       });
     });
+  }
   const properties = [...propertyMap.values()];
   return {
     type_name: label,
@@ -233,7 +235,8 @@ export function transformGrootCreateEdgeToOptions(
   const target = nodeMap[targetID];
   const propertyMap = new Map();
   //@ts-ignore
-  property.length &&
+  if (property.length) {
+    //@ts-ignore
     property.forEach(item => {
       const { name, type } = item;
       propertyMap.set(item.name, {
@@ -243,6 +246,7 @@ export function transformGrootCreateEdgeToOptions(
         },
       });
     });
+  }
   const properties = [...propertyMap.values()];
   return {
     type_name: label,

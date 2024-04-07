@@ -9,18 +9,10 @@ import { useContext } from '@/layouts/useContext';
 import { deleteGraph, startService, stopService } from './service';
 
 const { Text, Paragraph } = Typography;
-import { MoreOutlined, StarOutlined } from '@ant-design/icons';
+import { MoreOutlined } from '@ant-design/icons';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faDiagramProject,
-  faFileArrowUp,
-  faMagnifyingGlass,
-  faPause,
-  faFileImport,
-  faNetworkWired,
-  faFileArchive,
-} from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faFileImport, faNetworkWired } from '@fortawesome/free-solid-svg-icons';
 import { faPlayCircle, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
@@ -52,10 +44,6 @@ export type InstaceCardType = {
   handleChange: () => void;
 };
 
-const styles: React.CSSProperties = {
-  margin: '0px',
-  color: '#404A54',
-};
 const STATUS_COLOR_MAP: Record<string, string> = {
   stopped: 'red',
   running: 'green',
@@ -66,11 +54,8 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   const {
     updatetime,
     importtime,
-    version,
     createtime,
     server,
-    routes,
-    actions,
     status,
     name,
     hqps,
@@ -94,6 +79,11 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   ];
 
   const handleRestart = () => {};
+  /** 删除graph */
+  const handleDelete = async (name: string) => {
+    await deleteGraph(name);
+    handleChange();
+  };
   const onClick: MenuProps['onClick'] = ({ key }) => {
     if (key === 'delete') {
       handleDelete(name);
@@ -158,12 +148,6 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     </>
   );
 
-  /** 删除graph */
-  const handleDelete = async (name: string) => {
-    await deleteGraph(name);
-    handleChange && handleChange();
-  };
-
   const handleClick = async (name: string, status: string) => {
     updateIsLoading(true);
     /** running->stopService */
@@ -175,16 +159,16 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
       await startService(name);
     }
     updateIsLoading(false);
-    handleChange && handleChange();
+    handleChange();
   };
   /** Start|Pause 提示 */
   let tooltipContext;
-  if (status == 'stopped') tooltipContext = <FormattedMessage id="Start graph service" />;
-  if (status == 'running') tooltipContext = <FormattedMessage id="Pause graph service" />;
+  if (status === 'stopped') tooltipContext = <FormattedMessage id="Start graph service" />;
+  if (status === 'running') tooltipContext = <FormattedMessage id="Pause graph service" />;
   /** Start|Pause icon */
   let btnIcon;
-  if (status == 'stopped') btnIcon = <PlayCircleOutlined />;
-  if (status == 'running') btnIcon = <PauseCircleOutlined />;
+  if (status === 'stopped') btnIcon = <PlayCircleOutlined />;
+  if (status === 'running') btnIcon = <PauseCircleOutlined />;
   /** 按钮中英文宽度 */
   let btnWidth = locale === 'zh-CN' ? '115px' : '150px';
   return (

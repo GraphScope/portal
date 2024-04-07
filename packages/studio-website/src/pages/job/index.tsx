@@ -2,8 +2,7 @@ import * as React from 'react';
 import Section from '@/components/section';
 import JobsList from './job-list';
 
-interface IJobProps {}
-const Job: React.FunctionComponent<IJobProps> = props => {
+const Job: React.FunctionComponent = () => {
   return (
     <>
       <Section

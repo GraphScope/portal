@@ -1,8 +1,7 @@
 import { CypherDriver, CypherSchemaData, MockDriver, GremlinDriver } from '@graphscope/studio-query';
 import type { IStudioQueryProps, IStatement } from '@graphscope/studio-query';
 import localforage from 'localforage';
-import { v4 as uuidv4 } from 'uuid';
-import { GraphApiFactory, GraphApi, GraphApiFp, ServiceApiFactory } from '@graphscope/studio-server';
+import { GraphApiFactory, ServiceApiFactory } from '@graphscope/studio-server';
 import { transformSchema } from './utils/schema';
 import { handleError, handleResponse } from '@/components/utils/handleServer';
 
@@ -30,7 +29,7 @@ export const queryEndpoint = async (): Promise<{
       return res.json();
     })
     .then(res => res.data)
-    .catch(error => {
+    .catch(() => {
       return {
         cypher_endpoint: 'mock',
         gremlin_endpoint: 'mock',

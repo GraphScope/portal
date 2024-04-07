@@ -4,7 +4,7 @@ import { Card, Flex, Typography, theme, Avatar, Row, Col } from 'antd';
 const { Title, Text } = Typography;
 import { FormattedMessage } from 'react-intl';
 
-export interface Card {
+export interface ICard {
   id: string;
   title: string;
   desc: string | React.ReactNode;
@@ -12,9 +12,9 @@ export interface Card {
   disabled?: boolean;
 }
 interface ISelectCardsProps {
-  items: Card[];
+  items: ICard[];
   val: string;
-  onChange: (card: Card) => void;
+  onChange: (card: ICard) => void;
 }
 const iconStyle: React.CSSProperties = {
   position: 'absolute',
@@ -41,7 +41,7 @@ const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
                 onClick={() => {
                   if (!disabled) {
                     setCurrent(id);
-                    onChange && onChange(item);
+                    onChange(item);
                   }
                 }}
                 style={

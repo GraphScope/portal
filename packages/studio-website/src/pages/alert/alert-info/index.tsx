@@ -11,7 +11,6 @@ export type IalertInfo = {
   severity: string;
   status: string[];
 };
-type IAlertInfoProps = {};
 type IState = {
   /** 属性选择 */
   metricTypeOptions: { value: string; text: string }[];
@@ -39,7 +38,7 @@ const handleOptions = (data: { [x: string]: string }[], type: string) => {
     }),
   );
 };
-const AlertInfo: React.FC<IAlertInfoProps> = () => {
+const AlertInfo: React.FC = () => {
   const [state, updateState] = useState<IState>({
     metricTypeOptions: [],
     severityTypeOptions: [],
@@ -55,9 +54,6 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
   });
   const { metricTypeOptions, severityTypeOptions, isReady, alertInfo, selectedRowKeys, selectedRows, filterValues } =
     state;
-  useEffect(() => {
-    getListAlertMessages();
-  }, []);
   const getListAlertMessages = async () => {
     const data = await listAlertMessages({});
     updateState(preset => {
@@ -83,6 +79,9 @@ const AlertInfo: React.FC<IAlertInfoProps> = () => {
     await updateAlertMessages(data);
     getListAlertMessages();
   };
+  useEffect(() => {
+    getListAlertMessages();
+  }, []);
   const columns = [
     {
       title: <FormattedMessage id="Alert information" />,

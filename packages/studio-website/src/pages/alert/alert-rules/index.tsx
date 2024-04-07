@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Form, Popconfirm, Table, Button, Space, Tag, Skeleton, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { listAlertRules, deleteAlertRuleByName } from '../service';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+// import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import EditRule from './edit-rule';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
@@ -21,8 +21,7 @@ type Istate = {
   isEditRules: boolean;
   ruleData: IAlertRule;
 };
-type IAlertRuleProps = {};
-const AlertRule: React.FC<IAlertRuleProps> = props => {
+const AlertRule: React.FC = () => {
   const [form] = Form.useForm();
   const [state, updateState] = useState<Istate>({
     alertRule: [],
@@ -32,9 +31,6 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
     ruleData: {},
   });
   const { alertRule, isReady, isEditRules, ruleData } = state;
-  useEffect(() => {
-    getAlertRules();
-  }, []);
   /** 获取告警规则数据 */
   const getAlertRules = async () => {
     const res = await listAlertRules();
@@ -127,7 +123,7 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
             />
             <Popconfirm
               title={<FormattedMessage id="Are you sure to delete this task?" />}
-              onConfirm={(event: any) => delRowRules(name)}
+              onConfirm={() => delRowRules(name)}
               onCancel={() => {}}
               okText={<FormattedMessage id="Yes" />}
               cancelText={<FormattedMessage id="No" />}
@@ -139,7 +135,9 @@ const AlertRule: React.FC<IAlertRuleProps> = props => {
       },
     },
   ];
-
+  useEffect(() => {
+    getAlertRules();
+  }, []);
   return (
     <>
       {!isReady ? (

@@ -781,6 +781,71 @@ export type GraphStoredProceduresDirectoryEnum = typeof GraphStoredProceduresDir
 /**
  * 
  * @export
+ * @interface GrootDataloadingJobConfig
+ */
+export interface GrootDataloadingJobConfig {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof GrootDataloadingJobConfig
+     */
+    'vertices'?: Array<string>;
+    /**
+     * 
+     * @type {Array<GrootDataloadingJobConfigEdgesInner>}
+     * @memberof GrootDataloadingJobConfig
+     */
+    'edges'?: Array<GrootDataloadingJobConfigEdgesInner>;
+    /**
+     * format with \'2023-02-21 11:56:30\'
+     * @type {string}
+     * @memberof GrootDataloadingJobConfig
+     */
+    'schedule'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GrootDataloadingJobConfig
+     */
+    'repeat'?: GrootDataloadingJobConfigRepeatEnum;
+}
+
+export const GrootDataloadingJobConfigRepeatEnum = {
+    Once: 'once',
+    Day: 'day',
+    Week: 'week'
+} as const;
+
+export type GrootDataloadingJobConfigRepeatEnum = typeof GrootDataloadingJobConfigRepeatEnum[keyof typeof GrootDataloadingJobConfigRepeatEnum];
+
+/**
+ * 
+ * @export
+ * @interface GrootDataloadingJobConfigEdgesInner
+ */
+export interface GrootDataloadingJobConfigEdgesInner {
+    /**
+     * 
+     * @type {string}
+     * @memberof GrootDataloadingJobConfigEdgesInner
+     */
+    'type_name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GrootDataloadingJobConfigEdgesInner
+     */
+    'source_vertex'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GrootDataloadingJobConfigEdgesInner
+     */
+    'destination_vertex'?: string;
+}
+/**
+ * 
+ * @export
  * @interface GrootEdgeType
  */
 export interface GrootEdgeType {
@@ -4155,7 +4220,7 @@ export const JobApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getDataloadingConfig(graphName: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SchemaMapping>>> {
+        async getDataloadingConfig(graphName: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SchemaMapping>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getDataloadingConfig(graphName, options);
             const index = configuration?.serverIndex ?? 0;
             const operationBasePath = operationServerMap['JobApi.getDataloadingConfig']?.[index]?.url;
@@ -4219,7 +4284,7 @@ export const JobApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getDataloadingConfig(graphName: string, options?: any): AxiosPromise<Array<SchemaMapping>> {
+        getDataloadingConfig(graphName: string, options?: any): AxiosPromise<SchemaMapping> {
             return localVarFp.getDataloadingConfig(graphName, options).then((request) => request(axios, basePath));
         },
         /**
@@ -4313,6 +4378,45 @@ export class JobApi extends BaseAPI {
  */
 export const LegacyApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @param {string} graphName 
+         * @param {GrootDataloadingJobConfig} grootDataloadingJobConfig 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createGrootDataloadingJob: async (graphName: string, grootDataloadingJobConfig: GrootDataloadingJobConfig, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphName' is not null or undefined
+            assertParamExists('createGrootDataloadingJob', 'graphName', graphName)
+            // verify required parameter 'grootDataloadingJobConfig' is not null or undefined
+            assertParamExists('createGrootDataloadingJob', 'grootDataloadingJobConfig', grootDataloadingJobConfig)
+            const localVarPath = `/api/v1/groot/graph/{graph_name}/dataloading`
+                .replace(`{${"graph_name"}}`, encodeURIComponent(String(graphName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(grootDataloadingJobConfig, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * Get graph schema by name
          * @param {string} graphName 
@@ -4425,6 +4529,19 @@ export const LegacyApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = LegacyApiAxiosParamCreator(configuration)
     return {
         /**
+         * 
+         * @param {string} graphName 
+         * @param {GrootDataloadingJobConfig} grootDataloadingJobConfig 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createGrootDataloadingJob(graphName: string, grootDataloadingJobConfig: GrootDataloadingJobConfig, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createGrootDataloadingJob(graphName, grootDataloadingJobConfig, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['LegacyApi.createGrootDataloadingJob']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
          * Get graph schema by name
          * @param {string} graphName 
          * @param {*} [options] Override http request option.
@@ -4471,6 +4588,16 @@ export const LegacyApiFactory = function (configuration?: Configuration, basePat
     const localVarFp = LegacyApiFp(configuration)
     return {
         /**
+         * 
+         * @param {string} graphName 
+         * @param {GrootDataloadingJobConfig} grootDataloadingJobConfig 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createGrootDataloadingJob(graphName: string, grootDataloadingJobConfig: GrootDataloadingJobConfig, options?: any): AxiosPromise<string> {
+            return localVarFp.createGrootDataloadingJob(graphName, grootDataloadingJobConfig, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Get graph schema by name
          * @param {string} graphName 
          * @param {*} [options] Override http request option.
@@ -4507,6 +4634,18 @@ export const LegacyApiFactory = function (configuration?: Configuration, basePat
  * @extends {BaseAPI}
  */
 export class LegacyApi extends BaseAPI {
+    /**
+     * 
+     * @param {string} graphName 
+     * @param {GrootDataloadingJobConfig} grootDataloadingJobConfig 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof LegacyApi
+     */
+    public createGrootDataloadingJob(graphName: string, grootDataloadingJobConfig: GrootDataloadingJobConfig, options?: RawAxiosRequestConfig) {
+        return LegacyApiFp(this.configuration).createGrootDataloadingJob(graphName, grootDataloadingJobConfig, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * Get graph schema by name
      * @param {string} graphName 
@@ -4611,6 +4750,43 @@ export const ProcedureApiAxiosParamCreator = function (configuration?: Configura
             }
 
             const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get a procedure by name
+         * @param {string} graphName 
+         * @param {string} procedureName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getProcedure: async (graphName: string, procedureName: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphName' is not null or undefined
+            assertParamExists('getProcedure', 'graphName', graphName)
+            // verify required parameter 'procedureName' is not null or undefined
+            assertParamExists('getProcedure', 'procedureName', procedureName)
+            const localVarPath = `/api/v1/graph/{graph_name}/procedure/{procedure_name}`
+                .replace(`{${"graph_name"}}`, encodeURIComponent(String(graphName)))
+                .replace(`{${"procedure_name"}}`, encodeURIComponent(String(procedureName)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -4765,6 +4941,19 @@ export const ProcedureApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
         },
         /**
+         * Get a procedure by name
+         * @param {string} graphName 
+         * @param {string} procedureName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getProcedure(graphName: string, procedureName: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Procedure>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getProcedure(graphName, procedureName, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['ProcedureApi.getProcedure']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
          * List all the stored procedures
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4832,6 +5021,16 @@ export const ProcedureApiFactory = function (configuration?: Configuration, base
             return localVarFp.deleteProcedure(graphName, procedureName, options).then((request) => request(axios, basePath));
         },
         /**
+         * Get a procedure by name
+         * @param {string} graphName 
+         * @param {string} procedureName 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getProcedure(graphName: string, procedureName: string, options?: any): AxiosPromise<Procedure> {
+            return localVarFp.getProcedure(graphName, procedureName, options).then((request) => request(axios, basePath));
+        },
+        /**
          * List all the stored procedures
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4891,6 +5090,18 @@ export class ProcedureApi extends BaseAPI {
      */
     public deleteProcedure(graphName: string, procedureName: string, options?: RawAxiosRequestConfig) {
         return ProcedureApiFp(this.configuration).deleteProcedure(graphName, procedureName, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get a procedure by name
+     * @param {string} graphName 
+     * @param {string} procedureName 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProcedureApi
+     */
+    public getProcedure(graphName: string, procedureName: string, options?: RawAxiosRequestConfig) {
+        return ProcedureApiFp(this.configuration).getProcedure(graphName, procedureName, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

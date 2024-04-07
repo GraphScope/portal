@@ -47,7 +47,27 @@ export function transformSchemaToImportOptions(schema: Schema) {
 
   return { nodes, edges };
 }
-
+/** loading_config 空数据 || undefined 处理 */
+function loadingConfig(loading_config: { format: { type: string; metadata: { delimiter: string } } }): any {
+  if (loading_config) {
+    const { type, metadata } = loading_config?.format || { type: 'csv' };
+    const { delimiter } = metadata || { delimiter: ',' };
+    return {
+      type,
+      delimiter,
+    };
+  }
+}
+function mappingName(mapping: any, name: string): string {
+  let token = '';
+  if (mapping) {
+    const match = mapping && mapping.properties_mappings[name];
+    if (match) {
+      token = match.name || '';
+    }
+  }
+  return token;
+}
 /**
  * 将后端标准的 MappingSchema 和 GrahSchema 转化为 Importor 需要的 Options
  * @param schemaMapping  后端标准的 MappingSchema
@@ -65,7 +85,8 @@ export function transformMappingSchemaToImportOptions(
 
   const { nodes, edges } = schemaOptions;
   const { loading_config, vertex_mappings, edge_mappings } = schemaMapping;
-  const { type, metadata } = loading_config?.format || { type: 'csv' };
+  // const { type, metadata } = loading_config?.format || { type: 'csv' };
+  const { type, delimiter } = loadingConfig(loading_config);
   const label_mappings: Record<string, VertexMapping | EdgeMapping> = {};
   /** 先将后端数据或者yaml返回的mapping数据做一次Map存储，方便与后续的schema整合取数 */
 
@@ -113,16 +134,13 @@ export function transformMappingSchemaToImportOptions(
       filelocation,
       isBind: !!filelocation,
       isEidtProperty: true,
-      delimiter: (metadata && metadata.delimiter) || ',',
+      delimiter,
       properties: properties.map(p => {
         const { name } = p;
-        //@ts-ignore
-        const match = mapping && mapping.properties_mappings[name];
-        console.log('match', match, name);
         return {
           ...p,
           // 只支持 name 不支持 index
-          token: match && match.name,
+          token: mappingName(mapping, name),
         };
       }),
     };
@@ -137,16 +155,13 @@ export function transformMappingSchemaToImportOptions(
       filelocation,
       isBind: !!filelocation,
       isEidtProperty: true,
-      delimiter: (metadata && metadata.delimiter) || ',',
+      delimiter,
       properties: properties.map(p => {
         const { name } = p;
-        //@ts-ignore
-        const match = mapping && mapping.properties_mappings[name];
-        console.log('match', match, name);
         return {
           ...p,
           // 只支持 name 不支持 index
-          token: match && match.name,
+          token: mappingName(mapping, name),
         };
       }),
     };
@@ -168,7 +183,8 @@ export function transformGrootMappingSchemaToImportOptions(schemaMapping: any, s
 
   const { nodes, edges } = schemaOptions;
   const { loading_config, vertices_datasource, edges_datasource } = schemaMapping;
-  const { type, metadata } = loading_config?.format || { type: 'csv' };
+  // const { type, metadata } = loading_config?.format || { type: 'csv' };
+  const { type, delimiter } = loadingConfig(loading_config);
   const label_mappings: Record<string, VertexMapping | EdgeMapping> = {};
   /** 先将后端数据或者yaml返回的mapping数据做一次Map存储，方便与后续的schema整合取数 */
 
@@ -216,7 +232,7 @@ export function transformGrootMappingSchemaToImportOptions(schemaMapping: any, s
       filelocation,
       isBind: !!filelocation,
       isEidtProperty: true,
-      delimiter: metadata.delimiter || ',',
+      delimiter,
       properties: properties.map(p => {
         const { name } = p;
         //@ts-ignore
@@ -240,7 +256,7 @@ export function transformGrootMappingSchemaToImportOptions(schemaMapping: any, s
       filelocation,
       isBind: !!filelocation,
       isEidtProperty: true,
-      delimiter: metadata.delimiter || ',',
+      delimiter,
       properties: properties.map(p => {
         const { name } = p;
         //@ts-ignore
@@ -366,7 +382,7 @@ export function transformDataMapToGrootSchema(dataMap: any) {
     vertex_type_pair_relations: { destination_vertex: any; relation: string; source_vertex: any }[];
   }[] = [];
   const { vertices, edges } = dataMap;
-  vertices.length &&
+  if (vertices.length) {
     vertices.forEach((item: { label: string; properties: any }) => {
       const { label, properties } = item;
       let primaryKey;
@@ -386,7 +402,7 @@ export function transformDataMapToGrootSchema(dataMap: any) {
         primary_keys: [primaryKey],
       });
     });
-  edges.length &&
+  if (edges.length) {
     edges.forEach((item: { label: string; relations: { src_label: string; dst_label: string }[]; properties: any }) => {
       const { label, relations, properties } = item;
       const { src_label, dst_label } = relations[0];
@@ -409,8 +425,27 @@ export function transformDataMapToGrootSchema(dataMap: any) {
         ],
       });
     });
+  }
 
   return { vertex_types, edge_types };
+}
+
+/**
+ * 周期导入接口参数转换
+ * @param options
+ * @returns
+ */
+export function transformDataMapToScheduledImportOptions(options: any) {
+  const { dataMap, data } = options;
+  let edge_mappings: { type_name: any; source_vertex: any; destination_vertex: any }[] = [];
+  const { label, source, target } = data;
+  edge_mappings.push({
+    type_name: source && target ? label : '',
+    source_vertex: source ? dataMap[source].label : '',
+    destination_vertex: target ? dataMap[target].label : '',
+  });
+
+  return edge_mappings;
 }
 
 export const MOCK_DATA = {

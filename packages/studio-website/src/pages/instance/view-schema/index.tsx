@@ -5,7 +5,7 @@ import { getSchema } from './service';
 import { searchParamOf } from '@/components/utils/index';
 import { Skeleton } from 'antd';
 
-const ViewSchema: React.FunctionComponent<ICreateGraph> = props => {
+const ViewSchema: React.FunctionComponent<ICreateGraph> = () => {
   const [state, updateState] = useState<{
     isReady: boolean;
     nodes: any[];

@@ -9,7 +9,6 @@ interface ContainerProps {
 
 const SideWidth = 150;
 const ContainerWidth = 1360;
-const Padding = 24;
 const CollapsedWidth = 60;
 
 const Container: React.FunctionComponent<ContainerProps> = props => {
