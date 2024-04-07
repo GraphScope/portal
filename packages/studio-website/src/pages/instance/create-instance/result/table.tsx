@@ -84,3 +84,43 @@ const TableList: React.FunctionComponent<IImportDataProps> = props => {
 };
 
 export default TableList;
+/**
+ * 首次创建边 undefined
+ * @param edge
+ * @returns
+ */
+function dataMapEages(edge: { label: string }): string {
+  let label = '';
+  if (edge) {
+    label = edge.label;
+  }
+  return label;
+}
+export function getItems(data: IImportDataProps['data']) {
+  const { nodes, edges } = data;
+  const dataMap = new Map();
+  nodes.forEach(item => {
+    const { label, key, properties } = item;
+    dataMap.set(key, {
+      type: 'vertex',
+      key,
+      label,
+      properties: properties,
+    });
+  });
+  edges.forEach(item => {
+    const { label, key, properties, source, target } = item;
+    const source_label = dataMapEages(dataMap.get(source));
+    const target_label = dataMapEages(dataMap.get(target));
+    console.log(source_label, target_label);
+    const edge_label = `(${source_label})-[${label}]-(${target_label})`;
+    dataMap.set(key, {
+      type: 'edge',
+      key,
+      label: edge_label,
+      properties: properties,
+    });
+  });
+  const items = [...dataMap.values()];
+  return items;
+}

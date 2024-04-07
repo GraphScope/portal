@@ -110,10 +110,10 @@ const Steps: React.FunctionComponent<{ currentStep: number }> = () => {
 
 const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   const { store, updateStore } = useContext();
-  const { currentStep, createInstaseResult, storeType } = store;
-  const { nodeList = [], edgeList = [], graphName = '', mode = 'create' } = props;
+  const { currentStep, createInstaseResult, storeType, nodeList, edgeList, graphName, mode } = store;
   useEffect(() => {
     let stepIndex = 1;
+    const { nodeList = [], edgeList = [], graphName = '', mode = 'create' } = props;
     if (mode === 'create') {
       // 如果是空Schema或者是创建模式，才从第一步开始
       stepIndex = 0;
