@@ -13,12 +13,12 @@ const { GS_ENGINE_TYPE } = window;
 const AddLabel: FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { nodeList, edgeList, currentType, mode } = store;
-  const disabled = mode == 'view' && GS_ENGINE_TYPE === 'interactive';
+  const disabled = mode === 'view' && GS_ENGINE_TYPE === 'interactive';
   /** 添加点边模版 */
   const addLabel = () => {
     const id = uuidv4();
     updateStore(draft => {
-      if (currentType == 'node') {
+      if (currentType === 'node') {
         draft.nodeActiveKey = id;
         /** 二次进入创建点未重置上次顺序 */
         index.node = nodeList.length === 0 ? 1 : index.node + 1;

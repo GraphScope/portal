@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Space, Typography, Divider } from 'antd';
+import { Space, Divider } from 'antd';
 
-interface IFooterProps {}
+// interface IFooterProps {}
 
-const Footer: React.FunctionComponent<IFooterProps> = props => {
+const Footer: React.FunctionComponent = () => {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', justifyItems: 'center' }}>
       <Space split={<Divider type="vertical" />} size={0}>

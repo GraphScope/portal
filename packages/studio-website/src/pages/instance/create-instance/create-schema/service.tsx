@@ -125,7 +125,7 @@ export const createEdgeType = async (graphName: string, nodeList: any[], schema:
 };
 /** 创建点或边类型 */
 export const createVertexOrEdgeType = async (
-  type: String,
+  type: string,
   graphName: string,
   nodeList: any[],
   schema: any,

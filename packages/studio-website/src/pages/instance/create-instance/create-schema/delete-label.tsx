@@ -4,8 +4,8 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { useContext } from '../useContext';
 import { deleteVertexOrEdge } from './service';
 const { GS_ENGINE_TYPE } = window;
-type IDeleteGrootLabel = {};
-const DeleteLabel: FunctionComponent<IDeleteGrootLabel> = props => {
+
+const DeleteLabel: FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const {
     mode,
@@ -16,25 +16,25 @@ const DeleteLabel: FunctionComponent<IDeleteGrootLabel> = props => {
     nodeActiveKey = nodeList[0]?.key,
     edgeActiveKey = edgeList[0]?.key,
   } = store;
-  const disabled = mode == 'view' && GS_ENGINE_TYPE === 'interactive';
+  const disabled = mode === 'view' && GS_ENGINE_TYPE === 'interactive';
   /** 删除点边模版 */
-  const data = currentType == 'node' ? nodeList : edgeList;
-  const key = currentType == 'node' ? nodeActiveKey : edgeActiveKey;
-  const options = data.filter(pane => pane.key == key);
+  const data = currentType === 'node' ? nodeList : edgeList;
+  const key = currentType === 'node' ? nodeActiveKey : edgeActiveKey;
+  const options = data.filter(pane => pane.key === key);
   const isDraft = options.length && options[0].isDraft;
   const deleteLabel = async () => {
     const newPanes = data.filter(pane => pane.key !== key);
-    const typeName = data.filter(pane => pane.key == key)[0].label;
+    const typeName = data.filter(pane => pane.key === key)[0].label;
     const activeKey = newPanes.length > 0 ? newPanes[newPanes.length - 1].key : '';
     let isDelete = false;
     /** isDraft===true 新建 */
-    if (!isDraft) {
+    if (!isDraft && GS_ENGINE_TYPE === 'groot') {
       const res = await deleteVertexOrEdge(currentType, graphName, { typeName, nodes: nodeList, edges: options });
       isDelete = (res && res[0].status === 500) || false;
     }
 
-    !isDelete &&
-      (await updateStore(draft => {
+    if (!isDelete) {
+      await updateStore(draft => {
         if (currentType === 'node') {
           //@ts-ignore
           draft.nodeList = newPanes;
@@ -45,7 +45,8 @@ const DeleteLabel: FunctionComponent<IDeleteGrootLabel> = props => {
           draft.edgeList = newPanes;
           draft.edgeActiveKey = activeKey;
         }
-      }));
+      });
+    }
   };
   if (GS_ENGINE_TYPE === 'groot') {
     return (

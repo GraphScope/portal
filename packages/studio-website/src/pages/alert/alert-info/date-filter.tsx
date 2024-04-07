@@ -56,7 +56,7 @@ const DateFilter = (props: IInquireMessageProps) => {
     });
   };
   /** 日期选择 */
-  const rangePickerChange = (value: any, dateString: [string, string] | string) => {
+  const rangePickerChange = (value: any) => {
     updateState(preset => {
       return {
         ...preset,

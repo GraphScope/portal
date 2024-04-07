@@ -1,16 +1,10 @@
-import {
-  GraphApiFactory,
-  UtilsApiFactory,
-  JobApiFactory,
-  DatasourceApiFactory,
-  LegacyApiFactory,
-} from '@graphscope/studio-server';
+import { GraphApiFactory, UtilsApiFactory, JobApiFactory, LegacyApiFactory } from '@graphscope/studio-server';
 import type { SchemaMapping } from '@graphscope/studio-server';
 
 import {
   transformSchemaToImportOptions,
   transformMappingSchemaToImportOptions,
-  transformDataMapToSchema,
+  transformDataMapToGrootSchema,
 } from '@/components/utils/import';
 
 /** upload file */
@@ -32,7 +26,9 @@ export const createDataloadingJob = async (params: SchemaMapping) => {
         return res.data;
       }
     })
-    .catch(error => {});
+    .catch(error => {
+      console.log(error);
+    });
 };
 
 export const getSchema = async (graph_name: string) => {
@@ -56,42 +52,35 @@ export const getSchema = async (graph_name: string) => {
         }
         return { nodes: [], edges: [] };
       });
-    schema = transformDataMapToSchema(JSON.parse(JSON.stringify(schema)));
+    schema = transformDataMapToGrootSchema(JSON.parse(JSON.stringify(schema)));
   }
 
   return schema;
 };
 export const getDataloadingConfig = async (graph_name: string, schema: any) => {
-  let schemaMapping;
-  if (window.GS_ENGINE_TYPE === 'interactive') {
-    schemaMapping = await JobApiFactory(undefined, location.origin)
-      .getDataloadingConfig(graph_name!)
-      .then(res => res.data)
-      .catch(error => {
-        return {};
-      });
+  const schemaMapping = await JobApiFactory(undefined, location.origin)
+    .getDataloadingConfig(graph_name!)
+    .then(res => res.data)
+    .catch(error => {
+      console.log(error);
+      return {};
+    });
+  console.log(schemaMapping);
 
-    if (JSON.stringify(schemaMapping) === '{}') {
-      //@ts-ignore
-      return transformSchemaToImportOptions(schema);
-    }
+  if (JSON.stringify(schemaMapping) === '{}') {
     //@ts-ignore
-    return transformMappingSchemaToImportOptions(schemaMapping, schema);
+    return transformSchemaToImportOptions(schema);
   }
-  if (window.GS_ENGINE_TYPE === 'groot') {
-    schemaMapping = await DatasourceApiFactory(undefined, location.origin)
-      .getDatasource(graph_name!)
-      .then(res => res.data)
-      .catch(error => {
-        return {};
-      });
-  }
-  console.log('schemaMapping', schemaMapping);
-
-  // if (JSON.stringify(schemaMapping) === '{}') {
-  //   //@ts-ignore
-  //   return transformSchemaToImportOptions(schema);
-  // }
-  // //@ts-ignore
-  // return transformGrootMappingSchemaToImportOptions(schemaMapping, schema);
+  //@ts-ignore
+  return transformMappingSchemaToImportOptions(schemaMapping, schema);
+};
+export const createGrootDataloadingJob = async (graph_name: any) => {
+  const grootDataloading = await LegacyApiFactory(undefined, location.origin)
+    .createGrootDataloadingJob(graph_name!)
+    .then(res => res.data)
+    .catch(error => {
+      console.log(error);
+      return {};
+    });
+  return grootDataloading;
 };

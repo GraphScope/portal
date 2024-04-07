@@ -1,7 +1,7 @@
 import * as React from 'react';
 import InstanceLists from './lists';
-interface InstanceProps {}
-const Instance: React.FunctionComponent<InstanceProps> = props => {
+
+const Instance: React.FunctionComponent = () => {
   return <InstanceLists />;
 };
 

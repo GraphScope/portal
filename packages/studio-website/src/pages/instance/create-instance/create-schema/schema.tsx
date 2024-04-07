@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, memo, useState } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import { Button, Empty, Form, Input, Select, Tooltip } from 'antd';
 import { PropertiesEditor } from '@graphscope/studio-importor';
 import PrimaryKey from '@/components/icons/primary-key';
@@ -22,7 +22,7 @@ type SchemaType = {
   id: string;
   shouldRender: boolean;
   currentType: 'node' | 'edge';
-  updateStore: (fn: (draft: IStore<{}>) => void) => void;
+  updateStore: (fn: (draft: IStore) => void) => void;
   nodeOptions?: { label: string; value: string }[];
   graphName: string;
   nodeList?: any;
@@ -112,7 +112,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   }, []);
   /** 创建点、边时值的监控 */
   const formChange = () => {
-    if (currentType == 'node') {
+    if (currentType === 'node') {
       const { label } = form.getFieldsValue();
       updateStore(draft => {
         draft.nodeList.forEach(item => {
@@ -155,9 +155,9 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
     return configcolumns;
   };
   const nodeOrEdgeTitle =
-    currentType == 'node' ? <FormattedMessage id="Vertex label" /> : <FormattedMessage id="Edge Label" />;
+    currentType === 'node' ? <FormattedMessage id="Vertex label" /> : <FormattedMessage id="Edge Label" />;
   let label =
-    currentType == 'node'
+    currentType === 'node'
       ? intl.formatMessage({ id: 'Please enter vertex label.' })
       : intl.formatMessage({ id: 'Please enter edge label.' });
   /** 添加属性标题国际化 */

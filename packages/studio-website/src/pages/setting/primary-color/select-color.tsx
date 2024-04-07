@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Space, theme } from 'antd';
-const { useToken } = theme;
+import { Space } from 'antd';
 import { useContext } from '@/layouts/useContext';
 import localStorage from '@/components/utils/localStorage';
 export type ISelectColorProps = {
@@ -30,7 +29,6 @@ const styles = {
 
 const SelectColor: React.FunctionComponent<ISelectColorProps> = props => {
   const { color } = props;
-  const { token } = useToken();
   const { updateStore } = useContext();
   const { setItem, getItem } = localStorage;
   const activeStyle = `2px solid blue`;
@@ -45,7 +43,7 @@ const SelectColor: React.FunctionComponent<ISelectColorProps> = props => {
   return (
     <Space style={{ marginLeft: '16px' }}>
       {colors.map(item => {
-        const isActive = color == item;
+        const isActive = color === item;
         return (
           <span
             key={item}

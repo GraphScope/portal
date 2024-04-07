@@ -18,8 +18,7 @@ type FieldType = {
 };
 const TYPEOPTION = [{ label: 'CPP', value: 'cpp' }];
 
-type ICreateRecepProps = {};
-const CreatePlugins: React.FC<ICreateRecepProps> = props => {
+const CreatePlugins: React.FC = () => {
   const [form] = Form.useForm();
   const graph_name = searchParamOf('graph_name') || '';
   const [state, updateState] = useState<{
@@ -42,19 +41,7 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
       gutterBackground: mode === 'defaultAlgorithm' ? '#fff' : '#151515',
     },
   });
-  useEffect(() => {
-    form.setFieldsValue({ type: 'cpp' });
-    listGraphs().then(res => {
-      //@ts-ignore
-      updateState(preset => {
-        return {
-          ...preset,
-          instanceOption: res,
-        };
-      });
-    });
-    graph_name && getlistProceduresByGraph(graph_name);
-  }, []);
+
   const getlistProceduresByGraph = async (bound_graph: string) => {
     const res = await listProceduresByGraph(bound_graph);
     console.log(res);
@@ -111,6 +98,21 @@ const CreatePlugins: React.FC<ICreateRecepProps> = props => {
       };
     });
   };
+  useEffect(() => {
+    form.setFieldsValue({ type: 'cpp' });
+    listGraphs().then(res => {
+      //@ts-ignore
+      updateState(preset => {
+        return {
+          ...preset,
+          instanceOption: res,
+        };
+      });
+    });
+    if (graph_name) {
+      getlistProceduresByGraph(graph_name);
+    }
+  }, []);
   return (
     <div style={{ padding: '14px 24px' }}>
       <Flex vertical gap="middle">

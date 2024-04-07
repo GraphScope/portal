@@ -1,4 +1,3 @@
-import { IUserEdge } from '@antv/graphin';
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 
@@ -65,13 +64,13 @@ export const initialStore: IStore = {
   engineDirected: false,
 };
 
-type ContextType<T> = {
+type ContextType = {
   store: Snapshot<IStore>;
   updateStore: (fn: (draft: IStore) => void) => void;
 };
 
 const proxyStore = proxy(initialStore) as IStore;
-export function useContext<T>(): ContextType<T> {
+export function useContext(): ContextType {
   const store = useSnapshot(proxyStore);
   return {
     store,

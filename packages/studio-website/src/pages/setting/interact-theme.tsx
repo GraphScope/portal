@@ -4,7 +4,7 @@ import { useContext } from '@/layouts/useContext';
 import SelectCards from '@/components/select-cards';
 import { FormattedMessage } from 'react-intl';
 import localStorage from '@/components/utils/localStorage';
-interface IInteractThemeProps {}
+
 const { Title, Text } = Typography;
 
 const engines = [
@@ -23,7 +23,7 @@ const engines = [
     primaryBGgColor: '#000',
   },
 ];
-const InteractTheme: React.FunctionComponent<IInteractThemeProps> = props => {
+const InteractTheme: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { mode } = store;
   const { setItem, getItem } = localStorage;

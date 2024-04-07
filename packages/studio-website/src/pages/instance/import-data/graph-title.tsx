@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Typography, Flex, Button, Space, Upload, Tooltip, message } from 'antd';
+import { Flex, Button, Space, Upload, Tooltip, message } from 'antd';
 import type { UploadProps } from 'antd';
 import { useContext, updateDataMap, clearDataMap } from './useContext';
 import {
@@ -13,17 +13,31 @@ import { cloneDeep } from 'lodash';
 import { submitParams } from './source-title';
 import FileExportIcon from '@/components/icons/file-export';
 import FileImportIcon from '@/components/icons/file-import';
-type IGraphTitleProps = {};
-const { Text } = Typography;
-const GraphTitle: React.FunctionComponent<IGraphTitleProps> = () => {
+
+const GraphTitle: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { nodes, edges, schema, graphName } = store;
+  const readFile = (file: any) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsText(file);
+    });
+  };
+  const Json2Yaml = () => {
+    //@ts-ignore
+    const schemaJSON = transformImportOptionsToSchemaMapping(cloneDeep({ nodes, edges }));
+    const params = submitParams(schemaJSON, graphName);
+    const yamlFile = yaml.dump(params);
+    download('schema.yaml', yamlFile);
+  };
   const handleUpload = async (file: any) => {
     try {
       const yamlContent = (await readFile(file)) as string;
       const parsedYaml = yaml.load(yamlContent);
       message.success('文件上传成功');
-      readFile(file).then(res => {
+      readFile(file).then(() => {
         console.log(yaml.load(yamlContent));
       });
       //@ts-ignore
@@ -51,26 +65,10 @@ const GraphTitle: React.FunctionComponent<IGraphTitleProps> = () => {
       message.error('解析文件失败，请确保上传的文件是有效的 YAML 格式');
     }
   };
-  const readFile = (file: any) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsText(file);
-    });
-  };
-  const Json2Yaml = () => {
-    //@ts-ignore
-    const schemaJSON = transformImportOptionsToSchemaMapping(cloneDeep({ nodes, edges }));
-    const params = submitParams(schemaJSON, graphName);
-    const yamlFile = yaml.dump(params);
-    download('schema.yaml', yamlFile);
-  };
   const customRequest: UploadProps['customRequest'] = async options => {
     const { file } = options;
     handleUpload(file);
   };
-
   return (
     <>
       <Flex gap="middle" justify="end" align="center">

@@ -1,4 +1,4 @@
-import type { Schema, VertexType, EdgeType } from '@graphscope/studio-server';
+import type { Schema, VertexType } from '@graphscope/studio-server';
 import { v4 as uuidv4 } from 'uuid';
 /** 导出数据*/
 export const download = (queryData: string, states: BlobPart) => {
@@ -67,16 +67,6 @@ export function transformSchema(originalSchema: DeepRequired<Schema>): Transform
     primary: vertexType.primary_keys[0],
   });
 
-  const transformEdge = (edgeType: DeepRequired<EdgeType>): TransformedEdge => ({
-    label: edgeType.type_name,
-    properties: (edgeType.properties || []).map(({ property_name, property_type }) => ({
-      name: property_name,
-      type: property_type.primitive_type,
-    })),
-    primary: edgeType.type_name,
-    source: '',
-    target: '',
-  });
   /** Edges  */
   const edges: TransformedEdge[] = [];
   edge_types.forEach(edge => {
@@ -164,7 +154,6 @@ export function transformSchemaToOptions(originalSchema: DeepRequired<Schema>, d
  * @returns
  */
 export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
-  const { edges } = options;
   const nodeMap: Record<string, string> = {};
   //@ts-ignore
   const vertex_types: VertexType[] = options.nodes.map((item, itemIdx) => {
@@ -187,7 +176,7 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
   const edgeMap = new Map();
 
   options.edges.forEach((item, itemIdx) => {
-    const { label, source: sourceID, target: targetID, relation, properties, key } = item;
+    const { label, source: sourceID, target: targetID, relation, properties } = item;
     const source = nodeMap[sourceID];
     const target = nodeMap[targetID];
     const constraint = {

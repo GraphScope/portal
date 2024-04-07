@@ -31,7 +31,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
         <Flex gap="middle" align="flex-start" vertical>
           <div>
             <p style={{ margin: '0px 0px 12px' }}>My Graph Instance</p>
-            <Tag color={status == 'running' ? 'green' : 'red'}>{status}</Tag>
+            <Tag color={status === 'running' ? 'green' : 'red'}>{status}</Tag>
           </div>
           <div>
             <p style={styles}>Sharing User：{user}</p>

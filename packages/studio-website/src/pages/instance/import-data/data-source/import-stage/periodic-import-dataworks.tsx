@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Button, Flex, Typography } from 'antd';
+import { Button, Flex, Typography } from 'antd';
 import CodeMirror from '@uiw/react-codemirror';
 import { createTheme } from '@uiw/codemirror-themes';
 import { useContext } from '@/layouts/useContext';
@@ -29,6 +29,12 @@ const PeriodicImportDataworks = (props: { setState?: any; configLpading?: any; t
     const param = `${type?.toLocaleLowerCase()}` + '_' + `${configLpading?.label?.label}` + '_config.ini';
     download(param, codeMirrorData);
   };
+  /** 临时写 */
+  useEffect(() => {
+    updateState(preset => {
+      return { ...preset };
+    });
+  }, []);
   return (
     <Flex vertical gap={12}>
       {/* <Card style={{ marginTop: '18px' }} styles={{ body: { padding: '16px 24px 24px' } }}> */}
@@ -61,7 +67,7 @@ const PeriodicImportDataworks = (props: { setState?: any; configLpading?: any; t
       />
       {/* </Card> */}
       <div style={{ textAlign: 'center' }}>
-        <Button type="primary" onClick={() => sparkDownload()}>
+        <Button type="primary" style={{ width: '108px' }} onClick={() => sparkDownload()}>
           download
         </Button>
       </div>

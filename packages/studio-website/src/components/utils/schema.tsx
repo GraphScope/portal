@@ -1,4 +1,4 @@
-import type { Schema, VertexType, EdgeType } from '@graphscope/studio-server';
+import type { Schema, VertexType } from '@graphscope/studio-server';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface Properties {
@@ -106,7 +106,7 @@ export function transformSchemaToOptions(originalSchema: DeepRequired<Schema>, d
       primary,
       label,
       key,
-      properties: properties.map((p, pIdx) => {
+      properties: properties.map(p => {
         const { name, type } = p;
         return {
           name,
@@ -127,7 +127,7 @@ export function transformSchemaToOptions(originalSchema: DeepRequired<Schema>, d
       key,
       source: nodeMap[source],
       target: nodeMap[target],
-      properties: properties.map((p, pIdx) => {
+      properties: properties.map(p => {
         const { name, type } = p;
         return {
           name,
@@ -151,7 +151,7 @@ export function transformSchemaToOptions(originalSchema: DeepRequired<Schema>, d
  * @returns
  */
 export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
-  const { edges } = options;
+  // const { edges } = options;
   const nodeMap: Record<string, string> = {};
   //@ts-ignore
   const vertex_types: VertexType[] = options.nodes.map((item, itemIdx) => {
@@ -181,7 +181,7 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
   const edgeMap = new Map();
 
   options.edges.forEach((item, itemIdx) => {
-    const { label, source: sourceID, target: targetID, relation, properties, key } = item;
+    const { label, source: sourceID, target: targetID, relation, properties } = item;
     const source = nodeMap[sourceID];
     const target = nodeMap[targetID];
     const constraint = {

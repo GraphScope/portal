@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { DeleteOutlined, UploadOutlined, LoadingOutlined } from '@ant-design/icons';
+import { UploadOutlined, LoadingOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
-import { Button, Upload, Flex, Input, Tooltip, Space } from 'antd';
+import { Button, Upload, Flex, Input, Space } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { uploadFile } from '../service';
 import { getDataFields } from '@/components/utils/getDataFields';
@@ -35,21 +35,9 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
       };
     });
 
-    onChange && onChange(filelocation);
-    onChangeHeader && onChangeHeader(headers);
+    onChange(filelocation);
+    onChangeHeader(headers);
   };
-  /** 删除文件 */
-  const deleteFile = () => {
-    updateState(preState => {
-      return {
-        ...preState,
-        isLoading: false,
-      };
-    });
-    onChange && onChange('');
-    onChangeHeader && onChangeHeader();
-  };
-
   return (
     <Flex justify="flex-start" align="center">
       {isLoading && <LoadingOutlined />}
@@ -63,11 +51,6 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
         </Upload>
         {value && <Input style={{ width: '400px' }} disabled value={value} />}
       </Space.Compact>
-      {value && (
-        <Tooltip title="delete and re-upload">
-          <DeleteOutlined onClick={deleteFile} style={{ marginLeft: '12px' }} />
-        </Tooltip>
-      )}
     </Flex>
   );
 };

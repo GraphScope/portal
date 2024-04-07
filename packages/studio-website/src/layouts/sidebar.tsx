@@ -11,7 +11,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins, faMagnifyingGlass, faListCheck, faBell, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
 
 const { useToken } = theme;
-interface ISidebarProps {}
 
 const items: MenuProps['items'] = [
   {
@@ -73,9 +72,8 @@ const settingMenu: MenuProps['items'] = [
   // },
 ];
 
-let currentPath = window.location.pathname;
 export const SideWidth = 150;
-const Sidebar: React.FunctionComponent<ISidebarProps> = props => {
+const Sidebar: React.FunctionComponent = () => {
   const location = useLocation();
   const intl = useIntl();
   let defaultPath = '/' + location.pathname.split('/')[1];

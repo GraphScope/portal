@@ -13,7 +13,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 // import Action from './action';
 import { listJobs, IJobType, deleteJobById } from './service';
-import { getSearchParams } from '@/components/utils';
 import dayjs from 'dayjs';
 
 /** 定义状态选项 */
@@ -56,13 +55,8 @@ const statusColor = [
   },
 ];
 
-interface IInfoListProps {}
-const JobsList: React.FunctionComponent<IInfoListProps> = props => {
+const JobsList: React.FunctionComponent = () => {
   const [jobsList, setJobsList] = useState([]);
-  const { path, searchParams } = getSearchParams(window.location);
-  useEffect(() => {
-    getJobList();
-  }, []);
   /** 获取jobs列表数据 */
   const getJobList = async () => {
     const res = await listJobs();
@@ -79,6 +73,11 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
     /** 过滤相同属性 */
     JOBOPTIONS = JOBOPTIONS.filter((item, index) => JOBOPTIONS.findIndex(i => i.value === item.value) === index);
   };
+
+  useEffect(() => {
+    getJobList();
+  }, []);
+
   /** 删除job */
   const deleteJob = async (job_id: string) => {
     const res = await deleteJobById(job_id);
@@ -90,8 +89,9 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
     const data = Object.entries(detail);
     return (
       <Flex vertical gap={2}>
-        {data.map(item => (
-          <span>{item[1]}</span>
+        {data.map((item, index) => (
+          //@ts-ignore
+          <span key={index}>{item[1]}</span>
         ))}
       </Flex>
     );
@@ -109,7 +109,7 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
       title: <FormattedMessage id="Job ID" />,
       dataIndex: 'job_id',
       key: 'job_id',
-      render: (record: string, all: { log: string }) => (
+      render: (record: string) => (
         <span
           style={{ cursor: 'pointer' }}
           onClick={() => {
@@ -142,7 +142,7 @@ const JobsList: React.FunctionComponent<IInfoListProps> = props => {
               const { type, color, icon } = item;
               return (
                 <>
-                  {record == type && (
+                  {record === type && (
                     <Tag icon={icon} color={color}>
                       {record.substring(0, 1) + record.substring(1).toLowerCase()}
                     </Tag>

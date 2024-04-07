@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import StagesImportPackages from './import-stage';
-interface IImportPeriodicProps {}
 
-const ImportPeriodic: React.FunctionComponent<IImportPeriodicProps> = props => {
+const ImportPeriodic: React.FunctionComponent = () => {
   const [visible, setVisible] = useState(false);
 
   return (

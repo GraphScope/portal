@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Input, Button, DatePicker, Select, Typography, Flex, Card } from 'antd';
+import { FormattedMessage } from 'react-intl';
 type StageProps = {
   onChange(val: boolean): void;
 };
@@ -23,7 +24,7 @@ const Stage: React.FunctionComponent<StageProps> = props => {
   const { onChange } = props;
   const saveStage = () => {
     console.log(form.getFieldsValue());
-    onChange && onChange(false);
+    onChange(false);
   };
   return (
     <Card style={{ marginTop: '18px' }} styles={{ body: { padding: '16px 24px 24px' } }}>
@@ -43,8 +44,8 @@ const Stage: React.FunctionComponent<StageProps> = props => {
         </Form.Item>
       </Form>
       <Flex justify="center">
-        <Button type="primary" onClick={saveStage}>
-          提交
+        <Button type="primary" style={{ width: '108px' }} onClick={saveStage}>
+          <FormattedMessage id="Submit" />
         </Button>
       </Flex>
     </Card>
