@@ -200,7 +200,6 @@ const JobsList: React.FunctionComponent = () => {
       dataSource={jobsList}
       //@ts-ignores
       columns={columns}
-      size="middle"
     />
   );
 };

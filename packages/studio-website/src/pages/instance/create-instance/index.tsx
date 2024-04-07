@@ -209,7 +209,12 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
       <div style={{ padding: '24px 0px' }}>
         {GS_ENGINE_TYPE === 'interactive' && mode === 'view' && (
           <Alert
-            message="您的图实例类型为 Interactive，一旦创建则不支持修改图模型，您可以选择新建图实例。"
+            message={
+              <FormattedMessage
+                id="Your graph instance is of type {enginetype} and cannot be modified after creation. Instead, you may choose to create a new graph instance."
+                values={{ enginetype: GS_ENGINE_TYPE }}
+              />
+            }
             type="info"
             showIcon
             closable
