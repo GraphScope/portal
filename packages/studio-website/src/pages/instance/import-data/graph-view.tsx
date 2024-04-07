@@ -51,7 +51,6 @@ const getVertexEdges = (source: any, mode: string) => {
         },
         keyshape: {
           stroke: '#5F646B',
-          fill: mode === 'defaultAlgorithm' ? '#fff' : '#212121',
           lineWidth: 2,
         },
       },

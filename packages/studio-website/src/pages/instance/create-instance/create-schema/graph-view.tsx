@@ -49,7 +49,6 @@ const getVertexEdges = (nodeList: NodeSchema[], edgeList: EdgeSchema[], mode: st
           },
           keyshape: {
             stroke: '#5F646B',
-            fill: mode === 'defaultAlgorithm' ? '#fff' : '#212121',
             lineWidth: 2,
           },
         },
