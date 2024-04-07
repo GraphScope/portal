@@ -7,7 +7,7 @@ import CodeMirror from '@uiw/react-codemirror';
 import { createTheme } from '@uiw/codemirror-themes';
 import { useContext } from '@/layouts/useContext';
 import UploadFiles from './upload-files';
-import { createProcedure, updateProcedure, listProceduresByGraph, listGraphs } from './service';
+import { createProcedure, updateProcedure, listGraphs, getProcedure } from './service';
 
 type FieldType = {
   name: string;
@@ -21,6 +21,8 @@ const TYPEOPTION = [{ label: 'CPP', value: 'cpp' }];
 const CreatePlugins: React.FC = () => {
   const [form] = Form.useForm();
   const graph_name = searchParamOf('graph_name') || '';
+  const procedure_name = searchParamOf('procedure_name') || '';
+
   const [state, updateState] = useState<{
     editCode: string;
     instanceOption: { label: string; value: string }[];
@@ -41,11 +43,9 @@ const CreatePlugins: React.FC = () => {
       gutterBackground: mode === 'defaultAlgorithm' ? '#fff' : '#151515',
     },
   });
-
-  const getlistProceduresByGraph = async (bound_graph: string) => {
-    const res = await listProceduresByGraph(bound_graph);
-    console.log(res);
-
+  /** 获取插件某条数据 */
+  const getProcedures = async (bound_graph: string, procedure_name: string) => {
+    const res = await getProcedure(bound_graph, procedure_name);
     const { query } = res;
     form.setFieldsValue(res);
     updateState(preset => {
@@ -109,8 +109,8 @@ const CreatePlugins: React.FC = () => {
         };
       });
     });
-    if (graph_name) {
-      getlistProceduresByGraph(graph_name);
+    if (graph_name && procedure_name) {
+      getProcedures(graph_name, procedure_name);
     }
   }, []);
   return (

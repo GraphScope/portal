@@ -9,6 +9,11 @@ export interface TransformedNode {
   /** 唯一标识 */
   key?: string;
 }
+export interface TransformedNodeOrEdges {
+  label: string;
+  properties: { id: string; name: string; type: string; is_primary_key: boolean }[];
+  relations: { src_label: string; dst_label: string }[];
+}
 export function transformGrootSchemaToOptions(schema: GrootSchema | undefined): TransformedSchema {
   if (!schema) {
     return {
@@ -18,7 +23,7 @@ export function transformGrootSchemaToOptions(schema: GrootSchema | undefined): 
   }
   const nodeMap: Record<string, string> = {};
   //@ts-ignore
-  const nodes = schema.vertices.map(item => {
+  const nodes = schema.vertices.map((item: TransformedNodeOrEdges) => {
     const { properties, label, ...others } = item;
     const key = uuidv4();
     nodeMap[label] = key;
@@ -26,7 +31,6 @@ export function transformGrootSchemaToOptions(schema: GrootSchema | undefined): 
       ...others,
       label,
       key,
-      //@ts-ignore
       properties: properties.map(p => {
         const { id, name, type, is_primary_key } = p;
         return {
@@ -41,7 +45,7 @@ export function transformGrootSchemaToOptions(schema: GrootSchema | undefined): 
     };
   });
   //@ts-ignore
-  const edges = schema.edges.map(item => {
+  const edges = schema.edges.map((item: TransformedNodeOrEdges) => {
     const { label, properties, relations, ...others } = item;
     const key = uuidv4();
     const { src_label, dst_label } = relations[0];
@@ -78,7 +82,6 @@ export function transformGrootSchemaToOptions(schema: GrootSchema | undefined): 
  */
 export function transOptionsToGrootSchema(options: DeepRequired<TransformedSchema>) {
   const nodeMap: Record<string, string> = {};
-  //@ts-ignore
   const vertices: VertexType[] = options.nodes.map(item => {
     nodeMap[item.key] = item.label;
     return {
@@ -164,9 +167,11 @@ export function transOptionsToGrootDataloading(options: DeepRequired<Transformed
   };
 }
 /** groot 删除边参数 */
-export function transformGrootDeleteEdgeToOptions(schema: { nodes: any[]; edges: any[] }) {
+export function transformGrootDeleteEdgeToOptions(schema: {
+  nodes: { key: string; label: string }[];
+  edges: { label: string; source: string; target: string }[];
+}) {
   const nodeMap: Record<string, string> = {};
-  //@ts-ignore
   schema.nodes.forEach(item => {
     nodeMap[item.key] = item.label;
   });
@@ -220,12 +225,11 @@ export function transformGrootCreateVertexToOptions(
   };
 }
 export function transformGrootCreateEdgeToOptions(
-  nodeList: any[],
+  nodeList: { key: string; label: string }[],
   schema: { label: string; source: string; target: string },
   property?: { id: string; name: string; primaryKey: boolean; type: string }[],
 ) {
   const nodeMap: Record<string, string> = {};
-  //@ts-ignore
   nodeList.map(item => {
     nodeMap[item.key] = item.label;
     return item.label;

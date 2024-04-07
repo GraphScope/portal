@@ -51,10 +51,10 @@ export const updateProcedure = async (graph_name: string, procedureName: string,
       return [];
     });
 };
-/** 获取详情 */
-export const listProceduresByGraph = async (graph_name: string) => {
+/** 获取某条插件数据 */
+export const getProcedure = async (graphName: string, procedureName: string) => {
   return await ProcedureApiFactory(undefined, location.origin)
-    .listProceduresByGraph(graph_name)
+    .getProcedure(graphName, procedureName)
     .then(res => {
       if (res.status === 200) {
         return res.data;
@@ -62,6 +62,7 @@ export const listProceduresByGraph = async (graph_name: string) => {
       return [];
     });
 };
+
 export const listGraphs = async () => {
   const deployments = await DeploymentApiFactory(undefined, location.origin)
     .getDeploymentInfo()

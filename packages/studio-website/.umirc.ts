@@ -11,7 +11,7 @@ export default defineConfig({
     { path: '/query', component: 'query' },
     { path: '/query-app', component: 'query/app', layout: false },
     { path: '/job', component: 'job' },
-    { path: '/job/detail', component: 'job/detail' },
+    { path: '/job/detail', component: 'job/job-detail' },
     { path: '/extension', component: 'extension' },
     { path: '/extension/:name', component: 'extension/create-plugins' },
     { path: '/alert', component: 'alert' },
@@ -30,7 +30,7 @@ export default defineConfig({
   proxy: {
     '/api': {
       target:
-        // 'http://47.242.172.5:8080',//interactive
+        // 'http://47.242.172.5:8080', //interactive
         'http://47.242.172.5:8081/', //groot
       // 'https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/0.9.1',
       // 'http://54.157.222.57',
