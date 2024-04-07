@@ -21,7 +21,7 @@ export const listJobs = async () => {
       }
       return [];
     });
-  const info = message.map((item: IJobType) => {
+  const info = message.map(item => {
     const { job_id } = item;
     return {
       ...item,

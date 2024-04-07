@@ -82,6 +82,7 @@ const GraphView: FunctionComponent<Props> = props => {
   } = useMode();
   //@ts-ignore
   const graphData = getVertexEdges(nodeList, edgeList, mode);
+  console.log('graphData', graphData);
 
   return (
     <>

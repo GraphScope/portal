@@ -66,14 +66,14 @@ const Plugins: React.FC = () => {
       key: 'actions',
       width: 60,
       render: (_: any, all: Item) => {
-        const { bound_graph } = all;
+        const { bound_graph, name } = all;
         return (
           <Space>
             <Button
               size="small"
               type="text"
               onClick={() => {
-                history.push(`/extension/edit#?graph_name=${bound_graph}`);
+                history.push(`/extension/edit#?graph_name=${bound_graph}&procedure_name=${name}`);
               }}
             >
               <FontAwesomeIcon icon={faPenToSquare} />
