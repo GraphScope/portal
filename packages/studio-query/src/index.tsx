@@ -6,4 +6,5 @@ export type { CypherSchemaData } from './cypher-editor';
 export type { IStudioQueryProps } from './app/context';
 export type { IStatement } from './app/context';
 export { CypherDriver, MockDriver, GremlinDriver };
+export { colors } from './properties-panel/legend/content';
 export default App;
