@@ -123,7 +123,7 @@ export default {
   'Data sources': '数据源',
   Vertices: '点',
   Edges: '边',
-  'Importing graph data': '导入数据',
+  'Importing data': '导入数据',
   'Existing data bindings': '目前绑定了',
   'Bound data source': '已绑定数据源',
   'Unbound data source': '未绑定数据源',
@@ -133,7 +133,7 @@ export default {
   'Import now': '立即导入',
   'importing, for more information, see Tasks': '类型的节点正在导入中，详情查看任务',
   /** graphlist */
-  'Define schema': '定义图模型（Schema）',
+  'Define schema': '定义模型',
   'Query graph': '查询数据',
   'Graph schema': '图模型',
   'types of edges': '种边标签类型',
@@ -175,6 +175,8 @@ export default {
   'Please select source vertex label.': '请选择源点标签。',
   'Please select target vertex label.': '请选择目标点标签。',
   'Please manually input the odps file location': '请手动输入文件地址，也可直接上传本地 CSV 文件',
+  'Your graph instance is of type {enginetype} and cannot be modified after creation. Instead, you may choose to create a new graph instance.':
+    '您的图实例类型为 {enginetype}，一旦创建则不支持修改图模型，您可以选择新建图实例。',
   /** sidebar */
   docs: '文档',
   graphscope: '官网',

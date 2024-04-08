@@ -122,7 +122,7 @@ export default {
   'Data sources': 'Data sources',
   Vertices: 'Vertices',
   Edges: 'Edges',
-  'Importing graph data': 'Importing graph data',
+  'Importing data': 'Importing data',
   'Existing data bindings': 'Existing data bindings',
   'Bound data source': 'Bound data source',
   'Unbound data source': 'Unbound data source',
@@ -179,6 +179,8 @@ export default {
   'Please select source vertex label.': 'Please select source vertex label.',
   'Please select target vertex label.': 'Please select target vertex label.',
   'Please manually input the odps file location': 'Please manually input the odps file location',
+  'Your graph instance is of type {enginetype} and cannot be modified after creation. Instead, you may choose to create a new graph instance.':
+    'Your graph instance is of type {enginetype} and cannot be modified after creation. Instead, you may choose to create a new graph instance.',
   /** sidebar */
   docs: 'docs',
   graphscope: 'website',

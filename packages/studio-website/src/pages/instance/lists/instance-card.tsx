@@ -244,7 +244,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
             icon={<FontAwesomeIcon icon={faFileImport} style={{ marginRight: '10px' }} />}
             onClick={() => history.push(`/instance/import-data#?engineType=interactive&graph_name=${name}`)}
           >
-            <FormattedMessage id="Importing graph data" />
+            <FormattedMessage id="Importing data" />
           </Button>
           <Button
             type="primary"
