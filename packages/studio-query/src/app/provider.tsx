@@ -29,6 +29,7 @@ export default function Provider(props) {
             Result: {
               iconFontSize: 62,
               titleFontSize: 20,
+              colorError: '#00000073',
             },
           },
           token: {
