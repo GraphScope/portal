@@ -70,29 +70,32 @@ export function transformSchema(originalSchema: DeepRequired<Schema>): Transform
 
   /** Edges  */
   const edges: TransformedEdge[] = [];
-  edge_types.forEach(
-    (edge: {
-      type_name: string;
-      properties: { property_name: string; property_type: { primitive_type: string } }[];
-      vertex_type_pair_relations: { destination_vertex: string; source_vertex: string; relation: any }[];
-    }) => {
-      const { type_name, properties, vertex_type_pair_relations } = edge;
-      vertex_type_pair_relations.forEach(c => {
-        const { destination_vertex, source_vertex, relation } = c;
-        edges.push({
-          label: type_name,
-          properties: (properties || []).map(({ property_name, property_type }) => ({
-            name: property_name,
-            type: property_type.primitive_type,
-          })),
+  /** edge_types->undefined 报错 */
+  if (edge_types) {
+    edge_types.forEach(
+      (edge: {
+        type_name: string;
+        properties: { property_name: string; property_type: { primitive_type: string } }[];
+        vertex_type_pair_relations: { destination_vertex: string; source_vertex: string; relation: any }[];
+      }) => {
+        const { type_name, properties, vertex_type_pair_relations } = edge;
+        vertex_type_pair_relations.forEach(c => {
+          const { destination_vertex, source_vertex, relation } = c;
+          edges.push({
+            label: type_name,
+            properties: (properties || []).map(({ property_name, property_type }) => ({
+              name: property_name,
+              type: property_type.primitive_type,
+            })),
 
-          source: source_vertex,
-          target: destination_vertex,
-          relation,
+            source: source_vertex,
+            target: destination_vertex,
+            relation,
+          });
         });
-      });
-    },
-  );
+      },
+    );
+  }
 
   const transformedSchema: TransformedSchema = {
     nodes: vertex_types.map(transformNode),

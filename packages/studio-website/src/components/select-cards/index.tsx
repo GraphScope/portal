@@ -56,9 +56,7 @@ const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
                         }
                       : {}
                 }
-                bodyStyle={{
-                  padding: '24px',
-                }}
+                styles={{ body: { padding: '24px' } }}
               >
                 <Flex justify="space-between" align="">
                   {avatar && <Avatar shape="square" size={45} src={avatar} />}

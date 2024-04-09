@@ -16,9 +16,8 @@ const Result: React.FunctionComponent = () => {
       </Col>
       <Col span={8}>
         <Card
-          bodyStyle={{
-            padding: '1px',
-            overflow: 'hidden',
+          styles={{
+            body: { padding: '1px', overflow: 'hidden' },
           }}
         >
           <GraphInsight />

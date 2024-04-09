@@ -112,7 +112,7 @@ const CreateInstance: React.FunctionComponent = () => {
           }}
         >
           <Card
-            bodyStyle={{ minHeight: '550px', height: 'cacl(100vh - 150px)', padding: '0px' }}
+            styles={{ body: { minHeight: '550px', height: 'cacl(100vh - 150px)', padding: '0px' } }}
             title={
               <Segmented
                 value={currentType}
@@ -158,11 +158,8 @@ const CreateInstance: React.FunctionComponent = () => {
       </Col>
       <Col span={8}>
         <Card
-          bodyStyle={{
-            padding: '1px',
-            minHeight: '550px',
-            height: 'cacl(100vh - 150px)',
-            overflow: 'hidden',
+          styles={{
+            body: { padding: '1px', minHeight: '550px', height: 'cacl(100vh - 150px)', overflow: 'hidden' },
           }}
           title={<FormattedMessage id="Graph Model" />}
           extra={<ExportConfig />}

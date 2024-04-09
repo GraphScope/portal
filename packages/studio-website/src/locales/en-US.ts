@@ -127,7 +127,11 @@ export default {
   'Bound data source': 'Bound data source',
   'Unbound data source': 'Unbound data source',
   'Scheduled import': 'Scheduled import',
-  'Periodic import from ODPS': 'Periodic import from ODPS',
+  // 'Periodic import from ODPS': 'Periodic import from ODPS',
+  'Periodic import': 'Periodic import',
+  'Create a recurring import task': 'Create a recurring import task',
+  Date: 'Date',
+  Repeat: 'Repeat',
   'Periodic import from Dataworks': 'Periodic import from Dataworks' /** ditto to above? difference from L137?? */,
   'Import now': 'Import now',
   'importing, for more information, see Tasks': 'Data import job <a>#JOBID</a> is running.' /** TODO */,
@@ -185,4 +189,6 @@ export default {
   docs: 'docs',
   graphscope: 'website',
   github: 'github',
+  /** jobs */
+  Jobs: 'Jobs',
 };

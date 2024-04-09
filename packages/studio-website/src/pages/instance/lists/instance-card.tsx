@@ -173,7 +173,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   let btnWidth = locale === 'zh-CN' ? '115px' : '150px';
   return (
     <Card
-      headStyle={{ fontSize: '30px' }}
+      styles={{ header: { fontSize: '30px' } }}
       title={name}
       style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
       extra={
