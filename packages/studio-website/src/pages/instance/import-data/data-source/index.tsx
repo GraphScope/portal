@@ -4,13 +4,13 @@ import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined, DeleteOutlined
 import { Button, Flex, Row, Col, Space, Typography, theme, Tooltip } from 'antd';
 import { BindingNode, useDataMap, updateDataMap } from '../useContext';
 import SwitchSource from './switch-source';
-// import ImportPeriodic from './import-periodic';
+import ImportPeriodic from './import-periodic';
 import ImportNow from './import-now';
 import TableList from './table';
-// import { getUrlParams } from '@/components/utils';
+import { searchParamOf } from '@/components/utils';
 import { useContext } from '@/layouts/useContext';
 import { transformDataMapToScheduledImportOptions } from '@/components/utils/import';
-// import { createGrootDataloadingJob } from '../service';
+import { createGrootDataloadingJob } from '../service';
 
 const { useToken } = theme;
 interface IImportDataProps {
@@ -33,7 +33,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const { isBind, filelocation, isEidtProperty, datatype, label, properties, dataFields } = data;
   const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
-  // const { graph } = getUrlParams();
+  const graph_name = searchParamOf('graph_name');
   const { store } = useContext();
   const engineType = window.GS_ENGINE_TYPE;
   const { mode } = store;
@@ -79,18 +79,19 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
     });
   };
   /** 周期导入 */
-  const handleSubmit = () => {
+  const handleSubmit = async (value: { repeat: string; schedule: string }) => {
+    const { repeat, schedule } = value;
     //@ts-ignore
     const { label, source, target } = data;
     const edgesOptions = transformDataMapToScheduledImportOptions({ dataMap, data });
     const params = {
-      vertices: source && target ? [''] : [label],
-      edges: edgesOptions,
-      schedule: '',
-      repeat: 'once',
+      vertices: source && target ? [] : [label],
+      edges: source && target ? edgesOptions : [],
+      schedule,
+      repeat,
     };
-    console.log(params);
-    // createGrootDataloadingJob(params);
+    //@ts-ignore
+    await createGrootDataloadingJob(graph_name, params);
   };
   /** 删除文件 */
   const deleteFile = () => {
@@ -184,11 +185,8 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                 <Space>
                   {engineType === 'groot' && (
                     <>
-                      {/* <ImportPeriodic handleSubmit={handleSubmit} /> */}
-                      <Button size="small" onClick={handleSubmit}>
-                        Scheduled import
-                      </Button>
-                      <ImportNow nodes={data} />
+                      <ImportPeriodic handleSubmit={handleSubmit} />
+                      <ImportNow nodes={data} handleSubmit={handleSubmit} />
                     </>
                   )}
                 </Space>

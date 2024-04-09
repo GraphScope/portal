@@ -1,6 +1,6 @@
 import { GraphApiFactory, UtilsApiFactory, JobApiFactory, LegacyApiFactory } from '@graphscope/studio-server';
-import type { SchemaMapping } from '@graphscope/studio-server';
-
+import type { SchemaMapping, GrootDataloadingJobConfig } from '@graphscope/studio-server';
+import { notification } from 'antd';
 import {
   transformSchemaToImportOptions,
   transformMappingSchemaToImportOptions,
@@ -74,12 +74,19 @@ export const getDataloadingConfig = async (graph_name: string, schema: any) => {
   //@ts-ignore
   return transformMappingSchemaToImportOptions(schemaMapping, schema);
 };
-export const createGrootDataloadingJob = async (graph_name: any) => {
+export const createGrootDataloadingJob = async (
+  graph_name: string,
+  grootDataloadingJobConfig: GrootDataloadingJobConfig,
+) => {
   const grootDataloading = await LegacyApiFactory(undefined, location.origin)
-    .createGrootDataloadingJob(graph_name!)
-    .then(res => res.data)
+    .createGrootDataloadingJob(graph_name!, grootDataloadingJobConfig)
+    .then(res => {
+      if (res.status === 200) {
+        res.data;
+      }
+    })
     .catch(error => {
-      console.log(error);
+      notification.error(error);
       return {};
     });
   return grootDataloading;

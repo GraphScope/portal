@@ -1,27 +1,18 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button, notification, Typography, Flex, Space } from 'antd';
-import { useContext } from '../useContext';
-import { transOptionsToGrootDataloading } from '@/components/utils/schema-groot';
 interface IImportNowProps {
   nodes: any;
+  handleSubmit(value: { repeat: string; schedule: string }): void;
 }
 const { Text } = Typography;
 const ImportNow: React.FunctionComponent<IImportNowProps> = props => {
-  const { nodes } = props;
+  const { nodes, handleSubmit } = props;
   const { label, filelocation } = nodes;
-  const { store } = useContext();
-  const { edges } = store;
-  /** 立即导入参数 */
-  const params = {
-    ...transOptionsToGrootDataloading({ nodes: [nodes], edges }),
-    schedule: filelocation,
-    repeat: 'once',
-  };
-  console.log(params);
 
   const [api, contextHolder] = notification.useNotification();
   const openNotification = () => {
+    handleSubmit({ schedule: 'now', repeat: 'once' });
     api.open({
       message: '数据导入',
       description: (

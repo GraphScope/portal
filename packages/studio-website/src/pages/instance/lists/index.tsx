@@ -57,7 +57,7 @@ const InstanceCard: React.FC = () => {
         {!isReady && (
           <Col span={12}>
             <Card
-              headStyle={{ fontSize: '30px' }}
+              styles={{ header: { fontSize: '30px' } }}
               title={<Skeleton.Button style={{ marginTop: '-10px', width: '120px' }} active />}
               style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
             >
@@ -71,9 +71,8 @@ const InstanceCard: React.FC = () => {
           <Col span={12}>
             <Card
               title={<FormattedMessage id="New graph" />}
-              headStyle={{ fontSize: '30px', color: '#ccc' }}
+              styles={{ header: { fontSize: '30px', color: '#ccc' }, body: { width: '100%' } }}
               style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
-              bodyStyle={{ width: '100%' }}
             >
               <div
                 style={{

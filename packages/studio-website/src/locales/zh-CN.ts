@@ -128,7 +128,11 @@ export default {
   'Bound data source': '已绑定数据源',
   'Unbound data source': '未绑定数据源',
   'Scheduled import': '周期导入',
-  'Periodic import from ODPS': '周期性导入 ODPS 表',
+  // 'Periodic import from ODPS': '周期性导入 ODPS 表',
+  'Create a recurring import task': '创建周期性导入任务',
+  Date: '日期',
+  Repeat: '调度策略',
+  'Periodic import': '周期性导入',
   'Periodic import from Dataworks': 'Dataworks 上构建数据导入流程',
   'Import now': '立即导入',
   'importing, for more information, see Tasks': '类型的节点正在导入中，详情查看任务',
@@ -181,4 +185,6 @@ export default {
   docs: '文档',
   graphscope: '官网',
   github: 'github',
+  /** jobs */
+  Jobs: '作业管理',
 };
