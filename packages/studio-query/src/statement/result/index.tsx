@@ -17,8 +17,8 @@ const MAP = {
   icon: <DeploymentUnitOutlined />,
 };
 
-const getOptions = data => {
-  const { nodes, edges, table = [], raw } = data;
+const getOptions = (data, isFetching) => {
+  const { nodes = [], edges = [], table = [], raw } = data;
   const hasNodes = nodes.length > 0;
   const hasEdges = edges.length > 0;
   const hasRows = table.length > 0;
@@ -39,6 +39,10 @@ const getOptions = data => {
     viewMode = 'table';
     options = ['raw', 'table'];
   }
+  if (isFetching) {
+    options = ['raw'];
+    viewMode = 'raw';
+  }
   return {
     viewMode,
     options,
@@ -53,7 +57,7 @@ const Result: React.FunctionComponent<IResultProps> = props => {
     viewMode: 'graph' | 'table' | 'raw';
     options: string[];
   }>(() => {
-    const { viewMode, options } = getOptions(data);
+    const { viewMode, options } = getOptions(data, isFetching);
     return {
       viewMode: viewMode as 'graph' | 'table' | 'raw',
       options,
@@ -107,7 +111,13 @@ const Result: React.FunctionComponent<IResultProps> = props => {
       children: <TableView data={data} />,
       disabled: !isExist('table'),
     },
-    { label: 'Raw', key: 'raw', icon: <CodeOutlined />, children: <RawView data={data} />, disabled: !isExist('raw') },
+    {
+      label: 'Raw',
+      key: 'raw',
+      icon: <CodeOutlined />,
+      children: <RawView data={data} isFetching={isFetching} />,
+      disabled: !isExist('raw'),
+    },
   ];
   return (
     <div style={{ padding: '16px 0px' }}>
