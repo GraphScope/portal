@@ -49,7 +49,7 @@ const RightButton = (props: { currentStep: any; handleNext: any; handleSubmit: a
     );
   }
   if (currentStep === 2) {
-    if (mode === 'create' || GS_ENGINE_TYPE === 'groot') {
+    if (mode === 'create') {
       return (
         <Button type="primary" onClick={handleSubmit} style={{ minWidth: '100px' }}>
           <FormattedMessage id="Confirm and create" />

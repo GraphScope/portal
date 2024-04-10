@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Table, Button, Space, Skeleton, Popconfirm, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { history } from 'umi';
@@ -24,7 +24,7 @@ const Plugins: React.FC = () => {
   });
   const { isReady, pluginList } = state;
   /** 获取插件列表数据 */
-  const getPlugins = async () => {
+  const getPlugins = useCallback(async () => {
     const res = await listProcedures();
     //@ts-ignore
     updateState(preset => {
@@ -33,67 +33,70 @@ const Plugins: React.FC = () => {
         pluginList: res || [],
       };
     });
-  };
+  }, []);
   /** 删除插件 */
-  const deleteExtension = async (all: { name: string; bound_graph: string }) => {
+  const deleteExtension = useCallback(async (all: { name: string; bound_graph: string }) => {
     const { bound_graph, name } = all;
     const res = await deleteProcedure(bound_graph, name);
     message.success(res);
-  };
+  }, []);
 
   useEffect(() => {
     getPlugins();
   }, []);
 
-  const columns = [
-    {
-      title: <FormattedMessage id="Name" />,
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: <FormattedMessage id="Plugin Type" />,
-      dataIndex: 'type',
-      key: 'type',
-    },
-    {
-      title: <FormattedMessage id="Binding graph" />,
-      dataIndex: 'bound_graph',
-      key: 'bound_graph',
-    },
-    {
-      title: <FormattedMessage id="Action" />,
-      key: 'actions',
-      width: 60,
-      render: (_: any, all: Item) => {
-        const { bound_graph, name } = all;
-        return (
-          <Space>
-            <Button
-              size="small"
-              type="text"
-              onClick={() => {
-                history.push(`/extension/edit#?graph_name=${bound_graph}&procedure_name=${name}`);
-              }}
-            >
-              <FontAwesomeIcon icon={faPenToSquare} />
-            </Button>
-            <Popconfirm
-              placement="bottomRight"
-              title={<FormattedMessage id="Are you sure to delete this task?" />}
-              onConfirm={() => deleteExtension(all)}
-              okText={<FormattedMessage id="Yes" />}
-              cancelText={<FormattedMessage id="No" />}
-            >
-              <Button type="text" size="small" danger ghost>
-                <FontAwesomeIcon icon={faTrashCan} />
-              </Button>
-            </Popconfirm>
-          </Space>
-        );
+  const columns = useMemo(
+    () => [
+      {
+        title: <FormattedMessage id="Name" />,
+        dataIndex: 'name',
+        key: 'name',
       },
-    },
-  ];
+      {
+        title: <FormattedMessage id="Plugin Type" />,
+        dataIndex: 'type',
+        key: 'type',
+      },
+      {
+        title: <FormattedMessage id="Binding graph" />,
+        dataIndex: 'bound_graph',
+        key: 'bound_graph',
+      },
+      {
+        title: <FormattedMessage id="Action" />,
+        key: 'actions',
+        width: 60,
+        render: (_: any, all: Item) => {
+          const { bound_graph, name } = all;
+          return (
+            <Space>
+              <Button
+                size="small"
+                type="text"
+                onClick={() => {
+                  history.push(`/extension/edit#?graph_name=${bound_graph}&procedure_name=${name}`);
+                }}
+              >
+                <FontAwesomeIcon icon={faPenToSquare} />
+              </Button>
+              <Popconfirm
+                placement="bottomRight"
+                title={<FormattedMessage id="Are you sure to delete this task?" />}
+                onConfirm={() => deleteExtension(all)}
+                okText={<FormattedMessage id="Yes" />}
+                cancelText={<FormattedMessage id="No" />}
+              >
+                <Button type="text" size="small" danger ghost>
+                  <FontAwesomeIcon icon={faTrashCan} />
+                </Button>
+              </Popconfirm>
+            </Space>
+          );
+        },
+      },
+    ],
+    [],
+  );
 
   return (
     <>

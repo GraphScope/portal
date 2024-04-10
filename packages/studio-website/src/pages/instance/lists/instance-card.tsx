@@ -188,9 +188,11 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
               }}
             />
           </Tooltip>
-          <Dropdown menu={{ items, onClick }}>
-            <Button type="text" icon={<MoreOutlined />} />
-          </Dropdown>
+          {window.GS_ENGINE_TYPE === 'interactive' && (
+            <Dropdown menu={{ items, onClick }}>
+              <Button type="text" icon={<MoreOutlined />} />
+            </Dropdown>
+          )}
         </Space>
       }
     >

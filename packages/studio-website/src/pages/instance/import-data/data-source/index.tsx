@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button, Flex, Row, Col, Space, Typography, theme, Tooltip } from 'antd';
-import { BindingNode, useDataMap, updateDataMap } from '../useContext';
+import { Button, Flex, Row, Col, Space, Typography, theme, Tooltip, notification } from 'antd';
+import { useContext as useMap, BindingNode, useDataMap, updateDataMap } from '../useContext';
 import SwitchSource from './switch-source';
 import ImportPeriodic from './import-periodic';
 import ImportNow from './import-now';
@@ -10,7 +10,7 @@ import TableList from './table';
 import { searchParamOf } from '@/components/utils';
 import { useContext } from '@/layouts/useContext';
 import { transformDataMapToScheduledImportOptions } from '@/components/utils/import';
-import { createGrootDataloadingJob } from '../service';
+import { createGrootDataloadingJob, bindDatasource } from '../service';
 
 const { useToken } = theme;
 interface IImportDataProps {
@@ -28,7 +28,9 @@ const ToggleIcon = (props: any) => {
 const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const { id } = props;
   const dataMap = useDataMap();
-
+  const {
+    store: { currentType },
+  } = useMap();
   const data = dataMap[id] as BindingNode & { isEidtProperty: boolean };
   const { isBind, filelocation, isEidtProperty, datatype, label, properties, dataFields } = data;
   const { token } = useToken();
@@ -90,6 +92,8 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       schedule,
       repeat,
     };
+    /** 数据绑定 */
+    await bindDatasource(currentType, data, dataMap);
     //@ts-ignore
     await createGrootDataloadingJob(graph_name, params);
   };

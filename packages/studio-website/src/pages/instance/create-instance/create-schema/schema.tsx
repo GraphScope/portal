@@ -265,9 +265,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
         //@ts-ignore
         tableConfig={hangdleConfigcolumns(configcolumns)}
       />
-      <div style={{ textAlign: 'right', marginTop: '24px' }}>
-        <SaveGrootType />
-      </div>
+      <div style={{ textAlign: 'right', marginTop: '24px' }}>{mode === 'view' && <SaveGrootType />}</div>
     </div>
   );
 };
