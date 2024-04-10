@@ -392,15 +392,12 @@ export function transformImportOptionsToGrootSchemaMapping(options: {
       data_source,
       type_name: label,
       location: filelocation,
-      properties_mappings: properties.map((item: { name: string; token: string }, index: number) => {
+      property_mapping: properties.reduce((acc, curr, index) => {
         return {
-          property: item.name,
-          column: {
-            index,
-            name: item.token,
-          },
+          ...acc,
+          [index]: curr.name,
         };
-      }),
+      }, {}),
     };
   }
   if (currentType === 'edge') {
@@ -415,37 +412,19 @@ export function transformImportOptionsToGrootSchemaMapping(options: {
       }
     });
     // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
-    const property_mapping: any[] = [];
-    const source_pk_column_map: any[] = [];
-    const destination_pk_column_map: any[] = [];
+    let property_mapping = {};
+    let source_pk_column_map = {};
+    let destination_pk_column_map = {};
     properties.forEach((p, pIdx) => {
       const { token, name } = p;
       const isSource = name.startsWith('#source');
       const isTarget = name.startsWith('#target');
-      const num = parseFloat(token as string);
-      const isNumber = !isNaN(num);
       if (isSource) {
-        source_pk_column_map.push({
-          column: {
-            index: 0,
-            name: token,
-          },
-        });
+        source_pk_column_map = { 0: token };
       } else if (isTarget) {
-        destination_pk_column_map.push({
-          column: {
-            index: 1,
-            name: token,
-          },
-        });
+        destination_pk_column_map = { 1: token };
       } else {
-        property_mapping.push({
-          column: {
-            index: pIdx, //isNumber ? num + 2 : 0,
-            name: isNumber ? '' : token,
-          },
-          property: name,
-        });
+        property_mapping = { [pIdx]: token };
       }
     });
     return {
