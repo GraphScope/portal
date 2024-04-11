@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Popover, Tooltip } from 'antd';
+import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Popover, Tooltip, notification } from 'antd';
 import type { MenuProps } from 'antd';
 import { history } from 'umi';
 import dayjs from 'dayjs';
 import { PauseCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { useContext } from '@/layouts/useContext';
 
-import { deleteGraph, startService, stopService } from './service';
+import { deleteGraph, startService, stopService, getDataloadingConfig } from './service';
 
 const { Text, Paragraph } = Typography;
 import { MoreOutlined } from '@ant-design/icons';
@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faFileImport, faNetworkWired } from '@fortawesome/free-solid-svg-icons';
 import { faPlayCircle, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 export type InstaceCardType = {
   /** graph name */
   name: string;
@@ -64,6 +64,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   } = props;
   const { store } = useContext();
   const { mode, locale } = store;
+  const intl = useIntl();
   const [isLoading, updateIsLoading] = useState(false);
   const items: MenuProps['items'] = [
     {
@@ -149,17 +150,24 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   );
 
   const handleClick = async (name: string, status: string) => {
-    updateIsLoading(true);
-    /** running->stopService */
-    if (status === 'running') {
-      await stopService(name);
+    const config = await getDataloadingConfig(name);
+    if (Object.keys(config).length === 0 && config.constructor === Object) {
+      notification.error({
+        message: intl.formatMessage({ id: 'You can restart the service after importing the data' }),
+      });
+    } else {
+      updateIsLoading(true);
+      /** running->stopService */
+      if (status === 'running') {
+        await stopService(name);
+      }
+      /** stoped->startService */
+      if (status === 'stopped') {
+        await startService(name);
+      }
+      updateIsLoading(false);
+      handleChange();
     }
-    /** stoped->startService */
-    if (status === 'stopped') {
-      await startService(name);
-    }
-    updateIsLoading(false);
-    handleChange();
   };
   /** Start|Pause 提示 */
   let tooltipContext;

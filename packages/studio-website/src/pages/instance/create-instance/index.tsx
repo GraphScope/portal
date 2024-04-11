@@ -223,7 +223,7 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
         )}
         <Steps currentStep={currentStep} />
 
-        <div>
+        <div style={{ minHeight: 'calc(100vh - 200px)' }}>
           <div style={currentStep === 0 ? activeItemStyle : itemStyle}>
             <ChooseEnginetype form={form} />
           </div>

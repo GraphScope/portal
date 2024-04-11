@@ -72,7 +72,9 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
       if (!reg.test(value) && regl.test(value.charAt(0))) {
         return Promise.resolve();
       }
-      return Promise.reject('请输入合法字符且首字母为英文.');
+      return Promise.reject(
+        intl.formatMessage({ id: 'Please input a valid string starting with an uppercase English letter.' }),
+      );
     },
   });
   useEffect(() => {
