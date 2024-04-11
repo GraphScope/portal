@@ -211,15 +211,18 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
       edgeMap.set(label, {
         type_id: itemIdx, //key,
         type_name: label,
-        properties: properties.map((p, pIdx) => {
-          return {
-            property_id: pIdx, //p.id,
-            property_name: p.name,
-            property_type: {
-              primitive_type: p.type,
-            },
-          };
-        }),
+        /** 边属性 [] || undefined */
+        properties: properties
+          ? properties.map((p, pIdx) => {
+              return {
+                property_id: pIdx, //p.id,
+                property_name: p.name,
+                property_type: {
+                  primitive_type: p.type,
+                },
+              };
+            })
+          : [],
         vertex_type_pair_relations: [constraint],
       });
     }
