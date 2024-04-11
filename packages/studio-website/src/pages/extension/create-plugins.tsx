@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Button, Form, Input, Select, Flex, Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { history } from 'umi';
@@ -33,16 +33,18 @@ const CreatePlugins: React.FC = () => {
   const { editCode, instanceOption } = state;
   const { store } = useContext();
   const { mode } = store;
-  //@ts-ignore
-  const myTheme = createTheme({
-    theme: mode === 'defaultAlgorithm' ? 'light' : 'dark',
-    settings: {
-      background: mode === 'defaultAlgorithm' ? '#fff' : '#151515',
-      backgroundImage: '',
-      foreground: mode === 'defaultAlgorithm' ? '#212121' : '#FFF',
-      gutterBackground: mode === 'defaultAlgorithm' ? '#fff' : '#151515',
-    },
-  });
+  const myTheme = useMemo(() => {
+    //@ts-ignore
+    return createTheme({
+      theme: mode === 'defaultAlgorithm' ? 'light' : 'dark',
+      settings: {
+        background: mode === 'defaultAlgorithm' ? '#fff' : '#151515',
+        backgroundImage: '',
+        foreground: mode === 'defaultAlgorithm' ? '#212121' : '#FFF',
+        gutterBackground: mode === 'defaultAlgorithm' ? '#fff' : '#151515',
+      },
+    });
+  }, [mode]);
   /** 获取插件某条数据 */
   const getProcedures = async (bound_graph: string, procedure_name: string) => {
     const res = await getProcedure(bound_graph, procedure_name);
@@ -85,12 +87,12 @@ const CreatePlugins: React.FC = () => {
       await updateProcedure(bound_graph, name, data);
     } else {
       /** 新建插件 */
-      await createProcedure(name, data);
+      await createProcedure(bound_graph, data);
     }
     history.push('/extension');
   };
   /** 获取editcode */
-  const handleCodeMirror = (val: string) => {
+  const onCodeMirrorChange = (val: string) => {
     updateState(preset => {
       return {
         ...preset,
@@ -179,7 +181,7 @@ const CreatePlugins: React.FC = () => {
                 borderRadius: '8px',
               }}
             >
-              <CodeMirror height="200px" value={editCode} onChange={e => handleCodeMirror(e)} theme={myTheme} />
+              <CodeMirror height="200px" value={editCode} onChange={e => onCodeMirrorChange(e)} theme={myTheme} />
             </div>
           </Form.Item>
           <Form.Item>

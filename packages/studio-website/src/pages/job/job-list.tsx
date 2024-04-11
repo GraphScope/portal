@@ -188,7 +188,14 @@ const JobsList: React.FunctionComponent = () => {
           cancelText={<FormattedMessage id="No" />}
           icon
         >
-          <Button type="text" size="small" danger ghost icon={<FontAwesomeIcon icon={faTrashCan} />} />
+          <Button
+            type="text"
+            size="small"
+            danger
+            ghost
+            icon={<FontAwesomeIcon icon={faTrashCan} />}
+            disabled={!['RUNNING', 'WAITING'].includes(record.status)}
+          />
         </Popconfirm>
       ),
     },

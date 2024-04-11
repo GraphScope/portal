@@ -378,6 +378,149 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
     edge_mappings,
   };
 }
+/** groot 数据绑定参数处理 */
+export function transformImportOptionsToGrootSchemaMapping(options: {
+  currentType: string;
+  data: any;
+  dataMap: { [x: string]: { key: string; label: string } };
+}) {
+  const { currentType, data, dataMap } = options;
+  const { label, filelocation, datatype, properties, source, target } = data;
+  const data_source = datatype === 'csv' ? 'FILE' : 'ODPS';
+  if (currentType === 'node') {
+    return {
+      data_source,
+      type_name: label,
+      location: filelocation,
+      property_mapping: properties.reduce((acc, curr, index) => {
+        return {
+          ...acc,
+          [index]: curr.name,
+        };
+      }, {}),
+    };
+  }
+  if (currentType === 'edge') {
+    let source_vertex: string = '';
+    let destination_vertex: string = '';
+    Object.values(dataMap).forEach(item => {
+      if (item.key === source) {
+        source_vertex = item.label;
+      }
+      if (item.key === target) {
+        destination_vertex = item.label;
+      }
+    });
+    // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
+    let property_mapping = {};
+    let source_pk_column_map = {};
+    let destination_pk_column_map = {};
+    properties.forEach((p, pIdx) => {
+      const { token, name } = p;
+      const isSource = name.startsWith('#source');
+      const isTarget = name.startsWith('#target');
+      if (isSource) {
+        source_pk_column_map = { 0: token };
+      } else if (isTarget) {
+        destination_pk_column_map = { 1: token };
+      } else {
+        property_mapping = { [pIdx]: token };
+      }
+    });
+    return {
+      data_source,
+      type_name: label,
+      source_vertex,
+      destination_vertex,
+      location: filelocation,
+      source_pk_column_map,
+      destination_pk_column_map,
+      property_mapping,
+    };
+  }
+
+  let vertex_mappings: any[] = [];
+  let edge_mappings: any[] = [];
+  const NODE_LABEL_MAP: Record<string, string> = {};
+  const NODE_PRIMARY_MAP: Record<string, string> = {};
+  options.nodes.forEach((item: { key: any; properties: any; filelocation: any; label: any; primary: any }) => {
+    const { key, properties, filelocation, label, primary } = item;
+    NODE_LABEL_MAP[key as string] = label;
+    NODE_PRIMARY_MAP[key as string] = primary;
+    vertex_mappings.push({
+      type_name: label,
+      inputs: [filelocation],
+      column_mappings: properties.map((p: { token: any; name: any }) => {
+        const { token, name } = p;
+
+        const num = parseFloat(token as string);
+        const isNumber = !isNaN(num);
+        return {
+          column: {
+            index: isNumber ? num : 0,
+            name: isNumber ? '' : token,
+          },
+          property: name,
+        };
+      }),
+    });
+  });
+
+  options.edges.forEach((item: { properties: any; filelocation: any; label: any; source: any; target: any }) => {
+    const { properties, filelocation, label, source, target } = item;
+    const column_mappings: any[] = [];
+    const source_vertex_mappings: any[] = [];
+    const destination_vertex_mappings: any[] = [];
+    // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
+    properties.forEach((p: { token: any; name: any }, pIdx: any) => {
+      const { token, name } = p;
+      const isSource = name.startsWith('#source');
+      const isTarget = name.startsWith('#target');
+      const num = parseFloat(token as string);
+      const isNumber = !isNaN(num);
+      if (isSource) {
+        source_vertex_mappings.push({
+          column: {
+            index: 0,
+            name: NODE_PRIMARY_MAP[source],
+          },
+        });
+      } else if (isTarget) {
+        destination_vertex_mappings.push({
+          column: {
+            index: 1,
+            name: NODE_PRIMARY_MAP[target],
+          },
+        });
+      } else {
+        column_mappings.push({
+          column: {
+            index: pIdx, //isNumber ? num + 2 : 0,
+            name: isNumber ? '' : token,
+          },
+          property: name,
+        });
+      }
+    });
+
+    edge_mappings.push({
+      type_triplet: {
+        edge: label,
+        source_vertex: NODE_LABEL_MAP[source],
+        destination_vertex: NODE_LABEL_MAP[target],
+      },
+      inputs: [filelocation],
+      column_mappings,
+      source_vertex_mappings,
+      destination_vertex_mappings,
+    });
+  });
+
+  return {
+    vertex_mappings,
+    edge_mappings,
+  };
+}
 
 export function transformDataMapToGrootSchema(dataMap: any) {
   const vertex_types: { type_name: string; properties: any; primary_keys: undefined[] }[] = [];

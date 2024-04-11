@@ -1,10 +1,22 @@
-import { GraphApiFactory, UtilsApiFactory, JobApiFactory, LegacyApiFactory } from '@graphscope/studio-server';
-import type { SchemaMapping, GrootDataloadingJobConfig } from '@graphscope/studio-server';
+import {
+  GraphApiFactory,
+  UtilsApiFactory,
+  JobApiFactory,
+  LegacyApiFactory,
+  DatasourceApiFactory,
+} from '@graphscope/studio-server';
+import type {
+  SchemaMapping,
+  GrootDataloadingJobConfig,
+  VertexDataSource,
+  EdgeDataSource,
+} from '@graphscope/studio-server';
 import { notification } from 'antd';
 import {
   transformSchemaToImportOptions,
   transformMappingSchemaToImportOptions,
   transformDataMapToGrootSchema,
+  transformImportOptionsToGrootSchemaMapping,
 } from '@/components/utils/import';
 
 /** upload file */
@@ -90,4 +102,41 @@ export const createGrootDataloadingJob = async (
       return {};
     });
   return grootDataloading;
+};
+/** groot 绑定点 */
+export const bindVertexDatasource = async (graphName: string, vertexDataSource: VertexDataSource) => {
+  return DatasourceApiFactory(undefined, location.origin)
+    .bindVertexDatasource(graphName, vertexDataSource)
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+/** groot 绑定边 */
+export const bindEdgeDatasource = async (graphName: string, edgeDataSource: EdgeDataSource) => {
+  return DatasourceApiFactory(undefined, location.origin)
+    .bindEdgeDatasource(graphName, edgeDataSource)
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const bindDatasource = async (currentType: string, data: any, dataMap: any) => {
+  const params = transformImportOptionsToGrootSchemaMapping({ currentType, data, dataMap });
+  const { label } = data;
+  if (currentType === 'node') {
+    await bindVertexDatasource(label, params);
+  }
+  if (currentType === 'edge') {
+    await bindVertexDatasource(label, params);
+  }
 };
