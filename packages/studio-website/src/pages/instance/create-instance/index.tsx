@@ -188,7 +188,8 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
     ...itemStyle,
     display: 'block',
   };
-
+  /** view 270 | 200 */
+  const minHeight = mode === 'view' ? 'calc(100vh - 270px)' : 'calc(100vh - 200px)';
   return (
     <div style={{ padding: '12px 24px' }}>
       {contextHolder}
@@ -223,7 +224,7 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
         )}
         <Steps currentStep={currentStep} />
 
-        <div style={{ minHeight: 'calc(100vh - 200px)' }}>
+        <div style={{ minHeight }}>
           <div style={currentStep === 0 ? activeItemStyle : itemStyle}>
             <ChooseEnginetype form={form} />
           </div>
@@ -239,12 +240,7 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
         </div>
         <div>
           <div>
-            <LeftButton
-              currentStep={currentStep}
-              handlePrev={prev}
-              createInstaseResult={createInstaseResult}
-              mode={mode}
-            />
+            <LeftButton currentStep={currentStep} handlePrev={prev} createInstaseResult={createInstaseResult} />
             <RightButton currentStep={currentStep} handleNext={next} handleSubmit={handleSubmit} mode={mode} />
           </div>
         </div>
