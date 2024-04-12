@@ -1,4 +1,10 @@
-import { GraphApiFactory, ServiceApiFactory, DeploymentApiFactory, LegacyApiFactory } from '@graphscope/studio-server';
+import {
+  GraphApiFactory,
+  ServiceApiFactory,
+  DeploymentApiFactory,
+  LegacyApiFactory,
+  JobApiFactory,
+} from '@graphscope/studio-server';
 import { message } from 'antd';
 
 export const listGraphs = async () => {
@@ -53,7 +59,13 @@ export const listGraphs = async () => {
     const isMatch = graph_name === name;
     //@ts-ignore
     const { schema, store_type, stored_procedures } = graphs_map[name];
-    const { vertex_types = [], edge_types = [], vertices = [], edges = [] } = schema;
+    const { vertex_types, edge_types, vertices, edges } = schema || {
+      vertex_types: [],
+      edge_types: [],
+      vertices: [],
+      edges: [],
+    };
+
     return {
       name: name,
       engineType: solution,
@@ -121,5 +133,15 @@ export const stopService = async (name: string) => {
         message.error(res.data);
         return false;
       }
+    });
+};
+/** 获取是否已经导入 */
+export const getDataloadingConfig = async (graph_name: string) => {
+  return await JobApiFactory(undefined, location.origin)
+    .getDataloadingConfig(graph_name!)
+    .then(res => res.data)
+    .catch(error => {
+      console.log(error);
+      return {};
     });
 };

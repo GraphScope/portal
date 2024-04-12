@@ -51,6 +51,9 @@ export default {
   Properties: 'Properties',
   'Add property': 'Add property',
   'Mapping from file': 'Mapping from file',
+  'Please input a valid string starting with an uppercase English letter.':
+    'Please input a valid string starting with an uppercase English letter.',
+  'You can restart the service after importing the data.': 'You can restart the service after importing the data.',
   /** extension */
   Name: 'Name',
 
