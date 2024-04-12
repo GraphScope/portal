@@ -19,7 +19,7 @@ type FieldType = {
 };
 const TYPEOPTION = [
   { label: 'Cypher', value: 'cypher' },
-  { label: 'Cpp', value: 'cpp' },
+  // { label: 'Cpp', value: 'cpp' },
 ];
 
 const CreatePlugins: React.FC = () => {
@@ -100,7 +100,7 @@ const CreatePlugins: React.FC = () => {
     });
   }, []);
   useEffect(() => {
-    form.setFieldsValue({ type: 'cpp' });
+    form.setFieldsValue({ type: 'cypher' });
     listGraphs().then(res => {
       //@ts-ignore
       updateState(preset => {
