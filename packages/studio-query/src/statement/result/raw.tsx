@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Result } from 'antd';
+import ReactJson from 'react-json-view';
 interface IJSONViewProps {
   data: any;
 }
@@ -12,7 +13,8 @@ const RawView: React.FunctionComponent<IJSONViewProps> = props => {
   }
   return (
     <div>
-      <pre style={{ textWrap: 'pretty' }}>{JSON.stringify(data.raw, null, 2)}</pre>
+      {/* <pre style={{ textWrap: 'pretty' }}>{JSON.stringify(data.raw, null, 2)}</pre> */}
+      <ReactJson src={JSON.stringify(data.raw, null, 2)} />
     </div>
   );
 };

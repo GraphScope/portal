@@ -74,6 +74,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       draft[id].properties = values;
     });
   };
+
   const onChangeDataFields = (header?: { dataFields: string[]; delimiter: string }) => {
     updateDataMap(draft => {
       draft[id].dataFields = header?.dataFields;
@@ -170,16 +171,12 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
             <Col span={19}>
               <TableList
                 //@ts-ignore
-                tabledata={JSON.parse(
-                  JSON.stringify(
-                    properties.map(item => {
-                      return {
-                        ...item,
-                        key: item.id,
-                      };
-                    }),
-                  ),
-                )}
+                tabledata={properties.map(item => {
+                  return {
+                    ...item,
+                    key: item.id,
+                  };
+                })}
                 onChange={onChangeTable}
                 dataFields={dataFields}
               />
