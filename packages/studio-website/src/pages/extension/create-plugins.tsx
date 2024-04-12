@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Button, Form, Input, Select, Flex, Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { history } from 'umi';
@@ -15,8 +15,12 @@ type FieldType = {
   bound_graph: string;
   query: string;
   instance: boolean;
+  description: string;
 };
-const TYPEOPTION = [{ label: 'CPP', value: 'cpp' }];
+const TYPEOPTION = [
+  { label: 'Cypher', value: 'cypher' },
+  { label: 'Cpp', value: 'cpp' },
+];
 
 const CreatePlugins: React.FC = () => {
   const [form] = Form.useForm();
@@ -26,27 +30,30 @@ const CreatePlugins: React.FC = () => {
   const [state, updateState] = useState<{
     editCode: string;
     instanceOption: { label: string; value: string }[];
+    isEdit: boolean;
   }>({
     editCode: '',
     instanceOption: [],
+    isEdit: false,
   });
-  const { editCode, instanceOption } = state;
+  const { editCode, instanceOption, isEdit } = state;
   const { store } = useContext();
   const { mode } = store;
+
   const myTheme = useMemo(() => {
     //@ts-ignore
     return createTheme({
       theme: mode === 'defaultAlgorithm' ? 'light' : 'dark',
       settings: {
-        background: mode === 'defaultAlgorithm' ? '#fff' : '#151515',
+        background: isEdit ? '#F5F5F5' : mode === 'defaultAlgorithm' ? '#fff' : '#151515',
         backgroundImage: '',
         foreground: mode === 'defaultAlgorithm' ? '#212121' : '#FFF',
-        gutterBackground: mode === 'defaultAlgorithm' ? '#fff' : '#151515',
+        gutterBackground: isEdit ? '#F5F5F5' : mode === 'defaultAlgorithm' ? '#fff' : '#151515',
       },
     });
-  }, [mode]);
+  }, [mode, isEdit]);
   /** 获取插件某条数据 */
-  const getProcedures = async (bound_graph: string, procedure_name: string) => {
+  const getProcedures = useCallback(async (bound_graph: string, procedure_name: string) => {
     const res = await getProcedure(bound_graph, procedure_name);
     const { query } = res;
     form.setFieldsValue(res);
@@ -54,33 +61,25 @@ const CreatePlugins: React.FC = () => {
       return {
         ...preset,
         editCode: query,
+        isEdit: true,
       };
     });
-  };
+  }, []);
 
   /** 创建插件 */
-  const onFinish = async () => {
-    const { name, bound_graph, type } = form.getFieldsValue();
+  const handleSubmit = useCallback(async () => {
+    const { name, bound_graph, type, description } = form.getFieldsValue();
+    console.log(editCode);
     const data = {
       name,
       bound_graph,
-      description: '',
+      description,
       type,
       query: editCode,
       enable: true,
       runnable: true,
-      params: [
-        {
-          name: '',
-          type: '',
-        },
-      ],
-      returns: [
-        {
-          name: '',
-          type: '',
-        },
-      ],
+      params: [],
+      returns: [],
     };
     if (graph_name) {
       /** 修改插件 */
@@ -90,16 +89,16 @@ const CreatePlugins: React.FC = () => {
       await createProcedure(bound_graph, data);
     }
     history.push('/extension');
-  };
+  }, [editCode, form.getFieldsValue()]);
   /** 获取editcode */
-  const onCodeMirrorChange = (val: string) => {
+  const onCodeMirrorChange = useCallback((val: string) => {
     updateState(preset => {
       return {
         ...preset,
         editCode: val,
       };
     });
-  };
+  }, []);
   useEffect(() => {
     form.setFieldsValue({ type: 'cpp' });
     listGraphs().then(res => {
@@ -133,6 +132,7 @@ const CreatePlugins: React.FC = () => {
           ]}
         />
         <UploadFiles
+          disabled={isEdit}
           handleChange={val => {
             //@ts-ignore
             updateState(preset => {
@@ -143,14 +143,14 @@ const CreatePlugins: React.FC = () => {
             });
           }}
         />
-        <Form name="basic" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }} form={form} onFinish={() => onFinish()}>
+        <Form name="basic" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }} form={form} onFinish={() => handleSubmit()}>
           <Form.Item<FieldType>
             style={{ marginBottom: '12px' }}
             label={<FormattedMessage id="Name" />}
             name="name"
             rules={[{ required: true, message: 'Please input your Graph name!' }]}
           >
-            <Input />
+            <Input disabled={isEdit} />
           </Form.Item>
 
           <Form.Item<FieldType>
@@ -159,7 +159,7 @@ const CreatePlugins: React.FC = () => {
             name="type"
             rules={[{ required: true, message: 'Please input your Plugin Type!' }]}
           >
-            <Select options={TYPEOPTION} />
+            <Select options={TYPEOPTION} disabled={isEdit} />
           </Form.Item>
           <Form.Item<FieldType>
             style={{ marginBottom: '12px' }}
@@ -167,7 +167,15 @@ const CreatePlugins: React.FC = () => {
             name="bound_graph"
             rules={[{ required: true, message: 'Please input your Graph Instance!' }]}
           >
-            <Select options={instanceOption} />
+            <Select options={instanceOption} disabled={isEdit} />
+          </Form.Item>
+          <Form.Item<FieldType>
+            style={{ marginBottom: '12px' }}
+            label={<FormattedMessage id="Description" />}
+            name="description"
+            rules={[{ required: true, message: 'Please input your Description!' }]}
+          >
+            <Input />
           </Form.Item>
           <Form.Item<FieldType>
             style={{ marginBottom: '12px' }}
@@ -181,7 +189,13 @@ const CreatePlugins: React.FC = () => {
                 borderRadius: '8px',
               }}
             >
-              <CodeMirror height="200px" value={editCode} onChange={e => onCodeMirrorChange(e)} theme={myTheme} />
+              <CodeMirror
+                height="200px"
+                value={editCode}
+                onChange={e => onCodeMirrorChange(e)}
+                theme={myTheme}
+                readOnly={isEdit}
+              />
             </div>
           </Form.Item>
           <Form.Item>
