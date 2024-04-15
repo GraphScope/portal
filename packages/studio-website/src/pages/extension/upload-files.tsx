@@ -5,9 +5,10 @@ import { FormattedMessage } from 'react-intl';
 
 const { Dragger } = Upload;
 type IUploadFile = {
+  disabled: boolean;
   handleChange(val: any): void;
 };
-const UploadFiles: React.FC<IUploadFile> = ({ handleChange }) => {
+const UploadFiles: React.FC<IUploadFile> = ({ disabled, handleChange }) => {
   /** 转换上传文件 */
   const readFile = (file: any) => {
     return new Promise((resolve, reject) => {
@@ -39,7 +40,7 @@ const UploadFiles: React.FC<IUploadFile> = ({ handleChange }) => {
     },
   };
   return (
-    <Dragger {...props}>
+    <Dragger {...props} disabled={disabled}>
       <p className="ant-upload-text">
         <FormattedMessage id="Click or drag file to this area to upload" />
       </p>

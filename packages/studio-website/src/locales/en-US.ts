@@ -56,7 +56,7 @@ export default {
   'You can restart the service after importing the data.': 'You can restart the service after importing the data.',
   /** extension */
   Name: 'Name',
-
+  Description: 'Description',
   'Binding graph': 'Binding graph',
   Create: 'Create',
   'Edit code': 'Edit code',

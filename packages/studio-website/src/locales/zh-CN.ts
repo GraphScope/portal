@@ -59,6 +59,7 @@ export default {
   'You can restart the service after importing the data.': '您成功导入数据后再重启服务。',
   /** extensions */
   Name: '名称',
+  Description: '描述',
   'Extension Type': '拓展插件类型',
   'Binding graph': '绑定的图实例',
   Create: '创建插件',

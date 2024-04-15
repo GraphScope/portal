@@ -58,13 +58,12 @@ export const listGraphs = async () => {
     const { graph_name } = status;
     const isMatch = graph_name === name;
     //@ts-ignore
-    const { schema, store_type, stored_procedures } = graphs_map[name];
-    const { vertex_types, edge_types, vertices, edges } = schema || {
-      vertex_types: [],
-      edge_types: [],
-      vertices: [],
-      edges: [],
+    const { schema, store_type, stored_procedures } = graphs_map[name] || {
+      schema: {},
+      store_type: {},
+      stored_procedures: {},
     };
+    const { vertex_types, edge_types, vertices, edges } = schema;
 
     return {
       name: name,

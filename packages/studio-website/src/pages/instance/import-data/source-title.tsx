@@ -21,7 +21,7 @@ export function submitParams(schema: any, graph_name: string) {
       data_source: {
         scheme: datatype === 'odps' ? 'odps' : 'file',
       },
-      import_option: 'init',
+      import_option: 'overwrite',
       format: {
         type: datatype === 'odps' ? 'odps' : 'csv',
         metadata: {

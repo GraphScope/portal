@@ -39,6 +39,7 @@ const Plugins: React.FC = () => {
     const { bound_graph, name } = all;
     const res = await deleteProcedure(bound_graph, name);
     message.success(res);
+    await getPlugins();
   }, []);
 
   useEffect(() => {
