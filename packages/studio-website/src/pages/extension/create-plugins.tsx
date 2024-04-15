@@ -3,8 +3,8 @@ import { Button, Form, Input, Select, Flex, Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { history } from 'umi';
 import { searchParamOf } from '@/components/utils/index';
+import { updateTheme } from '@/pages/utils';
 import CodeMirror from '@uiw/react-codemirror';
-import { createTheme } from '@uiw/codemirror-themes';
 import { useContext } from '@/layouts/useContext';
 import UploadFiles from './upload-files';
 import { createProcedure, updateProcedure, listGraphs, getProcedure } from './service';
@@ -40,18 +40,6 @@ const CreatePlugins: React.FC = () => {
   const { store } = useContext();
   const { mode } = store;
 
-  const myTheme = useMemo(() => {
-    //@ts-ignore
-    return createTheme({
-      theme: mode === 'defaultAlgorithm' ? 'light' : 'dark',
-      settings: {
-        background: isEdit ? '#F5F5F5' : mode === 'defaultAlgorithm' ? '#fff' : '#151515',
-        backgroundImage: '',
-        foreground: mode === 'defaultAlgorithm' ? '#212121' : '#FFF',
-        gutterBackground: isEdit ? '#F5F5F5' : mode === 'defaultAlgorithm' ? '#fff' : '#151515',
-      },
-    });
-  }, [mode, isEdit]);
   /** 获取插件某条数据 */
   const getProcedures = useCallback(async (bound_graph: string, procedure_name: string) => {
     const res = await getProcedure(bound_graph, procedure_name);
@@ -193,7 +181,7 @@ const CreatePlugins: React.FC = () => {
                 height="200px"
                 value={editCode}
                 onChange={e => onCodeMirrorChange(e)}
-                theme={myTheme}
+                theme={updateTheme(mode, isEdit)}
                 readOnly={isEdit}
               />
             </div>
