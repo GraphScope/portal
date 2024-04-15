@@ -1,6 +1,6 @@
 import { AlertApiFactory, UpdateAlertMessagesRequest } from '@graphscope/studio-server';
 import type { AlertReceiver, AlertRule } from '@graphscope/studio-server';
-import { setNotification } from '@/pages/utils';
+import { notification } from '@/pages/utils';
 export type IAlertMessages = {
   type?: string;
   status?: 'unsolved' | 'solved' | 'dealing';
@@ -37,7 +37,7 @@ export const listAlertMessages = async (params: IAlertMessages) => {
       return [];
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
     });
   const info = message.map((item: IAlertMessages & IMessageType) => {
     const { message_id } = item;
@@ -59,7 +59,7 @@ export const updateAlertMessages = async (params: UpdateAlertMessagesRequest) =>
       return [];
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
     });
 
   return message;
@@ -78,7 +78,7 @@ export const listAlertRules = async () => {
       return [];
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
     });
 
   const info = rules.map((item: IAlertRules) => {
@@ -100,7 +100,7 @@ export const deleteAlertRuleByName = async (params: string) => {
       return [];
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
     });
 
   return rules;
@@ -115,7 +115,7 @@ export const updateAlertRuleByName = async (params: string, alertRule: AlertRule
       return [];
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
     });
 
   return rules;
@@ -134,7 +134,7 @@ export const listReceivers = async () => {
       return [];
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
     });
   const info = receivers.map((item: AlertReceiver & { key: string }) => {
     const { receiver_id } = item;
@@ -155,7 +155,7 @@ export const registerReceiver = async (params: AlertReceiver) => {
       return [];
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
     });
 
   return receivers;
@@ -170,7 +170,7 @@ export const deleteReceiverById = async (receiverId: string) => {
       return [];
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
     });
 
   return receivers;
@@ -185,7 +185,7 @@ export const updateReceiverById = async (receiverId: string, alertReceiver: Aler
       return [];
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
     });
 
   return receivers;

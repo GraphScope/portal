@@ -5,7 +5,7 @@ import {
   LegacyApiFactory,
   JobApiFactory,
 } from '@graphscope/studio-server';
-import { setNotification } from '@/pages/utils';
+import { notification } from '@/pages/utils';
 
 export const listGraphs = async () => {
   const status = await ServiceApiFactory(undefined, location.origin)
@@ -17,7 +17,7 @@ export const listGraphs = async () => {
       return {};
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
     });
   const deployments = await DeploymentApiFactory(undefined, location.origin)
     .getDeploymentInfo()
@@ -25,7 +25,7 @@ export const listGraphs = async () => {
       return res.data;
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
     });
   const { GS_ENGINE_TYPE } = window;
   let graphs;
@@ -38,7 +38,7 @@ export const listGraphs = async () => {
         }
       })
       .catch(error => {
-        setNotification('error', error);
+        notification('error', error);
       });
   }
 
@@ -51,7 +51,7 @@ export const listGraphs = async () => {
         }
       })
       .catch(error => {
-        setNotification('error', error);
+        notification('error', error);
       });
   }
 
@@ -107,15 +107,15 @@ export const deleteGraph = async (name: string) => {
     .deleteGraph(name)
     .then(res => {
       if (res.status === 200) {
-        setNotification('success', res.data);
+        notification('success', res.data);
         return true;
       } else {
-        setNotification('error', res.data);
+        notification('error', res.data);
         return false;
       }
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
     });
 };
 
@@ -126,15 +126,15 @@ export const startService = async (name: string) => {
     })
     .then(res => {
       if (res.status === 200) {
-        setNotification('success', res.data);
+        notification('success', res.data);
         return true;
       } else {
-        setNotification('error', res.data);
+        notification('error', res.data);
         return false;
       }
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
     });
 };
 export const stopService = async (name: string) => {
@@ -144,15 +144,15 @@ export const stopService = async (name: string) => {
     })
     .then(res => {
       if (res.status === 200) {
-        setNotification('success', res.data);
+        notification('success', res.data);
         return true;
       } else {
-        setNotification('error', res.data);
+        notification('error', res.data);
         return false;
       }
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
     });
 };
 /** 获取是否已经导入 */
@@ -167,7 +167,7 @@ export const getDataloadingConfig = async (graph_name: string) => {
       }
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
       return {};
     });
 };

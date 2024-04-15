@@ -1,4 +1,4 @@
-import { notification } from 'antd';
+import { notification as notifications } from 'antd';
 
 export const getSearchParams = (location: Location) => {
   const { hash } = location;
@@ -10,13 +10,13 @@ export const getSearchParams = (location: Location) => {
   };
 };
 
-export const setNotification = (type: string, data: any) => {
+export const notification = (type: string, data: any) => {
   if (type === 'success') {
-    notification.success({ message: `${data}` });
+    notifications.success({ message: `${data}` });
   }
   if (type === 'error') {
     const { response } = data;
     const body = response.data.split('response body:')[1];
-    notification.error({ message: `${body}` });
+    notifications.error({ message: `${body}` });
   }
 };

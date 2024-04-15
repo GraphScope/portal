@@ -2,7 +2,7 @@ import { GraphApiFactory, LegacyApiFactory } from '@graphscope/studio-server';
 import { transOptionsToSchema } from '@/components/utils/schema';
 import { transOptionsToGrootSchema } from '@/components/utils/schema-groot';
 import { cloneDeep } from 'lodash';
-import { setNotification } from '@/pages/utils';
+import { notification } from '@/pages/utils';
 const { GS_ENGINE_TYPE } = window;
 
 export const createGraph = async (graphName: string, storeType: string, nodeList: any[], edgeList: any[]) => {
@@ -26,7 +26,7 @@ export const createGraph = async (graphName: string, storeType: string, nodeList
         return [];
       })
       .catch(error => {
-        setNotification('error', error.toString());
+        notification('error', error.toString());
         return [];
       });
   }
@@ -42,7 +42,7 @@ export const createGraph = async (graphName: string, storeType: string, nodeList
         return [];
       })
       .catch(error => {
-        setNotification('error', error.toString());
+        notification('error', error.toString());
         return [];
       });
   }

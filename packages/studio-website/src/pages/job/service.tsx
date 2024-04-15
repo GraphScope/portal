@@ -1,5 +1,5 @@
 import { JobApiFactory } from '@graphscope/studio-server';
-import { setNotification } from '@/pages/utils';
+import { notification } from '@/pages/utils';
 import dayjs from 'dayjs';
 export type IJobType = {
   key?: string;
@@ -23,7 +23,7 @@ export const listJobs = async () => {
       return [];
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
       return [];
     });
   const info = message
@@ -47,7 +47,7 @@ export const deleteJobById = async (jobId: string) => {
       return [];
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
     });
 };
 export const getJobById = async (jobId: string) => {
@@ -60,6 +60,6 @@ export const getJobById = async (jobId: string) => {
       return [];
     })
     .catch(error => {
-      setNotification('error', error);
+      notification('error', error);
     });
 };
