@@ -1,6 +1,5 @@
 import React, { useState, memo, useRef, useEffect } from 'react';
-import { Space, Button, theme, Skeleton } from 'antd';
-import { v4 as uuidv4 } from 'uuid';
+import { theme } from 'antd';
 import dayjs from 'dayjs';
 import Editor from './editor';
 import Result from './result';
@@ -48,7 +47,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
         };
   const ContainerRef = useRef<HTMLDivElement>(null);
   const [state, updateState] = useState({
-    data: null,
+    data: {},
     isFetching: false,
     startTime: 0,
     endTime: 0,
@@ -69,7 +68,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
         return {
           ...preState,
           isFetching: false,
-          data: null,
+          data: {},
         };
       });
       return;
@@ -133,10 +132,8 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
         isFetching={isFetching}
         antdToken={token}
       />
-      {data && !isFetching && (
-        <Result data={data} isFetching={isFetching} schemaData={schemaData} graphName={graphName} />
-      )}
-      {isFetching && <Skeleton />}
+
+      <Result data={data} isFetching={isFetching} schemaData={schemaData} graphName={graphName} />
     </div>
   );
 };

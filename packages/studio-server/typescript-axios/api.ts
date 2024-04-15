@@ -1001,9 +1001,9 @@ export interface GrootProperty {
 }
 
 export const GrootPropertyTypeEnum = {
-    String: 'STRING',
-    Long: 'LONG',
-    Double: 'DOUBLE'
+    String: 'DT_STRING',
+    SignedInt64: 'DT_SIGNED_INT64',
+    Double: 'DT_DOUBLE'
 } as const;
 
 export type GrootPropertyTypeEnum = typeof GrootPropertyTypeEnum[keyof typeof GrootPropertyTypeEnum];
@@ -1669,7 +1669,7 @@ export const AlertApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
-         * @param {string} [type] 
+         * @param {string} [alertType] 
          * @param {ListAlertMessagesStatusEnum} [status] 
          * @param {ListAlertMessagesSeverityEnum} [severity] 
          * @param {string} [startTime] format with \&quot;2023-02-21-11-56-30\&quot;
@@ -1677,7 +1677,7 @@ export const AlertApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listAlertMessages: async (type?: string, status?: ListAlertMessagesStatusEnum, severity?: ListAlertMessagesSeverityEnum, startTime?: string, endTime?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listAlertMessages: async (alertType?: string, status?: ListAlertMessagesStatusEnum, severity?: ListAlertMessagesSeverityEnum, startTime?: string, endTime?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/v1/alert/message`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1690,8 +1690,8 @@ export const AlertApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            if (type !== undefined) {
-                localVarQueryParameter['type'] = type;
+            if (alertType !== undefined) {
+                localVarQueryParameter['alert_type'] = alertType;
             }
 
             if (status !== undefined) {
@@ -1957,7 +1957,7 @@ export const AlertApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} [type] 
+         * @param {string} [alertType] 
          * @param {ListAlertMessagesStatusEnum} [status] 
          * @param {ListAlertMessagesSeverityEnum} [severity] 
          * @param {string} [startTime] format with \&quot;2023-02-21-11-56-30\&quot;
@@ -1965,8 +1965,8 @@ export const AlertApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listAlertMessages(type?: string, status?: ListAlertMessagesStatusEnum, severity?: ListAlertMessagesSeverityEnum, startTime?: string, endTime?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AlertMessage>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listAlertMessages(type, status, severity, startTime, endTime, options);
+        async listAlertMessages(alertType?: string, status?: ListAlertMessagesStatusEnum, severity?: ListAlertMessagesSeverityEnum, startTime?: string, endTime?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AlertMessage>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listAlertMessages(alertType, status, severity, startTime, endTime, options);
             const index = configuration?.serverIndex ?? 0;
             const operationBasePath = operationServerMap['AlertApi.listAlertMessages']?.[index]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
@@ -2073,7 +2073,7 @@ export const AlertApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
-         * @param {string} [type] 
+         * @param {string} [alertType] 
          * @param {ListAlertMessagesStatusEnum} [status] 
          * @param {ListAlertMessagesSeverityEnum} [severity] 
          * @param {string} [startTime] format with \&quot;2023-02-21-11-56-30\&quot;
@@ -2081,8 +2081,8 @@ export const AlertApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listAlertMessages(type?: string, status?: ListAlertMessagesStatusEnum, severity?: ListAlertMessagesSeverityEnum, startTime?: string, endTime?: string, options?: any): AxiosPromise<Array<AlertMessage>> {
-            return localVarFp.listAlertMessages(type, status, severity, startTime, endTime, options).then((request) => request(axios, basePath));
+        listAlertMessages(alertType?: string, status?: ListAlertMessagesStatusEnum, severity?: ListAlertMessagesSeverityEnum, startTime?: string, endTime?: string, options?: any): AxiosPromise<Array<AlertMessage>> {
+            return localVarFp.listAlertMessages(alertType, status, severity, startTime, endTime, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2172,7 +2172,7 @@ export class AlertApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} [type] 
+     * @param {string} [alertType] 
      * @param {ListAlertMessagesStatusEnum} [status] 
      * @param {ListAlertMessagesSeverityEnum} [severity] 
      * @param {string} [startTime] format with \&quot;2023-02-21-11-56-30\&quot;
@@ -2181,8 +2181,8 @@ export class AlertApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof AlertApi
      */
-    public listAlertMessages(type?: string, status?: ListAlertMessagesStatusEnum, severity?: ListAlertMessagesSeverityEnum, startTime?: string, endTime?: string, options?: RawAxiosRequestConfig) {
-        return AlertApiFp(this.configuration).listAlertMessages(type, status, severity, startTime, endTime, options).then((request) => request(this.axios, this.basePath));
+    public listAlertMessages(alertType?: string, status?: ListAlertMessagesStatusEnum, severity?: ListAlertMessagesSeverityEnum, startTime?: string, endTime?: string, options?: RawAxiosRequestConfig) {
+        return AlertApiFp(this.configuration).listAlertMessages(alertType, status, severity, startTime, endTime, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -622,6 +622,52 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/GrootGraph'
+              example:
+                - name: demo
+                  type: GrootGraph
+                  directed: true
+                  creation_time: 2024-04-01 12:00:00
+                  schema:
+                    vertices:
+                      - label: person
+                        properties:
+                          - id: 0
+                            name: id
+                            type: STRING
+                            is_primary_key: true
+                          - id: 1
+                            name: name
+                            type: STRING
+                            is_primary_key: false
+                      - label: software
+                        properties:
+                          - id: 0
+                            name: id
+                            type: STRING
+                            is_primary_key: true
+                          - id: 1
+                            name: name
+                            type: STRING
+                            is_primary_key: false
+                    edges:
+                      - label: knows
+                        relations:
+                          - src_label: person
+                            dst_label: person
+                        properties:
+                          - id: 0
+                            name: weight
+                            type: DOUBLE
+                            is_primary_key: false
+                      - label: created
+                        relations:
+                          - src_label: person
+                            dst_label: software
+                        properties:
+                          - id: 0
+                            name: weight
+                            type: DOUBLE
+                            is_primary_key: false
   /api/v1/groot/graph/{graph_name}/schema:
     post:
       tags:
@@ -665,6 +711,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GrootSchema'
+              example:
+                vertices:
+                  - label: person
+                    properties:
+                      - id: 0
+                        name: id
+                        type: STRING
+                        is_primary_key: true
+                      - id: 1
+                        name: name
+                        type: STRING
+                        is_primary_key: false
+                  - label: software
+                    properties:
+                      - id: 0
+                        name: id
+                        type: STRING
+                        is_primary_key: true
+                      - id: 1
+                        name: name
+                        type: STRING
+                        is_primary_key: false
+                edges:
+                  - label: knows
+                    relations:
+                      - src_label: person
+                        dst_label: person
+                    properties:
+                      - id: 0
+                        name: weight
+                        type: DOUBLE
+                        is_primary_key: false
+                  - label: created
+                    relations:
+                      - src_label: person
+                        dst_label: software
+                    properties:
+                      - id: 0
+                        name: weight
+                        type: DOUBLE
+                        is_primary_key: false
   /api/v1/groot/graph/{graph_name}/dataloading:
     post:
       tags:
@@ -1245,7 +1332,7 @@ paths:
         - alert
       operationId: list_alert_messages
       parameters:
-        - name: type
+        - name: alert_type
           in: query
           required: false
           schema:
@@ -2163,9 +2250,9 @@ components:
         type:
           type: string
           enum:
-            - STRING
-            - LONG
-            - DOUBLE
+            - DT_STRING
+            - DT_SIGNED_INT64
+            - DT_DOUBLE
         is_primary_key:
           type: boolean
     GrootDataloadingJobConfig:
@@ -2196,7 +2283,3 @@ components:
             - once
             - day
             - week
-servers:
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/0.9.1
