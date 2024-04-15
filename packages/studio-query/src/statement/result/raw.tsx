@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Result } from 'antd';
 import { LoadingOutlined, Loading3QuartersOutlined } from '@ant-design/icons';
-
 interface IJSONViewProps {
   data: any;
   isFetching: boolean;
