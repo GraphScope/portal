@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { Result } from 'antd';
-
-import ReactJson from 'react-json-view';
 import { LoadingOutlined, Loading3QuartersOutlined } from '@ant-design/icons';
+
 interface IJSONViewProps {
   data: any;
   isFetching: boolean;
@@ -20,8 +19,7 @@ const RawView: React.FunctionComponent<IJSONViewProps> = props => {
 
   return (
     <div>
-      {/* <pre style={{ textWrap: 'pretty' }}>{JSON.stringify(data.raw, null, 2)}</pre> */}
-      <ReactJson src={JSON.stringify(data.raw, null, 2)} />
+      <pre style={{ textWrap: 'pretty' }}>{JSON.stringify(data.raw, null, 2)}</pre>
     </div>
   );
 };
