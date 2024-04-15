@@ -5,7 +5,6 @@ import { useContext } from '../create-instance/useContext';
 import ChooseEnginetype from './choose-enginetype';
 import CreateSchema from '../create-instance/create-schema';
 import Result from './result';
-import ResultFailed from './result/result-failed';
 import ResultSuccess from './result/result-success';
 import { FormattedMessage } from 'react-intl';
 import { createGraph } from './service';
@@ -234,9 +233,7 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
           <div style={currentStep === 2 ? activeItemStyle : itemStyle}>
             <Result />
           </div>
-          <div style={currentStep === 3 ? activeItemStyle : itemStyle}>
-            {createInstaseResult ? <ResultSuccess /> : <ResultFailed />}
-          </div>
+          <div style={currentStep === 3 ? activeItemStyle : itemStyle}>{createInstaseResult && <ResultSuccess />}</div>
         </div>
         <div>
           <Space>
