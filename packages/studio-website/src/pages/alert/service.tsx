@@ -1,5 +1,6 @@
 import { AlertApiFactory, UpdateAlertMessagesRequest } from '@graphscope/studio-server';
 import type { AlertReceiver, AlertRule } from '@graphscope/studio-server';
+import { setNotification } from '@/pages/utils';
 export type IAlertMessages = {
   type?: string;
   status?: 'unsolved' | 'solved' | 'dealing';
@@ -34,6 +35,9 @@ export const listAlertMessages = async (params: IAlertMessages) => {
         return res.data;
       }
       return [];
+    })
+    .catch(error => {
+      setNotification('error', error);
     });
   const info = message.map((item: IAlertMessages & IMessageType) => {
     const { message_id } = item;
@@ -53,6 +57,9 @@ export const updateAlertMessages = async (params: UpdateAlertMessagesRequest) =>
         return res.data;
       }
       return [];
+    })
+    .catch(error => {
+      setNotification('error', error);
     });
 
   return message;
@@ -69,6 +76,9 @@ export const listAlertRules = async () => {
         return res.data;
       }
       return [];
+    })
+    .catch(error => {
+      setNotification('error', error);
     });
 
   const info = rules.map((item: IAlertRules) => {
@@ -88,6 +98,9 @@ export const deleteAlertRuleByName = async (params: string) => {
         return res.data;
       }
       return [];
+    })
+    .catch(error => {
+      setNotification('error', error);
     });
 
   return rules;
@@ -100,6 +113,9 @@ export const updateAlertRuleByName = async (params: string, alertRule: AlertRule
         return res.data;
       }
       return [];
+    })
+    .catch(error => {
+      setNotification('error', error);
     });
 
   return rules;
@@ -116,6 +132,9 @@ export const listReceivers = async () => {
         return res.data;
       }
       return [];
+    })
+    .catch(error => {
+      setNotification('error', error);
     });
   const info = receivers.map((item: AlertReceiver & { key: string }) => {
     const { receiver_id } = item;
@@ -134,6 +153,9 @@ export const registerReceiver = async (params: AlertReceiver) => {
         return res.data;
       }
       return [];
+    })
+    .catch(error => {
+      setNotification('error', error);
     });
 
   return receivers;
@@ -146,6 +168,9 @@ export const deleteReceiverById = async (receiverId: string) => {
         return res.data;
       }
       return [];
+    })
+    .catch(error => {
+      setNotification('error', error);
     });
 
   return receivers;
@@ -158,6 +183,9 @@ export const updateReceiverById = async (receiverId: string, alertReceiver: Aler
         return res.data;
       }
       return [];
+    })
+    .catch(error => {
+      setNotification('error', error);
     });
 
   return receivers;

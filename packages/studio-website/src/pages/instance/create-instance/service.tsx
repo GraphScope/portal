@@ -2,7 +2,7 @@ import { GraphApiFactory, LegacyApiFactory } from '@graphscope/studio-server';
 import { transOptionsToSchema } from '@/components/utils/schema';
 import { transOptionsToGrootSchema } from '@/components/utils/schema-groot';
 import { cloneDeep } from 'lodash';
-import { notification } from 'antd';
+import { setNotification } from '@/pages/utils';
 const { GS_ENGINE_TYPE } = window;
 
 export const createGraph = async (graphName: string, storeType: string, nodeList: any[], edgeList: any[]) => {
@@ -26,10 +26,7 @@ export const createGraph = async (graphName: string, storeType: string, nodeList
         return [];
       })
       .catch(error => {
-        notification.error({
-          message: '创建图模型失败',
-          description: error.toString(),
-        });
+        setNotification('error', error.toString());
         return [];
       });
   }
@@ -45,10 +42,7 @@ export const createGraph = async (graphName: string, storeType: string, nodeList
         return [];
       })
       .catch(error => {
-        notification.error({
-          message: '创建图模型失败',
-          description: error.toString(),
-        });
+        setNotification('error', error.toString());
         return [];
       });
   }

@@ -1,5 +1,6 @@
 import { ProcedureApiFactory, DeploymentApiFactory } from '@graphscope/studio-server';
 import type { Procedure } from '@graphscope/studio-server';
+import { setNotification } from '@/pages/utils';
 /** 获取插件列表 */
 export const listProcedures = async () => {
   const message = await ProcedureApiFactory(undefined, location.origin)
@@ -27,6 +28,9 @@ export const createProcedure = async (graph_name: string, procedure: Procedure) 
         return res.data;
       }
       return [];
+    })
+    .catch(error => {
+      setNotification('error', error);
     });
 };
 /** 删除插件 */
@@ -38,6 +42,9 @@ export const deleteProcedure = async (graph_name: string, procedureName: string)
         return res.data;
       }
       return [];
+    })
+    .catch(error => {
+      setNotification('error', error);
     });
 };
 /** 修改插件 */
@@ -49,6 +56,9 @@ export const updateProcedure = async (graph_name: string, procedureName: string,
         return res.data;
       }
       return [];
+    })
+    .catch(error => {
+      setNotification('error', error);
     });
 };
 /** 获取某条插件数据 */
@@ -60,6 +70,9 @@ export const getProcedure = async (graphName: string, procedureName: string) => 
         return res.data;
       }
       return [];
+    })
+    .catch(error => {
+      setNotification('error', error);
     });
 };
 
@@ -67,7 +80,13 @@ export const listGraphs = async () => {
   const deployments = await DeploymentApiFactory(undefined, location.origin)
     .getDeploymentInfo()
     .then(res => {
-      return res.data;
+      if (res.status === 200) {
+        return res.data;
+      }
+      return {};
+    })
+    .catch(error => {
+      setNotification('error', error);
     });
   const { graphs_info } = deployments;
 

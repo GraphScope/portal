@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { history } from 'umi';
-import { Button, notification, Steps as AntdSteps, Alert, Breadcrumb, Form } from 'antd';
+import { Button, notification, Steps as AntdSteps, Alert, Breadcrumb, Form, Space } from 'antd';
 import { useContext } from '../create-instance/useContext';
 import ChooseEnginetype from './choose-enginetype';
 import CreateSchema from '../create-instance/create-schema';
@@ -28,7 +28,7 @@ const LeftButton = (props: { currentStep: any; handlePrev: any; createInstaseRes
   }
   if (currentStep > 0) {
     return (
-      <Button style={{ margin: '0 8px', minWidth: '100px' }} onClick={handlePrev}>
+      <Button style={{ minWidth: '100px' }} onClick={handlePrev}>
         <FormattedMessage id="Previous" />
       </Button>
     );
@@ -239,10 +239,10 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
           </div>
         </div>
         <div>
-          <div>
+          <Space>
             <LeftButton currentStep={currentStep} handlePrev={prev} createInstaseResult={createInstaseResult} />
             <RightButton currentStep={currentStep} handleNext={next} handleSubmit={handleSubmit} mode={mode} />
-          </div>
+          </Space>
         </div>
       </div>
     </div>
