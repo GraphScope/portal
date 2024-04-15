@@ -26,7 +26,7 @@ export const createGraph = async (graphName: string, storeType: string, nodeList
         return [];
       })
       .catch(error => {
-        notification('error', error.toString());
+        notification('error', error);
         return [];
       });
   }
@@ -42,7 +42,7 @@ export const createGraph = async (graphName: string, storeType: string, nodeList
         return [];
       })
       .catch(error => {
-        notification('error', error.toString());
+        notification('error', error);
         return [];
       });
   }
