@@ -110,10 +110,21 @@ const ImportData: React.FunctionComponent = () => {
               <FormattedMessage id="Vertices" />
             </Text>
             {!isReady && <Skeleton />}
-            <GraphView
-              //@ts-ignore
-              viewdata={{ nodeLists: nodes, edgeLists: edges }}
-            ></GraphView>
+            <div
+              style={{
+                padding: '1px',
+                minHeight: 'calc(100vh - 300px)',
+                overflow: 'hidden',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <GraphView
+                //@ts-ignore
+                viewdata={{ nodeLists: nodes, edgeLists: edges }}
+              ></GraphView>
+            </div>
           </Card>
         </Col>
       </Row>
