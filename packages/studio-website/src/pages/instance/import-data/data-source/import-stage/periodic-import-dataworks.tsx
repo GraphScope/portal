@@ -3,7 +3,7 @@ import { Button, Flex, Typography } from 'antd';
 import CodeMirror from '@uiw/react-codemirror';
 import { useContext } from '@/layouts/useContext';
 import { download } from '@/components/utils';
-import { updateTheme } from '@/pages/utils';
+import { useEditorTheme } from '@/pages/utils';
 const { Title, Link } = Typography;
 const PeriodicImportDataworks = (props: { setState?: any; configLpading?: any; type?: any; onClose?: any }) => {
   const { configLpading, type } = props;
@@ -51,7 +51,7 @@ const PeriodicImportDataworks = (props: { setState?: any; configLpading?: any; t
         }}
         value={codeMirrorData}
         height="150px"
-        theme={updateTheme(mode, false)}
+        theme={useEditorTheme(mode, false)}
         readOnly
         autoFocus
       />

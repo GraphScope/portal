@@ -3,7 +3,7 @@ import { Button, Form, Input, Select, Flex, Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { history } from 'umi';
 import { searchParamOf } from '@/components/utils/index';
-import { updateTheme } from '@/pages/utils';
+import { useEditorTheme } from '@/pages/utils';
 import CodeMirror from '@uiw/react-codemirror';
 import { useContext } from '@/layouts/useContext';
 import UploadFiles from './upload-files';
@@ -181,7 +181,7 @@ const CreatePlugins: React.FC = () => {
                 height="200px"
                 value={editCode}
                 onChange={e => onCodeMirrorChange(e)}
-                theme={updateTheme(mode, isEdit)}
+                theme={useEditorTheme(mode, isEdit)}
                 readOnly={isEdit}
               />
             </div>

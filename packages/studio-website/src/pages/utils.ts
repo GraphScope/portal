@@ -21,7 +21,7 @@ export const notification = (type: string, data: any) => {
   }
 };
 
-export const updateTheme = (mode: string, isEdit: boolean) => {
+export const useEditorTheme = (mode: string, isEdit: boolean) => {
   //@ts-ignore
   return createTheme({
     theme: mode === 'defaultAlgorithm' ? 'light' : 'dark',
