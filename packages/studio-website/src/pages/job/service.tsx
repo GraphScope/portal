@@ -1,4 +1,5 @@
 import { JobApiFactory } from '@graphscope/studio-server';
+import { notification } from '@/pages/utils';
 import dayjs from 'dayjs';
 export type IJobType = {
   key?: string;
@@ -20,6 +21,10 @@ export const listJobs = async () => {
         return res.data;
       }
       return [];
+    })
+    .catch(error => {
+      notification('error', error);
+      return [];
     });
   const info = message
     .sort((a, b) => dayjs(b.start_time).valueOf() - dayjs(a.start_time).valueOf())
@@ -40,6 +45,9 @@ export const deleteJobById = async (jobId: string) => {
         return res.data;
       }
       return [];
+    })
+    .catch(error => {
+      notification('error', error);
     });
 };
 export const getJobById = async (jobId: string) => {
@@ -50,5 +58,8 @@ export const getJobById = async (jobId: string) => {
         return res.data;
       }
       return [];
+    })
+    .catch(error => {
+      notification('error', error);
     });
 };

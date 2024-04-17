@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import { history } from 'umi';
-import { Button, notification, Steps as AntdSteps, Alert, Breadcrumb, Form } from 'antd';
+import { Button, notification, Steps as AntdSteps, Alert, Breadcrumb, Form, Space } from 'antd';
 import { useContext } from '../create-instance/useContext';
 import ChooseEnginetype from './choose-enginetype';
 import CreateSchema from '../create-instance/create-schema';
 import Result from './result';
-import ResultFailed from './result/result-failed';
 import ResultSuccess from './result/result-success';
 import { FormattedMessage } from 'react-intl';
 import { createGraph } from './service';
@@ -28,7 +27,7 @@ const LeftButton = (props: { currentStep: any; handlePrev: any; createInstaseRes
   }
   if (currentStep > 0) {
     return (
-      <Button style={{ margin: '0 8px', minWidth: '100px' }} onClick={handlePrev}>
+      <Button style={{ minWidth: '100px' }} onClick={handlePrev}>
         <FormattedMessage id="Previous" />
       </Button>
     );
@@ -234,15 +233,13 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
           <div style={currentStep === 2 ? activeItemStyle : itemStyle}>
             <Result />
           </div>
-          <div style={currentStep === 3 ? activeItemStyle : itemStyle}>
-            {createInstaseResult ? <ResultSuccess /> : <ResultFailed />}
-          </div>
+          <div style={currentStep === 3 ? activeItemStyle : itemStyle}>{createInstaseResult && <ResultSuccess />}</div>
         </div>
         <div>
-          <div>
+          <Space>
             <LeftButton currentStep={currentStep} handlePrev={prev} createInstaseResult={createInstaseResult} />
             <RightButton currentStep={currentStep} handleNext={next} handleSubmit={handleSubmit} mode={mode} />
-          </div>
+          </Space>
         </div>
       </div>
     </div>

@@ -7,43 +7,42 @@ import { useContext } from '@/layouts/useContext';
 
 const Detail: React.FunctionComponent = () => {
   const jobId: string = searchParamOf('jobId') || '';
-  const [detailData, setDetailData] = useState('');
+  const [detailData, setDetailData] = useState<string>('');
   const { store } = useContext();
   const { mode } = store;
   /** 获取详情job */
-  const getJobByIdDetail = async () => {
-    const res = await getJobById(jobId);
-    const { log } = res;
-    setDetailData(log);
-  };
-
   useEffect(() => {
-    getJobByIdDetail();
-  }, []);
+    const fetchJobDetails = async () => {
+      const response = await getJobById(jobId);
+      const { log } = response;
+      setDetailData(log);
+    };
 
+    if (jobId) {
+      fetchJobDetails();
+    }
+  }, [jobId]);
+  /** code style */
+  const containerStyles = {
+    margin: '12px 0px',
+    height: 'calc(100vh - 120px)',
+    overflow: 'auto',
+    border: `${mode === 'defaultAlgorithm' ? '#efefef' : '#323232'} 1px solid`,
+    borderRadius: '6px',
+    padding: '12px',
+    color: mode === 'defaultAlgorithm' ? '#1F1F1F' : '#808080',
+  };
   return (
     <div style={{ padding: '12px 24px' }}>
-      <Breadcrumb
-        items={[
-          {
-            title: <a href="/job">作业管理</a>,
-          },
-          {
-            title: <FormattedMessage id="Detail" />,
-          },
-        ]}
-      />
-      <pre
-        style={{
-          margin: '12px 0px',
-          height: 'calc(100vh - 120px)',
-          overflow: 'scroll',
-          border: `1px solid ${mode === 'defaultAlgorithm' ? '#efefef' : '#323232'}`,
-          color: mode === 'defaultAlgorithm' ? '#1F1F1F' : '#808080',
-          borderRadius: '6px',
-          padding: '12px',
-        }}
-      >
+      <Breadcrumb>
+        <Breadcrumb.Item>
+          <a href="/job">作业管理</a>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <FormattedMessage id="Detail" />
+        </Breadcrumb.Item>
+      </Breadcrumb>
+      <pre style={containerStyles}>
         <code style={{ whiteSpace: 'pre-wrap' }}>{detailData}</code>
       </pre>
     </div>

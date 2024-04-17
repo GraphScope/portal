@@ -11,7 +11,7 @@ import type {
   VertexDataSource,
   EdgeDataSource,
 } from '@graphscope/studio-server';
-import { notification } from 'antd';
+import { notification } from '@/pages/utils';
 import {
   transformSchemaToImportOptions,
   transformMappingSchemaToImportOptions,
@@ -27,6 +27,9 @@ export const uploadFile = async (file: File) => {
       if (res.status === 200) {
         return res.data;
       }
+    })
+    .catch(error => {
+      notification('error', error);
     });
 };
 
@@ -39,7 +42,7 @@ export const createDataloadingJob = async (params: SchemaMapping) => {
       }
     })
     .catch(error => {
-      console.log(error);
+      notification('error', error);
     });
 };
 
@@ -53,6 +56,9 @@ export const getSchema = async (graph_name: string) => {
           return res.data;
         }
         return { nodes: [], edges: [] };
+      })
+      .catch(error => {
+        notification('error', error);
       });
   }
   if (window.GS_ENGINE_TYPE === 'groot') {
@@ -63,6 +69,9 @@ export const getSchema = async (graph_name: string) => {
           return res.data;
         }
         return { nodes: [], edges: [] };
+      })
+      .catch(error => {
+        notification('error', error);
       });
     schema = transformDataMapToGrootSchema(JSON.parse(JSON.stringify(schema)));
   }
@@ -74,7 +83,7 @@ export const getDataloadingConfig = async (graph_name: string, schema: any) => {
     .getDataloadingConfig(graph_name!)
     .then(res => res.data)
     .catch(error => {
-      console.log(error);
+      notification('error', error);
       return {};
     });
   console.log(schemaMapping);
@@ -98,7 +107,7 @@ export const createGrootDataloadingJob = async (
       }
     })
     .catch(error => {
-      notification.error(error);
+      notification('error', error);
       return {};
     });
   return grootDataloading;
@@ -113,7 +122,7 @@ export const bindVertexDatasource = async (graphName: string, vertexDataSource: 
       }
     })
     .catch(error => {
-      console.log(error);
+      notification('error', error);
     });
 };
 /** groot 绑定边 */
@@ -126,7 +135,7 @@ export const bindEdgeDatasource = async (graphName: string, edgeDataSource: Edge
       }
     })
     .catch(error => {
-      console.log(error);
+      notification('error', error);
     });
 };
 

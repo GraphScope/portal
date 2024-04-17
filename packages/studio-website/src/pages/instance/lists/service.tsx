@@ -5,7 +5,7 @@ import {
   LegacyApiFactory,
   JobApiFactory,
 } from '@graphscope/studio-server';
-import { message } from 'antd';
+import { notification } from '@/pages/utils';
 
 export const listGraphs = async () => {
   const status = await ServiceApiFactory(undefined, location.origin)
@@ -15,11 +15,17 @@ export const listGraphs = async () => {
         return res.data;
       }
       return {};
+    })
+    .catch(error => {
+      notification('error', error);
     });
   const deployments = await DeploymentApiFactory(undefined, location.origin)
     .getDeploymentInfo()
     .then(res => {
       return res.data;
+    })
+    .catch(error => {
+      notification('error', error);
     });
   const { GS_ENGINE_TYPE } = window;
   let graphs;
@@ -30,6 +36,9 @@ export const listGraphs = async () => {
         if (res.status === 200) {
           return res.data;
         }
+      })
+      .catch(error => {
+        notification('error', error);
       });
   }
 
@@ -40,6 +49,9 @@ export const listGraphs = async () => {
         if (res.status === 200) {
           return res.data;
         }
+      })
+      .catch(error => {
+        notification('error', error);
       });
   }
 
@@ -95,12 +107,15 @@ export const deleteGraph = async (name: string) => {
     .deleteGraph(name)
     .then(res => {
       if (res.status === 200) {
-        message.success(res.data);
+        notification('success', res.data);
         return true;
       } else {
-        message.error(res.data);
+        notification('error', res.data);
         return false;
       }
+    })
+    .catch(error => {
+      notification('error', error);
     });
 };
 
@@ -111,12 +126,15 @@ export const startService = async (name: string) => {
     })
     .then(res => {
       if (res.status === 200) {
-        message.success(res.data);
+        notification('success', res.data);
         return true;
       } else {
-        message.error(res.data);
+        notification('error', res.data);
         return false;
       }
+    })
+    .catch(error => {
+      notification('error', error);
     });
 };
 export const stopService = async (name: string) => {
@@ -126,21 +144,30 @@ export const stopService = async (name: string) => {
     })
     .then(res => {
       if (res.status === 200) {
-        message.success(res.data);
+        notification('success', res.data);
         return true;
       } else {
-        message.error(res.data);
+        notification('error', res.data);
         return false;
       }
+    })
+    .catch(error => {
+      notification('error', error);
     });
 };
 /** 获取是否已经导入 */
 export const getDataloadingConfig = async (graph_name: string) => {
   return await JobApiFactory(undefined, location.origin)
     .getDataloadingConfig(graph_name!)
-    .then(res => res.data)
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      } else {
+        return res.data;
+      }
+    })
     .catch(error => {
-      console.log(error);
+      notification('error', error);
       return {};
     });
 };

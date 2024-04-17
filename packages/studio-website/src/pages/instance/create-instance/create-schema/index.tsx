@@ -112,7 +112,7 @@ const CreateInstance: React.FunctionComponent = () => {
           }}
         >
           <Card
-            styles={{ body: { minHeight: '550px', height: 'cacl(100vh - 150px)', padding: '0px' } }}
+            styles={{ body: { minHeight: 'calc(100vh - 300px)', padding: '0px' } }}
             title={
               <Segmented
                 value={currentType}
@@ -130,7 +130,7 @@ const CreateInstance: React.FunctionComponent = () => {
                 <EmptyInfo />
               ) : (
                 <Tabs
-                  style={{ minHeight: '550px', height: 'cacl(100vh - 150px)', padding: '12px' }}
+                  style={{ minHeight: 'calc(100vh - 300px)', padding: '12px' }}
                   tabBarStyle={{ borderLeft: 0, width: '120px' }}
                   tabPosition="left"
                   items={nodeItems}
@@ -144,7 +144,7 @@ const CreateInstance: React.FunctionComponent = () => {
                 <EmptyInfo />
               ) : (
                 <Tabs
-                  style={{ minHeight: '550px', height: 'cacl(100vh - 150px)', padding: '12px' }}
+                  style={{ minHeight: 'calc(100vh - 300px)', padding: '12px' }}
                   tabBarStyle={{ borderLeft: 0, width: '120px' }}
                   tabPosition="left"
                   items={edgeItems}
@@ -159,7 +159,14 @@ const CreateInstance: React.FunctionComponent = () => {
       <Col span={8}>
         <Card
           styles={{
-            body: { padding: '1px', minHeight: '550px', height: 'cacl(100vh - 150px)', overflow: 'hidden' },
+            body: {
+              padding: '1px',
+              minHeight: 'calc(100vh - 300px)',
+              overflow: 'hidden',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
           }}
           title={<FormattedMessage id="Graph Model" />}
           extra={<ExportConfig />}

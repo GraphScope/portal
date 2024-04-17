@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import type { FC } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Table, Tag, Flex, message, Button, Popconfirm } from 'antd';
 import {
   CheckCircleOutlined,
@@ -15,8 +16,12 @@ import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { listJobs, IJobType, deleteJobById } from './service';
 import dayjs from 'dayjs';
 
+interface JobOption {
+  value: string;
+  text: string;
+}
 /** 定义状态选项 */
-const STATUSOPTIONS = [
+const STATUSOPTIONS: JobOption[] = [
   { value: '', text: 'All' },
   { value: 'RUNNING', text: 'Running' },
   { value: 'CANCELLED', text: 'Cancelled' },
@@ -25,44 +30,42 @@ const STATUSOPTIONS = [
   { value: 'WAITING', text: 'Waiting' },
 ];
 /** 定义job类型 */
-let JOBOPTIONS = [{ value: '', text: 'All' }];
+let JOBOPTIONS: JobOption[] = [{ value: '', text: 'All' }];
 /** job状态显示图标 */
-const statusColor = [
-  {
-    type: 'RUNNING',
-    color: 'blue',
-    icon: <SyncOutlined spin />,
-  },
-  {
-    type: 'CANCELLED',
-    color: 'grey',
-    icon: <MinusCircleOutlined />,
-  },
-  {
-    type: 'SUCCESS',
-    color: 'green',
-    icon: <CheckCircleOutlined />,
-  },
-  {
-    type: 'FAILED',
-    color: 'red',
-    icon: <CloseCircleOutlined />,
-  },
-  {
-    type: 'WAITING',
-    color: 'orange',
-    icon: <ExclamationCircleOutlined />,
-  },
-];
+const JOB_TYPE_ICONS: Record<string, JSX.Element> = {
+  RUNNING: <SyncOutlined spin />,
+  CANCELLED: <MinusCircleOutlined />,
+  SUCCESS: <CheckCircleOutlined />,
+  FAILED: <CloseCircleOutlined />,
+  WAITING: <ExclamationCircleOutlined />,
+};
+const getStatusColor = (status: string): string => {
+  switch (status) {
+    case 'RUNNING':
+      return 'blue';
+    case 'CANCELLED':
+      return 'grey';
+    case 'SUCCESS':
+      return 'green';
+    case 'FAILED':
+      return 'red';
+    case 'WAITING':
+      return 'orange';
+    default:
+      return '';
+  }
+};
+const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
-const JobsList: React.FunctionComponent = () => {
-  const [jobsList, setJobsList] = useState([]);
+const JobsList: FC = () => {
+  const [jobsList, setJobsList] = useState<IJobType[]>([]);
   /** 获取jobs列表数据 */
-  const getJobList = async () => {
+  const getJobList = useCallback(async () => {
     const res = await listJobs();
     setJobsList(res);
     /** 接口获取类型值 */
     JOBOPTIONS = JOBOPTIONS.concat(
+      //@ts-ignore
       res.map(item => {
         return {
           value: item.type,
@@ -72,18 +75,18 @@ const JobsList: React.FunctionComponent = () => {
     );
     /** 过滤相同属性 */
     JOBOPTIONS = JOBOPTIONS.filter((item, index) => JOBOPTIONS.findIndex(i => i.value === item.value) === index);
-  };
+  }, []);
 
   useEffect(() => {
     getJobList();
   }, []);
 
   /** 删除job */
-  const deleteJob = async (job_id: string) => {
+  const handleDeleteJob = useCallback(async (job_id: string) => {
     const res = await deleteJobById(job_id);
     message.success(res);
     getJobList();
-  };
+  }, []);
   /** detail Popover 展示*/
   const handleChange = (detail: { [s: string]: unknown } | ArrayLike<unknown>) => {
     const data = Object.entries(detail);
@@ -135,38 +138,23 @@ const JobsList: React.FunctionComponent = () => {
       filters: STATUSOPTIONS,
       filterMultiple: false,
       onFilter: (value: string, record: IJobType) => record.status.startsWith(value),
-      render: (record: string) => {
-        return (
-          <>
-            {statusColor.map(item => {
-              const { type, color, icon } = item;
-              return (
-                <>
-                  {record === type && (
-                    <Tag icon={icon} color={color}>
-                      {record.substring(0, 1) + record.substring(1).toLowerCase()}
-                    </Tag>
-                  )}
-                </>
-              );
-            })}
-          </>
-        );
-      },
+      render: (status: string) => (
+        <Tag icon={JOB_TYPE_ICONS[status]} color={getStatusColor(status)}>
+          {capitalizeFirstLetter(status.toLowerCase())}
+        </Tag>
+      ),
     },
     {
       title: <FormattedMessage id="Start time" />,
       key: 'start_time',
       dataIndex: 'start_time',
-      sorter: (a: { start_time: string }, b: { start_time: string }) =>
-        dayjs(a.start_time).valueOf() - dayjs(b.start_time).valueOf(),
+      sorter: (a: IJobType, b: IJobType) => dayjs(a.start_time).valueOf() - dayjs(b.start_time).valueOf(),
     },
     {
       title: <FormattedMessage id="End time" />,
       key: 'end_time',
       dataIndex: 'end_time',
-      sorter: (a: { end_time: string }, b: { end_time: string }) =>
-        dayjs(a.end_time).valueOf() - dayjs(b.end_time).valueOf(),
+      sorter: (a: IJobType, b: IJobType) => dayjs(a.end_time).valueOf() - dayjs(b.end_time).valueOf(),
     },
     {
       title: <FormattedMessage id="Graph name" />,
@@ -183,7 +171,7 @@ const JobsList: React.FunctionComponent = () => {
         <Popconfirm
           placement="bottomRight"
           title={<FormattedMessage id="Are you sure to delete this task?" />}
-          onConfirm={() => deleteJob(record.job_id)}
+          onConfirm={() => handleDeleteJob(record.job_id)}
           okText={<FormattedMessage id="Yes" />}
           cancelText={<FormattedMessage id="No" />}
           icon

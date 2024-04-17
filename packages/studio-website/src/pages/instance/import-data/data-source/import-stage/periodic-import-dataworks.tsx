@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Flex, Typography } from 'antd';
 import CodeMirror from '@uiw/react-codemirror';
-import { createTheme } from '@uiw/codemirror-themes';
 import { useContext } from '@/layouts/useContext';
 import { download } from '@/components/utils';
+import { useEditorTheme } from '@/pages/utils';
 const { Title, Link } = Typography;
 const PeriodicImportDataworks = (props: { setState?: any; configLpading?: any; type?: any; onClose?: any }) => {
   const { configLpading, type } = props;
@@ -14,16 +14,6 @@ const PeriodicImportDataworks = (props: { setState?: any; configLpading?: any; t
   const { codeMirrorData, howToUse } = state;
   const { store } = useContext();
   const { mode } = store;
-  //@ts-ignore
-  const myTheme = createTheme({
-    theme: mode === 'defaultAlgorithm' ? 'light' : 'dark',
-    settings: {
-      background: mode === 'defaultAlgorithm' ? '#fff' : '#151515',
-      backgroundImage: '',
-      foreground: mode === 'defaultAlgorithm' ? '#212121' : '#FFF',
-      gutterBackground: mode === 'defaultAlgorithm' ? '#fff' : '#151515',
-    },
-  });
   //下载
   const sparkDownload = () => {
     const param = `${type?.toLocaleLowerCase()}` + '_' + `${configLpading?.label?.label}` + '_config.ini';
@@ -61,7 +51,7 @@ const PeriodicImportDataworks = (props: { setState?: any; configLpading?: any; t
         }}
         value={codeMirrorData}
         height="150px"
-        theme={myTheme}
+        theme={useEditorTheme(mode, false)}
         readOnly
         autoFocus
       />
