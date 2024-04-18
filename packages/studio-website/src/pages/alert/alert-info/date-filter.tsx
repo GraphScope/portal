@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { Button, Typography, Form, Space, DatePicker, Segmented, Flex, Tooltip } from 'antd';
 import { CheckSquareOutlined, CloseSquareOutlined } from '@ant-design/icons';
 
@@ -33,20 +33,17 @@ const DateFilter = (props: IInquireMessageProps) => {
   });
   const { timePeriod, segmentedValue } = state;
   /** 全选 Dealing ｜ Solved */
-  const handleAllDealingSolved = useCallback(
-    async (status: string) => {
-      const params = {
-        messages: selectedRows,
-        batch_status: status,
-        batch_delete: false,
-      };
-      await updateAlertMessages(params);
-      resetChange();
-    },
-    [resetChange, selectedRows],
-  );
+  const handleAllDealingSolved = async (status: string) => {
+    const params = {
+      messages: selectedRows,
+      batch_status: status,
+      batch_delete: false,
+    };
+    await updateAlertMessages(params);
+    resetChange();
+  };
   /** 保存 */
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = async () => {
     const values = form.getFieldsValue();
     const params: IAlertMessages = {
       ...values,
@@ -55,25 +52,25 @@ const DateFilter = (props: IInquireMessageProps) => {
     };
     const res = await listAlertMessages(params);
     searchChange(res);
-  }, [form, searchChange, timePeriod]);
+  };
 
   /** 选择固定时间值 */
-  const handleChangeSegmented = useCallback((value: any) => {
+  const handleChangeSegmented = (value: any) => {
     const timeRange = getTimeRange(value);
     updateState(preset => ({
       ...preset,
       timePeriod: timeRange,
       segmentedValue: value,
     }));
-  }, []);
+  };
   /** 日期选择 */
-  const onRangePickerChange = useCallback((value: [dayjs.Dayjs, dayjs.Dayjs] | [] | null) => {
+  const onRangePickerChange = (value: [dayjs.Dayjs, dayjs.Dayjs] | [] | null) => {
     //@ts-ignore
     updateState(prevState => ({
       ...prevState,
       timePeriod: value || prevState.timePeriod,
     }));
-  }, []);
+  };
 
   return (
     <>

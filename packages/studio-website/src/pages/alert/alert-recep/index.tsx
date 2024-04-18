@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Popconfirm, Table, Button, Space, Tag, Skeleton, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import CreateRecep from './create-resep';
@@ -30,27 +30,24 @@ const Receivers: React.FC = () => {
   });
   const { isReady, alertRecep, isEditRecep, editData } = state;
   /** 获取告警接收数据 */
-  const fetchAlertReceivers = useCallback(async () => {
+  const fetchAlertReceivers = async () => {
     const res = await listReceivers();
     updateState(preset => ({
       ...preset,
       alertRecep: res || [],
       isReady: true,
     }));
-  }, []);
+  };
   /** 删除告警接收 */
-  const deleteReceiver = useCallback(
-    async (receiver_id: string) => {
-      const res = await deleteReceiverById(receiver_id);
-      await fetchAlertReceivers();
-      await message.success(res);
-    },
-    [fetchAlertReceivers],
-  );
+  const deleteReceiver = async (receiver_id: string) => {
+    const res = await deleteReceiverById(receiver_id);
+    await fetchAlertReceivers();
+    await message.success(res);
+  };
   /** 创建告警接收 */
-  const handleToggleEdit = useCallback(() => {
+  const handleToggleEdit = () => {
     updateState(preset => ({ ...preset, isEditRecep: true }));
-  }, []);
+  };
   useEffect(() => {
     fetchAlertReceivers();
   }, []);

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Space, Table, Tag, Button, Skeleton } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import DateFilter from './date-filter';
@@ -54,7 +54,7 @@ const AlertInfo: React.FC = () => {
   });
   const { metricTypeOptions, severityTypeOptions, isReady, alertInfo, selectedRowKeys, selectedRows, filterValues } =
     state;
-  const getListAlertMessages = useCallback(async () => {
+  const getListAlertMessages = async () => {
     const data = await listAlertMessages({});
     updateState(preset => ({
       ...preset,
@@ -63,8 +63,8 @@ const AlertInfo: React.FC = () => {
       isReady: true,
       alertInfo: data || [],
     }));
-  }, []);
-  const handleChange = useCallback(async (params: UpdateAlertMessagesRequest) => {
+  };
+  const handleChange = async (params: UpdateAlertMessagesRequest) => {
     const data = {
       messages: [{ ...params }],
       batch_status: params.batch_status,
@@ -72,7 +72,7 @@ const AlertInfo: React.FC = () => {
     };
     await updateAlertMessages(data);
     getListAlertMessages();
-  }, []);
+  };
   useEffect(() => {
     getListAlertMessages();
   }, []);
