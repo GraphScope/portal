@@ -64,6 +64,7 @@ function loadingConfig(loading_config: { format: { type: string; metadata: { del
     };
   }
 }
+/** properties change value */
 const loadingdataFields = (type: string, properties: any, mapping?: VertexMapping | EdgeMapping | undefined) => {
   if (type === 'nodes') {
     return properties.map((V: { name: string }) => (V.name.startsWith('#') ? V.name.substring(1) : V.name));
@@ -77,6 +78,7 @@ const loadingdataFields = (type: string, properties: any, mapping?: VertexMappin
     })
     .map((V: { token: string }) => (typeof V.token === 'string' ? V.token.split('_')[1] : V.token));
 };
+/** token */
 function mappingName(mapping: any, name: string, index: number): string {
   let token = '';
   if (mapping) {
