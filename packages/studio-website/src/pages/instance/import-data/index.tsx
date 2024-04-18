@@ -37,21 +37,9 @@ const ImportData: React.FunctionComponent = () => {
     updateDataMap(draft => {
       options.nodes.forEach(item => {
         draft[item.key as string] = cloneDeep(item);
-        /** 导入设置属性下拉框选项 */
-        draft[item.key].dataFields = item.properties.map(V => (V.name.startsWith('#') ? V.name.substring(1) : V.name));
       });
       options.edges.forEach(item => {
         draft[item.key as string] = cloneDeep(item);
-        // /** 导入设置属性下拉框选项 */
-        draft[item.key].dataFields = item.properties.map(V => {
-          const { name, token } = V;
-          const isSource = name.startsWith('#source');
-          const isTarget = name.startsWith('#target');
-          if (isSource || isTarget) {
-            return token.split('_')[1];
-          }
-          return name;
-        });
       });
     });
   };

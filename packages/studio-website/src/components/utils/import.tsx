@@ -64,6 +64,12 @@ function loadingConfig(loading_config: { format: { type: string; metadata: { del
     };
   }
 }
+const loadingdataFields = (type: string, properties: any) => {
+  if (type === 'nodes') {
+    return properties.map(V => (V.name.startsWith('#') ? V.name.substring(1) : V.name));
+  }
+  return properties.map(V => (typeof V.token === 'string' ? V.token.split('_')[1] : V.token));
+};
 function mappingName(mapping: any, name: string, index: number): string {
   let token = '';
   if (mapping) {
@@ -150,6 +156,7 @@ export function transformMappingSchemaToImportOptions(
       isBind: !!filelocation,
       isEidtProperty: true,
       delimiter,
+      dataFields: loadingdataFields('nodes', properties),
       properties: properties.map((p, index) => {
         const { name } = p;
         return {
@@ -171,6 +178,15 @@ export function transformMappingSchemaToImportOptions(
       isBind: !!filelocation,
       isEidtProperty: true,
       delimiter,
+      dataFields: loadingdataFields(
+        'edges',
+        properties.map((p, index) => {
+          const { name } = p;
+          return {
+            token: mappingName(mapping, name, index),
+          };
+        }),
+      ),
       properties: properties.map((p, index) => {
         const { name } = p;
         return {

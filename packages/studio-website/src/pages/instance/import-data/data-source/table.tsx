@@ -36,8 +36,6 @@ const MappingFields = (props: any) => {
     );
   } else if (dataFields) {
     const options = dataFields.map((item: string, index: number) => {
-      console.log('dataFields', value, item);
-
       return {
         value: `${index}_${item}`,
         label: (
@@ -55,8 +53,6 @@ const MappingFields = (props: any) => {
         ),
       };
     });
-    console.log(options);
-
     return <Select size="small" options={options} value={value} onChange={onChange} style={{ width: '136px' }} />;
   }
 };

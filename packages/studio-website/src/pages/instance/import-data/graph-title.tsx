@@ -56,18 +56,10 @@ const GraphTitle: React.FunctionComponent = () => {
         options.nodes.forEach(item => {
           //@ts-ignore
           draft[item.key] = item;
-          /** 导入设置属性下拉框选项 */
-          draft[item.key].dataFields = item.properties.map(V =>
-            V.name.startsWith('#') ? V.name.substring(1) : V.name,
-          );
         });
         options.edges.forEach(item => {
           //@ts-ignore
           draft[item.key] = item;
-          /** 导入设置属性下拉框选项 */
-          draft[item.key].dataFields = item.properties.map(V =>
-            typeof V.token === 'string' ? V.token.split('_')[1] : V.token,
-          );
         });
       });
     } catch (error) {

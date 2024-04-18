@@ -174,11 +174,8 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
               <TableList
                 //@ts-ignore
                 tabledata={properties.map((item, index) => {
-                  console.log(item);
-                  const value = item.token ? `${index}_${item.token}` : '';
                   return {
                     ...item,
-                    // token: value,
                     key: uuidv4(),
                   };
                 })}
