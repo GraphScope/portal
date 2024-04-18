@@ -48,7 +48,7 @@ const ImportData: React.FunctionComponent = () => {
           const isSource = name.startsWith('#source');
           const isTarget = name.startsWith('#target');
           if (isSource || isTarget) {
-            return token;
+            return token.split('_')[1];
           }
           return name;
         });
