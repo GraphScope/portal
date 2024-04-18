@@ -131,8 +131,9 @@ export function processData(data: GraphinData, configMap: Map<string, ConfigItem
         keyshape: {
           size: size,
           stroke: color,
-          fillOpacity: 1,
+          fillOpacity: 0.6,
           fill: color,
+          lineWidth: 2,
         },
       },
     };

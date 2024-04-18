@@ -42,7 +42,48 @@ const CanvasDoubleClick = () => {
   }, [graph]);
   return null;
 };
+const ForceSimulation = () => {
+  const { graph } = React.useContext(GraphinContext);
+  const layoutController = graph.get('layoutController');
+  const layoutMethod = layoutController.layoutMethods?.[0];
 
+  const stopForceSimulation = () => {
+    if (layoutMethod?.type === 'force2') {
+      layoutMethod.stop();
+    }
+  };
+  const restartForceSimulation = () => {
+    if (layoutMethod?.type === 'force2') {
+      graph.updateLayout({ animate: true, disableTriggerLayout: false });
+    }
+  };
+
+  React.useEffect(() => {
+    const handleNodeDragStart = () => {
+      stopForceSimulation();
+    };
+    const handleNodeDragEnd = (e: any) => {
+      if (e.item) {
+        graph.updateItem(e.item, {
+          pinned: true,
+          mass: 1000000,
+        });
+      }
+      restartForceSimulation();
+    };
+
+    graph.on('node:dragstart', handleNodeDragStart);
+    graph.on('node:dragend', handleNodeDragEnd);
+    graph.on('canvas:click', handleNodeDragStart);
+    return () => {
+      graph.off('node:dragstart', handleNodeDragStart);
+      graph.off('node:dragend', handleNodeDragEnd);
+      graph.off('canvas:click', handleNodeDragStart);
+    };
+  }, [graph]);
+
+  return null;
+};
 const GraphView: React.FunctionComponent<GraphViewProps> = props => {
   const { data, schemaData: schema, schemaId } = props;
   const [state, updateState] = useState(() => {
@@ -93,6 +134,7 @@ const GraphView: React.FunctionComponent<GraphViewProps> = props => {
       <FitView />
       <CanvasDoubleClick />
       <ActivateRelations />
+      <ForceSimulation />
       <ZoomCanvas enableOptimize={true} sensitivity={2} />
     </Graphin>
   );
