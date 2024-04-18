@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Select, Checkbox, Input, Typography } from 'antd';
+import { Table, Select, Checkbox, Typography, InputNumber, Flex } from 'antd';
 type EditableTableProps = Parameters<typeof Table>[0];
 const { Text } = Typography;
 interface DataType {
@@ -12,6 +12,7 @@ interface DataType {
 type TableListProps = {
   tabledata: DataType[];
   dataFields?: string[];
+  filelocation: string;
   onChange(val: DataType[]): void;
 };
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
@@ -21,36 +22,43 @@ const styles: React.CSSProperties = {
   fontWeight: 400,
 };
 const MappingFields = (props: any) => {
-  const { dataFields, value, onChange } = props;
+  const { dataFields, value, onChange, filelocation } = props;
+  if (typeof value === 'number' || !filelocation) {
+    return (
+      <InputNumber
+        size="small"
+        value={value}
+        min={0}
+        onChange={evt => {
+          onChange(evt);
+        }}
+      />
+    );
+  } else if (dataFields) {
+    const options = dataFields.map((item: string, index: number) => {
+      console.log('dataFields', value, item);
 
-  if (dataFields) {
-    const options = dataFields.map((item: string) => {
       return {
-        value: item,
-        label: item,
+        value: `${index}_${item}`,
+        label: (
+          <Flex justify="space-between" key={index}>
+            <span style={{ backgroundColor: '#ddd', padding: '0px 6px', marginRight: '12px' }}>#{index}</span>
+            <span>{item}</span>
+          </Flex>
+        ),
       };
     });
+    console.log(options);
+
     return <Select size="small" options={options} value={value} onChange={onChange} style={{ width: '136px' }} />;
   }
-  return (
-    <Input
-      size="small"
-      value={value}
-      onChange={e => {
-        onChange(e.target.value);
-      }}
-    />
-  );
 };
 
 const TableList: React.FC<TableListProps> = props => {
-  const { tabledata, onChange, dataFields } = props;
-
+  const { tabledata, onChange, dataFields, filelocation } = props;
   const title = dataFields ? 'Mapping Fields' : 'Column';
   const handleChangeIndex = (value: any, all: any) => {
-    console.log(value, all, tabledata);
     const { key } = all;
-
     tabledata.forEach(item => {
       if (item.key === key) {
         item.token = value;
@@ -109,6 +117,7 @@ const TableList: React.FC<TableListProps> = props => {
           <MappingFields
             dataFields={dataFields}
             value={token}
+            filelocation={filelocation}
             onChange={(value: string) => handleChangeIndex(value, all)}
           />
         );

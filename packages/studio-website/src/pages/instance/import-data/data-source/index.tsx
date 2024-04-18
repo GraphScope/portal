@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { v4 as uuidv4 } from 'uuid';
 import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Button, Flex, Row, Col, Space, Typography, theme, Tooltip, notification } from 'antd';
 import { useContext as useMap, BindingNode, useDataMap, updateDataMap } from '../useContext';
@@ -33,6 +34,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   } = useMap();
   const data = dataMap[id] as BindingNode & { isEidtProperty: boolean };
   const { isBind, filelocation, isEidtProperty, datatype, label, properties, dataFields } = data;
+
   const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const graph_name = searchParamOf('graph_name');
@@ -171,14 +173,18 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
             <Col span={19}>
               <TableList
                 //@ts-ignore
-                tabledata={properties.map(item => {
+                tabledata={properties.map((item, index) => {
+                  console.log(item);
+                  const value = item.token ? `${index}_${item.token}` : '';
                   return {
                     ...item,
-                    key: item.id,
+                    // token: value,
+                    key: uuidv4(),
                   };
                 })}
                 onChange={onChangeTable}
                 dataFields={dataFields}
+                filelocation={filelocation}
               />
             </Col>
             <Col span={24}>
