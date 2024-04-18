@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import Graphin, { GraphinData } from '@antv/graphin';
+import React, { useEffect, useState } from 'react';
+import Graphin, { GraphinData, GraphinContext } from '@antv/graphin';
 import Panel from './panel';
 import { processData, calcOverview, storage, getConfig } from './utils';
 import type { ISchema } from './typing';
@@ -10,6 +10,19 @@ interface GraphViewProps {
   schemaData: ISchema;
   schemaId: string;
 }
+let timer;
+const FitView = () => {
+  const { graph } = React.useContext(GraphinContext);
+  useEffect(() => {
+    timer = setTimeout(() => {
+      graph.fitView();
+    }, 100);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [graph]);
+  return null;
+};
 
 const GraphView: React.FunctionComponent<GraphViewProps> = props => {
   const { data, schemaData: schema, schemaId } = props;
@@ -39,15 +52,26 @@ const GraphView: React.FunctionComponent<GraphViewProps> = props => {
     <Graphin
       data={newData}
       layout={{
-        type: 'graphin-force',
+        type: 'force2',
+        animate: true,
         preset: {
           type: 'concentric',
+          width: 800,
+          height: 400,
+          minNodeSpacing: 2,
+          nodeSize: 10,
         },
+        clusterNodeStrength: 35,
+        minMovement: 5,
+        damping: 0.8,
+        maxSpeed: 1000,
+        distanceThresholdMode: 'max',
       }}
       style={{ height: '480px', minHeight: '480px', background: token.colorBgLayout }}
     >
       {/** @ts-ignore */}
       <Panel overview={overview} onChange={onChange}></Panel>
+      <FitView></FitView>
     </Graphin>
   );
 };
