@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Popconfirm, Table, Button, Space, Tag, Skeleton, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import CreateRecep from './create-resep';
@@ -15,7 +15,6 @@ export interface Item {
   enable: boolean;
   type: string;
 }
-
 const Receivers: React.FC = () => {
   const [state, updateState] = useState<{
     alertRecep: Item[];
@@ -31,124 +30,117 @@ const Receivers: React.FC = () => {
   });
   const { isReady, alertRecep, isEditRecep, editData } = state;
   /** 获取告警接收数据 */
-  const getAlertReceivers = async () => {
+  const fetchAlertReceivers = useCallback(async () => {
     const res = await listReceivers();
-    updateState(preset => {
-      return {
-        ...preset,
-        alertRecep: res || [],
-        isReady: true,
-      };
-    });
-  };
-  /** 删除告警接收 */
-  const delRowReceiver = async (receiver_id: string) => {
-    const res = await deleteReceiverById(receiver_id);
-    await getAlertReceivers();
-    await message.success(res);
-  };
-  /** 创建告警接收 */
-  const handleChange = () => {
-    updateState(preset => {
-      return {
-        ...preset,
-        isEditRecep: true,
-      };
-    });
-  };
-  useEffect(() => {
-    getAlertReceivers();
+    updateState(preset => ({
+      ...preset,
+      alertRecep: res || [],
+      isReady: true,
+    }));
   }, []);
-  const columns = [
-    {
-      title: <FormattedMessage id="Webhook Url" />,
-      dataIndex: 'webhook_url',
-      editable: true,
-      key: 'webhook_url',
+  /** 删除告警接收 */
+  const deleteReceiver = useCallback(
+    async (receiver_id: string) => {
+      const res = await deleteReceiverById(receiver_id);
+      await fetchAlertReceivers();
+      await message.success(res);
     },
-    {
-      title: <FormattedMessage id="@user IDs" />,
-      dataIndex: 'at_user_ids',
-      editable: true,
-      key: 'at_user_ids',
-      render: (record: string[]) => <span>{record?.join()}</span>,
-    },
-    {
-      title: <FormattedMessage id="@all?" />,
-      dataIndex: 'is_at_all',
-      editable: true,
-      key: 'is_at_all',
-      render: (is_at_all: boolean) => <Tag color={is_at_all ? 'green' : 'red'}>{is_at_all ? 'enable' : 'disable'}</Tag>,
-    },
-    {
-      title: <FormattedMessage id="Status" />,
-      dataIndex: 'enable',
-      editable: true,
-      key: 'enable',
-      render: (enable: boolean) => <Tag color={enable ? 'green' : 'red'}>{enable ? 'enable' : 'disable'}</Tag>,
-    },
-    {
-      title: <FormattedMessage id="Action" />,
-      key: 'actions',
-      render: (_: any, all: Item) => {
-        const { receiver_id } = all;
-        console.log(all);
-        return (
-          <Space>
-            <Button
-              size="small"
-              type="link"
-              icon={<FontAwesomeIcon icon={faPenToSquare} />}
-              onClick={() => {
-                updateState(preset => {
-                  return {
-                    ...preset,
-                    editData: all,
-                    isEditRecep: true,
-                  };
-                });
-              }}
-            />
-            <Popconfirm
-              title={<FormattedMessage id="Are you sure to delete this task?" />}
-              onConfirm={() => delRowReceiver(receiver_id)}
-              onCancel={() => {}}
-              okText={<FormattedMessage id="Yes" />}
-              cancelText={<FormattedMessage id="No" />}
-            >
-              <Button type="text" danger size="small" icon={<FontAwesomeIcon icon={faTrashCan} />} />
-            </Popconfirm>
-          </Space>
-        );
+    [fetchAlertReceivers],
+  );
+  /** 创建告警接收 */
+  const handleToggleEdit = useCallback(() => {
+    updateState(preset => ({ ...preset, isEditRecep: true }));
+  }, []);
+  useEffect(() => {
+    fetchAlertReceivers();
+  }, []);
+  const columns = useMemo(
+    () => [
+      {
+        title: <FormattedMessage id="Webhook Url" />,
+        dataIndex: 'webhook_url',
+        editable: true,
+        key: 'webhook_url',
       },
-    },
-  ];
-  let Content = (
-    <>
-      {isEditRecep && (
-        <CreateRecep
-          isCreateRecep={isEditRecep}
-          editDatas={editData}
-          handelChange={(val: boolean) => {
-            //@ts-ignore
-            updateState(preset => {
-              return {
-                ...preset,
-                isEditRecep: val,
-                editData: {},
-              };
-            });
-            getAlertReceivers();
-          }}
-        />
-      )}
-    </>
+      {
+        title: <FormattedMessage id="@user IDs" />,
+        dataIndex: 'at_user_ids',
+        editable: true,
+        key: 'at_user_ids',
+        render: (record: string[]) => <span>{record?.join()}</span>,
+      },
+      {
+        title: <FormattedMessage id="@all?" />,
+        dataIndex: 'is_at_all',
+        editable: true,
+        key: 'is_at_all',
+        render: (is_at_all: boolean) => (
+          <Tag color={is_at_all ? 'green' : 'red'}>{is_at_all ? 'enable' : 'disable'}</Tag>
+        ),
+      },
+      {
+        title: <FormattedMessage id="Status" />,
+        dataIndex: 'enable',
+        editable: true,
+        key: 'enable',
+        render: (enable: boolean) => <Tag color={enable ? 'green' : 'red'}>{enable ? 'enable' : 'disable'}</Tag>,
+      },
+      {
+        title: <FormattedMessage id="Action" />,
+        key: 'actions',
+        render: (_: any, all: Item) => {
+          const { receiver_id } = all;
+          console.log(all);
+          return (
+            <Space>
+              <Button
+                size="small"
+                type="link"
+                icon={<FontAwesomeIcon icon={faPenToSquare} />}
+                onClick={() => {
+                  updateState(preset => {
+                    return {
+                      ...preset,
+                      editData: all,
+                      isEditRecep: true,
+                    };
+                  });
+                }}
+              />
+              <Popconfirm
+                title={<FormattedMessage id="Are you sure to delete this task?" />}
+                onConfirm={() => deleteReceiver(receiver_id)}
+                onCancel={() => {}}
+                okText={<FormattedMessage id="Yes" />}
+                cancelText={<FormattedMessage id="No" />}
+              >
+                <Button type="text" danger size="small" icon={<FontAwesomeIcon icon={faTrashCan} />} />
+              </Popconfirm>
+            </Space>
+          );
+        },
+      },
+    ],
+    [],
+  );
+  const handleCloseEdit = (val: boolean) => {
+    //@ts-ignore
+    updateState(preset => ({ ...preset, isEditRecep: val, editData: {} }));
+    fetchAlertReceivers();
+  };
+
+  let Content = isEditRecep && (
+    <CreateRecep
+      isCreateRecep={isEditRecep}
+      editDatas={editData}
+      handelChange={(val: boolean) => handleCloseEdit(val)}
+    />
   );
 
   return (
     <>
       {Content}
-      <Button style={{ position: 'absolute', top: '-55px', right: '0px' }} type="primary" onClick={handleChange}>
+      <Button style={{ position: 'absolute', top: '-55px', right: '0px' }} type="primary" onClick={handleToggleEdit}>
         <FormattedMessage id="Create alert receiver" />
       </Button>
       {!isReady ? (

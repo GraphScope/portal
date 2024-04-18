@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Space, Table, Tag, Button, Skeleton } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import DateFilter from './date-filter';
 import { listAlertMessages, updateAlertMessages } from '../service';
 import type { UpdateAlertMessagesRequest } from '@graphscope/studio-server';
-export type IalertInfo = {
+export type IAlertInfo = {
   key: string;
   info: string;
   name: number;
@@ -18,7 +18,7 @@ type IState = {
   severityTypeOptions: { value: string; text: string }[];
   isReady: boolean;
   /** 列表数据 */
-  alertInfo: IalertInfo[];
+  alertInfo: IAlertInfo[];
   /** 选中列表值ID */
   selectedRowKeys: string[];
   /** 选中列表值 */
@@ -30,14 +30,14 @@ type IState = {
   };
 };
 /** 处理alert 属性options方法 */
-const handleOptions = (data: { [x: string]: string }[], type: string) => {
-  return [{ value: '', text: 'All' }].concat(
-    data.map((item: { [x: string]: string }) => {
+const handleOptions = (data: Record<string, string>[], type: string): { value: string; text: string }[] =>
+  [{ value: '', text: 'All' }].concat(
+    data.map(item => {
       const text = item[type].substring(0, 1).toUpperCase() + item[type].substring(1);
       return { value: item[type], text };
     }),
   );
-};
+
 const AlertInfo: React.FC = () => {
   const [state, updateState] = useState<IState>({
     metricTypeOptions: [],
@@ -54,126 +54,126 @@ const AlertInfo: React.FC = () => {
   });
   const { metricTypeOptions, severityTypeOptions, isReady, alertInfo, selectedRowKeys, selectedRows, filterValues } =
     state;
-  const getListAlertMessages = async () => {
+  const getListAlertMessages = useCallback(async () => {
     const data = await listAlertMessages({});
-    updateState(preset => {
-      return {
-        ...preset,
-        metricTypeOptions: handleOptions(data, 'severity'),
-        severityTypeOptions: handleOptions(data, 'metric_type'),
-        isReady: true,
-        alertInfo: data || [],
-      };
-    });
-  };
-  const handleChange = async (params: UpdateAlertMessagesRequest) => {
+    updateState(preset => ({
+      ...preset,
+      metricTypeOptions: handleOptions(data, 'severity'),
+      severityTypeOptions: handleOptions(data, 'metric_type'),
+      isReady: true,
+      alertInfo: data || [],
+    }));
+  }, []);
+  const handleChange = useCallback(async (params: UpdateAlertMessagesRequest) => {
     const data = {
-      messages: [
-        {
-          ...params,
-        },
-      ],
+      messages: [{ ...params }],
       batch_status: params.batch_status,
       batch_delete: false,
     };
     await updateAlertMessages(data);
     getListAlertMessages();
-  };
+  }, []);
   useEffect(() => {
     getListAlertMessages();
   }, []);
-  const columns = [
-    {
-      title: <FormattedMessage id="Alert information" />,
-      dataIndex: 'message',
-      key: 'message',
-    },
-    {
-      title: <FormattedMessage id="Alert name" />,
-      dataIndex: 'alert_name',
-      key: 'alert_name',
-    },
-    {
-      title: <FormattedMessage id="Severity" />,
-      dataIndex: 'severity',
-      key: 'severity',
-      filteredValue: filterValues.severity || null,
-      filterMultiple: false,
-      filters: severityTypeOptions,
-      onFilter: (value: string, record: { severity: string | string[] }) => record.severity.indexOf(value) === 0,
-    },
-    {
-      title: <FormattedMessage id="Metrics" />,
-      dataIndex: 'metric_type',
-      key: 'metric_type',
-      filteredValue: filterValues.metric_type || null,
-      filterMultiple: false,
-      filters: metricTypeOptions,
-      onFilter: (value: string, record: { metric_type: string | string[] }) => record.metric_type.indexOf(value) === 0,
-    },
-    {
-      title: <FormattedMessage id="Trigger Time" />,
-      key: 'trigger_time',
-      dataIndex: 'trigger_time',
-    },
-    {
-      title: <FormattedMessage id="Status" />,
-      key: 'status',
-      dataIndex: 'status',
-      filteredValue: filterValues.status || null,
-      filterMultiple: false,
-      filters: [
-        { value: '', text: 'All' },
-        { value: 'unsolved', text: 'Unsolved' },
-        { value: 'solved', text: 'Solved' },
-        { value: 'dealing', text: 'Dealing' },
-      ],
-      onFilter: (value: string, record: { status: string | string[] }) => record.status.indexOf(value) === 0,
-      render: (status: string) => {
-        let color = status === 'Magenta' ? 'geekblue' : 'green';
-        return (
-          <Tag color={color} key={status}>
-            {status}
-          </Tag>
-        );
+  const columns = useMemo(
+    () => [
+      {
+        title: <FormattedMessage id="Alert information" />,
+        dataIndex: 'message',
+        key: 'message',
       },
-    },
-    {
-      title: <FormattedMessage id="Action" />,
-      key: 'action',
-      render: (record: any) => {
-        return (
-          <Space size="middle">
-            {record.status !== 'dealing' && (
-              <Button type="primary" ghost onClick={() => handleChange({ ...record, batch_status: 'dealing' })}>
-                Dealing
-              </Button>
-            )}
-            {record.status !== 'solved' && (
-              <Button onClick={() => handleChange({ ...record, batch_status: 'solved' })}>Solved</Button>
-            )}
-            {record.status !== 'unsolved' && (
-              <Button danger onClick={() => handleChange({ ...record, batch_status: 'unsolved' })}>
-                Unsolved
-              </Button>
-            )}
-          </Space>
-        );
+      {
+        title: <FormattedMessage id="Alert name" />,
+        dataIndex: 'alert_name',
+        key: 'alert_name',
       },
-    },
-  ];
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (newSelectedRowKeys: string[], selectedRows: any) => {
-      updateState(preset => {
-        return {
-          ...preset,
+      {
+        title: <FormattedMessage id="Severity" />,
+        dataIndex: 'severity',
+        key: 'severity',
+        filteredValue: filterValues.severity || null,
+        filterMultiple: false,
+        filters: severityTypeOptions,
+        onFilter: (value: string, record: { severity: string | string[] }) => record.severity.indexOf(value) === 0,
+      },
+      {
+        title: <FormattedMessage id="Metrics" />,
+        dataIndex: 'metric_type',
+        key: 'metric_type',
+        filteredValue: filterValues.metric_type || null,
+        filterMultiple: false,
+        filters: metricTypeOptions,
+        onFilter: (value: string, record: { metric_type: string | string[] }) =>
+          record.metric_type.indexOf(value) === 0,
+      },
+      {
+        title: <FormattedMessage id="Trigger Time" />,
+        key: 'trigger_time',
+        dataIndex: 'trigger_time',
+      },
+      {
+        title: <FormattedMessage id="Status" />,
+        key: 'status',
+        dataIndex: 'status',
+        filteredValue: filterValues.status || null,
+        filterMultiple: false,
+        filters: [
+          { value: '', text: 'All' },
+          { value: 'unsolved', text: 'Unsolved' },
+          { value: 'solved', text: 'Solved' },
+          { value: 'dealing', text: 'Dealing' },
+        ],
+        onFilter: (value: string, record: { status: string | string[] }) => record.status.indexOf(value) === 0,
+        render: (status: string) => {
+          let color = status === 'Magenta' ? 'geekblue' : 'green';
+          return (
+            <Tag color={color} key={status}>
+              {status}
+            </Tag>
+          );
+        },
+      },
+      {
+        title: <FormattedMessage id="Action" />,
+        key: 'action',
+        render: (record: any) => {
+          return (
+            <Space size="middle">
+              {record.status !== 'dealing' && (
+                <Button type="primary" ghost onClick={() => handleChange({ ...record, batch_status: 'dealing' })}>
+                  Dealing
+                </Button>
+              )}
+              {record.status !== 'solved' && (
+                <Button onClick={() => handleChange({ ...record, batch_status: 'solved' })}>Solved</Button>
+              )}
+              {record.status !== 'unsolved' && (
+                <Button danger onClick={() => handleChange({ ...record, batch_status: 'unsolved' })}>
+                  Unsolved
+                </Button>
+              )}
+            </Space>
+          );
+        },
+      },
+    ],
+    [filterValues, metricTypeOptions, severityTypeOptions],
+  );
+  /** table 选择 */
+  const rowSelection = useMemo(
+    () => ({
+      selectedRowKeys,
+      onChange: (newSelectedRowKeys: string[], selectedRows: IAlertInfo[]) =>
+        //@ts-ignore
+        updateState(prevState => ({
+          ...prevState,
           selectedRowKeys: newSelectedRowKeys,
           selectedRows,
-        };
-      });
-    },
-  };
+        })),
+    }),
+    [selectedRowKeys],
+  );
 
   return (
     <>

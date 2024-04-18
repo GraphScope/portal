@@ -4,41 +4,36 @@ import { FormattedMessage } from 'react-intl';
 import { registerReceiver, updateReceiverById } from '../service';
 import { Item } from './index';
 
-type FieldType = {
+type ReceiverType = {
   type: string;
   webhook_url: string;
   at_user_ids: string;
   is_at_all: boolean;
   enable: boolean;
 };
-const RECEIVEROPTION = [{ label: 'WebHook', value: 'webhook' }];
-type ICreateRecepProps = {
+interface ICreateRecepProps {
   isCreateRecep: boolean;
   handelChange(val: boolean): void;
   editDatas: Item;
-};
+}
+const RECEIVEROPTION = [{ label: 'WebHook', value: 'webhook' }];
 const CreateRecep: React.FC<ICreateRecepProps> = props => {
   const { isCreateRecep, handelChange, editDatas } = props;
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<ReceiverType>();
   const [state, updateState] = useState({
     status: false,
     is_at_all: false,
   });
   const { status, is_at_all } = state;
+
   useEffect(() => {
     if (Object.keys(editDatas).length > 0) {
       const { enable, is_at_all } = editDatas;
       form.setFieldsValue(editDatas);
-      updateState(preset => {
-        return {
-          ...preset,
-          is_at_all: is_at_all,
-          status: enable,
-        };
-      });
+      updateState(preset => ({ ...preset, is_at_all: is_at_all, status: enable }));
     }
   }, []);
-  const onFinish = async () => {
+  const handleSubmit = async () => {
     /** 编辑告警接收 */
     if (Object.keys(editDatas).length > 0) {
       const { receiver_id } = editDatas;
@@ -50,6 +45,7 @@ const CreateRecep: React.FC<ICreateRecepProps> = props => {
     } else {
       /** 创建告警接收 */
       const { at_user_ids } = form.getFieldsValue();
+      //@ts-ignore
       const res = await registerReceiver({
         ...form.getFieldsValue(),
         at_user_ids: [at_user_ids],
@@ -59,6 +55,7 @@ const CreateRecep: React.FC<ICreateRecepProps> = props => {
       await message.success(res);
     }
     handelChange(false);
+    form.resetFields();
   };
   return (
     <Modal
@@ -72,7 +69,7 @@ const CreateRecep: React.FC<ICreateRecepProps> = props => {
       }}
     >
       <Form name="basic" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} form={form} style={{ marginTop: '24px' }}>
-        <Form.Item<FieldType>
+        <Form.Item<ReceiverType>
           label={<FormattedMessage id="Receiver type" />}
           name="type"
           rules={[{ required: true, message: 'Please input your Receiver!' }]}
@@ -80,17 +77,17 @@ const CreateRecep: React.FC<ICreateRecepProps> = props => {
           <Select options={RECEIVEROPTION} />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item<ReceiverType>
           label={<FormattedMessage id="WebHook URL" />}
           name="webhook_url"
           rules={[{ required: true, message: 'Please input your WebHook URL!' }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item<FieldType> label={<FormattedMessage id="@user IDs" />} name="at_user_ids">
+        <Form.Item<ReceiverType> label={<FormattedMessage id="@user IDs" />} name="at_user_ids">
           <Input />
         </Form.Item>
-        <Form.Item<FieldType> label={<FormattedMessage id="@all?" />} name="is_at_all" valuePropName="checked">
+        <Form.Item<ReceiverType> label={<FormattedMessage id="@all?" />} name="is_at_all" valuePropName="checked">
           <Tooltip title={is_at_all ? 'enable' : 'disable'}>
             <Switch
               value={is_at_all}
@@ -105,24 +102,19 @@ const CreateRecep: React.FC<ICreateRecepProps> = props => {
             />
           </Tooltip>
         </Form.Item>
-        <Form.Item<FieldType> label={<FormattedMessage id="Status" />} name="enable" valuePropName="checked">
+        <Form.Item<ReceiverType> label={<FormattedMessage id="Status" />} name="enable" valuePropName="checked">
           <Tooltip title={status ? 'enable' : 'disable'}>
             <Switch
-              value={status}
-              onChange={e => {
-                updateState(preset => {
-                  return {
-                    ...preset,
-                    status: e,
-                  };
-                });
+              checked={status}
+              onChange={checked => {
+                updateState(preset => ({ ...preset, status: checked }));
               }}
             />
           </Tooltip>
         </Form.Item>
       </Form>
       <Flex justify="end">
-        <Button type="primary" htmlType="submit" onClick={() => onFinish()}>
+        <Button type="primary" htmlType="submit" onClick={() => handleSubmit()}>
           <FormattedMessage id="Submit" />
         </Button>
       </Flex>
