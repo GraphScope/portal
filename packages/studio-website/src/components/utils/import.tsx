@@ -36,6 +36,7 @@ export function transformSchemaToImportOptions(schema: Schema) {
     const { properties, source, target } = item;
     const source_vertex = vertex_id_properties_map[source];
     const target_vertex = vertex_id_properties_map[target];
+
     return {
       ...item,
       datatype: 'csv',
@@ -63,15 +64,39 @@ function loadingConfig(loading_config: { format: { type: string; metadata: { del
     };
   }
 }
-function mappingName(mapping: any, name: string): string {
+/** properties change value */
+const loadingdataFields = (type: string, properties: any, mapping?: VertexMapping | EdgeMapping | undefined) => {
+  if (type === 'nodes') {
+    return properties.map((V: { name: string }) => (V.name.startsWith('#') ? V.name.substring(1) : V.name));
+  }
+  return properties
+    .map((p: { name: string }, index: number) => {
+      const { name } = p;
+      return {
+        token: mappingName(mapping, name, index),
+      };
+    })
+    .map((V: { token: string }) => (typeof V.token === 'string' ? V.token.split('_')[1] : V.token));
+};
+/** token */
+function mappingName(mapping: any, name: string, index: number): string {
   let token = '';
   if (mapping) {
-    const match = mapping && mapping.properties_mappings[name];
+    const isSource = name.startsWith('#source');
+    const isTarget = name.startsWith('#target');
+    let match;
+    if (isSource) {
+      match = mapping && mapping.source_vertex_mappings[0].column.name;
+    } else if (isTarget) {
+      match = mapping && mapping.destination_vertex_mappings[0].column.name;
+    } else {
+      match = mapping && mapping.properties_mappings[name].name;
+    }
     if (match) {
-      token = match.name || '';
+      token = match || '';
     }
   }
-  return token;
+  return `${index}_${token}`;
 }
 /**
  * 将后端标准的 MappingSchema 和 GrahSchema 转化为 Importor 需要的 Options
@@ -140,12 +165,13 @@ export function transformMappingSchemaToImportOptions(
       isBind: !!filelocation,
       isEidtProperty: true,
       delimiter,
-      properties: properties.map(p => {
+      dataFields: loadingdataFields('nodes', properties),
+      properties: properties.map((p, index) => {
         const { name } = p;
         return {
           ...p,
           // 只支持 name 不支持 index
-          token: mappingName(mapping, name),
+          token: mappingName(mapping, name, index),
         };
       }),
     };
@@ -161,12 +187,13 @@ export function transformMappingSchemaToImportOptions(
       isBind: !!filelocation,
       isEidtProperty: true,
       delimiter,
-      properties: properties.map(p => {
+      dataFields: loadingdataFields('edges', properties, mapping),
+      properties: properties.map((p, index) => {
         const { name } = p;
         return {
           ...p,
           // 只支持 name 不支持 index
-          token: mappingName(mapping, name),
+          token: mappingName(mapping, name, index),
         };
       }),
     };
@@ -307,15 +334,15 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
     vertex_mappings.push({
       type_name: label,
       inputs: [filelocation],
-      column_mappings: properties.map(p => {
+      column_mappings: properties.map((p, index) => {
         const { token, name } = p;
-
         const num = parseFloat(token as string);
         const isNumber = !isNaN(num);
+        const colmunName = typeof token === 'string' ? token.split('_')[1] : token;
         return {
           column: {
-            index: isNumber ? num : 0,
-            name: isNumber ? '' : token,
+            index,
+            name: isNumber ? colmunName : token,
           },
           property: name,
         };
@@ -334,26 +361,29 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
       const isSource = name.startsWith('#source');
       const isTarget = name.startsWith('#target');
       const num = parseFloat(token as string);
-      const isNumber = !isNaN(num);
+      const isNumber = isNaN(num);
+      const colmunName = typeof token === 'string' ? token.split('_')[1] : token;
       if (isSource) {
         source_vertex_mappings.push({
           column: {
             index: 0,
-            name: NODE_PRIMARY_MAP[source],
+            // name: NODE_PRIMARY_MAP[source],
+            name: isNumber ? '' : colmunName,
           },
         });
       } else if (isTarget) {
         destination_vertex_mappings.push({
           column: {
             index: 1,
-            name: NODE_PRIMARY_MAP[target],
+            // name: NODE_PRIMARY_MAP[target],
+            name: isNumber ? '' : colmunName,
           },
         });
       } else {
         column_mappings.push({
           column: {
             index: pIdx, //isNumber ? num + 2 : 0,
-            name: isNumber ? '' : token,
+            name: isNumber ? '' : colmunName,
           },
           property: name,
         });

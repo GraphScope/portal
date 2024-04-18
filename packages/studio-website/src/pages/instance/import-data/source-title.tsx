@@ -32,7 +32,7 @@ export function submitParams(schema: any, graph_name: string) {
     ...schema,
   };
 }
-function count(dataMap: BindingEdge | BindingNode) {
+export function count(dataMap: BindingEdge | BindingNode) {
   let nodeCount: number = 0;
   let nodeBind: number = 0;
   let edgeCount: number = 0;

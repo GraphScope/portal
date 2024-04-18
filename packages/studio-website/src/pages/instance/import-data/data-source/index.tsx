@@ -33,6 +33,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   } = useMap();
   const data = dataMap[id] as BindingNode & { isEidtProperty: boolean };
   const { isBind, filelocation, isEidtProperty, datatype, label, properties, dataFields } = data;
+
   const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const graph_name = searchParamOf('graph_name');
@@ -171,14 +172,16 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
             <Col span={19}>
               <TableList
                 //@ts-ignore
-                tabledata={properties.map(item => {
+                tabledata={properties.map((item, index) => {
+                  debugger;
                   return {
                     ...item,
-                    key: item.id,
+                    key: `${index}${item.id}`,
                   };
                 })}
                 onChange={onChangeTable}
                 dataFields={dataFields}
+                filelocation={filelocation}
               />
             </Col>
             <Col span={24}>

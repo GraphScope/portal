@@ -25,8 +25,6 @@ const Detail: React.FunctionComponent = () => {
   /** code style */
   const containerStyles = {
     margin: '12px 0px',
-    height: 'calc(100vh - 120px)',
-    overflow: 'auto',
     border: `${mode === 'defaultAlgorithm' ? '#efefef' : '#323232'} 1px solid`,
     borderRadius: '6px',
     padding: '12px',

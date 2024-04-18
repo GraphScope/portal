@@ -2,21 +2,22 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Flex, Button, Space, Upload, Tooltip, message } from 'antd';
 import type { UploadProps } from 'antd';
-import { useContext, updateDataMap, clearDataMap } from './useContext';
+import { useContext, updateDataMap, clearDataMap, useDataMap } from './useContext';
 import {
   transformMappingSchemaToImportOptions,
   transformImportOptionsToSchemaMapping,
+  transformDataMapToOptions,
 } from '@/components/utils/import';
 import { download } from '@/components/utils/index';
 import yaml from 'js-yaml';
-import { cloneDeep } from 'lodash';
 import { submitParams } from './source-title';
 import FileExportIcon from '@/components/icons/file-export';
 import FileImportIcon from '@/components/icons/file-import';
 
 const GraphTitle: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
-  const { nodes, edges, schema, graphName } = store;
+  const { schema, graphName } = store;
+  const dataMap = useDataMap();
   const readFile = (file: any) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -26,8 +27,9 @@ const GraphTitle: React.FunctionComponent = () => {
     });
   };
   const Json2Yaml = () => {
+    const options = transformDataMapToOptions(dataMap);
     //@ts-ignore
-    const schemaJSON = transformImportOptionsToSchemaMapping(cloneDeep({ nodes, edges }));
+    const schemaJSON = transformImportOptionsToSchemaMapping(options);
     const params = submitParams(schemaJSON, graphName);
     const yamlFile = yaml.dump(params);
     download('schema.yaml', yamlFile);
