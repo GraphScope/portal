@@ -42,7 +42,14 @@ const MappingFields = (props: any) => {
         value: `${index}_${item}`,
         label: (
           <Flex justify="space-between" key={index}>
-            <span style={{ backgroundColor: '#ddd', padding: '0px 6px', marginRight: '12px' }}>#{index}</span>
+            <span
+              style={{
+                marginRight: '12px',
+                color: '#b8b8b8',
+              }}
+            >
+              #{index}
+            </span>
             <span>{item}</span>
           </Flex>
         ),
