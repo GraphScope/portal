@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Result } from 'antd';
-import { LoadingOutlined, Loading3QuartersOutlined } from '@ant-design/icons';
+import { Loading3QuartersOutlined } from '@ant-design/icons';
 import ReactJson from 'react-json-view';
 interface IJSONViewProps {
   data: any;
@@ -16,11 +16,11 @@ const RawView: React.FunctionComponent<IJSONViewProps> = props => {
   if (data.mode === 'error') {
     return <Result status="error" title={data.raw && data.raw.name} subTitle={data.raw && data.raw.message}></Result>;
   }
-
+  console.log('JSON.stringify(data.raw, null, 2)', JSON.stringify(data.raw, null, 2));
   return (
     <div>
+      <ReactJson src={data.raw} />
       {/* <pre style={{ textWrap: 'pretty' }}>{JSON.stringify(data.raw, null, 2)}</pre> */}
-      <ReactJson src={JSON.stringify(data.raw, null, 2)} />
     </div>
   );
 };
