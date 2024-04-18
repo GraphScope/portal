@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { v4 as uuidv4 } from 'uuid';
 import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Button, Flex, Row, Col, Space, Typography, theme, Tooltip, notification } from 'antd';
 import { useContext as useMap, BindingNode, useDataMap, updateDataMap } from '../useContext';
@@ -174,9 +173,10 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
               <TableList
                 //@ts-ignore
                 tabledata={properties.map((item, index) => {
+                  debugger;
                   return {
                     ...item,
-                    key: uuidv4(),
+                    key: `${index}${item.id}`,
                   };
                 })}
                 onChange={onChangeTable}
