@@ -44,21 +44,23 @@ const CanvasDoubleClick = () => {
 };
 const ForceSimulation = () => {
   const { graph } = React.useContext(GraphinContext);
-  const layoutController = graph.get('layoutController');
-  const layoutMethod = layoutController.layoutMethods?.[0];
-
-  const stopForceSimulation = () => {
-    if (layoutMethod?.type === 'force2') {
-      layoutMethod.stop();
-    }
-  };
-  const restartForceSimulation = () => {
-    if (layoutMethod?.type === 'force2') {
-      graph.updateLayout({ animate: true, disableTriggerLayout: false });
-    }
-  };
 
   React.useEffect(() => {
+    const stopForceSimulation = () => {
+      const layoutController = graph.get('layoutController');
+      const layoutMethod = layoutController.layoutMethods?.[0];
+      if (layoutMethod?.type === 'force2') {
+        layoutMethod.stop();
+      }
+    };
+    const restartForceSimulation = () => {
+      const layoutController = graph.get('layoutController');
+      const layoutMethod = layoutController.layoutMethods?.[0];
+      if (layoutMethod?.type === 'force2') {
+        graph.updateLayout({ animate: true, disableTriggerLayout: false });
+      }
+    };
+
     const handleNodeDragStart = () => {
       stopForceSimulation();
     };
@@ -69,16 +71,17 @@ const ForceSimulation = () => {
           mass: 1000000,
         });
       }
+
       restartForceSimulation();
     };
 
     graph.on('node:dragstart', handleNodeDragStart);
     graph.on('node:dragend', handleNodeDragEnd);
-    graph.on('canvas:click', handleNodeDragStart);
+    // graph.on('canvas:click', handleNodeDragStart);
     return () => {
       graph.off('node:dragstart', handleNodeDragStart);
       graph.off('node:dragend', handleNodeDragEnd);
-      graph.off('canvas:click', handleNodeDragStart);
+      // graph.off('canvas:click', handleNodeDragStart);
     };
   }, [graph]);
 
