@@ -10,7 +10,8 @@ interface IPanelProps {
 
 const Panel: React.FunctionComponent<IPanelProps> = props => {
   const { overview, onChange } = props;
-  const { graph } = React.useContext(GraphinContext);
+
+  // const { graph } = React.useContext(GraphinContext);
   const { token } = theme.useToken();
   const [state, updateState] = useState<{
     detail: IDetail | null;
@@ -59,14 +60,10 @@ const Panel: React.FunctionComponent<IPanelProps> = props => {
   return (
     <div
       style={{
-        position: 'absolute',
-        top: '6px',
-        right: '6px',
-        bottom: '6px',
         background: token.colorBgContainer,
         padding: '12px',
-        boxShadow: token.boxShadowTertiary,
-        width: '250px',
+        minWidth: '100%',
+        zIndex: 1000,
       }}
     >
       <PropertiesPanel mode={mode} overview={overview} detail={detail as IDetail} onChange={onChange} />

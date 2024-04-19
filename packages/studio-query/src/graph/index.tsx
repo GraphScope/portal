@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createRef } from 'react';
 import Graphin, { GraphinData, GraphinContext, Behaviors } from '@antv/graphin';
 import { Resizable } from 're-resizable';
 import Panel from './panel';
@@ -93,11 +93,11 @@ const GraphView: React.FunctionComponent<GraphViewProps> = props => {
     const configMap = getConfig(schema, schemaId);
     return {
       configMap,
-      resizableWidth: 320,
+      resizableWidth: 1360,
     };
   });
   const { token } = theme.useToken();
-
+  const graphRef = createRef();
   const { configMap, resizableWidth } = state;
   const newData = processData(data, configMap);
   const overview = calcOverview(schema, configMap, data);
@@ -116,13 +116,17 @@ const GraphView: React.FunctionComponent<GraphViewProps> = props => {
     <Flex>
       <Resizable
         size={{ width: resizableWidth, height: 480 }}
-        minWidth={'50%'}
-        maxWidth={'70%'}
+        minWidth={'60%'}
+        maxWidth={'80%'}
         onResizeStop={(e, direction, ref, d) => {
-          updateState(preState => ({ ...preState, width: resizableWidth + d.width }));
+          updateState(preState => ({ ...preState, resizableWidth: resizableWidth + d.width }));
+          console.log(graphRef.current);
+          graphRef.current.graph.changeSize(resizableWidth, 500);
+          graphRef.current.graph.fitView([10, 10], {}, true);
         }}
       >
         <Graphin
+          ref={graphRef}
           data={newData}
           layout={{
             type: 'force2',
@@ -149,7 +153,14 @@ const GraphView: React.FunctionComponent<GraphViewProps> = props => {
           <ZoomCanvas enableOptimize={true} sensitivity={2} />
         </Graphin>
       </Resizable>
-      <div style={{ width: `calc(100% - ${resizableWidth}px)` }}>
+      <div
+        style={{
+          width: `calc(100% - ${resizableWidth})px`,
+          borderLeft: '1px solid #E2E3E5',
+          background: token.colorBgContainer,
+          zIndex: 1000,
+        }}
+      >
         {/** @ts-ignore */}
         <Panel overview={overview} onChange={onChange}></Panel>
       </div>
