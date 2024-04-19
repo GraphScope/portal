@@ -63,7 +63,7 @@ export const listGraphs = async () => {
   }, {});
 
   console.log(status, deployments);
-  const { graphs_info, version, solution, cluster_type } = deployments;
+  const { graphs_info, version, solution, cluster_type } = deployments || { graphs_info: {} };
 
   const info = Object.values(graphs_info!).map(item => {
     const { name, creation_time, last_dataloading_time, update_time } = item;
