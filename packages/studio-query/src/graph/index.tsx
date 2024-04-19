@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import Graphin, { GraphinData } from '@antv/graphin';
+import { Resizable } from 're-resizable';
 import Panel from './panel';
 import { processData, calcOverview, storage, getConfig } from './utils';
 import type { ISchema } from './typing';
-import { theme } from 'antd';
+import { theme, Flex } from 'antd';
 
 interface GraphViewProps {
   data: GraphinData;
@@ -17,11 +18,12 @@ const GraphView: React.FunctionComponent<GraphViewProps> = props => {
     const configMap = getConfig(schema, schemaId);
     return {
       configMap,
+      resizableWidth: 320,
     };
   });
   const { token } = theme.useToken();
 
-  const { configMap } = state;
+  const { configMap, resizableWidth } = state;
   const newData = processData(data, configMap);
   const overview = calcOverview(schema, configMap, data);
   const onChange = params => {
@@ -36,19 +38,31 @@ const GraphView: React.FunctionComponent<GraphViewProps> = props => {
     storage.set(schemaId, [...configMap.values()]);
   };
   return (
-    <Graphin
-      data={newData}
-      layout={{
-        type: 'graphin-force',
-        preset: {
-          type: 'concentric',
-        },
-      }}
-      style={{ height: '480px', minHeight: '480px', background: token.colorBgLayout }}
-    >
-      {/** @ts-ignore */}
-      <Panel overview={overview} onChange={onChange}></Panel>
-    </Graphin>
+    <Flex>
+      <Resizable
+        size={{ width: resizableWidth, height: 480 }}
+        minWidth={'50%'}
+        maxWidth={'70%'}
+        onResizeStop={(e, direction, ref, d) => {
+          updateState(preState => ({ ...preState, width: resizableWidth + d.width }));
+        }}
+      >
+        <Graphin
+          data={newData}
+          layout={{
+            type: 'graphin-force',
+            preset: {
+              type: 'concentric',
+            },
+          }}
+          style={{ height: '480px', minHeight: '480px', background: token.colorBgLayout }}
+        />
+      </Resizable>
+      <div style={{ width: `calc(100% - ${resizableWidth}px)` }}>
+        {/** @ts-ignore */}
+        <Panel overview={overview} onChange={onChange}></Panel>
+      </div>
+    </Flex>
   );
 };
 
