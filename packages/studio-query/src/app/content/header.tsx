@@ -55,8 +55,9 @@ const LanguageSwitch = () => {
         {
           label: 'Gremlin',
           value: 'gremlin',
+          disabled: language === 'cypher',
         },
-        { label: 'Cypher', value: 'cypher' },
+        { label: 'Cypher', value: 'cypher', disabled: language === 'gremlin' },
       ]}
       onChange={onChange}
     />
