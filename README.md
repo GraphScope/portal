@@ -1,18 +1,9 @@
-<h1 align="center">
-    <img src="https://graphscope.io/assets/images/graphscope-logo.svg" width="400" alt="graphscope-logo">
-</h1>
+# GraphScope Portal
 
-<p align="center">
-    A web-based management tool for GraphScope
-</p>
-
-<div align="center">
+A web-based management tool for GraphScope
   
 [![Version](https://badgen.net/npm/v/@graphscope/studio-query)](https://www.npmjs.com/@graphscope/studio-query)
- 
 ![Latest commit](https://badgen.net/github/last-commit/graphscope/portal)
-  
-</div>
 
 <img src="https://gw.alipayobjects.com/zos/antfincdn/R8sN%24GNdh6/language.svg" width="18"> English | [简体中文](./README.zh-CN.md)
 
