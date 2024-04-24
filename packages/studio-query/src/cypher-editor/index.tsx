@@ -82,7 +82,7 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
         const editor = editorProvider.create(editorRef.current, {
           language: LANGUAGE[language],
           value,
-          theme: isDark ? 'darkTheme' : THEMES[language],
+          theme: isDark ? 'vs-dark' : THEMES[language], // 'vs' (default), 'vs-dark', 'hc-black', 'hc-light'
           suggestLineHeight: 20,
           suggestLineHeight: 20,
           automaticLayout: true,
@@ -160,7 +160,6 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
         // });
       }
     });
-
     return () => {
       if (codeEditor) {
         codeEditor.dispose();
@@ -172,7 +171,6 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
       editorRef.current.codeEditor.setValue('');
     }
   }, [clear]);
-
   return (
     <div
       ref={editorRef}

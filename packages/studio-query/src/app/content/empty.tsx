@@ -2,25 +2,27 @@ import * as React from 'react';
 import { Typography } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { PlayCircleOutlined } from '@ant-design/icons';
+import Image from './image';
 interface IEmptyProps {}
 
 const Empty: React.FunctionComponent<IEmptyProps> = props => {
+  const isDark = JSON.parse(localStorage.getItem('GS_STUDIO_themeColor') || '') === 'darkAlgorithm';
   return (
     <div
       style={{
         fontSize: '14px',
-        backgroundImage:
-          'url(https://img.alicdn.com/imgextra/i3/O1CN01ioBjPd24ALzvMY66U_!!6000000007350-55-tps-915-866.svg)',
         height: '100%',
         width: '100%',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
       }}
     >
-      <Typography.Text type="secondary">
+      <Image isDark={isDark} />
+      <Typography.Text
+        type="secondary"
+        style={{ position: 'absolute', top: '50%', left: '35%', color: isDark ? '#D4D4D4' : '#838487' }}
+      >
         <FormattedMessage
           id="You can write cypher or gremlin queries, and then click the {icon} button to query data"
           values={{

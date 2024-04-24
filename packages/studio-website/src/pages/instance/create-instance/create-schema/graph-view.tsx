@@ -2,7 +2,7 @@ import { memo, FunctionComponent } from 'react';
 import Graphin, { Utils } from '@antv/graphin';
 import { useContext, NodeSchema, EdgeSchema } from '../useContext';
 import { useContext as useMode } from '@/layouts/useContext';
-import { Image } from 'antd';
+import Image from '@/components/icons/image';
 interface Props {
   children?: JSX.Element;
 }
@@ -86,12 +86,7 @@ const GraphView: FunctionComponent<Props> = props => {
   return (
     <>
       {graphData.nodes.length === 0 ? (
-        <Image
-          height="100%"
-          width="100%"
-          preview={false}
-          src="https://img.alicdn.com/imgextra/i3/O1CN01ioBjPd24ALzvMY66U_!!6000000007350-55-tps-915-866.svg"
-        />
+        <Image isDark={mode === 'defaultAlgorithm' ? false : true} />
       ) : (
         <Graphin
           theme={{ mode: mode === 'defaultAlgorithm' ? 'light' : 'dark' }}
