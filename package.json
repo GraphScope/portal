@@ -28,6 +28,12 @@
       "git add"
     ]
   },
+  "pnpm": {
+    "overrides": {
+      "react": "18.2.0",
+      "react-dom": "18.2.0"
+    }
+  },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
     "@uiw/codemirror-themes": "^4.21.24",
@@ -38,14 +44,14 @@
     "dayjs": "^1.11.10",
     "lodash": "4.17.21",
     "node-fetch": "^3.3.0",
-    "react": "18.x",
-    "react-dom": "18.x",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "use-immer": "^0.9.0"
   },
   "devDependencies": {
     "@types/node": "latest",
-    "@types/react": "18.x",
-    "@types/react-dom": "18.x",
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.0",
     "babel-loader": "^8.2.5",
     "css-loader": "^6.8.1",
     "dumi": "^2.2.16",
