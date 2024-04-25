@@ -11,6 +11,10 @@ import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 import { isDarkTheme } from '../../app/utils';
 
+export function capitalizeFirstLetter(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 const Editor: React.FunctionComponent<
   IEditorProps & {
     timestamp?: number;
@@ -73,7 +77,7 @@ const Editor: React.FunctionComponent<
         <Space>
           {/* <Tag>{language}</Tag> */}
           <Typography.Text type="secondary" style={{ fontSize: '12px', textAlign: 'center' }}>
-            {language} {message}
+            {capitalizeFirstLetter(language)} {message}
           </Typography.Text>
         </Space>
 
