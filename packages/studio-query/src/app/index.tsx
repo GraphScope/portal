@@ -11,16 +11,10 @@ import type { IStatement } from './context';
 import Sidebar from './sidebar';
 import Provider from './provider';
 import { FormattedMessage } from 'react-intl';
-import {
-  RedditOutlined,
-  DeploymentUnitOutlined,
-  DatabaseOutlined,
-  BookOutlined,
-  HistoryOutlined,
-} from '@ant-design/icons';
+
 import type { IStudioQueryProps } from './context';
 import { v4 as uuidv4 } from 'uuid';
-import { getSearchParams, searchParamOf, formatCypherStatement } from './utils';
+import { searchParamOf, formatCypherStatement } from './utils';
 import { storage } from '../graph/utils';
 
 import Container from './container';
@@ -46,6 +40,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     locale = 'zh-CN',
     theme,
   } = props;
+
   const { store, updateStore } = useContext();
   const { graphName, isReady, collapse, activeNavbar, statements, schemaData, language } = store;
   const enable = !!enableAbsolutePosition && statements.length > 0;
@@ -120,8 +115,9 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         draft.mode = displayMode as 'flow' | 'tabs';
         draft.language = language as 'gremlin' | 'cypher';
       });
+
+      storage.set('STUDIO_QUERY_THEME', theme);
     })();
-    storage.set('themeMode', theme);
   }, []);
 
   const handleChangeNavbar = value => {
@@ -148,7 +144,6 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       language,
     };
 
-    console.log('newParams', params, value);
     updateStore(draft => {
       draft.historyStatements.push(params);
     });

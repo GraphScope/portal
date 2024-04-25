@@ -1,3 +1,4 @@
+import { storage } from '../graph/utils';
 /**
  * 获取hash上的search对象
  * @param location
@@ -55,4 +56,9 @@ export function formatCypherStatement(cypherStatement) {
 export function countLines(str) {
   // 使用正则表达式匹配换行符，并计算匹配到的数量，即为行数
   return (str.match(/\r?\n/g) || []).length + 1;
+}
+
+export function isDarkTheme() {
+  const { mode } = storage.get<{ mode: string; primaryColor: string }>('STUDIO_QUERY_THEME') || {};
+  return mode === 'darkAlgorithm';
 }

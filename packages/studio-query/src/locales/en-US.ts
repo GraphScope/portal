@@ -12,7 +12,7 @@ export default {
 
   /** recommended */
   'Vertex Labels': 'Vertex Labels',
-  'Edge labels': 'Edge labels',
+  'Edge Labels': 'Edge Labels',
   'Property Keys': 'Property Keys',
   /** saved */
   'No saved query statements {br} You can click {icon} to save.':

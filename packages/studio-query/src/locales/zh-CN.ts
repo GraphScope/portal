@@ -11,7 +11,7 @@ export default {
     '您可以在这里编写 cypher 或 gremlin 语句，点击 {icon} 按钮查询数据',
   /** recommended */
   'Vertex Labels': '节点类型',
-  'Edge labels': '边类型',
+  'Edge Labels': '边类型',
   'Property Keys': '属性字段',
   /** saved */
   'No saved query statements {br} You can click {icon} to save.': '暂无保存的查询语句 {br} 您可以点击 {icon} 保存',
