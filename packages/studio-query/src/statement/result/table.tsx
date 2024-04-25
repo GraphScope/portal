@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, Space, Typography, Flex, Button, Tooltip, Segmented } from 'antd';
 import { FileExcelOutlined, BarChartOutlined, TableOutlined } from '@ant-design/icons';
 import ChartView from './chart';
+import { useIntl } from 'react-intl';
 interface ITableViewProps {
   data: any;
 }
@@ -74,13 +75,28 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
   const nodeCount = nodes.length;
   const edgeCount = edges.length;
   const totalCount = table.length;
+  const intl = useIntl();
   let description: string;
   if (nodeCount === 0 && edgeCount === 0 && totalCount !== 0) {
-    description = `A total of ${totalCount} records were retrieved`;
+    description = intl.formatMessage(
+      {
+        id: 'A total of {totalCount} records were retrieved',
+      },
+      {
+        totalCount: totalCount,
+      },
+    );
   } else {
-    description = `A total of ${
-      nodeCount + edgeCount
-    } records were retrieved, including ${nodeCount} nodes and  ${edgeCount} edges.`;
+    description = intl.formatMessage(
+      {
+        id: 'A total of {totalCount} records were retrieved, including {nodeCount} nodes and  {edgeCount} edges.',
+      },
+      {
+        totalCount: nodeCount + edgeCount,
+        nodeCount: nodeCount,
+        edgeCount: edgeCount,
+      },
+    );
   }
 
   const [mode, setMode] = useState<'table' | 'chart'>('table');

@@ -3,7 +3,7 @@ import { theme } from 'antd';
 import dayjs from 'dayjs';
 import Editor from './editor';
 import Result from './result';
-
+import { useIntl } from 'react-intl';
 import { IEditorProps } from './typing';
 
 export type IStatementProps = IEditorProps & {
@@ -37,6 +37,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
     language,
   } = props;
   const { token } = useToken();
+  const intl = useIntl();
   const borderStyle =
     active && mode === 'flow'
       ? {
@@ -101,8 +102,26 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
 
   const isRunning = endTime - startTime < 0;
   const message = isRunning
-    ? `query submmited on ${dayjs(startTime).format('HH:mm:ss YYYY-MM-DD')}. It's running ... `
-    : `query submmited on ${dayjs(startTime).format('HH:mm:ss YYYY-MM-DD')}. Running ${endTime - startTime} ms`;
+    ? intl.formatMessage(
+        {
+          id: "query submmited on {submitTime}. It's running ... ",
+        },
+        {
+          submitTime: dayjs(startTime).format('HH:mm:ss YYYY-MM-DD'),
+        },
+      )
+    : intl.formatMessage(
+        {
+          id: 'query submmited on {submitTime}. Running {runningTime} ms',
+        },
+        {
+          submitTime: dayjs(startTime).format('HH:mm:ss YYYY-MM-DD'),
+          runningTime: endTime - startTime,
+        },
+      );
+
+  // `query submmited on ${dayjs(startTime).format('HH:mm:ss YYYY-MM-DD')}. It's running ... `
+  // : `query submmited on ${dayjs(startTime).format('HH:mm:ss YYYY-MM-DD')}. Running ${endTime - startTime} ms`;
 
   return (
     <div
