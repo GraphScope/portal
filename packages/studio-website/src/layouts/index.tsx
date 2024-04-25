@@ -13,6 +13,7 @@ export default function Layout() {
   const { locale, primaryColor, mode, inputNumber } = store;
   //@ts-ignore
   const messages = locales[locale];
+  const isLight = mode === 'defaultAlgorithm';
   return (
     <IntlProvider messages={messages} locale={locale}>
       <ConfigProvider
@@ -52,6 +53,7 @@ export default function Layout() {
             colorPrimary: primaryColor,
             colorBorder: mode === 'defaultAlgorithm' ? '#F0F0F0' : '#303030',
             // colorBgBase: mode === 'defaultAlgorithm' ? '#fff' : '#000',
+            colorBgBase: isLight ? '#fff' : 'rgba(12,12,12,1)',
           },
         }}
       >

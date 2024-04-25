@@ -6,7 +6,7 @@ import { useContext } from '../context';
 import CypherEditor from '../../cypher-editor';
 import { countLines } from '../utils';
 import { v4 as uuidv4 } from 'uuid';
-
+import { isDarkTheme } from '../utils';
 interface IHeaderProps {}
 
 const options = [
@@ -121,6 +121,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
 
   const minRows = countLines(globalScript);
   const isShowCypherSwitch = state.lineCount === 1 && minRows === 1;
+  const isDark = isDarkTheme();
 
   return (
     <div
@@ -155,7 +156,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
             flex: 1,
             display: 'block',
             overflow: 'hidden',
-            border: '1px solid rgb(187, 190, 195)',
+            border: isDark ? '1px solid #434343' : '1px solid rgb(187, 190, 195)',
             borderRadius: '6px',
           }}
         >

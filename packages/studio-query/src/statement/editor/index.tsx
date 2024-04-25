@@ -9,6 +9,7 @@ import SaveStatement from './save';
 import dayjs from 'dayjs';
 
 import { v4 as uuidv4 } from 'uuid';
+import { isDarkTheme } from '../../app/utils';
 
 const Editor: React.FunctionComponent<
   IEditorProps & {
@@ -34,6 +35,7 @@ const Editor: React.FunctionComponent<
     message,
   } = props;
   const editorRef = useRef<any>(null);
+  const isDark = isDarkTheme();
 
   const handleQuery = async () => {
     const value = editorRef?.current?.codeEditor?.getValue();
@@ -93,7 +95,14 @@ const Editor: React.FunctionComponent<
           )}
         </Space>
       </Flex>
-      <Flex justify="space-between" style={{ border: '1px solid #bbbec3', borderRadius: '6px' }}>
+      <Flex
+        justify="space-between"
+        style={{
+          // border: '1px solid #bbbec3',
+          border: isDark ? '1px solid #434343' : '1px solid rgb(187, 190, 195)',
+          borderRadius: '6px',
+        }}
+      >
         <CypherEdit
           language={language}
           schemaData={schemaData}

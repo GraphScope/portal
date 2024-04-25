@@ -19,9 +19,9 @@ const QueryModule = () => {
   const language = GS_ENGINE_TYPE === 'groot' ? 'gremlin' : 'cypher';
   const globalScript = GS_ENGINE_TYPE === 'groot' ? 'g.V().limit 10' : 'Match (n) return n limit 10';
 
-  const locale = storage.getItem('locale');
-  const primaryColor = storage.getItem('primaryColor');
-  const themeMode = storage.getItem('themeColor');
+  const locale = storage.getItem('locale') || 'en-US';
+  const primaryColor = storage.getItem('primaryColor') || '#1978FF';
+  const themeMode = storage.getItem('themeColor') || 'defaultAlgorithm';
 
   return (
     <StudioQuery
