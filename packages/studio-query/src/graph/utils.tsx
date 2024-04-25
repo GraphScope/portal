@@ -1,6 +1,7 @@
 import { GraphinData, Utils } from '@antv/graphin';
 import { sizes, widths, colors } from '../properties-panel';
 import type { ISchema, ConfigItem } from './typing';
+import { isDarkTheme } from '../app/utils';
 export const storage = {
   get<T>(key: string): T | undefined {
     try {
@@ -108,8 +109,8 @@ export function countOccurrencesByKey(arr, key) {
 
 export function processData(data: GraphinData, configMap: Map<string, ConfigItem>) {
   const nodesMap = new Map();
-  const theme: { mode: 'defaultAlgorithm' | 'darkAlgorithm' } = storage.get('themeMode') || { mode: 'darkAlgorithm' };
-  const { mode } = theme;
+  const isDark = isDarkTheme();
+
   const { nodes: Nodes, edges: Edges } = data;
   const nodes = Nodes.map(item => {
     const { id, label, properties } = item;
@@ -128,7 +129,7 @@ export function processData(data: GraphinData, configMap: Map<string, ConfigItem
       style: {
         label: {
           value: displayLabel,
-          fill: mode === 'darkAlgorithm' ? '#fff' : '#212121',
+          fill: isDark ? '#fff' : '#212121',
           fillOpacity: 0.8,
         },
         fontSize: 14,
@@ -165,7 +166,7 @@ export function processData(data: GraphinData, configMap: Map<string, ConfigItem
         },
         label: {
           value: displayLabel,
-          fill: mode === 'darkAlgorithm' ? '#fff' : '#212121',
+          fill: isDark ? '#fff' : '#212121',
           offset: [0, 0],
         },
       },

@@ -15,11 +15,12 @@ let timer;
 const FitView = () => {
   const { graph } = React.useContext(GraphinContext);
   useEffect(() => {
-    timer = setTimeout(() => {
+    const handleFit = () => {
       graph.fitView([10, 10], {}, true);
-    }, 100);
+    };
+    graph.on('afterlayout', handleFit);
     return () => {
-      clearTimeout(timer);
+      graph.off('afterlayout', handleFit);
     };
   }, [graph]);
   return null;
