@@ -108,7 +108,7 @@ export function countOccurrencesByKey(arr, key) {
 
 export function processData(data: GraphinData, configMap: Map<string, ConfigItem>) {
   const nodesMap = new Map();
-  const theme: { mode: string } = storage.get('themeMode') || { mode: 'darkAlgorithm' };
+  const theme: { mode: 'defaultAlgorithm' | 'darkAlgorithm' } = storage.get('themeMode') || { mode: 'darkAlgorithm' };
   const { mode } = theme;
   const { nodes: Nodes, edges: Edges } = data;
   const nodes = Nodes.map(item => {
