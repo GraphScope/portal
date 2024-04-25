@@ -2,7 +2,7 @@ import * as React from 'react';
 import CypherEdit from '../../cypher-editor';
 import { Space, Button, Input, Flex, Tooltip, Typography, Tag, Card } from 'antd';
 import type { GlobalToken } from 'antd';
-import { PlayCircleOutlined, BookOutlined, CloseOutlined } from '@ant-design/icons';
+import { PlayCircleOutlined, BookOutlined, CloseOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { useRef } from 'react';
 import { IEditorProps } from '../typing';
 import SaveStatement from './save';
@@ -61,7 +61,12 @@ const Editor: React.FunctionComponent<
   const handleClose = () => {
     onClose && onClose(id);
   };
-
+  const handleShare = () => {
+    const value = editorRef?.current?.codeEditor?.getValue();
+    window.open(
+      `${window.location.origin}/query-app#?language=${language}&auto_run=true&global_script=${encodeURIComponent(value)}`,
+    );
+  };
   return (
     <div style={{}}>
       <Flex justify="space-between" style={{ paddingBottom: '8px' }}>
@@ -88,6 +93,9 @@ const Editor: React.FunctionComponent<
             />
           </Tooltip>
           {onSave && <SaveStatement onSave={handleSave} />}
+          <Tooltip title="Share statements">
+            <Button type="text" icon={<ShareAltOutlined onClick={handleShare} />} />
+          </Tooltip>
           {onClose && (
             <Tooltip title="删除语句">
               <Button type="text" icon={<CloseOutlined onClick={handleClose} />} />
