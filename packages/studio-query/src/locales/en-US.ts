@@ -36,9 +36,21 @@ export default {
   Delete: 'Delete',
   Query: 'Query',
   Share: 'Share',
-  /** Lengend Tags */
+  "query submmited on {submitTime}. It's running ... ": "query submmited on {submitTime}. It's running ... ",
+  'query submmited on {submitTime}. Running {runningTime} ms':
+    'query submmited on {submitTime}. Running {runningTime} ms',
+  'A total of {totalCount} records were retrieved': 'A total of {totalCount} records were retrieved',
+  'A total of {totalCount} records were retrieved, including {nodeCount} nodes and  {edgeCount} edges.':
+    'A total of {totalCount} records were retrieved, including {nodeCount} nodes and  {edgeCount} edges.',
+  /** Properties tags */
   Color: 'Color',
   Size: 'Size',
   Caption: 'Caption',
   LineWidth: 'LineWidth',
+  /** Properties detial */
+  'Node properties': 'Node properties',
+  /** display mode */
+  Graph: 'Graph',
+  Table: 'Table',
+  Raw: 'Raw',
 };

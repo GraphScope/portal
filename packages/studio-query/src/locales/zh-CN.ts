@@ -34,9 +34,20 @@ export default {
   Delete: '删除',
   Query: '查询',
   Share: '分享',
+  "query submmited on {submitTime}. It's running ... ": '查询提交于 {submitTime}. 正在运行中...',
+  'query submmited on {submitTime}. Running {runningTime} ms': '查询提交于 {submitTime}. 查询时长 {runningTime} ms',
+  'A total of {totalCount} records were retrieved': '一共检索到 {totalCount} 条记录',
+  'A total of {totalCount} records were retrieved, including {nodeCount} nodes and  {edgeCount} edges.':
+    '一共检索到 {totalCount} 条记录, 其中包含 {nodeCount} 个节点，{edgeCount} 条边',
   /** Lengend Tags */
   Color: '颜色',
   Size: '大小',
   Caption: '文本',
   LineWidth: '边宽',
+  /** Properties detial */
+  'Node properties': '属性详情',
+  /** display mode */
+  Graph: '图展示',
+  Table: '表格展示',
+  Raw: '原始数据',
 };

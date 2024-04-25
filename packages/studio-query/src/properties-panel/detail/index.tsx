@@ -3,6 +3,7 @@ import { Space, Tooltip, message } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import copy from 'copy-to-clipboard';
 import Legend from '../legend';
+import { FormattedMessage } from 'react-intl';
 import { Typography, Flex } from 'antd';
 const { Title, Text } = Typography;
 interface DetialProps {
@@ -14,10 +15,9 @@ const Detial: React.FunctionComponent<DetialProps> = props => {
   const { label, data } = props;
   return (
     <div>
-      <Title level={5} style={{ marginTop: '12px' }}>
-        Node properties
+      <Title level={5} style={{ margin: '6px 0px 12px 0px' }}>
+        <FormattedMessage id="Node properties" />
       </Title>
-      {/* <Legend onChange={onChange} properties={data} label={label} /> */}
 
       <table
         style={{

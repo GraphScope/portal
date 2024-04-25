@@ -3,6 +3,7 @@ import { Tabs } from 'antd';
 import TableView from './table';
 import RawView from './raw';
 import GraphView from './graph';
+import { useIntl } from 'react-intl';
 
 import { DeploymentUnitOutlined, TableOutlined, BarChartOutlined, CodeOutlined } from '@ant-design/icons';
 
@@ -58,6 +59,7 @@ const Result: React.FunctionComponent<IResultProps> = props => {
   const { data, isFetching, schemaData, graphName } = props;
 
   const [activeKey, setActiveKey] = React.useState(null);
+  const intl = useIntl();
 
   const { viewMode, options } = getOptions(data, isFetching, activeKey);
 
@@ -71,21 +73,21 @@ const Result: React.FunctionComponent<IResultProps> = props => {
 
   const items = [
     {
-      label: 'Graph ',
+      label: intl.formatMessage({ id: 'Graph' }),
       key: 'graph',
       icon: <DeploymentUnitOutlined />,
       children: <GraphView data={data} schemaData={schemaData} graphName={graphName} />,
       disabled: !isExist('graph'),
     },
     {
-      label: 'Table',
+      label: intl.formatMessage({ id: 'Table' }),
       key: 'table',
       icon: <TableOutlined />,
       children: <TableView data={data} />,
       disabled: !isExist('table'),
     },
     {
-      label: 'Raw',
+      label: intl.formatMessage({ id: 'Raw' }),
       key: 'raw',
       icon: <CodeOutlined />,
       children: <RawView data={data} isFetching={isFetching} />,
