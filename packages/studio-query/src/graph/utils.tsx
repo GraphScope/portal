@@ -108,6 +108,8 @@ export function countOccurrencesByKey(arr, key) {
 
 export function processData(data: GraphinData, configMap: Map<string, ConfigItem>) {
   const nodesMap = new Map();
+  const theme: { mode: 'defaultAlgorithm' | 'darkAlgorithm' } = storage.get('themeMode') || { mode: 'darkAlgorithm' };
+  const { mode } = theme;
   const { nodes: Nodes, edges: Edges } = data;
   const nodes = Nodes.map(item => {
     const { id, label, properties } = item;
@@ -126,6 +128,8 @@ export function processData(data: GraphinData, configMap: Map<string, ConfigItem
       style: {
         label: {
           value: displayLabel,
+          fill: mode === 'darkAlgorithm' ? '#fff' : '#212121',
+          fillOpacity: 0.8,
         },
         fontSize: 14,
         keyshape: {
@@ -161,7 +165,7 @@ export function processData(data: GraphinData, configMap: Map<string, ConfigItem
         },
         label: {
           value: displayLabel,
-          fill: color,
+          fill: mode === 'darkAlgorithm' ? '#fff' : '#212121',
           offset: [0, 0],
         },
       },

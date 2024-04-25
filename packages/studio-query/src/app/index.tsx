@@ -21,6 +21,7 @@ import {
 import type { IStudioQueryProps } from './context';
 import { v4 as uuidv4 } from 'uuid';
 import { getSearchParams, searchParamOf, formatCypherStatement } from './utils';
+import { storage } from '../graph/utils';
 
 import Container from './container';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -120,6 +121,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         draft.language = language as 'gremlin' | 'cypher';
       });
     })();
+    storage.set('themeMode', theme);
   }, []);
 
   const handleChangeNavbar = value => {
