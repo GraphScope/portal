@@ -27,6 +27,7 @@
     "react-intl": "^6.6.1",
     "@fortawesome/free-solid-svg-icons": "latest",
     "@fortawesome/react-fontawesome": "latest",
+    "@fortawesome/fontawesome-svg-core": "latest",
     "@antv/g2": "5.1.13",
     "uuid": "^9.0.1",
     "dayjs": "^1.11.10",
