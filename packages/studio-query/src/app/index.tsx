@@ -96,7 +96,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       const _hack = location.pathname === '/query-app' && location.search === '?graph_algo';
       // 临时的需求，后续删除
       if (_hack) {
-        globalScript = `MATCH (p)-[e]-(s) return p,e,s`;
+        globalScript = `MATCH (a)-[b:Belong]->(c) RETURN a,b,c;`;
         autoRun = true;
         graphName = `graph_algo`;
       }
