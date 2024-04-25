@@ -7,9 +7,9 @@ import { useRef } from 'react';
 import { IEditorProps } from '../typing';
 import SaveStatement from './save';
 import dayjs from 'dayjs';
-
 import { v4 as uuidv4 } from 'uuid';
 import { isDarkTheme } from '../../app/utils';
+import { useIntl } from 'react-intl';
 
 export function capitalizeFirstLetter(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -40,6 +40,7 @@ const Editor: React.FunctionComponent<
   } = props;
   const editorRef = useRef<any>(null);
   const isDark = isDarkTheme();
+  const intl = useIntl();
 
   const handleQuery = async () => {
     const value = editorRef?.current?.codeEditor?.getValue();
@@ -82,7 +83,7 @@ const Editor: React.FunctionComponent<
         </Space>
 
         <Space size={0}>
-          <Tooltip title="开始查询">
+          <Tooltip title={intl.formatMessage({ id: 'Query' })}>
             <Button
               type="text"
               icon={
@@ -97,11 +98,11 @@ const Editor: React.FunctionComponent<
             />
           </Tooltip>
           {onSave && <SaveStatement onSave={handleSave} />}
-          <Tooltip title="Share statements">
+          <Tooltip title={intl.formatMessage({ id: 'Share' })}>
             <Button type="text" icon={<ShareAltOutlined onClick={handleShare} />} />
           </Tooltip>
           {onClose && (
-            <Tooltip title="删除语句">
+            <Tooltip title={intl.formatMessage({ id: 'Delete' })}>
               <Button type="text" icon={<CloseOutlined onClick={handleClose} />} />
             </Tooltip>
           )}

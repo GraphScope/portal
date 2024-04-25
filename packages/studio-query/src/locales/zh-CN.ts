@@ -29,4 +29,14 @@ export default {
   'recommend 5 interesting query statements': '帮我推荐5个有意思的查询',
   'query any subgraph': '查询任意一个子图',
   'insight the statistical distribution of vertex labels in the graph': '帮我分析图中节点类型的分布情况',
+  /** Statement */
+  Save: '保存',
+  Delete: '删除',
+  Query: '查询',
+  Share: '分享',
+  /** Lengend Tags */
+  Color: '颜色',
+  Size: '大小',
+  Caption: '文本',
+  LineWidth: '边宽',
 };

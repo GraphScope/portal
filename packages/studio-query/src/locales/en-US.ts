@@ -31,4 +31,14 @@ export default {
   'query any subgraph': 'query any subgraph',
   'insight the statistical distribution of vertex labels in the graph':
     'insight the statistical distribution of vertex labels in the graph',
+  /** Statement */
+  Save: 'Save',
+  Delete: 'Delete',
+  Query: 'Query',
+  Share: 'Share',
+  /** Lengend Tags */
+  Color: 'Color',
+  Size: 'Size',
+  Caption: 'Caption',
+  LineWidth: 'LineWidth',
 };
