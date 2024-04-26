@@ -2,13 +2,18 @@ import * as React from 'react';
 import CypherEdit from '../../cypher-editor';
 import { Space, Button, Input, Flex, Tooltip, Typography, Tag, Card } from 'antd';
 import type { GlobalToken } from 'antd';
-import { PlayCircleOutlined, BookOutlined, CloseOutlined } from '@ant-design/icons';
+import { PlayCircleOutlined, BookOutlined, CloseOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { useRef } from 'react';
 import { IEditorProps } from '../typing';
 import SaveStatement from './save';
 import dayjs from 'dayjs';
-
 import { v4 as uuidv4 } from 'uuid';
+import { isDarkTheme } from '../../app/utils';
+import { useIntl } from 'react-intl';
+
+export function capitalizeFirstLetter(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 const Editor: React.FunctionComponent<
   IEditorProps & {
@@ -34,6 +39,8 @@ const Editor: React.FunctionComponent<
     message,
   } = props;
   const editorRef = useRef<any>(null);
+  const isDark = isDarkTheme();
+  const intl = useIntl();
 
   const handleQuery = async () => {
     const value = editorRef?.current?.codeEditor?.getValue();
@@ -59,19 +66,24 @@ const Editor: React.FunctionComponent<
   const handleClose = () => {
     onClose && onClose(id);
   };
-
+  const handleShare = () => {
+    const value = editorRef?.current?.codeEditor?.getValue();
+    window.open(
+      `${window.location.origin}/query-app#?language=${language}&auto_run=true&global_script=${encodeURIComponent(value)}`,
+    );
+  };
   return (
     <div style={{}}>
       <Flex justify="space-between" style={{ paddingBottom: '8px' }}>
         <Space>
           {/* <Tag>{language}</Tag> */}
           <Typography.Text type="secondary" style={{ fontSize: '12px', textAlign: 'center' }}>
-            {language} {message}
+            {capitalizeFirstLetter(language)} {message}
           </Typography.Text>
         </Space>
 
         <Space size={0}>
-          <Tooltip title="开始查询">
+          <Tooltip title={intl.formatMessage({ id: 'Query' })}>
             <Button
               type="text"
               icon={
@@ -86,14 +98,24 @@ const Editor: React.FunctionComponent<
             />
           </Tooltip>
           {onSave && <SaveStatement onSave={handleSave} />}
+          <Tooltip title={intl.formatMessage({ id: 'Share' })}>
+            <Button type="text" icon={<ShareAltOutlined onClick={handleShare} />} />
+          </Tooltip>
           {onClose && (
-            <Tooltip title="删除语句">
+            <Tooltip title={intl.formatMessage({ id: 'Delete' })}>
               <Button type="text" icon={<CloseOutlined onClick={handleClose} />} />
             </Tooltip>
           )}
         </Space>
       </Flex>
-      <Flex justify="space-between" style={{ border: '1px solid #bbbec3', borderRadius: '6px' }}>
+      <Flex
+        justify="space-between"
+        style={{
+          // border: '1px solid #bbbec3',
+          border: isDark ? '1px solid #434343' : '1px solid rgb(187, 190, 195)',
+          borderRadius: '6px',
+        }}
+      >
         <CypherEdit
           language={language}
           schemaData={schemaData}

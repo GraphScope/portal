@@ -6,6 +6,7 @@ import { useContext } from '../../context';
 const { Title, Text } = Typography;
 import Section from '../section';
 import { FormattedMessage } from 'react-intl';
+import { isDarkTheme } from '../../utils';
 interface IRecommendedStatementsProps {
   schemaData: any;
   schemaId: string;
@@ -39,6 +40,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
   const configMap = getConfig(schemaData, schemaId);
   const { nodes, edges } = schemaData;
   const keys = getPropertyKeys(graphSchema);
+  const isDark = isDarkTheme();
 
   const handleClick = (label: string, type: 'nodes' | 'edges' | 'property') => {
     let script = '';
@@ -79,7 +81,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
           );
         })}
         <Title level={5} style={styles.title}>
-          <FormattedMessage id="Edge labels" />
+          <FormattedMessage id="Edge Labels" />
         </Title>
         {edges.map(item => {
           const { label } = item;
@@ -104,7 +106,13 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
           return (
             <Tag
               key={item}
-              style={{ borderRadius: '8px', backgroundColor: '#000', cursor: 'pointer', margin: '4px', color: '#fff' }}
+              style={{
+                borderRadius: '8px',
+                backgroundColor: isDark ? '#fff' : '#000',
+                cursor: 'pointer',
+                margin: '4px',
+                color: isDark ? '#000' : '#fff',
+              }}
               bordered={false}
               onClick={() => {
                 handleClick(item, 'property');

@@ -12,7 +12,7 @@ export default {
 
   /** recommended */
   'Vertex Labels': 'Vertex Labels',
-  'Edge labels': 'Edge labels',
+  'Edge Labels': 'Edge Labels',
   'Property Keys': 'Property Keys',
   /** saved */
   'No saved query statements {br} You can click {icon} to save.':
@@ -31,4 +31,26 @@ export default {
   'query any subgraph': 'query any subgraph',
   'insight the statistical distribution of vertex labels in the graph':
     'insight the statistical distribution of vertex labels in the graph',
+  /** Statement */
+  Save: 'Save',
+  Delete: 'Delete',
+  Query: 'Query',
+  Share: 'Share',
+  "query submmited on {submitTime}. It's running ... ": "query submmited on {submitTime}. It's running ... ",
+  'query submmited on {submitTime}. Running {runningTime} ms':
+    'query submmited on {submitTime}. Running {runningTime} ms',
+  'A total of {totalCount} records were retrieved': 'A total of {totalCount} records were retrieved',
+  'A total of {totalCount} records were retrieved, including {nodeCount} nodes and  {edgeCount} edges.':
+    'A total of {totalCount} records were retrieved, including {nodeCount} nodes and  {edgeCount} edges.',
+  /** Properties tags */
+  Color: 'Color',
+  Size: 'Size',
+  Caption: 'Caption',
+  LineWidth: 'LineWidth',
+  /** Properties detial */
+  'Node properties': 'Node properties',
+  /** display mode */
+  Graph: 'Graph',
+  Table: 'Table',
+  Raw: 'Raw',
 };

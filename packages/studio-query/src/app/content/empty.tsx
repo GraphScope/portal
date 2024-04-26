@@ -3,10 +3,12 @@ import { Typography } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { PlayCircleOutlined } from '@ant-design/icons';
 import Image from './image';
+import { isDarkTheme } from '../utils';
 interface IEmptyProps {}
 
 const Empty: React.FunctionComponent<IEmptyProps> = props => {
-  const isDark = JSON.parse(localStorage.getItem('GS_STUDIO_themeColor') || '') === 'darkAlgorithm';
+  const isDark = isDarkTheme();
+
   return (
     <div
       style={{
@@ -21,7 +23,9 @@ const Empty: React.FunctionComponent<IEmptyProps> = props => {
       <Image isDark={isDark} />
       <Typography.Text
         type="secondary"
-        style={{ position: 'absolute', top: '50%', left: '35%', color: isDark ? '#D4D4D4' : '#838487' }}
+        style={{
+          position: 'absolute',
+        }}
       >
         <FormattedMessage
           id="You can write cypher or gremlin queries, and then click the {icon} button to query data"

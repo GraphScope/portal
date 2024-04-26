@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Flex, Typography, Space, Tag, theme } from 'antd';
+import { FormattedMessage } from 'react-intl';
 const { useToken } = theme;
 export interface ILegnedOption {
   /** 属性 */
@@ -89,7 +90,9 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
   return (
     <div>
       <Flex gap={12} style={{ padding: '6px 0px' }}>
-        <Typography.Text>Color</Typography.Text>
+        <Typography.Text>
+          <FormattedMessage id="Color" />
+        </Typography.Text>
         <Space>
           {colors.map(item => {
             const isActive = color == item;
@@ -110,7 +113,9 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
       </Flex>
       {type === 'node' && (
         <Flex gap={12} style={{ padding: '6px 0px' }}>
-          <Typography.Text>Size</Typography.Text>
+          <Typography.Text>
+            <FormattedMessage id="Size" />
+          </Typography.Text>
           <Space size={8}>
             {sizes.map(item => {
               const isActive = size == item;
@@ -134,7 +139,9 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
       )}
       {type === 'edge' && (
         <Flex gap={12} style={{ padding: '6px 0px' }}>
-          <Typography.Text>LineWidth</Typography.Text>
+          <Typography.Text>
+            <FormattedMessage id="LineWidth" />
+          </Typography.Text>
           <Space>
             {widths.map(item => {
               const isActive = size == item;
@@ -158,7 +165,9 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
         </Flex>
       )}
       <Flex gap={12} style={{ padding: '6px 0px' }}>
-        <Typography.Text>Caption</Typography.Text>
+        <Typography.Text>
+          <FormattedMessage id="Caption" />
+        </Typography.Text>
         <Space>
           {Object.keys(properties)?.map(item => {
             const isActive = caption == item;

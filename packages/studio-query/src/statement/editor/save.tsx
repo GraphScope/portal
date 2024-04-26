@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { Tooltip, Button, Popover, Typography, Flex, Input, Popconfirm } from 'antd';
 import { BookOutlined } from '@ant-design/icons';
+import { useIntl } from 'react-intl';
 interface ISaveStatementProps {
   onSave: (name: string) => void;
 }
@@ -8,6 +9,7 @@ interface ISaveStatementProps {
 const SaveStatement: React.FunctionComponent<ISaveStatementProps> = props => {
   const { onSave } = props;
   const InputRef = useRef(null);
+  const intl = useIntl();
   const confirm = () => {
     if (InputRef.current) {
       //@ts-ignore
@@ -19,7 +21,11 @@ const SaveStatement: React.FunctionComponent<ISaveStatementProps> = props => {
   const cancel = () => {};
 
   return (
-    <Tooltip title={'收藏语句'}>
+    <Tooltip
+      title={intl.formatMessage({
+        id: 'Save',
+      })}
+    >
       <Popconfirm
         title="name your statement"
         description={<Input width={'200px'} ref={InputRef}></Input>}

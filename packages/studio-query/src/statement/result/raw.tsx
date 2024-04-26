@@ -16,7 +16,7 @@ const RawView: React.FunctionComponent<IJSONViewProps> = props => {
   if (data.mode === 'error') {
     return <Result status="error" title={data.raw && data.raw.name} subTitle={data.raw && data.raw.message}></Result>;
   }
-  console.log('JSON.stringify(data.raw, null, 2)', JSON.stringify(data.raw, null, 2));
+
   return (
     <div>
       <ReactJson src={data.raw} />

@@ -11,7 +11,7 @@ export default {
     '您可以在这里编写 cypher 或 gremlin 语句，点击 {icon} 按钮查询数据',
   /** recommended */
   'Vertex Labels': '节点类型',
-  'Edge labels': '边类型',
+  'Edge Labels': '边类型',
   'Property Keys': '属性字段',
   /** saved */
   'No saved query statements {br} You can click {icon} to save.': '暂无保存的查询语句 {br} 您可以点击 {icon} 保存',
@@ -29,4 +29,25 @@ export default {
   'recommend 5 interesting query statements': '帮我推荐5个有意思的查询',
   'query any subgraph': '查询任意一个子图',
   'insight the statistical distribution of vertex labels in the graph': '帮我分析图中节点类型的分布情况',
+  /** Statement */
+  Save: '保存',
+  Delete: '删除',
+  Query: '查询',
+  Share: '分享',
+  "query submmited on {submitTime}. It's running ... ": '查询提交于 {submitTime}. 正在运行中...',
+  'query submmited on {submitTime}. Running {runningTime} ms': '查询提交于 {submitTime}. 查询时长 {runningTime} ms',
+  'A total of {totalCount} records were retrieved': '一共检索到 {totalCount} 条记录',
+  'A total of {totalCount} records were retrieved, including {nodeCount} nodes and  {edgeCount} edges.':
+    '一共检索到 {totalCount} 条记录, 其中包含 {nodeCount} 个节点，{edgeCount} 条边',
+  /** Lengend Tags */
+  Color: '颜色',
+  Size: '大小',
+  Caption: '文本',
+  LineWidth: '边宽',
+  /** Properties detial */
+  'Node properties': '属性详情',
+  /** display mode */
+  Graph: '图展示',
+  Table: '表格展示',
+  Raw: '原始数据',
 };
