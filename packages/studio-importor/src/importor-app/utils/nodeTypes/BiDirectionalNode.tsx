@@ -33,7 +33,22 @@ const BiDirectionalNode = ({ data, isConnectable }: NodeProps) => {
   const properties = Object.entries(data.properties);
   return (
     <div>
-      <Handle type="source" position={Position.Left} id="left" />
+      <Handle
+        type="target"
+        position={Position.Left}
+        id="target-left"
+        style={{ background: 'red', top: '30px', left: '100px' }}
+      />
+      <Handle
+        type="source"
+        position={Position.Left}
+        id="source-right"
+        style={{ background: 'blue', top: '10px', left: '100px' }}
+      />
+      {/* 
+      <Handle type="target" position={Position.Right} id="target-right" style={{ background: 'red', top: '30px' }} />
+      <Handle type="source" position={Position.Left} id="source-left" style={{ background: 'blue', top: '10px' }} /> */}
+
       <div style={{ border: '1px solid #ddd', backgroundColor: '#F6F7F9', borderRadius: '6px' }}>
         <div style={{ borderBottom: '1px solid #ddd', padding: '3px 12px' }}>{data.label}</div>
         {properties.map((item, index) => {
@@ -52,13 +67,6 @@ const BiDirectionalNode = ({ data, isConnectable }: NodeProps) => {
           );
         })}
       </div>
-      <Handle
-        type="target"
-        position={Position.Left}
-        style={{ bottom: 10, background: '#555' }}
-        onConnect={params => console.log('handle onConnect', params)}
-        isConnectable={isConnectable}
-      />
     </div>
   );
 };

@@ -15,19 +15,11 @@ export const getSpecialPath = ({ sourceX, sourceY, targetX, targetY }: GetSpecia
   return `M ${sourceX} ${sourceY} Q ${centerX} ${centerY + offset} ${targetX} ${targetY}`;
 };
 
-export default function CustomEdge({
-  source,
-  target,
-  sourceX,
-  sourceY,
-  targetX,
-  targetY,
-  sourcePosition,
-  targetPosition,
-  markerEnd,
-  data,
-}: EdgeProps) {
+export default function CustomEdge(props: EdgeProps) {
+  const { source, target, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, markerEnd, data } = props;
+  console.log('edge props', props);
   const isBiDirectionEdge = useStore((s: ReactFlowState) => {
+    console.log('s', s);
     const edgeExists = s.edges.some(
       e => (e.source === target && e.target === source) || (e.target === source && e.source === target),
     );

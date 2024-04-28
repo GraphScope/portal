@@ -2,28 +2,38 @@ import { Position, MarkerType } from 'reactflow';
 
 export function transformDataToReactFlow(nodes, edges) {
   const nodes_flow = nodes.map(item => {
-    const { key, label, properties } = item;
+    const { id, label, properties, _fromEdge } = item;
     return {
-      id: key,
-      type: 'bidirectional',
+      id,
+      _fromEdge,
       position: { x: Math.random() * 500, y: Math.random() * 500 },
       data: { label, properties },
+      label,
       sourcePosition: Position.Right,
       targetPosition: Position.Left,
+      style: _fromEdge
+        ? {
+            background: '#ddd',
+            color: '#000',
+            strokeWidth: 2,
+          }
+        : {
+            height: '180px',
+            background: 'rgb(29 121 255)',
+            color: '#000',
+            strokeWidth: 2,
+          },
     };
   });
   const edges_flow = edges.map(item => {
-    const { key, label, source, target, properties } = item;
+    const { id, label, source, target, properties, key } = item;
     return {
-      id: key,
+      id: id || key,
       label,
-      data: { label, properties },
+      data: { properties },
       source,
       target,
-      sourceHandle: 'right',
-      targetHandle: 'left',
       markerEnd: { type: MarkerType.ArrowClosed },
-      type: 'bidirectional',
     };
   });
   return {

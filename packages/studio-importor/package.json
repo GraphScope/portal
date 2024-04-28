@@ -23,6 +23,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "dagre": "latest",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "reactflow": "latest",
