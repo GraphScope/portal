@@ -6,6 +6,9 @@ export default {
   'navbar.alert': '告警监控',
   'navbar.setting': '应用设置',
   /** graphs */
+  day: '天',
+  hrs: '小时',
+  min: '分',
   'Listing all graphs on the cluster': '列出了当前所有的图实例',
   '{vertices} types of vertices {br} {edges} types of edges': '{vertices} 种类型的点 {br} {edges} 种类型的边',
   'Deleting a label': '确认删除',

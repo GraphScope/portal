@@ -7,6 +7,9 @@ export default {
   'navbar.setting': 'Settings',
   'Query App': 'Query App',
   /** graphs */
+  day: 'day',
+  hrs: 'hrs',
+  min: 'min',
   'Listing all graphs on the cluster': 'Listing all graphs on the cluster.',
   '{vertices} types of vertices {br} {edges} types of edges':
     '{vertices} types of vertices {br} {edges} types of edges.',
