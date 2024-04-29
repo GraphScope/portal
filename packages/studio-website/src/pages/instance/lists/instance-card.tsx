@@ -105,16 +105,16 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   const uptimeString = (
     <>
       {days > 0 && (
-        <span style={{ marginRight: '5px' }}>
+        <>
           {days}
           <FormattedMessage id="day" />
-        </span>
+        </>
       )}
       {hours > 0 && (
-        <span style={{ marginRight: '5px' }}>
+        <>
           {hours}
           <FormattedMessage id="hrs" />
-        </span>
+        </>
       )}
       {minutes}
       <FormattedMessage id="min" />
