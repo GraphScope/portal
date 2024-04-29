@@ -102,14 +102,24 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   const hours = Math.floor((uptime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((uptime % (1000 * 60 * 60)) / (1000 * 60));
   // 构建输出字符串
-  let uptimeString = '';
-  if (days > 0) {
-    uptimeString += `${days}day `;
-  }
-  if (hours > 0) {
-    uptimeString += `${hours}hrs `;
-  }
-  uptimeString += `${minutes}min`;
+  const uptimeString = (
+    <>
+      {days > 0 && (
+        <>
+          {days}
+          <FormattedMessage id="day" />
+        </>
+      )}
+      {hours > 0 && (
+        <>
+          {hours}
+          <FormattedMessage id="hrs" />
+        </>
+      )}
+      {minutes}
+      <FormattedMessage id="min" />
+    </>
+  );
 
   let Endpoints: React.ReactNode = (
     <>

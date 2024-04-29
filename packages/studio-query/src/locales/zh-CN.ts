@@ -4,7 +4,7 @@ export default {
   History: '历史查询',
   Copilot: '智能查询',
   Saved: '保存查询',
-  'Store Procedure': '存储过程',
+  'Stored Procedures': '存储过程',
 
   /** index */
   'You can write cypher or gremlin queries, and then click the {icon} button to query data':
