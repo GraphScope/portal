@@ -19,7 +19,7 @@ import { storage } from '../graph/utils';
 
 import Container from './container';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookmark, faClockFour, faDatabase, faRobot, faLightbulb } from '@fortawesome/free-solid-svg-icons';
+import { faBookmark, faClockFour, faServer, faRobot, faLightbulb } from '@fortawesome/free-solid-svg-icons';
 
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const {
@@ -65,8 +65,8 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     },
     {
       id: 'store-procedure',
-      name: <FormattedMessage id="Store Procedure" />,
-      icon: <FontAwesomeIcon icon={faDatabase} />, //<DatabaseOutlined />,
+      name: <FormattedMessage id="Stored Procedures" />,
+      icon: <FontAwesomeIcon icon={faServer} />, //<DatabaseOutlined />,
       children: <StoreProcedure deleteStatements={ids => deleteStatements('store-procedure', ids)} />,
     },
     {

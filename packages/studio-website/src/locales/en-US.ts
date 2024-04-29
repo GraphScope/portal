@@ -60,6 +60,8 @@ export default {
   'Binding graph': 'Binding graph',
   Create: 'Create',
   'Edit code': 'Edit code',
+  'Plugin Type': 'Plugin Type',
+  'Create Plugin': 'Create Plugin',
   Action: 'Actions',
   Extensions: 'Extensions',
   Edit: 'Edit' /** Not sure where to use, Edit or Editing */,
@@ -70,9 +72,6 @@ export default {
     'Drag and drop your existing files (e.g., .cpp, .zip, .jar) to upload them and create an extension.',
   'Click or drag file to this area to upload':
     'Click or drag file to this area to upload' /** Not sure where to use, ditto one? */,
-  /** You are mixing a tip and a RED warning. */
-  'Your data may be passed to a third party (e.g., OpenAI) for AI processing. Consider the risks carefully when handling sensitive data.':
-    'Your data may be passed to a third party (e.g., OpenAI) for AI processing. Consider the risks carefully when handling sensitive data.',
   /** job */
   'Job ID': 'Job ID',
   Type: 'Type',

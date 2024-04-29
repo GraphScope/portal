@@ -4,7 +4,7 @@ export default {
   History: 'History',
   Copilot: 'Copilot',
   Saved: 'Saved',
-  'Store Procedure': 'Store Procedure',
+  'Stored Procedures': 'Stored Procedures',
 
   /** Index */
   'You can write cypher or gremlin queries, and then click the {icon} button to query data':

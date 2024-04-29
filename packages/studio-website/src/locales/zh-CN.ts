@@ -64,6 +64,8 @@ export default {
   'Binding graph': '绑定的图实例',
   Create: '创建插件',
   'Edit code': '编辑代码',
+  'Plugin Type': '插件类型',
+  'Create Plugin': '创建插件',
   Action: '操作',
   Extensions: '扩展插件',
   Edit: '编辑',
@@ -72,8 +74,6 @@ export default {
   'If you already have an algorithm plugin file, you can upload it here, which will help you quickly create a plugin.':
     '拖动文件到此区域进行上传以创建新的扩展插件。',
   'Click or drag file to this area to upload': '单击或拖动文件到此区域进行上传',
-  'Your data may be passed to a third party (e.g., OpenAI) for AI processing. Consider the risks carefully when handling sensitive data.':
-    '数据将传送给第三方如 OpenAI 进行AI处理，请确保您知晓并同意自行评估数据敏感性需求。',
   /** job */
   'Job List': '作业列表',
   'Job ID': 'Job ID',

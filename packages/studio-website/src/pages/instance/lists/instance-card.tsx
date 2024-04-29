@@ -107,7 +107,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     uptimeString += `${days}day `;
   }
   if (hours > 0) {
-    uptimeString += `${hours}hrs `;
+    uptimeString += `${hours}hours `;
   }
   uptimeString += `${minutes}min`;
 

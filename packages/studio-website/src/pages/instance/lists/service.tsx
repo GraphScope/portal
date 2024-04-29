@@ -70,7 +70,7 @@ export const listGraphs = async () => {
     const { graph_name } = status;
     const isMatch = graph_name === name;
     //@ts-ignore
-    const { schema, store_type, stored_procedures } = graphs_map[name] || {
+    const { schema, store_type, stored_procedures } = (graphs_map && graphs_map[name]) || {
       schema: {},
       store_type: {},
       stored_procedures: {},
