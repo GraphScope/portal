@@ -29,27 +29,17 @@ const PopoverList = ({ data }) => {
     />
   );
 };
-const BiDirectionalNode = ({ data, isConnectable }: NodeProps) => {
+const TableNode = ({ data, isConnectable }: NodeProps) => {
   const properties = Object.entries(data.properties);
   return (
     <div>
-      <Handle
-        type="target"
-        position={Position.Left}
-        id="target-left"
-        style={{ background: 'red', top: '30px', left: '100px' }}
-      />
-      <Handle
-        type="source"
-        position={Position.Left}
-        id="source-right"
-        style={{ background: 'blue', top: '10px', left: '100px' }}
-      />
-      {/* 
-      <Handle type="target" position={Position.Right} id="target-right" style={{ background: 'red', top: '30px' }} />
-      <Handle type="source" position={Position.Left} id="source-left" style={{ background: 'blue', top: '10px' }} /> */}
-
-      <div style={{ border: '1px solid #ddd', backgroundColor: '#F6F7F9', borderRadius: '6px' }}>
+      <Handle type="target" position={Position.Left} id="left" style={{ background: 'red', top: '10px' }} />
+      <Handle type="target" position={Position.Right} id="left-revert" style={{ background: 'red', top: '10px' }} />
+      {/* <Handle type="target" position={Position.Right} id="left-revert" style={{ background: 'red' }} /> */}
+      <Handle type="source" position={Position.Right} id="right" style={{ background: 'blue', top: '10px' }} />
+      <Handle type="source" position={Position.Left} id="right-revert" style={{ background: 'blue', top: '10px' }} />
+      {/* <Handle type="source" position={Position.Left} id="right-revert" style={{ background: 'blue' }} /> */}
+      <div style={{ border: '1px solid #ddd', backgroundColor: '#F6F7F9', borderRadius: '6px', height: '120px' }}>
         <div style={{ borderBottom: '1px solid #ddd', padding: '3px 12px' }}>{data.label}</div>
         {properties.map((item, index) => {
           return (
@@ -62,7 +52,6 @@ const BiDirectionalNode = ({ data, isConnectable }: NodeProps) => {
               }}
             >
               <span>{item[0]}</span>
-              <span style={{ marginLeft: '24px' }}>{item[1]}</span>
             </Flex>
           );
         })}
@@ -71,4 +60,4 @@ const BiDirectionalNode = ({ data, isConnectable }: NodeProps) => {
   );
 };
 
-export default memo(BiDirectionalNode);
+export default memo(TableNode);

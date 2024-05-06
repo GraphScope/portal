@@ -1,6 +1,7 @@
 import type { EdgeTypes } from 'reactflow';
-import BiDirectionalEdge from './BiDirectionalEdge';
-
+import TableEdge from './custom-edge';
+import GraphEdge from './graph-edge';
 export const edgeTypes = {
-  bidirectional: BiDirectionalEdge,
+  'table-edge': TableEdge,
+  'graph-edge': GraphEdge,
 } satisfies EdgeTypes;

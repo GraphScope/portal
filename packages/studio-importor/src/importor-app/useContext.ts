@@ -1,6 +1,7 @@
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 import { initalData, process, paperData } from './utils/process';
+import processEdges from './utils/processEdges';
 export interface NodeSchema {
   key: string;
   label: string;
@@ -14,14 +15,17 @@ export type IStore = {
   currentType: 'nodes' | 'edges';
   nodes: NodeSchema[];
   edges: EdgeSchema[];
+  displayMode: 'graph' | 'table';
 };
 
-const data = process(initalData);
-console.log('data', data);
+const edges = processEdges(initalData.edges);
+console.log('data', edges, initalData);
 export const initialStore: IStore = {
   currentType: 'nodes',
   // ...data,
-  ...initalData,
+  nodes: initalData.nodes,
+  edges: edges,
+  displayMode: 'table',
 };
 
 type ContextType = {
