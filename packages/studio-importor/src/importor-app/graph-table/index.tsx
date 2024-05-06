@@ -8,9 +8,15 @@ interface IGraphTable {
     properties: any[];
   };
   type?: string;
+  /** 编辑 */
+  handleEdit: (val: any) => void;
+  /** 删除label */
+  handleDelete: (val: any) => void;
+  /** 删除属性 */
+  handleRowDelete: (val: any) => void;
 }
 const GraphTable: React.FC<IGraphTable> = props => {
-  const { tableData, type } = props;
+  const { tableData, type, handleEdit, handleDelete, handleRowDelete } = props;
   const [state, updateState] = useState({
     isHovered: false,
     hoveredField: -1,
@@ -66,8 +72,8 @@ const GraphTable: React.FC<IGraphTable> = props => {
             <span>{tableData.label}</span>
             {isHovered && (
               <Space size={[3, 6]}>
-                <FormOutlined />
-                <EllipsisOutlined />
+                <FormOutlined onClick={() => handleEdit(tableData)} />
+                <EllipsisOutlined onClick={() => handleDelete(tableData)} />
               </Space>
             )}
           </div>
@@ -102,7 +108,7 @@ const GraphTable: React.FC<IGraphTable> = props => {
               >
                 <div style={{ color: hoveredField === index ? '#A1A1AA' : '#28282B' }}>{keys}</div>
                 {hoveredField === index ? (
-                  <MinusSquareOutlined style={{ color: '#DF6A64' }} />
+                  <MinusSquareOutlined style={{ color: '#DF6A64' }} onClick={() => handleRowDelete(item)} />
                 ) : (
                   <Space size={[3, 6]} style={{ marginLeft: '16px', color: '#A1A1AA' }}>
                     <PrimaryKey />
