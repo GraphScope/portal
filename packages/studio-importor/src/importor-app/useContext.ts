@@ -1,6 +1,6 @@
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
-import { initalData, process, paperData } from './utils/process';
+import { initalData, paperData } from './const';
 import processEdges from './utils/processEdges';
 export interface NodeSchema {
   key: string;
