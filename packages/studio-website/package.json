@@ -3,7 +3,6 @@
   "name": "@graphscope/studio-site",
   "author": "pomelo-nwu <czynwu@outlook.com>",
   "scripts": {
-    "postinstall": "umi setup",
     "setup": "umi setup",
     "start": "umi dev --engineType=interactive",
     "start:interactive": "umi dev --engineType=interactive",

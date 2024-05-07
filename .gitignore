@@ -67,3 +67,4 @@ default.etcd
 
 pnpm-lock.yaml
 package-lock.json
+.vercel
