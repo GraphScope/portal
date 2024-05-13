@@ -1,103 +1,221 @@
 import React from 'react';
-import { getBezierPath, BaseEdge, useStore, EdgeProps, ReactFlowState, EdgeLabelRenderer } from 'reactflow';
+import { useCallback } from 'react';
+import { useStore, getBezierPath, getStraightPath, EdgeLabelRenderer } from 'reactflow';
 
-export type GetSpecialPathParams = {
-  sourceX: number;
-  sourceY: number;
-  targetX: number;
-  targetY: number;
+import { getEdgeParams } from './utils';
+import { useContext } from '../../useContext';
+
+const getControlPoint = ({ sourceX, sourceY, targetX, targetY, offset }) => {
+  // 计算两点之间的向量
+  const dx = targetX - sourceX;
+  const dy = targetY - sourceY;
+
+  // 计算向量的长度（即两点间的距离）
+  const distance = Math.sqrt(dx * dx + dy * dy);
+
+  // 计算单位向量（方向向量）
+  const unitDX = dx / distance;
+  const unitDY = dy / distance;
+
+  // 使用单位向量和给定的偏移量来找到控制点
+  // 注意：这里的offset是控制点偏离直线的垂直距离，因此我们分别对dx和dy进行操作
+  // 为了简化并考虑到各种方向，我们将offset应用到与目标点连线的垂直方向上
+  const controlOffsetX = -unitDY * offset; // 偏移控制点到目标连线的垂直左侧或右侧
+  const controlOffsetY = unitDX * offset; // 根据dx和dy的正负自动适应上下
+  console.log('controlOffsetX,controlOffsetY', controlOffsetX, controlOffsetY);
+
+  // 计算控制点坐标
+  const controlX = sourceX + dx / 2 + controlOffsetX;
+  const controlY = sourceY + dy / 2 + controlOffsetY;
+  return {
+    x: controlX,
+    y: controlY,
+  };
+};
+const getCustomPath = ({ source, P1, P2, P3, target }) => {
+  return [`M ${source.x},${source.y} L ${P1.x},${P1.y} ${P2.x},${P2.y} ${P3.x},${P3.y} ${target.x},${target.y}`];
 };
 
-function calculateBezierPath(params, offset) {
-  const { sourceX: c1x, sourceY: c1y, sourceR: r1, targetX: c2x, targetY: c2y, targetR: r2 } = params;
-  // Calculate the intersection points
-  const dx = c2x - c1x;
-  const dy = c2y - c1y;
-  const a = Math.pow(r1 + r2, 2);
-  const b = (Math.pow(dx, 2) + Math.pow(dy, 2) - (r1 - r2)) ^ 2;
-  const h = (a - b) / (2 * dx);
-  const k = c1y + h;
-
-  const x1 = c1x + (dx * h) / dy;
-  const y1 = k;
-  const x2 = c1x + (dx * (k - dy)) / dy;
-  const y2 = c1y + r1;
-
-  // Calculate the control points
-  const cx1 = [c1x, c1y];
-  const cy1 = [(x1 - c1x) / offset, (y1 - c1y) / offset];
-  const cx2 = [c2x, c2y];
-  const cy2 = [(x2 - c2x) / offset, (y2 - c2y) / offset];
-
-  // Create the Bezier curve path string
-  const bezierPath = `M ${cx1[0]} ${cx1[1]} C ${cy1[0] + cx1[0]} ${
-    cy1[1] + cx1[1]
-  }, ${x1} ${y1}, ${cy2[0] + cx2[0]} ${cy2[1] + cx2[1]} S ${x2} 
-${y2} Z`;
-
-  return bezierPath;
-}
-
-function generateSmoothCurvePath({ sourceX, sourceY, sourceR, targetX, targetY, targetR }, offset) {
-  // 计算两圆之间中心点的坐标
-  const centerX = (sourceX + targetX) / 2;
-  const centerY = (sourceY + targetY) / 2;
-
-  // 计算两圆心之间的距离 d
-  const d = Math.sqrt((targetX - sourceX) ** 2 + (targetY - sourceY) ** 2);
-
-  // 修改半径以考虑偏移量
-  const updatedSourceRadius = sourceR + offset;
-  const updatedTargetRadius = targetR + offset;
-
-  // 确保不会计算出非法曲线
-  if (updatedSourceRadius < 0 || updatedTargetRadius < 0) {
-    console.error('Offset is too large, resulting in negative radii.');
-    return '';
-  }
-
-  // 角度 theta 用于计算圆上交点的位置
-  const theta = Math.atan2(targetY - sourceY, targetX - sourceX);
-
-  // 计算两个交点的坐标
-  const sourceIntersectionX = sourceX + Math.cos(theta) * updatedSourceRadius;
-  const sourceIntersectionY = sourceY + Math.sin(theta) * updatedSourceRadius;
-  const targetIntersectionX = targetX - Math.cos(theta) * updatedTargetRadius;
-  const targetIntersectionY = targetY - Math.sin(theta) * updatedTargetRadius;
-
-  // 创建路径命令
-  return `M ${sourceIntersectionX} ${sourceIntersectionY} Q ${centerX} ${centerY + offset} ${targetIntersectionX} ${targetIntersectionY}`;
-}
-
-export const getSpecialPath = ({ sourceX, sourceY, targetX, targetY }: GetSpecialPathParams, offset: number) => {
-  const centerX = (sourceX + targetX) / 2;
-  const centerY = (sourceY + targetY) / 2;
-
-  return `M ${sourceX} ${sourceY} Q ${centerX} ${centerY + offset} ${targetX} ${targetY}`;
-};
-
-export default function GraphEdge(props: EdgeProps) {
-  const { source, target, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, markerEnd, data, style } =
-    props;
-  //@ts-ignore
-  const { _isLoop = false, _isPoly = false, _isRevert = false, _offset = 0 } = style || {};
-
-  const edgePathParams = {
-    sourceX,
-    sourceY,
-    sourcePosition,
-    targetX,
-    targetY,
-    targetPosition,
-    sourceR: 50,
-    targetR: 50,
+const getSmoothPath = ({ source, P1, P2, P3, target }) => {
+  // 计算控制点
+  const controlPoint1 = {
+    x: P1.x + (source.x - P1.x) / 3,
+    y: P1.y + (source.y - P1.y) / 3,
+  };
+  const controlPoint2 = {
+    x: P1.x + (P2.x - P1.x) / 3,
+    y: P1.y + (P2.y - P1.y) / 3,
+  };
+  const controlPoint3 = {
+    x: P3.x + (P2.x - P3.x) / 3,
+    y: P3.y + (P2.y - P3.y) / 3,
+  };
+  const controlPoint4 = {
+    x: P3.x + (target.x - P3.x) / 3,
+    y: P3.y + (target.y - P3.y) / 3,
   };
 
-  const path = getSpecialPath(edgePathParams, _offset);
+  return [
+    [
+      `M ${source.x},${source.y}`, // 移动到起点source
+      `L ${controlPoint1.x},${controlPoint1.y}`, // 绘制从source到控制点1的直线
+      `Q ${P1.x},${P1.y} ${controlPoint2.x},${controlPoint2.y}`, // 从控制点1经过P1到控制点2的贝塞尔曲线（使得在P1处平滑过渡）
+      `L ${P2.x},${P2.y}`, // 绘制从控制点2到P2的直线
+      `L ${controlPoint3.x},${controlPoint3.y}`, // 绘制从P2到控制点3的直线
+      `Q ${P3.x},${P3.y} ${controlPoint4.x},${controlPoint4.y}`, // 从控制点3经过P3到控制点4的贝塞尔曲线（使得在P3处平滑过渡）
+      `L ${target.x},${target.y}`, // 绘制从控制点4到target的直线
+    ].join(' '),
+  ];
+};
 
+export const calculateDagree = (source, target) => {
+  let deltaX = target.x - source.x;
+  let deltaY = target.y - source.y;
+  // 计算弧度
+  let radian = Math.atan2(deltaY, deltaX);
+  // 将弧度转换为度数
+  return radian * (180 / Math.PI);
+};
+
+const getBezierPointsWithOffsetsCorrected = ({ sourceX, sourceY, targetX, targetY, offset, R1 = 20, R2 = 20 }) => {
+  // 计算控制点P
+  const controlPoint = getControlPoint({ sourceX, sourceY, targetX, targetY, offset });
+
+  // 计算方向向量
+  const dx = targetX - sourceX;
+  const dy = targetY - sourceY;
+  const directionLength = Math.sqrt(dx * dx + dy * dy);
+
+  // 单位方向向量
+  const unitDX = dx / directionLength;
+  const unitDY = dy / directionLength;
+
+  // 计算P1，确保P1到source的距离为R1且方向平行
+  const p1DX = unitDX * R1;
+  const p1DY = unitDY * R1;
+  const p1X = sourceX + p1DX + offset * -unitDY; // 在平行方向上加上偏移
+  const p1Y = sourceY + p1DY + offset * unitDX;
+
+  const p2DX = -(unitDX * R2); // 负号确保向左移动
+  const p2DY = -(unitDY * R2);
+  const p2X = targetX + p2DX + offset * -unitDY;
+  const p2Y = targetY + p2DY + offset * unitDX;
+
+  return { P1: { x: p1X, y: p1Y }, P2: { x: p2X, y: p2Y }, controlPoint };
+};
+
+function GraphEdge({ id, source, target, markerEnd, style, data }) {
+  const { _offset = 0 } = data || { _offset: 0 };
+  const sourceNode = useStore(useCallback(store => store.nodeInternals.get(source), [source]));
+  const targetNode = useStore(useCallback(store => store.nodeInternals.get(target), [target]));
+  const { store, updateStore } = useContext();
+  const { currentId } = store;
+  if (!sourceNode || !targetNode) {
+    return null;
+  }
+  const isSelected = id === currentId;
+
+  const {
+    sx: sourceX,
+    sy: sourceY,
+    tx: targetX,
+    ty: targetY,
+    sourcePos,
+    targetPos,
+  } = getEdgeParams(sourceNode, targetNode);
+  const controlPoint = getControlPoint({ sourceX, sourceY, targetX, targetY, offset: _offset });
+
+  const { P1, P2 } = getBezierPointsWithOffsetsCorrected({
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+    offset: _offset,
+  });
+
+  const [edgePath] = getSmoothPath({
+    source: {
+      x: sourceX,
+      y: sourceY,
+    },
+    target: {
+      x: targetX,
+      y: targetY,
+    },
+    P1: P1,
+    P2: controlPoint,
+    P3: P2,
+  });
+  const onEdgeClick = () => {
+    updateStore(draft => {
+      draft.currentId = id;
+      draft.currentType = 'edges';
+    });
+  };
+
+  /** 计算标签和标签背景的旋转角度 */
+  let degree = calculateDagree({ x: sourceX, y: sourceY }, { x: targetX, y: targetY });
+  console.log('degree', style, edgePath);
   return (
     <>
-      <BaseEdge path={path} markerEnd={markerEnd} />{' '}
+      <path
+        id={id}
+        className="react-flow__edge-path"
+        d={edgePath}
+        markerEnd={markerEnd}
+        style={{ ...style, stroke: isSelected ? 'red' : '#ddd', strokeWidth: isSelected ? '2px' : '1px' }}
+      />
+      <EdgeLabelRenderer>
+        <div
+          style={{
+            cursor: 'pointer',
+            position: 'absolute',
+            transform: `translate(-50%, -50%) translate(${controlPoint.x}px,${controlPoint.y}px) rotate(${degree}deg)`,
+            fontSize: 12,
+
+            // everything inside EdgeLabelRenderer has no pointer events by default
+            // if you have an interactive element, set pointer-events: all
+            pointerEvents: 'all',
+          }}
+          className="nodrag nopan"
+        >
+          <button className="edgebutton" onClick={onEdgeClick}>
+            {id}
+          </button>
+        </div>
+        <div
+          style={{
+            width: '10px',
+            height: '10px',
+            borderRadius: '50%',
+            background: 'green',
+            position: 'absolute',
+            transform: `translate(${controlPoint.x}px,${controlPoint.y}px)`,
+          }}
+        ></div>
+        <div
+          style={{
+            width: '10px',
+            height: '10px',
+            borderRadius: '50%',
+            background: 'red',
+            position: 'absolute',
+            transform: `translate(${P1.x}px,${P1.y}px)`,
+          }}
+        ></div>
+        <div
+          style={{
+            width: '10px',
+            height: '10px',
+            borderRadius: '50%',
+            background: 'blue',
+            position: 'absolute',
+            transform: `translate(${P2.x}px,${P2.y}px)`,
+          }}
+        ></div>
+      </EdgeLabelRenderer>
     </>
   );
 }
+
+export default GraphEdge;
