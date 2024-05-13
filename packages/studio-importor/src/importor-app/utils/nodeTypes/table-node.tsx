@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { List, Popover, Flex } from 'antd';
+
 const style = {
   padding: 5,
   background: '#fff',
@@ -29,32 +30,45 @@ const PopoverList = ({ data }) => {
     />
   );
 };
-const TableNode = ({ data, isConnectable }: NodeProps) => {
-  const properties = Object.entries(data.properties);
+const TableNode = (props: NodeProps) => {
+  const { id, data } = props;
+  const { _fromEdge } = data || {};
+  console.log('props', props);
+  // const properties = Object.entries(data.properties);
+  const handleStyle = _fromEdge
+    ? {
+        top: '30px',
+        backgroundColor: 'transparent',
+      }
+    : {
+        top: '60px',
+        backgroundColor: 'transparent',
+      };
+  const tableStyle = _fromEdge
+    ? {
+        border: '1px dashed #000',
+        backgroundColor: '#F6F7F9',
+        borderRadius: '6px',
+        height: '60px',
+        width: '100px',
+      }
+    : {
+        border: '1px solid #ddd',
+        backgroundColor: '#F6F7F9',
+        borderRadius: '6px',
+        height: '120px',
+        width: '100px',
+      };
   return (
     <div>
-      <Handle type="target" position={Position.Left} id="left" style={{ background: 'red', top: '10px' }} />
-      <Handle type="target" position={Position.Right} id="left-revert" style={{ background: 'red', top: '10px' }} />
+      <Handle type="target" position={Position.Left} id="left" style={handleStyle} />
+      <Handle type="target" position={Position.Right} id="left-revert" style={handleStyle} />
       {/* <Handle type="target" position={Position.Right} id="left-revert" style={{ background: 'red' }} /> */}
-      <Handle type="source" position={Position.Right} id="right" style={{ background: 'blue', top: '10px' }} />
-      <Handle type="source" position={Position.Left} id="right-revert" style={{ background: 'blue', top: '10px' }} />
+      <Handle type="source" position={Position.Right} id="right" style={handleStyle} />
+      <Handle type="source" position={Position.Left} id="right-revert" style={handleStyle} />
       {/* <Handle type="source" position={Position.Left} id="right-revert" style={{ background: 'blue' }} /> */}
-      <div style={{ border: '1px solid #ddd', backgroundColor: '#F6F7F9', borderRadius: '6px', height: '120px' }}>
-        <div style={{ borderBottom: '1px solid #ddd', padding: '3px 12px' }}>{data.label}</div>
-        {properties.map((item, index) => {
-          return (
-            <Flex
-              justify="space-between"
-              style={{
-                lineHeight: '0px',
-                borderBottom: properties.length - 1 === index ? '' : '1px solid #ddd',
-                padding: 10,
-              }}
-            >
-              <span>{item[0]}</span>
-            </Flex>
-          );
-        })}
+      <div style={tableStyle}>
+        <div style={{ borderBottom: '1px solid #ddd', padding: '3px 12px' }}>{id}</div>
       </div>
     </div>
   );
