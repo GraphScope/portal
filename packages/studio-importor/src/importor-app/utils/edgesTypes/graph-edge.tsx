@@ -4,6 +4,7 @@ import { useStore, getBezierPath, getStraightPath, EdgeLabelRenderer } from 'rea
 
 import { getEdgeParams } from './utils';
 import { useContext } from '../../useContext';
+import EditableText from '../../../components/EditableText';
 
 const getControlPoint = ({ sourceX, sourceY, targetX, targetY, offset }) => {
   // 计算两点之间的向量
@@ -106,10 +107,12 @@ const getBezierPointsWithOffsetsCorrected = ({ sourceX, sourceY, targetX, target
 
 function GraphEdge({ id, source, target, markerEnd, style, data }) {
   const { _offset = 0 } = data || { _offset: 0 };
+  const { label } = data || {};
+  console.log('markend', markerEnd);
   const sourceNode = useStore(useCallback(store => store.nodeInternals.get(source), [source]));
   const targetNode = useStore(useCallback(store => store.nodeInternals.get(target), [target]));
   const { store, updateStore } = useContext();
-  const { currentId } = store;
+  const { currentId, theme } = store;
   if (!sourceNode || !targetNode) {
     return null;
   }
@@ -152,18 +155,27 @@ function GraphEdge({ id, source, target, markerEnd, style, data }) {
       draft.currentType = 'edges';
     });
   };
+  const onLabelChange = value => {
+    updateStore(draft => {
+      //@ts-ignore
+      const match = draft.edges.find(edge => edge.id === id);
+      if (match) {
+        match.label = value;
+      }
+    });
+  };
 
   /** 计算标签和标签背景的旋转角度 */
   let degree = calculateDagree({ x: sourceX, y: sourceY }, { x: targetX, y: targetY });
-  console.log('degree', style, edgePath);
+  console.log('degree', label);
   return (
     <>
       <path
         id={id}
         className="react-flow__edge-path"
         d={edgePath}
-        markerEnd={markerEnd}
-        style={{ ...style, stroke: isSelected ? 'red' : '#ddd', strokeWidth: isSelected ? '2px' : '1px' }}
+        markerEnd={isSelected ? 'url(#arrow-selected)' : 'url(#arrow)'}
+        style={{ ...style, stroke: isSelected ? theme.primaryColor : '#ddd', strokeWidth: isSelected ? '2px' : '1px' }}
       />
       <EdgeLabelRenderer>
         <div
@@ -172,18 +184,24 @@ function GraphEdge({ id, source, target, markerEnd, style, data }) {
             position: 'absolute',
             transform: `translate(-50%, -50%) translate(${controlPoint.x}px,${controlPoint.y}px) rotate(${degree}deg)`,
             fontSize: 12,
-
-            // everything inside EdgeLabelRenderer has no pointer events by default
-            // if you have an interactive element, set pointer-events: all
             pointerEvents: 'all',
           }}
           className="nodrag nopan"
         >
-          <button className="edgebutton" onClick={onEdgeClick}>
-            {id}
-          </button>
+          <div
+            className="edgebutton"
+            onClick={onEdgeClick}
+            style={{
+              borderRadius: '4px',
+              color: isSelected ? '#fff' : '#000',
+              background: isSelected ? `${theme.primaryColor}` : '#fff',
+              border: isSelected ? `2px solid ${theme.primaryColor}` : '1px solid #ddd',
+            }}
+          >
+            <EditableText text={label || id} onTextChange={onLabelChange} />
+          </div>
         </div>
-        <div
+        {/* <div
           style={{
             width: '10px',
             height: '10px',
@@ -192,8 +210,8 @@ function GraphEdge({ id, source, target, markerEnd, style, data }) {
             position: 'absolute',
             transform: `translate(${controlPoint.x}px,${controlPoint.y}px)`,
           }}
-        ></div>
-        <div
+        ></div> */}
+        {/* <div
           style={{
             width: '10px',
             height: '10px',
@@ -202,17 +220,17 @@ function GraphEdge({ id, source, target, markerEnd, style, data }) {
             position: 'absolute',
             transform: `translate(${P1.x}px,${P1.y}px)`,
           }}
-        ></div>
-        <div
-          style={{
-            width: '10px',
-            height: '10px',
-            borderRadius: '50%',
-            background: 'blue',
-            position: 'absolute',
-            transform: `translate(${P2.x}px,${P2.y}px)`,
-          }}
-        ></div>
+        ></div> */}
+        {/* <div
+        style={{
+          width: '10px',
+          height: '10px',
+          borderRadius: '50%',
+          background: 'blue',
+          position: 'absolute',
+          transform: `translate(${P2.x}px,${P2.y}px)`,
+        }}
+      ></div> */}
       </EdgeLabelRenderer>
     </>
   );
