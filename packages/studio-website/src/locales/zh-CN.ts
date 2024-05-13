@@ -5,6 +5,7 @@ export default {
   'navbar.extension': '扩展插件',
   'navbar.alert': '告警监控',
   'navbar.setting': '应用设置',
+  Schema: '建模二期',
   /** graphs */
   'Listing all graphs on the cluster': '列出了当前所有的图实例',
   '{vertices} types of vertices {br} {edges} types of edges': '{vertices} 种类型的点 {br} {edges} 种类型的边',

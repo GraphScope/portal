@@ -21,7 +21,7 @@ interface EdgeSchema extends PropertiesSchema {
 
 const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props => {
   const { store, updateStore } = useContext();
-  const { nodes, edges, currentType } = store;
+  const { nodes, edges, currentType, currentId } = store;
   // const [state, setState] = React.useState<{
   //   currentType: 'nodes' | 'edges';
   //   nodes: PropertiesSchema[];
@@ -59,25 +59,30 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
 
   // const { currentType, nodes, edges } = state;
   const nodes_items = nodes.map(item => {
-    const { key, label, properties } = item;
+    const { id, data } = item;
+    const { label } = data || { label: id };
     return {
-      key: key,
+      key: id,
       label: label,
       children: <PropertiesSchema data={item} type="nodes" />,
     };
   });
   const edges_items = edges.map(item => {
-    const { key, label, properties } = item;
+    const { id, data } = item;
+    const { label } = data || { label: id };
     return {
-      key: key,
+      key: id,
       label: label,
       children: <PropertiesSchema data={item} type="edges" />,
     };
   });
 
   const onChange = (key: string | string[]) => {
-    console.log(key);
+    updateStore(draft => {
+      draft.currentId = key[0] as string;
+    });
   };
+
   return (
     <div>
       <Segmented
@@ -86,12 +91,16 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
         // onChange={value => setState({ ...state, currentType: value })}
         onChange={value =>
           updateStore(draft => {
-            draft.currentType = value;
+            draft.currentType = value as 'nodes' | 'edges';
           })
         }
       />
-      {currentType === 'nodes' && <Collapse items={nodes_items} defaultActiveKey={['1']} onChange={onChange} />}
-      {currentType === 'edges' && <Collapse items={edges_items} defaultActiveKey={['1']} onChange={onChange} />}
+      {currentType === 'nodes' && (
+        <Collapse accordion items={nodes_items} activeKey={[currentId]} onChange={onChange} />
+      )}
+      {currentType === 'edges' && (
+        <Collapse accordion items={edges_items} activeKey={[currentId]} onChange={onChange} />
+      )}
     </div>
   );
 };

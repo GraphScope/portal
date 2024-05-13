@@ -6,6 +6,7 @@ export default {
   'navbar.alert': 'Alerts',
   'navbar.setting': 'Settings',
   'Query App': 'Query App',
+  Schema: 'Schema',
   /** graphs */
   'Listing all graphs on the cluster': 'Listing all graphs on the cluster.',
   '{vertices} types of vertices {br} {edges} types of edges':

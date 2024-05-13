@@ -5,45 +5,57 @@ export const initalData = {
   nodes: [
     {
       id: 'node-1',
-      label: 'person',
-      properties: {},
+      data: {
+        label: 'person',
+      },
+      type: 'graph-node',
+      position: { x: Math.random() * 500, y: Math.random() * 500 },
     },
     {
+      type: 'graph-node',
       id: 'node-2',
-      label: 'software',
-      properties: {},
+      data: {
+        label: 'software',
+      },
+      position: { x: Math.random() * 500, y: Math.random() * 500 },
     },
   ],
   edges: [
     {
+      type: 'graph-edge',
       id: 'edge-1',
       label: 'created',
       source: 'node-1',
       target: 'node-2',
-      properties: {},
+      data: {
+        _offset: 30,
+      },
     },
     {
+      type: 'graph-edge',
       id: 'edge-2',
       label: 'like',
       source: 'node-1',
       target: 'node-2',
-      properties: {},
+      data: {
+        _offset: -30,
+      },
     },
 
-    {
-      id: 'edge-3',
-      label: 'loop',
-      source: 'node-1',
-      target: 'node-1',
-      properties: {},
-    },
-    {
-      id: 'edge-4',
-      label: 'xxxxx',
-      source: 'node-2',
-      target: 'node-1',
-      properties: {},
-    },
+    // {
+    //   id: 'edge-3',
+    //   label: 'loop',
+    //   source: 'node-1',
+    //   target: 'node-1',
+    //   properties: {},
+    // },
+    // {
+    //   id: 'edge-4',
+    //   label: 'xxxxx',
+    //   source: 'node-2',
+    //   target: 'node-1',
+    //   properties: {},
+    // },
   ],
 };
 

@@ -6,7 +6,7 @@ function isOdd(number: number) {
   return !isEven(number);
 }
 
-const POLY_DEFAULT = 50;
+const POLY_DEFAULT = 30;
 const LOOP_DEFAULT = 10;
 const LOOP_LABEL_POSITION_DEFAULT = 1;
 
