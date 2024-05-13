@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { Flex, Col, Row } from 'antd';
 import GraphEditor from './graph-editor';
 import PropertiesEditor from './properties-editor';
 import ImportSchema from './import-schema';
 import ModeSwitch from './mode-switch';
-//@ts-ignore
-window.R2 = React;
+import { ReactFlowProvider } from 'reactflow';
+
 import 'reactflow/dist/style.css';
 
 interface ImportAppProps {}
@@ -18,7 +18,9 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
       <ModeSwitch style={{ position: 'absolute', right: '230px', top: '100px' }} />
       <Row gutter={[16, 16]}>
         <Col span={16}>
-          <GraphEditor></GraphEditor>
+          <ReactFlowProvider>
+            <GraphEditor></GraphEditor>
+          </ReactFlowProvider>
         </Col>
         <Col span={8}>
           <PropertiesEditor />

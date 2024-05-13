@@ -2,10 +2,10 @@ import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 import { initalData, paperData } from './const';
 import processEdges from './utils/processEdges';
-export interface NodeSchema {
-  key: string;
-  label: string;
-  properties: any[];
+import type { Node } from 'reactflow';
+export interface NodeSchema extends Node {
+  id: string;
+  data: Record<string, any>;
 }
 export interface EdgeSchema extends NodeSchema {
   source: string;
@@ -13,19 +13,38 @@ export interface EdgeSchema extends NodeSchema {
 }
 export type IStore = {
   currentType: 'nodes' | 'edges';
+  currentId: string;
   nodes: NodeSchema[];
   edges: EdgeSchema[];
+  source: {
+    nodes: NodeSchema[];
+    edges: EdgeSchema[];
+  };
+
   displayMode: 'graph' | 'table';
+  graphPosition: Record<string, { x: number; y: number }>;
+  tablePosition: Record<string, { x: number; y: number }>;
+  theme: {
+    primaryColor: string;
+  };
 };
 
-const edges = processEdges(initalData.edges);
-console.log('data', edges, initalData);
 export const initialStore: IStore = {
-  currentType: 'nodes',
   // ...data,
-  nodes: initalData.nodes,
-  edges: edges,
-  displayMode: 'table',
+  nodes: [],
+  edges: [],
+  source: {
+    nodes: [],
+    edges: [],
+  },
+  displayMode: 'graph',
+  graphPosition: {},
+  tablePosition: {},
+  currentType: 'nodes',
+  currentId: '',
+  theme: {
+    primaryColor: '#1978FF',
+  },
 };
 
 type ContextType = {
