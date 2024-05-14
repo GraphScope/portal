@@ -13,7 +13,7 @@ export function layout(data, direction) {
   dagreGraph.setGraph({ rankdir: direction });
   nodes.forEach(node => {
     const { _fromEdge } = node;
-    dagreGraph.setNode(node.id, { width: _fromEdge ? 200 : 150, height: _fromEdge ? 200 : 50 });
+    dagreGraph.setNode(node.id, { width: _fromEdge ? 170 : 170, height: _fromEdge ? 100 : 200 });
   });
   edges.forEach(edge => {
     dagreGraph.setEdge(edge.source, edge.target);

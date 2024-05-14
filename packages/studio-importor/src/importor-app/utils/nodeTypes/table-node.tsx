@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { List, Popover, Flex } from 'antd';
-
+import TableCard from '../../../components/TableCard';
 const style = {
   padding: 5,
   background: '#fff',
@@ -33,16 +33,18 @@ const PopoverList = ({ data }) => {
 const TableNode = (props: NodeProps) => {
   const { id, data } = props;
   const { _fromEdge } = data || {};
-  console.log('props', props);
+  console.log('props', data);
   // const properties = Object.entries(data.properties);
   const handleStyle = _fromEdge
     ? {
         top: '30px',
         backgroundColor: 'transparent',
+        border: 'none',
       }
     : {
         top: '60px',
         backgroundColor: 'transparent',
+        border: 'none',
       };
   const tableStyle = _fromEdge
     ? {
@@ -50,14 +52,14 @@ const TableNode = (props: NodeProps) => {
         backgroundColor: '#F6F7F9',
         borderRadius: '6px',
         height: '60px',
-        width: '100px',
+        width: '150px',
       }
     : {
         border: '1px solid #ddd',
         backgroundColor: '#F6F7F9',
         borderRadius: '6px',
-        height: '120px',
-        width: '100px',
+        width: '170px',
+        height: '200px',
       };
   return (
     <div>
@@ -67,9 +69,10 @@ const TableNode = (props: NodeProps) => {
       <Handle type="source" position={Position.Right} id="right" style={handleStyle} />
       <Handle type="source" position={Position.Left} id="right-revert" style={handleStyle} />
       {/* <Handle type="source" position={Position.Left} id="right-revert" style={{ background: 'blue' }} /> */}
-      <div style={tableStyle}>
-        <div style={{ borderBottom: '1px solid #ddd', padding: '3px 12px' }}>{id}</div>
-      </div>
+      {/* <div style={tableStyle}> */}
+      {/* <div style={{ borderBottom: '1px solid #ddd', padding: '3px 12px' }}>{id}</div> */}
+      <TableCard data={data} _fromEdge={_fromEdge} />
+      {/* </div> */}
     </div>
   );
 };

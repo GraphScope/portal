@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const EditableText = ({ text, onTextChange, id }) => {
+const EditableText = ({ text, onTextChange, id, style = {} }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableText, setEditableText] = useState(text);
   const inputRef = useRef<null | HTMLInputElement>(null);
@@ -51,6 +51,8 @@ const EditableText = ({ text, onTextChange, id }) => {
             outline: 'none',
             border: 'none',
             background: 'transparent',
+            fontSize: '12px',
+            ...style,
           }}
           ref={inputRef}
           type="text"
@@ -71,6 +73,7 @@ const EditableText = ({ text, onTextChange, id }) => {
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
+            ...style,
           }}
         >
           {editableText}

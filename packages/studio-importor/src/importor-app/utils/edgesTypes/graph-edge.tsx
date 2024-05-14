@@ -33,6 +33,7 @@ const getControlPoint = ({ sourceX, sourceY, targetX, targetY, offset }) => {
     y: controlY,
   };
 };
+
 const getCustomPath = ({ source, P1, P2, P3, target }) => {
   return [`M ${source.x},${source.y} L ${P1.x},${P1.y} ${P2.x},${P2.y} ${P3.x},${P3.y} ${target.x},${target.y}`];
 };
@@ -193,12 +194,17 @@ function GraphEdge({ id, source, target, markerEnd, style, data }) {
             onClick={onEdgeClick}
             style={{
               borderRadius: '4px',
-              color: isSelected ? '#fff' : '#000',
+
               background: isSelected ? `${theme.primaryColor}` : '#fff',
               border: isSelected ? `2px solid ${theme.primaryColor}` : '1px solid #ddd',
             }}
           >
-            <EditableText text={label || id} onTextChange={onLabelChange} />
+            <EditableText
+              id={id}
+              text={label || id}
+              onTextChange={onLabelChange}
+              style={{ color: isSelected ? '#fff' : '#000' }}
+            />
           </div>
         </div>
         {/* <div
