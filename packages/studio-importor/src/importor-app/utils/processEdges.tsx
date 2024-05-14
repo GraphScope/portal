@@ -89,9 +89,9 @@ const processEdges = (
         let offset = isEven(index) ? distance : -distance;
         let type = 'poly';
         // // 反向边需要revert
-        // if (isRevert) {
-        //   offset = -offset;
-        // }
+        if (isRevert) {
+          offset = -offset;
+        }
         if (isLoop) {
           type = 'loop';
           offset = index * loop;
