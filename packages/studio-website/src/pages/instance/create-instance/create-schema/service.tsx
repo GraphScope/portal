@@ -9,7 +9,7 @@ import { notification } from 'antd';
 /** 删除点类型 */
 export const deleteVertexType = async (graphName: string, typeName: string) => {
   const graphs = await GraphApiFactory(undefined, location.origin)
-    .deleteVertexType(graphName, typeName)
+    .deleteVertexTypeByName(graphName, typeName)
     .then(res => {
       if (res.status >= 200 || res.status <= 300) {
         notification.success({
@@ -31,11 +31,11 @@ export const deleteVertexType = async (graphName: string, typeName: string) => {
   return graphs;
 };
 /** 删除边类型 */
-export const deleteEdgeType = async (graphName: string, options: any) => {
+export const deleteEdgeType = async (graph_id: string, options: any) => {
   //@ts-ignore
   const { typeName, sourceVertexType, destinationVertexType } = transformGrootDeleteEdgeToOptions(options)[0];
   const graphs = await GraphApiFactory(undefined, location.origin)
-    .deleteEdgeType(graphName, typeName, sourceVertexType, destinationVertexType)
+    .deleteEdgeTypeById(graph_id, typeName, sourceVertexType, destinationVertexType)
     .then(res => {
       if (res.status >= 200 || res.status <= 300) {
         notification.success({
@@ -60,22 +60,22 @@ export const deleteEdgeType = async (graphName: string, options: any) => {
 /** 删除边或点类型 */
 export const deleteVertexOrEdge = (
   type: string,
-  graphName: string,
-  options: { graphName: string; typeName?: string; nodes?: any[]; edges?: any[] },
+  graph_id: string,
+  options: { graph_id: string; typeName?: string; nodes?: any[]; edges?: any[] },
 ) => {
   const { typeName, nodes, edges } = options;
   if (type === 'node') {
-    return deleteVertexType(graphName, typeName!);
+    return deleteVertexType(graph_id, typeName!);
   }
   if (type === 'edge') {
-    return deleteEdgeType(graphName, { nodes, edges });
+    return deleteEdgeType(graph_id, { nodes, edges });
   }
 };
 /** 创建点类型 */
-export const createVertexType = async (graphName: string, schema: { label: string }, options: any) => {
+export const createVertexType = async (graph_id: string, schema: { label: string }, options: any) => {
   const vertexType = transformGrootCreateVertexToOptions(schema, options);
   const graphs = await GraphApiFactory(undefined, location.origin)
-    .createVertexType(graphName, vertexType)
+    .createVertexType(graph_id, vertexType)
     .then(res => {
       if (res.status >= 200 || res.status <= 300) {
         notification.success({
@@ -126,15 +126,15 @@ export const createEdgeType = async (graphName: string, nodeList: any[], schema:
 /** 创建点或边类型 */
 export const createVertexOrEdgeType = async (
   type: string,
-  graphName: string,
+  graph_id: string,
   nodeList: any[],
   schema: any,
   options: any,
 ) => {
   if (type === 'node') {
-    return createVertexType(graphName, schema, options);
+    return createVertexType(graph_id, schema, options);
   }
   if (type === 'edge') {
-    return createEdgeType(graphName, nodeList, schema, options);
+    return createEdgeType(graph_id, nodeList, schema, options);
   }
 };

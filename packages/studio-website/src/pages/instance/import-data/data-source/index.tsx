@@ -33,7 +33,6 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   } = useMap();
   const data = dataMap[id] as BindingNode & { isEidtProperty: boolean };
   const { isBind, filelocation, isEidtProperty, datatype, label, properties, dataFields } = data;
-
   const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const graph_name = searchParamOf('graph_name');
@@ -53,6 +52,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       draft[id].datatype = type;
     });
   };
+
   /** 改变数据源地址 */
   const onChangeValue = (value: string) => {
     updateDataMap(draft => {
@@ -106,6 +106,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   };
   /** 融合判断 是否编辑或主题 dark  */
   const primaryColor = mode !== 'defaultAlgorithm' || isEidtProperty;
+
   return (
     <>
       <div>
@@ -173,7 +174,6 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
               <TableList
                 //@ts-ignore
                 tabledata={properties.map((item, index) => {
-                  debugger;
                   return {
                     ...item,
                     key: `${index}${item.id}`,

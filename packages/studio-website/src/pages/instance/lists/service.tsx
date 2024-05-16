@@ -1,8 +1,8 @@
 import {
   GraphApiFactory,
   ServiceApiFactory,
-  DeploymentApiFactory,
-  LegacyApiFactory,
+  // DeploymentApiFactory,
+  // LegacyApiFactory,
   JobApiFactory,
 } from '@graphscope/studio-server';
 import { notification } from '@/pages/utils';
@@ -19,72 +19,49 @@ export const listGraphs = async () => {
     .catch(error => {
       notification('error', error);
     });
-  const deployments = await DeploymentApiFactory(undefined, location.origin)
-    .getDeploymentInfo()
+
+  // const { GS_ENGINE_TYPE } = window;
+  let graphs;
+  // if (GS_ENGINE_TYPE === 'interactive') {
+  graphs = await GraphApiFactory(undefined, location.origin)
+    .listGraphs()
     .then(res => {
-      return res.data;
+      if (res.status === 200) {
+        return res.data;
+      }
     })
     .catch(error => {
       notification('error', error);
     });
-  const { GS_ENGINE_TYPE } = window;
-  let graphs;
-  if (GS_ENGINE_TYPE === 'interactive') {
-    graphs = await GraphApiFactory(undefined, location.origin)
-      .listGraphs()
-      .then(res => {
-        if (res.status === 200) {
-          return res.data;
-        }
-      })
-      .catch(error => {
-        notification('error', error);
-      });
-  }
+  // }
 
-  if (GS_ENGINE_TYPE === 'groot') {
-    graphs = await LegacyApiFactory(undefined, location.origin)
-      .listGrootGraph()
-      .then(res => {
-        if (res.status === 200) {
-          return res.data;
-        }
-      })
-      .catch(error => {
-        notification('error', error);
-      });
-  }
-
-  const graphs_map = graphs?.reduce((acc, curr) => {
-    return {
-      ...acc,
-      [curr.name as string]: curr,
-    };
-  }, {});
-
-  console.log(status, deployments);
-  const { graphs_info, version, solution, cluster_type } = deployments || { graphs_info: {} };
-
-  const info = Object.values(graphs_info!).map(item => {
-    const { name, creation_time, last_dataloading_time, update_time } = item;
-    const { graph_name } = status;
-    const isMatch = graph_name === name;
-    //@ts-ignore
-    const { schema, store_type, stored_procedures } = (graphs_map && graphs_map[name]) || {
-      schema: {},
-      store_type: {},
-      stored_procedures: {},
-    };
+  // if (GS_ENGINE_TYPE === 'groot') {
+  //   graphs = await LegacyApiFactory(undefined, location.origin)
+  //     .listGrootGraph()
+  //     .then(res => {
+  //       if (res.status === 200) {
+  //         return res.data;
+  //       }
+  //     })
+  //     .catch(error => {
+  //       notification('error', error);
+  //     });
+  // }
+  const graphs_map = graphs.map(item => {
+    const { schema, store_type, stored_procedures, schema_update_time, data_update_time, creation_time, id, name } =
+      item;
+    const { graph_id } = status;
+    const isMatch = graph_id === id;
     const { vertex_types, edge_types, vertices, edges } = schema;
-
     return {
-      name: name,
-      engineType: solution,
-      clusterType: cluster_type,
-      version: version,
+      id,
+      name,
+      // engineType: solution,
+      // clusterType: cluster_type,
+      // version: version,
       createtime: creation_time,
-      updatetime: update_time,
-      importtime: last_dataloading_time,
+      updatetime: schema_update_time,
+      importtime: data_update_time,
       server: isMatch ? status.sdk_endpoints?.cypher : '',
       status: isMatch ? status.status : 'stopped',
       hqps: isMatch ? status.sdk_endpoints?.hqps : '',
@@ -94,17 +71,15 @@ export const listGraphs = async () => {
       },
       store_type,
       stored_procedures,
-      // statistics: 'xxxx',
-      // logs: 'xxxx',
     };
   });
 
-  return info;
+  return graphs_map;
 };
 
-export const deleteGraph = async (name: string) => {
+export const deleteGraph = async (graph_id: string) => {
   return await GraphApiFactory(undefined, location.origin)
-    .deleteGraph(name)
+    .deleteGraphById(graph_id)
     .then(res => {
       if (res.status === 200) {
         notification('success', res.data);
@@ -119,10 +94,10 @@ export const deleteGraph = async (name: string) => {
     });
 };
 
-export const startService = async (name: string) => {
+export const startService = async (id: string) => {
   return await ServiceApiFactory(undefined, location.origin)
     .startService({
-      graph_name: name,
+      graph_id: id,
     })
     .then(res => {
       if (res.status === 200) {
@@ -137,10 +112,10 @@ export const startService = async (name: string) => {
       notification('error', error);
     });
 };
-export const stopService = async (name: string) => {
+export const stopService = async (id: string) => {
   return await ServiceApiFactory(undefined, location.origin)
     .stopService({
-      graph_name: name,
+      graph_id: id,
     })
     .then(res => {
       if (res.status === 200) {

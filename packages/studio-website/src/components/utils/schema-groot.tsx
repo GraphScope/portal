@@ -14,66 +14,66 @@ export interface TransformedNodeOrEdges {
   properties: { id: string; name: string; type: string; is_primary_key: boolean }[];
   relations: { src_label: string; dst_label: string }[];
 }
-export function transformGrootSchemaToOptions(schema: GrootSchema | undefined): TransformedSchema {
-  if (!schema) {
-    return {
-      nodes: [],
-      edges: [],
-    };
-  }
-  const nodeMap: Record<string, string> = {};
-  //@ts-ignore
-  const nodes = schema.vertices.map((item: TransformedNodeOrEdges) => {
-    const { properties, label, ...others } = item;
-    const key = uuidv4();
-    nodeMap[label] = key;
-    return {
-      ...others,
-      label,
-      key,
-      properties: properties.map(p => {
-        const { id, name, type, is_primary_key } = p;
-        return {
-          name,
-          type,
-          primaryKey: is_primary_key,
-          disable: false,
-          id,
-          token: '',
-        };
-      }),
-    };
-  });
-  //@ts-ignore
-  const edges = schema.edges.map((item: TransformedNodeOrEdges) => {
-    const { label, properties, relations, ...others } = item;
-    const key = uuidv4();
-    const { src_label, dst_label } = relations[0];
-    return {
-      ...others,
-      label,
-      key,
-      source: nodeMap[src_label],
-      target: nodeMap[dst_label],
-      properties: properties.map(p => {
-        const { id, name, type, is_primary_key } = p;
-        return {
-          name,
-          type,
-          primaryKey: is_primary_key,
-          disable: false,
-          id,
-          token: '',
-        };
-      }),
-    };
-  });
+// export function transformGrootSchemaToOptions(schema: GrootSchema | undefined): TransformedSchema {
+//   if (!schema) {
+//     return {
+//       nodes: [],
+//       edges: [],
+//     };
+//   }
+//   const nodeMap: Record<string, string> = {};
+//   //@ts-ignore
+//   const nodes = schema.vertices.map((item: TransformedNodeOrEdges) => {
+//     const { properties, label, ...others } = item;
+//     const key = uuidv4();
+//     nodeMap[label] = key;
+//     return {
+//       ...others,
+//       label,
+//       key,
+//       properties: properties.map(p => {
+//         const { id, name, type, is_primary_key } = p;
+//         return {
+//           name,
+//           type,
+//           primaryKey: is_primary_key,
+//           disable: false,
+//           id,
+//           token: '',
+//         };
+//       }),
+//     };
+//   });
+//   //@ts-ignore
+//   const edges = schema.edges.map((item: TransformedNodeOrEdges) => {
+//     const { label, properties, relations, ...others } = item;
+//     const key = uuidv4();
+//     const { src_label, dst_label } = relations[0];
+//     return {
+//       ...others,
+//       label,
+//       key,
+//       source: nodeMap[src_label],
+//       target: nodeMap[dst_label],
+//       properties: properties.map(p => {
+//         const { id, name, type, is_primary_key } = p;
+//         return {
+//           name,
+//           type,
+//           primaryKey: is_primary_key,
+//           disable: false,
+//           id,
+//           token: '',
+//         };
+//       }),
+//     };
+//   });
 
-  return {
-    nodes,
-    edges,
-  };
-}
+//   return {
+//     nodes,
+//     edges,
+//   };
+// }
 
 /**
  * groot

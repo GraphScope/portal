@@ -26,7 +26,7 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
         isLoading: true,
       };
     });
-    const filelocation = (await uploadFile(file as File)) || '';
+    const { file_path } = (await uploadFile(file as File)) || '';
     const headers = await getDataFields(file as File);
     updateState(preState => {
       return {
@@ -34,8 +34,7 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
         isLoading: false,
       };
     });
-
-    onChange(filelocation);
+    onChange(file_path);
     onChangeHeader(headers);
   };
   return (

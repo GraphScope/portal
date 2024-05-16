@@ -24,9 +24,9 @@ const ImportData: React.FunctionComponent = () => {
   } = useMode();
 
   const initMapping = async () => {
-    const { graph_name } = getUrlParams();
-    const schema = await getSchema(graph_name);
-    const options = await getDataloadingConfig(graph_name, schema);
+    const { graph_name, graph_id } = getUrlParams();
+    const schema = await getSchema(graph_id);
+    const options = await getDataloadingConfig(graph_id, schema);
     updateStore(draft => {
       draft.isReady = true;
       draft.nodes = options.nodes;

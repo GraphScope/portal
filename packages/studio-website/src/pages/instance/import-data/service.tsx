@@ -4,6 +4,7 @@ import {
   JobApiFactory,
   LegacyApiFactory,
   DatasourceApiFactory,
+  DataSourceApiFactory,
 } from '@graphscope/studio-server';
 import type {
   SchemaMapping,
@@ -33,9 +34,9 @@ export const uploadFile = async (file: File) => {
     });
 };
 
-export const createDataloadingJob = async (params: SchemaMapping) => {
-  return JobApiFactory(undefined, location.origin)
-    .createDataloadingJob(params.graph!, params)
+export const createDataloadingJob = async (graph_id: string, params: SchemaMapping) => {
+  return DataSourceApiFactory(undefined, location.origin)
+    .bindDatasourceInBatch(graph_id, params)
     .then(res => {
       if (res.status === 200) {
         return res.data;
@@ -46,14 +47,14 @@ export const createDataloadingJob = async (params: SchemaMapping) => {
     });
 };
 
-export const getSchema = async (graph_name: string) => {
+export const getSchema = async (graph_id: string) => {
   let schema;
   if (window.GS_ENGINE_TYPE === 'interactive') {
     schema = await GraphApiFactory(undefined, location.origin)
-      .getSchema(graph_name)
+      .getGraphById(graph_id)
       .then(res => {
         if (res.status === 200) {
-          return res.data;
+          return res.data.schema;
         }
         return { nodes: [], edges: [] };
       })
@@ -62,8 +63,8 @@ export const getSchema = async (graph_name: string) => {
       });
   }
   if (window.GS_ENGINE_TYPE === 'groot') {
-    schema = await LegacyApiFactory(undefined, location.origin)
-      .getGrootSchema(graph_name)
+    schema = await GraphApiFactory(undefined, location.origin)
+      .getSchemaById(graph_id)
       .then(res => {
         if (res.status === 200) {
           return res.data;
@@ -73,28 +74,55 @@ export const getSchema = async (graph_name: string) => {
       .catch(error => {
         notification('error', error);
       });
-    schema = transformDataMapToGrootSchema(JSON.parse(JSON.stringify(schema)));
+    // schema = transformDataMapToGrootSchema(JSON.parse(JSON.stringify(schema)));
   }
-
   return schema;
 };
-export const getDataloadingConfig = async (graph_name: string, schema: any) => {
-  const schemaMapping = await JobApiFactory(undefined, location.origin)
-    .getDataloadingConfig(graph_name!)
+// export const getDataloadingConfig = async (graph_id: string, schema: any) => {
+//   const schemaMapping = await JobApiFactory(undefined, location.origin)
+//     .getDataloadingJobConfig(graph_id!)
+//     .then(res => res.data)
+//     .catch(error => {
+//       notification('error', error);
+//       return {};
+//     });
+//   console.log(schemaMapping);
+
+//   if (JSON.stringify(schemaMapping) === '{}') {
+//     //@ts-ignore
+//     return transformSchemaToImportOptions(schema);
+//   }
+//   //@ts-ignore
+//   return transformMappingSchemaToImportOptions(schemaMapping, schema);
+// };
+/** getDatasourceById 获取数据源信息 */
+export const getDataloadingConfig = async (graph_id: string, schema: any) => {
+  const schemaMapping = await DataSourceApiFactory(undefined, location.origin)
+    .getDatasourceById(graph_id!)
     .then(res => res.data)
     .catch(error => {
       notification('error', error);
       return {};
     });
   console.log(schemaMapping);
+  // const loading_config = await JobApiFactory(undefined, location.origin)
+  //   .getDataloadingJobConfig(graph_id!)
+  //   .then(res => res.data)
+  //   .catch(error => {
+  //     notification('error', error);
+  //     return {};
+  //   });
+  // console.log(loading_config);
 
-  if (JSON.stringify(schemaMapping) === '{}') {
-    //@ts-ignore
+  // schemaMapping.loading_config = loading_config;
+  const { edge_mappings, vertex_mappings } = schemaMapping;
+  if (JSON.stringify(edge_mappings) === '[]' && JSON.stringify(vertex_mappings) === '[]') {
     return transformSchemaToImportOptions(schema);
   }
   //@ts-ignore
   return transformMappingSchemaToImportOptions(schemaMapping, schema);
 };
+
 export const createGrootDataloadingJob = async (
   graph_name: string,
   grootDataloadingJobConfig: GrootDataloadingJobConfig,

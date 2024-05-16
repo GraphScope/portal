@@ -17,6 +17,8 @@ import { faPlayCircle, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 export type InstaceCardType = {
+  /** graph id */
+  id: string;
   /** graph name */
   name: string;
   /** version 版本号 */
@@ -57,6 +59,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     createtime,
     server,
     status,
+    id,
     name,
     hqps,
     handleChange,
@@ -81,13 +84,13 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
 
   const handleRestart = () => {};
   /** 删除graph */
-  const handleDelete = async (name: string) => {
-    await deleteGraph(name);
+  const handleDelete = async (id: string) => {
+    await deleteGraph(id);
     handleChange();
   };
   const onClick: MenuProps['onClick'] = ({ key }) => {
     if (key === 'delete') {
-      handleDelete(name);
+      handleDelete(id);
     }
     if (key === 'restart') {
       handleRestart();
@@ -159,8 +162,8 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     </>
   );
 
-  const handleClick = async (name: string, status: string) => {
-    const config = await getDataloadingConfig(name);
+  const handleClick = async (id: string, status: string) => {
+    const config = await getDataloadingConfig(id);
     if (Object.keys(config).length === 0 && config.constructor === Object) {
       notification.error({
         message: intl.formatMessage({ id: 'You can restart the service after importing the data' }),
@@ -169,11 +172,11 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
       updateIsLoading(true);
       /** running->stopService */
       if (status === 'running') {
-        await stopService(name);
+        await stopService(id);
       }
       /** stoped->startService */
       if (status === 'stopped') {
-        await startService(name);
+        await startService(id);
       }
       updateIsLoading(false);
       handleChange();
@@ -202,7 +205,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
               icon={btnIcon}
               loading={isLoading}
               onClick={() => {
-                handleClick(name, status);
+                handleClick(id, status);
               }}
             />
           </Tooltip>
@@ -255,14 +258,16 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
           <Button
             style={{ width: btnWidth, textAlign: 'left' }}
             icon={<FontAwesomeIcon icon={faNetworkWired} style={{ marginRight: '8px' }} />}
-            onClick={() => history.push(`/instance/view-schema#?graph_name=${name}`)}
+            onClick={() => history.push(`/instance/view-schema#?graph_name=${name}&graph_id=${id}`)}
           >
             <FormattedMessage id="Define schema" />
           </Button>
           <Button
             style={{ width: btnWidth, textAlign: 'left' }}
             icon={<FontAwesomeIcon icon={faFileImport} style={{ marginRight: '10px' }} />}
-            onClick={() => history.push(`/instance/import-data#?engineType=interactive&graph_name=${name}`)}
+            onClick={() =>
+              history.push(`/instance/import-data#?engineType=interactive&graph_name=${name}&graph_id=${id}`)
+            }
           >
             <FormattedMessage id="Importing data" />
           </Button>

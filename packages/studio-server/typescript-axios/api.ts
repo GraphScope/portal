@@ -334,136 +334,6 @@ export type CreateAlertRuleRequestMetricTypeEnum = typeof CreateAlertRuleRequest
 /**
  * 
  * @export
- * @interface CreateDataloadingJobRequest
- */
-export interface CreateDataloadingJobRequest {
-    /**
-     * 
-     * @type {CreateDataloadingJobRequestLoadingConfig}
-     * @memberof CreateDataloadingJobRequest
-     */
-    'loading_config': CreateDataloadingJobRequestLoadingConfig;
-    /**
-     * 
-     * @type {Array<CreateDataloadingJobRequestVerticesInner>}
-     * @memberof CreateDataloadingJobRequest
-     */
-    'vertices': Array<CreateDataloadingJobRequestVerticesInner>;
-    /**
-     * 
-     * @type {Array<CreateDataloadingJobRequestEdgesInner>}
-     * @memberof CreateDataloadingJobRequest
-     */
-    'edges': Array<CreateDataloadingJobRequestEdgesInner>;
-    /**
-     * format with \'2023-02-21 11:56:30\'
-     * @type {string}
-     * @memberof CreateDataloadingJobRequest
-     */
-    'schedule'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateDataloadingJobRequest
-     */
-    'repeat'?: CreateDataloadingJobRequestRepeatEnum | null;
-}
-
-export const CreateDataloadingJobRequestRepeatEnum = {
-    Once: 'once',
-    Day: 'day',
-    Week: 'week'
-} as const;
-
-export type CreateDataloadingJobRequestRepeatEnum = typeof CreateDataloadingJobRequestRepeatEnum[keyof typeof CreateDataloadingJobRequestRepeatEnum];
-
-/**
- * 
- * @export
- * @interface CreateDataloadingJobRequestEdgesInner
- */
-export interface CreateDataloadingJobRequestEdgesInner {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateDataloadingJobRequestEdgesInner
-     */
-    'type_name'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateDataloadingJobRequestEdgesInner
-     */
-    'source_vertex'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateDataloadingJobRequestEdgesInner
-     */
-    'destination_vertex'?: string;
-}
-/**
- * 
- * @export
- * @interface CreateDataloadingJobRequestLoadingConfig
- */
-export interface CreateDataloadingJobRequestLoadingConfig {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateDataloadingJobRequestLoadingConfig
-     */
-    'import_option'?: CreateDataloadingJobRequestLoadingConfigImportOptionEnum;
-    /**
-     * 
-     * @type {CreateDataloadingJobRequestLoadingConfigFormat}
-     * @memberof CreateDataloadingJobRequestLoadingConfig
-     */
-    'format'?: CreateDataloadingJobRequestLoadingConfigFormat;
-}
-
-export const CreateDataloadingJobRequestLoadingConfigImportOptionEnum = {
-    Init: 'init',
-    Overwrite: 'overwrite'
-} as const;
-
-export type CreateDataloadingJobRequestLoadingConfigImportOptionEnum = typeof CreateDataloadingJobRequestLoadingConfigImportOptionEnum[keyof typeof CreateDataloadingJobRequestLoadingConfigImportOptionEnum];
-
-/**
- * 
- * @export
- * @interface CreateDataloadingJobRequestLoadingConfigFormat
- */
-export interface CreateDataloadingJobRequestLoadingConfigFormat {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateDataloadingJobRequestLoadingConfigFormat
-     */
-    'type'?: string;
-    /**
-     * 
-     * @type {{ [key: string]: any; }}
-     * @memberof CreateDataloadingJobRequestLoadingConfigFormat
-     */
-    'metadata'?: { [key: string]: any; };
-}
-/**
- * 
- * @export
- * @interface CreateDataloadingJobRequestVerticesInner
- */
-export interface CreateDataloadingJobRequestVerticesInner {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateDataloadingJobRequestVerticesInner
-     */
-    'type_name'?: string;
-}
-/**
- * 
- * @export
  * @interface CreateDataloadingJobResponse
  */
 export interface CreateDataloadingJobResponse {
@@ -705,6 +575,136 @@ export interface CreateVertexType {
      * @memberof CreateVertexType
      */
     'description'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface DataloadingJobConfig
+ */
+export interface DataloadingJobConfig {
+    /**
+     * 
+     * @type {DataloadingJobConfigLoadingConfig}
+     * @memberof DataloadingJobConfig
+     */
+    'loading_config': DataloadingJobConfigLoadingConfig;
+    /**
+     * 
+     * @type {Array<DataloadingJobConfigVerticesInner>}
+     * @memberof DataloadingJobConfig
+     */
+    'vertices': Array<DataloadingJobConfigVerticesInner>;
+    /**
+     * 
+     * @type {Array<DataloadingJobConfigEdgesInner>}
+     * @memberof DataloadingJobConfig
+     */
+    'edges': Array<DataloadingJobConfigEdgesInner>;
+    /**
+     * format with \'2023-02-21 11:56:30\'
+     * @type {string}
+     * @memberof DataloadingJobConfig
+     */
+    'schedule'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataloadingJobConfig
+     */
+    'repeat'?: DataloadingJobConfigRepeatEnum | null;
+}
+
+export const DataloadingJobConfigRepeatEnum = {
+    Once: 'once',
+    Day: 'day',
+    Week: 'week'
+} as const;
+
+export type DataloadingJobConfigRepeatEnum = typeof DataloadingJobConfigRepeatEnum[keyof typeof DataloadingJobConfigRepeatEnum];
+
+/**
+ * 
+ * @export
+ * @interface DataloadingJobConfigEdgesInner
+ */
+export interface DataloadingJobConfigEdgesInner {
+    /**
+     * 
+     * @type {string}
+     * @memberof DataloadingJobConfigEdgesInner
+     */
+    'type_name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataloadingJobConfigEdgesInner
+     */
+    'source_vertex'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DataloadingJobConfigEdgesInner
+     */
+    'destination_vertex'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface DataloadingJobConfigLoadingConfig
+ */
+export interface DataloadingJobConfigLoadingConfig {
+    /**
+     * 
+     * @type {string}
+     * @memberof DataloadingJobConfigLoadingConfig
+     */
+    'import_option'?: DataloadingJobConfigLoadingConfigImportOptionEnum;
+    /**
+     * 
+     * @type {DataloadingJobConfigLoadingConfigFormat}
+     * @memberof DataloadingJobConfigLoadingConfig
+     */
+    'format'?: DataloadingJobConfigLoadingConfigFormat;
+}
+
+export const DataloadingJobConfigLoadingConfigImportOptionEnum = {
+    Init: 'init',
+    Overwrite: 'overwrite'
+} as const;
+
+export type DataloadingJobConfigLoadingConfigImportOptionEnum = typeof DataloadingJobConfigLoadingConfigImportOptionEnum[keyof typeof DataloadingJobConfigLoadingConfigImportOptionEnum];
+
+/**
+ * 
+ * @export
+ * @interface DataloadingJobConfigLoadingConfigFormat
+ */
+export interface DataloadingJobConfigLoadingConfigFormat {
+    /**
+     * 
+     * @type {string}
+     * @memberof DataloadingJobConfigLoadingConfigFormat
+     */
+    'type'?: string;
+    /**
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof DataloadingJobConfigLoadingConfigFormat
+     */
+    'metadata'?: { [key: string]: any; };
+}
+/**
+ * 
+ * @export
+ * @interface DataloadingJobConfigVerticesInner
+ */
+export interface DataloadingJobConfigVerticesInner {
+    /**
+     * 
+     * @type {string}
+     * @memberof DataloadingJobConfigVerticesInner
+     */
+    'type_name'?: string;
 }
 /**
  * 
@@ -1487,10 +1487,10 @@ export interface ServiceStatus {
     'status': ServiceStatusStatusEnum;
     /**
      * 
-     * @type {string}
+     * @type {GetGraphResponse}
      * @memberof ServiceStatus
      */
-    'graph_id'?: string;
+    'graph'?: GetGraphResponse;
     /**
      * 
      * @type {ServiceStatusSdkEndpoints}
@@ -3029,15 +3029,15 @@ export const GraphApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteEdgeTypeById: async (graphId: string, typeName: string, sourceVertexType: string, destinationVertexType: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deleteEdgeTypeByName: async (graphId: string, typeName: string, sourceVertexType: string, destinationVertexType: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'graphId' is not null or undefined
-            assertParamExists('deleteEdgeTypeById', 'graphId', graphId)
+            assertParamExists('deleteEdgeTypeByName', 'graphId', graphId)
             // verify required parameter 'typeName' is not null or undefined
-            assertParamExists('deleteEdgeTypeById', 'typeName', typeName)
+            assertParamExists('deleteEdgeTypeByName', 'typeName', typeName)
             // verify required parameter 'sourceVertexType' is not null or undefined
-            assertParamExists('deleteEdgeTypeById', 'sourceVertexType', sourceVertexType)
+            assertParamExists('deleteEdgeTypeByName', 'sourceVertexType', sourceVertexType)
             // verify required parameter 'destinationVertexType' is not null or undefined
-            assertParamExists('deleteEdgeTypeById', 'destinationVertexType', destinationVertexType)
+            assertParamExists('deleteEdgeTypeByName', 'destinationVertexType', destinationVertexType)
             const localVarPath = `/api/v1/graph/{graph_id}/schema/edge/{type_name}`
                 .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)))
                 .replace(`{${"type_name"}}`, encodeURIComponent(String(typeName)));
@@ -3332,10 +3332,10 @@ export const GraphApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteEdgeTypeById(graphId: string, typeName: string, sourceVertexType: string, destinationVertexType: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteEdgeTypeById(graphId, typeName, sourceVertexType, destinationVertexType, options);
+        async deleteEdgeTypeByName(graphId: string, typeName: string, sourceVertexType: string, destinationVertexType: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteEdgeTypeByName(graphId, typeName, sourceVertexType, destinationVertexType, options);
             const index = configuration?.serverIndex ?? 0;
-            const operationBasePath = operationServerMap['GraphApi.deleteEdgeTypeById']?.[index]?.url;
+            const operationBasePath = operationServerMap['GraphApi.deleteEdgeTypeByName']?.[index]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
         },
         /**
@@ -3459,8 +3459,8 @@ export const GraphApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteEdgeTypeById(graphId: string, typeName: string, sourceVertexType: string, destinationVertexType: string, options?: any): AxiosPromise<string> {
-            return localVarFp.deleteEdgeTypeById(graphId, typeName, sourceVertexType, destinationVertexType, options).then((request) => request(axios, basePath));
+        deleteEdgeTypeByName(graphId: string, typeName: string, sourceVertexType: string, destinationVertexType: string, options?: any): AxiosPromise<string> {
+            return localVarFp.deleteEdgeTypeByName(graphId, typeName, sourceVertexType, destinationVertexType, options).then((request) => request(axios, basePath));
         },
         /**
          * Delete graph by ID
@@ -3572,8 +3572,8 @@ export class GraphApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof GraphApi
      */
-    public deleteEdgeTypeById(graphId: string, typeName: string, sourceVertexType: string, destinationVertexType: string, options?: RawAxiosRequestConfig) {
-        return GraphApiFp(this.configuration).deleteEdgeTypeById(graphId, typeName, sourceVertexType, destinationVertexType, options).then((request) => request(this.axios, this.basePath));
+    public deleteEdgeTypeByName(graphId: string, typeName: string, sourceVertexType: string, destinationVertexType: string, options?: RawAxiosRequestConfig) {
+        return GraphApiFp(this.configuration).deleteEdgeTypeByName(graphId, typeName, sourceVertexType, destinationVertexType, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3661,7 +3661,7 @@ export const JobApiAxiosParamCreator = function (configuration?: Configuration) 
         deleteJobById: async (jobId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'jobId' is not null or undefined
             assertParamExists('deleteJobById', 'jobId', jobId)
-            const localVarPath = `/ap1/v1/job/{job_id}`
+            const localVarPath = `/api/v1/job/{job_id}`
                 .replace(`{${"job_id"}}`, encodeURIComponent(String(jobId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3686,6 +3686,39 @@ export const JobApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
+         * Get the data loading configuration
+         * @param {string} graphId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDataloadingJobConfig: async (graphId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphId' is not null or undefined
+            assertParamExists('getDataloadingJobConfig', 'graphId', graphId)
+            const localVarPath = `/api/v1/graph/{graph_id}/dataloading/config`
+                .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Get job status by ID
          * @param {string} jobId 
          * @param {*} [options] Override http request option.
@@ -3694,7 +3727,7 @@ export const JobApiAxiosParamCreator = function (configuration?: Configuration) 
         getJobById: async (jobId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'jobId' is not null or undefined
             assertParamExists('getJobById', 'jobId', jobId)
-            const localVarPath = `/ap1/v1/job/{job_id}`
+            const localVarPath = `/api/v1/job/{job_id}`
                 .replace(`{${"job_id"}}`, encodeURIComponent(String(jobId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3750,15 +3783,15 @@ export const JobApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * Submit a dataloading job
          * @param {string} graphId 
-         * @param {CreateDataloadingJobRequest} createDataloadingJobRequest 
+         * @param {DataloadingJobConfig} dataloadingJobConfig 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        submitDataloadingJob: async (graphId: string, createDataloadingJobRequest: CreateDataloadingJobRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        submitDataloadingJob: async (graphId: string, dataloadingJobConfig: DataloadingJobConfig, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'graphId' is not null or undefined
             assertParamExists('submitDataloadingJob', 'graphId', graphId)
-            // verify required parameter 'createDataloadingJobRequest' is not null or undefined
-            assertParamExists('submitDataloadingJob', 'createDataloadingJobRequest', createDataloadingJobRequest)
+            // verify required parameter 'dataloadingJobConfig' is not null or undefined
+            assertParamExists('submitDataloadingJob', 'dataloadingJobConfig', dataloadingJobConfig)
             const localVarPath = `/api/v1/graph/{graph_id}/dataloading`
                 .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -3779,7 +3812,7 @@ export const JobApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createDataloadingJobRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(dataloadingJobConfig, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -3809,6 +3842,18 @@ export const JobApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
         },
         /**
+         * Get the data loading configuration
+         * @param {string} graphId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getDataloadingJobConfig(graphId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DataloadingJobConfig>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getDataloadingJobConfig(graphId, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['JobApi.getDataloadingJobConfig']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
          * Get job status by ID
          * @param {string} jobId 
          * @param {*} [options] Override http request option.
@@ -3834,12 +3879,12 @@ export const JobApiFp = function(configuration?: Configuration) {
         /**
          * Submit a dataloading job
          * @param {string} graphId 
-         * @param {CreateDataloadingJobRequest} createDataloadingJobRequest 
+         * @param {DataloadingJobConfig} dataloadingJobConfig 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async submitDataloadingJob(graphId: string, createDataloadingJobRequest: CreateDataloadingJobRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateDataloadingJobResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.submitDataloadingJob(graphId, createDataloadingJobRequest, options);
+        async submitDataloadingJob(graphId: string, dataloadingJobConfig: DataloadingJobConfig, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateDataloadingJobResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.submitDataloadingJob(graphId, dataloadingJobConfig, options);
             const index = configuration?.serverIndex ?? 0;
             const operationBasePath = operationServerMap['JobApi.submitDataloadingJob']?.[index]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
@@ -3864,6 +3909,15 @@ export const JobApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.deleteJobById(jobId, options).then((request) => request(axios, basePath));
         },
         /**
+         * Get the data loading configuration
+         * @param {string} graphId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDataloadingJobConfig(graphId: string, options?: any): AxiosPromise<DataloadingJobConfig> {
+            return localVarFp.getDataloadingJobConfig(graphId, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Get job status by ID
          * @param {string} jobId 
          * @param {*} [options] Override http request option.
@@ -3883,12 +3937,12 @@ export const JobApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * Submit a dataloading job
          * @param {string} graphId 
-         * @param {CreateDataloadingJobRequest} createDataloadingJobRequest 
+         * @param {DataloadingJobConfig} dataloadingJobConfig 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        submitDataloadingJob(graphId: string, createDataloadingJobRequest: CreateDataloadingJobRequest, options?: any): AxiosPromise<CreateDataloadingJobResponse> {
-            return localVarFp.submitDataloadingJob(graphId, createDataloadingJobRequest, options).then((request) => request(axios, basePath));
+        submitDataloadingJob(graphId: string, dataloadingJobConfig: DataloadingJobConfig, options?: any): AxiosPromise<CreateDataloadingJobResponse> {
+            return localVarFp.submitDataloadingJob(graphId, dataloadingJobConfig, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -3909,6 +3963,17 @@ export class JobApi extends BaseAPI {
      */
     public deleteJobById(jobId: string, options?: RawAxiosRequestConfig) {
         return JobApiFp(this.configuration).deleteJobById(jobId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get the data loading configuration
+     * @param {string} graphId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof JobApi
+     */
+    public getDataloadingJobConfig(graphId: string, options?: RawAxiosRequestConfig) {
+        return JobApiFp(this.configuration).getDataloadingJobConfig(graphId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3935,13 +4000,13 @@ export class JobApi extends BaseAPI {
     /**
      * Submit a dataloading job
      * @param {string} graphId 
-     * @param {CreateDataloadingJobRequest} createDataloadingJobRequest 
+     * @param {DataloadingJobConfig} dataloadingJobConfig 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof JobApi
      */
-    public submitDataloadingJob(graphId: string, createDataloadingJobRequest: CreateDataloadingJobRequest, options?: RawAxiosRequestConfig) {
-        return JobApiFp(this.configuration).submitDataloadingJob(graphId, createDataloadingJobRequest, options).then((request) => request(this.axios, this.basePath));
+    public submitDataloadingJob(graphId: string, dataloadingJobConfig: DataloadingJobConfig, options?: RawAxiosRequestConfig) {
+        return JobApiFp(this.configuration).submitDataloadingJob(graphId, dataloadingJobConfig, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

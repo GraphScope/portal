@@ -5,16 +5,20 @@ import { cloneDeep } from 'lodash';
 import { notification } from '@/pages/utils';
 const { GS_ENGINE_TYPE } = window;
 
-export const createGraph = async (graphName: string, storeType: string, nodeList: any[], edgeList: any[]) => {
+export const createGraph = async (
+  graph_id: string,
+  graphName: string,
+  storeType: string,
+  nodeList: any[],
+  edgeList: any[],
+) => {
   let graphs;
+  const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
   if (GS_ENGINE_TYPE === 'interactive') {
-    const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
     const data = {
       name: String(graphName).trim(),
       store_type: storeType,
-      stored_procedures: {
-        directory: 'plugins',
-      },
+      // stored_procedures: [],
       schema: schemaJSON,
     };
     graphs = await GraphApiFactory(undefined, location.origin)
@@ -32,9 +36,9 @@ export const createGraph = async (graphName: string, storeType: string, nodeList
   }
   /** groot 创建 */
   if (GS_ENGINE_TYPE === 'groot') {
-    const schemagrootJSON = transOptionsToGrootSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
-    graphs = await LegacyApiFactory(undefined, location.origin)
-      .importGrootSchema(String(graphName).trim(), schemagrootJSON)
+    // const schemagrootJSON = transOptionsToGrootSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
+    graphs = await GraphApiFactory(undefined, location.origin)
+      .importSchemaById(graph_id, schemaJSON)
       .then(res => {
         if (res.status === 200) {
           return res.data;

@@ -103,8 +103,8 @@ components:
           enum:
             - Running
             - Stopped
-        graph_id:
-          type: string
+        graph:
+          $ref: '#/components/schemas/GetGraphResponse'
         sdk_endpoints:
           properties:
             cypher:
@@ -565,8 +565,8 @@ components:
           items:
             $ref: '#/components/schemas/EdgeMapping'
 
-    CreateDataloadingJobRequest:
-      x-body-name: create_dataloading_job_request
+    DataloadingJobConfig:
+      x-body-name: dataloading_job_config
       required:
         - loading_config
         - vertices
@@ -1259,7 +1259,7 @@ paths:
     delete:
       tags: [Graph]
       description: Delete edge type by name
-      operationId: deleteEdgeTypeById
+      operationId: deleteEdgeTypeByName
       parameters:
         - name: graph_id
           in: path
@@ -1522,7 +1522,7 @@ paths:
         500:
           $ref: '#/components/responses/500'
 
-  /ap1/v1/job/{job_id}:
+  /api/v1/job/{job_id}:
     get:
       tags: [Job]
       description: Get job status by ID
@@ -1578,7 +1578,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateDataloadingJobRequest'
+              $ref: '#/components/schemas/DataloadingJobConfig'
         required: true
       responses:
         200:
@@ -1589,6 +1589,27 @@ paths:
                 $ref: '#/components/schemas/CreateDataloadingJobResponse'
         400:
           $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/{graph_id}/dataloading/config:
+    get:
+      tags: [Job]
+      description: Get the data loading configuration
+      operationId: getDataloadingJobConfig
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully returned the dataloading job configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataloadingJobConfig'
         500:
           $ref: '#/components/responses/500'
 
@@ -1842,7 +1863,88 @@ paths:
                 $ref: '#/components/schemas/ServiceStatus'
               example:
                 status: Running
-                graph_id: '1'
+                graph:
+                  id: GRAPHID
+                  name: demo
+                  creation_time: '2024-01-01 00:00:00'
+                  schema_update_time: '2024-01-02 00:00:00'
+                  data_update_time: '2024-01-03 00:00:00'
+                  stored_procedures:
+                    - id: PROCEDUREID
+                      name: procedure_name
+                      type: cypher
+                      query: 'MATCH(a) return COUNT(a);'
+                      library: /path/to/library
+                      params:
+                        - name: param1
+                          type:
+                            string:
+                              long_text: null
+                      returns:
+                        - name: return1
+                          type:
+                            PrimitiveType: DT_SIGNED_INT64
+                      bound_graph: demo
+                      runnable: true
+                  schema:
+                    vertex_types:
+                      - type_id: 0
+                        type_name: person
+                        properties:
+                          - property_id: 0
+                            property_name: id
+                            property_type:
+                              string:
+                                long_text: null
+                          - property_id: 1
+                            property_name: name
+                            property_type:
+                            string:
+                              long_text: null
+                        primary_keys:
+                          - id
+                      - type_id: 1
+                        type_name: software
+                        properties:
+                          - property_id: 0
+                            property_name: id
+                            property_type:
+                              string:
+                                long_text: null
+                          - property_id: 1
+                            property_name: name
+                            property_type:
+                              string:
+                                long_text: null
+                        primary_keys:
+                          - id
+                    edge_types:
+                      - type_id: 0
+                        type_name: knows
+                        vertex_type_pair_relations:
+                          - source_vertex: person
+                            destination_vertex: person
+                            relation: MANY_TO_MANY
+                            x_csr_params:
+                              edge_storage_strategy: ONLY_IN
+                        properties:
+                          - property_id: 0
+                            property_name: weight
+                            property_type:
+                              primitive_type: DT_DOUBLE
+                      - type_id: 1
+                        type_name: created
+                        vertex_type_pair_relations:
+                          - source_vertex: person
+                            destination_vertex: software
+                            relation: MANY_TO_MANY
+                            x_csr_params:
+                              edge_storage_strategy: ONLY_IN
+                        properties:
+                          - property_id: 0
+                            property_name: weight
+                            property_type:
+                              primitive_type: DT_DOUBLE
                 sdk_endpoints:
                   cypher: neo4j://mock.api.cypher:7676
                   gremlin: ws://mock.api.gremlin/gremlin

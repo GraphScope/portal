@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Segmented, Flex, Button, notification, Typography } from 'antd';
-import { useContext, useDataMap, BindingEdge, BindingNode } from './useContext';
+import { useContext, useDataMap, BindingEdge, BindingNode, initialDataMap } from './useContext';
 // import { getUrlParams } from './utils';
 import { searchParamOf } from '@/components/utils';
 // import TabAction from './tab-action';
@@ -11,12 +11,11 @@ import { transformDataMapToOptions, transformImportOptionsToSchemaMapping } from
 type ISourceTitleProps = {
   type?: string;
 };
-export function submitParams(schema: any, graph_name: string) {
+export function submitParams(schema: any) {
   const FIRST_DATA = schema.vertex_mappings[0];
   //@ts-ignore
   const { delimiter, datatype } = FIRST_DATA;
   return {
-    graph: graph_name,
     loading_config: {
       data_source: {
         scheme: datatype === 'odps' ? 'odps' : 'file',
@@ -65,14 +64,17 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = props => {
   const dataMap = useDataMap();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const engineType = window.GS_ENGINE_TYPE;
-  const graph_name = searchParamOf('graph_name') || '';
+  const graph_id = searchParamOf('graph_id') || '';
+  console.log(dataMap);
 
   const handleImport = async () => {
     //@ts-ignore
     const options = transformDataMapToOptions(dataMap);
     const schema = transformImportOptionsToSchemaMapping(options);
-    const params = submitParams(schema, graph_name);
-    const jobId = await createDataloadingJob(params as any);
+    // const params = submitParams(schema);
+    console.log(schema);
+
+    const jobId = await createDataloadingJob(graph_id, schema);
     if (jobId) {
       notification.success({
         message: 'Create DataImport Job Success',
@@ -82,10 +84,6 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = props => {
             <Typography.Link href={`/job#?jobId=${jobId}`}>details</Typography.Link>
           </>
         ),
-      });
-    } else {
-      notification.error({
-        message: 'Create DataImport Job Failed',
       });
     }
   };
