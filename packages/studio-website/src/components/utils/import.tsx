@@ -115,11 +115,10 @@ export function transformMappingSchemaToImportOptions(
   const schemaOptions = transformSchemaToImportOptions(schema);
 
   const { nodes, edges } = schemaOptions;
-  const { vertex_mappings, edge_mappings } = schemaMapping;
+  const { loading_config, vertex_mappings, edge_mappings } = schemaMapping;
   // const { type, metadata } = loading_config?.format || { type: 'csv' };
-  console.log(schemaMapping);
 
-  // const { type, delimiter } = loadingConfig(loading_config);
+  const { type, delimiter } = loadingConfig(loading_config);
   const label_mappings: Record<string, VertexMapping | EdgeMapping> = {};
   /** 先将后端数据或者yaml返回的mapping数据做一次Map存储，方便与后续的schema整合取数 */
 
@@ -161,17 +160,17 @@ export function transformMappingSchemaToImportOptions(
     const { label, properties } = item;
     const mapping = label_mappings[label];
     console.log(mapping);
-    const file = mapping && mapping.inputs && mapping.inputs[0].includes(':');
-    const filelocation = file ? mapping.inputs[0].split(':')[0] : mapping.inputs[0];
-    const type = file ? file[1] : 'file';
-
+    // const file = mapping && mapping.inputs && mapping.inputs[0].includes(':');
+    // const filelocation = file ? mapping.inputs[0].split(':')[0] : mapping.inputs[0];
+    // const type = file ? file[1] : 'file';
+    const filelocation = (mapping && mapping.inputs && mapping.inputs[0]) || '';
     return {
       ...item,
       datatype: type,
       filelocation,
       isBind: !!filelocation,
       isEidtProperty: true,
-      // delimiter: '|',
+      delimiter,
       dataFields: loadingdataFields('nodes', properties),
       properties: properties.map((p, index) => {
         const { name } = p;
@@ -186,16 +185,18 @@ export function transformMappingSchemaToImportOptions(
   const _edges = edges.map(item => {
     const { label, properties } = item;
     const mapping = label_mappings[label];
-    const file = mapping && mapping.inputs && mapping.inputs[0].includes(':');
-    const filelocation = file ? mapping.inputs[0].split(':')[0] : mapping.inputs[0];
-    const type = file ? file[1] : 'file';
+    console.log(mapping);
+    // const file = mapping && mapping.inputs && mapping.inputs[0].includes(':');
+    // const filelocation = file ? mapping.inputs[0].split(':')[0] : mapping.inputs[0];
+    // const type = file ? file[1] : 'file';
+    const filelocation = (mapping && mapping.inputs && mapping.inputs[0]) || '';
     return {
       ...item,
       datatype: type,
       filelocation,
       isBind: !!filelocation,
       isEidtProperty: true,
-      // delimiter: '|',
+      delimiter,
       dataFields: loadingdataFields('edges', properties, mapping),
       properties: properties.map((p, index) => {
         const { name } = p;

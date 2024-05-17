@@ -50,8 +50,8 @@ export const listGraphs = async () => {
   const graphs_map = graphs.map(item => {
     const { schema, store_type, stored_procedures, schema_update_time, data_update_time, creation_time, id, name } =
       item;
-    const { graph_id } = status;
-    const isMatch = graph_id === id;
+    const { graph } = status;
+    const isMatch = graph.id === id;
     const { vertex_types, edge_types, vertices, edges } = schema;
     return {
       id,
@@ -131,9 +131,9 @@ export const stopService = async (id: string) => {
     });
 };
 /** 获取是否已经导入 */
-export const getDataloadingConfig = async (graph_name: string) => {
+export const getDataloadingConfig = async (graph_id: string) => {
   return await JobApiFactory(undefined, location.origin)
-    .getDataloadingConfig(graph_name!)
+    .getDataloadingJobConfig(graph_id!)
     .then(res => {
       if (res.status === 200) {
         return res.data;

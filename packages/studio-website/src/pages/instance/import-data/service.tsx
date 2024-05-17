@@ -104,17 +104,15 @@ export const getDataloadingConfig = async (graph_id: string, schema: any) => {
       notification('error', error);
       return {};
     });
-  console.log(schemaMapping);
-  // const loading_config = await JobApiFactory(undefined, location.origin)
-  //   .getDataloadingJobConfig(graph_id!)
-  //   .then(res => res.data)
-  //   .catch(error => {
-  //     notification('error', error);
-  //     return {};
-  //   });
-  // console.log(loading_config);
-
-  // schemaMapping.loading_config = loading_config;
+  const loading_config = await JobApiFactory(undefined, location.origin)
+    .getDataloadingJobConfig(graph_id!)
+    .then(res => res.data)
+    .catch(error => {
+      notification('error', error);
+      return {};
+    });
+  /** 上边两接口获取一条数据 */
+  schemaMapping.loading_config = loading_config;
   const { edge_mappings, vertex_mappings } = schemaMapping;
   if (JSON.stringify(edge_mappings) === '[]' && JSON.stringify(vertex_mappings) === '[]') {
     return transformSchemaToImportOptions(schema);

@@ -1,6 +1,5 @@
-import { GraphApiFactory, LegacyApiFactory } from '@graphscope/studio-server';
+import { GraphApiFactory } from '@graphscope/studio-server';
 import { transOptionsToSchema } from '@/components/utils/schema';
-import { transOptionsToGrootSchema } from '@/components/utils/schema-groot';
 import { cloneDeep } from 'lodash';
 import { notification } from '@/pages/utils';
 const { GS_ENGINE_TYPE } = window;
@@ -17,6 +16,7 @@ export const createGraph = async (
   if (GS_ENGINE_TYPE === 'interactive') {
     const data = {
       name: String(graphName).trim(),
+      description: '',
       store_type: storeType,
       // stored_procedures: [],
       schema: schemaJSON,
@@ -58,7 +58,7 @@ export const getPrimitiveTypes = () => {
     return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'];
   }
   if (GS_ENGINE_TYPE === 'interactive') {
-    return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64', 'DT_DATE32'];
+    return ['DT_SIGNED_INT32', 'DT_SIGNED_INT64', 'DT_DOUBLE', 'DT_STRING'];
   }
   return [''];
 };

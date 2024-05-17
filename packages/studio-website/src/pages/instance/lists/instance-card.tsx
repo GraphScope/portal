@@ -48,7 +48,7 @@ export type InstaceCardType = {
 
 const STATUS_COLOR_MAP: Record<string, string> = {
   stopped: 'red',
-  running: 'green',
+  Running: 'green',
   undefined: 'green',
 };
 
@@ -163,33 +163,26 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   );
 
   const handleClick = async (id: string, status: string) => {
-    const config = await getDataloadingConfig(id);
-    if (Object.keys(config).length === 0 && config.constructor === Object) {
-      notification.error({
-        message: intl.formatMessage({ id: 'You can restart the service after importing the data' }),
-      });
-    } else {
-      updateIsLoading(true);
-      /** running->stopService */
-      if (status === 'running') {
-        await stopService(id);
-      }
-      /** stoped->startService */
-      if (status === 'stopped') {
-        await startService(id);
-      }
-      updateIsLoading(false);
-      handleChange();
+    updateIsLoading(true);
+    /** running->stopService */
+    if (status === 'running') {
+      await stopService(id);
     }
+    /** stoped->startService */
+    if (status === 'stopped') {
+      await startService(id);
+    }
+    updateIsLoading(false);
+    handleChange();
   };
   /** Start|Pause 提示 */
   let tooltipContext;
   if (status === 'stopped') tooltipContext = <FormattedMessage id="Start graph service" />;
-  if (status === 'running') tooltipContext = <FormattedMessage id="Pause graph service" />;
+  if (status === 'Running') tooltipContext = <FormattedMessage id="Pause graph service" />;
   /** Start|Pause icon */
   let btnIcon;
   if (status === 'stopped') btnIcon = <PlayCircleOutlined />;
-  if (status === 'running') btnIcon = <PauseCircleOutlined />;
+  if (status === 'Running') btnIcon = <PauseCircleOutlined />;
   /** 按钮中英文宽度 */
   let btnWidth = locale === 'zh-CN' ? '115px' : '150px';
   return (

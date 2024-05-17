@@ -1,4 +1,5 @@
 import type { Schema, VertexType } from '@graphscope/studio-server';
+import { String } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface Properties {
@@ -53,14 +54,19 @@ export type DeepRequired<T> = T extends (...args: any[]) => any
 
 export interface IProperty {
   property_name: string;
-  property_type: { primitive_type: string };
+  property_type: { primitive_type?: string; string?: { long_text: string } };
 }
 export interface IEdge {
   type_name: string;
   properties: IProperty[];
   vertex_type_pair_relations: { destination_vertex: string; source_vertex: string; relation: any }[];
 }
-
+const transformType = (property_type: { primitive_type?: string; string?: { long_text: string } }) => {
+  if (Object.hasOwn(property_type, 'primitive_type')) {
+    return property_type.primitive_type;
+  }
+  return 'DT_STRING';
+};
 export function transformSchema(originalSchema: DeepRequired<Schema>): TransformedSchema {
   const { vertex_types, edge_types } = originalSchema;
 
@@ -70,7 +76,7 @@ export function transformSchema(originalSchema: DeepRequired<Schema>): Transform
       const { property_name, property_type } = item;
       return {
         name: property_name,
-        type: property_type.primitive_type,
+        type: transformType(property_type),
       };
     }),
     primary: vertexType.primary_keys[0],
@@ -88,7 +94,7 @@ export function transformSchema(originalSchema: DeepRequired<Schema>): Transform
           label: type_name,
           properties: (properties || []).map(({ property_name, property_type }) => ({
             name: property_name,
-            type: property_type.primitive_type,
+            type: transformType(property_type),
           })),
 
           source: source_vertex,
@@ -157,7 +163,12 @@ export function transformSchemaToOptions(originalSchema: DeepRequired<Schema>, d
     edges,
   };
 }
-
+const typeChange = (type: string) => {
+  if (type === 'DT_STRING') {
+    return { string: { long_text: '' } };
+  }
+  return { primitive_type: type };
+};
 /**
  *
  * @param options 将store中的schema信息转化为引擎需要的schema
@@ -181,9 +192,7 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
         return {
           property_id: pIdx, // p.id,
           property_name: p.name,
-          property_type: {
-            primitive_type: p.type,
-          },
+          property_type: typeChange(p.type),
         };
       }),
       primary_keys: [primary_key],
@@ -217,9 +226,7 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
               return {
                 property_id: pIdx, //p.id,
                 property_name: p.name,
-                property_type: {
-                  primitive_type: p.type,
-                },
+                property_type: typeChange(p.type),
               };
             })
           : [],

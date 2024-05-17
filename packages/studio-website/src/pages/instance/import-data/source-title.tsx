@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Segmented, Flex, Button, notification, Typography } from 'antd';
-import { useContext, useDataMap, BindingEdge, BindingNode, initialDataMap } from './useContext';
+import { useContext, useDataMap, BindingEdge, BindingNode } from './useContext';
 // import { getUrlParams } from './utils';
 import { searchParamOf } from '@/components/utils';
 // import TabAction from './tab-action';
@@ -60,7 +60,7 @@ export function count(dataMap: BindingEdge | BindingNode) {
 }
 const SourceTitle: React.FunctionComponent<ISourceTitleProps> = props => {
   const { type } = props;
-  const { updateStore } = useContext();
+  const { store, updateStore } = useContext();
   const dataMap = useDataMap();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const engineType = window.GS_ENGINE_TYPE;
