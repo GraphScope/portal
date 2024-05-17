@@ -15,7 +15,7 @@ import {
 } from 'reactflow';
 import EmptyCanvas from '../../components/EmptyCanvas';
 import type { NodeChange, EdgeChange, Node } from 'reactflow';
-import { useContext } from '../useContext';
+import { useContext, proxyStore } from '../useContext';
 import { transformEdges, transformGraphNodes } from '../elements';
 import { nodeTypes } from '../elements/node-types';
 import { edgeTypes } from '../elements/edge-types';
@@ -25,6 +25,7 @@ import { Button } from 'antd';
 import ArrowMarker from '../elements/arrow-marker';
 
 import { initalData } from '../const';
+import { getBBox } from '../utils';
 const dagreGraph = new dagre.graphlib.Graph();
 
 dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -39,7 +40,7 @@ const getEdgeId = () => `Edge_${edgeIndex++}`;
 
 const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   const { store, updateStore } = useContext();
-  const { screenToFlowPosition, setCenter } = useReactFlow();
+  const { screenToFlowPosition, setCenter, fitBounds } = useReactFlow();
 
   const { displayMode, nodes, edges, theme } = store;
   const connectingNodeId = useRef(null);
@@ -165,6 +166,10 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
     });
   };
   const isEmpty = nodes.length === 0;
+  const onDoubleClick = () => {
+    const bbox = getBBox(proxyStore.nodes);
+    fitBounds(bbox, { duration: 600 });
+  };
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <div style={{ height: '100%', width: '100%' }}>
@@ -179,6 +184,9 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           onConnect={onConnect}
           onConnectStart={onConnectStart}
           onConnectEnd={onConnectEnd}
+          zoomOnDoubleClick={false}
+          onDoubleClick={onDoubleClick}
+
           // fitView
         >
           <ArrowMarker selectedColor={theme.primaryColor} />
