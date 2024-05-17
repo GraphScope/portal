@@ -1,24 +1,15 @@
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
-import { initalData, paperData } from './const';
-import processEdges from './elements/processEdges';
-import type { Node } from 'reactflow';
-export interface NodeSchema extends Node {
-  id: string;
-  data: Record<string, any>;
-}
-export interface EdgeSchema extends NodeSchema {
-  source: string;
-  target: string;
-}
+import type { Node, Edge } from 'reactflow';
+
 export type IStore = {
   currentType: 'nodes' | 'edges';
   currentId: string;
-  nodes: NodeSchema[];
-  edges: EdgeSchema[];
+  nodes: Node[];
+  edges: Edge[];
   source: {
-    nodes: NodeSchema[];
-    edges: EdgeSchema[];
+    nodes: Node[];
+    edges: Edge[];
   };
 
   displayMode: 'graph' | 'table';

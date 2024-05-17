@@ -3,42 +3,31 @@ import {
   ReactFlow,
   Controls,
   Background,
-  useNodesState,
-  useEdgesState,
-  Position,
   useReactFlow,
   addEdge,
-  ReactFlowProvider,
   applyEdgeChanges,
   applyNodeChanges,
   MiniMap,
 } from 'reactflow';
 import { uuid } from 'uuidv4';
 import EmptyCanvas from '../../components/EmptyCanvas';
-import type { NodeChange, EdgeChange, Node } from 'reactflow';
+import type { NodeChange, EdgeChange } from 'reactflow';
 import { useContext, proxyStore } from '../useContext';
-import { transformEdges, transformGraphNodes } from '../elements';
+import { transformEdges } from '../elements';
 import { nodeTypes } from '../elements/node-types';
 import { edgeTypes } from '../elements/edge-types';
 import dagre from 'dagre';
 import ConnectionLine from '../elements/connection-line';
-import { Button } from 'antd';
+
 import ArrowMarker from '../elements/arrow-marker';
 import AddNode from './add-node';
 
-import { initalData } from '../const';
 import { getBBox, createEdgeLabel, createNodeLabel } from '../utils';
 const dagreGraph = new dagre.graphlib.Graph();
 
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 interface IGraphEditorProps {}
-
-let nodeIndex = 1;
-let edgeIndex = 1;
-
-const getNodeId = () => `Vertex_${nodeIndex++}`;
-const getEdgeId = () => `Edge_${edgeIndex++}`;
 
 const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   const { store, updateStore } = useContext();
