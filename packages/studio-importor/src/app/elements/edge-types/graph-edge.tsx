@@ -158,9 +158,9 @@ function GraphEdge({ id, source, target, markerEnd, style, data }) {
   };
   const onLabelChange = value => {
     updateStore(draft => {
-      //@ts-ignore
       const match = draft.edges.find(edge => edge.id === id);
       if (match) {
+        //@ts-ignore
         match.label = value;
       }
     });

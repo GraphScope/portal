@@ -1,7 +1,7 @@
 import { Button, Segmented } from 'antd';
 import * as React from 'react';
-import { useContext } from './useContext';
-import { transEdge2Entity, transformEdges, transformNodes, layout, transformGraphNodes } from './utils/index';
+import { useContext } from '../useContext';
+import { transEdge2Entity, transformEdges, transformNodes, layout, transformGraphNodes } from '../elements/index';
 interface IModeSwitchProps {
   style: React.CSSProperties;
 }

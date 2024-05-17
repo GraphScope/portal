@@ -16,12 +16,13 @@ import {
 import EmptyCanvas from '../../components/EmptyCanvas';
 import type { NodeChange, EdgeChange, Node } from 'reactflow';
 import { useContext } from '../useContext';
-import { transformDataToReactFlow, transformEdges, transformNodes, transformGraphNodes } from '../utils';
-import { nodeTypes } from '../utils/nodeTypes';
-import { edgeTypes } from '../utils/edgesTypes';
+import { transformEdges, transformGraphNodes } from '../elements';
+import { nodeTypes } from '../elements/node-types';
+import { edgeTypes } from '../elements/edge-types';
 import dagre from 'dagre';
-import ConnectionLine from '../utils/connectionLine';
+import ConnectionLine from '../elements/connection-line';
 import { Button } from 'antd';
+import ArrowMarker from '../elements/arrow-marker';
 
 import { initalData } from '../const';
 const dagreGraph = new dagre.graphlib.Graph();
@@ -167,38 +168,6 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <div style={{ height: '100%', width: '100%' }}>
-        <svg
-          width="200"
-          height="200"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{ position: 'absolute', top: 0, left: 0, zIndex: -1 }}
-        >
-          <defs>
-            <marker
-              id="arrow"
-              markerWidth="10"
-              markerHeight="10"
-              refX="8"
-              refY="3"
-              orient="auto"
-              markerUnits="strokeWidth"
-            >
-              <path d="M0,0 L0,6 L9,3 z" fill="#ddd" />
-            </marker>
-            <marker
-              id="arrow-selected"
-              markerWidth="10"
-              markerHeight="10"
-              refX="8"
-              refY="3"
-              orient="auto"
-              markerUnits="strokeWidth"
-            >
-              <path d="M0,0 L0,6 L9,3 z" fill={theme.primaryColor} />
-            </marker>
-          </defs>
-        </svg>
-
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -212,6 +181,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           onConnectEnd={onConnectEnd}
           // fitView
         >
+          <ArrowMarker selectedColor={theme.primaryColor} />
           <Button onClick={handleAddVertex} style={{ position: 'absolute', top: '0px', left: '0px', zIndex: 999 }}>
             Add Vertex
           </Button>

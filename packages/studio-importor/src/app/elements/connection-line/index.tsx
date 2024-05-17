@@ -1,22 +1,22 @@
 import React from 'react';
-import { useStore } from 'reactflow';
 
 export default ({ fromX, fromY, toX, toY }) => {
   return (
-    <g>
+    <g style={{ zIndex: -1, position: 'absolute' }}>
       <path
         fill="none"
         stroke={'rgb(221, 221, 221)'}
-        strokeWidth={2}
+        strokeWidth={1}
         className="animated"
         d={`M${fromX},${fromY} L ${toX},${toY}`}
-        markerEnd="url(#arrow)"
+        markerEnd="url(#arrow-dragging)"
       />
       <circle
         cx={toX}
         cy={toY}
         fill="#fff"
         r={50}
+        className="animated"
         stroke={'rgb(221, 221, 221)'}
         strokeWidth={1}
         strokeDasharray={'10, 5'}
