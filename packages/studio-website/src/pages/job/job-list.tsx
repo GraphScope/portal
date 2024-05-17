@@ -101,17 +101,17 @@ const JobsList: FC = () => {
   };
   const hangdleJobid = (val: string) => (
     <>
-      {val.substring(0, val.length / 2)}
+      {val?.substring(0, val.length / 2)}
       <br />
-      {val.substring(val.length / 2)}
+      {val?.substring(val.length / 2)}
     </>
   );
 
   const columns = [
     {
       title: <FormattedMessage id="Job ID" />,
-      dataIndex: 'job_id',
-      key: 'job_id',
+      dataIndex: 'id',
+      key: 'id',
       render: (record: string) => (
         <span
           style={{ cursor: 'pointer' }}
@@ -171,7 +171,7 @@ const JobsList: FC = () => {
         <Popconfirm
           placement="bottomRight"
           title={<FormattedMessage id="Are you sure to delete this task?" />}
-          onConfirm={() => handleDeleteJob(record.job_id)}
+          onConfirm={() => handleDeleteJob(record.id)}
           okText={<FormattedMessage id="Yes" />}
           cancelText={<FormattedMessage id="No" />}
           icon
