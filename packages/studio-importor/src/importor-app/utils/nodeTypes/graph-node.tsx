@@ -107,6 +107,7 @@ const GraphNode = (props: NodeProps) => {
           ...styles.handler,
           border: state.isHover ? `2px dashed ${theme.primaryColor}` : 'none',
           background: state.isHover ? '#fafafa' : 'transparent',
+          cursor: 'copy',
         }}
       ></Handle>
       {/* <Handle

@@ -11,7 +11,9 @@ import {
   ReactFlowProvider,
   applyEdgeChanges,
   applyNodeChanges,
+  MiniMap,
 } from 'reactflow';
+import EmptyCanvas from '../../components/EmptyCanvas';
 import type { NodeChange, EdgeChange, Node } from 'reactflow';
 import { useContext } from '../useContext';
 import { transformDataToReactFlow, transformEdges, transformNodes, transformGraphNodes } from '../utils';
@@ -30,12 +32,13 @@ interface IGraphEditorProps {}
 
 let nodeIndex = 1;
 let edgeIndex = 1;
+let addNodeIndex = 0;
 const getNodeId = () => `Vertex_${nodeIndex++}`;
 const getEdgeId = () => `Edge_${edgeIndex++}`;
 
 const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   const { store, updateStore } = useContext();
-  const { screenToFlowPosition } = useReactFlow();
+  const { screenToFlowPosition, setCenter } = useReactFlow();
 
   const { displayMode, nodes, edges, theme } = store;
   const connectingNodeId = useRef(null);
@@ -76,13 +79,18 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
         // we need to remove the wrapper bounds, in order to get the correct position
         const nodeId = getNodeId();
         const edgeId = getEdgeId();
+        /** 这里计算的 position 是 handle 的位置，对GraphNode 而言，就是圆心的坐标 */
         const newPosition = screenToFlowPosition({
           x: event.clientX,
           y: event.clientY,
         });
+
         const newNode = {
           id: nodeId,
-          position: newPosition,
+          position: {
+            x: newPosition.x - 50,
+            y: newPosition.y - 50,
+          },
           type: 'graph-node',
           data: { label: nodeId },
           // origin: [-0.5, -0.5],
@@ -129,15 +137,19 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   const handleAddVertex = () => {
     updateStore(draft => {
       const id = getNodeId();
+      const x = addNodeIndex * 200;
+      const y = addNodeIndex * 100;
+      addNodeIndex++;
       draft.nodes.push({
         id,
         position: {
-          x: Math.round(Math.random() * 400),
-          y: Math.round(Math.random() * 400),
+          x,
+          y,
         },
         type: 'graph-node',
         data: { label: id },
       });
+      setCenter(x + 100 / 2, y + 100 / 2, { duration: 600, zoom: 1 });
     });
   };
 
@@ -151,6 +163,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
       draft.edges = applyEdgeChanges(changes, draft.edges);
     });
   };
+  const isEmpty = nodes.length === 0;
   return (
     <div>
       <Button onClick={handleAddVertex}>Add Vertex</Button>
@@ -186,6 +199,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
             </marker>
           </defs>
         </svg>
+
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -201,6 +215,8 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
         >
           <Controls />
           <Background />
+          {isEmpty && <EmptyCanvas />}
+          <MiniMap />
         </ReactFlow>
       </div>
     </div>
