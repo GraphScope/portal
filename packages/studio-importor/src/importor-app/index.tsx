@@ -16,7 +16,7 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
     <div style={{ width: '100%', height: '100%' }}>
       <ImportSchema style={{ position: 'absolute', right: '30px', top: '100px' }} />
       <ModeSwitch style={{ position: 'absolute', right: '230px', top: '100px' }} />
-      <Row gutter={[16, 16]}>
+      <Row gutter={[16, 16]} style={{ height: '100%' }}>
         <Col span={16}>
           <ReactFlowProvider>
             <GraphEditor></GraphEditor>

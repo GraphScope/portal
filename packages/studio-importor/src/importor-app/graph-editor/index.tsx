@@ -165,9 +165,8 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   };
   const isEmpty = nodes.length === 0;
   return (
-    <div>
-      <Button onClick={handleAddVertex}>Add Vertex</Button>
-      <div style={{ height: '500px', width: '100%' }}>
+    <div style={{ height: '100%', width: '100%' }}>
+      <div style={{ height: '100%', width: '100%' }}>
         <svg
           width="200"
           height="200"
@@ -213,6 +212,9 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           onConnectEnd={onConnectEnd}
           // fitView
         >
+          <Button onClick={handleAddVertex} style={{ position: 'absolute', top: '0px', left: '0px', zIndex: 999 }}>
+            Add Vertex
+          </Button>
           <Controls />
           <Background />
           {isEmpty && <EmptyCanvas />}
