@@ -159,10 +159,6 @@ export function transformMappingSchemaToImportOptions(
   const _nodes = nodes.map(item => {
     const { label, properties } = item;
     const mapping = label_mappings[label];
-    console.log(mapping);
-    // const file = mapping && mapping.inputs && mapping.inputs[0].includes(':');
-    // const filelocation = file ? mapping.inputs[0].split(':')[0] : mapping.inputs[0];
-    // const type = file ? file[1] : 'file';
     const filelocation = (mapping && mapping.inputs && mapping.inputs[0]) || '';
     return {
       ...item,
@@ -185,10 +181,6 @@ export function transformMappingSchemaToImportOptions(
   const _edges = edges.map(item => {
     const { label, properties } = item;
     const mapping = label_mappings[label];
-    console.log(mapping);
-    // const file = mapping && mapping.inputs && mapping.inputs[0].includes(':');
-    // const filelocation = file ? mapping.inputs[0].split(':')[0] : mapping.inputs[0];
-    // const type = file ? file[1] : 'file';
     const filelocation = (mapping && mapping.inputs && mapping.inputs[0]) || '';
     return {
       ...item,
