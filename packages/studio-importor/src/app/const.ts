@@ -41,21 +41,6 @@ export const initalData = {
         _offset: -30,
       },
     },
-
-    // {
-    //   id: 'edge-3',
-    //   label: 'loop',
-    //   source: 'node-1',
-    //   target: 'node-1',
-    //   properties: {},
-    // },
-    // {
-    //   id: 'edge-4',
-    //   label: 'xxxxx',
-    //   source: 'node-2',
-    //   target: 'node-1',
-    //   properties: {},
-    // },
   ],
 };
 

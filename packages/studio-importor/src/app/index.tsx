@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
-import { Flex, Col, Row } from 'antd';
-import GraphEditor from './graph-editor';
+import { Col, Row } from 'antd';
+import GraphCanvas from './graph-canvas';
 import PropertiesEditor from './properties-editor';
 import ImportSchema from './import-schema';
 import ModeSwitch from './mode-switch';
@@ -19,7 +19,7 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
           <ReactFlowProvider>
             <ImportSchema style={{ position: 'absolute', left: '0px', top: '40px', zIndex: 999 }} />
             <ModeSwitch style={{ position: 'absolute', left: '0px', top: '100px', zIndex: 999 }} />
-            <GraphEditor></GraphEditor>
+            <GraphCanvas />
           </ReactFlowProvider>
         </Col>
         <Col span={8}>
