@@ -1,28 +1,25 @@
-import { ProcedureApiFactory, DeploymentApiFactory } from '@graphscope/studio-server';
+import { ProcedureApiFactory, DeploymentApiFactory, GraphApiFactory } from '@graphscope/studio-server';
 import type { Procedure } from '@graphscope/studio-server';
 import { notification } from '@/pages/utils';
 /** 获取插件列表 */
 export const listProcedures = async () => {
-  const message = await ProcedureApiFactory(undefined, location.origin)
-    .listProcedures()
+  const message = await GraphApiFactory(undefined, location.origin)
+    .listGraphs()
     .then(res => {
       if (res.status === 200) {
         return res.data;
       }
       return [];
     });
-  const info = message.map((item: Procedure) => {
-    return {
-      ...item,
-      key: '',
-    };
-  });
+  const info = message.reduce((pre, cur) => {
+    return pre.concat(cur.stored_procedures);
+  }, []);
   return info;
 };
 /** 创建插件 */
-export const createProcedure = async (graph_name: string, procedure: Procedure) => {
+export const createProcedure = async (graphId: string, procedure: Procedure) => {
   return await ProcedureApiFactory(undefined, location.origin)
-    .createProcedure(graph_name, procedure)
+    .createProcedure(graphId, procedure)
     .then(res => {
       if (res.status === 200) {
         return res.data;
@@ -36,7 +33,7 @@ export const createProcedure = async (graph_name: string, procedure: Procedure) 
 /** 删除插件 */
 export const deleteProcedure = async (graph_name: string, procedureName: string) => {
   return await ProcedureApiFactory(undefined, location.origin)
-    .deleteProcedure(graph_name, procedureName)
+    .deleteProcedureById(graph_name, procedureName)
     .then(res => {
       if (res.status === 200) {
         return res.data;
@@ -50,7 +47,7 @@ export const deleteProcedure = async (graph_name: string, procedureName: string)
 /** 修改插件 */
 export const updateProcedure = async (graph_name: string, procedureName: string, procedure: Procedure) => {
   return await ProcedureApiFactory(undefined, location.origin)
-    .updateProcedure(graph_name, procedureName, procedure)
+    .updateProcedureById(graph_name, procedureName, procedure)
     .then(res => {
       if (res.status === 200) {
         return res.data;
@@ -62,9 +59,9 @@ export const updateProcedure = async (graph_name: string, procedureName: string,
     });
 };
 /** 获取某条插件数据 */
-export const getProcedure = async (graphName: string, procedureName: string) => {
+export const getProcedure = async (graphId: string, procedure_id: string) => {
   return await ProcedureApiFactory(undefined, location.origin)
-    .getProcedure(graphName, procedureName)
+    .getProcedureById(graphId, procedure_id)
     .then(res => {
       if (res.status === 200) {
         return res.data;
@@ -75,10 +72,10 @@ export const getProcedure = async (graphName: string, procedureName: string) => 
       notification('error', error);
     });
 };
-
+/** 获取 Binding graph 列表 */
 export const listGraphs = async () => {
-  const deployments = await DeploymentApiFactory(undefined, location.origin)
-    .getDeploymentInfo()
+  const deployments = await GraphApiFactory(undefined, location.origin)
+    .listGraphs()
     .then(res => {
       if (res.status === 200) {
         return res.data;
@@ -88,13 +85,11 @@ export const listGraphs = async () => {
     .catch(error => {
       notification('error', error);
     });
-  const { graphs_info } = deployments;
-
-  let info = Object.values(graphs_info!).map(item => {
-    const { name } = item;
+  let info = deployments.map(item => {
+    const { name, id } = item;
     return {
       label: name,
-      value: name,
+      value: id,
     };
   });
   /** 过滤相同属性 */

@@ -7,9 +7,9 @@ import {
 import { notification } from 'antd';
 
 /** 删除点类型 */
-export const deleteVertexType = async (graphName: string, typeName: string) => {
+export const deleteVertexType = async (graph_id: string, typeName: string) => {
   const graphs = await GraphApiFactory(undefined, location.origin)
-    .deleteVertexTypeByName(graphName, typeName)
+    .deleteVertexTypeByName(graph_id, typeName)
     .then(res => {
       if (res.status >= 200 || res.status <= 300) {
         notification.success({
@@ -35,7 +35,7 @@ export const deleteEdgeType = async (graph_id: string, options: any) => {
   //@ts-ignore
   const { typeName, sourceVertexType, destinationVertexType } = transformGrootDeleteEdgeToOptions(options)[0];
   const graphs = await GraphApiFactory(undefined, location.origin)
-    .deleteEdgeTypeById(graph_id, typeName, sourceVertexType, destinationVertexType)
+    .deleteEdgeTypeByName(graph_id, typeName, sourceVertexType, destinationVertexType)
     .then(res => {
       if (res.status >= 200 || res.status <= 300) {
         notification.success({

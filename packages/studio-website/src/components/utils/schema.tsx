@@ -163,7 +163,7 @@ export function transformSchemaToOptions(originalSchema: DeepRequired<Schema>, d
     edges,
   };
 }
-const typeChange = (type: string) => {
+export const handleType = (type: string) => {
   if (type === 'DT_STRING') {
     return { string: { long_text: '' } };
   }
@@ -192,7 +192,7 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
         return {
           property_id: pIdx, // p.id,
           property_name: p.name,
-          property_type: typeChange(p.type),
+          property_type: handleType(p.type),
         };
       }),
       primary_keys: [primary_key],
@@ -226,7 +226,7 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
               return {
                 property_id: pIdx, //p.id,
                 property_name: p.name,
-                property_type: typeChange(p.type),
+                property_type: handleType(p.type),
               };
             })
           : [],

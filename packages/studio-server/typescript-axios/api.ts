@@ -4030,7 +4030,7 @@ export const ProcedureApiAxiosParamCreator = function (configuration?: Configura
             assertParamExists('createProcedure', 'graphId', graphId)
             // verify required parameter 'createProcedureRequest' is not null or undefined
             assertParamExists('createProcedure', 'createProcedureRequest', createProcedureRequest)
-            const localVarPath = `/v1/graph/{graph_id}/procedure`
+            const localVarPath = `/api/v1/graph/{graph_id}/procedure`
                 .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4069,7 +4069,7 @@ export const ProcedureApiAxiosParamCreator = function (configuration?: Configura
             assertParamExists('deleteProcedureById', 'graphId', graphId)
             // verify required parameter 'procedureId' is not null or undefined
             assertParamExists('deleteProcedureById', 'procedureId', procedureId)
-            const localVarPath = `/v1/graph/{graph_id}/procedure/{procedure_id}`
+            const localVarPath = `/api/v1/graph/{graph_id}/procedure/{procedure_id}`
                 .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)))
                 .replace(`{${"procedure_id"}}`, encodeURIComponent(String(procedureId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -4106,7 +4106,7 @@ export const ProcedureApiAxiosParamCreator = function (configuration?: Configura
             assertParamExists('getProcedureById', 'graphId', graphId)
             // verify required parameter 'procedureId' is not null or undefined
             assertParamExists('getProcedureById', 'procedureId', procedureId)
-            const localVarPath = `/v1/graph/{graph_id}/procedure/{procedure_id}`
+            const localVarPath = `/api/v1/graph/{graph_id}/procedure/{procedure_id}`
                 .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)))
                 .replace(`{${"procedure_id"}}`, encodeURIComponent(String(procedureId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -4140,7 +4140,7 @@ export const ProcedureApiAxiosParamCreator = function (configuration?: Configura
         listProcedures: async (graphId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'graphId' is not null or undefined
             assertParamExists('listProcedures', 'graphId', graphId)
-            const localVarPath = `/v1/graph/{graph_id}/procedure`
+            const localVarPath = `/api/v1/graph/{graph_id}/procedure`
                 .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4177,7 +4177,7 @@ export const ProcedureApiAxiosParamCreator = function (configuration?: Configura
             assertParamExists('updateProcedureById', 'graphId', graphId)
             // verify required parameter 'procedureId' is not null or undefined
             assertParamExists('updateProcedureById', 'procedureId', procedureId)
-            const localVarPath = `/v1/graph/{graph_id}/procedure/{procedure_id}`
+            const localVarPath = `/api/v1/graph/{graph_id}/procedure/{procedure_id}`
                 .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)))
                 .replace(`{${"procedure_id"}}`, encodeURIComponent(String(procedureId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
