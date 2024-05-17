@@ -13,6 +13,7 @@ import {
   applyNodeChanges,
   MiniMap,
 } from 'reactflow';
+import { uuid } from 'uuidv4';
 import EmptyCanvas from '../../components/EmptyCanvas';
 import type { NodeChange, EdgeChange, Node } from 'reactflow';
 import { useContext, proxyStore } from '../useContext';
@@ -23,9 +24,10 @@ import dagre from 'dagre';
 import ConnectionLine from '../elements/connection-line';
 import { Button } from 'antd';
 import ArrowMarker from '../elements/arrow-marker';
+import AddNode from './add-node';
 
 import { initalData } from '../const';
-import { getBBox } from '../utils';
+import { getBBox, createEdgeLabel, createNodeLabel } from '../utils';
 const dagreGraph = new dagre.graphlib.Graph();
 
 dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -34,7 +36,7 @@ interface IGraphEditorProps {}
 
 let nodeIndex = 1;
 let edgeIndex = 1;
-let addNodeIndex = 0;
+
 const getNodeId = () => `Vertex_${nodeIndex++}`;
 const getEdgeId = () => `Edge_${edgeIndex++}`;
 
@@ -44,11 +46,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
 
   const { displayMode, nodes, edges, theme } = store;
   const connectingNodeId = useRef(null);
-  const setNodes = _nodes => {
-    updateStore(draft => {
-      draft.nodes = transformGraphNodes(_nodes, displayMode);
-    });
-  };
+
   const setEdges = _edges => {
     updateStore(draft => {
       draft.edges = transformEdges(_edges, displayMode);
@@ -79,14 +77,13 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
       // 空白画板需要添加节点
       if (targetIsPane) {
         // we need to remove the wrapper bounds, in order to get the correct position
-        const nodeId = getNodeId();
-        const edgeId = getEdgeId();
+        const nodeId = uuid();
+        const edgeId = uuid();
         /** 这里计算的 position 是 handle 的位置，对GraphNode 而言，就是圆心的坐标 */
         const newPosition = screenToFlowPosition({
           x: event.clientX,
           y: event.clientY,
         });
-
         const newNode = {
           id: nodeId,
           position: {
@@ -94,27 +91,34 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
             y: newPosition.y - 50,
           },
           type: 'graph-node',
-          data: { label: nodeId },
-          // origin: [-0.5, -0.5],
+          data: { label: createNodeLabel() },
         };
 
-        // setNodes(nds => nds.concat(newNode));
-        // setEdges(eds => eds.concat({ id, source: connectingNodeId.current, target: id, type: 'graph-edge' }));
         updateStore(draft => {
           draft.nodes.push(newNode);
-          draft.edges.push({ id: edgeId, source: connectingNodeId.current, target: nodeId, type: 'graph-edge' });
+          draft.edges.push({
+            id: edgeId,
+            source: connectingNodeId.current,
+            target: nodeId,
+            type: 'graph-edge',
+            data: {
+              label: createEdgeLabel(),
+            },
+          });
         });
       } else {
         const { nodeid } = event.target.dataset;
         console.log('event.target.dataset', event.target.dataset);
-        const edgeId = getEdgeId();
+
+        const edgeId = uuid();
+        const edgeLabel = createEdgeLabel();
         updateStore(draft => {
           draft.edges = transformEdges(
             [
               ...draft.edges,
               {
                 id: edgeId,
-                data: { label: edgeId },
+                data: { label: edgeLabel },
                 source: connectingNodeId.current,
                 target: nodeid,
                 type: 'graph-edge',
@@ -135,25 +139,6 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
       draft.nodes = []; //initalData.nodes; // [];
     });
   }, []);
-
-  const handleAddVertex = () => {
-    updateStore(draft => {
-      const id = getNodeId();
-      const x = addNodeIndex * 200;
-      const y = addNodeIndex * 100;
-      addNodeIndex++;
-      draft.nodes.push({
-        id,
-        position: {
-          x,
-          y,
-        },
-        type: 'graph-node',
-        data: { label: id },
-      });
-      setCenter(x + 100 / 2, y + 100 / 2, { duration: 600, zoom: 1 });
-    });
-  };
 
   const onNodesChange = (changes: NodeChange[]) => {
     updateStore(draft => {
@@ -190,9 +175,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           // fitView
         >
           <ArrowMarker selectedColor={theme.primaryColor} />
-          <Button onClick={handleAddVertex} style={{ position: 'absolute', top: '0px', left: '0px', zIndex: 999 }}>
-            Add Vertex
-          </Button>
+          <AddNode style={{ position: 'absolute', top: '70px', left: '0px', zIndex: 999 }} />
           <Controls />
           <Background />
           {isEmpty && <EmptyCanvas />}

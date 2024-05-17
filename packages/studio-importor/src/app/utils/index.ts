@@ -20,3 +20,8 @@ export const getBBox = (nodes: { position: { x: number; y: number } }[]) => {
     height: height,
   };
 };
+
+let nodeIndex = 1;
+let edgeIndex = 1;
+export const createNodeLabel = () => `Vertex_${nodeIndex++}`;
+export const createEdgeLabel = () => `Edge_${edgeIndex++}`;
