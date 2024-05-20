@@ -15,6 +15,7 @@ export interface IUserEdge {
   source: string;
   target: string;
   properties: string;
+  data: Record<string, any>;
   _type?: string;
   _offset?: string;
   _isLoop: boolean;

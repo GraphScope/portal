@@ -33,7 +33,9 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
     <div style={{ height: '100%', width: '100%' }}>
       <div style={{ height: '100%', width: '100%' }}>
         <ReactFlow
+          //@ts-ignore
           nodes={nodes}
+          //@ts-ignore
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}

@@ -73,11 +73,11 @@ export function transformNodes(nodes, displayMode) {
 export function transformEdges(_edges, displayMode) {
   const edges = processEdges(_edges);
   return edges.map((item, index) => {
-    const { id, label, source, target, data, _isRevert, _isLoop, _isPoly, _offset, ...others } = item;
+    const { id, source, target, data, _isRevert, _isLoop, _isPoly, _offset, ...others } = item;
     return {
       ...others,
       id: id || `${source}-${target}-${index}`,
-      label,
+
       data: {
         ...data,
         _isRevert,
@@ -88,8 +88,6 @@ export function transformEdges(_edges, displayMode) {
       source,
       target,
       type: displayMode === 'table' ? 'smoothstep' : 'graph-edge',
-      // sourceHandle: _isRevert ? 'right-revert' : 'right',
-      // targetHandle: _isRevert ? 'left-revert' : 'left',
     };
   });
 }
