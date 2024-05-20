@@ -69,13 +69,22 @@ const getSmoothPath = ({ source, P1, P2, P3, target }) => {
   ];
 };
 
-export const calculateDagree = (source, target) => {
+export const calculateDegree = (source, target) => {
   let deltaX = target.x - source.x;
   let deltaY = target.y - source.y;
   // 计算弧度
   let radian = Math.atan2(deltaY, deltaX);
   // 将弧度转换为度数
-  return radian * (180 / Math.PI);
+  let degree = radian * (180 / Math.PI);
+
+  // 确保角度在 -90 到 90 度之间
+  if (degree > 90) {
+    degree -= 180;
+  } else if (degree < -90) {
+    degree += 180;
+  }
+
+  return degree;
 };
 
 const getBezierPointsWithOffsetsCorrected = ({ sourceX, sourceY, targetX, targetY, offset, R1 = 20, R2 = 20 }) => {
@@ -166,7 +175,7 @@ function GraphEdge({ id, source, target, markerEnd, style, data }) {
   };
 
   /** 计算标签和标签背景的旋转角度 */
-  let degree = calculateDagree({ x: sourceX, y: sourceY }, { x: targetX, y: targetY });
+  let degree = calculateDegree({ x: sourceX, y: sourceY }, { x: targetX, y: targetY });
 
   return (
     <>
@@ -193,7 +202,6 @@ function GraphEdge({ id, source, target, markerEnd, style, data }) {
             onClick={onEdgeClick}
             style={{
               borderRadius: '4px',
-
               background: isSelected ? `${theme.primaryColor}` : '#fff',
               border: isSelected ? `2px solid ${theme.primaryColor}` : '1px solid #ddd',
             }}
@@ -206,36 +214,6 @@ function GraphEdge({ id, source, target, markerEnd, style, data }) {
             />
           </div>
         </div>
-        {/* <div
-          style={{
-            width: '10px',
-            height: '10px',
-            borderRadius: '50%',
-            background: 'green',
-            position: 'absolute',
-            transform: `translate(${controlPoint.x}px,${controlPoint.y}px)`,
-          }}
-        ></div> */}
-        {/* <div
-          style={{
-            width: '10px',
-            height: '10px',
-            borderRadius: '50%',
-            background: 'red',
-            position: 'absolute',
-            transform: `translate(${P1.x}px,${P1.y}px)`,
-          }}
-        ></div> */}
-        {/* <div
-        style={{
-          width: '10px',
-          height: '10px',
-          borderRadius: '50%',
-          background: 'blue',
-          position: 'absolute',
-          transform: `translate(${P2.x}px,${P2.y}px)`,
-        }}
-      ></div> */}
       </EdgeLabelRenderer>
     </>
   );
