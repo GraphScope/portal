@@ -72,18 +72,17 @@ export function transformNodes(nodes, displayMode) {
 }
 export function transformEdges(_edges, displayMode) {
   const edges = processEdges(_edges);
+  console.log('edges', edges);
   return edges.map((item, index) => {
-    const { id, source, target, data, _isRevert, _isLoop, _isPoly, _offset, ...others } = item;
+    console.log('edge', item);
+    const { id, source, target, data, _extra, ...others } = item;
     return {
       ...others,
       id: id || `${source}-${target}-${index}`,
 
       data: {
         ...data,
-        _isRevert,
-        _isLoop,
-        _offset,
-        _isPoly,
+        _extra,
       },
       source,
       target,

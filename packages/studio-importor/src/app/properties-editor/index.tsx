@@ -22,6 +22,7 @@ interface EdgeSchema extends PropertiesSchema {
 const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props => {
   const { store, updateStore } = useContext();
   const { nodes, edges, currentType, currentId } = store;
+  console.log('store', edges);
 
   const nodes_items = nodes.map(item => {
     const { id, data } = item;

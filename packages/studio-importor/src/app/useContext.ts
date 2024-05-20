@@ -44,12 +44,19 @@ type ContextType = {
 };
 
 export const proxyStore = proxy(initialStore) as IStore;
+
+export const updateStore = (fn: (draft: IStore) => void) => {
+  return fn(proxyStore);
+};
+
+export const useStore = (): Snapshot<IStore> => {
+  return useSnapshot(proxyStore);
+};
+
 export function useContext(): ContextType {
   const store = useSnapshot(proxyStore);
   return {
     store,
-    updateStore: (fn: (draft: IStore) => void) => {
-      return fn(proxyStore);
-    },
+    updateStore,
   };
 }
