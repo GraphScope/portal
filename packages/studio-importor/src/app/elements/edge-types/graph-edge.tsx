@@ -1,6 +1,7 @@
 import React from 'react';
 import { useCallback } from 'react';
-import { useStore, getBezierPath, getStraightPath, EdgeLabelRenderer } from 'reactflow';
+import { useStore, EdgeLabelRenderer } from 'reactflow';
+import type { EdgeProps } from 'reactflow';
 
 import { getEdgeParams } from './utils';
 import { useContext } from '../../useContext';
@@ -114,7 +115,8 @@ const getBezierPointsWithOffsetsCorrected = ({ sourceX, sourceY, targetX, target
   return { P1: { x: p1X, y: p1Y }, P2: { x: p2X, y: p2Y }, controlPoint };
 };
 
-function GraphEdge({ id, source, target, markerEnd, style, data }) {
+function GraphEdge(props: EdgeProps) {
+  const { id, source, target, style, data } = props;
   const { _offset = 0 } = data || { _offset: 0 };
   const { label } = data || {};
 
