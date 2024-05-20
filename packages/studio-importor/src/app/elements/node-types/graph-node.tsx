@@ -7,7 +7,7 @@ const style = {
   background: '#fff',
   border: '1px solid #ddd',
 };
-import Arrow from './arrow';
+
 import { useContext } from '../../useContext';
 const styles = {
   handler: {
@@ -28,7 +28,7 @@ const GraphNode = (props: NodeProps) => {
   const isSelected = id === currentId;
   const [state, updateState] = useState({
     isHover: false,
-    label: id,
+    label: data.label || id,
     contentEditable: false,
   });
 
