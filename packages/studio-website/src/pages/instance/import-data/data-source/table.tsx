@@ -23,9 +23,12 @@ const styles: React.CSSProperties = {
   fontWeight: 400,
 };
 const MappingFields = (props: any) => {
-  const { dataFields, value, onChange, isUpload } = props;
+  const { dataFields, value, onChange, filelocation, isUpload } = props;
+  /** filelocation没值 默认不是上传*/
+  const isDefault = !filelocation ? false : isUpload;
   /** 上传选择 or 输入数字 */
-  if (!isUpload) {
+  const isInputNumberShow = isDefault === undefined ? (typeof value === 'number' ? true : false) : !isDefault;
+  if (isInputNumberShow) {
     return (
       <InputNumber
         size="small"
