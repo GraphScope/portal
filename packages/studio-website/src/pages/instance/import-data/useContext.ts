@@ -10,6 +10,8 @@ export interface Extra {
   isBind: boolean;
   dataFields?: string[];
   delimiter?: string;
+  /** 是否为上传inputs */
+  isUpload?: boolean;
 }
 export type BindingNode = TransformedNode & Extra;
 export type BindingEdge = TransformedEdge & Extra;

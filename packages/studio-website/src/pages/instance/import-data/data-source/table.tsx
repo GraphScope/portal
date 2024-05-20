@@ -13,6 +13,7 @@ type TableListProps = {
   tabledata: DataType[];
   dataFields?: string[];
   filelocation: string;
+  isUpload?: boolean;
   onChange(val: DataType[]): void;
 };
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
@@ -22,8 +23,9 @@ const styles: React.CSSProperties = {
   fontWeight: 400,
 };
 const MappingFields = (props: any) => {
-  const { dataFields, value, onChange, filelocation } = props;
-  if (typeof value === 'number' || !filelocation) {
+  const { dataFields, value, onChange, isUpload } = props;
+  /** 上传选择 or 输入数字 */
+  if (!isUpload) {
     return (
       <InputNumber
         size="small"
@@ -58,7 +60,7 @@ const MappingFields = (props: any) => {
 };
 
 const TableList: React.FC<TableListProps> = props => {
-  const { tabledata, onChange, dataFields, filelocation } = props;
+  const { tabledata, onChange, dataFields, filelocation, isUpload } = props;
   const title = dataFields ? 'Mapping Fields' : 'Column';
   const handleChangeIndex = (value: any, all: any) => {
     const { key } = all;
@@ -118,6 +120,7 @@ const TableList: React.FC<TableListProps> = props => {
       render(token, all) {
         return (
           <MappingFields
+            isUpload={isUpload}
             dataFields={dataFields}
             value={token}
             filelocation={filelocation}

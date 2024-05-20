@@ -65,14 +65,11 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = props => {
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const engineType = window.GS_ENGINE_TYPE;
   const graph_id = searchParamOf('graph_id') || '';
-  console.log(dataMap);
-
   const handleImport = async () => {
     //@ts-ignore
     const options = transformDataMapToOptions(dataMap);
     const schema = transformImportOptionsToSchemaMapping(options);
     // const params = submitParams(schema);
-    console.log(schema);
 
     const jobId = await createDataloadingJob(graph_id, schema);
     if (jobId) {
@@ -90,7 +87,8 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = props => {
   //@ts-ignore
   const { nodeBind, nodeCount, edgeBind, edgeCount } = count(dataMap);
 
-  const isBind = nodeBind === nodeCount && nodeCount > 0 && edgeBind === edgeCount && edgeCount > 0;
+  // const isBind = nodeBind === nodeCount && nodeCount > 0 && edgeBind === edgeCount && edgeCount > 0;
+  const isBind = nodeBind > 0 || edgeBind > 0;
 
   const handleChangeTabs = (val: string) => {
     updateStore(draft => {

@@ -47,7 +47,7 @@ export type InstaceCardType = {
 };
 
 const STATUS_COLOR_MAP: Record<string, string> = {
-  stopped: 'red',
+  Stopped: 'red',
   Running: 'green',
   undefined: 'green',
 };
@@ -165,11 +165,11 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   const handleClick = async (id: string, status: string) => {
     updateIsLoading(true);
     /** running->stopService */
-    if (status === 'running') {
+    if (status === 'Running') {
       await stopService(id);
     }
     /** stoped->startService */
-    if (status === 'stopped') {
+    if (status === 'Stopped') {
       await startService(id);
     }
     updateIsLoading(false);
@@ -177,11 +177,11 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   };
   /** Start|Pause 提示 */
   let tooltipContext;
-  if (status === 'stopped') tooltipContext = <FormattedMessage id="Start graph service" />;
+  if (status === 'Stopped') tooltipContext = <FormattedMessage id="Start graph service" />;
   if (status === 'Running') tooltipContext = <FormattedMessage id="Pause graph service" />;
   /** Start|Pause icon */
   let btnIcon;
-  if (status === 'stopped') btnIcon = <PlayCircleOutlined />;
+  if (status === 'Stopped') btnIcon = <PlayCircleOutlined />;
   if (status === 'Running') btnIcon = <PauseCircleOutlined />;
   /** 按钮中英文宽度 */
   let btnWidth = locale === 'zh-CN' ? '115px' : '150px';
@@ -268,7 +268,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
             type="primary"
             style={{ width: btnWidth, textAlign: 'left' }}
             icon={<FontAwesomeIcon icon={faMagnifyingGlass} style={{ marginRight: '8px' }} />}
-            disabled={status === 'stopped' ? true : false}
+            disabled={status === 'Stopped' ? true : false}
             onClick={() => history.push(`/query-app#?graph_name=${name}`)}
           >
             <FormattedMessage id="Query graph" />

@@ -51,7 +51,7 @@ export const listGraphs = async () => {
     const { schema, store_type, stored_procedures, schema_update_time, data_update_time, creation_time, id, name } =
       item;
     const { graph } = status;
-    const isMatch = graph.id === id;
+    const isMatch = graph?.id === id;
     const { vertex_types, edge_types, vertices, edges } = schema;
     return {
       id,
@@ -63,7 +63,7 @@ export const listGraphs = async () => {
       updatetime: schema_update_time,
       importtime: data_update_time,
       server: isMatch ? status.sdk_endpoints?.cypher : '',
-      status: isMatch ? status.status : 'stopped',
+      status: isMatch ? status.status : 'Stopped',
       hqps: isMatch ? status.sdk_endpoints?.hqps : '',
       schema: {
         vertices: (vertices && vertices.length) || (vertex_types && vertex_types.length),

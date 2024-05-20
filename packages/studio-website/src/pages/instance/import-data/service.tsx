@@ -78,23 +78,7 @@ export const getSchema = async (graph_id: string) => {
   }
   return schema;
 };
-// export const getDataloadingConfig = async (graph_id: string, schema: any) => {
-//   const schemaMapping = await JobApiFactory(undefined, location.origin)
-//     .getDataloadingJobConfig(graph_id!)
-//     .then(res => res.data)
-//     .catch(error => {
-//       notification('error', error);
-//       return {};
-//     });
-//   console.log(schemaMapping);
 
-//   if (JSON.stringify(schemaMapping) === '{}') {
-//     //@ts-ignore
-//     return transformSchemaToImportOptions(schema);
-//   }
-//   //@ts-ignore
-//   return transformMappingSchemaToImportOptions(schemaMapping, schema);
-// };
 /** getDatasourceById 获取数据源信息 */
 export const getDataloadingConfig = async (graph_id: string, schema: any) => {
   const schemaMapping = await DataSourceApiFactory(undefined, location.origin)
