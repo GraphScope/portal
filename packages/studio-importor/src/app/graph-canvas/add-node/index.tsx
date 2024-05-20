@@ -33,11 +33,7 @@ const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
     });
   };
 
-  return (
-    <Button onClick={handleAddVertex} style={style}>
-      <AddNodeIcon />
-    </Button>
-  );
+  return <Button onClick={handleAddVertex} style={style} type="text" icon={<AddNodeIcon />}></Button>;
 };
 
 export default AddNode;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal, Segmented } from 'antd';
-
+import { UngroupOutlined } from '@ant-design/icons';
 interface IImportSchemaProps {
   style?: React.CSSProperties;
 }
@@ -25,9 +25,7 @@ const ImportSchema: React.FunctionComponent<IImportSchemaProps> = props => {
   };
   return (
     <div>
-      <Button onClick={handleClick} style={style}>
-        Import Schema
-      </Button>
+      <Button type="text" onClick={handleClick} style={style} icon={<UngroupOutlined />}></Button>
       <Modal title="import schema" open={visible} onOk={handleClose} onCancel={handleClose}>
         <Segmented options={['CSV', 'Database', 'GPT', 'Configaration']}></Segmented>
         <div>....</div>

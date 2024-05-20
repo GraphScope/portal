@@ -2,10 +2,11 @@ import { Button, Segmented } from 'antd';
 import * as React from 'react';
 import { useContext } from '../useContext';
 import { useReactFlow } from 'reactflow';
+import { ApartmentOutlined, BranchesOutlined } from '@ant-design/icons';
 
 import { transEdge2Entity, transformEdges, transformNodes, layout, transformGraphNodes } from '../elements/index';
 interface IModeSwitchProps {
-  style: React.CSSProperties;
+  style?: React.CSSProperties;
 }
 
 export const getBBox = (nodes: { position: { x: number; y: number } }[]) => {
@@ -62,10 +63,18 @@ const ModeSwitch: React.FunctionComponent<IModeSwitchProps> = props => {
       }
     });
   };
-
+  const icon = displayMode === 'graph' ? <ApartmentOutlined /> : <BranchesOutlined />;
   return (
     <div style={style}>
-      <Segmented options={['table', 'graph']} value={displayMode} onChange={handleChange} />
+      <Button
+        type="text"
+        icon={icon}
+        onClick={() => {
+          const value = displayMode === 'graph' ? 'table' : 'graph';
+          handleChange(value);
+        }}
+      ></Button>
+      {/* <Segmented options={['table', 'graph']} value={displayMode} onChange={handleChange} /> */}
     </div>
   );
 };

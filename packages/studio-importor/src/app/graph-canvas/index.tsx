@@ -48,7 +48,6 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           onDoubleClick={onDoubleClick}
         >
           <ArrowMarker selectedColor={theme.primaryColor} />
-          <AddNode style={{ position: 'absolute', top: '70px', left: '0px', zIndex: 999 }} />
           <Controls />
           <Background />
           {isEmpty && <EmptyCanvas />}

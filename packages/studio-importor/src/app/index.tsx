@@ -6,7 +6,8 @@ import PropertiesEditor from './properties-editor';
 import ImportSchema from './import-schema';
 import ModeSwitch from './mode-switch';
 import { ReactFlowProvider } from 'reactflow';
-
+import Toolbar from '../components/Toolbar';
+import AddNode from './graph-canvas/add-node';
 import 'reactflow/dist/style.css';
 
 interface ImportAppProps {}
@@ -17,8 +18,11 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
       <Row gutter={[16, 16]} style={{ height: '100%' }}>
         <Col span={16}>
           <ReactFlowProvider>
-            <ImportSchema style={{ position: 'absolute', left: '0px', top: '40px', zIndex: 999 }} />
-            <ModeSwitch style={{ position: 'absolute', left: '0px', top: '100px', zIndex: 999 }} />
+            <Toolbar>
+              <AddNode style={{}} />
+              <ImportSchema />
+              <ModeSwitch />
+            </Toolbar>
             <GraphCanvas />
           </ReactFlowProvider>
         </Col>
