@@ -69,6 +69,7 @@ const GraphNode = (props: NodeProps) => {
       draft.currentId = id;
     });
   };
+
   return (
     <div
       data-nodeid={id}

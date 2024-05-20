@@ -33,7 +33,7 @@ const PopoverList = ({ data }) => {
 const TableNode = (props: NodeProps) => {
   const { id, data } = props;
   const { _fromEdge } = data || {};
-  console.log('props', data);
+
   // const properties = Object.entries(data.properties);
   const handleStyle = _fromEdge
     ? {

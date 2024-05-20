@@ -54,7 +54,7 @@ const styles: Record<string, React.CSSProperties> = {
 const TableCard: React.FunctionComponent<ITableCardProps> = props => {
   const { data, _fromEdge } = props;
   const { label } = data;
-  console.log('data', data);
+
   const tableStyle = _fromEdge
     ? {
         border: '1px dashed #000',

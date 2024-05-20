@@ -23,7 +23,6 @@ const getControlPoint = ({ sourceX, sourceY, targetX, targetY, offset }) => {
   // 为了简化并考虑到各种方向，我们将offset应用到与目标点连线的垂直方向上
   const controlOffsetX = -unitDY * offset; // 偏移控制点到目标连线的垂直左侧或右侧
   const controlOffsetY = unitDX * offset; // 根据dx和dy的正负自动适应上下
-  console.log('controlOffsetX,controlOffsetY', controlOffsetX, controlOffsetY);
 
   // 计算控制点坐标
   const controlX = sourceX + dx / 2 + controlOffsetX;
@@ -109,7 +108,7 @@ const getBezierPointsWithOffsetsCorrected = ({ sourceX, sourceY, targetX, target
 function GraphEdge({ id, source, target, markerEnd, style, data }) {
   const { _offset = 0 } = data || { _offset: 0 };
   const { label } = data || {};
-  console.log('markend', markerEnd);
+
   const sourceNode = useStore(useCallback(store => store.nodeInternals.get(source), [source]));
   const targetNode = useStore(useCallback(store => store.nodeInternals.get(target), [target]));
   const { store, updateStore } = useContext();
@@ -168,7 +167,7 @@ function GraphEdge({ id, source, target, markerEnd, style, data }) {
 
   /** 计算标签和标签背景的旋转角度 */
   let degree = calculateDagree({ x: sourceX, y: sourceY }, { x: targetX, y: targetY });
-  console.log('degree', label);
+
   return (
     <>
       <path

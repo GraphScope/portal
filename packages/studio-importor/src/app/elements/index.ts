@@ -30,8 +30,6 @@ export function transformGraphNodes(nodes, displayMode) {
       GRAPH_POSITION_MAP[id] = position;
     }
 
-    console.log('GRAPH_POSITION_MAP', id, GRAPH_POSITION_MAP);
-
     const prevPosition = GRAPH_POSITION_MAP[id] ||
       dagreGraph.node(item.id) || { x: Math.random() * 500, y: Math.random() * 500 };
 
@@ -92,14 +90,6 @@ export function transformEdges(_edges, displayMode) {
       type: displayMode === 'table' ? 'smoothstep' : 'graph-edge',
       // sourceHandle: _isRevert ? 'right-revert' : 'right',
       // targetHandle: _isRevert ? 'left-revert' : 'left',
-      markerEnd: {
-        type: 'graph-edge-arrow',
-        width: 20,
-        height: 20,
-        refX: 9,
-        refY: 3,
-        color: '#FF0072',
-      },
     };
   });
 }
