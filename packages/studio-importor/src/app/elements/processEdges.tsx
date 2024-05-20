@@ -16,11 +16,15 @@ export interface IUserEdge {
   target: string;
   properties: string;
   data: Record<string, any>;
-  _type?: string;
-  _offset?: string;
-  _isLoop: boolean;
-  _isRevert?: boolean;
-  _isPoly?: boolean;
+  _extra?: {
+    type?: string;
+    offset?: string;
+    isLoop: boolean;
+    isRevert?: boolean;
+    isPoly?: boolean;
+    index?: number;
+    count?: number;
+  };
 }
 /**
  *
@@ -99,15 +103,28 @@ const processEdges = (
         }
         newEdges.push({
           ...edge,
-          _type: type,
-          _isPoly: true,
-          _isLoop: isLoop,
-          _offset: offset,
-          _isRevert: isRevert,
+          _extra: {
+            count: edges.length,
+            index: index,
+            type: type,
+            isPoly: true,
+            isLoop: isLoop,
+            offset: offset,
+            isRevert: isRevert,
+          },
         });
       });
     } else {
-      newEdges.push(edges[0]);
+      const [edge] = edges;
+      const { source, target } = edge;
+      newEdges.push({
+        ...edge,
+        _extra: {
+          count: 1,
+          index: 0,
+          isLoop: source === target,
+        },
+      });
     }
   });
 
