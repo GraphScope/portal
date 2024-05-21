@@ -83,6 +83,9 @@ function isEmpty(column: { name: string; index: number }, index: number) {
   if (column.name === '') {
     return column.index;
   }
+  if (!Object.hasOwn(column, 'name')) {
+    return column.index;
+  }
   return `${index}_${column.name}`;
 }
 /** token */
@@ -349,7 +352,6 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
         const num = parseFloat(token as string);
         const isNumber = !isNaN(num);
         const colmunName = typeof token === 'string' ? token.split('_')[1] : token;
-        console.log(token);
         return {
           column: {
             index: typeof token === 'number' ? token : 0,
