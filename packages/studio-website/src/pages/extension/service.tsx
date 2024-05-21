@@ -1,5 +1,5 @@
 import { ProcedureApiFactory, DeploymentApiFactory, GraphApiFactory } from '@graphscope/studio-server';
-import type { Procedure } from '@graphscope/studio-server';
+import type { CreateProcedureRequest, UpdateProcedureRequest } from '@graphscope/studio-server';
 import { notification } from '@/pages/utils';
 /** 获取插件列表 */
 export const listProcedures = async () => {
@@ -12,12 +12,13 @@ export const listProcedures = async () => {
       return [];
     });
   const info = message.reduce((pre, cur) => {
+    //@ts-ignore
     return pre.concat(cur.stored_procedures);
   }, []);
   return info;
 };
 /** 创建插件 */
-export const createProcedure = async (graphId: string, procedure: Procedure) => {
+export const createProcedure = async (graphId: string, procedure: CreateProcedureRequest) => {
   return await ProcedureApiFactory(undefined, location.origin)
     .createProcedure(graphId, procedure)
     .then(res => {
@@ -31,9 +32,9 @@ export const createProcedure = async (graphId: string, procedure: Procedure) => 
     });
 };
 /** 删除插件 */
-export const deleteProcedure = async (graph_name: string, procedureName: string) => {
+export const deleteProcedure = async (graphId: string, procedureName: string) => {
   return await ProcedureApiFactory(undefined, location.origin)
-    .deleteProcedureById(graph_name, procedureName)
+    .deleteProcedureById(graphId, procedureName)
     .then(res => {
       if (res.status === 200) {
         return res.data;
@@ -45,9 +46,9 @@ export const deleteProcedure = async (graph_name: string, procedureName: string)
     });
 };
 /** 修改插件 */
-export const updateProcedure = async (graph_name: string, procedureName: string, procedure: Procedure) => {
+export const updateProcedure = async (graphId: string, procedureId: string, procedure: UpdateProcedureRequest) => {
   return await ProcedureApiFactory(undefined, location.origin)
-    .updateProcedureById(graph_name, procedureName, procedure)
+    .updateProcedureById(graphId, procedureId, procedure)
     .then(res => {
       if (res.status === 200) {
         return res.data;
@@ -59,9 +60,9 @@ export const updateProcedure = async (graph_name: string, procedureName: string,
     });
 };
 /** 获取某条插件数据 */
-export const getProcedure = async (graphId: string, procedure_id: string) => {
+export const getProcedure = async (graphId: string, procedureId: string) => {
   return await ProcedureApiFactory(undefined, location.origin)
-    .getProcedureById(graphId, procedure_id)
+    .getProcedureById(graphId, procedureId)
     .then(res => {
       if (res.status === 200) {
         return res.data;

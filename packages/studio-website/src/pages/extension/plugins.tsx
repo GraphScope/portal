@@ -38,8 +38,8 @@ const Plugins: React.FC = () => {
   }, []);
   /** 删除插件 */
   const deleteExtension = useCallback(async (all: { id: string; bound_graph: string }) => {
-    const { bound_graph, id } = all;
-    const res = await deleteProcedure(bound_graph, id);
+    const { bound_graph: graph_id, id } = all;
+    const res = await deleteProcedure(graph_id, id);
     message.success(res);
     await getPlugins();
   }, []);
