@@ -22,6 +22,15 @@
     "build:esm:watch": "rimraf ./esm && tsc --module ESNext --outDir es --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "dependencies": {
+    "uuidv4": "^6.2.13",
+    "dagre": "latest",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "reactflow": "latest",
+    "react-intl": "^6.6.1",
+    "valtio": "^1.12.1"
+  },
   "author": "",
   "license": "ISC"
 }

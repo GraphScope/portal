@@ -14,6 +14,8 @@
     "lint": "umi lint"
   },
   "dependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "js-yaml": "^4.1.0",
     "localforage": "^1.10.0",
     "@ant-design/icons": "^5.2.6",
@@ -38,8 +40,8 @@
     "@umijs/lint": "latest",
     "@types/js-yaml": "^4.0.9",
     "@types/lodash": "^4.14.202",
-    "@types/react": "^18.2.45",
-    "@types/react-dom": "^18.2.18",
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.0",
     "@types/uuid": "^9.0.7",
     "react-intl": "^6.6.1",
     "typescript": "^5.3.3"
