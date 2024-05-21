@@ -67,7 +67,7 @@ function GraphEdge(props: EdgeProps) {
         className="react-flow__edge-path"
         d={edgePath}
         markerEnd={isSelected ? 'url(#arrow-selected)' : 'url(#arrow)'}
-        style={{ ...style, stroke: isSelected ? theme.primaryColor : '#ddd', strokeWidth: isSelected ? '2px' : '1px' }}
+        style={{ ...style, stroke: isSelected ? theme.primaryColor : '#000', strokeWidth: isSelected ? '2px' : '1px' }}
       />
       <Label
         id={id}
