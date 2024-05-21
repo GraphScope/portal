@@ -26,7 +26,7 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
       const match = draft.edges.find(edge => edge.id === id);
       if (match) {
         //@ts-ignore
-        match.label = value;
+        match.data.label = value;
       }
     });
   };

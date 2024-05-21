@@ -13,7 +13,7 @@ const Empty: React.FunctionComponent<IEmptyProps> = props => {
     <div
       style={{
         fontSize: '14px',
-        height: '100%',
+        height: '80%',
         width: '100%',
         display: 'flex',
         justifyContent: 'center',

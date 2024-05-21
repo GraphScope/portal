@@ -15,7 +15,7 @@ const Toolbar: React.FunctionComponent<IToolbarProps> = props => {
         flexDirection: 'column',
         position: 'absolute',
         top: '0px',
-        left: '0px',
+        left: '12px',
         zIndex: 999,
         padding: '6px 4px',
         borderRadius: '4px',

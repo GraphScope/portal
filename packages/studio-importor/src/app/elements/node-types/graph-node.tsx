@@ -60,7 +60,7 @@ const GraphNode = (props: NodeProps) => {
       const match = draft.nodes.find(node => node.id === id);
       if (match) {
         //@ts-ignore
-        match.label = value;
+        match.data.label = value;
       }
     });
   };

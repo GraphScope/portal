@@ -5,12 +5,9 @@ interface ISchemaPageProps {}
 
 const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
   return (
-    <Section
-      title="Schema"
-      desc="Managing long-running tasks, such as data importing, analytic jobs, and complex queries."
-    >
+    <div style={{ padding: '12px', height: '100%' }}>
       <ImportApp />
-    </Section>
+    </div>
   );
 };
 
