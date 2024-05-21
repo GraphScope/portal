@@ -10,6 +10,8 @@ export interface Extra {
   isBind: boolean;
   dataFields?: string[];
   delimiter?: string;
+  /** 是否为上传inputs */
+  isUpload?: boolean;
 }
 export type BindingNode = TransformedNode & Extra;
 export type BindingEdge = TransformedEdge & Extra;
@@ -21,6 +23,7 @@ export type IStore = {
   edges: BindingEdge[];
   isReady: boolean;
   schema: any;
+  dataMap: any;
 };
 
 export const initialStore: IStore = {
@@ -37,6 +40,7 @@ export const initialStore: IStore = {
     nodes: [],
     edges: [],
   },
+  dataMap: {},
 };
 export const initialDataMap: Record<string, BindingNode | BindingEdge> = {};
 

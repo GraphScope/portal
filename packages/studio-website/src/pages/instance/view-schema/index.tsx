@@ -17,9 +17,13 @@ const ViewSchema: React.FunctionComponent<ICreateGraph> = () => {
   });
 
   const graphName = searchParamOf('graph_name') || '';
-
+  const graph_id = searchParamOf('graph_id') || '';
+  const options = {
+    graphName,
+    graph_id,
+  };
   React.useEffect(() => {
-    getSchema(graphName).then(res => {
+    getSchema(graph_id).then(res => {
       //@ts-ignore
       const { nodes, edges } = res;
       updateState(preState => {
@@ -44,9 +48,9 @@ const ViewSchema: React.FunctionComponent<ICreateGraph> = () => {
     );
   }
   if (isEmpty) {
-    return <CreateInstance mode="create" nodeList={nodes} edgeList={edges} graphName={graphName} />;
+    return <CreateInstance mode="create" nodeList={nodes} edgeList={edges} {...options} />;
   }
-  return <CreateInstance mode="view" nodeList={nodes} edgeList={edges} graphName={graphName} />;
+  return <CreateInstance mode="view" nodeList={nodes} edgeList={edges} {...options} />;
 };
 
 export default ViewSchema;

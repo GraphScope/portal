@@ -1,6 +1,6 @@
-import type { VertexType, GrootSchema } from '@graphscope/studio-server';
+import type { VertexType } from '@graphscope/studio-server';
 import { DeepRequired, TransformedSchema, Properties } from './schema';
-import { v4 as uuidv4 } from 'uuid';
+import { handleType } from './schema';
 export interface TransformedNode {
   /** 节点类型 */
   label: string;
@@ -13,66 +13,6 @@ export interface TransformedNodeOrEdges {
   label: string;
   properties: { id: string; name: string; type: string; is_primary_key: boolean }[];
   relations: { src_label: string; dst_label: string }[];
-}
-export function transformGrootSchemaToOptions(schema: GrootSchema | undefined): TransformedSchema {
-  if (!schema) {
-    return {
-      nodes: [],
-      edges: [],
-    };
-  }
-  const nodeMap: Record<string, string> = {};
-  //@ts-ignore
-  const nodes = schema.vertices.map((item: TransformedNodeOrEdges) => {
-    const { properties, label, ...others } = item;
-    const key = uuidv4();
-    nodeMap[label] = key;
-    return {
-      ...others,
-      label,
-      key,
-      properties: properties.map(p => {
-        const { id, name, type, is_primary_key } = p;
-        return {
-          name,
-          type,
-          primaryKey: is_primary_key,
-          disable: false,
-          id,
-          token: '',
-        };
-      }),
-    };
-  });
-  //@ts-ignore
-  const edges = schema.edges.map((item: TransformedNodeOrEdges) => {
-    const { label, properties, relations, ...others } = item;
-    const key = uuidv4();
-    const { src_label, dst_label } = relations[0];
-    return {
-      ...others,
-      label,
-      key,
-      source: nodeMap[src_label],
-      target: nodeMap[dst_label],
-      properties: properties.map(p => {
-        const { id, name, type, is_primary_key } = p;
-        return {
-          name,
-          type,
-          primaryKey: is_primary_key,
-          disable: false,
-          id,
-          token: '',
-        };
-      }),
-    };
-  });
-
-  return {
-    nodes,
-    edges,
-  };
 }
 
 /**
@@ -211,9 +151,7 @@ export function transformGrootCreateVertexToOptions(
       }
       propertyMap.set(item.name, {
         property_name: name,
-        property_type: {
-          primitive_type: type,
-        },
+        property_type: handleType(type),
       });
     });
   }
@@ -245,9 +183,7 @@ export function transformGrootCreateEdgeToOptions(
       const { name, type } = item;
       propertyMap.set(item.name, {
         property_name: name,
-        property_type: {
-          primitive_type: type,
-        },
+        property_type: handleType(type),
       });
     });
   }

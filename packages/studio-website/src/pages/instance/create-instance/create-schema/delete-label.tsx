@@ -3,6 +3,7 @@ import { Button, Popconfirm } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useContext } from '../useContext';
 import { deleteVertexOrEdge } from './service';
+import { searchParamOf } from '@/components/utils/index';
 const { GS_ENGINE_TYPE } = window;
 
 const DeleteLabel: FunctionComponent = () => {
@@ -29,7 +30,8 @@ const DeleteLabel: FunctionComponent = () => {
     let isDelete = false;
     /** isDraft===true 新建 */
     if (!isDraft && GS_ENGINE_TYPE === 'groot') {
-      const res = await deleteVertexOrEdge(currentType, graphName, { typeName, nodes: nodeList, edges: options });
+      const graph_id = searchParamOf('graph_id') || '';
+      const res = await deleteVertexOrEdge(currentType, graph_id, { typeName, nodes: nodeList, edges: options });
       isDelete = (res && res[0].status === 500) || false;
     }
 

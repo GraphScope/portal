@@ -78,25 +78,37 @@ const loadingdataFields = (type: string, properties: any, mapping?: VertexMappin
     })
     .map((V: { token: string }) => (typeof V.token === 'string' ? V.token.split('_')[1] : V.token));
 };
+/** token中name 是否为空 */
+function isEmpty(column: { name: string; index: number }, index: number) {
+  if (column.name === '') {
+    return column.index;
+  }
+  if (!Object.hasOwn(column, 'name')) {
+    return column.index;
+  }
+  return `${index}_${column.name}`;
+}
 /** token */
-function mappingName(mapping: any, name: string, index: number): string {
+function mappingName(mapping: any, name: string, index: number): string | number {
   let token = '';
   if (mapping) {
     const isSource = name.startsWith('#source');
     const isTarget = name.startsWith('#target');
+
     let match;
     if (isSource) {
-      match = mapping && mapping.source_vertex_mappings[0].column.name;
+      // match = mapping && mapping.source_vertex_mappings[0].column.name;
+      match = mapping && isEmpty(mapping.source_vertex_mappings[0].column, index);
     } else if (isTarget) {
-      match = mapping && mapping.destination_vertex_mappings[0].column.name;
+      match = mapping && isEmpty(mapping.destination_vertex_mappings[0].column, index);
     } else {
-      match = mapping && mapping.properties_mappings[name].name;
+      match = mapping && isEmpty(mapping.properties_mappings[name], index);
     }
     if (match) {
       token = match || '';
     }
   }
-  return `${index}_${token}`;
+  return token;
 }
 /**
  * 将后端标准的 MappingSchema 和 GrahSchema 转化为 Importor 需要的 Options
@@ -116,6 +128,7 @@ export function transformMappingSchemaToImportOptions(
   const { nodes, edges } = schemaOptions;
   const { loading_config, vertex_mappings, edge_mappings } = schemaMapping;
   // const { type, metadata } = loading_config?.format || { type: 'csv' };
+
   const { type, delimiter } = loadingConfig(loading_config);
   const label_mappings: Record<string, VertexMapping | EdgeMapping> = {};
   /** 先将后端数据或者yaml返回的mapping数据做一次Map存储，方便与后续的schema整合取数 */
@@ -341,8 +354,9 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
         const colmunName = typeof token === 'string' ? token.split('_')[1] : token;
         return {
           column: {
-            index,
-            name: isNumber ? colmunName : token,
+            index: typeof token === 'number' ? token : 0,
+            // name: isNumber ? colmunName : token,
+            name: typeof token === 'number' ? '' : colmunName,
           },
           property: name,
         };
@@ -366,24 +380,26 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
       if (isSource) {
         source_vertex_mappings.push({
           column: {
-            index: 0,
+            index: typeof token === 'number' ? token : 0,
             // name: NODE_PRIMARY_MAP[source],
-            name: isNumber ? '' : colmunName,
+            name: typeof token === 'number' ? '' : colmunName,
           },
+          property: name,
         });
       } else if (isTarget) {
         destination_vertex_mappings.push({
           column: {
-            index: 1,
+            index: typeof token === 'number' ? token : 0,
             // name: NODE_PRIMARY_MAP[target],
-            name: isNumber ? '' : colmunName,
+            name: typeof token === 'number' ? '' : colmunName,
           },
+          property: name,
         });
       } else {
         column_mappings.push({
           column: {
-            index: pIdx, //isNumber ? num + 2 : 0,
-            name: isNumber ? '' : colmunName,
+            index: typeof token === 'number' ? token : 0, //isNumber ? num + 2 : 0,
+            name: typeof token === 'number' ? '' : colmunName,
           },
           property: name,
         });

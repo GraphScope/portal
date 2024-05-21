@@ -26,6 +26,8 @@ const Plugins: React.FC = () => {
   /** 获取插件列表数据 */
   const getPlugins = useCallback(async () => {
     const res = await listProcedures();
+    console.log(res);
+
     //@ts-ignore
     updateState(preset => {
       return {
@@ -35,9 +37,9 @@ const Plugins: React.FC = () => {
     });
   }, []);
   /** 删除插件 */
-  const deleteExtension = useCallback(async (all: { name: string; bound_graph: string }) => {
-    const { bound_graph, name } = all;
-    const res = await deleteProcedure(bound_graph, name);
+  const deleteExtension = useCallback(async (all: { id: string; bound_graph: string }) => {
+    const { bound_graph: graph_id, id } = all;
+    const res = await deleteProcedure(graph_id, id);
     message.success(res);
     await getPlugins();
   }, []);
@@ -68,14 +70,14 @@ const Plugins: React.FC = () => {
         key: 'actions',
         width: 60,
         render: (_: any, all: Item) => {
-          const { bound_graph, name } = all;
+          const { bound_graph, id } = all;
           return (
             <Space>
               <Button
                 size="small"
                 type="text"
                 onClick={() => {
-                  history.push(`/extension/edit#?graph_name=${bound_graph}&procedure_name=${name}`);
+                  history.push(`/extension/edit#?graph_id=${bound_graph}&procedure_id=${id}`);
                 }}
               >
                 <FontAwesomeIcon icon={faPenToSquare} />

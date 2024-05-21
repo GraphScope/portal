@@ -24,8 +24,8 @@ const TYPEOPTION = [
 
 const CreatePlugins: React.FC = () => {
   const [form] = Form.useForm();
-  const graph_name = searchParamOf('graph_name') || '';
-  const procedure_name = searchParamOf('procedure_name') || '';
+  const graph_id = searchParamOf('graph_id') || '';
+  const procedure_id = searchParamOf('procedure_id') || '';
 
   const [state, updateState] = useState<{
     editCode: string;
@@ -41,8 +41,8 @@ const CreatePlugins: React.FC = () => {
   const { mode } = store;
 
   /** 获取插件某条数据 */
-  const getProcedures = useCallback(async (bound_graph: string, procedure_name: string) => {
-    const res = await getProcedure(bound_graph, procedure_name);
+  const getProcedures = useCallback(async (graph_id: string, procedure_id: string) => {
+    const res = await getProcedure(graph_id, procedure_id);
     const { query } = res;
     form.setFieldsValue(res);
     updateState(preset => {
@@ -56,22 +56,23 @@ const CreatePlugins: React.FC = () => {
 
   /** 创建插件 */
   const handleSubmit = useCallback(async () => {
+    /** bound_graph 是 graph_ids */
     const { name, bound_graph, type, description } = form.getFieldsValue();
     console.log(editCode);
     const data = {
       name,
-      bound_graph,
+      // bound_graph,
       description,
       type,
       query: editCode,
-      enable: true,
-      runnable: true,
-      params: [],
-      returns: [],
+      // enable: true,
+      // runnable: true,
+      // params: [],
+      // returns: [],
     };
-    if (graph_name) {
+    if (graph_id) {
       /** 修改插件 */
-      await updateProcedure(bound_graph, name, data);
+      await updateProcedure(bound_graph, procedure_id, data);
     } else {
       /** 新建插件 */
       await createProcedure(bound_graph, data);
@@ -98,8 +99,8 @@ const CreatePlugins: React.FC = () => {
         };
       });
     });
-    if (graph_name && procedure_name) {
-      getProcedures(graph_name, procedure_name);
+    if (graph_id && procedure_id) {
+      getProcedures(graph_id, procedure_id);
     }
   }, []);
   return (

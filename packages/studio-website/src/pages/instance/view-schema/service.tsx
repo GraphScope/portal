@@ -1,30 +1,32 @@
-import { GraphApiFactory, LegacyApiFactory } from '@graphscope/studio-server';
+import { GraphApiFactory } from '@graphscope/studio-server';
 import { transformSchemaToOptions } from '@/components/utils/schema';
-import { transformGrootSchemaToOptions } from '@/components/utils/schema-groot';
+// import { transformGrootSchemaToOptions } from '@/components/utils/schema-groot';
 
-export const getSchema = async (graphName: string) => {
+export const getSchema = async (graph_id: string) => {
+  let graphs;
   if (window.GS_ENGINE_TYPE === 'interactive') {
-    const graphs = await GraphApiFactory(undefined, location.origin)
-      .getSchema(graphName)
+    graphs = await GraphApiFactory(undefined, location.origin)
+      .getGraphById(graph_id)
       .then(res => {
         if (res.status === 200) {
-          return res.data;
+          return res.data.schema;
         }
         return [];
       });
-    return transformSchemaToOptions(graphs as any, true);
+    // return transformSchemaToOptions(graphs as any, true);
   }
 
   if (window.GS_ENGINE_TYPE === 'groot') {
-    const graphs = await LegacyApiFactory(undefined, location.origin)
-      .getGrootSchema(graphName)
+    graphs = await GraphApiFactory(undefined, location.origin)
+      .getSchemaById(graph_id)
       .then(res => {
         if (res.status === 200) {
           return res.data;
         }
       });
-    console.log('graphs', graphs, transformGrootSchemaToOptions(graphs));
+    // console.log('graphs', graphs, transformGrootSchemaToOptions(graphs));
 
-    return transformGrootSchemaToOptions(graphs);
+    // return transformGrootSchemaToOptions(graphs);
   }
+  return transformSchemaToOptions(graphs as any, true);
 };

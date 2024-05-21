@@ -11,12 +11,11 @@ import { transformDataMapToOptions, transformImportOptionsToSchemaMapping } from
 type ISourceTitleProps = {
   type?: string;
 };
-export function submitParams(schema: any, graph_name: string) {
+export function submitParams(schema: any) {
   const FIRST_DATA = schema.vertex_mappings[0];
   //@ts-ignore
   const { delimiter, datatype } = FIRST_DATA;
   return {
-    graph: graph_name,
     loading_config: {
       data_source: {
         scheme: datatype === 'odps' ? 'odps' : 'file',
@@ -61,18 +60,18 @@ export function count(dataMap: BindingEdge | BindingNode) {
 }
 const SourceTitle: React.FunctionComponent<ISourceTitleProps> = props => {
   const { type } = props;
-  const { updateStore } = useContext();
+  const { store, updateStore } = useContext();
   const dataMap = useDataMap();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
   const engineType = window.GS_ENGINE_TYPE;
-  const graph_name = searchParamOf('graph_name') || '';
-
+  const graph_id = searchParamOf('graph_id') || '';
   const handleImport = async () => {
     //@ts-ignore
     const options = transformDataMapToOptions(dataMap);
     const schema = transformImportOptionsToSchemaMapping(options);
-    const params = submitParams(schema, graph_name);
-    const jobId = await createDataloadingJob(params as any);
+    // const params = submitParams(schema);
+
+    const jobId = await createDataloadingJob(graph_id, schema);
     if (jobId) {
       notification.success({
         message: 'Create DataImport Job Success',
@@ -83,16 +82,13 @@ const SourceTitle: React.FunctionComponent<ISourceTitleProps> = props => {
           </>
         ),
       });
-    } else {
-      notification.error({
-        message: 'Create DataImport Job Failed',
-      });
     }
   };
   //@ts-ignore
   const { nodeBind, nodeCount, edgeBind, edgeCount } = count(dataMap);
 
-  const isBind = nodeBind === nodeCount && nodeCount > 0 && edgeBind === edgeCount && edgeCount > 0;
+  // const isBind = nodeBind === nodeCount && nodeCount > 0 && edgeBind === edgeCount && edgeCount > 0;
+  const isBind = nodeBind > 0 || edgeBind > 0;
 
   const handleChangeTabs = (val: string) => {
     updateStore(draft => {

@@ -9,6 +9,7 @@ import { useContext } from '@/layouts/useContext';
 import { getPrimitiveTypes } from '../service';
 import { createVertexOrEdgeType } from './service';
 import { getSchema } from '../../view-schema/service';
+import { searchParamOf } from '@/components/utils/index';
 export type FieldType = {
   label?: string;
   source?: string;
@@ -100,6 +101,7 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   const [form] = Form.useForm();
   const { store } = useContext();
   const intl = useIntl();
+  const graph_id = searchParamOf('graph_id') || '';
   // const disabled = mode === 'view' && !data?.isDraft;
   let disabled = false;
   /** groot 根据 isDraft判断是否新建 */
@@ -178,9 +180,9 @@ const CreateSchema: React.FunctionComponent<SchemaType> = props => {
   /** groot 创建点/边  */
   const hangdleSubmit = () => {
     const property = cbRef.current || [];
-    createVertexOrEdgeType(currentType, graphName, nodeList, form.getFieldsValue(), property).then(res => {
+    createVertexOrEdgeType(currentType, graph_id, nodeList, form.getFieldsValue(), property).then(res => {
       if (res[0].status === 200) {
-        getSchema(graphName).then(data => {
+        getSchema(graph_id).then(data => {
           //@ts-ignore
           const { nodes, edges } = data;
           updateStore(draft => {

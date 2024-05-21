@@ -3,7 +3,7 @@ import { notification } from '@/pages/utils';
 import dayjs from 'dayjs';
 export type IJobType = {
   key?: string;
-  job_id: string;
+  id: string;
   type: string;
   status: string;
   start_time: string;

@@ -16,7 +16,7 @@ export const notification = (type: string, data: any) => {
   }
   if (type === 'error') {
     const { response, message } = data;
-    const body = response.data.split('response body:')[1];
+    const body = response.data.detail;
     notifications.error({ message, description: `${body}` });
   }
 };

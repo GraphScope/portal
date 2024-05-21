@@ -10,7 +10,7 @@ import TableList from './table';
 import { searchParamOf } from '@/components/utils';
 import { useContext } from '@/layouts/useContext';
 import { transformDataMapToScheduledImportOptions } from '@/components/utils/import';
-import { createGrootDataloadingJob, bindDatasource } from '../service';
+// import { createGrootDataloadingJob, bindDatasource } from '../service';
 
 const { useToken } = theme;
 interface IImportDataProps {
@@ -30,9 +30,10 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
   const dataMap = useDataMap();
   const {
     store: { currentType },
+    updateStore,
   } = useMap();
   const data = dataMap[id] as BindingNode & { isEidtProperty: boolean };
-  const { isBind, filelocation, isEidtProperty, datatype, label, properties, dataFields } = data;
+  const { isBind, filelocation, isEidtProperty, datatype, label, properties, dataFields, isUpload } = data;
 
   const { token } = useToken();
   /** 根据引擎的类型，进行部分UI的隐藏和展示 */
@@ -53,13 +54,15 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       draft[id].datatype = type;
     });
   };
-  /** 改变数据源地址 */
-  const onChangeValue = (value: string) => {
+
+  /** 改变数据源地址 isUpload判断是否为上传*/
+  const onChangeValue = (value: string, isUpload?: boolean) => {
     updateDataMap(draft => {
       draft[id].filelocation = value;
       draft[id].isBind = value !== '';
       //@ts-ignore
       draft[id].isEidtProperty = true;
+      draft[id].isUpload = isUpload;
     });
   };
   /** 聚焦到数据源的时候 */
@@ -95,17 +98,22 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       repeat,
     };
     /** 数据绑定 */
-    await bindDatasource(currentType, data, dataMap);
+    // await bindDatasource(currentType, data, dataMap);
     //@ts-ignore
-    await createGrootDataloadingJob(graph_name, params);
+    // await createGrootDataloadingJob(graph_name, params);
   };
   /** 删除文件 */
   const deleteFile = () => {
-    onChangeValue('');
+    onChangeValue('', false);
     onChangeDataFields();
   };
   /** 融合判断 是否编辑或主题 dark  */
   const primaryColor = mode !== 'defaultAlgorithm' || isEidtProperty;
+  React.useEffect(() => {
+    updateStore(draft => {
+      draft.dataMap = dataMap;
+    });
+  }, [dataMap]);
   return (
     <>
       <div>
@@ -173,7 +181,6 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
               <TableList
                 //@ts-ignore
                 tabledata={properties.map((item, index) => {
-                  debugger;
                   return {
                     ...item,
                     key: `${index}${item.id}`,
@@ -182,6 +189,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
                 onChange={onChangeTable}
                 dataFields={dataFields}
                 filelocation={filelocation}
+                isUpload={isUpload}
               />
             </Col>
             <Col span={24}>

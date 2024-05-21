@@ -90,6 +90,7 @@ export interface ICreateGraph {
   nodeList?: any;
   edgeList?: any;
   graphName: string;
+  graph_id: string;
 }
 
 const Steps: React.FunctionComponent<{ currentStep: number }> = () => {
@@ -108,6 +109,7 @@ const Steps: React.FunctionComponent<{ currentStep: number }> = () => {
 };
 
 const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
+  const { graph_id } = props;
   const { store, updateStore } = useContext();
   const { currentStep, createInstaseResult, storeType, nodeList, edgeList, graphName, mode } = store;
   useEffect(() => {
@@ -160,7 +162,7 @@ const CreateInstance: React.FunctionComponent<ICreateGraph> = props => {
   // createGraph
   const handleSubmit = () => {
     //@ts-ignore
-    createGraph(graphName, storeType, nodeList, edgeList)
+    createGraph(graph_id, graphName, storeType, nodeList, edgeList)
       .then(() => {
         /** 成功true */
         updateStore(draft => {

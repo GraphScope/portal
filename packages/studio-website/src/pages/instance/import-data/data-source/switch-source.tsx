@@ -6,7 +6,7 @@ interface ISwitchSourceProps {
   filelocation?: string;
   currentType?: string;
   onChangeType: (e: any) => void;
-  onChangeValue: (e: any) => void;
+  onChangeValue: (e: string, isUpload: boolean) => void;
   onChangeFocus: (e: any) => void;
   onChangeDataFields: (header?: { dataFields: string[]; delimiter: string }) => void;
 }
@@ -23,7 +23,7 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
             defaultValue={filelocation}
             placeholder={intl.formatMessage({ id: 'Please manually input the odps file location' })}
             onBlur={e => {
-              onChangeValue(e.target.value);
+              onChangeValue(e.target.value, false);
             }}
             onFocus={onChangeFocus}
           />

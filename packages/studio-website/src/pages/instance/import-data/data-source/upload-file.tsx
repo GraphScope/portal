@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import { uploadFile } from '../service';
 import { getDataFields } from '@/components/utils/getDataFields';
 type UploadFilesProps = {
-  onChange: (filelocation: string) => void;
+  onChange: (filelocation: string, isUpload: boolean) => void;
   value?: string;
   onChangeHeader: (header?: { dataFields: string[]; delimiter: string }) => void;
   handleChange?: (val: boolean) => void;
@@ -26,7 +26,7 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
         isLoading: true,
       };
     });
-    const filelocation = (await uploadFile(file as File)) || '';
+    const { file_path } = (await uploadFile(file as File)) || '';
     const headers = await getDataFields(file as File);
     updateState(preState => {
       return {
@@ -34,8 +34,7 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
         isLoading: false,
       };
     });
-
-    onChange(filelocation);
+    onChange(file_path, true);
     onChangeHeader(headers);
   };
   return (
