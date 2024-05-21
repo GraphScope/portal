@@ -10,7 +10,7 @@ import TableList from './table';
 import { searchParamOf } from '@/components/utils';
 import { useContext } from '@/layouts/useContext';
 import { transformDataMapToScheduledImportOptions } from '@/components/utils/import';
-import { createGrootDataloadingJob, bindDatasource } from '../service';
+// import { createGrootDataloadingJob, bindDatasource } from '../service';
 
 const { useToken } = theme;
 interface IImportDataProps {
@@ -98,9 +98,9 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
       repeat,
     };
     /** 数据绑定 */
-    await bindDatasource(currentType, data, dataMap);
+    // await bindDatasource(currentType, data, dataMap);
     //@ts-ignore
-    await createGrootDataloadingJob(graph_name, params);
+    // await createGrootDataloadingJob(graph_name, params);
   };
   /** 删除文件 */
   const deleteFile = () => {

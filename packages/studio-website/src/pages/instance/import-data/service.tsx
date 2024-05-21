@@ -2,22 +2,22 @@ import {
   GraphApiFactory,
   UtilsApiFactory,
   JobApiFactory,
-  LegacyApiFactory,
-  DatasourceApiFactory,
+  // LegacyApiFactory,
+  // DatasourceApiFactory,
   DataSourceApiFactory,
 } from '@graphscope/studio-server';
 import type {
   SchemaMapping,
-  GrootDataloadingJobConfig,
-  VertexDataSource,
-  EdgeDataSource,
+  // GrootDataloadingJobConfig,
+  // VertexDataSource,
+  // EdgeDataSource,
 } from '@graphscope/studio-server';
 import { notification } from '@/pages/utils';
 import {
   transformSchemaToImportOptions,
   transformMappingSchemaToImportOptions,
-  transformDataMapToGrootSchema,
-  transformImportOptionsToGrootSchemaMapping,
+  // transformDataMapToGrootSchema,
+  // transformImportOptionsToGrootSchemaMapping,
 } from '@/components/utils/import';
 
 /** upload file */
@@ -96,7 +96,9 @@ export const getDataloadingConfig = async (graph_id: string, schema: any) => {
       return {};
     });
   /** 上边两接口获取一条数据 */
+  //@ts-ignore
   schemaMapping.loading_config = loading_config;
+  //@ts-ignore
   const { edge_mappings, vertex_mappings } = schemaMapping;
   if (JSON.stringify(edge_mappings) === '[]' && JSON.stringify(vertex_mappings) === '[]') {
     return transformSchemaToImportOptions(schema);
@@ -105,57 +107,57 @@ export const getDataloadingConfig = async (graph_id: string, schema: any) => {
   return transformMappingSchemaToImportOptions(schemaMapping, schema);
 };
 
-export const createGrootDataloadingJob = async (
-  graph_name: string,
-  grootDataloadingJobConfig: GrootDataloadingJobConfig,
-) => {
-  const grootDataloading = await LegacyApiFactory(undefined, location.origin)
-    .createGrootDataloadingJob(graph_name!, grootDataloadingJobConfig)
-    .then(res => {
-      if (res.status === 200) {
-        res.data;
-      }
-    })
-    .catch(error => {
-      notification('error', error);
-      return {};
-    });
-  return grootDataloading;
-};
+// export const createGrootDataloadingJob = async (
+//   graph_name: string,
+//   grootDataloadingJobConfig: GrootDataloadingJobConfig,
+// ) => {
+//   const grootDataloading = await LegacyApiFactory(undefined, location.origin)
+//     .createGrootDataloadingJob(graph_name!, grootDataloadingJobConfig)
+//     .then(res => {
+//       if (res.status === 200) {
+//         res.data;
+//       }
+//     })
+//     .catch(error => {
+//       notification('error', error);
+//       return {};
+//     });
+//   return grootDataloading;
+// };
 /** groot 绑定点 */
-export const bindVertexDatasource = async (graphName: string, vertexDataSource: VertexDataSource) => {
-  return DatasourceApiFactory(undefined, location.origin)
-    .bindVertexDatasource(graphName, vertexDataSource)
-    .then(res => {
-      if (res.status === 200) {
-        return res.data;
-      }
-    })
-    .catch(error => {
-      notification('error', error);
-    });
-};
+// export const bindVertexDatasource = async (graphName: string, vertexDataSource: VertexDataSource) => {
+//   return DatasourceApiFactory(undefined, location.origin)
+//     .bindVertexDatasource(graphName, vertexDataSource)
+//     .then(res => {
+//       if (res.status === 200) {
+//         return res.data;
+//       }
+//     })
+//     .catch(error => {
+//       notification('error', error);
+//     });
+// };
 /** groot 绑定边 */
-export const bindEdgeDatasource = async (graphName: string, edgeDataSource: EdgeDataSource) => {
-  return DatasourceApiFactory(undefined, location.origin)
-    .bindEdgeDatasource(graphName, edgeDataSource)
-    .then(res => {
-      if (res.status === 200) {
-        return res.data;
-      }
-    })
-    .catch(error => {
-      notification('error', error);
-    });
-};
+// export const bindEdgeDatasource = async (graphName: string, edgeDataSource: EdgeDataSource) => {
+//   return DatasourceApiFactory(undefined, location.origin)
+//     .bindEdgeDatasource(graphName, edgeDataSource)
+//     .then(res => {
+//       if (res.status === 200) {
+//         return res.data;
+//       }
+//     })
+//     .catch(error => {
+//       notification('error', error);
+//     });
+// };
 
-export const bindDatasource = async (currentType: string, data: any, dataMap: any) => {
-  const params = transformImportOptionsToGrootSchemaMapping({ currentType, data, dataMap });
-  const { label } = data;
-  if (currentType === 'node') {
-    await bindVertexDatasource(label, params);
-  }
-  if (currentType === 'edge') {
-    await bindVertexDatasource(label, params);
-  }
-};
+// export const bindDatasource = async (currentType: string, data: any, dataMap: any) => {
+//   const params = transformImportOptionsToGrootSchemaMapping({ currentType, data, dataMap });
+//   const { label } = data;
+//   if (currentType === 'node') {
+//     await bindVertexDatasource(label, params);
+//   }
+//   if (currentType === 'edge') {
+//     await bindVertexDatasource(label, params);
+//   }
+// };
