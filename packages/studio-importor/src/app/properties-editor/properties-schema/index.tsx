@@ -1,19 +1,32 @@
 import * as React from 'react';
-import { Typography } from 'antd';
+import { Typography, Flex, Input } from 'antd';
+import PropertiesEditor from '../../../properties-editor';
+import { updateStore } from '../../useContext';
+import PropertiesList from '../../../components/PropertiesList';
 interface IPropertiesSchemaProps {
   data: any;
   type: 'nodes' | 'edges';
 }
 
 const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props => {
-  const { data } = props;
-  const { label } = data;
+  const { data, type } = props;
+  const { label, properties = [] } = data;
+  console.log('dara', props, data);
+  const handleChangeLabel = e => {
+    updateStore(draft => {
+      const match = draft;
+    });
+  };
+  const handleChange = e => {
+    console.log('e|||||', e);
+  };
   return (
     <div>
-      <Typography.Text>Vertex label: {label}</Typography.Text>
-      <Typography.Text> Properties : </Typography.Text>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-      xxxx
+      <Flex vertical gap={12} style={{ margin: '0px 12px' }}>
+        <Typography.Text>Label</Typography.Text>
+        <Input value={label} onChange={handleChangeLabel} />
+        <PropertiesList properties={properties} onChange={handleChange} />
+      </Flex>
     </div>
   );
 };
