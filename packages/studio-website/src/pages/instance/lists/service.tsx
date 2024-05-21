@@ -94,10 +94,10 @@ export const deleteGraph = async (graph_id: string) => {
     });
 };
 
-export const startService = async (id: string) => {
+export const startService = async (graph_id: string) => {
   return await ServiceApiFactory(undefined, location.origin)
     .startService({
-      graph_id: id,
+      graph_id,
     })
     .then(res => {
       if (res.status === 200) {
@@ -112,10 +112,10 @@ export const startService = async (id: string) => {
       notification('error', error);
     });
 };
-export const stopService = async (id: string) => {
+export const stopService = async (graph_id: string) => {
   return await ServiceApiFactory(undefined, location.origin)
     .stopService({
-      graph_id: id,
+      graph_id,
     })
     .then(res => {
       if (res.status === 200) {
