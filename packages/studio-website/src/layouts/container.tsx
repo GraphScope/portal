@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useContext } from './useContext';
-
+import useWidth from './useWidth';
 interface ContainerProps {
   sidebar: React.ReactNode;
   content: React.ReactNode;
@@ -8,12 +8,16 @@ interface ContainerProps {
 }
 
 const SideWidth = 150;
-const ContainerWidth = 1360;
+// const ContainerWidth = 1360;
 const CollapsedWidth = 60;
+
 const Container: React.FunctionComponent<ContainerProps> = props => {
   const { sidebar, content, footer } = props;
   const { store } = useContext();
   const { collapse, mode } = store;
+  const ContainerWidth = useWidth();
+  console.log('ContainerWidth', ContainerWidth);
+
   return (
     <div
       className="gs-root"

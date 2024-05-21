@@ -3,10 +3,11 @@ import { Button, Modal, Segmented } from 'antd';
 import { UngroupOutlined } from '@ant-design/icons';
 interface IImportSchemaProps {
   style?: React.CSSProperties;
+  displayType?: 'model' | 'panel';
 }
 
 const ImportSchema: React.FunctionComponent<IImportSchemaProps> = props => {
-  const { style } = props;
+  const { style, displayType = 'panel' } = props;
   const [state, updateState] = useState({
     visible: false,
   });
@@ -23,13 +24,21 @@ const ImportSchema: React.FunctionComponent<IImportSchemaProps> = props => {
       visible: false,
     });
   };
+  if (displayType === 'model') {
+    return (
+      <>
+        <Button type="text" onClick={handleClick} style={style} icon={<UngroupOutlined />}></Button>
+        <Modal title="import schema" open={visible} onOk={handleClose} onCancel={handleClose}>
+          <Segmented options={['CSV', 'Database', 'GPT', 'Configaration']}></Segmented>
+          <div>....</div>
+        </Modal>
+      </>
+    );
+  }
   return (
     <div>
-      <Button type="text" onClick={handleClick} style={style} icon={<UngroupOutlined />}></Button>
-      <Modal title="import schema" open={visible} onOk={handleClose} onCancel={handleClose}>
-        <Segmented options={['CSV', 'Database', 'GPT', 'Configaration']}></Segmented>
-        <div>....</div>
-      </Modal>
+      <Segmented options={['CSV', 'Database', 'GPT', 'Configaration']}></Segmented>
+      <div>....</div>
     </div>
   );
 };
