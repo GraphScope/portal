@@ -23,6 +23,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "monaco-editor": "latest",
+    "sql-ddl-to-json-schema": "latest",
     "uuidv4": "^6.2.13",
     "dagre": "latest",
     "react": "18.2.0",

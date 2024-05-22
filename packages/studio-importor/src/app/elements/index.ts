@@ -13,7 +13,7 @@ export function layout(data, direction) {
   dagreGraph.setGraph({ rankdir: direction });
   nodes.forEach(node => {
     const { _fromEdge } = node;
-    dagreGraph.setNode(node.id, { width: _fromEdge ? 170 : 170, height: _fromEdge ? 100 : 200 });
+    dagreGraph.setNode(node.id, { width: _fromEdge ? 270 : 270, height: _fromEdge ? 100 : 200 });
   });
   edges.forEach(edge => {
     dagreGraph.setEdge(edge.source, edge.target);
@@ -34,7 +34,9 @@ export function transformGraphNodes(nodes, displayMode) {
       dagreGraph.node(item.id) || { x: Math.random() * 500, y: Math.random() * 500 };
 
     return {
-      ...item,
+      data: {
+        ...item,
+      },
       id,
       type: displayMode === 'table' ? 'table-node' : 'graph-node',
       _fromEdge,
@@ -49,7 +51,7 @@ export function transformGraphNodes(nodes, displayMode) {
 }
 export function transformNodes(nodes, displayMode) {
   return nodes.map(item => {
-    const { position, id, _fromEdge } = item;
+    const { position, id, _fromEdge, ...properties } = item;
     const nodeWithPosition = dagreGraph.node(item.id) || { x: Math.random() * 500, y: Math.random() * 500 };
     GRAPH_POSITION_MAP[id] = position;
     return {
@@ -65,6 +67,7 @@ export function transformNodes(nodes, displayMode) {
       },
       data: {
         _fromEdge,
+        ...properties,
         label: id,
       },
     };
@@ -75,13 +78,14 @@ export function transformEdges(_edges, displayMode) {
   console.log('edges', edges);
   return edges.map((item, index) => {
     console.log('edge', item);
-    const { id, source, target, data, _extra, ...others } = item;
+    const { id, source, target, data, _extra, properties = {}, ...others } = item;
     return {
       ...others,
       id: id || `${source}-${target}-${index}`,
 
       data: {
         ...data,
+        ...properties,
         _extra,
       },
       source,
@@ -91,7 +95,7 @@ export function transformEdges(_edges, displayMode) {
   });
 }
 
-export function transformDataToReactFlow(nodes, edges, { displayMode, graphPosition }) {
+export function transformDataToReactFlow(nodes, edges, { displayMode }) {
   if (displayMode === 'table') {
     const data = transEdge2Entity({ nodes, edges });
     /** layout */

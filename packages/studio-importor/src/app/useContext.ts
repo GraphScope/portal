@@ -81,5 +81,5 @@ export function useColSpan() {
   if (left && !right) {
     return [0, 19, 5];
   }
-  return [5, 14, 5];
+  return [8, 12, 4];
 }
