@@ -1,10 +1,26 @@
 import React, { useState } from 'react';
 import { Button, Modal, Segmented } from 'antd';
 import { UngroupOutlined } from '@ant-design/icons';
+import ImportFromCSV from './import-from-csv';
+import ImportFromSQL from './import-from-sql';
+import SegmentedTabs, { SegmentedTabsProps } from '../../components/SegmentedTabs';
 interface IImportSchemaProps {
   style?: React.CSSProperties;
   displayType?: 'model' | 'panel';
 }
+
+const items: SegmentedTabsProps['items'] = [
+  {
+    label: 'CSV',
+    key: 'CSV',
+    children: <ImportFromCSV />,
+  },
+  {
+    label: 'SQL DDL',
+    key: 'SQL',
+    children: <ImportFromSQL />,
+  },
+];
 
 const ImportSchema: React.FunctionComponent<IImportSchemaProps> = props => {
   const { style, displayType = 'panel' } = props;
@@ -29,16 +45,18 @@ const ImportSchema: React.FunctionComponent<IImportSchemaProps> = props => {
       <>
         <Button type="text" onClick={handleClick} style={style} icon={<UngroupOutlined />}></Button>
         <Modal title="import schema" open={visible} onOk={handleClose} onCancel={handleClose}>
-          <Segmented options={['CSV', 'Database', 'GPT', 'Configaration']}></Segmented>
-          <div>....</div>
+          <Segmented options={['CSV', 'SQL DDL', 'YAML']} block></Segmented>
         </Modal>
       </>
     );
   }
   return (
-    <div>
-      <Segmented options={['CSV', 'Database', 'GPT', 'Configaration']}></Segmented>
-      <div>....</div>
+    <div style={{ height: '100%' }}>
+      <SegmentedTabs items={items} block />
+      {/* <Segmented options={['CSV', 'SQL DDL', 'YAML']} block></Segmented>
+      <div style={{ height: 'calc(100% - 40px)', padding: '12px 0px', boxSizing: 'border-box' }}>
+      
+      </div> */}
     </div>
   );
 };
