@@ -6,6 +6,7 @@ export const handleAdd = (state, updateState, onChange) => {
     name: `property_${index++}`,
     type: '',
     primaryKey: false,
+    disable: true,
   };
 
   updateState(preState => {
@@ -35,6 +36,7 @@ export const handleBlur = (evt, record, updateState, onChange) => {
       return {
         ...item,
         name: item.key === record.key ? evt.target.value : item.name,
+        disable: true,
       };
     });
     onChange(properties);
@@ -65,6 +67,23 @@ export const handlePrimaryKey = (record, updateState, onChange) => {
           };
         }
       }
+    });
+    onChange(properties);
+    return {
+      ...preset,
+      properties,
+    };
+  });
+};
+
+/** 双击编辑 */
+export const handleDoubleClick = (record, updateState, onChange) => {
+  updateState(preset => {
+    const properties = preset.properties.map(item => {
+      return {
+        ...item,
+        disable: item.key !== record.key,
+      };
     });
     onChange(properties);
     return {

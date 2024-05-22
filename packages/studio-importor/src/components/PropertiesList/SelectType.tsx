@@ -21,6 +21,7 @@ const SelectType: React.FunctionComponent<ISelectTypeProps> = props => {
 
   return (
     <Select
+      size="small"
       style={{ width: '100px' }}
       value={value}
       onChange={e => {
