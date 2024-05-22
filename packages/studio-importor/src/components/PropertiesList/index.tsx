@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Flex, Button, Checkbox, Select, Input, Table } from 'antd';
+import { Flex, Button, Checkbox, Select, Input, Table, Space } from 'antd';
 import { DeleteFilled, KeyOutlined, PlusCircleOutlined, PlusOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import { uuid } from 'uuidv4';
 import SelectType from './SelectType';
+import PrimaryKey from '../Icons/primary-key';
 interface Property {
   key: string;
   name: string;
@@ -57,13 +58,63 @@ const styles: Record<string, React.CSSProperties> = {
 const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
   const { title = 'Properties', onChange = () => {}, typeOptions = defaultTypeOptions, selectable = true } = props;
 
+  const [state, updateState] = React.useState({
+    properties: props.properties,
+    selectedRowKeys: [],
+  });
+  const { properties } = state;
+  /** input->blur */
+  const handleBlur = (evt, record) => {
+    updateState(preset => {
+      const properties = preset.properties.map(item => {
+        return {
+          ...item,
+          name: item.key === record.key ? evt.target.value : item.name,
+        };
+      });
+      onChange(properties);
+      return {
+        ...preset,
+        properties,
+      };
+    });
+  };
+  const handlePrimaryKey = record => {
+    updateState(preset => {
+      const properties = preset.properties.map(item => {
+        if (item.key == record.key && item.primaryKey) {
+          return {
+            ...item,
+            primaryKey: false,
+          };
+        } else {
+          if (item.key == record.key && !item.primaryKey) {
+            return {
+              ...item,
+              primaryKey: true,
+            };
+          } else {
+            return {
+              ...item,
+              primaryKey: false,
+            };
+          }
+        }
+      });
+      onChange(properties);
+      return {
+        ...preset,
+        properties,
+      };
+    });
+  };
   const columns = [
     {
       title: 'Name',
       dataIndex: 'name',
       render: (...p) => {
         const [row, record] = p;
-        return <Input value={row} />;
+        return <Input defaultValue={row} onBlur={e => handleBlur(e, record)} />;
       },
     },
     {
@@ -99,14 +150,16 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
     {
       title: 'ID',
       dataIndex: 'primaryKey',
+      render: (_, record: any) => (
+        <Button
+          size="small"
+          type={'text'}
+          onClick={() => handlePrimaryKey(record)}
+          icon={<PrimaryKey style={{ color: record?.primaryKey ? '#515151' : '#e6e6e6' }} />}
+        ></Button>
+      ),
     },
   ];
-
-  const [state, updateState] = React.useState({
-    properties: props.properties,
-    selectedRowKeys: [],
-  });
-  const { properties } = state;
 
   const rowSelection = {
     type: 'checkbox',
@@ -152,10 +205,12 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
     <div>
       <Flex justify="space-between" align="center">
         {title}
-        <Button type="text" onClick={handleAdd} icon={<PlusSquareOutlined />}></Button>
-        <Button type="text" onClick={handleDelete} icon={<DeleteFilled />}></Button>
+        <Space size={[0, 0]}>
+          <Button type="text" onClick={handleAdd} icon={<PlusSquareOutlined />}></Button>
+          <Button type="text" onClick={handleDelete} icon={<DeleteFilled />}></Button>
+        </Space>
       </Flex>
-      <Table columns={columns} dataSource={properties} rowSelection={rowSelection} />
+      <Table columns={columns} dataSource={properties} rowSelection={rowSelection} pagination={false} />
     </div>
   );
 };
