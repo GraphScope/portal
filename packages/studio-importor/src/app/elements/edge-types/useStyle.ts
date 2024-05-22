@@ -5,6 +5,6 @@ export const usePathStyle = (id: string) => {
   return {
     isSelected,
     markerEnd: isSelected ? 'url(#arrow-selected)' : 'url(#arrow)',
-    style: { stroke: isSelected ? theme.primaryColor : '#ddd', strokeWidth: isSelected ? '2px' : '1px' },
+    style: { stroke: isSelected ? theme.primaryColor : '#000', strokeWidth: isSelected ? '2px' : '1px' },
   };
 };

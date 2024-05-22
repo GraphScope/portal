@@ -5,7 +5,7 @@ export default ({ fromX, fromY, toX, toY }) => {
     <g style={{ zIndex: -1, position: 'absolute' }}>
       <path
         fill="none"
-        stroke={'rgb(221, 221, 221)'}
+        stroke={'#000'}
         strokeWidth={1}
         className="animated"
         d={`M${fromX},${fromY} L ${toX},${toY}`}
@@ -17,7 +17,7 @@ export default ({ fromX, fromY, toX, toY }) => {
         fill="#fff"
         r={50}
         className="animated"
-        stroke={'rgb(221, 221, 221)'}
+        stroke={'#000'}
         strokeWidth={1}
         strokeDasharray={'10, 5'}
       />
