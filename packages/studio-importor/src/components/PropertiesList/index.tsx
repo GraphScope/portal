@@ -72,6 +72,7 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
                   backgroundColor: '#505256',
                   color: '#fff',
                   borderRadius: '3px',
+                  textAlign: 'center',
                 }}
                 onClick={async () => {
                   await handleDoubleClick(record, updateState, onChange);
@@ -179,9 +180,13 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
               headerBg: '#fff',
               headerColor: '#575B5E',
               headerSplitColor: '#fff',
+              fontWeightStrong: 400,
               borderColor: '#DADADA',
               cellPaddingBlock: 4, //	单元格纵向内间距
               cellPaddingInline: 8, //单元格横向内间距（默认大尺寸）
+            },
+            Select: {
+              colorBorder: '#DADADA',
             },
           },
         }}
