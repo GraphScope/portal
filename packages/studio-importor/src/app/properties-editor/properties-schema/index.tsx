@@ -56,12 +56,14 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
       if (source && target) {
         draft.edges.map(item => {
           if (item.id === id) {
+            //@ts-ignore
             item.properties = e;
           }
         });
       } else {
         draft.nodes.map(item => {
           if (item.id === id) {
+            //@ts-ignore
             item.properties = e;
           }
         });
