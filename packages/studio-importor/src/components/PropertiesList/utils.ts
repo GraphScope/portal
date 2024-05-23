@@ -1,6 +1,7 @@
+import React from 'react';
 import { uuid } from 'uuidv4';
 let index = 0;
-export const handleAdd = (state, updateState, onChange) => {
+export const handleAdd = state => {
   const newProperty = {
     key: uuid(),
     name: `property_${index++}`,
@@ -8,87 +9,68 @@ export const handleAdd = (state, updateState, onChange) => {
     primaryKey: false,
     disable: true,
   };
-
-  updateState(preState => {
-    const properties = [...preState.properties, newProperty];
-    onChange(properties);
-    return {
-      ...state,
-      properties,
-    };
-  });
+  const properties = [...state.properties, newProperty];
+  return properties;
 };
-export const handleDelete = (state, updateState, onChange) => {
-  updateState(preState => {
-    const properties = preState.properties.filter(item => !preState.selectedRowKeys.includes(item.key));
-    onChange(properties);
-    return {
-      ...state,
-      properties,
-      selectedRowKeys: [],
-    };
-  });
+export const handleDelete = state => {
+  const properties = state.properties.filter(item => !state.selectedRowKeys.includes(item.key));
+  return properties;
 };
 /** input->blur */
-export const handleBlur = (evt, record, updateState, onChange) => {
-  updateState(preset => {
-    const properties = preset.properties.map(item => {
-      return {
-        ...item,
-        name: item.key === record.key ? evt.target.value : item.name,
-        disable: true,
-      };
-    });
-    onChange(properties);
+export const handleBlur = (evt, record, state) => {
+  const properties = state.properties.map(item => {
     return {
-      ...preset,
-      properties,
+      ...item,
+      name: item.key === record.key ? evt.target.value : item.name,
+      disable: true,
     };
   });
+  return properties;
 };
-export const handlePrimaryKey = (record, updateState, onChange) => {
-  updateState(preset => {
-    const properties = preset.properties.map(item => {
-      if (item.key == record.key && item.primaryKey) {
+export const handlePrimaryKey = (record, state) => {
+  const properties = state.properties.map(item => {
+    if (item.key == record.key && item.primaryKey) {
+      return {
+        ...item,
+        primaryKey: false,
+      };
+    } else {
+      if (item.key == record.key && !item.primaryKey) {
+        return {
+          ...item,
+          primaryKey: true,
+        };
+      } else {
         return {
           ...item,
           primaryKey: false,
         };
-      } else {
-        if (item.key == record.key && !item.primaryKey) {
-          return {
-            ...item,
-            primaryKey: true,
-          };
-        } else {
-          return {
-            ...item,
-            primaryKey: false,
-          };
-        }
       }
-    });
-    onChange(properties);
-    return {
-      ...preset,
-      properties,
-    };
+    }
   });
+  return properties;
 };
 
 /** 双击编辑 */
-export const handleDoubleClick = (record, updateState, onChange) => {
-  updateState(preset => {
-    const properties = preset.properties.map(item => {
-      return {
-        ...item,
-        disable: item.key !== record.key,
-      };
-    });
-    onChange(properties);
+export const handleDoubleClick = (record, state) => {
+  const properties = state.properties.map(item => {
     return {
-      ...preset,
-      properties,
+      ...item,
+      disable: item.key !== record.key,
     };
   });
+  return properties;
+};
+
+export const handleType = (value, row, state) => {
+  const properties = state.properties.map(item => {
+    if (item.key === row.key) {
+      return {
+        ...item,
+        type: value,
+      };
+    }
+    return item;
+  });
+  return properties;
 };
