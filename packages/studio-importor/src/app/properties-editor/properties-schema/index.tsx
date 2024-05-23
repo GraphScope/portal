@@ -21,7 +21,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
   const { store } = useContext();
   const { nodes } = store;
   let source_label, target_label;
-  if (source && target) {
+  if (type === 'edges') {
     nodes.forEach(item => {
       if (item.id === source) {
         source_label = item.data.label;
@@ -34,13 +34,14 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
   const handleChangeLabel = e => {
     const label = e.target.value;
     updateStore(draft => {
-      if (source && target) {
+      if (type === 'edges') {
         draft.edges.map(item => {
           if (item.id === id) {
             item.data.label = label;
           }
         });
-      } else {
+      }
+      if (type === 'nodes') {
         draft.nodes.map(item => {
           if (item.id === id) {
             item.data.label = label;
@@ -53,14 +54,15 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
   const handleChange = e => {
     console.log('e|||||', e);
     updateStore(draft => {
-      if (source && target) {
+      if (type === 'edges') {
         draft.edges.map(item => {
           if (item.id === id) {
             //@ts-ignore
             item.properties = e;
           }
         });
-      } else {
+      }
+      if (type === 'nodes') {
         draft.nodes.map(item => {
           if (item.id === id) {
             //@ts-ignore
