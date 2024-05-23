@@ -55,7 +55,7 @@ const MapFromFile = props => {
       }}
       description={
         <div style={{ width: '350px' }}>
-          <MapFromFileTable handleChange={file => handleFile(file)} properties={dataSource} selectedAll={selectedAll} />
+          <MapFromFileTable handleChange={file => handleFile(file)} properties={dataSource} />
         </div>
       }
       icon=""

@@ -31,7 +31,7 @@ interface IPropertiesListProps {
     value: string;
   }[];
   selectable?: boolean;
-  columns: {
+  columns?: {
     title;
     key;
   }[];
@@ -85,6 +85,7 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
             ) : (
               <Input
                 size="small"
+                //@ts-ignore
                 ref={inputRef}
                 defaultValue={row}
                 onBlur={e => handleBlur(e, record, updateState, onChange)}
@@ -142,6 +143,7 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
   const rowSelection = {
     type: 'checkbox',
     onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+      //@ts-ignore
       updateState(preState => {
         return {
           ...preState,
@@ -191,7 +193,13 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
           },
         }}
       >
-        <Table columns={columns} dataSource={properties} rowSelection={rowSelection} pagination={false} />
+        <Table
+          columns={columns}
+          dataSource={properties}
+          //@ts-ignore
+          rowSelection={rowSelection}
+          pagination={false}
+        />
       </ConfigProvider>
     </div>
   );
