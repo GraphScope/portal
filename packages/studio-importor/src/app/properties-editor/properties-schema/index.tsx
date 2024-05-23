@@ -77,7 +77,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
       <Flex vertical gap={12} style={{ margin: '0px 12px' }}>
         <Typography.Text>Label</Typography.Text>
         <Input value={label} onChange={handleChangeLabel} />
-        {source && target && (
+        {type === 'edges' && (
           <>
             <Typography.Text>Source</Typography.Text>
             <Input value={source_label} disabled />
