@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { Typography, Flex, Input } from 'antd';
 import PropertiesEditor from '../../../properties-editor';
-import { updateStore } from '../../useContext';
+import { updateStore, useContext } from '../../useContext';
 import PropertiesList from '../../../components/PropertiesList';
-import { useContext } from '../../useContext';
 interface IPropertiesSchemaProps {
   data: any;
   type: 'nodes' | 'edges';
@@ -12,6 +11,7 @@ interface IPropertiesSchemaProps {
 const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props => {
   const { data, type } = props;
   const {
+    id,
     data: { label },
     source,
     target,
@@ -32,12 +32,41 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
     });
   }
   const handleChangeLabel = e => {
+    const label = e.target.value;
     updateStore(draft => {
-      const match = draft;
+      if (source && target) {
+        draft.edges.map(item => {
+          if (item.id === id) {
+            item.data.label = label;
+          }
+        });
+      } else {
+        draft.nodes.map(item => {
+          if (item.id === id) {
+            item.data.label = label;
+          }
+        });
+      }
     });
   };
+
   const handleChange = e => {
     console.log('e|||||', e);
+    updateStore(draft => {
+      if (source && target) {
+        draft.edges.map(item => {
+          if (item.id === id) {
+            item.properties = e;
+          }
+        });
+      } else {
+        draft.nodes.map(item => {
+          if (item.id === id) {
+            item.properties = e;
+          }
+        });
+      }
+    });
   };
   return (
     <div>
