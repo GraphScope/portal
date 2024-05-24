@@ -137,6 +137,13 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
         }}
         delProperty={() => {
           handleProperties(handleDelete(state));
+          /**特殊性 删除选中后需重置为添加状态 */
+          updateState(preState => {
+            return {
+              ...preState,
+              selectedRowKeys: [],
+            };
+          });
         }}
         handleMapFromFile={file => {
           updateState(preState => {
