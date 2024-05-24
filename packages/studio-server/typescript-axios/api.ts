@@ -398,7 +398,7 @@ export interface CreateGraphRequest {
      * @type {string}
      * @memberof CreateGraphRequest
      */
-    'name': string;
+    'name'?: string;
     /**
      * 
      * @type {string}
@@ -407,16 +407,16 @@ export interface CreateGraphRequest {
     'description'?: string;
     /**
      * 
-     * @type {Array<CreateProcedureRequest>}
+     * @type {Array<CreateStoredProcRequest>}
      * @memberof CreateGraphRequest
      */
-    'stored_procedures'?: Array<CreateProcedureRequest>;
+    'stored_procedures'?: Array<CreateStoredProcRequest>;
     /**
      * 
      * @type {CreateGraphSchemaRequest}
      * @memberof CreateGraphRequest
      */
-    'schema': CreateGraphSchemaRequest;
+    'schema'?: CreateGraphSchemaRequest;
 }
 /**
  * 
@@ -449,58 +449,6 @@ export interface CreateGraphSchemaRequest {
      * @memberof CreateGraphSchemaRequest
      */
     'edge_types': Array<CreateEdgeType>;
-}
-/**
- * 
- * @export
- * @interface CreateProcedureRequest
- */
-export interface CreateProcedureRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateProcedureRequest
-     */
-    'name': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateProcedureRequest
-     */
-    'description'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateProcedureRequest
-     */
-    'type': CreateProcedureRequestTypeEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateProcedureRequest
-     */
-    'query': string;
-}
-
-export const CreateProcedureRequestTypeEnum = {
-    Cpp: 'cpp',
-    Cypher: 'cypher'
-} as const;
-
-export type CreateProcedureRequestTypeEnum = typeof CreateProcedureRequestTypeEnum[keyof typeof CreateProcedureRequestTypeEnum];
-
-/**
- * 
- * @export
- * @interface CreateProcedureResponse
- */
-export interface CreateProcedureResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateProcedureResponse
-     */
-    'procedure_id': string;
 }
 /**
  * 
@@ -538,6 +486,58 @@ export interface CreatePropertyMeta {
      * @memberof CreatePropertyMeta
      */
     'description'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface CreateStoredProcRequest
+ */
+export interface CreateStoredProcRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateStoredProcRequest
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateStoredProcRequest
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateStoredProcRequest
+     */
+    'type': CreateStoredProcRequestTypeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateStoredProcRequest
+     */
+    'query': string;
+}
+
+export const CreateStoredProcRequestTypeEnum = {
+    Cpp: 'cpp',
+    Cypher: 'cypher'
+} as const;
+
+export type CreateStoredProcRequestTypeEnum = typeof CreateStoredProcRequestTypeEnum[keyof typeof CreateStoredProcRequestTypeEnum];
+
+/**
+ * 
+ * @export
+ * @interface CreateStoredProcResponse
+ */
+export interface CreateStoredProcResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateStoredProcResponse
+     */
+    'stored_procedure_id': string;
 }
 /**
  * 
@@ -1068,10 +1068,10 @@ export interface GetGraphResponse {
     'schema_update_time': string;
     /**
      * 
-     * @type {Array<GetProcedureResponse>}
+     * @type {Array<GetStoredProcResponse>}
      * @memberof GetGraphResponse
      */
-    'stored_procedures'?: Array<GetProcedureResponse>;
+    'stored_procedures'?: Array<GetStoredProcResponse>;
     /**
      * 
      * @type {GetGraphSchemaResponse}
@@ -1105,81 +1105,6 @@ export interface GetGraphSchemaResponse {
      */
     'edge_types': Array<GetEdgeType>;
 }
-/**
- * 
- * @export
- * @interface GetProcedureResponse
- */
-export interface GetProcedureResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof GetProcedureResponse
-     */
-    'name': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetProcedureResponse
-     */
-    'description'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetProcedureResponse
-     */
-    'type': GetProcedureResponseTypeEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetProcedureResponse
-     */
-    'query': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetProcedureResponse
-     */
-    'id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetProcedureResponse
-     */
-    'library': string;
-    /**
-     * 
-     * @type {Array<Parameter>}
-     * @memberof GetProcedureResponse
-     */
-    'params': Array<Parameter>;
-    /**
-     * 
-     * @type {Array<Parameter>}
-     * @memberof GetProcedureResponse
-     */
-    'returns': Array<Parameter>;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetProcedureResponse
-     */
-    'bound_graph': string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof GetProcedureResponse
-     */
-    'runnable': boolean;
-}
-
-export const GetProcedureResponseTypeEnum = {
-    Cpp: 'cpp',
-    Cypher: 'cypher'
-} as const;
-
-export type GetProcedureResponseTypeEnum = typeof GetProcedureResponseTypeEnum[keyof typeof GetProcedureResponseTypeEnum];
-
 /**
  * 
  * @export
@@ -1223,6 +1148,81 @@ export interface GetPropertyMeta {
      */
     'property_id': number;
 }
+/**
+ * 
+ * @export
+ * @interface GetStoredProcResponse
+ */
+export interface GetStoredProcResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof GetStoredProcResponse
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetStoredProcResponse
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetStoredProcResponse
+     */
+    'type': GetStoredProcResponseTypeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetStoredProcResponse
+     */
+    'query': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetStoredProcResponse
+     */
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetStoredProcResponse
+     */
+    'library': string;
+    /**
+     * 
+     * @type {Array<Parameter>}
+     * @memberof GetStoredProcResponse
+     */
+    'params': Array<Parameter>;
+    /**
+     * 
+     * @type {Array<Parameter>}
+     * @memberof GetStoredProcResponse
+     */
+    'returns': Array<Parameter>;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetStoredProcResponse
+     */
+    'bound_graph': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof GetStoredProcResponse
+     */
+    'runnable': boolean;
+}
+
+export const GetStoredProcResponseTypeEnum = {
+    Cpp: 'cpp',
+    Cypher: 'cypher'
+} as const;
+
+export type GetStoredProcResponseTypeEnum = typeof GetStoredProcResponseTypeEnum[keyof typeof GetStoredProcResponseTypeEnum];
+
 /**
  * 
  * @export
@@ -1361,6 +1361,37 @@ export interface ModelError {
 /**
  * 
  * @export
+ * @interface NodeStatus
+ */
+export interface NodeStatus {
+    /**
+     * 
+     * @type {string}
+     * @memberof NodeStatus
+     */
+    'name': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof NodeStatus
+     */
+    'cpu_usage': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof NodeStatus
+     */
+    'memory_usage': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof NodeStatus
+     */
+    'disk_usage': number;
+}
+/**
+ * 
+ * @export
  * @interface Parameter
  */
 export interface Parameter {
@@ -1432,13 +1463,25 @@ export interface RunningDeploymentInfo {
      * @type {string}
      * @memberof RunningDeploymentInfo
      */
-    'solution': RunningDeploymentInfoSolutionEnum;
+    'creation_time': string;
     /**
      * 
      * @type {string}
      * @memberof RunningDeploymentInfo
      */
-    'creation_time': string;
+    'frontend': RunningDeploymentInfoFrontendEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof RunningDeploymentInfo
+     */
+    'engine': RunningDeploymentInfoEngineEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof RunningDeploymentInfo
+     */
+    'storage': RunningDeploymentInfoStorageEnum;
 }
 
 export const RunningDeploymentInfoClusterTypeEnum = {
@@ -1447,12 +1490,56 @@ export const RunningDeploymentInfoClusterTypeEnum = {
 } as const;
 
 export type RunningDeploymentInfoClusterTypeEnum = typeof RunningDeploymentInfoClusterTypeEnum[keyof typeof RunningDeploymentInfoClusterTypeEnum];
-export const RunningDeploymentInfoSolutionEnum = {
-    Interactive: 'INTERACTIVE',
-    GraphscopeInsight: 'GRAPHSCOPE_INSIGHT'
+export const RunningDeploymentInfoFrontendEnum = {
+    CypherGremlin: 'Cypher/Gremlin',
+    AnalyticalApps: 'AnalyticalApps'
 } as const;
 
-export type RunningDeploymentInfoSolutionEnum = typeof RunningDeploymentInfoSolutionEnum[keyof typeof RunningDeploymentInfoSolutionEnum];
+export type RunningDeploymentInfoFrontendEnum = typeof RunningDeploymentInfoFrontendEnum[keyof typeof RunningDeploymentInfoFrontendEnum];
+export const RunningDeploymentInfoEngineEnum = {
+    Hiactor: 'Hiactor',
+    Gaia: 'Gaia'
+} as const;
+
+export type RunningDeploymentInfoEngineEnum = typeof RunningDeploymentInfoEngineEnum[keyof typeof RunningDeploymentInfoEngineEnum];
+export const RunningDeploymentInfoStorageEnum = {
+    MutableCsr: 'MutableCSR'
+} as const;
+
+export type RunningDeploymentInfoStorageEnum = typeof RunningDeploymentInfoStorageEnum[keyof typeof RunningDeploymentInfoStorageEnum];
+
+/**
+ * 
+ * @export
+ * @interface RunningDeploymentStatus
+ */
+export interface RunningDeploymentStatus {
+    /**
+     * 
+     * @type {string}
+     * @memberof RunningDeploymentStatus
+     */
+    'cluster_type': RunningDeploymentStatusClusterTypeEnum;
+    /**
+     * 
+     * @type {Array<RunningDeploymentStatusNodesInner>}
+     * @memberof RunningDeploymentStatus
+     */
+    'nodes': Array<RunningDeploymentStatusNodesInner>;
+}
+
+export const RunningDeploymentStatusClusterTypeEnum = {
+    Hosts: 'HOSTS',
+    Kubernetes: 'KUBERNETES'
+} as const;
+
+export type RunningDeploymentStatusClusterTypeEnum = typeof RunningDeploymentStatusClusterTypeEnum[keyof typeof RunningDeploymentStatusClusterTypeEnum];
+
+/**
+ * @type RunningDeploymentStatusNodesInner
+ * @export
+ */
+export type RunningDeploymentStatusNodesInner = NodeStatus;
 
 /**
  * 
@@ -1484,19 +1571,25 @@ export interface ServiceStatus {
      * @type {string}
      * @memberof ServiceStatus
      */
-    'status': ServiceStatusStatusEnum;
+    'graph_id': string;
     /**
      * 
-     * @type {GetGraphResponse}
+     * @type {string}
      * @memberof ServiceStatus
      */
-    'graph'?: GetGraphResponse;
+    'status': ServiceStatusStatusEnum;
     /**
      * 
      * @type {ServiceStatusSdkEndpoints}
      * @memberof ServiceStatus
      */
     'sdk_endpoints'?: ServiceStatusSdkEndpoints;
+    /**
+     * 
+     * @type {string}
+     * @memberof ServiceStatus
+     */
+    'start_time'?: string;
 }
 
 export const ServiceStatusStatusEnum = {
@@ -1663,13 +1756,13 @@ export type UpdateAlertMessageStatusRequestStatusEnum = typeof UpdateAlertMessag
 /**
  * 
  * @export
- * @interface UpdateProcedureRequest
+ * @interface UpdateStoredProcRequest
  */
-export interface UpdateProcedureRequest {
+export interface UpdateStoredProcRequest {
     /**
      * 
      * @type {string}
-     * @memberof UpdateProcedureRequest
+     * @memberof UpdateStoredProcRequest
      */
     'description': string;
 }
@@ -2818,7 +2911,36 @@ export const DeploymentApiAxiosParamCreator = function (configuration?: Configur
          * @throws {RequiredError}
          */
         getDeploymentInfo: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/v1/deployment/info`;
+            const localVarPath = `/api/v1/deployment`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Deployment status
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDeploymentStatus: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/v1/deployment/status`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2862,6 +2984,17 @@ export const DeploymentApiFp = function(configuration?: Configuration) {
             const operationBasePath = operationServerMap['DeploymentApi.getDeploymentInfo']?.[index]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
         },
+        /**
+         * Deployment status
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getDeploymentStatus(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RunningDeploymentStatus>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getDeploymentStatus(options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['DeploymentApi.getDeploymentStatus']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
     }
 };
 
@@ -2879,6 +3012,14 @@ export const DeploymentApiFactory = function (configuration?: Configuration, bas
          */
         getDeploymentInfo(options?: any): AxiosPromise<RunningDeploymentInfo> {
             return localVarFp.getDeploymentInfo(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Deployment status
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDeploymentStatus(options?: any): AxiosPromise<RunningDeploymentStatus> {
+            return localVarFp.getDeploymentStatus(options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2898,6 +3039,16 @@ export class DeploymentApi extends BaseAPI {
      */
     public getDeploymentInfo(options?: RawAxiosRequestConfig) {
         return DeploymentApiFp(this.configuration).getDeploymentInfo(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Deployment status
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DeploymentApi
+     */
+    public getDeploymentStatus(options?: RawAxiosRequestConfig) {
+        return DeploymentApiFp(this.configuration).getDeploymentStatus(options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -4013,419 +4164,51 @@ export class JobApi extends BaseAPI {
 
 
 /**
- * ProcedureApi - axios parameter creator
- * @export
- */
-export const ProcedureApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Create a new stored procedure on a certain graph
-         * @param {string} graphId 
-         * @param {CreateProcedureRequest} createProcedureRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createProcedure: async (graphId: string, createProcedureRequest: CreateProcedureRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'graphId' is not null or undefined
-            assertParamExists('createProcedure', 'graphId', graphId)
-            // verify required parameter 'createProcedureRequest' is not null or undefined
-            assertParamExists('createProcedure', 'createProcedureRequest', createProcedureRequest)
-            const localVarPath = `/api/v1/graph/{graph_id}/procedure`
-                .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createProcedureRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Delete a stored procedure by ID
-         * @param {string} graphId 
-         * @param {string} procedureId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteProcedureById: async (graphId: string, procedureId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'graphId' is not null or undefined
-            assertParamExists('deleteProcedureById', 'graphId', graphId)
-            // verify required parameter 'procedureId' is not null or undefined
-            assertParamExists('deleteProcedureById', 'procedureId', procedureId)
-            const localVarPath = `/api/v1/graph/{graph_id}/procedure/{procedure_id}`
-                .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)))
-                .replace(`{${"procedure_id"}}`, encodeURIComponent(String(procedureId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Get a stored procedure by ID
-         * @param {string} graphId 
-         * @param {string} procedureId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getProcedureById: async (graphId: string, procedureId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'graphId' is not null or undefined
-            assertParamExists('getProcedureById', 'graphId', graphId)
-            // verify required parameter 'procedureId' is not null or undefined
-            assertParamExists('getProcedureById', 'procedureId', procedureId)
-            const localVarPath = `/api/v1/graph/{graph_id}/procedure/{procedure_id}`
-                .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)))
-                .replace(`{${"procedure_id"}}`, encodeURIComponent(String(procedureId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * List all stored procedures on a certain graph
-         * @param {string} graphId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listProcedures: async (graphId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'graphId' is not null or undefined
-            assertParamExists('listProcedures', 'graphId', graphId)
-            const localVarPath = `/api/v1/graph/{graph_id}/procedure`
-                .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Update a stored procedure by ID
-         * @param {string} graphId 
-         * @param {string} procedureId 
-         * @param {UpdateProcedureRequest} [updateProcedureRequest] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateProcedureById: async (graphId: string, procedureId: string, updateProcedureRequest?: UpdateProcedureRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'graphId' is not null or undefined
-            assertParamExists('updateProcedureById', 'graphId', graphId)
-            // verify required parameter 'procedureId' is not null or undefined
-            assertParamExists('updateProcedureById', 'procedureId', procedureId)
-            const localVarPath = `/api/v1/graph/{graph_id}/procedure/{procedure_id}`
-                .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)))
-                .replace(`{${"procedure_id"}}`, encodeURIComponent(String(procedureId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(updateProcedureRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * ProcedureApi - functional programming interface
- * @export
- */
-export const ProcedureApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = ProcedureApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * Create a new stored procedure on a certain graph
-         * @param {string} graphId 
-         * @param {CreateProcedureRequest} createProcedureRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createProcedure(graphId: string, createProcedureRequest: CreateProcedureRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateProcedureResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createProcedure(graphId, createProcedureRequest, options);
-            const index = configuration?.serverIndex ?? 0;
-            const operationBasePath = operationServerMap['ProcedureApi.createProcedure']?.[index]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
-        },
-        /**
-         * Delete a stored procedure by ID
-         * @param {string} graphId 
-         * @param {string} procedureId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteProcedureById(graphId: string, procedureId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteProcedureById(graphId, procedureId, options);
-            const index = configuration?.serverIndex ?? 0;
-            const operationBasePath = operationServerMap['ProcedureApi.deleteProcedureById']?.[index]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
-        },
-        /**
-         * Get a stored procedure by ID
-         * @param {string} graphId 
-         * @param {string} procedureId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getProcedureById(graphId: string, procedureId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetProcedureResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getProcedureById(graphId, procedureId, options);
-            const index = configuration?.serverIndex ?? 0;
-            const operationBasePath = operationServerMap['ProcedureApi.getProcedureById']?.[index]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
-        },
-        /**
-         * List all stored procedures on a certain graph
-         * @param {string} graphId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listProcedures(graphId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GetProcedureResponse>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listProcedures(graphId, options);
-            const index = configuration?.serverIndex ?? 0;
-            const operationBasePath = operationServerMap['ProcedureApi.listProcedures']?.[index]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
-        },
-        /**
-         * Update a stored procedure by ID
-         * @param {string} graphId 
-         * @param {string} procedureId 
-         * @param {UpdateProcedureRequest} [updateProcedureRequest] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateProcedureById(graphId: string, procedureId: string, updateProcedureRequest?: UpdateProcedureRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateProcedureById(graphId, procedureId, updateProcedureRequest, options);
-            const index = configuration?.serverIndex ?? 0;
-            const operationBasePath = operationServerMap['ProcedureApi.updateProcedureById']?.[index]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
-        },
-    }
-};
-
-/**
- * ProcedureApi - factory interface
- * @export
- */
-export const ProcedureApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = ProcedureApiFp(configuration)
-    return {
-        /**
-         * Create a new stored procedure on a certain graph
-         * @param {string} graphId 
-         * @param {CreateProcedureRequest} createProcedureRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createProcedure(graphId: string, createProcedureRequest: CreateProcedureRequest, options?: any): AxiosPromise<CreateProcedureResponse> {
-            return localVarFp.createProcedure(graphId, createProcedureRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Delete a stored procedure by ID
-         * @param {string} graphId 
-         * @param {string} procedureId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteProcedureById(graphId: string, procedureId: string, options?: any): AxiosPromise<string> {
-            return localVarFp.deleteProcedureById(graphId, procedureId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Get a stored procedure by ID
-         * @param {string} graphId 
-         * @param {string} procedureId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getProcedureById(graphId: string, procedureId: string, options?: any): AxiosPromise<GetProcedureResponse> {
-            return localVarFp.getProcedureById(graphId, procedureId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * List all stored procedures on a certain graph
-         * @param {string} graphId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listProcedures(graphId: string, options?: any): AxiosPromise<Array<GetProcedureResponse>> {
-            return localVarFp.listProcedures(graphId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Update a stored procedure by ID
-         * @param {string} graphId 
-         * @param {string} procedureId 
-         * @param {UpdateProcedureRequest} [updateProcedureRequest] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateProcedureById(graphId: string, procedureId: string, updateProcedureRequest?: UpdateProcedureRequest, options?: any): AxiosPromise<string> {
-            return localVarFp.updateProcedureById(graphId, procedureId, updateProcedureRequest, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * ProcedureApi - object-oriented interface
- * @export
- * @class ProcedureApi
- * @extends {BaseAPI}
- */
-export class ProcedureApi extends BaseAPI {
-    /**
-     * Create a new stored procedure on a certain graph
-     * @param {string} graphId 
-     * @param {CreateProcedureRequest} createProcedureRequest 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ProcedureApi
-     */
-    public createProcedure(graphId: string, createProcedureRequest: CreateProcedureRequest, options?: RawAxiosRequestConfig) {
-        return ProcedureApiFp(this.configuration).createProcedure(graphId, createProcedureRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Delete a stored procedure by ID
-     * @param {string} graphId 
-     * @param {string} procedureId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ProcedureApi
-     */
-    public deleteProcedureById(graphId: string, procedureId: string, options?: RawAxiosRequestConfig) {
-        return ProcedureApiFp(this.configuration).deleteProcedureById(graphId, procedureId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Get a stored procedure by ID
-     * @param {string} graphId 
-     * @param {string} procedureId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ProcedureApi
-     */
-    public getProcedureById(graphId: string, procedureId: string, options?: RawAxiosRequestConfig) {
-        return ProcedureApiFp(this.configuration).getProcedureById(graphId, procedureId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * List all stored procedures on a certain graph
-     * @param {string} graphId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ProcedureApi
-     */
-    public listProcedures(graphId: string, options?: RawAxiosRequestConfig) {
-        return ProcedureApiFp(this.configuration).listProcedures(graphId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Update a stored procedure by ID
-     * @param {string} graphId 
-     * @param {string} procedureId 
-     * @param {UpdateProcedureRequest} [updateProcedureRequest] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ProcedureApi
-     */
-    public updateProcedureById(graphId: string, procedureId: string, updateProcedureRequest?: UpdateProcedureRequest, options?: RawAxiosRequestConfig) {
-        return ProcedureApiFp(this.configuration).updateProcedureById(graphId, procedureId, updateProcedureRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-
-/**
  * ServiceApi - axios parameter creator
  * @export
  */
 export const ServiceApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Get service status
+         * Get service status by graph ID
+         * @param {string} graphId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getServiceStatus: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/v1/service/status`;
+        getServiceStatusById: async (graphId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphId' is not null or undefined
+            assertParamExists('getServiceStatusById', 'graphId', graphId)
+            const localVarPath = `/api/v1/graph/{graph_id}/service`
+                .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * List all service status
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listServiceStatus: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/v1/service`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4550,14 +4333,26 @@ export const ServiceApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ServiceApiAxiosParamCreator(configuration)
     return {
         /**
-         * Get service status
+         * Get service status by graph ID
+         * @param {string} graphId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getServiceStatus(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ServiceStatus>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getServiceStatus(options);
+        async getServiceStatusById(graphId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ServiceStatus>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getServiceStatusById(graphId, options);
             const index = configuration?.serverIndex ?? 0;
-            const operationBasePath = operationServerMap['ServiceApi.getServiceStatus']?.[index]?.url;
+            const operationBasePath = operationServerMap['ServiceApi.getServiceStatusById']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * List all service status
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listServiceStatus(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ServiceStatus>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listServiceStatus(options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['ServiceApi.listServiceStatus']?.[index]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
         },
         /**
@@ -4605,12 +4400,21 @@ export const ServiceApiFactory = function (configuration?: Configuration, basePa
     const localVarFp = ServiceApiFp(configuration)
     return {
         /**
-         * Get service status
+         * Get service status by graph ID
+         * @param {string} graphId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getServiceStatus(options?: any): AxiosPromise<ServiceStatus> {
-            return localVarFp.getServiceStatus(options).then((request) => request(axios, basePath));
+        getServiceStatusById(graphId: string, options?: any): AxiosPromise<ServiceStatus> {
+            return localVarFp.getServiceStatusById(graphId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * List all service status
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listServiceStatus(options?: any): AxiosPromise<Array<ServiceStatus>> {
+            return localVarFp.listServiceStatus(options).then((request) => request(axios, basePath));
         },
         /**
          * Restart current service
@@ -4648,13 +4452,24 @@ export const ServiceApiFactory = function (configuration?: Configuration, basePa
  */
 export class ServiceApi extends BaseAPI {
     /**
-     * Get service status
+     * Get service status by graph ID
+     * @param {string} graphId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ServiceApi
      */
-    public getServiceStatus(options?: RawAxiosRequestConfig) {
-        return ServiceApiFp(this.configuration).getServiceStatus(options).then((request) => request(this.axios, this.basePath));
+    public getServiceStatusById(graphId: string, options?: RawAxiosRequestConfig) {
+        return ServiceApiFp(this.configuration).getServiceStatusById(graphId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * List all service status
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ServiceApi
+     */
+    public listServiceStatus(options?: RawAxiosRequestConfig) {
+        return ServiceApiFp(this.configuration).listServiceStatus(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -4686,6 +4501,407 @@ export class ServiceApi extends BaseAPI {
      */
     public stopService(options?: RawAxiosRequestConfig) {
         return ServiceApiFp(this.configuration).stopService(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * StoredProcedureApi - axios parameter creator
+ * @export
+ */
+export const StoredProcedureApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Create a new stored procedure on a certain graph
+         * @param {string} graphId 
+         * @param {CreateStoredProcRequest} createStoredProcRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createStoredProcedure: async (graphId: string, createStoredProcRequest: CreateStoredProcRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphId' is not null or undefined
+            assertParamExists('createStoredProcedure', 'graphId', graphId)
+            // verify required parameter 'createStoredProcRequest' is not null or undefined
+            assertParamExists('createStoredProcedure', 'createStoredProcRequest', createStoredProcRequest)
+            const localVarPath = `/api/v1/graph/{graph_id}/storedproc`
+                .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createStoredProcRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Delete a stored procedure by ID
+         * @param {string} graphId 
+         * @param {string} storedProcedureId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteStoredProcedureById: async (graphId: string, storedProcedureId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphId' is not null or undefined
+            assertParamExists('deleteStoredProcedureById', 'graphId', graphId)
+            // verify required parameter 'storedProcedureId' is not null or undefined
+            assertParamExists('deleteStoredProcedureById', 'storedProcedureId', storedProcedureId)
+            const localVarPath = `/api/v1/graph/{graph_id}/storedproc/{stored_procedure_id}`
+                .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)))
+                .replace(`{${"stored_procedure_id"}}`, encodeURIComponent(String(storedProcedureId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get a stored procedure by ID
+         * @param {string} graphId 
+         * @param {string} storedProcedureId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getStoredProcedureById: async (graphId: string, storedProcedureId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphId' is not null or undefined
+            assertParamExists('getStoredProcedureById', 'graphId', graphId)
+            // verify required parameter 'storedProcedureId' is not null or undefined
+            assertParamExists('getStoredProcedureById', 'storedProcedureId', storedProcedureId)
+            const localVarPath = `/api/v1/graph/{graph_id}/storedproc/{stored_procedure_id}`
+                .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)))
+                .replace(`{${"stored_procedure_id"}}`, encodeURIComponent(String(storedProcedureId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * List all stored procedures on a certain graph
+         * @param {string} graphId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listStoredProcedures: async (graphId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphId' is not null or undefined
+            assertParamExists('listStoredProcedures', 'graphId', graphId)
+            const localVarPath = `/api/v1/graph/{graph_id}/storedproc`
+                .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Update a stored procedure by ID
+         * @param {string} graphId 
+         * @param {string} storedProcedureId 
+         * @param {UpdateStoredProcRequest} [updateStoredProcRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateStoredProcedureById: async (graphId: string, storedProcedureId: string, updateStoredProcRequest?: UpdateStoredProcRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'graphId' is not null or undefined
+            assertParamExists('updateStoredProcedureById', 'graphId', graphId)
+            // verify required parameter 'storedProcedureId' is not null or undefined
+            assertParamExists('updateStoredProcedureById', 'storedProcedureId', storedProcedureId)
+            const localVarPath = `/api/v1/graph/{graph_id}/storedproc/{stored_procedure_id}`
+                .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)))
+                .replace(`{${"stored_procedure_id"}}`, encodeURIComponent(String(storedProcedureId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateStoredProcRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * StoredProcedureApi - functional programming interface
+ * @export
+ */
+export const StoredProcedureApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = StoredProcedureApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * Create a new stored procedure on a certain graph
+         * @param {string} graphId 
+         * @param {CreateStoredProcRequest} createStoredProcRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createStoredProcedure(graphId: string, createStoredProcRequest: CreateStoredProcRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateStoredProcResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createStoredProcedure(graphId, createStoredProcRequest, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['StoredProcedureApi.createStoredProcedure']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * Delete a stored procedure by ID
+         * @param {string} graphId 
+         * @param {string} storedProcedureId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteStoredProcedureById(graphId: string, storedProcedureId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteStoredProcedureById(graphId, storedProcedureId, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['StoredProcedureApi.deleteStoredProcedureById']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * Get a stored procedure by ID
+         * @param {string} graphId 
+         * @param {string} storedProcedureId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getStoredProcedureById(graphId: string, storedProcedureId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetStoredProcResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getStoredProcedureById(graphId, storedProcedureId, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['StoredProcedureApi.getStoredProcedureById']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * List all stored procedures on a certain graph
+         * @param {string} graphId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listStoredProcedures(graphId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GetStoredProcResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listStoredProcedures(graphId, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['StoredProcedureApi.listStoredProcedures']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * Update a stored procedure by ID
+         * @param {string} graphId 
+         * @param {string} storedProcedureId 
+         * @param {UpdateStoredProcRequest} [updateStoredProcRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateStoredProcedureById(graphId: string, storedProcedureId: string, updateStoredProcRequest?: UpdateStoredProcRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateStoredProcedureById(graphId, storedProcedureId, updateStoredProcRequest, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['StoredProcedureApi.updateStoredProcedureById']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * StoredProcedureApi - factory interface
+ * @export
+ */
+export const StoredProcedureApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = StoredProcedureApiFp(configuration)
+    return {
+        /**
+         * Create a new stored procedure on a certain graph
+         * @param {string} graphId 
+         * @param {CreateStoredProcRequest} createStoredProcRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createStoredProcedure(graphId: string, createStoredProcRequest: CreateStoredProcRequest, options?: any): AxiosPromise<CreateStoredProcResponse> {
+            return localVarFp.createStoredProcedure(graphId, createStoredProcRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Delete a stored procedure by ID
+         * @param {string} graphId 
+         * @param {string} storedProcedureId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteStoredProcedureById(graphId: string, storedProcedureId: string, options?: any): AxiosPromise<string> {
+            return localVarFp.deleteStoredProcedureById(graphId, storedProcedureId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get a stored procedure by ID
+         * @param {string} graphId 
+         * @param {string} storedProcedureId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getStoredProcedureById(graphId: string, storedProcedureId: string, options?: any): AxiosPromise<GetStoredProcResponse> {
+            return localVarFp.getStoredProcedureById(graphId, storedProcedureId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * List all stored procedures on a certain graph
+         * @param {string} graphId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listStoredProcedures(graphId: string, options?: any): AxiosPromise<Array<GetStoredProcResponse>> {
+            return localVarFp.listStoredProcedures(graphId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Update a stored procedure by ID
+         * @param {string} graphId 
+         * @param {string} storedProcedureId 
+         * @param {UpdateStoredProcRequest} [updateStoredProcRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateStoredProcedureById(graphId: string, storedProcedureId: string, updateStoredProcRequest?: UpdateStoredProcRequest, options?: any): AxiosPromise<string> {
+            return localVarFp.updateStoredProcedureById(graphId, storedProcedureId, updateStoredProcRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * StoredProcedureApi - object-oriented interface
+ * @export
+ * @class StoredProcedureApi
+ * @extends {BaseAPI}
+ */
+export class StoredProcedureApi extends BaseAPI {
+    /**
+     * Create a new stored procedure on a certain graph
+     * @param {string} graphId 
+     * @param {CreateStoredProcRequest} createStoredProcRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StoredProcedureApi
+     */
+    public createStoredProcedure(graphId: string, createStoredProcRequest: CreateStoredProcRequest, options?: RawAxiosRequestConfig) {
+        return StoredProcedureApiFp(this.configuration).createStoredProcedure(graphId, createStoredProcRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Delete a stored procedure by ID
+     * @param {string} graphId 
+     * @param {string} storedProcedureId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StoredProcedureApi
+     */
+    public deleteStoredProcedureById(graphId: string, storedProcedureId: string, options?: RawAxiosRequestConfig) {
+        return StoredProcedureApiFp(this.configuration).deleteStoredProcedureById(graphId, storedProcedureId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get a stored procedure by ID
+     * @param {string} graphId 
+     * @param {string} storedProcedureId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StoredProcedureApi
+     */
+    public getStoredProcedureById(graphId: string, storedProcedureId: string, options?: RawAxiosRequestConfig) {
+        return StoredProcedureApiFp(this.configuration).getStoredProcedureById(graphId, storedProcedureId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * List all stored procedures on a certain graph
+     * @param {string} graphId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StoredProcedureApi
+     */
+    public listStoredProcedures(graphId: string, options?: RawAxiosRequestConfig) {
+        return StoredProcedureApiFp(this.configuration).listStoredProcedures(graphId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Update a stored procedure by ID
+     * @param {string} graphId 
+     * @param {string} storedProcedureId 
+     * @param {UpdateStoredProcRequest} [updateStoredProcRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StoredProcedureApi
+     */
+    public updateStoredProcedureById(graphId: string, storedProcedureId: string, updateStoredProcRequest?: UpdateStoredProcRequest, options?: RawAxiosRequestConfig) {
+        return StoredProcedureApiFp(this.configuration).updateStoredProcedureById(graphId, storedProcedureId, updateStoredProcRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
