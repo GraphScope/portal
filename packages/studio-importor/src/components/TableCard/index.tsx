@@ -53,6 +53,7 @@ const styles: Record<string, React.CSSProperties> = {
 };
 const TableCard: React.FunctionComponent<ITableCardProps> = props => {
   const { data, _fromEdge } = props;
+  //@ts-ignore
   const { label, properties = [] } = data;
 
   const tableStyle = _fromEdge
