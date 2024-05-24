@@ -33,6 +33,7 @@ const PopoverList = ({ data }) => {
 const TableNode = (props: NodeProps) => {
   const { id, data } = props;
   const { _fromEdge } = data || {};
+  console.log('props', props);
 
   // const properties = Object.entries(data.properties);
   const handleStyle = _fromEdge
@@ -52,13 +53,13 @@ const TableNode = (props: NodeProps) => {
         backgroundColor: '#F6F7F9',
         borderRadius: '6px',
         height: '60px',
-        width: '150px',
+        width: '250px',
       }
     : {
         border: '1px solid #ddd',
         backgroundColor: '#F6F7F9',
         borderRadius: '6px',
-        width: '170px',
+        width: '250px',
         height: '200px',
       };
   return (
