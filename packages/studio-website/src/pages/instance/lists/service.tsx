@@ -8,13 +8,13 @@ import {
 import { notification } from '@/pages/utils';
 
 export const listGraphs = async () => {
-  const status = await ServiceApiFactory(undefined, location.origin)
-    .getServiceStatus()
+  const _status = await ServiceApiFactory(undefined, location.origin)
+    .listServiceStatus()
     .then(res => {
       if (res.status === 200) {
         return res.data;
       }
-      return {};
+      return [];
     })
     .catch(error => {
       notification('error', error);
@@ -50,8 +50,7 @@ export const listGraphs = async () => {
   const graphs_map = graphs.map(item => {
     const { schema, store_type, stored_procedures, schema_update_time, data_update_time, creation_time, id, name } =
       item;
-    const { graph } = status;
-    const isMatch = graph?.id === id;
+    const { graph_id, sdk_endpoints, start_time, status } = _status.filter(V => V.graph_id === id)[0];
     const { vertex_types, edge_types, vertices, edges } = schema;
     return {
       id,
@@ -62,9 +61,9 @@ export const listGraphs = async () => {
       createtime: creation_time,
       updatetime: schema_update_time,
       importtime: data_update_time,
-      server: isMatch ? status.sdk_endpoints?.cypher : '',
-      status: isMatch ? status.status : 'Stopped',
-      hqps: isMatch ? status.sdk_endpoints?.hqps : '',
+      server: sdk_endpoints?.cypher ?? '',
+      status,
+      hqps: sdk_endpoints?.hqps ?? '',
       schema: {
         vertices: (vertices && vertices.length) || (vertex_types && vertex_types.length),
         edges: (edges && edges.length) || (edge_types && edge_types.length),
