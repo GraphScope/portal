@@ -2,10 +2,11 @@ import * as React from 'react';
 
 interface IToolbarProps {
   children: React.ReactNode;
+  style?: React.CSSProperties;
 }
 
 const Toolbar: React.FunctionComponent<IToolbarProps> = props => {
-  const { children } = props;
+  const { children, style } = props;
   return (
     <div
       style={{
@@ -20,6 +21,7 @@ const Toolbar: React.FunctionComponent<IToolbarProps> = props => {
         padding: '6px 4px',
         borderRadius: '4px',
         gap: '6px',
+        ...style,
       }}
     >
       {children}
