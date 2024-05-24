@@ -1,5 +1,5 @@
 import React from 'react';
-import { Collapse, Segmented } from 'antd';
+import { Collapse, Segmented, Button } from 'antd';
 import PropertiesSchema from './properties-schema';
 // import LabelSwitch from './label-switch';
 import { useContext } from '../useContext';
@@ -22,7 +22,6 @@ interface EdgeSchema extends PropertiesSchema {
 const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props => {
   const { store, updateStore } = useContext();
   const { nodes, edges, currentType, currentId } = store;
-  console.log('store', edges);
 
   const nodes_items = nodes.map(item => {
     const { id, data } = item;
@@ -48,9 +47,15 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       draft.currentId = key[0] as string;
     });
   };
-
+  const handleSubmit = () => {
+    console.log('edges', edges);
+    console.log('nodes', nodes);
+  };
   return (
     <div>
+      <Button style={{ position: 'absolute', right: '400px' }} onClick={handleSubmit}>
+        Save
+      </Button>
       <Segmented
         block
         options={[

@@ -26,7 +26,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
 
   const isEmpty = nodes.length === 0;
 
-  console.log('render.........>>>>>>');
+  console.log('render.........>>>>>>', nodes);
 
   return (
     <div style={{ height: '100%', width: '100%' }}>

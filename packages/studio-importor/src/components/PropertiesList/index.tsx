@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Flex, Button, Input, Table, ConfigProvider } from 'antd';
-import { DeleteFilled, PlusSquareOutlined, EditOutlined } from '@ant-design/icons';
+import { Button, Input, Table, ConfigProvider } from 'antd';
 import SelectType from './SelectType';
-import { handleAdd, handleDelete, handleBlur, handlePrimaryKey, handleDoubleClick } from './utils';
+import { handleAdd, handleDelete, handleBlur, handlePrimaryKey, handleDoubleClick, handleType } from './utils';
 import PrimaryKey from '../Icons/primary-key';
 import MapFromFile from './MapFromFile';
+import EditName from './EditName';
 interface Property {
   key: string;
   name: string;
@@ -31,7 +31,7 @@ interface IPropertiesListProps {
     value: string;
   }[];
   selectable?: boolean;
-  columns: {
+  columns?: {
     title;
     key;
   }[];
@@ -53,7 +53,15 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
     selectedRowKeys: [],
   });
   const { properties, selectedRowKeys } = state;
-  const inputRef = React.useRef();
+  const handleProperties = properties => {
+    updateState(preset => {
+      return {
+        ...preset,
+        properties,
+      };
+    });
+    onChange(properties);
+  };
   const columns = [
     {
       title: 'Name',
@@ -61,36 +69,15 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
       render: (...p) => {
         const [row, record] = p;
         return (
-          <>
-            {record.disable ? (
-              <div
-                style={{
-                  lineHeight: '12px',
-                  width: '100%',
-                  padding: '4px',
-                  cursor: 'pointer',
-                  backgroundColor: '#505256',
-                  color: '#fff',
-                  borderRadius: '3px',
-                  textAlign: 'center',
-                }}
-                onClick={async () => {
-                  await handleDoubleClick(record, updateState, onChange);
-                  //@ts-ignore
-                  await inputRef.current.focus();
-                }}
-              >
-                {record?.name} <EditOutlined />
-              </div>
-            ) : (
-              <Input
-                size="small"
-                ref={inputRef}
-                defaultValue={row}
-                onBlur={e => handleBlur(e, record, updateState, onChange)}
-              />
-            )}
-          </>
+          <EditName
+            p={p}
+            handleDoubleClick={() => {
+              handleProperties(handleDoubleClick(record, state));
+            }}
+            handleBlur={evt => {
+              handleProperties(handleBlur(evt, record, state));
+            }}
+          />
         );
       },
     },
@@ -103,22 +90,7 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
           <SelectType
             value={row.type}
             onChange={value => {
-              updateState(preState => {
-                const properties = preState.properties.map((item, index) => {
-                  if (item.key === row.key) {
-                    return {
-                      ...item,
-                      type: value,
-                    };
-                  }
-                  return item;
-                });
-                onChange(properties);
-                return {
-                  ...preState,
-                  properties,
-                };
-              });
+              handleProperties(handleType(value, row, state));
             }}
           />
         );
@@ -131,9 +103,9 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
         <Button
           size="small"
           type={'text'}
-          onClick={() => handlePrimaryKey(record, updateState, onChange)}
+          onClick={() => handleProperties(handlePrimaryKey(record, state))}
           icon={<PrimaryKey style={{ color: record?.primaryKey ? '#515151' : '#e6e6e6' }} />}
-          style={{ backgroundColor: record?.primaryKey ? '#e6e6e6' : '#fff' }}
+          style={{ backgroundColor: record?.primaryKey && '#e6e6e6' }}
         ></Button>
       ),
     },
@@ -142,6 +114,7 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
   const rowSelection = {
     type: 'checkbox',
     onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+      //@ts-ignore
       updateState(preState => {
         return {
           ...preState,
@@ -155,15 +128,16 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
     <div>
       <MapFromFile
         title={title}
-        dataSource={[
-          { key: '1', name: '1', type: 'INT' },
-          { key: '2', name: '2', type: 'INT' },
-        ]}
+        dataSource={[]}
         /** mapfeomfile 控制 */
         isMapFromFile={false}
         selectedRowKeys={selectedRowKeys}
-        addProperty={() => handleAdd(state, updateState, onChange)}
-        delProperty={() => handleDelete(state, updateState, onChange)}
+        addProperty={() => {
+          handleProperties(handleAdd(state));
+        }}
+        delProperty={() => {
+          handleProperties(handleDelete(state));
+        }}
         handleMapFromFile={file => {
           updateState(preState => {
             return {
@@ -191,7 +165,13 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
           },
         }}
       >
-        <Table columns={columns} dataSource={properties} rowSelection={rowSelection} pagination={false} />
+        <Table
+          columns={columns}
+          dataSource={properties}
+          //@ts-ignore
+          rowSelection={rowSelection}
+          pagination={false}
+        />
       </ConfigProvider>
     </div>
   );
