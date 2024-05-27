@@ -29,6 +29,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     return {
       key: id,
       label: label,
+      //@ts-ignore
       children: <PropertiesSchema data={item} type="nodes" {...props} />,
     };
   });
@@ -38,6 +39,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     return {
       key: id,
       label: label,
+      //@ts-ignore
       children: <PropertiesSchema data={item} type="edges" {...props} />,
     };
   });

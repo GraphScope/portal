@@ -5,7 +5,7 @@ import { useContext } from '../../useContext';
 import PropertiesList from '../../../components/PropertiesList';
 interface IPropertiesSchemaProps {
   GS_ENGINE_TYPE: string;
-  getPrimitiveTypes(): { label: string; value: string }[] | undefined;
+  getPrimitiveTypes(): { label: string; value: string }[];
   data: any;
   type: 'nodes' | 'edges';
 }
