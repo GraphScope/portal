@@ -18,7 +18,7 @@ export const getSpecialPath = ({ sourceX, sourceY, targetX, targetY }: GetSpecia
 export default function TableEdge(props: EdgeProps) {
   const { source, target, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, markerEnd, data, style } =
     props;
-  // console.log('edge props', props);
+
   //@ts-ignore
   const { _isLoop = false, _isPoly = false, _isRevert = false, _offset = 0 } = style || {};
 

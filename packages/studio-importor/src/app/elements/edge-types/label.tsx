@@ -18,6 +18,7 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
     updateStore(draft => {
       draft.currentId = id;
       draft.currentType = 'edges';
+      draft.collapsed.right = false;
     });
   };
 
