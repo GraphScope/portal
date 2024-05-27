@@ -1,6 +1,9 @@
 import { useCallback, useRef } from 'react';
 import { useReactFlow, applyEdgeChanges, applyNodeChanges } from 'reactflow';
 import { uuid } from 'uuidv4';
+const deepclone = obj => {
+  return JSON.parse(JSON.stringify(obj));
+};
 
 import type { NodeChange, EdgeChange } from 'reactflow';
 import { useContext, proxyStore } from '../useContext';
@@ -8,7 +11,7 @@ import { transformEdges } from '../elements';
 
 import { getBBox, createEdgeLabel, createNodeLabel } from '../utils';
 
-const useInteractive = () => {
+const useInteractive: any = () => {
   const { store, updateStore } = useContext();
   const { screenToFlowPosition, fitBounds } = useReactFlow();
   const { displayMode } = store;
@@ -77,7 +80,8 @@ const useInteractive = () => {
             ],
             displayMode,
           );
-          draft.nodes = [...draft.nodes];
+          // //如果移除这个，会导致节点无法再次拖拽
+          // draft.nodes = [...draft.nodes];
         });
       }
     },
@@ -86,12 +90,12 @@ const useInteractive = () => {
 
   const onNodesChange = (changes: NodeChange[]) => {
     updateStore(draft => {
-      draft.nodes = applyNodeChanges(changes, draft.nodes);
+      draft.nodes = applyNodeChanges(changes, deepclone(draft.nodes));
     });
   };
   const onEdgesChange = (changes: EdgeChange[]) => {
     updateStore(draft => {
-      draft.edges = applyEdgeChanges(changes, draft.edges);
+      draft.edges = applyEdgeChanges(changes, deepclone(draft.edges));
     });
   };
 
@@ -101,6 +105,8 @@ const useInteractive = () => {
   };
 
   return {
+    store,
+    updateStore,
     onDoubleClick,
     onEdgesChange,
     onNodesChange,

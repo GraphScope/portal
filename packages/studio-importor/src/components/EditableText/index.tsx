@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-
+import { debounce } from '../Utils/index';
 const EditableText = ({ text, onTextChange, id, style = {} }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableText, setEditableText] = useState(text);
+
   const inputRef = useRef<null | HTMLInputElement>(null);
 
   useEffect(() => {
@@ -11,6 +12,9 @@ const EditableText = ({ text, onTextChange, id, style = {} }) => {
       inputRef.current.focus();
     }
   }, [isEditing]);
+  useEffect(() => {
+    setEditableText(text);
+  }, [text]);
 
   const handleDoubleClick = () => {
     // 开启编辑模式
@@ -57,6 +61,7 @@ const EditableText = ({ text, onTextChange, id, style = {} }) => {
           ref={inputRef}
           type="text"
           value={editableText}
+          // defaultValue={text}
           onChange={handleChange}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}

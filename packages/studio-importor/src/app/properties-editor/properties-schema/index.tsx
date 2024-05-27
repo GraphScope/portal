@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { Typography, Flex, Input, Space, Button, Row } from 'antd';
 import PropertiesEditor from '../../../properties-editor';
-import { updateStore, useContext } from '../../useContext';
+import { useContext } from '../../useContext';
 import PropertiesList from '../../../components/PropertiesList';
 interface IPropertiesSchemaProps {
+  GS_ENGINE_TYPE: string;
+  getPrimitiveTypes(): { label: string; value: string }[] | undefined;
   data: any;
   type: 'nodes' | 'edges';
 }
@@ -17,9 +19,8 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
     target,
     properties = [],
   } = data;
-  const { GS_ENGINE_TYPE } = window;
-  console.log('dara', props, data);
-  const { store } = useContext();
+
+  const { store, updateStore } = useContext();
   const { nodes } = store;
   let source_label, target_label;
   if (type === 'edges') {
@@ -34,16 +35,18 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
   }
   const handleChangeLabel = e => {
     const label = e.target.value;
+
     updateStore(draft => {
+      draft.displayMode = 'table';
       if (type === 'edges') {
-        draft.edges.map(item => {
+        draft.edges.forEach(item => {
           if (item.id === id) {
             item.data.label = label;
           }
         });
       }
       if (type === 'nodes') {
-        draft.nodes.map(item => {
+        draft.nodes.forEach(item => {
           if (item.id === id) {
             item.data.label = label;
           }
@@ -92,7 +95,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
         )}
         <PropertiesList properties={properties} onChange={handleChange} typeOptions={props.getPrimitiveTypes()} />
         <Row justify="end">
-          {GS_ENGINE_TYPE === 'groot' && (
+          {props.GS_ENGINE_TYPE === 'groot' && (
             <Space>
               <Button size="small" type="primary" onClick={handleSubmit}>
                 Submit
