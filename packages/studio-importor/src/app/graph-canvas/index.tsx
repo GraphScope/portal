@@ -30,7 +30,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
 
   return (
     <div style={{ height: '100%', width: '100%' }}>
-      <div style={{ height: '100%', width: '100%' }}>
+      <div style={{ height: '100%', width: '100%', position: 'absolute' }}>
         <ReactFlow
           //@ts-ignore
           nodes={nodes}

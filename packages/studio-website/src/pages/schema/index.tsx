@@ -5,7 +5,7 @@ interface ISchemaPageProps {}
 
 const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
   return (
-    <div style={{ padding: '12px', height: '100%' }}>
+    <div style={{ padding: '12px', height: '100%', boxSizing: 'border-box' }}>
       <ImportApp />
     </div>
   );

@@ -41,8 +41,8 @@ export const initialStore: IStore = {
     primaryColor: '#1978FF',
   },
   collapsed: {
-    left: false,
-    right: false,
+    left: true,
+    right: true,
   },
 };
 
@@ -67,19 +67,4 @@ export function useContext(): ContextType {
     store,
     updateStore,
   };
-}
-
-export function useColSpan() {
-  const { collapsed } = useStore();
-  const { left, right } = collapsed;
-  if (left && right) {
-    return [0, 24, 0];
-  }
-  if (!left && right) {
-    return [5, 19, 0];
-  }
-  if (left && !right) {
-    return [0, 19, 5];
-  }
-  return [8, 12, 4];
 }
