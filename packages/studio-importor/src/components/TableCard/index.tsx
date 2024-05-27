@@ -53,7 +53,8 @@ const styles: Record<string, React.CSSProperties> = {
 };
 const TableCard: React.FunctionComponent<ITableCardProps> = props => {
   const { data, _fromEdge } = props;
-  const { label } = data;
+  //@ts-ignore
+  const { label, properties = [] } = data;
 
   const tableStyle = _fromEdge
     ? {
@@ -61,18 +62,19 @@ const TableCard: React.FunctionComponent<ITableCardProps> = props => {
         backgroundColor: '#F6F7F9',
         borderRadius: '6px',
         // height: '60px',
-        width: '150px',
+        width: '250px',
         borderTop: '4px solid blue',
       }
     : {
         border: '1px solid #ddd',
         backgroundColor: '#F6F7F9',
         borderRadius: '6px',
-        width: '170px',
+        width: '250px',
         // height: '200px',
         borderTop: '4px solid red',
       };
   const p = _fromEdge ? edgeProperties : properties;
+  console.log('TableCard', props, p);
   return (
     <div style={tableStyle}>
       <div style={{ borderBottom: '1px solid #ddd', padding: '6px 12px' }}>{label}</div>

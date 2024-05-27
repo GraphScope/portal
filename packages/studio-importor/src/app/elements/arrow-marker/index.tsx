@@ -8,7 +8,7 @@ interface IArrowMarkerProps {
 }
 
 const ArrowMarker: React.FunctionComponent<IArrowMarkerProps> = props => {
-  const { selectedColor = 'red', color = '#ddd' } = props;
+  const { selectedColor = 'red', color = '#000' } = props;
 
   return (
     <svg

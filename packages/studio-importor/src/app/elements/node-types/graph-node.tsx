@@ -60,7 +60,7 @@ const GraphNode = (props: NodeProps) => {
       const match = draft.nodes.find(node => node.id === id);
       if (match) {
         //@ts-ignore
-        match.label = value;
+        match.data.label = value;
       }
     });
   };
@@ -126,7 +126,7 @@ const GraphNode = (props: NodeProps) => {
           position: 'absolute',
           top: 0,
           left: 0,
-          border: isSelected ? `4px solid ${theme.primaryColor}` : '2px solid #ddd',
+          border: isSelected ? `4px solid ${theme.primaryColor}` : '2px solid #000',
           backgroundColor: isSelected ? '#fafafa' : '#fafafa',
           borderRadius: '50%',
           height: '100px',

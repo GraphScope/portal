@@ -18,6 +18,10 @@ export type IStore = {
   theme: {
     primaryColor: string;
   };
+  collapsed: {
+    left: boolean;
+    right: boolean;
+  };
 };
 
 export const initialStore: IStore = {
@@ -35,6 +39,10 @@ export const initialStore: IStore = {
   currentId: '',
   theme: {
     primaryColor: '#1978FF',
+  },
+  collapsed: {
+    left: true,
+    right: true,
   },
 };
 

@@ -18,7 +18,6 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   const { nodes, edges, theme } = store;
 
   useEffect(() => {
-    console.log('fetching graph schema....');
     updateStore(draft => {
       draft.edges = []; //initalData.edges; // [];
       draft.nodes = []; //initalData.nodes; // [];
@@ -27,11 +26,11 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
 
   const isEmpty = nodes.length === 0;
 
-  console.log('render.........>>>>>>');
+  console.log('render.........>>>>>>', nodes);
 
   return (
     <div style={{ height: '100%', width: '100%' }}>
-      <div style={{ height: '100%', width: '100%' }}>
+      <div style={{ height: '100%', width: '100%', position: 'absolute' }}>
         <ReactFlow
           //@ts-ignore
           nodes={nodes}
@@ -48,9 +47,14 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           onDoubleClick={onDoubleClick}
         >
           <ArrowMarker selectedColor={theme.primaryColor} />
-          <AddNode style={{ position: 'absolute', top: '70px', left: '0px', zIndex: 999 }} />
-          <Controls />
-          <Background />
+          <Controls
+            style={{
+              gap: '4px',
+              boxShadow:
+                '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)',
+            }}
+          />
+          <Background style={{ background: '#f4f5f5' }} />
           {isEmpty && <EmptyCanvas />}
           <MiniMap />
         </ReactFlow>

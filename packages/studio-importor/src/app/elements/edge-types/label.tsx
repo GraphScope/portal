@@ -26,7 +26,7 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
       const match = draft.edges.find(edge => edge.id === id);
       if (match) {
         //@ts-ignore
-        match.label = value;
+        match.data.label = value;
       }
     });
   };
@@ -49,7 +49,7 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
           style={{
             borderRadius: '4px',
             background: isSelected ? `${theme.primaryColor}` : '#fff',
-            border: isSelected ? `2px solid ${theme.primaryColor}` : '1px solid #ddd',
+            border: isSelected ? `2px solid ${theme.primaryColor}` : '1px solid #000',
           }}
         >
           <EditableText
