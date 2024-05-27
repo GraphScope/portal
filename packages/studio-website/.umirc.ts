@@ -16,6 +16,7 @@ export default defineConfig({
     { path: '/extension/:name', component: 'extension/create-plugins' },
     { path: '/alert', component: 'alert' },
     { path: '/deployment', component: 'deployment' },
+    { path: '/schema', component: 'schema' },
   ],
   jsMinifier: 'terser',
   npmClient: 'pnpm',

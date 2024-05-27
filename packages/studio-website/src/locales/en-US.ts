@@ -6,6 +6,7 @@ export default {
   'navbar.alert': 'Alerts',
   'navbar.setting': 'Settings',
   'Query App': 'Query App',
+  Schema: 'Schema',
   /** graphs */
   day: 'day',
   hrs: 'hrs',
