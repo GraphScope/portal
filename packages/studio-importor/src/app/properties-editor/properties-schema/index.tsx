@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, Flex, Input } from 'antd';
+import { Typography, Flex, Input, Space, Button, Row } from 'antd';
 import PropertiesEditor from '../../../properties-editor';
 import { updateStore, useContext } from '../../useContext';
 import PropertiesList from '../../../components/PropertiesList';
@@ -17,6 +17,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
     target,
     properties = [],
   } = data;
+  const { GS_ENGINE_TYPE } = window;
   console.log('dara', props, data);
   const { store } = useContext();
   const { nodes } = store;
@@ -72,6 +73,10 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
       }
     });
   };
+  const handleSubmit = () => {};
+  const handleDelete = () => {
+    console.log(id);
+  };
   return (
     <div>
       <Flex vertical gap={12} style={{ margin: '0px 12px' }}>
@@ -85,7 +90,19 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
             <Input value={target_label} disabled />
           </>
         )}
-        <PropertiesList properties={properties} onChange={handleChange} />
+        <PropertiesList properties={properties} onChange={handleChange} typeOptions={props.getPrimitiveTypes()} />
+        <Row justify="end">
+          {GS_ENGINE_TYPE === 'groot' && (
+            <Space>
+              <Button size="small" type="primary" onClick={handleSubmit}>
+                Submit
+              </Button>
+              <Button size="small" type="primary" danger ghost onClick={handleDelete}>
+                Delete
+              </Button>
+            </Space>
+          )}
+        </Row>
       </Flex>
     </div>
   );

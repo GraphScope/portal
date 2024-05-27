@@ -29,7 +29,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     return {
       key: id,
       label: label,
-      children: <PropertiesSchema data={item} type="nodes" />,
+      children: <PropertiesSchema data={item} type="nodes" {...props} />,
     };
   });
   const edges_items = edges.map(item => {
@@ -38,7 +38,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     return {
       key: id,
       label: label,
-      children: <PropertiesSchema data={item} type="edges" />,
+      children: <PropertiesSchema data={item} type="edges" {...props} />,
     };
   });
 
@@ -48,6 +48,8 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     });
   };
   const handleSubmit = () => {
+    /** 创建服务 「props.createGraph(params)」*/
+    console.log(props);
     console.log('edges', edges);
     console.log('nodes', nodes);
   };

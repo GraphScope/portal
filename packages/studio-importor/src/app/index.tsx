@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react';
-
-import { Col, Row } from 'antd';
 import GraphCanvas from './graph-canvas';
 import PropertiesEditor from './properties-editor';
 import ImportSchema from './import-schema';
@@ -53,7 +51,7 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
             transition: 'width 0.2s ease',
           }}
         >
-          <PropertiesEditor />
+          <PropertiesEditor {...props} />
         </div>
       </div>
     </div>
