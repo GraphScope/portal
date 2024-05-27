@@ -1,17 +1,11 @@
 import * as React from 'react';
-import { Button, Input, Table, ConfigProvider } from 'antd';
+import { Button, Table, ConfigProvider } from 'antd';
 import SelectType from './SelectType';
-import { handleAdd, handleDelete, handleBlur, handlePrimaryKey, handleDoubleClick, handleType } from './utils';
+import useStore from './utils';
+import type { Property, IState } from './utils';
 import PrimaryKey from '../Icons/primary-key';
 import MapFromFile from './MapFromFile';
 import EditName from './EditName';
-interface Property {
-  key: string;
-  name: string;
-  type: string;
-  index: number;
-  primaryKey: boolean;
-}
 
 interface DataType {
   key: string;
@@ -48,7 +42,8 @@ const defaultTypeOptions = [
 ];
 const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
   const { title = 'Properties', onChange = () => {}, typeOptions = defaultTypeOptions, selectable = true } = props;
-  const [state, updateState] = React.useState({
+  const { handleAdd, handleDelete, handleBlur, handlePrimaryKey, handleDoubleClick, handleType } = useStore();
+  const [state, updateState] = React.useState<IState & { selectedRowKeys: string[] }>({
     properties: props.properties,
     selectedRowKeys: [],
   });
