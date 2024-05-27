@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Typography, Flex, Input } from 'antd';
 import PropertiesEditor from '../../../properties-editor';
-import { updateStore, useContext } from '../../useContext';
+import { useContext } from '../../useContext';
 import PropertiesList from '../../../components/PropertiesList';
 interface IPropertiesSchemaProps {
   data: any;
@@ -17,9 +17,10 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
     target,
     properties = [],
   } = data;
-  console.log('dara', props, data);
-  const { store } = useContext();
+
+  const { store, updateStore } = useContext();
   const { nodes } = store;
+
   let source_label, target_label;
   if (type === 'edges') {
     nodes.forEach(item => {
@@ -33,16 +34,18 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
   }
   const handleChangeLabel = e => {
     const label = e.target.value;
+
     updateStore(draft => {
+      draft.displayMode = 'table';
       if (type === 'edges') {
-        draft.edges.map(item => {
+        draft.edges.forEach(item => {
           if (item.id === id) {
             item.data.label = label;
           }
         });
       }
       if (type === 'nodes') {
-        draft.nodes.map(item => {
+        draft.nodes.forEach(item => {
           if (item.id === id) {
             item.data.label = label;
           }

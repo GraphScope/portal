@@ -25,7 +25,6 @@ const TableContext = createContext<{
 const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
   const [form] = Form.useForm();
   const { onChange, data, rowKey } = useContext(TableContext)!;
-  console.log(data);
 
   return (
     <Form

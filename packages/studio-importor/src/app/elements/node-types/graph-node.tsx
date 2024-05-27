@@ -21,14 +21,13 @@ const styles = {
   },
 };
 const GraphNode = (props: NodeProps) => {
-  const { data, isConnectable, id } = props;
-
+  const { data = {}, isConnectable, id } = props;
+  const { label } = data;
   const { store, updateStore } = useContext();
   const { currentId, theme } = store;
   const isSelected = id === currentId;
   const [state, updateState] = useState({
     isHover: false,
-    label: data.label || id,
     contentEditable: false,
   });
 
@@ -49,12 +48,6 @@ const GraphNode = (props: NodeProps) => {
     });
   };
   const hanleChangeLabel = value => {
-    updateState(preState => {
-      return {
-        ...preState,
-        label: value,
-      };
-    });
     updateStore(draft => {
       //@ts-ignore
       const match = draft.nodes.find(node => node.id === id);
@@ -68,6 +61,7 @@ const GraphNode = (props: NodeProps) => {
     updateStore(draft => {
       draft.currentType = 'nodes';
       draft.currentId = id;
+      draft.collapsed.right = false;
     });
   };
 
@@ -140,7 +134,7 @@ const GraphNode = (props: NodeProps) => {
         }}
         data-nodeid={id}
       >
-        <EditableText id={id} text={state.label} onTextChange={hanleChangeLabel} />
+        <EditableText id={id} text={label} onTextChange={hanleChangeLabel} />
       </div>
     </div>
   );

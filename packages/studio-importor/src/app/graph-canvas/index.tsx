@@ -1,41 +1,40 @@
 import React, { useEffect } from 'react';
 import { ReactFlow, Controls, Background, MiniMap } from 'reactflow';
 import EmptyCanvas from '../../components/EmptyCanvas';
-import { useContext } from '../useContext';
 import { nodeTypes } from '../elements/node-types';
 import { edgeTypes } from '../elements/edge-types';
 import ConnectionLine from '../elements/connection-line';
 import ArrowMarker from '../elements/arrow-marker';
-import AddNode from './add-node';
+
 import useInteractive from './useInteractive';
 
 interface IGraphEditorProps {}
 
-const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
-  const { store, updateStore } = useContext();
-  const { onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } = useInteractive();
+const fakeSnapshot = obj => {
+  return JSON.parse(JSON.stringify(obj));
+};
 
+const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
+  const { store, updateStore, onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } =
+    useInteractive();
   const { nodes, edges, theme } = store;
 
   useEffect(() => {
     updateStore(draft => {
-      draft.edges = []; //initalData.edges; // [];
-      draft.nodes = []; //initalData.nodes; // [];
+      draft.edges = [];
+      draft.nodes = [];
     });
   }, []);
 
   const isEmpty = nodes.length === 0;
 
-  console.log('render.........>>>>>>', nodes);
-
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <div style={{ height: '100%', width: '100%', position: 'absolute' }}>
         <ReactFlow
+          nodes={fakeSnapshot(nodes)}
           //@ts-ignore
-          nodes={nodes}
-          //@ts-ignore
-          edges={edges}
+          edges={fakeSnapshot(edges)}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           nodeTypes={nodeTypes}

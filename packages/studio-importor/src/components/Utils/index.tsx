@@ -22,3 +22,17 @@ export function isDarkTheme() {
   const { mode } = storage.get<{ mode: string; primaryColor: string }>('STUDIO_QUERY_THEME') || {};
   return mode === 'darkAlgorithm';
 }
+
+export const debounce = <T extends (...args: any[]) => void>(
+  func: T,
+  wait: number,
+): ((...args: Parameters<T>) => void) => {
+  let timeout: NodeJS.Timeout | null;
+  return (...args: Parameters<T>): void => {
+    //@ts-ignore
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      func(...args);
+    }, wait);
+  };
+};

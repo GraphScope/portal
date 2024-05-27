@@ -20,7 +20,7 @@ const ImportFromSQL: React.FunctionComponent<IImportFromCSVProps> = props => {
       const data = schemaToPropertyGraph(value);
       const nodes = transformGraphNodes(data.nodes, 'graph');
       const edges = transformEdges(data.edges, 'graph');
-      console.log('dd', data, { nodes, edges });
+
       updateStore(draft => {
         draft.nodes = nodes;
         draft.edges = edges;
