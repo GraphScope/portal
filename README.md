@@ -1,7 +1,7 @@
 # GraphScope Portal
 
 A web-based management tool for GraphScope
-  
+
 [![Version](https://badgen.net/npm/v/@graphscope/studio-query)](https://www.npmjs.com/@graphscope/studio-query)
 ![Latest commit](https://badgen.net/github/last-commit/graphscope/portal)
 
@@ -29,6 +29,10 @@ Supports uploading local CSV files, with dropdown field mapping selection. Also 
 
 - Plugin Integration: Supports incorporating "stored procedures" and "graph algorithms" as plugins for seamless use.
 - Customization: Offers language switching, theme switching, and the ability to tailor theme colors and other details to individual preferences.
+
+## Common components
+
+- https://portal-bim.pages.dev/
 
 ## Development
 
