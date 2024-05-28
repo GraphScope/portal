@@ -14,6 +14,7 @@
     "build:all:umd": "turbo run build:umd --no-cache",
     "clean": "pnpm run -r clean",
     "docs": "NODE_OPTIONS=--max_old_space_size=4098 && dumi dev",
+    "docs:prev-build": "pnpm i && rm -rf package-lock.json && npm run build",
     "docs:build": "NODE_OPTIONS=--max_old_space_size=4098 && dumi build",
     "publish": "pnpm publish -r --registry=https://registry.npmjs.org"
   },
