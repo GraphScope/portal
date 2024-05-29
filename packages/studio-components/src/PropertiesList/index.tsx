@@ -160,7 +160,7 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
       });
     },
     getCheckboxProps: (record: DataType) => ({
-      disabled: !selectable, // Column configuration not to be checked
+      disabled: !editable, // Column configuration not to be checked
     }),
   };
 
