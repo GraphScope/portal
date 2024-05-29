@@ -200,6 +200,7 @@ export default defineConfig({
   externals: {
     'node:os': 'commonjs2 node:os',
   },
+  jsMinifier: 'terser',
   resolve: {
     docDirs: ['docs'],
     atomDirs: [
