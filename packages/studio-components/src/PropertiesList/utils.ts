@@ -1,5 +1,6 @@
 import { uuid } from 'uuidv4';
 export interface Property {
+  token: any;
   key: string;
   name: string;
   type: string;
@@ -17,6 +18,7 @@ interface IStore {
   handlePrimaryKey(record: { key: string }, state: IState): Property[];
   handleDoubleClick(record: { key: string }, state: IState): Property[];
   handleType(value: string, row: { key: string }, state: IState): Property[];
+  handleChangeIndex(value: any, all: { key: string }, state: IState): Property[];
 }
 let index = 0;
 export default function useStore(): IStore {
@@ -93,6 +95,19 @@ export default function useStore(): IStore {
     });
     return properties;
   };
+  const handleChangeIndex = (value: any, all: { key: string }, state: IState): Property[] => {
+    const { key } = all;
+    const properties = state.properties.map(item => {
+      if (item.key === key) {
+        return {
+          ...item,
+          token: value,
+        };
+      }
+      return item;
+    });
+    return properties;
+  };
   return {
     handleAdd,
     handleDelete,
@@ -100,5 +115,6 @@ export default function useStore(): IStore {
     handlePrimaryKey,
     handleDoubleClick,
     handleType,
+    handleChangeIndex,
   };
 }

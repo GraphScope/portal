@@ -3,16 +3,17 @@ import { Input } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 interface IEditNameProps {
   p: any;
+  editable?: boolean;
   handleDoubleClick: () => void;
   handleBlur: (evt) => void;
 }
 const EditName: React.FC<IEditNameProps> = props => {
-  const { p, handleDoubleClick, handleBlur } = props;
+  const { p, editable, handleDoubleClick, handleBlur } = props;
   const [row, record] = p;
   const inputRef = React.useRef();
   return (
     <>
-      {record.disable ? (
+      {record.disable && editable ? (
         <div
           style={{
             lineHeight: '12px',
@@ -35,6 +36,7 @@ const EditName: React.FC<IEditNameProps> = props => {
       ) : (
         <Input
           size="small"
+          disabled={!editable}
           //@ts-ignore
           ref={inputRef}
           defaultValue={row}
