@@ -208,7 +208,7 @@ export default defineConfig({
         dir: 'packages/studio-components/src',
       },
       {
-        type: 'components',
+        type: 'components/properties-panel',
         dir: 'packages/studio-query/src/properties-panel',
       },
       {
