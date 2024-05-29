@@ -4,5 +4,5 @@ export { default as SegmentedTabs } from './SegmentedTabs';
 export { default as TableCard } from './TableCard';
 export { default as Toolbar } from './Toolbar';
 
-export * as Utils from './EmptyCanvas';
+export * as Utils from './Utils';
 export * as Icons from './Icons';

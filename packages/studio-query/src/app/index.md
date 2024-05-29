@@ -1,7 +1,12 @@
-## StudioQuery 数据查询模块
+---
+order: 1
+title: Query
+---
 
 ```jsx
-import StudioQuery from './index';
+import QueryApp from '@graphscope/studio-query';
+import { Utils } from '@graphscope/studio-components';
+const { storage } = Utils;
 
 export default () => {
   const queryInfo = () => {
@@ -24,6 +29,27 @@ export default () => {
       resolve([]);
     });
   };
-  return <StudioQuery queryInfo={queryInfo} queryGraphSchema={queryGraphSchema} queryStatements={queryStatements} />;
+  const { GS_ENGINE_TYPE } = window;
+  const language = GS_ENGINE_TYPE === 'groot' ? 'gremlin' : 'cypher';
+  const globalScript = GS_ENGINE_TYPE === 'groot' ? 'g.V().limit 10' : 'Match (n) return n limit 10';
+
+  const locale = storage.get('locale') || 'en-US';
+  const primaryColor = storage.get('primaryColor') || '#1978FF';
+  const themeMode = storage.get('themeColor') || 'defaultAlgorithm';
+
+  return (
+    <QueryApp
+      /** 主题相关 */
+      theme={{ mode: themeMode, primaryColor }}
+      /** 国际化 */
+      locale={locale}
+      /** 返回导航 */
+      globalScript={globalScript}
+      language={language}
+      queryInfo={queryInfo}
+      queryGraphSchema={queryGraphSchema}
+      queryStatements={queryStatements}
+    />
+  );
 };
 ```

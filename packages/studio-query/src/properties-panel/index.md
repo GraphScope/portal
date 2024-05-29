@@ -1,4 +1,4 @@
-## Usage
+# PropertiesPanel
 
 ```jsx
 import PropertiesPanel from './index.tsx';
