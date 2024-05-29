@@ -38,18 +38,30 @@ export default () => {
   const themeMode = storage.get('themeColor') || 'defaultAlgorithm';
 
   return (
-    <QueryApp
-      /** 主题相关 */
-      theme={{ mode: themeMode, primaryColor }}
-      /** 国际化 */
-      locale={locale}
-      /** 返回导航 */
-      globalScript={globalScript}
-      language={language}
-      queryInfo={queryInfo}
-      queryGraphSchema={queryGraphSchema}
-      queryStatements={queryStatements}
-    />
+    <div
+      style={{
+        position: 'fixed',
+        top: '65px',
+        left: '0px',
+        right: '0px',
+        zIndex: 999,
+        bottom: '0px',
+        background: '#fff',
+      }}
+    >
+      <QueryApp
+        /** 主题相关 */
+        theme={{ mode: themeMode, primaryColor }}
+        /** 国际化 */
+        locale={locale}
+        /** 返回导航 */
+        globalScript={globalScript}
+        language={language}
+        queryInfo={queryInfo}
+        queryGraphSchema={queryGraphSchema}
+        queryStatements={queryStatements}
+      />
+    </div>
   );
 };
 ```
