@@ -51,15 +51,14 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
   };
   const handleSubmit = () => {
     /** 创建服务 「props.createGraph(params)」*/
-    console.log(props);
     console.log('edges', edges);
     console.log('nodes', nodes);
+    //@ts-ignore
+    props.createGraph(2, 'test', nodes, edges);
   };
   return (
     <div>
-      <Button style={{ position: 'absolute', right: '400px' }} onClick={handleSubmit}>
-        Save
-      </Button>
+      <Button onClick={handleSubmit}>Save</Button>
       <Segmented
         block
         options={[
@@ -77,7 +76,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       <div
         style={{
           position: 'absolute',
-          top: '40px',
+          top: '45px',
           bottom: '0px',
           left: 0,
           right: 0,

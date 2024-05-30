@@ -17,18 +17,18 @@ export interface Properties {
 
 export interface TransformedNode {
   /** 节点类型 */
-  label: string;
+  data: { label: string };
   /** 节点属性 */
   properties: Properties[];
   /** 节点主键 */
   primary: string;
   /** 唯一标识 */
-  key?: string;
+  id?: string;
 }
 
 export interface TransformedEdge {
   /** 边类型 */
-  label: string;
+  data: { label: string };
   /** 边属性 */
   properties: Properties[];
   /** 启始节点ID */
@@ -174,17 +174,18 @@ export const handleType = (type: string) => {
  * @param options 将store中的schema信息转化为引擎需要的schema
  * @returns
  */
+
 export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
   // const { edges } = options;
   const nodeMap: Record<string, string> = {};
   //@ts-ignore
   const vertex_types: VertexType[] = options.nodes.map((item, itemIdx) => {
-    nodeMap[item.key] = item.label;
+    nodeMap[item.id] = item.data.label;
 
     let primary_key = 'id';
     return {
       type_id: itemIdx, // item.key,
-      type_name: item.label,
+      type_name: item.data.label,
       properties: item.properties.map((p, pIdx) => {
         if (p.primaryKey) {
           primary_key = p.name;
@@ -201,12 +202,17 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
   const edgeMap = new Map();
 
   options.edges.forEach((item, itemIdx) => {
-    const { label, source: sourceID, target: targetID, relation, properties } = item;
+    const {
+      data: { label },
+      source: sourceID,
+      target: targetID,
+      properties,
+    } = item;
     const source = nodeMap[sourceID];
     const target = nodeMap[targetID];
     const constraint = {
       destination_vertex: target,
-      relation,
+      relation: 'MANY_TO_MANY',
       source_vertex: source,
     };
 
