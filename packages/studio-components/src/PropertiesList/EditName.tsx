@@ -24,7 +24,6 @@ const EditName: React.FC<IEditNameProps> = props => {
             color: '#fff',
             textAlign: 'center',
           }}
-          disabled={!disabled}
           //@ts-ignore
           ref={inputRef}
           defaultValue={row}
