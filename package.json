@@ -5,15 +5,14 @@
   },
   "scripts": {
     "ci": "pnpm i && rm -rf package-lock.json && npm run build && npm run build:site",
-    "build": "turbo run build:esm && turbo run build:cjs",
+    "build": "turbo run build --no-cache",
     "build:site": "cd packages/studio-website && npm run build",
+    "start": "turbo run start",
+    "docs": "dumi dev",
+    "docs:build": "pnpm i && rm -rf package-lock.json && npm run build &&  dumi build",
     "deploy": "cd packages/studio-website/proxy && npm run start --",
     "re-deploy": "cd packages/studio-website/proxy && npm run restart --",
     "logs": "cd packages/studio-website/proxy && npm run logs",
-    "start": "turbo run build:esm:watch && turbo run build:cjs:watch",
-    "build:all:umd": "turbo run build:umd --no-cache",
-    "clean": "pnpm run -r clean",
-    "docs": "NODE_OPTIONS=--max_old_space_size=4098 && dumi dev",
     "publish": "pnpm publish -r --registry=https://registry.npmjs.org"
   },
   "husky": {
@@ -51,14 +50,14 @@
     "use-immer": "^0.9.0"
   },
   "devDependencies": {
+    "father": "^4.4.1",
     "@types/node": "latest",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.0",
     "babel-loader": "^8.2.5",
     "css-loader": "^6.8.1",
     "dumi": "^2.2.16",
-    "dumi-theme-antd-style": "latest",
-    "father": "^4.3.8",
+    "dumi-theme-antd": "latest",
     "fs-extra": "^10.1.0",
     "husky": "^8.0.3",
     "less-loader": "^11.0.0",

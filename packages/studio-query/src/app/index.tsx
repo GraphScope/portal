@@ -5,7 +5,6 @@ import GPTStatements from './sidebar/gpt-statements';
 import RecommendedStatements from './sidebar/recommended-statements';
 import StoreProcedure from './sidebar/store-procedure';
 import HistoryStatements from './sidebar/history-statements';
-import './index.css';
 import { useContext, localStorageVars } from './context';
 import type { IStatement } from './context';
 import Sidebar from './sidebar';

@@ -53,6 +53,10 @@ docker pull <insight-engine-image>
 docker pull <interactive-engine-image>
 ```
 
+## 通用组件库
+
+- https://portal-bim.pages.dev/
+
 ## 本地开发
 
 - 准备工作
