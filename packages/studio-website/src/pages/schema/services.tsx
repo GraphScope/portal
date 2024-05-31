@@ -1,7 +1,14 @@
-import { GraphApiFactory } from '@graphscope/studio-server';
-import { transOptionsToSchema } from '@/components/utils/schema';
+import { GraphApiFactory, UtilsApiFactory, DataSourceApiFactory, JobApiFactory } from '@graphscope/studio-server';
+import type { SchemaMapping } from '@graphscope/studio-server';
+import { transOptionsToSchema } from './utils/schema';
 import { cloneDeep } from 'lodash';
 import { notification } from '@/pages/utils';
+import {
+  transformDataMapToOptions,
+  transformImportOptionsToSchemaMapping,
+  transformSchemaToImportOptions,
+  transformMappingSchemaToImportOptions,
+} from './utils/import';
 const { GS_ENGINE_TYPE } = window;
 
 export const createGraph = async (graph_id: string, graphName: string, nodeList: any[], edgeList: any[]) => {
@@ -43,6 +50,96 @@ export const createGraph = async (graph_id: string, graphName: string, nodeList:
       });
   }
   return graphs;
+};
+/** upload file */
+export const uploadFile = async (file: File) => {
+  return UtilsApiFactory(undefined, location.origin)
+    .uploadFile(file)
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
+    })
+    .catch(error => {
+      notification('error', error);
+    });
+};
+/** 数据绑定 dataMap(nodes/edges集合)*/
+export const createDataloadingJob = async (graph_id: string, dataMap: SchemaMapping) => {
+  const options = transformDataMapToOptions(dataMap);
+  const schema = transformImportOptionsToSchemaMapping(options);
+  console.log(schema);
+
+  return;
+  return DataSourceApiFactory(undefined, location.origin)
+    .bindDatasourceInBatch(graph_id, schema)
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
+    })
+    .catch(error => {
+      notification('error', error);
+    });
+};
+export const getSchema = async (graph_id: string) => {
+  let schema;
+  if (window.GS_ENGINE_TYPE === 'interactive') {
+    schema = await GraphApiFactory(undefined, location.origin)
+      .getGraphById(graph_id)
+      .then(res => {
+        if (res.status === 200) {
+          return res.data.schema;
+        }
+        return { nodes: [], edges: [] };
+      })
+      .catch(error => {
+        notification('error', error);
+      });
+  }
+  if (window.GS_ENGINE_TYPE === 'groot') {
+    schema = await GraphApiFactory(undefined, location.origin)
+      .getSchemaById(graph_id)
+      .then(res => {
+        if (res.status === 200) {
+          return res.data;
+        }
+        return { nodes: [], edges: [] };
+      })
+      .catch(error => {
+        notification('error', error);
+      });
+    // schema = transformDataMapToGrootSchema(JSON.parse(JSON.stringify(schema)));
+  }
+  return schema;
+};
+
+/** getDatasourceById 获取数据源信息 */
+export const getDataloadingConfig = async (graph_id: string, schema: any) => {
+  const schemaMapping = await DataSourceApiFactory(undefined, location.origin)
+    .getDatasourceById(graph_id!)
+    .then(res => res.data)
+    .catch(error => {
+      notification('error', error);
+      return {};
+    });
+  const loading_config = await JobApiFactory(undefined, location.origin)
+    .getDataloadingJobConfig(graph_id!)
+    .then(res => res.data)
+    .catch(error => {
+      notification('error', error);
+      return {};
+    });
+  /** 上边两接口获取一条数据 */
+  //@ts-ignore
+  schemaMapping.loading_config = loading_config;
+  //@ts-ignore
+  const { edge_mappings, vertex_mappings } = schemaMapping;
+  if (JSON.stringify(edge_mappings) === '[]' && JSON.stringify(vertex_mappings) === '[]') {
+    return transformSchemaToImportOptions(schema);
+  }
+  //@ts-ignore
+  return transformMappingSchemaToImportOptions(schemaMapping, schema);
 };
 
 export const getPrimitiveTypes = () => {

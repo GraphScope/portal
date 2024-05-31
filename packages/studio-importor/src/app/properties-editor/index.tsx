@@ -49,16 +49,9 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       draft.currentId = key[0] as string;
     });
   };
-  const handleSubmit = () => {
-    /** 创建服务 「props.createGraph(params)」*/
-    console.log('edges', edges);
-    console.log('nodes', nodes);
-    //@ts-ignore
-    props.createGraph(2, 'test', nodes, edges);
-  };
+
   return (
     <div>
-      <Button onClick={handleSubmit}>Save</Button>
       <Segmented
         block
         options={[

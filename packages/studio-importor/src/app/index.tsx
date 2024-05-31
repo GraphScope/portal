@@ -10,11 +10,27 @@ import 'reactflow/dist/style.css';
 import RightButton from './layout-controller/right-button';
 import LeftButton from './layout-controller/left-button';
 interface ImportAppProps {}
-import { useStore } from './useContext';
+import { useStore, useContext } from './useContext';
+import { Button } from 'antd';
 
 const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
   const { collapsed } = useStore();
   const { left, right } = collapsed;
+  const { store } = useContext();
+  const { nodes, edges } = store;
+  const handleSubmit = () => {
+    /** 创建服务 「props.createGraph(params)」*/
+    console.log('edges', edges);
+    console.log('nodes', nodes);
+    //@ts-ignore
+    // props.createGraph(2, 'test', nodes, edges);
+  };
+  /** 数据绑定 */
+  const handleBind = () => {
+    const dataMap = [...nodes, ...edges];
+    console.log(dataMap);
+    props.createDataloadingJob(1, dataMap);
+  };
   return (
     <div style={{ width: '100%', height: '100%' }}>
       <div style={{ height: '100%', display: 'flex' }}>
@@ -35,6 +51,14 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
               <AddNode />
               <ImportSchema displayType="model" />
               <ModeSwitch />
+            </Toolbar>
+            <Toolbar style={{ top: '18px', right: '70px', left: 'unset', padding: 0 }}>
+              {/* <Button type="primary" onClick={handleSubmit}>
+                Save
+              </Button> */}
+              <Button type="primary" onClick={handleBind}>
+                Start Import
+              </Button>
             </Toolbar>
             <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }}>
               <RightButton />
