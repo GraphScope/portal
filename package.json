@@ -5,17 +5,14 @@
   },
   "scripts": {
     "ci": "pnpm i && rm -rf package-lock.json && npm run build && npm run build:site",
-    "build": "turbo run build:esm && turbo run build:cjs",
+    "build": "turbo run build --no-cache",
     "build:site": "cd packages/studio-website && npm run build",
+    "start": "turbo run start",
+    "docs": "dumi dev",
+    "docs:build": "pnpm i && rm -rf package-lock.json && npm run build &&  dumi build",
     "deploy": "cd packages/studio-website/proxy && npm run start --",
     "re-deploy": "cd packages/studio-website/proxy && npm run restart --",
     "logs": "cd packages/studio-website/proxy && npm run logs",
-    "start": "turbo run build:esm:watch && turbo run build:cjs:watch",
-    "build:all:umd": "turbo run build:umd --no-cache",
-    "clean": "pnpm run -r clean",
-    "docs": "NODE_OPTIONS=--max_old_space_size=4098 && dumi dev",
-    "docs:prev-build": "pnpm i && rm -rf package-lock.json && npm run build",
-    "docs:build": "NODE_OPTIONS=--max_old_space_size=4098 && dumi build",
     "publish": "pnpm publish -r --registry=https://registry.npmjs.org"
   },
   "husky": {
