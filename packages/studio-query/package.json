@@ -15,12 +15,12 @@
     "dist"
   ],
   "scripts": {
-    "start": "run-p build:cjs:watch build:esm:watch",
-    "build:cjs": "rimraf ./lib && tsc --module commonjs --outDir lib",
-    "build:esm": "rimraf ./esm && tsc --module ESNext --outDir es",
-    "build:cjs:watch": "rimraf ./lib && tsc --module commonjs --outDir lib --watch",
-    "build:esm:watch": "rimraf ./esm && tsc --module ESNext --outDir es --watch",
+    "start": "father dev",
+    "build": "father build",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "father": "^4.4.1"
   },
   "dependencies": {
     "react-json-view": "^1.21.3",
