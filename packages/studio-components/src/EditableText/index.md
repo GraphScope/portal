@@ -1,4 +1,7 @@
-# EditableText
+---
+order: 1
+title: 可编辑文本
+---
 
 ```jsx
 import React, { useState } from 'react';

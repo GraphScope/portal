@@ -24,6 +24,7 @@ const MapFromFile = props => {
     selectedRowKeys,
     isMapFromFile = true,
     dataSource,
+    editable,
     addProperty,
     delProperty,
     handleMapFromFile,
@@ -74,7 +75,7 @@ const MapFromFile = props => {
           {selectedRowKeys.length == 0 ? (
             <Space>
               <Tooltip title="Add Property">
-                <Button icon={<PlusOutlined />} onClick={() => addProperty()} size="small" />
+                <Button icon={<PlusOutlined />} disabled={editable} onClick={() => addProperty()} size="small" />
               </Tooltip>
               {heder}
             </Space>
