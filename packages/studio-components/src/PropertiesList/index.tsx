@@ -2,76 +2,59 @@ import * as React from 'react';
 import { Button, Table, ConfigProvider, Checkbox, Tooltip } from 'antd';
 import SelectType from './SelectType';
 import useStore from './utils';
-import type { Property, IState } from './utils';
-import PrimaryKey from '../Icons/primary-key';
-import MapFromFile from './MapFromFile';
+import type { IState } from './utils';
+
+import Controller from './Controller';
 import EditName from './EditName';
 import MappingFields from './MappingFields';
+import { defaultTypeOptions } from './const';
+import type { Property } from './typing';
 
-interface DataType {
-  key: string;
-  name: string;
-  type: string;
-  index: number;
-  primaryKey: boolean;
+export interface Option {
+  label: string;
+  value: string;
+  disabled?: boolean;
 }
+export interface IPropertiesListProps {
+  /** 是否可编辑 */
 
-interface IPropertiesListProps {
+  disabled?: boolean;
+  /** 标题，默认是 Properties */
   title?: string | React.ReactNode;
-  properties: Property[];
+  /** 属性  */
+  properties?: Property[];
+  propertiesFromFiles?: Property[];
+  /** 每当属性改变的时候，会触发该方法 */
   onChange: (properties: Property[]) => void;
-  mapFromFiles?: any;
-  typeOptions?: {
-    label: string;
-    value: string;
-  }[];
-  /**
-   * 创建图(true) or 导入数据（false）
-   * */
-  selectable?: boolean;
-  /** editable === true or false */
-  editable?: boolean;
-  /** 数据绑定 导入中需要 */
-  isUpload?: boolean;
-  dataFields?: [];
-  filelocation?: string;
+  /**  第二项 */
+  typeColumn: {
+    options: Option[];
+  };
+  /** 第四项 */
+  mappingColumn?: {
+    options: Option[];
+    type: 'Select' | 'InputNumber';
+  };
 }
-const defaultTypeOptions = [
-  {
-    label: 'DT_STRING',
-    value: 'DT_STRING',
-  },
-  {
-    label: 'DT_DOUBLE',
-    value: 'DT_DOUBLE',
-  },
-  {
-    label: 'DT_SIGNED_INT32',
-    value: 'DT_SIGNED_INT32',
-  },
-  {
-    label: 'DT_SIGNED_INT64',
-    value: 'DT_SIGNED_INT64',
-  },
-];
+
+/**
+ * name --> nameOptions / name_options
+ * type--> typeOptions  / type_options
+ * token--> tokenOptions === dataFields
+ *
+ */
 const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
-  const {
-    title = 'Properties',
-    onChange = () => {},
-    typeOptions = defaultTypeOptions,
-    selectable = true,
-    editable = true,
-    isUpload = false,
-    dataFields = [],
-    filelocation = '',
-  } = props;
+  const { title = 'Properties', onChange = () => {}, disabled, typeColumn, mappingColumn } = props;
+  const { options: typeOptions = defaultTypeOptions } = typeColumn || {};
+
   const { handleAdd, handleDelete, handleBlur, handlePrimaryKey, handleDoubleClick, handleType, handleChangeIndex } =
     useStore();
   const [state, updateState] = React.useState<IState & { selectedRowKeys: string[] }>({
-    properties: props.properties,
+    properties: props.properties || [],
     selectedRowKeys: [],
   });
   const { properties, selectedRowKeys } = state;
+  const componentType = 'Select';
   const handleProperties = properties => {
     updateState(preset => {
       return {
@@ -81,6 +64,7 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
     });
     onChange(properties);
   };
+
   const columns = [
     {
       title: 'Name',
@@ -89,7 +73,7 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
         const [row, record] = p;
         return (
           <EditName
-            editable={editable}
+            editable={!disabled}
             p={p}
             handleDoubleClick={() => {
               handleProperties(handleDoubleClick(record, state));
@@ -109,8 +93,8 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
         return (
           <SelectType
             value={row.type}
-            typeOptions={typeOptions}
-            editable={editable}
+            options={typeOptions}
+            disabled={disabled}
             onChange={value => {
               handleProperties(handleType(value, row, state));
             }}
@@ -125,32 +109,36 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
         return (
           <Checkbox
             checked={text}
-            disabled={!editable}
+            disabled={disabled}
             onClick={() => handleProperties(handlePrimaryKey(record, state))}
           />
         );
       },
     },
-    {
+  ];
+  if (mappingColumn) {
+    /** 如果有映射关系，则出现第四列 */
+    columns.push({
       title: 'mapping fields',
       dataIndex: 'token',
       render(token, all) {
+        console.log('token', token);
         return (
           <MappingFields
-            isUpload={isUpload}
-            dataFields={dataFields}
+            options={mappingColumn?.options}
             value={token}
-            filelocation={filelocation}
+            componentType={mappingColumn?.type}
             onChange={(value: string) => handleProperties(handleChangeIndex(value, all, state))}
           />
         );
       },
-    },
-  ].filter(item => (selectable ? item.dataIndex !== 'token' : item));
-  /** selectable 创建图(true) or 导入数据（false） */
-  const rowSelection = selectable && {
+    });
+  }
+
+  /** isMappingToken 创建图(true) or 导入数据（false） */
+  const rowSelection = !mappingColumn && {
     type: 'checkbox',
-    onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: Property[]) => {
       //@ts-ignore
       updateState(preState => {
         return {
@@ -159,18 +147,18 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
         };
       });
     },
-    getCheckboxProps: (record: DataType) => ({
-      disabled: !editable, // Column configuration not to be checked
+    getCheckboxProps: (record: Property) => ({
+      disabled, // Column configuration not to be checked
     }),
   };
 
   return (
     <div>
-      {selectable && (
-        <MapFromFile
+      {!mappingColumn && (
+        <Controller
           title={title}
           dataSource={[]}
-          editable={!editable}
+          disabled={disabled}
           /** mapfeomfile 控制 */
           isMapFromFile={false}
           selectedRowKeys={selectedRowKeys}

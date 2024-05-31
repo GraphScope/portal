@@ -1,12 +1,17 @@
 import { uuid } from 'uuidv4';
 export interface Property {
   token: any;
-  key: string;
-  name: string;
-  type: string;
-  index: number;
-  primaryKey: boolean;
   disable?: boolean;
+  /** 唯一标识 */
+  key: string;
+  /** 属性名 */
+  name: string;
+  /** 属性类型 */
+  type: string;
+  /** 索引 */
+  index: number;
+  /** 是否是主键 */
+  primaryKey: boolean;
 }
 export interface IState {
   properties: Property[];

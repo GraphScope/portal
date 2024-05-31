@@ -3,7 +3,7 @@ import { join } from 'path';
 import { defineThemeConfig } from 'dumi-theme-antd/dist/defineThemeConfig';
 const themeConfig = defineThemeConfig({
   name: 'GraphScope Portal',
-  title: 'Dumi Theme Ant Design',
+  title: 'GraphScope Portal Components',
   lastUpdated: true,
   nav: {
     'zh-CN': [
@@ -24,7 +24,6 @@ const themeConfig = defineThemeConfig({
     { id: 'zh-CN', switchPrefix: '中' },
     { id: 'en-US', switchPrefix: 'en' },
   ],
-  // sidebarGroupModePath: ['/config', '/guide'],
   description: {
     'zh-CN': 'Ant Design 5.0 官网风格类似的 dumi2 主题插件',
     'en-US': 'dumi2 theme similar to antd v5 website',
@@ -34,11 +33,15 @@ const themeConfig = defineThemeConfig({
       {
         type: 'primary',
         text: '开始使用',
-        link: '/guide/introduce',
+        link: '/components',
       },
       {
-        text: '配置',
-        link: '/config/base',
+        text: '体验建模',
+        link: '/modelings',
+      },
+      {
+        text: '体验查询',
+        link: '/queries',
       },
     ],
     'en-US': [
@@ -58,7 +61,7 @@ const themeConfig = defineThemeConfig({
       {
         title: '内置全文搜索',
         details:
-          '不需要接入任何三方服务，标题、正文、demo 等内容均可被搜索，支持多关键词搜索，且不会带来产物体积的增加。',
+          'xxx 不需要接入任何三方服务，标题、正文、demo 等内容均可被搜索，支持多关键词搜索，且不会带来产物体积的增加。',
       },
       {
         title: '更好的编译性能',
@@ -115,12 +118,7 @@ const themeConfig = defineThemeConfig({
       },
     ],
   },
-  loading: {
-    skeleton: ['/guide', '/config', '/demo'],
-  },
-  // docVersions: {
-  //   [pkgJSON.version]: '',
-  // },
+
   footerLinks: [
     {
       title: '相关资源',
@@ -200,9 +198,14 @@ export default defineConfig({
   externals: {
     'node:os': 'commonjs2 node:os',
   },
+  locales: [
+    { id: 'zh-CN', name: '中文', suffix: '' },
+    { id: 'en-US', name: 'English', suffix: '-en' },
+  ],
   jsMinifier: 'terser',
   resolve: {
-    docDirs: ['docs'],
+    // docDirs: ['docs'],
+
     atomDirs: [
       {
         type: 'components',

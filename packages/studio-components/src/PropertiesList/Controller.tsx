@@ -18,13 +18,13 @@ const styles: { [x: string]: CSSProperties } = {
   },
 };
 
-const MapFromFile = props => {
+const Controller = props => {
   const {
     title,
     selectedRowKeys,
     isMapFromFile = true,
     dataSource,
-    editable,
+    disabled,
     addProperty,
     delProperty,
     handleMapFromFile,
@@ -75,7 +75,7 @@ const MapFromFile = props => {
           {selectedRowKeys.length == 0 ? (
             <Space>
               <Tooltip title="Add Property">
-                <Button icon={<PlusOutlined />} disabled={editable} onClick={() => addProperty()} size="small" />
+                <Button icon={<PlusOutlined />} disabled={disabled} onClick={() => addProperty()} size="small" />
               </Tooltip>
               {heder}
             </Space>
@@ -91,4 +91,4 @@ const MapFromFile = props => {
   );
 };
 
-export default MapFromFile;
+export default Controller;

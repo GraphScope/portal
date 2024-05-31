@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { InputNumber, Flex, Select } from 'antd';
-interface IMappingFields {
-  dataFields?: any;
+import type { Option } from './typing';
+interface IController {
+  componentType: 'Select' | 'InputNumber';
+  options: Option[];
   value: string | number;
   onChange(evt: any): void;
-  filelocation?: string;
-  isUpload?: boolean;
 }
-const MappingFields = (props: IMappingFields) => {
-  const { dataFields, value, onChange, filelocation, isUpload = false } = props;
+const Controller = (props: IController) => {
+  const { options, value, onChange, componentType } = props;
   /** mappingFiles options */
-  const options = dataFields.map((item: string, index: number) => {
+  const _options = options.map((item, index: number) => {
     return {
-      value: `${index}_${item}`,
+      value: item.value,
       label: (
         <Flex justify="space-between" key={index}>
           <span
@@ -23,16 +23,22 @@ const MappingFields = (props: IMappingFields) => {
           >
             #{index}
           </span>
-          <span>{item}</span>
+          <span>{item.value}</span>
         </Flex>
       ),
     };
   });
-  /** filelocation没值 默认不是上传*/
-  const isDefault = !filelocation ? false : isUpload;
-  /** 上传选择 or 输入数字 */
-  const isInputNumberShow = isDefault === undefined ? (typeof value === 'number' ? true : false) : !isDefault;
-  if (isInputNumberShow) {
+
+  /**
+   * index:numner
+   * token ===''
+   */
+  /** 这里都是业务逻辑，不需要在组件内部处理 */
+  // /** filelocation没值 默认不是上传*/
+  // const isDefault = !filelocation ? false : isUpload;
+  // /** 上传选择 or 输入数字 */
+  // const isInputNumberShow = isDefault === undefined ? (typeof value === 'number' ? true : false) : !isDefault;
+  if (componentType === 'InputNumber') {
     return (
       <InputNumber
         size="small"
@@ -44,8 +50,8 @@ const MappingFields = (props: IMappingFields) => {
       />
     );
   } else {
-    return <Select size="small" options={options} value={value} onChange={onChange} style={{ width: '100%' }} />;
+    return <Select size="small" options={_options} value={value} onChange={onChange} style={{ width: '100%' }} />;
   }
 };
 
-export default MappingFields;
+export default Controller;
