@@ -10,3 +10,5 @@ export * as Utils from './Utils';
 export * as Icons from './Icons';
 /** export hooks  */
 export { useContainer } from './Container/useContainer';
+/** export typing */
+export type { SegmentedTabsProps } from './SegmentedTabs';

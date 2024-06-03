@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EdgeLabelRenderer } from 'reactflow';
-import EditableText from '../../../components/EditableText';
+import { EditableText } from '@graphscope/studio-components';
 import { useContext } from '../../useContext';
 interface ILabelProps {
   id: string;

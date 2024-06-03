@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { List, Popover, Flex } from 'antd';
-import TableCard from '../../../components/TableCard';
+import { TableCard } from '@graphscope/studio-components';
 const style = {
   padding: 5,
   background: '#fff',

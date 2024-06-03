@@ -4,7 +4,8 @@ import { UngroupOutlined } from '@ant-design/icons';
 import ImportFromCSV from './import-from-csv';
 import ImportFromSQL from './import-from-sql';
 import ImportFromYaml from './import-from-yaml';
-import SegmentedTabs, { SegmentedTabsProps } from '../../components/SegmentedTabs';
+import { SegmentedTabs } from '@graphscope/studio-components';
+import type { SegmentedTabsProps } from '@graphscope/studio-components';
 interface IImportSchemaProps {
   style?: React.CSSProperties;
   displayType?: 'model' | 'panel';

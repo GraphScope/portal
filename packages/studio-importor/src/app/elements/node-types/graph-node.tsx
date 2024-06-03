@@ -1,7 +1,7 @@
 import React, { memo, useState, useRef } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { List, Popover, Flex, Typography, Input } from 'antd';
-import EditableText from '../../../components/EditableText';
+import { EditableText } from '@graphscope/studio-components';
 const style = {
   padding: 5,
   background: '#fff',

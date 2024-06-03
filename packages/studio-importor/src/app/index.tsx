@@ -4,7 +4,7 @@ import PropertiesEditor from './properties-editor';
 import ImportSchema from './import-schema';
 import ModeSwitch from './mode-switch';
 import { ReactFlowProvider } from 'reactflow';
-import Toolbar from '../components/Toolbar';
+import { Toolbar } from '@graphscope/studio-components';
 import AddNode from './graph-canvas/add-node';
 import Delete from './graph-canvas/delete';
 import 'reactflow/dist/style.css';
