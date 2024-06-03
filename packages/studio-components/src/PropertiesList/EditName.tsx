@@ -1,42 +1,43 @@
 import React from 'react';
-import { Input } from 'antd';
+import { Input, Space, Button } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 interface IEditNameProps {
   p: any;
-  editable?: boolean;
+  disabled?: boolean;
   handleDoubleClick: () => void;
   handleBlur: (evt) => void;
 }
+
 const EditName: React.FC<IEditNameProps> = props => {
-  const { p, editable, handleDoubleClick, handleBlur } = props;
+  const { p, disabled, handleDoubleClick, handleBlur } = props;
   const [row, record] = p;
   const inputRef = React.useRef();
   return (
     <>
-      {record.disable && editable ? (
-        <div
+      {record.disable && disabled ? (
+        <Input
+          size="small"
           style={{
-            lineHeight: '12px',
             width: '100%',
-            padding: '4px 3px 5px 5px',
             cursor: 'pointer',
             backgroundColor: '#505256',
             color: '#fff',
-            borderRadius: '3px',
             textAlign: 'center',
           }}
+          //@ts-ignore
+          ref={inputRef}
+          defaultValue={row}
           onClick={async () => {
             await handleDoubleClick();
             //@ts-ignore
             await inputRef.current.focus();
           }}
-        >
-          {record?.name} <EditOutlined />
-        </div>
+        />
       ) : (
         <Input
           size="small"
-          disabled={!editable}
+          style={{ width: '100%' }}
+          disabled={!disabled}
           //@ts-ignore
           ref={inputRef}
           defaultValue={row}

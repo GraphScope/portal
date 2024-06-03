@@ -73,7 +73,7 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
         const [row, record] = p;
         return (
           <EditName
-            editable={!disabled}
+            disabled={!disabled}
             p={p}
             handleDoubleClick={() => {
               handleProperties(handleDoubleClick(record, state));
