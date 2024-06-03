@@ -9,11 +9,14 @@ import AddNode from './graph-canvas/add-node';
 import 'reactflow/dist/style.css';
 import RightButton from './layout-controller/right-button';
 import LeftButton from './layout-controller/left-button';
-interface ImportAppProps {}
+interface ImportAppProps {
+  view: string;
+}
 import { useStore, useContext } from './useContext';
 import { Button } from 'antd';
 
 const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
+  const { view } = props;
   const { collapsed } = useStore();
   const { left, right } = collapsed;
   const { store } = useContext();
@@ -29,6 +32,7 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
   const handleBind = () => {
     const dataMap = [...nodes, ...edges];
     console.log(dataMap);
+    //@ts-ignore
     props.createDataloadingJob(1, dataMap);
   };
   return (
@@ -53,12 +57,15 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
               <ModeSwitch />
             </Toolbar>
             <Toolbar style={{ top: '18px', right: '70px', left: 'unset', padding: 0 }}>
-              {/* <Button type="primary" onClick={handleSubmit}>
-                Save
-              </Button> */}
-              <Button type="primary" onClick={handleBind}>
-                Start Import
-              </Button>
+              {view === 'import_data' ? (
+                <Button type="primary" onClick={handleBind}>
+                  Start Import
+                </Button>
+              ) : (
+                <Button type="primary" onClick={handleSubmit}>
+                  Save
+                </Button>
+              )}
             </Toolbar>
             <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }}>
               <RightButton />

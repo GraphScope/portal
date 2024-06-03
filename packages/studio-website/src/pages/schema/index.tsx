@@ -18,6 +18,7 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
         /** 数据绑定 */
         createDataloadingJob={createDataloadingJob}
         GS_ENGINE_TYPE={GS_ENGINE_TYPE}
+        view="import_data"
       />
     </div>
   );

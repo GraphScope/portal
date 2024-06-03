@@ -11,13 +11,14 @@ interface IPropertiesSchemaProps {
   getPrimitiveTypes(): { label: string; value: string }[];
   data: any;
   type: 'nodes' | 'edges';
+  view: string;
   uploadFile(file): { file_path: string };
 }
 const { Text } = Typography;
 const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props => {
   console.log('props', props);
 
-  const { data, type } = props;
+  const { data, type, view } = props;
   const {
     id,
     data: { label },
@@ -51,6 +52,8 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
       }
     });
   }
+  console.log(data);
+
   const handleSubmit = () => {};
   const handleDelete = () => {
     console.log(id);
@@ -59,49 +62,54 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
   return (
     <div>
       <Flex vertical gap={12} style={{ margin: '0px 12px' }}>
-        <Typography.Text>Label</Typography.Text>
-        <Input value={label} onChange={handleChangeLabel} />
-        <div
-          style={{
-            // borderTop: `1px solid ${token.colorBorder}`,
-            // background: primaryColor ? 'none' : '#FCFCFC',
-            borderRadius: '0px 0px 8px 8px',
-          }}
-        >
-          <Flex vertical gap={8}>
-            <Text>Location</Text>
-            <Flex justify="space-between" align="center">
-              <SwitchSource
-                filelocation={filelocation}
-                currentType={datatype}
-                onChangeType={onChangeType}
-                onChangeValue={onChangeValue}
-                onChangeFocus={onChangeFocus}
-                onChangeDataFields={onChangeDataFields}
-                uploadFile={props.uploadFile}
-              />
-              <Space size={0}>
-                {filelocation && (
-                  <Tooltip title="delete and re-upload">
-                    <Button type="text" size="small" icon={<DeleteOutlined onClick={deleteFile} />}></Button>
+        {view === 'import_data' ? (
+          <div
+            style={{
+              // borderTop: `1px solid ${token.colorBorder}`,
+              // background: primaryColor ? 'none' : '#FCFCFC',
+              borderRadius: '0px 0px 8px 8px',
+            }}
+          >
+            <Flex vertical gap={8}>
+              <Text>Location</Text>
+              <Flex justify="space-between" align="center">
+                <SwitchSource
+                  filelocation={filelocation}
+                  currentType={datatype}
+                  onChangeType={onChangeType}
+                  onChangeValue={onChangeValue}
+                  onChangeFocus={onChangeFocus}
+                  onChangeDataFields={onChangeDataFields}
+                  uploadFile={props.uploadFile}
+                />
+                <Space size={0}>
+                  {filelocation && (
+                    <Tooltip title="delete and re-upload">
+                      <Button type="text" size="small" icon={<DeleteOutlined onClick={deleteFile} />}></Button>
+                    </Tooltip>
+                  )}
+                  <Tooltip
+                    // title={
+                    //   isBind ? <FormattedMessage id="Bound data source" /> : <FormattedMessage id="Unbound data source" />
+                    // }
+                    title="Bound data source"
+                  >
+                    <Button
+                      type="text"
+                      size="small"
+                      icon={<CheckCircleOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}
+                    ></Button>
                   </Tooltip>
-                )}
-                <Tooltip
-                  // title={
-                  //   isBind ? <FormattedMessage id="Bound data source" /> : <FormattedMessage id="Unbound data source" />
-                  // }
-                  title="Bound data source"
-                >
-                  <Button
-                    type="text"
-                    size="small"
-                    icon={<CheckCircleOutlined style={{ color: isBind ? '#53C31C' : '#ddd' }} />}
-                  ></Button>
-                </Tooltip>
-              </Space>
+                </Space>
+              </Flex>
             </Flex>
-          </Flex>
-        </div>
+          </div>
+        ) : (
+          <>
+            <Typography.Text>Label</Typography.Text>
+            <Input value={label} onChange={handleChangeLabel} />
+          </>
+        )}
         {type === 'edges' && (
           <>
             <Typography.Text>Source</Typography.Text>
