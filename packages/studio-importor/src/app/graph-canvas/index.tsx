@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { ReactFlow, Controls, Background, MiniMap } from 'reactflow';
-import EmptyCanvas from '../../components/EmptyCanvas';
+import { EmptyCanvas } from '@graphscope/studio-components';
 import { nodeTypes } from '../elements/node-types';
 import { edgeTypes } from '../elements/edge-types';
 import ConnectionLine from '../elements/connection-line';

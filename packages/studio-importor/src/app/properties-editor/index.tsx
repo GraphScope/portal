@@ -1,8 +1,9 @@
 import React from 'react';
 import { Collapse, Segmented, Button } from 'antd';
 import PropertiesSchema from './properties-schema';
-// import LabelSwitch from './label-switch';
+
 import { useContext } from '../useContext';
+import { SegmentedTabs } from '@graphscope/studio-components';
 interface IPropetiesEditorProps {}
 
 interface PropertiesSchema {
@@ -19,6 +20,23 @@ interface EdgeSchema extends PropertiesSchema {
   target: string;
 }
 
+const StyleWrap = ({ children }) => {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: '65px',
+        bottom: '0px',
+        left: 0,
+        right: 0,
+        overflow: 'scroll',
+        padding: '0px 10px 0px 10px',
+      }}
+    >
+      {children}
+    </div>
+  );
+};
 const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props => {
   const { store, updateStore } = useContext();
   const { nodes, edges, currentType, currentId } = store;
@@ -52,12 +70,9 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
 
   return (
     <div>
-      <Segmented
+      <SegmentedTabs
         block
-        options={[
-          { value: 'nodes', label: 'Vertex' },
-          { value: 'edges', label: 'Edges' },
-        ]}
+        queryKey="element"
         value={currentType}
         // onChange={value => setState({ ...state, currentType: value })}
         onChange={value =>
@@ -65,25 +80,27 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
             draft.currentType = value as 'nodes' | 'edges';
           })
         }
+        items={[
+          {
+            key: 'nodes',
+            label: 'Vertex',
+            children: (
+              <StyleWrap>
+                <Collapse accordion items={nodes_items} activeKey={[currentId]} onChange={onChange} />
+              </StyleWrap>
+            ),
+          },
+          {
+            key: 'edges',
+            label: 'Edges',
+            children: (
+              <StyleWrap>
+                <Collapse accordion items={edges_items} activeKey={[currentId]} onChange={onChange} />
+              </StyleWrap>
+            ),
+          },
+        ]}
       />
-      <div
-        style={{
-          position: 'absolute',
-          top: '45px',
-          bottom: '0px',
-          left: 0,
-          right: 0,
-          overflow: 'scroll',
-          padding: '0px 10px 0px 10px',
-        }}
-      >
-        {currentType === 'nodes' && (
-          <Collapse accordion items={nodes_items} activeKey={[currentId]} onChange={onChange} />
-        )}
-        {currentType === 'edges' && (
-          <Collapse accordion items={edges_items} activeKey={[currentId]} onChange={onChange} />
-        )}
-      </div>
     </div>
   );
 };

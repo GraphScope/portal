@@ -2,7 +2,9 @@ import * as React from 'react';
 import { Button } from 'antd';
 import { uuid } from 'uuidv4';
 import { useReactFlow } from 'reactflow';
-import { AddNode as AddNodeIcon } from '../../../components/Icons';
+import { Icons } from '@graphscope/studio-components';
+const AddNodeIcon = Icons.AddNode;
+
 import { createNodeLabel } from '../../utils';
 interface IAddNodeProps {
   style?: React.CSSProperties;
