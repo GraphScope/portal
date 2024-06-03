@@ -6,8 +6,11 @@ export { default as Toolbar } from './Toolbar';
 export { default as Logo, LogoImage, LogoText } from './Logo';
 export { default as Container } from './Container';
 export { default as PropertiesList } from './PropertiesList';
+export { default as SegmentedSection } from './SegmentedSection';
+/** all */
 export * as Utils from './Utils';
 export * as Icons from './Icons';
+
 /** export hooks  */
 export { useContainer } from './Container/useContainer';
 /** export typing */

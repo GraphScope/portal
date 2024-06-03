@@ -8,8 +8,17 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useContext } from './useContext';
 import Logo from '@/components/logo';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoins, faMagnifyingGlass, faListCheck, faBell, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
-
+import {
+  faCoins,
+  faMagnifyingGlass,
+  faDownload,
+  faListCheck,
+  faBell,
+  faPuzzlePiece,
+  faDiagramProject,
+} from '@fortawesome/free-solid-svg-icons';
+import { Icons } from '@graphscope/studio-components';
+import { modalGlobalConfig } from 'antd/es/modal/confirm';
 const { useToken } = theme;
 
 const items: MenuProps['items'] = [
@@ -18,15 +27,37 @@ const items: MenuProps['items'] = [
     key: '/instance',
     icon: <FontAwesomeIcon icon={faCoins} />,
   },
-  // {
-  //   label: <FormattedMessage id="navbar.query" />,
-  //   key: '/query',
-  //   icon: <FileSearchOutlined />,
-  // },
   {
-    label: <FormattedMessage id="Query" />,
-    key: '/query-app',
+    type: 'divider',
+  },
+  // {
+  //   key: 'grp',
+  //   // label: 'Graphs',
+  //   type: 'group',
+  //   children: [
+  //     { key: 'schema', label: 'Modeling' },
+  //     { key: 'importing', label: 'Importing' },
+  //     { key: 'query', label: 'Querying' },
+  //   ],
+  // },
+
+  {
+    label: <FormattedMessage id="Modeling" />,
+    key: '/schema',
+    icon: <FontAwesomeIcon icon={faDiagramProject} />,
+  },
+  {
+    label: <FormattedMessage id="Importing" />,
+    key: '/importing',
+    icon: <FontAwesomeIcon icon={faDownload} />,
+  },
+  {
+    label: <FormattedMessage id="Querying" />,
+    key: '/query',
     icon: <FontAwesomeIcon icon={faMagnifyingGlass} />,
+  },
+  {
+    type: 'divider',
   },
 ];
 

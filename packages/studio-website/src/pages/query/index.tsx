@@ -1,6 +1,6 @@
 import * as React from 'react';
 import StudioQuery from '@graphscope/studio-query';
-import Section from '@/components/section';
+import { SegmentedSection } from '@graphscope/studio-components';
 import storage from '@/components/utils/localStorage';
 import {
   queryGraphData,
@@ -19,22 +19,7 @@ const QueryModule = () => {
   const primaryColor = storage.getItem('primaryColor');
   const themeMode = storage.getItem('themeColor');
   return (
-    <Section
-      breadcrumb={[
-        {
-          title: 'Home',
-        },
-        {
-          title: 'Query',
-        },
-      ]}
-      title="Query"
-      desc="You can use Cypher or Gremlin here to query the graph data"
-      style={{
-        padding: '0px',
-        marginTop: '-24px',
-      }}
-    >
+    <SegmentedSection>
       <StudioQuery
         //@ts-ignore
         /** 主题相关 */
@@ -65,7 +50,7 @@ const QueryModule = () => {
         /** 是否立即查询 */
         enableImmediateQuery={true}
       />
-    </Section>
+    </SegmentedSection>
   );
 };
 

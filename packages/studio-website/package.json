@@ -24,6 +24,7 @@
     "@graphscope/studio-importor": "workspace:*",
     "@graphscope/studio-query": "workspace:*",
     "@graphscope/studio-server": "workspace:*",
+    "@graphscope/studio-components": "workspace:*",
     "@uiw/react-codemirror": "^4.21.21",
     "antd": "^5.12.5",
     "lodash": "^4.17.21",
