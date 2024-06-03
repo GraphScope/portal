@@ -144,10 +144,14 @@ export const getDataloadingConfig = async (graph_id: string, schema: any) => {
 
 export const getPrimitiveTypes = () => {
   if (GS_ENGINE_TYPE === 'groot') {
-    return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'];
+    return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {
+      return { label: item, value: item };
+    });
   }
   if (GS_ENGINE_TYPE === 'interactive') {
-    return ['DT_SIGNED_INT32', 'DT_SIGNED_INT64', 'DT_DOUBLE', 'DT_STRING'];
+    return ['DT_SIGNED_INT32', 'DT_SIGNED_INT64', 'DT_DOUBLE', 'DT_STRING'].map(item => {
+      return { label: item, value: item };
+    });
   }
-  return [''];
+  return [];
 };
