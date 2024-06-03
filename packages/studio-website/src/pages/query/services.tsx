@@ -37,9 +37,9 @@ export const queryEndpoint = async (): Promise<{
     });
 };
 
-export const queryInfo = async () => {
+export const queryInfo = async (id: string) => {
   const result = await ServiceApiFactory(undefined, location.origin)
-    .getServiceStatus()
+    .getServiceStatusById(id)
     .then(res => handleResponse(res))
     .catch(error => handleError(error));
 
@@ -47,7 +47,7 @@ export const queryInfo = async () => {
 };
 export const queryGraphSchema = async (name: string): Promise<CypherSchemaData> => {
   const schema = await GraphApiFactory(undefined, location.origin)
-    .getSchema(name)
+    .getSchemaById(name)
     .then(res => handleResponse(res))
     .catch(error => handleError(error));
 

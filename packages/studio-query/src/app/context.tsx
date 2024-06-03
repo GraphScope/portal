@@ -125,7 +125,7 @@ export interface IStudioQueryProps {
   language: 'cypher' | 'gremlin';
 
   globalScript?: string;
-  queryInfo: () => Promise<Info>;
+  queryInfo: (graph_id: string) => Promise<Info>;
   /** 查询图数据 */
   queryGraphData: (params: IStatement) => Promise<IGraphData>;
   /** 取消查询 */
