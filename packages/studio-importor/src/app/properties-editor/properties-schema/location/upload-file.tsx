@@ -3,7 +3,7 @@ import { UploadOutlined, LoadingOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import { Button, Upload, Flex, Input, Space } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { getDataFields } from './utils/getDataFields';
+import { getDataFields } from '../utils/getDataFields';
 type UploadFilesProps = {
   onChange: (filelocation: string, isUpload: boolean) => void;
   value?: string;

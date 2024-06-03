@@ -20,7 +20,7 @@ interface EdgeSchema extends PropertiesSchema {
   target: string;
 }
 
-const Wrap = ({ children }) => {
+const StyleWrap = ({ children }) => {
   return (
     <div
       style={{
@@ -78,18 +78,18 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
             key: 'nodes',
             label: 'Vertex',
             children: (
-              <Wrap>
+              <StyleWrap>
                 <Collapse accordion items={nodes_items} activeKey={[currentId]} onChange={onChange} />
-              </Wrap>
+              </StyleWrap>
             ),
           },
           {
             key: 'edges',
             label: 'Edges',
             children: (
-              <Wrap>
+              <StyleWrap>
                 <Collapse accordion items={edges_items} activeKey={[currentId]} onChange={onChange} />
-              </Wrap>
+              </StyleWrap>
             ),
           },
         ]}
