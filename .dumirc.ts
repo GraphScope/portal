@@ -25,8 +25,8 @@ const themeConfig = defineThemeConfig({
     { id: 'en-US', switchPrefix: 'en' },
   ],
   description: {
-    'zh-CN': 'Ant Design 5.0 官网风格类似的 dumi2 主题插件',
-    'en-US': 'dumi2 theme similar to antd v5 website',
+    'zh-CN': '基于 GraphScope Portal 的组件库，帮助开发者快速构建图应用',
+    'en-US': 'A component library based on GraphScope Portal, helping developers quickly build graph applications.',
   },
   actions: {
     'zh-CN': [
@@ -47,74 +47,51 @@ const themeConfig = defineThemeConfig({
     'en-US': [
       {
         type: 'primary',
-        text: 'Start',
-        link: '/guide/introduce-en',
+        text: 'Quick start',
+        link: '/components-en',
       },
       {
-        text: 'Config',
-        link: '/config/base-en',
+        text: 'Data Modeling',
+        link: '/modelings-en',
+      },
+      {
+        text: 'Data Querying',
+        link: '/queries-en',
       },
     ],
   },
   features: {
     'zh-CN': [
       {
-        title: '内置全文搜索',
+        title: '数据建模',
         details:
-          'xxx 不需要接入任何三方服务，标题、正文、demo 等内容均可被搜索，支持多关键词搜索，且不会带来产物体积的增加。',
+          '手动拖拽建模，轻松创建图的点边标签与属性。支持 CSV，SQL DDL 导入建模，让用户拥有在白板上设计图模型般的自由体验',
       },
       {
-        title: '更好的编译性能',
-        details: '通过结合使用 Umi 4 MFSU、esbuild、SWC、持久缓存等方案，带来比 dumi 1.x 更快的编译速度。',
-      },
-      {
-        title: 'SSR',
-        details: '全面支持 SSR，让文档具有更好的首屏加载速度、更好的SEO效果、更快的内容到达率。',
-      },
-      {
-        title: '样式风格统一',
-        details: '基于 antd 5.0 CSS-in-JS 样式加持，全面统一 dumi 内置样式，同时支持自定义主题加载。',
-      },
-      {
-        title: '功能增强',
+        title: '数据查询',
         details:
-          '在 dumi 内置 markdown 增强基础上新增特有 FrontMatter 配置，并且内置多种组件，使文档展示效果得以提升。',
+          '一键连接引擎地址即可查询图数据。支持Cypher/Gremlin 语法，支持历史查询，智能查询，让用户查询数据低门槛无负担',
       },
       {
         title: '开箱即用',
-        details: '接入简单，安装即使用，全面融入 Ant Design 风格，内置主题切换，紧凑模式等功能。',
+        details: '沉淀 10+ 通用组件，产品与交互标准化。可以在 Web，Jupyternote 端开箱即用，加速图应用研发的效率',
       },
     ],
     'en-US': [
       {
-        title: 'Built-in Full-Text search',
+        title: 'Data Modeling',
         details:
-          'There is no need to access any third-party services, and the contents such as title, text, demo, etc. can be searched, which supports multi-keyword search and will not increase the product volume.',
+          'Manually drag and drop to model, easily creating graph nodes, edges, and attributes. Supports CSV and SQL DDL import for modeling, giving users the freedom to design graph models as if on a whiteboard.',
       },
       {
-        title: 'Better Compilation Performance',
+        title: 'Data Querying',
         details:
-          'By combining Umi 4 MFSU, esbuild, SWC, persistent cache and other schemes, it brings faster compilation speed than dumi1.x.',
+          'Query graph data by connecting to the engine address with a single click. Supports Cypher/Gremlin syntax, historical queries, and intelligent queries, making data querying easy and hassle-free for users.',
       },
       {
-        title: 'SSR',
+        title: 'Out-of-the-Box',
         details:
-          'Fully supports SSR, allowing documents to have better first-screen loading speed, better SEO effect, and faster content arrival rate.',
-      },
-      {
-        title: 'Uniform style',
-        details:
-          "Based on antd 5.0 CSS-in-JS style support, it fully unifies dumi's built-in styles and supports custom theme loading.",
-      },
-      {
-        title: 'Function enhancement',
-        details:
-          "Based on dumi's built-in markdown enhancement, a unique FrontMatter configuration is added, and a variety of built-in components improve the document display effect.",
-      },
-      {
-        title: 'Simple Use',
-        details:
-          'Easy access, installation and use, fully integrated into Ant Design style, built-in theme switching, compact mode and other functions.',
+          'Includes over 10 general-purpose components, with standardized product and interaction design. Ready to use in Web and Jupyter Notebook environments, accelerating the efficiency of graph application development.',
       },
     ],
   },
@@ -124,14 +101,15 @@ const themeConfig = defineThemeConfig({
       title: '相关资源',
       items: [
         {
-          title: 'dumi',
-          description: '组件/文档研发工具',
-          url: 'https://d.umijs.org',
+          title: 'graphscope',
+
+          url: 'https://github.com/alibaba/graphscope',
           openExternal: true,
         },
         {
-          title: 'Ant Design',
-          url: 'https://ant.design',
+          title: 'graphscope portal',
+
+          url: 'https://github.com/GraphScope/portal',
           openExternal: true,
         },
       ],
@@ -140,33 +118,30 @@ const themeConfig = defineThemeConfig({
       title: '帮助',
       items: [
         {
-          icon: 'https://github-production-user-asset-6210df.s3.amazonaws.com/20694238/256181695-b05fa72a-4ab5-479d-bb74-3d723755de47.png',
           title: 'GitHub',
-          url: 'https://github.com/KuangPF/dumi-theme-antd',
+          url: 'https://github.com/GraphScope/portal',
           openExternal: true,
         },
         {
-          icon: 'https://github-production-user-asset-6210df.s3.amazonaws.com/20694238/256181710-8e63ee99-ed71-4ee6-8507-d5ffac02ca51.png',
           title: '更新日志',
-          url: '/dumi-theme-antd/guide/changelog',
+          url: 'https://github.com/GraphScope/portal/changelog',
         },
       ],
     },
     {
       title: '更多产品',
-      icon: 'https://gw.alipayobjects.com/zos/rmsportal/nBVXkrFdWHxbZlmMbsaH.svg',
+      icon: 'https://camo.githubusercontent.com/45f3e5a1aa6a8d1229aede5062e8ec28a88658cc4a23ad4bbbbdf112036d6276/68747470733a2f2f677261706873636f70652e696f2f6173736574732f696d616765732f677261706873636f70652d6c6f676f2e737667',
       items: [
         {
-          icon: 'https://gw.alipayobjects.com/zos/rmsportal/DMDOlAUhmktLyEODCMBR.ico',
-          title: 'Kitchen',
-          description: 'Sketch 工具集',
-          url: 'https://kitchen.alipay.com',
+          title: 'GART',
+          description: 'Graph Analysis on Relational Transactional Datasets',
+          url: 'https://github.com/GraphScope/GART',
           openExternal: true,
         },
         {
-          icon: 'https://gw.alipayobjects.com/zos/rmsportal/nBVXkrFdWHxbZlmMbsaH.svg',
-          title: '蚂蚁体验科技',
-          url: 'https://xtech.antfin.com/',
+          title: 'GraphAR',
+          description: 'An open source, standard data file format for graph data storage and retrieval.',
+          url: 'https://github.com/apache/incubator-graphar',
           openExternal: true,
         },
       ],
@@ -175,13 +150,15 @@ const themeConfig = defineThemeConfig({
   moreLinks: [
     {
       text: 'GraphScope',
-      link: 'https://d.umijs.org/',
+      link: 'https://github.com/alibaba/graphscope',
     },
   ],
 });
 export default defineConfig({
   title: 'GraphScope', // 网站header标题
-  // favicons: ['https://img.alicdn.com/imgextra/i3/O1CN01DaSVLB1lD7ZIbDOi2_!!6000000004784-2-tps-256-257.png'], // 网站 favicon
+  favicons: [
+    'https://camo.githubusercontent.com/45f3e5a1aa6a8d1229aede5062e8ec28a88658cc4a23ad4bbbbdf112036d6276/68747470733a2f2f677261706873636f70652e696f2f6173736574732f696d616765732f677261706873636f70652d6c6f676f2e737667',
+  ], // 网站 favicon
   metas: [
     // 自定义 meta 标签
     { name: 'keywords', content: 'GraphScope' },
