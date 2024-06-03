@@ -73,6 +73,13 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       <SegmentedTabs
         block
         queryKey="element"
+        value={currentType}
+        // onChange={value => setState({ ...state, currentType: value })}
+        onChange={value =>
+          updateStore(draft => {
+            draft.currentType = value as 'nodes' | 'edges';
+          })
+        }
         items={[
           {
             key: 'nodes',

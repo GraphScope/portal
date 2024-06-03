@@ -9,6 +9,8 @@ export interface SegmentedTabsProps {
   style?: React.CSSProperties;
   defaultActive?: string;
   block?: boolean;
+  value?: string;
+  onChange?: (value: string) => void;
 }
 const styles: Record<string, React.CSSProperties> = {
   tabs: {
@@ -27,7 +29,7 @@ const styles: Record<string, React.CSSProperties> = {
 };
 
 const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
-  const { items, queryKey = 'tab', style = {}, defaultActive, block } = props;
+  const { items, queryKey = 'tab', style = {}, defaultActive, block, value, onChange } = props;
 
   const [state, setState] = React.useState<{ active: string }>(() => {
     const { searchParams, path } = getSearchParams(window.location);
@@ -46,7 +48,11 @@ const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
     };
   });
 
-  const onChange = value => {
+  const handleChange = value => {
+    if (onChange) {
+      onChange(value);
+      return;
+    }
     const { searchParams, path } = getSearchParams(window.location);
     searchParams.set(queryKey, value);
     window.location.hash = `${path}?${searchParams.toString()}`;
@@ -57,14 +63,15 @@ const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
       };
     });
   };
+  const val = value || active;
 
   return (
     <div style={styles.tabs}>
-      <Segmented options={options} value={active} onChange={onChange} block={block} style={{ marginBottom: '12px' }} />
+      <Segmented options={options} value={val} onChange={handleChange} block={block} style={{ marginBottom: '12px' }} />
       <>
         {items.map(item => {
           const { key, children } = item;
-          const isActive = key === active;
+          const isActive = key === val;
           return (
             <div style={isActive ? styles.appear : styles.hidden} key={key}>
               {children}
