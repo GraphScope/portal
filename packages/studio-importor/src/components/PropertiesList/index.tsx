@@ -84,6 +84,10 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
         return (
           <SelectType
             value={row.type}
+            //@ts-ignore
+            typeOptions={typeOptions.map(item => {
+              return { label: item, value: item };
+            })}
             onChange={value => {
               handleProperties(handleType(value, row, state));
             }}
@@ -163,6 +167,7 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
             },
             Select: {
               colorBorder: '#DADADA',
+              fontSize: 12,
             },
           },
         }}

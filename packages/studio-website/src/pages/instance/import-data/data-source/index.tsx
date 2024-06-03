@@ -169,7 +169,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
           <Row
             style={{
               borderTop: isEidtProperty ? 'none' : `1px solid ${token.colorBorder}`,
-              padding: '0px 8px 8px 5px',
+              padding: '0px 8px 8px 0px',
               display: 'flex',
               justifyContent: 'end',
               transition: 'all 4s ease-in-out 1s',
@@ -177,7 +177,7 @@ const DataSource: React.FunctionComponent<IImportDataProps> = props => {
             }}
             gutter={[0, 8]}
           >
-            <Col span={19}>
+            <Col span={20}>
               <TableList
                 //@ts-ignore
                 tabledata={properties.map((item, index) => {

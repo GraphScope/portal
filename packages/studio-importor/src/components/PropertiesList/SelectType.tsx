@@ -2,21 +2,15 @@ import * as React from 'react';
 import { Select } from 'antd';
 interface ISelectTypeProps {
   value: string;
+  typeOptions?: {
+    label: string;
+    value: string;
+  }[];
   onChange: (value: string) => void;
 }
-const options = [
-  {
-    value: 'INT',
-    label: 'INT',
-  },
-  {
-    value: 'NUMBER',
-    label: 'NUMBER',
-  },
-];
 
 const SelectType: React.FunctionComponent<ISelectTypeProps> = props => {
-  const { onChange } = props;
+  const { onChange, typeOptions } = props;
   const [value, setValue] = React.useState(props.value);
 
   return (
@@ -28,7 +22,7 @@ const SelectType: React.FunctionComponent<ISelectTypeProps> = props => {
         setValue(e);
         onChange(e);
       }}
-      options={options}
+      options={typeOptions}
     ></Select>
   );
 };

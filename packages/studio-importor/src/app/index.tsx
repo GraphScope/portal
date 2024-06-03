@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react';
-
-import { Col, Row } from 'antd';
 import GraphCanvas from './graph-canvas';
 import PropertiesEditor from './properties-editor';
 import ImportSchema from './import-schema';
@@ -8,15 +6,36 @@ import ModeSwitch from './mode-switch';
 import { ReactFlowProvider } from 'reactflow';
 import Toolbar from '../components/Toolbar';
 import AddNode from './graph-canvas/add-node';
+import Delete from './graph-canvas/delete';
 import 'reactflow/dist/style.css';
 import RightButton from './layout-controller/right-button';
 import LeftButton from './layout-controller/left-button';
-interface ImportAppProps {}
-import { useStore } from './useContext';
+interface ImportAppProps {
+  view: string;
+}
+import { useStore, useContext } from './useContext';
+import { Button } from 'antd';
 
 const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
+  const { view } = props;
   const { collapsed } = useStore();
   const { left, right } = collapsed;
+  const { store } = useContext();
+  const { nodes, edges } = store;
+  const handleSubmit = () => {
+    /** 创建服务 「props.createGraph(params)」*/
+    console.log('edges', edges);
+    console.log('nodes', nodes);
+    //@ts-ignore
+    // props.createGraph(2, 'test', nodes, edges);
+  };
+  /** 数据绑定 */
+  const handleBind = () => {
+    const dataMap = [...nodes, ...edges];
+    console.log(dataMap);
+    //@ts-ignore
+    props.createDataloadingJob(1, dataMap);
+  };
   return (
     <div style={{ width: '100%', height: '100%' }}>
       <div style={{ height: '100%', display: 'flex' }}>
@@ -35,8 +54,19 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
             <Toolbar>
               <LeftButton />
               <AddNode />
-              <ImportSchema displayType="model" />
-              <ModeSwitch />
+              <Delete />
+              {/* <ModeSwitch /> */}
+            </Toolbar>
+            <Toolbar style={{ top: '18px', right: '70px', left: 'unset', padding: 0 }}>
+              {view === 'import_data' ? (
+                <Button type="primary" onClick={handleBind}>
+                  Start Import
+                </Button>
+              ) : (
+                <Button type="primary" onClick={handleSubmit}>
+                  Save
+                </Button>
+              )}
             </Toolbar>
             <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }}>
               <RightButton />
@@ -53,7 +83,7 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
             transition: 'width 0.2s ease',
           }}
         >
-          <PropertiesEditor />
+          <PropertiesEditor {...props} />
         </div>
       </div>
     </div>

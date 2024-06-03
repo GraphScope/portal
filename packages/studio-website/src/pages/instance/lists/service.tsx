@@ -47,10 +47,13 @@ export const listGraphs = async () => {
   //       notification('error', error);
   //     });
   // }
-  const graphs_map = graphs.map(item => {
+  const graphs_map = graphs?.map(item => {
     const { schema, store_type, stored_procedures, schema_update_time, data_update_time, creation_time, id, name } =
       item;
-    const { graph_id, sdk_endpoints, start_time, status } = _status.filter(V => V.graph_id === id)[0];
+    const { sdk_endpoints, status } = _status?.filter(V => V.graph_id === id)[0] || {
+      sdk_endpoints: { cypher: '', hqps: '' },
+      status: '',
+    };
     const { vertex_types, edge_types, vertices, edges } = schema;
     return {
       id,

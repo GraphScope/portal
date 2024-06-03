@@ -29,7 +29,8 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     return {
       key: id,
       label: label,
-      children: <PropertiesSchema data={item} type="nodes" />,
+      //@ts-ignore
+      children: <PropertiesSchema data={item} type="nodes" {...props} />,
     };
   });
   const edges_items = edges.map(item => {
@@ -38,7 +39,8 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     return {
       key: id,
       label: label,
-      children: <PropertiesSchema data={item} type="edges" />,
+      //@ts-ignore
+      children: <PropertiesSchema data={item} type="edges" {...props} />,
     };
   });
 
@@ -47,15 +49,9 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       draft.currentId = key[0] as string;
     });
   };
-  const handleSubmit = () => {
-    console.log('edges', edges);
-    console.log('nodes', nodes);
-  };
+
   return (
     <div>
-      <Button style={{ position: 'absolute', right: '400px' }} onClick={handleSubmit}>
-        Save
-      </Button>
       <Segmented
         block
         options={[
@@ -73,7 +69,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       <div
         style={{
           position: 'absolute',
-          top: '40px',
+          top: '45px',
           bottom: '0px',
           left: 0,
           right: 0,
