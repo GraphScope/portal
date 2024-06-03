@@ -1,7 +1,7 @@
 {
-  "name": "@graphscope/studio-sdk",
+  "name": "@graphscope/studio-components",
   "version": "0.1.0",
-  "description": "A GraphStudio SDK built from `studio-importor`, `studio-query`, and `studio-canvas`",
+  "description": "A components for graphscope studio",
   "main": "lib/index.js",
   "module": "es/index.js",
   "types": "lib/index.d.ts",
@@ -21,8 +21,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@graphscope/studio-query": "workspace:*",
-    "@graphscope/studio-importor": "workspace:*"
+    "uuidv4": "latest",
+    "react-intl": "latest"
   },
   "publishConfig": {
     "access": "public"

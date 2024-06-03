@@ -87,25 +87,6 @@ const JobsList: FC = () => {
     message.success(res);
     getJobList();
   }, []);
-  /** detail Popover 展示*/
-  const handleChange = (detail: { [s: string]: unknown } | ArrayLike<unknown>) => {
-    const data = Object.entries(detail);
-    return (
-      <Flex vertical gap={2}>
-        {data.map((item, index) => (
-          //@ts-ignore
-          <span key={index}>{item[1]}</span>
-        ))}
-      </Flex>
-    );
-  };
-  const hangdleJobid = (val: string) => (
-    <>
-      {val?.substring(0, val.length / 2)}
-      <br />
-      {val?.substring(val.length / 2)}
-    </>
-  );
 
   const columns = [
     {
@@ -119,7 +100,7 @@ const JobsList: FC = () => {
             history.push(`/job/detail#?jobId=${record}`);
           }}
         >
-          {hangdleJobid(record)}
+          {record}
         </span>
       ),
     },
@@ -157,11 +138,16 @@ const JobsList: FC = () => {
       sorter: (a: IJobType, b: IJobType) => dayjs(a.end_time).valueOf() - dayjs(b.end_time).valueOf(),
     },
     {
-      title: <FormattedMessage id="Graph name" />,
+      title: <FormattedMessage id="Graph id" />,
       dataIndex: 'detail',
       key: 'detail',
-      // render: (record: any) => <Popover content={() => handleChange(record)}>查询详情</Popover>,
-      render: (record: ArrayLike<unknown> | { [s: string]: unknown }) => <>{handleChange(record)}</>,
+      render: (record: { graph_id: String } | { [s: string]: unknown }) => <>{record?.graph_id}</>,
+    },
+    {
+      title: <FormattedMessage id="Process id" />,
+      dataIndex: 'detail',
+      key: 'detail',
+      render: (record: { process_id: string } | { [s: string]: unknown }) => <>{record?.process_id}</>,
     },
     {
       title: <FormattedMessage id="Action" />,
