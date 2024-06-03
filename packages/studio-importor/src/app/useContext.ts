@@ -3,6 +3,11 @@ import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 import type { Node, Edge } from 'reactflow';
 
 export type IStore = {
+  /** APP类型 */
+  appMode: 'DATA_MODELING' | 'DATA_IMPORTING';
+  /**不可编辑状态 */
+  disabled: boolean;
+
   currentType: 'nodes' | 'edges';
   currentId: string;
   nodes: Node[];
@@ -25,7 +30,10 @@ export type IStore = {
 };
 
 export const initialStore: IStore = {
-  // ...data,
+  /** APP类型 */
+  appMode: 'DATA_MODELING',
+  /**不可编辑状态 */
+  disabled: false,
   nodes: [],
   edges: [],
   source: {
