@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Typography, Flex, Input, Space, Button, Row, Tooltip } from 'antd';
 import PropertiesEditor from '../../../properties-editor';
 import { useContext } from '../../useContext';
-import PropertiesList from '../../../components/PropertiesList';
+import { PropertiesList } from '@graphscope/studio-components';
 import SwitchSource from './switch-source';
 import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useHandleChange } from './utils';
@@ -116,7 +116,11 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
             <Input value={target_label} disabled />
           </>
         )}
-        <PropertiesList properties={properties} onChange={handleProperty} typeOptions={props.getPrimitiveTypes()} />
+        <PropertiesList
+          properties={properties}
+          onChange={handleProperty}
+          typeColumn={{ options: props.getPrimitiveTypes() }}
+        />
         <Row justify="end">
           {props.GS_ENGINE_TYPE === 'groot' && (
             <Space>
