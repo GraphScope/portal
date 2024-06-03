@@ -1,6 +1,6 @@
 import React from 'react';
 import { useContext } from '../../../useContext';
-export function useHandleChange({ type, id }) {
+export default function useChange({ type, id }) {
   const { store, updateStore } = useContext();
   /** 改变数据源类型 */
   const onChangeType = (datatype: string) => {
@@ -106,56 +106,12 @@ export function useHandleChange({ type, id }) {
     onChangeValue('', false);
     onChangeDataFields();
   };
-  /** 修改label */
-  const handleChangeLabel = e => {
-    const label = e.target.value;
-    updateStore(draft => {
-      draft.displayMode = 'table';
-      if (type === 'edges') {
-        draft.edges.forEach(item => {
-          if (item.id === id) {
-            item.data.label = label;
-          }
-        });
-      }
-      if (type === 'nodes') {
-        draft.nodes.forEach(item => {
-          if (item.id === id) {
-            item.data.label = label;
-          }
-        });
-      }
-    });
-  };
 
-  const handleProperty = e => {
-    console.log('e|||||', e);
-    updateStore(draft => {
-      if (type === 'edges') {
-        draft.edges.map(item => {
-          if (item.id === id) {
-            //@ts-ignore
-            item.properties = e;
-          }
-        });
-      }
-      if (type === 'nodes') {
-        draft.nodes.map(item => {
-          if (item.id === id) {
-            //@ts-ignore
-            item.properties = e;
-          }
-        });
-      }
-    });
-  };
   return {
     onChangeType,
     onChangeValue,
     onChangeFocus,
     onChangeDataFields,
     deleteFile,
-    handleChangeLabel,
-    handleProperty,
   };
 }

@@ -4,7 +4,7 @@ import { useContext } from '../../../useContext';
 import { PropertiesList, SegmentedTabs } from '@graphscope/studio-components';
 import SwitchSource from './switch-source';
 import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useHandleChange } from '../utils';
+import useChange from './useChange';
 import type { IPropertiesSchemaProps } from '../index';
 
 // interface ILocationFieldProps {
@@ -28,15 +28,8 @@ const LocationField: React.FunctionComponent<IPropertiesSchemaProps> = props => 
 
   const { store } = useContext();
   const { nodes } = store;
-  const {
-    onChangeType,
-    onChangeValue,
-    onChangeFocus,
-    onChangeDataFields,
-    deleteFile,
-    handleChangeLabel,
-    handleProperty,
-  } = useHandleChange({ type, id });
+
+  const { onChangeType, onChangeValue, onChangeFocus, onChangeDataFields, deleteFile } = useChange({ type, id });
   let source_label, target_label;
   if (type === 'edges') {
     nodes.forEach(item => {

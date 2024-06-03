@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Typography, Flex, Input, Space, Button, Row } from 'antd';
 import { PropertiesList } from '@graphscope/studio-components';
-import { useHandleChange } from './utils';
+import useModel from './useModel';
 import LocationField from './location';
 import SourceTarget from './source-target';
+import GrootCase from './groot-case';
 export interface IPropertiesSchemaProps {
   GS_ENGINE_TYPE: string;
   getPrimitiveTypes(): { label: string; value: string }[];
@@ -23,12 +24,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
     properties = [],
   } = data;
 
-  const { handleChangeLabel, handleProperty } = useHandleChange({ type, id });
-
-  const handleSubmit = () => {};
-  const handleDelete = () => {
-    console.log(id);
-  };
+  const { handleChangeLabel, handleProperty } = useModel({ type, id });
 
   return (
     <div>
@@ -47,18 +43,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
           onChange={handleProperty}
           typeColumn={{ options: props.getPrimitiveTypes() }}
         />
-        <Row justify="end">
-          {props.GS_ENGINE_TYPE === 'groot' && (
-            <Space>
-              <Button size="small" type="primary" onClick={handleSubmit}>
-                Submit
-              </Button>
-              <Button size="small" type="primary" danger ghost onClick={handleDelete}>
-                Delete
-              </Button>
-            </Space>
-          )}
-        </Row>
+        <GrootCase />
       </Flex>
     </div>
   );
