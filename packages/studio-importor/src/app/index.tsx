@@ -6,6 +6,7 @@ import ModeSwitch from './mode-switch';
 import { ReactFlowProvider } from 'reactflow';
 import Toolbar from '../components/Toolbar';
 import AddNode from './graph-canvas/add-node';
+import Delete from './graph-canvas/delete';
 import 'reactflow/dist/style.css';
 import RightButton from './layout-controller/right-button';
 import LeftButton from './layout-controller/left-button';
@@ -53,8 +54,8 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
             <Toolbar>
               <LeftButton />
               <AddNode />
-              <ImportSchema displayType="model" />
-              <ModeSwitch />
+              <Delete />
+              {/* <ModeSwitch /> */}
             </Toolbar>
             <Toolbar style={{ top: '18px', right: '70px', left: 'unset', padding: 0 }}>
               {view === 'import_data' ? (
