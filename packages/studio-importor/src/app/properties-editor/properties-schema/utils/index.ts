@@ -31,8 +31,11 @@ export function useHandleChange({ type, id }) {
           if (item.id === id) {
             //@ts-ignore
             item.filelocation = value;
+            //@ts-ignore
             item.isBind = value !== '';
+            //@ts-ignore
             item.isEidtProperty = true;
+            //@ts-ignore
             item.isUpload = isUpload;
           }
         });
@@ -42,8 +45,11 @@ export function useHandleChange({ type, id }) {
           if (item.id === id) {
             //@ts-ignore
             item.filelocation = value;
+            //@ts-ignore
             item.isBind = value !== '';
+            //@ts-ignore
             item.isEidtProperty = true;
+            //@ts-ignore
             item.isUpload = isUpload;
           }
         });
@@ -78,6 +84,7 @@ export function useHandleChange({ type, id }) {
           if (item.id === id) {
             //@ts-ignore
             item.dataFields = header?.dataFields;
+            //@ts-ignore
             item.delimiter = header?.delimiter;
           }
         });
@@ -87,6 +94,7 @@ export function useHandleChange({ type, id }) {
           if (item.id === id) {
             //@ts-ignore
             item.dataFields = header?.dataFields;
+            //@ts-ignore
             item.delimiter = header?.delimiter;
           }
         });

@@ -18,9 +18,11 @@ export const getDataFields = async (file: File): Promise<{ dataFields: string[];
 
         if (header1.length > header2.length) {
           delimiter = ',';
+          //@ts-ignore
           dataFields = header1;
         } else {
           delimiter = '|';
+          //@ts-ignore
           dataFields = header2;
         }
         resolve({ dataFields, delimiter });

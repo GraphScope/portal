@@ -52,8 +52,6 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
       }
     });
   }
-  console.log(data);
-
   const handleSubmit = () => {};
   const handleDelete = () => {
     console.log(id);
