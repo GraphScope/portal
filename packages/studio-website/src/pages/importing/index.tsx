@@ -27,6 +27,7 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
       const graphSchema = await getSchema(graph_id);
       /** options 包含nodes,edges */
       const options = await getDataloadingConfig(graph_id, graphSchema);
+
       return options;
     }
     return { nodes: [], edges: [] };

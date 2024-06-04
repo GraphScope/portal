@@ -25,11 +25,10 @@ export function layout(data, direction) {
 }
 export function transformGraphNodes(nodes, displayMode) {
   return nodes.map(item => {
-    const { position, id, _fromEdge } = item;
+    const { position, key, id, _fromEdge } = item;
     if (position) {
       GRAPH_POSITION_MAP[id] = position;
     }
-
     const prevPosition = GRAPH_POSITION_MAP[id] ||
       dagreGraph.node(item.id) || { x: Math.random() * 500, y: Math.random() * 500 };
 
@@ -37,7 +36,7 @@ export function transformGraphNodes(nodes, displayMode) {
       data: {
         ...item,
       },
-      id,
+      id: id || key,
       type: displayMode === 'table' ? 'table-node' : 'graph-node',
       _fromEdge,
       targetPosition: Position.Left,
@@ -51,12 +50,13 @@ export function transformGraphNodes(nodes, displayMode) {
 }
 export function transformNodes(nodes, displayMode) {
   return nodes.map(item => {
-    const { position, id, _fromEdge, ...properties } = item;
+    const { position, key, id, _fromEdge, ...properties } = item;
     const nodeWithPosition = dagreGraph.node(item.id) || { x: Math.random() * 500, y: Math.random() * 500 };
     GRAPH_POSITION_MAP[id] = position;
+
     return {
       ...item,
-      id,
+      id: id || key,
       type: displayMode === 'table' ? 'table-node' : 'graph-node',
       _fromEdge,
       targetPosition: Position.Left,
@@ -78,11 +78,10 @@ export function transformEdges(_edges, displayMode) {
   console.log('edges', edges);
   return edges.map((item, index) => {
     console.log('edge', item);
-    const { id, source, target, data, _extra, properties = {}, ...others } = item;
+    const { id, key, source, target, data, _extra, properties = {}, ...others } = item;
     return {
       ...others,
-      id: id || `${source}-${target}-${index}`,
-
+      id: id || key || `${source}-${target}-${index}`,
       data: {
         ...data,
         ...properties,

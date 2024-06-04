@@ -11,6 +11,7 @@ import 'reactflow/dist/style.css';
 import RightButton from './layout-controller/right-button';
 import LeftButton from './layout-controller/left-button';
 import { notification } from 'antd';
+import { transformGraphNodes, transformEdges } from './elements/index';
 interface Option {
   label: string;
   value: string;
@@ -98,7 +99,11 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
         schemaOptions = await queryGraphSchema();
       }
       if (appMode === 'DATA_IMPORTING' && queryBoundSchema) {
-        schemaOptions = await queryBoundSchema();
+        const schema = await queryBoundSchema();
+        schemaOptions = {
+          nodes: transformGraphNodes(schema.nodes, store.displayMode),
+          edges: transformEdges(schema.edges, store.displayMode),
+        };
       }
       //@ts-ignore
       const { nodes, edges } = schemaOptions;
