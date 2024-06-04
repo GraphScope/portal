@@ -13,7 +13,7 @@ interface ISwitchSourceProps {
   uploadFile(file): { file_path: string };
 }
 const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
-  const { filelocation, onChangeFocus, onChangeValue, onChangeDataFields } = props;
+  const { filelocation, onChangeFocus, onChangeValue, onChangeDataFields, uploadFile } = props;
   const intl = useIntl();
   return (
     <Space.Compact size="small">
@@ -22,7 +22,7 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
           value={filelocation}
           onChange={onChangeValue}
           onChangeHeader={onChangeDataFields}
-          uploadFile={props.uploadFile}
+          uploadFile={uploadFile}
         />
         {!filelocation && (
           <Input
