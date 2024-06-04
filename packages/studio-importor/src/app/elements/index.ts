@@ -78,6 +78,7 @@ export function transformEdges(_edges, displayMode) {
   console.log('edges', edges);
   return edges.map((item, index) => {
     console.log('edge', item);
+    //@ts-ignore
     const { id, key, source, target, data, _extra, properties = {}, ...others } = item;
     return {
       ...others,

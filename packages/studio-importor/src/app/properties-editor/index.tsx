@@ -5,9 +5,7 @@ import PropertiesSchema from './properties-schema';
 import { useContext } from '../useContext';
 import { SegmentedTabs } from '@graphscope/studio-components';
 import { promises } from 'dns';
-interface IPropetiesEditorProps {
-  queryImportData: () => void;
-}
+interface IPropetiesEditorProps {}
 
 interface PropertiesSchema {
   /** 唯一ID */
