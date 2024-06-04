@@ -1,6 +1,6 @@
 import * as React from 'react';
 import StudioQuery from '@graphscope/studio-query';
-import Section from '@/components/section';
+import { SegmentedSection } from '@graphscope/studio-components';
 import storage from '@/components/utils/localStorage';
 import {
   queryGraphData,
@@ -10,7 +10,9 @@ import {
   deleteStatements,
   createStatements,
 } from './services';
-
+import { TOOLS_MENU } from '../../layouts/const';
+import { useContext } from '@/layouts/useContext';
+import { history } from 'umi';
 const QueryModule = () => {
   const { GS_ENGINE_TYPE } = window;
   const language = GS_ENGINE_TYPE === 'groot' ? 'gremlin' : 'cypher';
@@ -18,23 +20,12 @@ const QueryModule = () => {
   const locale = storage.getItem('locale');
   const primaryColor = storage.getItem('primaryColor');
   const themeMode = storage.getItem('themeColor');
+  const { store } = useContext();
+  const onChange = (value: any) => {
+    history.push(value);
+  };
   return (
-    <Section
-      breadcrumb={[
-        {
-          title: 'Home',
-        },
-        {
-          title: 'Query',
-        },
-      ]}
-      title="Query"
-      desc="You can use Cypher or Gremlin here to query the graph data"
-      style={{
-        padding: '0px',
-        marginTop: '-24px',
-      }}
-    >
+    <SegmentedSection withNav={store.navStyle === 'inline'} options={TOOLS_MENU} value="/querying" onChange={onChange}>
       <StudioQuery
         //@ts-ignore
         /** 主题相关 */
@@ -65,7 +56,7 @@ const QueryModule = () => {
         /** 是否立即查询 */
         enableImmediateQuery={true}
       />
-    </Section>
+    </SegmentedSection>
   );
 };
 

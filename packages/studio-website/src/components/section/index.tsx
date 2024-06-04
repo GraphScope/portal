@@ -30,9 +30,17 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
   };
   const hasDivider = title && desc && !items;
   return (
-    <section style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ padding: '12px 24px' }}>
-        {breadcrumb && <Breadcrumb items={breadcrumb} />}
+    <section
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        background: '#fff',
+        borderRadius: '12px',
+      }}
+    >
+      <div style={{ padding: '0px 24px' }}>
+        {/* {breadcrumb && <Breadcrumb items={breadcrumb} />} */}
         {title && (
           <Typography.Title level={1} style={{ fontSize: 40 }}>
             <FormattedMessage id={title} />

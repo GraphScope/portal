@@ -243,24 +243,21 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
                 </span>
               </Popover>
             </Typography.Text>
-            {/* <Typography.Text type="secondary">Logs</Typography.Text> */}
           </Space>
         </Flex>
-        {/* <Flex justify="space-between" vertical align="end"> */}
+
         <Flex gap="middle" align="flex-end" vertical justify="end">
           <Button
             style={{ width: btnWidth, textAlign: 'left' }}
             icon={<FontAwesomeIcon icon={faNetworkWired} style={{ marginRight: '8px' }} />}
-            onClick={() => history.push(`/instance/view-schema#?graph_name=${name}&graph_id=${id}`)}
+            onClick={() => history.push(`/modeling#?graph_name=${name}&graph_id=${id}`)}
           >
             <FormattedMessage id="Define schema" />
           </Button>
           <Button
             style={{ width: btnWidth, textAlign: 'left' }}
             icon={<FontAwesomeIcon icon={faFileImport} style={{ marginRight: '10px' }} />}
-            onClick={() =>
-              history.push(`/instance/import-data#?engineType=interactive&graph_name=${name}&graph_id=${id}`)
-            }
+            onClick={() => history.push(`/importing#?engineType=interactive&graph_name=${name}&graph_id=${id}`)}
           >
             <FormattedMessage id="Importing data" />
           </Button>
@@ -269,18 +266,12 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
             style={{ width: btnWidth, textAlign: 'left' }}
             icon={<FontAwesomeIcon icon={faMagnifyingGlass} style={{ marginRight: '8px' }} />}
             disabled={status === 'Stopped' ? true : false}
-            onClick={() => history.push(`/query-app#?graph_name=${name}`)}
+            onClick={() => history.push(`/querying#?graph_name=${name}`)}
           >
-            <FormattedMessage id="Query graph" />
+            <FormattedMessage id="Querying data" />
           </Button>
         </Flex>
-        {/* <Flex wrap="wrap" align="end">
-            <Button type="text" icon={<PlayCircleOutlined />} />
-            <Button type="text" icon={<DeleteOutlined />} />
-            <Button type="text" icon={<MoreOutlined />} />
-          </Flex> */}
       </Flex>
-      {/* </Flex> */}
     </Card>
   );
 };

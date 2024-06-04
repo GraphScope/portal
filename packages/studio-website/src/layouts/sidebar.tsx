@@ -8,25 +8,32 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useContext } from './useContext';
 import Logo from '@/components/logo';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoins, faMagnifyingGlass, faListCheck, faBell, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
-
+import {
+  faCoins,
+  faMagnifyingGlass,
+  faDownload,
+  faListCheck,
+  faBell,
+  faPuzzlePiece,
+  faDiagramProject,
+} from '@fortawesome/free-solid-svg-icons';
+import { Icons } from '@graphscope/studio-components';
+import { modalGlobalConfig } from 'antd/es/modal/confirm';
+import { TOOLS_MENU } from './const';
 const { useToken } = theme;
 
 const items: MenuProps['items'] = [
   {
     label: <FormattedMessage id="navbar.graphs" />,
-    key: '/instance',
+    key: '/graphs',
     icon: <FontAwesomeIcon icon={faCoins} />,
   },
-  // {
-  //   label: <FormattedMessage id="navbar.query" />,
-  //   key: '/query',
-  //   icon: <FileSearchOutlined />,
-  // },
   {
-    label: <FormattedMessage id="Query" />,
-    key: '/query-app',
-    icon: <FontAwesomeIcon icon={faMagnifyingGlass} />,
+    type: 'divider',
+  },
+  ...TOOLS_MENU,
+  {
+    type: 'divider',
   },
 ];
 
@@ -78,12 +85,11 @@ const Sidebar: React.FunctionComponent = () => {
   const intl = useIntl();
   let defaultPath = '/' + location.pathname.split('/')[1];
   if (defaultPath === '/') {
-    defaultPath = '/instance';
+    defaultPath = '/graphs';
   }
   const { token } = useToken();
   const { store, updateStore } = useContext();
   const { collapse } = store;
-  const [current, setCurrent] = useState(defaultPath);
 
   const onClick: MenuProps['onClick'] = e => {
     if (e.key === '/layout') {
@@ -92,7 +98,7 @@ const Sidebar: React.FunctionComponent = () => {
       });
       return;
     }
-    setCurrent(e.key);
+
     history.push(`${e.key}`);
   };
   const iconStyle = {
@@ -119,7 +125,7 @@ const Sidebar: React.FunctionComponent = () => {
           inlineCollapsed={collapse}
           onClick={onClick}
           // defaultSelectedKeys={[location.pathname]}
-          selectedKeys={[current]}
+          selectedKeys={[defaultPath]}
           items={[...items, ...otherItems]}
           mode="vertical"
           style={{ borderInlineEnd: 'none' }}
@@ -130,7 +136,7 @@ const Sidebar: React.FunctionComponent = () => {
             inlineCollapsed={collapse}
             onClick={onClick}
             // defaultSelectedKeys={[location.pathname]}
-            selectedKeys={[current]}
+            selectedKeys={[defaultPath]}
             items={settingMenu}
             mode="vertical"
             style={{ borderInlineEnd: 'none' }}

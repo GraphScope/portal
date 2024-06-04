@@ -48,7 +48,7 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
         <div
           style={{
             width: left ? '0px' : '300px',
-            padding: left ? '0px' : '12px',
+            padding: left ? '0px' : '0px 12px',
             overflow: 'hidden',
             transition: 'width 0.2s ease',
           }}
@@ -83,7 +83,7 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
         <div
           style={{
             width: right ? '0px' : '350px',
-            padding: right ? '0px' : '12px',
+            padding: right ? '0px' : '0px 12px',
             position: 'relative',
             overflow: 'hidden',
             transition: 'width 0.2s ease',

@@ -17,7 +17,7 @@ const fakeSnapshot = obj => {
 const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   const { store, updateStore, onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } =
     useInteractive();
-  const { nodes, edges, theme } = store;
+  const { nodes, edges, theme, collapsed } = store;
 
   // useEffect(() => {
   //   updateStore(draft => {
@@ -54,7 +54,12 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
                 '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)',
             }}
           />
-          <Background style={{ background: '#f4f5f5' }} />
+          <Background
+            style={{
+              // background: '#f4f5f5',
+              background: collapsed.left && collapsed.right ? '#fff' : '#f4f5f5',
+            }}
+          />
           {isEmpty && <EmptyCanvas />}
           <MiniMap />
         </ReactFlow>
