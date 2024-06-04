@@ -2,8 +2,8 @@ import { defineConfig } from 'umi';
 
 export default defineConfig({
   routes: [
-    { path: '/', redirect: '/instance' },
-    { path: '/instance', component: 'instance' },
+    { path: '/', redirect: '/graphs' },
+    { path: '/graphs', component: 'instance' },
     { path: '/setting', component: 'setting' },
     // { path: '/instance/create', component: 'instance/create-instance' },
     // { path: '/instance/view-schema', component: 'instance/view-schema' },

@@ -25,7 +25,7 @@ const { useToken } = theme;
 const items: MenuProps['items'] = [
   {
     label: <FormattedMessage id="navbar.graphs" />,
-    key: '/instance',
+    key: '/graphs',
     icon: <FontAwesomeIcon icon={faCoins} />,
   },
   {
@@ -85,7 +85,7 @@ const Sidebar: React.FunctionComponent = () => {
   const intl = useIntl();
   let defaultPath = '/' + location.pathname.split('/')[1];
   if (defaultPath === '/') {
-    defaultPath = '/instance';
+    defaultPath = '/graphs';
   }
   const { token } = useToken();
   const { store, updateStore } = useContext();
