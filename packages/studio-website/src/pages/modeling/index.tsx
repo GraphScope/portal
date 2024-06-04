@@ -17,7 +17,7 @@ import {
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 
-const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
+const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
   /**查询数据导入 */
   const { store } = useContext();
   const onChange = (value: any) => {
@@ -60,4 +60,4 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
   );
 };
 
-export default SchemaPage;
+export default ModelingPage;

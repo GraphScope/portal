@@ -17,7 +17,7 @@ export default defineConfig({
     { path: '/alert', component: 'alert' },
     { path: '/deployment', component: 'deployment' },
 
-    { path: '/modeling', component: 'schema' },
+    { path: '/modeling', component: 'modeling' },
     { path: '/importing', component: 'importing' },
     { path: '/querying', component: 'query' },
   ],
