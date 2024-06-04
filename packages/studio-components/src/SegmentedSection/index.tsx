@@ -11,9 +11,10 @@ interface ISectionProps {
   children?: React.ReactNode;
   options: SegmentedProps['options'];
   style?: React.CSSProperties;
-  value?: string;
+  value: string;
   withNav?: boolean;
   connectStyle?: React.CSSProperties;
+  onChange: SegmentedProps['onChange'];
 }
 
 const StatusPoint = ({ status }) => {
@@ -21,10 +22,8 @@ const StatusPoint = ({ status }) => {
 };
 
 const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
-  const { children, style, value, withNav, connectStyle, options } = props;
-
+  const { children, style, value, withNav, connectStyle, options, onChange } = props;
   const handleClick = () => {};
-
   return (
     <section style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div
@@ -43,7 +42,7 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
         {withNav && (
           <>
             <div style={{ width: '400px' }}>
-              <Segmented options={options} block value={value} />
+              <Segmented options={options} block value={value} onChange={onChange} />
             </div>
             <div></div>
           </>

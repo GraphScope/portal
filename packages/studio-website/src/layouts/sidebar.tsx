@@ -90,7 +90,6 @@ const Sidebar: React.FunctionComponent = () => {
   const { token } = useToken();
   const { store, updateStore } = useContext();
   const { collapse } = store;
-  const [current, setCurrent] = useState(defaultPath);
 
   const onClick: MenuProps['onClick'] = e => {
     if (e.key === '/layout') {
@@ -99,7 +98,7 @@ const Sidebar: React.FunctionComponent = () => {
       });
       return;
     }
-    setCurrent(e.key);
+
     history.push(`${e.key}`);
   };
   const iconStyle = {
@@ -126,7 +125,7 @@ const Sidebar: React.FunctionComponent = () => {
           inlineCollapsed={collapse}
           onClick={onClick}
           // defaultSelectedKeys={[location.pathname]}
-          selectedKeys={[current]}
+          selectedKeys={[defaultPath]}
           items={[...items, ...otherItems]}
           mode="vertical"
           style={{ borderInlineEnd: 'none' }}
@@ -137,7 +136,7 @@ const Sidebar: React.FunctionComponent = () => {
             inlineCollapsed={collapse}
             onClick={onClick}
             // defaultSelectedKeys={[location.pathname]}
-            selectedKeys={[current]}
+            selectedKeys={[defaultPath]}
             items={settingMenu}
             mode="vertical"
             style={{ borderInlineEnd: 'none' }}
