@@ -19,6 +19,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Icons } from '@graphscope/studio-components';
 import { modalGlobalConfig } from 'antd/es/modal/confirm';
+import { TOOLS_MENU } from './const';
 const { useToken } = theme;
 
 const items: MenuProps['items'] = [
@@ -30,32 +31,7 @@ const items: MenuProps['items'] = [
   {
     type: 'divider',
   },
-  // {
-  //   key: 'grp',
-  //   // label: 'Graphs',
-  //   type: 'group',
-  //   children: [
-  //     { key: 'schema', label: 'Modeling' },
-  //     { key: 'importing', label: 'Importing' },
-  //     { key: 'query', label: 'Querying' },
-  //   ],
-  // },
-
-  {
-    label: <FormattedMessage id="Modeling" />,
-    key: '/schema',
-    icon: <FontAwesomeIcon icon={faDiagramProject} />,
-  },
-  {
-    label: <FormattedMessage id="Importing" />,
-    key: '/importing',
-    icon: <FontAwesomeIcon icon={faDownload} />,
-  },
-  {
-    label: <FormattedMessage id="Querying" />,
-    key: '/query',
-    icon: <FontAwesomeIcon icon={faMagnifyingGlass} />,
-  },
+  ...TOOLS_MENU,
   {
     type: 'divider',
   },

@@ -8,7 +8,7 @@ export default defineConfig({
     { path: '/instance/create', component: 'instance/create-instance' },
     { path: '/instance/view-schema', component: 'instance/view-schema' },
     { path: '/instance/import-data', component: 'instance/import-data' },
-    { path: '/query', component: 'query' },
+
     { path: '/query-app', component: 'query/app', layout: false },
     { path: '/job', component: 'job' },
     { path: '/job/detail', component: 'job/job-detail' },
@@ -16,8 +16,10 @@ export default defineConfig({
     { path: '/extension/:name', component: 'extension/create-plugins' },
     { path: '/alert', component: 'alert' },
     { path: '/deployment', component: 'deployment' },
-    { path: '/schema', component: 'schema' },
+
+    { path: '/modeling', component: 'schema' },
     { path: '/importing', component: 'importing' },
+    { path: '/querying', component: 'query' },
   ],
   jsMinifier: 'terser',
   npmClient: 'pnpm',

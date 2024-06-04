@@ -271,7 +271,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
             disabled={status === 'Stopped' ? true : false}
             onClick={() => history.push(`/query-app#?graph_name=${name}`)}
           >
-            <FormattedMessage id="Query graph" />
+            <FormattedMessage id="Querying data" />
           </Button>
         </Flex>
         {/* <Flex wrap="wrap" align="end">

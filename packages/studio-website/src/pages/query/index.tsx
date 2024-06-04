@@ -10,7 +10,8 @@ import {
   deleteStatements,
   createStatements,
 } from './services';
-
+import { TOOLS_MENU } from '../../layouts/const';
+import { useContext } from '@/layouts/useContext';
 const QueryModule = () => {
   const { GS_ENGINE_TYPE } = window;
   const language = GS_ENGINE_TYPE === 'groot' ? 'gremlin' : 'cypher';
@@ -18,8 +19,9 @@ const QueryModule = () => {
   const locale = storage.getItem('locale');
   const primaryColor = storage.getItem('primaryColor');
   const themeMode = storage.getItem('themeColor');
+  const { store } = useContext();
   return (
-    <SegmentedSection>
+    <SegmentedSection withNav={store.navStyle === 'inline'} options={TOOLS_MENU} value="/querying">
       <StudioQuery
         //@ts-ignore
         /** 主题相关 */
