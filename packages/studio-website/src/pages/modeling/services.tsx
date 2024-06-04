@@ -8,7 +8,7 @@ import {
   transformImportOptionsToSchemaMapping,
   transformSchemaToImportOptions,
   transformMappingSchemaToImportOptions,
-} from './utils/import';
+} from '../importing/utils/import';
 const { GS_ENGINE_TYPE } = window;
 
 export const createGraph = async (graph_id: string, params: { graphName: string; nodes: any[]; edges: any[] }) => {

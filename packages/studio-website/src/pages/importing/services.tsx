@@ -1,6 +1,6 @@
 import { GraphApiFactory, UtilsApiFactory, DataSourceApiFactory, JobApiFactory } from '@graphscope/studio-server';
 import type { SchemaMapping } from '@graphscope/studio-server';
-import { transOptionsToSchema } from './utils/schema';
+import { transOptionsToSchema } from '../modeling/utils/schema';
 import { cloneDeep } from 'lodash';
 import { notification } from '@/pages/utils';
 import {

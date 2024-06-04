@@ -6,7 +6,7 @@ import { TOOLS_MENU } from '../../layouts/const';
 import { useContext } from '../../layouts/useContext';
 import { history } from 'umi';
 import { Utils } from '@graphscope/studio-components';
-import { notification } from 'antd';
+
 import {
   createGraph,
   queryPrimitiveTypes,

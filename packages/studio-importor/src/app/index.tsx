@@ -26,7 +26,9 @@ interface ImportAppProps {
     options: Option[];
     type: 'Select' | 'InputNumber';
   };
-  queryGraphSchema: () => Promise<any>;
+
+  queryGraphSchema?: () => Promise<any>;
+  queryBoundSchema?: () => Promise<any>;
   handleUploadFile?: (file: File) => Promise<string>;
   saveModeling?: (schema: any) => void;
   handleImporting?: (schema: any) => void;
@@ -36,7 +38,7 @@ import { useStore, useContext, updateStore } from './useContext';
 import { Button } from 'antd';
 
 const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
-  const { appMode, handleImporting, saveModeling, queryGraphSchema } = props;
+  const { appMode, handleImporting, saveModeling, queryGraphSchema, queryBoundSchema } = props;
   const { collapsed } = useStore();
   const { left, right } = collapsed;
   const { store } = useContext();
@@ -90,11 +92,19 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
   };
   useEffect(() => {
     (async () => {
-      const graphSchema = await queryGraphSchema();
-      console.log('graphSchema', graphSchema);
+      let schemaOptions = {};
+
+      if (appMode === 'DATA_MODELING' && queryGraphSchema) {
+        schemaOptions = await queryGraphSchema();
+      }
+      if (appMode === 'DATA_IMPORTING' && queryBoundSchema) {
+        schemaOptions = await queryBoundSchema();
+      }
+      //@ts-ignore
+      const { nodes, edges } = schemaOptions;
       updateStore(draft => {
-        draft.nodes = graphSchema.nodes;
-        draft.edges = graphSchema.edges;
+        draft.nodes = nodes;
+        draft.edges = edges;
       });
     })();
   }, []);

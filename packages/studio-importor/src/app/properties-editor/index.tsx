@@ -71,16 +71,6 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     });
   };
 
-  // useEffect(() => {
-  //   const { queryImportData } = props;
-  //   queryImportData().then(res => {
-  //     updateStore(draft => {
-  //       draft.edges = res.edges || [];
-  //       draft.nodes = res.nodes || [];
-  //     });
-  //   });
-  // }, []);
-
   return (
     <div>
       <SegmentedTabs

@@ -1,4 +1,4 @@
-import type { VertexType } from '@graphscope/studio-server';
+import type { BaseVertexType } from '@graphscope/studio-server';
 
 export interface Properties {
   name: string;
@@ -76,7 +76,7 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
   // const { edges } = options;
   const nodeMap: Record<string, string> = {};
   //@ts-ignore
-  const vertex_types: VertexType[] = options.nodes.map((item, itemIdx) => {
+  const vertex_types: BaseVertexType[] = options.nodes.map((item, itemIdx) => {
     nodeMap[item.id] = item.label;
 
     let primary_key = 'id';
@@ -142,7 +142,7 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
 export function transSchemaToOptions(options: DeepRequired<{ nodes: TransformedNode[]; edges: TransformedEdge[] }>) {
   const nodeMap: Record<string, string> = {};
   //@ts-ignore
-  const nodes: VertexType[] = options.vertex_types.map((item, itemIdx) => {
+  const nodes: BaseVertexType[] = options.vertex_types.map((item, itemIdx) => {
     const { type_id, type_name, properties, primary_keys } = item;
     nodeMap[type_name] = type_id;
     return {
