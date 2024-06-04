@@ -15,7 +15,7 @@ export interface Properties {
 
 export interface TransformedNode {
   /** 节点类型 */
-  data: { label: string };
+  label: string;
   /** 节点属性 */
   properties: Properties[];
   /** 节点主键 */
@@ -26,7 +26,7 @@ export interface TransformedNode {
 
 export interface TransformedEdge {
   /** 边类型 */
-  data: { label: string };
+  label: string;
   /** 边属性 */
   properties: Properties[];
   /** 启始节点ID */
@@ -77,12 +77,12 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
   const nodeMap: Record<string, string> = {};
   //@ts-ignore
   const vertex_types: VertexType[] = options.nodes.map((item, itemIdx) => {
-    nodeMap[item.id] = item.data.label;
+    nodeMap[item.id] = item.label;
 
     let primary_key = 'id';
     return {
       type_id: itemIdx, // item.key,
-      type_name: item.data.label,
+      type_name: item.label,
       properties: item.properties.map((p, pIdx) => {
         if (p.primaryKey) {
           primary_key = p.name;
@@ -99,12 +99,7 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
   const edgeMap = new Map();
 
   options.edges.forEach((item, itemIdx) => {
-    const {
-      data: { label },
-      source: sourceID,
-      target: targetID,
-      properties,
-    } = item;
+    const { label, source: sourceID, target: targetID, properties } = item;
     const source = nodeMap[sourceID];
     const target = nodeMap[targetID];
     const constraint = {
@@ -170,7 +165,7 @@ export function transSchemaToOptions(options: DeepRequired<{ nodes: TransformedN
   });
   //@ts-ignore
   const edges = options.edge_types.map((item, itemIdx) => {
-    const { type_id, type_name, vertex_type_pair_relations, properties, primary_keys } = item;
+    const { type_id, type_name, vertex_type_pair_relations, properties = [], primary_keys } = item;
     const { source_vertex, destination_vertex } = vertex_type_pair_relations[0];
     return {
       id: `${type_id}`,

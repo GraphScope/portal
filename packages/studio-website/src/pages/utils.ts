@@ -16,8 +16,8 @@ export const notification = (type: string, data: any) => {
   }
   if (type === 'error') {
     const { response, message } = data;
-    const body = response.data.detail;
-    notifications.error({ message, description: `${body}` });
+    const msg = response.data;
+    notifications.error({ message, description: `${msg}` });
   }
 };
 

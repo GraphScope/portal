@@ -5,9 +5,11 @@ import { SegmentedSection } from '@graphscope/studio-components';
 import { TOOLS_MENU } from '../../layouts/const';
 import { useContext } from '../../layouts/useContext';
 import { history } from 'umi';
+import { Utils } from '@graphscope/studio-components';
+import { notification } from 'antd';
 import {
   createGraph,
-  getPrimitiveTypes,
+  queryPrimitiveTypes,
   uploadFile,
   createDataloadingJob,
   getSchema,
@@ -31,30 +33,46 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
     return options;
   };
   /** 查询图 */
-  const queryGrsph = async () => {
-    const schema = await getSchema('2');
-    return transSchemaToOptions(schema);
+  const queryGraphSchema = async () => {
+    const graph_id = Utils.searchParamOf('graph_id');
+    let schema: any = { vertex_types: [], edge_types: [] };
+    if (graph_id) {
+      schema = await getSchema(graph_id);
+      if (!schema) {
+        schema = { vertex_types: [], edge_types: [] };
+      }
+      console.log('DDDADADDADA schema', schema);
+    }
+    // const schema = { vertex_types: [], edge_types: [] };
+    return transSchemaToOptions(schema as any);
+  };
+  const saveModeling = (schema: any) => {
+    const { nodes, edges } = schema;
+    console.log('nodes', nodes, edges);
+    createGraph('2', {
+      graphName: 'test',
+      nodes,
+      edges,
+    });
   };
 
   return (
     <SegmentedSection withNav={store.navStyle === 'inline'} options={TOOLS_MENU} value="/modeling" onChange={onChange}>
       <ImportApp
         /** 创建图模型 */
+        appMode="DATA_MODELING"
         //@ts-ignore
-        handleModeling={createGraph}
+        queryGraphSchema={queryGraphSchema}
+        disabled={true}
+        //@ts-ignore
+        saveModeling={saveModeling}
         /** 属性下拉选项值 */
-        getPrimitiveTypes={() => {
+        queryPrimitiveTypes={() => {
           return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {
             return { label: item, value: item };
           });
         }}
-        /** 绑定数据中上传文件 */
-        uploadFile={uploadFile}
-        /** 数据绑定 */
-        handleImporting={createDataloadingJob}
-        queryImportData={queryGrsph}
         GS_ENGINE_TYPE={GS_ENGINE_TYPE}
-        appMode="DATA_MODELING"
       />
     </SegmentedSection>
   );

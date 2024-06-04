@@ -7,7 +7,7 @@ import SourceTarget from './source-target';
 import GrootCase from './groot-case';
 export interface IPropertiesSchemaProps {
   GS_ENGINE_TYPE: string;
-  getPrimitiveTypes(): { label: string; value: string }[];
+  queryPrimitiveTypes(): { label: string; value: string }[];
   data: any;
   type: 'nodes' | 'edges';
   appMode: string;
@@ -15,7 +15,7 @@ export interface IPropertiesSchemaProps {
 }
 
 const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props => {
-  const { data, type, appMode, getPrimitiveTypes } = props;
+  const { data, type, appMode, queryPrimitiveTypes } = props;
   const {
     id,
     data: { label, dataFields, properties = [] },
@@ -51,7 +51,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
         <PropertiesList
           properties={properties}
           onChange={handleProperty}
-          typeColumn={{ options: getPrimitiveTypes() }}
+          typeColumn={{ options: queryPrimitiveTypes() }}
           disabled={!!mappingColumn}
           //@ts-ignore
           mappingColumn={mappingColumn}

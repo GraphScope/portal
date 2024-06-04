@@ -6,7 +6,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import type { IStore } from '../useContext';
 import { useContext } from '@/layouts/useContext';
-import { getPrimitiveTypes } from '../service';
+import { queryPrimitiveTypes } from '../service';
 import { createVertexOrEdgeType } from './service';
 import { getSchema } from '../../view-schema/service';
 import { searchParamOf } from '@/components/utils/index';
@@ -36,7 +36,7 @@ type configcolumnsType = {
   option?: { label: string; value: string }[];
 };
 
-const primitive_types = getPrimitiveTypes();
+const primitive_types = queryPrimitiveTypes();
 
 /** 子项 [{title:'表头'，dataIndex:'绑定字段'，type:'字段对应编辑框'，option:'select配置选项',width:'表头宽度'}] */
 const configcolumns: configcolumnsType[] = [

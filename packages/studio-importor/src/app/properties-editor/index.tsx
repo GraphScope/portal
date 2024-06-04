@@ -6,7 +6,7 @@ import { useContext } from '../useContext';
 import { SegmentedTabs } from '@graphscope/studio-components';
 import { promises } from 'dns';
 interface IPropetiesEditorProps {
-  queryImportData: () => any;
+  queryImportData: () => void;
 }
 
 interface PropertiesSchema {
@@ -70,15 +70,16 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       draft.currentId = key[0] as string;
     });
   };
-  useEffect(() => {
-    const { queryImportData } = props;
-    queryImportData().then(res => {
-      updateStore(draft => {
-        draft.edges = res.edges || [];
-        draft.nodes = res.nodes || [];
-      });
-    });
-  }, []);
+
+  // useEffect(() => {
+  //   const { queryImportData } = props;
+  //   queryImportData().then(res => {
+  //     updateStore(draft => {
+  //       draft.edges = res.edges || [];
+  //       draft.nodes = res.nodes || [];
+  //     });
+  //   });
+  // }, []);
 
   return (
     <div>

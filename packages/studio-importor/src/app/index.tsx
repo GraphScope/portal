@@ -10,37 +10,94 @@ import Delete from './graph-canvas/delete';
 import 'reactflow/dist/style.css';
 import RightButton from './layout-controller/right-button';
 import LeftButton from './layout-controller/left-button';
+import { notification } from 'antd';
+interface Option {
+  label: string;
+  value: string;
+}
 interface ImportAppProps {
   appMode: 'DATA_MODELING' | 'DATA_IMPORTING';
-  handleUploadFile: (file: File) => Promise<string>;
-  handleModeling: (graphId: string, params: any) => void;
-  handleImporting: (graphId: string, params: any) => void;
+  /**  第二项 */
+  queryPrimitiveTypes: () => {
+    options: Option[];
+  };
+  /** 第四项 */
+  mappingColumn?: {
+    options: Option[];
+    type: 'Select' | 'InputNumber';
+  };
+  queryGraphSchema: () => Promise<any>;
+  handleUploadFile?: (file: File) => Promise<string>;
+  saveModeling?: (schema: any) => void;
+  handleImporting?: (schema: any) => void;
+  queryImportData?: () => void;
 }
-import { useStore, useContext } from './useContext';
+import { useStore, useContext, updateStore } from './useContext';
 import { Button } from 'antd';
 
 const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
-  const { appMode, handleImporting, handleModeling } = props;
+  const { appMode, handleImporting, saveModeling, queryGraphSchema } = props;
   const { collapsed } = useStore();
   const { left, right } = collapsed;
   const { store } = useContext();
   const { nodes, edges } = store;
-  const _handleModeling = () => {
-    /** 创建服务 「props.createGraph(params)」*/
-    console.log('edges', edges);
-    console.log('nodes', nodes);
-    if (handleModeling) {
-      handleModeling('2', { graphName: 'test', nodes, edges });
+  const handleSave = () => {
+    let errors: string[] = [];
+    const _nodes = nodes.map(item => {
+      const { data, id } = item;
+      const { label, properties } = data;
+      if (properties) {
+        return {
+          id,
+          label,
+          properties,
+        };
+      } else {
+        errors.push(label);
+      }
+    });
+    const _edges = edges.map(item => {
+      const { data, id, source, target } = item;
+      const { label, properties } = data;
+      return {
+        label,
+        id,
+        source,
+        target,
+        properties,
+      };
+    });
+    if (errors.length !== 0) {
+      notification.warning({
+        message: `Properties error`,
+        description: `Vertex ${errors.join(',')} need add Properties`,
+        duration: 1,
+      });
+    } else if (saveModeling) {
+      saveModeling({
+        nodes: _nodes,
+        edges: _edges,
+      });
     }
   };
   /** 数据绑定 */
   const _handleImporting = () => {
-    const dataMap = [...nodes, ...edges];
-    console.log(dataMap);
+    const graphSchema = [...nodes, ...edges];
+    console.log(graphSchema);
     if (handleImporting) {
-      handleImporting('1', dataMap);
+      handleImporting(graphSchema);
     }
   };
+  useEffect(() => {
+    (async () => {
+      const graphSchema = await queryGraphSchema();
+      console.log('graphSchema', graphSchema);
+      updateStore(draft => {
+        draft.nodes = graphSchema.nodes;
+        draft.edges = graphSchema.edges;
+      });
+    })();
+  }, []);
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
@@ -69,7 +126,7 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
                   Start Importing
                 </Button>
               ) : (
-                <Button type="primary" onClick={_handleModeling}>
+                <Button type="primary" onClick={handleSave}>
                   Save Modeling
                 </Button>
               )}
