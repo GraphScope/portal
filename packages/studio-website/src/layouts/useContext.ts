@@ -20,6 +20,7 @@ export const initialStore = {
   /** 主题模式 */
   mode: themeColor || 'defaultAlgorithm',
   inputNumber: corner || 6,
+  navStyle: 'inline',
 };
 
 export type IStore = typeof initialStore;

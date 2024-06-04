@@ -22,7 +22,18 @@ export default () => {
         background: '#fff',
       }}
     >
-      <ModelingApp />
+      <ModelingApp
+        /** 属性下拉选项值 */
+        getPrimitiveTypes={() => {
+          return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {
+            return { label: item, value: item };
+          });
+        }}
+        GS_ENGINE_TYPE={'interactive'}
+        appMode="DATA_MODELING"
+        createGraph={() => {}}
+        uploadFile={() => {}}
+      />
     </div>
   );
 };

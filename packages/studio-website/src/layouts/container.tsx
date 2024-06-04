@@ -77,7 +77,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
             style={{
               boxSizing: 'border-box',
               flex: 1,
-              background: mode === 'defaultAlgorithm' ? '#fff' : '#161616',
+              // background: mode === 'defaultAlgorithm' ? '#fff' : '#161616',
               borderRadius: '12px',
               position: 'relative',
             }}
