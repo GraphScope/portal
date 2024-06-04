@@ -9,7 +9,7 @@ export default function useChange({ type, id }) {
         draft.edges.map(item => {
           if (item.id === id) {
             //@ts-ignore
-            item.datatype = datatype;
+            item.data.datatype = datatype;
           }
         });
       }
@@ -17,7 +17,7 @@ export default function useChange({ type, id }) {
         draft.nodes.map(item => {
           if (item.id === id) {
             //@ts-ignore
-            item.datatype = datatype;
+            item.data.datatype = datatype;
           }
         });
       }
@@ -30,13 +30,13 @@ export default function useChange({ type, id }) {
         draft.edges.map(item => {
           if (item.id === id) {
             //@ts-ignore
-            item.filelocation = value;
+            item.data.filelocation = value;
             //@ts-ignore
-            item.isBind = value !== '';
+            item.data.isBind = value !== '';
             //@ts-ignore
-            item.isEidtProperty = true;
+            item.data.isEidtProperty = true;
             //@ts-ignore
-            item.isUpload = isUpload;
+            item.data.isUpload = isUpload;
           }
         });
       }
@@ -44,13 +44,13 @@ export default function useChange({ type, id }) {
         draft.nodes.map(item => {
           if (item.id === id) {
             //@ts-ignore
-            item.filelocation = value;
+            item.data.filelocation = value;
             //@ts-ignore
-            item.isBind = value !== '';
+            item.data.isBind = value !== '';
             //@ts-ignore
-            item.isEidtProperty = true;
+            item.data.isEidtProperty = true;
             //@ts-ignore
-            item.isUpload = isUpload;
+            item.data.isUpload = isUpload;
           }
         });
       }
@@ -63,7 +63,7 @@ export default function useChange({ type, id }) {
         draft.edges.map(item => {
           if (item.id === id) {
             //@ts-ignore
-            item.isEidtProperty = true;
+            item.data.isEidtProperty = true;
           }
         });
       }
@@ -71,7 +71,7 @@ export default function useChange({ type, id }) {
         draft.nodes.map(item => {
           if (item.id === id) {
             //@ts-ignore
-            item.isEidtProperty = true;
+            item.data.isEidtProperty = true;
           }
         });
       }
@@ -83,9 +83,9 @@ export default function useChange({ type, id }) {
         draft.edges.map(item => {
           if (item.id === id) {
             //@ts-ignore
-            item.dataFields = header?.dataFields;
+            item.data.dataFields = header?.dataFields;
             //@ts-ignore
-            item.delimiter = header?.delimiter;
+            item.data.delimiter = header?.delimiter;
           }
         });
       }
@@ -93,9 +93,9 @@ export default function useChange({ type, id }) {
         draft.nodes.map(item => {
           if (item.id === id) {
             //@ts-ignore
-            item.dataFields = header?.dataFields;
+            item.data.dataFields = header?.dataFields;
             //@ts-ignore
-            item.delimiter = header?.delimiter;
+            item.data.delimiter = header?.delimiter;
           }
         });
       }

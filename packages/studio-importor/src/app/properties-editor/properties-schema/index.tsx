@@ -18,12 +18,11 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
   const { data, type, appMode, getPrimitiveTypes } = props;
   const {
     id,
-    data: { label },
+    data: { label, dataFields, properties = [] },
     source,
     target,
-    dataFields,
-    properties = [],
   } = data;
+  console.log('dataFields', dataFields, ' properties', properties);
 
   const { handleChangeLabel, handleProperty } = useModel({ type, id });
   /** 判断是否为导入数据 */
@@ -46,14 +45,14 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
           <>
             <Typography.Text>Label</Typography.Text>
             <Input value={label} onChange={handleChangeLabel} />
+            {type === 'edges' && <SourceTarget source={source} target={target} />}
           </>
         )}
-        {type === 'edges' && <SourceTarget source={source} target={target} />}
         <PropertiesList
-          properties={[{ key: '1', name: 'id', type: 'int', primaryKey: true, token: '', index: 0 }]}
-          // properties={properties}
+          properties={properties}
           onChange={handleProperty}
           typeColumn={{ options: getPrimitiveTypes() }}
+          disabled={!!mappingColumn}
           //@ts-ignore
           mappingColumn={mappingColumn}
         />

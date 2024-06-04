@@ -30,7 +30,7 @@ export default function useModel({ type, id }) {
         draft.edges.map(item => {
           if (item.id === id) {
             //@ts-ignore
-            item.properties = e;
+            item.data.properties = e;
           }
         });
       }
@@ -38,7 +38,7 @@ export default function useModel({ type, id }) {
         draft.nodes.map(item => {
           if (item.id === id) {
             //@ts-ignore
-            item.properties = e;
+            item.data.properties = e;
           }
         });
       }

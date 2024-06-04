@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Collapse, Segmented, Button } from 'antd';
 import PropertiesSchema from './properties-schema';
 
 import { useContext } from '../useContext';
 import { SegmentedTabs } from '@graphscope/studio-components';
-interface IPropetiesEditorProps {}
+import { promises } from 'dns';
+interface IPropetiesEditorProps {
+  queryImportData: () => any;
+}
 
 interface PropertiesSchema {
   /** 唯一ID */
@@ -67,6 +70,15 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       draft.currentId = key[0] as string;
     });
   };
+  useEffect(() => {
+    const { queryImportData } = props;
+    queryImportData().then(res => {
+      updateStore(draft => {
+        draft.edges = res.edges || [];
+        draft.nodes = res.nodes || [];
+      });
+    });
+  }, []);
 
   return (
     <div>

@@ -1,7 +1,8 @@
 import type { EdgeMapping, SchemaMapping, VertexMapping, Schema } from '@graphscope/studio-server';
-import type { BindingEdge, BindingNode } from '../../pages/instance/import-data/useContext';
+import type { BindingEdge, BindingNode } from '../../../pages/instance/import-data/useContext';
 import { transformSchemaToOptions } from '@/components/utils/schema';
 import type { DeepRequired } from '@/components/utils/schema';
+import { height } from '@fortawesome/free-solid-svg-icons/fa0';
 
 export interface ItemType {
   property_mapping: { [x: string]: string }[];
@@ -167,48 +168,61 @@ export function transformMappingSchemaToImportOptions(
     };
   });
   /** 基于schema 进行 properties 中 token 字段的回填*/
-  const _nodes = nodes.map(item => {
-    const { label, properties } = item;
+  const _nodes = nodes.map((item, index) => {
+    const { label, properties, key } = item;
     const mapping = label_mappings[label];
     const filelocation = (mapping && mapping.inputs && mapping.inputs[0]) || '';
     return {
-      ...item,
-      datatype: type,
-      filelocation,
-      isBind: !!filelocation,
-      isEidtProperty: true,
-      delimiter,
-      dataFields: loadingdataFields('nodes', properties),
-      properties: properties.map((p, index) => {
-        const { name } = p;
-        return {
-          ...p,
-          // 只支持 name 不支持 index
-          token: mappingName(mapping, name, index),
-        };
-      }),
+      data: {
+        ...item,
+        datatype: type,
+        filelocation,
+        isBind: !!filelocation,
+        isEidtProperty: true,
+        delimiter,
+        dataFields: loadingdataFields('nodes', properties),
+        properties: properties.map((p, index) => {
+          const { name } = p;
+          return {
+            ...p,
+            // 只支持 name 不支持 index
+            token: mappingName(mapping, name, index),
+          };
+        }),
+      },
+      id: key,
+      position: { x: 200 * index, y: 100 * index },
+      with: 100,
+      height: 100,
+      type: 'graph-node',
     };
   });
   const _edges = edges.map(item => {
-    const { label, properties } = item;
+    const { label, source, target, properties, key } = item;
     const mapping = label_mappings[label];
     const filelocation = (mapping && mapping.inputs && mapping.inputs[0]) || '';
     return {
-      ...item,
-      datatype: type,
-      filelocation,
-      isBind: !!filelocation,
-      isEidtProperty: true,
-      delimiter,
-      dataFields: loadingdataFields('edges', properties, mapping),
-      properties: properties.map((p, index) => {
-        const { name } = p;
-        return {
-          ...p,
-          // 只支持 name 不支持 index
-          token: mappingName(mapping, name, index),
-        };
-      }),
+      data: {
+        ...item,
+        datatype: type,
+        filelocation,
+        isBind: !!filelocation,
+        isEidtProperty: true,
+        delimiter,
+        dataFields: loadingdataFields('edges', properties, mapping),
+        properties: properties.map((p, index) => {
+          const { name } = p;
+          return {
+            ...p,
+            // 只支持 name 不支持 index
+            token: mappingName(mapping, name, index),
+          };
+        }),
+      },
+      id: key,
+      source,
+      target,
+      type: 'graph-edge',
     };
   });
   return {
@@ -342,19 +356,13 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
   const NODE_PRIMARY_MAP: Record<string, string> = {};
   options.nodes.forEach(item => {
     // const { key, properties, filelocation, label, primary } = item;
-    const {
-      id: key,
-      properties,
-      filelocation,
-      data: { label },
-      primary,
-    } = item;
+    const { id: key, properties, filelocation, label, primary } = item.data;
     NODE_LABEL_MAP[key as string] = label;
     NODE_PRIMARY_MAP[key as string] = primary;
     vertex_mappings.push({
       type_name: label,
       inputs: [filelocation],
-      column_mappings: properties.map((p, index) => {
+      column_mappings: properties?.map((p, index) => {
         const { token, name } = p;
         const num = parseFloat(token as string);
         const isNumber = !isNaN(num);
@@ -372,18 +380,12 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
   });
 
   options.edges.forEach(item => {
-    const {
-      properties,
-      filelocation,
-      data: { label },
-      source,
-      target,
-    } = item;
+    const { properties, filelocation, label, source, target } = item.data;
     const column_mappings: any[] = [];
     const source_vertex_mappings: any[] = [];
     const destination_vertex_mappings: any[] = [];
     // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
-    properties.forEach((p, pIdx) => {
+    properties?.forEach((p, pIdx) => {
       const { token, name } = p;
       const isSource = name.startsWith('#source');
       const isTarget = name.startsWith('#target');

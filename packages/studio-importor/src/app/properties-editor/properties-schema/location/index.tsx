@@ -14,7 +14,10 @@ const { Text } = Typography;
 
 const LocationField: React.FunctionComponent<IPropertiesSchemaProps> = props => {
   const { data, type, uploadFile } = props;
-  const { id, filelocation, datatype, isBind } = data;
+  const {
+    id,
+    data: { filelocation, datatype, isBind },
+  } = data;
 
   const { store } = useContext();
   const { nodes } = store;

@@ -144,3 +144,55 @@ export function transOptionsToSchema(options: DeepRequired<TransformedSchema>) {
     edge_types,
   };
 }
+export function transSchemaToOptions(options: DeepRequired<{ nodes: TransformedNode[]; edges: TransformedEdge[] }>) {
+  const nodeMap: Record<string, string> = {};
+  //@ts-ignore
+  const nodes: VertexType[] = options.vertex_types.map((item, itemIdx) => {
+    const { type_id, type_name, properties, primary_keys } = item;
+    nodeMap[type_name] = type_id;
+    return {
+      id: `${type_id}`,
+      data: {
+        label: type_name,
+        properties: properties.map(v => {
+          const { property_id, property_name, property_type } = v;
+          return {
+            id: property_id,
+            name: property_name,
+            type: Object.hasOwn(property_type, 'string') ? 'DT_STRING' : property_type.primitive_type,
+            primaryKey: primary_keys[0] === property_name,
+          };
+        }),
+      },
+      position: { x: 200 * itemIdx, y: 100 * itemIdx },
+      type: 'graph-node',
+    };
+  });
+  //@ts-ignore
+  const edges = options.edge_types.map((item, itemIdx) => {
+    const { type_id, type_name, vertex_type_pair_relations, properties, primary_keys } = item;
+    const { source_vertex, destination_vertex } = vertex_type_pair_relations[0];
+    return {
+      id: `${type_id}`,
+      type: 'graph-edge',
+      source: `${nodeMap[source_vertex]}`,
+      target: `${nodeMap[destination_vertex]}`,
+      data: {
+        label: type_name,
+        properties: properties.map(v => {
+          const { property_id, property_name, property_type } = v;
+          return {
+            id: property_id,
+            name: property_name,
+            type: Object.hasOwn(property_type, 'string') ? 'DT_STRING' : property_type.primitive_type,
+            primaryKey: primary_keys[0] === property_name,
+          };
+        }),
+      },
+    };
+  });
+  return {
+    nodes,
+    edges,
+  };
+}

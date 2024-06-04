@@ -19,12 +19,13 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
     useInteractive();
   const { nodes, edges, theme } = store;
 
-  useEffect(() => {
-    updateStore(draft => {
-      draft.edges = [];
-      draft.nodes = [];
-    });
-  }, []);
+  // useEffect(() => {
+  //   updateStore(draft => {
+  //     draft.edges = [];
+  //     draft.nodes = [];
+  //   });
+  // }, []);
+  console.log(nodes, edges);
 
   const isEmpty = nodes.length === 0;
 
