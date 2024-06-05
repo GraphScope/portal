@@ -1,6 +1,8 @@
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 import type { Node, Edge } from 'reactflow';
+import React from 'react';
+import { fakeSnapshot } from './utils';
 
 export type IStore = {
   /** APP类型 */
@@ -53,26 +55,38 @@ export const initialStore: IStore = {
     right: true,
   },
 };
-
+export const StoreMap = new Map();
+//@ts-ignore
+window.StoreMap = StoreMap;
 type ContextType = {
   store: Snapshot<IStore>;
   updateStore: (fn: (draft: IStore) => void) => void;
 };
 
-export const proxyStore = proxy(initialStore) as IStore;
+export const IdContext = React.createContext<{ id: string }>({
+  id: '',
+});
 
-export const updateStore = (fn: (draft: IStore) => void) => {
-  return fn(proxyStore);
-};
+export const getProxyStoreById = (ContextId: string) => {
+  if (ContextId) {
+    const prevStore = StoreMap.get(ContextId);
+    if (!prevStore) {
+      /** 考虑SDK多实例的场景 */
+      StoreMap.set(ContextId, proxy(fakeSnapshot(initialStore)));
+    }
+  }
 
-export const useStore = (): Snapshot<IStore> => {
-  return useSnapshot(proxyStore);
+  return StoreMap.get(ContextId);
 };
 
 export function useContext(): ContextType {
+  const { id } = React.useContext(IdContext);
+  const proxyStore = getProxyStoreById(id);
   const store = useSnapshot(proxyStore);
   return {
     store,
-    updateStore,
+    updateStore: (fn: (draft) => void) => {
+      return fn(proxyStore);
+    },
   };
 }

@@ -1,6 +1,7 @@
 import React from 'react';
-import { updateStore } from '../../useContext';
+import { useContext } from '../../useContext';
 export default function useModel({ type, id }) {
+  const { updateStore } = useContext();
   /** 修改label */
   const handleChangeLabel = e => {
     const label = e.target.value;

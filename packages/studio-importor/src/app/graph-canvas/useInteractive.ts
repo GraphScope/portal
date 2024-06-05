@@ -6,7 +6,7 @@ const deepclone = obj => {
 };
 
 import type { NodeChange, EdgeChange } from 'reactflow';
-import { useContext, proxyStore } from '../useContext';
+import { useContext } from '../useContext';
 import { transformEdges } from '../elements';
 
 import { getBBox, createEdgeLabel, createNodeLabel } from '../utils';
@@ -100,7 +100,8 @@ const useInteractive: any = () => {
   };
 
   const onDoubleClick = () => {
-    const bbox = getBBox(proxyStore.nodes);
+    //@ts-ignore
+    const bbox = getBBox(store.nodes);
     fitBounds(bbox, { duration: 600 });
   };
 

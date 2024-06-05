@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import GraphCanvas from './graph-canvas';
 import PropertiesEditor from './properties-editor';
 import ImportSchema from './import-schema';
@@ -12,11 +12,13 @@ import RightButton from './layout-controller/right-button';
 import LeftButton from './layout-controller/left-button';
 import { notification } from 'antd';
 import { transformGraphNodes, transformEdges } from './elements/index';
+import { IdContext } from './useContext';
 interface Option {
   label: string;
   value: string;
 }
 interface ImportAppProps {
+  id: string;
   appMode: 'DATA_MODELING' | 'DATA_IMPORTING';
   /**  第二项 */
   queryPrimitiveTypes: () => {
@@ -35,15 +37,16 @@ interface ImportAppProps {
   handleImporting?: (schema: any) => void;
   queryImportData?: () => void;
 }
-import { useStore, useContext, updateStore } from './useContext';
+import { useContext } from './useContext';
 import { Button } from 'antd';
 
 const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
-  const { appMode, handleImporting, saveModeling, queryGraphSchema, queryBoundSchema } = props;
-  const { collapsed } = useStore();
+  const { appMode, handleImporting, saveModeling, queryGraphSchema, queryBoundSchema, id } = props;
+  const { store, updateStore } = useContext();
+  const { collapsed } = store;
   const { left, right } = collapsed;
-  const { store } = useContext();
   const { nodes, edges } = store;
+
   const handleSave = () => {
     let errors: string[] = [];
     const _nodes = nodes.map(item => {
@@ -100,6 +103,7 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
       }
       if (appMode === 'DATA_IMPORTING' && queryBoundSchema) {
         const schema = await queryBoundSchema();
+        debugger;
         schemaOptions = {
           nodes: transformGraphNodes(schema.nodes, store.displayMode),
           edges: transformEdges(schema.edges, store.displayMode),
@@ -168,4 +172,21 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
   );
 };
 
-export default ImportApp;
+export const MultipleInstance = props => {
+  const SDK_ID = useMemo(() => {
+    if (!props.id) {
+      const defaultId = `${Math.random().toString(36).substr(2)}`;
+      console.warn(`⚠️: props.id 缺失，默认生成 SDK_ID : ${defaultId} 用于多实例管理`);
+      return defaultId;
+    }
+    return props.id;
+  }, []);
+
+  return (
+    <IdContext.Provider value={{ id: SDK_ID }}>
+      <ImportApp {...props} />
+    </IdContext.Provider>
+  );
+};
+
+export default MultipleInstance;

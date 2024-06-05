@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import UploadFile from './update-file';
-import { updateStore } from '../../useContext';
+import { useContext } from '../../useContext';
 import CodeEditor from './code-editor';
 import { Button } from 'antd';
 
@@ -11,6 +11,7 @@ import { transformNodes, transformEdges, layout, transformGraphNodes } from '../
 
 const ImportFromSQL: React.FunctionComponent<IImportFromCSVProps> = props => {
   const editorRef = useRef(null);
+  const { updateStore } = useContext();
 
   const handleCovert = () => {
     if (editorRef.current) {

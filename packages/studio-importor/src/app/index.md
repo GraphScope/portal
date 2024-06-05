@@ -7,6 +7,9 @@ title: Modeling
 import React, { useState, useEffect } from 'react';
 import ModelingApp from '@graphscope/studio-importor';
 export default () => {
+  const queryGraphSchema = async () => {
+    return { nodes: [], edges: [] };
+  };
   return (
     <div
       style={{
@@ -29,10 +32,8 @@ export default () => {
             return { label: item, value: item };
           });
         }}
-        GS_ENGINE_TYPE={'interactive'}
+        queryGraphSchema={queryGraphSchema}
         appMode="DATA_MODELING"
-        createGraph={() => {}}
-        uploadFile={() => {}}
       />
     </div>
   );
