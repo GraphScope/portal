@@ -22,9 +22,7 @@ const { GS_ENGINE_TYPE } = window;
 const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
   /**查询数据导入 */
   const { store } = useContext();
-  const onChange = (value: any) => {
-    history.push(value);
-  };
+
   const queryImportData = async () => {
     // const { graph_id } = getUrlParams();
     const schema = await getSchema('2');
@@ -57,7 +55,7 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
   };
 
   return (
-    <SegmentedSection withNav={store.navStyle === 'inline'} options={TOOLS_MENU} value="/modeling" onChange={onChange}>
+    <SegmentedSection history={history} withNav={store.navStyle === 'inline'} options={TOOLS_MENU} value="/modeling">
       <ImportApp
         /** 创建图模型 */
         appMode="DATA_MODELING"

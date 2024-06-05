@@ -21,11 +21,9 @@ const QueryModule = () => {
   const primaryColor = storage.getItem('primaryColor');
   const themeMode = storage.getItem('themeColor');
   const { store } = useContext();
-  const onChange = (value: any) => {
-    history.push(value);
-  };
+
   return (
-    <SegmentedSection withNav={store.navStyle === 'inline'} options={TOOLS_MENU} value="/querying" onChange={onChange}>
+    <SegmentedSection withNav={store.navStyle === 'inline'} options={TOOLS_MENU} value="/querying" history={history}>
       <StudioQuery
         //@ts-ignore
         /** 主题相关 */

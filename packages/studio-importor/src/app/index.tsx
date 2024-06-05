@@ -45,6 +45,15 @@ interface ImportAppProps {
   saveModeling?: (schema: any) => void;
   handleImporting?: (schema: any) => void;
   queryImportData?: () => void;
+  /** 默认样式相关 */
+  defaultLeftStyles?: {
+    collapsed: boolean;
+    width: number;
+  };
+  defaultRightStyles?: {
+    collapsed: boolean;
+    width: number;
+  };
 }
 import { useContext } from './useContext';
 import { Button } from 'antd';
@@ -61,6 +70,14 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
     theme = {
       primaryColor: '#1890ff',
       mode: 'defaultAlgorithm',
+    },
+    defaultLeftStyles = {
+      collapsed: true,
+      width: 300,
+    },
+    defaultRightStyles = {
+      collapsed: true,
+      width: 400,
     },
   } = props;
   const { store, updateStore } = useContext();
@@ -135,6 +152,8 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
       updateStore(draft => {
         draft.nodes = nodes;
         draft.edges = edges;
+        draft.collapsed.left = defaultLeftStyles.collapsed;
+        draft.collapsed.right = defaultRightStyles.collapsed;
       });
     })();
   }, []);
@@ -145,7 +164,7 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
         <div style={{ height: '100%', display: 'flex' }}>
           <div
             style={{
-              width: left ? '0px' : '300px',
+              width: left ? '0px' : defaultLeftStyles.width,
               padding: left ? '0px' : '0px 12px',
               overflow: 'hidden',
               transition: 'width 0.2s ease',
@@ -180,7 +199,7 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
           </div>
           <div
             style={{
-              width: right ? '0px' : '350px',
+              width: right ? '0px' : defaultRightStyles.width,
               padding: right ? '0px' : '0px 12px',
               position: 'relative',
               overflow: 'hidden',

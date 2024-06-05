@@ -1,14 +1,7 @@
 import * as React from 'react';
 import ImportApp from '@graphscope/studio-importor';
 import { SegmentedSection } from '@graphscope/studio-components';
-import {
-  createGraph,
-  queryPrimitiveTypes,
-  uploadFile,
-  createDataloadingJob,
-  getSchema,
-  getDataloadingConfig,
-} from './services';
+import { queryPrimitiveTypes, uploadFile, createDataloadingJob, getSchema, getDataloadingConfig } from './services';
 import { TOOLS_MENU } from '../../layouts/const';
 import { useContext } from '../../layouts/useContext';
 import { Utils } from '@graphscope/studio-components';
@@ -17,9 +10,6 @@ interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
   const { store } = useContext();
-  const onChange = (value: any) => {
-    history.push(value);
-  };
 
   const queryBoundSchema = async () => {
     const graph_id = Utils.searchParamOf('graph_id');
@@ -34,7 +24,7 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
   };
 
   return (
-    <SegmentedSection withNav={store.navStyle === 'inline'} options={TOOLS_MENU} value="/importing" onChange={onChange}>
+    <SegmentedSection withNav={store.navStyle === 'inline'} options={TOOLS_MENU} value="/importing" history={history}>
       <ImportApp
         appMode="DATA_IMPORTING"
         queryBoundSchema={queryBoundSchema}
@@ -45,6 +35,10 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
         /** 数据绑定 */
         createDataloadingJob={createDataloadingJob}
         GS_ENGINE_TYPE={GS_ENGINE_TYPE}
+        defaultRightStyles={{
+          collapsed: false,
+          width: 500,
+        }}
       />
     </SegmentedSection>
   );
