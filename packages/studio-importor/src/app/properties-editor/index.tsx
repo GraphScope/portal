@@ -7,20 +7,6 @@ import { SegmentedTabs } from '@graphscope/studio-components';
 import { promises } from 'dns';
 interface IPropetiesEditorProps {}
 
-interface PropertiesSchema {
-  /** 唯一ID */
-  key: string;
-  /** 类型 */
-  label: string;
-  properties: {
-    [key: string]: string;
-  };
-}
-interface EdgeSchema extends PropertiesSchema {
-  source: string;
-  target: string;
-}
-
 const StyleWrap = ({ children }) => {
   return (
     <div
@@ -49,7 +35,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       key: id,
       label: label,
       //@ts-ignore
-      children: <PropertiesSchema data={item} type="nodes" {...props} />,
+      children: <PropertiesSchema schema={item} type="nodes" {...props} />,
     };
   });
   const edges_items = edges.map(item => {
@@ -59,7 +45,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       key: id,
       label: label,
       //@ts-ignore
-      children: <PropertiesSchema data={item} type="edges" {...props} />,
+      children: <PropertiesSchema schema={item} type="edges" {...props} />,
     };
   });
 

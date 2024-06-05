@@ -8,21 +8,16 @@ import GrootCase from './groot-case';
 export interface IPropertiesSchemaProps {
   GS_ENGINE_TYPE: string;
   queryPrimitiveTypes(): { label: string; value: string }[];
-  data: any;
+  schema: any;
   type: 'nodes' | 'edges';
   appMode: string;
   uploadFile(file): { file_path: string };
 }
 
 const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props => {
-  const { data, type, appMode, queryPrimitiveTypes } = props;
-  const {
-    id,
-    data: { label, dataFields, properties = [] },
-    source,
-    target,
-  } = data;
-  console.log('dataFields', dataFields, ' properties', properties);
+  const { schema, type, appMode, queryPrimitiveTypes } = props;
+  const { id, source, target, data } = schema;
+  const { dataFields, properties = [], label = id } = data;
 
   const { handleChangeLabel, handleProperty } = useModel({ type, id });
   /** 判断是否为导入数据 */

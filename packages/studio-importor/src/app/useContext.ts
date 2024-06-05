@@ -29,6 +29,7 @@ export type IStore = {
     left: boolean;
     right: boolean;
   };
+  hasLayouted: boolean;
 };
 
 export const initialStore: IStore = {
@@ -54,6 +55,7 @@ export const initialStore: IStore = {
     left: true,
     right: true,
   },
+  hasLayouted: false,
 };
 export const StoreMap = new Map();
 //@ts-ignore
