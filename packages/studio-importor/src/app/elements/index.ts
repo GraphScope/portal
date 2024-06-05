@@ -48,31 +48,7 @@ export function transformGraphNodes(nodes, displayMode) {
     };
   });
 }
-export function transformNodes(nodes, displayMode) {
-  return nodes.map(item => {
-    const { position, key, id, _fromEdge, ...properties } = item;
-    const nodeWithPosition = dagreGraph.node(item.id) || { x: Math.random() * 500, y: Math.random() * 500 };
-    GRAPH_POSITION_MAP[id] = position;
 
-    return {
-      ...item,
-      id: id || key,
-      type: displayMode === 'table' ? 'table-node' : 'graph-node',
-      _fromEdge,
-      targetPosition: Position.Left,
-      sourcePosition: Position.Right,
-      position: position || {
-        x: nodeWithPosition.x,
-        y: nodeWithPosition.y,
-      },
-      data: {
-        _fromEdge,
-        ...properties,
-        label: id,
-      },
-    };
-  });
-}
 export function transformEdges(_edges, displayMode) {
   const edges = processEdges(_edges);
   console.log('edges', edges);
@@ -81,11 +57,9 @@ export function transformEdges(_edges, displayMode) {
     //@ts-ignore
     const { id, key, source, target, data, _extra, properties = {}, ...others } = item;
     return {
-      ...others,
       id: id || key || `${source}-${target}-${index}`,
       data: {
-        ...data,
-        ...properties,
+        ...item,
         _extra,
       },
       source,
@@ -161,4 +135,30 @@ export function transEdge2Entity(data) {
     ],
     edges: relationship,
   };
+}
+
+export function transformNodes(nodes, displayMode) {
+  return nodes.map(item => {
+    const { position, key, id, _fromEdge, ...properties } = item;
+    const nodeWithPosition = dagreGraph.node(item.id) || { x: Math.random() * 500, y: Math.random() * 500 };
+    GRAPH_POSITION_MAP[id] = position;
+
+    return {
+      ...item,
+      id: id || key,
+      type: displayMode === 'table' ? 'table-node' : 'graph-node',
+      _fromEdge,
+      targetPosition: Position.Left,
+      sourcePosition: Position.Right,
+      position: position || {
+        x: nodeWithPosition.x,
+        y: nodeWithPosition.y,
+      },
+      data: {
+        _fromEdge,
+        ...properties,
+        label: id,
+      },
+    };
+  });
 }
