@@ -13,14 +13,11 @@ import type { IPropertiesSchemaProps } from '../index';
 const { Text } = Typography;
 
 const LocationField: React.FunctionComponent<IPropertiesSchemaProps> = props => {
-  const { data, type, uploadFile } = props;
+  const { schema, type, uploadFile } = props;
   const {
     id,
     data: { filelocation, datatype, isBind },
-  } = data;
-
-  const { store } = useContext();
-  const { nodes } = store;
+  } = schema;
 
   const { onChangeType, onChangeValue, onChangeFocus, onChangeDataFields, deleteFile } = useChange({ type, id });
 

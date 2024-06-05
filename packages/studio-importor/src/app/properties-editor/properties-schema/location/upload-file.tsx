@@ -12,7 +12,7 @@ type UploadFilesProps = {
   uploadFile(file): { file_path: string };
 };
 const UploadFiles: React.FC<UploadFilesProps> = props => {
-  const { onChange, value, onChangeHeader, uploadFile } = props;
+  const { onChange, onChangeHeader, uploadFile } = props;
   const [state, updateState] = useState({
     isLoading: false,
   });
@@ -48,7 +48,6 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
             </span>
           </Button>
         </Upload>
-        {value && <Input style={{ width: '100%' }} disabled value={value} />}
       </Space.Compact>
     </Flex>
   );

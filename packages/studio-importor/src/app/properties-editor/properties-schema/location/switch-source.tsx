@@ -24,6 +24,7 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
           onChangeHeader={onChangeDataFields}
           uploadFile={uploadFile}
         />
+        {filelocation && <Input style={{ width: '100%' }} disabled value={filelocation} />}
         {!filelocation && (
           <Input
             style={{ width: '100%' }}
