@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useReactFlow, applyEdgeChanges, applyNodeChanges } from 'reactflow';
 import { uuid } from 'uuidv4';
+import { createStaticForceLayout } from '../elements/forceLayout';
+import { fakeSnapshot } from '../utils/index';
 const deepclone = obj => {
   return JSON.parse(JSON.stringify(obj));
 };
@@ -14,7 +16,7 @@ import { getBBox, createEdgeLabel, createNodeLabel } from '../utils';
 const useInteractive: any = () => {
   const { store, updateStore } = useContext();
   const { screenToFlowPosition, fitBounds } = useReactFlow();
-  const { displayMode } = store;
+  const { displayMode, nodes, edges, hasLayouted } = store;
   const connectingNodeId = useRef(null);
 
   const onConnectStart = useCallback((_, { nodeId }) => {
@@ -67,21 +69,21 @@ const useInteractive: any = () => {
         const edgeLabel = createEdgeLabel();
 
         updateStore(draft => {
+          // 可能存在多边，所以需要走一遍 transform 函数
           draft.edges = transformEdges(
             [
               ...draft.edges,
               {
                 id: edgeId,
-                data: { label: edgeLabel },
+                data: {
+                  label: edgeLabel,
+                },
                 source: connectingNodeId.current,
                 target: nodeid,
-                type: 'graph-edge',
               },
             ],
             displayMode,
           );
-          // //如果移除这个，会导致节点无法再次拖拽
-          // draft.nodes = [...draft.nodes];
         });
       }
     },
@@ -101,14 +103,26 @@ const useInteractive: any = () => {
 
   const onDoubleClick = () => {
     //@ts-ignore
-    const bbox = getBBox(store.nodes);
+    const bbox = getBBox(nodes);
     fitBounds(bbox, { duration: 600 });
   };
+
   useEffect(() => {
-    if (store.nodes.length > 0) {
+    if (nodes.length > 0) {
+      // 交互
       onDoubleClick();
+      // 布局
+      if (!hasLayouted) {
+        const graph = createStaticForceLayout(fakeSnapshot(nodes), fakeSnapshot(edges));
+        console.log('layout......', graph);
+        updateStore(draft => {
+          draft.hasLayouted = true;
+          draft.nodes = graph.nodes;
+          draft.edges = graph.edges;
+        });
+      }
     }
-  }, [store.nodes]);
+  }, [nodes, edges, hasLayouted]);
 
   return {
     store,
