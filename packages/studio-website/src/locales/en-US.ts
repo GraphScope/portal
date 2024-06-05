@@ -203,4 +203,5 @@ export default {
   Querying: 'Querying',
   'Querying data': 'Querying data',
   Stopped: 'Stopped',
+  Running: 'Running',
 };

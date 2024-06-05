@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import GraphCanvas from './graph-canvas';
 import PropertiesEditor from './properties-editor';
 import ImportSchema from './import-schema';
-import ModeSwitch from './mode-switch';
+
 import { ReactFlowProvider } from 'reactflow';
 import { Toolbar } from '@graphscope/studio-components';
 import AddNode from './graph-canvas/add-node';
@@ -13,12 +13,21 @@ import LeftButton from './layout-controller/left-button';
 import { notification } from 'antd';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
+import Provider from './provider';
 interface Option {
   label: string;
   value: string;
 }
 interface ImportAppProps {
-  id: string;
+  /** 用于多实例管理的 ID */
+  id?: string;
+  /** 语言 */
+  locale?: 'zh-CN' | 'en-US';
+  /** 主题样式 */
+  theme?: {
+    primaryColor: string;
+    mode: 'darkAlgorithm' | 'defaultAlgorithm';
+  };
   appMode: 'DATA_MODELING' | 'DATA_IMPORTING';
   /**  第二项 */
   queryPrimitiveTypes: () => {
@@ -41,7 +50,19 @@ import { useContext } from './useContext';
 import { Button } from 'antd';
 
 const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
-  const { appMode, handleImporting, saveModeling, queryGraphSchema, queryBoundSchema, id } = props;
+  const {
+    appMode,
+    handleImporting,
+    saveModeling,
+    queryGraphSchema,
+    queryBoundSchema,
+    id,
+    locale = 'zh-CN',
+    theme = {
+      primaryColor: '#1890ff',
+      mode: 'defaultAlgorithm',
+    },
+  } = props;
   const { store, updateStore } = useContext();
   const { collapsed } = store;
   const { left, right } = collapsed;
@@ -119,56 +140,58 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      <div style={{ height: '100%', display: 'flex' }}>
-        <div
-          style={{
-            width: left ? '0px' : '300px',
-            padding: left ? '0px' : '0px 12px',
-            overflow: 'hidden',
-            transition: 'width 0.2s ease',
-          }}
-        >
-          <ImportSchema />
-        </div>
-        <div style={{ flex: 1, position: 'relative' }}>
-          <ReactFlowProvider>
-            <Toolbar>
-              <LeftButton />
-              <AddNode />
-              <Delete />
-              {/* <ModeSwitch /> */}
-            </Toolbar>
-            <Toolbar style={{ top: '18px', right: '70px', left: 'unset', padding: 0 }}>
-              {appMode === 'DATA_IMPORTING' ? (
-                <Button type="primary" onClick={_handleImporting}>
-                  Start Importing
-                </Button>
-              ) : (
-                <Button type="primary" onClick={handleSave}>
-                  Save Modeling
-                </Button>
-              )}
-            </Toolbar>
-            <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }}>
-              <RightButton />
-            </Toolbar>
-            <GraphCanvas />
-          </ReactFlowProvider>
-        </div>
-        <div
-          style={{
-            width: right ? '0px' : '350px',
-            padding: right ? '0px' : '0px 12px',
-            position: 'relative',
-            overflow: 'hidden',
-            transition: 'width 0.2s ease',
-          }}
-        >
-          <PropertiesEditor {...props} />
+    <Provider locale={locale} theme={theme}>
+      <div style={{ width: '100%', height: '100%' }}>
+        <div style={{ height: '100%', display: 'flex' }}>
+          <div
+            style={{
+              width: left ? '0px' : '300px',
+              padding: left ? '0px' : '0px 12px',
+              overflow: 'hidden',
+              transition: 'width 0.2s ease',
+            }}
+          >
+            <ImportSchema />
+          </div>
+          <div style={{ flex: 1, position: 'relative' }}>
+            <ReactFlowProvider>
+              <Toolbar>
+                <LeftButton />
+                <AddNode />
+                <Delete />
+                {/* <ModeSwitch /> */}
+              </Toolbar>
+              <Toolbar style={{ top: '18px', right: '70px', left: 'unset', padding: 0 }}>
+                {appMode === 'DATA_IMPORTING' ? (
+                  <Button type="primary" onClick={_handleImporting}>
+                    Start Importing
+                  </Button>
+                ) : (
+                  <Button type="primary" onClick={handleSave}>
+                    Save Modeling
+                  </Button>
+                )}
+              </Toolbar>
+              <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }}>
+                <RightButton />
+              </Toolbar>
+              <GraphCanvas />
+            </ReactFlowProvider>
+          </div>
+          <div
+            style={{
+              width: right ? '0px' : '350px',
+              padding: right ? '0px' : '0px 12px',
+              position: 'relative',
+              overflow: 'hidden',
+              transition: 'width 0.2s ease',
+            }}
+          >
+            <PropertiesEditor {...props} />
+          </div>
         </div>
       </div>
-    </div>
+    </Provider>
   );
 };
 
@@ -176,7 +199,10 @@ export const MultipleInstance = props => {
   const SDK_ID = useMemo(() => {
     if (!props.id) {
       const defaultId = `${Math.random().toString(36).substr(2)}`;
-      console.warn(`⚠️: props.id 缺失，默认生成 SDK_ID : ${defaultId} 用于多实例管理`);
+      console.info(
+        `%c ⚠️: The id prop is missing in the Importor component. A default SDK_ID: ${defaultId} is generated for managing multiple instances.`,
+        'color:green',
+      );
       return defaultId;
     }
     return props.id;

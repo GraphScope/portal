@@ -199,5 +199,6 @@ export default {
   Importing: '导数',
   Querying: '查询',
   'Querying data': '查询数据',
-  Stopped: '停止',
+  Stopped: '已停止',
+  Running: '运行中',
 };

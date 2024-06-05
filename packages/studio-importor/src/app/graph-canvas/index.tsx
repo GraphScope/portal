@@ -5,8 +5,10 @@ import { nodeTypes } from '../elements/node-types';
 import { edgeTypes } from '../elements/edge-types';
 import ConnectionLine from '../elements/connection-line';
 import ArrowMarker from '../elements/arrow-marker';
+import { PlayCircleOutlined } from '@ant-design/icons';
 
 import useInteractive from './useInteractive';
+import { FormattedMessage } from 'react-intl';
 
 interface IGraphEditorProps {}
 
@@ -20,7 +22,14 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   const { nodes, edges, theme, collapsed } = store;
 
   const isEmpty = nodes.length === 0;
-
+  const description = (
+    <FormattedMessage
+      id="Start sketching a model, a vertex label is a named grouping or categorization of nodes within the graph dataset"
+      values={{
+        icon: <PlayCircleOutlined />,
+      }}
+    />
+  );
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <div style={{ height: '100%', width: '100%', position: 'absolute' }}>
@@ -52,7 +61,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
               background: collapsed.left && collapsed.right ? '#fff' : '#f4f5f5',
             }}
           />
-          {isEmpty && <EmptyCanvas />}
+          {isEmpty && <EmptyCanvas description={description} />}
           <MiniMap />
         </ReactFlow>
       </div>
