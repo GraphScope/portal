@@ -4,6 +4,7 @@ export default defineConfig({
   routes: [
     { path: '/', redirect: '/graphs' },
     { path: '/graphs', component: 'instance' },
+    { path: '/graphs/create', component: 'instance/create' },
     { path: '/setting', component: 'setting' },
     // { path: '/instance/create', component: 'instance/create-instance' },
     // { path: '/instance/view-schema', component: 'instance/view-schema' },

@@ -7,7 +7,7 @@ import { useContext } from './useContext';
 
 export type FieldType = {
   graphName?: string;
-  type?: string;
+  storeType?: string;
   directed: boolean;
 };
 
@@ -86,7 +86,6 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
       <Form.Item<FieldType>
         label={<FormattedMessage id="Graph instance name" />}
         name="graphName"
-        wrapperCol={{ span: 8 }}
         rules={[{ required: true, message: '' }, validatePasswords]}
       >
         <Input
@@ -103,7 +102,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
 
       <Form.Item<FieldType>
         label={<FormattedMessage id="Graph store type" />}
-        name="type"
+        name="storeType"
         tooltip=""
         rules={[{ required: true, message: '' }]}
       >

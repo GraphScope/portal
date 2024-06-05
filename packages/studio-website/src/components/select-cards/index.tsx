@@ -36,7 +36,7 @@ const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
           const isChecked = id === current;
           console.log('isChecked', value, current, id);
           return (
-            <Col span={8} key={id}>
+            <Col span={24} key={id}>
               <Card
                 onClick={() => {
                   if (!disabled) {
