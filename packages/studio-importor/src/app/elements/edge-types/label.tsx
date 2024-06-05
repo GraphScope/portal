@@ -2,14 +2,17 @@ import * as React from 'react';
 import { EdgeLabelRenderer } from 'reactflow';
 import { EditableText } from '@graphscope/studio-components';
 import { useContext } from '../../useContext';
+import { LinkOutlined } from '@ant-design/icons';
+import { Tag } from 'antd';
 interface ILabelProps {
   id: string;
   label: string;
   style?: React.CSSProperties;
+  filelocation?: string;
 }
 
 const Label: React.FunctionComponent<ILabelProps> = props => {
-  const { id, label, style } = props;
+  const { id, label, style, filelocation } = props;
   const { store, updateStore } = useContext();
   const { currentId, theme } = store;
   const isSelected = id === currentId;
@@ -44,6 +47,19 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
         }}
         className="nodrag nopan"
       >
+        {filelocation && (
+          <div
+            style={{
+              position: 'absolute',
+              transform: 'translate(120%,-2px)',
+              right: '0px',
+            }}
+          >
+            <Tag color="success">
+              <LinkOutlined />
+            </Tag>
+          </div>
+        )}
         <div
           className="edgebutton"
           onClick={onEdgeClick}

@@ -1,6 +1,7 @@
 import React, { memo, useState, useRef } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
-import { List, Popover, Flex, Typography, Input } from 'antd';
+import { List, Popover, Flex, Typography, Input, Tag } from 'antd';
+import { LinkOutlined } from '@ant-design/icons';
 import { EditableText } from '@graphscope/studio-components';
 const style = {
   padding: 5,
@@ -22,7 +23,8 @@ const styles = {
 };
 const GraphNode = (props: NodeProps) => {
   const { data = {}, isConnectable, id } = props;
-  const { label } = data;
+  const { label, filelocation } = data;
+  console.log('filelocation>>>>>>>', filelocation);
   const { store, updateStore } = useContext();
   const { currentId, theme } = store;
   const isSelected = id === currentId;
@@ -80,20 +82,8 @@ const GraphNode = (props: NodeProps) => {
         style={{
           background: 'transparent',
           position: 'relative',
-
-          //  top: '50%', left: '50%', transform: 'translate(-50%,-50%)'
         }}
       />
-      {/* 
-      <Handle
-        type="target"
-        position={Position.Right}
-        id="left-revert"
-        style={{
-          background: 'red',
-          // top: '50%', left: '50%', transform: 'translate(-50%,-50%)'
-        }}
-      /> */}
 
       <Handle
         type="source"
@@ -106,15 +96,7 @@ const GraphNode = (props: NodeProps) => {
           cursor: 'copy',
         }}
       ></Handle>
-      {/* <Handle
-        type="source"
-        position={Position.Left}
-        id="right-revert"
-        style={{
-          background: 'blue',
-          //  top: '50%', left: '50%', transform: 'translate(-50%,-50%)'
-        }}
-      /> */}
+
       <div
         style={{
           position: 'absolute',
@@ -134,6 +116,18 @@ const GraphNode = (props: NodeProps) => {
         }}
         data-nodeid={id}
       >
+        {filelocation && (
+          <div
+            style={{
+              position: 'absolute',
+              transform: 'translate(50px,-100%)',
+            }}
+          >
+            <Tag color="green">
+              <LinkOutlined /> Mapped
+            </Tag>
+          </div>
+        )}
         <EditableText id={id} text={label} onTextChange={hanleChangeLabel} />
       </div>
     </div>

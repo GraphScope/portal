@@ -6,7 +6,7 @@ import Label from './label';
 
 function LoopEdge(props: EdgeProps) {
   const { id, style, data, sourceX, sourceY } = props;
-  const { _extra, label } = data || {};
+  const { _extra, label, filelocation } = data || {};
   const { index = 0 } = _extra || {};
   const { markerEnd, style: pathStyle } = usePathStyle(id);
   const edgePath = generateSelfLoopPath(sourceX, sourceY, { index });
@@ -23,6 +23,7 @@ function LoopEdge(props: EdgeProps) {
       />
 
       <Label
+        filelocation={filelocation}
         label={label}
         id={id}
         style={{
