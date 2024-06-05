@@ -133,19 +133,6 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       <Flex justify="space-between" align="center">
         <LanguageSwitch />
 
-        <Typography.Text>
-          <span
-            style={{
-              background: 'green',
-              width: '10px',
-              height: '10px',
-              borderRadius: '50%',
-              display: 'inline-block',
-              marginRight: '3px',
-            }}
-          />
-          {graphName}
-        </Typography.Text>
         <Space>
           <ModeSwitch />
         </Space>

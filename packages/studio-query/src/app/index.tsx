@@ -13,8 +13,10 @@ import { FormattedMessage } from 'react-intl';
 
 import type { IStudioQueryProps } from './context';
 import { v4 as uuidv4 } from 'uuid';
-import { searchParamOf, formatCypherStatement } from './utils';
+import { formatCypherStatement } from './utils';
 import { storage } from '../graph/utils';
+import { Utils } from '@graphscope/studio-components';
+const { searchParamOf } = Utils;
 
 import Container from './container';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -81,14 +83,15 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       //@ts-ignore
 
       const graph_name = searchParamOf('graph_name');
+      const graphId = searchParamOf('graph_id') || '';
       const activeNavbar = searchParamOf('nav') || 'saved';
       const language = searchParamOf('language') || props.language;
       let globalScript = searchParamOf('global_script') || props.globalScript;
       const displayMode = searchParamOf('display_mode') || localStorage.getItem(localStorageVars.mode) || 'flow';
       let autoRun = searchParamOf('auto_run') === 'true' ? true : false;
-      const info = await queryInfo(graph_name || '');
+      const info = await queryInfo(graphId || '');
       let graphName = info?.graph_name || graph_name || '';
-      const schemaData = await queryGraphSchema(graphName);
+      const schemaData = await queryGraphSchema(graphId);
       const historyStatements = await queryStatements('history');
       const savedStatements = await queryStatements('saved');
       const storeProcedures = await queryStatements('store-procedure');
@@ -102,6 +105,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
 
       updateStore(draft => {
         draft.isReady = true;
+        draft.graphId = graphId;
         draft.graphName = graphName;
         draft.schemaData = schemaData;
         draft.historyStatements = historyStatements;
