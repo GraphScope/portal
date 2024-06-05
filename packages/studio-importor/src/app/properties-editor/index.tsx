@@ -4,7 +4,8 @@ import PropertiesSchema from './properties-schema';
 
 import { useContext } from '../useContext';
 import { SegmentedTabs } from '@graphscope/studio-components';
-import { promises } from 'dns';
+import { CaretRightOutlined } from '@ant-design/icons';
+
 interface IPropetiesEditorProps {}
 
 const StyleWrap = ({ children }) => {
@@ -73,7 +74,13 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
             label: 'Vertex',
             children: (
               <StyleWrap>
-                <Collapse accordion items={nodes_items} activeKey={[currentId]} onChange={onChange} />
+                <Collapse
+                  expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+                  accordion
+                  items={nodes_items}
+                  activeKey={[currentId]}
+                  onChange={onChange}
+                />
               </StyleWrap>
             ),
           },
@@ -82,7 +89,13 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
             label: 'Edges',
             children: (
               <StyleWrap>
-                <Collapse accordion items={edges_items} activeKey={[currentId]} onChange={onChange} />
+                <Collapse
+                  expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+                  accordion
+                  items={edges_items}
+                  activeKey={[currentId]}
+                  onChange={onChange}
+                />
               </StyleWrap>
             ),
           },

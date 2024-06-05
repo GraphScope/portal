@@ -8,12 +8,14 @@ import { Toolbar } from '@graphscope/studio-components';
 import AddNode from './graph-canvas/add-node';
 import Delete from './graph-canvas/delete';
 import 'reactflow/dist/style.css';
-import RightButton from './layout-controller/right-button';
-import LeftButton from './layout-controller/left-button';
-import { notification } from 'antd';
+import RightButton from './button-controller/right-button';
+import LeftButton from './button-controller/left-button';
+import { Divider, notification } from 'antd';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
 import Provider from './provider';
+import StartImporting from './button-controller/start-importing';
+import SaveModeling from './button-controller/save-modeling';
 interface Option {
   label: string;
   value: string;
@@ -162,6 +164,7 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
       updateStore(draft => {
         draft.nodes = nodes;
         draft.edges = edges;
+        draft.appMode = appMode;
         draft.collapsed.left = defaultLeftStyles.collapsed;
         draft.collapsed.right = defaultRightStyles.collapsed;
         draft.elementOptions = {
@@ -191,22 +194,16 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
             <ReactFlowProvider>
               <Toolbar>
                 <LeftButton />
+                <Divider type="horizontal" style={{ margin: '0px' }} />
                 <AddNode />
                 <Delete />
                 {/* <ModeSwitch /> */}
               </Toolbar>
-              <Toolbar style={{ top: '18px', right: '70px', left: 'unset', padding: 0 }}>
-                {appMode === 'DATA_IMPORTING' ? (
-                  <Button type="primary" onClick={_handleImporting}>
-                    Start Importing
-                  </Button>
-                ) : (
-                  <Button type="primary" onClick={handleSave}>
-                    Save Modeling
-                  </Button>
-                )}
-              </Toolbar>
-              <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }}>
+
+              <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }} direction="horizontal">
+                <StartImporting onClick={_handleImporting} />
+                <SaveModeling onClick={handleSave} />
+                <Divider type="vertical" style={{ margin: '0px' }} />
                 <RightButton />
               </Toolbar>
               <GraphCanvas />

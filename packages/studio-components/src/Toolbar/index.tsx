@@ -1,12 +1,13 @@
 import * as React from 'react';
-
+import { Space } from 'antd';
 interface IToolbarProps {
   children: React.ReactNode;
   style?: React.CSSProperties;
+  direction?: 'horizontal' | 'vertical';
 }
 
 const Toolbar: React.FunctionComponent<IToolbarProps> = props => {
-  const { children, style } = props;
+  const { children, style, direction = 'vertical' } = props;
   return (
     <div
       style={{
@@ -18,13 +19,12 @@ const Toolbar: React.FunctionComponent<IToolbarProps> = props => {
         top: '12px',
         left: '24px',
         zIndex: 999,
-        padding: '6px 4px',
+        padding: '4px',
         borderRadius: '4px',
-        gap: '6px',
         ...style,
       }}
     >
-      {children}
+      <Space direction={direction}>{children}</Space>
     </div>
   );
 };
