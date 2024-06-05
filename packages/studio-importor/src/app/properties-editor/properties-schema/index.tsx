@@ -12,10 +12,11 @@ export interface IPropertiesSchemaProps {
   type: 'nodes' | 'edges';
   appMode: string;
   uploadFile(file): { file_path: string };
+  disabled?: boolean;
 }
 
 const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props => {
-  const { schema, type, appMode, queryPrimitiveTypes } = props;
+  const { schema, type, appMode, queryPrimitiveTypes, disabled } = props;
   const { id, source, target, data } = schema;
   const { dataFields, properties = [], label = id } = data;
 
@@ -39,7 +40,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
         ) : (
           <>
             <Typography.Text>Label</Typography.Text>
-            <Input value={label} onChange={handleChangeLabel} />
+            <Input value={label} onChange={handleChangeLabel} disabled={disabled} />
             {type === 'edges' && <SourceTarget source={source} target={target} />}
           </>
         )}
@@ -47,7 +48,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
           properties={properties}
           onChange={handleProperty}
           typeColumn={{ options: queryPrimitiveTypes() }}
-          disabled={!!mappingColumn}
+          disabled={disabled}
           //@ts-ignore
           mappingColumn={mappingColumn}
         />

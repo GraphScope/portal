@@ -26,7 +26,7 @@ const StyleWrap = ({ children }) => {
 };
 const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props => {
   const { store, updateStore } = useContext();
-  const { nodes, edges, currentType, currentId } = store;
+  const { nodes, edges, currentType, currentId, elementOptions } = store;
 
   const nodes_items = nodes.map(item => {
     const { id, data } = item;
@@ -35,7 +35,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       key: id,
       label: label,
       //@ts-ignore
-      children: <PropertiesSchema schema={item} type="nodes" {...props} />,
+      children: <PropertiesSchema disabled={!elementOptions.isEditable} schema={item} type="nodes" {...props} />,
     };
   });
   const edges_items = edges.map(item => {
@@ -45,7 +45,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       key: id,
       label: label,
       //@ts-ignore
-      children: <PropertiesSchema schema={item} type="edges" {...props} />,
+      children: <PropertiesSchema disabled={!elementOptions.isEditable} schema={item} type="edges" {...props} />,
     };
   });
 

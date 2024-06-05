@@ -14,7 +14,8 @@ let addNodeIndex = 0;
 const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
   const { style } = props;
   const { setCenter } = useReactFlow();
-  const { updateStore } = useContext();
+  const { updateStore, store } = useContext();
+  const { elementOptions } = store;
 
   const handleAddVertex = () => {
     updateStore(draft => {
@@ -35,7 +36,15 @@ const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
     });
   };
 
-  return <Button onClick={handleAddVertex} style={style} type="text" icon={<AddNodeIcon />}></Button>;
+  return (
+    <Button
+      disabled={!elementOptions.isConnectable}
+      onClick={handleAddVertex}
+      style={style}
+      type="text"
+      icon={<AddNodeIcon />}
+    ></Button>
+  );
 };
 
 export default AddNode;

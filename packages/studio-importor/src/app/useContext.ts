@@ -30,6 +30,15 @@ export type IStore = {
     right: boolean;
   };
   hasLayouted: boolean;
+
+  elementOptions: {
+    /** 是否能够连线，包括拖拽产生节点 */
+    isClickable: boolean;
+    /** 是否可以点击，包含点和边 */
+    isEditable: boolean;
+    /** 是否可以编辑标签，包括节点和边 */
+    isConnectable: boolean;
+  };
 };
 
 export const initialStore: IStore = {
@@ -56,6 +65,11 @@ export const initialStore: IStore = {
     right: true,
   },
   hasLayouted: false,
+  elementOptions: {
+    isClickable: true,
+    isEditable: true,
+    isConnectable: true,
+  },
 };
 export const StoreMap = new Map();
 //@ts-ignore

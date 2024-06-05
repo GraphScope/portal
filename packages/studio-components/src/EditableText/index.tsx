@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { debounce } from '../Utils/index';
-const EditableText = ({ text, onTextChange, id, style = {} }) => {
+const EditableText = ({ text, onTextChange, id, style = {}, disabled }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableText, setEditableText] = useState(text);
 
@@ -17,6 +17,7 @@ const EditableText = ({ text, onTextChange, id, style = {} }) => {
   }, [text]);
 
   const handleDoubleClick = () => {
+    if (disabled) return;
     // 开启编辑模式
     setIsEditing(true);
   };

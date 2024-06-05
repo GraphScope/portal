@@ -54,6 +54,15 @@ interface ImportAppProps {
     collapsed: boolean;
     width: number;
   };
+
+  elementOptions?: {
+    /** 是否能够连线，包括拖拽产生节点 */
+    isClickable: boolean;
+    /** 是否可以点击，包含点和边 */
+    isEditable: boolean;
+    /** 是否可以编辑标签，包括节点和边 */
+    isConnectable: boolean;
+  };
 }
 import { useContext } from './useContext';
 import { Button } from 'antd';
@@ -79,6 +88,7 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
       collapsed: true,
       width: 400,
     },
+    elementOptions,
   } = props;
   const { store, updateStore } = useContext();
   const { collapsed } = store;
@@ -154,6 +164,11 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
         draft.edges = edges;
         draft.collapsed.left = defaultLeftStyles.collapsed;
         draft.collapsed.right = defaultRightStyles.collapsed;
+        draft.elementOptions = {
+          isClickable: (elementOptions || {}).isClickable !== false, //默认undefined 则返回true
+          isEditable: nodes.length === 0, // 初始状态，接口获取画布有 Schema 数据的时候，不可编辑
+          isConnectable: nodes.length === 0, //  初始状态，接口获取画布有 Schema 数据的时候，不可连线
+        };
       });
     })();
   }, []);

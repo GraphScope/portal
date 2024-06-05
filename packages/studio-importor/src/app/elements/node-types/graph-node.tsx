@@ -26,7 +26,7 @@ const GraphNode = (props: NodeProps) => {
   const { label, filelocation } = data;
   console.log('filelocation>>>>>>>', filelocation);
   const { store, updateStore } = useContext();
-  const { currentId, theme } = store;
+  const { currentId, theme, elementOptions } = store;
   const isSelected = id === currentId;
   const [state, updateState] = useState({
     isHover: false,
@@ -34,6 +34,9 @@ const GraphNode = (props: NodeProps) => {
   });
 
   const onMouseEnter = () => {
+    if (!elementOptions.isConnectable) {
+      return;
+    }
     updateState(preState => {
       return {
         ...preState,
@@ -42,6 +45,9 @@ const GraphNode = (props: NodeProps) => {
     });
   };
   const onMouseLeave = () => {
+    if (!elementOptions.isConnectable) {
+      return;
+    }
     updateState(preState => {
       return {
         ...preState,
@@ -66,6 +72,17 @@ const GraphNode = (props: NodeProps) => {
       draft.collapsed.right = false;
     });
   };
+  const haloStyle = elementOptions.isConnectable
+    ? {
+        ...styles.handler,
+        border: state.isHover ? `2px dashed ${theme.primaryColor}` : 'none',
+        background: state.isHover ? '#fafafa' : 'transparent',
+        cursor: 'copy',
+      }
+    : {
+        cursor: 'not-allow',
+        background: 'transparent',
+      };
 
   return (
     <div
@@ -85,17 +102,7 @@ const GraphNode = (props: NodeProps) => {
         }}
       />
 
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="right"
-        style={{
-          ...styles.handler,
-          border: state.isHover ? `2px dashed ${theme.primaryColor}` : 'none',
-          background: state.isHover ? '#fafafa' : 'transparent',
-          cursor: 'copy',
-        }}
-      ></Handle>
+      <Handle type="source" position={Position.Right} id="right" style={haloStyle}></Handle>
 
       <div
         style={{
@@ -128,7 +135,7 @@ const GraphNode = (props: NodeProps) => {
             </Tag>
           </div>
         )}
-        <EditableText id={id} text={label} onTextChange={hanleChangeLabel} />
+        <EditableText id={id} text={label} onTextChange={hanleChangeLabel} disabled={!elementOptions.isEditable} />
       </div>
     </div>
   );

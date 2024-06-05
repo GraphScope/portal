@@ -16,16 +16,19 @@ import { getBBox, createEdgeLabel, createNodeLabel } from '../utils';
 const useInteractive: any = () => {
   const { store, updateStore } = useContext();
   const { screenToFlowPosition, fitBounds } = useReactFlow();
-  const { displayMode, nodes, edges, hasLayouted } = store;
+  const { displayMode, nodes, edges, hasLayouted, elementOptions } = store;
   const connectingNodeId = useRef(null);
+  console.log('elementOptions', elementOptions);
 
   const onConnectStart = useCallback((_, { nodeId }) => {
     connectingNodeId.current = nodeId;
+    if (!elementOptions.isConnectable) return;
   }, []);
 
   const onConnectEnd = useCallback(
     event => {
       if (!connectingNodeId.current) return;
+      if (!elementOptions.isConnectable) return;
 
       const targetIsPane = event.target.classList.contains('react-flow__pane');
 
@@ -91,14 +94,19 @@ const useInteractive: any = () => {
   );
 
   const onNodesChange = (changes: NodeChange[]) => {
-    updateStore(draft => {
-      draft.nodes = applyNodeChanges(changes, deepclone(draft.nodes));
-    });
+    console.log('onNodesChange', changes);
+    if (elementOptions.isConnectable) {
+      updateStore(draft => {
+        draft.nodes = applyNodeChanges(changes, deepclone(draft.nodes));
+      });
+    }
   };
   const onEdgesChange = (changes: EdgeChange[]) => {
-    updateStore(draft => {
-      draft.edges = applyEdgeChanges(changes, deepclone(draft.edges));
-    });
+    if (elementOptions.isConnectable) {
+      updateStore(draft => {
+        draft.edges = applyEdgeChanges(changes, deepclone(draft.edges));
+      });
+    }
   };
 
   const onDoubleClick = () => {
