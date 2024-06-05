@@ -103,14 +103,14 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
       }
       if (appMode === 'DATA_IMPORTING' && queryBoundSchema) {
         const schema = await queryBoundSchema();
-        debugger;
+
         schemaOptions = {
           nodes: transformGraphNodes(schema.nodes, store.displayMode),
           edges: transformEdges(schema.edges, store.displayMode),
         };
       }
       //@ts-ignore
-      const { nodes, edges } = schemaOptions;
+      const { nodes, edges } = schemaOptions || { nodes: [], edges: [] };
       updateStore(draft => {
         draft.nodes = nodes;
         draft.edges = edges;

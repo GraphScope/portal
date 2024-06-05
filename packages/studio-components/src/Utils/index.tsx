@@ -42,9 +42,9 @@ export const debounce = <T extends (...args: any[]) => void>(
  * @param location
  * @returns
  */
-export const getSearchParams = (location: Location) => {
-  const { hash } = location;
-  const [path, search] = hash.split('?');
+export const getSearchParams = () => {
+  const { href } = location;
+  const [path, search] = href.split('?');
   const searchParams = new URLSearchParams(search);
   return {
     path,
@@ -53,7 +53,7 @@ export const getSearchParams = (location: Location) => {
 };
 
 export const searchParamOf = (key: string) => {
-  const { searchParams } = getSearchParams(window.location);
+  const { searchParams } = getSearchParams();
   return searchParams.get(key);
 };
 

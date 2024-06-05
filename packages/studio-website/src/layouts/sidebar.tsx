@@ -17,7 +17,7 @@ import {
   faPuzzlePiece,
   faDiagramProject,
 } from '@fortawesome/free-solid-svg-icons';
-import { Icons } from '@graphscope/studio-components';
+import { Utils } from '@graphscope/studio-components';
 import { modalGlobalConfig } from 'antd/es/modal/confirm';
 import { TOOLS_MENU } from './const';
 const { useToken } = theme;
@@ -99,7 +99,9 @@ const Sidebar: React.FunctionComponent = () => {
       return;
     }
 
-    history.push(`${e.key}`);
+    const graphId = Utils.searchParamOf('graph_id');
+    const url = graphId ? `${e.key}?graph_id=${graphId}` : e.key;
+    history.push(`${url}`);
   };
   const iconStyle = {
     color: token.colorBgTextActive,
