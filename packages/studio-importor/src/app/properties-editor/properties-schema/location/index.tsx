@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Typography, Flex, Input, Space, Button, Row, Tooltip } from 'antd';
+import { Typography, Flex, Space, Button, Tooltip } from 'antd';
 import { useContext } from '../../../useContext';
-import { PropertiesList, SegmentedTabs } from '@graphscope/studio-components';
 import SwitchSource from './switch-source';
-import { CheckCircleOutlined, CaretUpOutlined, CaretDownOutlined, DeleteOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import useChange from './useChange';
 import type { IPropertiesSchemaProps } from '../index';
 
@@ -14,33 +13,16 @@ import type { IPropertiesSchemaProps } from '../index';
 const { Text } = Typography;
 
 const LocationField: React.FunctionComponent<IPropertiesSchemaProps> = props => {
-  const { data, type, view, uploadFile } = props;
+  const { data, type, uploadFile } = props;
   const {
     id,
-    data: { label },
-    source,
-    target,
-    properties = [],
-    filelocation,
-    datatype,
-    isBind,
+    data: { filelocation, datatype, isBind },
   } = data;
 
   const { store } = useContext();
   const { nodes } = store;
 
   const { onChangeType, onChangeValue, onChangeFocus, onChangeDataFields, deleteFile } = useChange({ type, id });
-  let source_label, target_label;
-  if (type === 'edges') {
-    nodes.forEach(item => {
-      if (item.id === source) {
-        source_label = item.data.label;
-      }
-      if (item.id === target) {
-        target_label = item.data.label;
-      }
-    });
-  }
 
   return (
     <div

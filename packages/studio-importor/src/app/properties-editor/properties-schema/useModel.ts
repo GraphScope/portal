@@ -1,6 +1,7 @@
 import React from 'react';
-import { updateStore } from '../../useContext';
+import { useContext } from '../../useContext';
 export default function useModel({ type, id }) {
+  const { updateStore } = useContext();
   /** 修改label */
   const handleChangeLabel = e => {
     const label = e.target.value;
@@ -30,7 +31,7 @@ export default function useModel({ type, id }) {
         draft.edges.map(item => {
           if (item.id === id) {
             //@ts-ignore
-            item.properties = e;
+            item.data.properties = e;
           }
         });
       }
@@ -38,7 +39,7 @@ export default function useModel({ type, id }) {
         draft.nodes.map(item => {
           if (item.id === id) {
             //@ts-ignore
-            item.properties = e;
+            item.data.properties = e;
           }
         });
       }

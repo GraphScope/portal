@@ -1,6 +1,7 @@
-import { useStore } from '../../useContext';
+import { useContext } from '../../useContext';
 export const usePathStyle = (id: string) => {
-  const { currentId, theme } = useStore();
+  const { store } = useContext();
+  const { currentId, theme } = store;
   const isSelected = id === currentId;
   return {
     isSelected,

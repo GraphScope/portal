@@ -1,11 +1,12 @@
 import { Button } from 'antd';
 import * as React from 'react';
-import { updateStore } from '../useContext';
+import { useContext } from '../useContext';
 import { Icons } from '@graphscope/studio-components';
 
 interface ILeftButtonProps {}
 
 const LeftButton: React.FunctionComponent<ILeftButtonProps> = props => {
+  const { updateStore } = useContext();
   return (
     <Button
       type="text"

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Collapse, Segmented, Button } from 'antd';
 import PropertiesSchema from './properties-schema';
 
 import { useContext } from '../useContext';
 import { SegmentedTabs } from '@graphscope/studio-components';
+import { promises } from 'dns';
 interface IPropetiesEditorProps {}
 
 interface PropertiesSchema {

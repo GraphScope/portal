@@ -9,10 +9,10 @@ interface IController {
 }
 const Controller = (props: IController) => {
   const { options, value, onChange, componentType } = props;
-  /** mappingFiles options */
+  /** mappingFiles options 边涉及相同value，导致不唯一 */
   const _options = options.map((item, index: number) => {
     return {
-      value: item.value,
+      value: `${index}_${item.value}`,
       label: (
         <Flex justify="space-between" key={index}>
           <span

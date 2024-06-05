@@ -4,6 +4,8 @@ export interface Property {
   /** name 是否可以修改 */
   disable?: boolean;
   /** 唯一标识 */
+  id: string;
+  /** 唯一标识 */
   key: string;
   /** 属性名 */
   name: string;

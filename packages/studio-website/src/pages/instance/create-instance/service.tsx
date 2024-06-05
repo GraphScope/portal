@@ -53,7 +53,7 @@ export const createGraph = async (
   return graphs;
 };
 
-export const getPrimitiveTypes = () => {
+export const queryPrimitiveTypes = () => {
   if (GS_ENGINE_TYPE === 'groot') {
     return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'];
   }

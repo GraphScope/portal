@@ -8,12 +8,13 @@ import {
   transformImportOptionsToSchemaMapping,
   transformSchemaToImportOptions,
   transformMappingSchemaToImportOptions,
-} from './utils/import';
+} from '../importing/utils/import';
 const { GS_ENGINE_TYPE } = window;
 
-export const createGraph = async (graph_id: string, graphName: string, nodeList: any[], edgeList: any[]) => {
+export const createGraph = async (graph_id: string, params: { graphName: string; nodes: any[]; edges: any[] }) => {
+  const { graphName, nodes, edges } = params;
   let graphs;
-  const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
+  const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodes, edges: edges }));
   if (GS_ENGINE_TYPE === 'interactive') {
     const data = {
       name: String(graphName).trim(),
@@ -35,7 +36,7 @@ export const createGraph = async (graph_id: string, graphName: string, nodeList:
   }
   /** groot 创建 */
   if (GS_ENGINE_TYPE === 'groot') {
-    // const schemagrootJSON = transOptionsToGrootSchema(cloneDeep({ nodes: nodeList, edges: edgeList }));
+    // const schemagrootJSON = transOptionsToGrootSchema(cloneDeep({ nodes: nodes, edges: edges }));
     graphs = await GraphApiFactory(undefined, location.origin)
       .importSchemaById(graph_id, schemaJSON)
       .then(res => {
@@ -91,10 +92,11 @@ export const getSchema = async (graph_id: string) => {
         if (res.status === 200) {
           return res.data.schema;
         }
-        return { nodes: [], edges: [] };
+        return { vertex_types: [], edge_types: [] };
       })
       .catch(error => {
         notification('error', error);
+        return { vertex_types: [], edge_types: [] };
       });
   }
   if (window.GS_ENGINE_TYPE === 'groot') {
@@ -142,7 +144,7 @@ export const getDataloadingConfig = async (graph_id: string, schema: any) => {
   return transformMappingSchemaToImportOptions(schemaMapping, schema);
 };
 
-export const getPrimitiveTypes = () => {
+export const queryPrimitiveTypes = () => {
   if (GS_ENGINE_TYPE === 'groot') {
     return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {
       return { label: item, value: item };

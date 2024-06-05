@@ -1,6 +1,6 @@
 import { GraphApiFactory, UtilsApiFactory, DataSourceApiFactory, JobApiFactory } from '@graphscope/studio-server';
 import type { SchemaMapping } from '@graphscope/studio-server';
-import { transOptionsToSchema } from './utils/schema';
+import { transOptionsToSchema } from '../modeling/utils/schema';
 import { cloneDeep } from 'lodash';
 import { notification } from '@/pages/utils';
 import {
@@ -142,7 +142,7 @@ export const getDataloadingConfig = async (graph_id: string, schema: any) => {
   return transformMappingSchemaToImportOptions(schemaMapping, schema);
 };
 
-export const getPrimitiveTypes = () => {
+export const queryPrimitiveTypes = () => {
   if (GS_ENGINE_TYPE === 'groot') {
     return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {
       return { label: item, value: item };
