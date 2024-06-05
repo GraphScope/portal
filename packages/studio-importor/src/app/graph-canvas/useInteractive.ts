@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useReactFlow, applyEdgeChanges, applyNodeChanges } from 'reactflow';
 import { uuid } from 'uuidv4';
 const deepclone = obj => {
@@ -104,6 +104,11 @@ const useInteractive: any = () => {
     const bbox = getBBox(store.nodes);
     fitBounds(bbox, { duration: 600 });
   };
+  useEffect(() => {
+    if (store.nodes.length > 0) {
+      onDoubleClick();
+    }
+  }, [store.nodes]);
 
   return {
     store,
