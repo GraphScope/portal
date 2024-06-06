@@ -1,6 +1,7 @@
 import React, { memo, useState, useRef } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
-import { List, Popover, Flex, Typography, Input } from 'antd';
+import { List, Popover, Flex, Typography, Input, Tag } from 'antd';
+import { LinkOutlined } from '@ant-design/icons';
 import { EditableText } from '@graphscope/studio-components';
 const style = {
   padding: 5,
@@ -22,9 +23,10 @@ const styles = {
 };
 const GraphNode = (props: NodeProps) => {
   const { data = {}, isConnectable, id } = props;
-  const { label } = data;
+  const { label, filelocation } = data;
+  console.log('filelocation>>>>>>>', filelocation);
   const { store, updateStore } = useContext();
-  const { currentId, theme } = store;
+  const { currentId, theme, elementOptions } = store;
   const isSelected = id === currentId;
   const [state, updateState] = useState({
     isHover: false,
@@ -32,6 +34,9 @@ const GraphNode = (props: NodeProps) => {
   });
 
   const onMouseEnter = () => {
+    if (!elementOptions.isConnectable) {
+      return;
+    }
     updateState(preState => {
       return {
         ...preState,
@@ -40,6 +45,9 @@ const GraphNode = (props: NodeProps) => {
     });
   };
   const onMouseLeave = () => {
+    if (!elementOptions.isConnectable) {
+      return;
+    }
     updateState(preState => {
       return {
         ...preState,
@@ -64,6 +72,17 @@ const GraphNode = (props: NodeProps) => {
       draft.collapsed.right = false;
     });
   };
+  const haloStyle = elementOptions.isConnectable
+    ? {
+        ...styles.handler,
+        border: state.isHover ? `2px dashed ${theme.primaryColor}` : 'none',
+        background: state.isHover ? '#fafafa' : 'transparent',
+        cursor: 'copy',
+      }
+    : {
+        cursor: 'not-allow',
+        background: 'transparent',
+      };
 
   return (
     <div
@@ -80,41 +99,11 @@ const GraphNode = (props: NodeProps) => {
         style={{
           background: 'transparent',
           position: 'relative',
-
-          //  top: '50%', left: '50%', transform: 'translate(-50%,-50%)'
         }}
       />
-      {/* 
-      <Handle
-        type="target"
-        position={Position.Right}
-        id="left-revert"
-        style={{
-          background: 'red',
-          // top: '50%', left: '50%', transform: 'translate(-50%,-50%)'
-        }}
-      /> */}
 
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="right"
-        style={{
-          ...styles.handler,
-          border: state.isHover ? `2px dashed ${theme.primaryColor}` : 'none',
-          background: state.isHover ? '#fafafa' : 'transparent',
-          cursor: 'copy',
-        }}
-      ></Handle>
-      {/* <Handle
-        type="source"
-        position={Position.Left}
-        id="right-revert"
-        style={{
-          background: 'blue',
-          //  top: '50%', left: '50%', transform: 'translate(-50%,-50%)'
-        }}
-      /> */}
+      <Handle type="source" position={Position.Right} id="right" style={haloStyle}></Handle>
+
       <div
         style={{
           position: 'absolute',
@@ -134,7 +123,19 @@ const GraphNode = (props: NodeProps) => {
         }}
         data-nodeid={id}
       >
-        <EditableText id={id} text={label} onTextChange={hanleChangeLabel} />
+        {filelocation && (
+          <div
+            style={{
+              position: 'absolute',
+              transform: 'translate(50px,-100%)',
+            }}
+          >
+            <Tag color="green">
+              <LinkOutlined /> Mapped
+            </Tag>
+          </div>
+        )}
+        <EditableText id={id} text={label} onTextChange={hanleChangeLabel} disabled={!elementOptions.isEditable} />
       </div>
     </div>
   );

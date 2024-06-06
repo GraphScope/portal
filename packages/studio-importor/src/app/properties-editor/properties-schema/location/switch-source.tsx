@@ -16,7 +16,7 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
   const { filelocation, onChangeFocus, onChangeValue, onChangeDataFields, uploadFile } = props;
   const intl = useIntl();
   return (
-    <Space.Compact size="small">
+    <Space.Compact size="small" style={{ width: '100%' }}>
       <>
         <UploadFiles
           value={filelocation}
@@ -24,6 +24,7 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
           onChangeHeader={onChangeDataFields}
           uploadFile={uploadFile}
         />
+        {filelocation && <Input style={{ width: '100%' }} disabled value={filelocation} />}
         {!filelocation && (
           <Input
             style={{ width: '100%' }}

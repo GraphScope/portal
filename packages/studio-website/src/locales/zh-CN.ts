@@ -194,4 +194,11 @@ export default {
   github: 'github',
   /** jobs */
   Jobs: '作业管理',
+  /** new navigation */
+  Modeling: '建模',
+  Importing: '导数',
+  Querying: '查询',
+  'Querying data': '查询数据',
+  Stopped: '已停止',
+  Running: '运行中',
 };

@@ -15,7 +15,7 @@ import Label from './label';
 
 function GraphEdge(props: EdgeProps) {
   const { id, source, target, style, data } = props;
-  const { _extra, label } = data || {};
+  const { _extra, label, filelocation } = data || {};
   const { offset = 0 } = _extra || {};
   const sourceNode = useStore(useCallback(store => store.nodeInternals.get(source), [source]));
   const targetNode = useStore(useCallback(store => store.nodeInternals.get(target), [target]));
@@ -72,6 +72,7 @@ function GraphEdge(props: EdgeProps) {
       <Label
         id={id}
         label={label}
+        filelocation={filelocation}
         style={{
           transform: `translate(-50%, -50%) translate(${controlPoint.x}px,${controlPoint.y}px) rotate(${degree}deg)`,
         }}

@@ -4,17 +4,21 @@ import { FormattedMessage } from 'react-intl';
 import { GlobalOutlined } from '@ant-design/icons';
 import type { BreadcrumbProps, TabsProps } from 'antd';
 import ConnectModal from '../ConnectModal';
+import { searchParamOf } from '../Utils';
 
 interface ISectionProps {
+  value: string;
+  options: SegmentedProps['options'];
   title?: string;
   desc?: string;
   children?: React.ReactNode;
-  options: SegmentedProps['options'];
   style?: React.CSSProperties;
-  value: string;
   withNav?: boolean;
   connectStyle?: React.CSSProperties;
-  onChange: SegmentedProps['onChange'];
+  onChange?: SegmentedProps['onChange'];
+  /** 额外需要转发的url信息，默认为 graph_id */
+  extraRouterKey?: string;
+  history?: any;
 }
 
 const StatusPoint = ({ status }) => {
@@ -22,7 +26,23 @@ const StatusPoint = ({ status }) => {
 };
 
 const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
-  const { children, style, value, withNav, connectStyle, options, onChange } = props;
+  const {
+    children,
+    style,
+    value,
+    withNav,
+    connectStyle,
+    options,
+    onChange,
+    extraRouterKey = 'graph_id',
+    history,
+  } = props;
+  const handleChange = value => {
+    const graphId = searchParamOf('graph_id');
+    const herf = graphId ? `${value}?${extraRouterKey}=${graphId}` : value;
+    history && history.push(herf);
+    onChange && onChange(value);
+  };
   const handleClick = () => {};
   return (
     <section style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -42,7 +62,7 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
         {withNav && (
           <>
             <div style={{ width: '400px' }}>
-              <Segmented options={options} block value={value} onChange={onChange} />
+              <Segmented options={options} block value={value} onChange={handleChange} />
             </div>
             <div></div>
           </>

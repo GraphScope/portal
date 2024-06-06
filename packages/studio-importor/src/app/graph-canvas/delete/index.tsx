@@ -12,7 +12,8 @@ import { useContext } from '../../useContext';
 const Delete: React.FunctionComponent<IAddNodeProps> = props => {
   const { style } = props;
 
-  const { updateStore } = useContext();
+  const { updateStore, store } = useContext();
+  const { elementOptions } = store;
 
   const handleDelete = () => {
     updateStore(draft => {
@@ -20,7 +21,15 @@ const Delete: React.FunctionComponent<IAddNodeProps> = props => {
     });
   };
 
-  return <Button onClick={handleDelete} style={style} type="text" icon={<Icons.Trash />}></Button>;
+  return (
+    <Button
+      disabled={!elementOptions.isConnectable}
+      onClick={handleDelete}
+      style={style}
+      type="text"
+      icon={<Icons.Trash />}
+    ></Button>
+  );
 };
 
 export default Delete;

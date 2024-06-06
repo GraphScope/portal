@@ -25,6 +25,7 @@ export interface IUserEdge {
     index?: number;
     count?: number;
   };
+  [key: string]: any;
 }
 /**
  *

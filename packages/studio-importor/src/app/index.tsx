@@ -2,23 +2,34 @@ import React, { useEffect, useMemo } from 'react';
 import GraphCanvas from './graph-canvas';
 import PropertiesEditor from './properties-editor';
 import ImportSchema from './import-schema';
-import ModeSwitch from './mode-switch';
+
 import { ReactFlowProvider } from 'reactflow';
 import { Toolbar } from '@graphscope/studio-components';
 import AddNode from './graph-canvas/add-node';
 import Delete from './graph-canvas/delete';
 import 'reactflow/dist/style.css';
-import RightButton from './layout-controller/right-button';
-import LeftButton from './layout-controller/left-button';
-import { notification } from 'antd';
+import RightButton from './button-controller/right-button';
+import LeftButton from './button-controller/left-button';
+import { Divider, notification } from 'antd';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
+import Provider from './provider';
+import StartImporting from './button-controller/start-importing';
+import SaveModeling from './button-controller/save-modeling';
 interface Option {
   label: string;
   value: string;
 }
 interface ImportAppProps {
-  id: string;
+  /** 用于多实例管理的 ID */
+  id?: string;
+  /** 语言 */
+  locale?: 'zh-CN' | 'en-US';
+  /** 主题样式 */
+  theme?: {
+    primaryColor: string;
+    mode: 'darkAlgorithm' | 'defaultAlgorithm';
+  };
   appMode: 'DATA_MODELING' | 'DATA_IMPORTING';
   /**  第二项 */
   queryPrimitiveTypes: () => {
@@ -36,12 +47,51 @@ interface ImportAppProps {
   saveModeling?: (schema: any) => void;
   handleImporting?: (schema: any) => void;
   queryImportData?: () => void;
+  /** 默认样式相关 */
+  defaultLeftStyles?: {
+    collapsed: boolean;
+    width: number;
+  };
+  defaultRightStyles?: {
+    collapsed: boolean;
+    width: number;
+  };
+
+  elementOptions?: {
+    /** 是否能够连线，包括拖拽产生节点 */
+    isClickable: boolean;
+    /** 是否可以点击，包含点和边 */
+    isEditable: boolean;
+    /** 是否可以编辑标签，包括节点和边 */
+    isConnectable: boolean;
+  };
 }
 import { useContext } from './useContext';
 import { Button } from 'antd';
 
 const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
-  const { appMode, handleImporting, saveModeling, queryGraphSchema, queryBoundSchema, id } = props;
+  const {
+    appMode,
+    handleImporting,
+    saveModeling,
+    queryGraphSchema,
+    queryBoundSchema,
+    id,
+    locale = 'zh-CN',
+    theme = {
+      primaryColor: '#1890ff',
+      mode: 'defaultAlgorithm',
+    },
+    defaultLeftStyles = {
+      collapsed: true,
+      width: 300,
+    },
+    defaultRightStyles = {
+      collapsed: true,
+      width: 400,
+    },
+    elementOptions,
+  } = props;
   const { store, updateStore } = useContext();
   const { collapsed } = store;
   const { left, right } = collapsed;
@@ -114,61 +164,65 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
       updateStore(draft => {
         draft.nodes = nodes;
         draft.edges = edges;
+        draft.appMode = appMode;
+        draft.collapsed.left = defaultLeftStyles.collapsed;
+        draft.collapsed.right = defaultRightStyles.collapsed;
+        draft.elementOptions = {
+          isClickable: (elementOptions || {}).isClickable !== false, //默认undefined 则返回true
+          isEditable: nodes.length === 0, // 初始状态，接口获取画布有 Schema 数据的时候，不可编辑
+          isConnectable: nodes.length === 0, //  初始状态，接口获取画布有 Schema 数据的时候，不可连线
+        };
       });
     })();
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      <div style={{ height: '100%', display: 'flex' }}>
-        <div
-          style={{
-            width: left ? '0px' : '300px',
-            padding: left ? '0px' : '0px 12px',
-            overflow: 'hidden',
-            transition: 'width 0.2s ease',
-          }}
-        >
-          <ImportSchema />
-        </div>
-        <div style={{ flex: 1, position: 'relative' }}>
-          <ReactFlowProvider>
-            <Toolbar>
-              <LeftButton />
-              <AddNode />
-              <Delete />
-              {/* <ModeSwitch /> */}
-            </Toolbar>
-            <Toolbar style={{ top: '18px', right: '70px', left: 'unset', padding: 0 }}>
-              {appMode === 'DATA_IMPORTING' ? (
-                <Button type="primary" onClick={_handleImporting}>
-                  Start Importing
-                </Button>
-              ) : (
-                <Button type="primary" onClick={handleSave}>
-                  Save Modeling
-                </Button>
-              )}
-            </Toolbar>
-            <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }}>
-              <RightButton />
-            </Toolbar>
-            <GraphCanvas />
-          </ReactFlowProvider>
-        </div>
-        <div
-          style={{
-            width: right ? '0px' : '350px',
-            padding: right ? '0px' : '0px 12px',
-            position: 'relative',
-            overflow: 'hidden',
-            transition: 'width 0.2s ease',
-          }}
-        >
-          <PropertiesEditor {...props} />
+    <Provider locale={locale} theme={theme}>
+      <div style={{ width: '100%', height: '100%' }}>
+        <div style={{ height: '100%', display: 'flex' }}>
+          <div
+            style={{
+              width: left ? '0px' : defaultLeftStyles.width,
+              padding: left ? '0px' : '0px 12px',
+              overflow: 'hidden',
+              transition: 'width 0.2s ease',
+            }}
+          >
+            <ImportSchema />
+          </div>
+          <div style={{ flex: 1, position: 'relative' }}>
+            <ReactFlowProvider>
+              <Toolbar>
+                <LeftButton />
+                <Divider type="horizontal" style={{ margin: '0px' }} />
+                <AddNode />
+                <Delete />
+                {/* <ModeSwitch /> */}
+              </Toolbar>
+
+              <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }} direction="horizontal">
+                <StartImporting onClick={_handleImporting} />
+                <SaveModeling onClick={handleSave} />
+                <Divider type="vertical" style={{ margin: '0px' }} />
+                <RightButton />
+              </Toolbar>
+              <GraphCanvas />
+            </ReactFlowProvider>
+          </div>
+          <div
+            style={{
+              width: right ? '0px' : defaultRightStyles.width,
+              padding: right ? '0px' : '0px 12px',
+              position: 'relative',
+              overflow: 'hidden',
+              transition: 'width 0.2s ease',
+            }}
+          >
+            <PropertiesEditor {...props} />
+          </div>
         </div>
       </div>
-    </div>
+    </Provider>
   );
 };
 
@@ -176,7 +230,10 @@ export const MultipleInstance = props => {
   const SDK_ID = useMemo(() => {
     if (!props.id) {
       const defaultId = `${Math.random().toString(36).substr(2)}`;
-      console.warn(`⚠️: props.id 缺失，默认生成 SDK_ID : ${defaultId} 用于多实例管理`);
+      console.info(
+        `%c ⚠️: The id prop is missing in the Importor component. A default SDK_ID: ${defaultId} is generated for managing multiple instances.`,
+        'color:green',
+      );
       return defaultId;
     }
     return props.id;

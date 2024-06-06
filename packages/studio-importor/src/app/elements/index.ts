@@ -25,7 +25,7 @@ export function layout(data, direction) {
 }
 export function transformGraphNodes(nodes, displayMode) {
   return nodes.map(item => {
-    const { position, key, id, _fromEdge } = item;
+    const { position, key, id, _fromEdge, data = {}, ...others } = item;
     if (position) {
       GRAPH_POSITION_MAP[id] = position;
     }
@@ -33,10 +33,11 @@ export function transformGraphNodes(nodes, displayMode) {
       dagreGraph.node(item.id) || { x: Math.random() * 500, y: Math.random() * 500 };
 
     return {
-      data: {
-        ...item,
-      },
       id: id || key,
+      data: {
+        ...data,
+        ...others,
+      },
       type: displayMode === 'table' ? 'table-node' : 'graph-node',
       _fromEdge,
       targetPosition: Position.Left,
@@ -48,49 +49,20 @@ export function transformGraphNodes(nodes, displayMode) {
     };
   });
 }
-export function transformNodes(nodes, displayMode) {
-  return nodes.map(item => {
-    const { position, key, id, _fromEdge, ...properties } = item;
-    const nodeWithPosition = dagreGraph.node(item.id) || { x: Math.random() * 500, y: Math.random() * 500 };
-    GRAPH_POSITION_MAP[id] = position;
 
-    return {
-      ...item,
-      id: id || key,
-      type: displayMode === 'table' ? 'table-node' : 'graph-node',
-      _fromEdge,
-      targetPosition: Position.Left,
-      sourcePosition: Position.Right,
-      position: position || {
-        x: nodeWithPosition.x,
-        y: nodeWithPosition.y,
-      },
-      data: {
-        _fromEdge,
-        ...properties,
-        label: id,
-      },
-    };
-  });
-}
 export function transformEdges(_edges, displayMode) {
   const edges = processEdges(_edges);
-  console.log('edges', edges);
   return edges.map((item, index) => {
-    console.log('edge', item);
-    //@ts-ignore
-    const { id, key, source, target, data, _extra, properties = {}, ...others } = item;
+    const { id, key, source, target, data = {}, ...others } = item;
     return {
-      ...others,
       id: id || key || `${source}-${target}-${index}`,
-      data: {
-        ...data,
-        ...properties,
-        _extra,
-      },
       source,
       target,
       type: displayMode === 'table' ? 'smoothstep' : 'graph-edge',
+      data: {
+        ...data,
+        ...others,
+      },
     };
   });
 }
@@ -161,4 +133,30 @@ export function transEdge2Entity(data) {
     ],
     edges: relationship,
   };
+}
+
+export function transformNodes(nodes, displayMode) {
+  return nodes.map(item => {
+    const { position, key, id, _fromEdge, ...properties } = item;
+    const nodeWithPosition = dagreGraph.node(item.id) || { x: Math.random() * 500, y: Math.random() * 500 };
+    GRAPH_POSITION_MAP[id] = position;
+
+    return {
+      ...item,
+      id: id || key,
+      type: displayMode === 'table' ? 'table-node' : 'graph-node',
+      _fromEdge,
+      targetPosition: Position.Left,
+      sourcePosition: Position.Right,
+      position: position || {
+        x: nodeWithPosition.x,
+        y: nodeWithPosition.y,
+      },
+      data: {
+        _fromEdge,
+        ...properties,
+        label: id,
+      },
+    };
+  });
 }

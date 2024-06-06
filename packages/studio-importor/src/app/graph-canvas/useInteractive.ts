@@ -1,6 +1,8 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useReactFlow, applyEdgeChanges, applyNodeChanges } from 'reactflow';
 import { uuid } from 'uuidv4';
+import { createStaticForceLayout } from '../elements/forceLayout';
+import { fakeSnapshot } from '../utils/index';
 const deepclone = obj => {
   return JSON.parse(JSON.stringify(obj));
 };
@@ -14,16 +16,19 @@ import { getBBox, createEdgeLabel, createNodeLabel } from '../utils';
 const useInteractive: any = () => {
   const { store, updateStore } = useContext();
   const { screenToFlowPosition, fitBounds } = useReactFlow();
-  const { displayMode } = store;
+  const { displayMode, nodes, edges, hasLayouted, elementOptions } = store;
   const connectingNodeId = useRef(null);
+  console.log('elementOptions', elementOptions);
 
   const onConnectStart = useCallback((_, { nodeId }) => {
     connectingNodeId.current = nodeId;
+    if (!elementOptions.isConnectable) return;
   }, []);
 
   const onConnectEnd = useCallback(
     event => {
       if (!connectingNodeId.current) return;
+      if (!elementOptions.isConnectable) return;
 
       const targetIsPane = event.target.classList.contains('react-flow__pane');
 
@@ -67,21 +72,21 @@ const useInteractive: any = () => {
         const edgeLabel = createEdgeLabel();
 
         updateStore(draft => {
+          // 可能存在多边，所以需要走一遍 transform 函数
           draft.edges = transformEdges(
             [
               ...draft.edges,
               {
                 id: edgeId,
-                data: { label: edgeLabel },
+                data: {
+                  label: edgeLabel,
+                },
                 source: connectingNodeId.current,
                 target: nodeid,
-                type: 'graph-edge',
               },
             ],
             displayMode,
           );
-          // //如果移除这个，会导致节点无法再次拖拽
-          // draft.nodes = [...draft.nodes];
         });
       }
     },
@@ -89,21 +94,43 @@ const useInteractive: any = () => {
   );
 
   const onNodesChange = (changes: NodeChange[]) => {
-    updateStore(draft => {
-      draft.nodes = applyNodeChanges(changes, deepclone(draft.nodes));
-    });
+    console.log('onNodesChange', changes);
+    if (elementOptions.isConnectable) {
+      updateStore(draft => {
+        draft.nodes = applyNodeChanges(changes, deepclone(draft.nodes));
+      });
+    }
   };
   const onEdgesChange = (changes: EdgeChange[]) => {
-    updateStore(draft => {
-      draft.edges = applyEdgeChanges(changes, deepclone(draft.edges));
-    });
+    if (elementOptions.isConnectable) {
+      updateStore(draft => {
+        draft.edges = applyEdgeChanges(changes, deepclone(draft.edges));
+      });
+    }
   };
 
   const onDoubleClick = () => {
     //@ts-ignore
-    const bbox = getBBox(store.nodes);
+    const bbox = getBBox(nodes);
     fitBounds(bbox, { duration: 600 });
   };
+
+  useEffect(() => {
+    if (nodes.length > 0) {
+      // 交互
+      onDoubleClick();
+      // 布局
+      if (!hasLayouted) {
+        const graph = createStaticForceLayout(fakeSnapshot(nodes), fakeSnapshot(edges));
+        console.log('layout......', graph);
+        updateStore(draft => {
+          draft.hasLayouted = true;
+          draft.nodes = graph.nodes;
+          draft.edges = graph.edges;
+        });
+      }
+    }
+  }, [nodes, edges, hasLayouted]);
 
   return {
     store,

@@ -32,20 +32,16 @@ const InstanceCard: React.FC = () => {
   }, []);
 
   const handleCreate = () => {
-    history.push('/instance/create');
+    history.push('/graphs/create');
   };
 
   return (
     <Section
       breadcrumb={[
         {
-          title: 'Home',
-        },
-        {
           title: 'Graphs',
         },
       ]}
-      title="navbar.graphs"
       desc="Listing all graphs on the cluster"
     >
       <Row gutter={[12, 12]}>

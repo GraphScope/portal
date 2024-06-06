@@ -67,6 +67,19 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
 
   const columns = [
     {
+      title: 'PK',
+      dataIndex: 'primaryKey',
+      render(text, record: any) {
+        return (
+          <Checkbox
+            checked={text}
+            disabled={disabled}
+            onClick={() => handleProperties(handlePrimaryKey(record, state))}
+          />
+        );
+      },
+    },
+    {
       title: 'Name',
       dataIndex: 'name',
       render: (...p) => {
@@ -102,24 +115,11 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
         );
       },
     },
-    {
-      title: 'PK',
-      dataIndex: 'primaryKey',
-      render(text, record: any) {
-        return (
-          <Checkbox
-            checked={text}
-            disabled={disabled}
-            onClick={() => handleProperties(handlePrimaryKey(record, state))}
-          />
-        );
-      },
-    },
   ];
   if (mappingColumn) {
     /** 如果有映射关系，则出现第四列 */
     columns.push({
-      title: 'mapping fields',
+      title: 'Data Fields',
       dataIndex: 'token',
       render(token, all) {
         return (

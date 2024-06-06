@@ -8,21 +8,17 @@ import GrootCase from './groot-case';
 export interface IPropertiesSchemaProps {
   GS_ENGINE_TYPE: string;
   queryPrimitiveTypes(): { label: string; value: string }[];
-  data: any;
+  schema: any;
   type: 'nodes' | 'edges';
   appMode: string;
   uploadFile(file): { file_path: string };
+  disabled?: boolean;
 }
 
 const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props => {
-  const { data, type, appMode, queryPrimitiveTypes } = props;
-  const {
-    id,
-    data: { label, dataFields, properties = [] },
-    source,
-    target,
-  } = data;
-  console.log('dataFields', dataFields, ' properties', properties);
+  const { schema, type, appMode, queryPrimitiveTypes, disabled } = props;
+  const { id, source, target, data } = schema;
+  const { dataFields, properties = [], label = id } = data;
 
   const { handleChangeLabel, handleProperty } = useModel({ type, id });
   /** 判断是否为导入数据 */
@@ -44,7 +40,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
         ) : (
           <>
             <Typography.Text>Label</Typography.Text>
-            <Input value={label} onChange={handleChangeLabel} />
+            <Input value={label} onChange={handleChangeLabel} disabled={disabled} />
             {type === 'edges' && <SourceTarget source={source} target={target} />}
           </>
         )}
@@ -52,7 +48,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
           properties={properties}
           onChange={handleProperty}
           typeColumn={{ options: queryPrimitiveTypes() }}
-          disabled={!!mappingColumn}
+          disabled={disabled}
           //@ts-ignore
           mappingColumn={mappingColumn}
         />

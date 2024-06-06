@@ -19,6 +19,7 @@
     "build": "father build"
   },
   "dependencies": {
+    "d3-force": "latest",
     "@graphscope/studio-components": "workspace:*",
     "monaco-editor": "latest",
     "sql-ddl-to-json-schema": "latest",
@@ -29,6 +30,9 @@
     "reactflow": "latest",
     "react-intl": "^6.6.1",
     "valtio": "^1.12.1"
+  },
+  "devDependencies": {
+    "@types/d3-force": "latest"
   },
   "author": "",
   "license": "ISC"

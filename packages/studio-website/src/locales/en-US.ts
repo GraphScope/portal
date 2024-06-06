@@ -197,4 +197,11 @@ export default {
   github: 'github',
   /** jobs */
   Jobs: 'Jobs',
+  /** new navigation */
+  Modeling: 'Modeling',
+  Importing: 'Importing',
+  Querying: 'Querying',
+  'Querying data': 'Querying data',
+  Stopped: 'Stopped',
+  Running: 'Running',
 };

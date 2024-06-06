@@ -4,22 +4,9 @@ import PropertiesSchema from './properties-schema';
 
 import { useContext } from '../useContext';
 import { SegmentedTabs } from '@graphscope/studio-components';
-import { promises } from 'dns';
-interface IPropetiesEditorProps {}
+import { CaretRightOutlined } from '@ant-design/icons';
 
-interface PropertiesSchema {
-  /** 唯一ID */
-  key: string;
-  /** 类型 */
-  label: string;
-  properties: {
-    [key: string]: string;
-  };
-}
-interface EdgeSchema extends PropertiesSchema {
-  source: string;
-  target: string;
-}
+interface IPropetiesEditorProps {}
 
 const StyleWrap = ({ children }) => {
   return (
@@ -40,7 +27,7 @@ const StyleWrap = ({ children }) => {
 };
 const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props => {
   const { store, updateStore } = useContext();
-  const { nodes, edges, currentType, currentId } = store;
+  const { nodes, edges, currentType, currentId, elementOptions } = store;
 
   const nodes_items = nodes.map(item => {
     const { id, data } = item;
@@ -49,17 +36,18 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       key: id,
       label: label,
       //@ts-ignore
-      children: <PropertiesSchema data={item} type="nodes" {...props} />,
+      children: <PropertiesSchema schema={item} type="nodes" {...props} disabled={!elementOptions.isEditable} />,
     };
   });
   const edges_items = edges.map(item => {
     const { id, data } = item;
     const { label } = data || { label: id };
+
     return {
       key: id,
       label: label,
       //@ts-ignore
-      children: <PropertiesSchema data={item} type="edges" {...props} />,
+      children: <PropertiesSchema schema={item} type="edges" {...props} disabled={!elementOptions.isEditable} />,
     };
   });
 
@@ -87,7 +75,13 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
             label: 'Vertex',
             children: (
               <StyleWrap>
-                <Collapse accordion items={nodes_items} activeKey={[currentId]} onChange={onChange} />
+                <Collapse
+                  expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+                  accordion
+                  items={nodes_items}
+                  activeKey={[currentId]}
+                  onChange={onChange}
+                />
               </StyleWrap>
             ),
           },
@@ -96,7 +90,13 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
             label: 'Edges',
             children: (
               <StyleWrap>
-                <Collapse accordion items={edges_items} activeKey={[currentId]} onChange={onChange} />
+                <Collapse
+                  expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+                  accordion
+                  items={edges_items}
+                  activeKey={[currentId]}
+                  onChange={onChange}
+                />
               </StyleWrap>
             ),
           },

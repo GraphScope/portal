@@ -45,9 +45,9 @@ export const queryInfo = async (id: string) => {
 
   return result;
 };
-export const queryGraphSchema = async (name: string): Promise<CypherSchemaData> => {
+export const queryGraphSchema = async (graph_id: string): Promise<CypherSchemaData> => {
   const schema = await GraphApiFactory(undefined, location.origin)
-    .getSchemaById(name)
+    .getSchemaById(graph_id)
     .then(res => handleResponse(res))
     .catch(error => handleError(error));
 
