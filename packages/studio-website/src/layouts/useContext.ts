@@ -16,7 +16,7 @@ export interface IGraph {
   updatetime: string;
   importtime: string;
   server: string;
-  status: 'Running' | 'Stopped';
+  status: 'Running' | 'Stopped' | 'Draft';
   hqps: string;
   schema: {
     vertices: number;
@@ -41,6 +41,7 @@ export const initialStore = {
   navStyle: 'inline',
   graphs: [],
   graphId: Utils.searchParamOf('graph_id'),
+  draftGraph: Utils.storage.get('DRAFT_GRAPH') || {},
 };
 
 export type IStore = {
@@ -53,6 +54,7 @@ export type IStore = {
   navStyle: string;
   graphs: IGraph[];
   graphId: string | null;
+  draftGraph: IGraph | {};
 };
 
 type ContextType = {

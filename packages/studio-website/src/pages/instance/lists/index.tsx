@@ -10,7 +10,7 @@ import { listGraphs } from './service';
 const { GS_ENGINE_TYPE } = window;
 const InstanceCard: React.FC = () => {
   const { store } = useContext();
-  const { mode } = store;
+  const { mode, draftGraph } = store;
   const [state, updateState] = useState<{ isReady: boolean; instanceList: InstaceCardType[] }>({
     instanceList: [],
     isReady: false,
@@ -45,11 +45,15 @@ const InstanceCard: React.FC = () => {
       desc="Listing all graphs on the cluster"
     >
       <Row gutter={[12, 12]}>
-        {instanceList.map((item, i) => (
-          <Col key={i} span={12}>
-            <InstaceCard {...item} handleChange={() => fetchLists()} />
-          </Col>
-        ))}
+        {[draftGraph, ...instanceList]
+          .filter(c => {
+            return Object.keys(c).length > 0;
+          })
+          .map((item, i) => (
+            <Col key={i} span={12}>
+              <InstaceCard {...item} handleChange={() => fetchLists()} />
+            </Col>
+          ))}
         {!isReady && (
           <Col span={12}>
             <Card

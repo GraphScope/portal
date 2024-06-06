@@ -11,7 +11,9 @@ const { GS_ENGINE_TYPE } = window;
 const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
   /**查询数据导入 */
   const { store } = useContext();
-  const { graphId } = store;
+  const { graphId, graphs } = store;
+  const match = graphs.find(item => item.id === graphId);
+  const isEmpty = match?.schema.vertices === 0;
 
   const queryImportData = async () => {
     // const { graphId } = getUrlParams();
@@ -41,6 +43,7 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
       edges,
     });
   };
+  console.log('match', match);
 
   return (
     <ImportApp
@@ -48,7 +51,6 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
       appMode="DATA_MODELING"
       //@ts-ignore
       queryGraphSchema={queryGraphSchema}
-      disabled={true}
       //@ts-ignore
       saveModeling={saveModeling}
       /** 属性下拉选项值 */
@@ -58,6 +60,10 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
         });
       }}
       GS_ENGINE_TYPE={GS_ENGINE_TYPE}
+      defaultLeftStyles={{
+        width: 350,
+        collapsed: isEmpty ? false : true,
+      }}
     >
       <Toolbar style={{ top: '12px', right: '74px', left: 'unset' }} direction="horizontal">
         <Save />
