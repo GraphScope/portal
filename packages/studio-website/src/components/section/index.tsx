@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Breadcrumb, Divider, Typography, Tabs } from 'antd';
+import { Breadcrumb, Divider, Typography, Tabs, Space } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import type { BreadcrumbProps, TabsProps } from 'antd';
 import { getSearchParams } from '../utils';
@@ -28,7 +28,8 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
     searchParams.set('nav', key);
     window.location.hash = `${path}?${searchParams.toString()}`;
   };
-  const hasDivider = title && desc && !items;
+  const hasDivider = desc && !items;
+  console.log('breadcrumb', breadcrumb);
   return (
     <section
       style={{
@@ -40,12 +41,24 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
       }}
     >
       <div style={{ padding: '0px 24px' }}>
-        {/* {breadcrumb && <Breadcrumb items={breadcrumb} />} */}
-        {title && (
-          <Typography.Title level={1} style={{ fontSize: 40 }}>
-            <FormattedMessage id={title} />
-          </Typography.Title>
-        )}
+        <Typography.Title level={1} style={{ fontSize: 40 }}>
+          <Space
+            align="center"
+            split={
+              <Divider
+                type="vertical"
+                style={{ rotate: '25deg', fontSize: '25px', background: '#000', width: '3px' }}
+              />
+            }
+          >
+            {/* <FormattedMessage id={title} /> */}
+            {breadcrumb?.map((item, index) => {
+              //@ts-ignore
+              return <FormattedMessage id={item.title} />;
+            })}
+          </Space>
+        </Typography.Title>
+
         {desc && (
           <Typography.Title type="secondary" level={4} style={{ fontWeight: 300 }}>
             <FormattedMessage id={desc} />

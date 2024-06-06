@@ -11,7 +11,7 @@ export function createStaticForceLayout(nodes, edges, params: IParams = {}) {
     .force(
       'link',
       forceLink(edges)
-        .id(d => d.id)
+        .id((d: any) => d.id)
         .distance(300),
     )
     .force('charge', forceManyBody().strength(-30))

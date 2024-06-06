@@ -23,6 +23,7 @@
     "father": "^4.4.1"
   },
   "dependencies": {
+    "@graphscope/studio-components": "workspace:*",
     "react-json-view": "^1.21.3",
     "react-intl": "^6.6.1",
     "@fortawesome/free-solid-svg-icons": "latest",

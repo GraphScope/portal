@@ -33,7 +33,7 @@ const QueryModule = () => {
         /** 侧边栏展示的位置 */
         displaySidebarPosition="right"
         /** 是否启用绝对定位布局 */
-        enableAbsolutePosition={true}
+        enableAbsolutePosition={false}
         /** 语句默认展示的模式 */
         dispalyMode="flow"
         /** 查询类型 */

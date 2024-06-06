@@ -31,6 +31,9 @@
     "react-intl": "^6.6.1",
     "valtio": "^1.12.1"
   },
+  "devDependencies": {
+    "@types/d3-force": "latest"
+  },
   "author": "",
   "license": "ISC"
 }

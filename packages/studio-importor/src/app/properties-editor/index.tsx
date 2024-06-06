@@ -36,17 +36,18 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       key: id,
       label: label,
       //@ts-ignore
-      children: <PropertiesSchema disabled={!elementOptions.isEditable} schema={item} type="nodes" {...props} />,
+      children: <PropertiesSchema schema={item} type="nodes" {...props} disabled={!elementOptions.isEditable} />,
     };
   });
   const edges_items = edges.map(item => {
     const { id, data } = item;
     const { label } = data || { label: id };
+
     return {
       key: id,
       label: label,
       //@ts-ignore
-      children: <PropertiesSchema disabled={!elementOptions.isEditable} schema={item} type="edges" {...props} />,
+      children: <PropertiesSchema schema={item} type="edges" {...props} disabled={!elementOptions.isEditable} />,
     };
   });
 

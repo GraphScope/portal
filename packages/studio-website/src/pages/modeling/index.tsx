@@ -45,10 +45,11 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
     return transSchemaToOptions(schema as any);
   };
   const saveModeling = (schema: any) => {
+    const graph_id = Utils.searchParamOf('graph_id') || '';
     const { nodes, edges } = schema;
     console.log('nodes', nodes, edges);
-    createGraph('2', {
-      graphName: 'test',
+    createGraph(graph_id, {
+      graphName: 'pomelo',
       nodes,
       edges,
     });

@@ -14,7 +14,7 @@ interface ILabelProps {
 const Label: React.FunctionComponent<ILabelProps> = props => {
   const { id, label, style, filelocation } = props;
   const { store, updateStore } = useContext();
-  const { currentId, theme } = store;
+  const { currentId, theme, elementOptions } = store;
   const isSelected = id === currentId;
 
   const onEdgeClick = () => {
@@ -70,6 +70,7 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
           }}
         >
           <EditableText
+            disabled={!elementOptions.isEditable}
             id={id}
             text={label || id}
             onTextChange={onLabelChange}
