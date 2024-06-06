@@ -16,6 +16,7 @@ import { faMagnifyingGlass, faFileImport, faNetworkWired } from '@fortawesome/fr
 import { faPlayCircle, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { TOOLS_MENU } from '@/layouts/const';
 export type InstaceCardType = {
   /** graph id */
   id: string;
@@ -65,7 +66,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     handleChange,
     schema = { edges: 0, vertices: 0 },
   } = props;
-  const { store } = useContext();
+  const { store, updateStore } = useContext();
   const { mode, locale } = store;
   const intl = useIntl();
   const [isLoading, updateIsLoading] = useState(false);
@@ -161,7 +162,13 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
       />
     </>
   );
-
+  const handleHistory = (path: string) => {
+    history.push(`${path}#?engineType=interactive&graph_id=${id}`);
+    updateStore(draft => {
+      draft.graphId = id;
+      draft.currentnNav = path;
+    });
+  };
   const handleClick = async (id: string, status: string) => {
     updateIsLoading(true);
     /** running->stopService */
@@ -184,7 +191,8 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   if (status === 'Stopped') btnIcon = <PlayCircleOutlined />;
   if (status === 'Running') btnIcon = <PauseCircleOutlined />;
   /** 按钮中英文宽度 */
-  let btnWidth = locale === 'zh-CN' ? '115px' : '150px';
+  let btnWidth = locale === 'zh-CN' ? '115px' : '130px';
+
   return (
     <Card
       styles={{ header: { fontSize: '30px' } }}
@@ -247,29 +255,18 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
         </Flex>
 
         <Flex gap="middle" align="flex-end" vertical justify="end">
-          <Button
-            style={{ width: btnWidth, textAlign: 'left' }}
-            icon={<FontAwesomeIcon icon={faNetworkWired} style={{ marginRight: '8px' }} />}
-            onClick={() => history.push(`/modeling#?graph_name=${name}&graph_id=${id}`)}
-          >
-            <FormattedMessage id="Define schema" />
-          </Button>
-          <Button
-            style={{ width: btnWidth, textAlign: 'left' }}
-            icon={<FontAwesomeIcon icon={faFileImport} style={{ marginRight: '10px' }} />}
-            onClick={() => history.push(`/importing#?engineType=interactive&graph_name=${name}&graph_id=${id}`)}
-          >
-            <FormattedMessage id="Importing data" />
-          </Button>
-          <Button
-            type="primary"
-            style={{ width: btnWidth, textAlign: 'left' }}
-            icon={<FontAwesomeIcon icon={faMagnifyingGlass} style={{ marginRight: '8px' }} />}
-            disabled={status === 'Stopped' ? true : false}
-            onClick={() => history.push(`/querying#?graph_name=${name}`)}
-          >
-            <FormattedMessage id="Querying data" />
-          </Button>
+          {TOOLS_MENU.map(item => {
+            return (
+              <Button
+                key={item.key}
+                style={{ width: btnWidth, textAlign: 'left' }}
+                icon={item.icon}
+                onClick={() => handleHistory(item.value)}
+              >
+                <span style={{ marginLeft: '8px' }}>{item.label}</span>
+              </Button>
+            );
+          })}
         </Flex>
       </Flex>
     </Card>

@@ -19,6 +19,7 @@ const Content = (props: any) => {
   const match = TOOLS_MENU.find(item => {
     return item.value === currentnNav;
   });
+
   if (match) {
     return (
       <SegmentedSection options={TOOLS_MENU} value={currentnNav} history={history} withNav={navStyle === 'inline'}>

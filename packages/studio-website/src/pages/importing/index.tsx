@@ -1,21 +1,19 @@
 import * as React from 'react';
 import ImportApp from '@graphscope/studio-importor';
 import { queryPrimitiveTypes, uploadFile, createDataloadingJob, getSchema, getDataloadingConfig } from './services';
-import { TOOLS_MENU } from '../../layouts/const';
 import { useContext } from '../../layouts/useContext';
-import { Utils } from '@graphscope/studio-components';
-import { history } from 'umi';
+
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
   const { store } = useContext();
+  const { graphId } = store;
 
   const queryBoundSchema = async () => {
-    const graph_id = Utils.searchParamOf('graph_id');
-    if (graph_id) {
-      const graphSchema = await getSchema(graph_id);
+    if (graphId) {
+      const graphSchema = await getSchema(graphId);
       /** options 包含nodes,edges */
-      const options = await getDataloadingConfig(graph_id, graphSchema);
+      const options = await getDataloadingConfig(graphId, graphSchema);
 
       return options;
     }
@@ -24,6 +22,7 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
 
   return (
     <ImportApp
+      key={graphId}
       appMode="DATA_IMPORTING"
       queryBoundSchema={queryBoundSchema}
       /** 属性下拉选项值 */

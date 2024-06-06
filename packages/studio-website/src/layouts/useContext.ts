@@ -6,7 +6,25 @@ const themeColor = getItem('themeColor');
 const primaryColor = getItem('primaryColor');
 const corner = getItem('corner');
 const locale = getItem('locale');
+import { Utils } from '@graphscope/studio-components';
 console.log(themeColor);
+
+export interface IGraph {
+  id: string;
+  name: string;
+  createtime: string;
+  updatetime: string;
+  importtime: string;
+  server: string;
+  status: 'Running' | 'Stopped';
+  hqps: string;
+  schema: {
+    vertices: number;
+    edges: number;
+  };
+  store_type: string;
+  stored_procedures: string[];
+}
 
 export const initialStore = {
   /** 语言 */
@@ -21,9 +39,21 @@ export const initialStore = {
   mode: themeColor || 'defaultAlgorithm',
   inputNumber: corner || 6,
   navStyle: 'inline',
+  graphs: [],
+  graphId: Utils.searchParamOf('graph_id'),
 };
 
-export type IStore = typeof initialStore;
+export type IStore = {
+  locale: string;
+  primaryColor: string;
+  collapse: boolean;
+  currentnNav: string;
+  mode: string;
+  inputNumber: number;
+  navStyle: string;
+  graphs: IGraph[];
+  graphId: string | null;
+};
 
 type ContextType = {
   store: Snapshot<IStore>;

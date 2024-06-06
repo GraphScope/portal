@@ -3,11 +3,12 @@ import { Breadcrumb, Divider, Typography, Tabs, Segmented, Select, Space, Button
 import { FormattedMessage } from 'react-intl';
 import { GlobalOutlined } from '@ant-design/icons';
 import type { BreadcrumbProps, TabsProps } from 'antd';
-interface IConnectModelProps {
-  style?: React.CSSProperties;
-  options: any[];
-  value: string;
-}
+import { useContext } from './useContext';
+import { STATUS_MAP } from './const';
+import { history } from 'umi';
+import { Utils } from '@graphscope/studio-components';
+
+interface IConnectModelProps {}
 const defaultOptions = [
   {
     value: 'movie-1',
@@ -16,18 +17,43 @@ const defaultOptions = [
 ];
 
 const SelectGraph: React.FunctionComponent<IConnectModelProps> = props => {
-  const { style, options = defaultOptions, value } = props;
+  const { store, updateStore } = useContext();
+  const { graphs, graphId } = store;
+  const options = graphs.map(item => {
+    return {
+      label: (
+        <Space>
+          <GlobalOutlined style={{ color: STATUS_MAP[item.status].color }} />
+          {item.name}
+        </Space>
+      ),
+      value: item.id,
+    };
+  });
+
   const [open, setOpen] = useState(false);
   const handleClick = () => {};
   const handleConnect = () => {};
-
+  // console.log('graphId', graphId, options);
+  const handleChange = value => {
+    updateStore(draft => {
+      draft.graphId = value;
+    });
+    const { pathname } = location;
+    const { path, searchParams } = Utils.getSearchParams();
+    searchParams.set('graph_id', value);
+    const href = `${pathname}?${searchParams.toString()}`;
+    console.log(searchParams.toString(), pathname, href);
+    history.push(href);
+  };
   return (
     <div>
       <Select
         variant="borderless"
         style={{ flex: 1, minWidth: '120px' }}
         placeholder="Choose graph instance"
-        value={value}
+        value={graphId}
+        onChange={handleChange}
         dropdownRender={menu => (
           <>
             {menu}

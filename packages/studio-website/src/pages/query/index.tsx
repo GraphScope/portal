@@ -21,9 +21,11 @@ const QueryModule = () => {
   const primaryColor = storage.getItem('primaryColor');
   const themeMode = storage.getItem('themeColor');
   const { store } = useContext();
+  const { graphId } = store;
 
   return (
     <StudioQuery
+      key={graphId}
       //@ts-ignore
       /** 主题相关 */
       theme={{ mode: themeMode, primaryColor }}

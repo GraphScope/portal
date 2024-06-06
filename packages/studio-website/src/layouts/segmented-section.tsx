@@ -1,5 +1,16 @@
 import * as React from 'react';
-import { Breadcrumb, Divider, Typography, Tabs, Segmented, Select, Space, Button, SegmentedProps } from 'antd';
+import {
+  Breadcrumb,
+  Divider,
+  Typography,
+  Tabs,
+  Segmented,
+  Select,
+  Space,
+  Button,
+  SegmentedProps,
+  notification,
+} from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { GlobalOutlined } from '@ant-design/icons';
 import type { BreadcrumbProps, TabsProps } from 'antd';
@@ -7,7 +18,8 @@ import SelectGraph from './select-graph';
 
 import { Utils } from '@graphscope/studio-components';
 import { listGraphs } from '@/pages/instance/lists/service';
-import { useContext } from './useContext';
+import { useContext, IGraph } from './useContext';
+
 const { searchParamOf } = Utils;
 interface ISectionProps {
   value: string;
@@ -24,34 +36,7 @@ interface ISectionProps {
   history?: any;
 }
 
-const StatusPoint = ({ status }) => {
-  return <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'green' }}></div>;
-};
-
-const defaultOptions = [
-  {
-    label: (
-      <>
-        <Space>
-          <GlobalOutlined style={{ color: 'green' }} />
-          Movie-1
-        </Space>
-      </>
-    ),
-    value: 'movie-1',
-  },
-  {
-    label: (
-      <>
-        <Space>
-          <GlobalOutlined style={{ color: 'red' }} />
-          Movie-2
-        </Space>
-      </>
-    ),
-    value: 'movie-2',
-  },
-];
+const getGraphOptions = () => {};
 
 const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
   const {
@@ -65,10 +50,11 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
     extraRouterKey = 'graph_id',
     history,
   } = props;
+
   const { store, updateStore } = useContext();
-  const { currentnNav } = store;
+  const { currentnNav, graphs, graphId } = store;
+
   const handleChange = (value: string) => {
-    const graphId = searchParamOf('graph_id');
     const herf = graphId ? `${value}?${extraRouterKey}=${graphId}` : value;
     history && history.push(herf);
     updateStore(draft => {
@@ -79,11 +65,32 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
   React.useEffect(() => {
     listGraphs().then(res => {
       console.log('res', res);
+      let matchGraph: any;
+      if (res) {
+        if (graphId) {
+          matchGraph = res.find(item => item.id === graphId);
+          if (!matchGraph) {
+            notification.error({
+              message: 'Graph Instance Not Found',
+              description: `Graph Instance ${graphId} Not Found`,
+              duration: 3,
+            });
+          }
+        } else {
+          matchGraph = res.find(item => {
+            return item.status === 'Running';
+          });
+        }
+        updateStore(draft => {
+          draft.graphs = res as unknown as IGraph[];
+          draft.graphId = (matchGraph && matchGraph.id) || graphId;
+        });
+      }
     });
   }, []);
 
-  const defaultValue = '/' + location.pathname.split('/')[1];
   const handleClick = () => {};
+
   return (
     <section style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div
@@ -95,7 +102,7 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
           justifyContent: 'space-between',
         }}
       >
-        <SelectGraph options={defaultOptions} value={''} />
+        <SelectGraph />
 
         {withNav && (
           <>
