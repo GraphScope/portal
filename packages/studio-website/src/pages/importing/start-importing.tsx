@@ -1,15 +1,19 @@
 import { Button } from 'antd';
 import * as React from 'react';
 import { AppstoreOutlined, CloseOutlined } from '@ant-design/icons';
-import { useContext } from '../useContext';
+
 import { Icons } from '@graphscope/studio-components';
+import { useContext } from '../../layouts/useContext';
+
+import { useContext as useImporting } from '@graphscope/studio-importor';
 interface StartImportingProps {
   onClick?: () => void;
 }
 
 const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
   const { store } = useContext();
-  const { appMode } = store;
+  const { store: importingStore } = useImporting();
+  const { appMode } = importingStore;
   const { onClick } = props;
   const handleClick = () => {
     onClick && onClick();

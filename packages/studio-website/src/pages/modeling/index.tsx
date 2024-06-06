@@ -2,9 +2,9 @@ import * as React from 'react';
 import ImportApp from '@graphscope/studio-importor';
 import { transSchemaToOptions } from './utils/schema';
 import { useContext } from '../../layouts/useContext';
-
+import { Toolbar } from '@graphscope/studio-components';
 import { createGraph, getSchema, getDataloadingConfig } from './services';
-
+import Save from './save-modeling';
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 
@@ -58,7 +58,11 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
         });
       }}
       GS_ENGINE_TYPE={GS_ENGINE_TYPE}
-    />
+    >
+      <Toolbar style={{ top: '12px', right: '74px', left: 'unset' }} direction="horizontal">
+        <Save />
+      </Toolbar>
+    </ImportApp>
   );
 };
 

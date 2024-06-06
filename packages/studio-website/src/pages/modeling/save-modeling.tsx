@@ -1,16 +1,21 @@
 import { Button } from 'antd';
 import * as React from 'react';
 import { AppstoreOutlined, CloseOutlined, SaveOutlined } from '@ant-design/icons';
-import { useContext } from '../useContext';
+import { useContext } from '../../layouts/useContext';
 import { Icons } from '@graphscope/studio-components';
-
+import { useContext as useModeling } from '@graphscope/studio-importor';
 interface SaveModelingProps {
   onClick?: () => void;
 }
 
 const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   const { store } = useContext();
-  const { appMode, elementOptions } = store;
+
+  const { store: modelingStore } = useModeling();
+  const { elementOptions, appMode } = modelingStore;
+  console.log(store, modelingStore);
+
+  const { graphId } = store;
   const disabled = !elementOptions.isEditable;
 
   const { onClick } = props;
