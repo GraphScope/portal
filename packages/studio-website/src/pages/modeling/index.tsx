@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ImportApp from '@graphscope/studio-importor';
 import { transSchemaToOptions } from './utils/schema';
-import { SegmentedSection } from '@graphscope/studio-components';
+import SegmentedSection from '@/layouts/segmented-section';
 import { TOOLS_MENU } from '../../layouts/const';
 import { useContext } from '../../layouts/useContext';
 import { history } from 'umi';
@@ -39,7 +39,6 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
       if (!schema) {
         schema = { vertex_types: [], edge_types: [] };
       }
-      console.log('DDDADADDADA schema', schema);
     }
     // const schema = { vertex_types: [], edge_types: [] };
     return transSchemaToOptions(schema as any);
@@ -56,24 +55,22 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
   };
 
   return (
-    <SegmentedSection history={history} withNav={store.navStyle === 'inline'} options={TOOLS_MENU} value="/modeling">
-      <ImportApp
-        /** 创建图模型 */
-        appMode="DATA_MODELING"
-        //@ts-ignore
-        queryGraphSchema={queryGraphSchema}
-        disabled={true}
-        //@ts-ignore
-        saveModeling={saveModeling}
-        /** 属性下拉选项值 */
-        queryPrimitiveTypes={() => {
-          return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {
-            return { label: item, value: item };
-          });
-        }}
-        GS_ENGINE_TYPE={GS_ENGINE_TYPE}
-      />
-    </SegmentedSection>
+    <ImportApp
+      /** 创建图模型 */
+      appMode="DATA_MODELING"
+      //@ts-ignore
+      queryGraphSchema={queryGraphSchema}
+      disabled={true}
+      //@ts-ignore
+      saveModeling={saveModeling}
+      /** 属性下拉选项值 */
+      queryPrimitiveTypes={() => {
+        return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {
+          return { label: item, value: item };
+        });
+      }}
+      GS_ENGINE_TYPE={GS_ENGINE_TYPE}
+    />
   );
 };
 

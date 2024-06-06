@@ -24,7 +24,6 @@ const styles = {
 const GraphNode = (props: NodeProps) => {
   const { data = {}, isConnectable, id } = props;
   const { label, filelocation } = data;
-  console.log('filelocation>>>>>>>', filelocation);
   const { store, updateStore } = useContext();
   const { currentId, theme, elementOptions } = store;
   const isSelected = id === currentId;

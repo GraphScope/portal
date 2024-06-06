@@ -16,7 +16,7 @@ export const initialStore = {
   /** 收起导航 */
   collapse: false,
   /** 当前导航 */
-  currentnNav: '',
+  currentnNav: '/' + location.pathname.split('/')[1],
   /** 主题模式 */
   mode: themeColor || 'defaultAlgorithm',
   inputNumber: corner || 6,

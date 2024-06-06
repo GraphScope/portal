@@ -3,9 +3,12 @@ import { Breadcrumb, Divider, Typography, Tabs, Segmented, Select, Space, Button
 import { FormattedMessage } from 'react-intl';
 import { GlobalOutlined } from '@ant-design/icons';
 import type { BreadcrumbProps, TabsProps } from 'antd';
-import ConnectModal from '../ConnectModal';
-import { searchParamOf } from '../Utils';
+import SelectGraph from './select-graph';
 
+import { Utils } from '@graphscope/studio-components';
+import { listGraphs } from '@/pages/instance/lists/service';
+import { useContext } from './useContext';
+const { searchParamOf } = Utils;
 interface ISectionProps {
   value: string;
   options: SegmentedProps['options'];
@@ -25,6 +28,31 @@ const StatusPoint = ({ status }) => {
   return <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'green' }}></div>;
 };
 
+const defaultOptions = [
+  {
+    label: (
+      <>
+        <Space>
+          <GlobalOutlined style={{ color: 'green' }} />
+          Movie-1
+        </Space>
+      </>
+    ),
+    value: 'movie-1',
+  },
+  {
+    label: (
+      <>
+        <Space>
+          <GlobalOutlined style={{ color: 'red' }} />
+          Movie-2
+        </Space>
+      </>
+    ),
+    value: 'movie-2',
+  },
+];
+
 const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
   const {
     children,
@@ -37,12 +65,24 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
     extraRouterKey = 'graph_id',
     history,
   } = props;
-  const handleChange = value => {
+  const { store, updateStore } = useContext();
+  const { currentnNav } = store;
+  const handleChange = (value: string) => {
     const graphId = searchParamOf('graph_id');
     const herf = graphId ? `${value}?${extraRouterKey}=${graphId}` : value;
     history && history.push(herf);
+    updateStore(draft => {
+      draft.currentnNav = value;
+    });
     onChange && onChange(value);
   };
+  React.useEffect(() => {
+    listGraphs().then(res => {
+      console.log('res', res);
+    });
+  }, []);
+
+  const defaultValue = '/' + location.pathname.split('/')[1];
   const handleClick = () => {};
   return (
     <section style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -55,14 +95,12 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
           justifyContent: 'space-between',
         }}
       >
-        <Button type="text" icon={<GlobalOutlined style={{ color: 'green' }} />} onClick={handleClick}>
-          Movie-1
-        </Button>
+        <SelectGraph options={defaultOptions} value={''} />
 
         {withNav && (
           <>
             <div style={{ width: '400px' }}>
-              <Segmented options={options} block value={value} onChange={handleChange} />
+              <Segmented options={options} block onChange={handleChange} value={currentnNav} />
             </div>
             <div></div>
           </>

@@ -26,7 +26,6 @@ export function createStaticForceLayout(nodes, edges, params: IParams = {}) {
 
   // 输出最终的节点和连线的位置
   nodes.forEach(node => {
-    console.log(`Node ${node.id}: x = ${node.x}, y = ${node.y}`);
     delete node.index;
     delete node.vx;
     delete node.vy;

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ImportApp from '@graphscope/studio-importor';
-import { SegmentedSection } from '@graphscope/studio-components';
 import { queryPrimitiveTypes, uploadFile, createDataloadingJob, getSchema, getDataloadingConfig } from './services';
 import { TOOLS_MENU } from '../../layouts/const';
 import { useContext } from '../../layouts/useContext';
@@ -24,23 +23,21 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
   };
 
   return (
-    <SegmentedSection withNav={store.navStyle === 'inline'} options={TOOLS_MENU} value="/importing" history={history}>
-      <ImportApp
-        appMode="DATA_IMPORTING"
-        queryBoundSchema={queryBoundSchema}
-        /** 属性下拉选项值 */
-        queryPrimitiveTypes={queryPrimitiveTypes}
-        /** 绑定数据中上传文件 */
-        uploadFile={uploadFile}
-        /** 数据绑定 */
-        createDataloadingJob={createDataloadingJob}
-        GS_ENGINE_TYPE={GS_ENGINE_TYPE}
-        defaultRightStyles={{
-          collapsed: false,
-          width: 500,
-        }}
-      />
-    </SegmentedSection>
+    <ImportApp
+      appMode="DATA_IMPORTING"
+      queryBoundSchema={queryBoundSchema}
+      /** 属性下拉选项值 */
+      queryPrimitiveTypes={queryPrimitiveTypes}
+      /** 绑定数据中上传文件 */
+      uploadFile={uploadFile}
+      /** 数据绑定 */
+      createDataloadingJob={createDataloadingJob}
+      GS_ENGINE_TYPE={GS_ENGINE_TYPE}
+      defaultRightStyles={{
+        collapsed: false,
+        width: 500,
+      }}
+    />
   );
 };
 

@@ -14,7 +14,7 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
   const handleClick = () => {
     onClick && onClick();
   };
-  console.log('appMode ', appMode);
+
   if (appMode === 'DATA_IMPORTING') {
     return (
       <Button type="primary" onClick={handleClick}>
