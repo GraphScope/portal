@@ -42,6 +42,7 @@ export const initialStore = {
   graphs: [],
   graphId: Utils.searchParamOf('graph_id'),
   draftGraph: Utils.storage.get('DRAFT_GRAPH') || {},
+  draftId: 'DRAFT_GRAPH',
 };
 
 export type IStore = {
@@ -55,6 +56,7 @@ export type IStore = {
   graphs: IGraph[];
   graphId: string | null;
   draftGraph: IGraph | {};
+  draftId: string;
 };
 
 type ContextType = {

@@ -32,4 +32,7 @@ export const STATUS_MAP = {
   Stopped: {
     color: 'red',
   },
+  Draft: {
+    color: '#ddd',
+  },
 };

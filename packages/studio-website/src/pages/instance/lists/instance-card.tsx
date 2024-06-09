@@ -67,7 +67,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     schema = { edges: 0, vertices: 0 },
   } = props;
   const { store, updateStore } = useContext();
-  const { mode, locale } = store;
+  const { mode, locale, draftGraph, draftId } = store;
   const intl = useIntl();
   const [isLoading, updateIsLoading] = useState(false);
   const items: MenuProps['items'] = [
@@ -91,7 +91,13 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   };
   const onClick: MenuProps['onClick'] = ({ key }) => {
     if (key === 'delete') {
-      handleDelete(id);
+      if (id === draftId) {
+        updateStore(draft => {
+          draft.draftGraph = {};
+        });
+      } else {
+        handleDelete(id);
+      }
     }
     if (key === 'restart') {
       handleRestart();

@@ -14,17 +14,17 @@ const { GS_ENGINE_TYPE } = window;
 const Create: React.FC = () => {
   const { store } = useContext();
   const { updateStore } = useModel();
-  const { mode } = store;
+  const { mode, draftId } = store;
   const [form] = Form.useForm();
   const handleCreate = async () => {
     console.log('form', form.getFieldsValue());
     const { graphName, storeType } = form.getFieldsValue();
     // const a = await createGraph('', graphName, storeType, [], []);
     // console.log('a', a);
-    const draftId = 'draft-graph';
+
     const draftGraph = {
       id: draftId,
-      name: 'Draft Graph',
+      name: graphName,
       status: 'Draft',
       schema: {
         //@ts-ignore
@@ -32,13 +32,14 @@ const Create: React.FC = () => {
         //@ts-ignore
         edges: [],
       },
+      storeType,
     };
     updateStore(draft => {
-      draft.draftGraph = draftGraph;
       draft.graphId = draftId;
+      draft.draftGraph = draftGraph;
       draft.currentnNav = '/modeling';
     });
-    history.push('/modeling?graphId=draft-id');
+    history.push(`/modeling?graph_id=${draftId}`);
     Utils.storage.set('DRAFT_GRAPH', draftGraph);
   };
 

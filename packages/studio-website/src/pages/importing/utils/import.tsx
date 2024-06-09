@@ -342,13 +342,7 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
   const NODE_PRIMARY_MAP: Record<string, string> = {};
   options.nodes.forEach(item => {
     // const { key, properties, filelocation, label, primary } = item;
-    const {
-      id: key,
-      properties,
-      filelocation,
-      data: { label },
-      primary,
-    } = item;
+    const { id: key, properties, filelocation, label, primary } = item;
     NODE_LABEL_MAP[key as string] = label;
     NODE_PRIMARY_MAP[key as string] = primary;
     vertex_mappings.push({
@@ -372,13 +366,7 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
   });
 
   options.edges.forEach(item => {
-    const {
-      properties,
-      filelocation,
-      data: { label },
-      source,
-      target,
-    } = item;
+    const { properties, filelocation, label, source, target } = item;
     const column_mappings: any[] = [];
     const source_vertex_mappings: any[] = [];
     const destination_vertex_mappings: any[] = [];

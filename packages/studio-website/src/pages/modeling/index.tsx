@@ -11,8 +11,12 @@ const { GS_ENGINE_TYPE } = window;
 const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
   /**查询数据导入 */
   const { store } = useContext();
-  const { graphId, graphs } = store;
-  const match = graphs.find(item => item.id === graphId);
+  const { graphId, graphs, draftGraph } = store;
+  const match = [...graphs, draftGraph]
+    .filter(item => {
+      return Object.keys(item).length > 0;
+    })
+    .find(item => item.id === graphId);
   const isEmpty = match?.schema.vertices === 0;
 
   const queryImportData = async () => {

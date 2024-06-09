@@ -65,13 +65,10 @@ export const uploadFile = async (file: File) => {
     });
 };
 /** 数据绑定 dataMap(nodes/edges集合)*/
-export const createDataloadingJob = async (graph_id: string, dataMap: SchemaMapping) => {
-  const options = transformDataMapToOptions(dataMap);
+export const bindDatasourceInBatch = async (graph_id: string, options: any) => {
   const schema = transformImportOptionsToSchemaMapping(options);
-  console.log(schema);
 
-  return;
-  return DataSourceApiFactory(undefined, location.origin)
+  return await DataSourceApiFactory(undefined, location.origin)
     .bindDatasourceInBatch(graph_id, schema)
     .then(res => {
       if (res.status === 200) {
@@ -82,6 +79,42 @@ export const createDataloadingJob = async (graph_id: string, dataMap: SchemaMapp
       notification('error', error);
     });
 };
+
+/** 数据绑定 dataMap(nodes/edges集合)*/
+export const submitDataloadingJob = async (graph_id: string, options: any) => {
+  // const schema = transformImportOptionsToSchemaMapping(options);
+  let NODE_LABEL_MAP: any = {};
+  const schema = {
+    vertices: options.nodes.map((item: any) => {
+      const { id, data } = item;
+      NODE_LABEL_MAP[id] = data.label;
+      return {
+        type_name: data.label,
+      };
+    }),
+    edges: options.edges.map((item: any) => {
+      const { id, source, data, target } = item;
+      return {
+        type_name: data.label,
+        source_vertex: NODE_LABEL_MAP[source],
+        destination_vertex: NODE_LABEL_MAP[target],
+      };
+    }),
+  };
+  debugger;
+
+  return JobApiFactory(undefined, location.origin)
+    .submitDataloadingJob(graph_id, schema)
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
+    })
+    .catch(error => {
+      notification('error', error);
+    });
+};
+
 export const getSchema = async (graph_id: string) => {
   let schema;
   if (window.GS_ENGINE_TYPE === 'interactive') {

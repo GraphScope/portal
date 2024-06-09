@@ -3,28 +3,31 @@ import { Button } from 'antd';
 
 import { Icons } from '@graphscope/studio-components';
 import { useReactFlow } from 'reactflow';
+import { resetIndex } from '../utils';
 
 interface IAddNodeProps {
   style?: React.CSSProperties;
 }
-import { useContext } from '../../useContext';
+import { useContext } from '../useContext';
 
-const Delete: React.FunctionComponent<IAddNodeProps> = props => {
+const ClearCanvas: React.FunctionComponent<IAddNodeProps> = props => {
   const { style } = props;
 
   const { updateStore, store } = useContext();
   const { elementOptions } = store;
 
-  const handleDelete = () => {
+  const handleClear = () => {
+    resetIndex();
     updateStore(draft => {
-      console.log('draft', draft.nodes, draft.edges);
+      draft.nodes = [];
+      draft.edges = [];
     });
   };
 
   return (
     <Button
       disabled={!elementOptions.isConnectable}
-      onClick={handleDelete}
+      onClick={handleClear}
       style={style}
       type="text"
       icon={<Icons.Trash />}
@@ -32,4 +35,4 @@ const Delete: React.FunctionComponent<IAddNodeProps> = props => {
   );
 };
 
-export default Delete;
+export default ClearCanvas;

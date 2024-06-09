@@ -3,7 +3,7 @@ import { Breadcrumb, Divider, Typography, Tabs, Segmented, Select, Space, Button
 import { FormattedMessage } from 'react-intl';
 import { GlobalOutlined } from '@ant-design/icons';
 import type { BreadcrumbProps, TabsProps } from 'antd';
-import { useContext } from './useContext';
+import { IGraph, useContext } from './useContext';
 import { STATUS_MAP } from './const';
 import { history } from 'umi';
 import { Utils } from '@graphscope/studio-components';
@@ -12,18 +12,22 @@ interface IConnectModelProps {}
 
 const SelectGraph: React.FunctionComponent<IConnectModelProps> = props => {
   const { store, updateStore } = useContext();
-  const { graphs, graphId, currentnNav } = store;
-  const options = graphs.map(item => {
-    return {
-      label: (
-        <Space>
-          <GlobalOutlined style={{ color: STATUS_MAP[item.status].color }} />
-          {item.name}
-        </Space>
-      ),
-      value: item.id,
-    };
-  });
+  const { graphs, graphId, currentnNav, draftGraph } = store;
+  const options = ([draftGraph, ...graphs] as IGraph[])
+    .filter(item => {
+      return Object.keys(item).length > 0;
+    })
+    .map(item => {
+      return {
+        label: (
+          <Space>
+            <GlobalOutlined style={{ color: STATUS_MAP[item.status].color }} />
+            {item.name}
+          </Space>
+        ),
+        value: item.id,
+      };
+    });
 
   const [open, setOpen] = useState(false);
 
@@ -52,17 +56,13 @@ const SelectGraph: React.FunctionComponent<IConnectModelProps> = props => {
         dropdownRender={menu => (
           <>
             {menu}
-            <Divider style={{ margin: '4px 0px' }} />
-
             {currentnNav === '/querying' && (
-              <Button type="default" onClick={handleConnect} style={{ width: '100%' }}>
-                Connect
-              </Button>
-            )}
-            {(currentnNav === '/modeling' || currentnNav === '/importing') && (
-              <Button type="default" onClick={handleCreate} style={{ width: '100%' }}>
-                Create graph
-              </Button>
+              <>
+                <Divider style={{ margin: '4px 0px' }} />
+                <Button type="default" onClick={handleConnect} style={{ width: '100%' }}>
+                  Connect
+                </Button>
+              </>
             )}
           </>
         )}

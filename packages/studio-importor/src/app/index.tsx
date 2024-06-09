@@ -5,11 +5,12 @@ import ImportSchema from './import-schema';
 
 import { ReactFlowProvider } from 'reactflow';
 import { Toolbar } from '@graphscope/studio-components';
-import AddNode from './graph-canvas/add-node';
-import Delete from './graph-canvas/delete';
+
 import 'reactflow/dist/style.css';
 import RightButton from './button-controller/right-button';
 import LeftButton from './button-controller/left-button';
+import ClearCanvas from './button-controller/clear-canvas';
+import AddNode from './button-controller/add-node';
 import { Divider, notification } from 'antd';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
@@ -43,8 +44,6 @@ interface ImportAppProps {
   queryGraphSchema?: () => Promise<any>;
   queryBoundSchema?: () => Promise<any>;
   handleUploadFile?: (file: File) => Promise<string>;
-  saveModeling?: (schema: any) => void;
-  handleImporting?: (schema: any) => void;
   queryImportData?: () => void;
   /** 默认样式相关 */
   defaultLeftStyles?: {
@@ -72,8 +71,6 @@ import { Button } from 'antd';
 const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
   const {
     appMode,
-    handleImporting,
-    saveModeling,
     queryGraphSchema,
     queryBoundSchema,
     id,
@@ -96,55 +93,7 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
   const { store, updateStore } = useContext();
   const { collapsed } = store;
   const { left, right } = collapsed;
-  const { nodes, edges } = store;
 
-  const handleSave = () => {
-    let errors: string[] = [];
-    const _nodes = nodes.map(item => {
-      const { data, id } = item;
-      const { label, properties } = data;
-      if (properties) {
-        return {
-          id,
-          label,
-          properties,
-        };
-      } else {
-        errors.push(label);
-      }
-    });
-    const _edges = edges.map(item => {
-      const { data, id, source, target } = item;
-      const { label, properties } = data;
-      return {
-        label,
-        id,
-        source,
-        target,
-        properties,
-      };
-    });
-    if (errors.length !== 0) {
-      notification.warning({
-        message: `Properties error`,
-        description: `Vertex ${errors.join(',')} need add Properties`,
-        duration: 1,
-      });
-    } else if (saveModeling) {
-      saveModeling({
-        nodes: _nodes,
-        edges: _edges,
-      });
-    }
-  };
-  /** 数据绑定 */
-  const _handleImporting = () => {
-    const graphSchema = [...nodes, ...edges];
-    console.log(graphSchema);
-    if (handleImporting) {
-      handleImporting(graphSchema);
-    }
-  };
   useEffect(() => {
     (async () => {
       let schemaOptions = {};
@@ -197,7 +146,7 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
                 <LeftButton />
                 <Divider type="horizontal" style={{ margin: '0px' }} />
                 <AddNode />
-                <Delete />
+                <ClearCanvas />
                 {/* <ModeSwitch /> */}
               </Toolbar>
               {children}
