@@ -20,7 +20,7 @@ export const parseCSV = async (file: File): Promise<ParsedFile> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     // 以文本形式读取文件
-    reader.readAsText(file);
+    reader.readAsText(file, 'utf-8');
     // 监听读取完成事件
     reader.onload = function (event) {
       // 读取文件内容

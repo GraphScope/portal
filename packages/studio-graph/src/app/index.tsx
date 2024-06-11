@@ -33,7 +33,7 @@ const StudioGraph: React.FunctionComponent<StudioGraphProps> = props => {
           autoResize={false}
           defaultStyle={{
             leftSideCollapsed: false,
-            leftSideWidth: 200,
+            leftSideWidth: 350,
             rightSideCollapsed: true,
             rightSideWidth: 300,
           }}
