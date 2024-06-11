@@ -3,6 +3,7 @@ import UploadFile from './update-file';
 import { useContext } from '../../useContext';
 import CodeEditor from './code-editor';
 import { Button } from 'antd';
+import { Utils } from '@graphscope/studio-components';
 
 interface IImportFromCSVProps {}
 import { convertDDLToPropertyGraph } from './parse';
@@ -41,6 +42,7 @@ const ImportFromSQL: React.FunctionComponent<IImportFromCSVProps> = props => {
       // });
     }
   };
+
   return (
     <div
       style={{

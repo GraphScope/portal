@@ -142,13 +142,15 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
           </div>
           <div style={{ flex: 1, position: 'relative' }}>
             <ReactFlowProvider>
-              <Toolbar>
-                <LeftButton />
-                <Divider type="horizontal" style={{ margin: '0px' }} />
-                <AddNode />
-                <ClearCanvas />
-                {/* <ModeSwitch /> */}
-              </Toolbar>
+              {appMode === 'DATA_MODELING' && (
+                <Toolbar>
+                  <LeftButton />
+                  <Divider type="horizontal" style={{ margin: '0px' }} />
+                  <AddNode />
+                  <ClearCanvas />
+                  {/* <ModeSwitch /> */}
+                </Toolbar>
+              )}
               {children}
 
               <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }} direction="horizontal">

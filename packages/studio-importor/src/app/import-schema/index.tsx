@@ -22,11 +22,6 @@ const items: SegmentedTabsProps['items'] = [
     key: 'SQL',
     children: <ImportFromSQL />,
   },
-  {
-    label: 'YAML',
-    key: 'YAML',
-    children: <ImportFromYaml />,
-  },
 ];
 
 const ImportSchema: React.FunctionComponent<IImportSchemaProps> = props => {
@@ -52,7 +47,7 @@ const ImportSchema: React.FunctionComponent<IImportSchemaProps> = props => {
       <>
         <Button type="text" onClick={handleClick} style={style} icon={<UngroupOutlined />}></Button>
         <Modal title="import schema" open={visible} onOk={handleClose} onCancel={handleClose}>
-          <Segmented options={['CSV', 'SQL DDL', 'YAML']} block></Segmented>
+          <Segmented options={['CSV', 'SQL DDL']} block></Segmented>
         </Modal>
       </>
     );
@@ -60,10 +55,6 @@ const ImportSchema: React.FunctionComponent<IImportSchemaProps> = props => {
   return (
     <div style={{ height: '100%' }}>
       <SegmentedTabs items={items} block />
-      {/* <Segmented options={['CSV', 'SQL DDL', 'YAML']} block></Segmented>
-      <div style={{ height: 'calc(100% - 40px)', padding: '12px 0px', boxSizing: 'border-box' }}>
-      
-      </div> */}
     </div>
   );
 };

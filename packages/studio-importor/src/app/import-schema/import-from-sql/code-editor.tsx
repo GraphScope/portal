@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, forwardRef } from 'react';
 import * as monaco from 'monaco-editor';
+import { Utils } from '@graphscope/studio-components';
 import ldbc from './ldbc';
 const debounce = <T extends (...args: any[]) => void>(func: T, wait: number): ((...args: Parameters<T>) => void) => {
   let timeout: NodeJS.Timeout | null;
@@ -14,12 +15,14 @@ const debounce = <T extends (...args: any[]) => void>(func: T, wait: number): ((
 
 const Editor: React.FC<{ ref: React.Ref<HTMLDivElement> }> = forwardRef((props, ref: any) => {
   let editor: monaco.editor.IStandaloneCodeEditor;
+
   useEffect(() => {
     if (ref.current) {
       editor = monaco.editor.create(ref.current, {
         value: ldbc,
         language: 'sql',
       });
+      editor.layout();
       ref.current.editor = editor;
     }
     const handleSize = debounce(() => {
@@ -33,6 +36,8 @@ const Editor: React.FC<{ ref: React.Ref<HTMLDivElement> }> = forwardRef((props, 
     };
   }, []);
 
-  return <div className="Editor" ref={ref} style={{ height: 'calc(100% - 40px)', width: '100%' }}></div>;
+  return (
+    <div className="Editor" ref={ref} style={{ height: 'calc(100% - 40px)', width: '100%', minWidth: '350px' }}></div>
+  );
 });
 export default Editor;
