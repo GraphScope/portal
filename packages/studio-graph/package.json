@@ -1,0 +1,34 @@
+{
+  "name": "@graphscope/studio-graph",
+  "version": "0.1.0",
+  "description": "A React toolkit for graph analysis based on g6",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GraphScope/graphscope-components.git"
+  },
+  "files": [
+    "es",
+    "lib",
+    "dist"
+  ],
+  "scripts": {
+    "start": "father dev",
+    "build": "father build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "valtio": "latest",
+    "uuidv4": "latest",
+    "@graphscope/studio-components": "workspace:*",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "@antv/g6": "latest"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
