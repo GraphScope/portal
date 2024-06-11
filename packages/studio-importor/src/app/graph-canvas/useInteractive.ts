@@ -18,7 +18,6 @@ const useInteractive: any = () => {
   const { screenToFlowPosition, fitBounds } = useReactFlow();
   const { displayMode, nodes, edges, hasLayouted, elementOptions } = store;
   const connectingNodeId = useRef(null);
-  console.log('elementOptions', elementOptions);
 
   const onConnectStart = useCallback((_, { nodeId }) => {
     connectingNodeId.current = nodeId;
@@ -94,7 +93,6 @@ const useInteractive: any = () => {
   );
 
   const onNodesChange = (changes: NodeChange[]) => {
-    console.log('onNodesChange', changes);
     if (elementOptions.isConnectable) {
       updateStore(draft => {
         draft.nodes = applyNodeChanges(changes, deepclone(draft.nodes));
@@ -122,7 +120,6 @@ const useInteractive: any = () => {
       // 布局
       if (!hasLayouted) {
         const graph = createStaticForceLayout(fakeSnapshot(nodes), fakeSnapshot(edges));
-        console.log('layout......', graph);
         updateStore(draft => {
           draft.hasLayouted = true;
           draft.nodes = graph.nodes;

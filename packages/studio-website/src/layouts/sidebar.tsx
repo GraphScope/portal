@@ -98,10 +98,13 @@ const Sidebar: React.FunctionComponent = () => {
       });
       return;
     }
-
     const graphId = Utils.searchParamOf('graph_id');
     const url = graphId ? `${e.key}?graph_id=${graphId}` : e.key;
     history.push(`${url}`);
+
+    updateStore(draft => {
+      draft.currentnNav = e.key;
+    });
   };
   const iconStyle = {
     color: token.colorBgTextActive,

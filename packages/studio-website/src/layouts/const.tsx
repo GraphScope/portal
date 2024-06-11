@@ -24,3 +24,12 @@ export const TOOLS_MENU = [
     icon: <FontAwesomeIcon icon={faMagnifyingGlass} />,
   },
 ];
+
+export const STATUS_MAP = {
+  Running: {
+    color: 'green',
+  },
+  Stopped: {
+    color: 'red',
+  },
+};

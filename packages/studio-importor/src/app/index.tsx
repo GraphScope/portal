@@ -14,8 +14,7 @@ import { Divider, notification } from 'antd';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
 import Provider from './provider';
-import StartImporting from './button-controller/start-importing';
-import SaveModeling from './button-controller/save-modeling';
+
 interface Option {
   label: string;
   value: string;
@@ -65,6 +64,7 @@ interface ImportAppProps {
     /** 是否可以编辑标签，包括节点和边 */
     isConnectable: boolean;
   };
+  children?: React.ReactNode;
 }
 import { useContext } from './useContext';
 import { Button } from 'antd';
@@ -91,6 +91,7 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
       width: 400,
     },
     elementOptions,
+    children,
   } = props;
   const { store, updateStore } = useContext();
   const { collapsed } = store;
@@ -199,11 +200,9 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
                 <Delete />
                 {/* <ModeSwitch /> */}
               </Toolbar>
+              {children}
 
               <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }} direction="horizontal">
-                <StartImporting onClick={_handleImporting} />
-                <SaveModeling onClick={handleSave} />
-                <Divider type="vertical" style={{ margin: '0px' }} />
                 <RightButton />
               </Toolbar>
               <GraphCanvas />
