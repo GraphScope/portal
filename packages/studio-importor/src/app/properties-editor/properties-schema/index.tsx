@@ -18,8 +18,7 @@ export interface IPropertiesSchemaProps {
 const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props => {
   const { schema, type, appMode, queryPrimitiveTypes, disabled } = props;
   const { id, source, target, data } = schema;
-  const { dataFields, properties = [], label = id } = data;
-
+  const { dataFields, properties = [], label = id, source_data_fields, target_data_fields } = data;
   const { handleChangeLabel, handleProperty } = useModel({ type, id });
   /** 判断是否为导入数据 */
   const mappingColumn =
@@ -32,6 +31,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
           type: dataFields?.length ? 'Select' : 'InputNumber',
         }
       : null;
+
   return (
     <div>
       <Flex vertical gap={12} style={{ margin: '0px 12px' }}>
@@ -41,8 +41,19 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
           <>
             <Typography.Text>Label</Typography.Text>
             <Input value={label} onChange={handleChangeLabel} disabled={disabled} />
-            {type === 'edges' && <SourceTarget source={source} target={target} />}
           </>
+        )}
+        {type === 'edges' && (
+          <SourceTarget
+            id={id}
+            source={source}
+            target={target}
+            source_data_fields={source_data_fields}
+            target_data_fields={target_data_fields}
+            componentType={dataFields?.length ? 'Select' : 'InputNumber'}
+            //@ts-ignore
+            mappingColumn={mappingColumn}
+          />
         )}
         <PropertiesList
           properties={properties}

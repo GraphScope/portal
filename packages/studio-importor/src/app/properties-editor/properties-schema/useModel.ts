@@ -45,8 +45,19 @@ export default function useModel({ type, id }) {
       }
     });
   };
+  /** 修改source/target 的dataFiles */
+  const handleDataFieldsChange = (val, data_fields) => {
+    updateStore(draft => {
+      draft.edges.forEach(item => {
+        if (item.id === id) {
+          item.data[data_fields] = typeof val === 'string' ? val.split('_')[1] : val;
+        }
+      });
+    });
+  };
   return {
     handleChangeLabel,
+    handleDataFieldsChange,
     handleProperty,
   };
 }
