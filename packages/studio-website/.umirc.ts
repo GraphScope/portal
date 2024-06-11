@@ -21,6 +21,7 @@ export default defineConfig({
     { path: '/modeling', component: 'modeling' },
     { path: '/importing', component: 'importing' },
     { path: '/querying', component: 'query' },
+    { path: '/exploring', component: 'exploring' },
   ],
   jsMinifier: 'terser',
   npmClient: 'pnpm',
