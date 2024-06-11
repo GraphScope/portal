@@ -37,26 +37,27 @@ export const debounce = <T extends (...args: any[]) => void>(
   };
 };
 
-/**
- * 获取hash上的search对象
- * @param location
- * @returns
- */
-export const getSearchParams = () => {
-  const { href } = location;
-  const [path, search] = href.split('?');
-  const searchParams = new URLSearchParams(search);
-  return {
-    path,
-    searchParams,
-  };
+export const getSearchParams = (key: string) => {
+  //@ts-ignore
+  const url = new URL(window.location);
+  const { searchParams } = url;
+  return searchParams.get(key);
+};
+export const setSearchParams = (params: Record<string, string>) => {
+  //@ts-ignore
+  const url = new URL(window.location);
+  const { searchParams } = url;
+  Object.keys(params).forEach(key => {
+    searchParams.set(key, params[key]);
+  });
+  window.history.pushState({}, '', url);
 };
 
 export const searchParamOf = (key: string) => {
-  const { searchParams } = getSearchParams();
+  const searchParams = new URLSearchParams(location.search);
   return searchParams.get(key);
 };
 
 export const getUrlParams = () => {
-  return Object.fromEntries(new URLSearchParams(location.href.split('?')[1]).entries());
+  return Object.fromEntries(new URLSearchParams(location.hash.split('?')[1]).entries());
 };

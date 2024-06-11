@@ -98,7 +98,7 @@ const Sidebar: React.FunctionComponent = () => {
       });
       return;
     }
-    const graphId = Utils.searchParamOf('graph_id');
+    const graphId = Utils.getSearchParams('graph_id');
     const url = graphId ? `${e.key}?graph_id=${graphId}` : e.key;
     history.push(`${url}`);
 

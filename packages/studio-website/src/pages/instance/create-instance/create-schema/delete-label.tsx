@@ -3,8 +3,9 @@ import { Button, Popconfirm } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useContext } from '../useContext';
 import { deleteVertexOrEdge } from './service';
-import { searchParamOf } from '@/components/utils/index';
+import { Utils } from '@graphscope/studio-components';
 const { GS_ENGINE_TYPE } = window;
+const { searchParamOf } = Utils;
 
 const DeleteLabel: FunctionComponent = () => {
   const { store, updateStore } = useContext();

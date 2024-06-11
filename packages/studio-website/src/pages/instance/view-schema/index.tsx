@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import CreateInstance from '../create-instance';
 import type { ICreateGraph } from '../create-instance';
 import { getSchema } from './service';
-import { searchParamOf } from '@/components/utils/index';
+import { Utils } from '@graphscope/studio-components';
+const { searchParamOf } = Utils;
 import { Skeleton } from 'antd';
 
 const ViewSchema: React.FunctionComponent<ICreateGraph> = () => {

@@ -34,16 +34,13 @@ const SelectGraph: React.FunctionComponent<IConnectModelProps> = props => {
   const handleConnect = () => {};
 
   const handleChange = (value: string) => {
+    Utils.setSearchParams({
+      graph_id: value,
+    });
     updateStore(draft => {
       draft.graphId = value;
     });
-    const { pathname } = location;
-    const { searchParams } = Utils.getSearchParams();
-    searchParams.set('graph_id', value);
-    const href = `${pathname}?${searchParams.toString()}`;
-    history.push(href);
   };
-  const handleCreate = () => {};
 
   return (
     <div>

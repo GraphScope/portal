@@ -12,8 +12,3 @@ export const getSearchParams = (location: Location) => {
     searchParams,
   };
 };
-
-export const searchParamOf = (key: string) => {
-  const { searchParams } = getSearchParams(window.location);
-  return searchParams.get(key);
-};

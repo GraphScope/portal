@@ -104,7 +104,19 @@ export const submitDataloadingJob = async (graph_id: string, options: any) => {
   debugger;
 
   return JobApiFactory(undefined, location.origin)
-    .submitDataloadingJob(graph_id, schema)
+    .submitDataloadingJob(graph_id, {
+      ...schema,
+      loading_config: {
+        import_option: 'overwrite',
+        format: {
+          type: 'csv',
+          metadata: {
+            delimiter: '|',
+            header_row: 'true',
+          },
+        },
+      },
+    })
     .then(res => {
       if (res.status === 200) {
         return res.data;

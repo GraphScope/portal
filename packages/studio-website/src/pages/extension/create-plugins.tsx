@@ -2,12 +2,14 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Button, Form, Input, Select, Flex, Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { history } from 'umi';
-import { searchParamOf } from '@/components/utils/index';
+import { Utils } from '@graphscope/studio-components';
 import { useEditorTheme } from '@/pages/utils';
 import CodeMirror from '@uiw/react-codemirror';
 import { useContext } from '@/layouts/useContext';
 import UploadFiles from './upload-files';
+
 import { createProcedure, updateProcedure, listGraphs, getProcedure } from './service';
+const { searchParamOf } = Utils;
 
 type FieldType = {
   name: string;

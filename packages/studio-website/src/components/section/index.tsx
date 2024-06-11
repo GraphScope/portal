@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Breadcrumb, Divider, Typography, Tabs, Space } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import type { BreadcrumbProps, TabsProps } from 'antd';
-import { getSearchParams } from '../utils';
+import { Utils } from '@graphscope/studio-components';
 interface ISectionProps {
   title?: string;
   desc?: string;
@@ -14,19 +14,21 @@ interface ISectionProps {
 const { useEffect } = React;
 const Section: React.FunctionComponent<ISectionProps> = props => {
   const { title, desc, breadcrumb, children, items, style } = props;
-  const { path, searchParams } = getSearchParams(window.location);
+
   useEffect(() => {
     if (items) {
-      const nav = searchParams.get('nav') || '';
+      const nav = Utils.getSearchParams('nav') || '';
       if (nav === '') {
-        searchParams.set('nav', items[0].key);
-        window.location.hash = `${path}?${searchParams.toString()}`;
+        Utils.setSearchParams({
+          nav: items[0].key,
+        });
       }
     }
   }, []);
   const onChange = (key: string) => {
-    searchParams.set('nav', key);
-    window.location.hash = `${path}?${searchParams.toString()}`;
+    Utils.setSearchParams({
+      nav: key,
+    });
   };
   const hasDivider = desc && !items;
   console.log('breadcrumb', breadcrumb);

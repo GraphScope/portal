@@ -4,8 +4,7 @@ import { queryPrimitiveTypes, uploadFile, getSchema, getDataloadingConfig } from
 import { useContext } from '../../layouts/useContext';
 import { Toolbar } from '@graphscope/studio-components';
 import StartImporting from './start-importing';
-import BindDataFields from './bind-datafields';
-import { Divider } from 'antd';
+
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
@@ -17,7 +16,6 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
       const graphSchema = await getSchema(graphId);
       /** options 包含nodes,edges */
       const options = await getDataloadingConfig(graphId, graphSchema);
-
       return options;
     }
     return { nodes: [], edges: [] };
