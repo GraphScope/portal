@@ -16,7 +16,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { formatCypherStatement } from './utils';
 import { storage } from '../graph/utils';
 import { Utils } from '@graphscope/studio-components';
-const { searchParamOf } = Utils;
+const { getSearchParams } = Utils;
 
 import Container from './container';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -82,13 +82,13 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     (async () => {
       //@ts-ignore
 
-      const graph_name = searchParamOf('graph_name');
-      const graphId = searchParamOf('graph_id') || '';
-      const activeNavbar = searchParamOf('nav') || 'saved';
-      const language = searchParamOf('language') || props.language;
-      let globalScript = searchParamOf('global_script') || props.globalScript;
-      const displayMode = searchParamOf('display_mode') || localStorage.getItem(localStorageVars.mode) || 'flow';
-      let autoRun = searchParamOf('auto_run') === 'true' ? true : false;
+      const graph_name = getSearchParams('graph_name');
+      const graphId = getSearchParams('graph_id') || '';
+      const activeNavbar = getSearchParams('nav') || 'saved';
+      const language = getSearchParams('language') || props.language;
+      let globalScript = getSearchParams('global_script') || props.globalScript;
+      const displayMode = getSearchParams('display_mode') || localStorage.getItem(localStorageVars.mode) || 'flow';
+      let autoRun = getSearchParams('auto_run') === 'true' ? true : false;
       const info = await queryInfo(graphId || '');
       let graphName = info?.graph_name || graph_name || '';
       const schemaData = await queryGraphSchema(graphId);

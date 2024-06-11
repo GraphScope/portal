@@ -1,7 +1,7 @@
 import { Segmented } from 'antd';
 import * as React from 'react';
 import { ReactNode } from 'react';
-import { getSearchParams } from './utils';
+import { getSearchParams, setSearchParams } from '../Utils';
 
 export interface SegmentedTabsProps {
   items: { key: string; children: ReactNode; label?: string; icon?: ReactNode }[];
@@ -32,8 +32,8 @@ const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
   const { items, queryKey = 'tab', style = {}, defaultActive, block, value, onChange } = props;
 
   const [state, setState] = React.useState<{ active: string }>(() => {
-    const { searchParams, path } = getSearchParams(window.location);
-    const active = searchParams.get(queryKey) || defaultActive || items[0]?.key || '';
+    const defaultKey = getSearchParams(queryKey);
+    const active = defaultKey || defaultActive || items[0]?.key || '';
     return {
       active,
     };
@@ -53,9 +53,11 @@ const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
       onChange(value);
       return;
     }
-    const { searchParams, path } = getSearchParams(window.location);
-    searchParams.set(queryKey, value);
-    window.location.hash = `${path}?${searchParams.toString()}`;
+
+    setSearchParams({
+      [queryKey]: value,
+    });
+
     setState(preState => {
       return {
         ...preState,

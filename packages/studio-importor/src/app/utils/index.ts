@@ -26,6 +26,10 @@ let edgeIndex = 1;
 export const createNodeLabel = () => `Vertex_${nodeIndex++}`;
 export const createEdgeLabel = () => `Edge_${edgeIndex++}`;
 
+export const resetIndex = () => {
+  nodeIndex = 1;
+  edgeIndex = 1;
+};
 export const fakeSnapshot = obj => {
   return JSON.parse(JSON.stringify(obj));
 };

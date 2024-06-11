@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { getJobById } from './service';
-import { searchParamOf } from '@/components/utils';
+import { Utils } from '@graphscope/studio-components';
+const { searchParamOf } = Utils;
 import { useContext } from '@/layouts/useContext';
 
 const Detail: React.FunctionComponent = () => {

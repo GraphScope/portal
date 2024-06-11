@@ -11,16 +11,13 @@ import {
   SegmentedProps,
   notification,
 } from 'antd';
-import { FormattedMessage } from 'react-intl';
-import { GlobalOutlined } from '@ant-design/icons';
-import type { BreadcrumbProps, TabsProps } from 'antd';
+
 import SelectGraph from './select-graph';
 
 import { Utils } from '@graphscope/studio-components';
 import { listGraphs } from '@/pages/instance/lists/service';
 import { useContext, IGraph } from './useContext';
 
-const { searchParamOf } = Utils;
 interface ISectionProps {
   value: string;
   options: SegmentedProps['options'];
@@ -64,7 +61,6 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
   };
   React.useEffect(() => {
     listGraphs().then(res => {
-      console.log('res', res);
       let matchGraph: any;
       if (res) {
         if (graphId) {
@@ -85,11 +81,12 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
           draft.graphs = res as unknown as IGraph[];
           draft.graphId = (matchGraph && matchGraph.id) || graphId;
         });
+        Utils.setSearchParams({
+          graph_id: (matchGraph && matchGraph.id) || graphId,
+        });
       }
     });
   }, []);
-
-  const handleClick = () => {};
 
   return (
     <section style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>

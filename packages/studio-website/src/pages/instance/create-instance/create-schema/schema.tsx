@@ -9,7 +9,8 @@ import { useContext } from '@/layouts/useContext';
 import { queryPrimitiveTypes } from '../service';
 import { createVertexOrEdgeType } from './service';
 import { getSchema } from '../../view-schema/service';
-import { searchParamOf } from '@/components/utils/index';
+import { Utils } from '@graphscope/studio-components';
+const { searchParamOf } = Utils;
 export type FieldType = {
   label?: string;
   source?: string;

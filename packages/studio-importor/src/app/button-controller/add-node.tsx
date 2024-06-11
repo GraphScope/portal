@@ -5,11 +5,11 @@ import { useReactFlow } from 'reactflow';
 import { Icons } from '@graphscope/studio-components';
 const AddNodeIcon = Icons.AddNode;
 
-import { createNodeLabel } from '../../utils';
+import { createNodeLabel } from '../utils';
 interface IAddNodeProps {
   style?: React.CSSProperties;
 }
-import { useContext } from '../../useContext';
+import { useContext } from '../useContext';
 let addNodeIndex = 0;
 const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
   const { style } = props;

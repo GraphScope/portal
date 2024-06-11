@@ -11,19 +11,19 @@ const { GS_ENGINE_TYPE } = window;
 const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
   /**查询数据导入 */
   const { store } = useContext();
-  const { graphId, graphs } = store;
-  const match = graphs.find(item => item.id === graphId);
+  const { graphId, graphs, draftGraph, draftId } = store;
+  const match = [...graphs, draftGraph]
+    .filter(item => {
+      return Object.keys(item).length > 0;
+    })
+    .find(item => item.id === graphId);
   const isEmpty = match?.schema.vertices === 0;
 
-  const queryImportData = async () => {
-    // const { graphId } = getUrlParams();
-    const schema = await getSchema('2');
-    /** options 包含nodes,edges */
-    const options = await getDataloadingConfig('2', schema);
-    return options;
-  };
   /** 查询图 */
   const queryGraphSchema = async () => {
+    if (graphId === draftId) {
+      return transSchemaToOptions({ vertex_types: [], edge_types: [] } as any);
+    }
     let schema: any = { vertex_types: [], edge_types: [] };
     if (graphId) {
       schema = await getSchema(graphId);
@@ -31,28 +31,16 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
         schema = { vertex_types: [], edge_types: [] };
       }
     }
-    // const schema = { vertex_types: [], edge_types: [] };
     return transSchemaToOptions(schema as any);
   };
-  const saveModeling = (schema: any) => {
-    const { nodes, edges } = schema;
-    console.log('nodes', nodes, edges);
-    createGraph(graphId || '', {
-      graphName: 'pomelo',
-      nodes,
-      edges,
-    });
-  };
-  console.log('match', match);
 
   return (
     <ImportApp
+      key={graphId}
       /** 创建图模型 */
       appMode="DATA_MODELING"
       //@ts-ignore
       queryGraphSchema={queryGraphSchema}
-      //@ts-ignore
-      saveModeling={saveModeling}
       /** 属性下拉选项值 */
       queryPrimitiveTypes={() => {
         return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {

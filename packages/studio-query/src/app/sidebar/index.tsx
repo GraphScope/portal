@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { memo } from 'react';
-import { getSearchParams, searchParamOf } from '../utils';
+import { Utils } from '@graphscope/studio-components';
 import { RollbackOutlined, PicLeftOutlined, SlidersOutlined } from '@ant-design/icons';
 import { Space, Button, theme, Flex, Typography, Tooltip, Divider, Tag } from 'antd';
 const { useToken } = theme;
@@ -29,8 +29,7 @@ const width = 300;
 const Sidebar: React.FunctionComponent<SidebarProps> = props => {
   const { options, collapse, onChange, title, onBack, logo } = props;
   const { token } = useToken();
-  const { searchParams, path } = getSearchParams(window.location);
-  const nav = searchParams.get('nav') || 'recommended';
+  const nav = Utils.getSearchParams('nav') || 'recommended';
   const activeOption = options.find(item => {
     return item.id === nav;
   });
@@ -124,8 +123,9 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
                 style={{ ...styles.li, ...activeLi }}
                 key={id}
                 onClick={() => {
-                  searchParams.set('nav', id);
-                  window.location.hash = `${path}?${searchParams.toString()}`;
+                  Utils.setSearchParams({
+                    nav: id,
+                  });
                   onChange(opt);
                 }}
               >

@@ -17,6 +17,7 @@ import { faPlayCircle, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { TOOLS_MENU } from '@/layouts/const';
+import { Utils } from '@graphscope/studio-components';
 export type InstaceCardType = {
   /** graph id */
   id: string;
@@ -67,7 +68,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     schema = { edges: 0, vertices: 0 },
   } = props;
   const { store, updateStore } = useContext();
-  const { mode, locale } = store;
+  const { mode, locale, draftGraph, draftId } = store;
   const intl = useIntl();
   const [isLoading, updateIsLoading] = useState(false);
   const items: MenuProps['items'] = [
@@ -91,7 +92,14 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   };
   const onClick: MenuProps['onClick'] = ({ key }) => {
     if (key === 'delete') {
-      handleDelete(id);
+      if (id === draftId) {
+        updateStore(draft => {
+          draft.draftGraph = {};
+        });
+        Utils.storage.set('DRAFT_GRAPH', {});
+      } else {
+        handleDelete(id);
+      }
     }
     if (key === 'restart') {
       handleRestart();
@@ -163,7 +171,14 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     </>
   );
   const handleHistory = (path: string) => {
-    history.push(`${path}#?engineType=interactive&graph_id=${id}`);
+    //@ts-ignore
+    const url = new URL(window.location);
+    const { searchParams } = url;
+    searchParams.set('engineType', 'interactive');
+    searchParams.set('graph_id', id);
+    url.pathname = path;
+    window.history.pushState({}, '', url);
+    history.push(`${path}?${searchParams.toString()}`);
     updateStore(draft => {
       draft.graphId = id;
       draft.currentnNav = path;
