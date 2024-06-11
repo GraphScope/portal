@@ -65,3 +65,5 @@ export const getUrlParams = () => {
 export const fakeSnapshot = obj => {
   return JSON.parse(JSON.stringify(obj));
 };
+
+export { generatorSchemaByGraphData } from './schema';
