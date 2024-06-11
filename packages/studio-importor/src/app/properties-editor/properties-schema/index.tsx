@@ -5,10 +5,11 @@ import useModel from './useModel';
 import LocationField from './location';
 import SourceTarget from './source-target';
 import GrootCase from './groot-case';
+import type { ISchemaEdge, ISchemaNode, ISchemaOptions } from '../../typing';
 export interface IPropertiesSchemaProps {
   GS_ENGINE_TYPE: string;
   queryPrimitiveTypes(): { label: string; value: string }[];
-  schema: any;
+  schema: ISchemaEdge;
   type: 'nodes' | 'edges';
   appMode: string;
   uploadFile(file): { file_path: string };

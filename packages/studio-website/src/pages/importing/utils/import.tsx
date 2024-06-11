@@ -1,7 +1,8 @@
 import type { EdgeMapping, SchemaMapping, VertexMapping, Schema } from '@graphscope/studio-server';
-import type { BindingEdge, BindingNode } from '../../pages/instance/import-data/useContext';
+
 import { transformSchemaToOptions } from '@/components/utils/schema';
 import type { DeepRequired } from '@/components/utils/schema';
+import type { ISchemaEdge, ISchemaNode, ISchemaOptions } from '@graphscope/studio-importor';
 
 export interface ItemType {
   property_mapping: { [x: string]: string }[];
@@ -119,12 +120,13 @@ function mappingName(mapping: any, name: string, index: number): string | number
  * @param schema 后端标准的  GraphSchema
  * @returns
  */
+
 export function transformMappingSchemaToImportOptions(
   schemaMapping: DeepRequired<SchemaMapping>,
   schema: DeepRequired<Schema>,
 ): {
-  edges: BindingEdge[];
-  nodes: BindingNode[];
+  edges: ISchemaEdge[];
+  nodes: ISchemaNode[];
 } {
   const schemaOptions = transformSchemaToImportOptions(schema);
 
@@ -377,45 +379,24 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
   });
 
   options.edges.forEach(item => {
-    const { properties, filelocation, label, source, target } = item;
+    const { properties, filelocation, label, source, target, source_data_fields, target_data_fields } = item;
     const column_mappings: any[] = [];
     const source_vertex_mappings: any[] = [];
     const destination_vertex_mappings: any[] = [];
+
     // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
     properties.forEach((p, pIdx) => {
       const { token, name } = p;
-      const isSource = name.startsWith('#source');
-      const isTarget = name.startsWith('#target');
       const num = parseFloat(token as string);
       const isNumber = isNaN(num);
       const colmunName = typeof token === 'string' ? token.split('_')[1] : token;
-      if (isSource) {
-        source_vertex_mappings.push({
-          column: {
-            index: typeof token === 'number' ? token : 0,
-            // name: NODE_PRIMARY_MAP[source],
-            name: typeof token === 'number' ? '' : colmunName,
-          },
-          property: name,
-        });
-      } else if (isTarget) {
-        destination_vertex_mappings.push({
-          column: {
-            index: typeof token === 'number' ? token : 0,
-            // name: NODE_PRIMARY_MAP[target],
-            name: typeof token === 'number' ? '' : colmunName,
-          },
-          property: name,
-        });
-      } else {
-        column_mappings.push({
-          column: {
-            index: typeof token === 'number' ? token : 0, //isNumber ? num + 2 : 0,
-            name: typeof token === 'number' ? '' : colmunName,
-          },
-          property: name,
-        });
-      }
+      column_mappings.push({
+        column: {
+          index: typeof token === 'number' ? token : 0, //isNumber ? num + 2 : 0,
+          name: typeof token === 'number' ? '' : colmunName,
+        },
+        property: name,
+      });
     });
 
     edge_mappings.push({
@@ -426,8 +407,8 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
       },
       inputs: [filelocation],
       column_mappings,
-      source_vertex_mappings,
-      destination_vertex_mappings,
+      source_vertex_mappings: source_data_fields,
+      destination_vertex_mappings: target_data_fields,
     });
   });
 

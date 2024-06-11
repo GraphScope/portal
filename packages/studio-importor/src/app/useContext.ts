@@ -1,6 +1,7 @@
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 import type { Node, Edge } from 'reactflow';
+import type { ISchemaNode, ISchemaEdge } from './typing';
 import React from 'react';
 import { fakeSnapshot } from './utils';
 
@@ -12,11 +13,11 @@ export type IStore = {
 
   currentType: 'nodes' | 'edges';
   currentId: string;
-  nodes: Node[];
-  edges: Edge[];
+  nodes: ISchemaNode[];
+  edges: ISchemaEdge[];
   source: {
-    nodes: Node[];
-    edges: Edge[];
+    nodes: ISchemaNode[];
+    edges: ISchemaEdge[];
   };
 
   displayMode: 'graph' | 'table';

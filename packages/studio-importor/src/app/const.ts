@@ -204,11 +204,13 @@ export const paperData = {
       properties: [
         {
           name: 'id',
+
           type: 'DT_SIGNED_INT64',
           primaryKey: true,
           disable: true,
           id: '0e988ee5-2eef-4f27-af4c-6b1d8b38c7a0',
-          token: '',
+          index: 0, // columnIndex
+          token: '', // columnName
         },
         {
           name: 'solution',
