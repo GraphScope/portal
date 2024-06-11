@@ -36,16 +36,19 @@ export function transformSchemaToImportOptions(schema: Schema) {
     const { properties, source, target } = item;
     const source_vertex = vertex_id_properties_map[source];
     const target_vertex = vertex_id_properties_map[target];
-
+    const source_data_fields = source_vertex.name;
+    const target_data_fields = target_vertex.name;
     return {
       ...item,
       datatype: 'csv',
       filelocation: '',
       isBind: false,
+      source_data_fields,
+      target_data_fields,
       properties: [
         /** source 和 target 在后端不算做 properties ，但是在前端需要他俩作为属性，因此手动添加 */
-        { ...source_vertex, name: `#source.${source_vertex.name}` },
-        { ...target_vertex, name: `#target.${target_vertex.name}` },
+        // { ...source_vertex, name: `#source.${source_vertex.name}` },
+        // { ...target_vertex, name: `#target.${target_vertex.name}` },
         ...properties,
       ],
     };
@@ -149,14 +152,18 @@ export function transformMappingSchemaToImportOptions(
   edge_mappings.forEach(item => {
     const { column_mappings, type_triplet, destination_vertex_mappings, source_vertex_mappings } = item;
     const { edge } = type_triplet;
-    const sourceField = source_vertex_mappings[0].column;
-    const targetField = destination_vertex_mappings[0].column;
+    // const sourceField = source_vertex_mappings[0].column;
+    // const targetField = destination_vertex_mappings[0].column;
+    const source_data_fields = source_vertex_mappings[0].column;
+    const target_data_fields = destination_vertex_mappings[0].column;
     label_mappings[edge] = {
       ...item,
       //@ts-ignore
+      source_data_fields,
+      target_data_fields,
       properties_mappings: {
-        [`#source.${sourceField.name}`]: sourceField,
-        [`#target.${targetField.name}`]: targetField,
+        // [`#source.${sourceField.name}`]: sourceField,
+        // [`#target.${targetField.name}`]: targetField,
         ...column_mappings.reduce((acc, curr) => {
           return {
             ...acc,
@@ -249,14 +256,18 @@ export function transformGrootMappingSchemaToImportOptions(schemaMapping: any, s
   edges_datasource.forEach((item: ItemType & { type_triplet: { edge: string } }) => {
     const { property_mapping, type_triplet, destination_pk_column_map, source_pk_column_map } = item;
     const { edge } = type_triplet;
-    const sourceField = source_pk_column_map[0].column;
-    const targetField = destination_pk_column_map[0].column;
+    // const sourceField = source_pk_column_map[0].column;
+    // const targetField = destination_pk_column_map[0].column;
+    const source_data_fields = source_pk_column_map[0].column;
+    const target_data_fields = destination_pk_column_map[0].column;
     label_mappings[edge] = {
       ...item,
       //@ts-ignore
+      source_data_fields,
+      target_data_fields,
       properties_mappings: {
-        [`#source.${sourceField.name}`]: sourceField,
-        [`#target.${targetField.name}`]: targetField,
+        // [`#source.${sourceField.name}`]: sourceField,
+        // [`#target.${targetField.name}`]: targetField,
         ...property_mapping?.reduce((acc, curr) => {
           return {
             ...acc,
