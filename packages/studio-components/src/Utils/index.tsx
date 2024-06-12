@@ -68,3 +68,4 @@ export const fakeSnapshot = obj => {
 
 export { generatorSchemaByGraphData } from './schema';
 export { asyncFunctionWithWorker } from './work';
+export { guestGraphFields } from './guestGraphFields';

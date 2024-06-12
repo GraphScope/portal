@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { SegmentedTabs } from '@graphscope/studio-components';
 import ImportFromCSV from './import-from-csv';
+import ImportFromJSON from './import-from-json';
 interface ISideProps {}
 
 const Side: React.FunctionComponent<ISideProps> = props => {
@@ -10,6 +11,12 @@ const Side: React.FunctionComponent<ISideProps> = props => {
       label: 'CSV',
       value: 'CSV',
       children: <ImportFromCSV />,
+    },
+    {
+      key: 'JSON',
+      label: 'JSON',
+      value: 'JSON',
+      children: <ImportFromJSON />,
     },
   ];
   return (
