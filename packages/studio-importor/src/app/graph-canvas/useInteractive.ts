@@ -102,6 +102,7 @@ const useInteractive: any = () => {
   const onEdgesChange = (changes: EdgeChange[]) => {
     if (elementOptions.isConnectable) {
       updateStore(draft => {
+        //@ts-ignore
         draft.edges = applyEdgeChanges(changes, deepclone(draft.edges));
       });
     }

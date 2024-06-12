@@ -9,8 +9,8 @@ type ISourceTargetProps = Pick<ImportorProps, 'mappingColumn'> & {
   id: string;
   source: string;
   target: string;
-  source_data_fields: { index: number; name: string };
-  target_data_fields: { index: number; name: string };
+  source_data_fields: { index: number; columnName: string };
+  target_data_fields: { index: number; columnName: string };
 };
 
 const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
