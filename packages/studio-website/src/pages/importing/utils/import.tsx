@@ -412,20 +412,9 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
   options.edges.forEach(item => {
     const { properties, filelocation, label, source, target, source_data_fields, target_data_fields } = item;
     const column_mappings: any[] = [];
-<<<<<<< HEAD
-    const source_vertex_mappings: any[] = [];
-    const destination_vertex_mappings: any[] = [];
-
     // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
     properties.forEach((p, pIdx) => {
       const { token, name } = p;
-      const num = parseFloat(token as string);
-      const isNumber = isNaN(num);
-=======
-    // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
-    properties.forEach((p, pIdx) => {
-      const { token, name } = p;
->>>>>>> c21e060... feat: update data
       const colmunName = typeof token === 'string' ? token.split('_')[1] : token;
       column_mappings.push({
         column: {
@@ -444,13 +433,8 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
       },
       inputs: [filelocation],
       column_mappings,
-<<<<<<< HEAD
-      source_vertex_mappings: source_data_fields,
-      destination_vertex_mappings: target_data_fields,
-=======
       source_vertex_mappings: [source_data_fields],
       destination_vertex_mappings: [target_data_fields],
->>>>>>> c21e060... feat: update data
     });
   });
 
