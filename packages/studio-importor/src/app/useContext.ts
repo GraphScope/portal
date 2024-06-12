@@ -1,10 +1,9 @@
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 import type { Node, Edge } from 'reactflow';
-import type { ISchemaNode, ISchemaEdge } from './typing';
 import React from 'react';
 import { fakeSnapshot } from './utils';
-
+import { ISchemaNode, ISchemaEdge } from './typing';
 export type IStore = {
   /** APP类型 */
   appMode: 'DATA_MODELING' | 'DATA_IMPORTING';

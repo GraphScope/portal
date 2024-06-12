@@ -5,16 +5,13 @@ import useModel from './useModel';
 import LocationField from './location';
 import SourceTarget from './source-target';
 import GrootCase from './groot-case';
-import type { ISchemaEdge, ISchemaNode, ISchemaOptions } from '../../typing';
-export interface IPropertiesSchemaProps {
-  GS_ENGINE_TYPE: string;
-  queryPrimitiveTypes(): { label: string; value: string }[];
+import type { ISchemaEdge, ISchemaNode, ISchemaOptions, ImportorProps } from '../../typing';
+
+export type IPropertiesSchemaProps = Pick<ImportorProps, 'appMode' | 'queryPrimitiveTypes' | 'handleUploadFile'> & {
   schema: ISchemaEdge;
   type: 'nodes' | 'edges';
-  appMode: string;
-  uploadFile(file): { file_path: string };
   disabled?: boolean;
-}
+};
 
 const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props => {
   const { schema, type, appMode, queryPrimitiveTypes, disabled } = props;
