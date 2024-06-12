@@ -13,7 +13,8 @@ export interface IMeta {
 export interface ParsedFile {
   id: string;
   meta: IMeta;
-  data: Record<string, any>;
+  contents: string;
+  data?: Record<string, any>;
 }
 
 export const parseCSV = async (file: File): Promise<ParsedFile> => {
@@ -27,12 +28,15 @@ export const parseCSV = async (file: File): Promise<ParsedFile> => {
       if (event) {
         const contents = event.target!.result as string;
         const { header, delimiter } = extractHeaderAndDelimiter(contents);
-        const data = getJSONData(contents, header, delimiter);
+        console.time('COST JSON');
+        // const data = getJSONData(contents, header, delimiter);
         const graphFields = guestGraphFields(header);
+        console.timeEnd('COST JSON');
 
         resolve({
           meta: { header, delimiter, size: getFileSize(file.size), name: file.name, graphFields },
-          data,
+          // data,
+          contents,
           //@ts-ignore
           id: file.uid,
         });
@@ -120,9 +124,9 @@ export function getJSONData(contents, header, delimiter) {
 }
 
 export function guestGraphFields(header: string[]) {
-  const idKeys = new Set(['id', 'ID', '_id', 's_id', 't_id']);
-  const sourceKeys = new Set(['source', 'src', 'src_id', 'srcId', 'from', 'start']);
-  const targetKeys = new Set(['target', 'dst', 'dst_id', 'dstId', 'to', 'end']);
+  const idKeys = new Set(['id', 'ID', '_id', 's_id', 't_id', `"id"`]);
+  const sourceKeys = new Set(['source', 'src', 'src_id', 'srcId', 'from', 'start', `"src_id"`]);
+  const targetKeys = new Set(['target', 'dst', 'dst_id', 'dstId', 'to', 'end', `"dst_id"`]);
 
   let sourceField, targetField, idField, type;
 

@@ -5,7 +5,6 @@ import type { IMeta, ParsedFile } from './parseCSV';
 
 interface IMappingProps {
   id: string;
-  data: any;
   meta: IMeta;
   updateState: React.Dispatch<
     React.SetStateAction<{

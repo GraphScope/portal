@@ -67,3 +67,4 @@ export const fakeSnapshot = obj => {
 };
 
 export { generatorSchemaByGraphData } from './schema';
+export { asyncFunctionWithWorker } from './work';
