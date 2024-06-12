@@ -10,24 +10,29 @@ export interface Option {
 interface IController {
   componentType: 'Select' | 'InputNumber';
   options: Option[];
-  value: string | number;
+  value: { index: number; columnName: string };
   onChange(evt: any): void;
 }
 const Controller = (props: IController) => {
-  const { options, value, onChange, componentType } = props;
+  const {
+    options,
+    value: { index, columnName },
+    onChange,
+    componentType,
+  } = props;
   /** mappingFiles options 边涉及相同value，导致不唯一 */
-  const _options = options.map((item, index: number) => {
+  const _options = options.map((item, Index: number) => {
     return {
-      value: `${index}_${item.value}`,
+      value: `${Index}_${item.value}`,
       label: (
-        <Flex justify="space-between" key={index}>
+        <Flex justify="space-between" key={Index}>
           <span
             style={{
               marginRight: '12px',
               color: '#b8b8b8',
             }}
           >
-            #{index}
+            #{Index}
           </span>
           <span>{item.value}</span>
         </Flex>
@@ -48,7 +53,7 @@ const Controller = (props: IController) => {
     return (
       <InputNumber
         style={{ width: '100%', marginTop: '8px' }}
-        value={value}
+        value={index}
         min={0}
         onChange={evt => {
           onChange(evt);
@@ -56,7 +61,9 @@ const Controller = (props: IController) => {
       />
     );
   } else {
-    return <Select style={{ width: '100%', marginTop: '8px' }} options={_options} value={value} onChange={onChange} />;
+    return (
+      <Select style={{ width: '100%', marginTop: '8px' }} options={_options} value={columnName} onChange={onChange} />
+    );
   }
 };
 

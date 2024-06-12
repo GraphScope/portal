@@ -1,7 +1,8 @@
 import type { EdgeMapping, SchemaMapping, VertexMapping, Schema } from '@graphscope/studio-server';
-import type { BindingEdge, BindingNode } from '../../pages/instance/import-data/useContext';
+
 import { transformSchemaToOptions } from '@/components/utils/schema';
 import type { DeepRequired } from '@/components/utils/schema';
+import type { ISchemaEdge, ISchemaNode, ISchemaOptions } from '@graphscope/studio-importor';
 
 export interface ItemType {
   property_mapping: { [x: string]: string }[];
@@ -16,8 +17,10 @@ export interface ItemType {
 export function transformSchemaToImportOptions(schema: Schema) {
   //@ts-ignore
   const schemaOption = transformSchemaToOptions(schema, false);
-
+  let edges_mapping: { [key: string]: string } = {};
   const nodes = schemaOption.nodes.map(item => {
+    const { key, label } = item as { key: string; label: string };
+    edges_mapping[key] = label;
     return {
       ...item,
       datatype: 'csv',
@@ -36,13 +39,29 @@ export function transformSchemaToImportOptions(schema: Schema) {
     const { properties, source, target } = item;
     const source_vertex = vertex_id_properties_map[source];
     const target_vertex = vertex_id_properties_map[target];
-    const source_data_fields = source_vertex.name;
-    const target_data_fields = target_vertex.name;
+    // const source_data_fields = source_vertex.name;
+    // const target_data_fields = target_vertex.name;
+    const dataFields = [
+      `${edges_mapping[source]}.${source_vertex.name}`,
+      `${edges_mapping[target]}.${target_vertex.name}`,
+    ];
+
+    const source_data_fields = {
+      index: typeof source_vertex.token === 'number' ? source_vertex.token : null,
+      columnName:
+        typeof source_vertex.token === 'string' ? (source_vertex.token ? `0_${source_vertex.token}` : '') : '',
+    };
+    const target_data_fields = {
+      index: typeof target_vertex.token === 'number' ? target_vertex.token : null,
+      columnName:
+        typeof target_vertex.token === 'string' ? (target_vertex.token ? `1_${target_vertex.token}` : '') : '',
+    };
     return {
       ...item,
       datatype: 'csv',
       filelocation: '',
       isBind: false,
+      dataFields: dataFields.concat(properties.map(item => item.name)),
       source_data_fields,
       target_data_fields,
       properties: [
@@ -119,12 +138,13 @@ function mappingName(mapping: any, name: string, index: number): string | number
  * @param schema 后端标准的  GraphSchema
  * @returns
  */
+
 export function transformMappingSchemaToImportOptions(
   schemaMapping: DeepRequired<SchemaMapping>,
   schema: DeepRequired<Schema>,
 ): {
-  edges: BindingEdge[];
-  nodes: BindingNode[];
+  edges: ISchemaEdge[];
+  nodes: ISchemaNode[];
 } {
   const schemaOptions = transformSchemaToImportOptions(schema);
 
@@ -149,21 +169,25 @@ export function transformMappingSchemaToImportOptions(
       }, {}),
     };
   });
-  edge_mappings.forEach(item => {
+  edge_mappings.forEach((item, index) => {
     const { column_mappings, type_triplet, destination_vertex_mappings, source_vertex_mappings } = item;
     const { edge } = type_triplet;
-    // const sourceField = source_vertex_mappings[0].column;
-    // const targetField = destination_vertex_mappings[0].column;
-    const source_data_fields = source_vertex_mappings[0].column;
-    const target_data_fields = destination_vertex_mappings[0].column;
+    const sourceField = source_vertex_mappings[0]?.column;
+    const targetField = destination_vertex_mappings[0]?.column;
+    const source_data_fields = {
+      index: sourceField?.index,
+      name: `${index}_${sourceField?.name}`,
+    };
+    const target_data_fields = {
+      index: targetField?.index,
+      name: `${index}_${targetField?.name}`,
+    };
     label_mappings[edge] = {
       ...item,
       //@ts-ignore
       source_data_fields,
       target_data_fields,
       properties_mappings: {
-        // [`#source.${sourceField.name}`]: sourceField,
-        // [`#target.${targetField.name}`]: targetField,
         ...column_mappings.reduce((acc, curr) => {
           return {
             ...acc,
@@ -199,6 +223,8 @@ export function transformMappingSchemaToImportOptions(
   const _edges = edges.map(item => {
     const { label, properties } = item;
     const mapping = label_mappings[label];
+    //@ts-ignore
+    const { source_data_fields, target_data_fields } = mapping;
     const filelocation = (mapping && mapping.inputs && mapping.inputs[0]) || '';
     return {
       ...item,
@@ -207,7 +233,9 @@ export function transformMappingSchemaToImportOptions(
       isBind: !!filelocation,
       isEidtProperty: true,
       delimiter,
-      dataFields: loadingdataFields('edges', properties, mapping),
+      source_data_fields: { index: source_data_fields.index, columnName: source_data_fields.name },
+      target_data_fields: { index: target_data_fields.index, columnName: target_data_fields.name },
+      dataFields: loadingdataFields('edges', properties, mapping).concat(item.dataFields),
       properties: properties.map((p, index) => {
         const { name } = p;
         return {
@@ -218,6 +246,8 @@ export function transformMappingSchemaToImportOptions(
       }),
     };
   });
+  console.log(_edges);
+
   return {
     nodes: _nodes,
     edges: _edges,
@@ -361,8 +391,6 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
       inputs: [filelocation],
       column_mappings: properties.map((p, index) => {
         const { token, name } = p;
-        const num = parseFloat(token as string);
-        const isNumber = !isNaN(num);
         const colmunName = typeof token === 'string' ? token.split('_')[1] : token;
         return {
           column: {
@@ -377,47 +405,36 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
   });
 
   options.edges.forEach(item => {
-    const { properties, filelocation, label, source, target } = item;
+    const { properties, filelocation, label, source, target, source_data_fields, target_data_fields } = item;
     const column_mappings: any[] = [];
     const source_vertex_mappings: any[] = [];
     const destination_vertex_mappings: any[] = [];
     // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
-    properties.forEach((p, pIdx) => {
+    properties.forEach((p: { token: string; name: string }) => {
       const { token, name } = p;
-      const isSource = name.startsWith('#source');
-      const isTarget = name.startsWith('#target');
-      const num = parseFloat(token as string);
-      const isNumber = isNaN(num);
       const colmunName = typeof token === 'string' ? token.split('_')[1] : token;
-      if (isSource) {
-        source_vertex_mappings.push({
-          column: {
-            index: typeof token === 'number' ? token : 0,
-            // name: NODE_PRIMARY_MAP[source],
-            name: typeof token === 'number' ? '' : colmunName,
-          },
-          property: name,
-        });
-      } else if (isTarget) {
-        destination_vertex_mappings.push({
-          column: {
-            index: typeof token === 'number' ? token : 0,
-            // name: NODE_PRIMARY_MAP[target],
-            name: typeof token === 'number' ? '' : colmunName,
-          },
-          property: name,
-        });
-      } else {
-        column_mappings.push({
-          column: {
-            index: typeof token === 'number' ? token : 0, //isNumber ? num + 2 : 0,
-            name: typeof token === 'number' ? '' : colmunName,
-          },
-          property: name,
-        });
-      }
+      column_mappings.push({
+        column: {
+          index: typeof token === 'number' ? token : 0, //isNumber ? num + 2 : 0,
+          name: typeof token === 'number' ? '' : colmunName,
+        },
+        property: name,
+      });
     });
-
+    source_vertex_mappings.push({
+      column: {
+        index: source_data_fields.index,
+        name: source_data_fields.columnName.split('_')[1] || '',
+      },
+      property: source_data_fields.name,
+    });
+    destination_vertex_mappings.push({
+      column: {
+        index: target_data_fields.index,
+        name: target_data_fields.columnName.split('_')[1] || '',
+      },
+      property: target_data_fields.name,
+    });
     edge_mappings.push({
       type_triplet: {
         edge: label,

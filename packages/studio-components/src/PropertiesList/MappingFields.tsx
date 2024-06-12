@@ -41,6 +41,7 @@ const Controller = (props: IController) => {
   if (componentType === 'InputNumber') {
     return (
       <InputNumber
+        style={{ minWidth: '120px' }}
         size="small"
         value={value}
         min={0}
@@ -50,7 +51,7 @@ const Controller = (props: IController) => {
       />
     );
   } else {
-    return <Select size="small" options={_options} value={value} onChange={onChange} style={{ width: '100%' }} />;
+    return <Select size="small" options={_options} value={value} onChange={onChange} style={{ minWidth: '120px' }} />;
   }
 };
 

@@ -13,7 +13,7 @@ const SelectType: React.FunctionComponent<ISelectTypeProps> = props => {
   return (
     <Select
       size="small"
-      style={{ width: '100%' }}
+      style={{ minWidth: '160px' }}
       value={value}
       disabled={disabled}
       onChange={e => {

@@ -5,18 +5,16 @@ import useModel from './useModel';
 import LocationField from './location';
 import SourceTarget from './source-target';
 import GrootCase from './groot-case';
-export interface IPropertiesSchemaProps {
-  GS_ENGINE_TYPE: string;
-  queryPrimitiveTypes(): { label: string; value: string }[];
-  schema: any;
+import type { ISchemaEdge, ISchemaNode, ISchemaOptions, ImportorProps, Option } from '../../typing';
+
+export type IPropertiesSchemaProps = Pick<ImportorProps, 'appMode' | 'queryPrimitiveTypes' | 'handleUploadFile'> & {
+  schema: ISchemaEdge;
   type: 'nodes' | 'edges';
-  appMode: string;
-  uploadFile(file): { file_path: string };
   disabled?: boolean;
-}
+};
 
 const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props => {
-  const { schema, type, appMode, queryPrimitiveTypes, disabled } = props;
+  const { schema, type, appMode, queryPrimitiveTypes, disabled, handleUploadFile } = props;
   const { id, source, target, data } = schema;
   const { dataFields, properties = [], label = id, source_data_fields, target_data_fields } = data;
   const { handleChangeLabel, handleProperty } = useModel({ type, id });
@@ -25,7 +23,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
     appMode === 'DATA_IMPORTING'
       ? {
           options:
-            dataFields?.map((item, index) => {
+            dataFields?.map(item => {
               return { label: item, value: item };
             }) || [],
           type: dataFields?.length ? 'Select' : 'InputNumber',
@@ -36,7 +34,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
     <div>
       <Flex vertical gap={12} style={{ margin: '0px 12px' }}>
         {appMode === 'DATA_IMPORTING' ? (
-          <LocationField {...props} />
+          <LocationField schema={schema} type={type} handleUploadFile={handleUploadFile} />
         ) : (
           <>
             <Typography.Text>Label</Typography.Text>
@@ -50,18 +48,15 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
             target={target}
             source_data_fields={source_data_fields}
             target_data_fields={target_data_fields}
-            componentType={dataFields?.length ? 'Select' : 'InputNumber'}
-            //@ts-ignore
-            mappingColumn={mappingColumn}
+            mappingColumn={mappingColumn as ImportorProps['mappingColumn']}
           />
         )}
         <PropertiesList
           properties={properties}
           onChange={handleProperty}
-          typeColumn={{ options: queryPrimitiveTypes() }}
+          typeColumn={{ options: queryPrimitiveTypes() as unknown as Option[] }}
           disabled={disabled}
-          //@ts-ignore
-          mappingColumn={mappingColumn}
+          mappingColumn={mappingColumn as ImportorProps['mappingColumn']}
         />
         <GrootCase />
       </Flex>

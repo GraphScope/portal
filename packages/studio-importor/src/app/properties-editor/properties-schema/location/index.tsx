@@ -1,19 +1,15 @@
 import * as React from 'react';
 import { Typography, Flex, Space, Button, Tooltip } from 'antd';
-import { useContext } from '../../../useContext';
 import SwitchSource from './switch-source';
 import { CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import useChange from './useChange';
 import type { IPropertiesSchemaProps } from '../index';
-
-// interface ILocationFieldProps {
-//   handleUploadFile: () => { file_path: string };
-// }
+export type ILocationFieldProps = Pick<IPropertiesSchemaProps, 'type' | 'schema' | 'handleUploadFile'>;
 
 const { Text } = Typography;
 
-const LocationField: React.FunctionComponent<IPropertiesSchemaProps> = props => {
-  const { schema, type, uploadFile } = props;
+const LocationField: React.FunctionComponent<ILocationFieldProps> = props => {
+  const { schema, type, handleUploadFile } = props;
   const {
     id,
     data: { filelocation, datatype, isBind },
@@ -37,7 +33,7 @@ const LocationField: React.FunctionComponent<IPropertiesSchemaProps> = props => 
             onChangeValue={onChangeValue}
             onChangeFocus={onChangeFocus}
             onChangeDataFields={onChangeDataFields}
-            uploadFile={uploadFile}
+            handleUploadFile={handleUploadFile}
           />
           <Space size={0}>
             {filelocation && (

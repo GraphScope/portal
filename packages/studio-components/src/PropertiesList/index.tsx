@@ -67,19 +67,6 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
 
   const columns = [
     {
-      title: 'PK',
-      dataIndex: 'primaryKey',
-      render(text, record: any) {
-        return (
-          <Checkbox
-            checked={text}
-            disabled={disabled}
-            onClick={() => handleProperties(handlePrimaryKey(record, state))}
-          />
-        );
-      },
-    },
-    {
       title: 'Name',
       dataIndex: 'name',
       render: (...p) => {
@@ -111,6 +98,19 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
             onChange={value => {
               handleProperties(handleType(value, row, state));
             }}
+          />
+        );
+      },
+    },
+    {
+      title: 'PK',
+      dataIndex: 'primaryKey',
+      render(text, record: any) {
+        return (
+          <Checkbox
+            checked={text}
+            disabled={disabled}
+            onClick={() => handleProperties(handlePrimaryKey(record, state))}
           />
         );
       },

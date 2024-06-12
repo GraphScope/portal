@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
-import { Collapse, Segmented, Button } from 'antd';
+import React from 'react';
+import { Collapse } from 'antd';
 import PropertiesSchema from './properties-schema';
-
+import type {} from '../typing';
 import { useContext } from '../useContext';
 import { SegmentedTabs } from '@graphscope/studio-components';
 import { CaretRightOutlined } from '@ant-design/icons';
+import type { ImportorProps } from '../typing';
 
-interface IPropetiesEditorProps {}
+type IPropetiesEditorProps = Pick<ImportorProps, 'appMode' | 'handleUploadFile' | 'queryPrimitiveTypes'>;
 
 const StyleWrap = ({ children }) => {
   return (
@@ -28,6 +29,7 @@ const StyleWrap = ({ children }) => {
 const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props => {
   const { store, updateStore } = useContext();
   const { nodes, edges, currentType, currentId, elementOptions } = store;
+  const { appMode, handleUploadFile, queryPrimitiveTypes } = props;
 
   const nodes_items = nodes.map(item => {
     const { id, data } = item;
@@ -35,8 +37,16 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     return {
       key: id,
       label: label,
-      //@ts-ignore
-      children: <PropertiesSchema schema={item} type="nodes" {...props} disabled={!elementOptions.isEditable} />,
+      children: (
+        <PropertiesSchema
+          schema={JSON.parse(JSON.stringify(item))}
+          type="nodes"
+          queryPrimitiveTypes={queryPrimitiveTypes}
+          handleUploadFile={handleUploadFile}
+          appMode={appMode}
+          disabled={!elementOptions.isEditable}
+        />
+      ),
     };
   });
   const edges_items = edges.map(item => {
@@ -46,8 +56,16 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     return {
       key: id,
       label: label,
-      //@ts-ignore
-      children: <PropertiesSchema schema={item} type="edges" {...props} disabled={!elementOptions.isEditable} />,
+      children: (
+        <PropertiesSchema
+          schema={JSON.parse(JSON.stringify(item))}
+          type="edges"
+          queryPrimitiveTypes={queryPrimitiveTypes}
+          handleUploadFile={handleUploadFile}
+          appMode={appMode}
+          disabled={!elementOptions.isEditable}
+        />
+      ),
     };
   });
 

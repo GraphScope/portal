@@ -15,60 +15,13 @@ import { Divider, notification } from 'antd';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
 import Provider from './provider';
-
+import type { ImportorProps } from './typing';
 interface Option {
   label: string;
   value: string;
 }
-interface ImportAppProps {
-  /** 用于多实例管理的 ID */
-  id?: string;
-  /** 语言 */
-  locale?: 'zh-CN' | 'en-US';
-  /** 主题样式 */
-  theme?: {
-    primaryColor: string;
-    mode: 'darkAlgorithm' | 'defaultAlgorithm';
-  };
-  appMode: 'DATA_MODELING' | 'DATA_IMPORTING';
-  /**  第二项 */
-  queryPrimitiveTypes: () => {
-    options: Option[];
-  };
-  /** 第四项 */
-  mappingColumn?: {
-    options: Option[];
-    type: 'Select' | 'InputNumber';
-  };
-
-  queryGraphSchema?: () => Promise<any>;
-  queryBoundSchema?: () => Promise<any>;
-  handleUploadFile?: (file: File) => Promise<string>;
-  queryImportData?: () => void;
-  /** 默认样式相关 */
-  defaultLeftStyles?: {
-    collapsed: boolean;
-    width: number;
-  };
-  defaultRightStyles?: {
-    collapsed: boolean;
-    width: number;
-  };
-
-  elementOptions?: {
-    /** 是否能够连线，包括拖拽产生节点 */
-    isClickable: boolean;
-    /** 是否可以点击，包含点和边 */
-    isEditable: boolean;
-    /** 是否可以编辑标签，包括节点和边 */
-    isConnectable: boolean;
-  };
-  children?: React.ReactNode;
-}
 import { useContext } from './useContext';
-import { Button } from 'antd';
-
-const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
+const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   const {
     appMode,
     queryGraphSchema,
@@ -89,6 +42,8 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
     },
     elementOptions,
     children,
+    queryPrimitiveTypes,
+    handleUploadFile,
   } = props;
   const { store, updateStore } = useContext();
   const { collapsed } = store;
@@ -168,7 +123,12 @@ const ImportApp: React.FunctionComponent<ImportAppProps> = props => {
               transition: 'width 0.2s ease',
             }}
           >
-            <PropertiesEditor {...props} />
+            <PropertiesEditor
+              appMode={appMode}
+              /**  第二项 */
+              queryPrimitiveTypes={queryPrimitiveTypes}
+              handleUploadFile={handleUploadFile}
+            />
           </div>
         </div>
       </div>

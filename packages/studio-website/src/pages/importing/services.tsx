@@ -67,7 +67,6 @@ export const uploadFile = async (file: File) => {
 /** 数据绑定 dataMap(nodes/edges集合)*/
 export const bindDatasourceInBatch = async (graph_id: string, options: any) => {
   const schema = transformImportOptionsToSchemaMapping(options);
-
   return await DataSourceApiFactory(undefined, location.origin)
     .bindDatasourceInBatch(graph_id, schema)
     .then(res => {
@@ -101,7 +100,6 @@ export const submitDataloadingJob = async (graph_id: string, options: any) => {
       };
     }),
   };
-  debugger;
 
   return JobApiFactory(undefined, location.origin)
     .submitDataloadingJob(graph_id, {

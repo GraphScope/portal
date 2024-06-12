@@ -29,7 +29,7 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
       /** 属性下拉选项值 */
       queryPrimitiveTypes={queryPrimitiveTypes}
       /** 绑定数据中上传文件 */
-      uploadFile={uploadFile}
+      handleUploadFile={uploadFile}
       /** 数据绑定 */
       GS_ENGINE_TYPE={GS_ENGINE_TYPE}
       defaultRightStyles={{

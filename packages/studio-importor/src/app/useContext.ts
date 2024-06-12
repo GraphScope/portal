@@ -3,7 +3,7 @@ import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 import type { Node, Edge } from 'reactflow';
 import React from 'react';
 import { fakeSnapshot } from './utils';
-
+import { ISchemaNode, ISchemaEdge } from './typing';
 export type IStore = {
   /** APP类型 */
   appMode: 'DATA_MODELING' | 'DATA_IMPORTING';
@@ -12,11 +12,11 @@ export type IStore = {
 
   currentType: 'nodes' | 'edges';
   currentId: string;
-  nodes: Node[];
-  edges: Edge[];
+  nodes: ISchemaNode[];
+  edges: ISchemaEdge[];
   source: {
-    nodes: Node[];
-    edges: Edge[];
+    nodes: ISchemaNode[];
+    edges: ISchemaEdge[];
   };
 
   displayMode: 'graph' | 'table';
