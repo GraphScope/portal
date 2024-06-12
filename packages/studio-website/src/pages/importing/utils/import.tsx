@@ -170,27 +170,15 @@ export function transformMappingSchemaToImportOptions(
   edge_mappings.forEach(item => {
     const { column_mappings, type_triplet, destination_vertex_mappings, source_vertex_mappings } = item;
     const { edge } = type_triplet;
-    const sourceField = source_vertex_mappings[0].column;
-    const targetField = destination_vertex_mappings[0].column;
-    // const source_data_fields = {
-    //   column: {
-    //     index: typeof sourceField === 'number' ? sourceField : 0,
-    //     name: typeof sourceField === 'string' ? sourceField : '',
-    //   },
-    // };
-    // const target_data_fields = {
-    //   column: {
-    //     index: typeof targetField === 'number' ? targetField : 0,
-    //     name: typeof targetField === 'string' ? targetField : '',
-    //   },
-    // };
+    const sourceField = source_vertex_mappings[0]?.column;
+    const targetField = destination_vertex_mappings[0]?.column;
     const source_data_fields = {
-      index: sourceField.index,
-      name: sourceField.name,
+      index: sourceField?.index,
+      name: sourceField?.name,
     };
     const target_data_fields = {
-      index: targetField.index,
-      name: targetField.name,
+      index: targetField?.index,
+      name: targetField?.name,
     };
     label_mappings[edge] = {
       ...item,
@@ -198,8 +186,6 @@ export function transformMappingSchemaToImportOptions(
       source_data_fields,
       target_data_fields,
       properties_mappings: {
-        // [`#source.${sourceField.name}`]: sourceField,
-        // [`#target.${targetField.name}`]: targetField,
         ...column_mappings.reduce((acc, curr) => {
           return {
             ...acc,
