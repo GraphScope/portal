@@ -10,13 +10,13 @@ export interface Option {
 interface IController {
   componentType: 'Select' | 'InputNumber';
   options: Option[];
-  value: { index: number; name: string };
+  value: { index: number; columnName: string };
   onChange(evt: any): void;
 }
 const Controller = (props: IController) => {
   const {
     options,
-    value: { index, name },
+    value: { index, columnName },
     onChange,
     componentType,
   } = props;
@@ -61,7 +61,9 @@ const Controller = (props: IController) => {
       />
     );
   } else {
-    return <Select style={{ width: '100%', marginTop: '8px' }} options={_options} value={name} onChange={onChange} />;
+    return (
+      <Select style={{ width: '100%', marginTop: '8px' }} options={_options} value={columnName} onChange={onChange} />
+    );
   }
 };
 

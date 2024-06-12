@@ -47,12 +47,14 @@ export function transformSchemaToImportOptions(schema: Schema) {
     ];
 
     const source_data_fields = {
-      index: typeof source_vertex.token === 'number' ? source_vertex.token : 0,
-      name: typeof source_vertex.token === 'string' ? source_vertex.token : '',
+      index: typeof source_vertex.token === 'number' ? source_vertex.token : null,
+      columnName:
+        typeof source_vertex.token === 'string' ? (source_vertex.token ? `0_${source_vertex.token}` : '') : '',
     };
     const target_data_fields = {
-      index: typeof target_vertex.token === 'number' ? target_vertex.token : 0,
-      name: typeof target_vertex.token === 'string' ? target_vertex.token : '',
+      index: typeof target_vertex.token === 'number' ? target_vertex.token : null,
+      columnName:
+        typeof target_vertex.token === 'string' ? (target_vertex.token ? `1_${target_vertex.token}` : '') : '',
     };
     return {
       ...item,
@@ -174,11 +176,11 @@ export function transformMappingSchemaToImportOptions(
     const targetField = destination_vertex_mappings[0]?.column;
     const source_data_fields = {
       index: sourceField?.index,
-      name: sourceField?.name,
+      columnName: `0_${sourceField?.name}`,
     };
     const target_data_fields = {
       index: targetField?.index,
-      name: targetField?.name,
+      columnName: `1_${targetField?.name}`,
     };
     label_mappings[edge] = {
       ...item,
@@ -383,8 +385,6 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
       inputs: [filelocation],
       column_mappings: properties.map((p, index) => {
         const { token, name } = p;
-        const num = parseFloat(token as string);
-        const isNumber = !isNaN(num);
         const colmunName = typeof token === 'string' ? token.split('_')[1] : token;
         return {
           column: {
@@ -418,14 +418,14 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
     source_vertex_mappings.push({
       column: {
         index: source_data_fields.index,
-        name: source_data_fields.columnName || '',
+        name: source_data_fields.columnName.split('_')[1] || '',
       },
       property: source_data_fields.name,
     });
     destination_vertex_mappings.push({
       column: {
         index: target_data_fields.index,
-        name: target_data_fields.columnName || '',
+        name: target_data_fields.columnName.split('_')[1] || '',
       },
       property: target_data_fields.name,
     });

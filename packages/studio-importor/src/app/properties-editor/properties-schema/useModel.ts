@@ -56,7 +56,7 @@ export default function useModel({ type, id }) {
             index: typeof val === 'number' ? val : 0,
             name,
             type: '',
-            columnName: typeof val === 'string' ? val.split('_')[1] : '',
+            columnName: typeof val === 'string' ? val : '',
           };
         }
       });
