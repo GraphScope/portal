@@ -34,7 +34,7 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
   return (
     <>
       <Flex justify="space-between" gap="small">
-        <div style={{ width: mappingColumn ? '50%' : '100%' }}>
+        <div style={{ width: mappingColumn ? '70%' : '100%' }}>
           <Typography.Text>Source</Typography.Text>
           <Input value={source_label} disabled style={{ marginTop: '8px' }} />
         </div>
@@ -43,7 +43,7 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
             <Typography.Text>Data Fields</Typography.Text>
             <Controller
               value={source_data_fields}
-              onChange={val => handleDataFieldsChange(val, 'source_data_fields')}
+              onChange={val => handleDataFieldsChange(val, source_label, 'source_data_fields')}
               componentType={componentType}
               options={mappingColumn?.options || []}
             />
@@ -51,7 +51,7 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
         )}
       </Flex>
       <Flex justify="space-between" gap="small">
-        <div style={{ width: mappingColumn ? '50%' : '100%' }}>
+        <div style={{ width: mappingColumn ? '70%' : '100%' }}>
           <Typography.Text>Target</Typography.Text>
           <Input value={target_label} disabled style={{ marginTop: '8px' }} />
         </div>
@@ -60,7 +60,7 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
             <Typography.Text>Data Fields</Typography.Text>
             <Controller
               value={target_data_fields}
-              onChange={val => handleDataFieldsChange(val, 'target_data_fields')}
+              onChange={val => handleDataFieldsChange(val, target_label, 'target_data_fields')}
               componentType={componentType}
               options={mappingColumn?.options || []}
             />

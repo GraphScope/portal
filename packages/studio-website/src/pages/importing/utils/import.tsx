@@ -17,8 +17,10 @@ export interface ItemType {
 export function transformSchemaToImportOptions(schema: Schema) {
   //@ts-ignore
   const schemaOption = transformSchemaToOptions(schema, false);
-
+  let edges_mapping: { [key: string]: string } = {};
   const nodes = schemaOption.nodes.map(item => {
+    const { key, label } = item as { key: string; label: string };
+    edges_mapping[key] = label;
     return {
       ...item,
       datatype: 'csv',
@@ -37,13 +39,32 @@ export function transformSchemaToImportOptions(schema: Schema) {
     const { properties, source, target } = item;
     const source_vertex = vertex_id_properties_map[source];
     const target_vertex = vertex_id_properties_map[target];
-    const source_data_fields = source_vertex.name;
-    const target_data_fields = target_vertex.name;
+    // const source_data_fields = source_vertex.name;
+    // const target_data_fields = target_vertex.name;
+    const dataFields = [
+      `${edges_mapping[source]}.${source_vertex.name}`,
+      `${edges_mapping[target]}.${target_vertex.name}`,
+    ];
+    console.log(dataFields);
+
+    const source_data_fields = {
+      column: {
+        index: typeof source_vertex.name === 'number' ? source_vertex.name : 0,
+        name: typeof source_vertex.name === 'string' ? source_vertex.name : '',
+      },
+    };
+    const target_data_fields = {
+      column: {
+        index: typeof target_vertex.name === 'number' ? target_vertex.name : 0,
+        name: typeof target_vertex.name === 'string' ? target_vertex.name : '',
+      },
+    };
     return {
       ...item,
       datatype: 'csv',
       filelocation: '',
       isBind: false,
+      dataFields,
       source_data_fields,
       target_data_fields,
       properties: [
@@ -156,13 +177,23 @@ export function transformMappingSchemaToImportOptions(
     const { edge } = type_triplet;
     // const sourceField = source_vertex_mappings[0].column;
     // const targetField = destination_vertex_mappings[0].column;
-    const source_data_fields = source_vertex_mappings[0].column;
-    const target_data_fields = destination_vertex_mappings[0].column;
+    // const source_data_fields = {
+    //   column: {
+    //     index: typeof sourceField === 'number' ? sourceField : 0,
+    //     name: typeof sourceField === 'string' ? sourceField : '',
+    //   },
+    // };
+    // const target_data_fields = {
+    //   column: {
+    //     index: typeof targetField === 'number' ? targetField : 0,
+    //     name: typeof targetField === 'string' ? targetField : '',
+    //   },
+    // };
     label_mappings[edge] = {
       ...item,
       //@ts-ignore
-      source_data_fields,
-      target_data_fields,
+      source_data_fields: source_vertex_mappings[0],
+      target_data_fields: destination_vertex_mappings[0],
       properties_mappings: {
         // [`#source.${sourceField.name}`]: sourceField,
         // [`#target.${targetField.name}`]: targetField,
@@ -209,7 +240,7 @@ export function transformMappingSchemaToImportOptions(
       isBind: !!filelocation,
       isEidtProperty: true,
       delimiter,
-      dataFields: loadingdataFields('edges', properties, mapping),
+      dataFields: loadingdataFields('edges', properties, mapping).concat(item.dataFields),
       properties: properties.map((p, index) => {
         const { name } = p;
         return {
@@ -381,6 +412,7 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
   options.edges.forEach(item => {
     const { properties, filelocation, label, source, target, source_data_fields, target_data_fields } = item;
     const column_mappings: any[] = [];
+<<<<<<< HEAD
     const source_vertex_mappings: any[] = [];
     const destination_vertex_mappings: any[] = [];
 
@@ -389,6 +421,11 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
       const { token, name } = p;
       const num = parseFloat(token as string);
       const isNumber = isNaN(num);
+=======
+    // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
+    properties.forEach((p, pIdx) => {
+      const { token, name } = p;
+>>>>>>> c21e060... feat: update data
       const colmunName = typeof token === 'string' ? token.split('_')[1] : token;
       column_mappings.push({
         column: {
@@ -407,8 +444,13 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
       },
       inputs: [filelocation],
       column_mappings,
+<<<<<<< HEAD
       source_vertex_mappings: source_data_fields,
       destination_vertex_mappings: target_data_fields,
+=======
+      source_vertex_mappings: [source_data_fields],
+      destination_vertex_mappings: [target_data_fields],
+>>>>>>> c21e060... feat: update data
     });
   });
 

@@ -35,7 +35,6 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     return {
       key: id,
       label: label,
-      //@ts-ignore
       children: <PropertiesSchema schema={item} type="nodes" {...props} disabled={!elementOptions.isEditable} />,
     };
   });
@@ -46,7 +45,6 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     return {
       key: id,
       label: label,
-      //@ts-ignore
       children: <PropertiesSchema schema={item} type="edges" {...props} disabled={!elementOptions.isEditable} />,
     };
   });

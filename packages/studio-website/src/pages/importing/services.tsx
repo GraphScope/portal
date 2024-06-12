@@ -101,7 +101,6 @@ export const submitDataloadingJob = async (graph_id: string, options: any) => {
       };
     }),
   };
-  debugger;
 
   return JobApiFactory(undefined, location.origin)
     .submitDataloadingJob(graph_id, {

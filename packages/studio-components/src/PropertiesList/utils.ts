@@ -102,13 +102,15 @@ export default function useStore(): IStore {
     });
     return properties;
   };
-  const handleChangeIndex = (value: any, all: { id: string }, state: IState): Property[] => {
+  /** data files */
+  const handleChangeIndex = (value: number | string, all: { id: string }, state: IState): Property[] => {
     const { id } = all;
     const properties = state.properties.map(item => {
       if (item.id === id) {
         return {
           ...item,
-          token: value,
+          index: typeof value === 'number' ? value : 0,
+          token: typeof value === 'string' ? value : '',
         };
       }
       return item;
