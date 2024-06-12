@@ -5,11 +5,11 @@ import type { IMeta, ParsedFile } from './parseCSV';
 
 interface IMappingProps {
   id: string;
+  data: any;
   meta: IMeta;
   updateState: React.Dispatch<
     React.SetStateAction<{
       files: ParsedFile[];
-      loading: boolean;
     }>
   >;
 }
@@ -18,7 +18,14 @@ const styles = {
     width: '200px',
   },
 };
-
+const getOptions = (keys: string[]) => {
+  return keys.map(item => {
+    return {
+      value: item,
+      label: item,
+    };
+  });
+};
 const Mapping: React.FunctionComponent<IMappingProps> = props => {
   const { meta, updateState, id } = props;
   const { header, graphFields } = meta;

@@ -61,3 +61,10 @@ export const searchParamOf = (key: string) => {
 export const getUrlParams = () => {
   return Object.fromEntries(new URLSearchParams(location.hash.split('?')[1]).entries());
 };
+
+export const fakeSnapshot = obj => {
+  return JSON.parse(JSON.stringify(obj));
+};
+
+export { generatorSchemaByGraphData } from './schema';
+export { asyncFunctionWithWorker } from './work';

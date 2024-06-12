@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 import { uuid } from 'uuidv4';
 import { useReactFlow } from 'reactflow';
 import { Icons } from '@graphscope/studio-components';
@@ -16,6 +16,10 @@ const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
   const { setCenter } = useReactFlow();
   const { updateStore, store } = useContext();
   const { elementOptions } = store;
+  const disabled = !elementOptions.isConnectable;
+  const tooltipText = disabled
+    ? 'The current mode is preview only, and does not support creating new vertex'
+    : 'Create new vertex';
 
   const handleAddVertex = () => {
     updateStore(draft => {
@@ -37,13 +41,15 @@ const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
   };
 
   return (
-    <Button
-      disabled={!elementOptions.isConnectable}
-      onClick={handleAddVertex}
-      style={style}
-      type="text"
-      icon={<AddNodeIcon />}
-    ></Button>
+    <Tooltip title={tooltipText} placement="right">
+      <Button
+        disabled={!elementOptions.isConnectable}
+        onClick={handleAddVertex}
+        style={style}
+        type="text"
+        icon={<AddNodeIcon />}
+      ></Button>
+    </Tooltip>
   );
 };
 

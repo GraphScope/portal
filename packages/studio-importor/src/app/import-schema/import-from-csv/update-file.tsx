@@ -14,8 +14,6 @@ export interface IProps {
 }
 
 const UploadFile = ({ onChange }: IProps) => {
-  const [api, contextHolder] = notification.useNotification();
-
   const customRequest: UploadProps['customRequest'] = async options => {
     const { file } = options;
     console.log('options', options);
@@ -31,28 +29,26 @@ const UploadFile = ({ onChange }: IProps) => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      {contextHolder}
-      <Space>
-        <Dragger
-          accept=".csv,.xlsx" // 限制文件类型
-          customRequest={customRequest}
-          showUploadList={false}
-          multiple={true}
-          onDrop={onDrop}
-        >
-          <Tooltip title={<FormattedMessage id="Import" />}>
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">Click or drag file to this area to upload</p>
-            <p className="ant-upload-hint">
-              Support for a single or bulk upload. Strictly prohibited from uploading company data or other banned
-              files.
-            </p>
-          </Tooltip>
-        </Dragger>
-      </Space>
+    <div style={{ display: 'flex', justifyContent: 'space-between', height: '100%' }}>
+      <Dragger
+        accept=".csv,.xlsx" // 限制文件类型
+        customRequest={customRequest}
+        showUploadList={false}
+        multiple={true}
+        onDrop={onDrop}
+        style={{ height: '100%' }}
+      >
+        <Tooltip title={<FormattedMessage id="Import" />}>
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">Click or drag file to this area to upload</p>
+          <p className="ant-upload-hint">
+            If you already have CSV data, feel free to upload it here, and the system will automatically infer possible
+            graph models for you.
+          </p>
+        </Tooltip>
+      </Dragger>
     </div>
   );
 };

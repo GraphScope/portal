@@ -6,6 +6,8 @@ export { default as Toolbar } from './Toolbar';
 export { default as Logo, LogoImage, LogoText } from './Logo';
 export { default as Container } from './Container';
 export { default as PropertiesList } from './PropertiesList';
+export { default as Section } from './Section';
+export { default as MultipleInstance } from './MultipleInstance';
 
 /** all */
 export * as Utils from './Utils';
@@ -13,6 +15,8 @@ export * as Icons from './Icons';
 
 /** export hooks  */
 export { useContainer } from './Container/useContainer';
+export { useSection } from './Section/useSection';
+export { useMultipleInstance } from './MultipleInstance/useMultipleInstance';
 /** export typing */
 export type { SegmentedTabsProps } from './SegmentedTabs';
 export type { Property } from './PropertiesList/typing';
