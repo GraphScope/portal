@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import UploadFile from './update-file';
-import { Button, Collapse, Space } from 'antd';
+import { Button, Collapse, Space, Tag, Flex, Dropdown } from 'antd';
+import type { MenuProps } from 'antd';
 import Mapping from './mapping';
 import type { ParsedFile } from './parseCSV';
 import { useContext } from '../../useContext';
+import { CaretRightOutlined, MoreOutlined } from '@ant-design/icons';
 
 import { Utils } from '@graphscope/studio-components';
 
 import { getSchemaData } from './web-worker';
 import { transform } from './transform';
+import MappingHeader from './mapping-header';
 interface IImportFromCSVProps {}
 
 const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
@@ -30,17 +33,6 @@ const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
       };
     });
   };
-
-  const items = files.map((item, index) => {
-    const { meta, id } = item;
-    const { name } = meta;
-    return {
-      key: index,
-      label: name,
-      //@ts-ignore
-      children: <Mapping meta={meta} updateState={setState} id={id} />,
-    };
-  });
 
   const onSubmit = async () => {
     setState(preState => {
@@ -72,17 +64,37 @@ const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
       };
     });
   };
+  const isEmpty = files.length === 0;
+
+  const items = files.map((item, index) => {
+    const { meta, id } = item;
+    return {
+      key: index,
+      label: <MappingHeader id={id} meta={meta} updateState={setState} />,
+      children: <Mapping id={id} meta={meta} updateState={setState} />,
+    };
+  });
+
   return (
     <div
       style={{
-        border: '1px dashed #ddd',
+        border: isEmpty ? '1px dashed #ddd' : 'none',
         height: '100%',
         borderRadius: '6px',
+        position: 'relative',
       }}
     >
-      {files.length === 0 ? <UploadFile onChange={onChange} /> : <Collapse items={items} defaultActiveKey={['1']} />}
-      {files.length !== 0 && (
-        <Space>
+      {isEmpty ? (
+        <UploadFile onChange={onChange} />
+      ) : (
+        <Collapse
+          expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+          items={items}
+          defaultActiveKey={['0']}
+        />
+      )}
+      {!isEmpty && (
+        <Space style={{ position: 'absolute', bottom: '0px', right: '0px' }}>
           <Button type="default" onClick={onClear}>
             clear files
           </Button>

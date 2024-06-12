@@ -169,7 +169,9 @@ export function guestGraphFields(header: string[]) {
     'destination',
   ]);
 
-  const idPattern = /(?:^|[._-])(id|uid|uuid|key)(?:[._-]|$)/i;
+  // const idPattern = /(?:^|[._-])(id|uid|uuid|key)(?:[._-]|$)/i;
+  const idPattern = /(?:^|[._-])(id|uid|uuid|key)(?:\d*)(?:[._-]|$)/i;
+
   const potentialIdFields: string[] = [];
 
   let sourceField, targetField, idField, type;
