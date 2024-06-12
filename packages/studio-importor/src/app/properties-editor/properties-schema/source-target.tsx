@@ -4,20 +4,17 @@ import { Typography, Input, Flex } from 'antd';
 import Controller from './Controller';
 import { useContext } from '../../useContext';
 import useModel from './useModel';
-interface ISourceTargetProps {
+import type { ImportorProps } from '../../typing';
+type ISourceTargetProps = Pick<ImportorProps, 'mappingColumn'> & {
   id: string;
   source: string;
   target: string;
-  source_data_fields: string | number;
-  target_data_fields: string | number;
-  componentType?: 'Select' | 'InputNumber';
-  mappingColumn: {
-    options?: { label: string; value: string }[];
-  };
-}
+  source_data_fields: { index: number; name: string };
+  target_data_fields: { index: number; name: string };
+};
 
 const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
-  const { id, source, target, mappingColumn, componentType = 'Select', source_data_fields, target_data_fields } = props;
+  const { id, source, target, mappingColumn, source_data_fields, target_data_fields } = props;
   const { store } = useContext();
   const { nodes } = store;
   const { handleDataFieldsChange } = useModel({ type: 'edges', id });
@@ -44,7 +41,7 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
             <Controller
               value={source_data_fields}
               onChange={val => handleDataFieldsChange(val, source_label, 'source_data_fields')}
-              componentType={componentType}
+              componentType={mappingColumn.type}
               options={mappingColumn?.options || []}
             />
           </div>
@@ -61,7 +58,7 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
             <Controller
               value={target_data_fields}
               onChange={val => handleDataFieldsChange(val, target_label, 'target_data_fields')}
-              componentType={componentType}
+              componentType={mappingColumn.type}
               options={mappingColumn?.options || []}
             />
           </div>

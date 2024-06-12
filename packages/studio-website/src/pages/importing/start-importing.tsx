@@ -19,7 +19,6 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
       nodes: nodes.map(item => item.data),
       edges: edges.map(item => item.data),
     });
-    return;
     // 再倒入数据
     const res = await submitDataloadingJob(graphId, {
       nodes,

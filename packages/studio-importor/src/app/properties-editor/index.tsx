@@ -39,7 +39,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       label: label,
       children: (
         <PropertiesSchema
-          schema={item}
+          schema={JSON.parse(JSON.stringify(item))}
           type="nodes"
           queryPrimitiveTypes={queryPrimitiveTypes}
           handleUploadFile={handleUploadFile}
@@ -58,7 +58,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       label: label,
       children: (
         <PropertiesSchema
-          schema={item}
+          schema={JSON.parse(JSON.stringify(item))}
           type="edges"
           queryPrimitiveTypes={queryPrimitiveTypes}
           handleUploadFile={handleUploadFile}
