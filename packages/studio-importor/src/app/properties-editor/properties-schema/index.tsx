@@ -23,7 +23,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
     appMode === 'DATA_IMPORTING'
       ? {
           options:
-            dataFields?.map((item, index) => {
+            dataFields?.map(item => {
               return { label: item, value: item };
             }) || [],
           type: dataFields?.length ? 'Select' : 'InputNumber',
@@ -48,18 +48,15 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
             target={target}
             source_data_fields={source_data_fields}
             target_data_fields={target_data_fields}
-            componentType={dataFields?.length ? 'Select' : 'InputNumber'}
-            //@ts-ignore
-            mappingColumn={mappingColumn}
+            mappingColumn={mappingColumn as ImportorProps['mappingColumn']}
           />
         )}
         <PropertiesList
           properties={properties}
           onChange={handleProperty}
-          typeColumn={{ options: queryPrimitiveTypes() }}
+          typeColumn={{ options: queryPrimitiveTypes() as unknown as Option[] }}
           disabled={disabled}
-          //@ts-ignore
-          mappingColumn={mappingColumn}
+          mappingColumn={mappingColumn as ImportorProps['mappingColumn']}
         />
         <GrootCase />
       </Flex>

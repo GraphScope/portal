@@ -41,7 +41,7 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
             <Controller
               value={source_data_fields}
               onChange={val => handleDataFieldsChange(val, source_label, 'source_data_fields')}
-              componentType={mappingColumn.type}
+              componentType={mappingColumn?.type || 'Select'}
               options={mappingColumn?.options || []}
             />
           </div>
@@ -58,7 +58,7 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
             <Controller
               value={target_data_fields}
               onChange={val => handleDataFieldsChange(val, target_label, 'target_data_fields')}
-              componentType={mappingColumn.type}
+              componentType={mappingColumn.type || 'Select'}
               options={mappingColumn?.options || []}
             />
           </div>
