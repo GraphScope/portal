@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 
 import { Icons } from '@graphscope/studio-components';
 import { useReactFlow } from 'reactflow';
@@ -15,6 +15,10 @@ const ClearCanvas: React.FunctionComponent<IAddNodeProps> = props => {
 
   const { updateStore, store } = useContext();
   const { elementOptions } = store;
+  const disabled = !elementOptions.isConnectable;
+  const tooltipText = disabled
+    ? 'The current mode is preview only, and does not support clearing the model'
+    : 'Clear graph model';
 
   const handleClear = () => {
     resetIndex();
@@ -25,13 +29,15 @@ const ClearCanvas: React.FunctionComponent<IAddNodeProps> = props => {
   };
 
   return (
-    <Button
-      disabled={!elementOptions.isConnectable}
-      onClick={handleClear}
-      style={style}
-      type="text"
-      icon={<Icons.Trash />}
-    ></Button>
+    <Tooltip title={tooltipText} placement="right">
+      <Button
+        disabled={disabled}
+        onClick={handleClear}
+        style={style}
+        type="text"
+        icon={<Icons.Trash disabled={disabled} />}
+      ></Button>
+    </Tooltip>
   );
 };
 

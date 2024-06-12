@@ -7,6 +7,7 @@ interface ILeftButtonProps {}
 
 const LeftButton: React.FunctionComponent<ILeftButtonProps> = props => {
   const { updateStore } = useContext();
+
   return (
     <Button
       type="text"

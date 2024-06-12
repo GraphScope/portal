@@ -5,8 +5,6 @@ import Mapping from './mapping';
 import type { IMeta, ParsedFile } from './parseCSV';
 import type { NodeData, EdgeData } from '../typing';
 import { useContext } from '../useContext';
-import { uuid } from 'uuidv4';
-import { Utils } from '@graphscope/studio-components';
 
 interface IImportFromCSVProps {}
 
@@ -70,15 +68,11 @@ const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
         });
       }
     });
-    console.log('graph data', { nodes, edges }, Utils.generatorSchemaByGraphData({ nodes, edges }));
+
     updateStore(draft => {
       draft.edges = edges;
       draft.nodes = nodes;
     });
-    // updateStore(draft => {
-    //   draft.hasLayouted = false;
-    //   draft.nodes = nodes;
-    // });
   };
   const onClear = () => {
     setState(preState => {
