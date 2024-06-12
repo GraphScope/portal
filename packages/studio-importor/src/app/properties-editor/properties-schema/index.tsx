@@ -5,7 +5,7 @@ import useModel from './useModel';
 import LocationField from './location';
 import SourceTarget from './source-target';
 import GrootCase from './groot-case';
-import type { ISchemaEdge, ISchemaNode, ISchemaOptions, ImportorProps } from '../../typing';
+import type { ISchemaEdge, ISchemaNode, ISchemaOptions, ImportorProps, Option } from '../../typing';
 
 export type IPropertiesSchemaProps = Pick<ImportorProps, 'appMode' | 'queryPrimitiveTypes' | 'handleUploadFile'> & {
   schema: ISchemaEdge;
@@ -14,7 +14,7 @@ export type IPropertiesSchemaProps = Pick<ImportorProps, 'appMode' | 'queryPrimi
 };
 
 const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props => {
-  const { schema, type, appMode, queryPrimitiveTypes, disabled } = props;
+  const { schema, type, appMode, queryPrimitiveTypes, disabled, handleUploadFile } = props;
   const { id, source, target, data } = schema;
   const { dataFields, properties = [], label = id, source_data_fields, target_data_fields } = data;
   const { handleChangeLabel, handleProperty } = useModel({ type, id });
@@ -34,7 +34,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
     <div>
       <Flex vertical gap={12} style={{ margin: '0px 12px' }}>
         {appMode === 'DATA_IMPORTING' ? (
-          <LocationField {...props} />
+          <LocationField schema={schema} type={type} handleUploadFile={handleUploadFile} />
         ) : (
           <>
             <Typography.Text>Label</Typography.Text>

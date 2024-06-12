@@ -51,11 +51,12 @@ export default function useModel({ type, id }) {
       draft.edges.forEach(item => {
         if (item.id === id) {
           item.data[data_fields] = {
-            column: {
-              index: typeof val === 'number' ? val : 0,
-              name: typeof val === 'string' ? val.split('_')[1] : '',
-            },
-            property: name,
+            id,
+            key: id,
+            index: typeof val === 'number' ? val : 0,
+            name,
+            type: '',
+            columnName: typeof val === 'string' ? val.split('_')[1] : '',
           };
         }
       });

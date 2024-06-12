@@ -2,18 +2,17 @@ import React from 'react';
 import { Input, Space } from 'antd';
 import UploadFiles from './upload-file';
 import { useIntl } from 'react-intl';
-interface ISwitchSourceProps {
+import type { ILocationFieldProps } from '../location';
+export type ISwitchSourceProps = Pick<ILocationFieldProps, 'handleUploadFile'> & {
   filelocation?: string;
   currentType?: string;
   onChangeType: (e: any) => void;
   onChangeValue: (e: string, isUpload: boolean) => void;
   onChangeFocus: (e: any) => void;
   onChangeDataFields: (header?: { dataFields: string[]; delimiter: string }) => void;
-  /** 上传接口 */
-  uploadFile(file): { file_path: string };
-}
+};
 const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
-  const { filelocation, onChangeFocus, onChangeValue, onChangeDataFields, uploadFile } = props;
+  const { filelocation, onChangeFocus, onChangeValue, onChangeDataFields, handleUploadFile } = props;
   const intl = useIntl();
   return (
     <Space.Compact size="small" style={{ width: '100%' }}>
@@ -22,7 +21,7 @@ const SwitchSource: React.FunctionComponent<ISwitchSourceProps> = props => {
           value={filelocation}
           onChange={onChangeValue}
           onChangeHeader={onChangeDataFields}
-          uploadFile={uploadFile}
+          handleUploadFile={handleUploadFile}
         />
         {filelocation && <Input style={{ width: '100%' }} disabled value={filelocation} />}
         {!filelocation && (

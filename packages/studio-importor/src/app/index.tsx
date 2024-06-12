@@ -21,8 +21,6 @@ interface Option {
   value: string;
 }
 import { useContext } from './useContext';
-import { Button } from 'antd';
-
 const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   const {
     appMode,

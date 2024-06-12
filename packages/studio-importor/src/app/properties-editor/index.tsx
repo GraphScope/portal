@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Collapse, Segmented, Button } from 'antd';
+import React from 'react';
+import { Collapse } from 'antd';
 import PropertiesSchema from './properties-schema';
 import type {} from '../typing';
 import { useContext } from '../useContext';
@@ -56,7 +56,16 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     return {
       key: id,
       label: label,
-      children: <PropertiesSchema schema={item} type="edges" {...props} disabled={!elementOptions.isEditable} />,
+      children: (
+        <PropertiesSchema
+          schema={item}
+          type="edges"
+          queryPrimitiveTypes={queryPrimitiveTypes}
+          handleUploadFile={handleUploadFile}
+          appMode={appMode}
+          disabled={!elementOptions.isEditable}
+        />
+      ),
     };
   });
 

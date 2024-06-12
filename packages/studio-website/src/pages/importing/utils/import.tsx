@@ -45,26 +45,21 @@ export function transformSchemaToImportOptions(schema: Schema) {
       `${edges_mapping[source]}.${source_vertex.name}`,
       `${edges_mapping[target]}.${target_vertex.name}`,
     ];
-    console.log(dataFields);
 
     const source_data_fields = {
-      column: {
-        index: typeof source_vertex.name === 'number' ? source_vertex.name : 0,
-        name: typeof source_vertex.name === 'string' ? source_vertex.name : '',
-      },
+      index: typeof source_vertex.token === 'number' ? source_vertex.token : 0,
+      name: typeof source_vertex.token === 'string' ? source_vertex.token : '',
     };
     const target_data_fields = {
-      column: {
-        index: typeof target_vertex.name === 'number' ? target_vertex.name : 0,
-        name: typeof target_vertex.name === 'string' ? target_vertex.name : '',
-      },
+      index: typeof target_vertex.token === 'number' ? target_vertex.token : 0,
+      name: typeof target_vertex.token === 'string' ? target_vertex.token : '',
     };
     return {
       ...item,
       datatype: 'csv',
       filelocation: '',
       isBind: false,
-      dataFields,
+      // dataFields: dataFields.concat(properties.map(item => item.name)),
       source_data_fields,
       target_data_fields,
       properties: [
@@ -175,8 +170,8 @@ export function transformMappingSchemaToImportOptions(
   edge_mappings.forEach(item => {
     const { column_mappings, type_triplet, destination_vertex_mappings, source_vertex_mappings } = item;
     const { edge } = type_triplet;
-    // const sourceField = source_vertex_mappings[0].column;
-    // const targetField = destination_vertex_mappings[0].column;
+    const sourceField = source_vertex_mappings[0].column;
+    const targetField = destination_vertex_mappings[0].column;
     // const source_data_fields = {
     //   column: {
     //     index: typeof sourceField === 'number' ? sourceField : 0,
@@ -189,11 +184,19 @@ export function transformMappingSchemaToImportOptions(
     //     name: typeof targetField === 'string' ? targetField : '',
     //   },
     // };
+    const source_data_fields = {
+      index: sourceField.index,
+      name: sourceField.name,
+    };
+    const target_data_fields = {
+      index: targetField.index,
+      name: targetField.name,
+    };
     label_mappings[edge] = {
       ...item,
       //@ts-ignore
-      source_data_fields: source_vertex_mappings[0],
-      target_data_fields: destination_vertex_mappings[0],
+      source_data_fields,
+      target_data_fields,
       properties_mappings: {
         // [`#source.${sourceField.name}`]: sourceField,
         // [`#target.${targetField.name}`]: targetField,
@@ -412,8 +415,10 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
   options.edges.forEach(item => {
     const { properties, filelocation, label, source, target, source_data_fields, target_data_fields } = item;
     const column_mappings: any[] = [];
+    const source_vertex_mappings: any[] = [];
+    const destination_vertex_mappings: any[] = [];
     // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
-    properties.forEach((p, pIdx) => {
+    properties.forEach((p: { token: string; name: string }) => {
       const { token, name } = p;
       const colmunName = typeof token === 'string' ? token.split('_')[1] : token;
       column_mappings.push({
@@ -424,7 +429,20 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
         property: name,
       });
     });
-
+    source_vertex_mappings.push({
+      column: {
+        index: source_data_fields.index,
+        name: source_data_fields.columnName || '',
+      },
+      property: source_data_fields.name,
+    });
+    destination_vertex_mappings.push({
+      column: {
+        index: target_data_fields.index,
+        name: target_data_fields.columnName || '',
+      },
+      property: target_data_fields.name,
+    });
     edge_mappings.push({
       type_triplet: {
         edge: label,
@@ -433,8 +451,8 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
       },
       inputs: [filelocation],
       column_mappings,
-      source_vertex_mappings: [source_data_fields],
-      destination_vertex_mappings: [target_data_fields],
+      source_vertex_mappings,
+      destination_vertex_mappings,
     });
   });
 

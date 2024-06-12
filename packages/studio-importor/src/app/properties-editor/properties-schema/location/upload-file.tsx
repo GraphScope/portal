@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { UploadOutlined, LoadingOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
-import { Button, Upload, Flex, Input, Space } from 'antd';
+import { Button, Upload, Flex, Space } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { getDataFields } from '../utils/getDataFields';
-type UploadFilesProps = {
+import type { ISwitchSourceProps } from './switch-source';
+type UploadFilesProps = Pick<ISwitchSourceProps, 'handleUploadFile'> & {
   onChange: (filelocation: string, isUpload: boolean) => void;
   value?: string;
   onChangeHeader: (header?: { dataFields: string[]; delimiter: string }) => void;
   handleChange?: (val: boolean) => void;
-  uploadFile(file): { file_path: string };
 };
 const UploadFiles: React.FC<UploadFilesProps> = props => {
-  const { onChange, onChangeHeader, uploadFile } = props;
+  const { onChange, onChangeHeader, handleUploadFile } = props;
   const [state, updateState] = useState({
     isLoading: false,
   });
@@ -26,7 +26,7 @@ const UploadFiles: React.FC<UploadFilesProps> = props => {
         isLoading: true,
       };
     });
-    const { file_path } = (await uploadFile(file as File)) || '';
+    const { file_path } = (await handleUploadFile(file as File)) || '';
     const headers = await getDataFields(file as File);
     updateState(preState => {
       return {

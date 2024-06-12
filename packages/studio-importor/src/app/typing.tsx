@@ -51,7 +51,9 @@ export interface ImportorProps {
 
   queryGraphSchema?: () => Promise<any>;
   queryBoundSchema?: () => Promise<any>;
-  handleUploadFile?: (file: File) => Promise<string>;
+  handleUploadFile: (file: File) => {
+    file_path: string;
+  };
   queryImportData?: () => void;
   /** 默认样式相关 */
   defaultLeftStyles?: {
