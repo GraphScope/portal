@@ -31,7 +31,7 @@ export const getSchemaData = files => {
         if (!data.hasOwnProperty(key)) continue;
         var value = data[key];
         var prefixedKey = prefix ? ''.concat(prefix, '.').concat(key) : key;
-        if (value && typeof value === 'object' && !Array.isArray(value)) {
+        if (value && Object.prototype.toString.call(value) === '[object Object]' && !Array.isArray(value)) {
           properties.push.apply(properties, extractProperties(value, prefixedKey));
         } else {
           properties.push({ name: prefixedKey, type: getType(value) });
@@ -48,9 +48,9 @@ export const getSchemaData = files => {
       if (value === null) return 'null';
       if (Array.isArray(value)) return 'array';
       if (value instanceof Date) return 'date';
-      if (!isNaN(value) && typeof value !== 'boolean') return 'number';
-      if (typeof value === 'string' && isValidDate(value)) return 'date';
-      return typeof value;
+      if (!isNaN(value) && Object.prototype.toString.call(value) !== '[object Boolean]') return 'number';
+      if (Object.prototype.toString.call(value) === '[object String]' && isValidDate(value)) return 'date';
+      return 'string';
     };
     /**
      * 检查字符串是否为有效日期
@@ -121,15 +121,16 @@ export const getSchemaData = files => {
    * @returns
    */
   function getJSONData(contents, header, delimiter) {
-    const [_header, ..._data] = contents.split('\n');
-    const data = _data.map(line => {
-      return line.split(delimiter).reduce((acc, curr, index) => {
-        const key = header[index];
-        return {
-          ...acc,
-          [key]: curr,
-        };
-      }, {});
+    var _ref = contents.split('\n'),
+      _data = _ref.slice(1);
+
+    var data = _data.map(function (line) {
+      var lineArr = line.split(delimiter);
+      var obj = {};
+      for (var i = 0; i < header.length; i++) {
+        obj[header[i]] = lineArr[i];
+      }
+      return obj;
     });
     return data;
   }
