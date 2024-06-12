@@ -61,7 +61,7 @@ export function transformSchemaToImportOptions(schema: Schema) {
       datatype: 'csv',
       filelocation: '',
       isBind: false,
-      // dataFields: dataFields.concat(properties.map(item => item.name)),
+      dataFields: dataFields.concat(properties.map(item => item.name)),
       source_data_fields,
       target_data_fields,
       properties: [
@@ -169,18 +169,18 @@ export function transformMappingSchemaToImportOptions(
       }, {}),
     };
   });
-  edge_mappings.forEach(item => {
+  edge_mappings.forEach((item, index) => {
     const { column_mappings, type_triplet, destination_vertex_mappings, source_vertex_mappings } = item;
     const { edge } = type_triplet;
     const sourceField = source_vertex_mappings[0]?.column;
     const targetField = destination_vertex_mappings[0]?.column;
     const source_data_fields = {
       index: sourceField?.index,
-      columnName: `0_${sourceField?.name}`,
+      name: `${index}_${sourceField?.name}`,
     };
     const target_data_fields = {
       index: targetField?.index,
-      columnName: `1_${targetField?.name}`,
+      name: `${index}_${targetField?.name}`,
     };
     label_mappings[edge] = {
       ...item,
@@ -223,6 +223,8 @@ export function transformMappingSchemaToImportOptions(
   const _edges = edges.map(item => {
     const { label, properties } = item;
     const mapping = label_mappings[label];
+    //@ts-ignore
+    const { source_data_fields, target_data_fields } = mapping;
     const filelocation = (mapping && mapping.inputs && mapping.inputs[0]) || '';
     return {
       ...item,
@@ -231,6 +233,8 @@ export function transformMappingSchemaToImportOptions(
       isBind: !!filelocation,
       isEidtProperty: true,
       delimiter,
+      source_data_fields: { index: source_data_fields.index, columnName: source_data_fields.name },
+      target_data_fields: { index: target_data_fields.index, columnName: target_data_fields.name },
       dataFields: loadingdataFields('edges', properties, mapping).concat(item.dataFields),
       properties: properties.map((p, index) => {
         const { name } = p;
@@ -242,6 +246,8 @@ export function transformMappingSchemaToImportOptions(
       }),
     };
   });
+  console.log(_edges);
+
   return {
     nodes: _nodes,
     edges: _edges,
