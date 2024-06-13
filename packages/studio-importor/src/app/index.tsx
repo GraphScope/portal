@@ -51,19 +51,17 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
 
   useEffect(() => {
     (async () => {
-      let schemaOptions = {};
-
+      let schema = {};
       if (appMode === 'DATA_MODELING' && queryGraphSchema) {
-        schemaOptions = await queryGraphSchema();
+        schema = await queryGraphSchema();
       }
       if (appMode === 'DATA_IMPORTING' && queryBoundSchema) {
-        const schema = await queryBoundSchema();
-
-        schemaOptions = {
-          nodes: transformGraphNodes(schema.nodes, store.displayMode),
-          edges: transformEdges(schema.edges, store.displayMode),
-        };
+        schema = await queryBoundSchema();
       }
+      const schemaOptions = {
+        nodes: transformGraphNodes(schema.nodes, store.displayMode),
+        edges: transformEdges(schema.edges, store.displayMode),
+      };
       //@ts-ignore
       const { nodes, edges } = schemaOptions || { nodes: [], edges: [] };
       updateStore(draft => {
