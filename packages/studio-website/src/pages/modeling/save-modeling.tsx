@@ -77,8 +77,6 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
 
   const { isLoading, open, status, schema } = state;
 
-  console.log(store, modelingStore, schema);
-
   const { graphId } = store;
   const disabled = graphId !== draftId;
 
