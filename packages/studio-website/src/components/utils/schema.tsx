@@ -146,7 +146,8 @@ export function transformSchemaToOptions(originalSchema: DeepRequired<Schema>, d
       key,
       source: nodeMap[source],
       target: nodeMap[target],
-      properties: properties.map(p => {
+      /**接口返回前两项为nodes主键，页面现拆离出去 */
+      properties: properties.splice(2).map(p => {
         const { name, type } = p;
         return {
           name,

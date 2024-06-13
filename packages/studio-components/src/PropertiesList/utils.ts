@@ -103,14 +103,19 @@ export default function useStore(): IStore {
     return properties;
   };
   /** data files */
-  const handleChangeIndex = (value: number | string, all: { id: string }, state: IState): Property[] => {
+  const handleChangeIndex = (
+    value: { index: number; token: string },
+    all: { id: string },
+    state: IState,
+  ): Property[] => {
     const { id } = all;
+    const { index, token } = value;
     const properties = state.properties.map(item => {
       if (item.id === id) {
         return {
           ...item,
-          index: typeof value === 'number' ? value : 0,
-          token: typeof value === 'string' ? value : '',
+          index,
+          token: `${index}_${token}`,
         };
       }
       return item;
