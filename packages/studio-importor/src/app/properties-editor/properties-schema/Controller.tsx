@@ -21,18 +21,19 @@ const Controller = (props: IController) => {
     componentType,
   } = props;
   /** mappingFiles options 边涉及相同value，导致不唯一 */
-  const _options = options.map((item, Index: number) => {
+  const _options = options.map((item, Pindex) => {
     return {
-      value: `${Index}_${item.value}`,
+      /** 接口返回有index则使用，上传情况用上传key ->Pindex*/
+      value: `${Pindex}_${item.value}`,
       label: (
-        <Flex justify="space-between" key={Index}>
+        <Flex justify="space-between" key={Pindex}>
           <span
             style={{
               marginRight: '12px',
               color: '#b8b8b8',
             }}
           >
-            #{Index}
+            #{Pindex}
           </span>
           <span>{item.value}</span>
         </Flex>
@@ -56,13 +57,21 @@ const Controller = (props: IController) => {
         value={index}
         min={0}
         onChange={evt => {
-          onChange(evt);
+          onChange({ index: evt, token: '' });
         }}
       />
     );
   } else {
     return (
-      <Select style={{ width: '100%', marginTop: '8px' }} options={_options} value={columnName} onChange={onChange} />
+      <Select
+        style={{ width: '100%', marginTop: '8px' }}
+        options={_options}
+        value={columnName}
+        onChange={(evt: string) => {
+          const [index, value] = evt.split('_');
+          onChange({ index: Number(index), columnName: value });
+        }}
+      />
     );
   }
 };

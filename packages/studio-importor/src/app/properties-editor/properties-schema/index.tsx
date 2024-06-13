@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Typography, Flex, Input, Space, Button, Row } from 'antd';
+import { Typography, Flex, Input } from 'antd';
 import { PropertiesList } from '@graphscope/studio-components';
 import useModel from './useModel';
 import LocationField from './location';
 import SourceTarget from './source-target';
 import GrootCase from './groot-case';
 import type { ISchemaEdge, ISchemaNode, ISchemaOptions, ImportorProps, Option } from '../../typing';
-
+import { useContext } from '../../useContext';
 export type IPropertiesSchemaProps = Pick<ImportorProps, 'appMode' | 'queryPrimitiveTypes' | 'handleUploadFile'> & {
   schema: ISchemaEdge;
   type: 'nodes' | 'edges';
@@ -16,8 +16,19 @@ export type IPropertiesSchemaProps = Pick<ImportorProps, 'appMode' | 'queryPrimi
 const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props => {
   const { schema, type, appMode, queryPrimitiveTypes, disabled, handleUploadFile } = props;
   const { id, source, target, data } = schema;
-  const { dataFields, properties = [], label = id, source_data_fields, target_data_fields } = data;
+  const { dataFields, properties = [], label = id, source_data_fields, target_data_fields, isUpload } = data;
   const { handleChangeLabel, handleProperty } = useModel({ type, id });
+  const { store } = useContext();
+  const { edges } = store;
+  /** 判断是否导入 */
+  let componentType = isUpload;
+  if (type === 'edges') {
+    edges.map(item => {
+      if (item.id === id) {
+        componentType = item.data.isUpload;
+      }
+    });
+  }
   /** 判断是否为导入数据 */
   const mappingColumn =
     appMode === 'DATA_IMPORTING'
@@ -26,7 +37,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
             dataFields?.map(item => {
               return { label: item, value: item };
             }) || [],
-          type: dataFields?.length ? 'Select' : 'InputNumber',
+          type: componentType ? 'Select' : 'InputNumber',
         }
       : null;
 
