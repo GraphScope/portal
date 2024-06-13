@@ -144,25 +144,23 @@ const JobsList: FC = () => {
       key: 'actions',
       // render: (record: IJobType) => <Action {...record} onChange={() => getJobList()} />,
       render: (record: IJobType) => (
-        <>
-          <Popconfirm
-            placement="bottomRight"
-            title={<FormattedMessage id="Are you sure to delete this task?" />}
-            onConfirm={() => handleDeleteJob(record.id)}
-            okText={<FormattedMessage id="Yes" />}
-            cancelText={<FormattedMessage id="No" />}
-            icon
-          >
-            <Button
-              type="text"
-              size="small"
-              danger
-              ghost
-              icon={<FontAwesomeIcon icon={faTrashCan} />}
-              disabled={!['RUNNING', 'WAITING'].includes(record.status)}
-            />
-          </Popconfirm>
-        </>
+        <Popconfirm
+          placement="bottomRight"
+          title={<FormattedMessage id="Are you sure to delete this task?" />}
+          onConfirm={() => handleDeleteJob(record.id)}
+          okText={<FormattedMessage id="Yes" />}
+          cancelText={<FormattedMessage id="No" />}
+          icon
+        >
+          <Button
+            type="text"
+            size="small"
+            danger
+            ghost
+            icon={<FontAwesomeIcon icon={faTrashCan} />}
+            disabled={!['RUNNING', 'WAITING'].includes(record.status)}
+          />
+        </Popconfirm>
       ),
     },
   ];
