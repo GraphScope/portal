@@ -41,7 +41,7 @@ const Controller = (props: IController) => {
   // /** 上传选择 or 输入数字 */
   // const isInputNumberShow = isDefault === undefined ? (typeof value === 'number' ? true : false) : !isDefault;
 
-  if (componentType === 'InputNumber') {
+  if (!token) {
     return (
       <InputNumber
         style={{ minWidth: '140px' }}

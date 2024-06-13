@@ -50,7 +50,7 @@ const Controller = (props: IController) => {
   // const isDefault = !filelocation ? false : isUpload;
   // /** 上传选择 or 输入数字 */
   // const isInputNumberShow = isDefault === undefined ? (typeof value === 'number' ? true : false) : !isDefault;
-  if (componentType === 'InputNumber') {
+  if (!columnName) {
     return (
       <InputNumber
         style={{ width: '100%', marginTop: '8px' }}

@@ -208,8 +208,6 @@ export function transformMappingSchemaToImportOptions(
       datatype: type,
       filelocation,
       isBind: !!filelocation,
-      /** 判断inputs有值且属性有值 */
-      isUpload: filelocation.includes('.csv'),
       isEidtProperty: true,
       delimiter,
       dataFields: loadingdataFields('nodes', properties),
@@ -235,7 +233,6 @@ export function transformMappingSchemaToImportOptions(
       datatype: type,
       filelocation,
       isBind: !!filelocation,
-      isUpload: filelocation.includes('.csv'),
       isEidtProperty: true,
       delimiter,
       source_data_fields: {

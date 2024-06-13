@@ -16,12 +16,12 @@ export type IPropertiesSchemaProps = Pick<ImportorProps, 'appMode' | 'queryPrimi
 const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props => {
   const { schema, type, appMode, queryPrimitiveTypes, disabled, handleUploadFile } = props;
   const { id, source, target, data } = schema;
-  const { dataFields, properties = [], label = id, source_data_fields, target_data_fields, isUpload } = data;
+  const { dataFields, properties = [], label = id, source_data_fields, target_data_fields } = data;
   const { handleChangeLabel, handleProperty } = useModel({ type, id });
   const { store } = useContext();
   const { edges } = store;
   /** 判断是否导入 */
-  let componentType = isUpload;
+  let componentType = false;
   if (type === 'edges') {
     edges.map(item => {
       if (item.id === id) {
