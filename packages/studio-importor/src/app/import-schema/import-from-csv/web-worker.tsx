@@ -80,6 +80,7 @@ export const getSchemaData = files => {
       if (!nodeSchemas.has(label)) {
         var nodeSchema = {
           label: label,
+          meta: node.meta,
           properties: extractProperties(node.data),
         };
         nodeSchemas.set(label, nodeSchema);
@@ -103,6 +104,7 @@ export const getSchemaData = files => {
           source: getLabel(currentSource, defaultlabelKey, nodeLabelFromProperties),
           target: getLabel(currentTarget, defaultlabelKey, nodeLabelFromProperties),
           properties: extractProperties(edge.data),
+          meta: edge.meta,
         };
         edgeSchemas.set(label, edgeSchema);
       }
@@ -153,6 +155,7 @@ export const getSchemaData = files => {
             id: node[idField],
             label,
             data: node,
+            meta: { graphFields, delimiter },
           });
         });
       }
@@ -164,6 +167,7 @@ export const getSchemaData = files => {
             source: edge[sourceField],
             target: edge[targetField],
             data: edge,
+            meta: { graphFields, delimiter },
           });
         });
       }

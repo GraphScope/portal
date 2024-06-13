@@ -49,7 +49,7 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
   } = props;
 
   const { store, updateStore } = useContext();
-  const { currentnNav, graphs, graphId } = store;
+  const { currentnNav, graphs, graphId, draftId } = store;
 
   const handleChange = (value: string) => {
     const herf = graphId ? `${value}?${extraRouterKey}=${graphId}` : value;
@@ -66,11 +66,13 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
         if (graphId) {
           matchGraph = res.find(item => item.id === graphId);
           if (!matchGraph) {
-            notification.error({
-              message: 'Graph Instance Not Found',
-              description: `Graph Instance ${graphId} Not Found`,
-              duration: 3,
-            });
+            if (graphId !== draftId) {
+              notification.error({
+                message: 'Graph Instance Not Found',
+                description: `Graph Instance ${graphId} Not Found`,
+                duration: 3,
+              });
+            }
           }
         } else {
           matchGraph = res.find(item => {

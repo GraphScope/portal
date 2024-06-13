@@ -8,7 +8,7 @@ export { default as Container } from './Container';
 export { default as PropertiesList } from './PropertiesList';
 export { default as Section } from './Section';
 export { default as MultipleInstance } from './MultipleInstance';
-
+export { default as SplitSection } from './SplitSection';
 /** all */
 export * as Utils from './Utils';
 export * as Icons from './Icons';

@@ -21,18 +21,7 @@ export const createGraph = async (graph_id: string, params: { graphName: string;
       description: '',
       schema: schemaJSON,
     };
-    graphs = await GraphApiFactory(undefined, location.origin)
-      .createGraph(data)
-      .then(res => {
-        if (res.status === 200) {
-          return res.data;
-        }
-        return [];
-      })
-      .catch(error => {
-        notification('error', error);
-        return [];
-      });
+    graphs = await GraphApiFactory(undefined, location.origin).createGraph(data);
   }
   /** groot 创建 */
   if (GS_ENGINE_TYPE === 'groot') {

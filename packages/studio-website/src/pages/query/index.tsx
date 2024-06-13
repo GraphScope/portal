@@ -12,6 +12,7 @@ import {
 } from './services';
 import { TOOLS_MENU } from '../../layouts/const';
 import { useContext } from '@/layouts/useContext';
+import EmptyModelCase from './empty-model-case';
 
 const QueryModule = () => {
   const { GS_ENGINE_TYPE } = window;
@@ -24,37 +25,40 @@ const QueryModule = () => {
   const { graphId } = store;
 
   return (
-    <StudioQuery
-      key={graphId}
-      //@ts-ignore
-      /** 主题相关 */
-      theme={{ mode: themeMode, primaryColor }}
-      /** 国际化 */
-      locale={locale}
-      /** 侧边栏展示的位置 */
-      displaySidebarPosition="right"
-      /** 是否启用绝对定位布局 */
-      enableAbsolutePosition={false}
-      /** 语句默认展示的模式 */
-      dispalyMode="flow"
-      /** 查询类型 */
-      globalScript={globalScript}
-      language={language}
-      //@ts-ignore
-      queryInfo={queryInfo}
-      /** 语句服务  */
-      queryStatements={queryStatements}
-      createStatements={createStatements}
-      deleteStatements={deleteStatements}
-      /** 查询图数据 */
-      //@ts-ignore
-      queryGraphData={queryGraphData}
-      /** 查询Schema */
-      //@ts-ignore
-      queryGraphSchema={queryGraphSchema}
-      /** 是否立即查询 */
-      enableImmediateQuery={true}
-    />
+    <>
+      <EmptyModelCase />
+      <StudioQuery
+        key={graphId}
+        //@ts-ignore
+        /** 主题相关 */
+        theme={{ mode: themeMode, primaryColor }}
+        /** 国际化 */
+        locale={locale}
+        /** 侧边栏展示的位置 */
+        displaySidebarPosition="right"
+        /** 是否启用绝对定位布局 */
+        enableAbsolutePosition={false}
+        /** 语句默认展示的模式 */
+        dispalyMode="flow"
+        /** 查询类型 */
+        globalScript={globalScript}
+        language={language}
+        //@ts-ignore
+        queryInfo={queryInfo}
+        /** 语句服务  */
+        queryStatements={queryStatements}
+        createStatements={createStatements}
+        deleteStatements={deleteStatements}
+        /** 查询图数据 */
+        //@ts-ignore
+        queryGraphData={queryGraphData}
+        /** 查询Schema */
+        //@ts-ignore
+        queryGraphSchema={queryGraphSchema}
+        /** 是否立即查询 */
+        enableImmediateQuery={true}
+      />
+    </>
   );
 };
 

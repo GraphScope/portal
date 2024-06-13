@@ -51,32 +51,37 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
 
   useEffect(() => {
     (async () => {
-      let schemaOptions = {};
-
+      let schema = {};
       if (appMode === 'DATA_MODELING' && queryGraphSchema) {
-        schemaOptions = await queryGraphSchema();
+        schema = await queryGraphSchema();
       }
       if (appMode === 'DATA_IMPORTING' && queryBoundSchema) {
-        const schema = await queryBoundSchema();
-
-        schemaOptions = {
-          nodes: transformGraphNodes(schema.nodes, store.displayMode),
-          edges: transformEdges(schema.edges, store.displayMode),
-        };
+        schema = await queryBoundSchema();
       }
+      const schemaOptions = {
+        //@ts-ignore
+        nodes: transformGraphNodes(schema.nodes, store.displayMode),
+        //@ts-ignore
+        edges: transformEdges(schema.edges, store.displayMode),
+      };
       //@ts-ignore
       const { nodes, edges } = schemaOptions || { nodes: [], edges: [] };
+      const isEmpty = nodes.length === 0;
+      const leftSideOpen = appMode === 'DATA_MODELING' && isEmpty;
+      const rightSideOpen = !isEmpty;
       updateStore(draft => {
         draft.nodes = nodes;
         draft.edges = edges;
         draft.appMode = appMode;
-        draft.collapsed.left = defaultLeftStyles.collapsed;
-        draft.collapsed.right = defaultRightStyles.collapsed;
+        draft.collapsed.left = !leftSideOpen;
+        draft.collapsed.right = !rightSideOpen;
         draft.elementOptions = {
           isClickable: (elementOptions || {}).isClickable !== false, //默认undefined 则返回true
-          isEditable: nodes.length === 0, // 初始状态，接口获取画布有 Schema 数据的时候，不可编辑
-          isConnectable: nodes.length === 0, //  初始状态，接口获取画布有 Schema 数据的时候，不可连线
+          isEditable: isEmpty, // 初始状态，接口获取画布有 Schema 数据的时候，不可编辑
+          isConnectable: isEmpty, //  初始状态，接口获取画布有 Schema 数据的时候，不可连线
         };
+        draft.currentId = isEmpty ? '' : nodes[0].id;
+        draft.currentType = 'nodes';
       });
     })();
   }, []);
