@@ -4,14 +4,18 @@ import { queryPrimitiveTypes, uploadFile, getSchema, getDataloadingConfig } from
 import { useContext } from '../../layouts/useContext';
 import { Toolbar } from '@graphscope/studio-components';
 import StartImporting from './start-importing';
-
+import { transformMappingSchemaToImportOptions } from './utils/import';
+import EmptyModelCase from './empty-model-case';
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
   const { store } = useContext();
-  const { graphId } = store;
+  const { graphId, draftId } = store;
 
   const queryBoundSchema = async () => {
+    if (graphId === draftId) {
+      return { nodes: [], edges: [] } as any;
+    }
     if (graphId) {
       const graphSchema = await getSchema(graphId);
       /** options 包含nodes,edges */
@@ -37,14 +41,10 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
         width: 500,
       }}
     >
-      {/* <Toolbar style={{ top: '12px', right: '184px', left: 'unset' }} direction="horizontal">
-        <BindDataFields />
-      </Toolbar> */}
       <Toolbar style={{ top: '12px', right: '74px', left: 'unset' }} direction="horizontal">
-        {/* <BindDataFields />
-        <Divider type="vertical" style={{ margin: '0px' }} /> */}
         <StartImporting />
       </Toolbar>
+      <EmptyModelCase />
     </ImportApp>
   );
 };
