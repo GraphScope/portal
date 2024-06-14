@@ -9,28 +9,29 @@ export type FieldType = {
 };
 
 interface IModalType {
+  isImportFinish: boolean;
   handleFinish: (values: FieldType) => void;
   handleColse: () => void;
 }
 const { Text } = Typography;
 const ModalType: React.FC<IModalType> = props => {
-  const { handleFinish, handleColse } = props;
+  const { isImportFinish, handleFinish, handleColse } = props;
   const [form] = Form.useForm();
   const { store: importingStore } = useImporting();
   const { nodes, edges } = importingStore;
   const [state, updateState] = useState({
-    finish: true,
+    finish: false,
   });
   const { finish } = state;
   const handleClick = () => {
-    const data = form.getFieldsValue();
-    handleFinish(data);
     updateState(preset => {
       return {
         ...preset,
         finish: true,
       };
     });
+    const data = form.getFieldsValue();
+    handleFinish(data);
   };
   const nodes_bind = nodes.length;
   const edges_bind = nodes.length;
@@ -99,7 +100,7 @@ const ModalType: React.FC<IModalType> = props => {
               </Flex>
             ) : (
               <Flex vertical align="end">
-                <Button style={{ width: '240px' }} type="primary" onClick={() => handleClick}>
+                <Button style={{ width: '240px' }} type="primary" onClick={handleClick}>
                   Load data
                 </Button>
               </Flex>
@@ -110,7 +111,13 @@ const ModalType: React.FC<IModalType> = props => {
       <Col span={12}>
         <Card style={{ height: '500px' }}>
           {finish ? (
-            <Result status="403" subTitle="Sorry, you are not authorized to access this page." />
+            <>
+              {isImportFinish ? (
+                <Result status="403" subTitle="Sorry, you are not authorized to access this page." />
+              ) : (
+                <Text>导入数据需要一点时间，请耐心等待，您可以前往任务中心查看进展</Text>
+              )}
+            </>
           ) : (
             <Text>
               您此时需要导入 {nodes_bind} 份点文件，{edges_bind} 份边文件，共计 {nodes_bind + edges_bind}{' '}

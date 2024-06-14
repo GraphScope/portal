@@ -16,8 +16,10 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
   const { graphId } = store;
   const [state, updateState] = useState({
     open: false,
+    /** 是否导入完成 */
+    isImportFinish: false,
   });
-  const { open } = state;
+  const { open, isImportFinish } = state;
   const handleClick = async (values: FieldType) => {
     /** loading config */
     console.log(values);
@@ -32,6 +34,12 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
       edges,
     });
     console.log('res', res);
+    updateState(preset => {
+      return {
+        ...preset,
+        isImportFinish: true,
+      };
+    });
   };
 
   if (appMode === 'DATA_IMPORTING') {
@@ -52,6 +60,7 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
         </Button>
         <Modal title="LoadConfig" width={'40%'} open={open} footer={null} closable={false}>
           <ModalType
+            isImportFinish={isImportFinish}
             handleFinish={handleClick}
             handleColse={() =>
               updateState(preset => {
