@@ -7,11 +7,20 @@ interface IController {
   value: { index: number; token: string };
   onChange(evt: any): void;
 }
+
+export const getValue = (index, token) => {
+  let _value = `${index}_${token}`;
+  const badCase = new Set([undefined, null, '']);
+  if (badCase.has(String(index)) || badCase.has(token)) {
+    _value = '';
+  }
+  return _value;
+};
 const MappingFields = (props: IController) => {
   const { options, value, onChange, componentType } = props;
   const { index, token } = value;
   console.log(index, token, options);
-  const _value = `${index}_${token}`;
+
   /** mappingFiles options 边涉及相同value，导致不唯一 */
   const _options = options.map((item, pIdx) => {
     return {
@@ -57,11 +66,13 @@ const MappingFields = (props: IController) => {
     );
   }
 
+  const _value = getValue(index, token);
+
   return (
     <Select
       size="small"
       options={_options}
-      value={_value === 'undefined_' ? '' : (_value as string)}
+      value={_value}
       onChange={(evt: string) => {
         const [index, value] = evt.split('_');
         onChange({ index: Number(index), token: value });

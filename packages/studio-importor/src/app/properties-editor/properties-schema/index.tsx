@@ -19,28 +19,17 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
   const { dataFields, properties = [], label = id, source_data_fields, target_data_fields } = data;
   const { handleChangeLabel, handleProperty } = useModel({ type, id });
   const { store } = useContext();
-  const { edges } = store;
-  /** 判断是否导入 */
-  let componentType = false;
-  if (type === 'edges') {
-    edges.map(item => {
-      if (item.id === id) {
-        componentType = item.data.isUpload;
-      }
-    });
-  }
-  /** 判断是否为导入数据 */
-  const mappingColumn =
-    appMode === 'DATA_IMPORTING'
-      ? {
-          options:
-            dataFields?.map(item => {
-              return { label: item, value: item };
-            }) || [],
-          type: componentType ? 'Select' : 'InputNumber',
-        }
-      : null;
+  const { edges, nodes } = store;
 
+  /** 判断是否为导入数据 */
+  const mappingColumn = {
+    options:
+      dataFields?.map(item => {
+        return { label: item, value: item };
+      }) || [],
+  };
+
+  console.log('edges', nodes, edges, mappingColumn);
   return (
     <div>
       <Flex vertical gap={12} style={{ margin: '0px 12px' }}>

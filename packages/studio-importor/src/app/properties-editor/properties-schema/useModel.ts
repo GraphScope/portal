@@ -46,18 +46,18 @@ export default function useModel({ type, id }) {
     });
   };
   /** 修改source/target 的dataFiles */
-  const handleDataFieldsChange = (val: { index: number; columnName: string }, name: string, data_fields) => {
+  const handleDataFieldsChange = (val: { index: number; token: string }, name: string, data_fields) => {
     updateStore(draft => {
       draft.edges.forEach(item => {
         if (item.id === id) {
-          const { index, columnName } = val;
+          const { index, token } = val;
           item.data[data_fields] = {
             id,
             key: id,
             index,
             name,
             type: '',
-            columnName: columnName ? `${index}_${columnName}` : '',
+            token: token,
           };
         }
       });
