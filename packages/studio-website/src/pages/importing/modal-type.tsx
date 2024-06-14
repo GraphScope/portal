@@ -25,7 +25,7 @@ const ModalType: React.FC<IModalType> = props => {
         />
       </Form.Item>
 
-      <Form.Item<FieldType> label="delimiter" name="delimiter">
+      <Form.Item<FieldType> label="Delimiter" name="delimiter">
         <Select
           allowClear
           options={[
@@ -34,7 +34,7 @@ const ModalType: React.FC<IModalType> = props => {
           ]}
         />
       </Form.Item>
-      <Form.Item<FieldType> label="import_option" name="import_option">
+      <Form.Item<FieldType> label="Import Option" name="import_option">
         <Select
           allowClear
           options={[
