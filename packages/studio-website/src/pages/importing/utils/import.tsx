@@ -401,7 +401,7 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
         return {
           column: {
             index,
-            name: token.split('_')[1],
+            name: token,
           },
           property: name,
         };
@@ -420,7 +420,7 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
       column_mappings.push({
         column: {
           index,
-          name: token.split('_')[1],
+          name: token,
         },
         property: name,
       });
@@ -428,14 +428,14 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
     source_vertex_mappings.push({
       column: {
         index: source_data_fields.index,
-        name: source_data_fields.columnName.split('_')[1] || '',
+        name: source_data_fields.token,
       },
       property: source_data_fields.name,
     });
     destination_vertex_mappings.push({
       column: {
         index: target_data_fields.index,
-        name: target_data_fields.columnName.split('_')[1] || '',
+        name: target_data_fields.token,
       },
       property: target_data_fields.name,
     });
