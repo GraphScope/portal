@@ -48,6 +48,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   const { store, updateStore } = useContext();
   const { collapsed } = store;
   const { left, right } = collapsed;
+  console.log('rener,,,,store', store);
 
   useEffect(() => {
     (async () => {

@@ -1,23 +1,24 @@
 import type { Property } from '@graphscope/studio-components';
 import type { Node, Edge } from 'reactflow';
-export interface ISchemaNode extends Node {
-  data: {
-    label: string;
-    properties?: Property[];
 
-    [key: string]: any;
-  };
+export interface IEdgeData {
+  label: string;
+  properties?: Property[];
+  source_vertex_fields?: Property;
+  target_vertex_fields?: Property;
+  dataFields?: string[];
+  [key: string]: any;
 }
 
-export type ISchemaEdge = {
-  data: {
-    label: string;
-    properties?: Property[];
-    source_vertex_fields?: Property;
-    target_vertex_fields?: Property;
-    [key: string]: any;
-  };
-} & Edge;
+export interface INodeData {
+  label: string;
+  properties?: Property[];
+  dataFields?: string[];
+  [key: string]: any;
+}
+export type ISchemaNode = Node<INodeData>;
+
+export type ISchemaEdge = Edge<IEdgeData> & { data: IEdgeData };
 
 export interface ISchemaOptions {
   nodes: ISchemaNode[];

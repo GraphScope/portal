@@ -122,7 +122,6 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
       title: 'Data Fields',
       dataIndex: 'token',
       render(token, all) {
-        console.log(mappingColumn);
         return (
           <MappingFields
             options={mappingColumn?.options}

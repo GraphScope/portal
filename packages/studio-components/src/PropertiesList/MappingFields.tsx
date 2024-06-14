@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { InputNumber, Flex, Select } from 'antd';
 import type { Option } from './typing';
-interface IController {
+interface IMappingFields {
   componentType: 'Select' | 'InputNumber';
   options: Option[];
-  value: { index: number; token: string };
+  value?: { index?: number; token?: string };
   onChange(evt: any): void;
 }
 
@@ -16,10 +16,9 @@ export const getValue = (index, token) => {
   }
   return _value;
 };
-const MappingFields = (props: IController) => {
+const MappingFields = (props: IMappingFields) => {
   const { options, value, onChange, componentType } = props;
-  const { index, token } = value;
-  console.log(index, token, options);
+  const { index, token } = value || {};
 
   /** mappingFiles options 边涉及相同value，导致不唯一 */
   const _options = options.map((item, pIdx) => {

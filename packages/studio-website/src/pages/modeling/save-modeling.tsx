@@ -87,7 +87,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
         open: true,
       };
     });
-    const schema = getSchemaOptions(nodes, edges);
+    const schema = { nodes, edges };
 
     if (schema) {
       let _status = '',

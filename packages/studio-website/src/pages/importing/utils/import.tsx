@@ -1,137 +1,20 @@
-import type { EdgeMapping, SchemaMapping, VertexMapping, Schema } from '@graphscope/studio-server';
-
-import { transformSchemaToOptions } from '@/components/utils/schema';
+import type {
+  EdgeMapping,
+  SchemaMapping,
+  VertexMapping,
+  GetGraphSchemaResponse,
+  EdgeMappingTypeTriplet,
+} from '@graphscope/studio-server';
+import { transSchemaToOptions } from '../../modeling/utils/schema';
 import type { DeepRequired } from '@/components/utils/schema';
-import type { ISchemaEdge, ISchemaNode, ISchemaOptions } from '@graphscope/studio-importor';
+import type { ISchemaEdge, ISchemaNode, ISchemaOptions, Property } from '@graphscope/studio-importor';
 
-export interface ItemType {
-  property_mapping: { [x: string]: string }[];
-  destination_pk_column_map: { column: { name: string } }[];
-  source_pk_column_map: { column: { name: string } }[];
-}
-/**
- * 将后端标准的 Schema 结构转化为 Importor 组件需要的 Options
- * @param schema GraphSchema
- * @returns
- */
-export function transformSchemaToImportOptions(schema: Schema) {
-  //@ts-ignore
-  const schemaOption = transformSchemaToOptions(schema, false);
-  let edges_mapping: { [key: string]: string } = {};
-  const nodes = schemaOption.nodes.map(item => {
-    const { key, label } = item as { key: string; label: string };
-    edges_mapping[key] = label;
-    return {
-      ...item,
-      datatype: 'csv',
-      filelocation: '',
-      isBind: false,
-    };
+const loadingdataFields = (type: 'nodes' | 'edges', properties: Property[]) => {
+  return properties.map(item => {
+    return item.name;
   });
-  /** 将 nodes 所属 primary 的 properties 信息拿到 */
-  const vertex_id_properties_map: Record<string, any> = nodes.reduce((acc, curr) => {
-    return {
-      ...acc,
-      [curr.key as string]: curr.properties.find(p => p.name === curr.primary),
-    };
-  }, {});
-  const edges = schemaOption.edges.map(item => {
-    const { properties, source, target } = item;
-    const source_vertex = vertex_id_properties_map[source];
-    const target_vertex = vertex_id_properties_map[target];
-    // const source_data_fields = source_vertex.name;
-    // const target_data_fields = target_vertex.name;
-    const dataFields = [
-      `${edges_mapping[source]}.${source_vertex.name}`,
-      `${edges_mapping[target]}.${target_vertex.name}`,
-    ];
-
-    const source_data_fields = {
-      index: typeof source_vertex.token === 'number' ? source_vertex.token : null,
-      columnName:
-        typeof source_vertex.token === 'string' ? (source_vertex.token ? `0_${source_vertex.token}` : '') : '',
-    };
-    const target_data_fields = {
-      index: typeof target_vertex.token === 'number' ? target_vertex.token : null,
-      columnName:
-        typeof target_vertex.token === 'string' ? (target_vertex.token ? `1_${target_vertex.token}` : '') : '',
-    };
-    return {
-      ...item,
-      datatype: 'csv',
-      filelocation: '',
-      isBind: false,
-      dataFields: dataFields.concat(properties.map(item => item.name)),
-      source_data_fields,
-      target_data_fields,
-      properties: [
-        /** source 和 target 在后端不算做 properties ，但是在前端需要他俩作为属性，因此手动添加 */
-        // { ...source_vertex, name: `#source.${source_vertex.name}` },
-        // { ...target_vertex, name: `#target.${target_vertex.name}` },
-        ...properties,
-      ],
-    };
-  });
-
-  return { nodes, edges };
-}
-/** loading_config 空数据 || undefined 处理 */
-function loadingConfig(loading_config: { format: { type: string; metadata: { delimiter: string } } }): any {
-  if (loading_config) {
-    const { type, metadata } = loading_config?.format || { type: 'csv' };
-    const { delimiter } = metadata || { delimiter: ',' };
-    return {
-      type,
-      delimiter,
-    };
-  }
-}
-/** properties change value */
-const loadingdataFields = (type: string, properties: any, mapping?: VertexMapping | EdgeMapping | undefined) => {
-  if (type === 'nodes') {
-    return properties.map((V: { name: string }) => (V.name.startsWith('#') ? V.name.substring(1) : V.name));
-  }
-  return properties
-    .map((p: { name: string }, index: number) => {
-      const { name } = p;
-      return {
-        token: mappingName(mapping, name, index),
-      };
-    })
-    .map((V: { token: string }) => (typeof V.token === 'string' ? V.token.split('_')[1] : V.token));
 };
-/** token中name 是否为空 */
-function isEmpty(column: { name: string; index: number }, index: number) {
-  if (column.name === '') {
-    return column.index;
-  }
-  if (!Object.hasOwn(column, 'name')) {
-    return column.index;
-  }
-  return `${index}_${column.name}`;
-}
-/** token */
-function mappingName(mapping: any, name: string, index: number): string | number {
-  let token = '';
-  if (mapping) {
-    const isSource = name.startsWith('#source');
-    const isTarget = name.startsWith('#target');
 
-    let match;
-    if (isSource) {
-      // match = mapping && mapping.source_vertex_mappings[0].column.name;
-      match = mapping && isEmpty(mapping.source_vertex_mappings[0].column, index);
-    } else if (isTarget) {
-      match = mapping && isEmpty(mapping.destination_vertex_mappings[0].column, index);
-    } else {
-      match = mapping && isEmpty(mapping.properties_mappings[name], index);
-    }
-    if (match) {
-      token = match || '';
-    }
-  }
-  return token;
-}
 /**
  * 将后端标准的 MappingSchema 和 GrahSchema 转化为 Importor 需要的 Options
  * @param schemaMapping  后端标准的 MappingSchema
@@ -139,264 +22,164 @@ function mappingName(mapping: any, name: string, index: number): string | number
  * @returns
  */
 
-export function transformMappingSchemaToImportOptions(
-  schemaMapping: DeepRequired<SchemaMapping>,
-  schema: DeepRequired<Schema>,
-): {
-  edges: ISchemaEdge[];
-  nodes: ISchemaNode[];
-} {
-  const schemaOptions = transformSchemaToImportOptions(schema);
+export function transMappingSchemaToOptions(
+  schema: DeepRequired<GetGraphSchemaResponse>,
+  schemaMapping: DeepRequired<SchemaMapping> | {},
+): ISchemaOptions {
+  const schemaOptions = transSchemaToOptions(schema);
 
   const { nodes, edges } = schemaOptions;
-  const { loading_config, vertex_mappings, edge_mappings } = schemaMapping;
-  // const { type, metadata } = loading_config?.format || { type: 'csv' };
 
-  const { type, delimiter } = loadingConfig(loading_config);
-  const label_mappings: Record<string, VertexMapping | EdgeMapping> = {};
-  /** 先将后端数据或者yaml返回的mapping数据做一次Map存储，方便与后续的schema整合取数 */
-
-  vertex_mappings.forEach(item => {
-    const { column_mappings, type_name } = item;
-    label_mappings[type_name] = {
-      ...item,
-      //@ts-ignore
-      properties_mappings: column_mappings.reduce((acc, curr) => {
-        return {
-          ...acc,
-          [curr.property]: curr.column,
-        };
-      }, {}),
-    };
-  });
-  edge_mappings.forEach(item => {
-    const { column_mappings, type_triplet, destination_vertex_mappings, source_vertex_mappings } = item;
-    const { edge } = type_triplet;
-    const sourceField = source_vertex_mappings[0]?.column;
-    const targetField = destination_vertex_mappings[0]?.column;
-    const source_data_fields = {
-      index: sourceField?.index,
-      /** 接口返回name 有值判断 */
-      name: sourceField?.name ? `${sourceField?.index}_${sourceField?.name}` : '',
-    };
-    const target_data_fields = {
-      index: targetField?.index,
-      name: targetField?.name ? `${targetField?.index}_${targetField?.name}` : '',
-    };
-    label_mappings[edge] = {
-      ...item,
-      //@ts-ignore
-      source_data_fields,
-      target_data_fields,
-      properties_mappings: {
-        ...column_mappings.reduce((acc, curr) => {
-          return {
-            ...acc,
-            [curr.property]: curr.column,
-          };
-        }, {}),
-      },
-    };
-  });
-  /** 基于schema 进行 properties 中 token 字段的回填*/
-  const _nodes = nodes.map(item => {
-    const { label, properties } = item;
-    const mapping = label_mappings[label];
-    const filelocation = (mapping && mapping.inputs && mapping.inputs[0]) || '';
-    return {
-      ...item,
-      datatype: type,
-      filelocation,
-      isBind: !!filelocation,
-      isEidtProperty: true,
-      delimiter,
-      dataFields: loadingdataFields('nodes', properties),
-      properties: properties.map((p, index) => {
-        const { name } = p;
-        return {
-          ...p,
-          index: typeof mappingName(mapping, name, index) === 'number' ? mappingName(mapping, name, index) : 0,
-          // 只支持 name 不支持 index
-          token: typeof mappingName(mapping, name, index) === 'string' ? mappingName(mapping, name, index) : '',
-        };
-      }),
-    };
-  });
-  const _edges = edges.map(item => {
-    const { label, properties } = item;
-    const mapping = label_mappings[label];
-    //@ts-ignore
-    const { source_data_fields, target_data_fields } = mapping;
-    const filelocation = (mapping && mapping.inputs && mapping.inputs[0]) || '';
-    return {
-      ...item,
-      datatype: type,
-      filelocation,
-      isBind: !!filelocation,
-      isEidtProperty: true,
-      delimiter,
-      source_data_fields: {
-        index: source_data_fields.index,
-        columnName: source_data_fields.name ? source_data_fields.name : '',
-      },
-      target_data_fields: {
-        index: target_data_fields.index,
-        columnName: target_data_fields.name ? target_data_fields.name : '',
-      },
-      dataFields: item.dataFields,
-      properties: properties.map((p, index) => {
-        const { name } = p;
-        return {
-          ...p,
-          /** 如果边属性有值，则从下标2开始 */
-          token: mappingName(mapping, name, index + 2),
-        };
-      }),
-    };
-  });
-
-  return {
-    nodes: _nodes,
-    edges: _edges,
-  };
-}
-/**
- * 将后端groot 标准的 MappingSchema 和 GrahSchema 转化为 Importor 需要的 Options
- * @param schemaMapping  后端标准的 MappingSchema
- * @param schema 后端标准的  GraphSchema
- * @returns
- */
-export function transformGrootMappingSchemaToImportOptions(schemaMapping: any, schema: any) {
-  const schemaOptions = transformSchemaToImportOptions(schema);
-  console.log(schemaMapping);
-
-  const { nodes, edges } = schemaOptions;
-  const { loading_config, vertices_datasource, edges_datasource } = schemaMapping;
-  // const { type, metadata } = loading_config?.format || { type: 'csv' };
-  const { type, delimiter } = loadingConfig(loading_config);
-  const label_mappings: Record<string, VertexMapping | EdgeMapping> = {};
-  /** 先将后端数据或者yaml返回的mapping数据做一次Map存储，方便与后续的schema整合取数 */
-
-  vertices_datasource.forEach((item: ItemType & { type_name: string }) => {
-    const { property_mapping, type_name } = item;
-    label_mappings[type_name] = {
-      ...item,
-      //@ts-ignore
-      properties_mappings: property_mapping?.reduce((acc, curr) => {
-        return {
-          ...acc,
-          [curr.property]: curr.column,
-        };
-      }, {}),
-    };
-  });
-  edges_datasource.forEach((item: ItemType & { type_triplet: { edge: string } }) => {
-    const { property_mapping, type_triplet, destination_pk_column_map, source_pk_column_map } = item;
-    const { edge } = type_triplet;
-    // const sourceField = source_pk_column_map[0].column;
-    // const targetField = destination_pk_column_map[0].column;
-    const source_data_fields = source_pk_column_map[0].column;
-    const target_data_fields = destination_pk_column_map[0].column;
-    label_mappings[edge] = {
-      ...item,
-      //@ts-ignore
-      source_data_fields,
-      target_data_fields,
-      properties_mappings: {
-        // [`#source.${sourceField.name}`]: sourceField,
-        // [`#target.${targetField.name}`]: targetField,
-        ...property_mapping?.reduce((acc, curr) => {
-          return {
-            ...acc,
-            [curr.property]: curr.column,
-          };
-        }, {}),
-      },
-    };
-  });
-  /** 基于schema 进行 properties 中 token 字段的回填*/
-  const _nodes = nodes.map(item => {
-    const { label, properties } = item;
-    const mapping = label_mappings[label];
-    const filelocation = (mapping && mapping.inputs && mapping.inputs[0]) || '';
-    return {
-      ...item,
-      datatype: type,
-      filelocation,
-      isBind: !!filelocation,
-      isEidtProperty: true,
-      delimiter,
-      properties: properties.map(p => {
-        const { name } = p;
-        //@ts-ignore
-        const match = mapping.properties_mappings[name];
-        console.log('match', match, name);
-        return {
-          ...p,
-          // 只支持 name 不支持 index
-          token: match.name,
-        };
-      }),
-    };
-  });
-  const _edges = edges.map(item => {
-    const { label, properties } = item;
-    const mapping = label_mappings[label];
-    const filelocation = (mapping && mapping.inputs && mapping.inputs[0]) || '';
-    return {
-      ...item,
-      datatype: type,
-      filelocation,
-      isBind: !!filelocation,
-      isEidtProperty: true,
-      delimiter,
-      properties: properties.map(p => {
-        const { name } = p;
-        //@ts-ignore
-        const match = mapping.properties_mappings[name];
-        console.log('match', match, name);
-        return {
-          ...p,
-          // 只支持 name 不支持 index
-          token: match.name,
-        };
-      }),
-    };
-  });
-  return {
-    nodes: _nodes,
-    edges: _edges,
-  };
-}
-
-export function transformDataMapToOptions(dataMap: any) {
-  const nodes: BindingNode[] = [];
-  const edges: BindingEdge[] = [];
-  Object.values(dataMap).forEach((item: any) => {
-    const { source, target } = item;
-    const isEdge = source && target;
-    if (isEdge) {
-      edges.push(item);
-    } else {
-      nodes.push(item);
+  const itemMapping: Record<
+    string,
+    (VertexMapping | EdgeMapping) & {
+      properties_mappings: { [key: string]: { index: number; token: string | number } };
     }
+  > = {};
+
+  if ('vertex_mappings' in schemaMapping) {
+    schemaMapping.vertex_mappings.forEach(item => {
+      const { type_name } = item;
+      itemMapping[type_name] = {
+        ...item,
+        properties_mappings: item.column_mappings.reduce((acc, curr) => {
+          return {
+            ...acc,
+            [curr.property]: {
+              index: curr.column.index,
+              token: curr.column.name,
+            },
+          };
+        }, {}),
+      };
+    });
+  }
+  if ('edge_mappings' in schemaMapping) {
+    schemaMapping.edge_mappings.forEach(item => {
+      const { type_triplet } = item;
+      itemMapping[type_triplet.edge] = {
+        ...item,
+        properties_mappings: item.column_mappings.reduce((acc, curr) => {
+          return {
+            ...acc,
+            [curr.property]: {
+              index: curr.column.index,
+              token: curr.column.name,
+            },
+          };
+        }, {}),
+      };
+    });
+  }
+
+  /** 基于schema 进行 properties 中 token 字段的回填*/
+  const _nodes = nodes.map(item => {
+    const { data } = item;
+    const { label, properties = [] } = data;
+    const match = itemMapping[label] || {
+      inputs: [''],
+      properties_mappings: {},
+    };
+    const filelocation = match.inputs[0];
+
+    return {
+      ...item,
+      filelocation,
+      isBind: !!filelocation,
+      isEidtProperty: true,
+      dataFields: loadingdataFields('nodes', properties),
+      data: {
+        ...item.data,
+        properties: properties.map((p, index) => {
+          const { name } = p;
+          const pMatch = (match && match.properties_mappings && match.properties_mappings[name]) || {
+            index: 0,
+            token: '',
+          };
+          return {
+            ...p,
+            index: pMatch.index,
+            token: pMatch.token,
+          };
+        }),
+      },
+    };
   });
-  return { nodes, edges };
+  const _edges = edges
+    .map(item => {
+      const { data } = item;
+      if (!data) {
+        return;
+      }
+
+      const { label, properties = [] } = data;
+      const match = itemMapping[label] || {
+        source_vertex_mappings: [{ column: { index: 0, name: '' } }],
+        destination_vertex_mappings: [{ column: { index: 0, name: '' } }],
+        properties_mappings: {},
+        inputs: [''],
+      };
+
+      if ('destination_vertex_mappings' in match) {
+        const { source_vertex_mappings, destination_vertex_mappings, properties_mappings } = match;
+        const filelocation = match.inputs[0];
+        return {
+          ...item,
+          filelocation,
+          isBind: !!filelocation,
+          isEidtProperty: true,
+          dataFields: loadingdataFields('edges', properties),
+          data: {
+            ...item.data,
+            properties: properties.map((p: Property) => {
+              const { name } = p;
+              const pMatch = properties_mappings[name] || { index: 0, token: '' };
+              return {
+                ...p,
+                index: pMatch.index,
+                token: pMatch.token,
+                name: name,
+              };
+            }),
+            source_vertex_fields: {
+              index: source_vertex_mappings[0].column.index,
+              token: source_vertex_mappings[0].column.name,
+              name: source_vertex_mappings[0].property,
+            },
+            target_vertex_fields: {
+              index: destination_vertex_mappings[0].column.index,
+              token: destination_vertex_mappings[0].column.name,
+              name: destination_vertex_mappings[0].property,
+            },
+          },
+        };
+      }
+    })
+    .filter(item => {
+      return item;
+    }) as ISchemaEdge[];
+
+  return {
+    nodes: _nodes,
+    edges: _edges,
+  };
 }
-export function transformImportOptionsToSchemaMapping(options: { nodes: BindingNode[]; edges: BindingEdge[] }) {
+
+export function transformImportOptionsToSchemaMapping(options: ISchemaOptions): DeepRequired<SchemaMapping> {
   let vertex_mappings: any[] = [];
   let edge_mappings: any[] = [];
   const NODE_LABEL_MAP: Record<string, string> = {};
   const NODE_PRIMARY_MAP: Record<string, string> = {};
+
   options.nodes.forEach(item => {
-    // const { key, properties, filelocation, label, primary } = item;
-    const { id: key, properties, filelocation, label, primary } = item;
-    NODE_LABEL_MAP[key as string] = label;
-    NODE_PRIMARY_MAP[key as string] = primary;
+    const { id, data } = item;
+    const { properties = [], filelocation, label, primary } = data;
+    NODE_LABEL_MAP[id] = label;
+    NODE_PRIMARY_MAP[id] = primary;
     vertex_mappings.push({
       type_name: label,
       inputs: [filelocation],
-      column_mappings: properties.map((p: { index: number; token: string; name: string }) => {
+      column_mappings: properties.map(p => {
         const { index, token, name } = p;
         return {
           column: {
@@ -410,12 +193,20 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
   });
 
   options.edges.forEach(item => {
-    const { properties, filelocation, label, source, target, source_data_fields, target_data_fields } = item;
+    const { data, source, target } = item;
+
+    const {
+      properties = [],
+      filelocation,
+      source_vertex_fields = { index: 0, token: '', name: 'id' },
+      target_vertex_fields = { index: 0, token: '', name: 'id' },
+      label,
+    } = data;
     const column_mappings: any[] = [];
     const source_vertex_mappings: any[] = [];
     const destination_vertex_mappings: any[] = [];
-    // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
-    properties.forEach((p: { index: number; token: string; name: string }) => {
+
+    properties.forEach((p: Property) => {
       const { index, token, name } = p;
       column_mappings.push({
         column: {
@@ -427,17 +218,17 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
     });
     source_vertex_mappings.push({
       column: {
-        index: source_data_fields.index,
-        name: source_data_fields.token,
+        index: source_vertex_fields.index,
+        name: source_vertex_fields.token,
       },
-      property: source_data_fields.name,
+      property: source_vertex_fields.name,
     });
     destination_vertex_mappings.push({
       column: {
-        index: target_data_fields.index,
-        name: target_data_fields.token,
+        index: target_vertex_fields.index,
+        name: target_vertex_fields.token,
       },
-      property: target_data_fields.name,
+      property: target_vertex_fields.name,
     });
     edge_mappings.push({
       type_triplet: {
@@ -455,222 +246,4 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
     vertex_mappings,
     edge_mappings,
   };
-}
-/** groot 数据绑定参数处理 */
-export function transformImportOptionsToGrootSchemaMapping(options: {
-  currentType: string;
-  data: any;
-  dataMap: { [x: string]: { key: string; label: string } };
-}) {
-  const { currentType, data, dataMap } = options;
-  const { label, filelocation, datatype, properties, source, target } = data;
-  const data_source = datatype === 'csv' ? 'FILE' : 'ODPS';
-  if (currentType === 'node') {
-    return {
-      data_source,
-      type_name: label,
-      location: filelocation,
-      property_mapping: properties.reduce((acc, curr, index) => {
-        return {
-          ...acc,
-          [index]: curr.name,
-        };
-      }, {}),
-    };
-  }
-  if (currentType === 'edge') {
-    let source_vertex: string = '';
-    let destination_vertex: string = '';
-    Object.values(dataMap).forEach(item => {
-      if (item.key === source) {
-        source_vertex = item.label;
-      }
-      if (item.key === target) {
-        destination_vertex = item.label;
-      }
-    });
-    // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
-    let property_mapping = {};
-    let source_pk_column_map = {};
-    let destination_pk_column_map = {};
-    properties.forEach((p, pIdx) => {
-      const { token, name } = p;
-      const isSource = name.startsWith('#source');
-      const isTarget = name.startsWith('#target');
-      if (isSource) {
-        source_pk_column_map = { 0: token };
-      } else if (isTarget) {
-        destination_pk_column_map = { 1: token };
-      } else {
-        property_mapping = { [pIdx]: token };
-      }
-    });
-    return {
-      data_source,
-      type_name: label,
-      source_vertex,
-      destination_vertex,
-      location: filelocation,
-      source_pk_column_map,
-      destination_pk_column_map,
-      property_mapping,
-    };
-  }
-
-  let vertex_mappings: any[] = [];
-  let edge_mappings: any[] = [];
-  const NODE_LABEL_MAP: Record<string, string> = {};
-  const NODE_PRIMARY_MAP: Record<string, string> = {};
-  options.nodes.forEach((item: { key: any; properties: any; filelocation: any; label: any; primary: any }) => {
-    const { key, properties, filelocation, label, primary } = item;
-    NODE_LABEL_MAP[key as string] = label;
-    NODE_PRIMARY_MAP[key as string] = primary;
-    vertex_mappings.push({
-      type_name: label,
-      inputs: [filelocation],
-      column_mappings: properties.map((p: { token: any; name: any }) => {
-        const { token, name } = p;
-
-        const num = parseFloat(token as string);
-        const isNumber = !isNaN(num);
-        return {
-          column: {
-            index: isNumber ? num : 0,
-            name: isNumber ? '' : token,
-          },
-          property: name,
-        };
-      }),
-    });
-  });
-
-  options.edges.forEach((item: { properties: any; filelocation: any; label: any; source: any; target: any }) => {
-    const { properties, filelocation, label, source, target } = item;
-    const column_mappings: any[] = [];
-    const source_vertex_mappings: any[] = [];
-    const destination_vertex_mappings: any[] = [];
-    // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
-    properties.forEach((p: { token: any; name: any }, pIdx: any) => {
-      const { token, name } = p;
-      const isSource = name.startsWith('#source');
-      const isTarget = name.startsWith('#target');
-      const num = parseFloat(token as string);
-      const isNumber = !isNaN(num);
-      if (isSource) {
-        source_vertex_mappings.push({
-          column: {
-            index: 0,
-            name: NODE_PRIMARY_MAP[source],
-          },
-        });
-      } else if (isTarget) {
-        destination_vertex_mappings.push({
-          column: {
-            index: 1,
-            name: NODE_PRIMARY_MAP[target],
-          },
-        });
-      } else {
-        column_mappings.push({
-          column: {
-            index: pIdx, //isNumber ? num + 2 : 0,
-            name: isNumber ? '' : token,
-          },
-          property: name,
-        });
-      }
-    });
-
-    edge_mappings.push({
-      type_triplet: {
-        edge: label,
-        source_vertex: NODE_LABEL_MAP[source],
-        destination_vertex: NODE_LABEL_MAP[target],
-      },
-      inputs: [filelocation],
-      column_mappings,
-      source_vertex_mappings,
-      destination_vertex_mappings,
-    });
-  });
-
-  return {
-    vertex_mappings,
-    edge_mappings,
-  };
-}
-
-export function transformDataMapToGrootSchema(dataMap: any) {
-  const vertex_types: { type_name: string; properties: any; primary_keys: undefined[] }[] = [];
-  const edge_types: {
-    type_name: string;
-    properties: any;
-    vertex_type_pair_relations: { destination_vertex: any; relation: string; source_vertex: any }[];
-  }[] = [];
-  const { vertices, edges } = dataMap;
-  if (vertices.length) {
-    vertices.forEach((item: { label: string; properties: any }) => {
-      const { label, properties } = item;
-      let primaryKey;
-      vertex_types.push({
-        type_name: label,
-        properties: properties.map((p: { id: any; is_primary_key: any; name: any; type: any }) => {
-          const { id, is_primary_key, name, type } = p;
-          if (is_primary_key) {
-            primaryKey = name;
-          }
-          return {
-            property_id: id,
-            property_name: name,
-            property_type: { primitive_type: type },
-          };
-        }),
-        primary_keys: [primaryKey],
-      });
-    });
-  }
-  if (edges.length) {
-    edges.forEach((item: { label: string; relations: { src_label: string; dst_label: string }[]; properties: any }) => {
-      const { label, relations, properties } = item;
-      const { src_label, dst_label } = relations[0];
-      edge_types.push({
-        type_name: label,
-        properties: properties.map((p: { id: any; name: any; type: any }) => {
-          const { id, name, type } = p;
-          return {
-            property_id: id,
-            property_name: name,
-            property_type: { primitive_type: type },
-          };
-        }),
-        vertex_type_pair_relations: [
-          {
-            destination_vertex: dst_label,
-            relation: 'MANY_TO_MANY',
-            source_vertex: src_label,
-          },
-        ],
-      });
-    });
-  }
-
-  return { vertex_types, edge_types };
-}
-
-/**
- * 周期导入接口参数转换
- * @param options
- * @returns
- */
-export function transformDataMapToScheduledImportOptions(options: any) {
-  const { dataMap, data } = options;
-  let edge_mappings: { type_name: any; source_vertex: any; destination_vertex: any }[] = [];
-  const { label, source, target } = data;
-  edge_mappings.push({
-    type_name: source && target ? label : '',
-    source_vertex: source ? dataMap[source].label : '',
-    destination_vertex: target ? dataMap[target].label : '',
-  });
-
-  return edge_mappings;
 }

@@ -4,14 +4,12 @@ import { Typography, Input, Flex } from 'antd';
 import { MappingFields } from '@graphscope/studio-components';
 import { useContext } from '../../useContext';
 import useModel from './useModel';
-import type { ImportorProps } from '../../typing';
-type ISourceTargetProps = Pick<ImportorProps, 'mappingColumn'> & {
-  id: string;
-  source: string;
-  target: string;
-  source_data_fields: { index: number; token: string };
-  target_data_fields: { index: number; token: string };
-};
+import type { ISchemaEdge, ImportorProps, IEdgeData } from '../../typing';
+type ISourceTargetProps = {
+  mappingColumn: ImportorProps['mappingColumn'];
+  source_vertex_fields: IEdgeData['source_vertex_fields'];
+  target_vertex_fields: IEdgeData['target_vertex_fields'];
+} & Pick<ISchemaEdge, 'source' | 'target' | 'id'>;
 
 const getLabelById = (nodes, source, target) => {
   let source_label, target_label;
@@ -29,7 +27,7 @@ const getLabelById = (nodes, source, target) => {
   };
 };
 const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
-  const { id, source, target, mappingColumn, source_data_fields, target_data_fields } = props;
+  const { id, source, target, mappingColumn, source_vertex_fields, target_vertex_fields } = props;
   const { store } = useContext();
   const { nodes } = store;
   const { handleDataFieldsChange } = useModel({ type: 'edges', id });
@@ -46,8 +44,8 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
           <Flex vertical gap="small">
             <Typography.Text>Data Fields</Typography.Text>
             <MappingFields
-              value={source_data_fields}
-              onChange={val => handleDataFieldsChange(val, source_label, 'source_data_fields')}
+              value={source_vertex_fields}
+              onChange={val => handleDataFieldsChange(val, source_label, 'source_vertex_fields')}
               componentType={mappingColumn?.type || 'Select'}
               options={mappingColumn?.options || []}
             />
@@ -63,8 +61,8 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
           <Flex vertical gap="small">
             <Typography.Text>Data Fields</Typography.Text>
             <MappingFields
-              value={target_data_fields}
-              onChange={val => handleDataFieldsChange(val, source_label, 'target_data_fields')}
+              value={target_vertex_fields}
+              onChange={val => handleDataFieldsChange(val, target_label, 'target_vertex_fields')}
               componentType={mappingColumn?.type || 'Select'}
               options={mappingColumn?.options || []}
             />

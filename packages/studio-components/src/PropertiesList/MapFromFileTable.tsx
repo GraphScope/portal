@@ -1,21 +1,7 @@
 import * as React from 'react';
 import { Table, Checkbox } from 'antd';
 const { useState } = React;
-interface Property {
-  key: string;
-  name: string;
-  type: string;
-  index: number;
-  primaryKey: boolean;
-}
-
-interface DataType {
-  key: string;
-  name: string;
-  type: string;
-  index: number;
-  primaryKey: boolean;
-}
+import { Property } from './typing';
 
 interface IPropertiesListProps {
   properties: Property[];
@@ -35,7 +21,7 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
   ];
 
   const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: Property[]) => {
       // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
       handleChange(selectedRows);
     },
