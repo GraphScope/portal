@@ -1,4 +1,5 @@
 import React from 'react';
+import { history } from 'umi';
 import { Button, Select, Form, Flex } from 'antd';
 import type { IModalType } from './modal-type';
 export type FieldType = {
@@ -8,14 +9,12 @@ export type FieldType = {
   header_row: boolean;
 };
 type ILeftSide = Pick<IModalType, 'handleFinish' | 'handleColse'> & {
-  finish: boolean;
-  handleState: () => void;
+  isImportFinish: boolean;
 };
 const LeftSide: React.FC<ILeftSide> = props => {
-  const { finish, handleFinish, handleColse, handleState } = props;
+  const { isImportFinish, handleFinish, handleColse } = props;
   const [form] = Form.useForm();
   const handleClick = () => {
-    handleState();
     const data = form.getFieldsValue();
     handleFinish(data);
   };
@@ -64,13 +63,13 @@ const LeftSide: React.FC<ILeftSide> = props => {
         </Form.Item>
       </Form>
       <>
-        {finish ? (
+        {isImportFinish ? (
           <Flex vertical align="end" gap={12}>
             <Button
               style={{ width: '240px' }}
               type="primary"
               onClick={() => {
-                handleFinish;
+                history.push('/job');
               }}
             >
               Goto Jobs

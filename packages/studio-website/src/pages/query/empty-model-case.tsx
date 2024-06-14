@@ -26,12 +26,26 @@ const EmptyModelCase: React.FunctionComponent<IEmptyModelCaseProps> = props => {
       draft.currentnNav = '/modeling';
     });
   };
+  /** 连接参数 */
+  const handleFinish = (values: any) => {
+    console.log(values);
+  };
   if (graphId === draftId) {
     return (
       <div>
         <Modal title={null} open={open} footer={null} closable={false} width={1000}>
           <SplitSection
             leftSide={
+              <ConnectEndpoint
+                handleFinish={handleFinish}
+                handleColse={() =>
+                  setState({
+                    open: false,
+                  })
+                }
+              />
+            }
+            rightSide={
               <Result
                 status="403"
                 title="Please create the graph model first"
@@ -43,7 +57,6 @@ const EmptyModelCase: React.FunctionComponent<IEmptyModelCaseProps> = props => {
                 }
               />
             }
-            rightSide={<ConnectEndpoint />}
           />
         </Modal>
       </div>

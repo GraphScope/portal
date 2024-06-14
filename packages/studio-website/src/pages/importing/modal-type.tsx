@@ -12,30 +12,11 @@ export interface IModalType {
 const { useState } = React;
 const ModalType: React.FC<IModalType> = props => {
   const { isImportFinish, handleFinish, handleColse } = props;
-  const [state, updateState] = useState({
-    finish: false,
-  });
-  const { finish } = state;
-
   return (
     <>
       <SplitSection
-        leftSide={
-          <LeftSide
-            finish={finish}
-            handleFinish={handleFinish}
-            handleColse={handleColse}
-            handleState={() => {
-              updateState(preset => {
-                return {
-                  ...preset,
-                  finish: true,
-                };
-              });
-            }}
-          />
-        }
-        rightSide={<RightSide isImportFinish={isImportFinish} finish={finish} />}
+        leftSide={<LeftSide isImportFinish={isImportFinish} handleFinish={handleFinish} handleColse={handleColse} />}
+        rightSide={<RightSide isImportFinish={isImportFinish} handleColse={handleColse} />}
       />
     </>
   );
