@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import { Table, Tag, Flex, message, Button, Popconfirm } from 'antd';
+import { Table, Tag, message, Button, Popconfirm, Space } from 'antd';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
@@ -12,6 +12,7 @@ import { FormattedMessage } from 'react-intl';
 import { history } from 'umi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import { FileSearchOutlined } from '@ant-design/icons';
 // import Action from './action';
 import { listJobs, IJobType, deleteJobById } from './service';
 import dayjs from 'dayjs';
@@ -144,41 +145,37 @@ const JobsList: FC = () => {
       key: 'actions',
       // render: (record: IJobType) => <Action {...record} onChange={() => getJobList()} />,
       render: (record: IJobType) => (
-        <Popconfirm
-          placement="bottomRight"
-          title={<FormattedMessage id="Are you sure to delete this task?" />}
-          onConfirm={() => handleDeleteJob(record.id)}
-          okText={<FormattedMessage id="Yes" />}
-          cancelText={<FormattedMessage id="No" />}
-          icon
-        >
-          <Button
-            type="text"
-            size="small"
-            danger
-            ghost
-            icon={<FontAwesomeIcon icon={faTrashCan} />}
-            disabled={!['RUNNING', 'WAITING'].includes(record.status)}
-          />
-        </Popconfirm>
+        <Space>
+          <Popconfirm
+            placement="bottomRight"
+            title={<FormattedMessage id="Are you sure to delete this task?" />}
+            onConfirm={() => handleDeleteJob(record.id)}
+            okText={<FormattedMessage id="Yes" />}
+            cancelText={<FormattedMessage id="No" />}
+            icon
+          >
+            <Button
+              type="text"
+              size="small"
+              danger
+              ghost
+              icon={<FontAwesomeIcon icon={faTrashCan} />}
+              disabled={!['RUNNING', 'WAITING'].includes(record.status)}
+            />
+          </Popconfirm>
+          <FileSearchOutlined onClick={() => history.push(`/job/detail#?jobId=${record.id}`)} />
+        </Space>
       ),
     },
   ];
 
   return (
     <Table
-      style={{ marginTop: '-18px', cursor: 'pointer' }}
+      style={{ marginTop: '-18px' }}
       dataSource={jobsList}
       //@ts-ignores
       columns={columns}
       size="middle"
-      onRow={record => {
-        return {
-          onClick: event => {
-            history.push(`/job/detail#?jobId=${record.id}`);
-          },
-        };
-      }}
     />
   );
 };

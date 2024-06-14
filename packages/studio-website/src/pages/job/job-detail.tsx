@@ -3,11 +3,13 @@ import { Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { getJobById } from './service';
 import { Utils } from '@graphscope/studio-components';
-const { searchParamOf } = Utils;
+const { getUrlParams } = Utils;
 import { useContext } from '@/layouts/useContext';
 
 const Detail: React.FunctionComponent = () => {
-  const jobId: string = searchParamOf('jobId') || '';
+  console.log(getUrlParams());
+
+  const { jobId } = getUrlParams() || '';
   const [detailData, setDetailData] = useState<string>('');
   const { store } = useContext();
   const { mode } = store;
