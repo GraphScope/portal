@@ -169,18 +169,19 @@ export function transformMappingSchemaToImportOptions(
       }, {}),
     };
   });
-  edge_mappings.forEach((item, index) => {
+  edge_mappings.forEach(item => {
     const { column_mappings, type_triplet, destination_vertex_mappings, source_vertex_mappings } = item;
     const { edge } = type_triplet;
     const sourceField = source_vertex_mappings[0]?.column;
     const targetField = destination_vertex_mappings[0]?.column;
     const source_data_fields = {
       index: sourceField?.index,
-      name: `${index}_${sourceField?.name}`,
+      /** 接口返回name 有值判断 */
+      name: sourceField?.name ? `${sourceField?.index}_${sourceField?.name}` : '',
     };
     const target_data_fields = {
       index: targetField?.index,
-      name: `${index}_${targetField?.name}`,
+      name: targetField?.name ? `${targetField?.index}_${targetField?.name}` : '',
     };
     label_mappings[edge] = {
       ...item,
@@ -214,8 +215,9 @@ export function transformMappingSchemaToImportOptions(
         const { name } = p;
         return {
           ...p,
+          index: typeof mappingName(mapping, name, index) === 'number' ? mappingName(mapping, name, index) : 0,
           // 只支持 name 不支持 index
-          token: mappingName(mapping, name, index),
+          token: typeof mappingName(mapping, name, index) === 'string' ? mappingName(mapping, name, index) : '',
         };
       }),
     };
@@ -233,20 +235,25 @@ export function transformMappingSchemaToImportOptions(
       isBind: !!filelocation,
       isEidtProperty: true,
       delimiter,
-      source_data_fields: { index: source_data_fields.index, columnName: source_data_fields.name },
-      target_data_fields: { index: target_data_fields.index, columnName: target_data_fields.name },
-      dataFields: loadingdataFields('edges', properties, mapping).concat(item.dataFields),
+      source_data_fields: {
+        index: source_data_fields.index,
+        columnName: source_data_fields.name ? source_data_fields.name : '',
+      },
+      target_data_fields: {
+        index: target_data_fields.index,
+        columnName: target_data_fields.name ? target_data_fields.name : '',
+      },
+      dataFields: item.dataFields,
       properties: properties.map((p, index) => {
         const { name } = p;
         return {
           ...p,
-          // 只支持 name 不支持 index
-          token: mappingName(mapping, name, index),
+          /** 如果边属性有值，则从下标2开始 */
+          token: mappingName(mapping, name, index + 2),
         };
       }),
     };
   });
-  console.log(_edges);
 
   return {
     nodes: _nodes,
@@ -389,14 +396,12 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
     vertex_mappings.push({
       type_name: label,
       inputs: [filelocation],
-      column_mappings: properties.map((p, index) => {
-        const { token, name } = p;
-        const colmunName = typeof token === 'string' ? token.split('_')[1] : token;
+      column_mappings: properties.map((p: { index: number; token: string; name: string }) => {
+        const { index, token, name } = p;
         return {
           column: {
-            index: typeof token === 'number' ? token : 0,
-            // name: isNumber ? colmunName : token,
-            name: typeof token === 'number' ? '' : colmunName,
+            index,
+            name: token.split('_')[1],
           },
           property: name,
         };
@@ -410,13 +415,12 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
     const source_vertex_mappings: any[] = [];
     const destination_vertex_mappings: any[] = [];
     // 要将 properties 中前端拼接的 #source 和 #target 过滤掉
-    properties.forEach((p: { token: string; name: string }) => {
-      const { token, name } = p;
-      const colmunName = typeof token === 'string' ? token.split('_')[1] : token;
+    properties.forEach((p: { index: number; token: string; name: string }) => {
+      const { index, token, name } = p;
       column_mappings.push({
         column: {
-          index: typeof token === 'number' ? token : 0, //isNumber ? num + 2 : 0,
-          name: typeof token === 'number' ? '' : colmunName,
+          index,
+          name: token.split('_')[1],
         },
         property: name,
       });
@@ -447,7 +451,6 @@ export function transformImportOptionsToSchemaMapping(options: { nodes: BindingN
       destination_vertex_mappings,
     });
   });
-
   return {
     vertex_mappings,
     edge_mappings,
