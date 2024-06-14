@@ -23,7 +23,7 @@ const ConnectEndpoint: React.FunctionComponent<IConnectEndpointProps> = props =>
   // });
   // const { instanceEdit } = state;
   return (
-    <Flex vertical>
+    <Flex vertical style={{ marginRight: '12px' }}>
       <div style={{ textAlign: 'center' }}>
         <Title level={2}>GraphScope</Title>
         {/* <Title level={2}>Connect to instance</Title> */}
@@ -92,7 +92,7 @@ const ConnectEndpoint: React.FunctionComponent<IConnectEndpointProps> = props =>
             <Button type="primary" htmlType="submit">
               Connect
             </Button>
-            <Button onClick={() => handleColse}>Cancel</Button>
+            <Button onClick={handleColse}>Cancel</Button>
           </Flex>
         </Form.Item>
       </Form>
