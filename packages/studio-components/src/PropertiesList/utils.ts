@@ -115,7 +115,7 @@ export default function useStore(): IStore {
         return {
           ...item,
           index,
-          token: `${index}_${token}`,
+          token,
         };
       }
       return item;
