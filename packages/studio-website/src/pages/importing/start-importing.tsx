@@ -32,12 +32,6 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
       edges,
     });
     console.log('res', res);
-    updateState(preset => {
-      return {
-        ...preset,
-        open: false,
-      };
-    });
   };
 
   if (appMode === 'DATA_IMPORTING') {
@@ -56,8 +50,18 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
         >
           Start importing
         </Button>
-        <Modal title="Loading Config" open={open} footer={null} closable={false}>
-          <ModalType handleFinish={handleClick} />
+        <Modal title="LoadConfig" width={'40%'} open={open} footer={null} closable={false}>
+          <ModalType
+            handleFinish={handleClick}
+            handleColse={() =>
+              updateState(preset => {
+                return {
+                  ...preset,
+                  open: false,
+                };
+              })
+            }
+          />
         </Modal>
       </>
     );
