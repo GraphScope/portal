@@ -8,21 +8,11 @@ export type DeepRequired<T> = T extends (...args: any[]) => any
     ? { [K in keyof T]-?: DeepRequired<T[K]> }
     : T;
 
-export interface IProperty {
-  property_name: string;
-  property_type: { primitive_type?: string; string?: { long_text: string } };
-}
-export interface IEdge {
-  type_name: string;
-  properties: IProperty[];
-  vertex_type_pair_relations: { destination_vertex: string; source_vertex: string; relation: any }[];
-}
-
 export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchemaResponse>): ISchemaOptions {
   const { vertex_types, edge_types } = originalSchema;
   const idMappingforNode: Record<string, string> = {};
   const nodes: ISchemaNode[] = vertex_types.map(item => {
-    const { primary_keys, properties, type_name } = item;
+    const { primary_keys, properties = [], type_name } = item;
     const id = uuidv4();
     idMappingforNode[type_name] = id;
     return {
@@ -53,7 +43,7 @@ export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchema
   /** edge_types->undefined 报错 */
   if (edge_types) {
     edge_types.forEach(edge => {
-      const { type_name, properties, vertex_type_pair_relations } = edge;
+      const { type_name, properties = [], vertex_type_pair_relations } = edge;
       vertex_type_pair_relations.forEach(c => {
         const { destination_vertex, source_vertex, relation } = c;
         const source = idMappingforNode[source_vertex];
@@ -100,7 +90,7 @@ export function transOptionsToSchema(options: DeepRequired<ISchemaOptions>) {
 
   const vertex_types: GetGraphSchemaResponse['vertex_types'] = options.nodes.map((item, index) => {
     const { id, data } = item;
-    const { label, properties } = data;
+    const { label, properties = [] } = data;
     nodeMap[id] = label;
     let primary_key = 'id';
     return {
@@ -124,7 +114,7 @@ export function transOptionsToSchema(options: DeepRequired<ISchemaOptions>) {
 
   options.edges.forEach((item, itemIdx) => {
     const { source: sourceID, target: targetID, data } = item;
-    const { properties, label } = data;
+    const { properties = [], label } = data;
     const source = nodeMap[sourceID];
     const target = nodeMap[targetID];
     const constraint = {
