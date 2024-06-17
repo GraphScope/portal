@@ -13,9 +13,10 @@ import { transformEdges } from '../elements';
 
 import { getBBox, createEdgeLabel, createNodeLabel } from '../utils';
 
+let timer: any = null;
 const useInteractive: any = () => {
   const { store, updateStore } = useContext();
-  const { screenToFlowPosition, fitBounds } = useReactFlow();
+  const { screenToFlowPosition, fitBounds, fitView } = useReactFlow();
   const { displayMode, nodes, edges, hasLayouted, elementOptions } = store;
   const connectingNodeId = useRef(null);
 
@@ -117,10 +118,17 @@ const useInteractive: any = () => {
   useEffect(() => {
     if (nodes.length > 0) {
       // 交互
-      onDoubleClick();
+      if (hasLayouted) {
+        onDoubleClick();
+      }
       // 布局
       if (!hasLayouted) {
         const graph = createStaticForceLayout(fakeSnapshot(nodes), fakeSnapshot(edges));
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          const bbox = getBBox(graph.nodes);
+          fitBounds(bbox, { duration: 300 });
+        }, 300);
         updateStore(draft => {
           draft.hasLayouted = true;
           draft.nodes = graph.nodes;
