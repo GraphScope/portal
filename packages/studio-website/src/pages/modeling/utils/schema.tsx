@@ -74,11 +74,12 @@ export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchema
   return { nodes, edges };
 }
 
-export const handleType = (type: string): any => {
+export const handleType = (type?: string) => {
   if (type === 'DT_STRING') {
     return { string: { long_text: '' } };
+  } else {
+    return { primitive_type: type };
   }
-  return { primitive_type: type };
 };
 /**
  *
@@ -103,7 +104,9 @@ export function transOptionsToSchema(options: DeepRequired<ISchemaOptions>) {
         return {
           property_id: pIdx,
           property_name: p.name,
-          property_type: handleType(p.type),
+          property_type: {
+            primitive_type: p.type as any,
+          },
         };
       }),
       primary_keys: [primary_key],

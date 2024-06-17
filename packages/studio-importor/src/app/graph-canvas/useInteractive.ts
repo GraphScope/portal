@@ -80,7 +80,7 @@ const useInteractive: any = () => {
                 data: {
                   label: edgeLabel,
                 },
-                source: connectingNodeId.current,
+                source: connectingNodeId.current || '',
                 target: nodeid,
               },
             ],

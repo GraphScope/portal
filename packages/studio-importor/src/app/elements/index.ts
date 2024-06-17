@@ -1,6 +1,8 @@
 import { Position, MarkerType } from 'reactflow';
 import processEdges from './processEdges';
 import dagre from 'dagre';
+import { ISchemaEdge, ISchemaNode, ISchemaOptions } from '../typing';
+import { uuid } from 'uuidv4';
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -50,24 +52,22 @@ export function transformGraphNodes(nodes, displayMode) {
   });
 }
 
-export function transformEdges(_edges, displayMode) {
+export function transformEdges(_edges: ISchemaEdge[], displayMode): ISchemaEdge[] {
   const edges = processEdges(_edges);
   return edges.map((item, index) => {
-    const { id, key, source, target, data = {}, ...others } = item;
+    const { id, source, target, data } = item;
+    console.log('edge', data);
     return {
-      id: id || key || `${source}-${target}-${index}`,
+      id: id || `${source}-${target}-${index}`,
       source,
       target,
       type: displayMode === 'table' ? 'smoothstep' : 'graph-edge',
-      data: {
-        ...data,
-        ...others,
-      },
+      data,
     };
   });
 }
 
-export function transformDataToReactFlow(nodes, edges, { displayMode }) {
+export function transformDataToReactFlow(nodes: ISchemaNode[], edges: ISchemaEdge[], { displayMode }) {
   if (displayMode === 'table') {
     const data = transEdge2Entity({ nodes, edges });
     /** layout */
@@ -95,25 +95,40 @@ export function transformDataToReactFlow(nodes, edges, { displayMode }) {
   };
 }
 
-export function transEdge2Entity(data) {
+export function transEdge2Entity(data: ISchemaOptions): ISchemaOptions {
   const { nodes, edges } = data;
-  const relationship: { source; target }[] = [];
+  const relationship: ISchemaEdge[] = [];
   /** 把边也当作一个实体去处理 */
-  const entity = edges.map(item => {
-    const { source, target, id, data } = item;
+  const entity: ISchemaNode[] = edges.map(item => {
+    const { source, target, id, data, ...others } = item;
     relationship.push({
+      id: uuid(),
       source: source,
       target: id,
+      type: 'smoothstep',
+      data: {
+        ...others,
+        label: '',
+      },
     });
     relationship.push({
+      id: uuid(),
       source: id,
       target: target,
+      type: 'smoothstep',
+      data: {
+        label: '',
+      },
     });
     return {
       ...item,
       _fromEdge: true,
       id: item.id,
       data: data,
+      position: {
+        x: 0,
+        y: 0,
+      },
     };
   });
   return {
@@ -121,13 +136,15 @@ export function transEdge2Entity(data) {
       ...nodes.map(item => {
         return {
           ...item,
-          position: null,
+          position: {
+            x: 0,
+            y: 0,
+          },
         };
       }),
       ...entity.map(item => {
         return {
           ...item,
-          position: null,
         };
       }),
     ],

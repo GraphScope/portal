@@ -15,17 +15,19 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
   const { graphId } = store;
   const handleClick = async () => {
     console.log('importingStore', importingStore);
-    // //先绑定数据
-    const bindStatus = await bindDatasourceInBatch(graphId, {
-      nodes,
-      edges,
-    });
-    // 再倒入数据
-    const res = await submitDataloadingJob(graphId, {
-      nodes,
-      edges,
-    });
-    console.log('res', res);
+    if (graphId) {
+      // //先绑定数据
+      const bindStatus = await bindDatasourceInBatch(graphId, {
+        nodes,
+        edges,
+      });
+      // 再倒入数据
+      const res = await submitDataloadingJob(graphId, {
+        nodes,
+        edges,
+      });
+      console.log('res', res);
+    }
   };
 
   if (appMode === 'DATA_IMPORTING') {

@@ -8,6 +8,15 @@ export interface IEdgeData {
   target_vertex_fields?: Property;
   dataFields?: string[];
   [key: string]: any;
+  _extra?: {
+    type?: string;
+    offset?: string;
+    isLoop: boolean;
+    isRevert?: boolean;
+    isPoly?: boolean;
+    index?: number;
+    count?: number;
+  };
 }
 
 export interface INodeData {
@@ -50,8 +59,8 @@ export interface ImportorProps {
     type: 'Select' | 'InputNumber';
   };
 
-  queryGraphSchema?: () => Promise<any>;
-  queryBoundSchema?: () => Promise<any>;
+  queryGraphSchema?: () => Promise<ISchemaOptions>;
+  queryBoundSchema?: () => Promise<ISchemaOptions>;
   handleUploadFile: (file: File) => {
     file_path: string;
   };
