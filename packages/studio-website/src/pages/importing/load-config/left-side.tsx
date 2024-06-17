@@ -8,12 +8,10 @@ export type FieldType = {
   import_option?: string;
   header_row: boolean;
 };
-type ILeftSide = Pick<IModalType, 'onFinish' | 'onColse'> & {
-  isImportFinish: boolean;
-};
+type ILeftSide = Pick<IModalType, 'onFinish' | 'onColse'>;
 const { Title } = Typography;
 const LeftSide: React.FC<ILeftSide> = props => {
-  const { isImportFinish, onFinish, onColse } = props;
+  const { onFinish, onColse } = props;
   const [form] = Form.useForm();
   const handleClick = () => {
     const data = form.getFieldsValue();
@@ -71,9 +69,12 @@ const LeftSide: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
-        <Flex vertical align="end">
+        <Flex justify="end" gap={12}>
           <Button style={{ width: '120px' }} type="primary" onClick={handleClick}>
             Load data
+          </Button>
+          <Button style={{ width: '120px' }} onClick={onColse}>
+            Close
           </Button>
         </Flex>
       </Form>

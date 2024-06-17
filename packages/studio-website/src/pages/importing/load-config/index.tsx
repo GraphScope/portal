@@ -18,8 +18,8 @@ const LoadConfig: React.FC<IModalType> = props => {
       <SplitSection
         splitText=""
         span={12}
-        leftSide={<LeftSide isImportFinish={isImportFinish} onFinish={onFinish} onColse={onColse} />}
-        rightSide={<RightSide isImportFinish={isImportFinish} onColse={onColse} />}
+        leftSide={<LeftSide onFinish={onFinish} onColse={onColse} />}
+        rightSide={<RightSide isImportFinish={isImportFinish} />}
       />
     </Modal>
   );

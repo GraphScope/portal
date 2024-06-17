@@ -3,12 +3,12 @@ import { history } from 'umi';
 import { Result, Typography, Button, Space } from 'antd';
 import { useContext as useImporting } from '@graphscope/studio-importor';
 import type { IModalType } from './load-config/modal-type';
-type IRightSide = Pick<IModalType, 'onColse'> & {
+type IRightSide = {
   isImportFinish: boolean;
 };
 const { Text } = Typography;
 const RightSide: React.FC<IRightSide> = props => {
-  const { isImportFinish, onColse } = props;
+  const { isImportFinish } = props;
   const { store: importingStore } = useImporting();
   const { nodes, edges } = importingStore;
   const nodes_bind = nodes.length;
@@ -49,20 +49,15 @@ const RightSide: React.FC<IRightSide> = props => {
             }
           />
           <div style={{ textAlign: 'center', marginTop: '-24px' }}>
-            <Space>
-              <Button
-                style={{ width: '120px' }}
-                type="primary"
-                onClick={() => {
-                  history.push('/job');
-                }}
-              >
-                Goto Jobs
-              </Button>
-              <Button style={{ width: '120px' }} onClick={onColse}>
-                Close
-              </Button>
-            </Space>
+            <Button
+              style={{ width: '120px' }}
+              type="primary"
+              onClick={() => {
+                history.push('/job');
+              }}
+            >
+              Goto Jobs
+            </Button>
           </div>
         </>
       )}
