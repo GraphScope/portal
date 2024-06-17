@@ -1,10 +1,10 @@
 import * as React from 'react';
-import ImportApp from '@graphscope/studio-importor';
-import { queryPrimitiveTypes, uploadFile, getSchema, getDataloadingConfig } from './services';
+import ImportApp, { ISchemaOptions } from '@graphscope/studio-importor';
+import { queryPrimitiveTypes, uploadFile, getSchema, getDatasourceById } from './services';
 import { useContext } from '../../layouts/useContext';
 import { Toolbar } from '@graphscope/studio-components';
 import StartImporting from './start-importing';
-import { transformMappingSchemaToImportOptions } from './utils/import';
+
 import EmptyModelCase from './empty-model-case';
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
@@ -12,14 +12,14 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
   const { store } = useContext();
   const { graphId, draftId } = store;
 
-  const queryBoundSchema = async () => {
+  const queryBoundSchema = async (): Promise<ISchemaOptions> => {
     if (graphId === draftId) {
-      return { nodes: [], edges: [] } as any;
+      return { nodes: [], edges: [] };
     }
     if (graphId) {
       const graphSchema = await getSchema(graphId);
       /** options 包含nodes,edges */
-      const options = await getDataloadingConfig(graphId, graphSchema);
+      const options = await getDatasourceById(graphId, graphSchema);
       return options;
     }
     return { nodes: [], edges: [] };

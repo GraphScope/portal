@@ -1,20 +1,6 @@
 import { uuid } from 'uuidv4';
-export interface Property {
-  token: any;
-  disable?: boolean;
-  /** 唯一标识 */
-  id: string;
-  /** 唯一标识 */
-  key: string;
-  /** 属性名 */
-  name: string;
-  /** 属性类型 */
-  type: string;
-  /** 索引 */
-  index: number;
-  /** 是否是主键 */
-  primaryKey: boolean;
-}
+import { Property } from './typing';
+
 export interface IState {
   properties: Property[];
 }
@@ -25,7 +11,7 @@ interface IStore {
   handlePrimaryKey(record: { key: string }, state: IState): Property[];
   handleDoubleClick(record: { key: string }, state: IState): Property[];
   handleType(value: string, row: { key: string }, state: IState): Property[];
-  handleChangeIndex(value: any, all: { id: string }, state: IState): Property[];
+  handleChangeIndex(value: any, all: { key: string }, state: IState): Property[];
 }
 let index = 0;
 export default function useStore(): IStore {
@@ -41,7 +27,7 @@ export default function useStore(): IStore {
     return properties;
   };
   const handleDelete = (state: IState & { selectedRowKeys: string[] }): Property[] => {
-    const properties = state.properties.filter(item => !state.selectedRowKeys.includes(item.key));
+    const properties = state.properties.filter(item => !state.selectedRowKeys.includes(item.key || ''));
     return properties;
   };
   /** input->blur */
@@ -105,17 +91,18 @@ export default function useStore(): IStore {
   /** data files */
   const handleChangeIndex = (
     value: { index: number; token: string },
-    all: { id: string },
+    all: { key: string },
     state: IState,
   ): Property[] => {
-    const { id } = all;
+    const { key } = all;
     const { index, token } = value;
+
     const properties = state.properties.map(item => {
-      if (item.id === id) {
+      if (item.key === key) {
         return {
           ...item,
           index,
-          token: `${index}_${token}`,
+          token,
         };
       }
       return item;

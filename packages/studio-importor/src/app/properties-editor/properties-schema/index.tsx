@@ -5,7 +5,7 @@ import useModel from './useModel';
 import LocationField from './location';
 import SourceTarget from './source-target';
 import GrootCase from './groot-case';
-import type { ISchemaEdge, ISchemaNode, ISchemaOptions, ImportorProps, Option } from '../../typing';
+import type { ISchemaEdge, ISchemaNode, ISchemaOptions, ImportorProps, Option, IEdgeData } from '../../typing';
 import { useContext } from '../../useContext';
 export type IPropertiesSchemaProps = Pick<ImportorProps, 'appMode' | 'queryPrimitiveTypes' | 'handleUploadFile'> & {
   schema: ISchemaEdge;
@@ -16,19 +16,12 @@ export type IPropertiesSchemaProps = Pick<ImportorProps, 'appMode' | 'queryPrimi
 const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props => {
   const { schema, type, appMode, queryPrimitiveTypes, disabled, handleUploadFile } = props;
   const { id, source, target, data } = schema;
-  const { dataFields, properties = [], label = id, source_data_fields, target_data_fields } = data;
+
+  const { dataFields, properties = [], label, source_vertex_fields, target_vertex_fields } = data || {};
   const { handleChangeLabel, handleProperty } = useModel({ type, id });
   const { store } = useContext();
-  const { edges } = store;
-  /** 判断是否导入 */
-  let componentType = false;
-  if (type === 'edges') {
-    edges.map(item => {
-      if (item.id === id) {
-        componentType = item.data.isUpload;
-      }
-    });
-  }
+  const { edges, nodes } = store;
+
   /** 判断是否为导入数据 */
   const mappingColumn =
     appMode === 'DATA_IMPORTING'
@@ -37,10 +30,10 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
             dataFields?.map(item => {
               return { label: item, value: item };
             }) || [],
-          type: componentType ? 'Select' : 'InputNumber',
         }
       : null;
 
+  console.log('edges', nodes, edges, mappingColumn);
   return (
     <div>
       <Flex vertical gap={12} style={{ margin: '0px 12px' }}>
@@ -57,8 +50,8 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
             id={id}
             source={source}
             target={target}
-            source_data_fields={source_data_fields}
-            target_data_fields={target_data_fields}
+            source_vertex_fields={source_vertex_fields}
+            target_vertex_fields={target_vertex_fields}
             mappingColumn={mappingColumn as ImportorProps['mappingColumn']}
           />
         )}

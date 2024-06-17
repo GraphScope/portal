@@ -1,29 +1,39 @@
 import * as React from 'react';
 import { InputNumber, Flex, Select } from 'antd';
 import type { Option } from './typing';
-interface IController {
+interface IMappingFields {
   componentType: 'Select' | 'InputNumber';
   options: Option[];
-  value: { index: number; token: string };
+  value?: { index?: number; token?: string };
   onChange(evt: any): void;
 }
-const Controller = (props: IController) => {
+
+export const getValue = (index, token) => {
+  let _value = `${index}_${token}`;
+  const badCase = new Set([undefined, null, '']);
+  if (badCase.has(String(index)) || badCase.has(token)) {
+    _value = '';
+  }
+  return _value;
+};
+const MappingFields = (props: IMappingFields) => {
   const { options, value, onChange, componentType } = props;
-  const { index, token } = value;
+  const { index, token } = value || {};
+
   /** mappingFiles options 边涉及相同value，导致不唯一 */
-  const _options = options.map((item, Pindex) => {
+  const _options = options.map((item, pIdx) => {
     return {
-      /** 接口返回有index则使用，上传情况用上传key ->Pindex*/
-      value: `${Pindex}_${item.value}`,
+      /** 接口返回有index则使用，上传情况用上传key ->pIdx*/
+      value: `${pIdx}_${item.value}`,
       label: (
-        <Flex justify="space-between" key={Pindex}>
+        <Flex justify="space-between" key={pIdx}>
           <span
             style={{
               marginRight: '12px',
               color: '#b8b8b8',
             }}
           >
-            #{Pindex}
+            #{pIdx}
           </span>
           <span>{item.value}</span>
         </Flex>
@@ -41,7 +51,7 @@ const Controller = (props: IController) => {
   // /** 上传选择 or 输入数字 */
   // const isInputNumberShow = isDefault === undefined ? (typeof value === 'number' ? true : false) : !isDefault;
 
-  if (!token) {
+  if (options.length === 0 && token === '') {
     return (
       <InputNumber
         style={{ minWidth: '140px' }}
@@ -53,20 +63,22 @@ const Controller = (props: IController) => {
         }}
       />
     );
-  } else {
-    return (
-      <Select
-        size="small"
-        options={_options}
-        value={token as string}
-        onChange={(evt: string) => {
-          const [index, value] = evt.split('_');
-          onChange({ index: Number(index), token: value });
-        }}
-        style={{ minWidth: '140px' }}
-      />
-    );
   }
+
+  const _value = getValue(index, token);
+
+  return (
+    <Select
+      size="small"
+      options={_options}
+      value={_value}
+      onChange={(evt: string) => {
+        const [index, value] = evt.split('_');
+        onChange({ index: Number(index), token: value });
+      }}
+      style={{ minWidth: '140px' }}
+    />
+  );
 };
 
-export default Controller;
+export default MappingFields;
