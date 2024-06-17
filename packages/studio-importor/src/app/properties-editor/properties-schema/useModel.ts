@@ -46,16 +46,19 @@ export default function useModel({ type, id }) {
     });
   };
   /** 修改source/target 的dataFiles */
-  const handleDataFieldsChange = (val: Property, name: string, data_fields) => {
+  const handleDataFieldsChange = (
+    val: Property,
+    data_field: 'source_vertex_fields' | 'target_vertex_fields',
+    vertext_primary_key,
+  ) => {
     updateStore(draft => {
       draft.edges.forEach(item => {
         if (item.id === id) {
           const { index, token } = val;
-          item.data[data_fields] = {
+          item.data[data_field] = {
             key: id,
             index,
-            name,
-            type: '',
+            name: vertext_primary_key,
             token: token,
           };
         }

@@ -13,17 +13,26 @@ type ISourceTargetProps = {
 
 const getLabelById = (nodes, source, target) => {
   let source_label, target_label;
+  let source_primary_key, target_primary_key;
   nodes.forEach(item => {
     if (item.id === source) {
       source_label = item.data.label;
+      source_primary_key = item.data.properties.find(item => {
+        return item.primaryKey;
+      });
     }
     if (item.id === target) {
       target_label = item.data.label;
+      target_primary_key = item.data.properties.find(item => {
+        return item.primaryKey;
+      });
     }
   });
   return {
     source_label,
     target_label,
+    target_primary_key: target_primary_key?.name,
+    source_primary_key: source_primary_key?.name,
   };
 };
 const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
@@ -31,7 +40,7 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
   const { store } = useContext();
   const { nodes } = store;
   const { handleDataFieldsChange } = useModel({ type: 'edges', id });
-  const { source_label, target_label } = getLabelById(nodes, source, target);
+  const { source_label, target_label, target_primary_key, source_primary_key } = getLabelById(nodes, source, target);
 
   return (
     <>
@@ -45,7 +54,7 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
             <Typography.Text>Data Fields</Typography.Text>
             <MappingFields
               value={source_vertex_fields}
-              onChange={val => handleDataFieldsChange(val, source_label, 'source_vertex_fields')}
+              onChange={val => handleDataFieldsChange(val, 'source_vertex_fields', source_primary_key)}
               componentType={mappingColumn?.type || 'Select'}
               options={mappingColumn?.options || []}
             />
@@ -62,7 +71,7 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
             <Typography.Text>Data Fields</Typography.Text>
             <MappingFields
               value={target_vertex_fields}
-              onChange={val => handleDataFieldsChange(val, target_label, 'target_vertex_fields')}
+              onChange={val => handleDataFieldsChange(val, 'target_vertex_fields', target_primary_key)}
               componentType={mappingColumn?.type || 'Select'}
               options={mappingColumn?.options || []}
             />

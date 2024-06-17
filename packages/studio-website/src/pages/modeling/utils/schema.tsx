@@ -104,9 +104,7 @@ export function transOptionsToSchema(options: DeepRequired<ISchemaOptions>) {
         return {
           property_id: pIdx,
           property_name: p.name,
-          property_type: {
-            primitive_type: p.type as any,
-          },
+          property_type: handleType(p.type),
         };
       }),
       primary_keys: [primary_key],
