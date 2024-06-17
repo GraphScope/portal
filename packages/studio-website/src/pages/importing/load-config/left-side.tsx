@@ -1,26 +1,36 @@
 import React from 'react';
 import { history } from 'umi';
-import { Button, Select, Form, Flex } from 'antd';
-import type { IModalType } from './modal-type';
+import { Button, Select, Form, Flex, Typography } from 'antd';
+import type { IModalType } from '.';
 export type FieldType = {
   type?: string;
   delimiter?: string;
   import_option?: string;
   header_row: boolean;
 };
-type ILeftSide = Pick<IModalType, 'handleFinish' | 'handleColse'> & {
+type ILeftSide = Pick<IModalType, 'onFinish' | 'onColse'> & {
   isImportFinish: boolean;
 };
+const { Title } = Typography;
 const LeftSide: React.FC<ILeftSide> = props => {
-  const { isImportFinish, handleFinish, handleColse } = props;
+  const { isImportFinish, onFinish, onColse } = props;
   const [form] = Form.useForm();
   const handleClick = () => {
     const data = form.getFieldsValue();
-    handleFinish(data);
+    onFinish(data);
   };
   return (
-    <div style={{ marginRight: '12px' }}>
-      <Form name="modal_type" layout="vertical" labelCol={{ span: 8 }} form={form}>
+    <div style={{ padding: '0px 24px' }}>
+      <Title level={2} style={{ textAlign: 'center', marginTop: '0px' }}>
+        LoadConfig
+      </Title>
+      <Form
+        name="modal_type"
+        layout="vertical"
+        style={{ margin: '12px 12px 0px 0px' }}
+        labelCol={{ span: 8 }}
+        form={form}
+      >
         <Form.Item<FieldType> label="Type" name="type">
           <Select
             allowClear
@@ -61,31 +71,12 @@ const LeftSide: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
+        <Flex vertical align="end">
+          <Button style={{ width: '120px' }} type="primary" onClick={handleClick}>
+            Load data
+          </Button>
+        </Flex>
       </Form>
-      <>
-        {isImportFinish ? (
-          <Flex vertical align="end" gap={12}>
-            <Button
-              style={{ width: '240px' }}
-              type="primary"
-              onClick={() => {
-                history.push('/job');
-              }}
-            >
-              Goto Jobs
-            </Button>
-            <Button style={{ width: '240px' }} onClick={handleColse}>
-              Close
-            </Button>
-          </Flex>
-        ) : (
-          <Flex vertical align="end">
-            <Button style={{ width: '240px' }} type="primary" onClick={handleClick}>
-              Load data
-            </Button>
-          </Flex>
-        )}
-      </>
     </div>
   );
 };

@@ -36,16 +36,6 @@ const EmptyModelCase: React.FunctionComponent<IEmptyModelCaseProps> = props => {
         <Modal title={null} open={open} footer={null} closable={false} width={1000}>
           <SplitSection
             leftSide={
-              <ConnectEndpoint
-                handleFinish={handleFinish}
-                handleColse={() =>
-                  setState({
-                    open: false,
-                  })
-                }
-              />
-            }
-            rightSide={
               <Result
                 status="403"
                 title="Please create the graph model first"
@@ -54,6 +44,16 @@ const EmptyModelCase: React.FunctionComponent<IEmptyModelCaseProps> = props => {
                   <Button type="primary" onClick={handleGotoModeling}>
                     Goto Modeling
                   </Button>
+                }
+              />
+            }
+            rightSide={
+              <ConnectEndpoint
+                onFinish={handleFinish}
+                onColse={() =>
+                  setState({
+                    open: false,
+                  })
                 }
               />
             }

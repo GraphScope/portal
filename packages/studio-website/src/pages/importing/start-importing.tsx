@@ -3,8 +3,8 @@ import * as React from 'react';
 import { useContext } from '../../layouts/useContext';
 import { useContext as useImporting } from '@graphscope/studio-importor';
 import { submitDataloadingJob, bindDatasourceInBatch } from './services';
-import ModalType from './modal-type';
-import type { FieldType } from './modal-type';
+import type { FieldType } from './load-config';
+import LoadConfig from './load-config';
 interface StartImportingProps {
   onClick?: () => void;
 }
@@ -58,20 +58,19 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
         >
           Start importing
         </Button>
-        <Modal title="LoadConfig" width={'40%'} open={open} footer={null} closable={false}>
-          <ModalType
-            isImportFinish={isImportFinish}
-            handleFinish={handleClick}
-            handleColse={() =>
-              updateState(preset => {
-                return {
-                  ...preset,
-                  open: false,
-                };
-              })
-            }
-          />
-        </Modal>
+        <LoadConfig
+          open={open}
+          isImportFinish={isImportFinish}
+          onFinish={handleClick}
+          onColse={() =>
+            updateState(preset => {
+              return {
+                ...preset,
+                open: false,
+              };
+            })
+          }
+        />
       </>
     );
   }
