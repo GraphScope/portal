@@ -84,12 +84,12 @@ export function transMappingSchemaToOptions(
 
     return {
       ...item,
-      filelocation,
-      isBind: !!filelocation,
-      isEidtProperty: true,
-      dataFields: loadingdataFields('nodes', properties),
       data: {
         ...item.data,
+        filelocation,
+        isBind: !!filelocation,
+        isEidtProperty: true,
+        dataFields: loadingdataFields('nodes', properties),
         properties: properties.map((p, index) => {
           const { name } = p;
           const pMatch = (match && match.properties_mappings && match.properties_mappings[name]) || {
@@ -125,12 +125,12 @@ export function transMappingSchemaToOptions(
         const filelocation = match.inputs[0];
         return {
           ...item,
-          filelocation,
-          isBind: !!filelocation,
-          isEidtProperty: true,
-          dataFields: loadingdataFields('edges', properties),
           data: {
             ...item.data,
+            filelocation,
+            isBind: !!filelocation,
+            isEidtProperty: true,
+            dataFields: loadingdataFields('edges', properties),
             properties: properties.map((p: Property) => {
               const { name } = p;
               const pMatch = properties_mappings[name] || { index: 0, token: '' };
