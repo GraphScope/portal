@@ -1,5 +1,6 @@
 import React from 'react';
 import { useContext } from '../../useContext';
+import { Property } from '@graphscope/studio-components';
 export default function useModel({ type, id }) {
   const { updateStore } = useContext();
   /** 修改label */
@@ -26,11 +27,11 @@ export default function useModel({ type, id }) {
 
   const handleProperty = e => {
     console.log('e|||||', e);
+
     updateStore(draft => {
       if (type === 'edges') {
         draft.edges.map(item => {
           if (item.id === id) {
-            //@ts-ignore
             item.data.properties = e;
           }
         });
@@ -38,7 +39,6 @@ export default function useModel({ type, id }) {
       if (type === 'nodes') {
         draft.nodes.map(item => {
           if (item.id === id) {
-            //@ts-ignore
             item.data.properties = e;
           }
         });
@@ -46,17 +46,17 @@ export default function useModel({ type, id }) {
     });
   };
   /** 修改source/target 的dataFiles */
-  const handleDataFieldsChange = (val, name, data_fields) => {
+  const handleDataFieldsChange = (val: Property, name: string, data_fields) => {
     updateStore(draft => {
       draft.edges.forEach(item => {
         if (item.id === id) {
+          const { index, token } = val;
           item.data[data_fields] = {
-            id,
             key: id,
-            index: typeof val === 'number' ? val : 0,
+            index,
             name,
             type: '',
-            columnName: typeof val === 'string' ? val : '',
+            token: token,
           };
         }
       });

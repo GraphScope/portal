@@ -125,9 +125,10 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
         return (
           <MappingFields
             options={mappingColumn?.options}
-            value={token}
+            /** 拆分后 index/token,后期需处理 */
+            value={all}
             componentType={mappingColumn?.type}
-            onChange={(value: string) => handleProperties(handleChangeIndex(value, all, state))}
+            onChange={(value: number | string) => handleProperties(handleChangeIndex(value, all, state))}
           />
         );
       },

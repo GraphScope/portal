@@ -6,6 +6,7 @@ export { default as Toolbar } from './Toolbar';
 export { default as Logo, LogoImage, LogoText } from './Logo';
 export { default as Container } from './Container';
 export { default as PropertiesList } from './PropertiesList';
+export { default as MappingFields } from './PropertiesList/MappingFields';
 export { default as Section } from './Section';
 export { default as MultipleInstance } from './MultipleInstance';
 export { default as SplitSection } from './SplitSection';

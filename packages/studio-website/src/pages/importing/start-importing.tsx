@@ -14,6 +14,7 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
   const { store: importingStore } = useImporting();
   const { appMode, nodes, edges } = importingStore;
   const { graphId } = store;
+
   const [state, updateState] = useState({
     open: false,
     /** 是否导入完成 */
@@ -40,6 +41,7 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
         isImportFinish: true,
       };
     });
+
   };
 
   if (appMode === 'DATA_IMPORTING') {

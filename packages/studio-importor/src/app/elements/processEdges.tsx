@@ -1,3 +1,4 @@
+import type { ISchemaEdge } from '../typing';
 function isEven(number: number) {
   return number % 2 === 0;
 }
@@ -10,30 +11,13 @@ const POLY_DEFAULT = 30;
 const LOOP_DEFAULT = 10;
 const LOOP_LABEL_POSITION_DEFAULT = 1;
 
-export interface IUserEdge {
-  id: string;
-  source: string;
-  target: string;
-  properties: string;
-  data: Record<string, any>;
-  _extra?: {
-    type?: string;
-    offset?: string;
-    isLoop: boolean;
-    isRevert?: boolean;
-    isPoly?: boolean;
-    index?: number;
-    count?: number;
-  };
-  [key: string]: any;
-}
 /**
  *
  * @param edges 边的集合
  * @param {poly,loop} 设置多边和自环多边的distance
  */
 const processEdges = (
-  edges: IUserEdge[],
+  edges: ISchemaEdge[],
   {
     poly = POLY_DEFAULT,
     loop = LOOP_DEFAULT,
@@ -51,7 +35,7 @@ const processEdges = (
     loopLabelPosition: LOOP_LABEL_POSITION_DEFAULT,
   },
 ) => {
-  const edgesMap: { [edgeId: string]: IUserEdge[] } = {};
+  const edgesMap: { [edgeId: string]: ISchemaEdge[] } = {};
   /** 计算得到 edgesMap */
   edges.forEach((item, index) => {
     const edge = { ...item };
@@ -69,14 +53,15 @@ const processEdges = (
   });
 
   const edgeGroups = Object.values(edgesMap);
-  const newEdges: IUserEdge[] = [];
+  const newEdges: ISchemaEdge[] = [];
   edgeGroups.forEach(edges => {
     const isMultipleEdge = edges.length > 1;
     // 说明是多边的情况
     if (isMultipleEdge) {
       const isEvenCount = isEven(edges.length);
       edges.forEach((edge, i: number) => {
-        const { source, target } = edge;
+        const { source, target, data } = edge;
+
         const revertGroupId = `${target}-${source}`;
         const isLoop = source === target;
         const isRevert = !!edgesMap[revertGroupId];
@@ -104,26 +89,32 @@ const processEdges = (
         }
         newEdges.push({
           ...edge,
-          _extra: {
-            count: edges.length,
-            index: index,
-            type: type,
-            isPoly: true,
-            isLoop: isLoop,
-            offset: offset,
-            isRevert: isRevert,
+          data: {
+            ...data,
+            _extra: {
+              count: edges.length,
+              index: index,
+              type: type,
+              isPoly: true,
+              isLoop: isLoop,
+              offset: offset,
+              isRevert: isRevert,
+            },
           },
         });
       });
     } else {
       const [edge] = edges;
-      const { source, target } = edge;
+      const { source, target, data } = edge;
       newEdges.push({
         ...edge,
-        _extra: {
-          count: 1,
-          index: 0,
-          isLoop: source === target,
+        data: {
+          ...data,
+          _extra: {
+            count: 1,
+            index: 0,
+            isLoop: source === target,
+          },
         },
       });
     }

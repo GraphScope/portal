@@ -15,7 +15,7 @@ import { Divider, notification } from 'antd';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
 import Provider from './provider';
-import type { ImportorProps } from './typing';
+import type { ISchemaOptions, ImportorProps } from './typing';
 interface Option {
   label: string;
   value: string;
@@ -48,10 +48,11 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   const { store, updateStore } = useContext();
   const { collapsed } = store;
   const { left, right } = collapsed;
+  console.log('rener,,,,store', store);
 
   useEffect(() => {
     (async () => {
-      let schema = {};
+      let schema: ISchemaOptions = { nodes: [], edges: [] };
       if (appMode === 'DATA_MODELING' && queryGraphSchema) {
         schema = await queryGraphSchema();
       }
@@ -59,12 +60,9 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         schema = await queryBoundSchema();
       }
       const schemaOptions = {
-        //@ts-ignore
         nodes: transformGraphNodes(schema.nodes, store.displayMode),
-        //@ts-ignore
         edges: transformEdges(schema.edges, store.displayMode),
       };
-      //@ts-ignore
       const { nodes, edges } = schemaOptions || { nodes: [], edges: [] };
       const isEmpty = nodes.length === 0;
       const leftSideOpen = appMode === 'DATA_MODELING' && isEmpty;
