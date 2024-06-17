@@ -15,29 +15,23 @@ export type FieldType = {
   password: string;
   connection: boolean;
 };
-// const { useState } = React;
+
 const ConnectEndpoint: React.FunctionComponent<IConnectEndpointProps> = props => {
   const { onFinish, onColse } = props;
-  // const [state, updateState] = useState({
-  //   instanceEdit: false,
-  // });
-  // const { instanceEdit } = state;
   return (
-    <Flex vertical style={{ margin: '12px 12px 12px 0px' }}>
-      <Title level={2} style={{ textAlign: 'center' }}>
-        GraphScope
+    <Flex vertical style={{ padding: '12px 24px' }}>
+      <Title level={3} style={{ marginBottom: '12px' }}>
+        Connect Endpoint
       </Title>
-      <Form name="modal_type" layout="vertical" style={{ marginTop: '24px' }} onFinish={onFinish}>
+      <Text type="secondary" style={{ marginBottom: '16px' }}>
+        If you have already started the GraphScope endpoint through other means, you can directly connect to it and
+        start querying data.
+      </Text>
+      <Form name="modal_type" layout="vertical" onFinish={onFinish}>
         <Row gutter={[12, 0]} style={{ marginTop: '16px' }}>
           <Col span={6}>
             <Form.Item<FieldType> label="Protocol" name="protocol">
-              <Select
-                allowClear
-                options={[
-                  { label: 'csv', value: 'csv' },
-                  { label: 'odps', value: 'odps' },
-                ]}
-              />
+              <Select allowClear options={[{ label: 'neo4j', value: 'neo4j://' }]} />
             </Form.Item>
           </Col>
           <Col span={18}>
@@ -53,8 +47,12 @@ const ConnectEndpoint: React.FunctionComponent<IConnectEndpointProps> = props =>
           <Input.Password />
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 8, span: 8 }} style={{ marginTop: '48px' }}>
-          <Button type="primary" htmlType="submit" style={{ width: '128px', marginBottom: '12px' }}>
+        <Form.Item style={{ marginTop: '48px' }}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ width: '128px', marginBottom: '12px', marginRight: '12px' }}
+          >
             Connect
           </Button>
           <Button style={{ width: '128px' }} onClick={onColse}>

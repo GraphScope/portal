@@ -14,7 +14,7 @@ const SplitSection: React.FunctionComponent<ISplitSectionProps> = props => {
     <Row>
       <Col span={span}>{leftSide}</Col>
       <Col span={2}>
-        <Flex vertical style={{ height: '100%' }}>
+        <Flex vertical style={{ height: '100%', alignItems: 'center' }}>
           <Divider type="vertical" style={{ flex: 1 }} />
           {splitText}
           <Divider type="vertical" style={{ flex: 1 }} />
