@@ -1,61 +1,108 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import UploadFile from './update-file';
+import { Button, Collapse, Space, Tag, Flex, Dropdown } from 'antd';
+import Mapping from '../import-from-csv/mapping';
 import { useContext } from '../../useContext';
-import CodeEditor from './code-editor';
-import { Button } from 'antd';
+import { CaretRightOutlined, MoreOutlined } from '@ant-design/icons';
 import { Utils } from '@graphscope/studio-components';
-
+import MappingHeader from '../import-from-csv/mapping-header';
+import { ParsedFile } from '../import-from-csv/parseCSV';
+import { covertSchemaByTables } from './parse-ddl';
+import { transformEdges, transformGraphNodes } from '../../elements';
 interface IImportFromCSVProps {}
-import { convertDDLToPropertyGraph } from './parse';
-import { schemaToPropertyGraph } from './parse-ddl';
-import { transformNodes, transformEdges, layout, transformGraphNodes } from '../../elements/index';
 
-const ImportFromSQL: React.FunctionComponent<IImportFromCSVProps> = props => {
-  const editorRef = useRef(null);
+const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
   const { updateStore } = useContext();
-
-  const handleCovert = () => {
-    if (editorRef.current) {
-      const { editor } = editorRef.current;
-      //@ts-ignore
-      const value = editor.getValue();
-      const data = schemaToPropertyGraph(value);
-      const nodes = transformGraphNodes(data.nodes, 'graph');
-      const edges = transformEdges(data.edges, 'graph');
-
-      updateStore(draft => {
-        draft.nodes = nodes;
-        draft.edges = edges;
-        draft.displayMode = 'graph';
-      });
-
-      // const res = convertDDLToPropertyGraph(value);
-      // const data = processProperties(res);
-      // layout(data, 'LR');
-      // const nodes = transformNodes(data.nodes, 'table');
-      // const edges = transformEdges(data.edges, 'table');
-      // console.log('data', data, { nodes, edges }, dd);
-      // updateStore(draft => {
-      //   draft.nodes = nodes;
-      //   draft.edges = edges;
-      //   draft.displayMode = 'table';
-      // });
-    }
+  const [state, setState] = useState<{
+    files: ParsedFile[];
+    loading: boolean;
+  }>({
+    files: [],
+    loading: false,
+  });
+  const { files } = state;
+  const onChange = (value: any) => {
+    console.log(value);
+    setState(preState => {
+      return {
+        ...preState,
+        files: [...preState.files, ...value],
+      };
+    });
   };
+
+  const onSubmit = async () => {
+    setState(preState => {
+      return {
+        ...preState,
+        loading: true,
+      };
+    });
+    const { nodes, edges } = covertSchemaByTables(files);
+    console.log(nodes, edges);
+    updateStore(draft => {
+      draft.hasLayouted = false;
+      draft.nodes = transformGraphNodes(nodes, 'graph');
+      draft.edges = transformEdges(edges, 'graph');
+    });
+    setState(preState => {
+      return {
+        ...preState,
+        loading: false,
+      };
+    });
+  };
+  const onClear = () => {
+    setState(preState => {
+      return {
+        ...preState,
+        files: [],
+      };
+    });
+  };
+  const isEmpty = files.length === 0;
+  console.log('files', files);
+  const items = files.map((item, index) => {
+    const { meta, id } = item;
+
+    return {
+      key: index,
+      label: <MappingHeader id={id} meta={meta} updateState={setState} />,
+      children: <Mapping id={id} meta={meta} updateState={setState} />,
+    };
+  });
 
   return (
     <div
       style={{
+        border: isEmpty ? '1px dashed #ddd' : 'none',
         height: '100%',
         borderRadius: '6px',
+        position: 'relative',
+        overflow: 'scroll',
       }}
     >
-      <CodeEditor ref={editorRef} />
-      <Button type="primary" onClick={handleCovert} style={{ marginLeft: '12px', width: '120px' }}>
-        Convert
-      </Button>
+      {isEmpty ? (
+        <UploadFile onChange={onChange} />
+      ) : (
+        <Collapse
+          expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+          items={items}
+          defaultActiveKey={['0']}
+        />
+      )}
+      {!isEmpty && (
+        <Space style={{ position: 'absolute', bottom: '0px', right: '0px' }}>
+          <Button type="default" onClick={onClear}>
+            clear files
+          </Button>
+          <Button type="primary" onClick={onSubmit} loading={state.loading}>
+            Generate Graph Schema
+          </Button>
+        </Space>
+      )}
     </div>
   );
 };
 
-export default ImportFromSQL;
+export default ImportFromCSV;
