@@ -18,7 +18,7 @@ const LeftSide: React.FC<ILeftSide> = props => {
     onFinish(data);
   };
   return (
-    <div style={{ padding: '0px 24px' }}>
+    <div style={{ padding: '12px 36px' }}>
       <Title level={2} style={{ textAlign: 'center', marginTop: '0px' }}>
         LoadConfig
       </Title>

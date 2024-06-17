@@ -17,7 +17,7 @@ const LoadConfig: React.FC<IModalType> = props => {
     <Modal title="" open={open} footer={null} closable={false} width={1000}>
       <SplitSection
         splitText=""
-        span={12}
+        span={10}
         leftSide={<LeftSide onFinish={onFinish} onColse={onColse} />}
         rightSide={<RightSide isImportFinish={isImportFinish} />}
       />
