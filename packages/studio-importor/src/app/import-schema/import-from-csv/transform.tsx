@@ -35,17 +35,25 @@ export const transform = schemaData => {
       label,
       source,
       target,
-      properties: properties.map(p => {
-        const { name, type } = p;
-        const IS_PK = sourceField === name || targetField === name;
-        return {
-          name,
-          type: IS_PK ? 'DT_SIGNED_INT32' : DATA_TYPE_MAPPING[type],
-          key: uuid(),
-          disable: false,
-          primaryKey: false,
-        };
-      }),
+      properties: properties
+        .map(p => {
+          const { name, type } = p;
+          /**
+           * TODO：目前 interactive 边的属性支持的数量只有一个，因此这里需要先把source和target从属性中过滤
+           */
+          const IS_PK = sourceField === name || targetField === name;
+          if (IS_PK) {
+            return null;
+          }
+          return {
+            name,
+            type: IS_PK ? 'DT_SIGNED_INT32' : DATA_TYPE_MAPPING[type],
+            key: uuid(),
+            disable: false,
+            primaryKey: false,
+          };
+        })
+        .filter(item => item),
     };
   });
   return {
