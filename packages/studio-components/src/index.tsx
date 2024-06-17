@@ -10,6 +10,7 @@ export { default as MappingFields } from './PropertiesList/MappingFields';
 export { default as Section } from './Section';
 export { default as MultipleInstance } from './MultipleInstance';
 export { default as SplitSection } from './SplitSection';
+export { default as ResultConfig } from './ResultConfig';
 /** all */
 export * as Utils from './Utils';
 export * as Icons from './Icons';

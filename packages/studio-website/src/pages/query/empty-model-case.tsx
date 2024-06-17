@@ -26,13 +26,19 @@ const EmptyModelCase: React.FunctionComponent<IEmptyModelCaseProps> = props => {
       draft.currentnNav = '/modeling';
     });
   };
+  /** 连接参数 */
+  const handleFinish = (values: any) => {
+    console.log(values);
+  };
   if (graphId === draftId) {
     return (
       <div>
         <Modal title={null} open={open} footer={null} closable={false} width={1000}>
           <SplitSection
+            span={12}
             leftSide={
               <Result
+                style={{ marginTop: '-12px' }}
                 status="403"
                 title="Please create the graph model first"
                 subTitle="Sorry, the system detected that there is no available graph model. Please create a graph model before importing data"
@@ -43,7 +49,16 @@ const EmptyModelCase: React.FunctionComponent<IEmptyModelCaseProps> = props => {
                 }
               />
             }
-            rightSide={<ConnectEndpoint />}
+            rightSide={
+              <ConnectEndpoint
+                onFinish={handleFinish}
+                onColse={() =>
+                  setState({
+                    open: false,
+                  })
+                }
+              />
+            }
           />
         </Modal>
       </div>
