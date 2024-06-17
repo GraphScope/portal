@@ -23,7 +23,7 @@ const ConnectEndpoint: React.FunctionComponent<IConnectEndpointProps> = props =>
   // });
   // const { instanceEdit } = state;
   return (
-    <Flex vertical style={{ marginRight: '12px' }}>
+    <Flex vertical style={{ margin: '12px 12px 12px 0px' }}>
       <Title level={2} style={{ textAlign: 'center' }}>
         GraphScope
       </Title>
@@ -53,11 +53,13 @@ const ConnectEndpoint: React.FunctionComponent<IConnectEndpointProps> = props =>
           <Input.Password />
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
-          <Button type="primary" htmlType="submit">
+        <Form.Item wrapperCol={{ offset: 8, span: 8 }} style={{ marginTop: '48px' }}>
+          <Button type="primary" htmlType="submit" style={{ width: '128px', marginBottom: '12px' }}>
             Connect
           </Button>
-          <Button onClick={onColse}>Cancel</Button>
+          <Button style={{ width: '128px' }} onClick={onColse}>
+            Cancel
+          </Button>
         </Form.Item>
       </Form>
     </Flex>

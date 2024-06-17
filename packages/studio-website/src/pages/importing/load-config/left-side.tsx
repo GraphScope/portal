@@ -70,10 +70,10 @@ const LeftSide: React.FC<ILeftSide> = props => {
           />
         </Form.Item>
         <Flex justify="end" gap={12}>
-          <Button style={{ width: '120px' }} type="primary" onClick={handleClick}>
+          <Button style={{ width: '128px' }} type="primary" onClick={handleClick}>
             Load data
           </Button>
-          <Button style={{ width: '120px' }} onClick={onColse}>
+          <Button style={{ width: '128px' }} onClick={onColse}>
             Close
           </Button>
         </Flex>

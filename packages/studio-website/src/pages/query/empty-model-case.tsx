@@ -35,8 +35,10 @@ const EmptyModelCase: React.FunctionComponent<IEmptyModelCaseProps> = props => {
       <div>
         <Modal title={null} open={open} footer={null} closable={false} width={1000}>
           <SplitSection
+            span={12}
             leftSide={
               <Result
+                style={{ marginTop: '-12px' }}
                 status="403"
                 title="Please create the graph model first"
                 subTitle="Sorry, the system detected that there is no available graph model. Please create a graph model before importing data"

@@ -50,7 +50,7 @@ const RightSide: React.FC<IRightSide> = props => {
           />
           <div style={{ textAlign: 'center', marginTop: '-24px' }}>
             <Button
-              style={{ width: '120px' }}
+              style={{ width: '128px' }}
               type="primary"
               onClick={() => {
                 history.push('/job');
