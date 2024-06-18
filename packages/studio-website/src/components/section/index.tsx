@@ -3,6 +3,7 @@ import { Breadcrumb, Divider, Typography, Tabs, Space } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import type { BreadcrumbProps, TabsProps } from 'antd';
 import { Utils } from '@graphscope/studio-components';
+import { useContext } from '@/layouts/useContext';
 interface ISectionProps {
   title?: string;
   desc?: string;
@@ -14,7 +15,8 @@ interface ISectionProps {
 const { useEffect } = React;
 const Section: React.FunctionComponent<ISectionProps> = props => {
   const { title, desc, breadcrumb, children, items, style } = props;
-
+  const { store } = useContext();
+  const { mode } = store;
   useEffect(() => {
     if (items) {
       const nav = Utils.getSearchParams('nav') || '';
@@ -38,7 +40,7 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        background: '#fff',
+        background: mode === 'defaultAlgorithm' ? '#fff' : '#0D0D0D',
         borderRadius: '12px',
       }}
     >
