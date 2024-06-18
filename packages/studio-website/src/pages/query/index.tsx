@@ -13,6 +13,7 @@ import {
 import { TOOLS_MENU } from '../../layouts/const';
 import { useContext } from '@/layouts/useContext';
 import EmptyModelCase from './empty-model-case';
+import StoppedServiceCase from './stopped-service-case';
 
 const QueryModule = () => {
   const { GS_ENGINE_TYPE } = window;
@@ -27,6 +28,7 @@ const QueryModule = () => {
   return (
     <>
       <EmptyModelCase />
+      <StoppedServiceCase />
       <StudioQuery
         key={graphId}
         //@ts-ignore
