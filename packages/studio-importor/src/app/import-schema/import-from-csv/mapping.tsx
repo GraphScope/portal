@@ -57,7 +57,7 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
   return (
     <div>
       <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
-        <Typography.Text>File Type</Typography.Text>
+        <Typography.Text>File type</Typography.Text>
         <Select
           value={type}
           style={styles.Select}
@@ -70,7 +70,7 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
       </Flex>
       {type === 'Vertex' && (
         <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
-          <Typography.Text>ID Field</Typography.Text>
+          <Typography.Text>ID field</Typography.Text>
           <Select
             value={idField}
             style={styles.Select}
@@ -82,7 +82,7 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
       {type === 'Edge' && (
         <>
           <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
-            <Typography.Text>Source Field</Typography.Text>
+            <Typography.Text>Source field</Typography.Text>
             <Select
               value={sourceField}
               style={styles.Select}
@@ -91,7 +91,7 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
             />
           </Flex>
           <Flex align="center" justify="space-between">
-            <Typography.Text>Target Field</Typography.Text>
+            <Typography.Text>Target field</Typography.Text>
             <Select
               value={targetField}
               style={styles.Select}
