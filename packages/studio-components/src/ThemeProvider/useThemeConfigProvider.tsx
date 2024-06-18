@@ -1,11 +1,13 @@
 import { createContext, useContext } from 'react';
 
-export interface IContainerContext {
-  mode: string;
+export interface ThemeProviderType {
   components?: { [key: string]: { [key: string]: string | number } };
   token?: { [key: string]: string | number };
 }
-export const ContainerContext = createContext<IContainerContext>({ mode: 'defaultAlgorithm' });
+export interface IContainerContext {
+  handleTheme?: (value: ThemeProviderType) => void;
+}
+export const ContainerContext = createContext<IContainerContext>({});
 
 export const ContainerProvider = ContainerContext.Provider;
 
