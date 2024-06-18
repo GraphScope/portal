@@ -1,4 +1,3 @@
-import { Color } from 'antd/es/color-picker';
 import { createContext, useContext } from 'react';
 
 export interface ThemeProviderType {
