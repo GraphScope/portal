@@ -3,15 +3,19 @@ import { FormattedMessage } from 'react-intl';
 import { useContext } from '@/layouts/useContext';
 import localStorage from '@/components/utils/localStorage';
 import { Flex, Row, Col, InputNumber, Slider, Typography } from 'antd';
+import { useThemeContainer } from '@graphscope/studio-components';
 const { Title, Text } = Typography;
 // type IRoundedCornerProps = {};
 const RoundedCorner: React.FunctionComponent = () => {
+  const { handleTheme } = useThemeContainer();
   const { store, updateStore } = useContext();
   const { inputNumber } = store;
   const { setItem, getItem } = localStorage;
   const handleChange: (val: number) => void = val => {
     setItem('corner', val);
+    const primaryColor = getItem('primaryColor');
     const corner = getItem('corner');
+    handleTheme({ token: { colorPrimary: primaryColor, borderRadius: corner } });
     updateStore(draft => {
       draft.inputNumber = corner;
     });

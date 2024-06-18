@@ -3,11 +3,13 @@ import { ColorPicker, Flex, Row, Col, Typography } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { useContext } from '@/layouts/useContext';
 import SelectColor from './select-color';
+
 const { Title, Text } = Typography;
 // type IPrimaryColorProps = {};
 const PrimaryColor: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { primaryColor } = store;
+
   return (
     <Row>
       <Col span={8}>

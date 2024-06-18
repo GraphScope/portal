@@ -36,7 +36,7 @@ export default function Layout() {
 
   return (
     <IntlProvider messages={messages} locale={locale}>
-      <ThemeProvider mode={mode} token={{ borderRadius: inputNumber, colorPrimary: primaryColor }}>
+      <ThemeProvider mode={mode}>
         <Container
           sidebar={<Sidebar />}
           content={

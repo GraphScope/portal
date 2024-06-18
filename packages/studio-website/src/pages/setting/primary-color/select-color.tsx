@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Space } from 'antd';
 import { useContext } from '@/layouts/useContext';
 import localStorage from '@/components/utils/localStorage';
+import { useThemeContainer } from '@graphscope/studio-components';
 export type ISelectColorProps = {
   color: string;
 };
@@ -29,6 +30,7 @@ const styles = {
 
 const SelectColor: React.FunctionComponent<ISelectColorProps> = props => {
   const { color } = props;
+  const { handleTheme } = useThemeContainer();
   const { updateStore } = useContext();
   const { setItem, getItem } = localStorage;
   const activeStyle = `2px solid blue`;
@@ -36,6 +38,8 @@ const SelectColor: React.FunctionComponent<ISelectColorProps> = props => {
   const handlePrimaryColor = (item: string) => {
     setItem('primaryColor', item);
     const primaryColor = getItem('primaryColor');
+    const corner = getItem('corner');
+    handleTheme({ token: { colorPrimary: primaryColor, borderRadius: corner } });
     updateStore(draft => {
       draft.primaryColor = primaryColor;
     });

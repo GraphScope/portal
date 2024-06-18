@@ -1,3 +1,4 @@
+import { Color } from 'antd/es/color-picker';
 import { createContext, useContext } from 'react';
 
 export interface ThemeProviderType {
@@ -5,9 +6,13 @@ export interface ThemeProviderType {
   token?: { [key: string]: string | number };
 }
 export interface IContainerContext {
-  handleTheme?: (value: ThemeProviderType) => void;
+  handleTheme: (value: ThemeProviderType) => void;
 }
-export const ContainerContext = createContext<IContainerContext>({});
+export const ContainerContext = createContext<IContainerContext>({
+  handleTheme: function (value: ThemeProviderType): void {
+    throw new Error('Function not implemented.');
+  },
+});
 
 export const ContainerProvider = ContainerContext.Provider;
 
