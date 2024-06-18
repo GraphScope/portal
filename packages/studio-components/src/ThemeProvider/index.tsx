@@ -39,7 +39,7 @@ const ThemeProvider: React.FC<IThemeProvider> = props => {
           ...components,
         },
         token: {
-          colorBorder: mode === 'defaultAlgorithm' ? '#F0F0F0' : '#303030',
+          colorBorder: isLight ? '#F0F0F0' : '#303030',
           colorBgBase: isLight ? '#fff' : 'rgba(12,12,12,1)',
           ...token,
         },
