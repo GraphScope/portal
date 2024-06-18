@@ -64,9 +64,8 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
     )
       .then((res: any) => {
         if (res.status === 200) {
-          _status =
-            'The data loading task has been successfully created. You can view detailed logs in the jobs center.';
-          _message = ``;
+          _status = 'success';
+          _message = `The data loading task has been successfully created. You can view detailed logs in the job center.`;
           return res.data && res.data.job_id;
         }
         _status = 'error';

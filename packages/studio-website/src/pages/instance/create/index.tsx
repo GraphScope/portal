@@ -4,11 +4,13 @@ import Section from '@/components/section';
 
 import { useContext } from '@/layouts/useContext';
 import ChooseEnginetype from '../create-instance/choose-enginetype';
-import { Form, Row, Col, Divider, Flex, Space, Button } from 'antd';
+import { Form, Row, Col, Divider, Flex, Space, Button, Result } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { createGraph } from '../create-instance/service';
 import { useContext as useModel } from '@/layouts/useContext';
 import { Utils } from '@graphscope/studio-components';
+import { SplitSection } from '@graphscope/studio-components';
+
 import { history } from 'umi';
 const { GS_ENGINE_TYPE } = window;
 const Create: React.FC = () => {
@@ -56,15 +58,12 @@ const Create: React.FC = () => {
       title="navbar.graphs"
       desc="Choose the appropriate GraphScope computing engine and start creating graph instances"
     >
-      <Row gutter={[24, 24]}>
-        <Col span={12}>
-          <ChooseEnginetype form={form} />
-        </Col>
-        <Col span={12}>
-          <Divider type="vertical" style={{ height: '100%' }}></Divider>
-          video
-        </Col>
-      </Row>
+      <SplitSection
+        leftSide={<ChooseEnginetype form={form} />}
+        rightSide={<Result status="404" subTitle={'Introduction video to GraphScope'} />}
+        splitText=""
+      />
+
       <Button type="primary" onClick={handleCreate} style={{ minWidth: '100px' }}>
         <FormattedMessage id="Create Graph" />
       </Button>
