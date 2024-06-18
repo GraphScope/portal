@@ -4,7 +4,7 @@ import { uuid } from 'uuidv4';
 import { IMeta } from './parseCSV';
 const DATA_TYPE_MAPPING = {
   number: 'DT_DOUBLE',
-  string: 'DT_SIGNED_INT32',
+  string: 'DT_STRING',
 };
 interface ISchema {
   nodes: {
@@ -38,9 +38,11 @@ export const transform = (schemaData: ISchema): ISchemaOptions => {
         properties: properties.map(p => {
           const { name, type } = p;
           const IS_PK = idField === name;
+          const dataType = DATA_TYPE_MAPPING[type];
+
           return {
             name,
-            type: IS_PK ? 'DT_SIGNED_INT32' : DATA_TYPE_MAPPING[type],
+            type: dataType === 'DT_DOUBLE' && IS_PK ? 'DT_SIGNED_INT64' : dataType,
             key: uuid(),
             disable: false,
             primaryKey: IS_PK,
