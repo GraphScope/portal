@@ -1,11 +1,11 @@
 import React from 'react';
 import { history } from 'umi';
 import { Result, Typography, Button } from 'antd';
-import { useContext as useImporting } from '@graphscope/studio-importor';
-import { ResultConfig } from '@graphscope/studio-components';
+
 import { useContext } from '@/layouts/useContext';
 type IRightSide = {
-  isImportFinish: boolean;
+  status?: 'error' | 'success';
+  message?: string;
 };
 const { Text } = Typography;
 const rightSVG = (
@@ -18,37 +18,21 @@ const rightSVG = (
   </>
 );
 const RightSide: React.FC<IRightSide> = props => {
-  const { isImportFinish } = props;
+  const { status, message } = props;
   const { updateStore } = useContext();
-  const { store: importingStore } = useImporting();
-  const { nodes, edges } = importingStore;
-  const nodes_bind = nodes.length;
-  const edges_bind = edges.length;
+
   return (
     <div style={{ padding: '48px 16px 24px 0px ', marginLeft: '-36px' }}>
-      {!isImportFinish ? (
-        <ResultConfig
+      <>
+        <Result
+          status="404"
           subTitle={
-            <Text type="secondary">
-              You currently need to import: {nodes_bind} node files, {edges_bind} edge files, a total of &nbsp;
-              {nodes_bind + edges_bind} files.
-            </Text>
+            <>
+              <Text type="secondary">{message}</Text>
+            </>
           }
-          rightSVG={rightSVG}
         />
-      ) : (
-        <>
-          <Result
-            status="404"
-            subTitle={
-              <>
-                <Text type="secondary">
-                  Importing data may take a moment, please wait patiently. You can check the progress in the Task
-                  Center.
-                </Text>
-              </>
-            }
-          />
+        {status === 'success' && (
           <div style={{ textAlign: 'center', marginTop: '12px' }}>
             <Button
               style={{ width: '128px' }}
@@ -63,8 +47,8 @@ const RightSide: React.FC<IRightSide> = props => {
               Goto Jobs
             </Button>
           </div>
-        </>
-      )}
+        )}
+      </>
     </div>
   );
 };

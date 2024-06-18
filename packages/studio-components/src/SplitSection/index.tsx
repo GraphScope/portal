@@ -5,11 +5,14 @@ interface ISplitSectionProps {
   splitText?: string;
   span?: number;
   leftSide: React.ReactNode;
-  rightSide: React.ReactNode;
+  rightSide?: React.ReactNode;
 }
 
 const SplitSection: React.FunctionComponent<ISplitSectionProps> = props => {
   const { splitText = 'OR', span = 11, leftSide, rightSide } = props;
+  if (!rightSide) {
+    return <>{leftSide}</>;
+  }
   return (
     <Row>
       <Col span={span}>{leftSide}</Col>

@@ -1,13 +1,5 @@
-import {
-  GraphApiFactory,
-  UtilsApiFactory,
-  DataSourceApiFactory,
-  JobApiFactory,
-  DataloadingJobConfigLoadingConfig,
-} from '@graphscope/studio-server';
+import { GraphApiFactory, UtilsApiFactory, DataSourceApiFactory, JobApiFactory } from '@graphscope/studio-server';
 
-import { transOptionsToSchema } from '../modeling/utils/schema';
-import { cloneDeep } from 'lodash';
 import { notification } from '@/pages/utils';
 import { transformImportOptionsToSchemaMapping, transMappingSchemaToOptions } from './utils/import';
 const { GS_ENGINE_TYPE } = window;
@@ -62,28 +54,19 @@ export const submitDataloadingJob = async (graph_id: string, graphSchema: any, l
     }),
   };
 
-  return JobApiFactory(undefined, location.origin)
-    .submitDataloadingJob(graph_id, {
-      ...schema,
-      loading_config: {
-        import_option: loadConfig.import_option,
-        format: {
-          type: loadConfig.type,
-          metadata: {
-            delimiter: loadConfig.delimiter,
-            header_row: loadConfig.header_row,
-          },
+  return JobApiFactory(undefined, location.origin).submitDataloadingJob(graph_id, {
+    ...schema,
+    loading_config: {
+      import_option: loadConfig.import_option,
+      format: {
+        type: loadConfig.type,
+        metadata: {
+          delimiter: loadConfig.delimiter,
+          header_row: loadConfig.header_row,
         },
       },
-    })
-    .then(res => {
-      if (res.status === 200) {
-        return res.data;
-      }
-    })
-    .catch(error => {
-      notification('error', error);
-    });
+    },
+  });
 };
 
 export const getSchema = async (graph_id: string) => {
