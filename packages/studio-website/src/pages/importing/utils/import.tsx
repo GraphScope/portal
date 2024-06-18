@@ -39,10 +39,10 @@ export function transMappingSchemaToOptions(
 
   if ('vertex_mappings' in schemaMapping) {
     schemaMapping.vertex_mappings.forEach(item => {
-      const { type_name } = item;
+      const { type_name, column_mappings = [] } = item;
       itemMapping[type_name] = {
         ...item,
-        properties_mappings: item.column_mappings.reduce((acc, curr) => {
+        properties_mappings: column_mappings.reduce((acc, curr) => {
           return {
             ...acc,
             [curr.property]: {
@@ -56,10 +56,10 @@ export function transMappingSchemaToOptions(
   }
   if ('edge_mappings' in schemaMapping) {
     schemaMapping.edge_mappings.forEach(item => {
-      const { type_triplet } = item;
+      const { type_triplet, column_mappings = [] } = item;
       itemMapping[type_triplet.edge] = {
         ...item,
-        properties_mappings: item.column_mappings.reduce((acc, curr) => {
+        properties_mappings: column_mappings.reduce((acc, curr) => {
           return {
             ...acc,
             [curr.property]: {
