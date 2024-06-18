@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Space, Tag, Flex, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
 
-import type { ParsedFile, IMeta } from './parseCSV';
+import type { ParsedFile, IMeta } from '../Utils/parseCSV';
 
 import { MoreOutlined } from '@ant-design/icons';
 

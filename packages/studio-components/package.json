@@ -21,6 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "sql-ddl-to-json-schema": "latest",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "uuidv4": "latest",

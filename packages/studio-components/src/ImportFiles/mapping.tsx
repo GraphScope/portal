@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Select, Space, Typography, Flex } from 'antd';
-import type { IMeta, ParsedFile } from './parseCSV';
+import type { IMeta, ParsedFile } from '../Utils/parseCSV';
 
 interface IMappingProps {
   id: string;

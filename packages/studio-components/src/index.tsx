@@ -11,6 +11,7 @@ export { default as Section } from './Section';
 export { default as MultipleInstance } from './MultipleInstance';
 export { default as SplitSection } from './SplitSection';
 export { default as ResultConfig } from './ResultConfig';
+export { default as ImportFiles } from './ImportFiles';
 /** all */
 export * as Utils from './Utils';
 export * as Icons from './Icons';
@@ -22,3 +23,4 @@ export { useMultipleInstance } from './MultipleInstance/useMultipleInstance';
 /** export typing */
 export type { SegmentedTabsProps } from './SegmentedTabs';
 export type { Property } from './PropertiesList/typing';
+export type { ParsedFile } from './Utils/parseCSV';

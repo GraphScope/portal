@@ -1,7 +1,8 @@
 import { transformGraphNodes, transformEdges } from '../../elements/index';
 import { ISchemaOptions } from '../../typing';
 import { uuid } from 'uuidv4';
-import { IMeta } from './parseCSV';
+import { ParsedFile } from '@graphscope/studio-components';
+type IMeta = ParsedFile['meta'];
 const DATA_TYPE_MAPPING = {
   number: 'DT_DOUBLE',
   string: 'DT_STRING',
