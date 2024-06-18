@@ -3,12 +3,11 @@ import { useContext } from '../../../useContext';
 export default function useChange({ type, id }) {
   const { store, updateStore } = useContext();
   /** 改变数据源类型 */
-  const onChangeType = (datatype: string) => {
+  const onChangeType = (datatype: 'csv' | 'odps') => {
     updateStore(draft => {
       if (type === 'edges') {
         draft.edges.map(item => {
           if (item.id === id) {
-            //@ts-ignore
             item.data.datatype = datatype;
           }
         });
@@ -16,7 +15,6 @@ export default function useChange({ type, id }) {
       if (type === 'nodes') {
         draft.nodes.map(item => {
           if (item.id === id) {
-            //@ts-ignore
             item.data.datatype = datatype;
           }
         });
@@ -29,13 +27,9 @@ export default function useChange({ type, id }) {
       if (type === 'edges') {
         draft.edges.map(item => {
           if (item.id === id) {
-            //@ts-ignore
             item.data.filelocation = value;
-            //@ts-ignore
             item.data.isBind = value !== '';
-            //@ts-ignore
             item.data.isEidtProperty = true;
-            //@ts-ignore
             item.data.isUpload = isUpload;
           }
         });
@@ -43,13 +37,12 @@ export default function useChange({ type, id }) {
       if (type === 'nodes') {
         draft.nodes.map(item => {
           if (item.id === id) {
-            //@ts-ignore
             item.data.filelocation = value;
-            //@ts-ignore
+
             item.data.isBind = value !== '';
-            //@ts-ignore
+
             item.data.isEidtProperty = true;
-            //@ts-ignore
+
             item.data.isUpload = isUpload;
           }
         });
@@ -62,7 +55,6 @@ export default function useChange({ type, id }) {
       if (type === 'edges') {
         draft.edges.map(item => {
           if (item.id === id) {
-            //@ts-ignore
             item.data.isEidtProperty = true;
           }
         });
@@ -70,7 +62,6 @@ export default function useChange({ type, id }) {
       if (type === 'nodes') {
         draft.nodes.map(item => {
           if (item.id === id) {
-            //@ts-ignore
             item.data.isEidtProperty = true;
           }
         });
@@ -82,9 +73,7 @@ export default function useChange({ type, id }) {
       if (type === 'edges') {
         draft.edges.map(item => {
           if (item.id === id) {
-            //@ts-ignore
             item.data.dataFields = header?.dataFields;
-            //@ts-ignore
             item.data.delimiter = header?.delimiter;
           }
         });
@@ -92,9 +81,7 @@ export default function useChange({ type, id }) {
       if (type === 'nodes') {
         draft.nodes.map(item => {
           if (item.id === id) {
-            //@ts-ignore
             item.data.dataFields = header?.dataFields;
-            //@ts-ignore
             item.data.delimiter = header?.delimiter;
           }
         });

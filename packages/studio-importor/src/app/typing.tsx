@@ -7,7 +7,9 @@ export interface IEdgeData {
   source_vertex_fields?: Property;
   target_vertex_fields?: Property;
   dataFields?: string[];
-  [key: string]: any;
+  delimiter?: string;
+  datatype?: 'csv' | 'odps';
+  filelocation?: string;
   _extra?: {
     type?: string;
     offset?: string;
@@ -17,12 +19,16 @@ export interface IEdgeData {
     index?: number;
     count?: number;
   };
+  [key: string]: any;
 }
 
 export interface INodeData {
   label: string;
   properties?: Property[];
   dataFields?: string[];
+  delimiter?: string;
+  datatype?: 'csv' | 'odps';
+  filelocation?: string;
   [key: string]: any;
 }
 export type ISchemaNode = Node<INodeData>;
