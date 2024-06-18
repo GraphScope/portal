@@ -10,15 +10,17 @@ export interface IModalType {
   isImportFinish: boolean;
   onFinish: (values: FieldType) => void;
   onColse: () => void;
+  delimiter?: string;
+  datatype?: 'odps' | 'csv';
 }
 const LoadConfig: React.FC<IModalType> = props => {
-  const { open, isImportFinish, onFinish, onColse } = props;
+  const { open, isImportFinish, onFinish, onColse, delimiter, datatype } = props;
   return (
     <Modal title="" open={open} footer={null} closable={false} width={1000}>
       <SplitSection
-        splitText=""
+        splitText="Result"
         span={10}
-        leftSide={<LeftSide onFinish={onFinish} onColse={onColse} />}
+        leftSide={<LeftSide onFinish={onFinish} onColse={onColse} delimiter={delimiter} datatype={datatype} />}
         rightSide={<RightSide isImportFinish={isImportFinish} />}
       />
     </Modal>

@@ -3,6 +3,7 @@ import { history } from 'umi';
 import { Result, Typography, Button } from 'antd';
 import { useContext as useImporting } from '@graphscope/studio-importor';
 import { ResultConfig } from '@graphscope/studio-components';
+import { useContext } from '@/layouts/useContext';
 type IRightSide = {
   isImportFinish: boolean;
 };
@@ -18,6 +19,7 @@ const rightSVG = (
 );
 const RightSide: React.FC<IRightSide> = props => {
   const { isImportFinish } = props;
+  const { updateStore } = useContext();
   const { store: importingStore } = useImporting();
   const { nodes, edges } = importingStore;
   const nodes_bind = nodes.length;
@@ -27,30 +29,23 @@ const RightSide: React.FC<IRightSide> = props => {
       {!isImportFinish ? (
         <ResultConfig
           subTitle={
-            <Text>
+            <Text type="secondary">
               You currently need to import: {nodes_bind} node files, {edges_bind} edge files, a total of &nbsp;
-              {nodes_bind + edges_bind} files, requiring 300MB of memory.
+              {nodes_bind + edges_bind} files.
             </Text>
-            //       {/* <Text>您此时需要导入:</Text>
-            //       <Text>节点 {nodes_bind} 份文件,</Text>
-            //       <Text>边 {edges_bind} 份文件,</Text>
-            //       <Text>共计 {nodes_bind + edges_bind} 份文件,</Text>
-            //       <Text>内存 300MB</Text> */}
           }
           rightSVG={rightSVG}
         />
       ) : (
         <>
           <Result
-            style={{ padding: 0 }}
             status="404"
             subTitle={
               <>
-                <Text>
+                <Text type="secondary">
                   Importing data may take a moment, please wait patiently. You can check the progress in the Task
                   Center.
                 </Text>
-                {/* <Text>导入数据需要一点时间，请耐心等待，您可以前往任务中心查看进展</Text> */}
               </>
             }
           />
@@ -60,6 +55,9 @@ const RightSide: React.FC<IRightSide> = props => {
               type="primary"
               onClick={() => {
                 history.push('/job');
+                updateStore(draft => {
+                  draft.currentnNav = '/job';
+                });
               }}
             >
               Goto Jobs

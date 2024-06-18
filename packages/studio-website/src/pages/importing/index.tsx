@@ -18,7 +18,9 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
     }
     if (graphId) {
       const graphSchema = await getSchema(graphId);
-      /** options 包含nodes,edges */
+      if (!graphSchema) {
+        return { nodes: [], edges: [] };
+      }
       const options = await getDatasourceById(graphId, graphSchema);
       return options;
     }
