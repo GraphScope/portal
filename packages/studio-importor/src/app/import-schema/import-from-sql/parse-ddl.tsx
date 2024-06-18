@@ -11,8 +11,7 @@ export const covertSchemaByTables = (tables: ParsedFile[]) => {
     const { meta, contents, id } = table;
     const { graphFields } = meta;
     const { type, sourceField, targetField } = graphFields;
-    //@ts-ignore
-    const data = (contents as any[]) || [];
+    const data = JSON.parse(contents) || [];
     if (type === 'Vertex') {
       nodes.push({
         id,

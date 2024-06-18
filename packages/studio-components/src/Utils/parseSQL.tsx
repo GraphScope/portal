@@ -37,6 +37,7 @@ export async function parseSQL(file: File): Promise<ParsedFile[]> {
     return {
       id: uuid(),
       meta: {
+        type: 'sql',
         size: 'table',
         header: tables,
         delimiter: '',
@@ -48,7 +49,7 @@ export async function parseSQL(file: File): Promise<ParsedFile[]> {
           targetField,
         },
       },
-      contents: columns,
+      contents: JSON.stringify(columns),
     };
   });
   return files;
