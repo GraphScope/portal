@@ -15,7 +15,7 @@ const ThemeProvider: React.FC<IThemeProvider> = props => {
     <ConfigProvider
       theme={{
         // 1. 单独使用暗色算法
-        algorithm: mode === 'defaultAlgorithm' ? theme.defaultAlgorithm : theme.darkAlgorithm,
+        algorithm: isLight ? theme.defaultAlgorithm : theme.darkAlgorithm,
         components: {
           Menu: {
             itemBg: 'rgba(255, 255, 255, 0)',
