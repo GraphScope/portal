@@ -1,52 +1,49 @@
 import React from 'react';
 import { ConfigProvider, theme } from 'antd';
-
-interface IThemeProvider {
-  mode: string;
-  components?: { [key: string]: { [key: string]: string | number } };
-  token?: { [key: string]: string | number };
+import { ContainerProvider } from './useThemeConfigProvider';
+import type { IContainerContext } from './useThemeConfigProvider';
+type IThemeProvider = Pick<IContainerContext, 'mode' | 'token' | 'components'> & {
   children?: React.ReactNode;
-}
+};
 const ThemeProvider: React.FC<IThemeProvider> = props => {
   const { mode, components, token, children } = props;
 
   const isLight = mode === 'defaultAlgorithm';
+  const themeConfig = {
+    // 1. 单独使用暗色算法
+    algorithm: isLight ? theme.defaultAlgorithm : theme.darkAlgorithm,
+    components: {
+      Menu: {
+        itemBg: 'rgba(255, 255, 255, 0)',
+        subMenuItemBg: 'rgba(255, 255, 255, 0)',
+        iconMarginInlineEnd: 14,
+        itemMarginInline: 4,
+        iconSize: 14,
+        collapsedWidth: 60,
+      },
+      Typography: {
+        titleMarginBottom: '0.2em',
+        titleMarginTop: '0.8em',
+      },
+      Table: {
+        cellPaddingBlock: 4, //	单元格纵向内间距
+        cellPaddingInline: 8, //单元格横向内间距（默认大尺寸）
+      },
+      Pagination: {
+        itemSize: 20,
+      },
+      ...components,
+    },
+    token: {
+      colorBorder: isLight ? '#F0F0F0' : '#303030',
+      colorBgBase: isLight ? '#fff' : 'rgba(12,12,12,1)',
+      ...token,
+    },
+  };
   return (
-    <ConfigProvider
-      theme={{
-        // 1. 单独使用暗色算法
-        algorithm: isLight ? theme.defaultAlgorithm : theme.darkAlgorithm,
-        components: {
-          Menu: {
-            itemBg: 'rgba(255, 255, 255, 0)',
-            subMenuItemBg: 'rgba(255, 255, 255, 0)',
-            iconMarginInlineEnd: 14,
-            itemMarginInline: 4,
-            iconSize: 14,
-            collapsedWidth: 60,
-          },
-          Typography: {
-            titleMarginBottom: '0.2em',
-            titleMarginTop: '0.8em',
-          },
-          Table: {
-            cellPaddingBlock: 4, //	单元格纵向内间距
-            cellPaddingInline: 8, //单元格横向内间距（默认大尺寸）
-          },
-          Pagination: {
-            itemSize: 20,
-          },
-          ...components,
-        },
-        token: {
-          colorBorder: isLight ? '#F0F0F0' : '#303030',
-          colorBgBase: isLight ? '#fff' : 'rgba(12,12,12,1)',
-          ...token,
-        },
-      }}
-    >
-      {children}
-    </ConfigProvider>
+    <ContainerProvider value={{ ...themeConfig, ...props }}>
+      <ConfigProvider theme={themeConfig}>{children}</ConfigProvider>
+    </ContainerProvider>
   );
 };
 
