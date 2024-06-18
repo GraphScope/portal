@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ConfigProvider, theme } from 'antd';
 import { ContainerProvider } from './useThemeConfigProvider';
-import type { ThemeProviderType } from './useThemeConfigProvider';
+import type { ThemeProviderType } from './useThemeConfigProvider.tsx';
 
 type IThemeProvider = {
   mode: string;
@@ -26,6 +26,7 @@ const ThemeProvider: React.FC<IThemeProvider> = props => {
       };
     });
   };
+
   return (
     <ContainerProvider value={{ ...state, handleTheme }}>
       <ConfigProvider

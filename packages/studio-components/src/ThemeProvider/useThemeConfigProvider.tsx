@@ -8,9 +8,7 @@ export interface IContainerContext {
   handleTheme: (value: ThemeProviderType) => void;
 }
 export const ContainerContext = createContext<IContainerContext>({
-  handleTheme: function (value: ThemeProviderType): void {
-    throw new Error('Function not implemented.');
-  },
+  handleTheme: ({}) => {},
 });
 
 export const ContainerProvider = ContainerContext.Provider;

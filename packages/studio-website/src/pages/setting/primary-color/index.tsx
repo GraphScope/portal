@@ -3,13 +3,16 @@ import { ColorPicker, Flex, Row, Col, Typography } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { useContext } from '@/layouts/useContext';
 import SelectColor from './select-color';
+import localStorage from '@/components/utils/localStorage';
+import { useThemeContainer } from '@graphscope/studio-components';
 
 const { Title, Text } = Typography;
 // type IPrimaryColorProps = {};
 const PrimaryColor: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { primaryColor } = store;
-
+  const { handleTheme } = useThemeContainer();
+  const { getItem } = localStorage;
   return (
     <Row>
       <Col span={8}>
@@ -28,6 +31,8 @@ const PrimaryColor: React.FunctionComponent = () => {
             showText
             value={primaryColor}
             onChangeComplete={color => {
+              const corner = getItem('corner');
+              handleTheme({ token: { colorPrimary: color.toHexString(), borderRadius: corner } });
               updateStore(draft => {
                 draft.primaryColor = color.toHexString();
               });
