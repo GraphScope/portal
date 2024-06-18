@@ -20,19 +20,20 @@ const rightSVG = (
 const RightSide: React.FC<IRightSide> = props => {
   const { status, message } = props;
   const { updateStore } = useContext();
+  const isSuccess = status === 'success';
 
   return (
-    <div style={{ padding: '48px 16px 24px 0px ', marginLeft: '-36px' }}>
+    <div style={{ marginLeft: '-36px' }}>
       <>
         <Result
           status="404"
           subTitle={
             <>
-              <Text type="secondary">{message}</Text>
+              <Text type={isSuccess ? 'secondary' : 'danger'}>{message}</Text>
             </>
           }
         />
-        {status === 'success' && (
+        {isSuccess && (
           <div style={{ textAlign: 'center', marginTop: '12px' }}>
             <Button
               style={{ width: '128px' }}
