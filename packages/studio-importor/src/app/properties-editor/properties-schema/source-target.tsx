@@ -4,27 +4,30 @@ import { Typography, Input, Flex } from 'antd';
 import { MappingFields } from '@graphscope/studio-components';
 import { useContext } from '../../useContext';
 import useModel from './useModel';
-import type { ISchemaEdge, ImportorProps, IEdgeData } from '../../typing';
+import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
+import type { ISchemaEdge, ImportorProps, IEdgeData, ISchemaNode } from '../../typing';
 type ISourceTargetProps = {
   mappingColumn: ImportorProps['mappingColumn'];
   source_vertex_fields: IEdgeData['source_vertex_fields'];
   target_vertex_fields: IEdgeData['target_vertex_fields'];
 } & Pick<ISchemaEdge, 'source' | 'target' | 'id'>;
 
-const getLabelById = (nodes, source, target) => {
+const getLabelById = (nodes: Snapshot<ISchemaNode[]>, source: string, target: string) => {
   let source_label, target_label;
   let source_primary_key, target_primary_key;
   nodes.forEach(item => {
-    if (item.id === source) {
-      source_label = item.data.label;
-      source_primary_key = item.data.properties.find(item => {
-        return item.primaryKey;
+    const { id, data } = item;
+    const { properties = [], label } = data;
+    if (id === source) {
+      source_label = label;
+      source_primary_key = properties.find(p => {
+        return p.primaryKey;
       });
     }
-    if (item.id === target) {
-      target_label = item.data.label;
-      target_primary_key = item.data.properties.find(item => {
-        return item.primaryKey;
+    if (id === target) {
+      target_label = label;
+      target_primary_key = properties.find(p => {
+        return p.primaryKey;
       });
     }
   });
