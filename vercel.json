@@ -4,7 +4,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/0.9.1/api/$1"
+      "destination": "https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/1.0.0/api/$1"
     },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
