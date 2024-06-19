@@ -1,12 +1,16 @@
-import React, { useRef, useState } from 'react';
+import React, { lazy, useRef, useState, Suspense } from 'react';
 import { InsertRowAboveOutlined, OrderedListOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { Tooltip, Segmented, Button, Space, Flex, Typography } from 'antd';
 import { localStorageVars } from '../context';
 import { useContext } from '../context';
-import CypherEditor from '../../cypher-editor';
+
 import { countLines } from '../utils';
 import { v4 as uuidv4 } from 'uuid';
 import { isDarkTheme } from '../utils';
+import Loading from './loading';
+
+const CypherEditor = lazy(() => import('../../cypher-editor'));
+
 interface IHeaderProps {}
 
 const options = [
@@ -147,21 +151,23 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
             borderRadius: '6px',
           }}
         >
-          <CypherEditor
-            language={language}
-            onChangeContent={onChangeContent}
-            value={globalScript}
-            ref={editorRef}
-            onChange={handleChange}
-            onInit={(initEditor: any) => {
-              if (autoRun) {
-                handleQuery();
-              }
-            }}
-            maxRows={25}
-            minRows={minRows}
-            clear={state.clear}
-          />
+          <Suspense fallback={<Loading />}>
+            <CypherEditor
+              language={language}
+              onChangeContent={onChangeContent}
+              value={globalScript}
+              ref={editorRef}
+              onChange={handleChange}
+              onInit={(initEditor: any) => {
+                if (autoRun) {
+                  handleQuery();
+                }
+              }}
+              maxRows={25}
+              minRows={minRows}
+              clear={state.clear}
+            />
+          </Suspense>
         </div>
         <div style={{ flexBasis: '48px', flexShrink: 0 }}>
           <Button
