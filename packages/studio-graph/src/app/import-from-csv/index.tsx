@@ -31,21 +31,28 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
 
       if (type === 'Vertex') {
         data.forEach(node => {
-          nodes.push({
-            id: node[idField],
-            type: 'circle',
-            data: node,
-          });
+          const id = node[idField];
+          if (id) {
+            nodes.push({
+              id,
+              type: 'circle',
+              data: node,
+            });
+          }
         });
       }
       if (type === 'Edge') {
         data.forEach(edge => {
-          edges.push({
-            id: `${edge[sourceField]}-${edge[targetField]}`,
-            source: edge[sourceField],
-            target: edge[targetField],
-            data: edge,
-          });
+          const source = edge[sourceField];
+          const target = edge[targetField];
+          if (source && target) {
+            edges.push({
+              id: `${edge[sourceField]}-${edge[targetField]}`,
+              source,
+              target,
+              data: edge,
+            });
+          }
         });
       }
     });

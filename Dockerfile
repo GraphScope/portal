@@ -47,5 +47,3 @@ EXPOSE $port
 
 # 在容器启动时运行的命令
 CMD ["sh", "-c", "npm run dev -- --port=$port --proxy=$proxy --cypher_endpoint=$cypher_endpoint --gremlin_endpoint=$gremlin_endpoint"]
-# TODO intergration with pm2
-# CMD [ "pm2-runtime", "index.js","--port","$port","--proxy","$proxy","--cypher_endpoint" ,"$cypher_endpoint","--gremlin_endpoint","$gremlin_endpoint"]
