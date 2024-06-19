@@ -15,6 +15,7 @@ import {
 import SelectGraph from './select-graph';
 
 import { Utils } from '@graphscope/studio-components';
+import { useThemeContainer } from '@graphscope/studio-components';
 import { listGraphs } from '@/pages/instance/lists/service';
 import { useContext, IGraph } from './useContext';
 
@@ -47,10 +48,9 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
     extraRouterKey = 'graph_id',
     history,
   } = props;
-
   const { store, updateStore } = useContext();
   const { currentnNav, graphs, graphId, draftId } = store;
-
+  const { token } = useThemeContainer();
   const handleChange = (value: string) => {
     const herf = graphId ? `${value}?${extraRouterKey}=${graphId}` : value;
     history && history.push(herf);
@@ -116,7 +116,7 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
         style={{
           padding: '4px',
           flex: 1,
-          background: '#fff',
+          background: token.colorBgBase,
           borderRadius: '4px',
           ...style,
         }}

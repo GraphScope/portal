@@ -4,10 +4,12 @@ export interface ThemeProviderType {
   components?: { [key: string]: { [key: string]: string | number } };
   token?: { [key: string]: string | number };
 }
-export interface IContainerContext {
+export interface IContainerContext extends ThemeProviderType {
   handleTheme: (value: ThemeProviderType) => void;
 }
 export const ContainerContext = createContext<IContainerContext>({
+  components: {},
+  token: {},
   handleTheme: ({}) => {},
 });
 

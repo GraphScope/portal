@@ -30,7 +30,7 @@ const Content = (props: any) => {
 };
 export default function Layout() {
   const { store } = useContext();
-  const { locale, primaryColor, mode, inputNumber, navStyle } = store;
+  const { locale, mode, navStyle } = store;
   //@ts-ignore
   const messages = locales[locale];
 
