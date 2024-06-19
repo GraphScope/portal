@@ -2,7 +2,7 @@
   "scripts": {
     "dev": "node index.js --",
     "prestart": "rm -rf package-lock.json && npm i",
-    "start": "node start index.js  --"
+    "start": "node index.js  --"
   },
   "dependencies": {
     "express": "^4.18.2",
