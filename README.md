@@ -71,20 +71,16 @@ Compile front-end assets
 
 Initial deployment of the service:
 
-`npm run deploy -- --proxy=http://x.x.x.x --port=8888`
+```bash
+cd packages/studio-website/proxy
+npm run start -- --cypher_endpoint=127.0.0.1:7687 --proxy=127.0.0.1:8080
+```
 
 explanation:
 
 - `proxy` is the deployment address of the graphscope engine, defaulting to `http://127.0.0.1:8080`.
 - `port` is the port of the service front-end, defaulting to `8888`.
-
-View logs:
-
-`npm run logs`
-
-Re-deployment
-
-`npm run re-deploy -- --proxy=http://x.x.x.x --port=8888`
+- `cypher_endpoint` is the Cypher endpoint of the graphscope interactive engine, defaulting to `http://127.0.0.1:7687`.
 
 ## Technical Architecture
 
