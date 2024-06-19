@@ -27,11 +27,9 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
     appMode === 'DATA_IMPORTING'
       ? {
           options:
-            (filelocation &&
-              dataFields?.map(item => {
-                return { label: item, value: item };
-              })) ||
-            [],
+            dataFields?.map(item => {
+              return { label: item, value: item };
+            }) || [],
         }
       : null;
 
