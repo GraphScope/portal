@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
-import { history } from 'umi';
 import { Button, Select, Form, Flex, Typography } from 'antd';
-import type { IModalType } from '.';
 import type { DataloadingJobConfigLoadingConfigImportOptionEnum } from '@graphscope/studio-server';
 export type FieldType = {
   type?: string;
@@ -9,7 +7,12 @@ export type FieldType = {
   import_option?: DataloadingJobConfigLoadingConfigImportOptionEnum;
   header_row: boolean;
 };
-type ILeftSide = Pick<IModalType, 'onFinish' | 'onColse' | 'datatype' | 'delimiter'>;
+type ILeftSide = {
+  onFinish: (value: any) => void;
+  onColse: () => void;
+  datatype?: string;
+  delimiter?: string;
+};
 const { Title, Text } = Typography;
 const LeftSide: React.FC<ILeftSide> = props => {
   const { onFinish, onColse, delimiter, datatype } = props;

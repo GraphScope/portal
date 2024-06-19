@@ -1,15 +1,15 @@
 import React from 'react';
 
 import { Select, Space, Typography, Flex } from 'antd';
-import type { IMeta, ParsedFile } from './parseCSV';
+import type { IMeta, ParsedFile } from '../Utils/parseCSV';
 
 interface IMappingProps {
   id: string;
-  data: any;
   meta: IMeta;
   updateState: React.Dispatch<
     React.SetStateAction<{
       files: ParsedFile[];
+      loading: boolean;
     }>
   >;
 }
@@ -18,14 +18,7 @@ const styles = {
     width: '200px',
   },
 };
-const getOptions = (keys: string[]) => {
-  return keys.map(item => {
-    return {
-      value: item,
-      label: item,
-    };
-  });
-};
+
 const Mapping: React.FunctionComponent<IMappingProps> = props => {
   const { meta, updateState, id } = props;
   const { header, graphFields } = meta;
@@ -64,7 +57,7 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
   return (
     <div>
       <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
-        <Typography.Text>File Type</Typography.Text>
+        <Typography.Text>File type</Typography.Text>
         <Select
           value={type}
           style={styles.Select}
@@ -77,7 +70,7 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
       </Flex>
       {type === 'Vertex' && (
         <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
-          <Typography.Text>ID Field</Typography.Text>
+          <Typography.Text>ID field</Typography.Text>
           <Select
             value={idField}
             style={styles.Select}
@@ -89,7 +82,7 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
       {type === 'Edge' && (
         <>
           <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
-            <Typography.Text>Source Field</Typography.Text>
+            <Typography.Text>Source field</Typography.Text>
             <Select
               value={sourceField}
               style={styles.Select}
@@ -98,7 +91,7 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
             />
           </Flex>
           <Flex align="center" justify="space-between">
-            <Typography.Text>Target Field</Typography.Text>
+            <Typography.Text>Target field</Typography.Text>
             <Select
               value={targetField}
               style={styles.Select}

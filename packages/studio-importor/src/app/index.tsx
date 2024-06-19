@@ -34,7 +34,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
     },
     defaultLeftStyles = {
       collapsed: true,
-      width: 300,
+      width: 350,
     },
     defaultRightStyles = {
       collapsed: true,
