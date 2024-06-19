@@ -73,7 +73,7 @@ const MappingFields = (props: IMappingFields) => {
       options={_options}
       value={_value}
       onChange={(evt: string) => {
-        const [index, value] = evt.split('_');
+        const [index, value] = [evt.slice(0, evt.search('_')), evt.slice(evt.search('_') + 1)];
         onChange({ index: Number(index), token: value });
       }}
       style={{ minWidth: '140px' }}
