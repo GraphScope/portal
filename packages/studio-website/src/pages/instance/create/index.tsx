@@ -23,26 +23,27 @@ const Create: React.FC = () => {
     const { graphName, storeType } = form.getFieldsValue();
     // const a = await createGraph('', graphName, storeType, [], []);
     // console.log('a', a);
-
-    const draftGraph = {
-      id: draftId,
-      name: graphName,
-      status: 'Draft',
-      schema: {
-        //@ts-ignore
-        vertices: [],
-        //@ts-ignore
-        edges: [],
-      },
-      storeType,
-    };
-    updateStore(draft => {
-      draft.graphId = draftId;
-      draft.draftGraph = draftGraph;
-      draft.currentnNav = '/modeling';
+    form.validateFields().then(() => {
+      const draftGraph = {
+        id: draftId,
+        name: graphName,
+        status: 'Draft',
+        schema: {
+          //@ts-ignore
+          vertices: [],
+          //@ts-ignore
+          edges: [],
+        },
+        storeType,
+      };
+      updateStore(draft => {
+        draft.graphId = draftId;
+        draft.draftGraph = draftGraph;
+        draft.currentnNav = '/modeling';
+      });
+      history.push(`/modeling?graph_id=${draftId}`);
+      Utils.storage.set('DRAFT_GRAPH', draftGraph);
     });
-    history.push(`/modeling?graph_id=${draftId}`);
-    Utils.storage.set('DRAFT_GRAPH', draftGraph);
   };
 
   return (

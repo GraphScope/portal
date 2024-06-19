@@ -53,7 +53,7 @@ const engines = gs_all_engines.filter(item => {
 const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props => {
   const { form } = props;
   const { store, updateStore } = useContext();
-  const { graphName, storeType, mode } = store;
+  const { graphName = '', storeType, mode } = store;
   const intl = useIntl();
   const chooseStoreType = (item: any) => {
     updateStore(draft => {
@@ -78,8 +78,8 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
     },
   });
   useEffect(() => {
-    form.setFieldsValue({ graphName, storeType });
-  }, [graphName, storeType]);
+    form.setFieldsValue({ graphName: '', storeType });
+  }, []);
 
   return (
     <Form name="basic" form={form} layout="vertical" style={{ marginTop: '24px' }}>
@@ -94,7 +94,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
           disabled={mode === 'view'}
           onChange={e =>
             updateStore(draft => {
-              draft.graphName = String(e.target.value || 'unkown');
+              draft.graphName = String(e.target.value || '');
             })
           }
         />
