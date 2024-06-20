@@ -30,7 +30,6 @@ export type IStore = {
     right: boolean;
   };
   hasLayouted: boolean;
-
   elementOptions: {
     /** 是否能够连线，包括拖拽产生节点 */
     isClickable: boolean;
@@ -39,6 +38,9 @@ export type IStore = {
     /** 是否可以编辑标签，包括节点和边 */
     isConnectable: boolean;
   };
+  /** 是否保存原始上传的文件 */
+  isSaveFiles?: boolean;
+  csvFiles: File[];
 };
 
 export const initialStore: IStore = {
@@ -70,6 +72,7 @@ export const initialStore: IStore = {
     isEditable: true,
     isConnectable: true,
   },
+  csvFiles: [],
 };
 export const StoreMap = new Map();
 //@ts-ignore

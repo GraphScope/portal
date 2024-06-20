@@ -13,6 +13,7 @@ interface IMappingHeaderProps {
     React.SetStateAction<{
       files: ParsedFile[];
       loading: boolean;
+      csvFiles: File[];
     }>
   >;
   meta: IMeta;

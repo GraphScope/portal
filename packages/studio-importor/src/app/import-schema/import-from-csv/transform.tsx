@@ -1,5 +1,5 @@
 import { transformGraphNodes, transformEdges } from '../../elements/index';
-import { ISchemaOptions } from '../../typing';
+import { ISchemaNode, ISchemaOptions } from '../../typing';
 import { uuid } from 'uuidv4';
 import { ParsedFile } from '@graphscope/studio-components';
 type IMeta = ParsedFile['meta'];
@@ -28,19 +28,27 @@ interface ISchema {
   }[];
 }
 export const transform = (schemaData: ISchema): ISchemaOptions => {
-  const nodes = schemaData.nodes.map(item => {
+  const nodes: ISchemaNode[] = schemaData.nodes.map(item => {
     const { label, properties, meta } = item;
     const { idField } = meta.graphFields;
 
     return {
       id: label,
+      position: {
+        x: 0,
+        y: 0,
+      },
       data: {
         label,
+        dataFields: meta.header,
+        delimiter: meta.delimiter,
+        datatype: 'csv',
+        csv_location: meta.name,
+        graphFields: meta.graphFields,
         properties: properties.map(p => {
           const { name, type } = p;
           const IS_PK = idField === name;
           const dataType = DATA_TYPE_MAPPING[type];
-
           return {
             name,
             type: dataType === 'DT_DOUBLE' && IS_PK ? 'DT_SIGNED_INT64' : dataType,
@@ -63,6 +71,11 @@ export const transform = (schemaData: ISchema): ISchemaOptions => {
       target,
       data: {
         label,
+        dataFields: meta.header,
+        delimiter: meta.delimiter,
+        datatype: 'csv' as 'csv' | 'odps',
+        csv_location: meta.name,
+        graphFields: meta.graphFields,
         properties: properties
           .map(p => {
             const { name, type } = p;

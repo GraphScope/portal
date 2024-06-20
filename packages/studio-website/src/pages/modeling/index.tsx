@@ -30,6 +30,7 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
 
   return (
     <ImportApp
+      isSaveFiles={true}
       key={graphId}
       /** 创建图模型 */
       appMode="DATA_MODELING"

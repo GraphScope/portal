@@ -10,6 +10,7 @@ interface IMappingProps {
     React.SetStateAction<{
       files: ParsedFile[];
       loading: boolean;
+      csvFiles: File[];
     }>
   >;
 }

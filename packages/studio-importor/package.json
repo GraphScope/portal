@@ -19,6 +19,7 @@
     "build": "father build"
   },
   "dependencies": {
+    "localforage": "latest",
     "d3-force": "latest",
     "@graphscope/studio-components": "workspace:*",
     "monaco-editor": "latest",

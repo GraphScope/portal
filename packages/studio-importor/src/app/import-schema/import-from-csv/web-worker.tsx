@@ -155,7 +155,7 @@ export const getSchemaData = files => {
             id: node[idField],
             label,
             data: node,
-            meta: { graphFields, delimiter },
+            meta,
           });
         });
       }
@@ -167,7 +167,7 @@ export const getSchemaData = files => {
             source: edge[sourceField],
             target: edge[targetField],
             data: edge,
-            meta: { graphFields, delimiter },
+            meta,
           });
         });
       }
