@@ -51,7 +51,7 @@ const MappingFields = (props: IMappingFields) => {
   // /** 上传选择 or 输入数字 */
   // const isInputNumberShow = isDefault === undefined ? (typeof value === 'number' ? true : false) : !isDefault;
 
-  if (options.length === 0 && token === '') {
+  if (options.length === 0 || token === '') {
     return (
       <InputNumber
         style={{ minWidth: '140px' }}

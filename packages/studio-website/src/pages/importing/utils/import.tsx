@@ -123,6 +123,10 @@ export function transMappingSchemaToOptions(
       if ('destination_vertex_mappings' in match) {
         const { source_vertex_mappings, destination_vertex_mappings, properties_mappings } = match;
         const filelocation = match.inputs[0];
+        /** Does the source_vertex_mappings or destination_vertex_mappings have a value ?*/
+        const dataFields = [];
+        source_vertex_mappings && dataFields.push(source_vertex_mappings[0].column.name);
+        destination_vertex_mappings && dataFields.push(destination_vertex_mappings[0].column.name);
         return {
           ...item,
           data: {
@@ -130,7 +134,7 @@ export function transMappingSchemaToOptions(
             filelocation,
             isBind: !!filelocation,
             isEidtProperty: true,
-            dataFields: loadingdataFields('edges', properties),
+            dataFields: dataFields.concat(loadingdataFields('edges', properties)),
             properties: properties.map((p: Property) => {
               const { name } = p;
               const pMatch = properties_mappings[name] || { index: 0, token: '' };

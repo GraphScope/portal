@@ -17,7 +17,7 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
   const { schema, type, appMode, queryPrimitiveTypes, disabled, handleUploadFile } = props;
   const { id, source, target, data } = schema;
 
-  const { dataFields, properties = [], label, source_vertex_fields, target_vertex_fields, filelocation } = data || {};
+  const { dataFields, properties = [], label, source_vertex_fields, target_vertex_fields } = data || {};
   const { handleChangeLabel, handleProperty } = useModel({ type, id });
   const { store } = useContext();
   const { edges, nodes } = store;
