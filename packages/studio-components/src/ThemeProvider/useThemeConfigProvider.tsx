@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react';
 
 export interface ThemeProviderType {
+  algorithm?: 'defaultAlgorithm' | 'darkAlgorithm';
   components?: { [key: string]: { [key: string]: string | number } };
   token?: { [key: string]: string | number };
 }

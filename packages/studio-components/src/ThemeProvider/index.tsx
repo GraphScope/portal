@@ -1,22 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ConfigProvider, theme } from 'antd';
 import { ContainerProvider } from './useThemeConfigProvider';
 import type { ThemeProviderType } from './useThemeConfigProvider';
+import { storage } from '../Utils';
 
 type IThemeProvider = {
-  mode: string;
+  algorithm: string;
   children?: React.ReactNode;
 };
 
 const ThemeProvider: React.FC<IThemeProvider> = props => {
-  const { mode, children } = props;
-  const isLight = mode === 'defaultAlgorithm';
-  const [state, setState] = useState<ThemeProviderType>({
-    components: {},
-    token: {},
-  });
+  const { algorithm: defaultMode, children } = props;
 
-  const { components, token } = state;
+  const [state, setState] = useState<ThemeProviderType>({
+    components: storage.get('components'),
+    token: storage.get('token'),
+    algorithm: storage.get('algorithm') || 'defaultAlgorithm',
+  });
+  useEffect(() => {
+    setState(preState => {
+      return {
+        ...preState,
+        algorithm: defaultMode as ThemeProviderType['algorithm'],
+      };
+    });
+  }, [defaultMode]);
+
+  const { components, token, algorithm } = state;
+
+  const isLight = algorithm === 'defaultAlgorithm';
+
   /** token 基础配置 */
   const tokenConfig = {
     colorBorder: isLight ? '#F0F0F0' : '#303030',
@@ -50,13 +63,19 @@ const ThemeProvider: React.FC<IThemeProvider> = props => {
       colorError: '#00000073',
     },
   };
+
   const handleTheme = (themeConfig: ThemeProviderType) => {
     const { components, token } = themeConfig;
+    Object.keys(themeConfig).forEach(key => {
+      storage.set(key, themeConfig[key]);
+    });
+
     setState(preState => {
       return {
         ...preState,
         components: { ...preState.components, ...components },
         token: { ...preState.token, ...token },
+        algorithm: themeConfig.algorithm || preState.algorithm,
       };
     });
   };
@@ -64,9 +83,10 @@ const ThemeProvider: React.FC<IThemeProvider> = props => {
   return (
     <ContainerProvider
       value={{
-        token: { ...tokenConfig, ...state.token },
-        components: { ...componentsConfig, ...state.components },
+        token: { ...tokenConfig, ...token },
+        components: { ...componentsConfig, ...components },
         handleTheme,
+        algorithm,
       }}
     >
       <ConfigProvider

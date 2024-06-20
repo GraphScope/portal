@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Flex, Typography, Row, Col } from 'antd';
+import { Flex, Typography, Row, Col, theme } from 'antd';
 import { useContext } from '@/layouts/useContext';
 import SelectCards from '@/components/select-cards';
 import { FormattedMessage } from 'react-intl';
-import localStorage from '@/components/utils/localStorage';
+import { useThemeContainer } from '@graphscope/studio-components';
 
 const { Title, Text } = Typography;
 
@@ -24,14 +24,11 @@ const engines = [
   },
 ];
 const InteractTheme: React.FunctionComponent = () => {
-  const { store, updateStore } = useContext();
-  const { mode } = store;
-  const { setItem, getItem } = localStorage;
+  const { token, algorithm, handleTheme } = useThemeContainer();
+
   const changeEngineType = (item: any) => {
-    setItem('themeColor', item.id);
-    const themeColor = getItem('themeColor');
-    updateStore(draft => {
-      draft.mode = themeColor;
+    handleTheme({
+      algorithm: item.id,
     });
   };
   return (
@@ -47,7 +44,7 @@ const InteractTheme: React.FunctionComponent = () => {
         </Flex>
       </Col>
       <Col span={16}>
-        <SelectCards val={mode} items={engines} onChange={changeEngineType} />
+        <SelectCards val={algorithm} items={engines} onChange={changeEngineType} />
       </Col>
     </Row>
   );
