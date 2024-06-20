@@ -1,27 +1,40 @@
-import React from 'react';
-import { history } from 'umi';
+import React, { useEffect } from 'react';
 import { Button, Select, Form, Flex, Typography } from 'antd';
-import type { IModalType } from '.';
+import type { DataloadingJobConfigLoadingConfigImportOptionEnum } from '@graphscope/studio-server';
 export type FieldType = {
   type?: string;
   delimiter?: string;
-  import_option?: string;
+  import_option?: DataloadingJobConfigLoadingConfigImportOptionEnum;
   header_row: boolean;
 };
-type ILeftSide = Pick<IModalType, 'onFinish' | 'onColse'>;
-const { Title } = Typography;
+type ILeftSide = {
+  onFinish: (value: any) => void;
+  onColse: () => void;
+  datatype?: string;
+  delimiter?: string;
+};
+const { Title, Text } = Typography;
 const LeftSide: React.FC<ILeftSide> = props => {
-  const { onFinish, onColse } = props;
+  const { onFinish, onColse, delimiter, datatype } = props;
   const [form] = Form.useForm();
   const handleClick = () => {
     const data = form.getFieldsValue();
     onFinish(data);
   };
+  useEffect(() => {
+    form.setFieldsValue({
+      type: datatype || 'csv',
+      delimiter: delimiter || '|',
+      import_option: 'overwrite',
+      header_row: true,
+    });
+  }, [delimiter, datatype]);
   return (
     <div style={{ padding: '12px 36px' }}>
-      <Title level={2} style={{ textAlign: 'center', marginTop: '0px' }}>
-        LoadConfig
-      </Title>
+      <Title level={2}>Configuration</Title>
+      <Text type="secondary">
+        You have successfully bound the data source. Please complete the configuration to start importing data.
+      </Text>
       <Form
         name="modal_type"
         layout="vertical"

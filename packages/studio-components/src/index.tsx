@@ -12,6 +12,7 @@ export { default as MultipleInstance } from './MultipleInstance';
 export { default as SplitSection } from './SplitSection';
 export { default as ResultConfig } from './ResultConfig';
 export { default as ThemeProvider } from './ThemeProvider';
+export { default as ImportFiles } from './ImportFiles';
 /** all */
 export * as Utils from './Utils';
 export * as Icons from './Icons';
@@ -24,3 +25,4 @@ export { useThemeContainer } from './ThemeProvider/useThemeConfigProvider';
 /** export typing */
 export type { SegmentedTabsProps } from './SegmentedTabs';
 export type { Property } from './PropertiesList/typing';
+export type { ParsedFile } from './Utils/parseCSV';

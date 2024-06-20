@@ -3,8 +3,11 @@ import * as React from 'react';
 import { useContext } from '../../layouts/useContext';
 import { useContext as useImporting } from '@graphscope/studio-importor';
 import { submitDataloadingJob, bindDatasourceInBatch } from './services';
-import type { FieldType } from './load-config';
-import LoadConfig from './load-config';
+import type { FieldType } from './load-config/left-side';
+import { SplitSection } from '@graphscope/studio-components';
+import LeftSide from './load-config/left-side';
+import RightSide from './load-config/right-side';
+
 interface StartImportingProps {
   onClick?: () => void;
 }
@@ -15,64 +18,99 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
   const { appMode, nodes, edges } = importingStore;
   const { graphId } = store;
 
-  const [state, updateState] = useState({
+  const [state, updateState] = useState<{
+    open: boolean;
+    result?: {
+      status: 'success' | 'error';
+      message: string;
+    };
+    datatype?: 'odps' | 'csv';
+    delimiter?: string;
+  }>({
     open: false,
     /** 是否导入完成 */
-    isImportFinish: false,
+    result: undefined,
+    datatype: 'csv',
+    delimiter: ',',
   });
-  const { open, isImportFinish } = state;
-  const handleClick = async (values: FieldType) => {
-    /** loading config */
-    console.log(values);
-    //先绑定数据
-    const bindStatus = await bindDatasourceInBatch(graphId, {
-      nodes: nodes.map(item => item.data),
-      edges: edges.map(item => item.data),
+  const { open, result, delimiter, datatype } = state;
+
+  const handleBound = async () => {
+    const bindStatus = await bindDatasourceInBatch(graphId || '', {
+      nodes: nodes,
+      edges: edges,
     });
-    // 再倒入数据
-    const res = await submitDataloadingJob(graphId, {
-      nodes,
-      edges,
+    const firstNode = nodes[0];
+    const { delimiter, datatype } = firstNode.data;
+
+    updateState(preset => {
+      return {
+        ...preset,
+        open: true,
+        delimiter,
+        datatype,
+      };
     });
+  };
+  const onFinish = async (values: FieldType) => {
+    let _status: string, _message: string;
+    const res = await submitDataloadingJob(
+      graphId || '',
+      {
+        nodes,
+        edges,
+      },
+      values,
+    )
+      .then((res: any) => {
+        if (res.status === 200) {
+          _status = 'success';
+          _message = `The data loading task has been successfully created. You can view detailed logs in the job center.`;
+          return res.data && res.data.job_id;
+        }
+        _status = 'error';
+        _message = res.message;
+      })
+      .catch(error => {
+        _status = 'error';
+        _message = error.response.data;
+      });
+
     console.log('res', res);
     updateState(preset => {
       return {
         ...preset,
-        isImportFinish: true,
+        result: {
+          status: _status as 'success' | 'error',
+          message: _message,
+        },
       };
     });
-
+  };
+  const onColse = () => {
+    updateState(preset => {
+      return {
+        ...preset,
+        open: false,
+        result: undefined,
+      };
+    });
   };
 
   if (appMode === 'DATA_IMPORTING') {
     return (
       <>
-        <Button
-          type="primary"
-          onClick={() => {
-            updateState(preset => {
-              return {
-                ...preset,
-                open: true,
-              };
-            });
-          }}
-        >
+        <Button type="primary" onClick={handleBound}>
           Start importing
         </Button>
-        <LoadConfig
-          open={open}
-          isImportFinish={isImportFinish}
-          onFinish={handleClick}
-          onColse={() =>
-            updateState(preset => {
-              return {
-                ...preset,
-                open: false,
-              };
-            })
-          }
-        />
+        <Modal title="" open={open} footer={null} closable={false} width={1000}>
+          <SplitSection
+            splitText=""
+            span={12}
+            leftSide={<LeftSide onFinish={onFinish} onColse={onColse} delimiter={delimiter} datatype={datatype} />}
+            rightSide={result ? <RightSide message={state.result?.message} status={state.result?.status} /> : null}
+          />
+        </Modal>
       </>
     );
   }

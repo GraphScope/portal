@@ -27,7 +27,8 @@ let index = 0;
 interface ICanvasProps {}
 export const transform = (data): { nodes: NodeData[]; edges: EdgeData[] } => {
   const nodes = data.nodes.map(item => {
-    const { label, data } = item;
+    const { data, id } = item;
+    const { label } = data;
 
     if (!categoryColors[label]) {
       categoryColors[label] = colors[index];
@@ -40,7 +41,7 @@ export const transform = (data): { nodes: NodeData[]; edges: EdgeData[] } => {
       type: 'circle',
       style: {
         fill: color,
-        labelText: data.name,
+        labelText: id,
       },
     } as NodeData;
   });

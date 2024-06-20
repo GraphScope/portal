@@ -5,16 +5,19 @@ interface ISplitSectionProps {
   splitText?: string;
   span?: number;
   leftSide: React.ReactNode;
-  rightSide: React.ReactNode;
+  rightSide?: React.ReactNode;
 }
 
 const SplitSection: React.FunctionComponent<ISplitSectionProps> = props => {
   const { splitText = 'OR', span = 11, leftSide, rightSide } = props;
+  if (!rightSide) {
+    return <>{leftSide}</>;
+  }
   return (
     <Row>
       <Col span={span}>{leftSide}</Col>
       <Col span={2}>
-        <Flex vertical style={{ height: '100%' }}>
+        <Flex vertical style={{ height: '100%', alignItems: 'center' }}>
           <Divider type="vertical" style={{ flex: 1 }} />
           {splitText}
           <Divider type="vertical" style={{ flex: 1 }} />

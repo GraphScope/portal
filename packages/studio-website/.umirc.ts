@@ -52,7 +52,12 @@ export default defineConfig({
       changeOrigin: true,
     },
   },
-
+  // analyze: {
+  //   analyzerPort: 'auto',
+  // },
+  // codeSplitting: {
+  //   jsStrategy: 'granularChunks',
+  // },
   headScripts: [
     // 'https://gw.alipayobjects.com/os/lib/antv/g2/5.1.14/dist/g2.min.js',
     // 'https://gw.alipayobjects.com/os/lib/react/18.2.0/umd/react.production.min.js',

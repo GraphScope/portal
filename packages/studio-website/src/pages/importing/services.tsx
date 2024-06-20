@@ -1,10 +1,9 @@
 import { GraphApiFactory, UtilsApiFactory, DataSourceApiFactory, JobApiFactory } from '@graphscope/studio-server';
 
-import { transOptionsToSchema } from '../modeling/utils/schema';
-import { cloneDeep } from 'lodash';
 import { notification } from '@/pages/utils';
 import { transformImportOptionsToSchemaMapping, transMappingSchemaToOptions } from './utils/import';
 const { GS_ENGINE_TYPE } = window;
+import type { FieldType } from './load-config/left-side';
 
 /** upload file */
 export const uploadFile = async (file: File) => {
@@ -35,18 +34,17 @@ export const bindDatasourceInBatch = async (graph_id: string, options: any) => {
 };
 
 /** 数据绑定 dataMap(nodes/edges集合)*/
-export const submitDataloadingJob = async (graph_id: string, options: any) => {
-  // const schema = transformImportOptionsToSchemaMapping(options);
+export const submitDataloadingJob = async (graph_id: string, graphSchema: any, loadConfig: FieldType) => {
   let NODE_LABEL_MAP: any = {};
   const schema = {
-    vertices: options.nodes.map((item: any) => {
+    vertices: graphSchema.nodes.map((item: any) => {
       const { id, data } = item;
       NODE_LABEL_MAP[id] = data.label;
       return {
         type_name: data.label,
       };
     }),
-    edges: options.edges.map((item: any) => {
+    edges: graphSchema.edges.map((item: any) => {
       const { id, source, data, target } = item;
       return {
         type_name: data.label,
@@ -56,28 +54,19 @@ export const submitDataloadingJob = async (graph_id: string, options: any) => {
     }),
   };
 
-  return JobApiFactory(undefined, location.origin)
-    .submitDataloadingJob(graph_id, {
-      ...schema,
-      loading_config: {
-        import_option: 'overwrite',
-        format: {
-          type: 'csv',
-          metadata: {
-            delimiter: '|',
-            header_row: 'true',
-          },
+  return JobApiFactory(undefined, location.origin).submitDataloadingJob(graph_id, {
+    ...schema,
+    loading_config: {
+      import_option: loadConfig.import_option,
+      format: {
+        type: loadConfig.type,
+        metadata: {
+          delimiter: loadConfig.delimiter,
+          header_row: loadConfig.header_row,
         },
       },
-    })
-    .then(res => {
-      if (res.status === 200) {
-        return res.data;
-      }
-    })
-    .catch(error => {
-      notification('error', error);
-    });
+    },
+  });
 };
 
 export const getSchema = async (graph_id: string) => {

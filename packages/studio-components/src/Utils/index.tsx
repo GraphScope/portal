@@ -68,3 +68,15 @@ export const fakeSnapshot = obj => {
 
 export { generatorSchemaByGraphData } from './schema';
 export { asyncFunctionWithWorker } from './work';
+
+export {
+  parseFile,
+  extractHeaderAndDelimiter,
+  detectDataTypes,
+  getFileSize,
+  parseCSV,
+  covertCSV2JSON,
+} from './parseCSV';
+export { inferredGraphFields } from './inferredGraphFields';
+export { parseJSON } from './parseJSON';
+export { parseSQL } from './parseSQL';

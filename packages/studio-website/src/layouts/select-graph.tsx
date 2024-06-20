@@ -7,6 +7,7 @@ import { IGraph, useContext } from './useContext';
 import { STATUS_MAP } from './const';
 import { history } from 'umi';
 import { Utils } from '@graphscope/studio-components';
+import ConnectEndpoint from '@/pages/query/connect-endpoint';
 
 interface IConnectModelProps {}
 
@@ -31,7 +32,9 @@ const SelectGraph: React.FunctionComponent<IConnectModelProps> = props => {
 
   const [open, setOpen] = useState(false);
 
-  const handleConnect = () => {};
+  const handleConnect = () => {
+    setOpen(true);
+  };
 
   const handleChange = (value: string) => {
     Utils.setSearchParams({
@@ -40,6 +43,11 @@ const SelectGraph: React.FunctionComponent<IConnectModelProps> = props => {
     updateStore(draft => {
       draft.graphId = value;
     });
+  };
+
+  const onFinish = () => {};
+  const onClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -67,16 +75,16 @@ const SelectGraph: React.FunctionComponent<IConnectModelProps> = props => {
       />
 
       <Modal
-        title="Connect"
         centered
-        open={open}
         onOk={() => setOpen(false)}
         onCancel={() => setOpen(false)}
-        width={'80%'}
+        title={null}
+        open={open}
+        footer={null}
+        closable={false}
+        width={1000}
       >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
+        <ConnectEndpoint onFinish={onFinish} onColse={onClose} />
       </Modal>
     </div>
   );

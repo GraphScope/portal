@@ -18,13 +18,7 @@ export interface EdgeSchema {
 }
 export type IStore = {
   mode: 'create' | 'view';
-
   currentStep: number;
-  /********* STEP 1 *************/
-  /** 图名称 */
-  graphName: string;
-  /** 存储类型 */
-  storeType: 'mutable_csr' | 'groot_store';
   /** 引擎Directed */
   engineDirected: boolean;
   /********* STEP 2 *************/
@@ -44,14 +38,9 @@ export type IStore = {
   createInstaseResult: true | false;
 };
 /** groot 默认 groot_store，接口暂时没有状态 */
-const storeType = window.GS_ENGINE_TYPE === 'groot' ? 'groot_store' : 'mutable_csr';
+export const storeType = window.GS_ENGINE_TYPE === 'groot' ? 'groot_store' : 'mutable_csr';
 export const initialStore: IStore = {
-  /** 引擎类型 */
-
   mode: 'create',
-  storeType: storeType,
-  /** 图名称 */
-  graphName: '',
   /** 当前步骤 */
   currentStep: 0,
   nodeList: [],
