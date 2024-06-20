@@ -4,45 +4,41 @@ import Section from '@/components/section';
 
 import { useContext } from '@/layouts/useContext';
 import ChooseEnginetype from '../create-instance/choose-enginetype';
-import { Form, Row, Col, Divider, Flex, Space, Button, Result } from 'antd';
+import { Form, Button, Result } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { createGraph } from '../create-instance/service';
-import { useContext as useModel } from '@/layouts/useContext';
 import { Utils } from '@graphscope/studio-components';
 import { SplitSection } from '@graphscope/studio-components';
 
 import { history } from 'umi';
 const { GS_ENGINE_TYPE } = window;
 const Create: React.FC = () => {
-  const { store } = useContext();
-  const { updateStore } = useModel();
+  const { store, updateStore } = useContext();
   const { mode, draftId } = store;
   const [form] = Form.useForm();
   const handleCreate = async () => {
     console.log('form', form.getFieldsValue());
     const { graphName, storeType } = form.getFieldsValue();
-    // const a = await createGraph('', graphName, storeType, [], []);
-    // console.log('a', a);
-
-    const draftGraph = {
-      id: draftId,
-      name: graphName,
-      status: 'Draft',
-      schema: {
-        //@ts-ignore
-        vertices: [],
-        //@ts-ignore
-        edges: [],
-      },
-      storeType,
-    };
-    updateStore(draft => {
-      draft.graphId = draftId;
-      draft.draftGraph = draftGraph;
-      draft.currentnNav = '/modeling';
+    form.validateFields().then(() => {
+      const draftGraph = {
+        id: draftId,
+        name: graphName,
+        status: 'Draft',
+        schema: {
+          //@ts-ignore
+          vertices: [],
+          //@ts-ignore
+          edges: [],
+        },
+        storeType,
+      };
+      updateStore(draft => {
+        draft.graphId = draftId;
+        draft.draftGraph = draftGraph;
+        draft.currentnNav = '/modeling';
+      });
+      history.push(`/modeling?graph_id=${draftId}`);
+      Utils.storage.set('DRAFT_GRAPH', draftGraph);
     });
-    history.push(`/modeling?graph_id=${draftId}`);
-    Utils.storage.set('DRAFT_GRAPH', draftGraph);
   };
 
   return (

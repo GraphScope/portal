@@ -3,7 +3,7 @@ import { Form, Input, Typography } from 'antd';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 import SelectCards from '@/components/select-cards';
-import { useContext } from './useContext';
+import { useContext, storeType } from './useContext';
 
 export type FieldType = {
   graphName?: string;
@@ -53,12 +53,12 @@ const engines = gs_all_engines.filter(item => {
 const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props => {
   const { form } = props;
   const { store, updateStore } = useContext();
-  const { graphName, storeType, mode } = store;
+  const { mode } = store;
   const intl = useIntl();
   const chooseStoreType = (item: any) => {
-    updateStore(draft => {
-      draft.storeType = item.id;
-    });
+    // updateStore(draft => {
+    //   draft.storeType = item.id;
+    // });
   };
 
   /** 合法输入验证 */
@@ -78,8 +78,8 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
     },
   });
   useEffect(() => {
-    form.setFieldsValue({ graphName, storeType });
-  }, [graphName, storeType]);
+    form.setFieldsValue({ graphName: '', storeType });
+  }, []);
 
   return (
     <Form name="basic" form={form} layout="vertical" style={{ marginTop: '24px' }}>
@@ -89,14 +89,8 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
         rules={[{ required: true, message: '' }, validatePasswords]}
       >
         <Input
-          defaultValue={graphName}
           placeholder={intl.formatMessage({ id: 'please name your graph instance.' })}
           disabled={mode === 'view'}
-          onChange={e =>
-            updateStore(draft => {
-              draft.graphName = String(e.target.value || 'unkown');
-            })
-          }
         />
       </Form.Item>
 
