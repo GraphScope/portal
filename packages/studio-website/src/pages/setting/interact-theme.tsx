@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { Flex, Typography, Row, Col, theme } from 'antd';
-import { useContext } from '@/layouts/useContext';
 import SelectCards from '@/components/select-cards';
 import { FormattedMessage } from 'react-intl';
 import { useThemeContainer } from '@graphscope/studio-components';
-
+import { ICard } from '@/components/select-cards';
 const { Title, Text } = Typography;
 
-const engines = [
+const engines: ICard[] & { primaryBGgColor: string }[] = [
   {
     id: 'defaultAlgorithm',
     title: 'Light',
@@ -24,11 +23,10 @@ const engines = [
   },
 ];
 const InteractTheme: React.FunctionComponent = () => {
-  const { token, algorithm, handleTheme } = useThemeContainer();
-
-  const changeEngineType = (item: any) => {
+  const { algorithm = 'defaultAlgorithm', handleTheme } = useThemeContainer();
+  const changeEngineType = (item: { id: string }) => {
     handleTheme({
-      algorithm: item.id,
+      algorithm: item.id as 'defaultAlgorithm' | 'darkAlgorithm',
     });
   };
   return (
@@ -44,7 +42,7 @@ const InteractTheme: React.FunctionComponent = () => {
         </Flex>
       </Col>
       <Col span={16}>
-        <SelectCards val={algorithm} items={engines} onChange={changeEngineType} />
+        <SelectCards selectValue={algorithm} items={engines} onChange={changeEngineType} />
       </Col>
     </Row>
   );

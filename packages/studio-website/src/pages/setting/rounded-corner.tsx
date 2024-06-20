@@ -1,24 +1,17 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useContext } from '@/layouts/useContext';
-import localStorage from '@/components/utils/localStorage';
-import { Flex, Row, Col, InputNumber, Slider, Typography } from 'antd';
+import { Flex, Row, Col, InputNumber, Slider, Typography, theme } from 'antd';
 import { useThemeContainer } from '@graphscope/studio-components';
 const { Title, Text } = Typography;
 // type IRoundedCornerProps = {};
+const { useToken } = theme;
 const RoundedCorner: React.FunctionComponent = () => {
+  const { token } = useToken();
+  const { borderRadius, colorPrimary } = token;
   const { handleTheme } = useThemeContainer();
-  const { store, updateStore } = useContext();
-  const { inputNumber } = store;
-  const { setItem, getItem } = localStorage;
+
   const handleChange: (val: number) => void = val => {
-    setItem('corner', val);
-    const primaryColor = getItem('primaryColor');
-    const corner = getItem('corner');
-    handleTheme({ token: { colorPrimary: primaryColor, borderRadius: corner } });
-    updateStore(draft => {
-      draft.inputNumber = corner;
-    });
+    handleTheme({ token: { colorPrimary, borderRadius: val } });
   };
   return (
     <Row>
@@ -33,10 +26,10 @@ const RoundedCorner: React.FunctionComponent = () => {
         </Flex>
       </Col>
       <Col span={4}>
-        <InputNumber min={1} addonAfter="px" value={inputNumber} onChange={e => handleChange(e)} />
+        <InputNumber min={1} addonAfter="px" value={borderRadius} onChange={e => handleChange(e)} />
       </Col>
       <Col span={8}>
-        <Slider min={1} onChange={handleChange} value={typeof inputNumber === 'number' ? inputNumber : 0} />
+        <Slider min={1} onChange={handleChange} value={typeof borderRadius === 'number' ? borderRadius : 0} />
       </Col>
     </Row>
   );

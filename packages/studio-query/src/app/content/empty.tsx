@@ -3,12 +3,13 @@ import { Typography } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { PlayCircleOutlined } from '@ant-design/icons';
 import Image from './image';
-import { isDarkTheme } from '../utils';
+import { useThemeContainer } from '@graphscope/studio-components';
+
 interface IEmptyProps {}
 
 const Empty: React.FunctionComponent<IEmptyProps> = props => {
-  const isDark = isDarkTheme();
-
+  const { algorithm } = useThemeContainer();
+  const isDark = algorithm === 'darkAlgorithm';
   return (
     <div
       style={{

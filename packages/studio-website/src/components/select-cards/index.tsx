@@ -5,15 +5,16 @@ const { Title, Text } = Typography;
 import { FormattedMessage } from 'react-intl';
 
 export interface ICard {
-  id: string;
+  id: 'defaultAlgorithm' | 'darkAlgorithm';
   title: string;
   desc: string | React.ReactNode;
   avatar?: string;
   disabled?: boolean;
 }
+
 interface ISelectCardsProps {
   items: ICard[];
-  val: string;
+  selectValue: 'defaultAlgorithm' | 'darkAlgorithm';
   onChange: (card: ICard) => void;
 }
 const iconStyle: React.CSSProperties = {
@@ -23,7 +24,7 @@ const iconStyle: React.CSSProperties = {
   fontSize: '20px',
 };
 const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
-  const { val: value, onChange, items } = props;
+  const { selectValue: value, onChange, items } = props;
   const [current, setCurrent] = useState(value);
   const { useToken } = theme;
   const { token } = useToken();

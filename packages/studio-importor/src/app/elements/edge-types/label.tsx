@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EdgeLabelRenderer } from 'reactflow';
-import { EditableText } from '@graphscope/studio-components';
+import { EditableText, useThemeContainer } from '@graphscope/studio-components';
 import { useContext } from '../../useContext';
 import { LinkOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
@@ -16,7 +16,8 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
   const { store, updateStore } = useContext();
   const { currentId, theme, elementOptions } = store;
   const isSelected = id === currentId;
-
+  const { algorithm } = useThemeContainer();
+  const isDark = algorithm === 'darkAlgorithm';
   const onEdgeClick = () => {
     updateStore(draft => {
       draft.currentId = id;
@@ -34,7 +35,24 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
       }
     });
   };
-
+  const getBackground = () => {
+    if (isDark) {
+      return isSelected ? `${theme.primaryColor}` : '#232323';
+    }
+    return isSelected ? `${theme.primaryColor}` : '#fff';
+  };
+  const getBorder = () => {
+    if (isDark) {
+      return isSelected ? `2px solid ${theme.primaryColor}` : '1px solid #323232';
+    }
+    return isSelected ? `2px solid ${theme.primaryColor}` : '1px solid #000';
+  };
+  const getColor = () => {
+    if (isDark) {
+      return isSelected ? '#fff' : '#D7D7D7';
+    }
+    return isSelected ? '#fff' : '#000';
+  };
   return (
     <EdgeLabelRenderer>
       <div
@@ -65,8 +83,8 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
           onClick={onEdgeClick}
           style={{
             borderRadius: '4px',
-            background: isSelected ? `${theme.primaryColor}` : '#fff',
-            border: isSelected ? `2px solid ${theme.primaryColor}` : '1px solid #000',
+            background: getBackground(),
+            border: getBorder(),
           }}
         >
           <EditableText
@@ -74,7 +92,7 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
             id={id}
             text={label || id}
             onTextChange={onLabelChange}
-            style={{ color: isSelected ? '#fff' : '#000' }}
+            style={{ color: getColor() }}
           />
         </div>
       </div>

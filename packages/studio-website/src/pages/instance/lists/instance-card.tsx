@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
-import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Popover, Tooltip, notification } from 'antd';
+import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Popover, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
 import { history } from 'umi';
 import dayjs from 'dayjs';
 import { PauseCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { useContext } from '@/layouts/useContext';
 
-import { deleteGraph, startService, stopService, getDataloadingConfig } from './service';
+import { deleteGraph, startService, stopService } from './service';
 
 const { Text, Paragraph } = Typography;
 import { MoreOutlined } from '@ant-design/icons';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faFileImport, faNetworkWired } from '@fortawesome/free-solid-svg-icons';
 import { faPlayCircle, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { TOOLS_MENU } from '@/layouts/const';
-import { Utils } from '@graphscope/studio-components';
+import { Utils, useThemeContainer } from '@graphscope/studio-components';
 export type InstaceCardType = {
   /** graph id */
   id: string;
@@ -68,7 +67,8 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     schema = { edges: 0, vertices: 0 },
   } = props;
   const { store, updateStore } = useContext();
-  const { mode, locale, draftGraph, draftId } = store;
+  const { locale, draftGraph, draftId } = store;
+  const { algorithm } = useThemeContainer();
   const intl = useIntl();
   const [isLoading, updateIsLoading] = useState(false);
   const items: MenuProps['items'] = [
@@ -212,7 +212,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     <Card
       styles={{ header: { fontSize: '30px' } }}
       title={name}
-      style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
+      style={{ background: algorithm === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
       extra={
         <Space>
           <Tooltip title={tooltipContext}>

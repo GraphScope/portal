@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useContext } from './useContext';
 import useWidth from './useWidth';
+import { useThemeContainer } from '@graphscope/studio-components';
+
 interface ContainerProps {
   sidebar: React.ReactNode;
   content: React.ReactNode;
@@ -14,16 +16,16 @@ const CollapsedWidth = 60;
 const Container: React.FunctionComponent<ContainerProps> = props => {
   const { sidebar, content, footer } = props;
   const { store } = useContext();
-  const { collapse, mode } = store;
+  const { collapse } = store;
   const ContainerWidth = useWidth();
   console.log('ContainerWidth', ContainerWidth);
-
+  const { algorithm } = useThemeContainer();
   return (
     <div
       className="gs-root"
       style={{
         // background: '#f5f7f9',
-        background: mode === 'defaultAlgorithm' ? '#f5f7f9' : '#020202',
+        background: algorithm === 'defaultAlgorithm' ? '#f5f7f9' : '#020202',
         display: 'flex',
         alignItems: 'center',
         height: '100vh',

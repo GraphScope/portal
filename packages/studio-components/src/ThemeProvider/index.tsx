@@ -5,7 +5,7 @@ import type { ThemeProviderType } from './useThemeConfigProvider';
 import { storage } from '../Utils';
 
 type IThemeProvider = {
-  algorithm: string;
+  algorithm?: string;
   children?: React.ReactNode;
 };
 
@@ -15,21 +15,38 @@ const ThemeProvider: React.FC<IThemeProvider> = props => {
   const [state, setState] = useState<ThemeProviderType>({
     components: storage.get('components'),
     token: storage.get('token'),
-    algorithm: storage.get('algorithm') || 'defaultAlgorithm',
+    algorithm: (storage.get('algorithm') as ThemeProviderType['algorithm']) || 'defaultAlgorithm',
   });
   useEffect(() => {
-    setState(preState => {
-      return {
-        ...preState,
-        algorithm: defaultMode as ThemeProviderType['algorithm'],
-      };
-    });
+    if (defaultMode) {
+      setState(preState => {
+        return {
+          ...preState,
+          algorithm: defaultMode as ThemeProviderType['algorithm'],
+        };
+      });
+    }
   }, [defaultMode]);
 
   const { components, token, algorithm } = state;
 
   const isLight = algorithm === 'defaultAlgorithm';
 
+  const handleTheme = (themeConfig: ThemeProviderType) => {
+    const { components, token } = themeConfig;
+    Object.keys(themeConfig).forEach(key => {
+      storage.set(key, themeConfig[key]);
+    });
+
+    setState(preState => {
+      return {
+        ...preState,
+        components: { ...preState.components, ...components },
+        token: { ...preState.token, ...token },
+        algorithm: themeConfig.algorithm || preState.algorithm,
+      };
+    });
+  };
   /** token 基础配置 */
   const tokenConfig = {
     colorBorder: isLight ? '#F0F0F0' : '#303030',
@@ -63,23 +80,6 @@ const ThemeProvider: React.FC<IThemeProvider> = props => {
       colorError: '#00000073',
     },
   };
-
-  const handleTheme = (themeConfig: ThemeProviderType) => {
-    const { components, token } = themeConfig;
-    Object.keys(themeConfig).forEach(key => {
-      storage.set(key, themeConfig[key]);
-    });
-
-    setState(preState => {
-      return {
-        ...preState,
-        components: { ...preState.components, ...components },
-        token: { ...preState.token, ...token },
-        algorithm: themeConfig.algorithm || preState.algorithm,
-      };
-    });
-  };
-
   return (
     <ContainerProvider
       value={{

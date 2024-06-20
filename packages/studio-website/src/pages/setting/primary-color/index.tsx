@@ -11,9 +11,7 @@ const { Title, Text } = Typography;
 const PrimaryColor: React.FunctionComponent = () => {
   const { handleTheme } = useThemeContainer();
   const { token } = useToken();
-  const { colorPrimary } = token;
-  console.log(theme);
-
+  const { borderRadius, colorPrimary } = token;
   return (
     <Row>
       <Col span={8}>
@@ -32,7 +30,7 @@ const PrimaryColor: React.FunctionComponent = () => {
             showText
             value={colorPrimary}
             onChangeComplete={color => {
-              handleTheme({ token: { colorPrimary: color.toHexString() } });
+              handleTheme({ token: { colorPrimary: color.toHexString(), borderRadius } });
             }}
           />
           <SelectColor value={colorPrimary} />

@@ -6,11 +6,13 @@ import Section from '@/components/section';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import { useContext } from '@/layouts/useContext';
+import { useThemeContainer } from '@graphscope/studio-components';
 import { listGraphs } from './service';
 const { GS_ENGINE_TYPE } = window;
 const InstanceCard: React.FC = () => {
   const { store } = useContext();
-  const { mode, draftGraph } = store;
+  const { draftGraph } = store;
+  const { algorithm } = useThemeContainer();
   const [state, updateState] = useState<{ isReady: boolean; instanceList: InstaceCardType[] }>({
     instanceList: [],
     isReady: false,
@@ -59,7 +61,7 @@ const InstanceCard: React.FC = () => {
             <Card
               styles={{ header: { fontSize: '30px' } }}
               title={<Skeleton.Button style={{ marginTop: '-10px', width: '120px' }} active />}
-              style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
+              style={{ background: algorithm === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
             >
               <div style={{ display: 'flex', height: '164px', justifyContent: 'center', alignContent: 'center' }}>
                 <Skeleton active />
@@ -72,7 +74,7 @@ const InstanceCard: React.FC = () => {
             <Card
               title={<FormattedMessage id="New graph" />}
               styles={{ header: { fontSize: '30px', color: '#ccc' }, body: { width: '100%' } }}
-              style={{ background: mode === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
+              style={{ background: algorithm === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
             >
               <div
                 style={{

@@ -32,10 +32,12 @@ const styles = {
 const SelectColor: React.FunctionComponent<ISelectColorProps> = props => {
   const { value } = props;
   const { handleTheme } = useThemeContainer();
+  const { token } = useToken();
+  const { borderRadius } = token;
   const activeStyle = `2px solid blue`;
   /** 修改主题颜色 */
   const handlePrimaryColor = (color: string) => {
-    handleTheme({ token: { colorPrimary: color } });
+    handleTheme({ token: { colorPrimary: color, borderRadius } });
   };
   return (
     <Space style={{ marginLeft: '16px' }}>

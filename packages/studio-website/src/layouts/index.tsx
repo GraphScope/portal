@@ -30,13 +30,13 @@ const Content = (props: any) => {
 };
 export default function Layout() {
   const { store } = useContext();
-  const { locale, mode, navStyle } = store;
+  const { locale, navStyle } = store;
   //@ts-ignore
   const messages = locales[locale];
 
   return (
     <IntlProvider messages={messages} locale={locale}>
-      <ThemeProvider mode={mode}>
+      <ThemeProvider>
         <Container
           sidebar={<Sidebar />}
           content={

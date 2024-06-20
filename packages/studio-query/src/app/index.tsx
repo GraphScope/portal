@@ -21,7 +21,6 @@ const { getSearchParams } = Utils;
 import Container from './container';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark, faClockFour, faServer, faRobot, faLightbulb } from '@fortawesome/free-solid-svg-icons';
-
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const {
     queryInfo,
@@ -118,8 +117,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         draft.mode = displayMode as 'flow' | 'tabs';
         draft.language = language as 'gremlin' | 'cypher';
       });
-
-      storage.set('STUDIO_QUERY_THEME', theme);
+      // storage.set('STUDIO_QUERY_THEME', theme);
     })();
   }, []);
 

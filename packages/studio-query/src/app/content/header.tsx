@@ -6,7 +6,7 @@ import { useContext } from '../context';
 
 import { countLines } from '../utils';
 import { v4 as uuidv4 } from 'uuid';
-import { isDarkTheme } from '../utils';
+import { useThemeContainer } from '@graphscope/studio-components';
 import Loading from './loading';
 
 const CypherEditor = lazy(() => import('../../cypher-editor'));
@@ -125,7 +125,8 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
 
   const minRows = countLines(globalScript);
   const isShowCypherSwitch = state.lineCount === 1 && minRows === 1;
-  const isDark = isDarkTheme();
+  const { algorithm } = useThemeContainer();
+  const isDark = algorithm === 'darkAlgorithm';
 
   return (
     <div

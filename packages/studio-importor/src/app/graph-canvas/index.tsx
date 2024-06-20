@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { ReactFlow, Controls, Background, MiniMap } from 'reactflow';
-import { EmptyCanvas } from '@graphscope/studio-components';
+import { EmptyCanvas, useThemeContainer } from '@graphscope/studio-components';
 import { nodeTypes } from '../elements/node-types';
 import { edgeTypes } from '../elements/edge-types';
 import ConnectionLine from '../elements/connection-line';
@@ -20,8 +20,10 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   const { store, updateStore, onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } =
     useInteractive();
   const { nodes, edges, theme, collapsed } = store;
-
+  const { algorithm } = useThemeContainer();
   const isEmpty = nodes.length === 0;
+  const isDark = algorithm === 'darkAlgorithm';
+  const rfBG = isDark ? '#212121' : collapsed.left && collapsed.right ? '#fff' : '#f4f5f5';
   const description = (
     <FormattedMessage
       id="Start sketching a model, a vertex label is a named grouping or categorization of nodes within the graph dataset"
@@ -47,7 +49,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           zoomOnDoubleClick={false}
           onDoubleClick={onDoubleClick}
         >
-          <ArrowMarker selectedColor={theme.primaryColor} />
+          <ArrowMarker selectedColor={theme.primaryColor} color={isDark ? '#d7d7d7' : '#000'} />
           <Controls
             style={{
               gap: '4px',
@@ -58,11 +60,11 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           <Background
             style={{
               // background: '#f4f5f5',
-              background: collapsed.left && collapsed.right ? '#fff' : '#f4f5f5',
+              background: rfBG,
             }}
           />
           {isEmpty && <EmptyCanvas description={description} />}
-          <MiniMap />
+          <MiniMap style={{ backgroundColor: isDark ? '#212121' : '' }} />
         </ReactFlow>
       </div>
     </div>

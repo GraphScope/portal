@@ -1,7 +1,7 @@
 import { GraphinData, Utils } from '@antv/graphin';
 import { sizes, widths, colors } from '../properties-panel';
 import type { ISchema, ConfigItem } from './typing';
-import { isDarkTheme } from '../app/utils';
+import { useThemeContainer } from '@graphscope/studio-components';
 export const storage = {
   get<T>(key: string): T | undefined {
     try {
@@ -109,7 +109,8 @@ export function countOccurrencesByKey(arr, key) {
 
 export function processData(data: GraphinData, configMap: Map<string, ConfigItem>) {
   const nodesMap = new Map();
-  const isDark = isDarkTheme();
+  const { algorithm } = useThemeContainer();
+  const isDark = algorithm === 'darkAlgorithm';
 
   const { nodes: Nodes, edges: Edges } = data;
   const nodes = Nodes.map(item => {
