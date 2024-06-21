@@ -6,6 +6,8 @@ interface IMappingFields {
   options: Option[];
   value?: { index?: number; token?: string };
   onChange(evt: any): void;
+  /** 是否上传 默认 false */
+  isUpload?: boolean;
 }
 
 export const getValue = (index, token) => {
@@ -17,7 +19,7 @@ export const getValue = (index, token) => {
   return _value;
 };
 const MappingFields = (props: IMappingFields) => {
-  const { options, value, onChange, componentType } = props;
+  const { options, value, isUpload, onChange, componentType } = props;
   const { index, token } = value || {};
 
   /** mappingFiles options 边涉及相同value，导致不唯一 */
@@ -51,7 +53,7 @@ const MappingFields = (props: IMappingFields) => {
   // /** 上传选择 or 输入数字 */
   // const isInputNumberShow = isDefault === undefined ? (typeof value === 'number' ? true : false) : !isDefault;
 
-  if (options.length === 0 || token === '') {
+  if ((options.length === 0 || token === '') && !isUpload) {
     return (
       <InputNumber
         style={{ minWidth: '140px' }}

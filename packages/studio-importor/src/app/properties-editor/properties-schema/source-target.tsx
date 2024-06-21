@@ -6,6 +6,7 @@ import { useContext } from '../../useContext';
 import useModel from './useModel';
 import type { ISchemaEdge, ImportorProps, IEdgeData } from '../../typing';
 type ISourceTargetProps = {
+  isUpload: boolean;
   mappingColumn: ImportorProps['mappingColumn'];
   source_vertex_fields: IEdgeData['source_vertex_fields'];
   target_vertex_fields: IEdgeData['target_vertex_fields'];
@@ -36,7 +37,7 @@ const getLabelById = (nodes, source, target) => {
   };
 };
 const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
-  const { id, source, target, mappingColumn, source_vertex_fields, target_vertex_fields } = props;
+  const { id, source, target, isUpload, mappingColumn, source_vertex_fields, target_vertex_fields } = props;
   const { store } = useContext();
   const { nodes } = store;
   const { handleDataFieldsChange } = useModel({ type: 'edges', id });
@@ -54,6 +55,7 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
             <Typography.Text>Data Fields</Typography.Text>
             <MappingFields
               value={source_vertex_fields}
+              isUpload={isUpload}
               onChange={val => handleDataFieldsChange(val, 'source_vertex_fields', source_primary_key)}
               componentType={mappingColumn?.type || 'Select'}
               options={mappingColumn?.options || []}
@@ -71,6 +73,7 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
             <Typography.Text>Data Fields</Typography.Text>
             <MappingFields
               value={target_vertex_fields}
+              isUpload={isUpload}
               onChange={val => handleDataFieldsChange(val, 'target_vertex_fields', target_primary_key)}
               componentType={mappingColumn?.type || 'Select'}
               options={mappingColumn?.options || []}
