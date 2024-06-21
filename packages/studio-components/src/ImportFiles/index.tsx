@@ -10,8 +10,11 @@ import MappingHeader from './mapping-header';
 export interface IState {
   files: ParsedFile[];
   loading: boolean;
+  csvFiles: File[];
 }
 export interface IImportFromFileProps {
+  /** 是否保存上传的原始文件 */
+  isSaveFiles?: boolean;
   upload: {
     // 限制文件类型
     accept: string;
@@ -22,18 +25,20 @@ export interface IImportFromFileProps {
 }
 
 const ImportFromCSV: React.FunctionComponent<IImportFromFileProps> = props => {
-  const { upload, children } = props;
+  const { upload, children, isSaveFiles } = props;
   const [state, setState] = useState<IState>({
     files: [],
     loading: false,
+    csvFiles: [],
   });
   const { files } = state;
-  const onChange = (value: ParsedFile[]) => {
+  const onChange = (value: ParsedFile[], csvFiles?: File[]) => {
     console.log(value);
     setState(preState => {
       return {
         ...preState,
         files: [...preState.files, ...value],
+        csvFiles: [...preState.csvFiles, ...(csvFiles || [])],
       };
     });
   };
@@ -68,7 +73,7 @@ const ImportFromCSV: React.FunctionComponent<IImportFromFileProps> = props => {
       }}
     >
       {isEmpty ? (
-        <UploadFile onChange={onChange} {...upload} />
+        <UploadFile isSaveFiles={isSaveFiles} onChange={onChange} {...upload} />
       ) : (
         <Collapse
           expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}

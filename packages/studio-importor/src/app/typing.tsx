@@ -90,4 +90,6 @@ export interface ImportorProps {
     isConnectable: boolean;
   };
   children?: React.ReactNode;
+  /** 是否保存原始文件 */
+  isSaveFiles?: boolean;
 }

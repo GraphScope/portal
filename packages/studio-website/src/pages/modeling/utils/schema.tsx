@@ -97,16 +97,17 @@ export function transOptionsToSchema(options: DeepRequired<ISchemaOptions>) {
     return {
       type_id: index,
       type_name: label,
-      properties: properties.map((p, pIdx) => {
-        if (p.primaryKey) {
-          primary_key = p.name;
-        }
-        return {
-          property_id: pIdx,
-          property_name: p.name,
-          property_type: handleType(p.type),
-        };
-      }),
+      properties:
+        properties.map((p, pIdx) => {
+          if (p.primaryKey) {
+            primary_key = p.name;
+          }
+          return {
+            property_id: pIdx,
+            property_name: p.name,
+            property_type: handleType(p.type),
+          };
+        }) || [],
       primary_keys: [primary_key],
     };
   });
@@ -132,13 +133,14 @@ export function transOptionsToSchema(options: DeepRequired<ISchemaOptions>) {
       edgeMap.set(label, {
         type_id: itemIdx,
         type_name: label,
-        properties: (properties || []).map((p: Property, pIdx: number) => {
-          return {
-            property_id: pIdx,
-            property_name: p.name,
-            property_type: handleType(p.type),
-          };
-        }),
+        properties:
+          (properties || []).map((p: Property, pIdx: number) => {
+            return {
+              property_id: pIdx,
+              property_name: p.name,
+              property_type: handleType(p.type),
+            };
+          }) || [],
         vertex_type_pair_relations: [constraint],
       });
     }

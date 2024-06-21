@@ -4,8 +4,10 @@ import { queryPrimitiveTypes, uploadFile, getSchema, getDatasourceById } from '.
 import { useContext } from '../../layouts/useContext';
 import { Toolbar } from '@graphscope/studio-components';
 import StartImporting from './start-importing';
+import { transMappingSchemaToOptions } from './utils/import';
 
 import EmptyModelCase from './empty-model-case';
+import EmptyMappingCase from './empty-mapping-case';
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
@@ -21,7 +23,8 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
       if (!graphSchema) {
         return { nodes: [], edges: [] };
       }
-      const options = await getDatasourceById(graphId, graphSchema);
+      const schemaMapping = await getDatasourceById(graphId);
+      const options = transMappingSchemaToOptions(graphSchema as any, schemaMapping);
       return options;
     }
     return { nodes: [], edges: [] };
@@ -47,6 +50,7 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
         <StartImporting />
       </Toolbar>
       <EmptyModelCase />
+      <EmptyMappingCase />
     </ImportApp>
   );
 };

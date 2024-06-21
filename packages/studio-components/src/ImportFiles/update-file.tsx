@@ -5,25 +5,28 @@ import { FormattedMessage } from 'react-intl';
 import { InboxOutlined } from '@ant-design/icons';
 import { parseCSV, parseJSON, parseSQL } from '../Utils';
 import type { IImportFromFileProps } from './index';
+import { ParsedFile } from '../Utils/parseCSV';
 const { Dragger } = Upload;
 
 export type IProps = {
-  onChange?: (value: any) => void;
+  onChange?: (value: ParsedFile[], csvFiles?: File[]) => void;
+  isSaveFiles?: boolean;
 } & Pick<IImportFromFileProps['upload'], 'accept' | 'description' | 'title'>;
 
-const UploadFile = ({ onChange, accept, title, description }: IProps) => {
+const UploadFile = ({ onChange, accept, title, description, isSaveFiles }: IProps) => {
   const customRequest: UploadProps['customRequest'] = async options => {
     const { file } = options;
     const { type } = file as File;
-    console.log('options', options);
+
     try {
       if (type === 'application/json') {
         const files = await parseJSON(file as File);
         onChange && onChange(files);
       }
       if (type === 'text/csv') {
+        const csvFiles = isSaveFiles ? [file] : [];
         const files = await parseCSV(file as File);
-        onChange && onChange([files]);
+        onChange && onChange([files], csvFiles as File[]);
       }
       if (type === '') {
         const files = await parseSQL(file as File);

@@ -101,7 +101,7 @@ export const getSchema = async (graph_id: string) => {
 };
 
 /** getDatasourceById 获取数据源信息 */
-export const getDatasourceById = async (graph_id: string, schema: any) => {
+export const getDatasourceById = async (graph_id: string) => {
   const schemaMapping = await DataSourceApiFactory(undefined, location.origin)
     .getDatasourceById(graph_id!)
     .then(res => res.data)
@@ -110,7 +110,7 @@ export const getDatasourceById = async (graph_id: string, schema: any) => {
       return {};
     });
 
-  return transMappingSchemaToOptions(schema, schemaMapping);
+  return schemaMapping;
 };
 
 export const queryPrimitiveTypes = () => {

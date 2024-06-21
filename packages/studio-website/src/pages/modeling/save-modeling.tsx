@@ -4,11 +4,13 @@ import { AppstoreOutlined, CloseOutlined, SaveOutlined } from '@ant-design/icons
 import { useContext } from '../../layouts/useContext';
 import { Icons } from '@graphscope/studio-components';
 import { useContext as useModeling } from '@graphscope/studio-importor';
-import { createGraph, getSchema, getDataloadingConfig } from './services';
+import { createGraph, getSchema } from './services';
 import ChooseEngineType from '@/pages/instance/create-instance/choose-enginetype';
 import type { ISchemaNode, ISchemaEdge, ISchemaOptions } from '@graphscope/studio-importor';
 import { Utils } from '@graphscope/studio-components';
 import { history } from 'umi';
+import localforage from 'localforage';
+import { snapshot } from 'valtio';
 interface SaveModelingProps {}
 export const getSchemaOptions = (nodes: ISchemaNode[], edges: ISchemaEdge[]) => {
   let errors: string[] = [];
@@ -72,7 +74,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   const { store, updateStore } = useContext();
   const [form] = Form.useForm();
   const { store: modelingStore } = useModeling();
-  const { elementOptions, appMode, nodes, edges } = modelingStore;
+  const { elementOptions, appMode, nodes, edges, csvFiles } = modelingStore;
   const { draftGraph, draftId } = store;
 
   const { isLoading, open, status, schema } = state;
@@ -103,6 +105,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
           if (res.status === 200) {
             _status = 'success';
             _message = `The graph model contains ${schema.nodes.length} types of nodes and ${schema.edges.length} types of edges.`;
+
             return res.data && res.data.graph_id;
           }
           _status = 'error';
@@ -113,6 +116,8 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
           _message = error.response.data;
         });
 
+      await localforage.setItem(`GRAPH_SCHEMA_OPTIONS_${graph_id}`, Utils.fakeSnapshot(schema));
+      //@ts-ignore
       setState(preState => {
         return {
           ...preState,

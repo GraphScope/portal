@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
 import { useContext } from '../../useContext';
-import { Utils, ImportFiles } from '@graphscope/studio-components';
+import { Utils, ImportFiles, ParsedFile } from '@graphscope/studio-components';
 import { getSchemaData } from './web-worker';
 import { transform } from './transform';
 import { Button } from 'antd';
+import localforage from 'localforage';
 
 interface IImportFromCSVProps {}
 
 const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
-  const { updateStore } = useContext();
+  const { updateStore, store } = useContext();
+  const { isSaveFiles } = store;
 
-  const onSubmit = async (params, updateState) => {
-    const { files } = params;
+  const onSubmit = async (
+    params: {
+      files: ParsedFile[];
+      csvFiles: File[];
+    },
+    updateState,
+  ) => {
+    const { files, csvFiles } = params;
     updateState(preState => {
       return {
         ...preState,
@@ -20,11 +28,15 @@ const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
     });
     const { result: schemaData, duration } = await Utils.asyncFunctionWithWorker(getSchemaData)(files);
     const { nodes, edges } = transform(schemaData);
-    console.log(duration, schemaData);
+    console.log(duration, schemaData, csvFiles);
+    if (isSaveFiles) {
+      localforage.setItem('DRAFT_GRAPH_FILES', csvFiles);
+    }
     updateStore(draft => {
       draft.hasLayouted = false;
       draft.nodes = nodes;
       draft.edges = edges;
+      draft.csvFiles = csvFiles;
     });
     updateState(preState => {
       return {
@@ -36,6 +48,7 @@ const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
 
   return (
     <ImportFiles
+      isSaveFiles={isSaveFiles}
       upload={{
         accept: '.csv',
         title: 'Click or drag file to this area to upload',
