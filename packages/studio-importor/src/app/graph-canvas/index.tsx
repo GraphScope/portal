@@ -23,7 +23,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   const { algorithm } = useThemeContainer();
   const isEmpty = nodes.length === 0;
   const isDark = algorithm === 'darkAlgorithm';
-  const rfBG = isDark ? '#212121' : collapsed.left && collapsed.right ? '#fff' : '#f4f5f5';
+  const rfBG = isDark ? '#161616' : collapsed.left && collapsed.right ? '#fff' : '#f4f5f5';
   const description = (
     <FormattedMessage
       id="Start sketching a model, a vertex label is a named grouping or categorization of nodes within the graph dataset"
@@ -64,7 +64,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
             }}
           />
           {isEmpty && <EmptyCanvas description={description} />}
-          <MiniMap style={{ backgroundColor: isDark ? '#212121' : '' }} />
+          <MiniMap style={{ backgroundColor: isDark ? '#161616' : '' }} />
         </ReactFlow>
       </div>
     </div>

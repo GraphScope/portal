@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { Space, theme } from 'antd';
-import { useContext } from '@/layouts/useContext';
-import localStorage from '@/components/utils/localStorage';
 import { useThemeContainer } from '@graphscope/studio-components';
 const { useToken } = theme;
 export type ISelectColorProps = {

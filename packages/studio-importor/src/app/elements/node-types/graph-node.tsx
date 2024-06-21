@@ -1,13 +1,8 @@
-import React, { memo, useState, useRef } from 'react';
+import React, { memo, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
-import { List, Popover, Flex, Typography, Input, Tag } from 'antd';
+import { Tag } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
 import { EditableText, useThemeContainer } from '@graphscope/studio-components';
-const style = {
-  padding: 5,
-  background: '#fff',
-  border: '1px solid #ddd',
-};
 
 import { useContext } from '../../useContext';
 const styles = {
@@ -22,7 +17,7 @@ const styles = {
   },
 };
 const GraphNode = (props: NodeProps) => {
-  const { data = {}, isConnectable, id } = props;
+  const { data = {}, id } = props;
   const { label, filelocation } = data;
   const { store, updateStore } = useContext();
   const { currentId, theme, elementOptions } = store;
@@ -83,10 +78,11 @@ const GraphNode = (props: NodeProps) => {
     : {
         cursor: 'not-allow',
         background: 'transparent',
+        border: 'none',
       };
   const getBorder = () => {
     if (isDark) {
-      return isSelected ? `4px solid ${theme.primaryColor}` : '2px solid #323232';
+      return isSelected ? `4px solid ${theme.primaryColor}` : '2px solid #d7d7d7';
     }
     return isSelected ? `4px solid ${theme.primaryColor}` : '2px solid #000';
   };
@@ -105,6 +101,7 @@ const GraphNode = (props: NodeProps) => {
         style={{
           background: 'transparent',
           position: 'relative',
+          border: 'none',
         }}
       />
 
@@ -116,7 +113,7 @@ const GraphNode = (props: NodeProps) => {
           top: 0,
           left: 0,
           border: getBorder(),
-          backgroundColor: isDark ? '#212121' : '#fafafa',
+          backgroundColor: isDark ? '#161616' : '#fafafa',
           borderRadius: '50%',
           height: '100px',
           width: '100px',

@@ -37,13 +37,13 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
   };
   const getBackground = () => {
     if (isDark) {
-      return isSelected ? `${theme.primaryColor}` : '#232323';
+      return isSelected ? `${theme.primaryColor}` : '#161616';
     }
     return isSelected ? `${theme.primaryColor}` : '#fff';
   };
   const getBorder = () => {
     if (isDark) {
-      return isSelected ? `2px solid ${theme.primaryColor}` : '1px solid #323232';
+      return isSelected ? `2px solid ${theme.primaryColor}` : '1px solid #d7d7d7';
     }
     return isSelected ? `2px solid ${theme.primaryColor}` : '1px solid #000';
   };

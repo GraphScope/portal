@@ -1,7 +1,6 @@
 import React from 'react';
 import { ColorPicker, Flex, Row, Col, Typography, theme } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { useContext } from '@/layouts/useContext';
 import SelectColor from './select-color';
 const { useToken } = theme;
 import { useThemeContainer } from '@graphscope/studio-components';

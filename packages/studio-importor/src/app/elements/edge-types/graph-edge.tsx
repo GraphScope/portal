@@ -12,6 +12,7 @@ import {
 import { useContext } from '../../useContext';
 import LoopEdge from './loop-edge';
 import Label from './label';
+import { useThemeContainer } from '@graphscope/studio-components';
 
 function GraphEdge(props: EdgeProps) {
   const { id, source, target, style, data } = props;
@@ -21,6 +22,8 @@ function GraphEdge(props: EdgeProps) {
   const targetNode = useStore(useCallback(store => store.nodeInternals.get(target), [target]));
   const { store } = useContext();
   const { currentId, theme } = store;
+  const { algorithm } = useThemeContainer();
+  const isDark = algorithm === 'darkAlgorithm';
   if (!sourceNode || !targetNode) {
     return null;
   }
@@ -59,7 +62,12 @@ function GraphEdge(props: EdgeProps) {
 
   /** 计算标签和标签背景的旋转角度 */
   let degree = calculateDegree({ x: sourceX, y: sourceY }, { x: targetX, y: targetY });
-
+  const getStroke = () => {
+    if (isDark) {
+      return isSelected ? theme.primaryColor : '#d7d7d7';
+    }
+    return isSelected ? theme.primaryColor : '#000';
+  };
   return (
     <>
       <path
@@ -67,7 +75,7 @@ function GraphEdge(props: EdgeProps) {
         className="react-flow__edge-path"
         d={edgePath}
         markerEnd={isSelected ? 'url(#arrow-selected)' : 'url(#arrow)'}
-        style={{ ...style, stroke: isSelected ? theme.primaryColor : '#000', strokeWidth: isSelected ? '2px' : '1px' }}
+        style={{ ...style, stroke: getStroke(), strokeWidth: isSelected ? '2px' : '1px' }}
       />
       <Label
         id={id}
