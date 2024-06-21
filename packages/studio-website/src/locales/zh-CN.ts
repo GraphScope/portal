@@ -113,6 +113,8 @@ export default {
   Yes: '是',
   No: '否',
   /** setting */
+  Home: '首页',
+  Setting: '应用设置',
   'Primary color': '主题颜色',
   International: '国际化',
   'Select language': '选择语言',
@@ -123,6 +125,10 @@ export default {
   'Corner radians': '圆角弧度',
   'Appearance Setting': '系统设置',
   'Change how Untitled UI looks and feels in your browser': '您可以在这里自定义系统语言，主题样式等',
+  'Select navigation style': '选择导航样式',
+  'Navigation Style': '导航风格',
+  'Nighttime theme': '夜间主题',
+  'Lighttime theme': '白天主题',
   Light: '白天',
   Dark: '黑夜',
   /** import data */
