@@ -1,13 +1,8 @@
-import React, { memo, useState, useRef } from 'react';
+import React, { memo, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
-import { List, Popover, Flex, Typography, Input, Tag } from 'antd';
+import { Tag } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
-import { EditableText } from '@graphscope/studio-components';
-const style = {
-  padding: 5,
-  background: '#fff',
-  border: '1px solid #ddd',
-};
+import { EditableText, useThemeContainer } from '@graphscope/studio-components';
 
 import { useContext } from '../../useContext';
 const styles = {
@@ -22,11 +17,13 @@ const styles = {
   },
 };
 const GraphNode = (props: NodeProps) => {
-  const { data = {}, isConnectable, id } = props;
+  const { data = {}, id } = props;
   const { label, filelocation } = data;
   const { store, updateStore } = useContext();
   const { currentId, theme, elementOptions } = store;
+  const { algorithm } = useThemeContainer();
   const isSelected = id === currentId;
+  const isDark = algorithm === 'darkAlgorithm';
   const [state, updateState] = useState({
     isHover: false,
     contentEditable: false,
@@ -81,8 +78,14 @@ const GraphNode = (props: NodeProps) => {
     : {
         cursor: 'not-allow',
         background: 'transparent',
+        border: 'none',
       };
-
+  const getBorder = () => {
+    if (isDark) {
+      return isSelected ? `4px solid ${theme.primaryColor}` : '2px solid #d7d7d7';
+    }
+    return isSelected ? `4px solid ${theme.primaryColor}` : '2px solid #000';
+  };
   return (
     <div
       data-nodeid={id}
@@ -98,6 +101,7 @@ const GraphNode = (props: NodeProps) => {
         style={{
           background: 'transparent',
           position: 'relative',
+          border: 'none',
         }}
       />
 
@@ -108,8 +112,8 @@ const GraphNode = (props: NodeProps) => {
           position: 'absolute',
           top: 0,
           left: 0,
-          border: isSelected ? `4px solid ${theme.primaryColor}` : '2px solid #000',
-          backgroundColor: isSelected ? '#fafafa' : '#fafafa',
+          border: getBorder(),
+          backgroundColor: isDark ? '#161616' : '#fafafa',
           borderRadius: '50%',
           height: '100px',
           width: '100px',
@@ -134,7 +138,13 @@ const GraphNode = (props: NodeProps) => {
             </Tag>
           </div>
         )}
-        <EditableText id={id} text={label} onTextChange={hanleChangeLabel} disabled={!elementOptions.isEditable} />
+        <EditableText
+          id={id}
+          text={label}
+          onTextChange={hanleChangeLabel}
+          disabled={!elementOptions.isEditable}
+          style={{ color: isDark ? '#D7D7D7' : '#000' }}
+        />
       </div>
     </div>
   );

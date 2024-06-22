@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { Flex, Typography, Row, Col } from 'antd';
-import { useContext } from '@/layouts/useContext';
+import { Flex, Typography, Row, Col, theme } from 'antd';
 import SelectCards from '@/components/select-cards';
 import { FormattedMessage } from 'react-intl';
-import localStorage from '@/components/utils/localStorage';
-
+import { useThemeContainer } from '@graphscope/studio-components';
+import { ICard } from '@/components/select-cards';
 const { Title, Text } = Typography;
 
-const engines = [
+const engines: ICard[] & { primaryBGgColor: string }[] = [
   {
     id: 'defaultAlgorithm',
     title: 'Light',
@@ -24,14 +23,10 @@ const engines = [
   },
 ];
 const InteractTheme: React.FunctionComponent = () => {
-  const { store, updateStore } = useContext();
-  const { mode } = store;
-  const { setItem, getItem } = localStorage;
-  const changeEngineType = (item: any) => {
-    setItem('themeColor', item.id);
-    const themeColor = getItem('themeColor');
-    updateStore(draft => {
-      draft.mode = themeColor;
+  const { algorithm = 'defaultAlgorithm', handleTheme } = useThemeContainer();
+  const changeEngineType = (item: { id: string }) => {
+    handleTheme({
+      algorithm: item.id as 'defaultAlgorithm' | 'darkAlgorithm',
     });
   };
   return (
@@ -47,7 +42,7 @@ const InteractTheme: React.FunctionComponent = () => {
         </Flex>
       </Col>
       <Col span={16}>
-        <SelectCards val={mode} items={engines} onChange={changeEngineType} />
+        <SelectCards selectValue={algorithm} items={engines} onChange={changeEngineType} />
       </Col>
     </Row>
   );

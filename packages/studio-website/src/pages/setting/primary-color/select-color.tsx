@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Space } from 'antd';
-import { useContext } from '@/layouts/useContext';
-import localStorage from '@/components/utils/localStorage';
+import { Space, theme } from 'antd';
+import { useThemeContainer } from '@graphscope/studio-components';
+const { useToken } = theme;
 export type ISelectColorProps = {
-  color: string;
+  value: string;
 };
 
 export const colors: string[] = [
@@ -28,31 +28,28 @@ const styles = {
 };
 
 const SelectColor: React.FunctionComponent<ISelectColorProps> = props => {
-  const { color } = props;
-  const { updateStore } = useContext();
-  const { setItem, getItem } = localStorage;
+  const { value } = props;
+  const { handleTheme } = useThemeContainer();
+  const { token } = useToken();
+  const { borderRadius } = token;
   const activeStyle = `2px solid blue`;
   /** 修改主题颜色 */
-  const handlePrimaryColor = (item: string) => {
-    setItem('primaryColor', item);
-    const primaryColor = getItem('primaryColor');
-    updateStore(draft => {
-      draft.primaryColor = primaryColor;
-    });
+  const handlePrimaryColor = (color: string) => {
+    handleTheme({ token: { colorPrimary: color, borderRadius } });
   };
   return (
     <Space style={{ marginLeft: '16px' }}>
-      {colors.map(item => {
-        const isActive = color === item;
+      {colors.map(color => {
+        const isActive = value === color;
         return (
           <span
-            key={item}
+            key={color}
             onClick={() => {
-              handlePrimaryColor(item);
+              handlePrimaryColor(color);
             }}
             style={{
               ...styles.color,
-              backgroundColor: item,
+              backgroundColor: color,
               boxSizing: 'border-box',
               border: isActive ? activeStyle : 'none',
             }}

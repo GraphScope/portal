@@ -1,13 +1,16 @@
 import React from 'react';
-import { ColorPicker, Flex, Row, Col, Typography } from 'antd';
+import { ColorPicker, Flex, Row, Col, Typography, theme } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { useContext } from '@/layouts/useContext';
 import SelectColor from './select-color';
+const { useToken } = theme;
+import { useThemeContainer } from '@graphscope/studio-components';
+
 const { Title, Text } = Typography;
-// type IPrimaryColorProps = {};
+
 const PrimaryColor: React.FunctionComponent = () => {
-  const { store, updateStore } = useContext();
-  const { primaryColor } = store;
+  const { handleTheme } = useThemeContainer();
+  const { token } = useToken();
+  const { borderRadius, colorPrimary } = token;
   return (
     <Row>
       <Col span={8}>
@@ -24,14 +27,12 @@ const PrimaryColor: React.FunctionComponent = () => {
         <Flex align="center">
           <ColorPicker
             showText
-            value={primaryColor}
+            value={colorPrimary}
             onChangeComplete={color => {
-              updateStore(draft => {
-                draft.primaryColor = color.toHexString();
-              });
+              handleTheme({ token: { colorPrimary: color.toHexString(), borderRadius } });
             }}
           />
-          <SelectColor color={primaryColor} />
+          <SelectColor value={colorPrimary} />
         </Flex>
       </Col>
     </Row>

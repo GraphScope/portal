@@ -189,16 +189,15 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
         theme={{
           components: {
             Table: {
-              headerBg: '#fff',
               headerColor: '#575B5E',
-              headerSplitColor: '#fff',
+              // headerSplitColor: '#fff',
               fontWeightStrong: 400,
-              borderColor: '#DADADA',
+              // borderColor: '#DADADA',
               cellPaddingBlock: 4, //	单元格纵向内间距
               cellPaddingInline: 8, //单元格横向内间距（默认大尺寸）
             },
             Select: {
-              colorBorder: '#DADADA',
+              // colorBorder: '#DADADA',
             },
           },
         }}

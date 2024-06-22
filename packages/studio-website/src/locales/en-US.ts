@@ -113,6 +113,8 @@ export default {
   Yes: 'Yes' /** Sure, and Cancel, if you are buttons for dialog above. */,
   No: 'No',
   /** setting */
+  Home: 'Home',
+  Setting: 'Setting',
   'Primary color': 'Primary color',
   International: 'International',
   'Select language': 'Select language' /** what is national language??? */,
@@ -121,6 +123,10 @@ export default {
   'Select or customize your UI theme': 'Select or customize your UI theme',
   'Rounded corners': 'Rounded corners',
   'Corner radians': 'Corner radians',
+  'Select navigation style': 'Select navigation style',
+  'Navigation Style': 'Navigation Style',
+  'Nighttime theme': 'Nighttime theme',
+  'Lighttime theme': 'Lighttime theme',
   Light: 'Light',
   Dark: 'Dark',
   /** import data */

@@ -4,7 +4,7 @@ import { MonacoEnvironment, EditorProvider } from '@difizen/cofine-editor-core';
 import cypherLanguage, { registerOptions } from '@difizen/cofine-language-cypher';
 import gremlinLanguage from '@difizen/cofine-language-gremlin';
 import './index.css';
-import { isDarkTheme } from '../app/utils';
+import { useThemeContainer } from '@graphscope/studio-components';
 
 export interface ItemSchema {
   label: string;
@@ -64,7 +64,8 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
   // 监听事件
   let erdElement: HTMLElement | null;
   const MAGIC_NUMBER = onChangeContent ? 0 : 1;
-
+  const { algorithm } = useThemeContainer();
+  const isDark = algorithm === 'darkAlgorithm';
   React.useEffect(() => {
     MonacoEnvironment.loadModule(async (container: { load: (arg0: Syringe.Module) => void }) => {
       container.load(cypherLanguage);
@@ -76,8 +77,6 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
           editorRef.current.style.height = countLines(value) * 20 + 'px';
         }
         //@TODO hard code
-
-        const isDark = isDarkTheme();
 
         const editorProvider = MonacoEnvironment.container.get<EditorProvider>(EditorProvider);
         const editor = editorProvider.create(editorRef.current, {
@@ -166,7 +165,7 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
         codeEditor.dispose();
       }
     };
-  }, [editorRef, value, language]);
+  }, [editorRef, value, language, isDark]);
   React.useEffect(() => {
     if (clear && editorRef && editorRef.current && editorRef.current.codeEditor) {
       editorRef.current.codeEditor.setValue('');

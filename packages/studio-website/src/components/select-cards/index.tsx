@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { CheckCircleTwoTone } from '@ant-design/icons';
-import { Card, Flex, Typography, theme, Avatar, Row, Col } from 'antd';
+import { Card, Flex, Typography, theme, Avatar, Row, Col, Space } from 'antd';
 const { Title, Text } = Typography;
 import { FormattedMessage } from 'react-intl';
 
 export interface ICard {
-  id: string;
+  id: 'defaultAlgorithm' | 'darkAlgorithm';
   title: string;
   desc: string | React.ReactNode;
   avatar?: string;
   disabled?: boolean;
 }
+
 interface ISelectCardsProps {
   items: ICard[];
-  val: string;
+  selectValue: 'defaultAlgorithm' | 'darkAlgorithm';
   onChange: (card: ICard) => void;
 }
 const iconStyle: React.CSSProperties = {
@@ -23,7 +24,7 @@ const iconStyle: React.CSSProperties = {
   fontSize: '20px',
 };
 const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
-  const { val: value, onChange, items } = props;
+  const { selectValue: value, onChange, items } = props;
   const [current, setCurrent] = useState(value);
   const { useToken } = theme;
   const { token } = useToken();
@@ -36,40 +37,42 @@ const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
           const isChecked = id === current;
           console.log('isChecked', value, current, id);
           return (
-            <Col span={24} key={id}>
-              <Card
-                onClick={() => {
-                  if (!disabled) {
-                    setCurrent(id);
-                    onChange(item);
-                  }
-                }}
-                style={
-                  disabled
-                    ? {
-                        background: '#dddddd29',
-                        cursor: 'not-allowed',
-                      }
-                    : isChecked
+            <Space>
+              <Col span={24} key={id}>
+                <Card
+                  onClick={() => {
+                    if (!disabled) {
+                      setCurrent(id);
+                      onChange(item);
+                    }
+                  }}
+                  style={
+                    disabled
                       ? {
-                          border: `1px solid ${token.colorPrimary}`,
+                          background: '#dddddd29',
+                          cursor: 'not-allowed',
                         }
-                      : {}
-                }
-                styles={{ body: { padding: '24px' } }}
-              >
-                <Flex justify="space-between" align="">
-                  {avatar && <Avatar shape="square" size={45} src={avatar} />}
-                  <div>
-                    <Title level={4} style={{ margin: '0px 0px 10px 0px' }}>
-                      {<FormattedMessage id={title} />}
-                    </Title>
-                    <Text type="secondary">{desc}</Text>
-                  </div>
-                </Flex>
-                {isChecked && <CheckCircleTwoTone twoToneColor={token.colorPrimary} style={iconStyle} />}
-              </Card>
-            </Col>
+                      : isChecked
+                        ? {
+                            border: `1px solid ${token.colorPrimary}`,
+                          }
+                        : {}
+                  }
+                  styles={{ body: { padding: '24px' } }}
+                >
+                  <Flex justify="space-between" align="">
+                    {avatar && <Avatar shape="square" size={45} src={avatar} />}
+                    <div style={{ marginLeft: '10px' }}>
+                      <Title level={4} style={{ margin: '0px 0px 10px 0px' }}>
+                        {<FormattedMessage id={title} />}
+                      </Title>
+                      <Text type="secondary">{desc}</Text>
+                    </div>
+                  </Flex>
+                  {isChecked && <CheckCircleTwoTone twoToneColor={token.colorPrimary} style={iconStyle} />}
+                </Card>
+              </Col>
+            </Space>
           );
         })}
       </Row>

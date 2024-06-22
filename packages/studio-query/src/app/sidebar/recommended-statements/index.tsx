@@ -6,7 +6,7 @@ import { useContext } from '../../context';
 const { Title, Text } = Typography;
 import Section from '../section';
 import { FormattedMessage } from 'react-intl';
-import { isDarkTheme } from '../../utils';
+import { useThemeContainer } from '@graphscope/studio-components';
 interface IRecommendedStatementsProps {
   schemaData: any;
   schemaId: string;
@@ -40,7 +40,8 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
   const configMap = getConfig(schemaData, schemaId);
   const { nodes, edges } = schemaData;
   const keys = getPropertyKeys(graphSchema);
-  const isDark = isDarkTheme();
+  const { algorithm } = useThemeContainer();
+  const isDark = algorithm === 'darkAlgorithm';
 
   const handleClick = (label: string, type: 'nodes' | 'edges' | 'property') => {
     let script = '';
