@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Result, Button } from 'antd';
 import { useContext } from '@/layouts/useContext';
 import { history } from 'umi';
+import { FormattedMessage } from 'react-intl';
 interface IEmptyModelCaseProps {}
 
 const EmptyModelCase: React.FunctionComponent<IEmptyModelCaseProps> = props => {
@@ -30,11 +31,13 @@ const EmptyModelCase: React.FunctionComponent<IEmptyModelCaseProps> = props => {
         <Modal title={null} open={open} footer={null} closable={false}>
           <Result
             status="403"
-            title="Please create the graph model first"
-            subTitle="Sorry, the system detected that there is no available graph model. Please create a graph model before importing data"
+            title={<FormattedMessage id="Please create the graph model first" />}
+            subTitle={
+              <FormattedMessage id="Sorry, the system detected that there is no available graph model. Please create a graph model before importing data" />
+            }
             extra={
               <Button type="primary" onClick={handleGotoModeling}>
-                Goto Modeling
+                <FormattedMessage id="Goto Modeling" />
               </Button>
             }
           />

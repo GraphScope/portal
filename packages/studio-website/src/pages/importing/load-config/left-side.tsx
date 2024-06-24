@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Button, Select, Form, Flex, Typography } from 'antd';
 import type { DataloadingJobConfigLoadingConfigImportOptionEnum } from '@graphscope/studio-server';
+import { FormattedMessage, useIntl } from 'react-intl';
 export type FieldType = {
   type?: string;
   delimiter?: string;
@@ -17,6 +18,9 @@ const { Title, Text } = Typography;
 const LeftSide: React.FC<ILeftSide> = props => {
   const { onFinish, onColse, delimiter, datatype } = props;
   const [form] = Form.useForm();
+  const intl = useIntl();
+  console.log(intl);
+
   const handleClick = () => {
     const data = form.getFieldsValue();
     onFinish(data);
@@ -84,10 +88,11 @@ const LeftSide: React.FC<ILeftSide> = props => {
         </Form.Item>
         <Flex justify="end" gap={12}>
           <Button style={{ width: '128px' }} type="primary" onClick={handleClick}>
-            Load data
+            <FormattedMessage id="Load data" />
+            {/* {intl ? '加载数据' : 'Load data'} */}
           </Button>
           <Button style={{ width: '128px' }} onClick={onColse}>
-            Close
+            <FormattedMessage id="Close" />
           </Button>
         </Flex>
       </Form>

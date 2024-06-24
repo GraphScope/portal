@@ -165,6 +165,13 @@ export default {
   running: 'Running',
   stopped: 'Stopped' /** more status? No schema/No data. */,
   /** instance  */
+  Graphs: 'Graphs',
+  Draft: 'Draft',
+  'Creating instance': 'Creating instance',
+  'Interactive Engine': 'Interactive Engine',
+  'Create Graph': 'Create Graph',
+  'Choose the appropriate GraphScope computing engine and start creating graph instances':
+    'Choose the appropriate GraphScope computing engine and start creating graph instances',
   'Graph Metadata': 'Graph Metadata',
   'Graph instance name': 'Graph instance name',
   'Graph store type': 'Graph storage type',

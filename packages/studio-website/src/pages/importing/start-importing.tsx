@@ -7,6 +7,7 @@ import type { FieldType } from './load-config/left-side';
 import { SplitSection } from '@graphscope/studio-components';
 import LeftSide from './load-config/left-side';
 import RightSide from './load-config/right-side';
+import { FormattedMessage } from 'react-intl';
 
 interface StartImportingProps {
   onClick?: () => void;
@@ -101,7 +102,7 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
     return (
       <>
         <Button type="primary" onClick={handleBound}>
-          Start importing
+          <FormattedMessage id="Start importing" />
         </Button>
         <Modal title="" open={open} footer={null} closable={false} width={1000}>
           <SplitSection

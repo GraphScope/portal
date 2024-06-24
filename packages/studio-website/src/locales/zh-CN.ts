@@ -167,6 +167,13 @@ export default {
   running: '运行中',
   stopped: '已停止 ',
   /** instance  */
+  Graphs: '图实例',
+  Draft: '草案',
+  'Creating instance': '创建实例',
+  'Interactive Engine': '交互式引擎',
+  'Create Graph': '创建图模型',
+  'Choose the appropriate GraphScope computing engine and start creating graph instances':
+    '选择合适的GraphScope计算引擎，开始创建图实例。',
   'Graph Metadata': '图的元数据',
   'Graph instance name': '实例名称',
   'Graph store type': '存储类型',
@@ -191,7 +198,7 @@ export default {
   'Please enter edge label.': '请输入边标题',
   'Please select source vertex label.': '请选择源点标签。',
   'Please select target vertex label.': '请选择目标点标签。',
-  'Please manually input the odps file location': '请手动输入文件地址，也可直接上传本地 CSV 文件',
+  'Please manually input the odps file location': '请手动填写 odps 文件位置，也可直接上传本地 CSV 文件',
   'Your graph instance is of type {enginetype} and cannot be modified after creation. Instead, you may choose to create a new graph instance.':
     '您的图实例类型为 {enginetype}，一旦创建则不支持修改图模型，您可以选择新建图实例。',
   /** sidebar */
