@@ -5,7 +5,7 @@ import Mapping from './mapping';
 import type { ParsedFile } from '../Utils/parseCSV';
 
 import { CaretRightOutlined } from '@ant-design/icons';
-
+import { FormattedMessage } from 'react-intl';
 import MappingHeader from './mapping-header';
 export interface IState {
   files: ParsedFile[];
@@ -84,7 +84,7 @@ const ImportFromCSV: React.FunctionComponent<IImportFromFileProps> = props => {
       {!isEmpty && (
         <Space style={{ position: 'absolute', bottom: '0px', right: '0px' }}>
           <Button type="default" onClick={onClear}>
-            Clear all files
+            <FormattedMessage id="Clear all files" />
           </Button>
           {children(state, setState)}
         </Space>

@@ -22,4 +22,11 @@ export default {
   'Bulk Import Data': '批量导入数据',
   'The system has detected that you have previously uploaded CSV files. You can quickly bulk import data into graphscope':
     '系统检测到您之前上传过 CSV 文件。您可以快速将数据批量导入 graphscope',
+  'Click or drag file to this area to upload': '单击或拖动文件到此区域进行上传',
+  'Clear all files': '清除所有文件',
+  'Generate graph model': '生成图模型',
+  'If you already have CSV data, feel free to upload it here, and the system will automatically infer possible graph models for you.':
+    '如果您已经有 CSV 数据，请随时将其上传到此处，系统将自动为您推断可能的图模型。',
+  'If you already have SQLDDL file, feel free to upload it here, and the system will automatically infer possible graph models for you.':
+    '如果您已经有 SQLDDL 文件，请随时在此处上传，系统将自动为您推断可能的图模型。',
 };

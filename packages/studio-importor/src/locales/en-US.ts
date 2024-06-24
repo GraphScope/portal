@@ -22,4 +22,11 @@ export default {
   'Bulk Import Data': 'Bulk Import Data',
   'The system has detected that you have previously uploaded CSV files. You can quickly bulk import data into graphscope':
     'The system has detected that you have previously uploaded CSV files. You can quickly bulk import data into graphscope',
+  'Click or drag file to this area to upload': 'Click or drag file to this area to upload',
+  'Clear all files': 'Clear all files',
+  'Generate graph model': 'Generate graph model',
+  'If you already have CSV data, feel free to upload it here, and the system will automatically infer possible graph models for you.':
+    'If you already have CSV data, feel free to upload it here, and the system will automatically infer possible graph models for you.',
+  'If you already have SQLDDL file, feel free to upload it here, and the system will automatically infer possible graph models for you.':
+    'If you already have SQLDDL file, feel free to upload it here, and the system will automatically infer possible graph models for you.',
 };
