@@ -1,0 +1,31 @@
+{
+  "name": "@graphscope/studio-explore",
+  "version": "0.1.0",
+  "description": "",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GraphScope/graphscope-components.git"
+  },
+  "files": [
+    "es",
+    "lib",
+    "dist"
+  ],
+  "scripts": {
+    "start": "father dev",
+    "build": "father build"
+  },
+  "dependencies": {
+    "localforage": "latest",
+    "d3-force": "latest",
+    "@graphscope/studio-components": "workspace:*",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC"
+}
