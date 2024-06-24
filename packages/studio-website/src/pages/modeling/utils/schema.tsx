@@ -19,6 +19,7 @@ export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchema
       id,
       data: {
         label: type_name,
+        primary: primary_keys[0],
         properties: properties.map((item, index) => {
           const { property_name, property_type } = item;
           return {
@@ -91,9 +92,9 @@ export function transOptionsToSchema(options: DeepRequired<ISchemaOptions>) {
 
   const vertex_types: GetGraphSchemaResponse['vertex_types'] = options.nodes.map((item, index) => {
     const { id, data } = item;
-    const { label, properties = [] } = data;
+    const { label, properties = [], primary } = data;
     nodeMap[id] = label;
-    let primary_key = 'id';
+    let primary_key = primary;
     return {
       type_id: index,
       type_name: label,

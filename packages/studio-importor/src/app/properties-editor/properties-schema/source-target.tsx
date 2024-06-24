@@ -44,7 +44,6 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
   const { nodes } = store;
   const { handleDataFieldsChange } = useModel({ type: 'edges', id });
   const { source_label, target_label, target_primary_key, source_primary_key } = getLabelById(nodes, source, target);
-
   return (
     <>
       <Flex justify="space-between" gap="12px" align="center">
