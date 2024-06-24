@@ -175,12 +175,16 @@ export function transformImportOptionsToSchemaMapping(options: ISchemaOptions): 
     const { id, data } = item;
     const { properties = [], filelocation, label, primary } = data;
     NODE_LABEL_MAP[id] = label;
-    NODE_PRIMARY_MAP[id] = primary;
+
     vertex_mappings.push({
       type_name: label,
       inputs: [filelocation],
       column_mappings: properties.map(p => {
-        const { index, token, name } = p;
+        const { index, token, name, primaryKey } = p;
+        if (primaryKey) {
+          NODE_PRIMARY_MAP[id] = name;
+        }
+
         return {
           column: {
             index,
@@ -221,14 +225,14 @@ export function transformImportOptionsToSchemaMapping(options: ISchemaOptions): 
         index: source_vertex_fields.index,
         name: source_vertex_fields.token,
       },
-      property: source_vertex_fields.name,
+      property: NODE_PRIMARY_MAP[source],
     });
     destination_vertex_mappings.push({
       column: {
         index: target_vertex_fields.index,
         name: target_vertex_fields.token,
       },
-      property: target_vertex_fields.name,
+      property: NODE_PRIMARY_MAP[target],
     });
     edge_mappings.push({
       type_triplet: {
