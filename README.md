@@ -73,7 +73,7 @@ Initial deployment of the service:
 
 ```bash
 cd packages/studio-website/proxy
-npm run start -- --cypher_endpoint=127.0.0.1:7687 --proxy=127.0.0.1:8080
+npm run start -- --cypher_endpoint=http://127.0.0.1:7687 --proxy=http://127.0.0.1:8080
 ```
 
 explanation:
