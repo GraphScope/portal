@@ -10,6 +10,7 @@ import { CheckCircleOutlined } from '@ant-design/icons';
 import { transMappingSchemaToOptions } from './utils/import';
 import type { ISchemaOptions } from '@graphscope/studio-importor';
 import { useContext as useModeling } from '@graphscope/studio-importor';
+import { FormattedMessage } from 'react-intl';
 interface IAutoLoadCSVCaseProps {}
 
 const AutoLoadCSVCase: React.FunctionComponent<IAutoLoadCSVCaseProps> = props => {
@@ -171,8 +172,10 @@ const AutoLoadCSVCase: React.FunctionComponent<IAutoLoadCSVCaseProps> = props =>
             leftSide={
               <Result
                 status="403"
-                title="Bulk Import Data"
-                subTitle="The system has detected that you have previously uploaded CSV files. You can quickly bulk import data into graphscope"
+                title={<FormattedMessage id="Bulk Import Data" />}
+                subTitle={
+                  <FormattedMessage id="The system has detected that you have previously uploaded CSV files. You can quickly bulk import data into graphscope" />
+                }
               />
             }
             rightSide={
@@ -199,9 +202,11 @@ const AutoLoadCSVCase: React.FunctionComponent<IAutoLoadCSVCaseProps> = props =>
                 />
                 <Space>
                   <Button type="primary" onClick={handleBulk} loading={state.isLoading}>
-                    Bulk Import
+                    <FormattedMessage id="Bulk Import" />
                   </Button>
-                  <Button onClick={handleClose}>Close</Button>
+                  <Button onClick={handleClose}>
+                    <FormattedMessage id="Close" />
+                  </Button>
                 </Space>
               </Flex>
             }

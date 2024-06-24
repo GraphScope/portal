@@ -5,7 +5,7 @@ import { getSchemaData } from './web-worker';
 import { transform } from './transform';
 import { Button } from 'antd';
 import localforage from 'localforage';
-
+import { FormattedMessage } from 'react-intl';
 interface IImportFromCSVProps {}
 
 const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
@@ -59,7 +59,7 @@ const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
       {(params, updateState) => {
         return (
           <Button type="primary" onClick={() => onSubmit(params, updateState)} loading={params.loading}>
-            Generate graph model
+            <FormattedMessage id="Generate graph model" />
           </Button>
         );
       }}

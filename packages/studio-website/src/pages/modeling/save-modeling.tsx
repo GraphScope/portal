@@ -11,6 +11,8 @@ import { Utils } from '@graphscope/studio-components';
 import { history } from 'umi';
 import localforage from 'localforage';
 import { snapshot } from 'valtio';
+import { FormattedMessage } from 'react-intl';
+
 interface SaveModelingProps {}
 export const getSchemaOptions = (nodes: ISchemaNode[], edges: ISchemaEdge[]) => {
   let errors: string[] = [];
@@ -171,16 +173,23 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   };
 
   const text = disabled ? 'View Schema' : 'Save Modeling';
-  const title = status === 'success' ? 'Successfully saved the graph model' : 'Failed to save the graph model';
+  const title =
+    status === 'success' ? (
+      <FormattedMessage id="Successfully saved the graph model" />
+    ) : (
+      <FormattedMessage id="Failed to save the graph model" />
+    );
   const SuccessAction = [
-    <Button onClick={handleGotoGraphs}>Goto Graphs</Button>,
+    <Button onClick={handleGotoGraphs}>
+      <FormattedMessage id="Goto Graphs" />
+    </Button>,
     <Button type="primary" onClick={handleGotoImporting}>
-      Goto Importing
+      <FormattedMessage id="Goto Importing" />
     </Button>,
   ];
   const ErrorAction = [
     <Button type="primary" onClick={handleGoback}>
-      Go back to modify the graph model.
+      <FormattedMessage id="Go back to modify the graph model." />
     </Button>,
   ];
   const Action = status === 'success' ? SuccessAction : ErrorAction;
@@ -189,7 +198,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
     return (
       <>
         <Button disabled={disabled} type="primary" icon={<SaveOutlined />} onClick={handleSave}>
-          {text}
+          <FormattedMessage id={text} />
         </Button>
         <Modal title={null} open={open} footer={null} closable={false}>
           <Result status={status as 'error' | 'success'} title={title} subTitle={state.message} extra={Action} />

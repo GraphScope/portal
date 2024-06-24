@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Result, Button, Col, Row, Flex, Divider } from 'antd';
+import { Modal, Result, Button } from 'antd';
 import { useContext } from '@/layouts/useContext';
 import { history } from 'umi';
 import ConnectEndpoint from './connect-endpoint';
 import { SplitSection } from '@graphscope/studio-components';
+import { FormattedMessage } from 'react-intl';
 interface IEmptyModelCaseProps {}
 
 const EmptyModelCase: React.FunctionComponent<IEmptyModelCaseProps> = props => {
@@ -44,7 +45,7 @@ const EmptyModelCase: React.FunctionComponent<IEmptyModelCaseProps> = props => {
                 subTitle="Sorry, the system detected that there is no available graph model. Please create a graph model before importing data"
                 extra={
                   <Button type="primary" onClick={handleGotoModeling}>
-                    Goto Modeling
+                    <FormattedMessage id="Goto Modeling" />
                   </Button>
                 }
               />
