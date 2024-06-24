@@ -17,7 +17,12 @@ args.forEach(arg => {
 
 const WORKSPACE = path.dirname(__dirname);
 
-const { port = 8888, proxy = 'http://127.0.0.1:8080', cypher_endpoint, gremlin_endpoint } = params;
+const {
+  port = 8888,
+  proxy = 'http://127.0.0.1:8080',
+  cypher_endpoint = 'http://127.0.0.1:7687',
+  gremlin_endpoint = 'http://127.0.0.1:8182',
+} = params;
 
 // static
 app.use(express.static(WORKSPACE + '/dist'));
