@@ -217,4 +217,18 @@ export default {
   'Querying data': 'Querying data',
   Stopped: 'Stopped',
   Running: 'Running',
+  /** query */
+  Connect: 'Connect',
+  Cancel: 'Cancel',
+  'Connect Endpoint': 'Connect Endpoint',
+  'If you have already started the GraphScope endpoint through other means, you can directly connect to it and start querying data.':
+    'If you have already started the GraphScope endpoint through other means, you can directly connect to it and start querying data.',
+  'Please create the graph model first': 'Please create the graph model first',
+  'Sorry, the system detected that there is no available graph model. Please create a graph model before importing data':
+    'Sorry, the system detected that there is no available graph model. Please create a graph model before importing data',
+  'Goto Modeling': 'Goto Modeling',
+  Protocol: 'Protocol',
+  'Connection URL': 'Connection URL',
+  'Database user': 'Database user',
+  Password: 'Password',
 };
