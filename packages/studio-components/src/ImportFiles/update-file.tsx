@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Space, Tooltip, Upload, Button, message, notification } from 'antd';
 import type { UploadProps } from 'antd';
-import { FormattedMessage } from 'react-intl';
 import { InboxOutlined } from '@ant-design/icons';
 import { parseCSV, parseJSON, parseSQL } from '../Utils';
 import type { IImportFromFileProps } from './index';
@@ -54,12 +53,8 @@ const UploadFile = ({ onChange, accept, title, description, isSaveFiles }: IProp
           <p className="ant-upload-drag-icon">
             <InboxOutlined />
           </p>
-          <p className="ant-upload-text">
-            <FormattedMessage id={title} />
-          </p>
-          <p className="ant-upload-hint">
-            <FormattedMessage id={description} />
-          </p>
+          <p className="ant-upload-text">{title}</p>
+          <p className="ant-upload-hint">{description}</p>
         </div>
       </Dragger>
     </div>

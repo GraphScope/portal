@@ -28,7 +28,7 @@ export interface IGraph {
 
 export const initialStore = {
   /** 语言 */
-  locale: locale || 'en-US',
+  locale: Utils.storage.get('locale') || 'en-US',
   /** 主题色 */
   primaryColor: primaryColor || '#1677ff',
   /** 收起导航 */

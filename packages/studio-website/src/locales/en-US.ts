@@ -58,6 +58,7 @@ export default {
   'Please input a valid string starting with an uppercase English letter.':
     'Please input a valid string starting with an uppercase English letter.',
   'You can restart the service after importing the data.': 'You can restart the service after importing the data.',
+  'Introduction video to GraphScope': 'Introduction video to GraphScope',
   /** extension */
   Name: 'Name',
   Description: 'Description',

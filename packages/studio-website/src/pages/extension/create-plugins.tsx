@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Button, Form, Input, Select, Flex, Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { history } from 'umi';
-import { Utils } from '@graphscope/studio-components';
+import { Utils, useThemeContainer } from '@graphscope/studio-components';
 import { useEditorTheme } from '@/pages/utils';
 import CodeMirror from '@uiw/react-codemirror';
 import { useContext } from '@/layouts/useContext';
@@ -41,7 +41,7 @@ const CreatePlugins: React.FC = () => {
   const { editCode, instanceOption, isEdit } = state;
   const { store } = useContext();
   const { mode } = store;
-
+  const { pluginBorder } = useThemeContainer();
   /** 获取插件某条数据 */
   const getProcedures = useCallback(async (graph_id: string, procedure_id: string) => {
     const res = await getProcedure(graph_id, procedure_id);
@@ -176,7 +176,7 @@ const CreatePlugins: React.FC = () => {
             <div
               style={{
                 overflow: 'scroll',
-                border: `1px solid ${mode === 'defaultAlgorithm' ? '#efefef' : '#323232'}`,
+                border: `1px solid ${pluginBorder}`,
                 borderRadius: '8px',
               }}
             >
@@ -184,7 +184,7 @@ const CreatePlugins: React.FC = () => {
                 height="200px"
                 value={editCode}
                 onChange={e => onCodeMirrorChange(e)}
-                theme={useEditorTheme(mode, isEdit)}
+                theme={useEditorTheme(isEdit)}
                 readOnly={isEdit}
               />
             </div>

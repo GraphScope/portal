@@ -2,17 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { getJobById } from './service';
-import { Utils } from '@graphscope/studio-components';
+import { Utils, useThemeContainer } from '@graphscope/studio-components';
 const { getUrlParams } = Utils;
-import { useContext } from '@/layouts/useContext';
 
 const Detail: React.FunctionComponent = () => {
   console.log(getUrlParams());
 
   const { jobId } = getUrlParams() || '';
   const [detailData, setDetailData] = useState<string>('');
-  const { store } = useContext();
-  const { mode } = store;
+  const { jobDetailBorder, jobDetailColor } = useThemeContainer();
   /** 获取详情job */
   useEffect(() => {
     const fetchJobDetails = async () => {
@@ -28,10 +26,10 @@ const Detail: React.FunctionComponent = () => {
   /** code style */
   const containerStyles = {
     margin: '12px 0px',
-    border: `${mode === 'defaultAlgorithm' ? '#efefef' : '#323232'} 1px solid`,
+    border: `${jobDetailBorder} 1px solid`,
     borderRadius: '6px',
     padding: '12px',
-    color: mode === 'defaultAlgorithm' ? '#1F1F1F' : '#808080',
+    color: jobDetailColor,
   };
   return (
     <div style={{ padding: '12px 24px' }}>

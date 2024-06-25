@@ -61,6 +61,7 @@ export default {
   'Mapping from file': '从文件映射',
   'Please input a valid string starting with an uppercase English letter.': '请输入合法字符且首字母为英文.',
   'You can restart the service after importing the data.': '您成功导入数据后再重启服务。',
+  'Introduction video to GraphScope': 'GraphScope 简介视频',
   /** extensions */
   Name: '名称',
   Description: '描述',

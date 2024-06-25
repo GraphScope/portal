@@ -11,7 +11,7 @@ export { default as Section } from './Section';
 export { default as MultipleInstance } from './MultipleInstance';
 export { default as SplitSection } from './SplitSection';
 export { default as ResultConfig } from './ResultConfig';
-export { default as ThemeProvider } from './ThemeProvider';
+export { default as ContainerProvider } from './Provider';
 export { default as ImportFiles } from './ImportFiles';
 /** all */
 export * as Utils from './Utils';
@@ -21,7 +21,7 @@ export * as Icons from './Icons';
 export { useContainer } from './Container/useContainer';
 export { useSection } from './Section/useSection';
 export { useMultipleInstance } from './MultipleInstance/useMultipleInstance';
-export { useThemeContainer } from './ThemeProvider/useThemeConfigProvider';
+export { useThemeContainer } from './Provider/useThemeConfigProvider';
 /** export typing */
 export type { SegmentedTabsProps } from './SegmentedTabs';
 export type { Property } from './PropertiesList/typing';

@@ -4,13 +4,12 @@ import Sidebar from './sidebar';
 import Container from './container';
 
 import Footer from './footer';
-import { IntlProvider } from 'react-intl';
 import locales from '../locales';
 import { useContext } from './useContext';
 import { TOOLS_MENU } from './const';
 import SegmentedSection from './segmented-section';
 import { history } from 'umi';
-import { ThemeProvider } from '@graphscope/studio-components';
+import { ContainerProvider } from '@graphscope/studio-components';
 const Content = (props: any) => {
   const { children, navStyle } = props;
   const { store } = useContext();
@@ -28,25 +27,24 @@ const Content = (props: any) => {
   }
   return <>{children}</>;
 };
+
 export default function Layout() {
   const { store } = useContext();
   const { locale, navStyle } = store;
+
   //@ts-ignore
   const messages = locales[locale];
-
   return (
-    <IntlProvider messages={messages} locale={locale}>
-      <ThemeProvider>
-        <Container
-          sidebar={<Sidebar />}
-          content={
-            <Content navStyle={navStyle}>
-              <Outlet />
-            </Content>
-          }
-          footer={<Footer />}
-        />
-      </ThemeProvider>
-    </IntlProvider>
+    <ContainerProvider messages={messages}>
+      <Container
+        sidebar={<Sidebar />}
+        content={
+          <Content navStyle={navStyle}>
+            <Outlet />
+          </Content>
+        }
+        footer={<Footer />}
+      />
+    </ContainerProvider>
   );
 }

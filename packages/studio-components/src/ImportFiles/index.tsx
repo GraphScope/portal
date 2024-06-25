@@ -18,8 +18,8 @@ export interface IImportFromFileProps {
   upload: {
     // 限制文件类型
     accept: string;
-    title: string;
-    description: string;
+    title: string | React.ReactNode;
+    description: string | React.ReactNode;
   };
   children: (state: IState, setState: React.Dispatch<React.SetStateAction<IState>>) => React.ReactNode;
 }

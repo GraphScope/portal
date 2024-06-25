@@ -14,7 +14,7 @@ interface ISectionProps {
 const { useEffect } = React;
 const Section: React.FunctionComponent<ISectionProps> = props => {
   const { title, desc, breadcrumb, children, items, style } = props;
-  const { algorithm } = useThemeContainer();
+  const { sectionBackground } = useThemeContainer();
   useEffect(() => {
     if (items) {
       const nav = Utils.getSearchParams('nav') || '';
@@ -38,7 +38,7 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        background: algorithm === 'defaultAlgorithm' ? '#fff' : '#0D0D0D',
+        background: sectionBackground,
         borderRadius: '12px',
       }}
     >
