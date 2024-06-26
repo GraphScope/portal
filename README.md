@@ -13,17 +13,23 @@ GraphScope Portal is a user-friendly web interface that simplifies managing grap
 
 ### Data Modeling
 
-Enables users to manually construct node and edge types, as well as quickly build models via YAML configuration files.
+Supports users to manually create vertex and edge types, as well as automatically generating graph models through CSV and SQDDL files.
 
-### Data Import
+![modeling](https://img.alicdn.com/imgextra/i2/O1CN01rCtTYy1ryeXesYuT5_!!6000000005700-0-tps-3490-1918.jpg)
 
-Supports uploading local CSV files, with dropdown field mapping selection. Also allows one-click data import through YAML configuration files.
+### Data Importing
+
+Supports local CSV file uploads with dropdown field mapping selection. Also allows one-click data import through YAML configuration files.
+
+![importing](https://img.alicdn.com/imgextra/i2/O1CN01uqf3lF1Kudkh0dbvR_!!6000000001224-0-tps-3472-1894.jpg)
 
 ### Interactive Querying
 
 - Powerful Editor: Provides syntax completion and highlighting for Cypher and Gremlin, facilitating easy editing and modification by users.
 - Multiple Query Methods: Allows users to write and save graph queries, browse query history, receive schema-based recommendations, and leverage natural language querying powered by OpenAI.
 - Rich Visualization: Presents results in Graph or Table view modes, with user customization of node/edge colors, sizes, caption styles, and further data insights through "Switch Chart" functionality.
+
+![querying](https://img.alicdn.com/imgextra/i4/O1CN01la3ZwB1HXn95Thc7C_!!6000000000768-0-tps-3518-1904.jpg)
 
 ### Extensibility
 
