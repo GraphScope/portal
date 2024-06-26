@@ -124,6 +124,7 @@ export default {
   'Select or customize your UI theme': 'Select or customize your UI theme',
   'Rounded corners': 'Rounded corners',
   'Corner radians': 'Corner radians',
+  'Change how Untitled UI looks and feels in your browser': 'Change how Untitled UI looks and feels in your browser',
   'Select navigation style': 'Select navigation style',
   'Navigation Style': 'Navigation Style',
   'Nighttime theme': 'Nighttime theme',
