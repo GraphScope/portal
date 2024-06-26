@@ -29,4 +29,18 @@ export default {
     '如果您已经有 CSV 数据，请随时将其上传到此处，系统将自动为您推断可能的图模型。',
   'If you already have SQLDDL file, feel free to upload it here, and the system will automatically infer possible graph models for you.':
     '如果您已经有 SQLDDL 文件，请随时在此处上传，系统将自动为您推断可能的图模型。',
+  'The current mode is preview only, and does not support clearing the model': '当前模式仅为预览模式，不支持清除模型',
+  'Clear graph model': '清除模型',
+  'The current mode is preview only, and does not support creating new vertex':
+    '当前模式仅为预览模式，不支持创建新顶点',
+  'Create new vertex': '创建节点',
+  'The current mode is preview only, and does not support opening multi-source modeling':
+    '当前模式仅为预览模式，不支持打开多源建模',
+  'Expand or collapse multi-source modeling': '展开或折叠多源建模',
+  Configuration: '配置',
+  'You have successfully bound the data source. Please complete the configuration to start importing data.':
+    '您已成功绑定数据源。请完成配置以开始导入数据。',
+  'The data loading task has been successfully created. You can view detailed logs in the job center.':
+    '数据加载任务已成功创建。您可以在作业中心查看详细日志。',
+  'Goto Jobs': '跳转到日志',
 };
