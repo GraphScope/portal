@@ -28,7 +28,6 @@ export const components = {
 
 /** token 基础配置 */
 export const token = {
-  colorBorder: '#303030',
-  colorBgBase: 'rgba(12,12,12,1)',
-  colorBgLayout: 'rgba(43,43,43,1)',
+  colorBorder: 'red',
+  colorBgBase: '#fff',
 };
