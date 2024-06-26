@@ -58,6 +58,7 @@ export default {
   'Please input a valid string starting with an uppercase English letter.':
     'Please input a valid string starting with an uppercase English letter.',
   'You can restart the service after importing the data.': 'You can restart the service after importing the data.',
+  'Introduction video to GraphScope': 'Introduction video to GraphScope',
   /** extension */
   Name: 'Name',
   Description: 'Description',
@@ -123,6 +124,7 @@ export default {
   'Select or customize your UI theme': 'Select or customize your UI theme',
   'Rounded corners': 'Rounded corners',
   'Corner radians': 'Corner radians',
+  'Change how Untitled UI looks and feels in your browser': 'Change how Untitled UI looks and feels in your browser',
   'Select navigation style': 'Select navigation style',
   'Navigation Style': 'Navigation Style',
   'Nighttime theme': 'Nighttime theme',
@@ -217,4 +219,18 @@ export default {
   'Querying data': 'Querying data',
   Stopped: 'Stopped',
   Running: 'Running',
+  /** query */
+  Connect: 'Connect',
+  Cancel: 'Cancel',
+  'Connect Endpoint': 'Connect Endpoint',
+  'If you have already started the GraphScope endpoint through other means, you can directly connect to it and start querying data.':
+    'If you have already started the GraphScope endpoint through other means, you can directly connect to it and start querying data.',
+  'Please create the graph model first': 'Please create the graph model first',
+  'Sorry, the system detected that there is no available graph model. Please create a graph model before importing data':
+    'Sorry, the system detected that there is no available graph model. Please create a graph model before importing data',
+  'Goto Modeling': 'Goto Modeling',
+  Protocol: 'Protocol',
+  'Connection URL': 'Connection URL',
+  'Database user': 'Database user',
+  Password: 'Password',
 };

@@ -4,9 +4,11 @@ import CodeMirror from '@uiw/react-codemirror';
 import { useContext } from '@/layouts/useContext';
 import { download } from '@/components/utils';
 import { useEditorTheme } from '@/pages/utils';
+import { useThemeContainer } from '@graphscope/studio-components';
 const { Title, Link } = Typography;
 const PeriodicImportDataworks = (props: { setState?: any; configLpading?: any; type?: any; onClose?: any }) => {
   const { configLpading, type } = props;
+  const { pluginBorder, jobDetailColor } = useThemeContainer();
   const [state, updateState] = useState({
     codeMirrorData: '',
     howToUse: '',
@@ -45,13 +47,13 @@ const PeriodicImportDataworks = (props: { setState?: any; configLpading?: any; t
       <CodeMirror
         style={{
           overflow: 'scroll',
-          border: `1px solid ${mode === 'defaultAlgorithm' ? '#efefef' : '#323232'}`,
-          color: mode === 'defaultAlgorithm' ? '#1F1F1F' : '#808080',
+          border: `1px solid ${pluginBorder}`,
+          color: jobDetailColor,
           borderRadius: '6px',
         }}
         value={codeMirrorData}
         height="150px"
-        theme={useEditorTheme(mode, false)}
+        theme={useEditorTheme(false)}
         readOnly
         autoFocus
       />

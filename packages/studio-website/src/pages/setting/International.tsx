@@ -3,19 +3,17 @@ import { FormattedMessage } from 'react-intl';
 import { Flex, Row, Col, Typography } from 'antd';
 import { useContext } from '@/layouts/useContext';
 import LocaleSwitch from '@/components/locale-switch';
-import localStorage from '@/components/utils/localStorage';
-
+import { useThemeContainer } from '@graphscope/studio-components';
+import type { ILocaleSwitchProps } from '@/components/locale-switch';
 const { Title, Text } = Typography;
 
 const International: React.FunctionComponent = () => {
-  const { store, updateStore } = useContext();
-  const { locale } = store;
-  const { setItem, getItem } = localStorage;
-  const handleLocale = (value: string) => {
-    setItem('locale', value);
-    const locale = getItem('locale');
+  const { updateStore } = useContext();
+  const { handleTheme, locale = 'zh-CN' } = useThemeContainer();
+  const handleLocale = (value: ILocaleSwitchProps['value']) => {
+    handleTheme({ locale: value });
     updateStore(draft => {
-      draft.locale = locale;
+      draft.locale = value;
     });
   };
   return (

@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { Segmented } from 'antd';
 
-interface ILocaleSwitchProps {
-  value: string;
-  onChange: (value: string) => void;
+export interface ILocaleSwitchProps {
+  value: 'zh-CN' | 'en-US';
+  onChange: (value: ILocaleSwitchProps['value']) => void;
 }
 
 const LocaleSwitch: React.FunctionComponent<ILocaleSwitchProps> = props => {
   const { value, onChange } = props;
-  const options = [
+  const options: { label: string; value: ILocaleSwitchProps['value'] }[] = [
     {
       label: 'English',
       value: 'en-US',

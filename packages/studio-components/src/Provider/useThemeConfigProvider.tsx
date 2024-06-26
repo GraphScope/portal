@@ -1,9 +1,11 @@
 import { createContext, useContext } from 'react';
-
-export interface ThemeProviderType {
+import { IColorStore } from './useStore';
+export interface ThemeProviderType extends IColorStore {
   algorithm?: 'defaultAlgorithm' | 'darkAlgorithm';
   components?: { [key: string]: { [key: string]: string | number } };
   token?: { [key: string]: string | number };
+  messages?: { [key: string]: string };
+  locale?: 'zh-CN' | 'en-US';
 }
 export interface IContainerContext extends ThemeProviderType {
   handleTheme: (value: ThemeProviderType) => void;
@@ -12,6 +14,7 @@ export const ContainerContext = createContext<IContainerContext>({
   components: {},
   token: {},
   handleTheme: ({}) => {},
+  locale: 'en-US',
 });
 
 export const ContainerProvider = ContainerContext.Provider;

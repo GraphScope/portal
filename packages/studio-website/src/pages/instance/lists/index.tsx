@@ -12,7 +12,7 @@ const { GS_ENGINE_TYPE } = window;
 const InstanceCard: React.FC = () => {
   const { store } = useContext();
   const { draftGraph } = store;
-  const { algorithm } = useThemeContainer();
+  const { instanceBackground } = useThemeContainer();
   const [state, updateState] = useState<{ isReady: boolean; instanceList: InstaceCardType[] }>({
     instanceList: [],
     isReady: false,
@@ -61,7 +61,7 @@ const InstanceCard: React.FC = () => {
             <Card
               styles={{ header: { fontSize: '30px' } }}
               title={<Skeleton.Button style={{ marginTop: '-10px', width: '120px' }} active />}
-              style={{ background: algorithm === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
+              style={{ background: instanceBackground }}
             >
               <div style={{ display: 'flex', height: '164px', justifyContent: 'center', alignContent: 'center' }}>
                 <Skeleton active />
@@ -74,7 +74,7 @@ const InstanceCard: React.FC = () => {
             <Card
               title={<FormattedMessage id="New graph" />}
               styles={{ header: { fontSize: '30px', color: '#ccc' }, body: { width: '100%' } }}
-              style={{ background: algorithm === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
+              style={{ background: instanceBackground }}
             >
               <div
                 style={{

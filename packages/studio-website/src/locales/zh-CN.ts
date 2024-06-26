@@ -61,6 +61,7 @@ export default {
   'Mapping from file': '从文件映射',
   'Please input a valid string starting with an uppercase English letter.': '请输入合法字符且首字母为英文.',
   'You can restart the service after importing the data.': '您成功导入数据后再重启服务。',
+  'Introduction video to GraphScope': 'GraphScope 简介视频',
   /** extensions */
   Name: '名称',
   Description: '描述',
@@ -214,4 +215,18 @@ export default {
   'Querying data': '查询数据',
   Stopped: '已停止',
   Running: '运行中',
+  /** query */
+  Connect: '连接',
+  Cancel: '取消',
+  'Connect Endpoint': '连接端点',
+  'If you have already started the GraphScope endpoint through other means, you can directly connect to it and start querying data.':
+    '如果已经通过其他方式启动了 GraphScope 端点，则可以直接连接到它，并开始查询数据。',
+  'Please create the graph model first': '请先创建图模型',
+  'Sorry, the system detected that there is no available graph model. Please create a graph model before importing data':
+    '对不起，系统检测到没有可用的图模型。导入数据前请先创建图模型',
+  'Goto Modeling': '跳转到图模型',
+  Protocol: '协议',
+  'Connection URL': '连接 URL',
+  'Database user': '数据库用户',
+  Password: '密码',
 };

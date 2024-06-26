@@ -14,7 +14,7 @@ import { MoreOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { TOOLS_MENU } from '@/layouts/const';
 import { Utils, useThemeContainer } from '@graphscope/studio-components';
 export type InstaceCardType = {
@@ -68,8 +68,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   } = props;
   const { store, updateStore } = useContext();
   const { locale, draftGraph, draftId } = store;
-  const { algorithm } = useThemeContainer();
-  const intl = useIntl();
+  const { instanceBackground } = useThemeContainer();
   const [isLoading, updateIsLoading] = useState(false);
   const items: MenuProps['items'] = [
     {
@@ -212,7 +211,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     <Card
       styles={{ header: { fontSize: '30px' } }}
       title={name}
-      style={{ background: algorithm === 'defaultAlgorithm' ? '#FCFCFC' : '' }}
+      style={{ background: instanceBackground }}
       extra={
         <Space>
           <Tooltip title={tooltipContext}>

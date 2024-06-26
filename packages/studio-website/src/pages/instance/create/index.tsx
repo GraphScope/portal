@@ -56,7 +56,7 @@ const Create: React.FC = () => {
     >
       <SplitSection
         leftSide={<ChooseEnginetype form={form} />}
-        rightSide={<Result status="404" subTitle={'Introduction video to GraphScope'} />}
+        rightSide={<Result status="404" subTitle={<FormattedMessage id="Introduction video to GraphScope" />} />}
         splitText=""
       />
 

@@ -19,13 +19,13 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
   const { collapse } = store;
   const ContainerWidth = useWidth();
   console.log('ContainerWidth', ContainerWidth);
-  const { algorithm } = useThemeContainer();
+  const { containerBackground } = useThemeContainer();
   return (
     <div
       className="gs-root"
       style={{
         // background: '#f5f7f9',
-        background: algorithm === 'defaultAlgorithm' ? '#f5f7f9' : '#020202',
+        background: containerBackground,
         display: 'flex',
         alignItems: 'center',
         height: '100vh',

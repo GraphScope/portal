@@ -1,5 +1,6 @@
 import { notification as notifications } from 'antd';
 import { createTheme } from '@uiw/codemirror-themes';
+import { useThemeContainer } from '@graphscope/studio-components';
 export const getSearchParams = (location: Location) => {
   const { hash } = location;
   const [path, search] = hash.split('?');
@@ -21,15 +22,17 @@ export const notification = (type: string, data: any) => {
   }
 };
 
-export const useEditorTheme = (mode: string, isEdit: boolean) => {
+export const useEditorTheme = (isEdit: boolean) => {
+  const { algorithm, editorBackground, editorForeground } = useThemeContainer();
+  const background = isEdit ? '#F5F5F5' : editorBackground;
   //@ts-ignore
   return createTheme({
-    theme: mode === 'defaultAlgorithm' ? 'light' : 'dark',
+    theme: algorithm === 'defaultAlgorithm' ? 'light' : 'dark',
     settings: {
-      background: isEdit ? '#F5F5F5' : mode === 'defaultAlgorithm' ? '#fff' : '#151515',
+      background,
       backgroundImage: '',
-      foreground: mode === 'defaultAlgorithm' ? '#212121' : '#FFF',
-      gutterBackground: isEdit ? '#F5F5F5' : mode === 'defaultAlgorithm' ? '#fff' : '#151515',
+      foreground: editorForeground,
+      gutterBackground: background,
     },
   });
 };
