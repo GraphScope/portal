@@ -22,17 +22,21 @@ GraphScope Portal 是一款专为 GraphScope 设计的，基于 Web 的用户交
 
 - 数据建模
 
-支持用户手动构建节点和边的类型，也支持用户通过 yaml 配置文件快速构建模型
+支持用户手动构建节点和边的类型，也支持用户通过 CSV，SQDDL 文件，自动推测生成图模型
+
+![modeling](https://img.alicdn.com/imgextra/i2/O1CN01rCtTYy1ryeXesYuT5_!!6000000005700-0-tps-3490-1918.jpg)
 
 - 数据导入
 
 支持本地 CSV 文件上传，下拉选择字段映射。也支持用过通过 yaml 配置文件一键导入数据
+![importing](https://img.alicdn.com/imgextra/i2/O1CN01uqf3lF1Kudkh0dbvR_!!6000000001224-0-tps-3472-1894.jpg)
 
 - 交互式查询
 
   - 强大的编辑器：支持 Cypher / Gremlin 的语法补全，高亮，方便用户编辑，修改。
   - 多种查询方式：支持用户编写保存图查询语句，回溯历史记录，根据 Schema 推荐查询，和基于 openai 的自然语言查询功能。
   - 丰富的可视化：支持 Graph / Table 的两种展示模式，支持用户自定义点边的颜色，大小，字体等样式，也支持通过「切换图表」进一步洞察数据。
+    ![querying](https://img.alicdn.com/imgextra/i4/O1CN01la3ZwB1HXn95Thc7C_!!6000000000768-0-tps-3518-1904.jpg)
 
 - 扩展机制
 
