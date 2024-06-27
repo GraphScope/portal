@@ -29,4 +29,8 @@ export default {
     '如果您已经有 CSV 数据，请随时将其上传到此处，系统将自动为您推断可能的图模型。',
   'If you already have SQLDDL file, feel free to upload it here, and the system will automatically infer possible graph models for you.':
     '如果您已经有 SQLDDL 文件，请随时在此处上传，系统将自动为您推断可能的图模型。',
+  /** 创建图模型tip */
+  'A vertex must have a primary key.': '节点必须具有一个主键。',
+  'A vertex must have at least one property.': '节点必须至少具有一个属性。',
+  'A edge can only have one property.': '一条边只能有一个属性。',
 };

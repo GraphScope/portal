@@ -1,11 +1,11 @@
 import React from 'react';
 import { Collapse } from 'antd';
 import PropertiesSchema from './properties-schema';
-import type {} from '../typing';
 import { useContext } from '../useContext';
 import { SegmentedTabs } from '@graphscope/studio-components';
 import { CaretRightOutlined } from '@ant-design/icons';
 import type { ImportorProps } from '../typing';
+import ExtraComponent from './properties-schema/extra-component';
 
 type IPropetiesEditorProps = Pick<ImportorProps, 'appMode' | 'handleUploadFile' | 'queryPrimitiveTypes'>;
 
@@ -33,10 +33,18 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
 
   const nodes_items = nodes.map(item => {
     const { id, data } = item;
-    const { label } = data || { label: id };
+    const { label, properties } = data || { label: id };
     return {
       key: id,
       label: label,
+      extra: (
+        <ExtraComponent
+          type="node"
+          appMode={appMode}
+          isEditable={elementOptions.isEditable}
+          properties={JSON.parse(JSON.stringify(properties))}
+        />
+      ),
       children: (
         <PropertiesSchema
           schema={JSON.parse(JSON.stringify(item))}
@@ -51,11 +59,19 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
   });
   const edges_items = edges.map(item => {
     const { id, data } = item;
-    const { label } = data || { label: id };
+    const { label, properties } = data || { label: id };
 
     return {
       key: id,
       label: label,
+      extra: (
+        <ExtraComponent
+          type="edge"
+          appMode={appMode}
+          isEditable={elementOptions.isEditable}
+          properties={JSON.parse(JSON.stringify(properties))}
+        />
+      ),
       children: (
         <PropertiesSchema
           schema={JSON.parse(JSON.stringify(item))}
