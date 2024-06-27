@@ -5,13 +5,12 @@ import { FormattedMessage } from 'react-intl';
 
 interface IExtraComponentProps {
   appMode: 'DATA_IMPORTING' | string;
-  isEditable: boolean;
   type: 'node' | 'edge';
   properties: { primaryKey: boolean }[];
 }
 
-const ValidateInfo: React.FC<IExtraComponentProps> = ({ appMode, isEditable, type, properties }) => {
-  const TooltipId = getTitle({ appMode, isEditable, type, properties });
+const ValidateInfo: React.FC<IExtraComponentProps> = ({ appMode = 'DATA_IMPORTING', type, properties }) => {
+  const TooltipId = getTitle({ appMode, type, properties });
   return (
     <>
       {TooltipId && (
@@ -23,8 +22,8 @@ const ValidateInfo: React.FC<IExtraComponentProps> = ({ appMode, isEditable, typ
   );
 };
 /** 获取不同状态下title */
-export function getTitle({ appMode, isEditable, type, properties }: IExtraComponentProps): string | null {
-  if (appMode !== 'DATA_IMPORTING' && isEditable) {
+export function getTitle({ appMode, type, properties }: IExtraComponentProps): string | null {
+  if (appMode !== 'DATA_IMPORTING') {
     if (type === 'node') {
       if (!properties || properties.length === 0) {
         return 'A vertex must have at least one property.';
@@ -35,7 +34,7 @@ export function getTitle({ appMode, isEditable, type, properties }: IExtraCompon
       }
     } else if (type === 'edge') {
       if (properties?.length !== 1) {
-        return 'An edge can only have one property.';
+        return 'A edge can only have one property.';
       }
     }
   }
