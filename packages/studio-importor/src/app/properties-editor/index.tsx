@@ -33,7 +33,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
 
   const nodes_items = nodes.map(item => {
     const { id, data } = item;
-    const { label, properties } = data || { label: id };
+    const { label, properties = [] } = data || { label: id };
     return {
       key: id,
       label: label,
@@ -59,7 +59,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
   });
   const edges_items = edges.map(item => {
     const { id, data } = item;
-    const { label, properties } = data || { label: id };
+    const { label, properties = [] } = data || { label: id };
 
     return {
       key: id,
