@@ -3,6 +3,7 @@ import { Button, Tooltip } from 'antd';
 import { uuid } from 'uuidv4';
 import { useReactFlow } from 'reactflow';
 import { Icons } from '@graphscope/studio-components';
+import { FormattedMessage } from 'react-intl';
 const AddNodeIcon = Icons.AddNode;
 
 import { createNodeLabel } from '../utils';
@@ -17,9 +18,11 @@ const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
   const { updateStore, store } = useContext();
   const { elementOptions } = store;
   const disabled = !elementOptions.isConnectable;
-  const tooltipText = disabled
-    ? 'The current mode is preview only, and does not support creating new vertex'
-    : 'Create new vertex';
+  const tooltipText = disabled ? (
+    <FormattedMessage id="The current mode is preview only, and does not support creating new vertex" />
+  ) : (
+    <FormattedMessage id="Create new vertex" />
+  );
 
   const handleAddVertex = () => {
     updateStore(draft => {

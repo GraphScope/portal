@@ -6,7 +6,7 @@ import type { ThemeProviderType } from './useThemeConfigProvider';
 import { storage } from '../Utils';
 import { useStore } from './useStore';
 
-type IThemeProvider = Pick<ThemeProviderType, 'locale' | 'algorithm'> & {
+type IThemeProvider = Partial<ThemeProviderType> & {
   messages?: { [key: string]: string };
   children?: React.ReactNode;
 };
@@ -34,7 +34,7 @@ const Provider: React.FC<IThemeProvider> = props => {
 
   const isLight = algorithm === 'defaultAlgorithm';
 
-  const handleTheme = (themeConfig: ThemeProviderType) => {
+  const handleTheme = (themeConfig: Partial<IThemeProvider>) => {
     const { components, token } = themeConfig;
     Object.keys(themeConfig).forEach(key => {
       storage.set(key, themeConfig[key]);

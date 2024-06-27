@@ -4,7 +4,7 @@ import { Button, Tooltip } from 'antd';
 import { Icons } from '@graphscope/studio-components';
 import { useReactFlow } from 'reactflow';
 import { resetIndex } from '../utils';
-
+import { FormattedMessage } from 'react-intl';
 interface IAddNodeProps {
   style?: React.CSSProperties;
 }
@@ -16,9 +16,11 @@ const ClearCanvas: React.FunctionComponent<IAddNodeProps> = props => {
   const { updateStore, store } = useContext();
   const { elementOptions } = store;
   const disabled = !elementOptions.isConnectable;
-  const tooltipText = disabled
-    ? 'The current mode is preview only, and does not support clearing the model'
-    : 'Clear graph model';
+  const tooltipText = disabled ? (
+    <FormattedMessage id="The current mode is preview only, and does not support clearing the model" />
+  ) : (
+    <FormattedMessage id="Clear graph model" />
+  );
 
   const handleClear = () => {
     resetIndex();
