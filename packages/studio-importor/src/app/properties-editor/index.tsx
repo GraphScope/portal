@@ -5,7 +5,7 @@ import { useContext } from '../useContext';
 import { SegmentedTabs } from '@graphscope/studio-components';
 import { CaretRightOutlined } from '@ant-design/icons';
 import type { ImportorProps } from '../typing';
-import ExtraComponent from './properties-schema/extra-component';
+import ValidateInfo from './properties-schema/validate-info';
 
 type IPropetiesEditorProps = Pick<ImportorProps, 'appMode' | 'handleUploadFile' | 'queryPrimitiveTypes'>;
 
@@ -38,7 +38,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       key: id,
       label: label,
       extra: (
-        <ExtraComponent
+        <ValidateInfo
           type="node"
           appMode={appMode}
           isEditable={elementOptions.isEditable}
@@ -65,7 +65,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       key: id,
       label: label,
       extra: (
-        <ExtraComponent
+        <ValidateInfo
           type="edge"
           appMode={appMode}
           isEditable={elementOptions.isEditable}

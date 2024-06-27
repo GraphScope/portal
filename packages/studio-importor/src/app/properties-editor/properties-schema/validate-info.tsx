@@ -10,7 +10,7 @@ interface IExtraComponentProps {
   properties: { primaryKey: boolean }[];
 }
 
-const ExtraComponent: React.FC<IExtraComponentProps> = ({ appMode, isEditable, type, properties }) => {
+const ValidateInfo: React.FC<IExtraComponentProps> = ({ appMode, isEditable, type, properties }) => {
   const TooltipId = getTitle({ appMode, isEditable, type, properties });
   return (
     <>
@@ -41,4 +41,4 @@ export function getTitle({ appMode, isEditable, type, properties }: IExtraCompon
   }
   return null;
 }
-export default ExtraComponent;
+export default ValidateInfo;
