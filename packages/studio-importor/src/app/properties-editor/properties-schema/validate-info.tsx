@@ -22,22 +22,29 @@ const ValidateInfo: React.FC<IExtraComponentProps> = ({ appMode = 'DATA_IMPORTIN
   );
 };
 /** 获取不同状态下title */
-export function getTitle({ appMode, type, properties }: IExtraComponentProps): string | null {
-  if (appMode !== 'DATA_IMPORTING') {
-    if (type === 'node') {
-      if (!properties || properties.length === 0) {
-        return 'A vertex must have at least one property.';
-      }
-      const hasPrimaryKey = properties.some(({ primaryKey }) => primaryKey);
-      if (!hasPrimaryKey) {
-        return 'A vertex must have a primary key.';
-      }
-    } else if (type === 'edge') {
-      if (properties?.length !== 1) {
-        return 'A edge can only have one property.';
-      }
+export function getTitle({ appMode, type, properties = [] }: IExtraComponentProps): string | null {
+  // Early return if the appMode is 'DATA_IMPORTING'
+  if (appMode === 'DATA_IMPORTING') {
+    return null;
+  }
+
+  // Node type checks
+  if (type === 'node') {
+    if (!properties.length) {
+      return 'A vertex must have at least one property.';
+    }
+    if (!properties.some(({ primaryKey }) => primaryKey)) {
+      return 'A vertex must have a primary key.';
     }
   }
+
+  // Edge type check
+  if (type === 'edge' && properties.length !== 1) {
+    return 'A edge can only have one property.';
+  }
+
+  // If none of the conditions are met, return null
   return null;
 }
+
 export default ValidateInfo;
