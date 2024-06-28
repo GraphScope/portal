@@ -17,6 +17,8 @@
   "scripts": {
     "start": "father dev",
     "build": "father build",
+    "build:umd": "webpack  --mode production  -c ../../webpack.config.js --env path=/packages/studio-query",
+    "build:umd:sdk": "webpack  --mode production  -c ../../webpack.config.js --env path=/packages/studio-query entry=/packages/studio-query/src/sdk/index.tsx global=STUDIO_QUERY_SDK",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
