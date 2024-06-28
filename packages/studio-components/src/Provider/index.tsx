@@ -6,35 +6,48 @@ import type { ThemeProviderType } from './useThemeConfigProvider';
 import { storage } from '../Utils';
 import { useStore } from './useStore';
 
-type IThemeProvider = Partial<ThemeProviderType> & {
-  messages?: { [key: string]: string };
-  children?: React.ReactNode;
+type IThemeProvider = {
+  locales: {
+    'zh-CN': Record<string, string>;
+    'en-US': Record<string, string>;
+  };
+  children: React.ReactNode;
+  locale?: 'zh-CN' | 'en-US';
+  algorithm?: 'defaultAlgorithm' | 'darkAlgorithm';
 };
 
 const Provider: React.FC<IThemeProvider> = props => {
-  const { algorithm: defaultMode, messages, children } = props;
-  const [state, setState] = useState<ThemeProviderType>({
-    components: storage.get('components'),
-    token: storage.get('token'),
-    algorithm: (storage.get('algorithm') as ThemeProviderType['algorithm']) || 'defaultAlgorithm',
-    locale: storage.get('locale') as ThemeProviderType['locale'],
+  const { children, locales } = props;
+  const [state, setState] = useState<ThemeProviderType>(() => {
+    let { algorithm, locale } = props;
+    if (!locale) {
+      locale = storage.get('locale');
+      if (!locale) {
+        locale = 'en-US';
+        storage.set('locale', locale);
+      }
+    }
+    if (!algorithm) {
+      algorithm = storage.get('algorithm');
+      if (!algorithm) {
+        algorithm = 'defaultAlgorithm';
+        storage.set('algorithm', algorithm);
+      }
+    }
+    return {
+      components: storage.get('components'),
+      token: storage.get('token'),
+      algorithm,
+      locale,
+    };
   });
+
   const { components, token, algorithm, locale } = state;
   const { componentsConfig, tokenConfig, colorConfig } = useStore(algorithm);
-  useEffect(() => {
-    if (defaultMode) {
-      setState(preState => {
-        return {
-          ...preState,
-          algorithm: defaultMode as ThemeProviderType['algorithm'],
-        };
-      });
-    }
-  }, [defaultMode]);
 
   const isLight = algorithm === 'defaultAlgorithm';
 
-  const handleTheme = (themeConfig: Partial<IThemeProvider>) => {
+  const handleTheme = (themeConfig: Partial<ThemeProviderType>) => {
     const { components, token } = themeConfig;
     Object.keys(themeConfig).forEach(key => {
       storage.set(key, themeConfig[key]);
@@ -50,7 +63,8 @@ const Provider: React.FC<IThemeProvider> = props => {
       };
     });
   };
-  const locales = locale ? locale : 'en-US';
+  const messages = locales[locale || 'en-US'];
+
   return (
     <ContainerProvider
       value={{
@@ -58,11 +72,11 @@ const Provider: React.FC<IThemeProvider> = props => {
         components: { ...componentsConfig, ...components },
         handleTheme,
         algorithm,
-        locale: locales,
+        locale: locale,
         ...colorConfig,
       }}
     >
-      <IntlProvider messages={messages} locale={locales}>
+      <IntlProvider messages={messages} locale={locale as 'zh-CN' | 'en-US'}>
         <ConfigProvider
           theme={{
             // 1. 单独使用暗色算法

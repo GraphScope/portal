@@ -15,12 +15,13 @@ import type { IStudioQueryProps } from './context';
 import { v4 as uuidv4 } from 'uuid';
 import { formatCypherStatement } from './utils';
 import { storage } from '../graph/utils';
-import { Utils } from '@graphscope/studio-components';
+import { Utils, ThemeProvider } from '@graphscope/studio-components';
 const { getSearchParams } = Utils;
 
 import Container from './container';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark, faClockFour, faServer, faRobot, faLightbulb } from '@fortawesome/free-solid-svg-icons';
+import locales from '../locales';
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const {
     queryInfo,
@@ -156,7 +157,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
 
   if (isReady) {
     return (
-      <Provider locale={locale} theme={theme}>
+      <ThemeProvider locales={locales}>
         <Container
           displaySidebarPosition={displaySidebarPosition}
           enableAbsolutePosition={enable}
@@ -181,7 +182,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
           }
           collapse={enableCollapseSidebar && collapse}
         ></Container>
-      </Provider>
+      </ThemeProvider>
     );
   }
   return null;

@@ -9,8 +9,6 @@ import { IEditorProps } from './typing';
 export type IStatementProps = IEditorProps & {
   /** 是否是当前激活的语句 */
   active: boolean;
-  // 是否是保存的语句
-  saved: boolean;
   mode?: 'tabs' | 'flow';
   enableImmediateQuery: boolean;
   graphName: string;
@@ -29,7 +27,6 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
     id,
     active,
     mode,
-    saved,
     schemaData,
     enableImmediateQuery,
     graphName,
@@ -81,7 +78,6 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
         startTime: new Date().getTime(),
       };
     });
-
     const res = await onQuery(params);
     //@ts-ignore
     updateState(preState => {
@@ -120,9 +116,6 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
         },
       );
 
-  // `query submmited on ${dayjs(startTime).format('HH:mm:ss YYYY-MM-DD')}. It's running ... `
-  // : `query submmited on ${dayjs(startTime).format('HH:mm:ss YYYY-MM-DD')}. Running ${endTime - startTime} ms`;
-
   return (
     <div
       ref={ContainerRef}
@@ -142,7 +135,6 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
         language={language}
         timestamp={timestamp}
         schemaData={schemaData}
-        saved={saved}
         id={id}
         script={script}
         onClose={onClose}

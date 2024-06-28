@@ -4,23 +4,24 @@ import PropertiesEditor from './properties-editor';
 import ImportSchema from './import-schema';
 
 import { ReactFlowProvider } from 'reactflow';
-import { Toolbar } from '@graphscope/studio-components';
+import { Toolbar, ThemeProvider } from '@graphscope/studio-components';
 
 import 'reactflow/dist/style.css';
 import RightButton from './button-controller/right-button';
 import LeftButton from './button-controller/left-button';
 import ClearCanvas from './button-controller/clear-canvas';
 import AddNode from './button-controller/add-node';
-import { Divider, notification } from 'antd';
+import { Divider } from 'antd';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
-import Provider from './provider';
+
 import type { ISchemaOptions, ImportorProps } from './typing';
 interface Option {
   label: string;
   value: string;
 }
 import { useContext } from './useContext';
+import locales from '../locales';
 const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   const {
     appMode,
@@ -87,7 +88,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   }, []);
 
   return (
-    <Provider locale={locale} theme={theme}>
+    <ThemeProvider locales={locales}>
       <div style={{ width: '100%', height: '100%', maxHeight: 'calc(100vh - 123px)' }}>
         <div style={{ height: '100%', display: 'flex' }}>
           <div
@@ -137,7 +138,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
           </div>
         </div>
       </div>
-    </Provider>
+    </ThemeProvider>
   );
 };
 
