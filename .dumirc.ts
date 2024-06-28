@@ -193,6 +193,10 @@ export default defineConfig({
         dir: 'packages/studio-query/src/properties-panel',
       },
       {
+        type: 'components/query-statement',
+        dir: 'packages/studio-query/src/statement',
+      },
+      {
         type: 'modeling',
         dir: 'packages/studio-importor/src/app',
       },
