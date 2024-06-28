@@ -2,7 +2,7 @@ import { Button, notification, Modal, Form, Result, Tooltip } from 'antd';
 import React, { useState } from 'react';
 import { SaveOutlined } from '@ant-design/icons';
 import { useContext } from '../../layouts/useContext';
-import { useContext as useModeling, getTitle } from '@graphscope/studio-importor';
+import { useContext as useModeling, getTooltipTitle } from '@graphscope/studio-importor';
 import { createGraph, getSchema } from './services';
 import type { ISchemaNode, ISchemaEdge, ISchemaOptions } from '@graphscope/studio-importor';
 import { Utils } from '@graphscope/studio-components';
@@ -190,7 +190,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
     </Button>,
   ];
   const Action = status === 'success' ? SuccessAction : ErrorAction;
-  const controlTooltip = butChange(JSON.parse(JSON.stringify(nodes)), JSON.parse(JSON.stringify(edges)));
+  const controlTooltip = controlsInfo(JSON.parse(JSON.stringify(nodes)), JSON.parse(JSON.stringify(edges)));
 
   if (appMode === 'DATA_MODELING') {
     return (
@@ -209,11 +209,11 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   return null;
 };
 
-export function butChange(nodes: ISchemaNode[], edges: ISchemaEdge[]): [boolean, string[]] {
+export function controlsInfo(nodes: ISchemaNode[], edges: ISchemaEdge[]): [boolean, string[]] {
   const verifyElements = (elements: any[], elementType: string) => {
     return elements.map((item: any) => {
       const { label, properties = [] } = item.data;
-      const verifyAttributes = getTitle({
+      const verifyAttributes = getTooltipTitle({
         appMode: 'DATA_MODELING',
         type: elementType as 'node' | 'edge',
         properties,

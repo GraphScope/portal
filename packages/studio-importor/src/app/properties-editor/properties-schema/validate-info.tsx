@@ -10,7 +10,7 @@ interface IExtraComponentProps {
 }
 
 const ValidateInfo: React.FC<IExtraComponentProps> = ({ appMode = 'DATA_IMPORTING', type, properties }) => {
-  const TooltipId = getTitle({ appMode, type, properties });
+  const TooltipId = getTooltipTitle({ appMode, type, properties });
   return (
     <>
       {TooltipId && (
@@ -22,7 +22,7 @@ const ValidateInfo: React.FC<IExtraComponentProps> = ({ appMode = 'DATA_IMPORTIN
   );
 };
 /** 获取不同状态下title */
-export function getTitle({ appMode, type, properties = [] }: IExtraComponentProps): string | null {
+export function getTooltipTitle({ appMode, type, properties = [] }: IExtraComponentProps): string | null {
   // Early return if the appMode is 'DATA_IMPORTING'
   if (appMode === 'DATA_IMPORTING') {
     return null;
