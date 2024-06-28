@@ -118,7 +118,6 @@ const Content: React.FunctionComponent<IContentProps> = props => {
                   enableImmediateQuery={enableImmediateQuery}
                   mode={mode}
                   active={id === activeId}
-                  saved={savedIds.indexOf(id) !== -1}
                   id={id}
                   timestamp={timestamp}
                   graphName={graphName}

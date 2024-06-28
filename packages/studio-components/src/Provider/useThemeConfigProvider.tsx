@@ -4,7 +4,6 @@ export interface ThemeProviderType extends IColorStore {
   algorithm?: 'defaultAlgorithm' | 'darkAlgorithm';
   components?: { [key: string]: { [key: string]: string | number } };
   token?: { [key: string]: string | number };
-  messages?: { [key: string]: string };
   locale?: 'zh-CN' | 'en-US';
 }
 export interface IContainerContext extends ThemeProviderType {
@@ -15,6 +14,7 @@ export const ContainerContext = createContext<IContainerContext>({
   token: {},
   handleTheme: ({}) => {},
   locale: 'en-US',
+  algorithm: 'defaultAlgorithm',
 });
 
 export const ContainerProvider = ContainerContext.Provider;
