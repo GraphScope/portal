@@ -1,0 +1,6 @@
+.venv
+
+# Ignore Python cache directories
+__pycache__/
+.ipynb_checkpoints/
+poetry.lock

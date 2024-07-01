@@ -20,7 +20,7 @@ const Editor: React.FunctionComponent<
     timestamp?: number;
     isFetching: boolean;
     antdToken: GlobalToken;
-    saved: boolean; // 是否是保存的语句
+
     message: string;
   }
 > = props => {
@@ -32,7 +32,6 @@ const Editor: React.FunctionComponent<
     id,
     isFetching,
     antdToken,
-    saved,
     schemaData,
     timestamp,
     language,
@@ -99,9 +98,11 @@ const Editor: React.FunctionComponent<
             />
           </Tooltip>
           {onSave && <SaveStatement onSave={handleSave} />}
-          <Tooltip title={intl.formatMessage({ id: 'Share' })}>
-            <Button type="text" icon={<ShareAltOutlined onClick={handleShare} />} />
-          </Tooltip>
+          {onClose && (
+            <Tooltip title={intl.formatMessage({ id: 'Share' })}>
+              <Button type="text" icon={<ShareAltOutlined onClick={handleShare} />} />
+            </Tooltip>
+          )}
           {onClose && (
             <Tooltip title={intl.formatMessage({ id: 'Delete' })}>
               <Button type="text" icon={<CloseOutlined onClick={handleClose} />} />

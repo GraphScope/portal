@@ -8,13 +8,11 @@ import HistoryStatements from './sidebar/history-statements';
 import { useContext, localStorageVars } from './context';
 import type { IStatement } from './context';
 import Sidebar from './sidebar';
-import Provider from './provider';
 import { FormattedMessage } from 'react-intl';
 
 import type { IStudioQueryProps } from './context';
 import { v4 as uuidv4 } from 'uuid';
 import { formatCypherStatement } from './utils';
-import { storage } from '../graph/utils';
 import { Utils, ThemeProvider } from '@graphscope/studio-components';
 const { getSearchParams } = Utils;
 
