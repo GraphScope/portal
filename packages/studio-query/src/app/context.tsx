@@ -157,4 +157,5 @@ export interface IStudioQueryProps {
   /** 启动折叠侧边栏 */
   enableCollapseSidebar?: boolean;
   logo?: React.ReactNode;
+  connectComponent?: React.ReactNode;
 }

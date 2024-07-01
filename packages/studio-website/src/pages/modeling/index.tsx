@@ -5,6 +5,7 @@ import { useContext } from '../../layouts/useContext';
 import { Toolbar } from '@graphscope/studio-components';
 import { getSchema } from './services';
 import Save from './save-modeling';
+import SelectGraph from '@/layouts/select-graph';
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 
@@ -45,6 +46,7 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
       GS_ENGINE_TYPE={GS_ENGINE_TYPE}
     >
       <Toolbar style={{ top: '12px', right: '74px', left: 'unset' }} direction="horizontal">
+        <SelectGraph />
         <Save />
       </Toolbar>
     </ImportApp>

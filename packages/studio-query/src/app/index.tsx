@@ -38,6 +38,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     logo,
     locale = 'zh-CN',
     theme,
+    connectComponent,
   } = props;
 
   const { store, updateStore } = useContext();
@@ -172,6 +173,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
           }
           content={
             <Content
+              connectComponent={connectComponent}
               handleCancelQuery={handleCancelQuery}
               createStatements={createStatements}
               queryGraphData={handleQuery}

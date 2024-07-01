@@ -13,11 +13,12 @@ interface IContentProps {
   queryGraphData: IStudioQueryProps['queryGraphData'];
   handleCancelQuery: IStudioQueryProps['handleCancelQuery'];
   enableImmediateQuery: boolean;
+  connectComponent?: IStudioQueryProps['connectComponent'];
 }
 const { useToken } = theme;
 
 const Content: React.FunctionComponent<IContentProps> = props => {
-  const { createStatements, queryGraphData, enableImmediateQuery, handleCancelQuery } = props;
+  const { createStatements, queryGraphData, enableImmediateQuery, handleCancelQuery, connectComponent } = props;
   const { store, updateStore } = useContext();
   const { activeId, mode, statements, savedStatements, schemaData, graphName, language } = store;
   const savedIds = savedStatements.map(item => item.id);
@@ -89,7 +90,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
         }}
       >
         <Suspense>
-          <Header />
+          <Header connectComponent={connectComponent} />
         </Suspense>
 
         {mode === 'tabs' && queryOptions.length !== 0 && (
