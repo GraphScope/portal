@@ -89,7 +89,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
 
   return (
     <ThemeProvider locales={locales}>
-      <div style={{ width: '100%', height: '100%', maxHeight: 'calc(100vh - 123px)' }}>
+      <div style={{ width: '100%', height: '100%' }}>
         <div style={{ height: '100%', display: 'flex' }}>
           <div
             style={{
