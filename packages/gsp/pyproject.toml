@@ -8,6 +8,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 flask = "^3.0.3"
+gradio = "^4.37.1"
+ipykernel = "^6.29.4"
 
 
 [tool.poetry.group.dev.dependencies]
