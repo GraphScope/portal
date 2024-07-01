@@ -1,8 +1,8 @@
-import React, { useState, memo, lazy, Suspense } from 'react';
-// import Statement from '../../statement';
-const Statement = lazy(() => import('../../statement'));
-// import Header from './header';
-const Header = lazy(() => import('./header'));
+import React, { useState, memo, lazy } from 'react';
+import Statement from '../../statement';
+// const Statement = lazy(() => import('../../statement'));
+import Header from './header';
+
 import { Segmented, theme } from 'antd';
 import { useContext } from '../context';
 import type { IStatement, IStudioQueryProps } from '../context';
@@ -88,9 +88,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
           borderBottom: `1px solid ${token.colorBorder}`,
         }}
       >
-        <Suspense>
-          <Header />
-        </Suspense>
+        <Header />
 
         {mode === 'tabs' && queryOptions.length !== 0 && (
           <div style={{ padding: '8px 0px' }}>
@@ -112,23 +110,21 @@ const Content: React.FunctionComponent<IContentProps> = props => {
                 flex: 1,
               }}
             >
-              <Suspense>
-                <Statement
-                  language={language}
-                  enableImmediateQuery={enableImmediateQuery}
-                  mode={mode}
-                  active={id === activeId}
-                  id={id}
-                  timestamp={timestamp}
-                  graphName={graphName}
-                  schemaData={schemaData}
-                  script={script}
-                  onQuery={queryGraphData}
-                  onCancel={handleCancelQuery}
-                  onClose={onClose}
-                  onSave={onSave}
-                />
-              </Suspense>
+              <Statement
+                language={language}
+                enableImmediateQuery={enableImmediateQuery}
+                mode={mode}
+                active={id === activeId}
+                id={id}
+                timestamp={timestamp}
+                graphName={graphName}
+                schemaData={schemaData}
+                script={script}
+                onQuery={queryGraphData}
+                onCancel={handleCancelQuery}
+                onClose={onClose}
+                onSave={onSave}
+              />
             </div>
           );
         })}

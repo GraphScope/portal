@@ -18,7 +18,7 @@
     "start": "father dev",
     "build": "father build",
     "build:umd": "webpack  --mode production  -c ../../webpack.config.js --env path=/packages/studio-query",
-    "build:umd:sdk": "webpack  --mode production  -c ../../webpack.config.js --env path=/packages/studio-query entry=/packages/studio-query/src/sdk/index.tsx global=STUDIO_QUERY_SDK",
+    "build:umd:sdk": "webpack  --mode production  -c ../../webpack.config.js --env path=/packages/studio-query entry=/packages/studio-query/src/sdk/index.tsx global=STUDIO_QUERY_SDK analysis=true",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
@@ -40,7 +40,8 @@
     "neo4j-driver": "^5.12.0",
     "@difizen/cofine-editor-core": "^0.0.1-alpha.8",
     "@difizen/cofine-language-cypher": "^0.0.1-alpha.8",
-    "@difizen/cofine-language-gremlin": "^0.0.1-alpha.8"
+    "@difizen/cofine-language-gremlin": "^0.0.1-alpha.8",
+    "monaco-editor": "latest"
   },
   "author": "",
   "license": "ISC",

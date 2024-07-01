@@ -8,47 +8,51 @@
   <body>
     <div id="ROOT_ID"></div>
     <script>
-      function loadScript(url) {
-        return new Promise(function (resolve, reject) {
-          var script = document.createElement('script');
-          script.type = 'text/javascript';
-          script.src = url;
-          script.onload = resolve;
-          script.onerror = reject;
-          document.head.appendChild(script);
-        });
-      }
-      function loadCSS(url) {
-        return new Promise(function (resolve, reject) {
-          var link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = url;
-          link.onload = resolve;
-          link.onerror = reject;
-          document.head.appendChild(link);
-        });
-      }
+      try {
+        function loadScript(url) {
+          return new Promise(function (resolve, reject) {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = url;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+          });
+        }
+        function loadCSS(url) {
+          return new Promise(function (resolve, reject) {
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = url;
+            link.onload = resolve;
+            link.onerror = reject;
+            document.head.appendChild(link);
+          });
+        }
 
-      // 先加载必须的两个 JavaScript 文件
-      Promise.all([
-        loadScript('https://gw.alipayobjects.com/os/lib/react/18.2.0/umd/react.production.min.js'),
-        loadScript('https://gw.alipayobjects.com/os/lib/react-dom/18.2.0/umd/react-dom.production.min.js'),
-      ])
-        .then(function () {
-          // 必须的两个脚本加载完成后，再加载其他的 JavaScript 文件
-          return Promise.all([
-            loadScript('http://127.0.0.1:5500/packages/studio-importor/dist/index.min.js'),
-            loadCSS('http://127.0.0.1:5500/packages/studio-importor/dist/index.css'),
-          ]);
-        })
-        .then(function () {
-          const { default: STUDIO_IMPORTOR, sdk } = window.STUDIO_IMPORTOR;
-          const id = 'ROOT_ID';
-          sdk.render_modeling({ id });
-        })
-        .catch(function (error) {
-          console.error('加载脚本时出错：', error);
-        });
+        // 先加载必须的两个 JavaScript 文件
+        Promise.all([
+          loadScript('https://gw.alipayobjects.com/os/lib/react/18.2.0/umd/react.production.min.js'),
+          loadScript('https://gw.alipayobjects.com/os/lib/react-dom/18.2.0/umd/react-dom.production.min.js'),
+        ])
+          .then(function () {
+            // 必须的两个脚本加载完成后，再加载其他的 JavaScript 文件
+            return Promise.all([
+              loadScript('http://127.0.0.1:5500/packages/studio-importor/dist/index.min.js'),
+              loadCSS('http://127.0.0.1:5500/packages/studio-importor/dist/index.css'),
+            ]);
+          })
+          .then(function () {
+            const { default: STUDIO_IMPORTOR, sdk } = window.STUDIO_IMPORTOR;
+            const id = 'ROOT_ID';
+            sdk.render_modeling({ id });
+          })
+          .catch(function (error) {
+            console.error('加载脚本时出错：', error);
+          });
+      } catch (error) {
+        document.getElementById('ROOT_ID').innerHTML = error;
+      }
     </script>
   </body>
 </html>

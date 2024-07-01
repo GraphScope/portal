@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = (env, argv) => {
@@ -16,22 +17,25 @@ module.exports = (env, argv) => {
   const plugins = env.analysis
     ? [
         new MiniCssExtractPlugin(),
-        // new BundleAnalyzerPlugin({
-        //   analyzerPort: Math.round(Math.random() * 100 + 8000),
-        // }),
+        new BundleAnalyzerPlugin({
+          analyzerPort: Math.round(Math.random() * 100 + 8000),
+        }),
+        new MonacoWebpackPlugin({
+          languages: ['json', 'cypher', 'typescript'],
+        }),
       ]
     : [
         new MiniCssExtractPlugin(),
-        new webpack.ProvidePlugin({
-          process: 'process/browser',
-          Buffer: ['buffer', 'Buffer'],
+        new MonacoWebpackPlugin({
+          languages: ['json', 'cypher', 'typescript'],
         }),
       ];
   return {
     entry: {
       index: entry ? path.join(__dirname, entry) : ENTRY_PATH,
     },
-    mode: argv.mode,
+    mode: 'development', //argv.mode,
+    devtool: 'eval-source-map',
     module: {
       rules: [
         {
