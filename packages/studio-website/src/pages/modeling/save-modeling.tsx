@@ -191,12 +191,14 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   ];
   const Action = status === 'success' ? SuccessAction : ErrorAction;
   const controlTooltip = controlsInfo(JSON.parse(JSON.stringify(nodes)), JSON.parse(JSON.stringify(edges)));
+  /** nodes为空且 按钮是 Save Modeling 不能点击保存按钮 */
+  const isSave = !nodes.length && !disabled ? true : disabled || controlTooltip[0];
 
   if (appMode === 'DATA_MODELING') {
     return (
       <>
         <Tooltip title={controlTooltip[0] ? <FormattedMessage id={`${controlTooltip[1]}`} /> : ''}>
-          <Button disabled={disabled || controlTooltip[0]} type="primary" icon={<SaveOutlined />} onClick={handleSave}>
+          <Button disabled={isSave} type="primary" icon={<SaveOutlined />} onClick={handleSave}>
             <FormattedMessage id={text} />
           </Button>
         </Tooltip>
