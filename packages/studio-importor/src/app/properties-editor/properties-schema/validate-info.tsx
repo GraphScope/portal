@@ -12,13 +12,13 @@ interface IExtraComponentProps {
 const ValidateInfo: React.FC<IExtraComponentProps> = ({ appMode = 'DATA_IMPORTING', type, properties }) => {
   const TooltipId = getTooltipTitle({ appMode, type, properties });
   return (
-    <>
+    <div style={{ height: '14px' }}>
       {TooltipId && (
         <Tooltip title={<FormattedMessage id={`${TooltipId}`} />}>
-          <Button type="text" icon={<WarnIcon />} />
+          <Button type="text" size="small" icon={<WarnIcon />} />
         </Tooltip>
       )}
-    </>
+    </div>
   );
 };
 /** 获取不同状态下title */
