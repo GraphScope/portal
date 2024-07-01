@@ -12,9 +12,6 @@ const Setting: React.FunctionComponent = () => {
       <Section
         breadcrumb={[
           {
-            title: 'Home',
-          },
-          {
             title: 'Setting',
           },
         ]}
