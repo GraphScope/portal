@@ -8,9 +8,6 @@ const Job: React.FunctionComponent = () => {
       <Section
         breadcrumb={[
           {
-            title: 'Home',
-          },
-          {
             title: 'Jobs',
           },
         ]}

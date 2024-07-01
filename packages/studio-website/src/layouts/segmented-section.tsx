@@ -1,18 +1,5 @@
 import * as React from 'react';
-import {
-  Breadcrumb,
-  Divider,
-  Typography,
-  Tabs,
-  Segmented,
-  Select,
-  Space,
-  Button,
-  SegmentedProps,
-  notification,
-} from 'antd';
-
-import SelectGraph from './select-graph';
+import { SegmentedProps, notification } from 'antd';
 
 import { Utils } from '@graphscope/studio-components';
 import { useThemeContainer } from '@graphscope/studio-components';
@@ -92,26 +79,6 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
 
   return (
     <section style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div
-        style={{
-          padding: '8px 8px 16px 8px',
-          display: 'flex',
-          alignItems: 'center',
-          // justifyContent: withNav ? 'space-between' : 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <SelectGraph />
-
-        {withNav && (
-          <>
-            <div style={{ width: '400px' }}>
-              <Segmented options={options} block onChange={handleChange} value={currentnNav} />
-            </div>
-            <div></div>
-          </>
-        )}
-      </div>
       <div
         style={{
           padding: '4px',

@@ -11,6 +11,7 @@ import {
 import { useContext } from '@/layouts/useContext';
 import EmptyModelCase from './empty-model-case';
 import StoppedServiceCase from './stopped-service-case';
+import SelectGraph from '@/layouts/select-graph';
 const QueryModule = () => {
   const { GS_ENGINE_TYPE } = window;
   const language = GS_ENGINE_TYPE === 'groot' ? 'gremlin' : 'cypher';
@@ -48,7 +49,8 @@ const QueryModule = () => {
         queryGraphSchema={queryGraphSchema}
         /** 是否立即查询 */
         enableImmediateQuery={true}
-      />
+        connectComponent={<SelectGraph />}
+      ></StudioQuery>
     </>
   );
 };
