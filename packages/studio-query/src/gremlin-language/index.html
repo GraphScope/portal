@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monaco Editor with Gremlin</title>
+    <style>
+      #container {
+        width: 800px;
+        height: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.31.1/min/vs/loader.js"></script>
+    <script>
+      require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.31.1/min/vs' } });
+      require(['vs/editor/editor.main'], function () {
+        require(['gremlin-language'], function () {
+          monaco.editor.create(document.getElementById('container'), {
+            value: ['g.V().hasLabel("person").has("name", "marko").out("knows").values("name")'].join('\n'),
+            language: 'gremlin',
+          });
+        });
+      });
+    </script>
+    <script src="./gremlin-language.js"></script>
+  </body>
+</html>
