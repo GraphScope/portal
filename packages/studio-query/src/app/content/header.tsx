@@ -8,6 +8,7 @@ import { countLines } from '../utils';
 import { v4 as uuidv4 } from 'uuid';
 import { useThemeContainer } from '@graphscope/studio-components';
 import Loading from './loading';
+import ToggleButton from './toggle-button';
 
 const CypherEditor = lazy(() => import('../../cypher-editor'));
 
@@ -139,7 +140,11 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       }}
     >
       <Flex justify="space-between" align="center">
-        <LanguageSwitch />
+        <Space>
+          <ToggleButton />
+          <LanguageSwitch />
+        </Space>
+
         {connectComponent}
         <Space>
           <ModeSwitch />

@@ -40,6 +40,7 @@ const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
   });
 
   const { active } = state;
+  console.log('active', active);
   const options = items.map(item => {
     return {
       value: item.key,

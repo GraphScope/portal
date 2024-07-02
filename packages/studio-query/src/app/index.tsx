@@ -6,6 +6,7 @@ import RecommendedStatements from './sidebar/recommended-statements';
 import StoreProcedure from './sidebar/store-procedure';
 import HistoryStatements from './sidebar/history-statements';
 import { useContext, localStorageVars } from './context';
+
 import type { IStatement } from './context';
 import Sidebar from './sidebar';
 import { FormattedMessage } from 'react-intl';
@@ -13,13 +14,14 @@ import { FormattedMessage } from 'react-intl';
 import type { IStudioQueryProps } from './context';
 import { v4 as uuidv4 } from 'uuid';
 import { formatCypherStatement } from './utils';
-import { Utils, ThemeProvider } from '@graphscope/studio-components';
+import { Utils, ThemeProvider, Section } from '@graphscope/studio-components';
 const { getSearchParams } = Utils;
 
 import Container from './container';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark, faClockFour, faServer, faRobot, faLightbulb } from '@fortawesome/free-solid-svg-icons';
 import locales from '../locales';
+
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const {
     queryInfo,
@@ -46,32 +48,32 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const enable = !!enableAbsolutePosition && statements.length > 0;
   const navbarOptions = [
     {
-      id: 'recommended',
-      name: <FormattedMessage id="Recommended" />,
+      key: 'recommended',
+      title: <FormattedMessage id="Recommended" />,
       icon: <FontAwesomeIcon icon={faLightbulb} />, //<DeploymentUnitOutlined />,
       children: <RecommendedStatements schemaData={schemaData} schemaId={graphName} />,
     },
     {
-      id: 'saved',
-      name: <FormattedMessage id="Saved" />,
+      key: 'saved',
+      title: <FormattedMessage id="Saved" />,
       icon: <FontAwesomeIcon icon={faBookmark} />, //  <BookOutlined />,
       children: <SavedStatements deleteStatements={ids => deleteStatements('saved', ids)} />,
     },
     {
-      id: 'history',
-      name: <FormattedMessage id="History" />,
+      key: 'history',
+      title: <FormattedMessage id="History" />,
       icon: <FontAwesomeIcon icon={faClockFour} />, //<HistoryOutlined />,//<FontAwesomeIcon icon={faTimesCircle} />
       children: <HistoryStatements deleteHistoryStatements={ids => deleteStatements('history', ids)} />,
     },
     {
-      id: 'store-procedure',
-      name: <FormattedMessage id="Stored Procedures" />,
+      key: 'store-procedure',
+      title: <FormattedMessage id="Stored Procedures" />,
       icon: <FontAwesomeIcon icon={faServer} />, //<DatabaseOutlined />,
       children: <StoreProcedure deleteStatements={ids => deleteStatements('store-procedure', ids)} />,
     },
     {
-      id: 'copilot',
-      name: <FormattedMessage id="Copilot" />,
+      key: 'copilot',
+      title: <FormattedMessage id="Copilot" />,
       icon: <FontAwesomeIcon icon={faRobot} />, //<RedditOutlined />,
       children: <GPTStatements schemaData={schemaData} />,
     },
@@ -121,16 +123,6 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     })();
   }, []);
 
-  const handleChangeNavbar = value => {
-    updateStore(draft => {
-      if (draft.activeNavbar === value.id) {
-        draft.collapse = !draft.collapse;
-      } else {
-        draft.activeNavbar = value.id;
-        draft.collapse = false;
-      }
-    });
-  };
   const handleQuery = (value: IStatement) => {
     /** 查询的时候，就可以存储历史记录了 */
     //@ts-ignore
@@ -157,31 +149,19 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   if (isReady) {
     return (
       <ThemeProvider locales={locales}>
-        <Container
-          displaySidebarPosition={displaySidebarPosition}
-          enableAbsolutePosition={enable}
-          sidebar={
-            <Sidebar
-              logo={logo}
-              title={graphName}
-              options={navbarOptions}
-              value={activeNavbar}
-              collapse={enableCollapseSidebar && collapse}
-              onChange={handleChangeNavbar}
-              onBack={onBack}
-            />
-          }
-          content={
-            <Content
-              connectComponent={connectComponent}
-              handleCancelQuery={handleCancelQuery}
-              createStatements={createStatements}
-              queryGraphData={handleQuery}
-              enableImmediateQuery={enableImmediateQuery}
-            />
-          }
-          collapse={enableCollapseSidebar && collapse}
-        ></Container>
+        <Section
+          leftSide={<Sidebar items={navbarOptions} />}
+          defaultStyle={{ leftSideWidth: 300, leftSideCollapsed: true }}
+          splitBorder
+        >
+          <Content
+            connectComponent={connectComponent}
+            handleCancelQuery={handleCancelQuery}
+            createStatements={createStatements}
+            queryGraphData={handleQuery}
+            enableImmediateQuery={enableImmediateQuery}
+          />
+        </Section>
       </ThemeProvider>
     );
   }
