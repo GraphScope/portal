@@ -2,8 +2,8 @@
 
 A web-based management tool for GraphScope
 
-[![Version](https://badgen.net/npm/v/@graphscope/studio-query)](https://www.npmjs.com/@graphscope/studio-query)
-![Latest commit](https://badgen.net/github/last-commit/graphscope/portal)
+<!-- [![Version](https://badgen.net/npm/v/@graphscope/studio-query)](https://www.npmjs.com/@graphscope/studio-query)
+![Latest commit](https://badgen.net/github/last-commit/graphscope/portal) -->
 
 <img src="https://gw.alipayobjects.com/zos/antfincdn/R8sN%24GNdh6/language.svg" width="18"> English | [简体中文](./README.zh-CN.md)
 

@@ -1,4 +1,4 @@
-<h1 align="center">
+<!-- <h1 align="center">
     <img src="https://graphscope.io/assets/images/graphscope-logo.svg" width="400" alt="graphscope-logo">
 </h1>
 
@@ -6,13 +6,17 @@
    专为 GraphScope 设计的，基于 Web 的用户交互工具
 </p>
 
-<div align="center">
-  
-[![Version](https://badgen.net/npm/v/@graphscope/studio-query)](https://www.npmjs.com/@graphscope/studio-query)
- 
+<div align="center"> -->
+
+<!-- [![Version](https://badgen.net/npm/v/@graphscope/studio-query)](https://www.npmjs.com/@graphscope/studio-query)
+
 ![Latest commit](https://badgen.net/github/last-commit/graphscope/portal)
-  
+   -->
 </div>
+
+# GraphScope Portal
+
+专为 GraphScope 设计的，基于 Web 的用户交互工具
 
 <img src="https://gw.alipayobjects.com/zos/antfincdn/R8sN%24GNdh6/language.svg" width="18"> [English](/docs/README.md) | 简体中文
 
