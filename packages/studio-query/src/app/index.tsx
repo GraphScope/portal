@@ -147,14 +147,24 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   }
 
   if (isReady) {
+    const side =
+      displaySidebarPosition === 'left'
+        ? {
+            leftSide: <Sidebar items={navbarOptions} />,
+          }
+        : {
+            rightSide: <Sidebar items={navbarOptions} />,
+          };
     return (
       <ThemeProvider locales={locales}>
         <Section
-          leftSide={<Sidebar items={navbarOptions} />}
+          style={{ height: 'calc(100vh - 50px)' }}
+          {...side}
           defaultStyle={{ leftSideWidth: 300, leftSideCollapsed: true }}
           splitBorder
         >
           <Content
+            displaySidebarPosition={displaySidebarPosition}
             connectComponent={connectComponent}
             handleCancelQuery={handleCancelQuery}
             createStatements={createStatements}

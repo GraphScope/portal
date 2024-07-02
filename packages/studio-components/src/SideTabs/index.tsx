@@ -1,7 +1,10 @@
-import React, { memo } from 'react';
-import { Utils } from '../';
+import React, { memo, ReactNode } from 'react';
+
 import { RollbackOutlined, PicLeftOutlined, SlidersOutlined } from '@ant-design/icons';
 import { Space, Button, theme, Flex, Typography, Tooltip, Divider, Tag } from 'antd';
+
+import { setSearchParams, getSearchParams } from '../Utils';
+
 const { useToken } = theme;
 
 interface Option {
@@ -14,26 +17,19 @@ interface Option {
   children: React.ReactNode;
 }
 interface SidebarProps {
-  title?: string;
-  options: Option[];
-  value: Option['id'];
-  collapse?: boolean;
-  onChange: (option: Option) => void;
-  onBack: () => void;
-  logo?: React.ReactNode;
-  width?: number;
-  collapsedWidth?: number;
+  items: { key: string; children: ReactNode; label?: string; icon?: ReactNode }[];
+  queryKey?: string;
+  style?: React.CSSProperties;
+  defaultActive?: string;
+  block?: boolean;
+  value?: string;
+  onChange?: (value: string) => void;
+  onBack?: () => void;
+  logo?: string;
 }
 
-const SideTabs: React.FunctionComponent<SidebarProps> = props => {
-  const { options, collapse, onChange, title, onBack, logo, width = 300, collapsedWidth = 50 } = props;
-  const { token } = useToken();
-  const nav = Utils.getSearchParams('nav') || 'recommended';
-  const activeOption = options.find(item => {
-    return item.id === nav;
-  });
-
-  const styles: Record<string, React.CSSProperties> = {
+const getStyles: (token: any) => Record<string, React.CSSProperties> = token => {
+  return {
     container: {
       display: 'flex',
       flexDirection: 'row',
@@ -69,6 +65,44 @@ const SideTabs: React.FunctionComponent<SidebarProps> = props => {
     },
     content: {},
   };
+};
+
+const SideTabs: React.FunctionComponent<SidebarProps> = props => {
+  const { items, queryKey = 'tab', style = {}, defaultActive, block, value, onChange, onBack, logo } = props;
+  const { token } = useToken();
+  const collapse = false;
+  const width = 300;
+  const collapsedWidth = 50;
+
+  const [state, setState] = React.useState<{ active: string }>(() => {
+    const defaultKey = getSearchParams(queryKey);
+    const active = defaultKey || defaultActive || items[0]?.key || '';
+    return {
+      active,
+    };
+  });
+  const { active } = state;
+
+  const handleChange = value => {
+    if (onChange) {
+      onChange(value);
+      return;
+    }
+    setSearchParams({
+      [queryKey]: value,
+    });
+    setState(preState => {
+      return {
+        ...preState,
+        active: value,
+      };
+    });
+  };
+  const val = value || active;
+  const activeOption = items.find(item => item.key === val);
+  console.log('active', activeOption, val);
+
+  const styles: Record<string, React.CSSProperties> = getStyles(token);
   return (
     <div
       style={{
@@ -88,9 +122,9 @@ const SideTabs: React.FunctionComponent<SidebarProps> = props => {
       )}
       <div style={styles.container}>
         <ul style={styles.ul}>
-          {options.map(opt => {
-            const { icon, id, name } = opt;
-            const isActive = id === nav;
+          {items.map(opt => {
+            const { icon, key, label } = opt;
+            const isActive = key === val;
             const activeLi = isActive
               ? {
                   // borderLeft: `2px solid ${token.colorPrimary}`,
@@ -120,15 +154,12 @@ const SideTabs: React.FunctionComponent<SidebarProps> = props => {
             return (
               <li
                 style={{ ...styles.li, ...activeLi }}
-                key={id}
+                key={key}
                 onClick={() => {
-                  Utils.setSearchParams({
-                    nav: id,
-                  });
-                  onChange(opt);
+                  handleChange(key);
                 }}
               >
-                <Tooltip title={name} placement="right">
+                <Tooltip title={label} placement="right">
                   <Button type={'text'} icon={icon} style={activeIcon} size="large"></Button>
                 </Tooltip>
               </li>
@@ -136,7 +167,7 @@ const SideTabs: React.FunctionComponent<SidebarProps> = props => {
           })}
         </ul>
 
-        <div style={{ flex: 1, overflow: 'hidden', height: 'calc(100% - 60px)', position: 'relative' }}>
+        <div style={{ flex: 1, overflow: 'hidden', height: '100%', position: 'relative' }}>
           {activeOption?.children}
         </div>
       </div>

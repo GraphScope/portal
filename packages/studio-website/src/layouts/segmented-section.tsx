@@ -5,6 +5,7 @@ import { Utils } from '@graphscope/studio-components';
 import { useThemeContainer } from '@graphscope/studio-components';
 import { listGraphs } from '@/pages/instance/lists/service';
 import { useContext, IGraph } from './useContext';
+import useWidth from './useWidth';
 
 interface ISectionProps {
   value: string;
@@ -38,6 +39,7 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
   const { store, updateStore } = useContext();
   const { currentnNav, graphs, graphId, draftId } = store;
   const { token } = useThemeContainer();
+  const ContainerWidth = useWidth();
   const handleChange = (value: string) => {
     const herf = graphId ? `${value}?${extraRouterKey}=${graphId}` : value;
     history && history.push(herf);
@@ -76,20 +78,23 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
       }
     });
   }, []);
+  const IS_QUERY = currentnNav === '/querying';
 
   return (
-    <section style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div
-        style={{
-          padding: '4px',
-          flex: 1,
-          background: token.colorBgBase,
-          borderRadius: '4px',
-          ...style,
-        }}
-      >
-        {children}
-      </div>
+    <section
+      style={{
+        //@ts-ignore
+        background: token.colorBgBase,
+        padding: IS_QUERY ? '0px' : '4px',
+        borderRadius: '8px',
+        height: '100%',
+        width: `${ContainerWidth - 220}px`,
+        overflow: 'hidden',
+
+        ...style,
+      }}
+    >
+      {children}
     </section>
   );
 };

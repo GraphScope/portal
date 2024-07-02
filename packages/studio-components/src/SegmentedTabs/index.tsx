@@ -6,7 +6,8 @@ import { getSearchParams, setSearchParams } from '../Utils';
 export interface SegmentedTabsProps {
   items: { key: string; children: ReactNode; label?: string; icon?: ReactNode }[];
   queryKey?: string;
-  style?: React.CSSProperties;
+  rootStyle?: React.CSSProperties;
+  tabStyle?: React.CSSProperties;
   defaultActive?: string;
   block?: boolean;
   value?: string;
@@ -20,16 +21,16 @@ const styles: Record<string, React.CSSProperties> = {
   },
   appear: {
     display: 'block',
-    height: 'calc(100% - 60px)',
+    height: 'calc(100% - 40px)',
   },
   hidden: {
     display: 'none',
-    height: 'calc(100% - 60px)',
+    height: 'calc(100% - 40px)',
   },
 };
 
 const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
-  const { items, queryKey = 'tab', style = {}, defaultActive, block, value, onChange } = props;
+  const { items, queryKey = 'tab', rootStyle = {}, tabStyle = {}, defaultActive, block, value, onChange } = props;
 
   const [state, setState] = React.useState<{ active: string }>(() => {
     const defaultKey = getSearchParams(queryKey);
@@ -40,7 +41,7 @@ const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
   });
 
   const { active } = state;
-  console.log('active', active);
+
   const options = items.map(item => {
     return {
       value: item.key,
@@ -69,8 +70,14 @@ const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
   const val = value || active;
 
   return (
-    <div style={styles.tabs}>
-      <Segmented options={options} value={val} onChange={handleChange} block={block} style={{ marginBottom: '12px' }} />
+    <div style={{ ...styles.tabs, ...rootStyle }}>
+      <Segmented
+        options={options}
+        value={val}
+        onChange={handleChange}
+        block={block}
+        style={{ marginBottom: '12px', ...tabStyle }}
+      />
       <>
         {items.map(item => {
           const { key, children } = item;

@@ -25,7 +25,7 @@ interface ISectionProps {
 }
 
 const Section: React.FunctionComponent<ISectionProps> = props => {
-  const { rightSide, leftSide, children, defaultStyle, splitBorder } = props;
+  const { rightSide, leftSide, children, defaultStyle, splitBorder, style } = props;
   const { token } = useToken();
   const [state, setState] = useState({
     widthStyle: {
@@ -64,22 +64,22 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
 
   return (
     <SectionProvider value={{ ...state, toggleRightSide, toggleLeftSide }}>
-      <div style={{ width: '100%', height: '100%' }}>
-        <div style={{ height: '100%', display: 'flex' }}>
+      <div style={{ width: '100%', height: '100%', display: 'flex', ...style }}>
+        <div style={{ height: '100%', display: 'flex', width: '100%', overflow: 'hidden' }}>
           {leftSide && (
             <div
               style={{
                 borderRight: collapsed.leftSide ? 'unset' : borderStyle,
                 width: collapsed.leftSide ? '0px' : widthStyle.leftSide,
-                padding: collapsed.leftSide ? '0px' : '0px 12px',
                 overflow: 'hidden',
                 transition: 'width 0.2s ease',
+                flexShrink: 0,
               }}
             >
               {leftSide}
             </div>
           )}
-          <div style={{ flex: 1, position: 'relative' }}>{children}</div>
+          {children && <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>{children}</div>}
           {rightSide && (
             <div
               style={{
@@ -89,6 +89,7 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
                 position: 'relative',
                 overflow: 'hidden',
                 transition: 'width 0.2s ease',
+                flexShrink: 0,
               }}
             >
               {rightSide}
