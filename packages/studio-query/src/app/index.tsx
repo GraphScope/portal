@@ -30,6 +30,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     queryGraphSchema,
     onBack,
     displaySidebarPosition = 'left',
+    displaySidebarType = 'Sidebar',
     enableAbsolutePosition,
     /** statements */
     queryStatements,
@@ -46,6 +47,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const { store, updateStore } = useContext();
   const { graphName, isReady, collapse, activeNavbar, statements, schemaData, language } = store;
   const enable = !!enableAbsolutePosition && statements.length > 0;
+
   const navbarOptions = [
     {
       key: 'recommended',
@@ -150,10 +152,10 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     const side =
       displaySidebarPosition === 'left'
         ? {
-            leftSide: <Sidebar items={navbarOptions} />,
+            leftSide: <Sidebar items={navbarOptions} type={displaySidebarType} />,
           }
         : {
-            rightSide: <Sidebar items={navbarOptions} />,
+            rightSide: <Sidebar items={navbarOptions} type={displaySidebarType} />,
           };
     return (
       <ThemeProvider locales={locales}>

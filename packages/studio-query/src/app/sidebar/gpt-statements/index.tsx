@@ -10,6 +10,7 @@ import { PlayCircleOutlined, ClearOutlined, SearchOutlined, BulbOutlined, Settin
 import MessageItem from './message';
 import Setting from './setting';
 import { useIntl } from 'react-intl';
+import { Utils } from '@graphscope/studio-components';
 interface IGPTStatementsProps {
   prompt?: string;
   welcome?: string;
@@ -131,12 +132,14 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
     });
   };
 
+  const defaultNav = Utils.getSearchParams('tab');
   return (
     <Flex vertical style={{ height: '100%', overflow: 'hidden', padding: '0px 12px' }} justify="space-between">
       <div style={{ overflowY: 'scroll' }}>
         <Typography.Title level={5} style={{ margin: '0px', flexBasis: '30px', padding: '12px 0px' }}>
           Copilot
         </Typography.Title>
+
         <Setting onChange={handleSave} style={{ position: 'absolute', right: '6px', top: '8px' }} />
 
         <div>
