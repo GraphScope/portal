@@ -83,7 +83,7 @@ const ImportFromCSV: React.FunctionComponent<IImportFromFileProps> = props => {
           left: '0px',
           right: '0px',
           top: '0px',
-          bottom: '40px',
+          bottom: isEmpty ? '0px' : '40px',
           //为了滚动条好看
           margin: '-12px',
           padding: '12px',
