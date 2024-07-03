@@ -40,8 +40,7 @@ const Detail: React.FunctionComponent = () => {
           title: 'ID',
         },
       ]}
-      desc="The jobid of the running state of the graph model is {jobId} verbose logs."
-      customdes={{ jobId }}
+      desc={{ id: 'The jobid of the running state of the graph model is {jobId} verbose logs.', values: { jobId } }}
     >
       <pre style={containerStyles}>
         <code style={{ whiteSpace: 'pre-wrap' }}>{detailData}</code>

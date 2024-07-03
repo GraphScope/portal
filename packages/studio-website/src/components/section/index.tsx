@@ -3,18 +3,21 @@ import { Breadcrumb, Divider, Typography, Tabs, Space } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import type { BreadcrumbProps, TabsProps } from 'antd';
 import { Utils, useThemeContainer } from '@graphscope/studio-components';
+interface IdescMessage {
+  id: string;
+  values?: { [key: string]: string };
+}
 interface ISectionProps {
   title?: string;
-  desc?: string;
+  desc?: string | IdescMessage;
   breadcrumb?: BreadcrumbProps['items'];
   children?: React.ReactNode;
   items?: TabsProps['items'];
   style?: React.CSSProperties;
-  customdes?: { [key: string]: string };
 }
 const { useEffect } = React;
 const Section: React.FunctionComponent<ISectionProps> = props => {
-  const { title, desc, breadcrumb, children, items, style, customdes } = props;
+  const { title, desc, breadcrumb, children, items, style } = props;
   const { sectionBackground } = useThemeContainer();
   useEffect(() => {
     if (items) {
@@ -33,6 +36,12 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
   };
   const hasDivider = desc && !items;
   console.log('breadcrumb', breadcrumb);
+  let descMessage: IdescMessage;
+  if (typeof desc === 'string') {
+    descMessage = { id: desc };
+  } else {
+    descMessage = desc as IdescMessage;
+  }
   return (
     <section
       style={{
@@ -64,7 +73,7 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
 
         {desc && (
           <Typography.Title type="secondary" level={4} style={{ fontWeight: 300 }}>
-            <FormattedMessage id={desc} values={customdes} />
+            <FormattedMessage id={descMessage.id} values={descMessage.values} />
           </Typography.Title>
         )}
       </div>
