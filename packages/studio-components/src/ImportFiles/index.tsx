@@ -12,6 +12,7 @@ export interface IState {
   loading: boolean;
   csvFiles: File[];
 }
+
 export interface IImportFromFileProps {
   /** 是否保存上传的原始文件 */
   isSaveFiles?: boolean;
@@ -31,6 +32,7 @@ const ImportFromCSV: React.FunctionComponent<IImportFromFileProps> = props => {
     loading: false,
     csvFiles: [],
   });
+
   const { files } = state;
   const onChange = (value: ParsedFile[], csvFiles?: File[]) => {
     console.log(value);
@@ -70,24 +72,50 @@ const ImportFromCSV: React.FunctionComponent<IImportFromFileProps> = props => {
         width: '100%',
         borderRadius: '6px',
         position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
       }}
     >
-      {isEmpty ? (
-        <UploadFile isSaveFiles={isSaveFiles} onChange={onChange} {...upload} />
-      ) : (
-        <Collapse
-          expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-          items={items}
-          defaultActiveKey={['0']}
-        />
-      )}
+      <div
+        style={{
+          position: 'absolute',
+          left: '0px',
+          right: '0px',
+          top: '0px',
+          bottom: '40px',
+          //为了滚动条好看
+          margin: '-12px',
+          padding: '12px',
+          overflowY: 'scroll',
+        }}
+      >
+        {isEmpty ? (
+          <UploadFile isSaveFiles={isSaveFiles} onChange={onChange} {...upload} />
+        ) : (
+          <Collapse
+            expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+            items={items}
+            defaultActiveKey={['0']}
+          />
+        )}
+      </div>
       {!isEmpty && (
-        <Space style={{ position: 'absolute', bottom: '0px', right: '0px' }}>
-          <Button type="default" onClick={onClear}>
-            <FormattedMessage id="Clear all files" />
-          </Button>
-          {children(state, setState)}
-        </Space>
+        <div
+          style={{
+            position: 'absolute',
+            left: '0px',
+            right: '0px',
+            bottom: '0px',
+          }}
+        >
+          <Space>
+            <Button type="default" onClick={onClear} style={{ width: '150px' }}>
+              <FormattedMessage id="Clear all files" />
+            </Button>
+            {children(state, setState)}
+          </Space>
+        </div>
       )}
     </div>
   );
