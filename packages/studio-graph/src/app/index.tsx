@@ -8,7 +8,7 @@ const ToogleButton = () => {
   const { toggleLeftSide } = useSection();
   return (
     <div>
-      <Button icon={<Icons.Sidebar />} onClick={toggleLeftSide} />
+      <Button icon={<Icons.Sidebar />} onClick={() => toggleLeftSide()} />
     </div>
   );
 };
@@ -31,11 +31,12 @@ const StudioGraph: React.FunctionComponent<StudioGraphProps> = props => {
         <Section
           leftSide={<Side />}
           autoResize={false}
-          defaultStyle={{
-            leftSideCollapsed: false,
-            leftSideWidth: 350,
-            rightSideCollapsed: true,
-            rightSideWidth: 300,
+          leftSideStyle={{
+            width: '350px',
+          }}
+          defaultCollapsed={{
+            leftSide: false,
+            rightSide: true,
           }}
         >
           <ToogleButton />
