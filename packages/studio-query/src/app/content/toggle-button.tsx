@@ -10,10 +10,10 @@ interface IToggleButtonProps {
 const ToggleButton: React.FunctionComponent<IToggleButtonProps> = props => {
   const { toggleLeftSide, toggleRightSide } = useSection();
   if (props.displaySidebarPosition === 'right') {
-    return <Button icon={<Icons.Sidebar />} onClick={toggleRightSide} />;
+    return <Button icon={<Icons.Sidebar />} onClick={() => toggleRightSide()} />;
   }
   if (props.displaySidebarPosition === 'left') {
-    return <Button icon={<Icons.Sidebar />} onClick={toggleLeftSide} />;
+    return <Button icon={<Icons.Sidebar />} onClick={() => toggleLeftSide()} />;
   }
   return null;
 };
