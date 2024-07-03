@@ -24,7 +24,7 @@ const Detail: React.FunctionComponent = () => {
   }, [jobId]);
   /** code style */
   const containerStyles = {
-    margin: '12px 0px',
+    margin: '-12px -10px',
     border: `${jobDetailBorder} 1px solid`,
     borderRadius: '6px',
     padding: '12px',
