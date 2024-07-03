@@ -37,10 +37,11 @@ const Detail: React.FunctionComponent = () => {
           title: 'Jobs',
         },
         {
-          title: 'Details',
+          title: 'ID',
         },
       ]}
-      desc="The detailed logs of the graph model running status."
+      desc="The jobid of the running state of the graph model is {jobId} verbose logs."
+      customdes={{ jobId }}
     >
       <pre style={containerStyles}>
         <code style={{ whiteSpace: 'pre-wrap' }}>{detailData}</code>

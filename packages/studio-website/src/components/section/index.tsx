@@ -10,10 +10,11 @@ interface ISectionProps {
   children?: React.ReactNode;
   items?: TabsProps['items'];
   style?: React.CSSProperties;
+  customdes?: { [key: string]: string };
 }
 const { useEffect } = React;
 const Section: React.FunctionComponent<ISectionProps> = props => {
-  const { title, desc, breadcrumb, children, items, style } = props;
+  const { title, desc, breadcrumb, children, items, style, customdes } = props;
   const { sectionBackground } = useThemeContainer();
   useEffect(() => {
     if (items) {
@@ -63,7 +64,7 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
 
         {desc && (
           <Typography.Title type="secondary" level={4} style={{ fontWeight: 300 }}>
-            <FormattedMessage id={desc} />
+            <FormattedMessage id={desc} values={customdes} />
           </Typography.Title>
         )}
       </div>

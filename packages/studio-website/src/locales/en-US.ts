@@ -91,7 +91,8 @@ export default {
   'End time': 'End time',
   Delete: 'Delete',
   Details: 'Details',
-  'The detailed logs of the graph model running status.': 'The detailed logs of the graph model running status.',
+  'The jobid of the running state of the graph model is {jobId} verbose logs.':
+    'The jobid of the running state of the graph model is {jobId} verbose logs.',
   /** alert */
   'Alert info': 'Alert info' /** see Line-93. */,
   'Alert rules': 'Alert rules',

@@ -94,7 +94,8 @@ export default {
   'End time': '结束时间',
   Delete: '删除',
   Details: '详情',
-  'The detailed logs of the graph model running status.': '图模型运行状态的详细日志。',
+  'The jobid of the running state of the graph model is {jobId} verbose logs.':
+    '图模型运行状态的作业ID为{jobId}详细日志。',
   /** alert */
   'Alert info': '警报信息',
   'Alert rules': '警报规则',
