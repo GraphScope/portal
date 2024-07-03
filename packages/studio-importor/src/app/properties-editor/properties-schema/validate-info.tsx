@@ -1,7 +1,8 @@
 import React from 'react';
-import { Button, Tooltip } from 'antd';
-import WarnIcon from './warn-icon';
+import { Button, Tooltip, theme } from 'antd';
 import { FormattedMessage } from 'react-intl';
+import { WarningOutlined } from '@ant-design/icons';
+const { useToken } = theme;
 
 interface IExtraComponentProps {
   appMode: 'DATA_IMPORTING' | string;
@@ -11,11 +12,12 @@ interface IExtraComponentProps {
 
 const ValidateInfo: React.FC<IExtraComponentProps> = ({ appMode = 'DATA_IMPORTING', type, properties }) => {
   const TooltipId = getTooltipTitle({ appMode, type, properties });
+  const { token } = useToken();
   return (
     <div style={{ height: '14px' }}>
       {TooltipId && (
         <Tooltip title={<FormattedMessage id={`${TooltipId}`} />}>
-          <Button type="text" size="small" icon={<WarnIcon />} />
+          <Button type="text" size="small" icon={<WarningOutlined style={{ color: token.colorErrorActive }} />} />
         </Tooltip>
       )}
     </div>

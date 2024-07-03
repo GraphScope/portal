@@ -42,7 +42,7 @@ export function inferredGraphFields(header: string[]) {
     'destination',
   ]);
 
-  const idPattern = /\b[a-zA-Z]+[_a-zA-Z0-9]*id\b/i;
+  const idPattern = /\b(?:[a-zA-Z0-9_]+[._-])?id(?:[_-][a-zA-Z0-9]+)?\b/i;
 
   const potentialIdFields: string[] = [];
 
