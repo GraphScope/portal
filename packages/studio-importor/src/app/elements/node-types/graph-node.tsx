@@ -2,7 +2,7 @@ import React, { memo, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { Tag } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
-import { EditableText, useThemeContainer } from '@graphscope/studio-components';
+import { EditableText, useThemeContainer, useSection } from '@graphscope/studio-components';
 
 import { useContext } from '../../useContext';
 const styles = {
@@ -22,8 +22,10 @@ const GraphNode = (props: NodeProps) => {
   const { store, updateStore } = useContext();
   const { currentId, theme, elementOptions } = store;
   const { algorithm } = useThemeContainer();
+  const { toggleRightSide } = useSection();
   const isSelected = id === currentId;
   const isDark = algorithm === 'darkAlgorithm';
+
   const [state, updateState] = useState({
     isHover: false,
     contentEditable: false,
@@ -65,8 +67,9 @@ const GraphNode = (props: NodeProps) => {
     updateStore(draft => {
       draft.currentType = 'nodes';
       draft.currentId = id;
-      draft.collapsed.right = false;
+      // draft.collapsed.right = false;
     });
+    toggleRightSide(false);
   };
   const haloStyle = elementOptions.isConnectable
     ? {

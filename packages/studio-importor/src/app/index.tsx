@@ -4,8 +4,7 @@ import PropertiesEditor from './properties-editor';
 import ImportSchema from './import-schema';
 
 import { ReactFlowProvider } from 'reactflow';
-import { Toolbar, ThemeProvider } from '@graphscope/studio-components';
-
+import { Toolbar, ThemeProvider, Section } from '@graphscope/studio-components';
 import 'reactflow/dist/style.css';
 import RightButton from './button-controller/right-button';
 import LeftButton from './button-controller/left-button';
@@ -89,55 +88,49 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
 
   return (
     <ThemeProvider locales={locales}>
-      <div style={{ width: '100%', height: '100%' }}>
-        <div style={{ height: '100%', display: 'flex' }}>
-          <div
-            style={{
-              width: left ? '0px' : defaultLeftStyles.width,
-              padding: left ? '0px' : '0px 12px',
-              overflow: 'hidden',
-              transition: 'width 0.2s ease',
-            }}
-          >
-            <ImportSchema />
-          </div>
-          <div style={{ flex: 1, position: 'relative' }}>
-            <ReactFlowProvider>
-              {appMode === 'DATA_MODELING' && (
-                <Toolbar>
-                  <LeftButton />
-                  <Divider type="horizontal" style={{ margin: '0px' }} />
-                  <AddNode />
-                  <ClearCanvas />
-                  {/* <ModeSwitch /> */}
-                </Toolbar>
-              )}
-              {children}
+      <Section
+        leftSide={<ImportSchema />}
+        rightSide={
+          <PropertiesEditor
+            appMode={appMode}
+            /**  第二项 */
+            queryPrimitiveTypes={queryPrimitiveTypes}
+            handleUploadFile={handleUploadFile}
+          />
+        }
+        leftSideStyle={{
+          width: '350px',
+          padding: '0px 12px',
+        }}
+        rightSideStyle={{
+          width: '400px',
+          padding: '0px 12px',
+        }}
+        defaultCollapsed={{
+          rightSide: true,
+          leftSide: true,
+        }}
+        style={{ height: 'calc(100vh - 50px)' }}
+        splitBorder
+      >
+        <ReactFlowProvider>
+          {appMode === 'DATA_MODELING' && (
+            <Toolbar>
+              <LeftButton />
+              <Divider type="horizontal" style={{ margin: '0px' }} />
+              <AddNode />
+              <ClearCanvas />
+              {/* <ModeSwitch /> */}
+            </Toolbar>
+          )}
+          {children}
 
-              <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }} direction="horizontal">
-                <RightButton />
-              </Toolbar>
-              <GraphCanvas />
-            </ReactFlowProvider>
-          </div>
-          <div
-            style={{
-              width: right ? '0px' : defaultRightStyles.width,
-              padding: right ? '0px' : '0px 12px',
-              position: 'relative',
-              overflow: 'hidden',
-              transition: 'width 0.2s ease',
-            }}
-          >
-            <PropertiesEditor
-              appMode={appMode}
-              /**  第二项 */
-              queryPrimitiveTypes={queryPrimitiveTypes}
-              handleUploadFile={handleUploadFile}
-            />
-          </div>
-        </div>
-      </div>
+          <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }} direction="horizontal">
+            <RightButton />
+          </Toolbar>
+          <GraphCanvas />
+        </ReactFlowProvider>
+      </Section>
     </ThemeProvider>
   );
 };
