@@ -1,13 +1,10 @@
 import * as React from 'react';
 import { InputNumber, Flex, Select } from 'antd';
 import type { Option } from './typing';
-interface IMappingFields {
-  componentType: 'Select' | 'InputNumber';
-  options: Option[];
+import { IPropertiesListProps } from './';
+interface IMappingFields extends Pick<IPropertiesListProps, 'mappingColumn'> {
   value?: { index?: number; token?: string };
   onChange(evt: any): void;
-  /** 是否上传 默认 false */
-  isUpload?: boolean;
 }
 
 export const getValue = (index, token) => {
@@ -18,10 +15,17 @@ export const getValue = (index, token) => {
   }
   return _value;
 };
-const MappingFields = (props: IMappingFields) => {
-  const { options, value, isUpload, onChange, componentType } = props;
-  const { index, token } = value || {};
+const shouldShowInputNumber = (props: IMappingFields): boolean => {
+  const { mappingColumn, value } = props;
+  const { options, type } = mappingColumn || { options: [], type: 'query' };
+  const { token } = value || {};
+  return (options.length === 0 || token === '') && type !== 'upload';
+};
 
+const MappingFields = (props: IMappingFields) => {
+  const { mappingColumn, value, onChange } = props;
+  const { index, token } = value || {};
+  const { options, type } = mappingColumn || { options: [], type: 'query' };
   /** mappingFiles options 边涉及相同value，导致不唯一 */
   const _options = options.map((item, pIdx) => {
     return {
@@ -52,8 +56,7 @@ const MappingFields = (props: IMappingFields) => {
   // const isDefault = !filelocation ? false : isUpload;
   // /** 上传选择 or 输入数字 */
   // const isInputNumberShow = isDefault === undefined ? (typeof value === 'number' ? true : false) : !isDefault;
-
-  if ((options.length === 0 || token === '') && !isUpload) {
+  if (shouldShowInputNumber(props)) {
     return (
       <InputNumber
         style={{ minWidth: '140px' }}

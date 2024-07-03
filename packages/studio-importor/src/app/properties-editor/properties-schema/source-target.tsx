@@ -6,42 +6,38 @@ import { useContext } from '../../useContext';
 import useModel from './useModel';
 import type { ISchemaEdge, ImportorProps, IEdgeData } from '../../typing';
 type ISourceTargetProps = {
-  isUpload: boolean;
   mappingColumn: ImportorProps['mappingColumn'];
   source_vertex_fields: IEdgeData['source_vertex_fields'];
   target_vertex_fields: IEdgeData['target_vertex_fields'];
 } & Pick<ISchemaEdge, 'source' | 'target' | 'id'>;
 
+// Constants for field names
+const SOURCE_VERTEX_FIELDS = 'source_vertex_fields';
+const TARGET_VERTEX_FIELDS = 'target_vertex_fields';
+
+// Extracted and memoized outside the component to avoid re-creation on each render
 const getLabelById = (nodes, source, target) => {
-  let source_label, target_label;
-  let source_primary_key, target_primary_key;
-  nodes.forEach(item => {
-    if (item.id === source) {
-      source_label = item.data.label;
-      source_primary_key = item.data.properties.find(item => {
-        return item.primaryKey;
-      });
-    }
-    if (item.id === target) {
-      target_label = item.data.label;
-      target_primary_key = item.data.properties.find(item => {
-        return item.primaryKey;
-      });
-    }
-  });
+  const sourceNode = nodes.find(node => node.id === source);
+  const targetNode = nodes.find(node => node.id === target);
+
   return {
-    source_label,
-    target_label,
-    target_primary_key: target_primary_key?.name,
-    source_primary_key: source_primary_key?.name,
+    source_label: sourceNode?.data.label,
+    target_label: targetNode?.data.label,
+    target_primary_key: targetNode?.data.properties.find(prop => prop.primaryKey)?.name,
+    source_primary_key: sourceNode?.data.properties.find(prop => prop.primaryKey)?.name,
   };
 };
+
 const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
-  const { id, source, target, isUpload, mappingColumn, source_vertex_fields, target_vertex_fields } = props;
+  const { id, source, target, mappingColumn, source_vertex_fields, target_vertex_fields } = props;
   const { store } = useContext();
   const { nodes } = store;
   const { handleDataFieldsChange } = useModel({ type: 'edges', id });
-  const { source_label, target_label, target_primary_key, source_primary_key } = getLabelById(nodes, source, target);
+  // Memoize the result of getLabelById to avoid unnecessary computations
+  const { source_label, target_label, source_primary_key, target_primary_key } = React.useMemo(
+    () => getLabelById(nodes, source, target),
+    [nodes, source, target],
+  );
 
   return (
     <>
@@ -55,10 +51,8 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
             <Typography.Text>Data Fields</Typography.Text>
             <MappingFields
               value={source_vertex_fields}
-              isUpload={isUpload}
-              onChange={val => handleDataFieldsChange(val, 'source_vertex_fields', source_primary_key)}
-              componentType={mappingColumn?.type || 'Select'}
-              options={mappingColumn?.options || []}
+              onChange={val => handleDataFieldsChange(val, SOURCE_VERTEX_FIELDS, source_primary_key)}
+              mappingColumn={mappingColumn}
             />
           </Flex>
         )}
@@ -73,10 +67,8 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
             <Typography.Text>Data Fields</Typography.Text>
             <MappingFields
               value={target_vertex_fields}
-              isUpload={isUpload}
-              onChange={val => handleDataFieldsChange(val, 'target_vertex_fields', target_primary_key)}
-              componentType={mappingColumn?.type || 'Select'}
-              options={mappingColumn?.options || []}
+              onChange={val => handleDataFieldsChange(val, TARGET_VERTEX_FIELDS, target_primary_key)}
+              mappingColumn={mappingColumn}
             />
           </Flex>
         )}

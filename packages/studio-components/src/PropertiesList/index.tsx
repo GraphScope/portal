@@ -18,8 +18,6 @@ export interface Option {
 export interface IPropertiesListProps {
   /** 是否可编辑 */
   disabled?: boolean;
-  /** 是否上传 */
-  isUpload?: boolean;
   /** 标题，默认是 Properties */
   title?: string | React.ReactNode;
   /** 属性  */
@@ -34,7 +32,7 @@ export interface IPropertiesListProps {
   /** 第四项 */
   mappingColumn?: {
     options: Option[];
-    type: 'Select' | 'InputNumber';
+    type: 'upload' | 'query';
   };
 }
 
@@ -45,7 +43,7 @@ export interface IPropertiesListProps {
  *
  */
 const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
-  const { title = 'Properties', onChange = () => {}, isUpload, disabled, typeColumn, mappingColumn } = props;
+  const { title = 'Properties', onChange = () => {}, disabled, typeColumn, mappingColumn } = props;
   const { options: typeOptions = defaultTypeOptions } = typeColumn || {};
 
   const { handleAdd, handleDelete, handleBlur, handlePrimaryKey, handleDoubleClick, handleType, handleChangeIndex } =
@@ -125,11 +123,9 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
       render(token, all) {
         return (
           <MappingFields
-            options={mappingColumn?.options}
+            mappingColumn={mappingColumn}
             /** 拆分后 index/token,后期需处理 */
             value={all}
-            isUpload={isUpload}
-            componentType={mappingColumn?.type}
             onChange={(value: number | string) => handleProperties(handleChangeIndex(value, all, state))}
           />
         );

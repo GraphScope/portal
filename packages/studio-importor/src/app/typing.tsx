@@ -62,7 +62,7 @@ export interface ImportorProps {
   /** 第四项 */
   mappingColumn?: {
     options: Option[];
-    type: 'Select' | 'InputNumber';
+    type: 'upload' | 'query';
   };
 
   queryGraphSchema?: () => Promise<ISchemaOptions>;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Collapse } from 'antd';
 import PropertiesSchema from './properties-schema';
 import type {} from '../typing';
@@ -31,43 +31,33 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
   const { nodes, edges, currentType, currentId, elementOptions } = store;
   const { appMode, handleUploadFile, queryPrimitiveTypes } = props;
 
-  const nodes_items = nodes.map(item => {
-    const { id, data } = item;
-    const { label } = data || { label: id };
-    return {
-      key: id,
-      label: label,
-      children: (
-        <PropertiesSchema
-          schema={JSON.parse(JSON.stringify(item))}
-          type="nodes"
-          queryPrimitiveTypes={queryPrimitiveTypes}
-          handleUploadFile={handleUploadFile}
-          appMode={appMode}
-          disabled={!elementOptions.isEditable}
-        />
-      ),
-    };
-  });
-  const edges_items = edges.map(item => {
-    const { id, data } = item;
-    const { label } = data || { label: id };
+  const commonProps = useMemo(
+    () => ({
+      appMode,
+      handleUploadFile,
+      queryPrimitiveTypes,
+      disabled: !elementOptions.isEditable,
+    }),
+    [appMode, handleUploadFile, queryPrimitiveTypes, elementOptions.isEditable],
+  );
+  const createItems = (items, type) =>
+    items.map(({ id, data }) => {
+      const label = data?.label || id;
+      return {
+        key: id,
+        label,
+        children: (
+          <PropertiesSchema
+            schema={JSON.parse(JSON.stringify(items.find(item => item.id === id)))}
+            type={type}
+            {...commonProps}
+          />
+        ),
+      };
+    });
 
-    return {
-      key: id,
-      label: label,
-      children: (
-        <PropertiesSchema
-          schema={JSON.parse(JSON.stringify(item))}
-          type="edges"
-          queryPrimitiveTypes={queryPrimitiveTypes}
-          handleUploadFile={handleUploadFile}
-          appMode={appMode}
-          disabled={!elementOptions.isEditable}
-        />
-      ),
-    };
-  });
+  const nodes_items = useMemo(() => createItems(nodes, 'nodes'), [nodes, commonProps]);
+  const edges_items = useMemo(() => createItems(edges, 'edges'), [edges, commonProps]);
 
   const onChange = (key: string | string[]) => {
     updateStore(draft => {
