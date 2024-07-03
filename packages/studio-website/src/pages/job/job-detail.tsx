@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Breadcrumb } from 'antd';
-import { FormattedMessage } from 'react-intl';
 import { getJobById } from './service';
 import { Utils, useThemeContainer } from '@graphscope/studio-components';
+import Section from '@/components/section';
 const { getUrlParams } = Utils;
 
 const Detail: React.FunctionComponent = () => {
@@ -32,19 +31,21 @@ const Detail: React.FunctionComponent = () => {
     color: jobDetailColor,
   };
   return (
-    <div style={{ padding: '12px 24px' }}>
-      <Breadcrumb>
-        <Breadcrumb.Item>
-          <a href="/job">作业管理</a>
-        </Breadcrumb.Item>
-        <Breadcrumb.Item>
-          <FormattedMessage id="Detail" />
-        </Breadcrumb.Item>
-      </Breadcrumb>
+    <Section
+      breadcrumb={[
+        {
+          title: 'Jobs',
+        },
+        {
+          title: 'Details',
+        },
+      ]}
+      desc="The detailed logs of the graph model running status."
+    >
       <pre style={containerStyles}>
         <code style={{ whiteSpace: 'pre-wrap' }}>{detailData}</code>
       </pre>
-    </div>
+    </Section>
   );
 };
 
