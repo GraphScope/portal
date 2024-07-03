@@ -190,9 +190,10 @@ export function validate(
 
   return [...verifyNodes, ...verifyEdges].reduce(
     (acc, curr) => {
+      const message = curr.passed ? '' : `  ${curr.label}`;
       return {
         passed: acc.passed && curr.passed,
-        message: acc.message + '  ' + curr.label,
+        message: acc.message + message,
       };
     },
     {

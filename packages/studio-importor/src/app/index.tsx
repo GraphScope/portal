@@ -67,13 +67,13 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
       };
       const { nodes, edges } = schemaOptions || { nodes: [], edges: [] };
       const isEmpty = nodes.length === 0;
-      const leftSideOpen = appMode === 'DATA_MODELING' && isEmpty;
+      // const leftSideOpen = appMode === 'DATA_MODELING' && isEmpty;
       const rightSideOpen = !isEmpty;
       updateStore(draft => {
         draft.nodes = nodes;
         draft.edges = edges;
         draft.appMode = appMode;
-        draft.collapsed.left = !leftSideOpen;
+        draft.collapsed.left = true; //!leftSideOpen;
         draft.collapsed.right = !rightSideOpen;
         draft.elementOptions = {
           isClickable: (elementOptions || {}).isClickable !== false, //默认undefined 则返回true
