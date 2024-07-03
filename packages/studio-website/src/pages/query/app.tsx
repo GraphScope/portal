@@ -11,12 +11,13 @@ import {
 import { useContext } from '@/layouts/useContext';
 import EmptyModelCase from './empty-model-case';
 import StoppedServiceCase from './stopped-service-case';
+import SelectGraph from '@/layouts/select-graph';
 const QueryModule = () => {
   const { GS_ENGINE_TYPE } = window;
   const language = GS_ENGINE_TYPE === 'groot' ? 'gremlin' : 'cypher';
   const globalScript = GS_ENGINE_TYPE === 'groot' ? 'g.V().limit 10' : 'Match (n) return n limit 10';
   const { store } = useContext();
-  const { graphId } = store;
+  const { graphId, displaySidebarPosition, displaySidebarType } = store;
 
   return (
     <>
@@ -25,8 +26,6 @@ const QueryModule = () => {
 
       <StudioQuery
         key={graphId}
-        /** 侧边栏展示的位置 */
-        displaySidebarPosition="right"
         /** 是否启用绝对定位布局 */
         enableAbsolutePosition={false}
         /** 语句默认展示的模式 */
@@ -48,7 +47,10 @@ const QueryModule = () => {
         queryGraphSchema={queryGraphSchema}
         /** 是否立即查询 */
         enableImmediateQuery={true}
-      />
+        connectComponent={<SelectGraph />}
+        displaySidebarPosition={displaySidebarPosition}
+        displaySidebarType={displaySidebarType}
+      ></StudioQuery>
     </>
   );
 };

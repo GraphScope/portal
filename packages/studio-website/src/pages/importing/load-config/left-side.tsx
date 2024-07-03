@@ -35,9 +35,11 @@ const LeftSide: React.FC<ILeftSide> = props => {
   }, [delimiter, datatype]);
   return (
     <div style={{ padding: '12px 36px' }}>
-      <Title level={2}>Configuration</Title>
+      <Title level={2}>
+        <FormattedMessage id="Configuration" />
+      </Title>
       <Text type="secondary">
-        You have successfully bound the data source. Please complete the configuration to start importing data.
+        <FormattedMessage id="You have successfully bound the data source. Please complete the configuration to start importing data." />
       </Text>
       <Form
         name="modal_type"

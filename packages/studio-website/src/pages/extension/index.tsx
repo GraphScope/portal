@@ -31,9 +31,6 @@ const Extension: React.FunctionComponent = () => {
       <Section
         breadcrumb={[
           {
-            title: 'Home',
-          },
-          {
             title: 'Extensions',
           },
         ]}

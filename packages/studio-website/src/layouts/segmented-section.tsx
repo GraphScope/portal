@@ -1,23 +1,11 @@
 import * as React from 'react';
-import {
-  Breadcrumb,
-  Divider,
-  Typography,
-  Tabs,
-  Segmented,
-  Select,
-  Space,
-  Button,
-  SegmentedProps,
-  notification,
-} from 'antd';
-
-import SelectGraph from './select-graph';
+import { SegmentedProps, notification } from 'antd';
 
 import { Utils } from '@graphscope/studio-components';
 import { useThemeContainer } from '@graphscope/studio-components';
 import { listGraphs } from '@/pages/instance/lists/service';
 import { useContext, IGraph } from './useContext';
+import useWidth from './useWidth';
 
 interface ISectionProps {
   value: string;
@@ -51,6 +39,7 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
   const { store, updateStore } = useContext();
   const { currentnNav, graphs, graphId, draftId } = store;
   const { token } = useThemeContainer();
+  const ContainerWidth = useWidth();
   const handleChange = (value: string) => {
     const herf = graphId ? `${value}?${extraRouterKey}=${graphId}` : value;
     history && history.push(herf);
@@ -89,40 +78,23 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
       }
     });
   }, []);
+  const IS_QUERY = currentnNav === '/querying';
 
   return (
-    <section style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div
-        style={{
-          padding: '8px 8px 16px 8px',
-          display: 'flex',
-          alignItems: 'center',
-          // justifyContent: withNav ? 'space-between' : 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <SelectGraph />
+    <section
+      style={{
+        //@ts-ignore
+        background: token.colorBgBase,
+        padding: IS_QUERY ? '0px' : '4px',
+        borderRadius: '8px',
+        height: '100%',
+        width: `${ContainerWidth - 220}px`,
+        overflow: 'hidden',
 
-        {withNav && (
-          <>
-            <div style={{ width: '400px' }}>
-              <Segmented options={options} block onChange={handleChange} value={currentnNav} />
-            </div>
-            <div></div>
-          </>
-        )}
-      </div>
-      <div
-        style={{
-          padding: '4px',
-          flex: 1,
-          background: token.colorBgBase,
-          borderRadius: '4px',
-          ...style,
-        }}
-      >
-        {children}
-      </div>
+        ...style,
+      }}
+    >
+      {children}
     </section>
   );
 };

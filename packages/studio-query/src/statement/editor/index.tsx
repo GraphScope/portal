@@ -20,7 +20,7 @@ const Editor: React.FunctionComponent<
     timestamp?: number;
     isFetching: boolean;
     antdToken: GlobalToken;
-    saved: boolean; // 是否是保存的语句
+
     message: string;
   }
 > = props => {
@@ -32,7 +32,6 @@ const Editor: React.FunctionComponent<
     id,
     isFetching,
     antdToken,
-    saved,
     schemaData,
     timestamp,
     language,
@@ -70,7 +69,7 @@ const Editor: React.FunctionComponent<
   const handleShare = () => {
     const value = editorRef?.current?.codeEditor?.getValue();
     window.open(
-      `${window.location.origin}/query-app#?language=${language}&auto_run=true&global_script=${encodeURIComponent(value)}`,
+      `${window.location.origin}/querying?language=${language}&auto_run=true&global_script=${encodeURIComponent(value)}`,
     );
   };
   return (
@@ -99,9 +98,11 @@ const Editor: React.FunctionComponent<
             />
           </Tooltip>
           {onSave && <SaveStatement onSave={handleSave} />}
-          <Tooltip title={intl.formatMessage({ id: 'Share' })}>
-            <Button type="text" icon={<ShareAltOutlined onClick={handleShare} />} />
-          </Tooltip>
+          {onClose && (
+            <Tooltip title={intl.formatMessage({ id: 'Share' })}>
+              <Button type="text" icon={<ShareAltOutlined onClick={handleShare} />} />
+            </Tooltip>
+          )}
           {onClose && (
             <Tooltip title={intl.formatMessage({ id: 'Delete' })}>
               <Button type="text" icon={<CloseOutlined onClick={handleClose} />} />

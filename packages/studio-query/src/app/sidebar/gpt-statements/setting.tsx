@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Input, Button, Modal, Flex, Typography } from 'antd';
 import { SettingOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { Utils } from '@graphscope/studio-components';
 interface ISettingProps {
   onChange: (value: string) => void;
   style?: React.CSSProperties;
@@ -9,7 +10,10 @@ interface ISettingProps {
 
 const Setting: React.FunctionComponent<ISettingProps> = props => {
   const { onChange, style } = props;
-  const [isModalOpen, setIsModalOpen] = useState(!localStorage.getItem('OPENAI_KEY_FOR_GS'));
+  const [isModalOpen, setIsModalOpen] = useState(() => {
+    const match = Utils.getSearchParams('tab') === 'copilot';
+    return !localStorage.getItem('OPENAI_KEY_FOR_GS') && match;
+  });
   const InputRef = useRef(null);
   const intl = useIntl();
 

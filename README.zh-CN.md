@@ -1,4 +1,4 @@
-<h1 align="center">
+<!-- <h1 align="center">
     <img src="https://graphscope.io/assets/images/graphscope-logo.svg" width="400" alt="graphscope-logo">
 </h1>
 
@@ -6,13 +6,17 @@
    专为 GraphScope 设计的，基于 Web 的用户交互工具
 </p>
 
-<div align="center">
-  
-[![Version](https://badgen.net/npm/v/@graphscope/studio-query)](https://www.npmjs.com/@graphscope/studio-query)
- 
+<div align="center"> -->
+
+<!-- [![Version](https://badgen.net/npm/v/@graphscope/studio-query)](https://www.npmjs.com/@graphscope/studio-query)
+
 ![Latest commit](https://badgen.net/github/last-commit/graphscope/portal)
-  
+   -->
 </div>
+
+# GraphScope Portal
+
+专为 GraphScope 设计的，基于 Web 的用户交互工具
 
 <img src="https://gw.alipayobjects.com/zos/antfincdn/R8sN%24GNdh6/language.svg" width="18"> [English](/docs/README.md) | 简体中文
 
@@ -45,91 +49,13 @@ GraphScope Portal 是一款专为 GraphScope 设计的，基于 Web 的用户交
 
 ## 快速开始
 
-- 启动 Insight 引擎
-
 ```bash
-docker pull <insight-engine-image>
+docker pull  registry.cn-hongkong.aliyuncs.com/graphscope/portal:latest
 ```
 
-- 启动 Interactive 引擎
+## [👏 共建指南 👏]('./CONTRIBUTING.zh-CN.md')
 
-```bash
-docker pull <interactive-engine-image>
-```
-
-## 通用组件库
-
-- https://portal-bim.pages.dev/
-
-## 本地开发
-
-- 准备工作
-
-  - 安装 node.js : https://nodejs.org/en
-  - 安装 pnpm : https://pnpm.io/installation#using-npm `npm install -g pnpm`
-
-- 安装依赖
-
-```bash
-pnpm install
-
-```
-
-- 编译子包
-
-```bash
-npm run start
-```
-
-- 启动 Portal 前端洁面
-
-```bash
-cd packages/studio-website
-npm run start
-```
-
-## 部署指南
-
-在根目录下执行:
-
-编译前端产物
-
-`npm run ci`
-
-初次部署
-
-`npm run deploy -- --proxy=http://x.x.x.x --port=8888`
-
-解释：
-
-- `proxy` 指定 GraphScope 引擎的部署地址，默认为 http://127.0.0.1:8080。
-- `port` 设置前端服务端口，默认为 8888。
-
-- 查看日志
-
-`npm run logs`
-
-- 重新部署
-
-`npm run re-deploy -- --proxy=http://x.x.x.x --port=8888`
-
-## 技术架构
-
-graphscope portal 采用 pnpm 多包架构，核心技术模块有
-
-| Subpackage      | Description                                          |
-| --------------- | ---------------------------------------------------- |
-| studio-server   | 采用 open api 的自动接口生成，用于 Portal 的接口请求 |
-| studio-importor | 数据建模和导入模块，支持可视化建模                   |
-| studio-query    | 数据查询模块，支持 Cypher 和 Gremlin 两种语法        |
-| studio-site     | portal 主站点                                        |
-| studio-sdk-py   | 正在建设中: 未来将支持在 JupyterLab 中使用 portal    |
-
-- 启动 Portal 中的前端组件包
-
-```
-npm run docs
-```
+## [ 🔧 组件库](https://portal-bim.pages.dev/)
 
 ## 许可证
 

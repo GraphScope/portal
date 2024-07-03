@@ -8,6 +8,16 @@ import { STATUS_MAP } from './const';
 import { history } from 'umi';
 import { Utils } from '@graphscope/studio-components';
 import ConnectEndpoint from '@/pages/query/connect-endpoint';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCoins,
+  faMagnifyingGlass,
+  faDownload,
+  faListCheck,
+  faBell,
+  faPuzzlePiece,
+  faDiagramProject,
+} from '@fortawesome/free-solid-svg-icons';
 
 interface IConnectModelProps {}
 
@@ -22,7 +32,8 @@ const SelectGraph: React.FunctionComponent<IConnectModelProps> = props => {
       return {
         label: (
           <Space>
-            <GlobalOutlined style={{ color: STATUS_MAP[item.status].color }} />
+            <FontAwesomeIcon icon={faCoins} style={{ color: STATUS_MAP[item.status].color }} />
+            {/* <GlobalOutlined style={{ color: STATUS_MAP[item.status].color }} /> */}
             {item.name}
           </Space>
         ),

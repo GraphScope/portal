@@ -5,7 +5,7 @@ import { useContext } from '../../layouts/useContext';
 import { Toolbar } from '@graphscope/studio-components';
 import StartImporting from './start-importing';
 import { transMappingSchemaToOptions } from './utils/import';
-
+import SelectGraph from '@/layouts/select-graph';
 import EmptyModelCase from './empty-model-case';
 import EmptyMappingCase from './empty-mapping-case';
 interface ISchemaPageProps {}
@@ -47,6 +47,7 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
       }}
     >
       <Toolbar style={{ top: '12px', right: '74px', left: 'unset' }} direction="horizontal">
+        <SelectGraph />
         <StartImporting />
       </Toolbar>
       <EmptyModelCase />

@@ -13,11 +13,20 @@ interface IContentProps {
   queryGraphData: IStudioQueryProps['queryGraphData'];
   handleCancelQuery: IStudioQueryProps['handleCancelQuery'];
   enableImmediateQuery: boolean;
+  connectComponent?: IStudioQueryProps['connectComponent'];
+  displaySidebarPosition?: IStudioQueryProps['displaySidebarPosition'];
 }
 const { useToken } = theme;
 
 const Content: React.FunctionComponent<IContentProps> = props => {
-  const { createStatements, queryGraphData, enableImmediateQuery, handleCancelQuery } = props;
+  const {
+    createStatements,
+    queryGraphData,
+    enableImmediateQuery,
+    handleCancelQuery,
+    connectComponent,
+    displaySidebarPosition,
+  } = props;
   const { store, updateStore } = useContext();
   const { activeId, mode, statements, savedStatements, schemaData, graphName, language } = store;
   const savedIds = savedStatements.map(item => item.id);
@@ -89,7 +98,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
         }}
       >
         <Suspense>
-          <Header />
+          <Header connectComponent={connectComponent} displaySidebarPosition={displaySidebarPosition} />
         </Suspense>
 
         {mode === 'tabs' && queryOptions.length !== 0 && (
@@ -118,7 +127,6 @@ const Content: React.FunctionComponent<IContentProps> = props => {
                   enableImmediateQuery={enableImmediateQuery}
                   mode={mode}
                   active={id === activeId}
-                  saved={savedIds.indexOf(id) !== -1}
                   id={id}
                   timestamp={timestamp}
                   graphName={graphName}

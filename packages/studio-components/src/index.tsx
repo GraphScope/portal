@@ -11,8 +11,9 @@ export { default as Section } from './Section';
 export { default as MultipleInstance } from './MultipleInstance';
 export { default as SplitSection } from './SplitSection';
 export { default as ResultConfig } from './ResultConfig';
-export { default as ContainerProvider } from './Provider';
+export { default as ThemeProvider } from './Provider';
 export { default as ImportFiles } from './ImportFiles';
+export { default as SideTabs } from './SideTabs';
 /** all */
 export * as Utils from './Utils';
 export * as Icons from './Icons';

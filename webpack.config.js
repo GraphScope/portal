@@ -1,27 +1,24 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const webpack = require('webpack');
 
 module.exports = (env, argv) => {
+  const { global, entry } = env;
   const ASSETS_PATH = path.join(__dirname, env.path);
   const ENTRY_PATH = path.join(ASSETS_PATH, 'src/index.tsx');
   const DIST_PATH = path.join(ASSETS_PATH, 'dist/');
   let ASSETS_UMD = env.path.replace('/packages/', '').split('-').join('_').toUpperCase();
 
-  if (ASSETS_UMD === 'GI_SDK') {
-    ASSETS_UMD = 'GISDK';
-  }
-
-  console.log(ASSETS_UMD);
+  console.log(ASSETS_UMD, global, entry, env);
 
   const plugins = env.analysis
     ? [
         new MiniCssExtractPlugin(),
-        new BundleAnalyzerPlugin({
-          analyzerPort: Math.round(Math.random() * 100 + 8000),
-        }),
+        // new BundleAnalyzerPlugin({
+        //   analyzerPort: Math.round(Math.random() * 100 + 8000),
+        // }),
       ]
     : [
         new MiniCssExtractPlugin(),
@@ -32,7 +29,7 @@ module.exports = (env, argv) => {
       ];
   return {
     entry: {
-      index: ENTRY_PATH,
+      index: entry ? path.join(__dirname, entry) : ENTRY_PATH,
     },
     mode: argv.mode,
     module: {
@@ -48,12 +45,11 @@ module.exports = (env, argv) => {
           exclude: /(node_modules|bower_components)/,
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/env', '@babel/preset-react'],
+            presets: ['@babel/preset-react'],
             plugins: [
               ['@babel/plugin-proposal-class-properties', { loose: true }],
               ['@babel/plugin-proposal-private-methods', { loose: true }],
               ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
-              ['react-hot-loader/babel'],
             ],
           },
         },
@@ -110,18 +106,18 @@ module.exports = (env, argv) => {
       extensions: ['*', '.ts', '.tsx', '.js', '.jsx'],
       fallback: {
         fs: false, //https://webpack.js.org/migrate/5/#clean-up-configuration
-        crypto: require.resolve('crypto-browserify'),
-        constants: require.resolve('constants-browserify'),
-        // // crypto: false,
-        // // constants: false,
-        stream: require.resolve('stream-browserify'),
-        buffer: require.resolve('buffer'),
+        // crypto: require.resolve('crypto-browserify'),
+        // constants: require.resolve('constants-browserify'),
+        // // // crypto: false,
+        // // // constants: false,
+        // stream: require.resolve('stream-browserify'),
+        // buffer: require.resolve('buffer'),
         // buffer: require.resolve('buffer-browserify'),
       },
     },
     // devtool: 'cheap-module-source-map',
     output: {
-      library: ASSETS_UMD,
+      library: global || ASSETS_UMD,
       libraryTarget: 'umd',
       path: DIST_PATH,
       publicPath: './',
@@ -129,13 +125,9 @@ module.exports = (env, argv) => {
     },
     plugins: plugins,
     externals: {
-      lodash: '_',
       react: 'React',
       'react-dom': 'ReactDOM',
-      '@antv/graphin': 'Graphin',
-      '@antv/g6': 'G6',
-      '@antv/gi-sdk': 'GISDK',
-      '@antv/g2plot': 'G2Plot',
+      'node:os': 'commonjs2 node:os',
     },
     watch: Boolean(env.watch),
   };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { history } from 'umi';
 import { Result, Typography, Button } from 'antd';
-
+import { FormattedMessage } from 'react-intl';
 import { useContext } from '@/layouts/useContext';
 type IRightSide = {
   status?: 'error' | 'success';
@@ -45,7 +45,7 @@ const RightSide: React.FC<IRightSide> = props => {
                 });
               }}
             >
-              Goto Jobs
+              <FormattedMessage id="Goto Jobs" />
             </Button>
           </div>
         )}
