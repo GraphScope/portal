@@ -135,12 +135,12 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
   const defaultNav = Utils.getSearchParams('tab');
   return (
     <Flex vertical style={{ height: '100%', overflow: 'hidden', padding: '0px 12px' }} justify="space-between">
-      <div style={{ overflowY: 'scroll' }}>
+      <div style={{ overflowY: 'scroll', position: 'relative' }}>
         <Typography.Title level={5} style={{ margin: '0px', flexBasis: '30px', padding: '12px 0px' }}>
           Copilot
         </Typography.Title>
 
-        <Setting onChange={handleSave} style={{ position: 'absolute', right: '6px', top: '8px' }} />
+        <Setting onChange={handleSave} style={{ position: 'absolute', right: '0px', top: '8px' }} />
 
         <div>
           {messages

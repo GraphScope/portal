@@ -2,54 +2,16 @@ import { Button, notification, Modal, Form, Result, Tooltip } from 'antd';
 import React, { useState } from 'react';
 import { SaveOutlined } from '@ant-design/icons';
 import { useContext } from '../../layouts/useContext';
-import { useContext as useModeling, getTooltipTitle } from '@graphscope/studio-importor';
+import { useContext as useModeling, validateProperties } from '@graphscope/studio-importor';
 import { createGraph, getSchema } from './services';
 import type { ISchemaNode, ISchemaEdge, ISchemaOptions } from '@graphscope/studio-importor';
 import { Utils } from '@graphscope/studio-components';
 import { history } from 'umi';
 import localforage from 'localforage';
 import { FormattedMessage } from 'react-intl';
+import type { INTERNAL_Snapshot } from 'valtio';
 
 interface SaveModelingProps {}
-export const getSchemaOptions = (nodes: ISchemaNode[], edges: ISchemaEdge[]) => {
-  let errors: string[] = [];
-  const _nodes = nodes.map(item => {
-    const { data, id } = item;
-    const { label, properties } = data;
-    if (properties) {
-      return {
-        id,
-        label,
-        properties,
-      };
-    } else {
-      errors.push(label);
-    }
-  });
-  const _edges = edges.map(item => {
-    const { data, id, source, target } = item;
-    const { label, properties } = data;
-    return {
-      label,
-      id,
-      source,
-      target,
-      properties,
-    };
-  });
-  if (errors.length !== 0) {
-    notification.warning({
-      message: `Properties error`,
-      description: `Vertex ${errors.join(',')} need add Properties`,
-      duration: 3,
-    });
-    return false;
-  }
-  return {
-    nodes: _nodes,
-    edges: _edges,
-  };
-};
 
 const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   const [state, setState] = useState<{
@@ -79,7 +41,8 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   const { isLoading, open, status, schema } = state;
 
   const { graphId } = store;
-  const disabled = graphId !== draftId;
+
+  const IS_DRAFT_GRAPH = graphId === draftId;
 
   const handleSave = async () => {
     const schema = { nodes, edges };
@@ -129,14 +92,6 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
       });
     }
   };
-  const handleClose = () => {
-    setState(preState => {
-      return {
-        ...preState,
-        open: false,
-      };
-    });
-  };
 
   const handleGotoGraphs = () => {
     Utils.setSearchParams({
@@ -169,7 +124,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
     });
   };
 
-  const text = disabled ? 'View Schema' : 'Save Modeling';
+  const text = IS_DRAFT_GRAPH ? 'View Schema' : 'Save Modeling';
   const title =
     status === 'success' ? (
       <FormattedMessage id="Successfully saved the graph model" />
@@ -190,15 +145,15 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
     </Button>,
   ];
   const Action = status === 'success' ? SuccessAction : ErrorAction;
-  const controlTooltip = controlsInfo(JSON.parse(JSON.stringify(nodes)), JSON.parse(JSON.stringify(edges)));
-  /** nodes为空且 按钮是 Save Modeling 不能点击保存按钮 */
-  const isSave = !nodes.length && !disabled ? true : disabled || controlTooltip[0];
+  const { passed: validatePassed, message: validateMessage } = validate(nodes, edges);
+
+  const canSave = nodes.length !== 0 && IS_DRAFT_GRAPH && validatePassed;
 
   if (appMode === 'DATA_MODELING') {
     return (
       <>
-        <Tooltip title={controlTooltip[0] ? <FormattedMessage id={`${controlTooltip[1]}`} /> : ''}>
-          <Button disabled={isSave} type="primary" icon={<SaveOutlined />} onClick={handleSave}>
+        <Tooltip title={validatePassed ? '' : validateMessage}>
+          <Button disabled={!canSave} type="primary" icon={<SaveOutlined />} onClick={handleSave}>
             <FormattedMessage id={text} />
           </Button>
         </Tooltip>
@@ -211,28 +166,41 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   return null;
 };
 
-export function controlsInfo(nodes: ISchemaNode[], edges: ISchemaEdge[]): [boolean, string[]] {
-  const verifyElements = (elements: any[], elementType: string) => {
+export function validate(
+  nodes: INTERNAL_Snapshot<ISchemaNode[]>,
+  edges: INTERNAL_Snapshot<ISchemaEdge[]>,
+): { passed: boolean; message: string } {
+  const verifyElements = (
+    elements: INTERNAL_Snapshot<ISchemaNode[]> | INTERNAL_Snapshot<ISchemaEdge[]>,
+    elementType: 'nodes' | 'edges',
+  ) => {
     return elements.map((item: any) => {
       const { label, properties = [] } = item.data;
-      const verifyAttributes = getTooltipTitle({
+      const verifyMessage = validateProperties({
         appMode: 'DATA_MODELING',
-        type: elementType as 'node' | 'edge',
+        type: elementType as 'nodes' | 'edges',
         properties,
       });
-      console.log(elementType === 'node' ? 1 : 2, verifyAttributes);
-      return { verify: Boolean(verifyAttributes), title: verifyAttributes || '' };
+
+      return { label, passed: !verifyMessage, message: verifyMessage || '' };
     });
   };
+  const verifyNodes = verifyElements(nodes, 'nodes');
+  const verifyEdges = verifyElements(edges, 'edges');
 
-  const [nodeResults, edgeResults] = [nodes, edges].map((typeElements, index) =>
-    verifyElements(typeElements, ['node', 'edge'][index]),
+  return [...verifyNodes, ...verifyEdges].reduce(
+    (acc, curr) => {
+      const message = curr.passed ? '' : `  ${curr.label}`;
+      return {
+        passed: acc.passed && curr.passed,
+        message: acc.message + message,
+      };
+    },
+    {
+      passed: true as boolean,
+      message: 'please check element: ',
+    },
   );
-
-  const hasTrueVerifications = nodeResults.some(result => result.verify) || edgeResults.some(result => result.verify);
-
-  const tooltipTitles = [...nodeResults, ...edgeResults].filter(result => result.title).map(result => result.title);
-
-  return [hasTrueVerifications, tooltipTitles];
 }
+
 export default SaveModeling;

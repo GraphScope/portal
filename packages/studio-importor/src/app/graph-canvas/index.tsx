@@ -17,8 +17,7 @@ const fakeSnapshot = obj => {
 };
 
 const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
-  const { store, updateStore, onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } =
-    useInteractive();
+  const { store, onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } = useInteractive();
   const { nodes, edges, theme, collapsed } = store;
   const { algorithm } = useThemeContainer();
   const isEmpty = nodes.length === 0;

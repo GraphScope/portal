@@ -37,7 +37,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     return {
       key: id,
       label: label,
-      extra: <ValidateInfo type="node" appMode={appMode} properties={JSON.parse(JSON.stringify(properties))} />,
+      extra: <ValidateInfo type="nodes" appMode={appMode} properties={JSON.parse(JSON.stringify(properties))} />,
       children: (
         <PropertiesSchema
           schema={JSON.parse(JSON.stringify(item))}
@@ -57,7 +57,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     return {
       key: id,
       label: label,
-      extra: <ValidateInfo type="edge" appMode={appMode} properties={JSON.parse(JSON.stringify(properties))} />,
+      extra: <ValidateInfo type="edges" appMode={appMode} properties={JSON.parse(JSON.stringify(properties))} />,
       children: (
         <PropertiesSchema
           schema={JSON.parse(JSON.stringify(item))}

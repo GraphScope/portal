@@ -1,49 +1,59 @@
 import React from 'react';
-import { Button, Tooltip } from 'antd';
-import WarnIcon from './warn-icon';
+import { Button, Tooltip, theme } from 'antd';
 import { FormattedMessage } from 'react-intl';
+import { WarningOutlined } from '@ant-design/icons';
+const { useToken } = theme;
+import type { Property } from '@graphscope/studio-components';
 
 interface IExtraComponentProps {
   appMode: 'DATA_IMPORTING' | string;
-  type: 'node' | 'edge';
-  properties: { primaryKey: boolean }[];
+  type: 'nodes' | 'edges';
+  properties: Property[];
 }
 
 const ValidateInfo: React.FC<IExtraComponentProps> = ({ appMode = 'DATA_IMPORTING', type, properties }) => {
-  const TooltipId = getTooltipTitle({ appMode, type, properties });
+  const tooltip = validateProperties({ appMode, type, properties });
+  const { token } = useToken();
   return (
     <div style={{ height: '14px' }}>
-      {TooltipId && (
-        <Tooltip title={<FormattedMessage id={`${TooltipId}`} />}>
-          <Button type="text" size="small" icon={<WarnIcon />} />
+      {tooltip && (
+        <Tooltip title={<FormattedMessage id={`${tooltip}`} />}>
+          <Button type="text" size="small" icon={<WarningOutlined style={{ color: token.colorErrorActive }} />} />
         </Tooltip>
       )}
     </div>
   );
 };
-/** 获取不同状态下title */
-export function getTooltipTitle({ appMode, type, properties = [] }: IExtraComponentProps): string | null {
-  // Early return if the appMode is 'DATA_IMPORTING'
+
+export function validateProperties({ appMode, type, properties = [] }: IExtraComponentProps): string | null {
   if (appMode === 'DATA_IMPORTING') {
     return null;
   }
 
   // Node type checks
-  if (type === 'node') {
+  if (type === 'nodes') {
     if (!properties.length) {
       return 'A vertex must have at least one property.';
     }
+    console.log('properties', properties);
     if (!properties.some(({ primaryKey }) => primaryKey)) {
       return 'A vertex must have a primary key.';
+    }
+    if (!properties.every(({ type }) => type)) {
+      return 'Please select a primate type.';
     }
   }
 
   // Edge type check
-  if (type === 'edge' && properties.length !== 1) {
-    return 'A edge can only have one property.';
+  if (type === 'edges') {
+    if (properties.length > 1) {
+      return 'A edge can only have one property.';
+    }
+    if (!properties.every(({ type }) => type)) {
+      return 'Please select a primate type.';
+    }
   }
 
-  // If none of the conditions are met, return null
   return null;
 }
 

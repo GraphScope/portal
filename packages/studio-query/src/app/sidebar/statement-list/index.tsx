@@ -202,43 +202,41 @@ const StatementList: React.FunctionComponent<IListProps> = props => {
   }
   return (
     <>
-      <div style={{ position: 'absolute', top: '14px', right: '8px', ...actionStyle }}>
-        {batch && (
-          <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
-            <Button
-              icon={<DeleteOutlined />}
-              size="small"
-              type="text"
-              onClick={() => {
-                onDelete([...checkedSet]);
-              }}
-            ></Button>
-          </Checkbox>
-        )}
-        <Button
-          icon={batch ? <MoreOutlined /> : <EditOutlined />}
-          size="small"
-          type="text"
-          onClick={() => {
-            updateState(pre => {
-              return {
-                ...pre,
-                batch: !pre.batch,
-              };
-            });
-          }}
-        ></Button>
-      </div>
-
       <Flex
         vertical
         flex={1}
         style={{
           position: 'relative',
           height: '100%',
-          overflow: 'hidden',
         }}
       >
+        <div style={{ position: 'absolute', top: '-34px', right: '0px', zIndex: 99, ...actionStyle }}>
+          {batch && (
+            <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
+              <Button
+                icon={<DeleteOutlined />}
+                size="small"
+                type="text"
+                onClick={() => {
+                  onDelete([...checkedSet]);
+                }}
+              ></Button>
+            </Checkbox>
+          )}
+          <Button
+            icon={batch ? <MoreOutlined /> : <EditOutlined />}
+            size="small"
+            type="text"
+            onClick={() => {
+              updateState(pre => {
+                return {
+                  ...pre,
+                  batch: !pre.batch,
+                };
+              });
+            }}
+          ></Button>
+        </div>
         {group ? (
           <GroupList items={items} batch={batch} checkedSet={checkedSet} onChange={onChange} onClick={onClick} />
         ) : (

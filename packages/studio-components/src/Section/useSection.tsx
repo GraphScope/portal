@@ -5,18 +5,11 @@ export interface ISectionContext {
     leftSide: boolean;
     rightSide: boolean;
   };
-  widthStyle: {
-    leftSide: number;
-    rightSide: number;
-  };
-  toggleLeftSide: () => void;
-  toggleRightSide: () => void;
+
+  toggleLeftSide: (value?: boolean) => void;
+  toggleRightSide: (value?: boolean) => void;
 }
 export const SectionContext = createContext<ISectionContext>({
-  widthStyle: {
-    leftSide: 350,
-    rightSide: 350,
-  },
   collapsed: {
     leftSide: true,
     rightSide: true,
