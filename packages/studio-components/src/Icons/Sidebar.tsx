@@ -1,6 +1,9 @@
 import React from 'react';
-export default ({ style, disabled }: { style?: React.CSSProperties; disabled?: boolean }) => {
+export default ({ style, disabled, revert }: { style?: React.CSSProperties; disabled?: boolean; revert?: boolean }) => {
   const color = disabled ? '#ddd' : '#000';
+  // 根据revert属性判断是否需要镜像
+  const transformStyle = revert ? { ...style, transform: 'scaleX(-1)' } : style;
+
   return (
     <svg
       viewBox="0 0 1024 1024"
@@ -9,7 +12,7 @@ export default ({ style, disabled }: { style?: React.CSSProperties; disabled?: b
       p-id="1426"
       width="14"
       height="14"
-      style={style}
+      style={transformStyle}
     >
       <path
         fill={color}

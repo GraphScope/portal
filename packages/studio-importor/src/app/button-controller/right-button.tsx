@@ -11,7 +11,7 @@ const LeftButton: React.FunctionComponent<ILeftButtonProps> = props => {
   return (
     <Button
       type="text"
-      icon={<Icons.Sidebar />}
+      icon={<Icons.Sidebar revert />}
       onClick={() => {
         updateStore(draft => {
           draft.collapsed.right = !draft.collapsed.right;
