@@ -150,6 +150,8 @@ export interface IStudioQueryProps {
   dispalyMode?: 'flow' | 'tabs';
   /** 侧边栏展示的位置 */
   displaySidebarPosition?: 'left' | 'right';
+  /** 侧边栏展示的类型 */
+  displaySidebarType?: 'Sidebar' | 'Segmented';
   /** 是否需要再添加查询语句的时候，切换展示为 absolute */
   enableAbsolutePosition?: boolean;
   /**  启用立刻查询 */
@@ -157,5 +159,6 @@ export interface IStudioQueryProps {
   /** 启动折叠侧边栏 */
   enableCollapseSidebar?: boolean;
   logo?: React.ReactNode;
+  /** 连接endpoint的组件 */
   connectComponent?: React.ReactNode;
 }

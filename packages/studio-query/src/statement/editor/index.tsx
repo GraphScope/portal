@@ -69,7 +69,7 @@ const Editor: React.FunctionComponent<
   const handleShare = () => {
     const value = editorRef?.current?.codeEditor?.getValue();
     window.open(
-      `${window.location.origin}/query-app#?language=${language}&auto_run=true&global_script=${encodeURIComponent(value)}`,
+      `${window.location.origin}/querying?language=${language}&auto_run=true&global_script=${encodeURIComponent(value)}`,
     );
   };
   return (

@@ -30,6 +30,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     queryGraphSchema,
     onBack,
     displaySidebarPosition = 'left',
+    displaySidebarType = 'Sidebar',
     enableAbsolutePosition,
     /** statements */
     queryStatements,
@@ -46,6 +47,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const { store, updateStore } = useContext();
   const { graphName, isReady, collapse, activeNavbar, statements, schemaData, language } = store;
   const enable = !!enableAbsolutePosition && statements.length > 0;
+
   const navbarOptions = [
     {
       key: 'recommended',
@@ -147,14 +149,24 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   }
 
   if (isReady) {
+    const side =
+      displaySidebarPosition === 'left'
+        ? {
+            leftSide: <Sidebar items={navbarOptions} type={displaySidebarType} />,
+          }
+        : {
+            rightSide: <Sidebar items={navbarOptions} type={displaySidebarType} />,
+          };
     return (
       <ThemeProvider locales={locales}>
         <Section
-          leftSide={<Sidebar items={navbarOptions} />}
-          defaultStyle={{ leftSideWidth: 300, leftSideCollapsed: true }}
+          style={{ height: 'calc(100vh - 50px)' }}
+          {...side}
+          defaultStyle={{ leftSideWidth: 320, rightSideWidth: 320, rightSideCollapsed: true, leftSideCollapsed: true }}
           splitBorder
         >
           <Content
+            displaySidebarPosition={displaySidebarPosition}
             connectComponent={connectComponent}
             handleCancelQuery={handleCancelQuery}
             createStatements={createStatements}

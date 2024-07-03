@@ -17,7 +17,7 @@ const QueryModule = () => {
   const language = GS_ENGINE_TYPE === 'groot' ? 'gremlin' : 'cypher';
   const globalScript = GS_ENGINE_TYPE === 'groot' ? 'g.V().limit 10' : 'Match (n) return n limit 10';
   const { store } = useContext();
-  const { graphId } = store;
+  const { graphId, displaySidebarPosition, displaySidebarType } = store;
 
   return (
     <>
@@ -48,6 +48,8 @@ const QueryModule = () => {
         /** 是否立即查询 */
         enableImmediateQuery={true}
         connectComponent={<SelectGraph />}
+        displaySidebarPosition={displaySidebarPosition}
+        displaySidebarType={displaySidebarType}
       ></StudioQuery>
     </>
   );

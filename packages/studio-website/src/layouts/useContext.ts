@@ -30,6 +30,8 @@ export const initialStore = {
   graphId: Utils.searchParamOf('graph_id'),
   draftGraph: Utils.storage.get('DRAFT_GRAPH') || {},
   draftId: 'DRAFT_GRAPH',
+  displaySidebarType: Utils.storage.get<'Sidebar' | 'Segmented'>('displaySidebarType') || 'Sidebar',
+  displaySidebarPosition: Utils.storage.get<'left' | 'right'>('displaySidebarPosition') || 'left',
 };
 
 export type IStore = {
@@ -41,6 +43,10 @@ export type IStore = {
   graphId: string | null;
   draftGraph: IGraph | {};
   draftId: string;
+  /** 查询侧边栏展示的位置 */
+  displaySidebarPosition?: 'left' | 'right';
+  /** 查询侧边栏展示的类型 */
+  displaySidebarType?: 'Sidebar' | 'Segmented';
 };
 
 type ContextType = {

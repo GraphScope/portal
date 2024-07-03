@@ -14,6 +14,7 @@ const CypherEditor = lazy(() => import('../../cypher-editor'));
 
 interface IHeaderProps {
   connectComponent?: IStudioQueryProps['connectComponent'];
+  displaySidebarPosition?: IStudioQueryProps['displaySidebarPosition'];
 }
 
 const options = [
@@ -72,7 +73,7 @@ const LanguageSwitch = () => {
 };
 
 const Header: React.FunctionComponent<IHeaderProps> = props => {
-  const { connectComponent } = props;
+  const { connectComponent, displaySidebarPosition } = props;
   const { updateStore, store } = useContext();
   const editorRef = useRef<any>(null);
   const [state, updateState] = useState({
@@ -141,13 +142,14 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
     >
       <Flex justify="space-between" align="center">
         <Space>
-          <ToggleButton />
+          {displaySidebarPosition === 'left' && <ToggleButton displaySidebarPosition={displaySidebarPosition} />}
           <LanguageSwitch />
         </Space>
 
         {connectComponent}
         <Space>
           <ModeSwitch />
+          {displaySidebarPosition === 'right' && <ToggleButton displaySidebarPosition={displaySidebarPosition} />}
         </Space>
       </Flex>
       <Flex justify="space-between" style={{ marginTop: '8px' }}>

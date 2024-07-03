@@ -6,6 +6,7 @@ import PrimaryColor from './primary-color';
 import RoundedCorner from './rounded-corner';
 import International from './International';
 import NavStyle from './nav-style';
+import QuerySetting from './query-setting';
 const Setting: React.FunctionComponent = () => {
   return (
     <div>
@@ -28,6 +29,8 @@ const Setting: React.FunctionComponent = () => {
           <RoundedCorner />
           <Divider />
           <International />
+          <Divider />
+          <QuerySetting />
         </>
       </Section>
     </div>
