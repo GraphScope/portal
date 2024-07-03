@@ -41,7 +41,7 @@ export function getTooltipTitle({ appMode, type, properties = [] }: IExtraCompon
   }
 
   // Edge type check
-  if (type === 'edge' && properties.length !== 1) {
+  if (type === 'edge' && properties.length > 1) {
     return 'A edge can only have one property.';
   }
 
