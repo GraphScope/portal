@@ -29,6 +29,12 @@ export default {
     'If you already have CSV data, feel free to upload it here, and the system will automatically infer possible graph models for you.',
   'If you already have SQLDDL file, feel free to upload it here, and the system will automatically infer possible graph models for you.':
     'If you already have SQLDDL file, feel free to upload it here, and the system will automatically infer possible graph models for you.',
+ 
+  /** 创建图模型tip */
+  'A vertex must have a primary key.': 'A vertex must have a primary key.',
+  'A vertex must have at least one property.': 'A vertex must have at least one property.',
+  'A edge can only have one property.': 'A edge can only have one property.',
+ 
   'The current mode is preview only, and does not support clearing the model':
     'The current mode is preview only, and does not support clearing the model',
   'Clear graph model': 'Clear graph model',
@@ -44,4 +50,5 @@ export default {
   'The data loading task has been successfully created. You can view detailed logs in the job center.':
     'The data loading task has been successfully created. You can view detailed logs in the job center.',
   'Goto Jobs': 'Goto Jobs',
+ 
 };

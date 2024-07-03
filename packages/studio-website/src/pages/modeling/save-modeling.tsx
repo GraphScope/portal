@@ -1,16 +1,13 @@
-import { Button, notification, Modal, Form, Alert, Result } from 'antd';
+import { Button, notification, Modal, Form, Result, Tooltip } from 'antd';
 import React, { useState } from 'react';
-import { AppstoreOutlined, CloseOutlined, SaveOutlined } from '@ant-design/icons';
+import { SaveOutlined } from '@ant-design/icons';
 import { useContext } from '../../layouts/useContext';
-import { Icons } from '@graphscope/studio-components';
-import { useContext as useModeling } from '@graphscope/studio-importor';
+import { useContext as useModeling, getTooltipTitle } from '@graphscope/studio-importor';
 import { createGraph, getSchema } from './services';
-import ChooseEngineType from '@/pages/instance/create-instance/choose-enginetype';
 import type { ISchemaNode, ISchemaEdge, ISchemaOptions } from '@graphscope/studio-importor';
 import { Utils } from '@graphscope/studio-components';
 import { history } from 'umi';
 import localforage from 'localforage';
-import { snapshot } from 'valtio';
 import { FormattedMessage } from 'react-intl';
 
 interface SaveModelingProps {}
@@ -85,13 +82,13 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   const disabled = graphId !== draftId;
 
   const handleSave = async () => {
+    const schema = { nodes, edges };
     setState(preState => {
       return {
         ...preState,
         open: true,
       };
     });
-    const schema = { nodes, edges };
 
     if (schema) {
       let _status = '',
@@ -193,13 +190,18 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
     </Button>,
   ];
   const Action = status === 'success' ? SuccessAction : ErrorAction;
+  const controlTooltip = controlsInfo(JSON.parse(JSON.stringify(nodes)), JSON.parse(JSON.stringify(edges)));
+  /** nodes为空且 按钮是 Save Modeling 不能点击保存按钮 */
+  const isSave = !nodes.length && !disabled ? true : disabled || controlTooltip[0];
 
   if (appMode === 'DATA_MODELING') {
     return (
       <>
-        <Button disabled={disabled} type="primary" icon={<SaveOutlined />} onClick={handleSave}>
-          <FormattedMessage id={text} />
-        </Button>
+        <Tooltip title={controlTooltip[0] ? <FormattedMessage id={`${controlTooltip[1]}`} /> : ''}>
+          <Button disabled={isSave} type="primary" icon={<SaveOutlined />} onClick={handleSave}>
+            <FormattedMessage id={text} />
+          </Button>
+        </Tooltip>
         <Modal title={null} open={open} footer={null} closable={false}>
           <Result status={status as 'error' | 'success'} title={title} subTitle={state.message} extra={Action} />
         </Modal>
@@ -209,4 +211,28 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   return null;
 };
 
+export function controlsInfo(nodes: ISchemaNode[], edges: ISchemaEdge[]): [boolean, string[]] {
+  const verifyElements = (elements: any[], elementType: string) => {
+    return elements.map((item: any) => {
+      const { label, properties = [] } = item.data;
+      const verifyAttributes = getTooltipTitle({
+        appMode: 'DATA_MODELING',
+        type: elementType as 'node' | 'edge',
+        properties,
+      });
+      console.log(elementType === 'node' ? 1 : 2, verifyAttributes);
+      return { verify: Boolean(verifyAttributes), title: verifyAttributes || '' };
+    });
+  };
+
+  const [nodeResults, edgeResults] = [nodes, edges].map((typeElements, index) =>
+    verifyElements(typeElements, ['node', 'edge'][index]),
+  );
+
+  const hasTrueVerifications = nodeResults.some(result => result.verify) || edgeResults.some(result => result.verify);
+
+  const tooltipTitles = [...nodeResults, ...edgeResults].filter(result => result.title).map(result => result.title);
+
+  return [hasTrueVerifications, tooltipTitles];
+}
 export default SaveModeling;

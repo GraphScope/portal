@@ -1,11 +1,11 @@
 import React from 'react';
 import { Collapse } from 'antd';
 import PropertiesSchema from './properties-schema';
-import type {} from '../typing';
 import { useContext } from '../useContext';
 import { SegmentedTabs } from '@graphscope/studio-components';
 import { CaretRightOutlined } from '@ant-design/icons';
 import type { ImportorProps } from '../typing';
+import ValidateInfo from './properties-schema/validate-info';
 
 type IPropetiesEditorProps = Pick<ImportorProps, 'appMode' | 'handleUploadFile' | 'queryPrimitiveTypes'>;
 
@@ -33,10 +33,11 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
 
   const nodes_items = nodes.map(item => {
     const { id, data } = item;
-    const { label } = data || { label: id };
+    const { label, properties = [] } = data || { label: id };
     return {
       key: id,
       label: label,
+      extra: <ValidateInfo type="node" appMode={appMode} properties={JSON.parse(JSON.stringify(properties))} />,
       children: (
         <PropertiesSchema
           schema={JSON.parse(JSON.stringify(item))}
@@ -51,11 +52,12 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
   });
   const edges_items = edges.map(item => {
     const { id, data } = item;
-    const { label } = data || { label: id };
+    const { label, properties = [] } = data || { label: id };
 
     return {
       key: id,
       label: label,
+      extra: <ValidateInfo type="edge" appMode={appMode} properties={JSON.parse(JSON.stringify(properties))} />,
       children: (
         <PropertiesSchema
           schema={JSON.parse(JSON.stringify(item))}
