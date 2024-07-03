@@ -162,7 +162,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         <Section
           style={{ height: 'calc(100vh - 50px)' }}
           {...side}
-          defaultStyle={{ leftSideWidth: 300, leftSideCollapsed: true }}
+          defaultStyle={{ leftSideWidth: 320, rightSideWidth: 320, rightSideCollapsed: true, leftSideCollapsed: true }}
           splitBorder
         >
           <Content

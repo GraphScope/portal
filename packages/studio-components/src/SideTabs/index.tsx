@@ -26,6 +26,7 @@ interface SidebarProps {
   onChange?: (value: string) => void;
   onBack?: () => void;
   logo?: string;
+  width?: number;
 }
 
 const getStyles: (token: any) => Record<string, React.CSSProperties> = token => {
@@ -68,10 +69,20 @@ const getStyles: (token: any) => Record<string, React.CSSProperties> = token => 
 };
 
 const SideTabs: React.FunctionComponent<SidebarProps> = props => {
-  const { items, queryKey = 'tab', style = {}, defaultActive, block, value, onChange, onBack, logo } = props;
+  const {
+    items,
+    queryKey = 'tab',
+    style = {},
+    defaultActive,
+    block,
+    value,
+    onChange,
+    onBack,
+    logo,
+    width = 320,
+  } = props;
   const { token } = useToken();
   const collapse = false;
-  const width = 300;
   const collapsedWidth = 50;
 
   const [state, setState] = React.useState<{ active: string }>(() => {

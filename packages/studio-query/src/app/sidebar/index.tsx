@@ -18,7 +18,7 @@ const Sidebar: React.FunctionComponent<SidebarProps> = props => {
   if (type === 'Segmented') {
     return <SegmentedTabs items={items} block rootStyle={{ padding: '9px 8px 8px 4px' }}></SegmentedTabs>;
   }
-  return <SideTabs items={items}></SideTabs>;
+  return <SideTabs items={items} width={320}></SideTabs>;
 };
 
 export default memo(Sidebar);

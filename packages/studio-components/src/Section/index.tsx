@@ -29,8 +29,8 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
   const { token } = useToken();
   const [state, setState] = useState({
     widthStyle: {
-      leftSide: defaultStyle?.leftSideWidth || 350,
-      rightSide: defaultStyle?.rightSideWidth || 350,
+      leftSide: defaultStyle?.leftSideWidth || 320,
+      rightSide: defaultStyle?.rightSideWidth || 320,
     },
     collapsed: {
       leftSide: !!defaultStyle?.leftSideCollapsed,
@@ -85,7 +85,6 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
               style={{
                 borderLeft: borderStyle,
                 width: collapsed.rightSide ? '0px' : widthStyle.rightSide,
-                padding: collapsed.rightSide ? '0px' : '0px 12px',
                 position: 'relative',
                 overflow: 'hidden',
                 transition: 'width 0.2s ease',
