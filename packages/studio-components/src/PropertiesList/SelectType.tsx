@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { Select } from 'antd';
 interface ISelectTypeProps {
   value: string;
@@ -7,21 +7,22 @@ interface ISelectTypeProps {
   onChange: (value: string) => void;
 }
 const SelectType: React.FunctionComponent<ISelectTypeProps> = props => {
-  const { onChange, options, disabled } = props;
-  const [value, setValue] = React.useState(props.value);
+  const { value, onChange, options, disabled } = props;
+  const [selectedValue, setSelectedValue] = useState(value);
 
+  const handleChange = (newValue: string) => {
+    setSelectedValue(newValue);
+    onChange(newValue);
+  };
   return (
     <Select
       size="small"
       style={{ minWidth: '160px' }}
-      value={value}
+      value={selectedValue}
       disabled={disabled}
-      onChange={e => {
-        setValue(e);
-        onChange(e);
-      }}
+      onChange={handleChange}
       options={options}
-    ></Select>
+    />
   );
 };
 
