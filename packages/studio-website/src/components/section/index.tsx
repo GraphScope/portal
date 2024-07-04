@@ -37,14 +37,8 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
   const hasDivider = desc && !items;
   console.log('breadcrumb', breadcrumb);
   /** 判断 items is string or object */
-  const handleFormattedMessage = (items: string | IFormattedMessage) => {
-    let message: IFormattedMessage;
-    if (typeof items === 'string') {
-      message = { id: items };
-    } else {
-      message = items as IFormattedMessage;
-    }
-    return message;
+  const handleFormattedMessage = (items: string | IFormattedMessage): IFormattedMessage => {
+    return typeof items === 'string' ? { id: items } : items;
   };
   return (
     <section
