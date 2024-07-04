@@ -41,10 +41,10 @@ const InstanceCard: React.FC = () => {
     <Section
       breadcrumb={[
         {
-          title: { id: 'Graphs' },
+          title: 'Graphs',
         },
       ]}
-      desc={{ id: 'Listing all graphs on the cluster' }}
+      desc="Listing all graphs on the cluster"
     >
       <Row gutter={[12, 12]}>
         {[draftGraph, ...instanceList]

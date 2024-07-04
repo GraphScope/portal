@@ -34,10 +34,10 @@ const Detail: React.FunctionComponent = () => {
     <Section
       breadcrumb={[
         {
-          title: { id: 'Jobs' },
+          title: 'Jobs',
         },
         {
-          title: { id: 'ID' },
+          title: 'ID',
         },
       ]}
       desc={{ id: 'The jobid of the running state of the graph model is {jobId} verbose logs.', values: { jobId } }}

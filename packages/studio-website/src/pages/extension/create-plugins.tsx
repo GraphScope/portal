@@ -110,13 +110,13 @@ const CreatePlugins: React.FC = () => {
     <Section
       breadcrumb={[
         {
-          title: { id: 'Extensions' },
+          title: 'Extensions',
         },
         {
-          title: { id: 'Create Plugin' },
+          title: 'Create Plugin',
         },
       ]}
-      desc={{ id: 'Expand its functionality or offer solutions that are finely tuned to specific needs.' }}
+      desc="Expand its functionality or offer solutions that are finely tuned to specific needs."
     >
       <Flex vertical gap="middle">
         <UploadFiles

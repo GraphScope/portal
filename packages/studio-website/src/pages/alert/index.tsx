@@ -33,10 +33,10 @@ const AlertModule: React.FunctionComponent = () => {
     <Section
       breadcrumb={[
         {
-          title: { id: 'Alert' },
+          title: 'Alert',
         },
       ]}
-      desc={{ id: 'Alert' }}
+      desc="Alert"
       items={items}
     ></Section>
   );

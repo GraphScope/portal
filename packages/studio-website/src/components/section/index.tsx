@@ -9,8 +9,8 @@ interface IFormattedMessage {
 }
 interface ISectionProps {
   title?: string;
-  desc?: IFormattedMessage;
-  breadcrumb?: { title: IFormattedMessage }[];
+  desc?: string | IFormattedMessage;
+  breadcrumb?: { title: string | IFormattedMessage }[];
   children?: React.ReactNode;
   items?: TabsProps['items'];
   style?: React.CSSProperties;
@@ -36,7 +36,16 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
   };
   const hasDivider = desc && !items;
   console.log('breadcrumb', breadcrumb);
-
+  /** 判断 items is string or object */
+  const handleFormattedMessage = (items: string | IFormattedMessage) => {
+    let message: IFormattedMessage;
+    if (typeof items === 'string') {
+      message = { id: items };
+    } else {
+      message = items as IFormattedMessage;
+    }
+    return message;
+  };
   return (
     <section
       style={{
@@ -60,7 +69,7 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
           >
             {/* <FormattedMessage id={title} /> */}
             {breadcrumb?.map((item, index) => {
-              const { id, values } = item.title;
+              const { id, values } = handleFormattedMessage(item.title);
               //@ts-ignore
               return <FormattedMessage id={id} values={values} />;
             })}
@@ -69,7 +78,7 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
 
         {desc && (
           <Typography.Title type="secondary" level={4} style={{ fontWeight: 300 }}>
-            <FormattedMessage id={desc.id} values={desc.values} />
+            <FormattedMessage id={handleFormattedMessage(desc).id} values={handleFormattedMessage(desc).values} />
           </Typography.Title>
         )}
       </div>
