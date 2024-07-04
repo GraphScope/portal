@@ -58,13 +58,13 @@ const ImportData: React.FunctionComponent = () => {
     <Section
       breadcrumb={[
         {
-          title: 'Graphs',
+          title: { id: 'Graphs' },
         },
         {
-          title: 'import data',
+          title: { id: 'import data' },
         },
         {
-          title: graphName,
+          title: { id: graphName },
         },
       ]}
     >

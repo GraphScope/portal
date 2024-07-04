@@ -12,11 +12,10 @@ const Setting: React.FunctionComponent = () => {
       <Section
         breadcrumb={[
           {
-            title: 'Setting',
+            title: { id: 'Appearance Setting' },
           },
         ]}
-        title="Appearance Setting"
-        desc="Change how Untitled UI looks and feels in your browser"
+        desc={{ id: 'Change how Untitled UI looks and feels in your browser' }}
       >
         <>
           <InteractTheme />

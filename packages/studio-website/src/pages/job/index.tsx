@@ -8,11 +8,10 @@ const Job: React.FunctionComponent = () => {
       <Section
         breadcrumb={[
           {
-            title: 'Jobs',
+            title: { id: 'Jobs' },
           },
         ]}
-        title="Jobs"
-        desc="Managing long-running tasks, such as data importing, analytic jobs, and complex queries."
+        desc={{ id: 'Managing long-running tasks, such as data importing, analytic jobs, and complex queries.' }}
         children={<JobsList />}
       ></Section>
     </>
