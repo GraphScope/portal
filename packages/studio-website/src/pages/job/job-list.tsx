@@ -171,7 +171,7 @@ const JobsList: FC = () => {
 
   return (
     <Table
-      style={{ marginTop: '-18px' }}
+      style={{ marginTop: '-8px' }}
       dataSource={jobsList}
       //@ts-ignores
       columns={columns}
