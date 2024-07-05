@@ -1,12 +1,16 @@
 import * as React from 'react';
-import { Breadcrumb, Divider, Typography, Tabs, Space } from 'antd';
+import { Divider, Typography, Tabs, Space } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import type { BreadcrumbProps, TabsProps } from 'antd';
+import type { TabsProps } from 'antd';
 import { Utils, useThemeContainer } from '@graphscope/studio-components';
+interface IFormattedMessage {
+  id: string;
+  values?: { [key: string]: string };
+}
 interface ISectionProps {
   title?: string;
-  desc?: string;
-  breadcrumb?: BreadcrumbProps['items'];
+  desc?: string | IFormattedMessage;
+  breadcrumb?: { title: string | IFormattedMessage }[];
   children?: React.ReactNode;
   items?: TabsProps['items'];
   style?: React.CSSProperties;
@@ -32,6 +36,10 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
   };
   const hasDivider = desc && !items;
   console.log('breadcrumb', breadcrumb);
+  /** 判断 items is string or object */
+  const handleFormattedMessage = (items: string | IFormattedMessage): IFormattedMessage => {
+    return typeof items === 'string' ? { id: items } : items;
+  };
   return (
     <section
       style={{
@@ -55,15 +63,16 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
           >
             {/* <FormattedMessage id={title} /> */}
             {breadcrumb?.map((item, index) => {
+              const { id, values } = handleFormattedMessage(item.title);
               //@ts-ignore
-              return <FormattedMessage id={item.title} />;
+              return <FormattedMessage id={id} values={values} />;
             })}
           </Space>
         </Typography.Title>
 
         {desc && (
           <Typography.Title type="secondary" level={4} style={{ fontWeight: 300 }}>
-            <FormattedMessage id={desc} />
+            <FormattedMessage id={handleFormattedMessage(desc).id} values={handleFormattedMessage(desc).values} />
           </Typography.Title>
         )}
       </div>

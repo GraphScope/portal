@@ -11,7 +11,6 @@ const Job: React.FunctionComponent = () => {
             title: 'Jobs',
           },
         ]}
-        title="Jobs"
         desc="Managing long-running tasks, such as data importing, analytic jobs, and complex queries."
         children={<JobsList />}
       ></Section>

@@ -36,7 +36,6 @@ const AlertModule: React.FunctionComponent = () => {
           title: 'Alert',
         },
       ]}
-      title="Alert"
       desc="Alert"
       items={items}
     ></Section>

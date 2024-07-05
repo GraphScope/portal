@@ -45,13 +45,12 @@ const Create: React.FC = () => {
     <Section
       breadcrumb={[
         {
-          title: 'Graphs',
+          title: 'navbar.graphs',
         },
         {
           title: 'Creating instance',
         },
       ]}
-      title="navbar.graphs"
       desc="Choose the appropriate GraphScope computing engine and start creating graph instances"
     >
       <SplitSection

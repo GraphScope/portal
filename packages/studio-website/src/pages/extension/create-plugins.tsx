@@ -7,6 +7,7 @@ import { useEditorTheme } from '@/pages/utils';
 import CodeMirror from '@uiw/react-codemirror';
 import { useContext } from '@/layouts/useContext';
 import UploadFiles from './upload-files';
+import Section from '@/components/section';
 
 import { createProcedure, updateProcedure, listGraphs, getProcedure } from './service';
 const { searchParamOf } = Utils;
@@ -106,22 +107,18 @@ const CreatePlugins: React.FC = () => {
     }
   }, []);
   return (
-    <div style={{ padding: '14px 24px' }}>
+    <Section
+      breadcrumb={[
+        {
+          title: 'Extensions',
+        },
+        {
+          title: 'Create Plugin',
+        },
+      ]}
+      desc="Expand its functionality or offer solutions that are finely tuned to specific needs."
+    >
       <Flex vertical gap="middle">
-        <Breadcrumb
-          items={[
-            {
-              title: (
-                <a href="/extension">
-                  <FormattedMessage id="Extensions" />
-                </a>
-              ),
-            },
-            {
-              title: <FormattedMessage id="Create Plugin" />,
-            },
-          ]}
-        />
         <UploadFiles
           disabled={isEdit}
           handleChange={val => {
@@ -189,14 +186,14 @@ const CreatePlugins: React.FC = () => {
               />
             </div>
           </Form.Item>
-          <Form.Item>
+          <Form.Item style={{ display: 'flex', justifyContent: 'end' }}>
             <Button type="primary" htmlType="submit">
               <FormattedMessage id="Create Plugin" />
             </Button>
           </Form.Item>
         </Form>
       </Flex>
-    </div>
+    </Section>
   );
 };
 

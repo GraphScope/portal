@@ -83,6 +83,8 @@ export default {
     'GraphScope提供了扩展插件机制，您可以根据业务需求灵活创建图学习、存储过程、图分析等多种类型的插件。',
   'Your data may be passed to a third party (e.g., OpenAI) for AI processing. Consider the risks carefully when handling sensitive data.':
     '您的数据可能会被传递给第三方（例如 OpenAI）进行 AI 处理。在处理敏感数据时，请仔细考虑风险。',
+  'Expand its functionality or offer solutions that are finely tuned to specific needs.':
+    '扩展其功能或提供针对特定需求进行微调的解决方案。',
   /** job */
   'Job List': '作业列表',
   'Job ID': 'Job ID',
@@ -91,6 +93,9 @@ export default {
   'Start time': '开始时间',
   'End time': '结束时间',
   Delete: '删除',
+  Details: '详情',
+  'The jobid of the running state of the graph model is {jobId} verbose logs.':
+    '图模型运行状态的作业ID为{jobId}详细日志。',
   /** alert */
   'Alert info': '警报信息',
   'Alert rules': '警报规则',

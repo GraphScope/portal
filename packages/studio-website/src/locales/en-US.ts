@@ -81,6 +81,8 @@ export default {
     'GraphScope provides an extension plugin mechanism, allowing you to flexibly create various types of plugins such as graph learning, store procedures, and graph analysis according to business needs.',
   'Your data may be passed to a third party (e.g., OpenAI) for AI processing. Consider the risks carefully when handling sensitive data.':
     'Your data may be passed to a third party (e.g., OpenAI) for AI processing. Consider the risks carefully when handling sensitive data.',
+  'Expand its functionality or offer solutions that are finely tuned to specific needs.':
+    'Expand its functionality or offer solutions that are finely tuned to specific needs.',
   /** job */
   'Job ID': 'Job ID',
   Type: 'Type',
@@ -88,7 +90,9 @@ export default {
   'Start time': 'Start time',
   'End time': 'End time',
   Delete: 'Delete',
-
+  Details: 'Details',
+  'The jobid of the running state of the graph model is {jobId} verbose logs.':
+    'The jobid of the running state of the graph model is {jobId} verbose logs.',
   /** alert */
   'Alert info': 'Alert info' /** see Line-93. */,
   'Alert rules': 'Alert rules',
