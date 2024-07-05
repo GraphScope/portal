@@ -103,7 +103,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
           padding: '0px 12px',
         }}
         rightSideStyle={{
-          width: '400px',
+          width: '450px',
           padding: '0px 12px',
         }}
         defaultCollapsed={{

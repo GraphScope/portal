@@ -7,7 +7,7 @@ export interface IParams {
 export function createStaticForceLayout(nodes, edges, params: IParams = {}) {
   const { iterations = 1000, center = { x: window.innerWidth / 2, y: window.innerHeight / 2 } } = params;
   const edgeDistance = 250;
-  const nodeStrength = -1 * (edgeDistance * 8);
+  const nodeStrength = -1 * (edgeDistance * (edges.length === 0 ? 0.5 : 8));
   // 创建力仿真
   const simulation = forceSimulation(nodes)
     .force(

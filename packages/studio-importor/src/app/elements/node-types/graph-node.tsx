@@ -1,10 +1,11 @@
 import React, { memo, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
-import { Tag } from 'antd';
-import { LinkOutlined } from '@ant-design/icons';
+import { Tag, Button, theme } from 'antd';
+import { CheckCircleOutlined, CheckOutlined } from '@ant-design/icons';
 import { EditableText, useThemeContainer, useSection } from '@graphscope/studio-components';
-
+const { useToken } = theme;
 import { useContext } from '../../useContext';
+
 const styles = {
   handler: {
     width: '126px',
@@ -23,6 +24,7 @@ const GraphNode = (props: NodeProps) => {
   const { currentId, theme, elementOptions } = store;
   const { algorithm } = useThemeContainer();
   const { toggleRightSide } = useSection();
+  const { token } = useToken();
   const isSelected = id === currentId;
   const isDark = algorithm === 'darkAlgorithm';
 
@@ -133,12 +135,11 @@ const GraphNode = (props: NodeProps) => {
           <div
             style={{
               position: 'absolute',
-              transform: 'translate(50px,-100%)',
+              top: '0px',
+              right: '-16px',
             }}
           >
-            <Tag color="green">
-              <LinkOutlined /> Mapped
-            </Tag>
+            <CheckOutlined style={{ color: token.colorSuccessActive, fontSize: 20 }} />
           </div>
         )}
         <EditableText
