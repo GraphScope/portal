@@ -6,11 +6,11 @@ import localStorage from '@/components/utils/localStorage';
 
 const { Title, Text } = Typography;
 
-interface ILocaleSwitchProps {
+interface ILocaleSwitchProps {}
+interface INavStyleOption {
+  label: string;
   value: string;
-  onChange: (value: string) => void;
 }
-
 const NavStyle: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { navStyle } = store;
@@ -23,7 +23,7 @@ const NavStyle: React.FunctionComponent = () => {
     });
   };
 
-  const options = [
+  const options: INavStyleOption[] = [
     {
       label: 'Inline',
       value: 'inline',
@@ -46,12 +46,7 @@ const NavStyle: React.FunctionComponent = () => {
         </Flex>
       </Col>
       <Col span={8}>
-        <Segmented
-          options={options}
-          value={navStyle}
-          //@ts-ignore
-          onChange={onChange}
-        />
+        <Segmented options={options} value={navStyle} onChange={onChange} />
       </Col>
     </Row>
   );
