@@ -5,19 +5,19 @@ export interface IParams {
   center?: { x: number; y: number };
 }
 export function createStaticForceLayout(nodes, edges, params: IParams = {}) {
-  const { iterations = 300, center = { x: window.innerWidth / 2, y: window.innerHeight / 2 } } = params;
+  const { iterations = 1000, center = { x: window.innerWidth / 2, y: window.innerHeight / 2 } } = params;
+  const edgeDistance = 250;
+  const nodeStrength = -1 * (edgeDistance * 8);
   // 创建力仿真
   const simulation = forceSimulation(nodes)
     .force(
       'link',
       forceLink(edges)
         .id((d: any) => d.id)
-        .distance(300),
+        .distance(edgeDistance),
     )
-    .force('charge', forceManyBody().strength(-30))
-    .force('center', forceCenter(center.x, center.y))
-    .force('collide', forceCollide().radius(30))
-    .stop(); // 停止自动的力仿真
+    .force('charge', forceManyBody().strength(nodeStrength))
+    .stop();
 
   // 手动运行力仿真
   for (let i = 0; i < iterations; i++) {
