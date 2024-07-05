@@ -7,12 +7,13 @@ const { Title, Text } = Typography;
 const { useToken } = theme;
 const RoundedCorner: React.FunctionComponent = () => {
   const { token } = useToken();
-  const { borderRadius, colorPrimary } = token;
+  const { borderRadius } = token;
   const { handleTheme } = useThemeContainer();
 
-  const handleChange: (val: number) => void = val => {
-    handleTheme({ token: { colorPrimary, borderRadius: val } });
+  const handleBorderRadiusChange: (newBorderRadius: number | null) => void = newBorderRadius => {
+    handleTheme({ token: { ...token, borderRadius: newBorderRadius } });
   };
+
   return (
     <Row>
       <Col span={8}>
@@ -26,10 +27,14 @@ const RoundedCorner: React.FunctionComponent = () => {
         </Flex>
       </Col>
       <Col span={4}>
-        <InputNumber min={1} addonAfter="px" value={borderRadius} onChange={e => handleChange(e)} />
+        <InputNumber min={1} addonAfter="px" value={borderRadius} onChange={handleBorderRadiusChange} />
       </Col>
       <Col span={8}>
-        <Slider min={1} onChange={handleChange} value={typeof borderRadius === 'number' ? borderRadius : 0} />
+        <Slider
+          min={1}
+          onChange={handleBorderRadiusChange}
+          value={typeof borderRadius === 'number' ? borderRadius : 0}
+        />
       </Col>
     </Row>
   );
