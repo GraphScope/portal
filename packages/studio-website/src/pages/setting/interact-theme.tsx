@@ -42,7 +42,7 @@ const InteractTheme: React.FunctionComponent = () => {
         </Flex>
       </Col>
       <Col span={16}>
-        <SelectCards selectValue={algorithm} items={engines} onChange={changeEngineType} />
+        <SelectCards value={algorithm} items={engines} onChange={changeEngineType} />
       </Col>
     </Row>
   );

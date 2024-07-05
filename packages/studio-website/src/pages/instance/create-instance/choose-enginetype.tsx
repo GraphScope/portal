@@ -18,8 +18,9 @@ type ChooseEnginetypeProps = {
 const gs_all_engines = [
   {
     id: 'mutable_csr',
+    type: 'interactive',
     title: 'Interactive Engine',
-    value: 'interactive',
+    value: 'mutable_csr',
     desc: (
       <>
         <FormattedMessage id="graphs.engine.interactive.desc" />
@@ -32,8 +33,9 @@ const gs_all_engines = [
   },
   {
     id: 'groot_store',
+    type: 'groot',
     title: 'Groot Engine',
-    value: 'groot',
+    value: 'mutable_csr',
     desc: (
       <>
         <FormattedMessage id="graphs.engine.interactive.desc" />
@@ -47,7 +49,7 @@ const gs_all_engines = [
 ];
 
 const engines = gs_all_engines.filter(item => {
-  return item.value === window.GS_ENGINE_TYPE;
+  return item.type === window.GS_ENGINE_TYPE;
 });
 
 const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props => {
@@ -80,6 +82,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
   useEffect(() => {
     form.setFieldsValue({ graphName: '', storeType });
   }, []);
+  console.log('storeType', storeType);
 
   return (
     <Form name="basic" form={form} layout="vertical" style={{ marginTop: '24px' }}>
