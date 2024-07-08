@@ -79,6 +79,7 @@ const EditableText = ({ text, onTextChange, id, style = {}, disabled }) => {
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
+            fontSize: '12px',
             ...style,
           }}
         >

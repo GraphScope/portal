@@ -95,7 +95,7 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
             id={id}
             text={label || id}
             onTextChange={onLabelChange}
-            style={{ color: getColor() }}
+            style={{ color: getColor(), fontSize: '10px', lineHeight: '14px', minHeight: '14px' }}
           />
         </div>
       </div>

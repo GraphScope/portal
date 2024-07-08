@@ -33,3 +33,5 @@ export const resetIndex = () => {
 export const fakeSnapshot = obj => {
   return JSON.parse(JSON.stringify(obj));
 };
+
+export { transOptionsToSchema, transSchemaToOptions } from './modeling';
