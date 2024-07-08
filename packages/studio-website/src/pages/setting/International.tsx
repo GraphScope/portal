@@ -1,5 +1,4 @@
 import React from 'react';
-import { Col } from 'antd';
 import { useContext } from '@/layouts/useContext';
 import LocaleSwitch from '@/components/locale-switch';
 import { useThemeContainer } from '@graphscope/studio-components';
@@ -16,7 +15,7 @@ const International: React.FunctionComponent = () => {
     });
   };
   return (
-    <SettingParcel style={{ margin: '0px  24px 0px 0px' }} title="International" text="Select language">
+    <SettingParcel title="International" text="Select language">
       <LocaleSwitch value={locale} onChange={value => handleLocale(value)}></LocaleSwitch>
     </SettingParcel>
   );

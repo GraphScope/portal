@@ -4,8 +4,6 @@ import SelectColor from './select-color';
 import { useThemeContainer } from '@graphscope/studio-components';
 import SettingParcel from '@/components/setting-parcel';
 
-// Style constants
-const TITLE_STYLE = { margin: '0px 24px 0px 0px' };
 const { useToken } = theme;
 const PrimaryColor: React.FunctionComponent = () => {
   const { handleTheme } = useThemeContainer();
@@ -17,7 +15,7 @@ const PrimaryColor: React.FunctionComponent = () => {
     handleTheme({ token: { colorPrimary: color, borderRadius } });
   };
   return (
-    <SettingParcel style={TITLE_STYLE} title="Primary color" text="Set the primary color">
+    <SettingParcel title="Primary color" text="Set the primary color">
       <Flex align="center">
         <ColorPicker
           showText
