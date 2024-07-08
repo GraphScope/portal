@@ -6,34 +6,21 @@ import { SegmentedTabs } from '@graphscope/studio-components';
 import { CaretRightOutlined } from '@ant-design/icons';
 import type { ImportorProps } from '../typing';
 import ValidateInfo from './properties-schema/validate-info';
-
+import ScrollContainer, { disableScroll } from './scroll-container';
 type IPropetiesEditorProps = Pick<ImportorProps, 'appMode' | 'handleUploadFile' | 'queryPrimitiveTypes'>;
 
-const StyleWrap = ({ children }) => {
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        top: '65px',
-        bottom: '0px',
-        left: 0,
-        right: 0,
-        overflow: 'scroll',
-        padding: '0px 10px 0px 10px',
-      }}
-    >
-      {children}
-    </div>
-  );
-};
 const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props => {
   const { store, updateStore } = useContext();
   const { nodes, edges, currentType, currentId, elementOptions } = store;
   const { appMode, handleUploadFile, queryPrimitiveTypes } = props;
 
-  const nodes_items = nodes.map(item => {
+  const NODES_SCROLL_ITEMS = {};
+  const EDGES_SCROLL_ITEMS = {};
+
+  const nodes_items = nodes.map((item, index) => {
     const { id, data } = item;
     const { label, properties = [] } = data || { label: id };
+    NODES_SCROLL_ITEMS[id] = { index: index };
     return {
       key: id,
       label: label,
@@ -50,10 +37,10 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
       ),
     };
   });
-  const edges_items = edges.map(item => {
+  const edges_items = edges.map((item, index) => {
     const { id, data } = item;
     const { label, properties = [] } = data || { label: id };
-
+    EDGES_SCROLL_ITEMS[id] = { index: index };
     return {
       key: id,
       label: label,
@@ -75,6 +62,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     updateStore(draft => {
       draft.currentId = key[0] as string;
     });
+    disableScroll();
   };
 
   return (
@@ -94,7 +82,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
             key: 'nodes',
             label: 'Vertex',
             children: (
-              <StyleWrap>
+              <ScrollContainer currentId={currentId} items={NODES_SCROLL_ITEMS}>
                 <Collapse
                   expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
                   accordion
@@ -102,14 +90,14 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
                   activeKey={[currentId]}
                   onChange={onChange}
                 />
-              </StyleWrap>
+              </ScrollContainer>
             ),
           },
           {
             key: 'edges',
             label: 'Edges',
             children: (
-              <StyleWrap>
+              <ScrollContainer currentId={currentId} items={EDGES_SCROLL_ITEMS}>
                 <Collapse
                   expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
                   accordion
@@ -117,7 +105,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
                   activeKey={[currentId]}
                   onChange={onChange}
                 />
-              </StyleWrap>
+              </ScrollContainer>
             ),
           },
         ]}

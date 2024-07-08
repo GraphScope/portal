@@ -14,6 +14,7 @@ import { Divider } from 'antd';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
 import ExportYaml from './button-controller/export-yaml';
+import ExportImage from './button-controller/export-image';
 
 import type { ISchemaOptions, ImportorProps } from './typing';
 interface Option {
@@ -50,7 +51,6 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   const { store, updateStore } = useContext();
   const { collapsed } = store;
   const { left, right } = collapsed;
-  console.log('rener,,,,store', store);
 
   useEffect(() => {
     (async () => {
@@ -122,6 +122,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
               <AddNode />
               <ClearCanvas />
               <ExportYaml />
+              <ExportImage />
               {/* <ModeSwitch /> */}
             </Toolbar>
           )}
