@@ -46,7 +46,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           onConnectStart={onConnectStart}
           onConnectEnd={onConnectEnd}
           zoomOnDoubleClick={false}
-          onDoubleClick={onDoubleClick}
+          // onDoubleClick={onDoubleClick}
         >
           <ArrowMarker selectedColor={theme.primaryColor} color={isDark ? '#d7d7d7' : '#000'} />
           <Controls

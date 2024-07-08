@@ -118,9 +118,9 @@ const useInteractive: any = () => {
   useEffect(() => {
     if (nodes.length > 0) {
       // 交互
-      if (hasLayouted) {
-        onDoubleClick();
-      }
+      // if (hasLayouted) {
+      //   onDoubleClick();
+      // }
       // 布局
       if (!hasLayouted) {
         const graph = createStaticForceLayout(fakeSnapshot(nodes), fakeSnapshot(edges));
