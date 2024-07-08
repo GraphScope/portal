@@ -17,6 +17,7 @@ export function createStaticForceLayout(nodes, edges, params: IParams = {}) {
         .distance(edgeDistance),
     )
     .force('charge', forceManyBody().strength(nodeStrength))
+    // .force('center', forceCenter(center.x, center.y))
     .stop();
 
   // 手动运行力仿真

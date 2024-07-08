@@ -13,6 +13,7 @@ import AddNode from './button-controller/add-node';
 import { Divider } from 'antd';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
+import ExportYaml from './button-controller/export-yaml';
 
 import type { ISchemaOptions, ImportorProps } from './typing';
 interface Option {
@@ -120,6 +121,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
               <Divider type="horizontal" style={{ margin: '0px' }} />
               <AddNode />
               <ClearCanvas />
+              <ExportYaml />
               {/* <ModeSwitch /> */}
             </Toolbar>
           )}
