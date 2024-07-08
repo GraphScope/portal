@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { Flex, Typography, Row, Col, theme } from 'antd';
 import SelectCards from '@/components/select-cards';
 import { FormattedMessage } from 'react-intl';
 import { useThemeContainer } from '@graphscope/studio-components';
 import { ICard } from '@/components/select-cards';
-const { Title, Text } = Typography;
+import SettingParcel from '@/components/setting-parcel';
 
 const engines: ICard[] & { primaryBGgColor: string }[] = [
   {
@@ -30,21 +29,9 @@ const InteractTheme: React.FunctionComponent = () => {
     });
   };
   return (
-    <Row>
-      <Col span={8}>
-        <Flex vertical>
-          <Title level={3} style={{ margin: '0px' }}>
-            <FormattedMessage id="Select theme" />
-          </Title>
-          <Text>
-            <FormattedMessage id="Select or customize your UI theme" />
-          </Text>
-        </Flex>
-      </Col>
-      <Col span={16}>
-        <SelectCards selectValue={algorithm} items={engines} onChange={changeEngineType} />
-      </Col>
-    </Row>
+    <SettingParcel style={{ margin: '0px' }} title="Select theme" text="Select or customize your UI theme">
+      <SelectCards selectValue={algorithm} items={engines} onChange={changeEngineType} />
+    </SettingParcel>
   );
 };
 

@@ -1,10 +1,8 @@
 import React from 'react';
-import { ColorPicker, Flex, Row, Col, Typography, theme } from 'antd';
-import { FormattedMessage } from 'react-intl';
+import { ColorPicker, Flex, Col, theme } from 'antd';
 import SelectColor from './select-color';
 import { useThemeContainer } from '@graphscope/studio-components';
-
-const { Title, Text } = Typography;
+import SettingParcel from '@/components/setting-parcel';
 
 // Style constants
 const TITLE_STYLE = { margin: '0px 24px 0px 0px' };
@@ -18,30 +16,17 @@ const PrimaryColor: React.FunctionComponent = () => {
   const handlePrimaryColor = (color: string) => {
     handleTheme({ token: { colorPrimary: color, borderRadius } });
   };
-
   return (
-    <Row>
-      <Col span={8}>
-        <Flex vertical>
-          <Title level={3} style={TITLE_STYLE}>
-            <FormattedMessage id={'Primary color'} />
-          </Title>
-          <Text>
-            <FormattedMessage id={'Set the primary color'} />
-          </Text>
-        </Flex>
-      </Col>
-      <Col span={16}>
-        <Flex align="center">
-          <ColorPicker
-            showText
-            value={colorPrimary}
-            onChangeComplete={color => handlePrimaryColor(color.toHexString())}
-          />
-          <SelectColor value={colorPrimary} onChange={handlePrimaryColor} />
-        </Flex>
-      </Col>
-    </Row>
+    <SettingParcel style={TITLE_STYLE} title="Primary color" text="Set the primary color">
+      <Flex align="center">
+        <ColorPicker
+          showText
+          value={colorPrimary}
+          onChangeComplete={color => handlePrimaryColor(color.toHexString())}
+        />
+        <SelectColor value={colorPrimary} onChange={handlePrimaryColor} />
+      </Flex>
+    </SettingParcel>
   );
 };
 
