@@ -77,6 +77,12 @@ export const download = (queryData: string, states: BlobPart) => {
   eleLink.click();
   document.body.removeChild(eleLink);
 };
+export const downloadImage = (dataUrl: string, name: string) => {
+  const a = document.createElement('a');
+  a.setAttribute('download', name);
+  a.setAttribute('href', dataUrl);
+  a.click();
+};
 
 export { generatorSchemaByGraphData } from './schema';
 export { asyncFunctionWithWorker } from './work';
