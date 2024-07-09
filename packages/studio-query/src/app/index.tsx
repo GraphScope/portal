@@ -167,9 +167,11 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
           }}
           leftSideStyle={{
             width: '320px',
+            padding: '0px',
           }}
           rightSideStyle={{
             width: '320px',
+            padding: '0px',
           }}
           splitBorder
         >
