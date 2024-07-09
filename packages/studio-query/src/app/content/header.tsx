@@ -95,7 +95,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
   };
   const handleQuery = () => {
     if (editorRef.current) {
-      const value = editorRef.current.codeEditor.getValue();
+      const value = editorRef.current.codeEditor;
       if (value === '') {
         return;
       }

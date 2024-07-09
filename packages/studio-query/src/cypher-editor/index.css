@@ -8,3 +8,7 @@
 .decorationsOverviewRuler {
   display: none !important;
 }
+
+.monaco-editor .view-overlays .current-line-exact {
+  border: none !important;
+}
