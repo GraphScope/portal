@@ -2,8 +2,9 @@ import * as React from 'react';
 import { EdgeLabelRenderer } from 'reactflow';
 import { EditableText, useThemeContainer, useSection } from '@graphscope/studio-components';
 import { useContext } from '../../useContext';
-import { LinkOutlined } from '@ant-design/icons';
-import { Tag } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
+import { Button, theme } from 'antd';
+const { useToken } = theme;
 interface ILabelProps {
   id: string;
   label: string;
@@ -15,6 +16,7 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
   const { id, label, style, filelocation } = props;
   const { store, updateStore } = useContext();
   const { toggleRightSide } = useSection();
+  const { token } = useToken();
   const { currentId, theme, elementOptions } = store;
   const isSelected = id === currentId;
   const { algorithm } = useThemeContainer();
@@ -71,13 +73,12 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
           <div
             style={{
               position: 'absolute',
-              transform: 'translate(120%,-2px)',
-              right: '0px',
+              // transform: 'translate(100%,0px)',
+              right: '-16px',
+              top: '-6px',
             }}
           >
-            <Tag color="success">
-              <LinkOutlined />
-            </Tag>
+            <CheckOutlined style={{ color: token.colorSuccessActive, fontSize: 12 }} />
           </div>
         )}
         <div
@@ -94,7 +95,7 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
             id={id}
             text={label || id}
             onTextChange={onLabelChange}
-            style={{ color: getColor() }}
+            style={{ color: getColor(), fontSize: '10px', lineHeight: '14px', minHeight: '14px' }}
           />
         </div>
       </div>

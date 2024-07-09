@@ -14,7 +14,7 @@ export interface ICard {
 
 interface ISelectCardsProps {
   items: ICard[];
-  selectValue: 'defaultAlgorithm' | 'darkAlgorithm';
+  value: string;
   onChange: (card: ICard) => void;
 }
 const iconStyle: React.CSSProperties = {
@@ -24,8 +24,8 @@ const iconStyle: React.CSSProperties = {
   fontSize: '20px',
 };
 const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
-  const { selectValue: value, onChange, items } = props;
-  const [current, setCurrent] = useState(value);
+  const { value, onChange, items } = props;
+
   const { useToken } = theme;
   const { token } = useToken();
 
@@ -34,15 +34,14 @@ const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
       <Row gutter={16}>
         {items.map(item => {
           const { id, title, desc, avatar, disabled } = item;
-          const isChecked = id === current;
-          console.log('isChecked', value, current, id);
+          const isChecked = id === value;
+          console.log('isChecked', value, id);
           return (
             <Space>
               <Col span={24} key={id}>
                 <Card
                   onClick={() => {
                     if (!disabled) {
-                      setCurrent(id);
                       onChange(item);
                     }
                   }}

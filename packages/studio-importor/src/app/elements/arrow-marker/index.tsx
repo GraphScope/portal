@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { theme } from 'antd';
 const { useToken } = theme;
 
@@ -12,6 +13,7 @@ const ArrowMarker: React.FunctionComponent<IArrowMarkerProps> = props => {
 
   return (
     <svg
+      id="arrow-marker-svg"
       width="200"
       height="200"
       xmlns="http://www.w3.org/2000/svg"

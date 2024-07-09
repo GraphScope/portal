@@ -1,14 +1,20 @@
 import React, { memo, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
-import { Tag } from 'antd';
-import { LinkOutlined } from '@ant-design/icons';
+import { Tag, Button, theme } from 'antd';
+import { CheckCircleOutlined, CheckOutlined } from '@ant-design/icons';
 import { EditableText, useThemeContainer, useSection } from '@graphscope/studio-components';
-
+const { useToken } = theme;
 import { useContext } from '../../useContext';
+
+const R = 50;
+const HALO_LINE_WIDTH = 16;
+const NODE_WIDTH = R * 2 + 'px';
+const HALO_WIDTH = R * 2 + HALO_LINE_WIDTH + 'px';
+
 const styles = {
   handler: {
-    width: '126px',
-    height: '126px',
+    width: HALO_WIDTH,
+    height: HALO_WIDTH,
     zIndex: 0,
     top: '50%',
     left: '50%',
@@ -22,7 +28,8 @@ const GraphNode = (props: NodeProps) => {
   const { store, updateStore } = useContext();
   const { currentId, theme, elementOptions } = store;
   const { algorithm } = useThemeContainer();
-  const { toggleRightSide } = useSection();
+  const { toggleRightSide, toggleLeftSide } = useSection();
+  const { token } = useToken();
   const isSelected = id === currentId;
   const isDark = algorithm === 'darkAlgorithm';
 
@@ -70,6 +77,7 @@ const GraphNode = (props: NodeProps) => {
       // draft.collapsed.right = false;
     });
     toggleRightSide(false);
+    toggleLeftSide(true);
   };
   const haloStyle = elementOptions.isConnectable
     ? {
@@ -118,8 +126,8 @@ const GraphNode = (props: NodeProps) => {
           border: getBorder(),
           backgroundColor: isDark ? '#161616' : '#fafafa',
           borderRadius: '50%',
-          height: '100px',
-          width: '100px',
+          height: NODE_WIDTH,
+          width: NODE_WIDTH,
           boxSizing: 'border-box',
           zIndex: 0,
           display: 'flex',
@@ -133,12 +141,11 @@ const GraphNode = (props: NodeProps) => {
           <div
             style={{
               position: 'absolute',
-              transform: 'translate(50px,-100%)',
+              top: '0px',
+              right: '-16px',
             }}
           >
-            <Tag color="green">
-              <LinkOutlined /> Mapped
-            </Tag>
+            <CheckOutlined style={{ color: token.colorSuccessActive, fontSize: 20 }} />
           </div>
         )}
         <EditableText

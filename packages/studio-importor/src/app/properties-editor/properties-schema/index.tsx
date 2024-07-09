@@ -33,7 +33,6 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
         }
       : null;
 
-  console.log('edges', nodes, edges, mappingColumn);
   return (
     <div>
       <Flex vertical gap={12} style={{ margin: '0px 12px' }}>

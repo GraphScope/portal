@@ -118,9 +118,9 @@ const useInteractive: any = () => {
   useEffect(() => {
     if (nodes.length > 0) {
       // 交互
-      if (hasLayouted) {
-        onDoubleClick();
-      }
+      // if (hasLayouted) {
+      //   onDoubleClick();
+      // }
       // 布局
       if (!hasLayouted) {
         const graph = createStaticForceLayout(fakeSnapshot(nodes), fakeSnapshot(edges));
@@ -137,6 +137,14 @@ const useInteractive: any = () => {
       }
     }
   }, [nodes, edges, hasLayouted]);
+  useEffect(() => {
+    /** 把marker 放到 reactflow 内部，目的是为了导出的时候 dom 不丢失 */
+    const marker = document.getElementById('arrow-marker-svg');
+    const view = document.querySelector('.react-flow__viewport');
+    if (marker && view) {
+      view.appendChild(marker);
+    }
+  }, []);
 
   return {
     store,

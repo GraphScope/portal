@@ -16,7 +16,9 @@ const EditableText = ({ text, onTextChange, id, style = {}, disabled }) => {
     setEditableText(text);
   }, [text]);
 
-  const handleDoubleClick = () => {
+  const handleDoubleClick = e => {
+    e.stopPropagation();
+    e.preventDefault();
     if (disabled) return;
     // 开启编辑模式
     setIsEditing(true);
@@ -79,6 +81,7 @@ const EditableText = ({ text, onTextChange, id, style = {}, disabled }) => {
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
+            fontSize: '12px',
             ...style,
           }}
         >
