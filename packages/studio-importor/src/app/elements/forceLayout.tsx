@@ -1,23 +1,25 @@
 // 引入 d3-force 模块
-import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from 'd3-force';
+import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide, forceRadial } from 'd3-force';
 export interface IParams {
   iterations?: number;
   center?: { x: number; y: number };
 }
 export function createStaticForceLayout(nodes, edges, params: IParams = {}) {
-  const { iterations = 300, center = { x: window.innerWidth / 2, y: window.innerHeight / 2 } } = params;
+  const { iterations = 1000, center = { x: window.innerWidth / 2, y: window.innerHeight / 2 } } = params;
+  const edgeDistance = 250;
+  const nodeStrength = -1 * (edgeDistance * (edges.length === 0 ? 0.5 : 8));
   // 创建力仿真
   const simulation = forceSimulation(nodes)
     .force(
       'link',
       forceLink(edges)
         .id((d: any) => d.id)
-        .distance(300),
+        .distance(edgeDistance),
     )
-    .force('charge', forceManyBody().strength(-30))
+    .force('charge', forceManyBody().strength(nodeStrength))
     .force('center', forceCenter(center.x, center.y))
-    .force('collide', forceCollide().radius(30))
-    .stop(); // 停止自动的力仿真
+    .force('radial', forceRadial(0, center.x, center.y).strength(0.01)) // 施加向心力
+    .stop();
 
   // 手动运行力仿真
   for (let i = 0; i < iterations; i++) {

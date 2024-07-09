@@ -3,7 +3,7 @@ import { Button, Modal, Segmented } from 'antd';
 import { UngroupOutlined } from '@ant-design/icons';
 import ImportFromCSV from './import-from-csv';
 import ImportFromSQL from './import-from-sql';
-import ImportFromYaml from './import-from-yaml';
+import ImportFromYAML from './import-from-yaml';
 import { SegmentedTabs } from '@graphscope/studio-components';
 import type { SegmentedTabsProps } from '@graphscope/studio-components';
 interface IImportSchemaProps {
@@ -21,6 +21,11 @@ const items: SegmentedTabsProps['items'] = [
     label: 'SQL DDL',
     key: 'SQL',
     children: <ImportFromSQL />,
+  },
+  {
+    label: 'YAML',
+    key: 'YAML',
+    children: <ImportFromYAML />,
   },
 ];
 

@@ -35,7 +35,6 @@ export function validateProperties({ appMode, type, properties = [] }: IExtraCom
     if (!properties.length) {
       return 'A vertex must have at least one property.';
     }
-    console.log('properties', properties);
     if (!properties.some(({ primaryKey }) => primaryKey)) {
       return 'A vertex must have a primary key.';
     }
