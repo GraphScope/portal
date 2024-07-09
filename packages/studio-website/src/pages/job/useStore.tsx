@@ -10,6 +10,14 @@ interface JobOption {
   value: string;
   text: string;
 }
+type TaskStatus = 'RUNNING' | 'CANCELLED' | 'SUCCESS' | 'FAILED' | 'WAITING';
+const statusColorMap: Record<TaskStatus, string> = {
+  RUNNING: 'blue',
+  CANCELLED: 'grey',
+  SUCCESS: 'green',
+  FAILED: 'red',
+  WAITING: 'orange',
+};
 /** 定义状态选项 */
 const STATUSOPTIONS: JobOption[] = [
   { value: '', text: 'All' },
@@ -29,21 +37,8 @@ export default function useStore() {
     FAILED: <CloseCircleOutlined />,
     WAITING: <ExclamationCircleOutlined />,
   };
-  const getStatusColor = (status: string): string => {
-    switch (status) {
-      case 'RUNNING':
-        return 'blue';
-      case 'CANCELLED':
-        return 'grey';
-      case 'SUCCESS':
-        return 'green';
-      case 'FAILED':
-        return 'red';
-      case 'WAITING':
-        return 'orange';
-      default:
-        return '';
-    }
+  const getStatusColor = (status: TaskStatus): string => {
+    return statusColorMap[status];
   };
 
   const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
