@@ -31,7 +31,7 @@ const SelectColor: React.FunctionComponent<ISelectColorProps> = props => {
   return (
     <Space style={{ marginLeft: '16px' }}>
       {colors.map(color => {
-        const isActive = value === color;
+        const isActive = value.toLocaleUpperCase() === color;
         return (
           <span
             key={color}
@@ -42,7 +42,7 @@ const SelectColor: React.FunctionComponent<ISelectColorProps> = props => {
               ...styles.color,
               backgroundColor: color,
               boxSizing: 'border-box',
-              border: isActive ? '2px solid blue`' : 'none',
+              border: isActive ? '2px solid blue' : 'none',
             }}
           ></span>
         );
