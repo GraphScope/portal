@@ -139,6 +139,10 @@ export default {
   'Lighttime theme': 'Lighttime theme',
   Light: 'Light',
   Dark: 'Dark',
+  'Sidebar placement': 'Sidebar placement',
+  'Querying page sidebar placement': 'Querying page sidebar placement',
+  'Sidebar type': 'Sidebar type',
+  'Querying page sidebar style': 'Querying page sidebar style',
   /** import data */
   Labels: 'Labels',
   'Data sources': 'Data sources',

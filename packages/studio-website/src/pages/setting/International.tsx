@@ -1,11 +1,9 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { Flex, Row, Col, Typography } from 'antd';
 import { useContext } from '@/layouts/useContext';
 import LocaleSwitch from '@/components/locale-switch';
 import { useThemeContainer } from '@graphscope/studio-components';
 import type { ILocaleSwitchProps } from '@/components/locale-switch';
-const { Title, Text } = Typography;
+import SettingParcel from '@/components/setting-parcel';
 
 const International: React.FunctionComponent = () => {
   const { updateStore } = useContext();
@@ -17,21 +15,9 @@ const International: React.FunctionComponent = () => {
     });
   };
   return (
-    <Row>
-      <Col span={8}>
-        <Flex vertical>
-          <Title level={3} style={{ margin: '0px  24px 0px 0px' }}>
-            <FormattedMessage id="International" />
-          </Title>
-          <Text>
-            <FormattedMessage id="Select language" />
-          </Text>
-        </Flex>
-      </Col>
-      <Col span={8}>
-        <LocaleSwitch value={locale} onChange={value => handleLocale(value)}></LocaleSwitch>
-      </Col>
-    </Row>
+    <SettingParcel title="International" text="Select language">
+      <LocaleSwitch value={locale} onChange={value => handleLocale(value)}></LocaleSwitch>
+    </SettingParcel>
   );
 };
 

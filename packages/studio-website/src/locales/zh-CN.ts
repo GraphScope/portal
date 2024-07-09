@@ -141,6 +141,10 @@ export default {
   'Lighttime theme': '白天主题',
   Light: '白天',
   Dark: '黑夜',
+  'Sidebar placement': '设置侧边栏',
+  'Querying page sidebar placement': '查询页面侧边栏位置',
+  'Sidebar type': '侧边栏类型',
+  'Querying page sidebar style': '查询页面侧边栏样式',
   /** import data */
   Labels: '标签',
   'Data sources': '数据源',
