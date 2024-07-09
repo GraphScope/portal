@@ -23,8 +23,6 @@ export type IStore<T> = T & {
   isReady: boolean;
   /** graph schema data */
   schemaData: any;
-  /** graph name */
-  graphName: string;
   /** graph id */
   graphId: string;
   // nav collapse
@@ -55,7 +53,6 @@ export type IStore<T> = T & {
 const initialStore: IStore<{}> = {
   /** isReady */
   isReady: false,
-  graphName: 'movie',
   graphId: '',
   activeNavbar: 'recommended',
   collapse: true,

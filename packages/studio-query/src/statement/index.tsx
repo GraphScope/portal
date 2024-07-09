@@ -11,7 +11,7 @@ export type IStatementProps = IEditorProps & {
   active: boolean;
   mode?: 'tabs' | 'flow';
   enableImmediateQuery: boolean;
-  graphName: string;
+  graphId: string;
   /** 时间戳 */
   timestamp?: number;
 };
@@ -29,7 +29,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
     mode,
     schemaData,
     enableImmediateQuery,
-    graphName,
+    graphId,
     timestamp,
     language,
   } = props;
@@ -144,7 +144,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
         antdToken={token}
       />
 
-      <Result data={data} isFetching={isFetching} schemaData={schemaData} graphName={graphName} />
+      <Result data={data} isFetching={isFetching} schemaData={schemaData} graphId={graphId} />
     </div>
   );
 };
