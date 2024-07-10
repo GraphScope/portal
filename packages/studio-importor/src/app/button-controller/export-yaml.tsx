@@ -12,7 +12,7 @@ const ExportYaml: React.FunctionComponent<ILeftButtonProps> = props => {
   const { nodes, edges } = store;
   const handleClick = () => {
     const content = transOptionsToSchema(Utils.fakeSnapshot({ nodes, edges }));
-    console.log('aa', content);
+
     const yamlFile = yaml.dump(content);
     Utils.download('schema.yaml', yamlFile);
   };
