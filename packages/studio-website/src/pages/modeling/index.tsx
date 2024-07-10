@@ -1,11 +1,11 @@
 import * as React from 'react';
-import ImportApp from '@graphscope/studio-importor';
-import { transSchemaToOptions } from './utils/schema';
+import ImportApp, { transSchemaToOptions } from '@graphscope/studio-importor';
 import { useContext } from '../../layouts/useContext';
 import { Toolbar } from '@graphscope/studio-components';
 import { getSchema } from './services';
 import Save from './save-modeling';
 import SelectGraph from '@/layouts/select-graph';
+
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 

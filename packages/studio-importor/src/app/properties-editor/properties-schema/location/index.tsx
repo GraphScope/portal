@@ -52,7 +52,6 @@ const LocationField = forwardRef((props: ILocationFieldProps, ref) => {
     updateState(preState => {
       return {
         ...preState,
-        uploadProgress: 100,
         isLoading: false,
       };
     });
@@ -64,7 +63,9 @@ const LocationField = forwardRef((props: ILocationFieldProps, ref) => {
   };
   const icon = isLoading ? <LoadingOutlined /> : <UploadOutlined />;
   const text = isLoading ? 'Uploading...' : 'Upload';
-  const tips = isLoading ? `file size ${size}...` : 'Upload';
+  const tips = isLoading
+    ? `The file size is ${size}, so this may take a bit of time to process. Please be patient...`
+    : 'Upload';
 
   return (
     <div
