@@ -74,7 +74,7 @@ const TableCard: React.FunctionComponent<ITableCardProps> = props => {
         borderTop: '4px solid red',
       };
   const p = _fromEdge ? edgeProperties : properties;
-  console.log('TableCard', props, p);
+
   return (
     <div style={tableStyle}>
       <div style={{ borderBottom: '1px solid #ddd', padding: '6px 12px' }}>{label}</div>

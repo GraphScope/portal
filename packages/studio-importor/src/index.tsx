@@ -7,6 +7,6 @@ export type { Property } from '@graphscope/studio-components';
 export default ImportApp;
 
 /** all */
-export * as Utils from './app/utils';
+export { transOptionsToSchema, transSchemaToOptions } from './app/utils';
 
 export { default as sdk } from './sdk';
