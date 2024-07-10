@@ -48,4 +48,4 @@ docker pull  registry.cn-hongkong.aliyuncs.com/graphscope/portal:latest
 
 ## License
 
-GraphScope Portal is licensed under the Apache License 2.0, an open-source software license encouraging modification, distribution, and commercial use while protecting contributors' rights.
+GraphScope Portal is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0). Please note that third-party dependencies may not have the same license as GraphScope Portal.
