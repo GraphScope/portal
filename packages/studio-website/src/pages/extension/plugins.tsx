@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Table, Button, Space, Skeleton, Popconfirm, message, Modal } from 'antd';
+import { Table, Button, Space, Skeleton, Popconfirm, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { history } from 'umi';
 import { listProcedures, deleteProcedure } from './service';
@@ -25,7 +25,7 @@ const Plugins: React.FC = () => {
     isReady: true,
     open: false,
   });
-  const { isReady, pluginList, open } = state;
+  const { isReady, pluginList } = state;
   /** 获取插件列表数据 */
   const getPlugins = useCallback(async () => {
     const res = await listProcedures();
@@ -78,8 +78,7 @@ const Plugins: React.FC = () => {
                 size="small"
                 type="text"
                 onClick={() => {
-                  updateState(preset => ({ ...preset, open: true }));
-                  history.push(`/extension?graph_id=${bound_graph}&procedure_id=${id}`);
+                  history.push(`/extension/edit#?graph_id=${bound_graph}&procedure_id=${id}`);
                 }}
               >
                 <FontAwesomeIcon icon={faPenToSquare} />
@@ -109,7 +108,7 @@ const Plugins: React.FC = () => {
         style={{ position: 'absolute', top: '-55px', right: '0px' }}
         type="primary"
         onClick={() => {
-          updateState(preset => ({ ...preset, open: true }));
+          history.push('/extension/create');
         }}
       >
         <FormattedMessage id="Create Plugin" />
@@ -122,15 +121,6 @@ const Plugins: React.FC = () => {
           //@ts-ignores
           columns={columns}
           size="middle"
-        />
-      )}
-
-      {open && (
-        <CreatePlugins
-          open={open}
-          handleOpen={() => {
-            updateState(preset => ({ ...preset, open: false }));
-          }}
         />
       )}
     </>
