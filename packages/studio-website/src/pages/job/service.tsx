@@ -1,4 +1,4 @@
-import { JobApiFactory } from '@graphscope/studio-server';
+import { JobApiFactory, GraphApiFactory } from '@graphscope/studio-server';
 import { notification } from '@/pages/utils';
 import dayjs from 'dayjs';
 export type IJobType = {
@@ -26,7 +26,27 @@ export const listJobs = async () => {
       notification('error', error);
       return [];
     });
-  const info = message
+  const graphs = await GraphApiFactory(undefined, location.origin)
+    .listGraphs()
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
+    })
+    .catch(error => {
+      notification('error', error);
+    });
+  const idToGraph = new Map();
+  graphs?.forEach(graph => {
+    idToGraph.set(graph.id, graph);
+  });
+
+  const data = message.map(V => {
+    const graph = idToGraph.get(V.id);
+    return graph ? { ...V, graph_name: graph.name } : V;
+  });
+
+  const info = data
     .sort((a, b) => dayjs(b.start_time).valueOf() - dayjs(a.start_time).valueOf())
     .map(item => {
       const { job_id } = item;

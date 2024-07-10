@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Button, Form, Input, Select, Flex } from 'antd';
+import { Button, Form, Input, Select, Modal, Space } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { history } from 'umi';
-import { Utils, useThemeContainer } from '@graphscope/studio-components';
+import { Utils, useThemeContainer, SplitSection } from '@graphscope/studio-components';
 import { useEditorTheme } from '@/pages/utils';
 import CodeMirror from '@uiw/react-codemirror';
 import UploadFiles from './upload-files';
-import Section from '@/components/section';
+// import Section from '@/components/section';
 
 import { createProcedure, updateProcedure, listGraphs, getProcedure } from './service';
 const { searchParamOf } = Utils;
@@ -23,8 +23,12 @@ const TYPEOPTION = [
   { label: 'Cypher', value: 'cypher' },
   // { label: 'Cpp', value: 'cpp' },
 ];
-
-const CreatePlugins: React.FC = () => {
+interface ICreatePlugins {
+  open: boolean;
+  handleOpen(): void;
+}
+const CreatePlugins: React.FC<ICreatePlugins> = props => {
+  const { open, handleOpen } = props;
   const [form] = Form.useForm();
   const graph_id = searchParamOf('graph_id') || '';
   const procedure_id = searchParamOf('procedure_id') || '';
@@ -61,7 +65,7 @@ const CreatePlugins: React.FC = () => {
       /** 新建插件 */
       await createProcedure(bound_graph, data);
     }
-    history.push('/extension');
+    handleOpen();
   }, [editCode, form.getFieldsValue()]);
   /** 获取editcode */
   const onCodeMirrorChange = useCallback((val: string) => {
@@ -77,82 +81,78 @@ const CreatePlugins: React.FC = () => {
     }
   }, []);
   return (
-    <Section
-      breadcrumb={[
-        {
-          title: 'Extensions',
-        },
-        {
-          title: 'Create Plugin',
-        },
-      ]}
-      desc="Expand its functionality or offer solutions that are finely tuned to specific needs."
-    >
-      <Flex vertical gap="middle">
-        <UploadFiles disabled={isEdit} handleChange={onCodeMirrorChange} />
-        <Form name="basic" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }} form={form} onFinish={handleSubmit}>
-          <Form.Item<FieldType>
-            style={{ marginBottom: '12px' }}
-            label={<FormattedMessage id="Name" />}
-            name="name"
-            rules={[{ required: true, message: 'Please input your Graph name!' }]}
-          >
-            <Input disabled={isEdit} />
-          </Form.Item>
-
-          <Form.Item<FieldType>
-            style={{ marginBottom: '12px' }}
-            label={<FormattedMessage id="Plugin Type" />}
-            name="type"
-            rules={[{ required: true, message: 'Please input your Plugin Type!' }]}
-          >
-            <Select options={TYPEOPTION} disabled={isEdit} />
-          </Form.Item>
-          <Form.Item<FieldType>
-            style={{ marginBottom: '12px' }}
-            label={<FormattedMessage id="Binding graph" />}
-            name="bound_graph"
-            rules={[{ required: true, message: 'Please input your Graph Instance!' }]}
-          >
-            <Select options={instanceOption} disabled={isEdit} />
-          </Form.Item>
-          <Form.Item<FieldType>
-            style={{ marginBottom: '12px' }}
-            label={<FormattedMessage id="Description" />}
-            name="description"
-            rules={[{ required: true, message: 'Please input your Description!' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item<FieldType>
-            style={{ marginBottom: '12px' }}
-            label={<FormattedMessage id="Edit code" />}
-            name="query"
-          >
-            <div
-              style={{
-                overflow: 'scroll',
-                border: `1px solid ${pluginBorder}`,
-                borderRadius: '8px',
-              }}
+    <Modal title={<FormattedMessage id="Create Plugin" />} open={open} footer={null} closable={false} width={1000}>
+      <SplitSection
+        splitText=""
+        span={6}
+        splitDivider={1}
+        leftSide={<UploadFiles disabled={isEdit} handleChange={onCodeMirrorChange} />}
+        rightSide={
+          <Form name="basic" labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} form={form} onFinish={handleSubmit}>
+            <Form.Item<FieldType>
+              style={{ marginBottom: '12px' }}
+              label={<FormattedMessage id="Name" />}
+              name="name"
+              rules={[{ required: true, message: 'Please input your Graph name!' }]}
             >
-              <CodeMirror
-                height="200px"
-                value={editCode}
-                onChange={e => onCodeMirrorChange(e)}
-                theme={useEditorTheme(isEdit)}
-                readOnly={isEdit}
-              />
-            </div>
-          </Form.Item>
-          <Form.Item style={{ display: 'flex', justifyContent: 'end' }}>
-            <Button type="primary" htmlType="submit">
-              <FormattedMessage id="Create Plugin" />
-            </Button>
-          </Form.Item>
-        </Form>
-      </Flex>
-    </Section>
+              <Input disabled={isEdit} />
+            </Form.Item>
+
+            <Form.Item<FieldType>
+              style={{ marginBottom: '12px' }}
+              label={<FormattedMessage id="Plugin Type" />}
+              name="type"
+              rules={[{ required: true, message: 'Please input your Plugin Type!' }]}
+            >
+              <Select options={TYPEOPTION} disabled={isEdit} />
+            </Form.Item>
+            <Form.Item<FieldType>
+              style={{ marginBottom: '12px' }}
+              label={<FormattedMessage id="Binding graph" />}
+              name="bound_graph"
+              rules={[{ required: true, message: 'Please input your Graph Instance!' }]}
+            >
+              <Select options={instanceOption} disabled={isEdit} />
+            </Form.Item>
+            <Form.Item<FieldType>
+              style={{ marginBottom: '12px' }}
+              label={<FormattedMessage id="Description" />}
+              name="description"
+              rules={[{ required: true, message: 'Please input your Description!' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item<FieldType> label={<FormattedMessage id="Edit code" />} name="query">
+              <div
+                style={{
+                  overflow: 'scroll',
+                  border: `1px solid ${pluginBorder}`,
+                  borderRadius: '8px',
+                }}
+              >
+                <CodeMirror
+                  height="240px"
+                  value={editCode}
+                  onChange={e => onCodeMirrorChange(e)}
+                  theme={useEditorTheme(isEdit)}
+                  readOnly={isEdit}
+                />
+              </div>
+            </Form.Item>
+            <Form.Item style={{ display: 'flex', justifyContent: 'end', marginBottom: '0px' }}>
+              <Space>
+                <Button type="primary" htmlType="submit" style={{ width: '128px' }}>
+                  <FormattedMessage id="Create Plugin" />
+                </Button>
+                <Button style={{ width: '128px' }} onClick={handleOpen}>
+                  <FormattedMessage id="Close" />
+                </Button>
+              </Space>
+            </Form.Item>
+          </Form>
+        }
+      ></SplitSection>
+    </Modal>
   );
 };
 

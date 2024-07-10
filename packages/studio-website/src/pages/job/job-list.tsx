@@ -98,6 +98,11 @@ const JobsList: FC = () => {
       render: (record: { graph_id: String } | { [s: string]: unknown }) => <>{record?.graph_id}</>,
     },
     {
+      title: <FormattedMessage id="Graph name" />,
+      key: 'graph_name',
+      dataIndex: 'graph_name',
+    },
+    {
       title: <FormattedMessage id="Process id" />,
       dataIndex: 'detail',
       key: 'detail',

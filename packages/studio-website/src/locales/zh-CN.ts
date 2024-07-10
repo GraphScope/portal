@@ -81,8 +81,8 @@ export default {
   'Click or drag file to this area to upload': '单击或拖动文件到此区域进行上传',
   'GraphScope provides an extension plugin mechanism, allowing you to flexibly create various types of plugins such as graph learning, store procedures, and graph analysis according to business needs.':
     'GraphScope提供了扩展插件机制，您可以根据业务需求灵活创建图学习、存储过程、图分析等多种类型的插件。',
-  'Your data may be passed to a third party (e.g., OpenAI) for AI processing. Consider the risks carefully when handling sensitive data.':
-    '您的数据可能会被传递给第三方（例如 OpenAI）进行 AI 处理。在处理敏感数据时，请仔细考虑风险。',
+  'Your can upload or simply drag and drop files pertinent to creating plugin statements.':
+    '您可以上传或简单地拖放与创建插件语句相关的文件。',
   'Expand its functionality or offer solutions that are finely tuned to specific needs.':
     '扩展其功能或提供针对特定需求进行微调的解决方案。',
   /** job */

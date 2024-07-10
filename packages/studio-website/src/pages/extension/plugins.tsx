@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Table, Button, Space, Skeleton, Popconfirm, message } from 'antd';
+import { Table, Button, Space, Skeleton, Popconfirm, message, Modal } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { history } from 'umi';
 import { listProcedures, deleteProcedure } from './service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+import CreatePlugins from './create-plugins';
 export interface Item {
   key: string;
   name: string;
@@ -18,16 +19,16 @@ const Plugins: React.FC = () => {
     pluginList: Item[];
     /** 控制骨架屏 */
     isReady: boolean;
+    open: boolean;
   }>({
     pluginList: [],
     isReady: true,
+    open: false,
   });
-  const { isReady, pluginList } = state;
+  const { isReady, pluginList, open } = state;
   /** 获取插件列表数据 */
   const getPlugins = useCallback(async () => {
     const res = await listProcedures();
-    console.log(res);
-
     //@ts-ignore
     updateState(preset => {
       return {
@@ -77,7 +78,8 @@ const Plugins: React.FC = () => {
                 size="small"
                 type="text"
                 onClick={() => {
-                  history.push(`/extension/edit#?graph_id=${bound_graph}&procedure_id=${id}`);
+                  updateState(preset => ({ ...preset, open: true }));
+                  history.push(`/extension?graph_id=${bound_graph}&procedure_id=${id}`);
                 }}
               >
                 <FontAwesomeIcon icon={faPenToSquare} />
@@ -107,7 +109,7 @@ const Plugins: React.FC = () => {
         style={{ position: 'absolute', top: '-55px', right: '0px' }}
         type="primary"
         onClick={() => {
-          history.push('/extension/create');
+          updateState(preset => ({ ...preset, open: true }));
         }}
       >
         <FormattedMessage id="Create Plugin" />
@@ -120,6 +122,15 @@ const Plugins: React.FC = () => {
           //@ts-ignores
           columns={columns}
           size="middle"
+        />
+      )}
+
+      {open && (
+        <CreatePlugins
+          open={open}
+          handleOpen={() => {
+            updateState(preset => ({ ...preset, open: false }));
+          }}
         />
       )}
     </>
