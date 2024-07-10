@@ -2,7 +2,6 @@ import React from 'react';
 import type { UploadProps } from 'antd';
 import { message, Upload } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { InboxOutlined } from '@ant-design/icons';
 import { Utils } from '@graphscope/studio-components';
 
 const { Dragger } = Upload;
@@ -27,9 +26,6 @@ const UploadFiles: React.FC<IUploadFile> = ({ disabled, handleChange }) => {
   };
   return (
     <Dragger disabled={disabled} showUploadList={false} multiple={true} onDrop={onDrop} customRequest={customRequest}>
-      <p className="ant-upload-drag-icon">
-        <InboxOutlined />
-      </p>
       <p className="ant-upload-text">
         <FormattedMessage id="Click or drag file to this area to upload" />
       </p>
