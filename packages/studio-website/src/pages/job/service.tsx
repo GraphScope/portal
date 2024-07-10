@@ -38,12 +38,12 @@ export const listJobs = async () => {
     });
   const idToGraph = new Map();
   graphs?.forEach(graph => {
-    idToGraph.set(graph.id, graph);
+    idToGraph.set(graph.id, graph.name);
   });
 
   const data = message.map(V => {
-    const graph = idToGraph.get(V.id);
-    return graph ? { ...V, graph_name: graph.name } : V;
+    const graph_name = idToGraph.get(V?.detail.graph_id);
+    return graph_name ? { ...V, graph_name } : V;
   });
 
   const info = data
