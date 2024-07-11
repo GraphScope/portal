@@ -48,6 +48,7 @@ const JobsList: FC = () => {
   /** 删除job */
   const handleDeleteJob = useCallback(async (job_id: string) => {
     const res = await deleteJobById(job_id);
+    //@ts-ignore
     message.success(res);
     getJobList();
   }, []);
@@ -74,6 +75,7 @@ const JobsList: FC = () => {
       filterMultiple: false,
       onFilter: (value: string, record: IJobType) => record.status.startsWith(value),
       render: (status: string) => (
+        //@ts-ignore
         <Tag icon={JOB_TYPE_ICONS[status]} color={getStatusColor(status)}>
           {capitalizeFirstLetter(status.toLowerCase())}
         </Tag>
@@ -130,7 +132,7 @@ const JobsList: FC = () => {
               disabled={!['RUNNING', 'WAITING'].includes(record.status)}
             />
           </Popconfirm>
-          <FileSearchOutlined onClick={() => history.push(`/job/detail#?jobId=${record.id}`)} />
+          <FileSearchOutlined onClick={() => history.push(`/job/detail?jobId=${record.id}`)} />
         </Space>
       ),
     },

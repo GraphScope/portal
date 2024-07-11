@@ -1,13 +1,13 @@
 import * as React from 'react';
-import ImportApp, { ISchemaOptions } from '@graphscope/studio-importor';
+import ImportApp, { ISchemaOptions, transMappingSchemaToOptions } from '@graphscope/studio-importor';
 import { queryPrimitiveTypes, uploadFile, getSchema, getDatasourceById } from './services';
 import { useContext } from '../../layouts/useContext';
 import { Toolbar, Utils } from '@graphscope/studio-components';
 import StartImporting from './start-importing';
-import { transMappingSchemaToOptions } from './utils/import';
+
 import SelectGraph from '@/layouts/select-graph';
 import EmptyModelCase from './empty-model-case';
-import EmptyMappingCase from './empty-mapping-case';
+
 import localforage from 'localforage';
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
@@ -61,18 +61,17 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
       handleUploadFile={uploadFile}
       /** 数据绑定 */
       GS_ENGINE_TYPE={GS_ENGINE_TYPE}
-      defaultRightStyles={{
-        collapsed: false,
-        width: 500,
+      defaultCollapsed={{
+        leftSide: true,
+        rightSide: false,
       }}
       batchUploadFiles={batchUploadFiles}
     >
-      <Toolbar style={{ top: '12px', right: '74px', left: 'unset' }} direction="horizontal">
+      <Toolbar style={{ top: '12px', right: '124px', left: 'unset' }} direction="horizontal">
         <SelectGraph />
         <StartImporting />
       </Toolbar>
       <EmptyModelCase />
-      {/* <EmptyMappingCase /> */}
     </ImportApp>
   );
 };

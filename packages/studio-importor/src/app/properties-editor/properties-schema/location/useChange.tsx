@@ -5,16 +5,16 @@ export const useChange = ({ type, id }) => {
   const { updateStore } = useContext();
   /** 上传文件 */
   const handleChangeUpload = (file_location, header) => {
+    const { dataFields = [], delimiter = '' } = header || {};
     updateStore(draft => {
       draft[type].forEach((item: ISchemaNode | ISchemaEdge) => {
         if (item.id === id) {
-          const { dataFields = [], delimiter = '' } = header || {};
           item.data.filelocation = file_location;
           item.data.dataFields = dataFields;
           item.data.delimiter = delimiter;
-          item.data.properties?.forEach((p, pIndex) => {
-            p.token = dataFields[pIndex];
-            p.index = pIndex;
+          item.data.properties?.forEach(p => {
+            p.token = p.name;
+            p.index = dataFields.findIndex(d => d === p.name);
           });
           if (type === 'edges') {
             /** 和解析CSV文件的逻辑保持一致 */
