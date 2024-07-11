@@ -13,6 +13,8 @@ import AddNode from './button-controller/add-node';
 import { Divider } from 'antd';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
+import ExportYaml from './button-controller/export-yaml';
+import ExportImage from './button-controller/export-image';
 
 import type { ISchemaOptions, ImportorProps } from './typing';
 interface Option {
@@ -45,11 +47,11 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
     queryPrimitiveTypes,
     handleUploadFile,
     isSaveFiles,
+    batchUploadFiles,
   } = props;
   const { store, updateStore } = useContext();
   const { collapsed } = store;
   const { left, right } = collapsed;
-  console.log('rener,,,,store', store);
 
   useEffect(() => {
     (async () => {
@@ -72,8 +74,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         draft.nodes = nodes;
         draft.edges = edges;
         draft.appMode = appMode;
-        draft.collapsed.left = true; //!leftSideOpen;
-        draft.collapsed.right = !rightSideOpen;
+
         draft.elementOptions = {
           isClickable: (elementOptions || {}).isClickable !== false, //默认undefined 则返回true
           isEditable: isEmpty, // 初始状态，接口获取画布有 Schema 数据的时候，不可编辑
@@ -96,6 +97,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
             /**  第二项 */
             queryPrimitiveTypes={queryPrimitiveTypes}
             handleUploadFile={handleUploadFile}
+            batchUploadFiles={batchUploadFiles}
           />
         }
         leftSideStyle={{
@@ -107,7 +109,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
           padding: '0px 12px',
         }}
         defaultCollapsed={{
-          rightSide: true,
+          rightSide: false,
           leftSide: true,
         }}
         style={{ height: 'calc(100vh - 50px)' }}
@@ -120,6 +122,8 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
               <Divider type="horizontal" style={{ margin: '0px' }} />
               <AddNode />
               <ClearCanvas />
+              <ExportYaml />
+              <ExportImage />
               {/* <ModeSwitch /> */}
             </Toolbar>
           )}

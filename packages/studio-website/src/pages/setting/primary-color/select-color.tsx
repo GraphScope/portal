@@ -42,7 +42,7 @@ const SelectColor: React.FunctionComponent<ISelectColorProps> = props => {
               ...styles.color,
               backgroundColor: color,
               boxSizing: 'border-box',
-              border: isActive ? '2px solid blue' : 'none',
+              border: isActive ? '2px solid blue`' : 'none',
             }}
           ></span>
         );

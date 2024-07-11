@@ -37,7 +37,7 @@ const Detail: React.FunctionComponent = () => {
           title: 'Jobs',
         },
         {
-          title: 'ID',
+          title: jobId,
         },
       ]}
       desc={{ id: 'The jobid of the running state of the graph model is {jobId} verbose logs.', values: { jobId } }}

@@ -111,7 +111,6 @@ const SideTabs: React.FunctionComponent<SidebarProps> = props => {
   };
   const val = value || active;
   const activeOption = items.find(item => item.key === val);
-  console.log('active', activeOption, val);
 
   const styles: Record<string, React.CSSProperties> = getStyles(token);
   return (

@@ -5,6 +5,7 @@ import { history } from 'umi';
 import { listProcedures, deleteProcedure } from './service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+import CreatePlugins from './create-plugins';
 export interface Item {
   key: string;
   name: string;
@@ -18,16 +19,16 @@ const Plugins: React.FC = () => {
     pluginList: Item[];
     /** 控制骨架屏 */
     isReady: boolean;
+    open: boolean;
   }>({
     pluginList: [],
     isReady: true,
+    open: false,
   });
   const { isReady, pluginList } = state;
   /** 获取插件列表数据 */
   const getPlugins = useCallback(async () => {
     const res = await listProcedures();
-    console.log(res);
-
     //@ts-ignore
     updateState(preset => {
       return {

@@ -28,7 +28,7 @@ const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
     });
     const { result: schemaData, duration } = await Utils.asyncFunctionWithWorker(getSchemaData)(files);
     const { nodes, edges } = transform(schemaData);
-    console.log(duration, schemaData, csvFiles);
+
     if (isSaveFiles) {
       localforage.setItem('DRAFT_GRAPH_FILES', csvFiles);
     }

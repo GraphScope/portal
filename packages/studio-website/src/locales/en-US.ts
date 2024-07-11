@@ -79,8 +79,8 @@ export default {
     'Click or drag file to this area to upload' /** Not sure where to use, ditto one? */,
   'GraphScope provides an extension plugin mechanism, allowing you to flexibly create various types of plugins such as graph learning, store procedures, and graph analysis according to business needs.':
     'GraphScope provides an extension plugin mechanism, allowing you to flexibly create various types of plugins such as graph learning, store procedures, and graph analysis according to business needs.',
-  'Your data may be passed to a third party (e.g., OpenAI) for AI processing. Consider the risks carefully when handling sensitive data.':
-    'Your data may be passed to a third party (e.g., OpenAI) for AI processing. Consider the risks carefully when handling sensitive data.',
+  'Your can upload or simply drag and drop files pertinent to creating plugin statements.':
+    'Your can upload or simply drag and drop files pertinent to creating plugin statements.',
   'Expand its functionality or offer solutions that are finely tuned to specific needs.':
     'Expand its functionality or offer solutions that are finely tuned to specific needs.',
   /** job */
@@ -139,6 +139,10 @@ export default {
   'Lighttime theme': 'Lighttime theme',
   Light: 'Light',
   Dark: 'Dark',
+  'Sidebar placement': 'Sidebar placement',
+  'Querying page sidebar placement': 'Querying page sidebar placement',
+  'Sidebar type': 'Sidebar type',
+  'Querying page sidebar style': 'Querying page sidebar style',
   /** import data */
   Labels: 'Labels',
   'Data sources': 'Data sources',

@@ -54,7 +54,7 @@ export function transformSchema(originalSchema: {
     label: vertexType.type_name,
     properties: vertexType.properties.map(({ property_name, property_type }) => ({
       name: property_name,
-      type: property_type.primitive_type,
+      type: 'primitive_type' in property_type ? property_type.primitive_type : 'DT_STRING',
     })),
     primary: vertexType.primary_keys[0],
   });
@@ -63,7 +63,7 @@ export function transformSchema(originalSchema: {
     label: edgeType.type_name,
     properties: (edgeType.properties || []).map(({ property_name, property_type }) => ({
       name: property_name,
-      type: property_type.primitive_type,
+      type: 'primitive_type' in property_type ? property_type.primitive_type : 'DT_STRING',
     })),
     primary: edgeType.type_name,
     constraints: edgeType.vertex_type_pair_relations.map(({ source_vertex, destination_vertex }) => [

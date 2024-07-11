@@ -1,5 +1,7 @@
 import type { GetGraphSchemaResponse } from '@graphscope/studio-server';
-import { ISchemaEdge, ISchemaNode, ISchemaOptions, Property } from '@graphscope/studio-importor';
+import type { Property } from '@graphscope/studio-components';
+import { ISchemaEdge, ISchemaNode, ISchemaOptions } from '../typing';
+
 import { v4 as uuidv4 } from 'uuid';
 
 export type DeepRequired<T> = T extends (...args: any[]) => any
@@ -59,8 +61,7 @@ export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchema
               return {
                 key: uuidv4(),
                 name: p.property_name,
-                //@ts-ignore
-                type: p.property_type.primitive_type,
+                type: 'primitive_type' in p.property_type ? p.property_type.primitive_type : 'DT_STRING',
                 primaryKey: false,
                 disable: false,
                 token: '',
@@ -106,7 +107,7 @@ export function transOptionsToSchema(options: DeepRequired<ISchemaOptions>) {
           return {
             property_id: pIdx,
             property_name: p.name,
-            property_type: handleType(p.type),
+            property_type: handleType(p.type) as any,
           };
         }) || [],
       primary_keys: [primary_key],

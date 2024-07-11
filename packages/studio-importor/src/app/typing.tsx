@@ -70,6 +70,8 @@ export interface ImportorProps {
   handleUploadFile: (file: File) => {
     file_path: string;
   };
+  /** 批量上传文件 */
+  batchUploadFiles?: () => Promise<File[]>;
   queryImportData?: () => void;
   /** 默认样式相关 */
   defaultLeftStyles?: {

@@ -15,6 +15,7 @@ export default () => {
         <Icons.AddNode />
         <Icons.PrimaryKey style={{ color: 'red' }} />
         <Icons.Sidebar />
+        <Icons.FileExport />
       </Space>
     </div>
   );

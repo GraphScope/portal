@@ -6,4 +6,7 @@ export type { ISchemaEdge, ISchemaNode, ISchemaOptions } from './app/typing';
 export type { Property } from '@graphscope/studio-components';
 export default ImportApp;
 
+/** all */
+export { transOptionsToSchema, transSchemaToOptions } from './app/utils';
+
 export { default as sdk } from './sdk';

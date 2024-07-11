@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { memo, forwardRef } from 'react';
 import { Typography, Flex, Input } from 'antd';
 import { PropertiesList } from '@graphscope/studio-components';
 import useModel from './useModel';
@@ -13,14 +13,12 @@ export type IPropertiesSchemaProps = Pick<ImportorProps, 'appMode' | 'queryPrimi
   disabled?: boolean;
 };
 
-const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props => {
+const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
   const { schema, type, appMode, queryPrimitiveTypes, disabled, handleUploadFile } = props;
   const { id, source, target, data } = schema;
 
   const { dataFields, properties = [], label, source_vertex_fields, target_vertex_fields, filelocation } = data || {};
   const { handleChangeLabel, handleProperty } = useModel({ type, id });
-  const { store } = useContext();
-  const { edges, nodes } = store;
 
   /** 判断是否为导入数据 */
   const mappingColumn =
@@ -33,12 +31,11 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
         }
       : null;
 
-  console.log('edges', nodes, edges, mappingColumn);
   return (
     <div>
       <Flex vertical gap={12} style={{ margin: '0px 12px' }}>
         {appMode === 'DATA_IMPORTING' ? (
-          <LocationField schema={schema} type={type} handleUploadFile={handleUploadFile} />
+          <LocationField ref={ref} schema={schema} type={type} handleUploadFile={handleUploadFile} />
         ) : (
           <>
             <Typography.Text>Label</Typography.Text>
@@ -66,6 +63,6 @@ const PropertiesSchema: React.FunctionComponent<IPropertiesSchemaProps> = props 
       </Flex>
     </div>
   );
-};
+});
 
 export default PropertiesSchema;

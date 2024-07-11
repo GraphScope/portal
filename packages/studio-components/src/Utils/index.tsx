@@ -66,6 +66,24 @@ export const fakeSnapshot = obj => {
   return JSON.parse(JSON.stringify(obj));
 };
 
+/** 导出数据*/
+export const download = (queryData: string, states: BlobPart) => {
+  const eleLink = document.createElement('a');
+  eleLink.download = queryData;
+  eleLink.style.display = 'none';
+  const blob = new Blob([states]);
+  eleLink.href = URL.createObjectURL(blob);
+  document.body.appendChild(eleLink);
+  eleLink.click();
+  document.body.removeChild(eleLink);
+};
+export const downloadImage = (dataUrl: string, name: string) => {
+  const a = document.createElement('a');
+  a.setAttribute('download', name);
+  a.setAttribute('href', dataUrl);
+  a.click();
+};
+
 export { generatorSchemaByGraphData } from './schema';
 export { asyncFunctionWithWorker } from './work';
 

@@ -63,6 +63,8 @@ export const submitDataloadingJob = async (graph_id: string, graphSchema: any, l
         metadata: {
           delimiter: loadConfig.delimiter,
           header_row: loadConfig.header_row,
+          quoting: loadConfig.quoting,
+          quote_char: loadConfig.quote_char,
         },
       },
     },
