@@ -5,7 +5,7 @@ import type {
   GetGraphSchemaResponse,
   EdgeMappingTypeTriplet,
 } from '@graphscope/studio-server';
-import { transSchemaToOptions } from '../../modeling/utils/schema';
+import { transSchemaToOptions } from '@graphscope/studio-importor';
 import type { DeepRequired } from '@/components/utils/schema';
 import type { ISchemaEdge, ISchemaNode, ISchemaOptions, Property } from '@graphscope/studio-importor';
 
@@ -173,7 +173,7 @@ export function transformImportOptionsToSchemaMapping(options: ISchemaOptions): 
 
   options.nodes.forEach(item => {
     const { id, data } = item;
-    const { properties = [], filelocation, label, primary } = data;
+    const { properties = [], filelocation = '', label, primary } = data;
     NODE_LABEL_MAP[id] = label;
 
     vertex_mappings.push({
@@ -201,7 +201,7 @@ export function transformImportOptionsToSchemaMapping(options: ISchemaOptions): 
 
     const {
       properties = [],
-      filelocation,
+      filelocation = '',
       source_vertex_fields = { index: 0, token: '', name: 'id' },
       target_vertex_fields = { index: 0, token: '', name: 'id' },
       label,

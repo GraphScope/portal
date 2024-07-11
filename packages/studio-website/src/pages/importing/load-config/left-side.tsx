@@ -7,6 +7,8 @@ export type FieldType = {
   delimiter?: string;
   import_option?: DataloadingJobConfigLoadingConfigImportOptionEnum;
   header_row: boolean;
+  quoting?: boolean;
+  quote_char?: string;
 };
 type ILeftSide = {
   onFinish: (value: any) => void;
@@ -88,6 +90,26 @@ const LeftSide: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
+        <Form.Item<FieldType> label="Quoting" name="quoting">
+          <Select
+            allowClear
+            options={[
+              { label: 'true', value: true },
+              { label: 'false', value: false },
+            ]}
+          />
+        </Form.Item>
+        <Form.Item<FieldType> label="Quote char" name="quote_char">
+          <Select
+            allowClear
+            options={[
+              { label: '"', value: '"' },
+              { label: `'`, value: `'` },
+              { label: '', value: '' },
+            ]}
+          />
+        </Form.Item>
+
         <Flex justify="end" gap={12}>
           <Button style={{ width: '128px' }} type="primary" onClick={handleClick}>
             <FormattedMessage id="Load data" />

@@ -161,7 +161,6 @@ const AutoLoadCSVCase: React.FunctionComponent<IAutoLoadCSVCaseProps> = props =>
     // });
   };
 
-  console.log('options', state.options);
   if (graphId !== draftId) {
     return (
       <div>
