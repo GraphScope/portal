@@ -72,10 +72,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
   }, []);
 
   const gotoJob = (jobId: string) => {
-    history.push(`/job/detail?jobId=${jobId}`);
-    // updateStore(draft => {
-    //   draft.currentnNav = '/job';
-    // });
+    history.push(`/job/detail?graph_id=${graphId}&jobId=${jobId}`);
   };
 
   const onFinish = async (values: FieldType) => {

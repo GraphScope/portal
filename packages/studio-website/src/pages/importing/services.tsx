@@ -3,7 +3,7 @@ import { GraphApiFactory, UtilsApiFactory, DataSourceApiFactory, JobApiFactory }
 import { notification } from '@/pages/utils';
 import { transformImportOptionsToSchemaMapping, transMappingSchemaToOptions } from './utils/import';
 const { GS_ENGINE_TYPE } = window;
-import type { FieldType } from './load-config/left-side';
+import type { FieldType } from './start-load';
 
 /** upload file */
 export const uploadFile = async (file: File) => {
