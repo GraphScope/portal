@@ -69,6 +69,7 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
       if (countLines(value) <= maxRows) {
         editorRef.current.style.height = countLines(value) * 20 + 'px';
       }
+
       //@TODO hard code
       editor = monaco.editor.create(editorRef.current, {
         language: LANGUAGE[language],
@@ -78,11 +79,20 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
         automaticLayout: true,
         minimap: { enabled: false },
         fontSize: 14,
-        lineHeight: 24,
+        lineHeight: 20,
         folding: true,
         wordWrap: 'on',
         lineDecorationsWidth: 0,
         lineNumbersMinChars: 3,
+        suggestSelection: 'first',
+        wordBasedSuggestions: false,
+        suggest: { snippetsPreventQuickSuggestions: false },
+        autoClosingQuotes: 'always',
+        fixedOverflowWidgets: true,
+        'bracketPairColorization.enabled': true,
+        scrollBeyondLastLine: false, // 不允许在内容的下方滚动
+        scrollBeyondLastColumn: false, // 不允许在内容的右侧滚动
+        // lineNumbers: 'off', // 如果你不需要行号，可以关闭它
       });
 
       editorRef.current.codeEditor = editor.getValue();
@@ -98,13 +108,13 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
         const contentHeight = editor.getContentHeight();
         const lineCount = editor.getModel()?.getLineCount(); // 获取行数
         const lineHeight = 20; // 获取行高
-
         // 计算编辑器容器的高度
         const height = lineCount === 1 ? (lineCount + MAGIC_NUMBER) * lineHeight : (lineCount + 1) * lineHeight;
 
         if (contentHeight <= maxRows * lineHeight) {
           editorRef.current.style.height = height + 'px';
         }
+
         if (onChange) {
           onChange(editor.getValue());
         }
