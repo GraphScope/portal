@@ -8,5 +8,6 @@ export default ImportApp;
 
 /** all */
 export { transOptionsToSchema, transSchemaToOptions } from './app/utils';
+export { transMappingSchemaToOptions, transformImportOptionsToSchemaMapping } from './app/utils';
 
 export { default as sdk } from './sdk';

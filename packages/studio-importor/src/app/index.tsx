@@ -4,23 +4,14 @@ import PropertiesEditor from './properties-editor';
 import ImportSchema from './import-schema';
 
 import { ReactFlowProvider } from 'reactflow';
-import { Toolbar, ThemeProvider, Section } from '@graphscope/studio-components';
+import { ThemeProvider, Section } from '@graphscope/studio-components';
 import 'reactflow/dist/style.css';
-import RightButton from './button-controller/right-button';
-import LeftButton from './button-controller/left-button';
-import ClearCanvas from './button-controller/clear-canvas';
-import AddNode from './button-controller/add-node';
-import { Divider } from 'antd';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
-import ExportYaml from './button-controller/export-yaml';
-import ExportImage from './button-controller/export-image';
+import ButtonController from './button-controller';
 
 import type { ISchemaOptions, ImportorProps } from './typing';
-interface Option {
-  label: string;
-  value: string;
-}
+
 import { useContext } from './useContext';
 import locales from '../locales';
 const ImportApp: React.FunctionComponent<ImportorProps> = props => {
@@ -54,8 +45,6 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
     batchUploadFiles,
   } = props;
   const { store, updateStore } = useContext();
-  const { collapsed } = store;
-  const { left, right } = collapsed;
 
   useEffect(() => {
     (async () => {
@@ -110,22 +99,8 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         splitBorder
       >
         <ReactFlowProvider>
-          {appMode === 'DATA_MODELING' && (
-            <Toolbar>
-              <LeftButton />
-              <Divider type="horizontal" style={{ margin: '0px' }} />
-              <AddNode />
-              <ClearCanvas />
-              <ExportYaml />
-              <ExportImage />
-              {/* <ModeSwitch /> */}
-            </Toolbar>
-          )}
+          <ButtonController />
           {children}
-
-          <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }} direction="horizontal">
-            <RightButton />
-          </Toolbar>
           <GraphCanvas />
         </ReactFlowProvider>
       </Section>
