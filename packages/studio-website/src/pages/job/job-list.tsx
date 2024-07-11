@@ -1,13 +1,6 @@
 import type { FC } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { Table, Tag, message, Button, Popconfirm, Space } from 'antd';
-import {
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-  ExclamationCircleOutlined,
-  MinusCircleOutlined,
-  SyncOutlined,
-} from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import { history } from 'umi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,57 +9,24 @@ import { FileSearchOutlined } from '@ant-design/icons';
 // import Action from './action';
 import { listJobs, IJobType, deleteJobById } from './service';
 import dayjs from 'dayjs';
-
-interface JobOption {
-  value: string;
-  text: string;
+import useStore from './useStore';
+interface IState {
+  jobsList: IJobType[];
+  typeOptions: { value: string; text: string }[];
 }
-/** 定义状态选项 */
-const STATUSOPTIONS: JobOption[] = [
-  { value: '', text: 'All' },
-  { value: 'RUNNING', text: 'Running' },
-  { value: 'CANCELLED', text: 'Cancelled' },
-  { value: 'FAILED', text: 'Failed' },
-  { value: 'SUCCESS', text: 'Succeed' },
-  { value: 'WAITING', text: 'Waiting' },
-];
-/** 定义job类型 */
-let JOBOPTIONS: JobOption[] = [{ value: '', text: 'All' }];
-/** job状态显示图标 */
-const JOB_TYPE_ICONS: Record<string, JSX.Element> = {
-  RUNNING: <SyncOutlined spin />,
-  CANCELLED: <MinusCircleOutlined />,
-  SUCCESS: <CheckCircleOutlined />,
-  FAILED: <CloseCircleOutlined />,
-  WAITING: <ExclamationCircleOutlined />,
-};
-const getStatusColor = (status: string): string => {
-  switch (status) {
-    case 'RUNNING':
-      return 'blue';
-    case 'CANCELLED':
-      return 'grey';
-    case 'SUCCESS':
-      return 'green';
-    case 'FAILED':
-      return 'red';
-    case 'WAITING':
-      return 'orange';
-    default:
-      return '';
-  }
-};
-const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
 const JobsList: FC = () => {
-  const [jobsList, setJobsList] = useState<IJobType[]>([]);
+  const [state, updateState] = useState<IState>({
+    jobsList: [],
+    typeOptions: [{ value: '', text: 'All' }],
+  });
+  const { jobsList, typeOptions } = state;
+  const { STATUSOPTIONS, JOB_TYPE_ICONS, getStatusColor, capitalizeFirstLetter } = useStore();
   /** 获取jobs列表数据 */
   const getJobList = useCallback(async () => {
     const res = await listJobs();
-    setJobsList(res);
     /** 接口获取类型值 */
-    JOBOPTIONS = JOBOPTIONS.concat(
-      //@ts-ignore
+    let uniqueJobTypes = typeOptions.concat(
       res.map(item => {
         return {
           value: item.type,
@@ -75,7 +35,10 @@ const JobsList: FC = () => {
       }),
     );
     /** 过滤相同属性 */
-    JOBOPTIONS = JOBOPTIONS.filter((item, index) => JOBOPTIONS.findIndex(i => i.value === item.value) === index);
+    uniqueJobTypes = uniqueJobTypes.filter(
+      (item, index) => uniqueJobTypes.findIndex(i => i.value === item.value) === index,
+    );
+    updateState(preset => ({ ...preset, jobsList: res, typeOptions: uniqueJobTypes }) as typeof state);
   }, []);
 
   useEffect(() => {
@@ -99,7 +62,7 @@ const JobsList: FC = () => {
       title: <FormattedMessage id="Type" />,
       dataIndex: 'type',
       key: 'type',
-      filters: JOBOPTIONS,
+      filters: typeOptions,
       filterMultiple: false,
       onFilter: (value: string, record: IJobType) => record.type.startsWith(value),
     },
@@ -135,6 +98,11 @@ const JobsList: FC = () => {
       render: (record: { graph_id: String } | { [s: string]: unknown }) => <>{record?.graph_id}</>,
     },
     {
+      title: <FormattedMessage id="Graph name" />,
+      key: 'graph_name',
+      dataIndex: 'graph_name',
+    },
+    {
       title: <FormattedMessage id="Process id" />,
       dataIndex: 'detail',
       key: 'detail',
@@ -143,7 +111,6 @@ const JobsList: FC = () => {
     {
       title: <FormattedMessage id="Action" />,
       key: 'actions',
-      // render: (record: IJobType) => <Action {...record} onChange={() => getJobList()} />,
       render: (record: IJobType) => (
         <Space>
           <Popconfirm
@@ -173,7 +140,7 @@ const JobsList: FC = () => {
     <Table
       style={{ marginTop: '-8px' }}
       dataSource={jobsList}
-      //@ts-ignores
+      //@ts-ignore
       columns={columns}
       size="middle"
     />
