@@ -12,6 +12,7 @@ const Detail: React.FunctionComponent = () => {
   useEffect(() => {
     const fetchJobDetails = async () => {
       const response = await getJobById(jobId);
+      //@ts-ignore
       const { log } = response;
       setDetailData(log);
     };
