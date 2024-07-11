@@ -8,7 +8,7 @@ import { useIntl } from 'react-intl';
 import { Utils } from '@graphscope/studio-components';
 
 import { useChange } from './useChange';
-import { getDataFields } from '../utils/getDataFields';
+
 import { UploadOutlined, LoadingOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import Progress from './progress';
@@ -46,16 +46,20 @@ const LocationField = forwardRef((props: ILocationFieldProps, ref) => {
         size: Utils.getFileSize(file.size),
       };
     });
-    const { file_path } = (await handleUploadFile(file as File)) || '';
-    const headers = await getDataFields(file as File);
-
+    const { file_path = '' } = (await handleUploadFile(file as File)) || {};
+    const contents = await Utils.parseFile(file);
+    const { header, quoting, delimiter } = Utils.extractHeaderAndDelimiter(contents);
     updateState(preState => {
       return {
         ...preState,
         isLoading: false,
       };
     });
-    handleChangeUpload(file_path, headers);
+    handleChangeUpload(file_path, {
+      dataFields: header,
+      quoting,
+      delimiter,
+    });
   };
   const customRequest: UploadProps['customRequest'] = async options => {
     const { file } = options;
