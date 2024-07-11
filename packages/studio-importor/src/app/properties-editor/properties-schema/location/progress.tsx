@@ -23,7 +23,6 @@ const UploadProgress: React.FunctionComponent<IUploadProgressProps> = props => {
     for (let i = 0; i < totalChunks; i++) {
       await delay(estimatedTime / totalChunks);
       const progress = Math.round(((i + 1) / totalChunks) * 99);
-      console.log('progress', progress);
       setState(preState => {
         return {
           ...preState,
