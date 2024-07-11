@@ -35,3 +35,4 @@ export const fakeSnapshot = obj => {
 };
 
 export { transOptionsToSchema, transSchemaToOptions } from './modeling';
+export { transMappingSchemaToOptions, transformImportOptionsToSchemaMapping } from './importing';

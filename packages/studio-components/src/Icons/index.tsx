@@ -4,3 +4,4 @@ export { default as Sidebar } from './Sidebar';
 export { default as Trash } from './Trash';
 export { default as Dump } from './Dump';
 export { default as FileExport } from './FileExport';
+export { default as FileYaml } from './FileYaml';

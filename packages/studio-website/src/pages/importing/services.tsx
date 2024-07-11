@@ -1,7 +1,7 @@
 import { GraphApiFactory, UtilsApiFactory, DataSourceApiFactory, JobApiFactory } from '@graphscope/studio-server';
 
 import { notification } from '@/pages/utils';
-import { transformImportOptionsToSchemaMapping, transMappingSchemaToOptions } from './utils/import';
+import { transformImportOptionsToSchemaMapping } from '@graphscope/studio-importor';
 const { GS_ENGINE_TYPE } = window;
 import type { FieldType } from './start-load';
 

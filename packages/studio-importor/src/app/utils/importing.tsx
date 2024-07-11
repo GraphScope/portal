@@ -5,9 +5,10 @@ import type {
   GetGraphSchemaResponse,
   EdgeMappingTypeTriplet,
 } from '@graphscope/studio-server';
-import { transSchemaToOptions } from '@graphscope/studio-importor';
-import type { DeepRequired } from '@/components/utils/schema';
-import type { ISchemaEdge, ISchemaNode, ISchemaOptions, Property } from '@graphscope/studio-importor';
+import { transSchemaToOptions } from './modeling';
+import type { DeepRequired } from './modeling';
+import type { ISchemaEdge, ISchemaNode, ISchemaOptions } from '../typing';
+import type { Property } from '@graphscope/studio-components';
 
 const loadingdataFields = (type: 'nodes' | 'edges', properties: Property[]) => {
   return properties.map(item => {
@@ -25,8 +26,9 @@ const loadingdataFields = (type: 'nodes' | 'edges', properties: Property[]) => {
 export function transMappingSchemaToOptions(
   schema: DeepRequired<GetGraphSchemaResponse>,
   schemaMapping: DeepRequired<SchemaMapping> | {},
+  _schemaOptions?: ISchemaOptions,
 ): ISchemaOptions {
-  const schemaOptions = transSchemaToOptions(schema);
+  const schemaOptions = _schemaOptions || transSchemaToOptions(schema);
 
   const { nodes, edges } = schemaOptions;
 

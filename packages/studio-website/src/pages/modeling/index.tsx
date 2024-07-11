@@ -49,7 +49,7 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
         rightSide: true,
       }}
     >
-      <Toolbar style={{ top: '12px', right: '74px', left: 'unset' }} direction="horizontal">
+      <Toolbar style={{ top: '12px', right: '124px', left: 'unset' }} direction="horizontal">
         <SelectGraph />
         <Save />
       </Toolbar>
