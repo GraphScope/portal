@@ -105,7 +105,6 @@ const LeftSide: React.FC<ILeftSide> = props => {
             options={[
               { label: '"', value: '"' },
               { label: `'`, value: `'` },
-              { label: '', value: '' },
             ]}
           />
         </Form.Item>

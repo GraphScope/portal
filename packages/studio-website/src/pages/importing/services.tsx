@@ -54,6 +54,12 @@ export const submitDataloadingJob = async (graph_id: string, graphSchema: any, l
     }),
   };
 
+  const  quoteParams = loadConfig.quoting? {
+    quoting: loadConfig.quoting,
+    quote_char:  loadConfig.quote_char,
+  }:{
+    quoting: loadConfig.quoting,
+  };
   return JobApiFactory(undefined, location.origin).submitDataloadingJob(graph_id, {
     ...schema,
     loading_config: {
@@ -63,8 +69,7 @@ export const submitDataloadingJob = async (graph_id: string, graphSchema: any, l
         metadata: {
           delimiter: loadConfig.delimiter,
           header_row: loadConfig.header_row,
-          quoting: loadConfig.quoting,
-          quote_char: loadConfig.quote_char,
+          ...quoteParams
         },
       },
     },
