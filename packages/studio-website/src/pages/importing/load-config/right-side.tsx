@@ -1,11 +1,13 @@
 import React from 'react';
 import { history } from 'umi';
-import { Result, Typography, Button } from 'antd';
+import { Result, Typography, Button, Flex } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { useContext } from '@/layouts/useContext';
 type IRightSide = {
   status?: 'error' | 'success';
   message?: string;
+  jobId?: string;
+  onColse: () => void;
 };
 const { Text } = Typography;
 const rightSVG = (
@@ -18,7 +20,7 @@ const rightSVG = (
   </>
 );
 const RightSide: React.FC<IRightSide> = props => {
-  const { status, message } = props;
+  const { status, message, jobId, onColse } = props;
   const { updateStore } = useContext();
   const isSuccess = status === 'success';
 
@@ -33,13 +35,14 @@ const RightSide: React.FC<IRightSide> = props => {
             </>
           }
         />
-        {isSuccess && (
-          <div style={{ textAlign: 'center', marginTop: '12px' }}>
+
+        <Flex justify="center" gap={12}>
+          {isSuccess && (
             <Button
               style={{ width: '128px' }}
               type="primary"
               onClick={() => {
-                history.push('/job');
+                history.push(`/job/detail?jobId=${jobId}`);
                 updateStore(draft => {
                   draft.currentnNav = '/job';
                 });
@@ -47,8 +50,11 @@ const RightSide: React.FC<IRightSide> = props => {
             >
               <FormattedMessage id="Goto Jobs" />
             </Button>
-          </div>
-        )}
+          )}
+          <Button style={{ width: '128px' }} onClick={onColse}>
+            <FormattedMessage id="Close" />
+          </Button>
+        </Flex>
       </>
     </div>
   );

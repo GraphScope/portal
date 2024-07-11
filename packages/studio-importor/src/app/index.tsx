@@ -34,13 +34,17 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
       primaryColor: '#1890ff',
       mode: 'defaultAlgorithm',
     },
-    defaultLeftStyles = {
-      collapsed: true,
-      width: 350,
+    defaultCollapsed = {
+      rightSide: false,
+      leftSide: true,
     },
-    defaultRightStyles = {
-      collapsed: true,
-      width: 400,
+    leftSideStyle = {
+      width: '350px',
+      padding: '0px 12px',
+    },
+    rightSideStyle = {
+      width: '450px',
+      padding: '0px 12px',
     },
     elementOptions,
     children,
@@ -74,7 +78,6 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         draft.nodes = nodes;
         draft.edges = edges;
         draft.appMode = appMode;
-
         draft.elementOptions = {
           isClickable: (elementOptions || {}).isClickable !== false, //默认undefined 则返回true
           isEditable: isEmpty, // 初始状态，接口获取画布有 Schema 数据的时候，不可编辑
@@ -100,18 +103,9 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
             batchUploadFiles={batchUploadFiles}
           />
         }
-        leftSideStyle={{
-          width: '350px',
-          padding: '0px 12px',
-        }}
-        rightSideStyle={{
-          width: '450px',
-          padding: '0px 12px',
-        }}
-        defaultCollapsed={{
-          rightSide: false,
-          leftSide: true,
-        }}
+        leftSideStyle={leftSideStyle}
+        rightSideStyle={rightSideStyle}
+        defaultCollapsed={defaultCollapsed}
         style={{ height: 'calc(100vh - 50px)' }}
         splitBorder
       >

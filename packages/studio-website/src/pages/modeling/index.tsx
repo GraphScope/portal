@@ -44,6 +44,10 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
         });
       }}
       GS_ENGINE_TYPE={GS_ENGINE_TYPE}
+      defaultCollapsed={{
+        leftSide: true,
+        rightSide: true,
+      }}
     >
       <Toolbar style={{ top: '12px', right: '74px', left: 'unset' }} direction="horizontal">
         <SelectGraph />

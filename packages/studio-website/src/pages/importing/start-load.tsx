@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Select, Form, Flex, Typography } from 'antd';
+import { Button, Select, Form, Flex, Typography, notification, Space } from 'antd';
 import type { DataloadingJobConfigLoadingConfigImportOptionEnum } from '@graphscope/studio-server';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useContext as useImporting } from '@graphscope/studio-importor';
-
+import { submitDataloadingJob } from './services';
+import { history } from 'umi';
 export type FieldType = {
   type?: string;
   delimiter?: string;
@@ -14,14 +15,33 @@ export type FieldType = {
 };
 type ILeftSide = {
   graphId: string;
-
   onColse: () => void;
   datatype?: string;
   delimiter?: string;
 };
 const { Title, Text } = Typography;
-const LeftSide: React.FC<ILeftSide> = props => {
-  const { graphId } = props;
+
+// const openNotification = (notify:any,message:string,description:string,onClick:any) => {
+//   const key = `open${Date.now()}`;
+//   const btn = (
+//     <Space>
+//       <Button style={{ width: '128px' }} type="primary" onClick={onClick}>
+//         <FormattedMessage id="Load data" />
+//       </Button>
+//     </Space>
+//   );
+//   //@ts-ignore
+//   notify({
+//     message,
+//     description
+//     btn,
+//     key,
+//     onClose: close,
+//   });
+// };
+
+const StartLoad: React.FC<ILeftSide> = props => {
+  const { graphId, onColse } = props;
   const [state, updateState] = useState<{
     result?: {
       status: 'success' | 'error';
@@ -32,17 +52,13 @@ const LeftSide: React.FC<ILeftSide> = props => {
     result: undefined,
     jobId: '',
   });
+  const [api, contextHolder] = notification.useNotification();
+
   const { store: importingStore } = useImporting();
-  const { appMode, nodes, edges } = importingStore;
+  const { nodes, edges } = importingStore;
 
-  const { onColse, delimiter, datatype } = props;
   const [form] = Form.useForm();
-  const intl = useIntl();
 
-  const handleClick = () => {
-    const data = form.getFieldsValue();
-    onFinish(data);
-  };
   useEffect(() => {
     const firstNode = nodes[0];
     const { delimiter, datatype } = firstNode.data;
@@ -51,11 +67,21 @@ const LeftSide: React.FC<ILeftSide> = props => {
       delimiter: delimiter || '|',
       import_option: 'overwrite',
       header_row: true,
+      quoting: false,
     });
-  }, [delimiter, datatype]);
+  }, []);
+
+  const gotoJob = (jobId: string) => {
+    history.push(`/job/detail?jobId=${jobId}`);
+    // updateStore(draft => {
+    //   draft.currentnNav = '/job';
+    // });
+  };
 
   const onFinish = async (values: FieldType) => {
-    let _status: string, _message: string;
+    let _status = 'success';
+    let _message = '';
+
     const job_id = await submitDataloadingJob(
       graphId || '',
       {
@@ -78,17 +104,25 @@ const LeftSide: React.FC<ILeftSide> = props => {
         _message = error.response.data;
       });
 
-    console.log('res', job_id);
-    updateState(preset => {
-      return {
-        ...preset,
-        result: {
-          status: _status as 'success' | 'error',
-          message: _message,
-          jobId: job_id,
-        },
-      };
+    const gotoBtn = (
+      <Button style={{ width: '128px' }} type="primary" onClick={() => gotoJob(job_id)}>
+        {/* <FormattedMessage id="Goto Jobs" /> */}
+        Goto Jobs
+      </Button>
+    );
+    //@ts-ignore
+    notification[_status]({
+      message: `load data ${_status}`,
+      description: _message,
+      btn: _status === 'success' ? gotoBtn : null,
     });
+
+    onColse();
+  };
+
+  const handleClick = () => {
+    const data = form.getFieldsValue();
+    onFinish(data);
   };
 
   return (
@@ -96,9 +130,9 @@ const LeftSide: React.FC<ILeftSide> = props => {
       <Title level={2}>
         <FormattedMessage id="Configuration" />
       </Title>
-      <Text type="secondary">
+      {/* <Text type="secondary">
         <FormattedMessage id="You have successfully bound the data source. Please complete the configuration to start importing data." />
-      </Text>
+      </Text> */}
       <Form
         name="modal_type"
         layout="vertical"
@@ -168,7 +202,6 @@ const LeftSide: React.FC<ILeftSide> = props => {
         <Flex justify="end" gap={12}>
           <Button style={{ width: '128px' }} type="primary" onClick={handleClick}>
             <FormattedMessage id="Load data" />
-            {/* {intl ? '加载数据' : 'Load data'} */}
           </Button>
           <Button style={{ width: '128px' }} onClick={onColse}>
             <FormattedMessage id="Close" />
@@ -179,4 +212,4 @@ const LeftSide: React.FC<ILeftSide> = props => {
   );
 };
 
-export default LeftSide;
+export default StartLoad;

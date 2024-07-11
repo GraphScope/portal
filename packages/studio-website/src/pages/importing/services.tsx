@@ -21,16 +21,7 @@ export const uploadFile = async (file: File) => {
 /** 数据绑定 dataMap(nodes/edges集合)*/
 export const bindDatasourceInBatch = async (graph_id: string, options: any) => {
   const schema = transformImportOptionsToSchemaMapping(options);
-  return await DataSourceApiFactory(undefined, location.origin)
-    .bindDatasourceInBatch(graph_id, schema)
-    .then(res => {
-      if (res.status === 200) {
-        return res.data;
-      }
-    })
-    .catch(error => {
-      notification('error', error);
-    });
+  return await DataSourceApiFactory(undefined, location.origin).bindDatasourceInBatch(graph_id, schema);
 };
 
 /** 数据绑定 dataMap(nodes/edges集合)*/
@@ -54,12 +45,14 @@ export const submitDataloadingJob = async (graph_id: string, graphSchema: any, l
     }),
   };
 
-  const  quoteParams = loadConfig.quoting? {
-    quoting: loadConfig.quoting,
-    quote_char:  loadConfig.quote_char,
-  }:{
-    quoting: loadConfig.quoting,
-  };
+  const quoteParams = loadConfig.quoting
+    ? {
+        quoting: loadConfig.quoting,
+        quote_char: loadConfig.quote_char,
+      }
+    : {
+        quoting: loadConfig.quoting,
+      };
   return JobApiFactory(undefined, location.origin).submitDataloadingJob(graph_id, {
     ...schema,
     loading_config: {
@@ -69,7 +62,7 @@ export const submitDataloadingJob = async (graph_id: string, graphSchema: any, l
         metadata: {
           delimiter: loadConfig.delimiter,
           header_row: loadConfig.header_row,
-          ...quoteParams
+          ...quoteParams,
         },
       },
     },

@@ -61,9 +61,9 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
       handleUploadFile={uploadFile}
       /** 数据绑定 */
       GS_ENGINE_TYPE={GS_ENGINE_TYPE}
-      defaultRightStyles={{
-        collapsed: false,
-        width: 500,
+      defaultCollapsed={{
+        leftSide: true,
+        rightSide: false,
       }}
       batchUploadFiles={batchUploadFiles}
     >

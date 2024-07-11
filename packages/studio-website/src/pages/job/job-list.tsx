@@ -130,7 +130,7 @@ const JobsList: FC = () => {
               disabled={!['RUNNING', 'WAITING'].includes(record.status)}
             />
           </Popconfirm>
-          <FileSearchOutlined onClick={() => history.push(`/job/detail#?jobId=${record.id}`)} />
+          <FileSearchOutlined onClick={() => history.push(`/job/detail?jobId=${record.id}`)} />
         </Space>
       ),
     },
