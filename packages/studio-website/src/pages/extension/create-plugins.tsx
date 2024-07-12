@@ -61,19 +61,12 @@ const CreatePlugins: React.FC = () => {
     });
   }, [editCode, form.getFieldsValue()]);
   /** 获取editcode */
-  const onCodeMirrorChange = useCallback((type: string, value: FieldType | string) => {
-    if (type === '') {
-      updateState(preset => {
-        return { ...preset, editCode: value as string };
-      });
-    }
-    if (type === 'application/x-yaml') {
-      const { query } = value as FieldType;
-      form.setFieldsValue(value);
-      updateState(preset => {
-        return { ...preset, editCode: query };
-      });
-    }
+  const onCodeMirrorChange = useCallback((value: FieldType) => {
+    const { query } = value as FieldType;
+    form.setFieldsValue(value);
+    updateState(preset => {
+      return { ...preset, editCode: query };
+    });
   }, []);
   useEffect(() => {
     form.setFieldsValue({ type: 'cypher' });

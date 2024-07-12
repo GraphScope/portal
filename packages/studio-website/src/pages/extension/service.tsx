@@ -86,7 +86,7 @@ export const listGraphs = async () => {
     .catch(error => {
       notification('error', error);
     });
-  let info = deployments.map((item: { name: string; id: string }) => {
+  let info = deployments?.map((item: { name: string; id: string }) => {
     const { name, id } = item;
     return {
       label: name,
@@ -94,7 +94,7 @@ export const listGraphs = async () => {
     };
   });
   /** 过滤相同属性 */
-  info = info.filter(
+  info = info?.filter(
     (item: { value: string }, index: number) =>
       info.findIndex((i: { value: string }) => i.value === item.value) === index,
   );

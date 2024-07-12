@@ -9,7 +9,7 @@ const { Dragger } = Upload;
 type IUploadFile = {
   disabled: boolean;
   editCode: string;
-  handleChange(type: string, val: any): void;
+  handleChange(val: any): void;
 };
 const UploadFiles: React.FC<IUploadFile> = ({ disabled, editCode, handleChange }) => {
   const customRequest: UploadProps['customRequest'] = async options => {
@@ -19,7 +19,7 @@ const UploadFiles: React.FC<IUploadFile> = ({ disabled, editCode, handleChange }
       try {
         const content = await Utils.parseFile(file as File);
         const data = js_yaml.load(content);
-        handleChange(type, data);
+        handleChange(data);
         message.success(`${name} file uploaded successfully.`);
       } catch (error) {
         message.error(`${name} file upload failed.`);
@@ -28,7 +28,15 @@ const UploadFiles: React.FC<IUploadFile> = ({ disabled, editCode, handleChange }
     if (type === '') {
       try {
         const content = await Utils.parseFile(file as File);
-        handleChange(type, content);
+        const data = {
+          name: '',
+          type: 'cypher',
+          bound_graph: '',
+          query: content,
+          instance: '',
+          description: '',
+        };
+        handleChange(data);
         message.success(`${name} file uploaded successfully.`);
       } catch (error) {
         message.error(`${name} file upload failed.`);
