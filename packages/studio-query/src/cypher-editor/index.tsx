@@ -123,6 +123,13 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
           onChangeContent(lineCount, editor.codeEditor);
         }
       });
+      // monaco-editor 不会捕捉到粘贴的代码块
+      editor.onDidPaste(function (event) {
+        var model = editor.getModel();
+        var range = event.range;
+        var text = model.getValueInRange(range);
+        editorRef.current.codeEditor = text;
+      });
     }
 
     return () => {

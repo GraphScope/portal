@@ -83,7 +83,11 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
 
   const { globalScript, autoRun, language, graphName } = store;
 
-  const handleChange = value => {};
+  const handleChange = value => {
+    updateStore(draft => {
+      draft.globalScript = value;
+    });
+  };
   const onChangeContent = line => {
     updateState(preState => {
       return {
