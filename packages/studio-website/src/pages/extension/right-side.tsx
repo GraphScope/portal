@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Form, Input, Select, Typography, Divider } from 'antd';
-type FieldType = {
+export type FieldType = {
   name: string;
   type: string;
   bound_graph: string;

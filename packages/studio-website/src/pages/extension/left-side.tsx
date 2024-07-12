@@ -11,7 +11,6 @@ interface ILeftSide {
 const LeftSide: React.FC<ILeftSide> = props => {
   const { editCode, isEdit, onCodeMirrorChange } = props;
   const { pluginBorder } = useThemeContainer();
-  // if (editCode) {
   return (
     <>
       <UploadFiles disabled={isEdit} editCode={editCode} handleChange={onCodeMirrorChange} />
@@ -32,8 +31,6 @@ const LeftSide: React.FC<ILeftSide> = props => {
       </div>
     </>
   );
-  // }
-  // return <UploadFiles disabled={isEdit} editCode={editCode} handleChange={onCodeMirrorChange} />;
 };
 
 export default LeftSide;

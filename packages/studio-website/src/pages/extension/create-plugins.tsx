@@ -6,6 +6,7 @@ import { Utils, SplitSection } from '@graphscope/studio-components';
 import Section from '@/components/section';
 import LeftSide from './left-side';
 import RightSide from './right-side';
+import type { FieldType } from './right-side';
 import { createProcedure, updateProcedure, listGraphs, getProcedure } from './service';
 const { getUrlParams } = Utils;
 const CreatePlugins: React.FC = () => {
@@ -49,8 +50,7 @@ const CreatePlugins: React.FC = () => {
           await updateProcedure(bound_graph, procedure_id, data);
         } else {
           /** 新建插件 */
-          const res = await createProcedure(bound_graph, data);
-          console.log(res);
+          await createProcedure(bound_graph, data);
         }
       } finally {
         await updateState(preset => {
@@ -61,10 +61,19 @@ const CreatePlugins: React.FC = () => {
     });
   }, [editCode, form.getFieldsValue()]);
   /** 获取editcode */
-  const onCodeMirrorChange = useCallback((val: string) => {
-    updateState(preset => {
-      return { ...preset, editCode: val };
-    });
+  const onCodeMirrorChange = useCallback((type: string, value: FieldType | string) => {
+    if (type === '') {
+      updateState(preset => {
+        return { ...preset, editCode: value as string };
+      });
+    }
+    if (type === 'application/x-yaml') {
+      const { query } = value as FieldType;
+      form.setFieldsValue(value);
+      updateState(preset => {
+        return { ...preset, editCode: query };
+      });
+    }
   }, []);
   useEffect(() => {
     form.setFieldsValue({ type: 'cypher' });
