@@ -71,9 +71,11 @@ export default {
   'Edit code': '编辑代码',
   'Plugin Type': '插件类型',
   'Create Plugin': '创建插件',
+  'Edit Plugin': '修改插件',
   Action: '操作',
   Extensions: '扩展插件',
   Edit: '编辑',
+  'Plugin info': '插件信息',
   'Store Procedure': '存储过程',
   'Managing your own stored procedures or customized algorithms.': '管理扩展插件，包括自定义的存储过程和算法等。',
   'If you already have an algorithm plugin file, you can upload it here, which will help you quickly create a plugin.':
