@@ -16,7 +16,6 @@ export default () => {
         <Icons.PrimaryKey style={{ color: 'red' }} />
         <Icons.Sidebar />
         <Icons.FileExport />
-        <Icons.FileYaml />
       </Space>
     </div>
   );

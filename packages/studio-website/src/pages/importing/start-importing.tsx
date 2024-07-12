@@ -1,12 +1,14 @@
-import { Button, Modal, Result, Typography } from 'antd';
+import { Button, Modal } from 'antd';
 import * as React from 'react';
 import { useContext } from '../../layouts/useContext';
 import { useContext as useImporting } from '@graphscope/studio-importor';
-import { bindDatasourceInBatch } from './services';
+import { submitDataloadingJob, bindDatasourceInBatch } from './services';
+import type { FieldType } from './load-config/left-side';
 import { SplitSection } from '@graphscope/studio-components';
+import LeftSide from './load-config/left-side';
+import RightSide from './load-config/right-side';
 import { FormattedMessage } from 'react-intl';
-import StartLoad from './start-load';
-const { Text } = Typography;
+
 interface StartImportingProps {
   onClick?: () => void;
 }
@@ -19,27 +21,53 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
 
   const [state, updateState] = useState<{
     open: boolean;
-    status: string;
-    message: string;
+    result?: {
+      status: 'success' | 'error';
+      message: string;
+    };
+    datatype?: 'odps' | 'csv';
+    delimiter?: string;
   }>({
     open: false,
-    status: '',
-    message: '',
+    /** 是否导入完成 */
+    result: undefined,
+    datatype: 'csv',
+    delimiter: ',',
   });
-  const { open, status, message } = state;
+  const { open, result, delimiter, datatype } = state;
 
-  const handleBind = async () => {
-    let _status = '';
-    let _message = '';
+  const handleBound = async () => {
     const bindStatus = await bindDatasourceInBatch(graphId || '', {
       nodes: nodes,
       edges: edges,
-    })
+    });
+    const firstNode = nodes[0];
+    const { delimiter, datatype } = firstNode.data;
+
+    updateState(preset => {
+      return {
+        ...preset,
+        open: true,
+        delimiter,
+        datatype,
+      };
+    });
+  };
+  const onFinish = async (values: FieldType) => {
+    let _status: string, _message: string;
+    const res = await submitDataloadingJob(
+      graphId || '',
+      {
+        nodes,
+        edges,
+      },
+      values,
+    )
       .then((res: any) => {
         if (res.status === 200) {
           _status = 'success';
-          _message = `You have successfully bound the data source. Please complete the configuration to start importing data.`;
-          return res.data;
+          _message = `The data loading task has been successfully created. You can view detailed logs in the job center.`;
+          return res.data && res.data.job_id;
         }
         _status = 'error';
         _message = res.message;
@@ -49,16 +77,17 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
         _message = error.response.data;
       });
 
+    console.log('res', res);
     updateState(preset => {
       return {
         ...preset,
-        open: true,
-        status: _status,
-        message: _message,
+        result: {
+          status: _status as 'success' | 'error',
+          message: _message,
+        },
       };
     });
   };
-
   const onColse = () => {
     updateState(preset => {
       return {
@@ -72,24 +101,15 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
   if (appMode === 'DATA_IMPORTING') {
     return (
       <>
-        <Button type="primary" onClick={handleBind}>
-          <FormattedMessage id="Batch data binding" />
+        <Button type="primary" onClick={handleBound}>
+          <FormattedMessage id="Start importing" />
         </Button>
         <Modal title="" open={open} footer={null} closable={false} width={1000}>
           <SplitSection
             splitText=""
-            span={8}
-            leftSide={
-              <Result
-                status="404"
-                subTitle={
-                  <>
-                    <Text type={status === 'success' ? 'secondary' : 'danger'}>{message}</Text>
-                  </>
-                }
-              />
-            }
-            rightSide={<StartLoad onColse={onColse} graphId={graphId || ''} />}
+            span={12}
+            leftSide={<LeftSide onFinish={onFinish} onColse={onColse} delimiter={delimiter} datatype={datatype} />}
+            rightSide={result ? <RightSide message={state.result?.message} status={state.result?.status} /> : null}
           />
         </Modal>
       </>

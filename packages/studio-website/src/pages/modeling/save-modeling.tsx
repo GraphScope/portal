@@ -124,7 +124,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
     });
   };
 
-  const text = IS_DRAFT_GRAPH ? 'Save Modeling' : 'View Schema';
+  const text = IS_DRAFT_GRAPH ? 'View Schema' : 'Save Modeling';
   const title =
     status === 'success' ? (
       <FormattedMessage id="Successfully saved the graph model" />

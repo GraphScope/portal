@@ -4,14 +4,23 @@ import PropertiesEditor from './properties-editor';
 import ImportSchema from './import-schema';
 
 import { ReactFlowProvider } from 'reactflow';
-import { ThemeProvider, Section } from '@graphscope/studio-components';
+import { Toolbar, ThemeProvider, Section } from '@graphscope/studio-components';
 import 'reactflow/dist/style.css';
+import RightButton from './button-controller/right-button';
+import LeftButton from './button-controller/left-button';
+import ClearCanvas from './button-controller/clear-canvas';
+import AddNode from './button-controller/add-node';
+import { Divider } from 'antd';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
-import ButtonController from './button-controller';
+import ExportYaml from './button-controller/export-yaml';
+import ExportImage from './button-controller/export-image';
 
 import type { ISchemaOptions, ImportorProps } from './typing';
-
+interface Option {
+  label: string;
+  value: string;
+}
 import { useContext } from './useContext';
 import locales from '../locales';
 const ImportApp: React.FunctionComponent<ImportorProps> = props => {
@@ -25,26 +34,23 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
       primaryColor: '#1890ff',
       mode: 'defaultAlgorithm',
     },
-    defaultCollapsed = {
-      rightSide: false,
-      leftSide: true,
+    defaultLeftStyles = {
+      collapsed: true,
+      width: 350,
     },
-    leftSideStyle = {
-      width: '350px',
-      padding: '0px 12px',
-    },
-    rightSideStyle = {
-      width: '450px',
-      padding: '0px 12px',
+    defaultRightStyles = {
+      collapsed: true,
+      width: 400,
     },
     elementOptions,
     children,
     queryPrimitiveTypes,
     handleUploadFile,
     isSaveFiles,
-    batchUploadFiles,
   } = props;
   const { store, updateStore } = useContext();
+  const { collapsed } = store;
+  const { left, right } = collapsed;
 
   useEffect(() => {
     (async () => {
@@ -67,6 +73,8 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         draft.nodes = nodes;
         draft.edges = edges;
         draft.appMode = appMode;
+        draft.collapsed.left = true; //!leftSideOpen;
+        draft.collapsed.right = !rightSideOpen;
         draft.elementOptions = {
           isClickable: (elementOptions || {}).isClickable !== false, //默认undefined 则返回true
           isEditable: isEmpty, // 初始状态，接口获取画布有 Schema 数据的时候，不可编辑
@@ -89,18 +97,40 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
             /**  第二项 */
             queryPrimitiveTypes={queryPrimitiveTypes}
             handleUploadFile={handleUploadFile}
-            batchUploadFiles={batchUploadFiles}
           />
         }
-        leftSideStyle={leftSideStyle}
-        rightSideStyle={rightSideStyle}
-        defaultCollapsed={defaultCollapsed}
+        leftSideStyle={{
+          width: '350px',
+          padding: '0px 12px',
+        }}
+        rightSideStyle={{
+          width: '450px',
+          padding: '0px 12px',
+        }}
+        defaultCollapsed={{
+          rightSide: true,
+          leftSide: true,
+        }}
         style={{ height: 'calc(100vh - 50px)' }}
         splitBorder
       >
         <ReactFlowProvider>
-          <ButtonController />
+          {appMode === 'DATA_MODELING' && (
+            <Toolbar>
+              <LeftButton />
+              <Divider type="horizontal" style={{ margin: '0px' }} />
+              <AddNode />
+              <ClearCanvas />
+              <ExportYaml />
+              <ExportImage />
+              {/* <ModeSwitch /> */}
+            </Toolbar>
+          )}
           {children}
+
+          <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }} direction="horizontal">
+            <RightButton />
+          </Toolbar>
           <GraphCanvas />
         </ReactFlowProvider>
       </Section>

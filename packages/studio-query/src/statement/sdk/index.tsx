@@ -28,7 +28,7 @@ const StatementDemo = props => {
     mode = 'flow',
     id = '',
     timestamp = Date.now(),
-    graphId = '',
+    graphName = '',
     schemaData = { nodes: [], edges: [] },
     script = 'Match (n) return n limit 10',
   } = props || {};
@@ -71,7 +71,7 @@ const StatementDemo = props => {
       active={true}
       id={id}
       timestamp={timestamp}
-      graphId={graphId}
+      graphName={graphName}
       schemaData={schemaData}
       script={script}
       onQuery={onQuery}

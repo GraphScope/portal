@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Collapse } from 'antd';
 import PropertiesSchema from './properties-schema';
 import { useContext } from '../useContext';
@@ -7,56 +7,26 @@ import { CaretRightOutlined } from '@ant-design/icons';
 import type { ImportorProps } from '../typing';
 import ValidateInfo from './properties-schema/validate-info';
 import ScrollContainer, { disableScroll } from './scroll-container';
-type IPropetiesEditorProps = Pick<
-  ImportorProps,
-  'appMode' | 'handleUploadFile' | 'queryPrimitiveTypes' | 'batchUploadFiles'
->;
+type IPropetiesEditorProps = Pick<ImportorProps, 'appMode' | 'handleUploadFile' | 'queryPrimitiveTypes'>;
 
 const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props => {
   const { store, updateStore } = useContext();
   const { nodes, edges, currentType, currentId, elementOptions } = store;
-  const { appMode, handleUploadFile, queryPrimitiveTypes, batchUploadFiles } = props;
-  const ids = new Set();
-  const itemRefs = [...nodes, ...edges].reduce((acc, curr) => {
-    acc[curr.id] = { ref: React.createRef(), file: curr.data.label + '.csv' };
-    ids.add(curr.id);
-    return acc;
-  }, {});
-
-  //@ts-ignore
-  window.ITEM_REFS = itemRefs;
-  const [state, setState] = React.useState(() => {
-    return {
-      autoUpload: false,
-    };
-  });
-  const { autoUpload } = state;
-
-  const activeKey = autoUpload ? [...ids.values()] : [currentId];
-  const accordion = autoUpload ? false : true;
-  console.log('autoUpload', autoUpload);
+  const { appMode, handleUploadFile, queryPrimitiveTypes } = props;
 
   const NODES_SCROLL_ITEMS = {};
   const EDGES_SCROLL_ITEMS = {};
 
   const nodes_items = nodes.map((item, index) => {
     const { id, data } = item;
-    const { label, properties = [], filelocation } = data || { label: id };
+    const { label, properties = [] } = data || { label: id };
     NODES_SCROLL_ITEMS[id] = { index: index };
     return {
       key: id,
       label: label,
-      extra: (
-        <ValidateInfo
-          type="nodes"
-          filelocation={filelocation}
-          appMode={appMode}
-          properties={JSON.parse(JSON.stringify(properties))}
-        />
-      ),
+      extra: <ValidateInfo type="nodes" appMode={appMode} properties={JSON.parse(JSON.stringify(properties))} />,
       children: (
         <PropertiesSchema
-          ref={itemRefs[id].ref}
           schema={JSON.parse(JSON.stringify(item))}
           type="nodes"
           queryPrimitiveTypes={queryPrimitiveTypes}
@@ -69,22 +39,14 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
   });
   const edges_items = edges.map((item, index) => {
     const { id, data } = item;
-    const { label, properties = [], filelocation } = data || { label: id };
+    const { label, properties = [] } = data || { label: id };
     EDGES_SCROLL_ITEMS[id] = { index: index };
     return {
       key: id,
       label: label,
-      extra: (
-        <ValidateInfo
-          type="edges"
-          filelocation={filelocation}
-          appMode={appMode}
-          properties={JSON.parse(JSON.stringify(properties))}
-        />
-      ),
+      extra: <ValidateInfo type="edges" appMode={appMode} properties={JSON.parse(JSON.stringify(properties))} />,
       children: (
         <PropertiesSchema
-          ref={itemRefs[id].ref}
           schema={JSON.parse(JSON.stringify(item))}
           type="edges"
           queryPrimitiveTypes={queryPrimitiveTypes}
@@ -102,54 +64,6 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     });
     disableScroll();
   };
-  useEffect(() => {
-    if (appMode !== 'DATA_IMPORTING') {
-      return;
-    }
-
-    if (batchUploadFiles) {
-      updateStore(draft => {
-        draft.currentType = 'edges';
-      });
-      setState(preState => {
-        return {
-          ...preState,
-          autoUpload: true,
-        };
-      });
-      batchUploadFiles().then(res => {
-        if (res) {
-          //@ts-ignore
-          const fileRef: any = Object.values(window.ITEM_REFS).reduce((acc: any, curr: any) => {
-            console.log('acc', acc, curr);
-            return {
-              ...acc,
-              [curr.file]: curr.ref,
-            };
-          }, {});
-          //@ts-ignore
-          console.log('res', res, window.ITEM_REFS);
-          res.forEach(file => {
-            //@ts-ignore
-            const match = fileRef[file.name];
-            if (match && match.current) {
-              match.current.upload(file);
-            }
-          });
-        } else {
-          setState(preState => {
-            return {
-              ...preState,
-              autoUpload: false,
-            };
-          });
-          updateStore(draft => {
-            draft.currentType = 'nodes';
-          });
-        }
-      });
-    }
-  }, []);
 
   return (
     <div>
@@ -171,11 +85,9 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
               <ScrollContainer currentId={currentId} items={NODES_SCROLL_ITEMS}>
                 <Collapse
                   expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-                  accordion={accordion}
+                  accordion
                   items={nodes_items}
-                  // activeKey={[currentId]}
-                  //@ts-ignore
-                  activeKey={activeKey}
+                  activeKey={[currentId]}
                   onChange={onChange}
                 />
               </ScrollContainer>
@@ -188,11 +100,9 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
               <ScrollContainer currentId={currentId} items={EDGES_SCROLL_ITEMS}>
                 <Collapse
                   expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-                  accordion={accordion}
+                  accordion
                   items={edges_items}
-                  // activeKey={[currentId]}
-                  //@ts-ignore
-                  activeKey={activeKey}
+                  activeKey={[currentId]}
                   onChange={onChange}
                 />
               </ScrollContainer>

@@ -45,7 +45,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   } = props;
 
   const { store, updateStore } = useContext();
-  const { graphId, isReady, collapse, activeNavbar, statements, schemaData, language } = store;
+  const { graphName, isReady, collapse, activeNavbar, statements, schemaData, language } = store;
   const enable = !!enableAbsolutePosition && statements.length > 0;
 
   const navbarOptions = [
@@ -53,7 +53,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       key: 'recommended',
       title: <FormattedMessage id="Recommended" />,
       icon: <FontAwesomeIcon icon={faLightbulb} />, //<DeploymentUnitOutlined />,
-      children: <RecommendedStatements schemaData={schemaData} schemaId={graphId} />,
+      children: <RecommendedStatements schemaData={schemaData} schemaId={graphName} />,
     },
     {
       key: 'saved',
@@ -93,7 +93,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       const displayMode = getSearchParams('display_mode') || localStorage.getItem(localStorageVars.mode) || 'flow';
       let autoRun = getSearchParams('auto_run') === 'true' ? true : false;
       const info = await queryInfo(graphId || '');
-
+      let graphName = info?.graph_name || graph_name || '';
       const schemaData = await queryGraphSchema(graphId);
       const historyStatements = await queryStatements('history');
       const savedStatements = await queryStatements('saved');
@@ -103,12 +103,13 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       if (_hack) {
         globalScript = `MATCH (a)-[b:Belong]->(c) RETURN a,b,c;`;
         autoRun = true;
+        graphName = `graph_algo`;
       }
 
       updateStore(draft => {
         draft.isReady = true;
         draft.graphId = graphId;
-        draft.graphId = graphId;
+        draft.graphName = graphName;
         draft.schemaData = schemaData;
         draft.historyStatements = historyStatements;
         draft.savedStatements = savedStatements;
@@ -167,11 +168,9 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
           }}
           leftSideStyle={{
             width: '320px',
-            padding: '0px',
           }}
           rightSideStyle={{
             width: '320px',
-            padding: '0px',
           }}
           splitBorder
         >

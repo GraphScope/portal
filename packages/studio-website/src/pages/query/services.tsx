@@ -1,10 +1,10 @@
 import { CypherDriver, CypherSchemaData, MockDriver, GremlinDriver } from '@graphscope/studio-query';
 import type { IStudioQueryProps, IStatement } from '@graphscope/studio-query';
 import localforage from 'localforage';
-import { GraphApiFactory, ServiceApiFactory, StoredProcedureApiFactory } from '@graphscope/studio-server';
+import { GraphApiFactory, ServiceApiFactory } from '@graphscope/studio-server';
 import { transformSchema } from './utils/schema';
 import { handleError, handleResponse } from '@/components/utils/handleServer';
-import { Utils } from '@graphscope/studio-components';
+
 const DB_QUERY_HISTORY = localforage.createInstance({
   name: 'DB_QUERY_HISTORY',
 });
@@ -79,23 +79,7 @@ export const queryStatements: IStudioQueryProps['queryStatements'] = async type 
     });
   }
   if (type === 'store-procedure') {
-    const graph_id = Utils.getSearchParams('graph_id');
-    if (!graph_id) {
-      return [];
-    }
-    return await StoredProcedureApiFactory(undefined, location.origin)
-      .listStoredProcedures(graph_id)
-      .then(res => {
-        if (res.status === 200) {
-          return res.data.map(item => {
-            return {
-              ...item,
-              script: '',
-            };
-          });
-        }
-        return [];
-      });
+    return [];
   }
   return result;
 };

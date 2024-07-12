@@ -11,7 +11,7 @@ interface IResultProps {
   data: any;
   isFetching: boolean;
   schemaData: any;
-  graphId: string;
+  graphName: string;
 }
 
 /**
@@ -56,7 +56,7 @@ const getOptions = (data, isFetching, activeKey) => {
 };
 
 const Result: React.FunctionComponent<IResultProps> = props => {
-  const { data, isFetching, schemaData, graphId } = props;
+  const { data, isFetching, schemaData, graphName } = props;
 
   const [activeKey, setActiveKey] = React.useState(null);
   const intl = useIntl();
@@ -76,7 +76,7 @@ const Result: React.FunctionComponent<IResultProps> = props => {
       label: intl.formatMessage({ id: 'Graph' }),
       key: 'graph',
       icon: <DeploymentUnitOutlined />,
-      children: <GraphView data={data} schemaData={schemaData} graphId={graphId} />,
+      children: <GraphView data={data} schemaData={schemaData} graphName={graphName} />,
       disabled: !isExist('graph'),
     },
     {

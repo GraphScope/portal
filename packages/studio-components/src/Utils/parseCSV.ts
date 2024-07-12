@@ -36,26 +36,9 @@ export function extractHeaderAndDelimiter(contents: string) {
       header = columns;
     }
   }
-  let quoting = false;
-  const _header = header.map(col => {
-    quoting = col.startsWith('"') && col.endsWith('"');
-    let item;
-    if (quoting) {
-      try {
-        item = JSON.parse(col);
-      } catch (e) {
-        // 如果解析失败，则返回原始字符串
-        item = col;
-      }
-    } else {
-      item = col;
-    }
-    return item.trim();
-  });
 
   return {
-    header: _header,
-    quoting,
+    header: header.map(col => col.trim()),
     delimiter: detectedDelimiter,
   };
 }

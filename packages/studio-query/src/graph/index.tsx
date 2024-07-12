@@ -137,7 +137,7 @@ const GraphView: React.FunctionComponent<GraphViewProps> = props => {
       <Panel overview={overview} onChange={onChange}></Panel>
       <FitView />
       <CanvasDoubleClick />
-      <ActivateRelations trigger="click" />
+      <ActivateRelations />
       <ForceSimulation />
       <ZoomCanvas enableOptimize={true} sensitivity={2} />
     </Graphin>

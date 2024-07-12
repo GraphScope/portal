@@ -42,7 +42,6 @@ export const listJobs = async () => {
   });
 
   const data = message.map(V => {
-    //@ts-ignore
     const graph_name = idToGraph.get(V?.detail.graph_id);
     return graph_name ? { ...V, graph_name } : V;
   });
@@ -50,7 +49,6 @@ export const listJobs = async () => {
   const info = data
     .sort((a, b) => dayjs(b.start_time).valueOf() - dayjs(a.start_time).valueOf())
     .map(item => {
-      //@ts-ignore
       const { job_id } = item;
       return {
         ...item,

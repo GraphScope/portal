@@ -1,6 +1,6 @@
 import { GraphApiFactory, UtilsApiFactory } from '@graphscope/studio-server';
 
-import { transOptionsToSchema } from '@graphscope/studio-importor';
+import { transOptionsToSchema } from './utils/schema';
 import { cloneDeep } from 'lodash';
 import { notification } from '@/pages/utils';
 

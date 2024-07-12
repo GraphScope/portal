@@ -7,9 +7,9 @@ import { SplitSection, Utils } from '@graphscope/studio-components';
 import { uploadFile, bindDatasourceInBatch } from './services';
 import localforage from 'localforage';
 import { CheckCircleOutlined } from '@ant-design/icons';
-
+import { transMappingSchemaToOptions } from './utils/import';
 import type { ISchemaOptions } from '@graphscope/studio-importor';
-import { useContext as useModeling, transMappingSchemaToOptions } from '@graphscope/studio-importor';
+import { useContext as useModeling } from '@graphscope/studio-importor';
 import { FormattedMessage } from 'react-intl';
 interface IAutoLoadCSVCaseProps {}
 
@@ -161,6 +161,7 @@ const AutoLoadCSVCase: React.FunctionComponent<IAutoLoadCSVCaseProps> = props =>
     // });
   };
 
+  console.log('options', state.options);
   if (graphId !== draftId) {
     return (
       <div>

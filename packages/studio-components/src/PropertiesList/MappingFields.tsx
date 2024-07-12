@@ -74,7 +74,6 @@ const MappingFields = (props: IMappingFields) => {
       value={_value}
       onChange={(evt: string) => {
         const [index, value] = splitValue(evt);
-
         onChange({ index: Number(index), token: value });
       }}
       style={{ minWidth: '140px' }}
@@ -84,9 +83,8 @@ const MappingFields = (props: IMappingFields) => {
 /** value 至少含有一个下划线 */
 const splitValue = (value: string) => {
   const parts = value.split('_');
-
   // 如果含有多个部分（即多个下划线），只保留前两个部分
-  return parts.length > 2 ? [parts[0], parts.slice(1).join('_')] : parts;
+  return parts.length > 2 ? [parts[0], parts.slice(2).join('_')] : parts;
 };
 
 export default MappingFields;

@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { getJobById } from './service';
 import { Utils, useThemeContainer } from '@graphscope/studio-components';
 import Section from '@/components/section';
-const { getSearchParams } = Utils;
+const { getUrlParams } = Utils;
 
 const Detail: React.FunctionComponent = () => {
-  const jobId = getSearchParams('jobId') || '';
+  console.log(getUrlParams());
+
+  const { jobId } = getUrlParams() || '';
   const [detailData, setDetailData] = useState<string>('');
   const { jobDetailBorder, jobDetailColor } = useThemeContainer();
   /** 获取详情job */
   useEffect(() => {
     const fetchJobDetails = async () => {
       const response = await getJobById(jobId);
-      //@ts-ignore
       const { log } = response;
       setDetailData(log);
     };

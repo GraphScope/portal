@@ -9,16 +9,10 @@ interface IExtraComponentProps {
   appMode: 'DATA_IMPORTING' | string;
   type: 'nodes' | 'edges';
   properties: Property[];
-  filelocation?: string;
 }
 
-const ValidateInfo: React.FC<IExtraComponentProps> = ({
-  appMode = 'DATA_IMPORTING',
-  type,
-  properties,
-  filelocation,
-}) => {
-  const tooltip = validateProperties({ appMode, type, properties, filelocation });
+const ValidateInfo: React.FC<IExtraComponentProps> = ({ appMode = 'DATA_IMPORTING', type, properties }) => {
+  const tooltip = validateProperties({ appMode, type, properties });
   const { token } = useToken();
   return (
     <div style={{ height: '14px' }}>
@@ -31,46 +25,32 @@ const ValidateInfo: React.FC<IExtraComponentProps> = ({
   );
 };
 
-export function validateProperties({
-  appMode,
-  type,
-  properties = [],
-  filelocation,
-}: IExtraComponentProps): string | null {
+export function validateProperties({ appMode, type, properties = [] }: IExtraComponentProps): string | null {
   if (appMode === 'DATA_IMPORTING') {
-    if (!filelocation) {
-      if (type === 'nodes') {
-        return 'This type of vertex has not been bound to a data source yet';
-      }
-      if (type === 'edges') {
-        return 'This type of edges has not been bound to a data source yet';
-      }
-    }
     return null;
   }
 
-  if (appMode === 'DATA_MODELING') {
-    if (type === 'nodes') {
-      if (!properties.length) {
-        return 'A vertex must have at least one property.';
-      }
-      if (!properties.some(({ primaryKey }) => primaryKey)) {
-        return 'A vertex must have a primary key.';
-      }
-      if (!properties.every(({ type }) => type)) {
-        return 'Please select a primate type.';
-      }
+  // Node type checks
+  if (type === 'nodes') {
+    if (!properties.length) {
+      return 'A vertex must have at least one property.';
     }
+    if (!properties.some(({ primaryKey }) => primaryKey)) {
+      return 'A vertex must have a primary key.';
+    }
+    if (!properties.every(({ type }) => type)) {
+      return 'Please select a primate type.';
+    }
+  }
 
-    if (type === 'edges') {
-      if (properties.length > 1) {
-        return 'A edge can only have one property.';
-      }
-      if (!properties.every(({ type }) => type)) {
-        return 'Please select a primate type.';
-      }
+  // Edge type check
+  if (type === 'edges') {
+    if (properties.length > 1) {
+      return 'A edge can only have one property.';
     }
-    return null;
+    if (!properties.every(({ type }) => type)) {
+      return 'Please select a primate type.';
+    }
   }
 
   return null;
