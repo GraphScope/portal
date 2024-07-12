@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Form, Card, Button, Divider } from 'antd';
+import { Form, Card, Button, Divider, message } from 'antd';
 import { history } from 'umi';
 import { FormattedMessage } from 'react-intl';
 import { Utils, SplitSection } from '@graphscope/studio-components';
@@ -16,12 +16,14 @@ const CreatePlugins: React.FC = () => {
     editCode: string;
     instanceOption: { label: string; value: string }[];
     isEdit: boolean;
+    isLoading: boolean;
   }>({
     editCode: '',
     instanceOption: [],
     isEdit: false,
+    isLoading: false,
   });
-  const { editCode, instanceOption, isEdit } = state;
+  const { editCode, instanceOption, isEdit, isLoading } = state;
   /** 获取插件某条数据 */
   const getProcedures = async (graph_id: string, procedure_id: string) => {
     const res = await getProcedure(graph_id, procedure_id);
@@ -35,17 +37,27 @@ const CreatePlugins: React.FC = () => {
   /** 创建插件 */
   const handleSubmit = useCallback(() => {
     form.validateFields().then(async res => {
+      updateState(preset => {
+        return { ...preset, isLoading: true };
+      });
       /** bound_graph 是 graph_ids */
       const { name, bound_graph, type, description } = res;
       const data = { name, description, type, query: editCode };
-      if (graph_id) {
-        /** 修改插件 */
-        await updateProcedure(bound_graph, procedure_id, data);
-      } else {
-        /** 新建插件 */
-        await createProcedure(bound_graph, data);
+      try {
+        if (graph_id) {
+          /** 修改插件 */
+          await updateProcedure(bound_graph, procedure_id, data);
+        } else {
+          /** 新建插件 */
+          const res = await createProcedure(bound_graph, data);
+          console.log(res);
+        }
+      } finally {
+        await updateState(preset => {
+          return { ...preset, isLoading: false };
+        });
       }
-      history.push('/extension');
+      await history.push('/extension');
     });
   }, [editCode, form.getFieldsValue()]);
   /** 获取editcode */
@@ -86,10 +98,11 @@ const CreatePlugins: React.FC = () => {
           leftSide={<LeftSide editCode={editCode} isEdit={isEdit} onCodeMirrorChange={onCodeMirrorChange} />}
           rightSide={<RightSide form={form} isEdit={isEdit} options={instanceOption} />}
         />
-        <Divider />
-        <Button type="primary" onClick={handleSubmit} style={{ width: '128px' }}>
-          {graph_id ? <FormattedMessage id="Edit Plugin" /> : <FormattedMessage id="Create Plugin" />}
-        </Button>
+        <div style={{ display: 'flex', justifyContent: 'end' }}>
+          <Button type="primary" onClick={handleSubmit} loading={isLoading} style={{ width: '128px' }}>
+            {graph_id ? <FormattedMessage id="Edit Plugin" /> : <FormattedMessage id="Create Plugin" />}
+          </Button>
+        </div>
       </Card>
     </Section>
   );

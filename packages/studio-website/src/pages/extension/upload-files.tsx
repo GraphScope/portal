@@ -28,33 +28,33 @@ const UploadFiles: React.FC<IUploadFile> = ({ disabled, editCode, handleChange }
   };
   return (
     <>
-      <Upload showUploadList={false} customRequest={customRequest}>
-        <Button>
+      {/* <Upload showUploadList={false} customRequest={customRequest}>
+        <Button disabled={disabled}>
           <FormattedMessage id="Upload" />
         </Button>
       </Upload>
-      <Divider />
-      {!editCode && (
-        <div style={{ height: '320px' }}>
-          <Dragger
-            disabled={disabled}
-            showUploadList={false}
-            multiple={true}
-            onDrop={onDrop}
-            customRequest={customRequest}
-          >
-            <p className="ant-upload-drag-icon">
+      <Divider /> */}
+      {/* {!editCode && ( */}
+      <div style={{ height: '150px', marginBottom: '12px' }}>
+        <Dragger
+          disabled={disabled}
+          showUploadList={false}
+          multiple={true}
+          onDrop={onDrop}
+          customRequest={customRequest}
+        >
+          {/* <p className="ant-upload-drag-icon">
               <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">
-              <FormattedMessage id="Click or drag file to this area to upload" />
-            </p>
-            <p className="ant-upload-hint">
-              <FormattedMessage id="Your can upload or simply drag and drop files pertinent to creating plugin statements." />
-            </p>
-          </Dragger>
-        </div>
-      )}
+            </p> */}
+          <p className="ant-upload-text">
+            <FormattedMessage id="Click or drag file to this area to upload" />
+          </p>
+          <p className="ant-upload-hint">
+            <FormattedMessage id="Your can upload or simply drag and drop files pertinent to creating plugin statements." />
+          </p>
+        </Dragger>
+      </div>
+      {/* )} */}
     </>
   );
 };

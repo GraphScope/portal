@@ -50,7 +50,11 @@ const RightSide: React.FC<IRightSide> = props => {
         >
           <Select options={options} disabled={isEdit} />
         </Form.Item>
-        <Form.Item<FieldType> label={<FormattedMessage id="Description" />} name="description">
+        <Form.Item<FieldType>
+          label={<FormattedMessage id="Description" />}
+          name="description"
+          rules={[{ required: true, message: 'Please input your Description!' }]}
+        >
           <Input />
         </Form.Item>
       </Form>
