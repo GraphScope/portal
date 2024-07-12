@@ -4,9 +4,11 @@ import { history } from 'umi';
 import { FormattedMessage } from 'react-intl';
 import { Utils, SplitSection } from '@graphscope/studio-components';
 import Section from '@/components/section';
+import SelectCard from './select-card';
 import LeftSide from './left-side';
 import RightSide from './right-side';
 import type { FieldType } from './right-side';
+import SelectCards from '@/components/select-cards';
 import { createProcedure, updateProcedure, listGraphs, getProcedure } from './service';
 const { getUrlParams } = Utils;
 const CreatePlugins: React.FC = () => {
@@ -18,13 +20,15 @@ const CreatePlugins: React.FC = () => {
     instanceOption: { label: string; value: string }[];
     isEdit: boolean;
     isLoading: boolean;
+    storeType: string;
   }>({
     editCode: '',
     instanceOption: [],
     isEdit: false,
     isLoading: false,
+    storeType: 'Stored procedures',
   });
-  const { editCode, instanceOption, isEdit, isLoading } = state;
+  const { editCode, instanceOption, isEdit, isLoading, storeType } = state;
   /** 获取插件某条数据 */
   const getProcedures = async (graph_id: string, procedure_id: string) => {
     const res = await getProcedure(graph_id, procedure_id);
@@ -61,8 +65,8 @@ const CreatePlugins: React.FC = () => {
     });
   }, [editCode, form.getFieldsValue()]);
   /** 获取editcode */
-  const onCodeMirrorChange = useCallback((value: FieldType) => {
-    const { query } = value as FieldType;
+  const onCodeMirrorChange = useCallback((value: string) => {
+    const { query } = value;
     form.setFieldsValue(value);
     updateState(preset => {
       return { ...preset, editCode: query };
@@ -79,7 +83,15 @@ const CreatePlugins: React.FC = () => {
       getProcedures(graph_id, procedure_id);
     }
   }, []);
-
+  const engines = [
+    {
+      id: 'Stored procedures',
+      value: 'Stored procedures',
+      type: 'Stored procedures',
+      title: 'Stored procedures',
+    },
+  ];
+  const chooseStoreType = () => {};
   return (
     <Section
       breadcrumb={[
@@ -92,6 +104,13 @@ const CreatePlugins: React.FC = () => {
       ]}
       desc="Expand its functionality or offer solutions that are finely tuned to specific needs."
     >
+      <SelectCards
+        style={{ position: 'absolute', top: '3px', right: '3px', fontSize: '20px' }}
+        value={storeType}
+        items={engines}
+        onChange={chooseStoreType}
+      />
+      <Divider />
       <SplitSection
         splitText=""
         span={12}
