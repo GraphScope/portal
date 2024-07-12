@@ -90,20 +90,18 @@ const CreatePlugins: React.FC = () => {
       ]}
       desc="Expand its functionality or offer solutions that are finely tuned to specific needs."
     >
-      <Card>
-        <SplitSection
-          splitText=""
-          span={12}
-          splitSpan={1}
-          leftSide={<LeftSide editCode={editCode} isEdit={isEdit} onCodeMirrorChange={onCodeMirrorChange} />}
-          rightSide={<RightSide form={form} isEdit={isEdit} options={instanceOption} />}
-        />
-        <div style={{ display: 'flex', justifyContent: 'end' }}>
-          <Button type="primary" onClick={handleSubmit} loading={isLoading} style={{ width: '128px' }}>
-            {graph_id ? <FormattedMessage id="Edit Plugin" /> : <FormattedMessage id="Create Plugin" />}
-          </Button>
-        </div>
-      </Card>
+      <SplitSection
+        splitText=""
+        span={12}
+        splitSpan={1}
+        leftSide={<LeftSide editCode={editCode} isEdit={isEdit} onCodeMirrorChange={onCodeMirrorChange} />}
+        rightSide={<RightSide form={form} isEdit={isEdit} options={instanceOption} />}
+      />
+      <div style={{ display: 'flex', justifyContent: 'end' }}>
+        <Button type="primary" onClick={handleSubmit} loading={isLoading} style={{ width: '128px' }}>
+          {graph_id ? <FormattedMessage id="Edit Plugin" /> : <FormattedMessage id="Create Plugin" />}
+        </Button>
+      </div>
     </Section>
   );
 };
