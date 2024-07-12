@@ -12,7 +12,6 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
   const { store, updateStore } = useContext();
 
   const onSubmit = params => {
-    console.log('state', params);
     const { files } = params;
     const nodes: NodeData[] = [];
     const edges: EdgeData[] = [];

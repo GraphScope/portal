@@ -28,7 +28,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
     displaySidebarPosition,
   } = props;
   const { store, updateStore } = useContext();
-  const { activeId, mode, statements, savedStatements, schemaData, graphName, language } = store;
+  const { activeId, mode, statements, savedStatements, schemaData, graphId, language } = store;
   const savedIds = savedStatements.map(item => item.id);
   const { token } = useToken();
 
@@ -129,7 +129,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
                   active={id === activeId}
                   id={id}
                   timestamp={timestamp}
-                  graphName={graphName}
+                  graphId={graphId}
                   schemaData={schemaData}
                   script={script}
                   onQuery={queryGraphData}

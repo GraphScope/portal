@@ -53,8 +53,18 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
     properties: props.properties || [],
     selectedRowKeys: [],
   });
+  React.useEffect(() => {
+    updateState(preState => {
+      return {
+        ...preState,
+        properties: props.properties || [],
+      };
+    });
+  }, [props.properties]);
+
   const { properties, selectedRowKeys } = state;
   const componentType = 'Select';
+
   const handleProperties = properties => {
     updateState(preset => {
       return {
