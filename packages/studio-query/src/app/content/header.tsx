@@ -83,11 +83,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
 
   const { globalScript, autoRun, language, graphName } = store;
 
-  const handleChange = value => {
-    updateStore(draft => {
-      draft.globalScript = value;
-    });
-  };
+  const handleChange = value => {};
   const onChangeContent = line => {
     updateState(preState => {
       return {
@@ -99,7 +95,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
   };
   const handleQuery = () => {
     if (editorRef.current) {
-      const value = editorRef.current.codeEditor;
+      const value = editorRef.current.codeEditor.getValue();
       if (value === '') {
         return;
       }

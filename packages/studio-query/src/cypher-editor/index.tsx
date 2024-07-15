@@ -1,6 +1,6 @@
 //@ts-nocheck
 import React, { forwardRef, useEffect } from 'react';
-import * as monaco from 'monaco-editor';
+import { editor } from 'monaco-editor';
 import 'monaco-editor/esm/vs/editor/editor.api';
 require('monaco-editor/esm/vs/basic-languages/javascript/javascript');
 import './index.css';
@@ -58,9 +58,7 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
     onChangeContent,
     clear,
   } = props;
-  let editor: monaco.editor.IStandaloneCodeEditor;
-  // 监听事件
-  let erdElement: HTMLElement | null;
+  let codeEditor: editor.IStandaloneCodeEditor;
   const MAGIC_NUMBER = onChangeContent ? 0 : 1;
   const { algorithm } = useThemeContainer();
   const isDark = algorithm === 'darkAlgorithm';
@@ -71,7 +69,7 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
       }
 
       //@TODO hard code
-      editor = monaco.editor.create(editorRef.current, {
+      codeEditor = editor.create(editorRef.current, {
         language: LANGUAGE[language],
         value,
         theme: isDark ? 'vs-dark' : THEMES[language], // 'vs' (default), 'vs-dark', 'hc-black', 'hc-light'
@@ -82,31 +80,23 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
         lineHeight: 20,
         folding: true,
         wordWrap: 'on',
-        lineDecorationsWidth: 0,
-        lineNumbersMinChars: 3,
-        suggestSelection: 'first',
-        wordBasedSuggestions: false,
-        suggest: { snippetsPreventQuickSuggestions: false },
-        autoClosingQuotes: 'always',
-        fixedOverflowWidgets: true,
-        'bracketPairColorization.enabled': true,
         scrollBeyondLastLine: false, // 不允许在内容的下方滚动
         scrollBeyondLastColumn: false, // 不允许在内容的右侧滚动
         // lineNumbers: 'off', // 如果你不需要行号，可以关闭它
       });
 
-      editorRef.current.codeEditor = editor.getValue();
+      editorRef.current.codeEditor = codeEditor;
       if (onInit) {
         onInit(editorRef.current);
       }
 
       if (onCreated) {
-        onCreated(editor);
+        onCreated(codeEditor);
       }
 
-      editor.onDidChangeModelContent(() => {
-        const contentHeight = editor.getContentHeight();
-        const lineCount = editor.getModel()?.getLineCount(); // 获取行数
+      codeEditor.onDidChangeModelContent(() => {
+        const contentHeight = codeEditor.getContentHeight();
+        const lineCount = codeEditor.getModel()?.getLineCount(); // 获取行数
         const lineHeight = 20; // 获取行高
         // 计算编辑器容器的高度
         const height = lineCount === 1 ? (lineCount + MAGIC_NUMBER) * lineHeight : (lineCount + 1) * lineHeight;
@@ -114,33 +104,24 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
         if (contentHeight <= maxRows * lineHeight) {
           editorRef.current.style.height = height + 'px';
         }
-
         if (onChange) {
-          onChange(editor.getValue());
+          onChange(codeEditor.getValue());
+          editorRef.current.codeEditor = codeEditor;
         }
 
         if (onChangeContent) {
-          onChangeContent(lineCount, editor.codeEditor);
+          onChangeContent(lineCount, codeEditor.codeEditor);
         }
-      });
-      // monaco-editor 不会捕捉到粘贴的代码块
-      editor.onDidPaste(function (event) {
-        var model = editor.getModel();
-        var range = event.range;
-        var text = model.getValueInRange(range);
-        editorRef.current.codeEditor = text;
       });
     }
 
     return () => {
-      if (editor) {
-        editor.dispose();
-      }
+      codeEditor.dispose();
     };
   }, [editorRef, value, language, isDark]);
-  useEffect(() => {
+  React.useEffect(() => {
     if (clear && editorRef && editorRef.current && editorRef.current.codeEditor) {
-      editorRef.current.codeEditor = '';
+      editorRef.current.codeEditor.setValue('');
     }
   }, [clear]);
   return (
