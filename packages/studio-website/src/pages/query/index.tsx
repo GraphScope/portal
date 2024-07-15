@@ -1,15 +1,12 @@
 import React, { lazy, Suspense } from 'react';
+import LoadingProgress from './loading-progress';
 
 const StudioQuery = lazy(() => import('./app'));
 
-const Loading = () => {
-  console.log('QueryModule 1 ');
-  return <div>Loading...</div>;
-};
 const QueryModule = () => {
   return (
     <>
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<LoadingProgress />}>
         <StudioQuery />
       </Suspense>
     </>
