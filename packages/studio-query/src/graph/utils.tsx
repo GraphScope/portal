@@ -153,7 +153,7 @@ export function processData(data: GraphinData, configMap: Map<string, ConfigItem
       caption: 'id',
     };
     const { color, size, caption } = match;
-    const displayLabel = (properties && properties[caption]) || id;
+    const displayLabel = (properties && properties[caption]) || '';
     return {
       id: id,
       source,
