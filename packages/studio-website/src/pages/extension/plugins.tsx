@@ -41,7 +41,7 @@ const Plugins: React.FC = () => {
   const deleteExtension = useCallback(async (all: { id: string; bound_graph: string }) => {
     const { bound_graph: graph_id, id } = all;
     const res = await deleteProcedure(graph_id, id);
-    message.success(res);
+    message.success(res || 'The plugin was deleted');
     await getPlugins();
   }, []);
 

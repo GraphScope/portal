@@ -67,9 +67,11 @@ export default {
   'Edit code': 'Edit code',
   'Plugin Type': 'Plugin Type',
   'Create Plugin': 'Create Plugin',
+  'Edit Plugin': 'Edit Plugin',
   Action: 'Actions',
   Extensions: 'Extensions',
   Edit: 'Edit' /** Not sure where to use, Edit or Editing */,
+  'Plugin info': 'Plugin info',
   'Store Procedure': 'Stored Procedure',
   'Managing your own stored procedures or customized algorithms.':
     'Managing your own stored procedures or customized algorithms.',

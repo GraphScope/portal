@@ -1,80 +1,97 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Button, Form, Input, Select, Flex } from 'antd';
-import { FormattedMessage } from 'react-intl';
+import { Form, Card, Button, Divider, message } from 'antd';
 import { history } from 'umi';
-import { Utils, useThemeContainer, SplitSection } from '@graphscope/studio-components';
-import { useEditorTheme } from '@/pages/utils';
-import CodeMirror from '@uiw/react-codemirror';
-import UploadFiles from './upload-files';
+import { FormattedMessage } from 'react-intl';
+import { Utils, SplitSection } from '@graphscope/studio-components';
 import Section from '@/components/section';
-
+import SelectCard from './select-card';
+import LeftSide from './left-side';
+import RightSide from './right-side';
+import type { FieldType } from './right-side';
+import SelectCards from '@/components/select-cards';
 import { createProcedure, updateProcedure, listGraphs, getProcedure } from './service';
-const { searchParamOf } = Utils;
-
-type FieldType = {
-  name: string;
-  type: string;
-  bound_graph: string;
-  query: string;
-  instance: boolean;
-  description: string;
-};
-const TYPEOPTION = [
-  { label: 'Cypher', value: 'cypher' },
-  // { label: 'Cpp', value: 'cpp' },
-];
-const CreatePlugins: React.FC = props => {
+const { getUrlParams } = Utils;
+const CreatePlugins: React.FC = () => {
+  console.log(getUrlParams());
+  const { graph_id, procedure_id } = getUrlParams();
   const [form] = Form.useForm();
-  const graph_id = searchParamOf('graph_id') || '';
-  const procedure_id = searchParamOf('procedure_id') || '';
-
   const [state, updateState] = useState<{
     editCode: string;
     instanceOption: { label: string; value: string }[];
     isEdit: boolean;
+    isLoading: boolean;
+    storeType: string;
   }>({
     editCode: '',
     instanceOption: [],
     isEdit: false,
+    isLoading: false,
+    storeType: 'Stored procedures',
   });
-  const { editCode, instanceOption, isEdit } = state;
-  const { pluginBorder } = useThemeContainer();
+  const { editCode, instanceOption, isEdit, isLoading, storeType } = state;
   /** 获取插件某条数据 */
-  const getProcedures = useCallback(async (graph_id: string, procedure_id: string) => {
+  const getProcedures = async (graph_id: string, procedure_id: string) => {
     const res = await getProcedure(graph_id, procedure_id);
-    const { query } = res as { query: string };
+    const { query } = res;
     form.setFieldsValue(res);
-    updateState(preset => ({ ...preset, editCode: query, isEdit: true }));
-  }, []);
+    updateState(preset => {
+      return { ...preset, editCode: query, isEdit: true };
+    });
+  };
 
   /** 创建插件 */
-  const handleSubmit = useCallback(async () => {
-    /** bound_graph 是 graph_ids */
-    const { name, bound_graph, type, description } = form.getFieldsValue();
-    console.log(editCode);
-    const data = { name, description, type, query: editCode };
-    if (graph_id) {
-      /** 修改插件 */
-      await updateProcedure(bound_graph, procedure_id, data);
-    } else {
-      /** 新建插件 */
-      await createProcedure(bound_graph, data);
-    }
-    history.push('/extension');
+  const handleSubmit = useCallback(() => {
+    form.validateFields().then(async res => {
+      updateState(preset => {
+        return { ...preset, isLoading: true };
+      });
+      /** bound_graph 是 graph_ids */
+      const { name, bound_graph, type, description } = res;
+      const data = { name, description, type, query: editCode };
+      try {
+        if (graph_id) {
+          /** 修改插件 */
+          await updateProcedure(bound_graph, procedure_id, data);
+        } else {
+          /** 新建插件 */
+          await createProcedure(bound_graph, data);
+        }
+      } finally {
+        await updateState(preset => {
+          return { ...preset, isLoading: false };
+        });
+      }
+      await history.push('/extension');
+    });
   }, [editCode, form.getFieldsValue()]);
   /** 获取editcode */
-  const onCodeMirrorChange = useCallback((val: string) => {
-    updateState(preset => ({ ...preset, editCode: val }));
+  const onCodeMirrorChange = useCallback((value: string) => {
+    const { query } = value;
+    form.setFieldsValue(value);
+    updateState(preset => {
+      return { ...preset, editCode: query };
+    });
   }, []);
   useEffect(() => {
     form.setFieldsValue({ type: 'cypher' });
     listGraphs().then(res => {
-      updateState(preset => ({ ...preset, instanceOption: res }));
+      updateState(preset => {
+        return { ...preset, instanceOption: res };
+      });
     });
     if (graph_id && procedure_id) {
       getProcedures(graph_id, procedure_id);
     }
   }, []);
+  const engines = [
+    {
+      id: 'Stored procedures',
+      value: 'Stored procedures',
+      type: 'Stored procedures',
+      title: 'Stored procedures',
+    },
+  ];
+  const chooseStoreType = () => {};
   return (
     <Section
       breadcrumb={[
@@ -87,66 +104,25 @@ const CreatePlugins: React.FC = props => {
       ]}
       desc="Expand its functionality or offer solutions that are finely tuned to specific needs."
     >
-      <Flex vertical gap={12}>
-        <UploadFiles disabled={isEdit} handleChange={onCodeMirrorChange} />
-        <Form name="basic" labelCol={{ span: 3 }} wrapperCol={{ span: 21 }} form={form} onFinish={handleSubmit}>
-          <Form.Item<FieldType>
-            style={{ marginBottom: '12px' }}
-            label={<FormattedMessage id="Name" />}
-            name="name"
-            rules={[{ required: true, message: 'Please input your Graph name!' }]}
-          >
-            <Input disabled={isEdit} />
-          </Form.Item>
-
-          <Form.Item<FieldType>
-            style={{ marginBottom: '12px' }}
-            label={<FormattedMessage id="Plugin Type" />}
-            name="type"
-            rules={[{ required: true, message: 'Please input your Plugin Type!' }]}
-          >
-            <Select options={TYPEOPTION} disabled={isEdit} />
-          </Form.Item>
-          <Form.Item<FieldType>
-            style={{ marginBottom: '12px' }}
-            label={<FormattedMessage id="Binding graph" />}
-            name="bound_graph"
-            rules={[{ required: true, message: 'Please input your Graph Instance!' }]}
-          >
-            <Select options={instanceOption} disabled={isEdit} />
-          </Form.Item>
-          <Form.Item<FieldType>
-            style={{ marginBottom: '12px' }}
-            label={<FormattedMessage id="Description" />}
-            name="description"
-            rules={[{ required: true, message: 'Please input your Description!' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item<FieldType> label={<FormattedMessage id="Edit code" />} name="query">
-            <div
-              style={{
-                overflow: 'scroll',
-                border: `1px solid ${pluginBorder}`,
-                borderRadius: '8px',
-              }}
-            >
-              <CodeMirror
-                height="240px"
-                value={editCode}
-                onChange={e => onCodeMirrorChange(e)}
-                theme={useEditorTheme(isEdit)}
-                readOnly={isEdit}
-              />
-            </div>
-          </Form.Item>
-          <Form.Item style={{ display: 'flex', justifyContent: 'end', marginBottom: '0px' }}>
-            <Button type="primary" htmlType="submit">
-              <FormattedMessage id="Create Plugin" />
-            </Button>
-          </Form.Item>
-        </Form>
-      </Flex>
+      <SelectCards
+        style={{ position: 'absolute', top: '3px', right: '3px', fontSize: '20px' }}
+        value={storeType}
+        items={engines}
+        onChange={chooseStoreType}
+      />
+      <Divider />
+      <SplitSection
+        splitText=""
+        span={12}
+        splitSpan={1}
+        leftSide={<LeftSide editCode={editCode} isEdit={isEdit} onCodeMirrorChange={onCodeMirrorChange} />}
+        rightSide={<RightSide form={form} isEdit={isEdit} options={instanceOption} />}
+      />
+      <div style={{ display: 'flex', justifyContent: 'end' }}>
+        <Button type="primary" onClick={handleSubmit} loading={isLoading} style={{ width: '128px' }}>
+          {graph_id ? <FormattedMessage id="Edit Plugin" /> : <FormattedMessage id="Create Plugin" />}
+        </Button>
+      </div>
     </Section>
   );
 };
