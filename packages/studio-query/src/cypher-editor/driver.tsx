@@ -168,21 +168,21 @@ export function processResult(result) {
       const isInteger = item.__isInteger__;
       const properties = processProperties(item.properties);
       if (isNode) {
-        const { labels, identity } = item as Node;
+        const { labels, identity, elementId } = item as Node;
         const nodeLabel = labels[0];
         nodes.push({
-          id: identity.low.toString(),
+          id: elementId,
           label: nodeLabel,
           properties,
         });
       }
       if (isEdge) {
-        const { start, end, type, identity } = item as Relationship;
-        const source = start.low.toString();
-        const target = end.low.toString();
+        const { type, startNodeElementId, endNodeElementId, elementId } = item as Relationship;
+        const source = startNodeElementId; //  start.low.toString();
+        const target = endNodeElementId; //end.low.toString();
         const label = type;
         edges.push({
-          id: 'e_' + identity.low.toString(),
+          id: elementId,
           source,
           target,
           label,
