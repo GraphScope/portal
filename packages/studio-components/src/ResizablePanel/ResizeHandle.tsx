@@ -1,5 +1,6 @@
+import React from 'react';
 import { PanelResizeHandle } from 'react-resizable-panels';
-
+//@ts-ignore
 import styles from './styles.module.css';
 
 export default function ResizeHandle({ className = '', id }: { className?: string; id?: string }) {

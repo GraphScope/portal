@@ -2,6 +2,7 @@ import React from 'react';
 import { Panel, PanelGroup } from 'react-resizable-panels';
 
 import ResizeHandle from './ResizeHandle';
+//@ts-ignore
 import styles from './styles.module.css';
 interface IResizablePanelsProps {
   leftSide?: React.ReactNode;
