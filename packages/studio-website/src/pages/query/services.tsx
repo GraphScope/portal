@@ -90,7 +90,7 @@ export const queryStatements: IStudioQueryProps['queryStatements'] = async type 
           return res.data.map(item => {
             return {
               ...item,
-              script: '',
+              script: item.query,
             };
           });
         }
