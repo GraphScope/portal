@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IStatement } from '../../context';
-import { Typography, Checkbox, Button, Flex, theme, Empty } from 'antd';
+import { Typography, Checkbox, Button, Flex, theme, Empty, Tooltip } from 'antd';
 import { DeleteOutlined, EditOutlined, MoreOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
@@ -85,35 +85,24 @@ const List = props => {
         return (
           <li key={item.id} style={styles.li} className="gs-query-list-item">
             {batch && <Checkbox checked={checked} onChange={e => onChange(item.id, e.target.checked)}></Checkbox>}
-
-            <pre
-              style={{
-                background: token.colorBgLayout,
-                overflow: 'hidden',
-                textWrap: 'pretty',
-                padding: '6px 14px',
-                fontSize: '12px',
-                border: '1px solid transparent',
-                borderRadius: '6px',
-                flex: 1,
-                margin: '0px',
-              }}
-              className="statement-list-item-pre"
-              onClick={() => {
-                onClick && onClick(item);
-              }}
-            >
-              <div
+            <Tooltip title="Click to start the query" placement="right">
+              <pre
                 style={{
-                  fontSize: '11px',
-                  padding: '4px 0px 12px 0px',
-                  color: token.colorTextDescription,
-                  fontStyle: 'italic',
+                  background: token.colorBgLayout,
+                  overflow: 'hidden',
+                  textWrap: 'pretty',
+                  padding: '6px 14px',
+                  fontSize: '12px',
+                  border: '1px solid transparent',
+                  borderRadius: '6px',
+                  flex: 1,
+                  margin: '0px',
+                }}
+                className="statement-list-item-pre"
+                onClick={() => {
+                  onClick && onClick(item);
                 }}
               >
-                {title}
-              </div>
-              {description && (
                 <div
                   style={{
                     fontSize: '11px',
@@ -122,18 +111,30 @@ const List = props => {
                     fontStyle: 'italic',
                   }}
                 >
-                  {description}
+                  {title}
                 </div>
-              )}
-              <code style={{ fontSize: '12px', color: token.colorTextHeading }}>{item.script}</code>
-              {item.query && (
-                <>
-                  <br />
-                  <br />
-                  <code style={{ fontSize: '12px', color: token.colorTextDescription }}>{item.query}</code>
-                </>
-              )}
-            </pre>
+                {description && (
+                  <div
+                    style={{
+                      fontSize: '11px',
+                      padding: '4px 0px 12px 0px',
+                      color: token.colorTextDescription,
+                      fontStyle: 'italic',
+                    }}
+                  >
+                    {description}
+                  </div>
+                )}
+                <code style={{ fontSize: '12px', color: token.colorTextHeading }}>{item.script}</code>
+                {item.query && (
+                  <>
+                    <br />
+                    <br />
+                    <code style={{ fontSize: '12px', color: token.colorTextDescription }}>{item.query}</code>
+                  </>
+                )}
+              </pre>
+            </Tooltip>
           </li>
         );
       })}
