@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { forwardRef, useEffect } from 'react';
 import { editor } from 'monaco-editor';
 import 'monaco-editor/esm/vs/editor/editor.api';
@@ -46,7 +45,15 @@ const THEMES = {
   cypher: 'cypherTheme',
   gremlin: 'GremlinTheme',
 };
-const Editor = forwardRef<any, any>((props, editorRef) => {
+interface IEditor extends CypherEditorProps {
+  value: string;
+  onCreated?: (val: editor.IStandaloneCodeEditor) => void;
+  onChange?: (val: string) => void;
+  language?: string;
+  onInit?: (val: HTMLDivElement) => void;
+  clear?: boolean;
+}
+const Editor = forwardRef((props: IEditor, editorRef: any) => {
   const {
     value,
     onCreated,
@@ -81,7 +88,7 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
         folding: true,
         wordWrap: 'on',
         scrollBeyondLastLine: false, // 不允许在内容的下方滚动
-        scrollBeyondLastColumn: false, // 不允许在内容的右侧滚动
+        scrollBeyondLastColumn: 0, // 不允许在内容的右侧滚动
         // lineNumbers: 'off', // 如果你不需要行号，可以关闭它
       });
 
@@ -96,7 +103,7 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
 
       codeEditor.onDidChangeModelContent(() => {
         const contentHeight = codeEditor.getContentHeight();
-        const lineCount = codeEditor.getModel()?.getLineCount(); // 获取行数
+        const lineCount = codeEditor.getModel()?.getLineCount() || 1; // 获取行数
         const lineHeight = 20; // 获取行高
         // 计算编辑器容器的高度
         const height = lineCount === 1 ? (lineCount + MAGIC_NUMBER) * lineHeight : (lineCount + 1) * lineHeight;
@@ -110,7 +117,7 @@ const Editor = forwardRef<any, any>((props, editorRef) => {
         }
 
         if (onChangeContent) {
-          onChangeContent(lineCount, codeEditor.codeEditor);
+          onChangeContent(lineCount, codeEditor);
         }
       });
     }
