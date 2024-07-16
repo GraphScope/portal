@@ -48,6 +48,10 @@ export type IStore<T> = T & {
   globalScript: string;
   autoRun: boolean;
   language: 'gremlin' | 'cypher';
+  welcome?: {
+    title: string;
+    description: string;
+  };
 };
 
 const initialStore: IStore<{}> = {
