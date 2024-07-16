@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Form, Card, Button, Divider, message } from 'antd';
+import { Form, Button, Divider } from 'antd';
 import { history } from 'umi';
 import { FormattedMessage } from 'react-intl';
 import { Utils, SplitSection } from '@graphscope/studio-components';
 import Section from '@/components/section';
-import SelectCard from './select-card';
 import LeftSide from './left-side';
 import RightSide from './right-side';
 import type { FieldType } from './right-side';
@@ -91,7 +90,14 @@ const CreatePlugins: React.FC = () => {
       title: 'Stored procedures',
     },
   ];
-  const chooseStoreType = () => {};
+  const chooseStoreType = (obj: { id: string }) => {
+    updateState(preset => {
+      return {
+        ...preset,
+        storeType: obj.id,
+      };
+    });
+  };
   return (
     <Section
       breadcrumb={[
