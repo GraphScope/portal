@@ -13,7 +13,7 @@ const Extension: React.FunctionComponent = () => {
     {
       key: 'Store',
       children: <Plugins />,
-      label: <FormattedMessage id="Store Procedure" />,
+      label: <FormattedMessage id="Stored Procedures" />,
     },
     // {
     //   key: 'Learn',

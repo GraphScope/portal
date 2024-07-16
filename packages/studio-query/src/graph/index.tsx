@@ -5,6 +5,7 @@ import { processData, calcOverview, storage, getConfig } from './utils';
 import type { ISchema } from './typing';
 import { theme } from 'antd';
 const { ZoomCanvas, ActivateRelations } = Behaviors;
+import { Utils } from '@graphscope/studio-components';
 
 interface GraphViewProps {
   data: GraphinData;
@@ -13,7 +14,7 @@ interface GraphViewProps {
 }
 let timer;
 const FitView = () => {
-  const { graph } = React.useContext(GraphinContext);
+  const { graph, layout } = React.useContext(GraphinContext);
   useEffect(() => {
     const handleFit = () => {
       graph.fitView([10, 10], {}, true);
@@ -25,6 +26,31 @@ const FitView = () => {
   }, [graph]);
   return null;
 };
+
+const CUSTER_MAP = {};
+let CUSTER_INDEX = 0;
+
+export const getDefSpringLenFunction = springConfig => {
+  const { defaultSpring = 100, maxLimitLength = 500, minLimitDegree = 5 } = springConfig;
+  const defSpringLen = (_edge, source, target) => {
+    /** 默认返回的是 200 的弹簧长度 */
+    /** 如果你要想要产生聚类的效果，可以考虑
+    根据边两边节点的度数来动态设置边的初始化长度：度数越小，则边越短 */
+    const Sdegree = source.data.layout.degree;
+    const Tdegree = target.data.layout.degree;
+    const MinDegree = Math.min(Sdegree, Tdegree);
+
+    let SpringLength = defaultSpring;
+    if (MinDegree < minLimitDegree) {
+      SpringLength = defaultSpring * MinDegree;
+    } else {
+      SpringLength = maxLimitLength;
+    }
+    return SpringLength;
+  };
+  return defSpringLen;
+};
+
 /**
  *
  * @returns 点击Canvas的交互逻辑
@@ -112,24 +138,23 @@ const GraphView: React.FunctionComponent<GraphViewProps> = props => {
     });
     storage.set(schemaId, [...configMap.values()]);
   };
+
   return (
     <Graphin
       data={newData}
       layout={{
-        type: 'force2',
-        animate: true,
+        type: 'graphin-force',
+        repulsion: 2000,
+        animation: false,
         preset: {
           type: 'concentric',
-          width: 800,
-          height: 400,
-          minNodeSpacing: 2,
-          nodeSize: 10,
         },
-        clusterNodeStrength: 35,
-        minMovement: 5,
-        damping: 0.8,
-        maxSpeed: 1000,
-        distanceThresholdMode: 'max',
+        defSpringLen: getDefSpringLenFunction({}),
+        centripetalOptions: {
+          single: 20,
+          leaf: 20,
+          others: 1,
+        },
       }}
       style={{ height: '480px', minHeight: '480px', background: token.colorBgLayout }}
     >

@@ -84,6 +84,21 @@ export const downloadImage = (dataUrl: string, name: string) => {
   a.click();
 };
 
+export function groupBy(array, fun) {
+  return array.reduce((result, currentItem) => {
+    // 获取自定义分组键值
+    const groupKey = fun(currentItem);
+
+    if (!result[groupKey]) {
+      result[groupKey] = [];
+    }
+
+    result[groupKey].push(currentItem);
+
+    return result;
+  }, {});
+}
+
 export { generatorSchemaByGraphData } from './schema';
 export { asyncFunctionWithWorker } from './work';
 

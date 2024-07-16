@@ -16,14 +16,11 @@ const StoreProcedure: React.FunctionComponent<IStoreProcedureProps> = props => {
     return item;
   });
   const handleClick = value => {
-    const { id } = value;
+    const { id, script, name } = value;
+
     updateStore(draft => {
-      const queryIds = draft.statements.map(item => item.id);
-      const HAS_QUERY = queryIds.indexOf(id) !== -1;
-      draft.activeId = id;
-      if (!HAS_QUERY) {
-        draft.statements = [value, ...draft.statements];
-      }
+      draft.globalScript = `CALL ${name}()`;
+      draft.autoRun = true;
     });
   };
 
@@ -37,7 +34,7 @@ const StoreProcedure: React.FunctionComponent<IStoreProcedureProps> = props => {
   };
 
   return (
-    <Section title="Store Procedure">
+    <Section title="Stored Procedures">
       <List
         items={items}
         onClick={handleClick}
