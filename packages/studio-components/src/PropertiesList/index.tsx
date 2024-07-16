@@ -35,6 +35,8 @@ export interface IPropertiesListProps {
     options: Option[];
     type: 'Select' | 'InputNumber';
   };
+  /** 是否开启映射 */
+  isMapFromFile?: boolean;
 }
 
 /**
@@ -44,7 +46,14 @@ export interface IPropertiesListProps {
  *
  */
 const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
-  const { title = 'Properties', onChange = () => {}, disabled, typeColumn, mappingColumn } = props;
+  const {
+    title = 'Properties',
+    onChange = () => {},
+    disabled,
+    typeColumn,
+    mappingColumn,
+    isMapFromFile = false,
+  } = props;
   const { options: typeOptions = defaultTypeOptions } = typeColumn || {};
 
   const { handleAdd, handleDelete, handleBlur, handlePrimaryKey, handleDoubleClick, handleType, handleChangeIndex } =
@@ -170,7 +179,7 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
           dataSource={[]}
           disabled={disabled}
           /** mapfeomfile 控制 */
-          isMapFromFile={false}
+          isMapFromFile={true}
           selectedRowKeys={selectedRowKeys}
           addProperty={() => {
             handleProperties(handleAdd(state));

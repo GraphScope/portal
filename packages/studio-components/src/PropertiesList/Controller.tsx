@@ -17,19 +17,28 @@ const styles: { [x: string]: CSSProperties } = {
     borderRight: '1px solid #e5e6e8',
   },
 };
-
-const Controller = props => {
+interface IControllerProps {
+  title: string;
+  selectedRowKeys: React.Key[];
+  isMapFromFile?: boolean;
+  dataSource: any[];
+  disabled?: boolean;
+  addProperty: () => void;
+  delProperty: () => void;
+  handleMapFromFile: (keys: React.Key[]) => void;
+}
+const Controller: React.FC<IControllerProps> = props => {
   const {
     title,
     selectedRowKeys,
-    isMapFromFile = true,
+    isMapFromFile = false,
     dataSource,
     disabled,
     addProperty,
     delProperty,
     handleMapFromFile,
   } = props;
-  const [state, updateState] = React.useState({
+  const [state, updateState] = React.useState<{ selectedKeys: React.Key[] }>({
     selectedKeys: [],
   });
   const { selectedKeys } = state;
@@ -42,26 +51,38 @@ const Controller = props => {
       };
     });
   };
-
+  const indeterminate = selectedKeys.length > 0 && selectedKeys.length < dataSource.length;
+  const checkAll = dataSource.length > 0 && dataSource.length === selectedKeys.length;
+  const onCheckAllChange = e => {
+    const newSet = e.target.checked ? dataSource.map(item => item) : [];
+    handleFile(newSet);
+  };
   /** Map from file模块 */
   let heder = isMapFromFile && (
     <Popconfirm
       placement="leftTop"
       title={() => {
         return (
-          <div style={{ width: '350px', padding: '0 12px' }}>
+          <Flex style={{ width: '350px', paddingBottom: '6px' }} justify="space-between">
             <span>Mapping From File</span>
-          </div>
+            <Checkbox indeterminate={indeterminate} checked={checkAll} onChange={onCheckAllChange}>
+              Select all
+            </Checkbox>
+          </Flex>
         );
       }}
       description={
         <div style={{ width: '350px' }}>
-          <MapFromFileTable handleChange={file => handleFile(file)} properties={dataSource} />
+          <MapFromFileTable
+            handleChange={file => handleFile(file)}
+            properties={dataSource}
+            selectedKeys={selectedKeys}
+          />
         </div>
       }
       icon=""
-      okText={<div style={{ width: '88px', height: '45px' }}>Confirm</div>}
-      cancelText={<div style={{ width: '88px', height: '45px' }}>Cancel</div>}
+      okText={<div style={{ width: '60px' }}>Confirm</div>}
+      cancelText={<div style={{ width: '60px' }}>Cancel</div>}
       onConfirm={() => handleMapFromFile(selectedKeys)}
     >
       <Button>Map from file</Button>
