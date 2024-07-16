@@ -39,7 +39,7 @@ const Controller: React.FC<IControllerProps> = props => {
     delProperty,
     handleMapFromFile,
   } = props;
-  const [state, updateState] = React.useState<{ selectedKeys: React.Key[] }>({
+  const [state, updateState] = React.useState<{ selectedKeys: Property[] }>({
     selectedKeys: [],
   });
   const { selectedKeys } = state;

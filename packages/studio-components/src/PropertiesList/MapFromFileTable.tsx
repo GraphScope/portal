@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { Table } from 'antd';
-const { useState } = React;
 import { Property } from './typing';
 interface IPropertiesListProps {
   properties: Property[];
-  selectedKeys: React.Key[];
+  selectedKeys: Property[];
   handleChange: (properties: Property[]) => void;
 }
 const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
@@ -23,7 +22,7 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
   ];
 
   const rowSelection = {
-    selectedRowKeys: selectedKeys.map(item => item?.key),
+    selectedRowKeys: selectedKeys.map(item => item?.key) as React.Key[],
     onChange: (newSelectedRowKeys: React.Key[], selectedRows: Property[]) => {
       console.log(`selectedRowKeys: ${newSelectedRowKeys}`, 'selectedRows: ', selectedRows);
       handleChange(selectedRows);
