@@ -55,11 +55,11 @@ class CypherDriver {
   async getSession() {
     if (this.driver) {
       //@ts-ignore
-      const IS_OPEN = this.session && this.session._open;
-      if (!IS_OPEN) {
-        const session = this.driver.session();
-        this.session = session;
-      }
+      // const IS_OPEN = this.session && this.session._open;
+      // if (!IS_OPEN) {
+      const session = this.driver.session();
+      this.session = session;
+      // }
       return this.session;
     }
   }
