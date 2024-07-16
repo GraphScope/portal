@@ -6,6 +6,7 @@ import { Utils, SplitSection } from '@graphscope/studio-components';
 import Section from '@/components/section';
 import LeftSide from './left-side';
 import RightSide from './right-side';
+import type { FieldType } from './right-side';
 import SelectCards from '@/components/select-cards';
 import { createProcedure, updateProcedure, listGraphs, getProcedure } from './service';
 const { getUrlParams } = Utils;
@@ -63,13 +64,16 @@ const CreatePlugins: React.FC = () => {
     });
   }, [editCode, form.getFieldsValue()]);
   /** 获取editcode */
-  const onCodeMirrorChange = useCallback((value: string) => {
+  const onCodeMirrorChange = useCallback((value: FieldType) => {
     const { query } = value;
     form.setFieldsValue(value);
+    handleCodeMirror(query);
+  }, []);
+  const handleCodeMirror = (query: string) => {
     updateState(preset => {
       return { ...preset, editCode: query };
     });
-  }, []);
+  };
   useEffect(() => {
     form.setFieldsValue({ type: 'cypher' });
     listGraphs().then(res => {
@@ -120,7 +124,14 @@ const CreatePlugins: React.FC = () => {
         splitText=""
         span={12}
         splitSpan={1}
-        leftSide={<LeftSide editCode={editCode} isEdit={isEdit} onCodeMirrorChange={onCodeMirrorChange} />}
+        leftSide={
+          <LeftSide
+            editCode={editCode}
+            isEdit={isEdit}
+            onCodeMirrorChange={onCodeMirrorChange}
+            onChange={handleCodeMirror}
+          />
+        }
         rightSide={<RightSide form={form} isEdit={isEdit} options={instanceOption} />}
       />
       <div style={{ display: 'flex', justifyContent: 'end' }}>
