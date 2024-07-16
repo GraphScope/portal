@@ -38,15 +38,15 @@ function generateDefaultConfig(schema: ISchema) {
   return [
     ...schema.nodes.map((item, index) => ({
       label: item.label,
-      size: sizes[5],
+      size: sizes[3],
       color: colors[index],
       caption: Object.keys(item.properties || {})[0] || 'id',
     })),
     ...schema.edges.map((item, index) => ({
       label: item.label,
       size: widths[1],
-      color: colors[index],
-      caption: Object.keys(item.properties || {})[0] || 'id',
+      color: '#D9D9D9',
+      caption: Object.keys(item.properties || {})[0] || '',
     })),
   ];
 }
@@ -116,8 +116,8 @@ export function processData(data: GraphinData, configMap: Map<string, ConfigItem
   const nodes = Nodes.map(item => {
     const { id, label, properties } = item;
     const match = configMap.get(label) || {
-      color: colors[1],
-      size: sizes[1],
+      color: colors[0],
+      size: sizes[3],
       caption: 'id',
     };
     const { color, size, caption } = match;
@@ -148,10 +148,11 @@ export function processData(data: GraphinData, configMap: Map<string, ConfigItem
   const edges = Edges.map(item => {
     const { id, label, source, target, properties } = item;
     const match = configMap.get(label) || {
-      color: colors[1],
+      color: '#D9D9D9',
       size: widths[1],
-      caption: 'id',
+      caption: '',
     };
+
     const { color, size, caption } = match;
     const displayLabel = (properties && properties[caption]) || '';
     return {
