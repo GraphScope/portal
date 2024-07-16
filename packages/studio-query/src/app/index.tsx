@@ -85,7 +85,6 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     (async () => {
       //@ts-ignore
 
-      const graph_name = getSearchParams('graph_name');
       const graphId = getSearchParams('graph_id') || '';
       const activeNavbar = getSearchParams('nav') || 'saved';
       const language = getSearchParams('language') || props.language;
@@ -98,11 +97,20 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       const historyStatements = await queryStatements('history');
       const savedStatements = await queryStatements('saved');
       const storeProcedures = await queryStatements('store-procedure');
-      const _hack = location.pathname === '/query-app' && location.search === '?graph_algo';
       // 临时的需求，后续删除
+      const _hack = getSearchParams('name') === 'graph_algo';
+      let welcome;
       if (_hack) {
-        globalScript = `MATCH (a)-[b:Belong]->(c) RETURN a,b,c;`;
+        globalScript = `
+        MATCH (a)-[b]->(c) RETURN a,b,c;
+        `;
         autoRun = true;
+        welcome = {
+          title:
+            'We are excited to introduce our interactive visualization tool, designed to complement our survey paper on distributed graph algorithms.',
+          description:
+            'This tool provides a dynamic way to explore the comprehensive analysis from our survey. It allows users to visualize how different algorithms address various challenges, analyze research trends across topics like Centrality, Community Detection, and Pattern Matching, and interactively query specific areas of interest.',
+        };
       }
 
       updateStore(draft => {
@@ -119,6 +127,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         draft.globalScript = formatCypherStatement(globalScript);
         draft.mode = displayMode as 'flow' | 'tabs';
         draft.language = language as 'gremlin' | 'cypher';
+        draft.welcome = welcome;
       });
       // storage.set('STUDIO_QUERY_THEME', theme);
     })();

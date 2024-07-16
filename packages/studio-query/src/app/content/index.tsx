@@ -7,6 +7,7 @@ import { Segmented, theme } from 'antd';
 import { useContext } from '../context';
 import type { IStatement, IStudioQueryProps } from '../context';
 import { PlayCircleOutlined } from '@ant-design/icons';
+import Welcome from './welcome';
 import Empty from './empty';
 interface IContentProps {
   createStatements: IStudioQueryProps['createStatements'];
@@ -110,6 +111,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
 
       <div style={{ overflowY: 'scroll', flex: '1', position: 'relative' }}>
         {isEmpty && <Empty />}
+        <Welcome />
         {statements.map(item => {
           const { id, script, timestamp, language } = item;
           return (

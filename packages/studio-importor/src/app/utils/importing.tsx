@@ -125,6 +125,11 @@ export function transMappingSchemaToOptions(
       if ('destination_vertex_mappings' in match) {
         const { source_vertex_mappings, destination_vertex_mappings, properties_mappings } = match;
         const filelocation = match.inputs[0];
+        const realEdgeProperties = [
+          source_vertex_mappings[0].column,
+          destination_vertex_mappings[0].column,
+          ...properties,
+        ];
         return {
           ...item,
           data: {
@@ -132,7 +137,8 @@ export function transMappingSchemaToOptions(
             filelocation,
             isBind: !!filelocation,
             isEidtProperty: true,
-            dataFields: loadingdataFields('edges', properties),
+            //@ts-ignore
+            dataFields: loadingdataFields('edges', realEdgeProperties),
             properties: properties.map((p: Property) => {
               const { name } = p;
               const pMatch = properties_mappings[name] || { index: 0, token: '' };
