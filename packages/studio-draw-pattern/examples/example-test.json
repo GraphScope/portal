@@ -1,0 +1,71 @@
+{
+  "nodes": [
+    {
+      "nodeKey": "(:Person:Director:Woman:Mather {name: 'Anna',age:34,sex:'woman'})-0",
+      "inRelations": [],
+      "outRelations": [
+        "-[:KNOWS]->+0"
+      ],
+      "labels": [
+        "Person",
+        "Director",
+        "Woman",
+        "Mather"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "value": "Anna",
+          "type": "string"
+        },
+        {
+          "name": "age",
+          "value": 34,
+          "type": "number"
+        },
+        {
+          "name": "sex",
+          "value": "woman",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "nodeKey": "(:Person)-1",
+      "inRelations": [
+        "-[:KNOWS]->+0"
+      ],
+      "outRelations": [
+        "-[:FATHER]->+1"
+      ],
+      "labels": [
+        "Person"
+      ]
+    },
+    {
+      "nodeKey": "(:Person)-2",
+      "inRelations": [
+        "-[:FATHER]->+1"
+      ],
+      "outRelations": [],
+      "labels": [
+        "Person"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "relationKey": "-[:KNOWS]->+0",
+      "targetNode": "(:Person)-1",
+      "sourceNode": "(:Person:Director:Woman:Mather {name: 'Anna',age:34,sex:'woman'})-0",
+      "type": "KNOWS"
+    },
+    {
+      "relationKey": "-[:FATHER]->+1",
+      "targetNode": "(:Person)-2",
+      "sourceNode": "(:Person)-1",
+      "type": "FATHER"
+    }
+  ],
+  "variables": []
+}

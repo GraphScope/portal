@@ -1,0 +1,55 @@
+{
+  "nodes": [
+    {
+      "nodeKey": "(a:Person)-0",
+      "inRelations": [],
+      "outRelations": [
+        "-[r:FRIEND]->+0"
+      ],
+      "labels": [
+        "Person"
+      ],
+      "variables": "a-(a:Person)"
+    },
+    {
+      "nodeKey": "(b:Person)-1",
+      "inRelations": [
+        "-[r:FRIEND]->+0"
+      ],
+      "outRelations": [],
+      "labels": [
+        "Person"
+      ],
+      "variables": "b-(b:Person)"
+    }
+  ],
+  "relations": [
+    {
+      "relationKey": "-[r:FRIEND]->+0",
+      "targetNode": "(b:Person)-1",
+      "sourceNode": "(a:Person)-0",
+      "type": "FRIEND",
+      "variable": "r--[r:FRIEND]->"
+    }
+  ],
+  "variables": [
+    {
+      "variableKey": "r--[r:FRIEND]->",
+      "name": "r",
+      "belongKey": "-[r:FRIEND]->+0",
+      "belongType": "RELATION"
+    },
+    {
+      "variableKey": "a-(a:Person)",
+      "name": "a",
+      "belongKey": "(a:Person)-0",
+      "belongType": "NODE"
+    },
+    {
+      "variableKey": "b-(b:Person)",
+      "name": "b",
+      "belongKey": "(b:Person)-1",
+      "belongType": "NODE"
+    }
+  ]
+}

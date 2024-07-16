@@ -1,0 +1,51 @@
+{
+  "nodes": [
+    {
+      "nodeKey": "(n)-0",
+      "inRelations": [],
+      "outRelations": [
+        "-[r]->+0"
+      ],
+      "labels": null,
+      "variables": "n-(n)"
+    },
+    {
+      "nodeKey": "(m)-1",
+      "inRelations": [
+        "-[r]->+0"
+      ],
+      "outRelations": [],
+      "labels": null,
+      "variables": "m-(m)"
+    }
+  ],
+  "relations": [
+    {
+      "relationKey": "-[r]->+0",
+      "targetNode": "(m)-1",
+      "sourceNode": "(n)-0",
+      "type": "",
+      "variable": "r--[r]->"
+    }
+  ],
+  "variables": [
+    {
+      "variableKey": "r--[r]->",
+      "name": "r",
+      "belongKey": "-[r]->+0",
+      "belongType": "RELATION"
+    },
+    {
+      "variableKey": "n-(n)",
+      "name": "n",
+      "belongKey": "(n)-0",
+      "belongType": "NODE"
+    },
+    {
+      "variableKey": "m-(m)",
+      "name": "m",
+      "belongKey": "(m)-1",
+      "belongType": "NODE"
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "nodes": [
+    {
+      "nodeKey": "node-1",
+      "labels": [
+        "Movie"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "value": "Hello world",
+          "type": "string"
+        }
+      ],
+      "variables": "variable-1",
+      "outRelations": [],
+      "inRelations": [
+        "relationship-3",
+        "relationship-4",
+        "relationship-1",
+        "relationship-5"
+      ]
+    },
+    {
+      "nodeKey": "node-2",
+      "labels": [
+        "Person",
+        "Director"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "value": "Mike",
+          "type": "string"
+        },
+        {
+          "name": "age",
+          "value": 42,
+          "type": "number"
+        }
+      ],
+      "variables": "variable-2",
+      "outRelations": [
+        "relationship-2",
+        "relationship-4",
+        "relationship-1"
+      ],
+      "inRelations": [
+        "relationship-7",
+        "relationship-8"
+      ]
+    },
+    {
+      "nodeKey": "node-3",
+      "labels": [
+        "Person",
+        "Actor"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "value": "Jack",
+          "type": "string"
+        },
+        {
+          "name": "age",
+          "value": 28,
+          "type": "number"
+        }
+      ],
+      "variables": "variable-0",
+      "outRelations": [
+        "relationship-3",
+        "relationship-6"
+      ],
+      "inRelations": [
+        "relationship-2"
+      ]
+    },
+    {
+      "nodeKey": "node-4",
+      "labels": [
+        "Person"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "value": "Merry",
+          "type": "string"
+        },
+        {
+          "name": "age",
+          "value": 32,
+          "type": "number"
+        }
+      ],
+      "outRelations": [
+        "relationship-8"
+      ],
+      "inRelations": [
+        "relationship-6"
+      ]
+    },
+    {
+      "nodeKey": "node-5",
+      "labels": [
+        "Person",
+        "Watcher"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "value": "John",
+          "type": "string"
+        },
+        {
+          "name": "age",
+          "value": 14,
+          "type": "number"
+        }
+      ],
+      "outRelations": [
+        "relationship-7",
+        "relationship-5"
+      ],
+      "inRelations": []
+    }
+  ],
+  "variables": [
+    {
+      "variableKey": "variable-1",
+      "name": "n1",
+      "type": "object",
+      "belongType": "node",
+      "belongKey": "node-1"
+    },
+    {
+      "variableKey": "variable-2",
+      "name": "n2",
+      "type": "object",
+      "belongType": "node",
+      "belongKey": "node-2"
+    },
+    {
+      "variableKey": "variable-0",
+      "name": "n0",
+      "type": "object",
+      "belongType": "node",
+      "belongKey": "node-3"
+    }
+  ],
+  "relations": [
+    {
+      "relationKey": "relationship-1",
+      "type": "OWNER",
+      "targetNode": "node-1",
+      "sourceNode": "node-2"
+    },
+    {
+      "relationKey": "relationship-2",
+      "type": "FRIEND",
+      "targetNode": "node-3",
+      "sourceNode": "node-2"
+    },
+    {
+      "relationKey": "relationship-3",
+      "type": "ACTED_IN",
+      "targetNode": "node-1",
+      "sourceNode": "node-3"
+    },
+    {
+      "relationKey": "relationship-4",
+      "type": "DIRECTED",
+      "targetNode": "node-1",
+      "sourceNode": "node-2"
+    },
+    {
+      "relationKey": "relationship-5",
+      "type": "WATCH",
+      "targetNode": "node-1",
+      "sourceNode": "node-5"
+    },
+    {
+      "relationKey": "relationship-6",
+      "type": "WIFE",
+      "targetNode": "node-4",
+      "sourceNode": "node-3"
+    },
+    {
+      "relationKey": "relationship-7",
+      "type": "MATHER",
+      "targetNode": "node-2",
+      "sourceNode": "node-5"
+    },
+    {
+      "relationKey": "relationship-8",
+      "type": "FRIEND",
+      "targetNode": "node-2",
+      "sourceNode": "node-4"
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "nodes": [
+    {
+      "nodeKey": "node-9",
+      "labels": [
+        "Book"
+      ],
+      "properties": [
+        {
+          "name": "title",
+          "value": "To Kill a Mockingbird",
+          "type": "string"
+        },
+        {
+          "name": "author",
+          "value": "Harper Lee",
+          "type": "string"
+        },
+        {
+          "name": "year",
+          "value": 1960,
+          "type": "number"
+        }
+      ],
+      "variables": "variable-6",
+      "outRelations": [
+        "relationship-17"
+      ],
+      "inRelations": [
+        "relationship-15",
+        "relationship-16"
+      ]
+    },
+    {
+      "nodeKey": "node-10",
+      "labels": [
+        "Person",
+        "Author"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "value": "Harper Lee",
+          "type": "string"
+        },
+        {
+          "name": "age",
+          "value": 89,
+          "type": "number"
+        }
+      ],
+      "variables": "variable-7",
+      "outRelations": [
+        "relationship-15",
+        "relationship-16"
+      ],
+      "inRelations": [
+        "relationship-17"
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "variableKey": "variable-6",
+      "name": "n6",
+      "type": "object",
+      "belongType": "node",
+      "belongKey": "node-9"
+    },
+    {
+      "variableKey": "variable-7",
+      "name": "n7",
+      "type": "object",
+      "belongType": "node",
+      "belongKey": "node-10"
+    }
+  ],
+  "relations": [
+    {
+      "relationKey": "relationship-15",
+      "type": "AUTHOR",
+      "targetNode": "node-9",
+      "sourceNode": "node-10"
+    },
+    {
+      "relationKey": "relationship-16",
+      "type": "READER",
+      "targetNode": "node-9",
+      "sourceNode": "node-10"
+    },
+    {
+      "relationKey": "relationship-17",
+      "type": "AWARD",
+      "targetNode": "node-10",
+      "sourceNode": "node-9"
+    }
+  ]
+}

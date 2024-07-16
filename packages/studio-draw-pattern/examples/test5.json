@@ -1,0 +1,140 @@
+{
+  "nodes": [
+    {
+      "nodeKey": "(n7)-0",
+      "inRelations": [
+        "<-[:AWARD]-+0"
+      ],
+      "outRelations": [],
+      "labels": null,
+      "variables": "n7-(n7)"
+    },
+    {
+      "nodeKey": "(n6:Book {title:'To Kill a Mockingbird',author:'Harper Lee',year:1960})-1",
+      "inRelations": [
+        "<-[:READER]-+1"
+      ],
+      "outRelations": [
+        "<-[:AWARD]-+0"
+      ],
+      "labels": [
+        "Book"
+      ],
+      "properties": [
+        {
+          "name": "title",
+          "value": "To Kill a Mockingbird",
+          "type": "string"
+        },
+        {
+          "name": "author",
+          "value": "Harper Lee",
+          "type": "string"
+        },
+        {
+          "name": "year",
+          "value": 1960,
+          "type": "number"
+        }
+      ],
+      "variables": "n6-(n6:Book {title:'To Kill a Mockingbird',author:'Harper Lee',year:1960})"
+    },
+    {
+      "nodeKey": "(n7:Person:Author {name:'Harper Lee',age:89})-2",
+      "inRelations": [],
+      "outRelations": [
+        "<-[:READER]-+1",
+        "-[:AUTHOR]->+2"
+      ],
+      "labels": [
+        "Person",
+        "Author"
+      ],
+      "properties": [
+        {
+          "name": "name",
+          "value": "Harper Lee",
+          "type": "string"
+        },
+        {
+          "name": "age",
+          "value": 89,
+          "type": "number"
+        }
+      ],
+      "variables": "n7-(n7:Person:Author {name:'Harper Lee',age:89})"
+    },
+    {
+      "nodeKey": "(n6)-3",
+      "inRelations": [
+        "-[:AUTHOR]->+2"
+      ],
+      "outRelations": [],
+      "labels": null,
+      "variables": "n6-(n6)"
+    }
+  ],
+  "relations": [
+    {
+      "relationKey": "<-[:AWARD]-+0",
+      "targetNode": "(n7)-0",
+      "sourceNode": "(n6:Book {title:'To Kill a Mockingbird',author:'Harper Lee',year:1960})-1",
+      "type": "AWARD",
+      "properties": [
+        {
+          "name": "title",
+          "value": "To Kill a Mockingbird",
+          "type": "string"
+        },
+        {
+          "name": "author",
+          "value": "Harper Lee",
+          "type": "string"
+        },
+        {
+          "name": "year",
+          "value": 1960,
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "relationKey": "<-[:READER]-+1",
+      "targetNode": "(n6:Book {title:'To Kill a Mockingbird',author:'Harper Lee',year:1960})-1",
+      "sourceNode": "(n7:Person:Author {name:'Harper Lee',age:89})-2",
+      "type": "READER"
+    },
+    {
+      "relationKey": "-[:AUTHOR]->+2",
+      "targetNode": "(n6)-3",
+      "sourceNode": "(n7:Person:Author {name:'Harper Lee',age:89})-2",
+      "type": "AUTHOR"
+    }
+  ],
+  "variables": [
+    {
+      "variableKey": "n7-(n7)",
+      "name": "n7",
+      "belongKey": "(n7)-0",
+      "belongType": "NODE"
+    },
+    {
+      "variableKey": "n6-(n6:Book {title:'To Kill a Mockingbird',author:'Harper Lee',year:1960})",
+      "name": "n6",
+      "belongKey": "(n6:Book {title:'To Kill a Mockingbird',author:'Harper Lee',year:1960})-1",
+      "belongType": "NODE"
+    },
+    {
+      "variableKey": "n7-(n7:Person:Author {name:'Harper Lee',age:89})",
+      "name": "n7",
+      "belongKey": "(n7:Person:Author {name:'Harper Lee',age:89})-2",
+      "belongType": "NODE"
+    },
+    {
+      "variableKey": "n6-(n6)",
+      "name": "n6",
+      "belongKey": "(n6)-3",
+      "belongType": "NODE"
+    }
+  ]
+}
