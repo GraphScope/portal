@@ -34,7 +34,7 @@ const StoreProcedure: React.FunctionComponent<IStoreProcedureProps> = props => {
   };
 
   return (
-    <Section title="Store Procedure">
+    <Section title="Stored Procedures">
       <List
         items={items}
         onClick={handleClick}

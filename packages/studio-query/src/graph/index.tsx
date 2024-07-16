@@ -14,7 +14,7 @@ interface GraphViewProps {
 }
 let timer;
 const FitView = () => {
-  const { graph } = React.useContext(GraphinContext);
+  const { graph, layout } = React.useContext(GraphinContext);
   useEffect(() => {
     const handleFit = () => {
       graph.fitView([10, 10], {}, true);
@@ -144,13 +144,17 @@ const GraphView: React.FunctionComponent<GraphViewProps> = props => {
       data={newData}
       layout={{
         type: 'graphin-force',
-        stiffness: 100,
-        repulsion: 3000,
-        animation: true,
+        repulsion: 2000,
+        animation: false,
         preset: {
           type: 'concentric',
         },
         defSpringLen: getDefSpringLenFunction({}),
+        centripetalOptions: {
+          single: 20,
+          leaf: 20,
+          others: 1,
+        },
       }}
       style={{ height: '480px', minHeight: '480px', background: token.colorBgLayout }}
     >

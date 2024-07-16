@@ -36,7 +36,7 @@ const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
         {items.map(item => {
           const { id, title, desc, avatar, disabled } = item;
           const isChecked = id === value;
-          debugger;
+
           console.log('isChecked', value, id);
           return (
             <Space>
