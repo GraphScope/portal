@@ -2,6 +2,7 @@ import React, { FunctionComponent, CSSProperties } from 'react';
 import { Button, Space, Tooltip, Popconfirm, Checkbox, Flex, Typography } from 'antd';
 import { PlusOutlined, createFromIconfontCN } from '@ant-design/icons';
 import MapFromFileTable from './MapFromFileTable';
+import type { Property } from './typing';
 // 使用createFromIconfontCN创建一个IconFont组件，加载自定义图标库
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_eryoeoa0lk5.js',
@@ -25,7 +26,7 @@ interface IControllerProps {
   disabled?: boolean;
   addProperty: () => void;
   delProperty: () => void;
-  handleMapFromFile: (keys: React.Key[]) => void;
+  handleMapFromFile: (keys: Property[]) => void;
 }
 const Controller: React.FC<IControllerProps> = props => {
   const {

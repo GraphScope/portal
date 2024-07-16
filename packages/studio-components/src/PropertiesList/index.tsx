@@ -20,7 +20,7 @@ export interface IPropertiesListProps {
 
   disabled?: boolean;
   /** 标题，默认是 Properties */
-  title?: string | React.ReactNode;
+  title?: string;
   /** 属性  */
   properties?: Property[];
   propertiesFromFiles?: Property[];
@@ -179,7 +179,7 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
           dataSource={[]}
           disabled={disabled}
           /** mapfeomfile 控制 */
-          isMapFromFile={true}
+          isMapFromFile={isMapFromFile}
           selectedRowKeys={selectedRowKeys}
           addProperty={() => {
             handleProperties(handleAdd(state));
@@ -194,7 +194,7 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
               };
             });
           }}
-          handleMapFromFile={file => {
+          handleMapFromFile={(file: Property[]) => {
             updateState(preState => {
               return {
                 ...preState,
