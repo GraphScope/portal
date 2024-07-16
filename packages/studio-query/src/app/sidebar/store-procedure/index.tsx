@@ -19,7 +19,7 @@ const StoreProcedure: React.FunctionComponent<IStoreProcedureProps> = props => {
     const { id, script, name } = value;
 
     updateStore(draft => {
-      draft.globalScript = `CALL ${name}()`;
+      draft.globalScript = script;
       draft.autoRun = true;
     });
   };

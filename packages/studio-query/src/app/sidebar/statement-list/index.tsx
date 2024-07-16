@@ -78,7 +78,7 @@ const List = props => {
   return (
     <ul style={styles.ul}>
       {items.map(item => {
-        const { hours, id, name, timestamp,description,query } = item;
+        const { hours, id, name, timestamp, description, query } = item;
         const checked = checkedSet.has(id);
         const title = name || hours || dayjs(timestamp).format('YYYY-MM-DD HH:mm');
 
@@ -113,17 +113,26 @@ const List = props => {
               >
                 {title}
               </div>
-              {description && <div
-                style={{
-                  fontSize: '11px',
-                  padding: '4px 0px 12px 0px',
-                  color: token.colorTextDescription,
-                  fontStyle: 'italic',
-                }}
-              >
-                {description}
-              </div>}
+              {description && (
+                <div
+                  style={{
+                    fontSize: '11px',
+                    padding: '4px 0px 12px 0px',
+                    color: token.colorTextDescription,
+                    fontStyle: 'italic',
+                  }}
+                >
+                  {description}
+                </div>
+              )}
               <code style={{ fontSize: '12px', color: token.colorTextHeading }}>{item.script}</code>
+              {item.query && (
+                <>
+                  <br />
+                  <br />
+                  <code style={{ fontSize: '12px', color: token.colorTextDescription }}>{item.query}</code>
+                </>
+              )}
             </pre>
           </li>
         );
