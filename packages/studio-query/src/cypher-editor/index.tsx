@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect } from 'react';
 import { editor } from 'monaco-editor';
 import 'monaco-editor/esm/vs/editor/editor.api';
-require('monaco-editor/esm/vs/basic-languages/javascript/javascript');
+require('monaco-editor/esm/vs/basic-languages/cpp/cpp');
 import './index.css';
 import { useThemeContainer } from '@graphscope/studio-components';
 
