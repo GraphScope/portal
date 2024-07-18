@@ -9,6 +9,32 @@ function countLines(str) {
   // 使用正则表达式匹配换行符，并计算匹配到的数量，即为行数
   return (str.match(/\r?\n/g) || []).length + 1;
 }
+export interface ItemSchema {
+  label: string;
+  properties: {
+    name: string;
+    type: 'string' | 'number';
+  }[];
+  primary: string;
+}
+export interface CypherSchemaData {
+  nodes: ItemSchema[];
+  edges: (ItemSchema & {
+    constraints: [[string, string]];
+  })[];
+}
+export interface CypherEditorProps {
+  maxRows?: number;
+  minRows?: number;
+  schemaData?: CypherSchemaData;
+  functions?: {
+    name: string;
+    type: string;
+    signatures: [];
+    desc: string;
+  }[];
+  onChangeContent?: (lineCount?: number, editor?: any) => void;
+}
 
 const LANGUAGE = {
   cypher: 'cypher',
@@ -18,16 +44,13 @@ const THEMES = {
   cypher: 'cypherTheme',
   gremlin: 'GremlinTheme',
 };
-interface IEditor {
+interface IEditor extends CypherEditorProps {
   value: string;
   language?: string;
-  maxRows?: number;
-  minRows?: number;
   clear?: boolean;
   onInit?: (val: HTMLDivElement) => void;
   onCreated?: (val: editor.IStandaloneCodeEditor) => void;
   onChange?: (val: string) => void;
-  onChangeContent?: () => void;
 }
 const Editor = forwardRef((props: IEditor, editorRef: any) => {
   const { value, language = 'cypher', maxRows = 10, minRows = 1, onChangeContent, clear } = props;
@@ -60,12 +83,13 @@ const Editor = forwardRef((props: IEditor, editorRef: any) => {
       editorRef.current.codeEditor = codeEditor;
       codeEditor.onDidChangeModelContent(() => {
         const contentHeight = codeEditor.getContentHeight();
+        const lineCount = codeEditor.getModel()?.getLineCount(); // 获取行数
         const lineHeight = 20; // 获取行高
         if (contentHeight <= maxRows * lineHeight) {
           editorRef.current.style.height = contentHeight + 'px';
         }
         if (onChangeContent) {
-          onChangeContent();
+          onChangeContent(lineCount, codeEditor);
         }
       });
     }
