@@ -1,6 +1,6 @@
 import React, { lazy, useRef, useState, Suspense } from 'react';
 import { InsertRowAboveOutlined, OrderedListOutlined, PlayCircleOutlined } from '@ant-design/icons';
-import { Tooltip, Segmented, Button, Space, Flex, Typography } from 'antd';
+import { Segmented, Button, Space, Flex } from 'antd';
 import { IStudioQueryProps, localStorageVars } from '../context';
 import { useContext } from '../context';
 
@@ -77,18 +77,18 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
   const { updateStore, store } = useContext();
   const editorRef = useRef<any>(null);
   const [state, updateState] = useState({
-    lineCount: 1,
+    // lineCount: 1,
     clear: false,
   });
 
-  const { globalScript, autoRun, language, graphName } = store;
+  const { globalScript, autoRun, language } = store;
 
-  const handleChange = value => {};
-  const onChangeContent = line => {
+  // const handleChange = value => {};
+  const onChangeContent = () => {
     updateState(preState => {
       return {
         ...preState,
-        lineCount: line,
+        // lineCount: line,
         clear: false,
       };
     });
@@ -122,14 +122,8 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       });
     }
   };
-  const handleChangeLanguage = value => {
-    updateStore(draft => {
-      draft.language = value;
-    });
-  };
 
   const minRows = countLines(globalScript);
-  const isShowCypherSwitch = state.lineCount === 1 && minRows === 1;
   const { algorithm } = useThemeContainer();
   const isDark = algorithm === 'darkAlgorithm';
 
@@ -153,33 +147,17 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
         </Space>
       </Flex>
       <Flex justify="space-between" style={{ marginTop: '8px' }}>
-        <div
-          style={{
-            flex: 1,
-            display: 'block',
-            overflow: 'hidden',
-            border: isDark ? '1px solid #434343' : '1px solid rgb(187, 190, 195)',
-            borderRadius: '6px',
-          }}
-        >
-          <Suspense fallback={<Loading />}>
-            <CypherEditor
-              language={language}
-              onChangeContent={onChangeContent}
-              value={globalScript}
-              ref={editorRef}
-              onChange={handleChange}
-              onInit={(initEditor: any) => {
-                if (autoRun) {
-                  handleQuery();
-                }
-              }}
-              maxRows={25}
-              minRows={minRows}
-              clear={state.clear}
-            />
-          </Suspense>
-        </div>
+        <Suspense fallback={<Loading />}>
+          <CypherEditor
+            language={language}
+            onChangeContent={onChangeContent}
+            value={globalScript}
+            ref={editorRef}
+            maxRows={25}
+            minRows={minRows}
+            clear={state.clear}
+          />
+        </Suspense>
         <div style={{ flexBasis: '48px', flexShrink: 0 }}>
           <Button
             style={{ marginLeft: '10px' }}

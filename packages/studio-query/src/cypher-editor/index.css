@@ -12,3 +12,7 @@
 .monaco-editor .view-overlays .current-line-exact {
   border: none !important;
 }
+
+.monaco-editor .scroll-decoration {
+  box-shadow: none;
+}
