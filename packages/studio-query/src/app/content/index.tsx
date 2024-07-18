@@ -1,4 +1,4 @@
-import React, { useState, memo, lazy, Suspense } from 'react';
+import React, { useState, memo, lazy, Suspense, useEffect } from 'react';
 // import Statement from '../../statement';
 const Statement = lazy(() => import('../../statement'));
 // import Header from './header';
@@ -29,7 +29,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
     displaySidebarPosition,
   } = props;
   const { store, updateStore } = useContext();
-  const { activeId, mode, statements, savedStatements, schemaData, graphId, language } = store;
+  const { activeId, mode, statements, savedStatements, schemaData, graphId, language, addStatements } = store;
   const savedIds = savedStatements.map(item => item.id);
   const { token } = useToken();
 
@@ -82,6 +82,10 @@ const Content: React.FunctionComponent<IContentProps> = props => {
     });
   };
   const isEmpty = statements.length === 0;
+  /** addStatements 只有添加语句滚动至顶部，删除保持原来位置 */
+  useEffect(() => {
+    document.getElementById('statements-layout')?.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [addStatements]);
   return (
     <div
       style={{
@@ -103,13 +107,13 @@ const Content: React.FunctionComponent<IContentProps> = props => {
         </Suspense>
 
         {mode === 'tabs' && queryOptions.length !== 0 && (
-          <div style={{ padding: '8px 0px' }}>
+          <div style={{ overflowX: 'scroll', padding: '8px 0px' }}>
             <Segmented options={queryOptions} onChange={handleChangeTab} value={activeId} />
           </div>
         )}
       </div>
 
-      <div style={{ overflowY: 'scroll', flex: '1', position: 'relative' }}>
+      <div id="statements-layout" style={{ overflowY: 'scroll', flex: '1', position: 'relative' }}>
         {isEmpty && <Empty />}
         <Welcome />
         {statements.map(item => {

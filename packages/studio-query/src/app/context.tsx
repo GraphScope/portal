@@ -35,6 +35,8 @@ export type IStore<T> = T & {
   historyStatements: IStatement[];
   /** 查询的语句 */
   statements: IStatement[];
+  /** 只有添加语句滚动至顶部，删除保持原来位置 */
+  addStatements: number;
   /** 展示的模式 */
   mode: 'flow' | 'tabs';
   /** 保存的语句 */
@@ -54,8 +56,6 @@ export type IStore<T> = T & {
   };
   /** 默认的折叠状态 */
   defaultCollapsed: boolean;
-  
-   
 };
 
 const initialStore: IStore<{}> = {
@@ -77,6 +77,8 @@ const initialStore: IStore<{}> = {
   },
   /** 运行时语句 */
   statements: [],
+  /** 只有添加语句滚动至顶部，删除保持原来位置 */
+  addStatements: 0,
   /** 历史查询语句 */
   historyStatements: [],
   /** 收藏语句 */
@@ -86,7 +88,7 @@ const initialStore: IStore<{}> = {
   mode: 'flow',
   enableImmediateQuery: false,
   language: 'gremlin',
-  defaultCollapsed:true
+  defaultCollapsed: true,
 };
 
 type ContextType<T> = {
