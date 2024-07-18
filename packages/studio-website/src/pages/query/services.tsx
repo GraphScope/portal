@@ -89,11 +89,11 @@ export const queryStatements: IStudioQueryProps['queryStatements'] = async type 
         if (res.status === 200) {
           return res.data.map(item => {
             const { name, params, description, ...others } = item;
-            const value = params.map(p => p.name).join(',');
+            const script = params.length > 0? `CALL ${name}("")`:`CALL ${name}()`
             return {
               ...others,
               name: description,
-              script: `CALL ${name}(${value})`,
+              script,
             };
           });
         }
