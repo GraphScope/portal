@@ -115,7 +115,7 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
   //TODO
   const types = [
     {
-      label: '柱状图',
+      label: 'interval',
       value: 'interval',
     },
     // {
@@ -127,11 +127,11 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
     //   value: 'grouped bar',
     // },
     // {
-    //   label: '饼图',
+    //   label: 'pie',
     //   value: 'pie',
     // },
     {
-      label: '散点图',
+      label: 'point',
       value: 'point',
     },
     // {

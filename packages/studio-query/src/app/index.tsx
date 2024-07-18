@@ -15,7 +15,7 @@ import type { IStudioQueryProps } from './context';
 import { v4 as uuidv4 } from 'uuid';
 import { formatCypherStatement } from './utils';
 import { Utils, ThemeProvider, Section } from '@graphscope/studio-components';
-const { getSearchParams } = Utils;
+const { getSearchParams,setSearchParams } = Utils;
 
 import Container from './container';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -45,7 +45,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   } = props;
 
   const { store, updateStore } = useContext();
-  const { graphId, isReady, collapse, activeNavbar, statements, schemaData, language } = store;
+  const { graphId, isReady, collapse, activeNavbar, statements, schemaData, language ,defaultCollapsed} = store;
   const enable = !!enableAbsolutePosition && statements.length > 0;
 
   const navbarOptions = [
@@ -86,12 +86,10 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       //@ts-ignore
 
       const graphId = getSearchParams('graph_id') || '';
-      const activeNavbar = getSearchParams('nav') || 'saved';
       const language = getSearchParams('language') || props.language;
       let globalScript = getSearchParams('global_script') || props.globalScript;
       const displayMode = getSearchParams('display_mode') || localStorage.getItem(localStorageVars.mode) || 'flow';
       let autoRun = getSearchParams('auto_run') === 'true' ? true : false;
-      const info = await queryInfo(graphId || '');
 
       const schemaData = await queryGraphSchema(graphId);
       const historyStatements = await queryStatements('history');
@@ -99,6 +97,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       const storeProcedures = await queryStatements('store-procedure');
       // 临时的需求，后续删除
       const _hack = getSearchParams('name') === 'graph_algo';
+      let collapsed = defaultCollapsed
       let welcome;
       if (_hack) {
         globalScript = `
@@ -111,6 +110,13 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
           description:
             'This tool provides a dynamic way to explore the comprehensive analysis from our survey. It allows users to visualize how different algorithms address various challenges, analyze research trends across topics like Centrality, Community Detection, and Pattern Matching, and interactively query specific areas of interest.',
         };
+        collapsed = false;
+        const tab = getSearchParams('tab');
+        if(!tab){
+          setSearchParams({
+            "tab": 'store-procedure'
+          });
+        }
       }
 
       updateStore(draft => {
@@ -121,13 +127,12 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         draft.historyStatements = historyStatements;
         draft.savedStatements = savedStatements;
         draft.storeProcedures = storeProcedures;
-        //@ts-ignore
-        draft.activeNavbar = activeNavbar;
         draft.autoRun = autoRun;
         draft.globalScript = formatCypherStatement(globalScript);
         draft.mode = displayMode as 'flow' | 'tabs';
         draft.language = language as 'gremlin' | 'cypher';
         draft.welcome = welcome;
+        draft.defaultCollapsed = collapsed
       });
       // storage.set('STUDIO_QUERY_THEME', theme);
     })();
@@ -165,14 +170,15 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         : {
             rightSide: <Sidebar items={navbarOptions} type={displaySidebarType} />,
           };
+    
     return (
       <ThemeProvider locales={locales}>
         <Section
           style={{ height: 'calc(100vh - 50px)' }}
           {...side}
           defaultCollapsed={{
-            leftSide: true,
-            rightSide: true,
+            leftSide: defaultCollapsed,
+            rightSide: defaultCollapsed,
           }}
           leftSideStyle={{
             width: '320px',
