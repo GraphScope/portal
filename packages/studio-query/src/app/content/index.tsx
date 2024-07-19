@@ -1,4 +1,4 @@
-import React, { useState, memo, lazy, Suspense } from 'react';
+import React, { useState, memo, lazy, Suspense, useEffect } from 'react';
 // import Statement from '../../statement';
 const Statement = lazy(() => import('../../statement'));
 // import Header from './header';
@@ -46,8 +46,6 @@ const Content: React.FunctionComponent<IContentProps> = props => {
     });
   };
 
-  React.useEffect(() => {}, []);
-
   const queryOptions = statements.map((item, index) => {
     return {
       label: `query-${index + 1}`, // item.id,
@@ -82,6 +80,12 @@ const Content: React.FunctionComponent<IContentProps> = props => {
     });
   };
   const isEmpty = statements.length === 0;
+  /** activeId !== undefined 或值不改变则不滚动*/
+  useEffect(() => {
+    if (activeId) {
+      document.getElementById('statements-layout')?.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [activeId]);
   return (
     <div
       style={{
@@ -103,13 +107,13 @@ const Content: React.FunctionComponent<IContentProps> = props => {
         </Suspense>
 
         {mode === 'tabs' && queryOptions.length !== 0 && (
-          <div style={{ padding: '8px 0px' }}>
+          <div style={{ overflowX: 'scroll', padding: '8px 0px' }}>
             <Segmented options={queryOptions} onChange={handleChangeTab} value={activeId} />
           </div>
         )}
       </div>
 
-      <div style={{ overflowY: 'scroll', flex: '1', position: 'relative' }}>
+      <div id="statements-layout" style={{ overflowY: 'scroll', flex: '1', position: 'relative' }}>
         {isEmpty && <Empty />}
         <Welcome />
         {statements.map(item => {

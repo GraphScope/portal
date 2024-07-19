@@ -54,8 +54,6 @@ export type IStore<T> = T & {
   };
   /** 默认的折叠状态 */
   defaultCollapsed: boolean;
-  
-   
 };
 
 const initialStore: IStore<{}> = {
@@ -86,7 +84,7 @@ const initialStore: IStore<{}> = {
   mode: 'flow',
   enableImmediateQuery: false,
   language: 'gremlin',
-  defaultCollapsed:true
+  defaultCollapsed: true,
 };
 
 type ContextType<T> = {
