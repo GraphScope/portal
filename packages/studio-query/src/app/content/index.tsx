@@ -29,7 +29,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
     displaySidebarPosition,
   } = props;
   const { store, updateStore } = useContext();
-  const { activeId, mode, statements, savedStatements, schemaData, graphId, language, addStatements } = store;
+  const { activeId, mode, statements, savedStatements, schemaData, graphId, language } = store;
   const savedIds = savedStatements.map(item => item.id);
   const { token } = useToken();
 
@@ -45,8 +45,6 @@ const Content: React.FunctionComponent<IContentProps> = props => {
       draft.activeId = value;
     });
   };
-
-  React.useEffect(() => {}, []);
 
   const queryOptions = statements.map((item, index) => {
     return {
@@ -82,10 +80,12 @@ const Content: React.FunctionComponent<IContentProps> = props => {
     });
   };
   const isEmpty = statements.length === 0;
-  /** addStatements 只有添加语句滚动至顶部，删除保持原来位置 */
+  /** activeId !== undefined 或值不改变则不滚动*/
   useEffect(() => {
-    document.getElementById('statements-layout')?.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [addStatements]);
+    if (activeId) {
+      document.getElementById('statements-layout')?.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [activeId]);
   return (
     <div
       style={{

@@ -112,7 +112,6 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
           ...draft.statements,
         ];
         draft.activeId = id;
-        draft.addStatements++;
       });
 
       updateState(preState => {
