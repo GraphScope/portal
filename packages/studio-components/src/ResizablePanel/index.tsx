@@ -1,13 +1,17 @@
 import React from 'react';
 import { Panel, PanelGroup } from 'react-resizable-panels';
-
 import ResizeHandle from './ResizeHandle';
 
 interface IResizablePanelsProps {
   leftSide?: React.ReactNode;
   middleSide?: React.ReactNode;
   rightSide?: React.ReactNode;
+  leftMinSize?: number;
+  leftMaxSize?: number;
+  rightMinSize?: number;
+  rightMaxSize?: number;
 }
+
 const styles: Record<string, React.CSSProperties> = {
   Container: {
     width: '100%',
@@ -16,7 +20,6 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     gap: '1rem',
   },
-  BottomRow: { flex: '1 1 auto' },
   Panel: { display: 'flex', flexDirection: 'row' },
   PanelContent: {
     height: '100%',
@@ -24,34 +27,37 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '0.5rem',
   },
 };
-const ResizablePanels: React.FC<IResizablePanelsProps> = props => {
-  const { leftSide, middleSide, rightSide } = props;
+
+const ResizablePanels: React.FC<IResizablePanelsProps> = ({
+  leftSide,
+  middleSide,
+  rightSide,
+  leftMinSize = 20,
+  leftMaxSize = 40,
+  rightMinSize = 20,
+  rightMaxSize = 40,
+}) => {
+  const renderLeftPanel = () => (
+    <Panel style={styles.Panel} collapsible={false} order={1} minSize={leftMinSize} maxSize={leftMaxSize}>
+      <div style={styles.PanelContent}>{leftSide}</div>
+    </Panel>
+  );
+
+  const renderRightPanel = () => (
+    <Panel style={styles.Panel} collapsible={false} order={3} minSize={rightMinSize} maxSize={rightMaxSize}>
+      <div style={styles.PanelContent}>{rightSide}</div>
+    </Panel>
+  );
+
   return (
     <div style={styles.Container}>
-      <div style={styles.BottomRow}>
-        <PanelGroup autoSaveId="example" direction="horizontal">
-          {leftSide && (
-            <>
-              <Panel style={styles.Panel} collapsible={true} defaultSize={20} order={1}>
-                <div style={styles.PanelContent}>{leftSide}</div>
-              </Panel>
-              <ResizeHandle />
-            </>
-          )}
-          <Panel style={styles.Panel} collapsible={true} order={2}>
-            <div style={styles.PanelContent}>{middleSide}</div>
-          </Panel>
-
-          {rightSide && (
-            <>
-              <ResizeHandle />
-              <Panel style={styles.Panel} collapsible={true} defaultSize={20} order={3}>
-                <div style={styles.PanelContent}>{rightSide}</div>
-              </Panel>
-            </>
-          )}
-        </PanelGroup>
-      </div>
+      <PanelGroup autoSaveId="example" direction="horizontal">
+        {leftSide && [renderLeftPanel(), <ResizeHandle key="left-handle" />]}
+        <Panel style={styles.Panel} collapsible={false} order={2}>
+          <div style={styles.PanelContent}>{middleSide}</div>
+        </Panel>
+        {rightSide && [<ResizeHandle key="right-handle" />, renderRightPanel()]}
+      </PanelGroup>
     </div>
   );
 };
