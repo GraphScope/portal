@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { Graphin } from '../graphin';
+import { Graph, useGraph, GraphContext } from '../graph';
 import { useContext } from './useContext';
 import { Utils } from '@graphscope/studio-components';
 import { NodeData, EdgeData } from './typing';
-
+import { Button } from 'antd';
+import ContextMenu from '../graph/components/ContextMenu';
+import PropertiesPanel from '../graph/components/PropertiesPanel';
 export const colors: string[] = [
   '#569480',
   '#4C8EDA',
@@ -24,7 +26,7 @@ export const colors: string[] = [
 const categoryColors = {};
 let index = 0;
 
-interface ICanvasProps {}
+export interface ICanvasProps {}
 export const transform = (data): { nodes: NodeData[]; edges: EdgeData[] } => {
   const nodes = data.nodes.map(item => {
     const { data, id } = item;
@@ -39,6 +41,7 @@ export const transform = (data): { nodes: NodeData[]; edges: EdgeData[] } => {
     return {
       ...item,
       type: 'circle',
+      group: data.group || data.layer,
       style: {
         fill: color,
         labelText: id,
@@ -49,6 +52,7 @@ export const transform = (data): { nodes: NodeData[]; edges: EdgeData[] } => {
     return {
       ...item,
       type: 'line',
+      group: data.group || data.layer,
       style: {
         endArrow: true,
       },
@@ -58,24 +62,25 @@ export const transform = (data): { nodes: NodeData[]; edges: EdgeData[] } => {
 };
 
 const Canvas: React.FunctionComponent<ICanvasProps> = props => {
-  const { store } = useContext();
-  const { nodes, edges } = store;
+  const { store, updateStore } = useContext();
+  const { nodes, edges, render } = store;
 
   const data = transform(Utils.fakeSnapshot({ nodes, edges }));
   console.log('data', data);
+  const handleSwitch = () => {
+    updateStore(draft => {
+      draft.render = render === '2D' ? '3D' : '2D';
+    });
+  };
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <Graphin
-        style={{ width: '100%', height: '100%' }}
-        options={{
-          layout: {
-            type: 'force',
-          },
-          data,
-          behaviors: ['zoom-canvas', 'drag-canvas', 'drag-element'],
-        }}
-      />
+      <Graph style={{ width: '100%', height: '100%' }} data={data} render={render}>
+        <Button onClick={handleSwitch} style={{ position: 'absolute', top: '20px', right: '20px' }}>
+          Switch
+        </Button>
+        <ContextMenu></ContextMenu>
+      </Graph>
     </div>
   );
 };

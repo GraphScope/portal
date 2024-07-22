@@ -1,17 +1,9 @@
 import * as React from 'react';
-import Canvas from './canvas';
-import { Button } from 'antd';
-import { Section, useSection, Icons, MultipleInstance } from '@graphscope/studio-components';
-import Side from './side';
+
+import { MultipleInstance } from '@graphscope/studio-components';
+
+import Sdk from './sdk';
 interface StudioGraphProps {}
-const ToogleButton = () => {
-  const { toggleLeftSide } = useSection();
-  return (
-    <div>
-      <Button icon={<Icons.Sidebar />} onClick={() => toggleLeftSide()} />
-    </div>
-  );
-};
 
 const StudioGraph: React.FunctionComponent<StudioGraphProps> = props => {
   return (
@@ -28,7 +20,8 @@ const StudioGraph: React.FunctionComponent<StudioGraphProps> = props => {
       }}
     >
       <MultipleInstance>
-        <Section
+        <Sdk />
+        {/* <Section
           leftSide={<Side />}
           autoResize={false}
           leftSideStyle={{
@@ -41,7 +34,7 @@ const StudioGraph: React.FunctionComponent<StudioGraphProps> = props => {
         >
           <ToogleButton />
           <Canvas />
-        </Section>
+        </Section> */}
       </MultipleInstance>
     </div>
   );

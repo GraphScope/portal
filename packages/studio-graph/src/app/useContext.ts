@@ -7,11 +7,13 @@ import { Utils, useMultipleInstance } from '@graphscope/studio-components';
 export type IStore = {
   nodes: NodeData[];
   edges: EdgeData[];
+  render: '2D' | '3D';
 };
 
 export const initialStore: IStore = {
   nodes: [],
   edges: [],
+  render: '2D',
 };
 
 type ContextType = {

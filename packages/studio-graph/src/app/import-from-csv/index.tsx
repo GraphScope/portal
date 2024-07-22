@@ -6,7 +6,7 @@ import { ImportFiles, Utils } from '@graphscope/studio-components';
 import type { NodeData, EdgeData } from '../typing';
 import { useContext } from '../useContext';
 
-interface IImportFromCSVProps {}
+export interface IImportFromCSVProps {}
 
 const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
   const { store, updateStore } = useContext();
