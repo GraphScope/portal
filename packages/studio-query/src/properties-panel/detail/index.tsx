@@ -17,6 +17,7 @@ const Detial: React.FunctionComponent<DetialProps> = props => {
 
       <table
         style={{
+          width: '100%',
           borderSpacing: '0px',
         }}
       >
