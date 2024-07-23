@@ -1,14 +1,12 @@
 import { useRef, useEffect, useState } from 'react';
 
-import type { GraphProps, Graph } from '../types';
-
+import type { GraphProps, Graph } from './types';
 import ForceGraph from 'force-graph';
-
 import ForceGraph3D from '3d-force-graph';
 import type { ForceGraphInstance } from 'force-graph';
 import type { ForceGraph3DInstance } from '3d-force-graph';
+import { Utils } from '@graphscope/studio-components';
 import mitt from 'mitt';
-import type { Emitter } from '../types';
 
 const emitter = mitt();
 /**
@@ -21,24 +19,26 @@ export default function useGraph<P extends GraphProps>(props: P) {
   const [isReady, setIsReady] = useState(false);
   const graphRef: React.MutableRefObject<Graph | null> = useRef(null);
   const containerRef: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
-  // const emitterRef: React.MutableRefObject<null | Emitter> = useRef(null);
+
   useEffect(() => {
     if (!containerRef.current) return;
 
     const width = containerRef.current.offsetWidth;
     const height = containerRef.current.offsetHeight;
-    // emitterRef.current = mitt();
-
     let graph: ForceGraphInstance | ForceGraph3DInstance | null = null;
     console.log('data ?>>', { nodes: data.nodes, links: data.edges });
     if (render === '2D') {
-      graph = ForceGraph()(containerRef.current)
+      graph = ForceGraph()(containerRef.current);
+      // graph.on = emitter.on;
+      // graph.off = emitter.off;
+      // graph.emit = emitter.emit;
+
+      graph
         .width(width)
         .height(height)
         .graphData({ nodes: data.nodes, links: data.edges })
         .nodeAutoColorBy('group')
         .onNodeHover(node => {
-          // console.log('onNodeHover', node);
           emitter.emit('node:hover', node);
         })
         .onNodeClick(node => {
@@ -69,12 +69,23 @@ export default function useGraph<P extends GraphProps>(props: P) {
 
     graphRef.current = graph;
     setIsReady(true);
-    onInit?.(graph);
+    onInit?.(graph, emitter);
 
+    /** 监听容器 DOM 尺寸变化 */
+    const handleResize = Utils.debounce(() => {
+      if (!containerRef.current) return;
+      const width = containerRef.current.offsetWidth;
+      const height = containerRef.current.offsetHeight;
+      graphRef.current?.width(width).height(height);
+    }, 200);
+    const observer = new ResizeObserver(handleResize);
+    observer.observe(containerRef.current);
     return () => {
-      const graph = graphRef.current;
-      if (graph) {
-        graph._destructor();
+      if (graphRef.current) {
+        graphRef.current._destructor();
+      }
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
       }
     };
   }, [render]);

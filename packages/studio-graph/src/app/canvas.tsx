@@ -1,11 +1,9 @@
-import * as React from 'react';
-import { Graph, useGraph, GraphContext } from '../graph';
+import React, { useRef } from 'react';
+import Graph from '../graph/index';
 import { useContext } from './useContext';
 import { Utils } from '@graphscope/studio-components';
 import { NodeData, EdgeData } from './typing';
-import { Button } from 'antd';
-import ContextMenu from '../graph/components/ContextMenu';
-import PropertiesPanel from '../graph/components/PropertiesPanel';
+
 export const colors: string[] = [
   '#569480',
   '#4C8EDA',
@@ -66,21 +64,17 @@ const Canvas: React.FunctionComponent<ICanvasProps> = props => {
   const { nodes, edges, render } = store;
 
   const data = transform(Utils.fakeSnapshot({ nodes, edges }));
-  console.log('data', data);
-  const handleSwitch = () => {
+
+  const onInit = (graph, emitter) => {
     updateStore(draft => {
-      draft.render = render === '2D' ? '3D' : '2D';
+      draft.graph = graph;
+      draft.emitter = emitter;
     });
   };
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <Graph style={{ width: '100%', height: '100%' }} data={data} render={render}>
-        <Button onClick={handleSwitch} style={{ position: 'absolute', top: '20px', right: '20px' }}>
-          Switch
-        </Button>
-        <ContextMenu></ContextMenu>
-      </Graph>
+      <Graph style={{ width: '100%', height: '100%' }} data={data} render={render} onInit={onInit} />
     </div>
   );
 };

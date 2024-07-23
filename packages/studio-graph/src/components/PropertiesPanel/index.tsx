@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { useGraph } from '../../context';
+import { useContext } from '../../app/useContext';
 export interface IPropertiesPanelProps {}
 
 const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props => {
-  const { emitter } = useGraph();
+  const { store } = useContext();
+  const { emitter } = store;
   const [data, setData] = React.useState({});
   React.useEffect(() => {
     console.log('PropertiesPanel effect.......');
     emitter?.on('node:click', node => {
       console.log('PropertiesPanel node:click', node);
+      //@ts-ignore
       setData(node);
     });
 
@@ -17,7 +19,7 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
     };
   }, [emitter]);
 
-  return <div>{JSON.stringify(data, null, 2)}</div>;
+  return <div>xxxxx{JSON.stringify(data, null, 2)}</div>;
 };
 
 PropertiesPanel.displayName = 'PropertiesPanel';

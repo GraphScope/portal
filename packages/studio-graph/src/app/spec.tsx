@@ -1,53 +1,103 @@
-import ContextMenu from '../graph/components/ContextMenu';
-import PropertiesPanel from '../graph/components/PropertiesPanel';
-import BasicContainer from '../graph/components/BasicContainer';
+import ContextMenu from '../components/ContextMenu';
+import PropertiesPanel from '../components/PropertiesPanel';
+import BasicContainer from '../components/BasicContainer';
 import ImportFromJSON from './import-from-csv';
 import BasicCanvas from './canvas';
-export type Type = 'components' | 'menu' | 'canvas' | 'container' | 'menuitem';
-export type Spec = {
+import SwitchEngine from '../components/SwitchEngine';
+
+export interface AtomSpec {
+  /** 原子组件唯一ID */
+  id: string;
+  /** 运行时参数 */
+  props: any;
+  /** 元信息 */
+  meta?: {
+    /** 排序 */
+    order?: number;
+    /** 分组 */
+    group?: string;
+    /** 标题 */
+    title?: string;
+    /** 描述 */
+    description?: string;
+    /** 图标 */
+    icon?: string;
+  };
+  /** 服务ID */
+  serviceId?: string[];
+}
+export interface ContainerSpec {
   id: string;
   props: any;
-  type: Type;
-  serviceId?: string[];
-}[];
-
-export const spec: Spec = [
-  {
-    id: 'PropertiesPanel',
-    type: 'components',
-    props: PropertiesPanel.defaultProps,
-    serviceId: ['/api/query/property'],
-  },
-  {
-    id: 'ClearNode',
-    type: 'menuitem',
-    props: {},
-  },
-  {
-    id: 'ImportFromJSON',
-    type: 'components',
-    props: {},
-  },
-  {
-    id: 'ContextMenu',
-    type: 'menu',
-    props: {},
-  },
-  {
+  children: AtomSpec[];
+}
+export interface Spec {
+  container: ContainerSpec;
+  contextmenu: ContainerSpec;
+  toolbar: ContainerSpec;
+  atoms: AtomSpec[];
+}
+export const spec: Spec = {
+  container: {
     id: 'BasicContainer',
-    type: 'container',
     props: {
-      // 唯一hack的地方
-      items: [['ImportFromJSON', 'PropertiesPanel'], ['PropertiesPanel']],
+      displayIcon: true,
     },
+    children: [
+      {
+        id: 'ImportFromJSON',
+        props: {},
+        meta: {
+          order: 1,
+          group: 'xxxxx',
+          icon: 'file-json',
+        },
+      },
+      {
+        id: 'PropertiesPanel',
+        props: PropertiesPanel.defaultProps,
+        serviceId: ['/api/query/property'],
+        meta: {
+          order: 2,
+          icon: 'icon-info',
+        },
+      },
+    ],
   },
-];
+  contextmenu: {
+    id: 'ContextMenu',
+    props: {},
+    children: [
+      {
+        id: 'ClearNode',
+        props: {},
+      },
+    ],
+  },
+  toolbar: {
+    id: 'Toolbar',
+    props: {},
+    children: [
+      {
+        id: 'SwitchEngine',
+        props: {},
+      },
+    ],
+  },
+  atoms: [
+    {
+      id: 'SwitchEngine',
+      props: {},
+    },
+  ],
+};
 
 export const assets = {
   ContextMenu,
   PropertiesPanel,
   BasicContainer,
   ImportFromJSON,
+  SwitchEngine,
 };
 
 export const services = [

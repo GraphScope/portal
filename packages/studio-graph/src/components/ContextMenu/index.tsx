@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { useGraph } from '../context';
+import { useContext } from '../../app/useContext';
 
 export interface IContextMenuProps {}
 
 const ContextMenu: React.FunctionComponent<IContextMenuProps> = props => {
-  const { graph, emitter } = useGraph();
+  const { store } = useContext();
+  const { graph, emitter } = store;
   const [state, setState] = React.useState({
     visible: false,
     data: {},
