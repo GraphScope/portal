@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Button } from 'antd';
 import { useContext } from '../../hooks/useContext';
+import { Icons } from '@graphscope/studio-components';
+const { Graph3D, Graph2D } = Icons;
 export interface ISwitchEngineProps {}
 
 const SwitchEngine: React.FunctionComponent<ISwitchEngineProps> = props => {
@@ -11,11 +13,8 @@ const SwitchEngine: React.FunctionComponent<ISwitchEngineProps> = props => {
       draft.render = render === '2D' ? '3D' : '2D';
     });
   };
-  return (
-    <Button onClick={handleSwitch} style={{ position: 'absolute', top: '20px', right: '20px' }}>
-      Switch
-    </Button>
-  );
+  const icon = render === '2D' ? <Graph3D /> : <Graph2D />;
+  return <Button onClick={handleSwitch} icon={icon} type="text"></Button>;
 };
 
 export default SwitchEngine;

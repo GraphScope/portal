@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { MultipleInstance, Section, SegmentedTabs } from '@graphscope/studio-components';
-import Canvas from './canvas';
-import { Toolbar, SwitchEngine, PropertiesPanel, LoadCSV } from '../components';
+import { Toolbar, SwitchEngine, PropertiesPanel, LoadCSV, Canvas } from '../components';
 
 interface ExploreGraphProps {}
 
@@ -37,14 +36,14 @@ const ExploreGraph: React.FunctionComponent<ExploreGraphProps> = props => {
         <Section
           splitBorder
           leftSide={<SegmentedTabs items={items} block />}
-          rightSide={<PropertiesPanel />}
+          // rightSide={<PropertiesPanel />}
           autoResize={false}
           leftSideStyle={{
             width: '350px',
           }}
           defaultCollapsed={{
             leftSide: false,
-            rightSide: false,
+            rightSide: true,
           }}
         >
           <Canvas />

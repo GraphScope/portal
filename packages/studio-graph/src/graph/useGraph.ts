@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 
-import type { GraphProps, Graph } from './types';
+import type { GraphProps, Graph, Emitter } from './types';
 import ForceGraph from 'force-graph';
 import ForceGraph3D from '3d-force-graph';
 import type { ForceGraphInstance } from 'force-graph';
@@ -8,46 +8,81 @@ import type { ForceGraph3DInstance } from '3d-force-graph';
 import { Utils } from '@graphscope/studio-components';
 import mitt from 'mitt';
 
-const emitter = mitt();
+const handleNodeColor = (node, nodeStyle) => {
+  const { id, label, __style_color } = node;
+  /** 用户手动指定的样式，优先级第一 */
+  const userStyle = nodeStyle[id];
+  if (userStyle) {
+    return userStyle.color;
+  }
+  /** 按照label 划分群组的样式，优先级第二 */
+  const groupStyle = nodeStyle[label];
+  if (groupStyle) {
+    return groupStyle.color;
+  }
+  /** 后台数据初始化就添加的样式，优先级第三 */
+  if (__style_color) {
+    return __style_color;
+  }
+  /** 兜底给一个样式 */
+  return '#1978fe';
+};
+const handleNodeCaption = (node, nodeStyle) => {
+  const { id, label, __style_caption, properties = {} } = node;
+
+  const userStyle = nodeStyle[id];
+  if (userStyle) {
+    return properties[userStyle.caption];
+  }
+
+  const groupStyle = nodeStyle[label];
+  if (groupStyle) {
+    return properties[groupStyle.caption];
+  }
+
+  if (__style_caption) {
+    return properties[__style_caption];
+  }
+
+  return '';
+};
+
 /**
  * Hook for creating and managing a G6 graph instance.
  * @param props The props for the Graphin component.
  * @returns An object containing the graph instance, the container ref, and a boolean indicating whether the graph is ready.
  */
 export default function useGraph<P extends GraphProps>(props: P) {
-  const { onInit, onReady, onDestroy, options, render = '2D', data } = props;
+  const { onInit, onReady, onDestroy, options, render = '2D', data, nodeStyle } = props;
   const [isReady, setIsReady] = useState(false);
   const graphRef: React.MutableRefObject<Graph | null> = useRef(null);
+  const emitterRef: React.MutableRefObject<Emitter | null> = useRef(null);
   const containerRef: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
+    emitterRef.current = mitt();
 
     const width = containerRef.current.offsetWidth;
     const height = containerRef.current.offsetHeight;
     let graph: ForceGraphInstance | ForceGraph3DInstance | null = null;
-    console.log('data ?>>', { nodes: data.nodes, links: data.edges });
+    console.log('graph init...', nodeStyle);
     if (render === '2D') {
       graph = ForceGraph()(containerRef.current);
-      // graph.on = emitter.on;
-      // graph.off = emitter.off;
-      // graph.emit = emitter.emit;
-
       graph
         .width(width)
         .height(height)
-        .graphData({ nodes: data.nodes, links: data.edges })
-        .nodeAutoColorBy('group')
+        .graphData(Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges }))
+        .nodeLabel(node => handleNodeCaption(node, nodeStyle))
+        .nodeColor(node => handleNodeColor(node, nodeStyle))
         .onNodeHover(node => {
-          emitter.emit('node:hover', node);
+          emitterRef.current?.emit('node:hover', node);
         })
         .onNodeClick(node => {
-          console.log('onNodeClick', node);
-          emitter.emit('node:click', node);
+          emitterRef.current?.emit('node:click', node);
         })
         .onNodeRightClick((node, evt) => {
-          console.log('onNodeRightClick', node);
-          emitter.emit('node:contextmenu', { node, evt });
+          emitterRef.current?.emit('node:contextmenu', { node, evt });
         });
     }
     if (render === '3D') {
@@ -55,21 +90,20 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .width(width)
         .height(height)
         .enableNodeDrag(false)
-        .graphData({ nodes: data.nodes, links: data.edges })
-        .nodeAutoColorBy('group')
+        .nodeLabel(node => handleNodeCaption(node, nodeStyle))
+        .nodeColor(node => handleNodeColor(node, nodeStyle))
+        .graphData(Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges }))
         .onNodeClick(node => {
-          console.log('onNodeClick', node);
-          emitter.emit('node:click', node);
+          emitterRef.current?.emit('node:click', node);
         })
         .onNodeRightClick((node, evt) => {
-          console.log('onNodeRightClick', node);
-          emitter.emit('node:contextmenu', { node, evt });
+          emitterRef.current?.emit('node:contextmenu', { node, evt });
         });
     }
 
     graphRef.current = graph;
     setIsReady(true);
-    onInit?.(graph, emitter);
+    onInit?.(graph, emitterRef.current);
 
     /** 监听容器 DOM 尺寸变化 */
     const handleResize = Utils.debounce(() => {
@@ -92,14 +126,22 @@ export default function useGraph<P extends GraphProps>(props: P) {
   useEffect(() => {
     if (graphRef.current) {
       console.log('data change.....');
-      graphRef.current.graphData({ nodes: data.nodes, links: data.edges });
+      graphRef.current.graphData(Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges }));
     }
   }, [data]);
+  useEffect(() => {
+    if (graphRef.current) {
+      console.log('style change.....');
+      const graph = graphRef.current;
+      graph.nodeColor(node => handleNodeColor(node, nodeStyle));
+      graph.nodeLabel(node => handleNodeCaption(node, nodeStyle));
+    }
+  }, [nodeStyle]);
 
   return {
     graph: graphRef.current,
+    emitter: emitterRef.current,
     containerRef,
     isReady,
-    emitter,
   };
 }

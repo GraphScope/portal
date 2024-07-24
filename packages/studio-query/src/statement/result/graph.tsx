@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import Graph from '../../graph';
+import { QueryGraph } from '@graphscope/studio-graph';
 interface IGraphViewProps {
   data: any;
   schemaData: any;
@@ -49,7 +50,8 @@ const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
 
   return (
     <div style={{ width: '100%' }}>
-      <Graph data={data} schemaData={graphSchema} schemaId={graphId} />
+      {/* <Graph data={data} schemaData={graphSchema} schemaId={graphId} /> */}
+      <QueryGraph data={data} schema={graphSchema} schemaId={graphId} />
     </div>
   );
 };

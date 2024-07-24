@@ -4,3 +4,5 @@ export { default as PropertiesPanel } from './PropertiesPanel';
 export { default as SwitchEngine } from './SwitchEngine';
 export { default as BasicContainer } from './BasicContainer';
 export { default as LoadCSV } from './LoadCSV';
+export { default as Canvas } from './Canvas';
+export { default as StyleSetting } from './StyleSetting';

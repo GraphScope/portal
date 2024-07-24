@@ -9,7 +9,7 @@ export default (props: { subTitle: React.ReactNode; rightSVG: React.ReactNode })
           <path d="M0 .335h253.49v253.49H0z"></path>
           <path d="M0 293.665h253.49V.401H0z"></path>
         </defs>
-        <g fill="none" fill-rule="evenodd">
+        <g fill="none">
           <g transform="translate(0 .067)">
             <mask fill="#fff"></mask>
             <path

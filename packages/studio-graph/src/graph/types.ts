@@ -20,6 +20,7 @@ export interface GraphProps extends Pick<React.HTMLAttributes<HTMLDivElement>, '
     nodes: any[];
     edges: any[];
   };
+  nodeStyle: any;
   /**
    * The options for the  graph instance.
    */
