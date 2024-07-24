@@ -1,14 +1,14 @@
 import React, { useRef } from 'react';
 import { Button } from 'antd';
-
 import { MultipleInstance, Section, SegmentedTabs, useSection, Icons, FullScreen } from '@graphscope/studio-components';
-import { Toolbar, SwitchEngine, PropertiesPanel, Canvas, StyleSetting } from '../components';
+import { Toolbar, SwitchEngine, PropertiesPanel, Canvas, StyleSetting, Prepare } from '../components';
 import { useContext } from '../hooks/useContext';
 import { Divider } from 'antd';
 
 interface QueryGraphProps {
   data: any;
   schema: any;
+  graphId: string;
 }
 
 const ToogleButton = () => {
@@ -20,19 +20,8 @@ const ToogleButton = () => {
   );
 };
 
-const RecivePropsData = props => {
-  const { data } = props;
-  const { updateStore } = useContext();
-  React.useEffect(() => {
-    updateStore(draft => {
-      draft.data = data;
-    });
-  }, [data]);
-  return null;
-};
-
-const Container = props => {
-  const { data, schema } = props;
+const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
+  const { data, schema, graphId } = props;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const items = [
     {
@@ -45,49 +34,40 @@ const Container = props => {
       key: 'Style',
       label: 'Style',
       value: 'Style',
-      children: <StyleSetting schema={schema} />,
+      children: <StyleSetting />,
     },
   ];
-  return (
-    <div style={{ background: '#fff', height: '100%' }} ref={containerRef}>
-      <Section
-        splitBorder
-        rightSide={<SegmentedTabs items={items} block />}
-        autoResize={false}
-        leftSideStyle={{
-          width: '350px',
-        }}
-        defaultCollapsed={{
-          leftSide: true,
-          rightSide: false,
-        }}
-      >
-        <RecivePropsData data={data} />
-        <Canvas />
-        <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
-          <ToogleButton />
-          <Divider style={{ margin: '0px' }} />
-          <SwitchEngine />
-          <FullScreen containerRef={containerRef} />
-        </Toolbar>
-      </Section>
-    </div>
-  );
-};
-
-const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
-  const { data, schema } = props;
   return (
     <div
       style={{
         background: '#fff',
         borderRadius: '8px',
         height: '500px',
-        // border: '1px solid #ddd',
       }}
+      ref={containerRef}
     >
       <MultipleInstance>
-        <Container data={data} schema={schema} />
+        <Section
+          splitBorder
+          rightSide={<SegmentedTabs items={items} block />}
+          autoResize={false}
+          leftSideStyle={{
+            width: '350px',
+          }}
+          defaultCollapsed={{
+            leftSide: true,
+            rightSide: false,
+          }}
+        >
+          <Prepare data={data} schema={schema} graphId={graphId} />
+          <Canvas />
+          <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
+            <ToogleButton />
+            <Divider style={{ margin: '0px' }} />
+            <SwitchEngine />
+            <FullScreen containerRef={containerRef} />
+          </Toolbar>
+        </Section>
       </MultipleInstance>
     </div>
   );

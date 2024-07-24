@@ -14,6 +14,8 @@ export type IStore = {
   graph: Graph;
   emitter: null | Emitter;
   nodeStyle: any;
+  graphId: string;
+  schema: any;
 };
 
 export const initialStore: IStore = {
@@ -26,6 +28,11 @@ export const initialStore: IStore = {
   isReady: false,
   emitter: null,
   nodeStyle: {},
+  graphId: '',
+  schema: {
+    nodes: [],
+    edges: [],
+  },
 };
 
 type ContextType = {

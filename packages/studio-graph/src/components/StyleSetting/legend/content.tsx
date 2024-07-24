@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Flex, Typography, Space, Tag, theme } from 'antd';
 import { FormattedMessage } from 'react-intl';
+import { sizes, widths, colors } from '../../Prepare/const';
 const { useToken } = theme;
 export interface ILegnedOption {
   /** 属性 */
@@ -21,45 +22,6 @@ export type ILengendContentProps = ILegnedOption & {
   type: 'node' | 'edge';
   onChange: (val: ILegnedOption) => void;
 };
-
-export const colors: string[] = [
-  // '#C2B8A2',
-  // '#EAD4E5',
-  // '#FCD8C2',
-  // '#C3E8F5',
-  // '#F16768',
-  // '#F0E9DF',
-  // '#D5EBD6',
-  // '#F8E1E9',
-  // '#B8D4F1',
-  // '#FFE7BD',
-  // '#F1C7D6',
-  // '#BBD5CD',
-  '#569480',
-  '#4C8EDA',
-  '#FFE081',
-  '#C990C0',
-  '#F79767',
-  '#57C7E3',
-  '#F16667',
-  '#D9C8AE',
-  '#8DCC93',
-  '#ECB5C9',
-  '#FFC454',
-  '#DA7194',
-  '#848484',
-  '#D9D9D9',
-];
-export const sizes: number[] = Array.from({
-  length: 10,
-}).map((_item, index) => {
-  return (index + 3) * 6;
-});
-export const widths: number[] = Array.from({
-  length: 10,
-}).map((_item, index) => {
-  return (index + 1) * 0.5;
-});
 
 const styles = {
   color: {

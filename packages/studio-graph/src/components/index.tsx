@@ -6,3 +6,4 @@ export { default as BasicContainer } from './BasicContainer';
 export { default as LoadCSV } from './LoadCSV';
 export { default as Canvas } from './Canvas';
 export { default as StyleSetting } from './StyleSetting';
+export { default as Prepare } from './Prepare';

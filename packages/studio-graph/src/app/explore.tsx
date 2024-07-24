@@ -1,10 +1,28 @@
-import * as React from 'react';
-import { MultipleInstance, Section, SegmentedTabs } from '@graphscope/studio-components';
-import { Toolbar, SwitchEngine, PropertiesPanel, LoadCSV, Canvas } from '../components';
+import React, { useRef } from 'react';
+import { Button } from 'antd';
+import { MultipleInstance, Section, SegmentedTabs, useSection, Icons, FullScreen } from '@graphscope/studio-components';
+import { Toolbar, SwitchEngine, PropertiesPanel, Canvas, StyleSetting, Prepare, LoadCSV } from '../components';
+import { useContext } from '../hooks/useContext';
+import { Divider } from 'antd';
 
-interface ExploreGraphProps {}
+interface QueryGraphProps {
+  data: any;
+  schema: any;
+  graphId: string;
+}
 
-const ExploreGraph: React.FunctionComponent<ExploreGraphProps> = props => {
+const ToogleButton = () => {
+  const { toggleRightSide } = useSection();
+  return (
+    <div>
+      <Button icon={<Icons.Sidebar />} onClick={() => toggleRightSide()} type="text" />
+    </div>
+  );
+};
+
+const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
+  const { data, schema, graphId } = props;
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const items = [
     {
       key: 'CSV',
@@ -18,37 +36,47 @@ const ExploreGraph: React.FunctionComponent<ExploreGraphProps> = props => {
       value: 'Info',
       children: <PropertiesPanel />,
     },
+    {
+      key: 'Style',
+      label: 'Style',
+      value: 'Style',
+      children: <StyleSetting />,
+    },
   ];
   return (
     <div
       style={{
         background: '#fff',
+        borderRadius: '8px',
         height: '100%',
         position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        borderRadius: '8px',
+        top: '0px',
+        left: '0px',
+        right: '0px',
+        bottom: '0px',
       }}
+      ref={containerRef}
     >
       <MultipleInstance>
         <Section
           splitBorder
-          leftSide={<SegmentedTabs items={items} block />}
-          // rightSide={<PropertiesPanel />}
+          rightSide={<SegmentedTabs items={items} block />}
           autoResize={false}
           leftSideStyle={{
             width: '350px',
           }}
           defaultCollapsed={{
-            leftSide: false,
-            rightSide: true,
+            leftSide: true,
+            rightSide: false,
           }}
         >
+          <Prepare data={data} schema={schema} graphId={graphId} />
           <Canvas />
-          <Toolbar>
+          <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
+            <ToogleButton />
+            <Divider style={{ margin: '0px' }} />
             <SwitchEngine />
+            <FullScreen containerRef={containerRef} />
           </Toolbar>
         </Section>
       </MultipleInstance>
@@ -56,4 +84,4 @@ const ExploreGraph: React.FunctionComponent<ExploreGraphProps> = props => {
   );
 };
 
-export default ExploreGraph;
+export default QueryGraph;

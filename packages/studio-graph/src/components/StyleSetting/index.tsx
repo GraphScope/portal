@@ -5,15 +5,12 @@ import { FormattedMessage } from 'react-intl';
 import Legend from './legend';
 import { useContext } from '../../hooks/useContext';
 
-interface IOverviewProps {
-  schema: any;
-}
+interface IOverviewProps {}
 
 const StyleSetting: React.FunctionComponent<IOverviewProps> = props => {
-  const { schema } = props;
-  const { nodes, edges } = schema;
   const { updateStore, store } = useContext();
-  const { graph } = store;
+  const { graph, schema } = store;
+  const { nodes, edges } = schema;
   const onChange = value => {
     console.log('value', value);
     const { caption, color, label, size } = value;

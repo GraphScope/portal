@@ -6,7 +6,7 @@ import { useContext } from '../../hooks/useContext';
 export interface IImportFromCSVProps {}
 
 const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
-  const { store, updateStore } = useContext();
+  const { updateStore } = useContext();
 
   const onSubmit = params => {
     const { files } = params;
@@ -53,8 +53,10 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
       }
     });
     updateStore(draft => {
-      draft.edges = edges;
-      draft.nodes = nodes;
+      draft.data = {
+        nodes,
+        edges,
+      };
     });
   };
 
