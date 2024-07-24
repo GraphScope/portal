@@ -17,6 +17,8 @@ export default () => {
         <Icons.Sidebar />
         <Icons.FileExport />
         <Icons.FileYaml />
+        <Icons.Graph2D />
+        <Icons.Graph3D />
       </Space>
     </div>
   );
