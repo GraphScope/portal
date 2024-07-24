@@ -1,13 +1,12 @@
 import React from 'react';
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
-import type { NodeData, EdgeData } from './typing';
 
 import { Utils, useMultipleInstance } from '@graphscope/studio-components';
 import type { Emitter, Graph } from '../graph/types';
 export type IStore = {
-  nodes: NodeData[];
-  edges: EdgeData[];
+  nodes: any[];
+  edges: any[];
   render: '2D' | '3D';
   isReady: boolean;
   graph: Graph;

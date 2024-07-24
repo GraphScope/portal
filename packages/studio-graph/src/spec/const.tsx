@@ -1,9 +1,6 @@
-import ContextMenu from '../components/ContextMenu';
-import PropertiesPanel from '../components/PropertiesPanel';
-import BasicContainer from '../components/BasicContainer';
-import ImportFromJSON from './import-from-csv';
-import BasicCanvas from './canvas';
-import SwitchEngine from '../components/SwitchEngine';
+import { LoadCSV, ContextMenu, PropertiesPanel, BasicContainer, SwitchEngine } from '../components';
+
+import BasicCanvas from '../app/canvas';
 
 export interface AtomSpec {
   /** 原子组件唯一ID */
@@ -45,7 +42,7 @@ export const spec: Spec = {
     },
     children: [
       {
-        id: 'ImportFromJSON',
+        id: 'LoadCSV',
         props: {},
         meta: {
           order: 1,
@@ -96,7 +93,7 @@ export const assets = {
   ContextMenu,
   PropertiesPanel,
   BasicContainer,
-  ImportFromJSON,
+  LoadCSV,
   SwitchEngine,
 };
 

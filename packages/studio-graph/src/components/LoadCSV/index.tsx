@@ -1,10 +1,7 @@
 import React from 'react';
-
 import { Button } from 'antd';
-
 import { ImportFiles, Utils } from '@graphscope/studio-components';
-import type { NodeData, EdgeData } from '../typing';
-import { useContext } from '../useContext';
+import { useContext } from '../../hooks/useContext';
 
 export interface IImportFromCSVProps {}
 
@@ -13,8 +10,8 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
 
   const onSubmit = params => {
     const { files } = params;
-    const nodes: NodeData[] = [];
-    const edges: EdgeData[] = [];
+    const nodes: any[] = [];
+    const edges: any[] = [];
     files.forEach(item => {
       const { meta, contents } = item;
       const { graphFields, name } = meta;

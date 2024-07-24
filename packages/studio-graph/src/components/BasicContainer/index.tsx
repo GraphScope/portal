@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Section, useSection, Icons } from '@graphscope/studio-components';
 import { Button } from 'antd';
 import { SegmentedTabs } from '@graphscope/studio-components';
-import { useContext } from '../../app/useContext';
-import type { RuntimeAtom } from '../../app/sdk';
+import { useContext } from '../../hooks/useContext';
+import type { RuntimeAtom } from '../../spec/';
 export interface IBasicContainerProps {
   items: RuntimeAtom[][];
   children: React.ReactNode;
@@ -40,6 +40,7 @@ const BasicContainer: React.FunctionComponent<IBasicContainerProps> = props => {
   const left = <SegmentedTabs items={_leftSide} />;
   console.log(_leftSide);
   return (
+    //@ts-ignore
     <Section leftSide={left} rightSide={graph && <RightSide />} splitBorder>
       {children}
       <ToogleButton />

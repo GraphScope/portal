@@ -1,2 +1,2 @@
-import StudioGraph from './app';
-export default StudioGraph;
+export { default as QueryGraph } from './app/query';
+export { default as ExploreGraph } from './app/explore';

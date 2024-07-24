@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import { assets, spec, services, defaultCanvas, defaultContainer, ContainerSpec, AtomSpec } from './spec';
+import { assets, spec, services, defaultCanvas, defaultContainer, ContainerSpec, AtomSpec } from './const';
 import { Utils } from '@graphscope/studio-components';
-import Canvas from './canvas';
+import Canvas from '../app/canvas';
 interface ISdkProps {}
 
 export interface RuntimeAtom extends AtomSpec {
@@ -46,6 +46,7 @@ const getCom = (container: ContainerSpec) => {
     },
   };
 };
+
 const Sdk: React.FunctionComponent<ISdkProps> = props => {
   const { container, toolbar, contextmenu, atoms } = useMemo(() => {
     const container = getCom(spec.container);

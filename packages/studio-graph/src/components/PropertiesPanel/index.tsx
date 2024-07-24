@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext } from '../../app/useContext';
+import { useContext } from '../../hooks/useContext';
 export interface IPropertiesPanelProps {}
 
 const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props => {

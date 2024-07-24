@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import Graph from '../graph/index';
-import { useContext } from './useContext';
+import { useContext } from '../hooks/useContext';
 import { Utils } from '@graphscope/studio-components';
-import { NodeData, EdgeData } from './typing';
+import { NodeData, EdgeData } from '../hooks/typing';
 
 export const colors: string[] = [
   '#569480',
