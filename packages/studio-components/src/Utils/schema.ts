@@ -72,7 +72,12 @@ export const generatorSchemaByGraphData = (graphData: ISchema, defaultOptions?: 
   };
   const getLabel = (entity, labelKey, labelKeyFromProperties) => {
     if (labelKeyFromProperties && entity.data[labelKeyFromProperties]) {
-      return entity.data[labelKeyFromProperties];
+      if (entity.data) {
+        return entity.data[labelKeyFromProperties];
+      }
+      if (entity.properties) {
+        return entity.properties[labelKeyFromProperties];
+      }
     }
     if (labelKey) {
       return entity[labelKey];

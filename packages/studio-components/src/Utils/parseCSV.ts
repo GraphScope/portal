@@ -117,6 +117,8 @@ export interface IMeta {
     type: 'Vertex' | 'Edge';
     sourceField?: string;
     targetField?: string;
+    nodeLabelField?: string;
+    edgeLabelField?: string;
   };
 }
 export interface ParsedFile {
