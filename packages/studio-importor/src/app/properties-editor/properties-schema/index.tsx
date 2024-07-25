@@ -52,35 +52,40 @@ const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
       : null;
   /** groot 保存节点或边*/
   const handleSubmit = async () => {
+    let response: boolean = true;
     if (type === 'nodes') {
-      await createVertexTypeOrEdgeType(type, { label, properties });
+      response = await createVertexTypeOrEdgeType(type, { label, properties });
       /** 置灰不可编辑，转化为正常查询数据 */
-      await updateStore(draft => {
-        draft.nodes = draft.nodes.map(item => {
-          if (item.id === id) {
-            return {
-              ...item,
-              data: { ...item.data, isNewNodeOrEdge: false },
-            };
-          }
-          return item;
+      if (response) {
+        updateStore(draft => {
+          draft.nodes = draft.nodes.map(item => {
+            if (item.id === id) {
+              return {
+                ...item,
+                data: { ...item.data, isNewNodeOrEdge: false },
+              };
+            }
+            return item;
+          });
         });
-      });
+      }
     }
     if (type === 'edges') {
-      await createVertexTypeOrEdgeType(type, { nodes, label, source, target, properties });
+      response = await createVertexTypeOrEdgeType(type, { nodes, label, source, target, properties });
       /** 置灰不可编辑，转化为正常查询数据 */
-      await updateStore(draft => {
-        draft.edges = draft.edges.map(item => {
-          if (item.id === id) {
-            return {
-              ...item,
-              data: { ...item.data, isNewNodeOrEdge: false },
-            };
-          }
-          return item;
+      if (response) {
+        updateStore(draft => {
+          draft.edges = draft.edges.map(item => {
+            if (item.id === id) {
+              return {
+                ...item,
+                data: { ...item.data, isNewNodeOrEdge: false },
+              };
+            }
+            return item;
+          });
         });
-      });
+      }
     }
   };
   /** groot 删除节点或边*/

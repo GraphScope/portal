@@ -134,12 +134,13 @@ export const createVertexTypeOrEdgeType = async (
   params: { nodes?: any; label: string; source?: string; target?: string; properties: any },
 ) => {
   const graph_id = getSearchParams('graph_id') || '';
-
+  let response: boolean = false;
   if (type === 'nodes') {
     const vertexType = transformGrootCreateVertexToOptions(params);
     try {
       const res = await GraphApiFactory(undefined, location.origin).createVertexType(graph_id, vertexType);
       message.success(res.data);
+      response = true;
     } catch (error) {
       message.error(error.response.data);
     }
@@ -150,6 +151,7 @@ export const createVertexTypeOrEdgeType = async (
     try {
       const res = await GraphApiFactory(undefined, location.origin).createEdgeType(graph_id, edgeType);
       message.success(res.data);
+      response = true;
     } catch (error) {
       message.error(error.response.data);
     }
