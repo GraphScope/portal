@@ -62,7 +62,7 @@ export const transform = (data): { nodes: NodeData[]; edges: EdgeData[] } => {
 
 const Canvas: React.FunctionComponent<ICanvasProps> = props => {
   const { store, updateStore } = useContext();
-  const { data, render, nodeStyle } = store;
+  const { data, render, nodeStyle, edgeStyle } = store;
 
   const onInit = (graph, emitter) => {
     updateStore(draft => {
@@ -75,6 +75,7 @@ const Canvas: React.FunctionComponent<ICanvasProps> = props => {
     <div style={{ width: '100%', height: '100%' }}>
       <Graph
         nodeStyle={nodeStyle}
+        edgeStyle={edgeStyle}
         style={{ width: '100%', height: '100%' }}
         //@ts-ignore
         data={data}

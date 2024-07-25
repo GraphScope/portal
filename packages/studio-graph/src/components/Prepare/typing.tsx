@@ -9,7 +9,7 @@ export interface ISchema {
   }[];
 }
 
-export interface ConfigItem {
+export interface StyleConfig {
   /** 类型 */
   label: string;
   /** 数量统计 */

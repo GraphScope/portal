@@ -1,9 +1,9 @@
 import React from 'react';
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
-
 import { Utils, useMultipleInstance } from '@graphscope/studio-components';
-import type { Emitter, Graph } from '../graph/types';
+import type { StyleConfig, Emitter, Graph } from './typing';
+
 export type IStore = {
   data: {
     nodes: any[];
@@ -13,7 +13,8 @@ export type IStore = {
   isReady: boolean;
   graph: Graph;
   emitter: null | Emitter;
-  nodeStyle: any;
+  nodeStyle: Record<string, StyleConfig>;
+  edgeStyle: Record<string, StyleConfig>;
   graphId: string;
   schema: any;
 };
@@ -28,6 +29,7 @@ export const initialStore: IStore = {
   isReady: false,
   emitter: null,
   nodeStyle: {},
+  edgeStyle: {},
   graphId: '',
   schema: {
     nodes: [],

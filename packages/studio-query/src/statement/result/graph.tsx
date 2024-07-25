@@ -51,7 +51,7 @@ const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
   return (
     <div style={{ width: '100%' }}>
       {/* <Graph data={data} schemaData={graphSchema} schemaId={graphId} /> */}
-      <QueryGraph data={data} schema={graphSchema} schemaId={graphId} />
+      <QueryGraph data={data} schema={graphSchema} graphId={graphId} />
     </div>
   );
 };

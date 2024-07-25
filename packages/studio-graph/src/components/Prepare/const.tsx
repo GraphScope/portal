@@ -14,13 +14,15 @@ export const colors: string[] = [
   '#848484',
   '#D9D9D9',
 ];
+
+//  这里是size的ratio
 export const sizes: number[] = Array.from({
   length: 10,
 }).map((_item, index) => {
-  return (index + 3) * 6;
+  return 0.5 * index + 0.1;
 });
 export const widths: number[] = Array.from({
   length: 10,
 }).map((_item, index) => {
-  return (index + 1) * 0.5;
+  return 0.5 * index + 0.1;
 });

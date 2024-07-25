@@ -4,11 +4,13 @@ import { Button } from 'antd';
 import { ImportFiles, Utils } from '@graphscope/studio-components';
 import { useContext } from '../../hooks/useContext';
 import { uuid } from 'uuidv4';
+import { getStyleConfig } from '../Prepare/utils';
 
 export interface IImportFromCSVProps {}
 
 const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
-  const { updateStore } = useContext();
+  const { updateStore, store } = useContext();
+  const { graphId } = store;
 
   const onSubmit = params => {
     const { files } = params;
@@ -105,13 +107,17 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
       edges: [...edgeSchemas.values()],
     };
     console.log('schema', schema);
+    const id = graphId || uuid();
+    const style = getStyleConfig(schema, id);
     updateStore(draft => {
       draft.data = {
         nodes,
         edges,
       };
-      draft.graphId = uuid();
+      draft.graphId = id;
       draft.schema = schema;
+      draft.nodeStyle = style.nodeStyle;
+      draft.edgeStyle = style.edgeStyle;
     });
   };
 

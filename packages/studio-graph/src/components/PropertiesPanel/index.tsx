@@ -4,11 +4,13 @@ import { FormattedMessage } from 'react-intl';
 const { Title } = Typography;
 import { useContext } from '../../hooks/useContext';
 import Legend from '../StyleSetting/legend';
+import { Utils } from '@graphscope/studio-components';
+import { BgColorsOutlined } from '@ant-design/icons';
 export interface IPropertiesPanelProps {}
 
 const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props => {
   const { store, updateStore } = useContext();
-  const { emitter } = store;
+  const { emitter, nodeStyle } = store;
   const [data, setData] = React.useState<{
     id: string;
     properties: Record<string, any>;
@@ -34,12 +36,19 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
   const onChange = val => {
     const { properties, ...params } = val;
     updateStore(draft => {
-      draft.nodeStyle = {
+      const newNodeStyle = {
         ...draft.nodeStyle,
         [id]: params,
       };
+      draft.nodeStyle = newNodeStyle;
+      Utils.storage.set(`GRAPH_${store.graphId}_STYLE`, {
+        nodeStyle: newNodeStyle,
+        edgeStyle: { ...draft.edgeStyle },
+      });
     });
   };
+  const style = nodeStyle[id] || nodeStyle[label];
+  console.log('style', style);
 
   return (
     <div>
@@ -47,7 +56,15 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
         <Title level={5} style={{ margin: '0px' }}>
           <FormattedMessage id="Vertex Properties" />
         </Title>
-        <Legend caption="id" properties={properties} label={label} color="red" type="node" onChange={onChange} />
+
+        <Legend
+          // style
+          {...style}
+          label={label}
+          type="node"
+          properties={properties}
+          onChange={onChange}
+        />
       </Flex>
 
       <table

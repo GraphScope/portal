@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React, { memo } from 'react';
 import { useContext } from '../../hooks/useContext';
-
+import { getStyleConfig } from './utils';
 interface IPrepareProps {
   data: any;
   schema: any;
@@ -9,17 +9,22 @@ interface IPrepareProps {
 
 const Prepare: React.FunctionComponent<IPrepareProps> = props => {
   const { data, schema, graphId } = props;
+
   const { updateStore } = useContext();
   React.useEffect(() => {
-    if (data && graphId) {
+    if (data) {
+      const style = getStyleConfig(schema, graphId);
+      console.log('Prepare >>>>>>', style);
       updateStore(draft => {
         draft.data = data;
         draft.schema = schema;
         draft.graphId = graphId;
+        draft.nodeStyle = style.nodeStyle;
+        draft.edgeStyle = style.edgeStyle;
       });
     }
-  }, [data]);
+  }, [data, schema, graphId]);
   return null;
 };
 
-export default Prepare;
+export default memo(Prepare);

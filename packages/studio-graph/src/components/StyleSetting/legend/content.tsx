@@ -16,6 +16,8 @@ export interface ILegnedOption {
   size: number;
   /** 文本映射字段 */
   caption: string;
+  /** 标识是节点还是边 */
+  type: 'node' | 'edge';
 }
 
 export type ILengendContentProps = ILegnedOption & {
@@ -37,25 +39,26 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
   const { color, size, caption, properties, label, onChange, type } = props;
   const { token } = useToken();
 
-  const handleChange = (type, item) => {
+  const handleChange = (key, value) => {
     onChange &&
       onChange({
+        type,
         label,
         color,
         size,
         caption,
         properties,
-        [type]: item,
+        [key]: value,
       });
   };
   const activeStyle = `2px solid ${token.colorPrimary}`;
   return (
-    <div>
+    <div style={{ maxWidth: '380px', overflow: 'hidden' }}>
       <Flex gap={12} style={{ padding: '6px 0px' }}>
-        <Typography.Text>
+        <Typography.Text style={{ flexShrink: 0 }}>
           <FormattedMessage id="Color" />
         </Typography.Text>
-        <Space>
+        <Space wrap>
           {colors.map(item => {
             const isActive = color == item;
             return (
@@ -75,20 +78,25 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
       </Flex>
       {type === 'node' && (
         <Flex gap={12} style={{ padding: '6px 0px' }}>
-          <Typography.Text>
+          <Typography.Text style={{ flexShrink: 0 }}>
             <FormattedMessage id="Size" />
           </Typography.Text>
-          <Space size={8}>
+          <Space size={8} wrap>
             {sizes.map(item => {
               const isActive = size == item;
+              const nodeRelSize = 4;
+              const padAmount = 2;
+
+              const R = Math.sqrt(Math.max(0, item)) * nodeRelSize + padAmount;
+              console.log('R', R);
               return (
                 <span
                   key={item}
                   onClick={() => handleChange('size', item)}
                   style={{
                     ...styles.color,
-                    width: `${item / 3}px`,
-                    height: `${item / 3}px`,
+                    width: `${2 * R}px`,
+                    height: `${2 * R}px`,
                     background: '#ddd',
                     boxSizing: 'border-box',
                     border: isActive ? activeStyle : 'none',
@@ -101,10 +109,10 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
       )}
       {type === 'edge' && (
         <Flex gap={12} style={{ padding: '6px 0px' }}>
-          <Typography.Text>
+          <Typography.Text style={{ flexShrink: 0 }}>
             <FormattedMessage id="LineWidth" />
           </Typography.Text>
-          <Space>
+          <Space wrap>
             {widths.map(item => {
               const isActive = size == item;
               return (
@@ -127,10 +135,10 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
         </Flex>
       )}
       <Flex gap={12} style={{ padding: '6px 0px' }}>
-        <Typography.Text>
+        <Typography.Text style={{ flexShrink: 0 }}>
           <FormattedMessage id="Caption" />
         </Typography.Text>
-        <Space>
+        <Space wrap>
           {Object.keys(properties)?.map(item => {
             const isActive = caption == item;
             return (

@@ -15,7 +15,10 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
 
   return (
     <Popover trigger="click" placement="left" content={<LengendContent {...props} />}>
-      <Tag style={{ borderRadius: '8px', backgroundColor: color, cursor: 'pointer' }} bordered={false}>
+      <Tag
+        style={{ borderRadius: '8px', backgroundColor: color, cursor: 'pointer', minWidth: '60px', minHeight: '22px' }}
+        bordered={false}
+      >
         {text}
       </Tag>
     </Popover>
