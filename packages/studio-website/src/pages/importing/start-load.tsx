@@ -13,6 +13,8 @@ export type FieldType = {
   header_row: boolean;
   quoting?: boolean;
   quote_char?: string;
+  repeat?: 'once' | 'day' | 'week';
+  schedule?: string;
 };
 type ILeftSide = {
   graphId: string;
@@ -82,6 +84,8 @@ const StartLoad: React.FC<ILeftSide> = props => {
       import_option: 'overwrite',
       header_row: true,
       quoting: false,
+      repeat: '',
+      schedule: '',
     });
   }, []);
 

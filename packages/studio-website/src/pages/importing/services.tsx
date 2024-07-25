@@ -24,11 +24,7 @@ export const bindDatasourceInBatch = async (graph_id: string, options: any) => {
   return await DataSourceApiFactory(undefined, location.origin).bindDatasourceInBatch(graph_id, schema);
 };
 /** 数据绑定 dataMap(nodes/edges集合)*/
-export const submitDataloadingJob = async (
-  graph_id: string,
-  graphSchema: any,
-  loadConfig: FieldType & { repeat: 'once' | 'day' | 'week'; schedule: string },
-) => {
+export const submitDataloadingJob = async (graph_id: string, graphSchema: any, loadConfig: FieldType) => {
   let NODE_LABEL_MAP: any = {};
   const schema = {
     vertices: graphSchema.nodes.map((item: any) => {
