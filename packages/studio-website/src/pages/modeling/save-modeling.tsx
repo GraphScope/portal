@@ -64,7 +64,6 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
         graphName: draftGraph.name,
       })
         .then((res: any) => {
-          debugger;
           if (res.status === 200) {
             _status = 'success';
             _message = `The graph model contains ${schema.nodes.length} types of nodes and ${schema.edges.length} types of edges.`;
@@ -75,7 +74,6 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
           _message = res.message;
         })
         .catch(error => {
-          debugger;
           _status = 'error';
           _message = error.response.data;
         });
