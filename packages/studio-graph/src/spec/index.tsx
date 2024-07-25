@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { assets, spec, services, defaultCanvas, defaultContainer, ContainerSpec, AtomSpec } from './const';
 import { Utils } from '@graphscope/studio-components';
-import Canvas from '../app/canvas';
+import { Canvas } from '../components';
 interface ISdkProps {}
 
 export interface RuntimeAtom extends AtomSpec {

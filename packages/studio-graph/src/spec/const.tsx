@@ -1,6 +1,4 @@
-import { LoadCSV, ContextMenu, PropertiesPanel, BasicContainer, SwitchEngine } from '../components';
-
-import BasicCanvas from '../app/canvas';
+import { LoadCSV, ContextMenu, PropertiesPanel, BasicContainer, SwitchEngine, Canvas } from '../components';
 
 export interface AtomSpec {
   /** 原子组件唯一ID */
@@ -111,9 +109,9 @@ export const services = [
 ];
 
 export const defaultCanvas = {
-  id: 'BasicCanvas',
+  id: 'Canvas',
   props: {},
-  render: BasicCanvas,
+  render: Canvas,
 };
 export const defaultContainer = {
   id: 'BasicContainer',

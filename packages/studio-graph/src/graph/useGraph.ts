@@ -100,7 +100,10 @@ export default function useGraph<P extends GraphProps>(props: P) {
       if (!containerRef.current) return;
       const width = containerRef.current.offsetWidth;
       const height = containerRef.current.offsetHeight;
-      graphRef.current?.width(width).height(height);
+      if (graphRef.current) {
+        //@ts-ignore
+        graphRef.current.width(width).height(height);
+      }
     }, 200);
     const observer = new ResizeObserver(handleResize);
     observer.observe(containerRef.current);
