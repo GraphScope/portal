@@ -1,7 +1,15 @@
 import type { ISchema, StyleConfig } from './typing';
 import { useThemeContainer } from '@graphscope/studio-components';
 import { Utils } from '@graphscope/studio-components';
-import { colors, sizes, widths } from './const';
+import {
+  colors,
+  sizes,
+  widths,
+  DEFAULT_EDGE_COLOR,
+  DEFAULT_NODE_COLOR,
+  DEFAULT_EDGE_WIDTH,
+  DEFAULT_NODE_SISE,
+} from '../../graph/const';
 const { storage } = Utils;
 export function getStyleConfig(schema: ISchema, graphId: string) {
   const localStyle = storage.get<{ nodeStyle: StyleConfig; edgeStyle: StyleConfig }>(`GRAPH_${graphId}_STYLE`);
@@ -17,18 +25,18 @@ export function getStyleConfig(schema: ISchema, graphId: string) {
     const { label } = item;
     defaultStyle.nodeStyle[label] = {
       label: item.label,
-      size: sizes[3],
+      size: DEFAULT_NODE_SISE,
       color: colors[index],
-      caption: Object.keys(item.properties || {})[0] || 'id',
-      captionStatus: 'display',
+      caption: Object.keys(item.properties || {})[0] || '',
+      captionStatus: 'hidden',
     };
   });
   schema.edges.forEach((item, index) => {
     const { label } = item;
     defaultStyle.edgeStyle[label] = {
       label: item.label,
-      size: widths[1],
-      color: '#D9D9D9',
+      size: DEFAULT_EDGE_WIDTH,
+      color: DEFAULT_EDGE_COLOR,
       caption: Object.keys(item.properties || {})[0] || '',
       captionStatus: 'hidden',
     };

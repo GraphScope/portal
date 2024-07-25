@@ -61,7 +61,12 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
           if (!nodeSchemas.has(label)) {
             const nodeSchema = {
               label,
-              properties: Utils.extractProperties(node),
+              properties: Utils.extractProperties(node).reduce((acc, curr) => {
+                return {
+                  ...acc,
+                  [curr.name]: curr.type,
+                };
+              }, {}),
             };
             nodeSchemas.set(label, nodeSchema);
           }
@@ -95,7 +100,12 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
               label,
               source: sourceLabel,
               target: targetLabel,
-              properties: Utils.extractProperties(edge.data),
+              properties: Utils.extractProperties(edge.data).reduce((acc, curr) => {
+                return {
+                  ...acc,
+                  [curr.name]: curr.type,
+                };
+              }, {}),
             };
             edgeSchemas.set(label, edgeSchema);
           }

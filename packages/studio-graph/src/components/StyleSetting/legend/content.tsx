@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Flex, Typography, Space, Tag, theme, Radio } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { sizes, widths, colors } from '../../Prepare/const';
+import { sizes, widths, colors } from '../../../graph/const';
 const { useToken } = theme;
 export interface ILegnedOption {
   /** 属性 */
@@ -174,7 +174,6 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
           <Radio.Group
             value={captionStatus}
             onChange={e => {
-              console.log('e', e.target.value);
               handleChange('captionStatus', e.target.value);
             }}
           >

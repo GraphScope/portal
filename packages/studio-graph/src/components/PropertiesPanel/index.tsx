@@ -51,7 +51,7 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
     return () => {
       emitter?.off('node:click');
     };
-  }, [emitter]);
+  }, [emitter, dataMap]);
   if (!data) {
     return null;
   }

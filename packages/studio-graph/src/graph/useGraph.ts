@@ -72,11 +72,13 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .width(width)
         .height(height)
         .enableNodeDrag(false)
+        /** node */
         .nodeRelSize(BASIC_NODE_R)
         .nodeVal(node => handleStyle(node, nodeStyle).size)
-        .nodeLabel(node => handleStyle(node, nodeStyle).caption)
+        .nodeLabel((node: any) => node && node.properties && node.properties[handleStyle(node, nodeStyle).caption])
         .nodeColor(node => handleStyle(node, nodeStyle).color)
-        .linkLabel(edge => handleStyle(edge, edgeStyle, 'edge').caption)
+        /** edge */
+        .linkLabel((edge: any) => edge && edge.properties && edge.properties[handleStyle(edge, edgeStyle).caption])
         .linkWidth(edge => handleStyle(edge, edgeStyle, 'edge').width)
         .linkColor(edge => handleStyle(edge, edgeStyle, 'edge').color)
         .graphData(Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges }))
@@ -128,7 +130,7 @@ export default function useGraph<P extends GraphProps>(props: P) {
         (graph as ForceGraph3DInstance)
           .nodeLabel(node => handleStyle(node, nodeStyle).caption)
           .nodeColor(node => handleStyle(node, nodeStyle).color)
-          .nodeVal(node => handleStyle(node, nodeStyle).size);
+          .nodeLabel((node: any) => node && node.properties && node.properties[handleStyle(node, nodeStyle).caption]);
       }
     }
   }, [nodeStyle, nodeStatus]);
@@ -138,6 +140,7 @@ export default function useGraph<P extends GraphProps>(props: P) {
       const graph = graphRef.current;
       (graph as ForceGraphInstance)
         .linkColor(edge => handleStyle(edge, edgeStyle).color)
+
         .linkColor((edge: any) => {
           const { color } = handleStyle(edge, edgeStyle);
           const match = edgeStatus[edge.id];
@@ -146,7 +149,7 @@ export default function useGraph<P extends GraphProps>(props: P) {
           }
           return color;
         })
-        .linkLabel(edge => handleStyle(edge, edgeStyle).caption)
+        .linkLabel((edge: any) => edge && edge.properties && edge.properties[handleStyle(edge, edgeStyle).caption])
         .linkWidth((edge: any) => {
           const { size } = handleStyle(edge, edgeStyle);
           const match = edgeStatus[edge.id];
