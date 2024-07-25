@@ -12,7 +12,7 @@ import { useContext } from '../useContext';
 import { transformEdges } from '../elements';
 
 import { getBBox, createEdgeLabel, createNodeLabel } from '../utils';
-
+const { GS_ENGINE_TYPE } = window as unknown as { GS_ENGINE_TYPE: string };
 let timer: any = null;
 const useInteractive: any = () => {
   const { store, updateStore } = useContext();
@@ -22,13 +22,15 @@ const useInteractive: any = () => {
 
   const onConnectStart = useCallback((_, { nodeId }) => {
     connectingNodeId.current = nodeId;
-    if (!elementOptions.isConnectable) return;
+    /** groot 可以添加新节点或边 */
+    if (GS_ENGINE_TYPE === 'interactive' && !elementOptions.isConnectable) return;
   }, []);
 
   const onConnectEnd = useCallback(
     event => {
-      if (!connectingNodeId.current) return;
-      if (!elementOptions.isConnectable) return;
+      /** groot 可以添加新节点或边 */
+      if (GS_ENGINE_TYPE === 'interactive' && !connectingNodeId.current) return;
+      if (GS_ENGINE_TYPE === 'interactive' && !elementOptions.isConnectable) return;
 
       const targetIsPane = event.target.classList.contains('react-flow__pane');
 
@@ -49,7 +51,7 @@ const useInteractive: any = () => {
             y: newPosition.y - 50,
           },
           type: 'graph-node',
-          data: { label: createNodeLabel() },
+          data: { label: createNodeLabel(), isNewNodeOrEdge: true },
         };
 
         updateStore(draft => {
@@ -62,6 +64,7 @@ const useInteractive: any = () => {
             type: 'graph-edge',
             data: {
               label: createEdgeLabel(),
+              isNewNodeOrEdge: true,
             },
           });
         });
@@ -80,6 +83,7 @@ const useInteractive: any = () => {
                 id: edgeId,
                 data: {
                   label: edgeLabel,
+                  isNewNodeOrEdge: true,
                 },
                 source: connectingNodeId.current || '',
                 target: nodeid,

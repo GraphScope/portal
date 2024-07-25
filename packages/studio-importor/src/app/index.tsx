@@ -43,6 +43,8 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
     handleUploadFile,
     isSaveFiles,
     batchUploadFiles,
+    createVertexTypeOrEdgeType,
+    deleteVertexTypeOrEdgeType,
   } = props;
   const { store, updateStore } = useContext();
 
@@ -90,6 +92,8 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
             queryPrimitiveTypes={queryPrimitiveTypes}
             handleUploadFile={handleUploadFile}
             batchUploadFiles={batchUploadFiles}
+            createVertexTypeOrEdgeType={createVertexTypeOrEdgeType}
+            deleteVertexTypeOrEdgeType={deleteVertexTypeOrEdgeType}
           />
         }
         leftSideStyle={leftSideStyle}

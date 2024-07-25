@@ -9,13 +9,25 @@ import ValidateInfo from './properties-schema/validate-info';
 import ScrollContainer, { disableScroll } from './scroll-container';
 type IPropetiesEditorProps = Pick<
   ImportorProps,
-  'appMode' | 'handleUploadFile' | 'queryPrimitiveTypes' | 'batchUploadFiles'
+  | 'appMode'
+  | 'handleUploadFile'
+  | 'queryPrimitiveTypes'
+  | 'batchUploadFiles'
+  | 'createVertexTypeOrEdgeType'
+  | 'deleteVertexTypeOrEdgeType'
 >;
-
+const { GS_ENGINE_TYPE } = window as unknown as { GS_ENGINE_TYPE: string };
 const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props => {
   const { store, updateStore } = useContext();
   const { nodes, edges, currentType, currentId, elementOptions } = store;
-  const { appMode, handleUploadFile, queryPrimitiveTypes, batchUploadFiles } = props;
+  const {
+    appMode,
+    handleUploadFile,
+    queryPrimitiveTypes,
+    batchUploadFiles,
+    createVertexTypeOrEdgeType,
+    deleteVertexTypeOrEdgeType,
+  } = props;
   const ids = new Set();
   const itemRefs = [...nodes, ...edges].reduce((acc, curr) => {
     acc[curr.id] = { ref: React.createRef(), file: curr.data.label + '.csv' };
@@ -41,18 +53,24 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
 
   const nodes_items = nodes.map((item, index) => {
     const { id, data } = item;
-    const { label, properties = [], filelocation } = data || { label: id };
+    const { label, properties = [], filelocation, isNewNodeOrEdge = false } = data || { label: id };
     NODES_SCROLL_ITEMS[id] = { index: index };
+    /** groot 状态下是否可以编辑节点 */
+    const disabled = GS_ENGINE_TYPE === 'interactive' ? !elementOptions.isConnectable : !isNewNodeOrEdge;
     return {
       key: id,
       label: label,
       extra: (
-        <ValidateInfo
-          type="nodes"
-          filelocation={filelocation}
-          appMode={appMode}
-          properties={JSON.parse(JSON.stringify(properties))}
-        />
+        <>
+          {appMode === 'DATA_MODELING' && (
+            <ValidateInfo
+              type="nodes"
+              filelocation={filelocation}
+              appMode={appMode}
+              properties={JSON.parse(JSON.stringify(properties))}
+            />
+          )}
+        </>
       ),
       children: (
         <PropertiesSchema
@@ -62,25 +80,33 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
           queryPrimitiveTypes={queryPrimitiveTypes}
           handleUploadFile={handleUploadFile}
           appMode={appMode}
-          disabled={!elementOptions.isEditable}
+          disabled={disabled}
+          createVertexTypeOrEdgeType={createVertexTypeOrEdgeType}
+          deleteVertexTypeOrEdgeType={deleteVertexTypeOrEdgeType}
         />
       ),
     };
   });
   const edges_items = edges.map((item, index) => {
     const { id, data } = item;
-    const { label, properties = [], filelocation } = data || { label: id };
+    const { label, properties = [], filelocation, isNewNodeOrEdge = false } = data || { label: id };
     EDGES_SCROLL_ITEMS[id] = { index: index };
+    /** groot 状态下是否可以编辑边 */
+    const disabled = GS_ENGINE_TYPE === 'interactive' ? !elementOptions.isEditable : !isNewNodeOrEdge;
     return {
       key: id,
       label: label,
       extra: (
-        <ValidateInfo
-          type="edges"
-          filelocation={filelocation}
-          appMode={appMode}
-          properties={JSON.parse(JSON.stringify(properties))}
-        />
+        <>
+          {appMode === 'DATA_MODELING' && (
+            <ValidateInfo
+              type="edges"
+              filelocation={filelocation}
+              appMode={appMode}
+              properties={JSON.parse(JSON.stringify(properties))}
+            />
+          )}
+        </>
       ),
       children: (
         <PropertiesSchema
@@ -90,7 +116,9 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
           queryPrimitiveTypes={queryPrimitiveTypes}
           handleUploadFile={handleUploadFile}
           appMode={appMode}
-          disabled={!elementOptions.isEditable}
+          disabled={disabled}
+          createVertexTypeOrEdgeType={createVertexTypeOrEdgeType}
+          deleteVertexTypeOrEdgeType={deleteVertexTypeOrEdgeType}
         />
       ),
     };

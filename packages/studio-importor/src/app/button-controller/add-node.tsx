@@ -14,10 +14,11 @@ import { useContext } from '../useContext';
 let addNodeIndex = 0;
 const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
   const { style } = props;
+  const { GS_ENGINE_TYPE } = window as unknown as { GS_ENGINE_TYPE: string };
   const { setCenter } = useReactFlow();
   const { updateStore, store } = useContext();
   const { elementOptions } = store;
-  const disabled = !elementOptions.isConnectable;
+  const disabled = GS_ENGINE_TYPE === 'interactive' ? !elementOptions.isConnectable : false;
   const tooltipText = disabled ? (
     <FormattedMessage id="The current mode is preview only, and does not support creating new vertex" />
   ) : (
@@ -37,7 +38,7 @@ const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
           y,
         },
         type: 'graph-node',
-        data: { label },
+        data: { label, isNewNodeOrEdge: true },
       });
       setCenter(x + 100 / 2, y + 100 / 2, { duration: 600, zoom: 1 });
     });
@@ -45,13 +46,7 @@ const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
 
   return (
     <Tooltip title={tooltipText} placement="right">
-      <Button
-        disabled={!elementOptions.isConnectable}
-        onClick={handleAddVertex}
-        style={style}
-        type="text"
-        icon={<AddNodeIcon />}
-      ></Button>
+      <Button disabled={disabled} onClick={handleAddVertex} style={style} type="text" icon={<AddNodeIcon />}></Button>
     </Tooltip>
   );
 };

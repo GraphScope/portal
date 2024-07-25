@@ -2,7 +2,7 @@ import * as React from 'react';
 import ImportApp, { transSchemaToOptions } from '@graphscope/studio-importor';
 import { useContext } from '../../layouts/useContext';
 import { Toolbar } from '@graphscope/studio-components';
-import { getSchema } from './services';
+import { getSchema, createVertexTypeOrEdgeType, deleteVertexTypeOrEdgeType } from './services';
 import Save from './save-modeling';
 import SelectGraph from '@/layouts/select-graph';
 
@@ -26,6 +26,7 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
         schema = { vertex_types: [], edge_types: [] };
       }
     }
+
     return transSchemaToOptions(schema as any);
   };
 
@@ -37,6 +38,10 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
       appMode="DATA_MODELING"
       //@ts-ignore
       queryGraphSchema={queryGraphSchema}
+      /**创建节点或边 */
+      createVertexTypeOrEdgeType={createVertexTypeOrEdgeType}
+      /**删除节点或边 */
+      deleteVertexTypeOrEdgeType={deleteVertexTypeOrEdgeType}
       /** 属性下拉选项值 */
       queryPrimitiveTypes={() => {
         return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {

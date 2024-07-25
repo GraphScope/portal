@@ -14,12 +14,20 @@ interface IMappingProps {
     }>
   >;
 }
+interface IOptions {
+  value: string;
+  label: string;
+}
 const styles = {
   Select: {
     width: '200px',
   },
 };
 
+const OPTIONS: IOptions[] = [
+  { value: 'Vertex', label: 'Vertex' },
+  { value: 'Edge', label: 'Edge' },
+];
 const Mapping: React.FunctionComponent<IMappingProps> = props => {
   const { meta, updateState, id } = props;
   const { header, graphFields } = meta;
@@ -55,51 +63,28 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
       };
     });
   };
-  return (
-    <div>
-      <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
-        <Typography.Text>File type</Typography.Text>
+  const splitModule = (title, selectValue: string, options: IOptions[]) => {
+    const style = { marginBottom: title === 'Target field' ? '0px' : '12px' };
+    return (
+      <Flex align="center" justify="space-between" style={style}>
+        <Typography.Text>{title}</Typography.Text>
         <Select
-          value={type}
+          value={selectValue}
           style={styles.Select}
-          onChange={value => handleChangeType('type', value)}
-          options={[
-            { value: 'Vertex', label: 'Vertex' },
-            { value: 'Edge', label: 'Edge' },
-          ]}
+          onChange={value => handleChangeType(`${selectValue}`, value)}
+          options={options}
         />
       </Flex>
-      {type === 'Vertex' && (
-        <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
-          <Typography.Text>ID field</Typography.Text>
-          <Select
-            value={idField}
-            style={styles.Select}
-            onChange={value => handleChangeType('idField', value)}
-            options={dataFields}
-          />
-        </Flex>
-      )}
+    );
+  };
+  return (
+    <div>
+      {splitModule('File type', type, OPTIONS)}
+      {type === 'Vertex' && splitModule('ID field', idField, dataFields)}
       {type === 'Edge' && (
         <>
-          <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
-            <Typography.Text>Source field</Typography.Text>
-            <Select
-              value={sourceField}
-              style={styles.Select}
-              onChange={value => handleChangeType('sourceField', value)}
-              options={dataFields}
-            />
-          </Flex>
-          <Flex align="center" justify="space-between">
-            <Typography.Text>Target field</Typography.Text>
-            <Select
-              value={targetField}
-              style={styles.Select}
-              onChange={value => handleChangeType('targetField', value)}
-              options={dataFields}
-            />
-          </Flex>
+          {splitModule('Source field', sourceField as string, dataFields)}
+          {splitModule('Target field', targetField as string, dataFields)}
         </>
       )}
     </div>

@@ -91,4 +91,6 @@ export interface ImportorProps {
   children?: React.ReactNode;
   /** 是否保存原始文件 */
   isSaveFiles?: boolean;
+  createVertexTypeOrEdgeType: (type: string, params: any) => void;
+  deleteVertexTypeOrEdgeType: (type: string, label: string, source?: string, target?: string, nodes?: any) => boolean;
 }

@@ -134,17 +134,15 @@ export function transformGrootDeleteEdgeToOptions(schema: {
   return [...edgeMap.values()];
 }
 /** groot 创建点参数 */
-export function transformGrootCreateVertexToOptions(
-  schema: { label: string },
-  property?: { id: string; name: string; primaryKey: boolean; type: string }[],
-) {
-  const { label } = schema;
+export function transformGrootCreateVertexToOptions(params: {
+  label: string;
+  properties: { id: string; name: string; primaryKey: boolean; type: string }[];
+}) {
+  const { label, properties } = params;
   let primary_keys;
   const propertyMap = new Map();
-  //@ts-ignore
-  if (property.length) {
-    //@ts-ignore
-    property.forEach(item => {
+  if (properties.length) {
+    properties.forEach(item => {
       const { name, primaryKey, type } = item;
       if (primaryKey) {
         primary_keys = [name];
@@ -155,22 +153,26 @@ export function transformGrootCreateVertexToOptions(
       });
     });
   }
-  const properties = [...propertyMap.values()];
+  const property = [...propertyMap.values()];
   return {
     type_name: label,
     primary_keys,
-    properties,
+    properties: property,
   };
 }
 export function transformGrootCreateEdgeToOptions(
-  nodeList: { key: string; label: string }[],
+  nodeList: {
+    data: { label: string };
+    id: string;
+    label: string;
+  }[],
   schema: { label: string; source: string; target: string },
   property?: { id: string; name: string; primaryKey: boolean; type: string }[],
 ) {
   const nodeMap: Record<string, string> = {};
   nodeList.map(item => {
-    nodeMap[item.key] = item.label;
-    return item.label;
+    nodeMap[item.id] = item.data.label;
+    return item.data.label;
   });
   const { label, source: sourceID, target: targetID } = schema;
   const source = nodeMap[sourceID];
