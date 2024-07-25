@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Select, Form, Flex, Typography, notification, Space } from 'antd';
+import { Button, Select, Form, Flex, Typography, notification, DatePicker } from 'antd';
 import type { DataloadingJobConfigLoadingConfigImportOptionEnum } from '@graphscope/studio-server';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useContext as useImporting } from '@graphscope/studio-importor';
 import { submitDataloadingJob } from './services';
 import { history } from 'umi';
+import dayjs from 'dayjs';
 export type FieldType = {
   type?: string;
   delimiter?: string;
@@ -39,7 +40,20 @@ const { Title, Text } = Typography;
 //     onClose: close,
 //   });
 // };
-
+const REPEATOPTIONS = [
+  {
+    value: 'once',
+    label: 'No repeat',
+  },
+  {
+    value: 'day',
+    label: 'Every day on the same time',
+  },
+  {
+    value: 'week',
+    label: 'Every week on the same time',
+  },
+];
 const StartLoad: React.FC<ILeftSide> = props => {
   const { graphId, onColse } = props;
   const [state, updateState] = useState<{
@@ -119,7 +133,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
 
   const handleClick = () => {
     const data = form.getFieldsValue();
-    onFinish(data);
+    onFinish({ ...data, schedule: dayjs(data.schedule).format('YYYY-MM-DD HH:mm:ss') });
   };
 
   return (
@@ -132,12 +146,12 @@ const StartLoad: React.FC<ILeftSide> = props => {
       </Text> */}
       <Form
         name="modal_type"
-        layout="vertical"
+        // layout="vertical"
         style={{ margin: '12px 12px 0px 0px' }}
-        labelCol={{ span: 8 }}
+        labelCol={{ span: 5 }}
         form={form}
       >
-        <Form.Item<FieldType> label="Type" name="type">
+        <Form.Item<FieldType> label="Type" name="type" style={{ marginBottom: '16px' }}>
           <Select
             allowClear
             options={[
@@ -146,7 +160,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
-        <Form.Item<FieldType> label="Delimiter" name="delimiter">
+        <Form.Item<FieldType> label="Delimiter" name="delimiter" style={{ marginBottom: '16px' }}>
           <Select
             allowClear
             options={[
@@ -159,7 +173,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
-        <Form.Item<FieldType> label="Header Row" name="header_row">
+        <Form.Item<FieldType> label="Header Row" name="header_row" style={{ marginBottom: '16px' }}>
           <Select
             allowClear
             options={[
@@ -168,7 +182,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
-        <Form.Item<FieldType> label="Import Option" name="import_option">
+        <Form.Item<FieldType> label="Import Option" name="import_option" style={{ marginBottom: '16px' }}>
           <Select
             allowClear
             options={[
@@ -177,7 +191,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
-        <Form.Item<FieldType> label="Quoting" name="quoting">
+        <Form.Item<FieldType> label="Quoting" name="quoting" style={{ marginBottom: '16px' }}>
           <Select
             allowClear
             options={[
@@ -186,7 +200,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
-        <Form.Item<FieldType> label="Quote char" name="quote_char">
+        <Form.Item<FieldType> label="Quote char" name="quote_char" style={{ marginBottom: '16px' }}>
           <Select
             allowClear
             options={[
@@ -195,7 +209,12 @@ const StartLoad: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
-
+        <Form.Item label={<FormattedMessage id="Date" />} name="schedule" style={{ marginBottom: '16px' }}>
+          <DatePicker placeholder=" " showTime style={{ width: '100%' }} />
+        </Form.Item>
+        <Form.Item label={<FormattedMessage id="Repeat" />} name="repeat" style={{ marginBottom: '16px' }}>
+          <Select options={REPEATOPTIONS} />
+        </Form.Item>
         <Flex justify="end" gap={12}>
           <Button style={{ width: '128px' }} type="primary" onClick={handleClick}>
             <FormattedMessage id="Load data" />
