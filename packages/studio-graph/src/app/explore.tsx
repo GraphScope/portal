@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import { Button } from 'antd';
 import { MultipleInstance, Section, SegmentedTabs, useSection, Icons, FullScreen } from '@graphscope/studio-components';
-import { Toolbar, SwitchEngine, PropertiesPanel, Canvas, StyleSetting, Prepare, LoadCSV } from '../components';
-import { useContext } from '../hooks/useContext';
+import { Toolbar, SwitchEngine, PropertiesPanel, Canvas, StyleSetting, Prepare, LoadCSV, ZoomFit } from '../components';
+
 import { Divider } from 'antd';
 
 interface QueryGraphProps {
@@ -15,7 +15,7 @@ const ToogleButton = () => {
   const { toggleRightSide } = useSection();
   return (
     <div>
-      <Button icon={<Icons.Sidebar />} onClick={() => toggleRightSide()} type="text" />
+      <Button icon={<Icons.Sidebar revert />} onClick={() => toggleRightSide()} type="text" />
     </div>
   );
 };
@@ -76,6 +76,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
             <ToogleButton />
             <Divider style={{ margin: '0px' }} />
             <SwitchEngine />
+            <ZoomFit />
             <FullScreen containerRef={containerRef} />
           </Toolbar>
         </Section>
