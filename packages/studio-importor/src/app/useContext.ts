@@ -41,6 +41,8 @@ export type IStore = {
   /** 是否保存原始上传的文件 */
   isSaveFiles?: boolean;
   csvFiles: File[];
+  /** groot 是否有查询数据 */
+  isQueryData: boolean;
 };
 
 export const initialStore: IStore = {
@@ -73,6 +75,7 @@ export const initialStore: IStore = {
     isConnectable: true,
   },
   csvFiles: [],
+  isQueryData: false,
 };
 export const StoreMap = new Map();
 //@ts-ignore

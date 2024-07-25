@@ -98,6 +98,7 @@ const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
         await updateStore(draft => {
           draft.nodes = JSON.parse(JSON.stringify(nodeList));
           draft.edges = JSON.parse(JSON.stringify(edgeList));
+          draft.isQueryData = !!nodeList.length;
         });
       }
     }

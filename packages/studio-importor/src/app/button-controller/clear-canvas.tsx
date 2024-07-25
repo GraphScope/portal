@@ -9,13 +9,14 @@ interface IAddNodeProps {
   style?: React.CSSProperties;
 }
 import { useContext } from '../useContext';
+const { GS_ENGINE_TYPE } = window as unknown as { GS_ENGINE_TYPE: string };
 
 const ClearCanvas: React.FunctionComponent<IAddNodeProps> = props => {
   const { style } = props;
 
   const { updateStore, store } = useContext();
-  const { elementOptions } = store;
-  const disabled = !elementOptions.isConnectable;
+  const { elementOptions, nodes } = store;
+  const disabled = GS_ENGINE_TYPE === 'interactive' ? !elementOptions.isConnectable : !!nodes.length;
   const tooltipText = disabled ? (
     <FormattedMessage id="The current mode is preview only, and does not support clearing the model" />
   ) : (

@@ -77,6 +77,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         draft.currentId = isEmpty ? '' : nodes[0].id;
         draft.currentType = 'nodes';
         draft.isSaveFiles = isSaveFiles;
+        draft.isQueryData = !!nodes.length;
       });
     })();
   }, []);

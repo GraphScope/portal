@@ -45,6 +45,8 @@ export const transform = (schemaData: ISchema): ISchemaOptions => {
         datatype: 'csv',
         csv_location: meta.name,
         graphFields: meta.graphFields,
+        /** 判断是否新建标识 */
+        isNewNodeOrEdge: true,
         properties: properties.map(p => {
           const { name, type } = p;
           const IS_PK = idField === name;
@@ -76,6 +78,8 @@ export const transform = (schemaData: ISchema): ISchemaOptions => {
         datatype: 'csv' as 'csv' | 'odps',
         csv_location: meta.name,
         graphFields: meta.graphFields,
+        /** 判断是否新建标识 */
+        isNewNodeOrEdge: true,
         properties: properties
           .map(p => {
             const { name, type } = p;

@@ -35,7 +35,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   const { store, updateStore } = useContext();
   const [form] = Form.useForm();
   const { store: modelingStore } = useModeling();
-  const { elementOptions, appMode, nodes, edges, csvFiles } = modelingStore;
+  const { elementOptions, appMode, nodes, edges, csvFiles, isQueryData } = modelingStore;
   const { draftGraph, draftId } = store;
 
   const { isLoading, open, status, schema } = state;
@@ -64,7 +64,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
         graphName: draftGraph.name,
       })
         .then((res: any) => {
-          if (res.status === 200) {
+          if (res.status === 200 || res === 'Import schema successfully') {
             _status = 'success';
             _message = `The graph model contains ${schema.nodes.length} types of nodes and ${schema.edges.length} types of edges.`;
 
@@ -77,8 +77,9 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
           _status = 'error';
           _message = error.response.data;
         });
-
-      await localforage.setItem(`GRAPH_SCHEMA_OPTIONS_${graph_id}`, Utils.fakeSnapshot(schema));
+      /** groot 接口缺陷，等后期后端完善 */
+      const id = Utils.getSearchParams('graph_id');
+      await localforage.setItem(`GRAPH_SCHEMA_OPTIONS_${graph_id ?? id}`, Utils.fakeSnapshot(schema));
       //@ts-ignore
       setState(preState => {
         return {
@@ -87,7 +88,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
           message: _message,
           schema: schema,
           //@ts-ignore
-          id: graph_id,
+          id: graph_id ?? id,
         };
       });
     }
@@ -151,7 +152,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   const canSave =
     GS_ENGINE_TYPE === 'interactive'
       ? nodes.length !== 0 && IS_DRAFT_GRAPH && validatePassed
-      : nodes.length !== 0 && !IS_DRAFT_GRAPH && validatePassed;
+      : !isQueryData && validatePassed;
   if (appMode === 'DATA_MODELING') {
     return (
       <>
