@@ -10,7 +10,7 @@ export interface IPropertiesPanelProps {}
 
 const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props => {
   const { store, updateStore } = useContext();
-  const { emitter, nodeStyle } = store;
+  const { emitter, nodeStyle, dataMap } = store;
   const [data, setData] = React.useState<{
     id: string;
     properties: Record<string, any>;
@@ -18,10 +18,34 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
   } | null>(null);
 
   React.useEffect(() => {
-    emitter?.on('node:click', node => {
-      console.log('PropertiesPanel node:click', node);
-      //@ts-ignore
-      setData(node);
+    emitter?.on('node:click', (node: any) => {
+      const { id } = node;
+      const { neighbors, links } = dataMap[id];
+      const slNodes = neighbors.reduce(
+        (acc, curr) => {
+          return {
+            ...acc,
+            [curr]: { hovering: true },
+          };
+        },
+        {
+          [id]: { selected: true },
+        },
+      );
+      const slEdges = links.reduce((acc, curr) => {
+        return {
+          ...acc,
+          [curr]: { selected: true },
+        };
+      }, {});
+      if (node) {
+        //@ts-ignore
+        setData(node);
+        updateStore(draft => {
+          draft.nodeStatus = slNodes;
+          draft.edgeStatus = slEdges;
+        });
+      }
     });
 
     return () => {
@@ -48,7 +72,6 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
     });
   };
   const style = nodeStyle[id] || nodeStyle[label];
-  console.log('style', style);
 
   return (
     <div>

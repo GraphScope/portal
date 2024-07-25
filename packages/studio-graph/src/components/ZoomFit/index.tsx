@@ -6,10 +6,13 @@ import { Icons } from '@graphscope/studio-components';
 export interface IZoomFitProps {}
 
 const ZoomFit: React.FunctionComponent<IZoomFitProps> = props => {
-  const { updateStore, store } = useContext();
-  const { graph } = store;
+  const { store } = useContext();
+  const { graph, data } = store;
   const handleClick = () => {
     graph?.zoomToFit(1000);
+    if (data && data.nodes && data.nodes[0]) {
+      console.log('data', data);
+    }
   };
   React.useEffect(() => {
     setTimeout(() => {

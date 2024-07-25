@@ -20,4 +20,12 @@ export interface StyleConfig {
   size: number;
   /** 文本映射字段 */
   caption: string;
+  /** 是否显示文字 */
+  captionStatus?: 'display' | 'hidden';
+}
+export interface StatusConfig {
+  /** 是否选中 */
+  selected?: boolean;
+  /** 是否悬停 */
+  hovering?: boolean;
 }

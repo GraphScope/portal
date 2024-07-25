@@ -14,7 +14,7 @@ const StyleSetting: React.FunctionComponent<IOverviewProps> = props => {
 
   const onChange = value => {
     console.log('value', value);
-    const { caption, color, label, size, type } = value;
+    const { caption, color, label, size, type, captionStatus } = value;
     updateStore(draft => {
       if (type === 'node') {
         const newNodeStyle = {
@@ -23,6 +23,7 @@ const StyleSetting: React.FunctionComponent<IOverviewProps> = props => {
             color,
             size,
             caption,
+            captionStatus,
           },
         };
         draft.nodeStyle = newNodeStyle;
@@ -39,6 +40,7 @@ const StyleSetting: React.FunctionComponent<IOverviewProps> = props => {
             color,
             size,
             caption,
+            captionStatus,
           },
         };
         draft.edgeStyle = newEdgeStyle;

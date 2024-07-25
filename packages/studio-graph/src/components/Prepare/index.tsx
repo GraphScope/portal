@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { useContext } from '../../hooks/useContext';
-import { getStyleConfig } from './utils';
+import { getStyleConfig, getDataMap } from './utils';
+import { Utils } from '@graphscope/studio-components';
 interface IPrepareProps {
   data: any;
   schema: any;
@@ -21,6 +22,7 @@ const Prepare: React.FunctionComponent<IPrepareProps> = props => {
         draft.graphId = graphId;
         draft.nodeStyle = style.nodeStyle;
         draft.edgeStyle = style.edgeStyle;
+        draft.dataMap = getDataMap(Utils.fakeSnapshot(data));
       });
     }
   }, [data, schema, graphId]);

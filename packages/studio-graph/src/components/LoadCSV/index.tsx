@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import { ImportFiles, Utils } from '@graphscope/studio-components';
 import { useContext } from '../../hooks/useContext';
 import { uuid } from 'uuidv4';
-import { getStyleConfig } from '../Prepare/utils';
+import { getStyleConfig, getDataMap } from '../Prepare/utils';
 
 export interface IImportFromCSVProps {}
 
@@ -118,6 +118,12 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
       draft.schema = schema;
       draft.nodeStyle = style.nodeStyle;
       draft.edgeStyle = style.edgeStyle;
+      draft.dataMap = getDataMap(
+        Utils.fakeSnapshot({
+          nodes,
+          edges,
+        }),
+      );
     });
   };
 

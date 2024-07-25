@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Flex, Typography, Space, Tag, theme } from 'antd';
+import { Flex, Typography, Space, Tag, theme, Radio } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { sizes, widths, colors } from '../../Prepare/const';
 const { useToken } = theme;
@@ -16,6 +16,8 @@ export interface ILegnedOption {
   size: number;
   /** 文本映射字段 */
   caption: string;
+  /** 是否隐藏文字 */
+  captionStatus?: 'hidden' | 'display';
   /** 标识是节点还是边 */
   type: 'node' | 'edge';
 }
@@ -36,8 +38,9 @@ const styles = {
 };
 
 const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
-  const { color, size, caption, properties, label, onChange, type } = props;
+  const { color, size, caption, properties, label, onChange, type, captionStatus } = props;
   const { token } = useToken();
+  console.log('captionStatus', captionStatus);
 
   const handleChange = (key, value) => {
     onChange &&
@@ -88,7 +91,7 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
               const padAmount = 2;
 
               const R = Math.sqrt(Math.max(0, item)) * nodeRelSize + padAmount;
-              console.log('R', R);
+
               return (
                 <span
                   key={item}
@@ -161,6 +164,23 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
               </span>
             );
           })}
+        </Space>
+      </Flex>
+      <Flex gap={12} style={{ padding: '6px 0px' }}>
+        <Typography.Text style={{ flexShrink: 0 }}>
+          <FormattedMessage id="Hidden Caption" />
+        </Typography.Text>
+        <Space wrap>
+          <Radio.Group
+            value={captionStatus}
+            onChange={e => {
+              console.log('e', e.target.value);
+              handleChange('captionStatus', e.target.value);
+            }}
+          >
+            <Radio value="hidden">hidden</Radio>
+            <Radio value="display">display</Radio>
+          </Radio.Group>
         </Space>
       </Flex>
     </div>
