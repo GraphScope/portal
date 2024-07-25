@@ -8,7 +8,7 @@ type GraphRef = any | null;
 const Graph = memo(
   forwardRef<GraphRef, PropsWithChildren<GraphProps>>((props, ref) => {
     const { style, children, ...restProps } = props;
-    const { graph, containerRef, isReady, emitter } = useGraph<GraphProps>(restProps);
+    const { graph, containerRef, isReady } = useGraph<GraphProps>(restProps);
     useImperativeHandle(ref, () => graph!, [isReady]);
     const containerStyle: CSSProperties = {
       height: 'inherit',
