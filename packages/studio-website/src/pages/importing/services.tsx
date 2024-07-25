@@ -29,7 +29,6 @@ export const submitDataloadingJob = async (
   graphSchema: any,
   loadConfig: FieldType & { repeat: 'once' | 'day' | 'week'; schedule: string },
 ) => {
-  debugger;
   let NODE_LABEL_MAP: any = {};
   const schema = {
     vertices: graphSchema.nodes.map((item: any) => {
