@@ -2,14 +2,12 @@ import React from 'react';
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 import { Utils, useMultipleInstance } from '@graphscope/studio-components';
-import type { StyleConfig, Emitter, Graph } from './typing';
+import type { StyleConfig, Emitter, Graph, GraphData } from './typing';
 import { StatusConfig } from '../components/Prepare/typing';
 
 export type IStore = {
-  data: {
-    nodes: any[];
-    edges: any[];
-  };
+  data: GraphData;
+  source: GraphData;
   dataMap: Record<
     string,
     {
@@ -34,6 +32,10 @@ export type IStore = {
 
 export const initialStore: IStore = {
   data: {
+    nodes: [],
+    edges: [],
+  },
+  source: {
     nodes: [],
     edges: [],
   },

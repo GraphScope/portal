@@ -115,11 +115,15 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
       nodes: [...nodeSchemas.values()],
       edges: [...edgeSchemas.values()],
     };
-    console.log('schema', schema);
+
     const id = graphId || uuid();
     const style = getStyleConfig(schema, id);
     updateStore(draft => {
       draft.data = {
+        nodes,
+        edges,
+      };
+      draft.source = {
         nodes,
         edges,
       };
