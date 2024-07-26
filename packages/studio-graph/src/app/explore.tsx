@@ -12,6 +12,7 @@ import {
   ZoomFit,
   ClearStatatus,
   SegmentedTabs,
+  SliderFilter,
 } from '../components';
 
 import { Divider } from 'antd';
@@ -52,6 +53,12 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       label: 'Style',
       value: 'Style',
       children: <StyleSetting />,
+    },
+    {
+      key: 'Filter',
+      label: 'Filter',
+      value: 'Filter',
+      children: <SliderFilter />,
     },
   ];
   return (

@@ -18,6 +18,7 @@ const Prepare: React.FunctionComponent<IPrepareProps> = props => {
       console.log('Prepare >>>>>>', style);
       updateStore(draft => {
         draft.data = data;
+        draft.source = data;
         draft.schema = schema;
         draft.graphId = graphId;
         draft.nodeStyle = style.nodeStyle;
