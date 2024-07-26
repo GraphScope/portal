@@ -35,7 +35,6 @@
     "@antv/g2": "5.1.13",
     "uuid": "^9.0.1",
     "dayjs": "^1.11.10",
-    "@antv/graphin": "latest",
     "valtio": "^1.12.1",
     "@graphscope/_test_gremlin_": "^0.1.2",
     "neo4j-driver": "^5.12.0",
