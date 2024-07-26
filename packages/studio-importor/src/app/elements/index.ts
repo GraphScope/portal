@@ -56,7 +56,6 @@ export function transformEdges(_edges: ISchemaEdge[], displayMode): ISchemaEdge[
   const edges = processEdges(_edges);
   return edges.map((item, index) => {
     const { id, source, target, data } = item;
-    console.log('edge', data);
     return {
       id: id || `${source}-${target}-${index}`,
       source,

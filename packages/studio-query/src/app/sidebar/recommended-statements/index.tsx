@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Tag, Typography, Flex } from 'antd';
+import { Tag, Typography } from 'antd';
 import { transGraphSchema } from '../../../statement/result/graph';
-import { getConfig } from '../../../graph/utils';
+import { getStyleConfig } from '@graphscope/studio-graph';
 import { useContext } from '../../context';
-const { Title, Text } = Typography;
+const { Title } = Typography;
 import Section from '../section';
 import { FormattedMessage } from 'react-intl';
 import { useThemeContainer } from '@graphscope/studio-components';
@@ -37,7 +37,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
   const { schemaData, schemaId } = props;
   const { updateStore } = useContext();
   const graphSchema = transGraphSchema(schemaData);
-  const configMap = getConfig(schemaData, schemaId);
+  const configMap = getStyleConfig(schemaData, schemaId);
   const { nodes, edges } = schemaData;
   const keys = getPropertyKeys(graphSchema);
   const { algorithm } = useThemeContainer();
@@ -67,7 +67,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
         </Title>
         {nodes.map(item => {
           const { label } = item;
-          const { color } = configMap.get(label) || { color: '#ddd' };
+          const { color } = configMap.nodeStyle[label];
           return (
             <Tag
               key={label}
@@ -86,7 +86,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
         </Title>
         {edges.map(item => {
           const { label } = item;
-          const { color } = configMap.get(label) || { color: '#ddd' };
+          const { color } = configMap.edgeStyle[label];
           return (
             <Tag
               key={label}

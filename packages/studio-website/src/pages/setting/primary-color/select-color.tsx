@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Space, theme } from 'antd';
-import { useThemeContainer } from '@graphscope/studio-components';
-const { useToken } = theme;
+import { Space } from 'antd';
 export type ISelectColorProps = {
   value: string;
+  onChange(value: string): void;
 };
 
 export const colors: string[] = [
@@ -28,15 +27,7 @@ const styles = {
 };
 
 const SelectColor: React.FunctionComponent<ISelectColorProps> = props => {
-  const { value } = props;
-  const { handleTheme } = useThemeContainer();
-  const { token } = useToken();
-  const { borderRadius } = token;
-  const activeStyle = `2px solid blue`;
-  /** 修改主题颜色 */
-  const handlePrimaryColor = (color: string) => {
-    handleTheme({ token: { colorPrimary: color, borderRadius } });
-  };
+  const { value, onChange } = props;
   return (
     <Space style={{ marginLeft: '16px' }}>
       {colors.map(color => {
@@ -45,13 +36,13 @@ const SelectColor: React.FunctionComponent<ISelectColorProps> = props => {
           <span
             key={color}
             onClick={() => {
-              handlePrimaryColor(color);
+              onChange(color);
             }}
             style={{
               ...styles.color,
               backgroundColor: color,
               boxSizing: 'border-box',
-              border: isActive ? activeStyle : 'none',
+              border: isActive ? '2px solid blue`' : 'none',
             }}
           ></span>
         );

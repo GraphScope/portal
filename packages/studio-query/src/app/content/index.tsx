@@ -1,4 +1,4 @@
-import React, { useState, memo, lazy, Suspense } from 'react';
+import React, { useState, memo, lazy, Suspense, useEffect } from 'react';
 // import Statement from '../../statement';
 const Statement = lazy(() => import('../../statement'));
 // import Header from './header';
@@ -7,6 +7,7 @@ import { Segmented, theme } from 'antd';
 import { useContext } from '../context';
 import type { IStatement, IStudioQueryProps } from '../context';
 import { PlayCircleOutlined } from '@ant-design/icons';
+import Welcome from './welcome';
 import Empty from './empty';
 interface IContentProps {
   createStatements: IStudioQueryProps['createStatements'];
@@ -28,7 +29,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
     displaySidebarPosition,
   } = props;
   const { store, updateStore } = useContext();
-  const { activeId, mode, statements, savedStatements, schemaData, graphName, language } = store;
+  const { activeId, mode, statements, savedStatements, schemaData, graphId, language } = store;
   const savedIds = savedStatements.map(item => item.id);
   const { token } = useToken();
 
@@ -44,8 +45,6 @@ const Content: React.FunctionComponent<IContentProps> = props => {
       draft.activeId = value;
     });
   };
-
-  React.useEffect(() => {}, []);
 
   const queryOptions = statements.map((item, index) => {
     return {
@@ -81,6 +80,12 @@ const Content: React.FunctionComponent<IContentProps> = props => {
     });
   };
   const isEmpty = statements.length === 0;
+  /** activeId !== undefined 或值不改变则不滚动*/
+  useEffect(() => {
+    if (activeId) {
+      document.getElementById('statements-layout')?.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [activeId]);
   return (
     <div
       style={{
@@ -102,14 +107,15 @@ const Content: React.FunctionComponent<IContentProps> = props => {
         </Suspense>
 
         {mode === 'tabs' && queryOptions.length !== 0 && (
-          <div style={{ padding: '8px 0px' }}>
+          <div style={{ overflowX: 'scroll', padding: '8px 0px' }}>
             <Segmented options={queryOptions} onChange={handleChangeTab} value={activeId} />
           </div>
         )}
       </div>
 
-      <div style={{ overflowY: 'scroll', flex: '1', position: 'relative' }}>
+      <div id="statements-layout" style={{ overflowY: 'scroll', flex: '1', position: 'relative' }}>
         {isEmpty && <Empty />}
+        <Welcome />
         {statements.map(item => {
           const { id, script, timestamp, language } = item;
           return (
@@ -129,7 +135,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
                   active={id === activeId}
                   id={id}
                   timestamp={timestamp}
-                  graphName={graphName}
+                  graphId={graphId}
                   schemaData={schemaData}
                   script={script}
                   onQuery={queryGraphData}

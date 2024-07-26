@@ -1,13 +1,14 @@
 import * as React from 'react';
-import ImportApp, { ISchemaOptions } from '@graphscope/studio-importor';
+import ImportApp, { ISchemaOptions, transMappingSchemaToOptions } from '@graphscope/studio-importor';
 import { queryPrimitiveTypes, uploadFile, getSchema, getDatasourceById } from './services';
 import { useContext } from '../../layouts/useContext';
-import { Toolbar } from '@graphscope/studio-components';
+import { Toolbar, Utils } from '@graphscope/studio-components';
 import StartImporting from './start-importing';
-import { transMappingSchemaToOptions } from './utils/import';
+
 import SelectGraph from '@/layouts/select-graph';
 import EmptyModelCase from './empty-model-case';
-import EmptyMappingCase from './empty-mapping-case';
+
+import localforage from 'localforage';
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
@@ -30,6 +31,25 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
     return { nodes: [], edges: [] };
   };
 
+  const getLocalFiles = async () => {
+    const schemaMapping = await getDatasourceById(graphId as string);
+    const graphSchema = await getSchema(graphId as string);
+    const options = transMappingSchemaToOptions(graphSchema as any, schemaMapping);
+    if ('vertex_mappings' in schemaMapping) {
+      const { vertex_mappings = [], edge_mappings = [] } = schemaMapping;
+      const emptyMapping = vertex_mappings.length === 0 && edge_mappings.length === 0;
+      if (emptyMapping) {
+        const localFiles = await localforage.getItem<File[]>('DRAFT_GRAPH_FILES');
+        return localFiles;
+      }
+    }
+  };
+
+  const batchUploadFiles = async () => {
+    const localFiles = getLocalFiles();
+    return localFiles;
+  };
+
   return (
     <ImportApp
       key={graphId}
@@ -41,17 +61,17 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
       handleUploadFile={uploadFile}
       /** 数据绑定 */
       GS_ENGINE_TYPE={GS_ENGINE_TYPE}
-      defaultRightStyles={{
-        collapsed: false,
-        width: 500,
+      defaultCollapsed={{
+        leftSide: true,
+        rightSide: false,
       }}
+      batchUploadFiles={batchUploadFiles}
     >
-      <Toolbar style={{ top: '12px', right: '74px', left: 'unset' }} direction="horizontal">
+      <Toolbar style={{ top: '12px', right: '124px', left: 'unset' }} direction="horizontal">
         <SelectGraph />
         <StartImporting />
       </Toolbar>
       <EmptyModelCase />
-      <EmptyMappingCase />
     </ImportApp>
   );
 };

@@ -71,18 +71,20 @@ export default {
   'Edit code': '编辑代码',
   'Plugin Type': '插件类型',
   'Create Plugin': '创建插件',
+  'Edit Plugin': '修改插件',
   Action: '操作',
   Extensions: '扩展插件',
   Edit: '编辑',
-  'Store Procedure': '存储过程',
+  'Plugin info': '插件信息',
+  'Stored Procedures': '存储过程',
   'Managing your own stored procedures or customized algorithms.': '管理扩展插件，包括自定义的存储过程和算法等。',
   'If you already have an algorithm plugin file, you can upload it here, which will help you quickly create a plugin.':
     '拖动文件到此区域进行上传以创建新的扩展插件。',
   'Click or drag file to this area to upload': '单击或拖动文件到此区域进行上传',
   'GraphScope provides an extension plugin mechanism, allowing you to flexibly create various types of plugins such as graph learning, store procedures, and graph analysis according to business needs.':
     'GraphScope提供了扩展插件机制，您可以根据业务需求灵活创建图学习、存储过程、图分析等多种类型的插件。',
-  'Your data may be passed to a third party (e.g., OpenAI) for AI processing. Consider the risks carefully when handling sensitive data.':
-    '您的数据可能会被传递给第三方（例如 OpenAI）进行 AI 处理。在处理敏感数据时，请仔细考虑风险。',
+  'Your can upload or simply drag and drop files pertinent to creating plugin statements.':
+    '您可以上传或简单地拖放与创建插件语句相关的文件。',
   'Expand its functionality or offer solutions that are finely tuned to specific needs.':
     '扩展其功能或提供针对特定需求进行微调的解决方案。',
   /** job */
@@ -141,6 +143,10 @@ export default {
   'Lighttime theme': '白天主题',
   Light: '白天',
   Dark: '黑夜',
+  'Sidebar placement': '设置侧边栏',
+  'Querying page sidebar placement': '查询页面侧边栏位置',
+  'Sidebar type': '侧边栏类型',
+  'Querying page sidebar style': '查询页面侧边栏样式',
   /** import data */
   Labels: '标签',
   'Data sources': '数据源',

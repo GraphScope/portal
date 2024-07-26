@@ -23,8 +23,6 @@ export type IStore<T> = T & {
   isReady: boolean;
   /** graph schema data */
   schemaData: any;
-  /** graph name */
-  graphName: string;
   /** graph id */
   graphId: string;
   // nav collapse
@@ -50,12 +48,17 @@ export type IStore<T> = T & {
   globalScript: string;
   autoRun: boolean;
   language: 'gremlin' | 'cypher';
+  welcome?: {
+    title: string;
+    description: string;
+  };
+  /** 默认的折叠状态 */
+  defaultCollapsed: boolean;
 };
 
 const initialStore: IStore<{}> = {
   /** isReady */
   isReady: false,
-  graphName: 'movie',
   graphId: '',
   activeNavbar: 'recommended',
   collapse: true,
@@ -81,6 +84,7 @@ const initialStore: IStore<{}> = {
   mode: 'flow',
   enableImmediateQuery: false,
   language: 'gremlin',
+  defaultCollapsed: true,
 };
 
 type ContextType<T> = {

@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
-import Graph from '../../graph';
+import React from 'react';
+import { QueryGraph } from '@graphscope/studio-graph';
 interface IGraphViewProps {
   data: any;
   schemaData: any;
-  graphName: string;
+  graphId: string;
 }
 export function transGraphSchema(schema) {
   return {
@@ -38,18 +38,12 @@ export function transGraphSchema(schema) {
 }
 
 const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
-  const { data, schemaData, graphName } = props;
+  const { data, schemaData, graphId } = props;
   const graphSchema = transGraphSchema(schemaData);
-
-  useEffect(() => {
-    return () => {
-      console.log('unmount....graph');
-    };
-  }, []);
 
   return (
     <div style={{ width: '100%' }}>
-      <Graph data={data} schemaData={graphSchema} schemaId={graphName} />
+      <QueryGraph data={data} schema={graphSchema} graphId={graphId} />
     </div>
   );
 };

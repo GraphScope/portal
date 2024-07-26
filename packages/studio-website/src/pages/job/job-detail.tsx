@@ -2,18 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { getJobById } from './service';
 import { Utils, useThemeContainer } from '@graphscope/studio-components';
 import Section from '@/components/section';
-const { getUrlParams } = Utils;
+const { getSearchParams } = Utils;
 
 const Detail: React.FunctionComponent = () => {
-  console.log(getUrlParams());
-
-  const { jobId } = getUrlParams() || '';
+  const jobId = getSearchParams('jobId') || '';
   const [detailData, setDetailData] = useState<string>('');
   const { jobDetailBorder, jobDetailColor } = useThemeContainer();
   /** 获取详情job */
   useEffect(() => {
     const fetchJobDetails = async () => {
       const response = await getJobById(jobId);
+      //@ts-ignore
       const { log } = response;
       setDetailData(log);
     };
@@ -37,7 +36,7 @@ const Detail: React.FunctionComponent = () => {
           title: 'Jobs',
         },
         {
-          title: 'ID',
+          title: jobId,
         },
       ]}
       desc={{ id: 'The jobid of the running state of the graph model is {jobId} verbose logs.', values: { jobId } }}

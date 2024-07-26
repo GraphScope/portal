@@ -77,6 +77,39 @@ export const download = (queryData: string, states: BlobPart) => {
   eleLink.click();
   document.body.removeChild(eleLink);
 };
+export const downloadImage = (dataUrl: string, name: string) => {
+  const a = document.createElement('a');
+  a.setAttribute('download', name);
+  a.setAttribute('href', dataUrl);
+  a.click();
+};
+
+export function createDownload(content: string | Blob, filename: string = 'untitled.txt') {
+  const eleLink = document.createElement('a');
+  eleLink.download = filename;
+  eleLink.style.display = 'none';
+  const blob = typeof content === 'string' ? new Blob([content]) : content;
+  eleLink.href = URL.createObjectURL(blob);
+  document.body.appendChild(eleLink);
+  eleLink.click();
+  document.body.removeChild(eleLink);
+  URL.revokeObjectURL(eleLink.href);
+}
+
+export function groupBy(array, fun) {
+  return array.reduce((result, currentItem) => {
+    // 获取自定义分组键值
+    const groupKey = fun(currentItem);
+
+    if (!result[groupKey]) {
+      result[groupKey] = [];
+    }
+
+    result[groupKey].push(currentItem);
+
+    return result;
+  }, {});
+}
 
 export { generatorSchemaByGraphData } from './schema';
 export { asyncFunctionWithWorker } from './work';
@@ -92,3 +125,4 @@ export {
 export { inferredGraphFields } from './inferredGraphFields';
 export { parseJSON } from './parseJSON';
 export { parseSQL } from './parseSQL';
+export { extractProperties } from './inferredSchema';

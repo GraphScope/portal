@@ -81,7 +81,8 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
     clear: false,
   });
 
-  const { globalScript, autoRun, language } = store;
+ 
+  const { globalScript, autoRun, language, graphId } = store;
 
   // const handleChange = value => {};
   const onChangeContent = () => {

@@ -3,6 +3,7 @@ import { Table, Space, Typography, Flex, Button, Tooltip, Segmented } from 'antd
 import { FileExcelOutlined, BarChartOutlined, TableOutlined } from '@ant-design/icons';
 import ChartView from './chart';
 import { useIntl } from 'react-intl';
+import { Utils } from '@graphscope/studio-components';
 interface ITableViewProps {
   data: any;
 }
@@ -100,6 +101,27 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
   }
 
   const [mode, setMode] = useState<'table' | 'chart'>('table');
+  const handleDownload = () => {
+    const _nodes = nodes.map(item => {
+      const { id, label, properties = {} } = item;
+      return {
+        id,
+        label,
+        ...properties,
+      };
+    });
+    const _edges = edges.map(item => {
+      const { id, label, source, target, properties = {} } = item;
+      return {
+        id,
+        label,
+        source,
+        target,
+        ...properties,
+      };
+    });
+    Utils.createDownload(JSON.stringify({ nodes: _nodes, edges: _edges }, null, 2), 'result.json');
+  };
 
   return (
     <div style={{ overflowX: 'scroll' }}>
@@ -117,7 +139,9 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
             ]}
           />
           <Tooltip title="download">
-            <Button icon={<FileExcelOutlined />} type="text"></Button>
+            <Button icon={<FileExcelOutlined />} type="text" onClick={handleDownload}>
+              {' '}
+            </Button>
           </Tooltip>
         </Space>
       </Flex>

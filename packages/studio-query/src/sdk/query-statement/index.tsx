@@ -30,7 +30,7 @@ const QueryStatement = props => {
     mode = 'flow',
     id = '',
     timestamp = Date.now(),
-    graphName = '',
+    graphId = '',
     schemaData = { nodes: [], edges: [] },
     script = 'Match (n) return n limit 10',
   } = props || {};
@@ -78,7 +78,7 @@ const QueryStatement = props => {
         active={true}
         id={id}
         timestamp={timestamp}
-        graphName={graphName}
+        graphId={graphId}
         schemaData={schemaData}
         script={script}
         onQuery={onQuery}

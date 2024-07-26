@@ -20,8 +20,8 @@
     "build:umd": "webpack  --mode production  -c ../../webpack.config.js --env path=/packages/studio-importor"
   },
   "dependencies": {
-    "@graphscope/studio-server": "workspace:*",
     "@graphscope/studio-components": "workspace:*",
+    "@graphscope/studio-server": "workspace:*",
     "d3-force": "latest",
     "dagre": "latest",
     "localforage": "latest",
@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@types/d3-force": "latest",
+    "html-to-image": "^1.11.11",
     "js-yaml": "^4.1.0",
     "uuid": "^9.0.1"
   },

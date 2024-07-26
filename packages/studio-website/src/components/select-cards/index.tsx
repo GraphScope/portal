@@ -6,8 +6,8 @@ import { FormattedMessage } from 'react-intl';
 
 export interface ICard {
   id: 'defaultAlgorithm' | 'darkAlgorithm';
-  title: string;
-  desc: string | React.ReactNode;
+  title?: string;
+  desc?: string | React.ReactNode;
   avatar?: string;
   disabled?: boolean;
 }
@@ -15,6 +15,7 @@ export interface ICard {
 interface ISelectCardsProps {
   items: ICard[];
   value: string;
+  style?: React.CSSProperties;
   onChange: (card: ICard) => void;
 }
 const iconStyle: React.CSSProperties = {
@@ -24,7 +25,7 @@ const iconStyle: React.CSSProperties = {
   fontSize: '20px',
 };
 const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
-  const { value, onChange, items } = props;
+  const { value, onChange, items, style } = props;
 
   const { useToken } = theme;
   const { token } = useToken();
@@ -35,6 +36,7 @@ const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
         {items.map(item => {
           const { id, title, desc, avatar, disabled } = item;
           const isChecked = id === value;
+
           console.log('isChecked', value, id);
           return (
             <Space>
@@ -68,7 +70,7 @@ const SelectCards: React.FunctionComponent<ISelectCardsProps> = props => {
                       <Text type="secondary">{desc}</Text>
                     </div>
                   </Flex>
-                  {isChecked && <CheckCircleTwoTone twoToneColor={token.colorPrimary} style={iconStyle} />}
+                  {isChecked && <CheckCircleTwoTone twoToneColor={token.colorPrimary} style={style || iconStyle} />}
                 </Card>
               </Col>
             </Space>

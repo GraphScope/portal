@@ -70,17 +70,16 @@ export interface ImportorProps {
   handleUploadFile: (file: File) => {
     file_path: string;
   };
+  /** 批量上传文件 */
+  batchUploadFiles?: () => Promise<File[]>;
   queryImportData?: () => void;
-  /** 默认样式相关 */
-  defaultLeftStyles?: {
-    collapsed: boolean;
-    width: number;
-  };
-  defaultRightStyles?: {
-    collapsed: boolean;
-    width: number;
-  };
-
+  /** 侧边栏的折叠情况 */
+  defaultCollapsed?: Partial<{
+    leftSide: boolean;
+    rightSide: boolean;
+  }>;
+  leftSideStyle?: React.CSSProperties;
+  rightSideStyle?: React.CSSProperties;
   elementOptions?: {
     /** 是否能够连线，包括拖拽产生节点 */
     isClickable: boolean;

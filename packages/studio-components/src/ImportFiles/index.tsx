@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useState, LegacyRef } from 'react';
 import UploadFile from './update-file';
 import { Button, Collapse, Space } from 'antd';
 import Mapping from './mapping';
@@ -23,10 +23,11 @@ export interface IImportFromFileProps {
     description: string | React.ReactNode;
   };
   children: (state: IState, setState: React.Dispatch<React.SetStateAction<IState>>) => React.ReactNode;
+  type?: 'json' | 'csv';
 }
 
-const ImportFromCSV: React.FunctionComponent<IImportFromFileProps> = props => {
-  const { upload, children, isSaveFiles } = props;
+const ImportFromCSV = forwardRef((props: IImportFromFileProps, ref: LegacyRef<HTMLDivElement>) => {
+  const { upload, children, isSaveFiles, type } = props;
   const [state, setState] = useState<IState>({
     files: [],
     loading: false,
@@ -60,7 +61,7 @@ const ImportFromCSV: React.FunctionComponent<IImportFromFileProps> = props => {
     return {
       key: index,
       label: <MappingHeader id={id} meta={meta} updateState={setState} />,
-      children: <Mapping id={id} meta={meta} updateState={setState} />,
+      children: <Mapping id={id} meta={meta} updateState={setState} type={type} />,
     };
   });
 
@@ -76,6 +77,7 @@ const ImportFromCSV: React.FunctionComponent<IImportFromFileProps> = props => {
         flexDirection: 'column',
         justifyContent: 'space-between',
       }}
+      ref={ref}
     >
       <div
         style={{
@@ -119,6 +121,6 @@ const ImportFromCSV: React.FunctionComponent<IImportFromFileProps> = props => {
       )}
     </div>
   );
-};
+});
 
 export default ImportFromCSV;

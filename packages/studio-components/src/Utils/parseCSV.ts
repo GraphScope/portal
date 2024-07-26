@@ -20,13 +20,21 @@ export const parseFile = async (file: File): Promise<string> => {
     };
   });
 };
-
+/**
+ *
+ * @param contents Windows 风格的换行符是 \r\n，而 Linux 和 macOS 使用的是 \n。
+ * @returns   // 统一将行结束符转换为 \n
+ */
+export function uniformedText(contents) {
+  return contents.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+}
 export function extractHeaderAndDelimiter(contents: string) {
   const delimiters = [',', ';', '\t', '|', ' ', ':'];
   let detectedDelimiter = '';
   let maxColumns = 0;
   let header: string[] = [];
-  const lines = contents.split('\n');
+
+  const lines = uniformedText(contents).split('\n');
 
   for (const delimiter of delimiters) {
     const columns = lines[0].split(delimiter);
@@ -36,9 +44,26 @@ export function extractHeaderAndDelimiter(contents: string) {
       header = columns;
     }
   }
+  let quoting = false;
+  const _header = header.map(col => {
+    quoting = col.startsWith('"') && col.endsWith('"');
+    let item;
+    if (quoting) {
+      try {
+        item = JSON.parse(col);
+      } catch (e) {
+        // 如果解析失败，则返回原始字符串
+        item = col;
+      }
+    } else {
+      item = col;
+    }
+    return item.trim();
+  });
 
   return {
-    header: header.map(col => col.trim()),
+    header: _header,
+    quoting,
     delimiter: detectedDelimiter,
   };
 }
@@ -92,6 +117,8 @@ export interface IMeta {
     type: 'Vertex' | 'Edge';
     sourceField?: string;
     targetField?: string;
+    nodeLabelField?: string;
+    edgeLabelField?: string;
   };
 }
 export interface ParsedFile {
@@ -121,7 +148,7 @@ export const parseCSV = async (file: File): Promise<ParsedFile> => {
  * @returns
  */
 export function covertCSV2JSON(contents: string, header: string[], delimiter: string) {
-  var _ref = contents.split('\n'),
+  var _ref = uniformedText(contents).split('\n'),
     _data = _ref.slice(1);
 
   var data = _data.map(function (line) {

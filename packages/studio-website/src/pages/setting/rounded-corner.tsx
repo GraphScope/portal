@@ -1,37 +1,32 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { Flex, Row, Col, InputNumber, Slider, Typography, theme } from 'antd';
+import { Col, InputNumber, Slider, theme } from 'antd';
 import { useThemeContainer } from '@graphscope/studio-components';
-const { Title, Text } = Typography;
+import SettingParcel from '@/components/setting-parcel';
 // type IRoundedCornerProps = {};
 const { useToken } = theme;
 const RoundedCorner: React.FunctionComponent = () => {
   const { token } = useToken();
-  const { borderRadius, colorPrimary } = token;
+  const { borderRadius } = token;
   const { handleTheme } = useThemeContainer();
 
-  const handleChange: (val: number) => void = val => {
-    handleTheme({ token: { colorPrimary, borderRadius: val } });
+  const handleBorderRadiusChange: (newBorderRadius: number | null) => void = newBorderRadius => {
+    handleTheme({ token: { ...token, borderRadius: newBorderRadius } });
   };
+
   return (
-    <Row>
-      <Col span={8}>
-        <Flex vertical>
-          <Title level={3} style={{ margin: '0px' }}>
-            <FormattedMessage id="Rounded corners" />
-          </Title>
-          <Text>
-            <FormattedMessage id="Corner radians" />
-          </Text>
-        </Flex>
-      </Col>
-      <Col span={4}>
-        <InputNumber min={1} addonAfter="px" value={borderRadius} onChange={e => handleChange(e)} />
-      </Col>
-      <Col span={8}>
-        <Slider min={1} onChange={handleChange} value={typeof borderRadius === 'number' ? borderRadius : 0} />
-      </Col>
-    </Row>
+    <SettingParcel
+      style={{ margin: '0px' }}
+      title="Rounded corners"
+      text="Corner radians"
+      leftModule={<InputNumber min={1} addonAfter="px" value={borderRadius} onChange={handleBorderRadiusChange} />}
+      rightModule={
+        <Slider
+          min={1}
+          onChange={handleBorderRadiusChange}
+          value={typeof borderRadius === 'number' ? borderRadius : 0}
+        />
+      }
+    />
   );
 };
 
