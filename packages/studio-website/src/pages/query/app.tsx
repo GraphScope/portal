@@ -18,7 +18,7 @@ const getPrefixParams = () => {
   const { GS_ENGINE_TYPE } = window;
   const language = GS_ENGINE_TYPE === 'groot' ? 'gremlin' : 'cypher';
   let globalScript = GS_ENGINE_TYPE === 'groot' ? 'g.V().limit 10' : 'Match (n) return n limit 10';
-  let welcome = null;
+  let welcome;
   let autoRun = false;
   let collapsed = true;
 
@@ -59,13 +59,12 @@ const QueryModule = () => {
   const { language, globalScript, welcome, autoRun, collapsed } = getPrefixParams();
   console.log('graphId', graphId);
   if (!graphId) {
-    return null;
+    return <EmptyModelCase />;
   }
   return (
     <>
       <EmptyModelCase />
       <StoppedServiceCase />
-
       <StudioQuery
         autoRun={autoRun}
         welcome={welcome}
