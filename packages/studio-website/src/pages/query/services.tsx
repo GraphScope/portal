@@ -88,9 +88,12 @@ export const queryStatements: IStudioQueryProps['queryStatements'] = async type 
       .then(res => {
         if (res.status === 200) {
           return res.data.map(item => {
+            const { name, params, description, ...others } = item;
+            const script = params.length > 0? `CALL ${name}("")`:`CALL ${name}()`
             return {
-              ...item,
-              script: '',
+              ...others,
+              name: description,
+              script,
             };
           });
         }

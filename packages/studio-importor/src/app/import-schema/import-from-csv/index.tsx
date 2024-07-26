@@ -20,6 +20,7 @@ const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
     updateState,
   ) => {
     const { files, csvFiles } = params;
+
     updateState(preState => {
       return {
         ...preState,

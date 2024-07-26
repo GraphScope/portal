@@ -72,7 +72,7 @@ export default {
   Extensions: 'Extensions',
   Edit: 'Edit' /** Not sure where to use, Edit or Editing */,
   'Plugin info': 'Plugin info',
-  'Store Procedure': 'Stored Procedure',
+  'Stored Procedures': 'Stored Procedure',
   'Managing your own stored procedures or customized algorithms.':
     'Managing your own stored procedures or customized algorithms.',
   'If you already have an algorithm plugin file, you can upload it here, which will help you quickly create a plugin.':

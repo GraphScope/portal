@@ -3,13 +3,15 @@ import CodeMirror from '@uiw/react-codemirror';
 import { useThemeContainer } from '@graphscope/studio-components';
 import { useEditorTheme } from '@/pages/utils';
 import UploadFiles from './upload-files';
+import type { FieldType } from './right-side';
 interface ILeftSide {
   editCode: string;
   isEdit: boolean;
-  onCodeMirrorChange(val: string): void;
+  onCodeMirrorChange(val: FieldType): void;
+  onChange(val: string): void;
 }
 const LeftSide: React.FC<ILeftSide> = props => {
-  const { editCode, isEdit, onCodeMirrorChange } = props;
+  const { editCode, isEdit, onCodeMirrorChange, onChange } = props;
   const { pluginBorder } = useThemeContainer();
   return (
     <>
@@ -24,7 +26,7 @@ const LeftSide: React.FC<ILeftSide> = props => {
         <CodeMirror
           height="320px"
           value={editCode}
-          onChange={e => onCodeMirrorChange(e)}
+          onChange={e => onChange(e)}
           theme={useEditorTheme(isEdit)}
           readOnly={isEdit}
         />

@@ -1,18 +1,14 @@
 import * as React from 'react';
-import { Space, Tooltip, message } from 'antd';
-import { CopyOutlined } from '@ant-design/icons';
-import copy from 'copy-to-clipboard';
-import Legend from '../legend';
 import { FormattedMessage } from 'react-intl';
-import { Typography, Flex } from 'antd';
-const { Title, Text } = Typography;
+import { Typography } from 'antd';
+const { Title } = Typography;
 interface DetialProps {
   label: string;
   data: any;
 }
 
 const Detial: React.FunctionComponent<DetialProps> = props => {
-  const { label, data } = props;
+  const { data } = props;
   return (
     <div>
       <Title level={5} style={{ margin: '6px 0px 12px 0px' }}>
@@ -21,6 +17,7 @@ const Detial: React.FunctionComponent<DetialProps> = props => {
 
       <table
         style={{
+          width: '100%',
           borderSpacing: '0px',
         }}
       >
@@ -29,7 +26,9 @@ const Detial: React.FunctionComponent<DetialProps> = props => {
             return (
               <tr style={{ backgroundColor: i % 2 == 1 ? '' : '#F7F6F6' }} key={key}>
                 <td style={{ minWidth: '80px', margin: '0px', padding: '4px' }}>{key}</td>
-                <td style={{ minWidth: '120px', fontSize: '14px', padding: '4px' }}>{data[key]}</td>
+                <td style={{ display: 'flex', flexWrap: 'wrap', minWidth: '120px', fontSize: '14px', padding: '4px' }}>
+                  {data[key]}
+                </td>
               </tr>
             );
           })}

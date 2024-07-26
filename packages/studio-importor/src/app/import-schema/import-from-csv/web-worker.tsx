@@ -86,11 +86,13 @@ export const getSchemaData = files => {
         nodeSchemas.set(label, nodeSchema);
       }
     });
+    console.log('nodes.edges', nodes, edges);
     edges.forEach(function (edge) {
       var label = getLabel(edge, defaultlabelKey, edgeLabelFromProperties);
       var currentSource = nodeMap.get(edge.source);
       var currentTarget = nodeMap.get(edge.target);
       if (!currentSource || !currentTarget) {
+        debugger;
         console.warn(
           '\u6570\u636E\u4E0D\u5408\u6CD5, \u627E\u4E0D\u5230 '.concat(
             !currentSource ? 'Source ID\uFF1A'.concat(edge.source) : 'Target ID\uFF1A'.concat(edge.target),
@@ -114,6 +116,14 @@ export const getSchemaData = files => {
       edges: Array.from(edgeSchemas.values()),
     };
   };
+  /**
+   *
+   * @param contents Windows 风格的换行符是 \r\n，而 Linux 和 macOS 使用的是 \n。
+   * @returns   // 统一将行结束符转换为 \n
+   */
+  function uniformedText(contents) {
+    return contents.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  }
 
   /**
    * 从csv文本中生成 JSON 数据
@@ -123,7 +133,7 @@ export const getSchemaData = files => {
    * @returns
    */
   function getJSONData(contents, header, delimiter) {
-    var _ref = contents.split('\n'),
+    var _ref = uniformedText(contents).split('\n'),
       _data = _ref.slice(1);
 
     var data = _data.map(function (line) {

@@ -1,5 +1,5 @@
-import { storage } from '../graph/utils';
-
+import { Utils } from '@graphscope/studio-components';
+const { storage } = Utils;
 type DebouncedFunction<T extends (...args: any[]) => any> = (...args: Parameters<T>) => void;
 
 export function debounce<T extends (...args: any[]) => any>(func: T, delay: number): DebouncedFunction<T> {

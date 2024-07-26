@@ -88,7 +88,7 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
   };
   const activeStyle = `2px solid ${token.colorPrimary}`;
   return (
-    <div>
+    <div style={{ width: '400px' }}>
       <Flex gap={12} style={{ padding: '6px 0px' }}>
         <Typography.Text>
           <FormattedMessage id="Color" />
@@ -165,10 +165,10 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
         </Flex>
       )}
       <Flex gap={12} style={{ padding: '6px 0px' }}>
-        <Typography.Text>
+        <Typography.Text style={{ minWidth: '55px' }}>
           <FormattedMessage id="Caption" />
         </Typography.Text>
-        <Space>
+        <Space size={[8, 8]} wrap>
           {Object.keys(properties)?.map(item => {
             const isActive = caption == item;
             return (

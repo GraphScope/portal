@@ -4,7 +4,7 @@ import { FileExcelFilled } from '@ant-design/icons';
 import { Utils, Icons } from '@graphscope/studio-components';
 import { useContext } from '../useContext';
 import { transOptionsToSchema } from '../utils/modeling';
-import { transMappingSchemaToOptions } from '../utils/importing';
+import { transformImportOptionsToSchemaMapping } from '../utils/importing';
 import yaml from 'js-yaml';
 import ImportFromYAML from '../import-schema/import-from-yaml';
 import type { ImportorProps } from '../typing';
@@ -37,14 +37,11 @@ const Content = () => {
     if (appMode === 'DATA_MODELING') {
       const content = transOptionsToSchema(Utils.fakeSnapshot({ nodes, edges }));
       const yamlFile = yaml.dump(content);
-      Utils.download('schema.yaml', yamlFile);
+      Utils.download('create-model.yaml', yamlFile);
       return;
     }
     if (appMode === 'DATA_IMPORTING') {
-      const content = transMappingSchemaToOptions({} as any, Utils.fakeSnapshot({ nodes, edges }), {
-        nodes,
-        edges,
-      } as any);
+      const content = transformImportOptionsToSchemaMapping( Utils.fakeSnapshot({ nodes, edges }));
       const yamlFile = yaml.dump(content);
       Utils.download('loading-config.yaml', yamlFile);
       return;
