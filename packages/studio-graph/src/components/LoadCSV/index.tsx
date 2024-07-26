@@ -22,9 +22,8 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
     const sortFiles = files.sort((a, b) => {
       return a.meta.graphFields.type === 'Vertex' ? -1 : 1;
     });
-    console.log('sortFiles', sortFiles, files);
+
     sortFiles.forEach(item => {
-      console.log('item', item);
       const { meta, contents } = item;
       const { graphFields, name } = meta;
       let data: any[] = [];
@@ -47,7 +46,7 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
       if (type === 'Vertex') {
         data.forEach(node => {
           const id = node[idField];
-          const label = node[nodeLabelField];
+          const label = node[nodeLabelField] || 'unknow';
           // generate graph data
           if (id) {
             NODE_MAP.set(id, label);
@@ -76,7 +75,7 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
         data.forEach(edge => {
           const source = edge[sourceField];
           const target = edge[targetField];
-          const label = edge[edgeLabelField];
+          const label = edge[edgeLabelField] || 'unknow';
           // check edge
           const sourceLabel = NODE_MAP.get(source);
           const targetLabel = NODE_MAP.get(target);

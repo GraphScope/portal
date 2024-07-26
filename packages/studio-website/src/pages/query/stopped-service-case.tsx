@@ -57,7 +57,6 @@ const StoppedServiceCase: React.FunctionComponent<IEmptyModelCaseProps> = props 
     });
   };
 
-  console.log('state', state.isLoading);
   if (graphId !== draftId) {
     return (
       <div>

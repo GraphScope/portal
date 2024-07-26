@@ -81,7 +81,6 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
     clear: false,
   });
 
- 
   const { globalScript, autoRun, language, graphId } = store;
 
   // const handleChange = value => {};
@@ -157,6 +156,12 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
             maxRows={25}
             minRows={minRows}
             clear={state.clear}
+            onInit={() => {
+              if (autoRun) {
+                console.log('>>>>>>>> autoRun >>>>>>>>>>>>>>>>>>>>>>', autoRun);
+                handleQuery();
+              }
+            }}
           />
         </Suspense>
         <div style={{ flexBasis: '48px', flexShrink: 0 }}>

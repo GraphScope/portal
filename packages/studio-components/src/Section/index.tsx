@@ -63,7 +63,6 @@ const getStyles = (props, collapsed: { leftSide: boolean; rightSide: boolean }, 
   };
 };
 const Section = forwardRef((props: ISectionProps, ref: LegacyRef<HTMLDivElement>) => {
-  console.log('ref', ref);
   const { rightSide, leftSide, children, splitBorder, defaultCollapsed, style, revert } = props;
   const { token } = useToken();
   const [state, setState] = useState({

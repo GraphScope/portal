@@ -64,8 +64,6 @@ const StyleSetting: React.FunctionComponent<IOverviewProps> = props => {
       style: edgeStyle[item.label],
     };
   });
-  console.log('Node', NODE_STYLES, schema);
-  const noSchema = schema.nodes.length === 0 && schema.edges.length === 0;
 
   return (
     <div>
