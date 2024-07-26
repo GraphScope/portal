@@ -13,6 +13,8 @@ interface IMappingProps {
       csvFiles: File[];
     }>
   >;
+
+  type?: 'json' | 'csv';
 }
 const styles = {
   Select: {
@@ -21,9 +23,9 @@ const styles = {
 };
 
 const Mapping: React.FunctionComponent<IMappingProps> = props => {
-  const { meta, updateState, id } = props;
+  const { meta, updateState, id, type: FileType = 'csv' } = props;
   const { header, graphFields } = meta;
-  const { idField, sourceField, targetField, type } = graphFields;
+  const { idField, sourceField, targetField, type, nodeLabelField = 'label', edgeLabelField = 'label' } = graphFields;
 
   const dataFields = header.map(item => {
     return {
@@ -70,15 +72,28 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
         />
       </Flex>
       {type === 'Vertex' && (
-        <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
-          <Typography.Text>ID field</Typography.Text>
-          <Select
-            value={idField}
-            style={styles.Select}
-            onChange={value => handleChangeType('idField', value)}
-            options={dataFields}
-          />
-        </Flex>
+        <>
+          <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
+            <Typography.Text>ID field</Typography.Text>
+            <Select
+              value={idField}
+              style={styles.Select}
+              onChange={value => handleChangeType('idField', value)}
+              options={dataFields}
+            />
+          </Flex>
+          {FileType === 'json' && (
+            <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
+              <Typography.Text>Label field</Typography.Text>
+              <Select
+                value={nodeLabelField}
+                style={styles.Select}
+                onChange={value => handleChangeType('nodeLabelField', value)}
+                options={dataFields}
+              />
+            </Flex>
+          )}
+        </>
       )}
       {type === 'Edge' && (
         <>
@@ -100,6 +115,17 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
               options={dataFields}
             />
           </Flex>
+          {FileType === 'json' && (
+            <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
+              <Typography.Text>Label field</Typography.Text>
+              <Select
+                value={edgeLabelField}
+                style={styles.Select}
+                onChange={value => handleChangeType('edgeLabelField', value)}
+                options={dataFields}
+              />
+            </Flex>
+          )}
         </>
       )}
     </div>
