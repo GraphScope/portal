@@ -158,6 +158,7 @@ export const createVertexTypeOrEdgeType = async (
       error && message.error(`${error}`);
     }
   }
+  return response;
 };
 export const queryPrimitiveTypes = () => {
   if (GS_ENGINE_TYPE === 'groot') {

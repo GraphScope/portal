@@ -39,8 +39,6 @@ export function transformGraphNodes(nodes, displayMode) {
       data: {
         ...data,
         ...others,
-        /** 判断是否新建标识 */
-        isNewNodeOrEdge: true,
       },
       type: displayMode === 'table' ? 'table-node' : 'graph-node',
       _fromEdge,
@@ -65,8 +63,6 @@ export function transformEdges(_edges: ISchemaEdge[], displayMode): ISchemaEdge[
       type: displayMode === 'table' ? 'smoothstep' : 'graph-edge',
       data: {
         ...data,
-        /** 判断是否新建标识 */
-        isNewNodeOrEdge: true,
       },
     };
   });

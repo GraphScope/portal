@@ -4,7 +4,7 @@ import type { UploadProps } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import yaml from 'js-yaml';
 
-import { transSchemaToOptions } from '../../utils/modeling';
+import { transSchemaToOptions, transSchemaToYAMLOptions } from '../../utils/modeling';
 import { transMappingSchemaToOptions } from '../../utils/importing';
 import { useContext } from '../../useContext';
 import { transformEdges, transformGraphNodes } from '../../elements';
@@ -46,7 +46,8 @@ const ImportFromYAML = (props: IProps) => {
         const jsonContent = hackContent(yaml.load(content));
         let schema;
         if (appMode === 'DATA_MODELING') {
-          schema = transSchemaToOptions(jsonContent);
+          /** YAML 特殊化处理，多处共用此方法，isNewNodeOrEdge只有yaml上传定义为true则是新建 */
+          schema = transSchemaToOptions(jsonContent, true);
         }
         if (appMode === 'DATA_IMPORTING') {
           schema = transMappingSchemaToOptions({} as any, jsonContent, { nodes, edges } as any);
