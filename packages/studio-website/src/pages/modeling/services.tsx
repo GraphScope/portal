@@ -1,4 +1,5 @@
 import { GraphApiFactory, UtilsApiFactory } from '@graphscope/studio-server';
+import type { CreateVertexType, CreateEdgeType } from '@graphscope/studio-server';
 import { transOptionsToSchema } from '@graphscope/studio-importor';
 import { cloneDeep } from 'lodash';
 import { message } from 'antd';
@@ -8,6 +9,7 @@ import {
   transformGrootCreateVertexToOptions,
   transformGrootCreateEdgeToOptions,
 } from '@/components/utils/schema-groot';
+
 const { getSearchParams } = Utils;
 const { GS_ENGINE_TYPE } = window;
 export const createGraph = async (graph_id: string, params: { graphName: string; nodes: any[]; edges: any[] }) => {
@@ -136,24 +138,24 @@ export const createVertexTypeOrEdgeType = async (
   const graph_id = getSearchParams('graph_id') || '';
   let response: boolean = false;
   if (type === 'nodes') {
-    const vertexType = transformGrootCreateVertexToOptions(params);
+    const vertexType = transformGrootCreateVertexToOptions(params) as CreateVertexType;
     try {
       const res = await GraphApiFactory(undefined, location.origin).createVertexType(graph_id, vertexType);
       message.success(res.data);
       response = true;
     } catch (error) {
-      message.error(error.response.data);
+      error && message.error(`${error}`);
     }
   }
   if (type === 'edges') {
     const { nodes, label, source = '', target = '', properties } = params;
-    const edgeType = transformGrootCreateEdgeToOptions(nodes, { label, source, target }, properties);
+    const edgeType = transformGrootCreateEdgeToOptions(nodes, { label, source, target }, properties) as CreateEdgeType;
     try {
       const res = await GraphApiFactory(undefined, location.origin).createEdgeType(graph_id, edgeType);
       message.success(res.data);
       response = true;
     } catch (error) {
-      message.error(error.response.data);
+      error && message.error(`${error}`);
     }
   }
 };

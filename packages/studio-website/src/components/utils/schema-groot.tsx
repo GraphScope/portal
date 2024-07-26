@@ -1,4 +1,3 @@
-import type { VertexType } from '@graphscope/studio-server';
 import { DeepRequired, TransformedSchema, Properties } from './schema';
 import { handleType } from './schema';
 export interface TransformedNode {
@@ -14,7 +13,15 @@ export interface TransformedNodeOrEdges {
   properties: { id: string; name: string; type: string; is_primary_key: boolean }[];
   relations: { src_label: string; dst_label: string }[];
 }
-
+interface VertexType {
+  label: string;
+  properties: {
+    id: number;
+    name: string;
+    type: string;
+    is_primary_key: boolean;
+  }[];
+}
 /**
  * groot
  * @param options 将store中的schema信息转化为引擎需要的schema
@@ -156,7 +163,7 @@ export function transformGrootCreateVertexToOptions(params: {
   const property = [...propertyMap.values()];
   return {
     type_name: label,
-    primary_keys,
+    primary_keys: primary_keys as unknown as string[],
     properties: property,
   };
 }
@@ -167,7 +174,7 @@ export function transformGrootCreateEdgeToOptions(
     label: string;
   }[],
   schema: { label: string; source: string; target: string },
-  property?: { id: string; name: string; primaryKey: boolean; type: string }[],
+  property?: Properties[],
 ) {
   const nodeMap: Record<string, string> = {};
   nodeList.map(item => {

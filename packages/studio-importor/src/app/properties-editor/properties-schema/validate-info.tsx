@@ -11,7 +11,7 @@ interface IExtraComponentProps {
   properties: Property[];
   filelocation?: string;
 }
-
+const { GS_ENGINE_TYPE } = window as unknown as { GS_ENGINE_TYPE: string };
 const ValidateInfo: React.FC<IExtraComponentProps> = ({
   appMode = 'DATA_IMPORTING',
   type,
@@ -63,7 +63,7 @@ export function validateProperties({
     }
 
     if (type === 'edges') {
-      if (properties.length > 1) {
+      if (GS_ENGINE_TYPE === 'interactive' && properties.length > 1) {
         return 'A edge can only have one property.';
       }
       if (!properties.every(({ type }) => type)) {
