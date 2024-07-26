@@ -65,6 +65,9 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .onNodeRightClick((node, evt) => {
           emitterRef.current?.emit('node:contextmenu', { node, evt });
         })
+        .onBackgroundClick(evt => {
+          emitterRef.current?.emit('canvas:click', evt);
+        })
         .cooldownTime(15000);
     }
     if (render === '3D') {
@@ -81,6 +84,7 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .linkLabel((edge: any) => edge && edge.properties && edge.properties[handleStyle(edge, edgeStyle).caption])
         .linkWidth(edge => handleStyle(edge, edgeStyle, 'edge').width)
         .linkColor(edge => handleStyle(edge, edgeStyle, 'edge').color)
+
         .graphData(Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges }))
         .cooldownTime(15000)
         .onNodeClick(node => {
@@ -88,6 +92,9 @@ export default function useGraph<P extends GraphProps>(props: P) {
         })
         .onNodeRightClick((node, evt) => {
           emitterRef.current?.emit('node:contextmenu', { node, evt });
+        })
+        .onBackgroundClick(evt => {
+          emitterRef.current?.emit('canvas:click', evt);
         });
     }
 

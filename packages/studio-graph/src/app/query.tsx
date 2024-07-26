@@ -1,7 +1,16 @@
 import React, { useRef } from 'react';
 import { Button } from 'antd';
 import { MultipleInstance, Section, SegmentedTabs, useSection, Icons, FullScreen } from '@graphscope/studio-components';
-import { Toolbar, SwitchEngine, PropertiesPanel, Canvas, StyleSetting, Prepare, ZoomFit } from '../components';
+import {
+  Toolbar,
+  SwitchEngine,
+  PropertiesPanel,
+  Canvas,
+  StyleSetting,
+  Prepare,
+  ZoomFit,
+  ClearStatatus,
+} from '../components';
 
 import { Divider } from 'antd';
 
@@ -62,6 +71,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
         >
           <Prepare data={data} schema={schema} graphId={graphId} />
           <Canvas />
+          <ClearStatatus />
           <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
             <ToogleButton />
             <Divider style={{ margin: '0px' }} />
