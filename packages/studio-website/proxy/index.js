@@ -49,4 +49,11 @@ app.get('*', (req, res) => {
 
 app.listen(port);
 
+console.log({
+  port,
+  coordinator,
+  cypher_endpoint,
+  gremlin_endpoint,
+});
+
 console.log('Service listen on', `http://127.0.0.1:${port}`);
