@@ -12,7 +12,7 @@ export type DeepRequired<T> = T extends (...args: any[]) => any
 /** YAML 特殊化处理，多处共用此方法，isNewNodeOrEdge只有yaml上传定义为true则是新建 */
 export function transSchemaToOptions(
   originalSchema: DeepRequired<GetGraphSchemaResponse>,
-  uploadYaml: boolean,
+  uploadYaml?: boolean,
 ): ISchemaOptions {
   const { vertex_types, edge_types } = originalSchema || { vertex_types: [], edge_types: [] };
   const idMappingforNode: Record<string, string> = {};

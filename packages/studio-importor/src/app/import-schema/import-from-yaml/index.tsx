@@ -4,7 +4,7 @@ import type { UploadProps } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import yaml from 'js-yaml';
 
-import { transSchemaToOptions, transSchemaToYAMLOptions } from '../../utils/modeling';
+import { transSchemaToOptions } from '../../utils/modeling';
 import { transMappingSchemaToOptions } from '../../utils/importing';
 import { useContext } from '../../useContext';
 import { transformEdges, transformGraphNodes } from '../../elements';
