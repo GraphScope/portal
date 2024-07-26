@@ -53,7 +53,7 @@ interface IEditor extends CypherEditorProps {
   onChange?: (val: string) => void;
 }
 const Editor = forwardRef((props: IEditor, editorRef: any) => {
-  const { value, language = 'cypher', maxRows = 10, minRows = 1, onChangeContent, clear } = props;
+  const { value, language = 'cypher', maxRows = 10, minRows = 1, onChangeContent, clear, onInit } = props;
   let codeEditor: editor.IStandaloneCodeEditor;
   const MAGIC_NUMBER = onChangeContent ? 0 : 1;
   const { algorithm } = useThemeContainer();
@@ -79,7 +79,6 @@ const Editor = forwardRef((props: IEditor, editorRef: any) => {
         scrollBeyondLastLine: false, // 不允许在内容的下方滚动
         scrollBeyondLastColumn: 0, // 不允许在内容的右侧滚动
       });
-
       editorRef.current.codeEditor = codeEditor;
       codeEditor.onDidChangeModelContent(() => {
         const contentHeight = codeEditor.getContentHeight();
@@ -92,6 +91,9 @@ const Editor = forwardRef((props: IEditor, editorRef: any) => {
           onChangeContent(lineCount, codeEditor);
         }
       });
+      if (onInit) {
+        onInit(editorRef.current);
+      }
     }
 
     return () => {
