@@ -79,7 +79,6 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
         <Title level={5} style={{ margin: '0px' }}>
           <FormattedMessage id="Vertex Properties" />
         </Title>
-
         <Legend
           // style
           {...style}

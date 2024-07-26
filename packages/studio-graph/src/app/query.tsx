@@ -1,6 +1,13 @@
 import React, { useRef } from 'react';
 import { Button } from 'antd';
-import { MultipleInstance, Section, SegmentedTabs, useSection, Icons, FullScreen } from '@graphscope/studio-components';
+import {
+  MultipleInstance,
+  Section,
+  //  SegmentedTabs,
+  useSection,
+  Icons,
+  FullScreen,
+} from '@graphscope/studio-components';
 import {
   Toolbar,
   SwitchEngine,
@@ -10,6 +17,7 @@ import {
   Prepare,
   ZoomFit,
   ClearStatatus,
+  SegmentedTabs,
 } from '../components';
 
 import { Divider } from 'antd';
@@ -39,6 +47,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       label: 'Info',
       value: 'Info',
       children: <PropertiesPanel />,
+      autoFoucs: true,
     },
     {
       key: 'Style',
@@ -59,7 +68,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       <MultipleInstance>
         <Section
           splitBorder
-          rightSide={<SegmentedTabs items={items} block />}
+          rightSide={<SegmentedTabs items={items} block nodeClickTab="Info" canvasClickTab="Style" />}
           autoResize={false}
           leftSideStyle={{
             width: '350px',

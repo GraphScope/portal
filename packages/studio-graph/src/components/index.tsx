@@ -11,3 +11,4 @@ export { default as StyleSetting } from './StyleSetting';
 export { default as Prepare } from './Prepare';
 export { default as ZoomFit } from './ZoomFit';
 export { default as ClearStatatus } from './ClearStatus';
+export { default as SegmentedTabs } from './SegmentedTabs';
