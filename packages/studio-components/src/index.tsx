@@ -14,6 +14,7 @@ export { default as ResultConfig } from './ResultConfig';
 export { default as ThemeProvider } from './Provider';
 export { default as ImportFiles } from './ImportFiles';
 export { default as SideTabs } from './SideTabs';
+export { default as ResizablePanels } from './ResizablePanel';
 export { default as FullScreen } from './FullScreen';
 /** all */
 export * as Utils from './Utils';
