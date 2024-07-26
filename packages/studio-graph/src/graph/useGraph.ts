@@ -142,31 +142,32 @@ export default function useGraph<P extends GraphProps>(props: P) {
     if (graphRef.current) {
       const graph = graphRef.current;
       (graph as ForceGraphInstance)
-        .linkColor(edge => handleStyle(edge, edgeStyle).color)
 
         .linkColor((edge: any) => {
-          const { color } = handleStyle(edge, edgeStyle);
+          const { color } = handleStyle(edge, edgeStyle, 'edge');
           const match = edgeStatus[edge.id];
           if (match && match.selected) {
             return SELECTED_EDGE_COLOR;
           }
           return color;
         })
-        .linkLabel((edge: any) => edge && edge.properties && edge.properties[handleStyle(edge, edgeStyle).caption])
+        .linkLabel(
+          (edge: any) => edge && edge.properties && edge.properties[handleStyle(edge, edgeStyle, 'edge').caption],
+        )
         .linkWidth((edge: any) => {
-          const { size } = handleStyle(edge, edgeStyle);
+          const { size } = handleStyle(edge, edgeStyle, 'edge');
           const match = edgeStatus[edge.id];
           if (match && match.selected) {
-            return size + 2;
+            return size + 1;
           }
           return size;
         })
         .linkDirectionalParticles(1)
         .linkDirectionalParticleWidth((edge: any) => {
-          const { size = 1 } = handleStyle(edge, edgeStyle);
+          const { size } = handleStyle(edge, edgeStyle, 'edge');
           const match = edgeStatus[edge.id];
           if (match && match.selected) {
-            return size + 2;
+            return size + 1;
           }
           return 0;
         });

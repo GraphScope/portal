@@ -49,30 +49,19 @@ export function getDataMap(data) {
   const dataMap = {};
   data.nodes.forEach(node => {
     const { id } = node;
-    dataMap[id] = node;
+    dataMap[id] = {
+      ...node,
+      neighbors: [],
+      links: [],
+    };
   });
   data.edges.forEach(edge => {
     const { source, target, id } = edge;
     dataMap[id] = edge;
     const sourceNode = dataMap[source];
     const targetNode = dataMap[target];
-
-    // 存储点的邻接点
-    if (!sourceNode.neighbors) {
-      sourceNode.neighbors = [];
-    }
-    if (!targetNode.neighbors) {
-      targetNode.neighbors = [];
-    }
     sourceNode.neighbors.push(target);
     targetNode.neighbors.push(source);
-    // 存储点的连接边
-    if (!sourceNode.links) {
-      sourceNode.links = [];
-    }
-    if (!targetNode.links) {
-      targetNode.links = [];
-    }
     sourceNode.links.push(id);
     targetNode.links.push(id);
   });

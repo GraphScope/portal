@@ -12,30 +12,22 @@ export const colors: string[] = [
   '#DA7194',
   '#848484',
   '#000',
-  'rgba(0,0,0,0.15)',
+  '#f0f0f0',
 ];
 
-//  这里是size的ratio
-export const sizes: number[] = Array.from({
-  length: 10,
-}).map((_item, index) => {
-  return 0.5 * index + 0.1;
-});
-export const widths: number[] = Array.from({
-  length: 10,
-}).map((_item, index) => {
-  return 0.4 * index + 0.1;
-});
+//  这里是 size 只是一个比率，因为还需要和内部的 BASIC_NODE_R 相乘
+export const sizes: number[] = [0, 0.1, 0.5, 1, 2, 3, 4, 6, 8, 10, 20];
+export const widths: number[] = [0, 0.1, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
 
 /** nodes */
 export const BASIC_NODE_R = 4;
 export const DEFAULT_NODE_COLOR = colors[6];
-export const DEFAULT_NODE_SISE = sizes[4]; //2.1
+export const DEFAULT_NODE_SISE = sizes[4];
 export const SELECTED_NODE_COLOR = 'rgba(255,0,0,0.8)';
 export const HOVERING_NODE_COLOR = 'rgba(255,0,0,0.3)';
 export const NODE_TEXT_COLOR = 'rgba(255, 255, 255, 0.8)';
 
 /** edges */
-export const DEFAULT_EDGE_COLOR = colors[colors.length - 1];
-export const DEFAULT_EDGE_WIDTH = widths[2]; //0.9
+export const DEFAULT_EDGE_COLOR = '#f0f0f0'; // colors[colors.length - 1];
+export const DEFAULT_EDGE_WIDTH = widths[3]; //0.9
 export const SELECTED_EDGE_COLOR = 'rgba(255,0,0,0.8)';
