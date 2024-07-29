@@ -3,7 +3,7 @@ import { EdgeLabelRenderer } from 'reactflow';
 import { EditableText, useThemeContainer, useSection } from '@graphscope/studio-components';
 import { useContext } from '../../useContext';
 import { CheckOutlined } from '@ant-design/icons';
-import { Button, theme } from 'antd';
+import { theme } from 'antd';
 const { useToken } = theme;
 interface ILabelProps {
   id: string;

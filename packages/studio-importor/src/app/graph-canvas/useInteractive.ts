@@ -12,7 +12,6 @@ import { useContext } from '../useContext';
 import { transformEdges } from '../elements';
 
 import { getBBox, createEdgeLabel, createNodeLabel } from '../utils';
-const { GS_ENGINE_TYPE } = window as unknown as { GS_ENGINE_TYPE: string };
 let timer: any = null;
 const useInteractive: any = () => {
   const { store, updateStore } = useContext();
@@ -22,13 +21,11 @@ const useInteractive: any = () => {
 
   const onConnectStart = useCallback((_, { nodeId }) => {
     connectingNodeId.current = nodeId;
-    /** groot 可以添加新节点或边 */
     if (!elementOptions.isConnectable) return;
   }, []);
 
   const onConnectEnd = useCallback(
     event => {
-      /** groot 可以添加新节点或边 */
       if (!connectingNodeId.current) return;
       if (!elementOptions.isConnectable) return;
 

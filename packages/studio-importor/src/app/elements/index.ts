@@ -61,9 +61,7 @@ export function transformEdges(_edges: ISchemaEdge[], displayMode): ISchemaEdge[
       source,
       target,
       type: displayMode === 'table' ? 'smoothstep' : 'graph-edge',
-      data: {
-        ...data,
-      },
+      data,
     };
   });
 }

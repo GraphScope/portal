@@ -14,7 +14,6 @@ import { useContext } from '../useContext';
 let addNodeIndex = 0;
 const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
   const { style } = props;
-  const { GS_ENGINE_TYPE } = window as unknown as { GS_ENGINE_TYPE: string };
   const { setCenter } = useReactFlow();
   const { updateStore, store } = useContext();
   const { elementOptions } = store;
