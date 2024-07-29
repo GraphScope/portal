@@ -105,9 +105,9 @@ export const deleteVertexTypeOrEdgeType = async (
     try {
       const res = await GraphApiFactory(undefined, location.origin).deleteVertexTypeByName(graph_id, typeName);
       response = true;
-      message.success(res.data);
+      notification('success', res.data);
     } catch (error) {
-      message.error(error.response.data);
+      notification('error', error);
     }
   }
   if (type === 'edges') {
@@ -124,9 +124,9 @@ export const deleteVertexTypeOrEdgeType = async (
         nodeMap[destinationVertexType as string],
       );
       response = true;
-      message.success(res.data);
+      notification('success', res.data);
     } catch (error) {
-      message.error(error.response.data);
+      notification('error', error);
     }
   }
   return response;
@@ -143,10 +143,10 @@ export const createVertexTypeOrEdgeType = async (
     const vertexType = transformGrootCreateVertexToOptions(params) as CreateVertexType;
     try {
       const res = await GraphApiFactory(undefined, location.origin).createVertexType(graph_id, vertexType);
-      message.success(res.data);
+      notification('success', res.data);
       response = true;
     } catch (error) {
-      error && message.error(`${error}`);
+      notification('error', error);
     }
   }
   if (type === 'edges') {
@@ -154,10 +154,10 @@ export const createVertexTypeOrEdgeType = async (
     const edgeType = transformGrootCreateEdgeToOptions(nodes, { label, source, target }, properties) as CreateEdgeType;
     try {
       const res = await GraphApiFactory(undefined, location.origin).createEdgeType(graph_id, edgeType);
-      message.success(res.data);
+      notification('success', res.data);
       response = true;
     } catch (error) {
-      error && message.error(`${error}`);
+      notification('error', error);
     }
   }
   return response;
