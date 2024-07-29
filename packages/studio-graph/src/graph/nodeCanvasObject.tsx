@@ -2,6 +2,7 @@ import { NodeObject } from 'force-graph';
 import { StyleConfig } from '../hooks/typing';
 import { handleStyle } from './handleStyle';
 import { handleStatus } from './handleStatus';
+import * as TWEEN from '@tweenjs/tween.js';
 import { HOVERING_NODE_COLOR, BASIC_NODE_R, SELECTED_NODE_COLOR, NODE_TEXT_COLOR } from './const';
 
 export const nodeCanvasObject =

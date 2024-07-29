@@ -13,6 +13,7 @@ import {
   ClearStatatus,
   SegmentedTabs,
   SliderFilter,
+  RunCluster,
 } from '../components';
 
 import { Divider } from 'antd';
@@ -96,6 +97,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
             <Divider style={{ margin: '0px' }} />
             <SwitchEngine />
             <ZoomFit />
+            <RunCluster />
             <FullScreen containerRef={containerRef} />
           </Toolbar>
         </Section>

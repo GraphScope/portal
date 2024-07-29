@@ -25,15 +25,17 @@
     "@graphscope/studio-components": "workspace:*",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-intl": "^6.6.1",
     "uuidv4": "latest",
-    "valtio": "latest",
-    "react-intl": "^6.6.1"
+    "valtio": "latest"
   },
   "publishConfig": {
     "access": "public"
   },
   "devDependencies": {
     "3d-force-graph": "^1.73.3",
+    "@tweenjs/tween.js": "^25.0.0",
+    "d3-force": "^3.0.0",
     "force-graph": "^1.43.5",
     "mitt": "^3.0.1"
   }
