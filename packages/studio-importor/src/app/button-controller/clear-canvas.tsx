@@ -13,7 +13,6 @@ const ClearCanvas: React.FunctionComponent<IAddNodeProps> = props => {
   const { updateStore, store } = useContext();
   const { elementOptions, isQueryData } = store;
   const disabled = !elementOptions.isConnectable || isQueryData;
-  debugger;
   const tooltipText = disabled ? (
     <FormattedMessage id="The current mode is preview only, and does not support clearing the model" />
   ) : (

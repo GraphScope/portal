@@ -9,8 +9,8 @@ interface IuseModel {
   target?: string;
   properties?: any;
   disable?: boolean;
-  createVertexTypeOrEdgeType: (type: string, params: any) => boolean;
-  deleteVertexTypeOrEdgeType: (type: string, label: string, source?: string, target?: string, nodes?: any) => boolean;
+  createVertexTypeOrEdgeType?: (type: string, params: any) => boolean;
+  deleteVertexTypeOrEdgeType?: (type: string, label: string, source?: string, target?: string, nodes?: any) => boolean;
 }
 export default function useModel({
   type,
@@ -92,7 +92,8 @@ export default function useModel({
   const handleSubmit = async () => {
     let response: boolean = true;
     if (type === 'nodes') {
-      response = await createVertexTypeOrEdgeType(type, { label, properties });
+      response =
+        (createVertexTypeOrEdgeType && (await createVertexTypeOrEdgeType(type, { label, properties }))) || false;
       /** 置灰不可编辑，转化为正常查询数据 */
       if (response) {
         updateStore(draft => {
@@ -109,7 +110,10 @@ export default function useModel({
       }
     }
     if (type === 'edges') {
-      response = await createVertexTypeOrEdgeType(type, { nodes, label, source, target, properties });
+      response =
+        (createVertexTypeOrEdgeType &&
+          (await createVertexTypeOrEdgeType(type, { nodes, label, source, target, properties }))) ||
+        false;
       /** 置灰不可编辑，转化为正常查询数据 */
       if (response) {
         updateStore(draft => {
@@ -131,7 +135,7 @@ export default function useModel({
     if (type === 'nodes') {
       let response: boolean = true;
       if (disable) {
-        response = await deleteVertexTypeOrEdgeType(type, label as string);
+        response = (deleteVertexTypeOrEdgeType && (await deleteVertexTypeOrEdgeType(type, label as string))) || false;
       }
       if (response) {
         /** 删除本地节点数据 */
@@ -147,7 +151,7 @@ export default function useModel({
     }
     if (type === 'edges') {
       if (disable) {
-        await deleteVertexTypeOrEdgeType(type, label as string, source, target, nodes);
+        deleteVertexTypeOrEdgeType && (await deleteVertexTypeOrEdgeType(type, label as string, source, target, nodes));
       }
       /** 删除本地边数据 */
       const edgeList = edges.filter(item => item.id !== id);
