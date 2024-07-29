@@ -84,8 +84,10 @@ export const getSchema = async (graph_id: string) => {
       .catch(error => {
         notification('error', error);
       });
+
     // schema = transformDataMapToGrootSchema(JSON.parse(JSON.stringify(schema)));
   }
+  console.log(schema);
   return schema;
 };
 /** groot interface */

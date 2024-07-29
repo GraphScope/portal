@@ -14,9 +14,11 @@ import type { ISchemaOptions, ImportorProps } from './typing';
 
 import { useContext } from './useContext';
 import locales from '../locales';
+
 const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   const {
     appMode,
+    GS_ENGINE_TYPE,
     queryGraphSchema,
     queryBoundSchema,
     id,
@@ -72,7 +74,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         draft.elementOptions = {
           isClickable: (elementOptions || {}).isClickable !== false, //默认undefined 则返回true
           isEditable: isEmpty, // 初始状态，接口获取画布有 Schema 数据的时候，不可编辑
-          isConnectable: isEmpty, //  初始状态，接口获取画布有 Schema 数据的时候，不可连线
+          isConnectable: GS_ENGINE_TYPE === 'groot' && appMode === 'DATA_MODELING' ? true : isEmpty, //  初始状态，接口获取画布有 Schema 数据的时候，不可连线
         };
         draft.currentId = isEmpty ? '' : nodes[0].id;
         draft.currentType = 'nodes';

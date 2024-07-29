@@ -23,14 +23,14 @@ const useInteractive: any = () => {
   const onConnectStart = useCallback((_, { nodeId }) => {
     connectingNodeId.current = nodeId;
     /** groot 可以添加新节点或边 */
-    if (GS_ENGINE_TYPE === 'interactive' && !elementOptions.isConnectable) return;
+    if (!elementOptions.isConnectable) return;
   }, []);
 
   const onConnectEnd = useCallback(
     event => {
       /** groot 可以添加新节点或边 */
-      if (GS_ENGINE_TYPE === 'interactive' && !connectingNodeId.current) return;
-      if (GS_ENGINE_TYPE === 'interactive' && !elementOptions.isConnectable) return;
+      if (!connectingNodeId.current) return;
+      if (!elementOptions.isConnectable) return;
 
       const targetIsPane = event.target.classList.contains('react-flow__pane');
 
@@ -51,7 +51,7 @@ const useInteractive: any = () => {
             y: newPosition.y - 50,
           },
           type: 'graph-node',
-          data: { label: createNodeLabel(), isNewNodeOrEdge: true },
+          data: { label: createNodeLabel() },
         };
 
         updateStore(draft => {
@@ -64,7 +64,6 @@ const useInteractive: any = () => {
             type: 'graph-edge',
             data: {
               label: createEdgeLabel(),
-              isNewNodeOrEdge: true,
             },
           });
         });
@@ -83,7 +82,6 @@ const useInteractive: any = () => {
                 id: edgeId,
                 data: {
                   label: edgeLabel,
-                  isNewNodeOrEdge: true,
                 },
                 source: connectingNodeId.current || '',
                 target: nodeid,

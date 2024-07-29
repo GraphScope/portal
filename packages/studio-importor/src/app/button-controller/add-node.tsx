@@ -18,7 +18,7 @@ const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
   const { setCenter } = useReactFlow();
   const { updateStore, store } = useContext();
   const { elementOptions } = store;
-  const disabled = GS_ENGINE_TYPE === 'interactive' ? !elementOptions.isConnectable : false;
+  const disabled = !elementOptions.isConnectable;
   const tooltipText = disabled ? (
     <FormattedMessage id="The current mode is preview only, and does not support creating new vertex" />
   ) : (
@@ -38,7 +38,7 @@ const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
           y,
         },
         type: 'graph-node',
-        data: { label, isNewNodeOrEdge: true },
+        data: { label },
       });
       setCenter(x + 100 / 2, y + 100 / 2, { duration: 600, zoom: 1 });
     });

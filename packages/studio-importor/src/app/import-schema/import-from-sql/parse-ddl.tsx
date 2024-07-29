@@ -21,8 +21,6 @@ export const covertSchemaByTables = (tables: ParsedFile[]) => {
         },
         data: {
           label: id,
-          /** 判断是否新建标识 */
-          isNewNodeOrEdge: true,
           properties: data.map(item => {
             const { name, type } = item;
             return {
@@ -43,8 +41,6 @@ export const covertSchemaByTables = (tables: ParsedFile[]) => {
         target: targetField || '',
         data: {
           label: id,
-          /** 判断是否新建标识 */
-          isNewNodeOrEdge: true,
           properties: data.map(item => {
             const { name, type } = item;
             return {

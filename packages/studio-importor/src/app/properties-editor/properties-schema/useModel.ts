@@ -1,8 +1,30 @@
 import React from 'react';
 import { useContext } from '../../useContext';
 import { Property } from '@graphscope/studio-components';
-export default function useModel({ type, id }) {
-  const { updateStore } = useContext();
+interface IuseModel {
+  type: string;
+  id: string;
+  label?: string;
+  source?: string;
+  target?: string;
+  properties?: any;
+  disable?: boolean;
+  createVertexTypeOrEdgeType: (type: string, params: any) => boolean;
+  deleteVertexTypeOrEdgeType: (type: string, label: string, source?: string, target?: string, nodes?: any) => boolean;
+}
+export default function useModel({
+  type,
+  id,
+  label,
+  source,
+  target,
+  properties,
+  disable,
+  createVertexTypeOrEdgeType,
+  deleteVertexTypeOrEdgeType,
+}: IuseModel) {
+  const { store, updateStore } = useContext();
+  const { nodes, edges } = store;
   /** 修改label */
   const handleChangeLabel = e => {
     const label = e.target.value;
@@ -65,9 +87,81 @@ export default function useModel({ type, id }) {
       });
     });
   };
+
+  /** groot 保存节点或边*/
+  const handleSubmit = async () => {
+    let response: boolean = true;
+    if (type === 'nodes') {
+      response = await createVertexTypeOrEdgeType(type, { label, properties });
+      /** 置灰不可编辑，转化为正常查询数据 */
+      if (response) {
+        updateStore(draft => {
+          draft.nodes = draft.nodes.map(item => {
+            if (item.id === id) {
+              return {
+                ...item,
+                data: { ...item.data, disable: true },
+              };
+            }
+            return item;
+          });
+        });
+      }
+    }
+    if (type === 'edges') {
+      response = await createVertexTypeOrEdgeType(type, { nodes, label, source, target, properties });
+      /** 置灰不可编辑，转化为正常查询数据 */
+      if (response) {
+        updateStore(draft => {
+          draft.edges = draft.edges.map(item => {
+            if (item.id === id) {
+              return {
+                ...item,
+                data: { ...item.data, disable: true },
+              };
+            }
+            return item;
+          });
+        });
+      }
+    }
+  };
+  /** groot 删除节点或边*/
+  const handleDelete = async () => {
+    if (type === 'nodes') {
+      let response: boolean = true;
+      if (disable) {
+        response = await deleteVertexTypeOrEdgeType(type, label as string);
+      }
+      if (response) {
+        /** 删除本地节点数据 */
+        const nodeList = nodes.filter(item => item.id !== id);
+        /** 删除节点时，需要删除与节点相关联边 */
+        const edgeList = edges.filter(item => item.source !== id && item.target !== id);
+        await updateStore(draft => {
+          draft.nodes = JSON.parse(JSON.stringify(nodeList));
+          draft.edges = JSON.parse(JSON.stringify(edgeList));
+          draft.isQueryData = !!nodeList.length;
+        });
+      }
+    }
+    if (type === 'edges') {
+      if (disable) {
+        await deleteVertexTypeOrEdgeType(type, label as string, source, target, nodes);
+      }
+      /** 删除本地边数据 */
+      const edgeList = edges.filter(item => item.id !== id);
+      await updateStore(draft => {
+        draft.edges = JSON.parse(JSON.stringify(edgeList));
+      });
+    }
+  };
+
   return {
     handleChangeLabel,
     handleDataFieldsChange,
     handleProperty,
+    handleSubmit,
+    handleDelete,
   };
 }

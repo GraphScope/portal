@@ -9,14 +9,13 @@ export type DeepRequired<T> = T extends (...args: any[]) => any
   : T extends object
     ? { [K in keyof T]-?: DeepRequired<T[K]> }
     : T;
-/** YAML 特殊化处理，多处共用此方法，isNewNodeOrEdge只有yaml上传定义为true则是新建 */
+
 export function transSchemaToOptions(
   originalSchema: DeepRequired<GetGraphSchemaResponse>,
-  uploadYaml?: boolean,
+  disable?: boolean,
 ): ISchemaOptions {
   const { vertex_types, edge_types } = originalSchema || { vertex_types: [], edge_types: [] };
   const idMappingforNode: Record<string, string> = {};
-  const isNewNodeOrEdge = uploadYaml && { isNewNodeOrEdge: true };
   const nodes: ISchemaNode[] = vertex_types.map(item => {
     const { primary_keys, properties = [], type_name } = item;
     const id = uuidv4();
@@ -26,7 +25,8 @@ export function transSchemaToOptions(
       data: {
         label: type_name,
         primary: primary_keys[0],
-        isNewNodeOrEdge,
+        /** 查询中单独节点内是否可以编辑 */
+        disable: !disable,
         properties: properties.map((item, index) => {
           const { property_name, property_type } = item;
           return {
@@ -62,7 +62,8 @@ export function transSchemaToOptions(
           id: uuidv4(),
           data: {
             label: type_name,
-            isNewNodeOrEdge,
+            /** 查询中单独边内是否可以编辑 */
+            disable: !disable,
             properties: properties.map(p => {
               return {
                 key: uuidv4(),

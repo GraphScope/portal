@@ -10,14 +10,15 @@ interface ILabelProps {
   label: string;
   style?: React.CSSProperties;
   filelocation?: string;
+  disabled?: boolean;
 }
 
 const Label: React.FunctionComponent<ILabelProps> = props => {
-  const { id, label, style, filelocation } = props;
+  const { id, label, style, filelocation, disabled } = props;
   const { store, updateStore } = useContext();
   const { toggleRightSide } = useSection();
   const { token } = useToken();
-  const { currentId, theme, elementOptions } = store;
+  const { currentId, theme } = store;
   const isSelected = id === currentId;
   const { algorithm } = useThemeContainer();
   const isDark = algorithm === 'darkAlgorithm';
@@ -91,7 +92,7 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
           }}
         >
           <EditableText
-            disabled={!elementOptions.isEditable}
+            disabled={disabled}
             id={id}
             text={label || id}
             onTextChange={onLabelChange}

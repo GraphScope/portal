@@ -24,7 +24,7 @@ const styles = {
 };
 const GraphNode = (props: NodeProps) => {
   const { data = {}, id } = props;
-  const { label, filelocation, isNewNodeOrEdge } = data;
+  const { label, filelocation, disable } = data;
   const { store, updateStore } = useContext();
   const { currentId, theme, elementOptions } = store;
   const { algorithm } = useThemeContainer();
@@ -32,11 +32,7 @@ const GraphNode = (props: NodeProps) => {
   const { token } = useToken();
   const isSelected = id === currentId;
   const isDark = algorithm === 'darkAlgorithm';
-  const { GS_ENGINE_TYPE } = window as unknown as { GS_ENGINE_TYPE: string };
-  /** 是否可以拖拽创建节点或边 */
-  const isConnectable = GS_ENGINE_TYPE === 'interactive' && !elementOptions.isConnectable;
-  /** 新创建节点可以编辑 */
-  const isEditable = GS_ENGINE_TYPE === 'interactive' ? !elementOptions.isEditable : !isNewNodeOrEdge;
+  const isConnectable = !elementOptions.isConnectable;
   const [state, updateState] = useState({
     isHover: false,
     contentEditable: false,
@@ -156,7 +152,7 @@ const GraphNode = (props: NodeProps) => {
           id={id}
           text={label}
           onTextChange={hanleChangeLabel}
-          disabled={isEditable}
+          disabled={disable}
           style={{ color: isDark ? '#D7D7D7' : '#000' }}
         />
       </div>

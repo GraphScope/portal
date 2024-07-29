@@ -46,8 +46,9 @@ const ImportFromYAML = (props: IProps) => {
         const jsonContent = hackContent(yaml.load(content));
         let schema;
         if (appMode === 'DATA_MODELING') {
-          /** YAML 特殊化处理，多处共用此方法，isNewNodeOrEdge只有yaml上传定义为true则是新建 */
-          schema = transSchemaToOptions(jsonContent, true);
+          /** YAML 特殊化处理，多处共用此方法，disabled只有yaml上传定义为true则是新建,查询默认false */
+          const disabled = true;
+          schema = transSchemaToOptions(jsonContent, disabled);
         }
         if (appMode === 'DATA_IMPORTING') {
           schema = transMappingSchemaToOptions({} as any, jsonContent, { nodes, edges } as any);

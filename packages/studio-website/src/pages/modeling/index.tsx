@@ -29,7 +29,6 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
 
     return transSchemaToOptions(schema as any);
   };
-
   return (
     <ImportApp
       isSaveFiles={true}

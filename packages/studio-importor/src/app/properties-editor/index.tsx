@@ -16,7 +16,7 @@ type IPropetiesEditorProps = Pick<
   | 'createVertexTypeOrEdgeType'
   | 'deleteVertexTypeOrEdgeType'
 >;
-const { GS_ENGINE_TYPE } = window as unknown as { GS_ENGINE_TYPE: string };
+// const { GS_ENGINE_TYPE } = window as unknown as { GS_ENGINE_TYPE: string };
 const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props => {
   const { store, updateStore } = useContext();
   const { nodes, edges, currentType, currentId, elementOptions } = store;
@@ -53,10 +53,10 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
 
   const nodes_items = nodes.map((item, index) => {
     const { id, data } = item;
-    const { label, properties = [], filelocation, isNewNodeOrEdge = false } = data || { label: id };
+    const { label, properties = [], filelocation, disable = false } = data || { label: id };
     NODES_SCROLL_ITEMS[id] = { index: index };
     /** groot 状态下是否可以编辑节点 */
-    const disabled = GS_ENGINE_TYPE === 'interactive' ? !elementOptions.isConnectable : !isNewNodeOrEdge;
+    // const disabled = GS_ENGINE_TYPE === 'interactive' ? !elementOptions.isConnectable : !isNewNodeOrEdge;
     return {
       key: id,
       label: label,
@@ -80,7 +80,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
           queryPrimitiveTypes={queryPrimitiveTypes}
           handleUploadFile={handleUploadFile}
           appMode={appMode}
-          disabled={disabled}
+          disabled={disable}
           createVertexTypeOrEdgeType={createVertexTypeOrEdgeType}
           deleteVertexTypeOrEdgeType={deleteVertexTypeOrEdgeType}
         />
@@ -89,10 +89,10 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
   });
   const edges_items = edges.map((item, index) => {
     const { id, data } = item;
-    const { label, properties = [], filelocation, isNewNodeOrEdge = false } = data || { label: id };
+    const { label, properties = [], filelocation, disable = false } = data || { label: id };
     EDGES_SCROLL_ITEMS[id] = { index: index };
     /** groot 状态下是否可以编辑边 */
-    const disabled = GS_ENGINE_TYPE === 'interactive' ? !elementOptions.isEditable : !isNewNodeOrEdge;
+    // const disabled = GS_ENGINE_TYPE === 'interactive' ? !elementOptions.isEditable : !isNewNodeOrEdge;
     return {
       key: id,
       label: label,
@@ -116,7 +116,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
           queryPrimitiveTypes={queryPrimitiveTypes}
           handleUploadFile={handleUploadFile}
           appMode={appMode}
-          disabled={disabled}
+          disabled={disable}
           createVertexTypeOrEdgeType={createVertexTypeOrEdgeType}
           deleteVertexTypeOrEdgeType={deleteVertexTypeOrEdgeType}
         />
