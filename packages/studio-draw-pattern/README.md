@@ -160,13 +160,16 @@ $ npm run build
   ```
 
 - case9
+
   ```sql
   MATCH p=shortestPath(
   (:Person {name:"Keanu Reeves"})-[*]-(:Person {name:"Tom Hanks"})
   )
   RETURN p
   ```
-  上面三种情况比较特使，而且我认为对于 `cypher` 查询初学者的使用难度较大，可以作为 `plugin` 功能贴在侧边栏
+
+  上面三种情况比较特使，而且我认为对于 `cypher` 查询初学者的使用难度较大，可以作为 `Quick Start` 功能贴在侧边栏, 方便用户使用
+
   1. 对于查询跳后的节点，点击侧边栏按钮，进行新的对话
 
      Q：请选择开始节点
@@ -198,9 +201,20 @@ $ npm run build
      Q：想选择这两点之间最长还是最短路径？
 
      A：点击选择
+
 - case10
   ```sql
   MATCH (:Person {name: 'Keanu Reeves'})-[:ACTED_IN]->(:Movie)<-[:ACTED_IN]-(coActor:Person),
   (coActor) - [: ACTED_IN] -> (: Movie)<-[: ACTED_IN] - (:Person { name: 'Tom Hanks' })
   RETURN DISTINCT coActor.name AS coActor
   ```
+- case11
+  ```sql
+  MATCH (a)-[:RELATIONSHIP]->(b)-[:RELATIONSHIP]->(c)-[:RELATIONSHIP]->(a)
+  RETURN a, b, c
+  ```
+  三角环的交互
+  Q：请选择三个点形成一个环，请在右侧选择并且点击（需要高亮所有能形成三角环的节点，并且用不同的高亮颜色区分）
+  A：点击选择
+
+为了更好的交互,会提供用户一个 Quick Start , Qucik Start 里面提供一系列的模式匹配, 三角环, 多跳, 两点之间最短距离, 两点关系 ... 提供用户使用体验.

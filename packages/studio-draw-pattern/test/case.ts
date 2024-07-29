@@ -47,3 +47,7 @@ export const case10 =
   "MATCH (:Person {name: 'Keanu Reeves'})-[:ACTED_IN]->(:Movie)<-[:ACTED_IN]-(coActor:Person),\
   (coActor) - [: ACTED_IN] -> (: Movie)<-[: ACTED_IN] - (:Person { name: 'Tom Hanks' })\
   RETURN DISTINCT coActor.name AS coActor";
+
+export const case11 =
+  'MATCH(a) - [: RELATIONSHIP] -> (b) - [: RELATIONSHIP] -> (c) - [: RELATIONSHIP] -> (a)\
+  RETURN a, b, c';
