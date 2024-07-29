@@ -60,7 +60,6 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .d3Force(
           'collide',
           d3.forceCollide().radius(node => {
-            console.log('node', node);
             return handleStyle(node, nodeStyle).size + 5;
           }),
         )
@@ -110,7 +109,7 @@ export default function useGraph<P extends GraphProps>(props: P) {
 
     graphRef.current = graph;
     setIsReady(true);
-    onInit?.(graph, emitterRef.current);
+    onInit?.(graph, emitterRef.current, { width, height });
 
     /** 监听容器 DOM 尺寸变化 */
     const handleResize = Utils.debounce(() => {

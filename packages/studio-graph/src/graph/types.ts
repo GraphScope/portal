@@ -52,7 +52,7 @@ export interface GraphProps extends Pick<React.HTMLAttributes<HTMLDivElement>, '
   /**
    * Callback for when the graph is initialized, after new Graph().
    */
-  onInit?: (graph: Graph, emitter: Emitter) => void;
+  onInit?: (graph: Graph, emitter: Emitter, params: any) => void;
   /**
    * Callback for when the graph is ready, after graph.render().
    */

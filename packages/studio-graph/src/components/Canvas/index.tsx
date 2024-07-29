@@ -63,10 +63,12 @@ export const transform = (data): { nodes: NodeData[]; edges: EdgeData[] } => {
 const Canvas: React.FunctionComponent<ICanvasProps> = props => {
   const { store, updateStore } = useContext();
   const { data, render, nodeStyle, edgeStyle, nodeStatus, edgeStatus } = store;
-  const onInit = (graph, emitter) => {
+  const onInit = (graph, emitter, { width, height }) => {
     updateStore(draft => {
       draft.graph = graph;
       draft.emitter = emitter;
+      draft.width = width;
+      draft.height = height;
     });
   };
 

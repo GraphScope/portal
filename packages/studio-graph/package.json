@@ -23,6 +23,8 @@
   "dependencies": {
     "@antv/g6": "latest",
     "@graphscope/studio-components": "workspace:*",
+    "d3-force-3d": "^3.0.5",
+    "d3-hierarchy": "^3.1.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-intl": "^6.6.1",
