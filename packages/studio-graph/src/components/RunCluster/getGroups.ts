@@ -1,17 +1,22 @@
 import { pack, hierarchy } from 'd3-hierarchy';
 import { Utils } from '@graphscope/studio-components';
 import { handleStyle } from '../../graph/handleStyle';
-
+ 
+interface NodeData {
+  children: NodeData[];
+  name: string;
+}
 export const getGroups = (nodes, { width, height, screen2GraphCoords, nodeStyle }) => {
   const groupedData = Utils.groupBy(nodes, node => {
     return node.label;
   });
-  const root: any = { name: 'root', children: [] };
+
+  const root:NodeData = { name: 'root', children: [] };
 
   for (const [label, nodes] of Object.entries(groupedData)) {
-    root.children.push({ name: label, children: nodes });
+    root.children.push({ name: label, children: nodes as NodeData[] });
   }
-  const rootNode = hierarchy(root)
+  const rootNode = hierarchy<NodeData>(root)
     // .sum(d => {
     //   return d.size || 9;
     // })
@@ -25,7 +30,7 @@ export const getGroups = (nodes, { width, height, screen2GraphCoords, nodeStyle 
     });
 
   // Circle Packing 布局，计算分组中心
-  const packLayput = pack()
+  const packLayput = pack<NodeData>()
     .size([width, height])
     .padding(20)
     .radius(d => {
@@ -35,9 +40,10 @@ export const getGroups = (nodes, { width, height, screen2GraphCoords, nodeStyle 
     });
 
   packLayput(rootNode);
+ 
 
   // 绘制分组节点
-  const groups = rootNode.children.map(d => {
+  const groups = (rootNode.children || []).map(d => {
     const { x, y } = screen2GraphCoords(d.x, d.y);
     const { color } = handleStyle({ label: d.data.name }, nodeStyle, 'node');
     return {
@@ -45,7 +51,7 @@ export const getGroups = (nodes, { width, height, screen2GraphCoords, nodeStyle 
       label: d.data.name,
       x: x,
       y: y,
-      r: d.r,
+      r: (d as any).r,
       color,
     };
   });
