@@ -18,6 +18,7 @@ import {
   ZoomFit,
   ClearStatatus,
   SegmentedTabs,
+  RunCluster,
 } from '../components';
 
 import { Divider } from 'antd';
@@ -87,6 +88,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
             <SwitchEngine />
             <FullScreen containerRef={containerRef} />
             <ZoomFit />
+            <RunCluster />
           </Toolbar>
         </Section>
       </MultipleInstance>

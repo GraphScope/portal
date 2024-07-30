@@ -13,3 +13,4 @@ export { default as ZoomFit } from './ZoomFit';
 export { default as ClearStatatus } from './ClearStatus';
 export { default as SegmentedTabs } from './SegmentedTabs';
 export { default as SliderFilter } from './SliderFilter';
+export { default as RunCluster } from './RunCluster';

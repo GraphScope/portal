@@ -10,6 +10,7 @@ import mitt from 'mitt';
 import { handleStyle } from './handleStyle';
 import { nodeCanvasObject } from './nodeCanvasObject';
 import { BASIC_NODE_R, SELECTED_EDGE_COLOR } from './const';
+import * as d3 from 'd3-force';
 
 export default function useGraph<P extends GraphProps>(props: P) {
   const {
@@ -54,6 +55,14 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .linkLabel(edge => handleStyle(edge, edgeStyle, 'edge').caption)
         .linkWidth(edge => handleStyle(edge, edgeStyle, 'edge').width)
         .linkColor(edge => handleStyle(edge, edgeStyle, 'edge').color)
+
+        /** force */
+        .d3Force(
+          'collide',
+          d3.forceCollide().radius(node => {
+            return handleStyle(node, nodeStyle).size + 5;
+          }),
+        )
 
         /** interaction */
         .onNodeHover(node => {
@@ -100,7 +109,7 @@ export default function useGraph<P extends GraphProps>(props: P) {
 
     graphRef.current = graph;
     setIsReady(true);
-    onInit?.(graph, emitterRef.current);
+    onInit?.(graph, emitterRef.current, { width, height });
 
     /** 监听容器 DOM 尺寸变化 */
     const handleResize = Utils.debounce(() => {

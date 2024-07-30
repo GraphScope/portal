@@ -18,6 +18,8 @@ export type IStore = {
       [key: string]: any;
     }
   >;
+  width: number;
+  height: number;
   render: '2D' | '3D';
   isReady: boolean;
   graph: Graph;
@@ -39,6 +41,8 @@ export const initialStore: IStore = {
     nodes: [],
     edges: [],
   },
+  width: 200,
+  height: 500,
   dataMap: {},
   render: '2D',
   graph: null,
