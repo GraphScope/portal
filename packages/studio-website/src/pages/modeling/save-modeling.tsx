@@ -35,7 +35,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   const { store, updateStore } = useContext();
   const [form] = Form.useForm();
   const { store: modelingStore } = useModeling();
-  const { elementOptions, appMode, nodes, edges, csvFiles, isQueryData } = modelingStore;
+  const { elementOptions, appMode, nodes, edges, csvFiles } = modelingStore;
   const { draftGraph, draftId } = store;
 
   const { isLoading, open, status, schema } = state;
@@ -152,7 +152,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   const canSave =
     GS_ENGINE_TYPE === 'interactive'
       ? nodes.length !== 0 && IS_DRAFT_GRAPH && validatePassed
-      : !isQueryData && validatePassed;
+      : !elementOptions.isEditable && validatePassed;
   if (appMode === 'DATA_MODELING') {
     return (
       <>

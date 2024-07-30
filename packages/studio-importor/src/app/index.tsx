@@ -73,13 +73,12 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         draft.appMode = appMode;
         draft.elementOptions = {
           isClickable: (elementOptions || {}).isClickable !== false, //默认undefined 则返回true
-          isEditable: isEmpty, // 初始状态，接口获取画布有 Schema 数据的时候，不可编辑
+          isEditable: GS_ENGINE_TYPE === 'groot' && appMode === 'DATA_MODELING' ? !!nodes.length : isEmpty, // 初始状态，接口获取画布有 Schema 数据的时候，不可编辑
           isConnectable: GS_ENGINE_TYPE === 'groot' && appMode === 'DATA_MODELING' ? true : isEmpty, //  初始状态，接口获取画布有 Schema 数据的时候，不可连线
         };
         draft.currentId = isEmpty ? '' : nodes[0].id;
         draft.currentType = 'nodes';
         draft.isSaveFiles = isSaveFiles;
-        draft.isQueryData = !!nodes.length;
       });
     })();
   }, []);

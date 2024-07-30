@@ -6,9 +6,9 @@ import { FormattedMessage } from 'react-intl';
 interface ILeftButtonProps {}
 const LeftButton: React.FunctionComponent<ILeftButtonProps> = props => {
   const { store } = useContext();
-  const { elementOptions, isQueryData } = store;
+  const { elementOptions } = store;
   const { toggleLeftSide } = useSection();
-  const disabled = !elementOptions.isConnectable || isQueryData;
+  const disabled = !elementOptions.isConnectable || elementOptions.isEditable;
   const tooltipText = disabled ? (
     <FormattedMessage id="The current mode is preview only, and does not support opening multi-source modeling" />
   ) : (

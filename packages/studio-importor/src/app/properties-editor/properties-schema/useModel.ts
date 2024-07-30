@@ -145,7 +145,7 @@ export default function useModel({
         await updateStore(draft => {
           draft.nodes = JSON.parse(JSON.stringify(nodeList));
           draft.edges = JSON.parse(JSON.stringify(edgeList));
-          draft.isQueryData = !!nodeList.length;
+          draft.elementOptions.isEditable = !!nodeList.length;
         });
       }
     }

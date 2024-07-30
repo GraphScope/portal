@@ -11,8 +11,8 @@ import { useContext } from '../useContext';
 const ClearCanvas: React.FunctionComponent<IAddNodeProps> = props => {
   const { style } = props;
   const { updateStore, store } = useContext();
-  const { elementOptions, isQueryData } = store;
-  const disabled = !elementOptions.isConnectable || isQueryData;
+  const { elementOptions } = store;
+  const disabled = !elementOptions.isConnectable || elementOptions.isEditable;
   const tooltipText = disabled ? (
     <FormattedMessage id="The current mode is preview only, and does not support clearing the model" />
   ) : (
