@@ -6,10 +6,9 @@ export const getGroups = (nodes, { width, height, screen2GraphCoords, nodeStyle 
   const groupedData = Utils.groupBy(nodes, node => {
     return node.label;
   });
-  const root = { name: 'root', children: [] };
+  const root: any = { name: 'root', children: [] };
 
   for (const [label, nodes] of Object.entries(groupedData)) {
-    //@ts-ignore
     root.children.push({ name: label, children: nodes });
   }
   const rootNode = hierarchy(root)
