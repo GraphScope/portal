@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 import { useContext } from '../../hooks/useContext';
 import { Icons, Utils } from '@graphscope/studio-components';
 import { getGroups } from './getGroups';
@@ -115,7 +115,6 @@ const RunCluster: React.FunctionComponent<IRunClusterProps> = props => {
             .onRenderFramePost((ctx, globalScale) => {
               groups.forEach(group => {
                 const { id, r, x, y, color, label } = group;
-
                 // 绘制圆形边界
                 ctx.beginPath();
                 ctx.setLineDash([5, 5]);
@@ -123,7 +122,6 @@ const RunCluster: React.FunctionComponent<IRunClusterProps> = props => {
                 ctx.strokeStyle = color;
                 ctx.lineWidth = 1;
                 ctx.stroke();
-
                 // 设置文本
                 ctx.font = '10px Arial';
                 ctx.fillStyle = color;
@@ -131,7 +129,6 @@ const RunCluster: React.FunctionComponent<IRunClusterProps> = props => {
                 const text = label;
                 const textX = x; // 文本的 x 坐标（与圆心 x 坐标对齐）
                 const textY = y - r - 6; // 文本的 y 坐标（在圆的上方）
-
                 ctx.fillText(text, textX, textY);
               });
             });
@@ -179,7 +176,11 @@ const RunCluster: React.FunctionComponent<IRunClusterProps> = props => {
     });
   };
 
-  return <Button onClick={handleClick} icon={<Icons.Cluster />} type="text"></Button>;
+  return (
+    <Tooltip title="Clustering layout" placement="left">
+      <Button onClick={handleClick} icon={<Icons.Cluster />} type="text"></Button>
+    </Tooltip>
+  );
 };
 
 export default RunCluster;

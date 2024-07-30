@@ -13,9 +13,9 @@ export const getGroups = (nodes, { width, height, screen2GraphCoords, nodeStyle 
     root.children.push({ name: label, children: nodes });
   }
   const rootNode = hierarchy(root)
-    .sum(d => {
-      return d.size || 9;
-    })
+    // .sum(d => {
+    //   return d.size || 9;
+    // })
     .sort((a, b) => {
       try {
         // 如果 label 是数字，则按照数字大小排序
