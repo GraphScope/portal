@@ -6,6 +6,7 @@ import Section from '@/components/section';
 import { useContext } from '@/layouts/useContext';
 import { useThemeContainer } from '@graphscope/studio-components';
 import GrootCase from './groot-case';
+import CreateGraph from './create-graph';
 import { listGraphs } from './service';
 const InstanceCard: React.FC = () => {
   const { store } = useContext();
@@ -68,7 +69,9 @@ const InstanceCard: React.FC = () => {
           </Col>
         )}
         <Col span={12}>
-          <GrootCase handleCreate={handleCreate} />
+          <GrootCase>
+            <CreateGraph onCreate={handleCreate} />
+          </GrootCase>
         </Col>
       </Row>
     </Section>
