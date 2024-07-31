@@ -8,9 +8,11 @@ import type { ForceGraph3DInstance } from '3d-force-graph';
 import { Utils } from '@graphscope/studio-components';
 import mitt from 'mitt';
 import { handleStyle } from './handleStyle';
-import { nodeCanvasObject } from './nodeCanvasObject';
+// import { nodeCanvasObject } from './nodeCanvasObject';
+import { nodeCanvasObject } from './custom-node';
 import { BASIC_NODE_R, SELECTED_EDGE_COLOR } from './const';
-import * as d3 from 'd3-force';
+// import * as d3 from 'd3-force';
+import * as d3 from 'd3-force-3d';
 
 export default function useGraph<P extends GraphProps>(props: P) {
   const {
@@ -180,9 +182,9 @@ export default function useGraph<P extends GraphProps>(props: P) {
         })
         .linkDirectionalParticles(1)
         .linkDirectionalParticleWidth((edge: any) => {
-          const { size } = handleStyle(edge, edgeStyle, 'edge');
           const match = edgeStatus[edge.id];
           if (match && match.selected) {
+            const { size } = handleStyle(edge, edgeStyle, 'edge');
             return size + 1;
           }
           return 0;

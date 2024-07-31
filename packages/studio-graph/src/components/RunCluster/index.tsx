@@ -15,14 +15,18 @@ import * as d3Force from 'd3-force';
 import { handleStyle } from '../../graph/handleStyle';
 export interface IRunClusterProps {}
 
-// 自定义力：为每个分组添加向心力
-function forceRadial(groups, strength = 1) {
-  // strength 是一个可调参数，默认值为 0.1
+/**
+ * 自定义力：为每个分组添加向心力
+ * @param groupMap
+ * @param strength strength 是一个可调参数，默认值为 0.1
+ * @returns
+ */
+function forceRadial(groupMap, strength = 0.1) {
   let nodes;
 
   function force(alpha) {
     nodes.forEach(d => {
-      const group = groups.find(g => g.id === d.label);
+      const group = groupMap.get(d.label);
       if (!group) return;
 
       // 使用 strength 调整向心力的强度
@@ -39,21 +43,25 @@ function forceRadial(groups, strength = 1) {
   return force;
 }
 
-// 自定义力：将节点限制在各自的分组范围内
-function forceCluster(groups) {
+/**
+ * 自定义分组聚类力：将节点限制在各自的分组范围内
+ * @param groupMap
+ * @returns
+ */
+function forceCluster(groupMap) {
   let nodes;
 
   function force(alpha) {
     nodes.forEach(d => {
-      const group = groups.find(g => g.id === d.label);
+      const group = groupMap.get(d.label);
       if (!group) return;
-
       const dx = d.x - group.x;
       const dy = d.y - group.y;
       const r = Math.sqrt(dx * dx + dy * dy);
       const maxRadius = group.r - (d.size || 3);
 
       if (r > maxRadius) {
+        /** 如果节点距离分组中心的距离 r 超过了最大距离 maxRadius，则按照比例 k 将节点拉回到允许的范围内 */
         const k = ((r - maxRadius) / r) * alpha;
         d.x -= dx * k;
         d.y -= dy * k;
@@ -96,10 +104,14 @@ const RunCluster: React.FunctionComponent<IRunClusterProps> = props => {
           screen2GraphCoords: graph.screen2GraphCoords,
           nodeStyle,
         });
+        const groupMap = new Map();
+        groups.forEach(group => {
+          groupMap.set(group.id, group);
+        });
         if (!cluster) {
           /** 启动聚类 */
-          graph.d3Force('cluster', forceCluster(groups));
-          graph.d3Force('radial', forceRadial(groups));
+          graph.d3Force('cluster', forceCluster(groupMap));
+          graph.d3Force('radial', forceRadial(groupMap));
           graph.d3Force('center', null);
           graph.d3Force('charge', null);
           graph.d3Force('link', null);
@@ -114,7 +126,7 @@ const RunCluster: React.FunctionComponent<IRunClusterProps> = props => {
           (graph as ForceGraphInstance) // 在渲染帧之后绘制 Combo 边界
             .onRenderFramePost((ctx, globalScale) => {
               groups.forEach(group => {
-                const { id, r, x, y, color, label } = group;
+                const { r, x, y, color, label } = group;
                 // 绘制圆形边界
                 ctx.beginPath();
                 ctx.setLineDash([5, 5]);
@@ -159,10 +171,14 @@ const RunCluster: React.FunctionComponent<IRunClusterProps> = props => {
           screen2GraphCoords: (x, y) => ({ x, y }),
           nodeStyle,
         });
+        const groupMap = new Map();
+        groups.forEach(group => {
+          groupMap.set(group.id, group);
+        });
         if (!cluster) {
           /** 启动聚类 */
-          graph.d3Force('cluster', forceCluster(groups));
-          graph.d3Force('radial', forceRadial(groups));
+          graph.d3Force('cluster', forceCluster(groupMap));
+          graph.d3Force('radial', forceRadial(groupMap));
         } else {
           /** 关闭聚类 */
           graph.d3Force('cluster', null);

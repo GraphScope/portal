@@ -1,9 +1,9 @@
 import { NodeObject } from 'force-graph';
-import { StyleConfig } from '../hooks/typing';
-import { handleStyle } from './handleStyle';
-import { handleStatus } from './handleStatus';
-import { HOVERING_NODE_COLOR, BASIC_NODE_R, SELECTED_NODE_COLOR, NODE_TEXT_COLOR } from './const';
-
+import { StyleConfig } from '../../hooks/typing';
+import { handleStyle } from '../handleStyle';
+import { handleStatus } from '../handleStatus';
+import { HOVERING_NODE_COLOR, BASIC_NODE_R, SELECTED_NODE_COLOR, NODE_TEXT_COLOR } from '../const';
+import { drawText } from './draw';
 export const nodeCanvasObject =
   (node: NodeObject, ctx: CanvasRenderingContext2D, globalScale: number) =>
   (nodeStyle: StyleConfig, nodeStatus: any) => {
@@ -44,25 +44,26 @@ export const nodeCanvasObject =
       //@TODO
     }
 
-    const showTextInCircle = R * globalScale > 30;
+    const showTextInCircle = R * globalScale > 14;
 
-    if (showTextInCircle) {
-      const fontSize = 1;
-      console.log('fontSize', globalScale, fontSize);
-      ctx.font = `${fontSize}px Sans-Serif`;
-      const textWidth = ctx.measureText(textLabel).width;
-      //   const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
-      ctx.fillStyle = NODE_TEXT_COLOR;
-      ctx.strokeStyle = '#000';
+    // if (showTextInCircle) {
+    //   const fontSize = 1;
+    //   ctx.font = `${fontSize}px Sans-Serif`;
+    //   ctx.fillStyle = NODE_TEXT_COLOR;
+    //   ctx.textAlign = 'center';
+    //   ctx.textBaseline = 'middle';
+    //   ctx.fillStyle = '#000';
+    //   drawText(ctx, {
+    //     text: textLabel,
+    //     x: node.x + R,
+    //     y: node.y + R,
+    //     maxWidth: 16,
+    //     lineHeight: fontSize,
+    //   });
+    // } else
 
-      //@ts-ignore
-      //   ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#fff';
-      ctx.fillText(textLabel, node.x, node.y);
-    } else if (captionStatus !== 'hidden' && textLabel) {
-      const fontSize = 6 / globalScale;
+    if (showTextInCircle && captionStatus !== 'hidden' && textLabel) {
+      const fontSize = 12 / globalScale;
       ctx.font = `${fontSize}px Sans-Serif`;
       const textWidth = ctx.measureText(textLabel).width;
       //   const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
