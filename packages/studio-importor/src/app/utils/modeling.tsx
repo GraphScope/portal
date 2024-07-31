@@ -10,10 +10,7 @@ export type DeepRequired<T> = T extends (...args: any[]) => any
     ? { [K in keyof T]-?: DeepRequired<T[K]> }
     : T;
 
-export function transSchemaToOptions(
-  originalSchema: DeepRequired<GetGraphSchemaResponse>,
-  disable?: boolean,
-): ISchemaOptions {
+export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchemaResponse>): ISchemaOptions {
   const { vertex_types, edge_types } = originalSchema || { vertex_types: [], edge_types: [] };
   const idMappingforNode: Record<string, string> = {};
   const nodes: ISchemaNode[] = vertex_types.map(item => {
@@ -26,7 +23,7 @@ export function transSchemaToOptions(
         label: type_name,
         primary: primary_keys[0],
         /** 查询中单独节点内是否可以编辑 */
-        disable: !disable,
+        disabled: true,
         properties: properties.map((item, index) => {
           const { property_name, property_type } = item;
           return {
@@ -63,7 +60,7 @@ export function transSchemaToOptions(
           data: {
             label: type_name,
             /** 查询中单独边内是否可以编辑 */
-            disable: !disable,
+            disabled: true,
             properties: properties.map(p => {
               return {
                 key: uuidv4(),
@@ -81,6 +78,31 @@ export function transSchemaToOptions(
   }
 
   return { nodes, edges };
+}
+export function transSchemaYamlToOptions(originalSchema: ISchemaOptions): ISchemaOptions {
+  const { nodes, edges } = originalSchema || { nodes: [], edges: [] };
+  const node: ISchemaNode[] = nodes.map(item => {
+    const { data } = item;
+    return {
+      ...item,
+      data: {
+        ...data,
+        disabled: false,
+      },
+    };
+  });
+  const edge: ISchemaEdge[] = edges.map(item => {
+    const { data } = item;
+    return {
+      ...item,
+      data: {
+        ...data,
+        disabled: false,
+      },
+    };
+  });
+
+  return { nodes: node, edges: edge };
 }
 
 export const handleType = (type?: string) => {

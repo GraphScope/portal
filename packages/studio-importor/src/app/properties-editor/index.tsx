@@ -52,22 +52,18 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
 
   const nodes_items = nodes.map((item, index) => {
     const { id, data } = item;
-    const { label, properties = [], filelocation, disable = false } = data || { label: id };
+    const { label, properties = [], filelocation } = data || { label: id };
     NODES_SCROLL_ITEMS[id] = { index: index };
     return {
       key: id,
       label: label,
       extra: (
-        <>
-          {appMode === 'DATA_MODELING' && (
-            <ValidateInfo
-              type="nodes"
-              filelocation={filelocation}
-              appMode={appMode}
-              properties={JSON.parse(JSON.stringify(properties))}
-            />
-          )}
-        </>
+        <ValidateInfo
+          type="nodes"
+          filelocation={filelocation}
+          appMode={appMode}
+          properties={JSON.parse(JSON.stringify(properties))}
+        />
       ),
       children: (
         <PropertiesSchema
@@ -77,7 +73,6 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
           queryPrimitiveTypes={queryPrimitiveTypes}
           handleUploadFile={handleUploadFile}
           appMode={appMode}
-          disabled={disable}
           createVertexTypeOrEdgeType={createVertexTypeOrEdgeType}
           deleteVertexTypeOrEdgeType={deleteVertexTypeOrEdgeType}
         />
@@ -86,22 +81,18 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
   });
   const edges_items = edges.map((item, index) => {
     const { id, data } = item;
-    const { label, properties = [], filelocation, disable = false } = data || { label: id };
+    const { label, properties = [], filelocation } = data || { label: id };
     EDGES_SCROLL_ITEMS[id] = { index: index };
     return {
       key: id,
       label: label,
       extra: (
-        <>
-          {appMode === 'DATA_MODELING' && (
-            <ValidateInfo
-              type="edges"
-              filelocation={filelocation}
-              appMode={appMode}
-              properties={JSON.parse(JSON.stringify(properties))}
-            />
-          )}
-        </>
+        <ValidateInfo
+          type="edges"
+          filelocation={filelocation}
+          appMode={appMode}
+          properties={JSON.parse(JSON.stringify(properties))}
+        />
       ),
       children: (
         <PropertiesSchema
@@ -111,7 +102,6 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
           queryPrimitiveTypes={queryPrimitiveTypes}
           handleUploadFile={handleUploadFile}
           appMode={appMode}
-          disabled={disable}
           createVertexTypeOrEdgeType={createVertexTypeOrEdgeType}
           deleteVertexTypeOrEdgeType={deleteVertexTypeOrEdgeType}
         />

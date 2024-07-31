@@ -24,7 +24,7 @@ const styles = {
 };
 const GraphNode = (props: NodeProps) => {
   const { data = {}, id } = props;
-  const { label, filelocation, disable } = data;
+  const { label, filelocation, disabled } = data;
   const { store, updateStore } = useContext();
   const { currentId, theme, elementOptions } = store;
   const { algorithm } = useThemeContainer();
@@ -152,7 +152,7 @@ const GraphNode = (props: NodeProps) => {
           id={id}
           text={label}
           onTextChange={hanleChangeLabel}
-          disabled={disable}
+          disabled={disabled}
           style={{ color: isDark ? '#D7D7D7' : '#000' }}
         />
       </div>

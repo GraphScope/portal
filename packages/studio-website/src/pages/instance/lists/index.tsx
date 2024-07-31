@@ -5,7 +5,7 @@ import InstaceCard, { InstaceCardType } from './instance-card';
 import Section from '@/components/section';
 import { useContext } from '@/layouts/useContext';
 import { useThemeContainer } from '@graphscope/studio-components';
-import GrootCase from './groot-case';
+import InteractiveCase from './interactive-case';
 import CreateGraph from './create-graph';
 import { listGraphs } from './service';
 const InstanceCard: React.FC = () => {
@@ -69,9 +69,9 @@ const InstanceCard: React.FC = () => {
           </Col>
         )}
         <Col span={12}>
-          <GrootCase>
+          <InteractiveCase>
             <CreateGraph onCreate={handleCreate} />
-          </GrootCase>
+          </InteractiveCase>
         </Col>
       </Row>
     </Section>

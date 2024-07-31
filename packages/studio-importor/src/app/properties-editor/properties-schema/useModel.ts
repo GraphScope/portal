@@ -8,7 +8,7 @@ interface IuseModel {
   source?: string;
   target?: string;
   properties?: any;
-  disable?: boolean;
+  disabled?: boolean;
   createVertexTypeOrEdgeType?: (type: string, params: any) => boolean;
   deleteVertexTypeOrEdgeType?: (type: string, label: string, source?: string, target?: string, nodes?: any) => boolean;
 }
@@ -19,12 +19,12 @@ export default function useModel({
   source,
   target,
   properties,
-  disable,
+  disabled,
   createVertexTypeOrEdgeType,
   deleteVertexTypeOrEdgeType,
 }: IuseModel) {
   const { store, updateStore } = useContext();
-  const { nodes, edges } = store;
+  const { nodes } = store;
   /** 修改label */
   const handleChangeLabel = e => {
     const label = e.target.value;
@@ -92,8 +92,7 @@ export default function useModel({
   const handleSubmit = async () => {
     let response: boolean = true;
     if (type === 'nodes') {
-      response =
-        (createVertexTypeOrEdgeType && (await createVertexTypeOrEdgeType(type, { label, properties }))) || false;
+      response = (createVertexTypeOrEdgeType && createVertexTypeOrEdgeType(type, { label, properties })) || false;
       /** 置灰不可编辑，转化为正常查询数据 */
       if (response) {
         updateStore(draft => {
@@ -101,7 +100,7 @@ export default function useModel({
             if (item.id === id) {
               return {
                 ...item,
-                data: { ...item.data, disable: true },
+                data: { ...item.data, disabled: true },
               };
             }
             return item;
@@ -112,7 +111,7 @@ export default function useModel({
     if (type === 'edges') {
       response =
         (createVertexTypeOrEdgeType &&
-          (await createVertexTypeOrEdgeType(type, { nodes, label, source, target, properties }))) ||
+          createVertexTypeOrEdgeType(type, { nodes, label, source, target, properties })) ||
         false;
       /** 置灰不可编辑，转化为正常查询数据 */
       if (response) {
@@ -121,7 +120,7 @@ export default function useModel({
             if (item.id === id) {
               return {
                 ...item,
-                data: { ...item.data, disable: true },
+                data: { ...item.data, disabled: true },
               };
             }
             return item;
@@ -134,29 +133,23 @@ export default function useModel({
   const handleDelete = async () => {
     if (type === 'nodes') {
       let response: boolean = true;
-      if (disable) {
+      if (disabled) {
         response = (deleteVertexTypeOrEdgeType && (await deleteVertexTypeOrEdgeType(type, label as string))) || false;
       }
       if (response) {
-        /** 删除本地节点数据 */
-        const nodeList = nodes.filter(item => item.id !== id);
-        /** 删除节点时，需要删除与节点相关联边 */
-        const edgeList = edges.filter(item => item.source !== id && item.target !== id);
-        await updateStore(draft => {
-          draft.nodes = JSON.parse(JSON.stringify(nodeList));
-          draft.edges = JSON.parse(JSON.stringify(edgeList));
-          draft.elementOptions.isEditable = !!nodeList.length;
+        updateStore(draft => {
+          draft.nodes = draft.nodes.filter(item => item.id !== id);
+          draft.edges = draft.edges.filter(item => item.source !== id && item.target !== id);
+          draft.elementOptions.isEditable = !!draft.nodes.length;
         });
       }
     }
     if (type === 'edges') {
-      if (disable) {
+      if (disabled) {
         deleteVertexTypeOrEdgeType && (await deleteVertexTypeOrEdgeType(type, label as string, source, target, nodes));
       }
-      /** 删除本地边数据 */
-      const edgeList = edges.filter(item => item.id !== id);
-      await updateStore(draft => {
-        draft.edges = JSON.parse(JSON.stringify(edgeList));
+      updateStore(draft => {
+        draft.edges = draft.edges.filter(item => item.id !== id);
       });
     }
   };

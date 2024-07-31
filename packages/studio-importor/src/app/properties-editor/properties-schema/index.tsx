@@ -13,7 +13,6 @@ export type IPropertiesSchemaProps = Pick<
 > & {
   schema: ISchemaEdge;
   type: 'nodes' | 'edges';
-  disabled: boolean;
 };
 
 const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
@@ -22,7 +21,6 @@ const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
     type,
     appMode,
     queryPrimitiveTypes,
-    disabled = false,
     handleUploadFile,
     createVertexTypeOrEdgeType,
     deleteVertexTypeOrEdgeType,
@@ -34,7 +32,7 @@ const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
     label,
     source_vertex_fields,
     target_vertex_fields,
-    disable = false,
+    disabled = false,
   } = data || {};
   const { handleChangeLabel, handleProperty, handleSubmit, handleDelete } = useModel({
     type,
@@ -43,7 +41,7 @@ const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
     source,
     target,
     properties,
-    disable,
+    disabled,
     createVertexTypeOrEdgeType,
     deleteVertexTypeOrEdgeType,
   });

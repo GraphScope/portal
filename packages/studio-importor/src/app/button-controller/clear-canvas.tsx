@@ -12,8 +12,7 @@ const ClearCanvas: React.FunctionComponent<IAddNodeProps> = props => {
   const { style } = props;
   const { updateStore, store } = useContext();
   const { elementOptions } = store;
-  const disabled = !elementOptions.isConnectable || elementOptions.isEditable;
-  const tooltipText = disabled ? (
+  const tooltipText = elementOptions.isEditable ? (
     <FormattedMessage id="The current mode is preview only, and does not support clearing the model" />
   ) : (
     <FormattedMessage id="Clear graph model" />
@@ -30,11 +29,11 @@ const ClearCanvas: React.FunctionComponent<IAddNodeProps> = props => {
   return (
     <Tooltip title={tooltipText} placement="right">
       <Button
-        disabled={disabled}
+        disabled={elementOptions.isEditable}
         onClick={handleClear}
         style={style}
         type="text"
-        icon={<Icons.Trash disabled={disabled} />}
+        icon={<Icons.Trash disabled={elementOptions.isEditable} />}
       ></Button>
     </Tooltip>
   );

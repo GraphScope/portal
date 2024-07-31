@@ -82,8 +82,6 @@ export interface ImportorProps {
   leftSideStyle?: React.CSSProperties;
   rightSideStyle?: React.CSSProperties;
   elementOptions?: {
-    /** 是否能够连线，包括拖拽产生节点 */
-    isClickable: boolean;
     /** 是否可以点击，包含点和边 */
     isEditable: boolean;
     /** 是否可以编辑标签，包括节点和边 */
