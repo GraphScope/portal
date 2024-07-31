@@ -38,13 +38,49 @@ Supports local CSV file uploads with dropdown field mapping selection. Also allo
 
 ## Quick start
 
+There are two ways to start graphscope portal
+
+### One: Using Docker Image
+
 ```bash
-docker pull  registry.cn-hongkong.aliyuncs.com/graphscope/portal:latest
+# Pull the image
+docker pull registry.cn-hongkong.aliyuncs.com/graphscope/portal:latest
+# Run the container
+docker run -it -p 8888:8888 --name my-portal registry.cn-hongkong.aliyuncs.com/graphscope/portal:latest
+# Enter the container and start the service
+npm run dev -- --port=8888 --coordinator=<graphscope_coordinator_endpoint> --cypher_endpoint=<graphscope_cypher_endpoint>
 ```
 
-## [👏 Contrubuting]('./CONTRIBUTING.md')
+> Description of Startup Parameters
 
-## [ 🔧 Components](https://portal-bim.pages.dev/)
+- `coordinator` is the address of the GraphScope engine
+- `port` is the frontend service port number 8888.
+- `cypher_endpoint` is the query address for the GraphScope Interactive engine, default is neo4j://<graphscope_cypher_endpoint>:7687
+
+### Two: Building from the source code
+
+- prepare node.js and pnpm
+  - install node.js : https://nodejs.org/en
+  - install pnpm : https://pnpm.io/installation#using-npm `npm install -g pnpm`
+
+Execute this command in the root directory:
+
+- Compile front-end assets
+
+`npm run ci`
+
+- Start the server
+
+```bash
+cd packages/studio-website/proxy
+npm run dev -- --port=8888 --coordinator=<graphscope_coordinator_endpoint> --cypher_endpoint=<graphscope_cypher_endpoint>
+
+```
+
+## Other Resources
+
+- [👏 Contrubuting]('./CONTRIBUTING.md')
+- [ 🔧 Components](https://portal-bim.pages.dev/)
 
 ## License
 

@@ -49,13 +49,46 @@ GraphScope Portal 是一款专为 GraphScope 设计的，基于 Web 的用户交
 
 ## 快速开始
 
+### 方式一：使用 Docker 镜像
+
 ```bash
+# 拉取镜像
 docker pull  registry.cn-hongkong.aliyuncs.com/graphscope/portal:latest
+# 运行容器
+docker run -it -p 8888:8888 --name my-portal registry.cn-hongkong.aliyuncs.com/graphscope/portal:latest
+# 进入容器，启动服务
+npm run dev  -- --coordinator=<"your graphscope engine"> --port=8888 --cypher_endpoint=neo4j://xx.xx.xx.xx:7687
+
 ```
 
-## [👏 共建指南 👏]('./CONTRIBUTING.zh-CN.md')
+> 启动参数说明
 
-## [ 🔧 组件库](https://portal-bim.pages.dev/)
+- `coordinator` 是 GraphScope 引擎地址（Interactice 和 Groot）
+- `port` 是前端服务端口号 `8888`.
+- `cypher_endpoint` 是 GraphScope Interactive 引擎的查询地址，默认为 `neo4j://<your ip address>:7687`.
+
+### 方式二：使用源码编译（本机或者云主机都可）
+
+- 环境准备
+
+  - 安装 node.js : https://nodejs.org/en
+  - 安装 pnpm : https://pnpm.io/installation#using-npm `npm install -g pnpm`
+
+- 安装依赖 & 编译前端产物
+
+`npm run ci`
+
+- 启动前端托管服务
+
+```bash
+cd packages/studio-website/proxy
+npm run dev -- --coordinator=http://127.0.0.1:8080 --cypher_endpoint=neo4j://xx.xx.xx.xx:7687
+```
+
+## 其他参考
+
+- [👏 共建指南 👏]('./CONTRIBUTING.zh-CN.md')
+- [ 🔧 组件库](https://portal-bim.pages.dev/)
 
 ## 许可证
 

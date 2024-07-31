@@ -32,14 +32,15 @@ WORKDIR /app/proxy
 # 安装proxy的依赖
 RUN npm install
 
-# 设置环境变量
-ENV PORT=8888
-ENV COORDINATOR=http://127.0.0.1:8080
-ENV CYPHER_ENDPOINT=neo4j://127.0.0.1:7687
-ENV GREMLIN_ENDPOINT=ws://127.0.0.1:12312/gremlin
+# # # 设置环境变量
+# ENV PORT=8888
+# # ENV COORDINATOR=http://127.0.0.1:8080
+# # ENV CYPHER_ENDPOINT=neo4j://127.0.0.1:7687
+# # ENV GREMLIN_ENDPOINT=ws://127.0.0.1:12312/gremlin
 
-# 暴露端口
-EXPOSE $PORT
+# # 暴露端口
+# EXPOSE $PORT
 
 # 在容器启动时运行的命令
-CMD ["sh", "-c", "npm run dev -- --port=${PORT} --coordinator=${COORDINATOR} --cypher_endpoint=${CYPHER_ENDPOINT} --gremlin_endpoint=${GREMLIN_ENDPOINT}"]
+# CMD ["sh", "-c", "npm run dev -- --port=${PORT} --coordinator=${COORDINATOR} --cypher_endpoint=${CYPHER_ENDPOINT} --gremlin_endpoint=${GREMLIN_ENDPOINT}"]
+ 
