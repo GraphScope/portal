@@ -65,7 +65,6 @@ export default function useGraph<P extends GraphProps>(props: P) {
             return handleStyle(node, nodeStyle).size + 5;
           }),
         )
-
         /** interaction */
         .onNodeHover(node => {
           emitterRef.current?.emit('node:hover', node);
