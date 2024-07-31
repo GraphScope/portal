@@ -79,30 +79,20 @@ export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchema
 
   return { nodes, edges };
 }
-export function transSchemaYamlToOptions(originalSchema: ISchemaOptions): ISchemaOptions {
+/** yaml 上传文件时添加可编辑标识 disabled为false */
+export function appendData(originalSchema: ISchemaOptions): ISchemaOptions {
   const { nodes, edges } = originalSchema || { nodes: [], edges: [] };
-  const node: ISchemaNode[] = nodes.map(item => {
-    const { data } = item;
-    return {
-      ...item,
-      data: {
-        ...data,
-        disabled: false,
-      },
-    };
-  });
-  const edge: ISchemaEdge[] = edges.map(item => {
-    const { data } = item;
-    return {
-      ...item,
-      data: {
-        ...data,
-        disabled: false,
-      },
-    };
-  });
+  const updatedNodes = nodes.map(item => ({
+    ...item,
+    data: { ...item.data, disabled: false },
+  }));
 
-  return { nodes: node, edges: edge };
+  const updatedEdges = edges.map(item => ({
+    ...item,
+    data: { ...item.data, disabled: false },
+  }));
+
+  return { nodes: updatedNodes, edges: updatedEdges };
 }
 
 export const handleType = (type?: string) => {

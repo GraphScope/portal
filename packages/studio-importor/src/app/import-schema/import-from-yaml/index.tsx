@@ -4,7 +4,7 @@ import type { UploadProps } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import yaml from 'js-yaml';
 
-import { transSchemaToOptions, transSchemaYamlToOptions } from '../../utils/modeling';
+import { transSchemaToOptions, appendData } from '../../utils/modeling';
 import { transMappingSchemaToOptions } from '../../utils/importing';
 import { useContext } from '../../useContext';
 import { transformEdges, transformGraphNodes } from '../../elements';
@@ -46,7 +46,7 @@ const ImportFromYAML = (props: IProps) => {
         const jsonContent = hackContent(yaml.load(content));
         let schema;
         if (appMode === 'DATA_MODELING') {
-          schema = transSchemaYamlToOptions(transSchemaToOptions(jsonContent));
+          schema = appendData(transSchemaToOptions(jsonContent));
         }
         if (appMode === 'DATA_IMPORTING') {
           schema = transMappingSchemaToOptions({} as any, jsonContent, { nodes, edges } as any);
