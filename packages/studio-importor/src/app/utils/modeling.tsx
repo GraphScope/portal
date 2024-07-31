@@ -80,16 +80,16 @@ export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchema
   return { nodes, edges };
 }
 /** yaml 上传文件时添加可编辑标识 disabled为false */
-export function appendData(originalSchema: ISchemaOptions): ISchemaOptions {
+export function appendData(originalSchema: ISchemaOptions, options: { disabled: boolean }): ISchemaOptions {
   const { nodes, edges } = originalSchema || { nodes: [], edges: [] };
   const updatedNodes = nodes.map(item => ({
     ...item,
-    data: { ...item.data, disabled: false },
+    data: { ...item.data, ...options },
   }));
 
   const updatedEdges = edges.map(item => ({
     ...item,
-    data: { ...item.data, disabled: false },
+    data: { ...item.data, ...options },
   }));
 
   return { nodes: updatedNodes, edges: updatedEdges };

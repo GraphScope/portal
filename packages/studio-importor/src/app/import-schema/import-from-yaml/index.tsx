@@ -46,7 +46,7 @@ const ImportFromYAML = (props: IProps) => {
         const jsonContent = hackContent(yaml.load(content));
         let schema;
         if (appMode === 'DATA_MODELING') {
-          schema = appendData(transSchemaToOptions(jsonContent));
+          schema = appendData(transSchemaToOptions(jsonContent), { disabled: false });
         }
         if (appMode === 'DATA_IMPORTING') {
           schema = transMappingSchemaToOptions({} as any, jsonContent, { nodes, edges } as any);
