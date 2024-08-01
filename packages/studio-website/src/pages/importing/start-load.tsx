@@ -56,6 +56,10 @@ const REPEATOPTIONS = [
     label: 'Every week on the same time',
   },
 ];
+const { GS_ENGINE_TYPE } = window;
+const styles: Record<string, string> = {
+  visibility: GS_ENGINE_TYPE == 'groot' ? 'visible' : 'hidden',
+};
 const StartLoad: React.FC<ILeftSide> = props => {
   const { graphId, onColse } = props;
   const [state, updateState] = useState<{
@@ -84,8 +88,8 @@ const StartLoad: React.FC<ILeftSide> = props => {
       import_option: 'overwrite',
       header_row: true,
       quoting: false,
-      repeat: '',
-      schedule: '',
+      repeat: 'once',
+      schedule: dayjs(),
     });
   }, []);
 
@@ -116,7 +120,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
       })
       .catch(error => {
         _status = 'error';
-        _message = error.response.data;
+        _message = GS_ENGINE_TYPE === 'interactive' ? error.response.data : error.response.data.detail;
       });
 
     const gotoBtn = (
@@ -137,8 +141,11 @@ const StartLoad: React.FC<ILeftSide> = props => {
 
   const handleClick = () => {
     const data = form.getFieldsValue();
-    const schedule = data.schedule ? dayjs(data.schedule).format('YYYY-MM-DD HH:mm:ss') : '';
-    onFinish({ ...data, schedule });
+    const grootValue = GS_ENGINE_TYPE === 'groot' && {
+      repeat: 'once',
+      schedule: data.schedule && dayjs(data.schedule).format('YYYY-MM-DD HH:mm:ss'),
+    };
+    onFinish({ ...data, ...grootValue });
   };
 
   return (
@@ -214,16 +221,14 @@ const StartLoad: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
-        {window.GS_ENGINE_TYPE == 'groot' && (
-          <>
-            <Form.Item label={<FormattedMessage id="Date" />} name="schedule">
-              <DatePicker placeholder=" " showTime style={{ width: '100%' }} />
-            </Form.Item>
-            <Form.Item label={<FormattedMessage id="Repeat" />} name="repeat">
-              <Select options={REPEATOPTIONS} />
-            </Form.Item>
-          </>
-        )}
+        <div style={styles}>
+          <Form.Item label={<FormattedMessage id="Date" />} name="schedule">
+            <DatePicker placeholder=" " showTime style={{ width: '100%' }} />
+          </Form.Item>
+          <Form.Item label={<FormattedMessage id="Repeat" />} name="repeat">
+            <Select options={REPEATOPTIONS} />
+          </Form.Item>
+        </div>
         <Flex justify="end" gap={12}>
           <Button style={{ width: '128px' }} type="primary" onClick={handleClick}>
             <FormattedMessage id="Load data" />
