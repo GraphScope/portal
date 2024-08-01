@@ -58,7 +58,7 @@ const REPEATOPTIONS = [
 ];
 const { GS_ENGINE_TYPE } = window;
 const styles: Record<string, string> = {
-  visibility: GS_ENGINE_TYPE == 'groot' ? 'visible' : 'hidden',
+  visibility: GS_ENGINE_TYPE === 'groot' ? 'visible' : 'hidden',
 };
 const StartLoad: React.FC<ILeftSide> = props => {
   const { graphId, onColse } = props;
