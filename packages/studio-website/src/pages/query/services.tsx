@@ -1,10 +1,12 @@
-import { CypherDriver, CypherSchemaData, MockDriver, GremlinDriver } from '@graphscope/studio-query';
+import { CypherSchemaData, MockDriver } from '@graphscope/studio-query';
+import { GremlinDriver, CypherDriver, queryGraph } from '@graphscope/studio-driver';
 import type { IStudioQueryProps, IStatement } from '@graphscope/studio-query';
 import localforage from 'localforage';
 import { GraphApiFactory, ServiceApiFactory, StoredProcedureApiFactory } from '@graphscope/studio-server';
 import { transformSchema } from './utils/schema';
 import { handleError, handleResponse } from '@/components/utils/handleServer';
 import { Utils } from '@graphscope/studio-components';
+const { storage } = Utils;
 const DB_QUERY_HISTORY = localforage.createInstance({
   name: 'DB_QUERY_HISTORY',
 });
@@ -31,8 +33,8 @@ export const queryEndpoint = async (): Promise<{
     .then(res => res.data)
     .catch(() => {
       return {
-        cypher_endpoint: 'mock',
-        gremlin_endpoint: 'mock',
+        cypher_endpoint: null,
+        gremlin_endpoint: null,
       };
     });
 };
@@ -89,7 +91,7 @@ export const queryStatements: IStudioQueryProps['queryStatements'] = async type 
         if (res.status === 200) {
           return res.data.map(item => {
             const { name, params, description, ...others } = item;
-            const script = params.length > 0? `CALL ${name}("")`:`CALL ${name}()`
+            const script = params.length > 0 ? `CALL ${name}("")` : `CALL ${name}()`;
             return {
               ...others,
               name: description,
@@ -157,14 +159,49 @@ export const getDriver = async (language: 'cypher' | 'gremlin' = 'cypher') => {
   }
   return driver_config.gremlin_driver;
 };
+
+export interface QueryParams {
+  script: string;
+  language: 'gremlin' | 'cypher';
+  endpoint: string;
+}
 export const queryGraphData = async (params: IStatement) => {
   createStatements('history', params);
-  const { language } = params;
-  console.log('params', params);
-  const driver = await getDriver(language);
-  //@ts-ignore
-  return driver.query(params.script);
+
+  const query_language = storage.get<'cypher' | 'gremlin'>('query_language') || 'cypher';
+  const query_endpoint = storage.get<string>('query_endpoint') || '';
+  const query_initiation = storage.get<'Server' | 'Browser'>('query_initiation');
+
+  const _params: QueryParams = {
+    script: params.script,
+    language: query_language,
+    endpoint: query_endpoint,
+  };
+
+  if (query_initiation === 'Browser') {
+    return queryGraph(_params);
+  }
+  if (query_initiation === 'Server') {
+    return await fetch('/query', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(_params),
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res.success) {
+          return res.data;
+        }
+        return {
+          nodes: [],
+          edges: [],
+        };
+      });
+  }
 };
+
 export const handleCancelQuery = async (params: IStatement) => {
   const { language } = params;
   const driver = await getDriver(language);

@@ -1,6 +1,7 @@
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 import { Utils } from '@graphscope/studio-components';
+const { storage } = Utils;
 export interface IGraph {
   id: string;
   name: string;
@@ -25,13 +26,14 @@ export const initialStore = {
   collapse: false,
   /** 当前导航 */
   currentnNav: '/' + location.pathname.split('/')[1],
-  navStyle: Utils.storage.get('GS_STUDIO_navStyle') || 'inline',
+  navStyle: (Utils.storage.get('GS_STUDIO_navStyle') as string) || 'inline',
   graphs: [],
   graphId: Utils.searchParamOf('graph_id'),
   draftGraph: Utils.storage.get('DRAFT_GRAPH') || {},
   draftId: 'DRAFT_GRAPH',
   displaySidebarType: Utils.storage.get<'Sidebar' | 'Segmented'>('displaySidebarType') || 'Sidebar',
   displaySidebarPosition: Utils.storage.get<'left' | 'right'>('displaySidebarPosition') || 'left',
+  isReady: false,
 };
 
 export type IStore = {
@@ -47,6 +49,7 @@ export type IStore = {
   displaySidebarPosition?: 'left' | 'right';
   /** 查询侧边栏展示的类型 */
   displaySidebarType?: 'Sidebar' | 'Segmented';
+  isReady: boolean;
 };
 
 type ContextType = {

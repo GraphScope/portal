@@ -88,22 +88,29 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   useEffect(() => {
     (async () => {
       //@ts-ignore
-
       const graphId = getSearchParams('graph_id') || '';
       const language = getSearchParams('language') || props.language;
       let globalScript = getSearchParams('global_script') || props.globalScript;
       const displayMode = getSearchParams('display_mode') || localStorage.getItem(localStorageVars.mode) || 'flow';
       const auto_run_from_url = getSearchParams('auto_run');
       const autoRun = auto_run_from_url ? (auto_run_from_url === 'true' ? true : false) : props.autoRun;
-
-      const schemaData = await queryGraphSchema(graphId);
-      const historyStatements = await queryStatements('history');
-      const savedStatements = await queryStatements('saved');
-      const storeProcedures = await queryStatements('store-procedure');
+      let schemaData = { nodes: [], edges: [] };
+      let historyStatements = [];
+      let savedStatements = [];
+      let storeProcedures = [];
+      try {
+        //@ts-ignore
+        schemaData = await queryGraphSchema(graphId);
+        //@ts-ignore
+        historyStatements = await queryStatements('history');
+        //@ts-ignore
+        savedStatements = await queryStatements('saved');
+        //@ts-ignore
+        storeProcedures = await queryStatements('store-procedure');
+      } catch (error) {}
 
       updateStore(draft => {
         draft.isReady = true;
-        draft.graphId = graphId;
         draft.graphId = graphId;
         draft.schemaData = schemaData;
         draft.historyStatements = historyStatements;

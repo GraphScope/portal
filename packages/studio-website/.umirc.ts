@@ -52,6 +52,11 @@ export default defineConfig({
 
       changeOrigin: true,
     },
+    '/query': {
+      target: 'http://127.0.0.1:8888',
+
+      changeOrigin: true,
+    },
   },
   // analyze: {
   //   analyzerPort: 'auto',

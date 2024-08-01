@@ -22,6 +22,7 @@
     "@ant-design/icons": "^5.2.6",
     "@antv/graphin": "^2.7.27",
     "@antv/graphin-icons": "^1.0.0",
+    "@graphscope/studio-driver": "workspace:*",
     "@graphscope/studio-importor": "workspace:*",
     "@graphscope/studio-query": "workspace:*",
     "@graphscope/studio-server": "workspace:*",
