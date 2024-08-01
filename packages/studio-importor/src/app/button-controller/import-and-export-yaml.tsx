@@ -35,14 +35,14 @@ const Content = () => {
   const handleExport = (type: string) => {
     if (appMode === 'DATA_MODELING') {
       const content = transOptionsToSchema(Utils.fakeSnapshot({ nodes, edges }));
-      const yamlFile = type === 'YAML' ? yaml.dump(content) : JSON.stringify(content);
-      Utils.download('create-model.yaml', yamlFile);
+      const yamlFile = type === 'yaml' ? yaml.dump(content) : JSON.stringify(content);
+      Utils.download(`create-model.${type}`, yamlFile);
       return;
     }
     if (appMode === 'DATA_IMPORTING') {
       const content = transformImportOptionsToSchemaMapping(Utils.fakeSnapshot({ nodes, edges }));
-      const yamlFile = type === 'YAML' ? yaml.dump(content) : JSON.stringify(content);
-      Utils.download('loading-config.yaml', yamlFile);
+      const yamlFile = type === 'yaml' ? yaml.dump(content) : JSON.stringify(content);
+      Utils.download(`loading-config.${type}`, yamlFile);
       return;
     }
   };
@@ -53,15 +53,15 @@ const Content = () => {
       <ImportFromYAML
         disabled={!elementOptions.isEditable}
         style={{ height: '160px' }}
-        icon={<Icons.FileImport style={{ fontSize: '50px', color: token.colorPrimary }} />}
+        icon={<Icons.FileYaml style={{ fontSize: '50px', color: token.colorPrimary }} />}
       />
       <Divider style={{ margin: '12px  0px' }} />
       <Typography.Text type="secondary">{exportText}</Typography.Text>
       <Flex gap={10}>
-        <Button style={{ width: '50%' }} onClick={() => handleExport('YAML')}>
+        <Button style={{ width: '50%' }} onClick={() => handleExport('yaml')}>
           YAML Export
         </Button>
-        <Button style={{ width: '50%' }} onClick={() => handleExport('JSON')}>
+        <Button style={{ width: '50%' }} onClick={() => handleExport('json')}>
           JSON Export
         </Button>
       </Flex>
@@ -72,7 +72,7 @@ const Content = () => {
 const ImportAndExportYaml: React.FunctionComponent<ILeftButtonProps> = props => {
   return (
     <Popover placement="bottomLeft" content={<Content />}>
-      <Button type="text" icon={<Icons.FileImport />} />
+      <Button type="text" icon={<Icons.FileYaml />} />
     </Popover>
   );
 };
