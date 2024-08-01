@@ -1,9 +1,12 @@
 const express = require('express');
 const path = require('path');
+const { queryGraph } = require('@graphscope/studio-driver');
 
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
+
+app.use(express.json());
 
 // 获取传递的参数
 const args = process.argv.slice(2);
@@ -39,6 +42,16 @@ app.get('/query_endpoint', (req, res) => {
   res.send({
     success: true,
     data: { cypher_endpoint, gremlin_endpoint },
+  });
+});
+
+/** 图查询 */
+app.post('/query', async (req, res) => {
+  const { script, language, endpoint } = req.body;
+  const data = await queryGraph({ script, language, endpoint }, { debugger: false });
+  res.send({
+    success: true,
+    data: data,
   });
 });
 
