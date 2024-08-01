@@ -9,38 +9,13 @@ A web-based management tool for GraphScope
 
 GraphScope Portal is a user-friendly web interface that simplifies managing graph data with GraphScope. It offers one-stop access to data modeling, importing, querying, and monitoring, catering to both Interactive and Insight engines within the GraphScope Flex architecture.
 
-## Core Features
-
-### Data Modeling
-
-Supports users to manually create vertex and edge types, as well as automatically generating graph models through CSV and SQDDL files.
-
-![modeling](https://img.alicdn.com/imgextra/i2/O1CN01rCtTYy1ryeXesYuT5_!!6000000005700-0-tps-3490-1918.jpg)
-
-### Data Importing
-
-Supports local CSV file uploads with dropdown field mapping selection. Also allows one-click data import through YAML configuration files.
-
-![importing](https://img.alicdn.com/imgextra/i2/O1CN01uqf3lF1Kudkh0dbvR_!!6000000001224-0-tps-3472-1894.jpg)
-
-### Interactive Querying
-
-- Powerful Editor: Provides syntax completion and highlighting for Cypher and Gremlin, facilitating easy editing and modification by users.
-- Multiple Query Methods: Allows users to write and save graph queries, browse query history, receive schema-based recommendations, and leverage natural language querying powered by OpenAI.
-- Rich Visualization: Presents results in Graph or Table view modes, with user customization of node/edge colors, sizes, caption styles, and further data insights through "Switch Chart" functionality.
-
-![querying](https://img.alicdn.com/imgextra/i4/O1CN01la3ZwB1HXn95Thc7C_!!6000000000768-0-tps-3518-1904.jpg)
-
-### Extensibility
-
-- Plugin Integration: Supports incorporating "stored procedures" and "graph algorithms" as plugins for seamless use.
-- Customization: Offers language switching, theme switching, and the ability to tailor theme colors and other details to individual preferences.
+![query](https://img.alicdn.com/imgextra/i3/O1CN015kMEu71soPJ8fuhy2_!!6000000005813-0-tps-3424-1636.jpg)
 
 ## Quick start
 
 There are two ways to start graphscope portal
 
-### One: Using Docker Image
+### Using Docker Image
 
 ```bash
 # Pull the image
@@ -57,25 +32,47 @@ npm run dev -- --port=8888 --coordinator=<graphscope_coordinator_endpoint> --cyp
 - `port` is the frontend service port number 8888.
 - `cypher_endpoint` is the query address for the GraphScope Interactive engine, default is neo4j://<graphscope_cypher_endpoint>:7687
 
-### Two: Building from the source code
+### Building from the source code
 
-- prepare node.js and pnpm
-  - install node.js : https://nodejs.org/en
-  - install pnpm : https://pnpm.io/installation#using-npm `npm install -g pnpm`
-
-Execute this command in the root directory:
-
-- Compile front-end assets
-
-`npm run ci`
-
-- Start the server
+prepare [node.js](https://nodejs.org/en) and [pnpm](https://pnpm.io/installation#using-npm)
 
 ```bash
+# Compile front-end assets
+npm run ci
+# Start the server
 cd packages/studio-website/proxy
 npm run dev -- --port=8888 --coordinator=<graphscope_coordinator_endpoint> --cypher_endpoint=<graphscope_cypher_endpoint>
-
 ```
+
+## Core Features
+
+### Data Modeling
+
+GraphScope Portal supports users in manually constructing graph models. You can create vertex types by clicking "Add Node" or create edge types by "dragging vertex edges." The entire process is like freely sketching on a whiteboard—efficient and simple. Additionally, Portal supports automatically inferring and generating graph models by parsing user CSV, JSON, and other data files.
+
+![modeling](https://img.alicdn.com/imgextra/i1/O1CN01Msfdm820qFpaF6Ku6_!!6000000006900-0-tps-3572-1912.jpg)
+
+### Data Importing
+
+GraphScope Portal allows users to bind data files in a single or batch mode according to the vertex-edge model. For CSV files, it provides local upload and field mapping parsing functionality. It also supports one-click data import through YAML configuration files.
+
+![importing](https://img.alicdn.com/imgextra/i2/O1CN01VZlwwK1K5nnW6MPF7_!!6000000001113-0-tps-3554-1914.jpg)
+
+### Interactive Querying
+
+Once the data is ready, GraphScope Portal offers the 「Query」 module, which features a powerful code editor, multiple query methods, and rich visualization.
+
+Powerful Editor: Supports syntax completion and highlighting for Cypher / Gremlin, making it easy for users to edit and modify queries.
+
+Multiple Query Methods: Allows users to write and save graph query statements, review history, recommend queries based on schema, and use natural language queries based on OpenAI.
+
+Rich Visualization: Supports both Graph and Table display modes. The Graph mode provides 2D/3D visualization, an efficient rendering engine, and allows users to customize node and edge colors, sizes, fonts, etc. It also supports further data insights through "switching charts."
+
+### Extensibility
+
+GraphScope Portal offers a 「Extension」 module, supporting the import and use of "Stored Procedures" and "Graph Algorithms" as plugins. It also provides "Personalized Configuration": supports language switching, theme switching, and customization of theme colors and other details.
+
+Its frontend module not only supports use on the Web UI but also integrates with Jupyter Notebook.
 
 ## Other Resources
 
