@@ -72,7 +72,7 @@ const ImportFromYAML = (props: IProps) => {
     <div style={{ height: '100%', width: '100%' }}>
       <Dragger
         disabled={appMode === 'DATA_MODELING' ? disabled : false}
-        // accept={'.yaml'}
+        accept={'.yaml,.json'}
         customRequest={customRequest}
         showUploadList={false}
         multiple={true}

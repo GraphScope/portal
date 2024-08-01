@@ -33,15 +33,26 @@ const Content = () => {
 
   /** export yaml */
   const handleExport = (type: string) => {
+    let yamlFile;
     if (appMode === 'DATA_MODELING') {
       const content = transOptionsToSchema(Utils.fakeSnapshot({ nodes, edges }));
-      const yamlFile = type === 'yaml' ? yaml.dump(content) : JSON.stringify(content);
+      if (type === 'yaml') {
+        yamlFile = yaml.dump(content);
+      }
+      if (type === 'json') {
+        yamlFile = JSON.stringify(content);
+      }
       Utils.download(`create-model.${type}`, yamlFile);
       return;
     }
     if (appMode === 'DATA_IMPORTING') {
       const content = transformImportOptionsToSchemaMapping(Utils.fakeSnapshot({ nodes, edges }));
-      const yamlFile = type === 'yaml' ? yaml.dump(content) : JSON.stringify(content);
+      if (type === 'yaml') {
+        yamlFile = yaml.dump(content);
+      }
+      if (type === 'json') {
+        yamlFile = JSON.stringify(content);
+      }
       Utils.download(`loading-config.${type}`, yamlFile);
       return;
     }
