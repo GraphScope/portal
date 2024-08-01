@@ -1,23 +1,13 @@
 import React, { useState } from 'react';
-import { Breadcrumb, Divider, Typography, Tabs, Segmented, Select, Space, Button, Modal } from 'antd';
-import { FormattedMessage } from 'react-intl';
-import { GlobalOutlined } from '@ant-design/icons';
-import type { BreadcrumbProps, TabsProps } from 'antd';
+import { Divider, Select, Space, Button, Modal } from 'antd';
+
 import { IGraph, useContext } from './useContext';
 import { STATUS_MAP } from './const';
 import { history } from 'umi';
 import { Utils } from '@graphscope/studio-components';
 import { ConnectEndpoint } from '@graphscope/studio-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faCoins,
-  faMagnifyingGlass,
-  faDownload,
-  faListCheck,
-  faBell,
-  faPuzzlePiece,
-  faDiagramProject,
-} from '@fortawesome/free-solid-svg-icons';
+import { faCoins } from '@fortawesome/free-solid-svg-icons';
 
 interface IConnectModelProps {}
 
@@ -33,7 +23,6 @@ const SelectGraph: React.FunctionComponent<IConnectModelProps> = props => {
         label: (
           <Space>
             <FontAwesomeIcon icon={faCoins} style={{ color: STATUS_MAP[item.status].color }} />
-            {/* <GlobalOutlined style={{ color: STATUS_MAP[item.status].color }} /> */}
             {item.name}
           </Space>
         ),
@@ -56,7 +45,9 @@ const SelectGraph: React.FunctionComponent<IConnectModelProps> = props => {
     });
   };
 
-  const onFinish = () => {};
+  const onFinish = () => {
+    setOpen(false);
+  };
   const onClose = () => {
     setOpen(false);
   };
@@ -76,7 +67,7 @@ const SelectGraph: React.FunctionComponent<IConnectModelProps> = props => {
               <>
                 <Divider style={{ margin: '4px 0px' }} />
                 <Button type="default" onClick={handleConnect} style={{ width: '100%' }}>
-                  Connect
+                  Endpoint
                 </Button>
               </>
             )}
