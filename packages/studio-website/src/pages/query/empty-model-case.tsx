@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { Modal, Result, Button } from 'antd';
 import { useContext } from '@/layouts/useContext';
 import { history } from 'umi';
-import ConnectEndpoint from './connect-endpoint';
+// import ConnectEndpoint from './connect-endpoint';
 import { SplitSection } from '@graphscope/studio-components';
 import { FormattedMessage } from 'react-intl';
+import { ConnectEndpoint } from '@graphscope/studio-query';
+import type { IQueryModuleState } from './app';
 interface IEmptyModelCaseProps {}
 
 const EmptyModelCase: React.FunctionComponent<IEmptyModelCaseProps> = props => {
@@ -31,6 +33,7 @@ const EmptyModelCase: React.FunctionComponent<IEmptyModelCaseProps> = props => {
   const handleFinish = (values: any) => {
     console.log(values);
   };
+  const handleConnect = () => {};
   if (graphId === draftId) {
     return (
       <div>
@@ -54,12 +57,12 @@ const EmptyModelCase: React.FunctionComponent<IEmptyModelCaseProps> = props => {
             }
             rightSide={
               <ConnectEndpoint
-                onFinish={handleFinish}
-                onColse={() =>
+                onClose={() =>
                   setState({
                     open: false,
                   })
                 }
+                onConnect={handleConnect}
               />
             }
           />
@@ -70,4 +73,4 @@ const EmptyModelCase: React.FunctionComponent<IEmptyModelCaseProps> = props => {
   return null;
 };
 
-export default EmptyModelCase;
+export default memo(EmptyModelCase);

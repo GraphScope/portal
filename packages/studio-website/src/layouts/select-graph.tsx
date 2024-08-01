@@ -7,7 +7,7 @@ import { IGraph, useContext } from './useContext';
 import { STATUS_MAP } from './const';
 import { history } from 'umi';
 import { Utils } from '@graphscope/studio-components';
-import ConnectEndpoint from '@/pages/query/connect-endpoint';
+import { ConnectEndpoint } from '@graphscope/studio-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCoins,
@@ -95,7 +95,7 @@ const SelectGraph: React.FunctionComponent<IConnectModelProps> = props => {
         closable={false}
         width={1000}
       >
-        <ConnectEndpoint onFinish={onFinish} onColse={onClose} />
+        <ConnectEndpoint onConnect={onFinish} onClose={onClose} />
       </Modal>
     </div>
   );

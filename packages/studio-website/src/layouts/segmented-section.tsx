@@ -37,7 +37,7 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
     history,
   } = props;
   const { store, updateStore } = useContext();
-  const { currentnNav, graphs, graphId, draftId } = store;
+  const { currentnNav, graphs, graphId, draftId, isReady } = store;
   const { token } = useThemeContainer();
   const ContainerWidth = useWidth();
   const handleChange = (value: string) => {
@@ -71,9 +71,14 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
         updateStore(draft => {
           draft.graphs = res as unknown as IGraph[];
           draft.graphId = (matchGraph && matchGraph.id) || graphId;
+          draft.isReady = true;
         });
         Utils.setSearchParams({
           graph_id: (matchGraph && matchGraph.id) || graphId,
+        });
+      } else {
+        updateStore(draft => {
+          draft.isReady = true;
         });
       }
     });
@@ -94,7 +99,7 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
         ...style,
       }}
     >
-      {children}
+      {isReady && children}
     </section>
   );
 };
