@@ -144,7 +144,6 @@ export function transformGrootCreateVertexToOptions(params: {
   const propertyMap = new Map();
   if (properties.length) {
     properties.forEach(item => {
-      debugger;
       const { name, primaryKey, type } = item;
       if (primaryKey) {
         primary_keys = [name];
