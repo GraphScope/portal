@@ -1,6 +1,5 @@
-import { Button, Tooltip, Popover, Flex, Typography, Divider, theme } from 'antd';
+import { Button, Popover, Flex, Typography, Divider, theme, Space } from 'antd';
 import * as React from 'react';
-import { FileExcelFilled } from '@ant-design/icons';
 import { Utils, Icons } from '@graphscope/studio-components';
 import { useContext } from '../useContext';
 import { transOptionsToSchema } from '../utils/modeling';
@@ -18,12 +17,12 @@ const APP_MODE_YAML_TITLE: {
   };
 } = {
   DATA_MODELING: {
-    importText: 'Import YAML file to generate graph model',
-    exportText: 'Save graph model to local YAML file',
+    importText: 'Import YAML or JSON file to generate graph model',
+    exportText: 'Save graph model to local YAML or JSON file',
   },
   DATA_IMPORTING: {
-    importText: 'Import YAML file to generate graph loading config',
-    exportText: 'Save graph loading config to local YAML file',
+    importText: 'Import YAML or JSON file to generate graph loading config',
+    exportText: 'Save graph loading config to local YAML or JSON file',
   },
 };
 const Content = () => {
@@ -33,16 +32,16 @@ const Content = () => {
   const { importText, exportText } = APP_MODE_YAML_TITLE[appMode];
 
   /** export yaml */
-  const handleExport = () => {
+  const handleExport = (type: string) => {
     if (appMode === 'DATA_MODELING') {
       const content = transOptionsToSchema(Utils.fakeSnapshot({ nodes, edges }));
-      const yamlFile = yaml.dump(content);
+      const yamlFile = type === 'YAML' ? yaml.dump(content) : JSON.stringify(content);
       Utils.download('create-model.yaml', yamlFile);
       return;
     }
     if (appMode === 'DATA_IMPORTING') {
-      const content = transformImportOptionsToSchemaMapping( Utils.fakeSnapshot({ nodes, edges }));
-      const yamlFile = yaml.dump(content);
+      const content = transformImportOptionsToSchemaMapping(Utils.fakeSnapshot({ nodes, edges }));
+      const yamlFile = type === 'YAML' ? yaml.dump(content) : JSON.stringify(content);
       Utils.download('loading-config.yaml', yamlFile);
       return;
     }
@@ -54,11 +53,18 @@ const Content = () => {
       <ImportFromYAML
         disabled={!elementOptions.isEditable}
         style={{ height: '160px' }}
-        icon={<Icons.FileYaml style={{ fontSize: '50px', color: token.colorPrimary }} />}
+        icon={<Icons.FileImport style={{ fontSize: '50px', color: token.colorPrimary }} />}
       />
       <Divider style={{ margin: '12px  0px' }} />
       <Typography.Text type="secondary">{exportText}</Typography.Text>
-      <Button onClick={handleExport}>Export</Button>
+      <Flex gap={10}>
+        <Button style={{ width: '50%' }} onClick={() => handleExport('YAML')}>
+          YAML Export
+        </Button>
+        <Button style={{ width: '50%' }} onClick={() => handleExport('JSON')}>
+          JSON Export
+        </Button>
+      </Flex>
     </Flex>
   );
 };
@@ -66,7 +72,7 @@ const Content = () => {
 const ImportAndExportYaml: React.FunctionComponent<ILeftButtonProps> = props => {
   return (
     <Popover placement="bottomLeft" content={<Content />}>
-      <Button type="text" icon={<Icons.FileYaml />} />
+      <Button type="text" icon={<Icons.FileImport />} />
     </Popover>
   );
 };
