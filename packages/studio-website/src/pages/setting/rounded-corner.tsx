@@ -1,8 +1,7 @@
 import React from 'react';
-import { Col, InputNumber, Slider, theme } from 'antd';
+import { InputNumber, Slider, theme } from 'antd';
 import { useThemeContainer } from '@graphscope/studio-components';
 import SettingParcel from '@/components/setting-parcel';
-// type IRoundedCornerProps = {};
 const { useToken } = theme;
 const RoundedCorner: React.FunctionComponent = () => {
   const { token } = useToken();
@@ -10,6 +9,7 @@ const RoundedCorner: React.FunctionComponent = () => {
   const { handleTheme } = useThemeContainer();
 
   const handleBorderRadiusChange: (newBorderRadius: number | null) => void = newBorderRadius => {
+    //@ts-ignore
     handleTheme({ token: { ...token, borderRadius: newBorderRadius } });
   };
 

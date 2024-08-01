@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, forwardRef, LegacyRef } from 'react';
 import { SectionContext, SectionProvider } from './useSection';
 import { theme } from 'antd';
 const { useToken } = theme;
@@ -62,7 +62,7 @@ const getStyles = (props, collapsed: { leftSide: boolean; rightSide: boolean }, 
     },
   };
 };
-const Section: React.FunctionComponent<ISectionProps> = props => {
+const Section = forwardRef((props: ISectionProps, ref: LegacyRef<HTMLDivElement>) => {
   const { rightSide, leftSide, children, splitBorder, defaultCollapsed, style, revert } = props;
   const { token } = useToken();
   const [state, setState] = useState({
@@ -101,7 +101,7 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
 
   return (
     <SectionProvider value={{ collapsed, toggleRightSide, toggleLeftSide }}>
-      <div style={{ width: '100%', height: '100%', display: 'flex', ...style }}>
+      <div style={{ width: '100%', height: '100%', display: 'flex', ...style }} ref={ref}>
         <div style={{ height: '100%', display: 'flex', width: '100%', overflow: 'hidden' }}>
           {leftSide && <div style={leftSideStyle}>{_leftSide}</div>}
           {children && <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>{children}</div>}
@@ -110,6 +110,6 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
       </div>
     </SectionProvider>
   );
-};
+});
 
 export default Section;

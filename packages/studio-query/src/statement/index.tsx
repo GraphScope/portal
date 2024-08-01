@@ -59,7 +59,6 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
   }, [active]);
 
   const handleQuery = async params => {
-    console.log('isFetching...', isFetching);
     if (isFetching) {
       onCancel && onCancel(params);
       updateState(preState => {

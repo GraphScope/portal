@@ -156,6 +156,11 @@ export interface IStudioQueryProps {
   displaySidebarPosition?: 'left' | 'right';
   /** 侧边栏展示的类型 */
   displaySidebarType?: 'Sidebar' | 'Segmented';
+  /** 侧边栏样式 */
+  sidebarStyle?: React.CSSProperties;
+  /** 侧边栏默认的折叠状态 */
+  sidebarCollapsed?: boolean;
+
   /** 是否需要再添加查询语句的时候，切换展示为 absolute */
   enableAbsolutePosition?: boolean;
   /**  启用立刻查询 */
@@ -165,4 +170,12 @@ export interface IStudioQueryProps {
   logo?: React.ReactNode;
   /** 连接endpoint的组件 */
   connectComponent?: React.ReactNode;
+
+  /** 是否初始化时候自动执行全局的语句 globalscript */
+  autoRun?: boolean;
+  /** 欢迎页 */
+  welcome?: {
+    title: string;
+    description: string;
+  };
 }

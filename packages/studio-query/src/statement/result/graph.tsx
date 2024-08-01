@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import Graph from '../../graph';
+import React from 'react';
+import { QueryGraph } from '@graphscope/studio-graph';
 interface IGraphViewProps {
   data: any;
   schemaData: any;
@@ -41,15 +41,9 @@ const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
   const { data, schemaData, graphId } = props;
   const graphSchema = transGraphSchema(schemaData);
 
-  useEffect(() => {
-    return () => {
-      console.log('unmount....graph');
-    };
-  }, []);
-
   return (
     <div style={{ width: '100%' }}>
-      <Graph data={data} schemaData={graphSchema} schemaId={graphId} />
+      <QueryGraph data={data} schema={graphSchema} graphId={graphId} />
     </div>
   );
 };

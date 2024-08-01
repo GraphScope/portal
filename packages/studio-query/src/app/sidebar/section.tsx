@@ -16,7 +16,7 @@ const Section: React.FunctionComponent<IContainerProps> = props => {
       <Typography.Title level={5} style={{ margin: '0px', flexBasis: '30px', padding: '12px' }}>
         <FormattedMessage id={title} />
       </Typography.Title>
-      {children}
+      <div style={{ height: '100%', overflow: 'hidden', marginBottom: '8px' }}>{children}</div>
     </Flex>
   );
 };

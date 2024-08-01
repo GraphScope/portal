@@ -84,5 +84,8 @@ export function inferredGraphFields(header: string[]) {
     sourceField,
     targetField,
     type,
+    /** 目前都是硬编码指定labelfield为label */
+    nodeLabelField: 'label',
+    edgeLabelField: 'label',
   };
 }

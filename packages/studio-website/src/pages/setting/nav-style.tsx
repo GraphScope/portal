@@ -1,6 +1,5 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { Flex, Row, Col, Segmented } from 'antd';
+import { Segmented } from 'antd';
 import { useContext } from '@/layouts/useContext';
 import localStorage from '@/components/utils/localStorage';
 import SettingParcel from '@/components/setting-parcel';

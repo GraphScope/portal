@@ -1,0 +1,37 @@
+{
+  "name": "@graphscope/studio-draw-pattern",
+  "version": "0.0.1",
+  "description": "Experiment draw pattern code for GrapeScope",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "scripts": {
+    "dev": "father dev",
+    "build": "father build",
+    "build:deps": "father prebundle",
+    "prepublishOnly": "father doctor && npm run build"
+  },
+  "keywords": [],
+  "authors": [],
+  "license": "MIT",
+  "files": [
+    "./dist/esm",
+    "compiled"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.7.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "father": "^4.4.5",
+    "typescript": "^5.5.4"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "dependencies": {
+    "valtio": "^1.13.2"
+  }
+}

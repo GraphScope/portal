@@ -8,6 +8,7 @@ tag: New
 import React, { useState } from 'react';
 import { Space } from 'antd';
 import { Icons } from '@graphscope/studio-components';
+
 export default () => {
   return (
     <div>
@@ -17,6 +18,8 @@ export default () => {
         <Icons.Sidebar />
         <Icons.FileExport />
         <Icons.FileYaml />
+        <Icons.Graph2D />
+        <Icons.Graph3D />
       </Space>
     </div>
   );

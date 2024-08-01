@@ -92,7 +92,6 @@ export const getSchemaData = files => {
       var currentSource = nodeMap.get(edge.source);
       var currentTarget = nodeMap.get(edge.target);
       if (!currentSource || !currentTarget) {
-        debugger;
         console.warn(
           '\u6570\u636E\u4E0D\u5408\u6CD5, \u627E\u4E0D\u5230 '.concat(
             !currentSource ? 'Source ID\uFF1A'.concat(edge.source) : 'Target ID\uFF1A'.concat(edge.target),

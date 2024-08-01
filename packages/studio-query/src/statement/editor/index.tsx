@@ -1,12 +1,11 @@
 import * as React from 'react';
 import CypherEdit from '../../cypher-editor';
-import { Space, Button, Input, Flex, Tooltip, Typography, Tag, Card } from 'antd';
+import { Space, Button, Flex, Tooltip, Typography } from 'antd';
 import type { GlobalToken } from 'antd';
-import { PlayCircleOutlined, BookOutlined, CloseOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { PlayCircleOutlined, CloseOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { useRef } from 'react';
 import { IEditorProps } from '../typing';
 import SaveStatement from './save';
-import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 import { useThemeContainer } from '@graphscope/studio-components';
 import { useIntl } from 'react-intl';
@@ -110,23 +109,7 @@ const Editor: React.FunctionComponent<
           )}
         </Space>
       </Flex>
-      <Flex
-        justify="space-between"
-        style={{
-          // border: '1px solid #bbbec3',
-          border: isDark ? '1px solid #434343' : '1px solid rgb(187, 190, 195)',
-          borderRadius: '6px',
-        }}
-      >
-        <CypherEdit
-          language={language}
-          schemaData={schemaData}
-          ref={editorRef}
-          value={script}
-          // onChange={handleChange}
-          onInit={(initEditor: any) => {}}
-        />
-      </Flex>
+      <CypherEdit language={language} ref={editorRef} value={script} />
     </div>
   );
 };

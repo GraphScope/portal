@@ -38,24 +38,3 @@ npm run start
 cd packages/studio-website
 npm run start
 ```
-
-## 部署指南
-
-在根目录下执行:
-
-编译前端产物
-
-`npm run ci`
-
-启动前端托管服务
-
-```bash
-cd packages/studio-website/proxy
-npm run start -- --cypher_endpoint=neo4j://xx.xx.xx.xx:7687 --coordinator=http://127.0.0.1:8080
-```
-
-explanation:
-
-- `coordinator` GraphScope的引擎地址，默认是 `http://127.0.0.1:8080`.
-- `port` 是前端服务端口号 `8888`.
-- `cypher_endpoint` 是GraphScope Interactive 引擎的查询地址，默认为 `neo4j://<your ip address>:7687`.
