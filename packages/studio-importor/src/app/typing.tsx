@@ -3,6 +3,7 @@ import type { Node, Edge } from 'reactflow';
 
 export interface IEdgeData {
   label: string;
+  disabled?: boolean;
   properties?: Property[];
   source_vertex_fields?: Property;
   target_vertex_fields?: Property;
@@ -24,6 +25,7 @@ export interface IEdgeData {
 
 export interface INodeData {
   label: string;
+  disabled?: boolean;
   properties?: Property[];
   dataFields?: string[];
   delimiter?: string;

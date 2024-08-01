@@ -1,10 +1,8 @@
 import { GraphApiFactory, UtilsApiFactory } from '@graphscope/studio-server';
-import type { CreateVertexType, CreateEdgeType } from '@graphscope/studio-server';
-import { transOptionsToSchema } from '@graphscope/studio-importor';
+import { transOptionsToSchema, ISchemaNode } from '@graphscope/studio-importor';
 import { cloneDeep } from 'lodash';
-import { message } from 'antd';
 import { notification } from '@/pages/utils';
-import { Utils } from '@graphscope/studio-components';
+import { Utils, Property } from '@graphscope/studio-components';
 import {
   transformGrootCreateVertexToOptions,
   transformGrootCreateEdgeToOptions,
@@ -97,7 +95,7 @@ export const deleteVertexTypeOrEdgeType = async (
   typeName: string,
   sourceVertexType?: string,
   destinationVertexType?: string,
-  nodes?: any,
+  nodes?: ISchemaNode[],
 ) => {
   let response: boolean = false;
   const graph_id = getSearchParams('graph_id') || '';
@@ -112,10 +110,11 @@ export const deleteVertexTypeOrEdgeType = async (
   }
   if (type === 'edges') {
     const nodeMap: Record<string, string> = {};
-    nodes.map((item: { id: string | number; data: { label: string } }) => {
-      nodeMap[item.id] = item.data.label;
-      return item.data.label;
-    });
+    nodes &&
+      nodes.map((item: { id: string | number; data: { label: string } }) => {
+        nodeMap[item.id] = item.data.label;
+        return item.data.label;
+      });
     try {
       const res = await GraphApiFactory(undefined, location.origin).deleteEdgeTypeByName(
         graph_id,
@@ -135,12 +134,13 @@ export const deleteVertexTypeOrEdgeType = async (
 /** groot 单独创建节点或边 */
 export const createVertexTypeOrEdgeType = async (
   type: string,
-  params: { nodes?: any; label: string; source?: string; target?: string; properties: any },
+  params: { nodes?: ISchemaNode[]; label: string; source?: string; target?: string; properties: Property[] },
 ) => {
-  const graph_id = getSearchParams('graph_id') || '';
   let response: boolean = false;
+  const graph_id = getSearchParams('graph_id') || '';
+  const { nodes = [], label, source = '', target = '', properties } = params;
   if (type === 'nodes') {
-    const vertexType = transformGrootCreateVertexToOptions(params) as CreateVertexType;
+    const vertexType = transformGrootCreateVertexToOptions({ label, properties });
     try {
       const res = await GraphApiFactory(undefined, location.origin).createVertexType(graph_id, vertexType);
       notification('success', res.data);
@@ -150,8 +150,7 @@ export const createVertexTypeOrEdgeType = async (
     }
   }
   if (type === 'edges') {
-    const { nodes, label, source = '', target = '', properties } = params;
-    const edgeType = transformGrootCreateEdgeToOptions(nodes, { label, source, target }, properties) as CreateEdgeType;
+    const edgeType = transformGrootCreateEdgeToOptions(nodes, { label, source, target }, properties);
     try {
       const res = await GraphApiFactory(undefined, location.origin).createEdgeType(graph_id, edgeType);
       notification('success', res.data);
