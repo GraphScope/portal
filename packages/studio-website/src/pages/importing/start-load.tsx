@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Select, Form, Flex, Typography, notification, Space } from 'antd';
+import { Button, Select, Form, Flex, Typography, notification, DatePicker } from 'antd';
 import type { DataloadingJobConfigLoadingConfigImportOptionEnum } from '@graphscope/studio-server';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useContext as useImporting } from '@graphscope/studio-importor';
 import { submitDataloadingJob } from './services';
 import { history } from 'umi';
+import dayjs from 'dayjs';
 export type FieldType = {
   type?: string;
   delimiter?: string;
@@ -12,6 +13,8 @@ export type FieldType = {
   header_row: boolean;
   quoting?: boolean;
   quote_char?: string;
+  repeat?: 'once' | 'day' | 'week';
+  schedule?: string;
 };
 type ILeftSide = {
   graphId: string;
@@ -39,7 +42,24 @@ const { Title, Text } = Typography;
 //     onClose: close,
 //   });
 // };
-
+const REPEATOPTIONS = [
+  {
+    value: 'once',
+    label: 'No repeat',
+  },
+  {
+    value: 'day',
+    label: 'Every day on the same time',
+  },
+  {
+    value: 'week',
+    label: 'Every week on the same time',
+  },
+];
+const { GS_ENGINE_TYPE } = window;
+const styles: Record<string, string> = {
+  visibility: GS_ENGINE_TYPE === 'groot' ? 'visible' : 'hidden',
+};
 const StartLoad: React.FC<ILeftSide> = props => {
   const { graphId, onColse } = props;
   const [state, updateState] = useState<{
@@ -68,6 +88,8 @@ const StartLoad: React.FC<ILeftSide> = props => {
       import_option: 'overwrite',
       header_row: true,
       quoting: false,
+      repeat: 'once',
+      schedule: dayjs(),
     });
   }, []);
 
@@ -98,7 +120,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
       })
       .catch(error => {
         _status = 'error';
-        _message = error.response.data;
+        _message = GS_ENGINE_TYPE === 'interactive' ? error.response.data : error.response.data.detail;
       });
 
     const gotoBtn = (
@@ -119,7 +141,11 @@ const StartLoad: React.FC<ILeftSide> = props => {
 
   const handleClick = () => {
     const data = form.getFieldsValue();
-    onFinish(data);
+    const grootValue = GS_ENGINE_TYPE === 'groot' && {
+      repeat: 'once',
+      schedule: data.schedule && dayjs(data.schedule).format('YYYY-MM-DD HH:mm:ss'),
+    };
+    onFinish({ ...data, ...grootValue });
   };
 
   return (
@@ -132,9 +158,9 @@ const StartLoad: React.FC<ILeftSide> = props => {
       </Text> */}
       <Form
         name="modal_type"
-        layout="vertical"
+        // layout="vertical"
         style={{ margin: '12px 12px 0px 0px' }}
-        labelCol={{ span: 8 }}
+        labelCol={{ span: 5 }}
         form={form}
       >
         <Form.Item<FieldType> label="Type" name="type">
@@ -195,7 +221,14 @@ const StartLoad: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
-
+        <div style={styles}>
+          <Form.Item label={<FormattedMessage id="Date" />} name="schedule">
+            <DatePicker placeholder=" " showTime style={{ width: '100%' }} />
+          </Form.Item>
+          <Form.Item label={<FormattedMessage id="Repeat" />} name="repeat">
+            <Select options={REPEATOPTIONS} />
+          </Form.Item>
+        </div>
         <Flex justify="end" gap={12}>
           <Button style={{ width: '128px' }} type="primary" onClick={handleClick}>
             <FormattedMessage id="Load data" />

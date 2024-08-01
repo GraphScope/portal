@@ -1,6 +1,8 @@
-import type { VertexType } from '@graphscope/studio-server';
 import { DeepRequired, TransformedSchema, Properties } from './schema';
 import { handleType } from './schema';
+import type { CreateVertexType, CreateEdgeType } from '@graphscope/studio-server';
+import type { Property } from '@graphscope/studio-components';
+import type { ISchemaNode } from '@graphscope/studio-importor';
 export interface TransformedNode {
   /** 节点类型 */
   label: string;
@@ -22,7 +24,7 @@ export interface TransformedNodeOrEdges {
  */
 export function transOptionsToGrootSchema(options: DeepRequired<TransformedSchema>) {
   const nodeMap: Record<string, string> = {};
-  const vertices: VertexType[] = options.nodes.map(item => {
+  const vertices = options.nodes.map(item => {
     nodeMap[item.key] = item.label;
     return {
       label: item.label,
@@ -78,8 +80,7 @@ export function transOptionsToGrootSchema(options: DeepRequired<TransformedSchem
 
 export function transOptionsToGrootDataloading(options: DeepRequired<TransformedSchema>) {
   const nodeMap: Record<string, string> = {};
-  //@ts-ignore
-  const vertices: VertexType[] = options.nodes.map(item => {
+  const vertices = options.nodes.map(item => {
     nodeMap[item.key] = item.label;
     return item.label;
   });
@@ -134,56 +135,52 @@ export function transformGrootDeleteEdgeToOptions(schema: {
   return [...edgeMap.values()];
 }
 /** groot 创建点参数 */
-export function transformGrootCreateVertexToOptions(
-  schema: { label: string },
-  property?: { id: string; name: string; primaryKey: boolean; type: string }[],
-) {
-  const { label } = schema;
+export function transformGrootCreateVertexToOptions(params: {
+  label: string;
+  properties: Property[];
+}): CreateVertexType {
+  const { label, properties } = params;
   let primary_keys;
   const propertyMap = new Map();
-  //@ts-ignore
-  if (property.length) {
-    //@ts-ignore
-    property.forEach(item => {
+  if (properties.length) {
+    properties.forEach(item => {
       const { name, primaryKey, type } = item;
       if (primaryKey) {
         primary_keys = [name];
       }
       propertyMap.set(item.name, {
         property_name: name,
-        property_type: handleType(type),
+        property_type: handleType(type as string),
       });
     });
   }
-  const properties = [...propertyMap.values()];
+  const property = [...propertyMap.values()];
   return {
     type_name: label,
-    primary_keys,
-    properties,
+    primary_keys: primary_keys as unknown as string[],
+    properties: property,
   };
 }
 export function transformGrootCreateEdgeToOptions(
-  nodeList: { key: string; label: string }[],
+  nodeList: ISchemaNode[],
   schema: { label: string; source: string; target: string },
-  property?: { id: string; name: string; primaryKey: boolean; type: string }[],
-) {
+  property?: Property[],
+): CreateEdgeType {
   const nodeMap: Record<string, string> = {};
   nodeList.map(item => {
-    nodeMap[item.key] = item.label;
-    return item.label;
+    nodeMap[item.id] = item.data.label;
+    return item.data.label;
   });
   const { label, source: sourceID, target: targetID } = schema;
   const source = nodeMap[sourceID];
   const target = nodeMap[targetID];
   const propertyMap = new Map();
-  //@ts-ignore
-  if (property.length) {
-    //@ts-ignore
+  if (property && property.length) {
     property.forEach(item => {
       const { name, type } = item;
       propertyMap.set(item.name, {
         property_name: name,
-        property_type: handleType(type),
+        property_type: handleType(type as string),
       });
     });
   }

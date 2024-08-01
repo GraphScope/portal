@@ -47,6 +47,7 @@ const Content = () => {
     }
     if (appMode === 'DATA_IMPORTING') {
       const content = transformImportOptionsToSchemaMapping(Utils.fakeSnapshot({ nodes, edges }));
+ 
       if (type === 'yaml') {
         yamlFile = yaml.dump(content);
       }

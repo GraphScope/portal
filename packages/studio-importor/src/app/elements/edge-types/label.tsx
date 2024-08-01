@@ -3,21 +3,22 @@ import { EdgeLabelRenderer } from 'reactflow';
 import { EditableText, useThemeContainer, useSection } from '@graphscope/studio-components';
 import { useContext } from '../../useContext';
 import { CheckOutlined } from '@ant-design/icons';
-import { Button, theme } from 'antd';
+import { theme } from 'antd';
 const { useToken } = theme;
 interface ILabelProps {
   id: string;
   label: string;
   style?: React.CSSProperties;
   filelocation?: string;
+  disabled?: boolean;
 }
 
 const Label: React.FunctionComponent<ILabelProps> = props => {
-  const { id, label, style, filelocation } = props;
+  const { id, label, style, filelocation, disabled } = props;
   const { store, updateStore } = useContext();
   const { toggleRightSide } = useSection();
   const { token } = useToken();
-  const { currentId, theme, elementOptions } = store;
+  const { currentId, theme } = store;
   const isSelected = id === currentId;
   const { algorithm } = useThemeContainer();
   const isDark = algorithm === 'darkAlgorithm';
@@ -91,7 +92,7 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
           }}
         >
           <EditableText
-            disabled={!elementOptions.isEditable}
+            disabled={disabled}
             id={id}
             text={label || id}
             onTextChange={onLabelChange}

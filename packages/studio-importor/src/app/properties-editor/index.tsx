@@ -9,13 +9,24 @@ import ValidateInfo from './properties-schema/validate-info';
 import ScrollContainer, { disableScroll } from './scroll-container';
 type IPropetiesEditorProps = Pick<
   ImportorProps,
-  'appMode' | 'handleUploadFile' | 'queryPrimitiveTypes' | 'batchUploadFiles'
+  | 'appMode'
+  | 'handleUploadFile'
+  | 'queryPrimitiveTypes'
+  | 'batchUploadFiles'
+  | 'createVertexTypeOrEdgeType'
+  | 'deleteVertexTypeOrEdgeType'
 >;
-
 const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props => {
   const { store, updateStore } = useContext();
   const { nodes, edges, currentType, currentId, elementOptions } = store;
-  const { appMode, handleUploadFile, queryPrimitiveTypes, batchUploadFiles } = props;
+  const {
+    appMode,
+    handleUploadFile,
+    queryPrimitiveTypes,
+    batchUploadFiles,
+    createVertexTypeOrEdgeType,
+    deleteVertexTypeOrEdgeType,
+  } = props;
   const ids = new Set();
   const itemRefs = [...nodes, ...edges].reduce((acc, curr) => {
     acc[curr.id] = { ref: React.createRef(), file: curr.data.label + '.csv' };
@@ -62,7 +73,8 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
           queryPrimitiveTypes={queryPrimitiveTypes}
           handleUploadFile={handleUploadFile}
           appMode={appMode}
-          disabled={!elementOptions.isEditable}
+          createVertexTypeOrEdgeType={createVertexTypeOrEdgeType}
+          deleteVertexTypeOrEdgeType={deleteVertexTypeOrEdgeType}
         />
       ),
     };
@@ -90,7 +102,8 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
           queryPrimitiveTypes={queryPrimitiveTypes}
           handleUploadFile={handleUploadFile}
           appMode={appMode}
-          disabled={!elementOptions.isEditable}
+          createVertexTypeOrEdgeType={createVertexTypeOrEdgeType}
+          deleteVertexTypeOrEdgeType={deleteVertexTypeOrEdgeType}
         />
       ),
     };

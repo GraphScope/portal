@@ -22,6 +22,8 @@ export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchema
       data: {
         label: type_name,
         primary: primary_keys[0],
+        /** 查询中单独节点内是否可以编辑 */
+        disabled: true,
         properties: properties.map((item, index) => {
           const { property_name, property_type } = item;
           return {
@@ -57,6 +59,8 @@ export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchema
           id: uuidv4(),
           data: {
             label: type_name,
+            /** 查询中单独边内是否可以编辑 */
+            disabled: true,
             properties: properties.map(p => {
               return {
                 key: uuidv4(),
@@ -74,6 +78,21 @@ export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchema
   }
 
   return { nodes, edges };
+}
+/** yaml 上传文件时添加可编辑标识 disabled为false */
+export function appendData(originalSchema: ISchemaOptions, options: { disabled: boolean }): ISchemaOptions {
+  const { nodes, edges } = originalSchema || { nodes: [], edges: [] };
+  const updatedNodes = nodes.map(item => ({
+    ...item,
+    data: { ...item.data, ...options },
+  }));
+
+  const updatedEdges = edges.map(item => ({
+    ...item,
+    data: { ...item.data, ...options },
+  }));
+
+  return { nodes: updatedNodes, edges: updatedEdges };
 }
 
 export const handleType = (type?: string) => {

@@ -4,7 +4,7 @@ import type { UploadProps } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import yaml from 'js-yaml';
 
-import { transSchemaToOptions } from '../../utils/modeling';
+import { transSchemaToOptions, appendData } from '../../utils/modeling';
 import { transMappingSchemaToOptions } from '../../utils/importing';
 import { useContext } from '../../useContext';
 import { transformEdges, transformGraphNodes } from '../../elements';
@@ -55,8 +55,6 @@ const ImportFromYAML = (props: IProps) => {
       if (appMode === 'DATA_IMPORTING') {
         schema = transMappingSchemaToOptions({} as any, jsonContent, { nodes, edges } as any);
       }
-
-      console.log(content, schema);
       updateStore(draft => {
         draft.hasLayouted = false;
         draft.nodes = transformGraphNodes(schema.nodes, 'graph');

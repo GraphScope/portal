@@ -1,23 +1,37 @@
 import * as React from 'react';
-import { Row, Space, Button, Typography } from 'antd';
-
-interface IGrootCaseProps {}
+import { Row, Space, Button, Tooltip } from 'antd';
+import { FormattedMessage } from 'react-intl';
+import { validateProperties } from './validate-info';
+interface IGrootCaseProps {
+  appMode: string;
+  type: 'nodes' | 'edges';
+  properties: any;
+  disabled: boolean;
+  handleSubmit: () => void;
+  handleDelete: () => void;
+}
 
 const GrootCase: React.FunctionComponent<IGrootCaseProps> = props => {
   //@ts-ignore
   const isGroot = window.GS_ENGINE_TYPE === 'groot';
-  const handleSubmit = () => {};
-  const handleDelete = () => {};
+  const { appMode, type, properties, disabled, handleSubmit, handleDelete } = props;
+  const tooltip = validateProperties({ appMode, type, properties, filelocation: '' });
   return (
     <Row justify="end">
       {isGroot && (
         <Space>
-          <Button size="small" type="primary" onClick={handleSubmit}>
-            Submit
-          </Button>
-          <Button size="small" type="primary" danger ghost onClick={handleDelete}>
-            Delete
-          </Button>
+          {!disabled && (
+            <Tooltip title={tooltip && <FormattedMessage id={`${tooltip}`} />}>
+              <Button size="small" type="primary" onClick={handleSubmit} disabled={!!tooltip}>
+                Submit
+              </Button>
+            </Tooltip>
+          )}
+          {appMode === 'DATA_MODELING' && (
+            <Button size="small" type="primary" danger ghost onClick={handleDelete}>
+              Delete
+            </Button>
+          )}
         </Space>
       )}
     </Row>

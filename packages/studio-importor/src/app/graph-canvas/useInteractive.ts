@@ -12,7 +12,6 @@ import { useContext } from '../useContext';
 import { transformEdges } from '../elements';
 
 import { getBBox, createEdgeLabel, createNodeLabel } from '../utils';
-
 let timer: any = null;
 const useInteractive: any = () => {
   const { store, updateStore } = useContext();
