@@ -1,7 +1,7 @@
 import { defineConfig } from 'umi';
 import dotenv from 'dotenv';
 const { parsed } = dotenv.configDotenv();
-const { PROXY_URL_GROOT, PROXY_URL_INTERACTIVE, PORXY_URL_LOCAL, SLOT_URL } = parsed || {};
+const { PROXY_URL_GROOT, PROXY_URL_INTERACTIVE, PORXY_URL_LOCAL, SLOT_URL = [] } = parsed || {};
 console.log(SLOT_URL);
 let headScripts;
 let externals;
@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'production') {
   headScripts = [
     'https://gw.alipayobjects.com/os/lib/react/18.2.0/umd/react.production.min.js',
     'https://gw.alipayobjects.com/os/lib/react-dom/18.2.0/umd/react-dom.production.min.js',
-    SLOT_URL,
+    ...SLOT_URL,
   ];
   externals = {
     'node:os': 'commonjs2 node:os',
