@@ -1,7 +1,30 @@
 import { defineConfig } from 'umi';
 import dotenv from 'dotenv';
 const { parsed } = dotenv.configDotenv();
-const { PROXY_URL_GROOT, PROXY_URL_INTERACTIVE, PORXY_URL_LOCAL } = parsed || {};
+const { PROXY_URL_GROOT, PROXY_URL_INTERACTIVE, PORXY_URL_LOCAL, SLOT_URL } = parsed || {};
+console.log(SLOT_URL);
+let headScripts;
+let externals;
+
+if (process.env.NODE_ENV === 'development') {
+  // 开发环境代码
+  headScripts = [];
+  externals = {
+    'node:os': 'commonjs2 node:os',
+  };
+}
+if (process.env.NODE_ENV === 'production') {
+  headScripts = [
+    'https://gw.alipayobjects.com/os/lib/react/18.2.0/umd/react.production.min.js',
+    'https://gw.alipayobjects.com/os/lib/react-dom/18.2.0/umd/react-dom.production.min.js',
+    SLOT_URL,
+  ];
+  externals = {
+    'node:os': 'commonjs2 node:os',
+    react: 'React',
+    'react-dom': 'ReactDOM',
+  };
+}
 
 export default defineConfig({
   routes: [
@@ -23,13 +46,8 @@ export default defineConfig({
   jsMinifier: 'terser',
   npmClient: 'pnpm',
   monorepoRedirect: {},
-  externals: {
-    // '@antv/g2': 'G2',
-    'node:os': 'commonjs2 node:os',
-    // '@graphscope/_test_gremlin_': 'GS_GREMLIN',
-    // react: 'React',
-    // 'react-dom': 'ReactDOM',
-  },
+  externals,
+  headScripts,
   mfsu: {
     shared: {
       react: {
@@ -37,7 +55,6 @@ export default defineConfig({
       },
     },
   },
-
   proxy: {
     '/api': {
       target: PROXY_URL_GROOT,
@@ -58,9 +75,4 @@ export default defineConfig({
   // codeSplitting: {
   //   jsStrategy: 'granularChunks',
   // },
-  headScripts: [
-    // 'https://gw.alipayobjects.com/os/lib/antv/g2/5.1.14/dist/g2.min.js',
-    // 'https://gw.alipayobjects.com/os/lib/react/18.2.0/umd/react.production.min.js',
-    // 'https://gw.alipayobjects.com/os/lib/react-dom/18.2.0/umd/react-dom.production.min.js',
-  ],
 });

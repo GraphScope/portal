@@ -5,6 +5,7 @@ export default {
   'navbar.extension': '扩展插件',
   'navbar.alert': '告警监控',
   'navbar.setting': '应用设置',
+  'navbar.deployment': '部署状态',
   Schema: '建模二期',
   /** graphs */
   day: '天',

@@ -1,7 +1,5 @@
-import * as React from 'react';
+import { Slot } from '@graphscope/studio-components';
 
-const Deployment: React.FunctionComponent = () => {
-  return <div> Deployment</div>;
+export default () => {
+  return <Slot id="Deloyment" />;
 };
-
-export default Deployment;
