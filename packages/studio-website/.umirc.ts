@@ -1,4 +1,7 @@
 import { defineConfig } from 'umi';
+import dotenv from 'dotenv';
+const { parsed } = dotenv.configDotenv();
+const { PROXY_URL_GROOT, PROXY_URL_INTERACTIVE, PORXY_URL_LOCAL } = parsed || {};
 
 export default defineConfig({
   routes: [
@@ -6,18 +9,12 @@ export default defineConfig({
     { path: '/graphs', component: 'instance' },
     { path: '/graphs/create', component: 'instance/create' },
     { path: '/setting', component: 'setting' },
-    // { path: '/instance/create', component: 'instance/create-instance' },
-    // { path: '/instance/view-schema', component: 'instance/view-schema' },
-    // { path: '/instance/import-data', component: 'instance/import-data' },
-
-    // { path: '/query-app', component: 'query/app', layout: false },
     { path: '/job', component: 'job' },
     { path: '/job/detail', component: 'job/job-detail' },
     { path: '/extension', component: 'extension' },
     { path: '/extension/:name', component: 'extension/create-plugins' },
     { path: '/alert', component: 'alert' },
     { path: '/deployment', component: 'deployment' },
-
     { path: '/modeling', component: 'modeling' },
     { path: '/importing', component: 'importing' },
     { path: '/querying', component: 'query' },
@@ -43,18 +40,15 @@ export default defineConfig({
 
   proxy: {
     '/api': {
-      target:
-        // 'http://47.242.172.5:8080', //interactive
-        // 'http://47.242.172.5:8081/', //groot
-        // 'https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/0.9.1',
-        // 'https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/1.0.0',
-        'http://54.157.222.57',
-
+      target: PROXY_URL_GROOT,
       changeOrigin: true,
     },
     '/query': {
-      target: 'http://127.0.0.1:8888',
-
+      target: PORXY_URL_LOCAL,
+      changeOrigin: true,
+    },
+    '/query_endpoint': {
+      target: PORXY_URL_LOCAL,
       changeOrigin: true,
     },
   },
