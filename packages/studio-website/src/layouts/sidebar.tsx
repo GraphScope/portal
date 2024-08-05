@@ -1,83 +1,14 @@
 import React, { useState } from 'react';
-import { SettingFilled, GithubOutlined, ReadOutlined, LinkOutlined } from '@ant-design/icons';
+import { GithubOutlined, ReadOutlined, LinkOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu, Flex, Button, theme, Tooltip } from 'antd';
 import { history, useLocation } from 'umi';
-import { FormattedMessage, useIntl } from 'react-intl';
-
+import { useIntl } from 'react-intl';
 import { useContext } from './useContext';
 import Logo from '@/components/logo';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faCoins,
-  faMagnifyingGlass,
-  faDownload,
-  faListCheck,
-  faBell,
-  faPuzzlePiece,
-  faDiagramProject,
-} from '@fortawesome/free-solid-svg-icons';
 import { Utils } from '@graphscope/studio-components';
-import { modalGlobalConfig } from 'antd/es/modal/confirm';
-import { TOOLS_MENU } from './const';
+import { SIDE_MENU } from './const';
 const { useToken } = theme;
-
-const items: MenuProps['items'] = [
-  {
-    label: <FormattedMessage id="navbar.graphs" />,
-    key: '/graphs',
-    icon: <FontAwesomeIcon icon={faCoins} />,
-  },
-  {
-    type: 'divider',
-  },
-  ...TOOLS_MENU,
-  {
-    type: 'divider',
-  },
-];
-
-const AlertModule =
-  window.GS_ENGINE_TYPE === 'groot'
-    ? [
-        {
-          label: <FormattedMessage id="navbar.alert" />,
-          key: '/alert',
-          icon: <FontAwesomeIcon icon={faBell} />,
-        },
-      ]
-    : [];
-const otherItems: MenuProps['items'] = [
-  {
-    label: <FormattedMessage id="navbar.jobs" />,
-    key: '/job',
-    icon: <FontAwesomeIcon icon={faListCheck} />,
-  },
-  ...AlertModule,
-  {
-    label: <FormattedMessage id="navbar.extension" />,
-    key: '/extension',
-    icon: <FontAwesomeIcon icon={faPuzzlePiece} />,
-  },
-  {
-    label: <FormattedMessage id="navbar.setting" />,
-    key: '/setting',
-    icon: <SettingFilled />,
-  },
-];
-
-const settingMenu: MenuProps['items'] = [
-  // {
-  //   label: <FormattedMessage id="collasped sidebar" />,
-  //   key: '/layout',
-  //   icon: <LayoutOutlined />,
-  // },
-  // {
-  //   label: <FormattedMessage id="navbar.setting" />,
-  //   key: '/setting',
-  //   icon: <SettingFilled />,
-  // },
-];
 
 export const SideWidth = 150;
 const Sidebar: React.FunctionComponent = () => {
@@ -131,21 +62,12 @@ const Sidebar: React.FunctionComponent = () => {
           onClick={onClick}
           // defaultSelectedKeys={[location.pathname]}
           selectedKeys={[defaultPath]}
-          items={[...items, ...otherItems]}
+          items={SIDE_MENU}
           mode="vertical"
           style={{ borderInlineEnd: 'none' }}
         />
 
         <div style={{ marginBottom: '16px' }}>
-          <Menu
-            inlineCollapsed={collapse}
-            onClick={onClick}
-            // defaultSelectedKeys={[location.pathname]}
-            selectedKeys={[defaultPath]}
-            items={settingMenu}
-            mode="vertical"
-            style={{ borderInlineEnd: 'none' }}
-          />
           <Flex gap={12} style={{ padding: '0px 12px' }}>
             <Tooltip
               title={intl.formatMessage({
