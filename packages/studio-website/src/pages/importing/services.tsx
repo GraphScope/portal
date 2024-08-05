@@ -25,49 +25,8 @@ export const bindDatasourceInBatch = async (graph_id: string, options: any) => {
 };
 /** 数据绑定 dataMap(nodes/edges集合)*/
 export const submitDataloadingJob = async (graph_id: string, graphSchema: any, loadConfig: FieldType) => {
-  let NODE_LABEL_MAP: any = {};
-  const schema = {
-    vertices: graphSchema.nodes.map((item: any) => {
-      const { id, data } = item;
-      NODE_LABEL_MAP[id] = data.label;
-      return {
-        type_name: data.label,
-      };
-    }),
-    edges: graphSchema.edges.map((item: any) => {
-      const { id, source, data, target } = item;
-      return {
-        type_name: data.label,
-        source_vertex: NODE_LABEL_MAP[source],
-        destination_vertex: NODE_LABEL_MAP[target],
-      };
-    }),
-  };
-
-  const quoteParams = loadConfig.quoting
-    ? {
-        quoting: loadConfig.quoting,
-        quote_char: loadConfig.quote_char,
-      }
-    : {
-        quoting: loadConfig.quoting,
-      };
-  return JobApiFactory(undefined, location.origin).submitDataloadingJob(graph_id, {
-    ...schema,
-    loading_config: {
-      import_option: loadConfig.import_option,
-      format: {
-        type: loadConfig.type,
-        metadata: {
-          delimiter: loadConfig.delimiter,
-          header_row: loadConfig.header_row,
-          ...quoteParams,
-        },
-      },
-    },
-    repeat: loadConfig.repeat,
-    schedule: loadConfig.schedule,
-  });
+  const params = loadingJob(graphSchema, loadConfig);
+  return JobApiFactory(undefined, location.origin).submitDataloadingJob(graph_id, { ...params });
 };
 
 export const getSchema = async (graph_id: string) => {
@@ -114,6 +73,65 @@ export const getDatasourceById = async (graph_id: string) => {
   return schemaMapping;
 };
 
+export const getDataloadingJobConfig = async (graph_id: string, graphSchema: any, loadConfig: FieldType) => {
+  const params = loadingJob(graphSchema, loadConfig);
+  const periodicSpark = await JobApiFactory(undefined, location.origin)
+    .getDataloadingJobConfig(graph_id!, { ...params })
+    .then(res => res.data)
+    .catch(error => {
+      notification('error', error);
+      return {};
+    });
+
+  return periodicSpark;
+};
+
+export const loadingJob = (graphSchema: any, loadConfig: FieldType) => {
+  let NODE_LABEL_MAP: any = {};
+  const schema = {
+    vertices: graphSchema.nodes.map((item: any) => {
+      const { id, data } = item;
+      NODE_LABEL_MAP[id] = data.label;
+      return {
+        type_name: data.label,
+      };
+    }),
+    edges: graphSchema.edges.map((item: any) => {
+      const { id, source, data, target } = item;
+      return {
+        type_name: data.label,
+        source_vertex: NODE_LABEL_MAP[source],
+        destination_vertex: NODE_LABEL_MAP[target],
+      };
+    }),
+  };
+
+  const quoteParams = loadConfig.quoting
+    ? {
+        quoting: loadConfig.quoting,
+        quote_char: loadConfig.quote_char,
+      }
+    : {
+        quoting: loadConfig.quoting,
+      };
+  const params = {
+    ...schema,
+    loading_config: {
+      import_option: loadConfig.import_option,
+      format: {
+        type: loadConfig.type,
+        metadata: {
+          delimiter: loadConfig.delimiter,
+          header_row: loadConfig.header_row,
+          ...quoteParams,
+        },
+      },
+    },
+    repeat: loadConfig.repeat,
+    schedule: loadConfig.schedule,
+  };
+  return params;
+};
 export const queryPrimitiveTypes = () => {
   if (GS_ENGINE_TYPE === 'groot') {
     return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {
