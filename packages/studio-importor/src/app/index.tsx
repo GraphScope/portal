@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import GraphCanvas from './graph-canvas';
 import PropertiesEditor from './properties-editor';
 import ImportSchema from './import-schema';
 
 import { ReactFlowProvider } from 'reactflow';
-import { ThemeProvider, Section } from '@graphscope/studio-components';
+import { ThemeProvider, Section, Icons } from '@graphscope/studio-components';
 import 'reactflow/dist/style.css';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
@@ -48,15 +48,18 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
     deleteVertexTypeOrEdgeType,
   } = props;
   const { store, updateStore } = useContext();
-
+  const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
     (async () => {
+      setLoading(true);
       let schema: ISchemaOptions = { nodes: [], edges: [] };
       if (appMode === 'DATA_MODELING' && queryGraphSchema) {
         schema = await queryGraphSchema();
+        setLoading(false);
       }
       if (appMode === 'DATA_IMPORTING' && queryBoundSchema) {
         schema = await queryBoundSchema();
+        setLoading(false);
       }
       const schemaOptions = {
         nodes: transformGraphNodes(schema.nodes, store.displayMode),
@@ -100,11 +103,26 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         style={{ height: 'calc(100vh - 50px)' }}
         splitBorder
       >
-        <ReactFlowProvider>
-          <ButtonController />
-          {children}
-          <GraphCanvas />
-        </ReactFlowProvider>
+        {loading ? (
+          <div
+            style={{
+              position: 'relative',
+              display: 'flex',
+              width: '100%',
+              height: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Icons.Cluster style={{ fontSize: 40, color: '#bfbfbf', width: '200px', height: '200px' }} />
+          </div>
+        ) : (
+          <ReactFlowProvider>
+            <ButtonController />
+            {children}
+            <GraphCanvas />
+          </ReactFlowProvider>
+        )}
       </Section>
     </ThemeProvider>
   );

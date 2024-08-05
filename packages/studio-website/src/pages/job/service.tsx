@@ -59,11 +59,12 @@ export const listJobs = async () => {
     });
   return info;
 };
-export const deleteJobById = async (jobId: string) => {
+export const deleteJobById = async (jobId: string, delete_scheduler: boolean) => {
   return await JobApiFactory(undefined, location.origin)
-    .deleteJobById(jobId)
+    .deleteJobById(jobId, delete_scheduler)
     .then(res => {
-      if (res.status === 200) {
+      if (res.status === 200 || 204) {
+        notification('success', 'delete job successfully.');
         return res.data;
       }
       return [];

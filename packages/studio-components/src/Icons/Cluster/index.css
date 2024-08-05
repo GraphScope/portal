@@ -7,11 +7,35 @@
   }
 }
 
-.skeleton {
+#cluster-path {
   background: linear-gradient(90deg, rgba(0, 0, 0, 0.06) 25%, rgba(0, 0, 0, 0.15) 37%, rgba(0, 0, 0, 0.06) 63%);
   background-size: 400% 100%;
   animation-name: ant-skeleton-loading;
   animation-duration: 1.4s;
   animation-timing-function: ease;
   animation-iteration-count: infinite;
+}
+
+@keyframes changeColor {
+  0%,
+  100% {
+    fill: rgba(0, 0, 0, 0.15);
+    background-position: 0 50%;
+  }
+  25% {
+    fill: rgba(0, 0, 0, 0.06);
+    background-position: 0 25%;
+  }
+  37% {
+    fill: rgba(0, 0, 0, 0.15);
+    background-position: 0 37%;
+  }
+  63% {
+    fill: rgba(0, 0, 0, 0.06);
+    background-position: 0 63%;
+  }
+}
+
+#animatedPath {
+  animation: changeColor 1.6s infinite;
 }

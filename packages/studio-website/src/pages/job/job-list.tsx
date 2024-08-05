@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import { Table, Tag, message, Button, Popconfirm, Space } from 'antd';
+import { Table, Tag, message, Button, Popconfirm, Space, Modal, Row, Col, Checkbox } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { history } from 'umi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,14 +13,20 @@ import useStore from './useStore';
 interface IState {
   jobsList: IJobType[];
   typeOptions: { value: string; text: string }[];
+  checked: boolean;
+  isOpen: boolean;
+  jobId: string;
 }
 
 const JobsList: FC = () => {
   const [state, updateState] = useState<IState>({
     jobsList: [],
     typeOptions: [{ value: '', text: 'All' }],
+    checked: true,
+    isOpen: false,
+    jobId: '',
   });
-  const { jobsList, typeOptions } = state;
+  const { jobsList, typeOptions, checked, isOpen, jobId } = state;
   const { STATUSOPTIONS, JOB_TYPE_ICONS, getStatusColor, capitalizeFirstLetter } = useStore();
   /** 获取jobs列表数据 */
   const getJobList = useCallback(async () => {
@@ -46,13 +52,25 @@ const JobsList: FC = () => {
   }, []);
 
   /** 删除job */
-  const handleDeleteJob = useCallback(async (job_id: string) => {
-    const res = await deleteJobById(job_id);
-    //@ts-ignore
-    message.success(res);
+  const handleDeleteJob = async () => {
+    const res = await deleteJobById(jobId, checked);
+    updateState(preset => {
+      return {
+        ...preset,
+        isOpen: false,
+      };
+    });
     getJobList();
-  }, []);
-
+  };
+  const handleOpenModal = (val: string) => {
+    updateState(preset => {
+      return {
+        ...preset,
+        isOpen: true,
+        jobId: val,
+      };
+    });
+  };
   const columns = [
     {
       title: <FormattedMessage id="Job ID" />,
@@ -115,37 +133,67 @@ const JobsList: FC = () => {
       key: 'actions',
       render: (record: IJobType) => (
         <Space>
-          <Popconfirm
-            placement="bottomRight"
-            title={<FormattedMessage id="Are you sure to delete this task?" />}
-            onConfirm={() => handleDeleteJob(record.id)}
-            okText={<FormattedMessage id="Yes" />}
-            cancelText={<FormattedMessage id="No" />}
-            icon
-          >
-            <Button
-              type="text"
-              size="small"
-              danger
-              ghost
-              icon={<FontAwesomeIcon icon={faTrashCan} />}
-              disabled={!['RUNNING', 'WAITING'].includes(record.status)}
-            />
-          </Popconfirm>
+          <Button
+            type="text"
+            size="small"
+            danger
+            ghost
+            icon={<FontAwesomeIcon icon={faTrashCan} />}
+            disabled={!['RUNNING', 'WAITING'].includes(record.status)}
+            onClick={() => handleOpenModal(record.id)}
+          />
+
           <FileSearchOutlined onClick={() => history.push(`/job/detail?jobId=${record.id}`)} />
         </Space>
       ),
     },
   ];
-
+  const handleChange = (val: boolean) => {
+    updateState(preset => {
+      return {
+        ...preset,
+        checked: val,
+      };
+    });
+  };
   return (
-    <Table
-      style={{ marginTop: '-8px' }}
-      dataSource={jobsList}
-      //@ts-ignore
-      columns={columns}
-      size="middle"
-    />
+    <>
+      <Table
+        style={{ marginTop: '-8px' }}
+        dataSource={jobsList}
+        //@ts-ignore
+        columns={columns}
+        size="middle"
+      />
+      <Modal
+        title="Cancel Job"
+        open={isOpen}
+        onOk={handleDeleteJob}
+        onCancel={() =>
+          updateState(preset => {
+            return {
+              ...preset,
+              isOpen: false,
+            };
+          })
+        }
+        cancelText="Cancel"
+        okText="Ok"
+      >
+        <div style={{ marginLeft: '80px' }}>
+          <p>
+            <Checkbox checked={checked} onChange={() => handleChange(true)}>
+              Only this job
+            </Checkbox>
+          </p>
+          <p>
+            <Checkbox checked={!checked} onChange={() => handleChange(false)}>
+              This job and follow-up jobs
+            </Checkbox>
+          </p>
+        </div>
+      </Modal>
+    </>
   );
 };
 

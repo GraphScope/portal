@@ -7,7 +7,11 @@ const { getSearchParams } = Utils;
 
 const Detail: React.FunctionComponent = () => {
   const jobId = getSearchParams('jobId') || '';
-  const [detailData, setDetailData] = useState<string>('');
+  const [state, updateState] = useState<{ detailData: string; build_stage_logview: string }>({
+    detailData: '',
+    build_stage_logview: '',
+  });
+  const { detailData, build_stage_logview } = state;
   const { jobDetailBorder, jobDetailColor } = useThemeContainer();
   /** 获取详情job */
   useEffect(() => {
@@ -15,8 +19,15 @@ const Detail: React.FunctionComponent = () => {
       try {
         const response = await getJobById(jobId);
         //@ts-ignore
-        const { log } = response;
-        setDetailData(log);
+        const { log, detail } = response;
+        const { build_stage_logview } = detail;
+        updateState(preset => {
+          return {
+            ...preset,
+            detailData: log,
+            build_stage_logview,
+          };
+        });
       } catch (error) {
         history.push('/job');
       }
@@ -34,6 +45,19 @@ const Detail: React.FunctionComponent = () => {
     padding: '12px',
     color: jobDetailColor,
   };
+  const Content = () => {
+    return (
+      <>
+        {build_stage_logview ? (
+          <iframe width="100%" height="100%" src={build_stage_logview}></iframe>
+        ) : (
+          <pre style={containerStyles}>
+            <code style={{ whiteSpace: 'pre-wrap' }}>{detailData}</code>
+          </pre>
+        )}
+      </>
+    );
+  };
   return (
     <Section
       breadcrumb={[
@@ -46,9 +70,7 @@ const Detail: React.FunctionComponent = () => {
       ]}
       desc={{ id: 'The jobid of the running state of the graph model is {jobId} verbose logs.', values: { jobId } }}
     >
-      <pre style={containerStyles}>
-        <code style={{ whiteSpace: 'pre-wrap' }}>{detailData}</code>
-      </pre>
+      <Content />
     </Section>
   );
 };
