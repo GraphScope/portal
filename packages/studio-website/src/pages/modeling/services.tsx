@@ -3,10 +3,6 @@ import { transOptionsToSchema, ISchemaNode } from '@graphscope/studio-importor';
 import { cloneDeep } from 'lodash';
 import { notification } from '@/pages/utils';
 import { Utils, Property } from '@graphscope/studio-components';
-import {
-  transformGrootCreateVertexToOptions,
-  transformGrootCreateEdgeToOptions,
-} from '@/components/utils/schema-groot';
 
 const { getSearchParams } = Utils;
 const { GS_ENGINE_TYPE } = window;
