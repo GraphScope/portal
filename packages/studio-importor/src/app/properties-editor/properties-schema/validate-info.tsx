@@ -20,15 +20,14 @@ const ValidateInfo: React.FC<IExtraComponentProps> = ({
 }) => {
   const tooltip = validateProperties({ appMode, type, properties, filelocation });
   const { token } = useToken();
-  return (
-    <div style={{ height: '14px' }}>
-      {tooltip && (
-        <Tooltip title={<FormattedMessage id={`${tooltip}`} />}>
-          <Button type="text" size="small" icon={<WarningOutlined style={{ color: token.colorErrorActive }} />} />
-        </Tooltip>
-      )}
-    </div>
-  );
+  if (tooltip) {
+    return (
+      <Tooltip title={<FormattedMessage id={`${tooltip}`} />}>
+        <Button type="text" size="small" icon={<WarningOutlined style={{ color: token.colorErrorActive }} />} />
+      </Tooltip>
+    );
+  }
+  return null;
 };
 
 export function validateProperties({
