@@ -1,17 +1,12 @@
-import React, { useState } from 'react';
-import { Card, Button } from 'antd';
+import React from 'react';
 import CodeMirror from '@uiw/react-codemirror';
-import { Utils, useThemeContainer } from '@graphscope/studio-components';
-const PeriodicSpark = () => {
-  const [state, updateState] = useState({
-    codeMirrorData: '',
-  });
-  const { codeMirrorData } = state;
+import { useThemeContainer } from '@graphscope/studio-components';
+interface IPeriodicSparkProps {
+  codeMirrorData: string;
+}
+const PeriodicSpark: React.FC<IPeriodicSparkProps> = props => {
+  const { codeMirrorData } = props;
   const { jobDetailBorder, jobDetailColor } = useThemeContainer();
-  const handleDownload = () => {
-    // const param = `${type?.toLocaleLowerCase()}` + '_' + `${configLpading?.label?.label}` + '_config.ini';
-    // Utils.download(param, codeMirrorData);
-  };
   /** code style */
   const containerStyles = {
     overFlowY: 'scroll',
@@ -21,6 +16,7 @@ const PeriodicSpark = () => {
     borderRadius: '6px',
     color: jobDetailColor,
   };
+
   return (
     <>
       <div>
@@ -34,11 +30,6 @@ const PeriodicSpark = () => {
           autoFocus
         />
       </div>
-      {/* <div style={{ textAlign: 'end', marginTop: '24px' }}>
-        <Button type="primary" onClick={() => handleDownload()}>
-          Download
-        </Button>
-      </div> */}
     </>
   );
 };

@@ -55,12 +55,14 @@ const StartLoad: React.FC<ILeftSide> = props => {
     };
     jobId: '';
     tabsChecked: string;
+    codeMirrorData: string;
   }>({
     result: undefined,
     jobId: '',
     tabsChecked: 'spark',
+    codeMirrorData: '',
   });
-  const { tabsChecked } = state;
+  const { tabsChecked, codeMirrorData } = state;
   const { store: importingStore } = useImporting();
   const { nodes, edges } = importingStore;
 
@@ -78,8 +80,9 @@ const StartLoad: React.FC<ILeftSide> = props => {
       repeat: 'once',
       schedule: dayjs(),
     });
-    /** api 暂时更新失败 */
-    const getDataloadingJobConfigs = async () => {
+    /** 获取 Periodic Import From Dataworks */
+    const getDataloadingConfig = async () => {
+      const graphId = Utils.searchParamOf('graph_id');
       const res = await getDataloadingJobConfig(
         graphId || '',
         {
@@ -92,9 +95,16 @@ const StartLoad: React.FC<ILeftSide> = props => {
           schedule: '',
         },
       );
-      console.log(res);
+      console.log(97, res);
+
+      updateState(preset => {
+        return {
+          ...preset,
+          codeMirrorData: res.config,
+        };
+      });
     };
-    getDataloadingJobConfigs();
+    getDataloadingConfig();
   }, []);
 
   const gotoJob = (jobId: string) => {
@@ -214,9 +224,9 @@ const StartLoad: React.FC<ILeftSide> = props => {
       </>
     );
   };
+  /** 下载Periodic Import From Dataworks */
   const handleDownload = () => {
-    // const param = `${type?.toLocaleLowerCase()}` + '_' + `${configLpading?.label?.label}` + '_config.ini';
-    // Utils.download(param, codeMirrorData);
+    Utils.download('configuration_config.ini', codeMirrorData);
   };
   return (
     <div style={{ padding: '12px 36px' }}>
@@ -236,6 +246,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
         {GS_ENGINE_TYPE === 'interactive' && <InteractiveItems />}
         {GS_ENGINE_TYPE === 'groot' && (
           <GrootCase
+            codeMirrorData={codeMirrorData}
             handleChange={val => {
               updateState(preset => {
                 return {
@@ -254,7 +265,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
           )}
           {tabsChecked === 'spark' && (
             <Button style={{ width: '128px' }} type="primary" onClick={() => handleDownload()}>
-              Download
+              <FormattedMessage id="Download" />
             </Button>
           )}
           <Button style={{ width: '128px' }} onClick={onColse}>

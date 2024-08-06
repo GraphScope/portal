@@ -44,6 +44,11 @@ export default {
     '当前模式仅为预览模式，不支持打开多源建模',
   'Expand or collapse multi-source modeling': '展开或折叠多源建模',
   Configuration: '配置',
+  Date: '日期',
+  Repeat: '调度策略',
+  Download: '下载',
+  'Periodic Import From Dataworks': 'Dataworks 上构建数据导入流程',
+  'Periodic Import From ODPS': '周期性导入 ODPS 表',
   'You have successfully bound the data source. Please complete the configuration to start importing data.':
     '您已成功绑定数据源。请完成配置以开始导入数据。',
   'The data loading task has been successfully created. You can view detailed logs in the job center.':

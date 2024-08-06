@@ -45,6 +45,11 @@ export default {
     'The current mode is preview only, and does not support opening multi-source modeling',
   'Expand or collapse multi-source modeling': 'Expand or collapse multi-source modeling',
   Configuration: 'Configuration',
+  Date: 'Date',
+  Repeat: 'Repeat',
+  Download: 'Download',
+  'Periodic Import From Dataworks': 'Periodic Import From Dataworks',
+  'Periodic Import From ODPS': 'Periodic Import From ODPS',
   'You have successfully bound the data source. Please complete the configuration to start importing data.':
     'You have successfully bound the data source. Please complete the configuration to start importing data.',
   'The data loading task has been successfully created. You can view detailed logs in the job center.':
