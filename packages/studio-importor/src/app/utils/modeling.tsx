@@ -24,6 +24,7 @@ export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchema
         primary: primary_keys[0],
         /** 查询中单独节点内是否可以编辑 */
         disabled: true,
+        saved: true,
         properties: properties.map((item, index) => {
           const { property_name, property_type } = item;
           return {
@@ -61,6 +62,7 @@ export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchema
             label: type_name,
             /** 查询中单独边内是否可以编辑 */
             disabled: true,
+            saved: true,
             properties: properties.map(p => {
               return {
                 key: uuidv4(),

@@ -42,8 +42,8 @@ app.get('/query_endpoint', (req, res) => {
 
 /** 图查询 */
 app.post('/query', async (req, res) => {
-  const { script, language, endpoint } = req.body;
-  const data = await queryGraph({ script, language, endpoint }, { debugger: false });
+  const { script, language, endpoint, username, password } = req.body;
+  const data = await queryGraph({ script, language, endpoint, username, password }, { debugger: false });
   res.send({
     success: true,
     data: data,
