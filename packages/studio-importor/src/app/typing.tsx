@@ -3,7 +3,10 @@ import type { Node, Edge } from 'reactflow';
 
 export interface IEdgeData {
   label: string;
+  /** 禁用：saved / binded / xxxx  */
   disabled?: boolean;
+  /** 是否保存在服务端 */
+  saved?: boolean;
   properties?: Property[];
   source_vertex_fields?: Property;
   target_vertex_fields?: Property;
@@ -92,6 +95,6 @@ export interface ImportorProps {
   children?: React.ReactNode;
   /** 是否保存原始文件 */
   isSaveFiles?: boolean;
-  createVertexTypeOrEdgeType: (type: string, params: any) => boolean;
-  deleteVertexTypeOrEdgeType: (type: string, label: string, source?: string, target?: string, nodes?: any) => boolean;
+  onCreateLabel?: (type: string, params: any) => boolean;
+  onDeleteLabel?: (type: string, label: string, sourceLabel?: string, targetLaebl?: string) => boolean;
 }
