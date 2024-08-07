@@ -33,12 +33,12 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
     id: 'DRAFT_GRAPH',
   });
   const { store, updateStore } = useContext();
-  const [form] = Form.useForm();
+
   const { store: modelingStore } = useModeling();
-  const { elementOptions, appMode, nodes, edges, csvFiles } = modelingStore;
+  const { elementOptions, nodes, edges } = modelingStore;
   const { draftGraph, draftId } = store;
 
-  const { isLoading, open, status, schema } = state;
+  const { open, status } = state;
 
   const { graphId } = store;
 
@@ -148,16 +148,12 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   const Action = status === 'success' ? SuccessAction : ErrorAction;
 
   const { passed: validatePassed, message: validateMessage } = validate(nodes, edges);
-
-  const canSave =
-    GS_ENGINE_TYPE === 'interactive'
-      ? nodes.length !== 0 && IS_DRAFT_GRAPH && validatePassed
-      : !elementOptions.isEditable && validatePassed;
-  if (appMode === 'DATA_MODELING') {
+  const showButton = isShowSaveButton(nodes);
+  if (showButton) {
     return (
       <>
         <Tooltip title={validatePassed ? '' : validateMessage}>
-          <Button disabled={!canSave} type="primary" icon={<SaveOutlined />} onClick={handleSave}>
+          <Button disabled={!validatePassed} type="primary" icon={<SaveOutlined />} onClick={handleSave}>
             <FormattedMessage id={text} />
           </Button>
         </Tooltip>
@@ -169,6 +165,8 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   }
   return null;
 };
+
+export default SaveModeling;
 
 export function validate(
   nodes: INTERNAL_Snapshot<ISchemaNode[]>,
@@ -206,5 +204,16 @@ export function validate(
     },
   );
 }
+export function isShowSaveButton(nodes: INTERNAL_Snapshot<ISchemaNode[]>) {
+  if (GS_ENGINE_TYPE === 'interactive') {
+    return nodes.length !== 0;
+  }
 
-export default SaveModeling;
+  if (GS_ENGINE_TYPE === 'groot') {
+    const someSaved = nodes.some(node => {
+      return node.data.saved;
+    });
+    return !someSaved;
+  }
+  return false;
+}
