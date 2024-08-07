@@ -1,7 +1,7 @@
 import { defineConfig } from 'umi';
 import dotenv from 'dotenv';
 const { parsed } = dotenv.configDotenv();
-const { PROXY_URL_GROOT, PROXY_URL_INTERACTIVE, PORXY_URL_LOCAL, SLOT_URL = [] } = parsed || {};
+const { PROXY_URL, BACKEND_URL, SLOT_URL = [] } = parsed || {};
 console.log(SLOT_URL);
 let headScripts;
 let externals;
@@ -57,15 +57,11 @@ export default defineConfig({
   },
   proxy: {
     '/api': {
-      target: PROXY_URL_GROOT,
+      target: PROXY_URL,
       changeOrigin: true,
     },
-    '/query': {
-      target: PORXY_URL_LOCAL,
-      changeOrigin: true,
-    },
-    '/query_endpoint': {
-      target: PORXY_URL_LOCAL,
+    '/graph': {
+      target: BACKEND_URL,
       changeOrigin: true,
     },
   },

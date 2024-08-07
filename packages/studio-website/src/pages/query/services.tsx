@@ -27,7 +27,7 @@ export const queryEndpoint = async (): Promise<{
   cypher_endpoint: string;
   gremlin_endpoint: string;
 }> => {
-  return fetch('/query_endpoint')
+  return fetch('/graph/endpoint')
     .then(res => {
       return res.json();
     })
@@ -182,7 +182,7 @@ export const queryGraphData = async (params: IStatement) => {
     return queryGraph(_params);
   }
   if (query_initiation === 'Server') {
-    return await fetch('/query', {
+    return await fetch('/graph/query', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -221,7 +221,7 @@ export const handleCancelQuery = async (params: IStatement) => {
     return cancelGraph(_params);
   }
   if (query_initiation === 'Server') {
-    return await fetch('/query_cancel', {
+    return await fetch('/graph/cancel', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
