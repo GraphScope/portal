@@ -14,6 +14,7 @@ import {
   SegmentedTabs,
   SliderFilter,
   RunCluster,
+  LayoutSetting,
 } from '../components';
 
 import { Divider } from 'antd';
@@ -60,6 +61,12 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       label: 'Filter',
       value: 'Filter',
       children: <SliderFilter />,
+    },
+    {
+      key: 'LayoutSetting',
+      label: 'Layout',
+      value: 'LayoutSetting',
+      children: <LayoutSetting />,
     },
   ];
   return (

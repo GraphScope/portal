@@ -33,7 +33,7 @@ app.use(
   }),
 );
 
-app.get('/query_endpoint', (req, res) => {
+app.get('/graph/endpoint', (req, res) => {
   res.send({
     success: true,
     data: { cypher_endpoint, gremlin_endpoint },
@@ -41,9 +41,9 @@ app.get('/query_endpoint', (req, res) => {
 });
 
 /** 图查询 */
-app.post('/query', async (req, res) => {
-  const { script, language, endpoint } = req.body;
-  const data = await queryGraph({ script, language, endpoint }, { debugger: false });
+app.post('/graph/query', async (req, res) => {
+  const { script, language, endpoint, username, password } = req.body;
+  const data = await queryGraph({ script, language, endpoint, username, password }, { debugger: false });
   res.send({
     success: true,
     data: data,
@@ -52,6 +52,7 @@ app.post('/query', async (req, res) => {
 
 // 对于其他路由，返回 React 应用的入口文件
 app.get('*', (req, res) => {
+  console.log('path>>>>>>', req.params);
   res.sendFile(path.join(WORKSPACE, '/dist', 'index.html'));
 });
 

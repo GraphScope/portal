@@ -29,10 +29,9 @@ export interface Table {
 class CypherDriver {
   private driver: any;
   private uri: string;
-  constructor(uri: string, username: string = 'admin', password: string = 'password') {
+  constructor(uri: string, username: string = '', password: string = '') {
     try {
       const authenticator = new gremlin.driver.auth.PlainTextSaslAuthenticator(username, password);
-      console.log('authenticator', authenticator);
       const client = new gremlin.driver.Client(uri, {
         traversalSource: 'g',
         authenticator,

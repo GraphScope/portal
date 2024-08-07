@@ -3,10 +3,6 @@ import { transOptionsToSchema, ISchemaNode } from '@graphscope/studio-importor';
 import { cloneDeep } from 'lodash';
 import { notification } from '@/pages/utils';
 import { Utils, Property } from '@graphscope/studio-components';
-import {
-  transformGrootCreateVertexToOptions,
-  transformGrootCreateEdgeToOptions,
-} from '@/components/utils/schema-groot';
 
 const { getSearchParams } = Utils;
 const { GS_ENGINE_TYPE } = window;
@@ -92,35 +88,32 @@ export const getSchema = async (graph_id: string) => {
 /** 删除节点或边 */
 export const deleteVertexTypeOrEdgeType = async (
   type: string,
-  typeName: string,
+  label: string,
   sourceVertexType?: string,
   destinationVertexType?: string,
-  nodes?: ISchemaNode[],
 ) => {
+  if (window.GS_ENGINE_TYPE === 'interactive') {
+    // interactive 图引擎，一旦创建模型，就无法删除，永远返回true
+    return false;
+  }
   let response: boolean = false;
   const graph_id = getSearchParams('graph_id') || '';
   if (type === 'nodes') {
     try {
-      const res = await GraphApiFactory(undefined, location.origin).deleteVertexTypeByName(graph_id, typeName);
+      const res = await GraphApiFactory(undefined, location.origin).deleteVertexTypeByName(graph_id, label);
       response = true;
       notification('success', res.data);
     } catch (error) {
       notification('error', error);
     }
   }
-  if (type === 'edges') {
-    const nodeMap: Record<string, string> = {};
-    nodes &&
-      nodes.map((item: { id: string | number; data: { label: string } }) => {
-        nodeMap[item.id] = item.data.label;
-        return item.data.label;
-      });
+  if (type === 'edges' && sourceVertexType && destinationVertexType) {
     try {
       const res = await GraphApiFactory(undefined, location.origin).deleteEdgeTypeByName(
         graph_id,
-        typeName,
-        nodeMap[sourceVertexType as string],
-        nodeMap[destinationVertexType as string],
+        label,
+        sourceVertexType,
+        destinationVertexType,
       );
       response = true;
       notification('success', res.data);
@@ -135,14 +128,17 @@ export const deleteVertexTypeOrEdgeType = async (
 export const createVertexTypeOrEdgeType = async (
   type: string,
   params: { nodes?: ISchemaNode[]; label: string; source?: string; target?: string; properties: Property[] },
+  nodes?: any,
 ) => {
   let response: boolean = false;
   const graph_id = getSearchParams('graph_id') || '';
-  const { nodes = [], label, source = '', target = '', properties } = params;
+  const { label, source = '', target = '', properties } = params;
   if (type === 'nodes') {
-    const vertexType = transformGrootCreateVertexToOptions({ label, properties });
+    // const vertexType = transformGrootCreateVertexToOptions({ label, properties });
+    //@ts-ignore
+    const { vertex_types } = transOptionsToSchema({ nodes: [params], edges: [] });
     try {
-      const res = await GraphApiFactory(undefined, location.origin).createVertexType(graph_id, vertexType);
+      const res = await GraphApiFactory(undefined, location.origin).createVertexType(graph_id, vertex_types[0]);
       notification('success', res.data);
       response = true;
     } catch (error) {
@@ -150,9 +146,11 @@ export const createVertexTypeOrEdgeType = async (
     }
   }
   if (type === 'edges') {
-    const edgeType = transformGrootCreateEdgeToOptions(nodes, { label, source, target }, properties);
+    //@ts-ignore
+    const { edge_types } = transOptionsToSchema({ nodes: nodes, edges: [params] });
+    console.log('edge_types', edge_types, params);
     try {
-      const res = await GraphApiFactory(undefined, location.origin).createEdgeType(graph_id, edgeType);
+      const res = await GraphApiFactory(undefined, location.origin).createEdgeType(graph_id, edge_types[0]);
       notification('success', res.data);
       response = true;
     } catch (error) {

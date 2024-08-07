@@ -20,7 +20,7 @@ const getPrefixParams = () => {
   const language =
     Utils.storage.get<'cypher' | 'gremlin'>('query_language') ||
     (GS_ENGINE_TYPE === 'interactive' ? 'cypher' : 'gremlin');
-  let globalScript = GS_ENGINE_TYPE === 'groot' ? 'g.V().limit 10' : 'Match (n) return n limit 10';
+  let globalScript = GS_ENGINE_TYPE === 'groot' ? 'g.V().limit(500)' : 'Match (n) return n limit 500';
   let welcome;
   let autoRun = false;
   let collapsed = true;

@@ -9,6 +9,7 @@ import {
   faListCheck,
   faPuzzlePiece,
   faBell,
+  faCoins,
 } from '@fortawesome/free-solid-svg-icons';
 import { MenuProps } from 'antd';
 
@@ -66,6 +67,14 @@ export const SYSTEM_MENU = [
 export const SIDE_MENU: MenuProps['items'] =
   window.GS_ENGINE_TYPE === 'groot'
     ? [
+        {
+          label: <FormattedMessage id="navbar.graphs" />,
+          key: '/graphs',
+          icon: <FontAwesomeIcon icon={faCoins} />,
+        },
+        {
+          type: 'divider',
+        },
         ...TOOLS_MENU,
         {
           type: 'divider',
@@ -74,6 +83,11 @@ export const SIDE_MENU: MenuProps['items'] =
         ...SYSTEM_MENU,
       ]
     : [
+        {
+          label: <FormattedMessage id="navbar.graphs" />,
+          key: '/graphs',
+          icon: <FontAwesomeIcon icon={faCoins} />,
+        },
         ...TOOLS_MENU,
         {
           type: 'divider',

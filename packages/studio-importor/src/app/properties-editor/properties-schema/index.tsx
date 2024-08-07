@@ -4,27 +4,16 @@ import { PropertiesList } from '@graphscope/studio-components';
 import useModel from './useModel';
 import LocationField from './location';
 import SourceTarget from './source-target';
-import GrootCase from './groot-case';
+
 import type { ISchemaEdge, ImportorProps, Option } from '../../typing';
 
-export type IPropertiesSchemaProps = Pick<
-  ImportorProps,
-  'appMode' | 'queryPrimitiveTypes' | 'handleUploadFile' | 'createVertexTypeOrEdgeType' | 'deleteVertexTypeOrEdgeType'
-> & {
+export type IPropertiesSchemaProps = Pick<ImportorProps, 'appMode' | 'queryPrimitiveTypes' | 'handleUploadFile'> & {
   schema: ISchemaEdge;
   type: 'nodes' | 'edges';
 };
 
 const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
-  const {
-    schema,
-    type,
-    appMode,
-    queryPrimitiveTypes,
-    handleUploadFile,
-    createVertexTypeOrEdgeType,
-    deleteVertexTypeOrEdgeType,
-  } = props;
+  const { schema, type, appMode, queryPrimitiveTypes, handleUploadFile } = props;
   const { id, source, target, data } = schema;
   const {
     dataFields,
@@ -34,16 +23,9 @@ const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
     target_vertex_fields,
     disabled = false,
   } = data || {};
-  const { handleChangeLabel, handleProperty, handleSubmit, handleDelete } = useModel({
+  const { handleChangeLabel, handleProperty } = useModel({
     type,
     id,
-    label,
-    source,
-    target,
-    properties,
-    disabled,
-    createVertexTypeOrEdgeType,
-    deleteVertexTypeOrEdgeType,
   });
   /** 判断是否为导入数据 */
   const mappingColumn =
@@ -83,14 +65,6 @@ const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
           typeColumn={{ options: queryPrimitiveTypes() as unknown as Option[] }}
           disabled={disabled}
           mappingColumn={mappingColumn as ImportorProps['mappingColumn']}
-        />
-        <GrootCase
-          type={type}
-          appMode={appMode}
-          properties={properties}
-          disabled={disabled}
-          handleDelete={handleDelete}
-          handleSubmit={handleSubmit}
         />
       </Flex>
     </div>
