@@ -24,10 +24,10 @@ WORKDIR /app
 
 # 复制前端产物到最终镜像
 COPY --from=builder /app/packages/studio-website/dist dist/
-COPY --from=builder /app/packages/studio-website/proxy proxy/
+COPY --from=builder /app/packages/studio-website/server server/
 
 # 进入proxy目录
-WORKDIR /app/proxy
+WORKDIR /app/server
 
 # 安装proxy的依赖
 RUN npm install

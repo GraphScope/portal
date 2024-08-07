@@ -10,7 +10,7 @@
     "start": "turbo run start",
     "docs": "dumi dev",
     "docs:build": "pnpm i && rm -rf package-lock.json && npm run build &&  dumi build",
-    "logs": "cd packages/studio-website/proxy && npm run logs",
+    "logs": "cd packages/studio-website/server && npm run logs",
     "publish": "pnpm publish -r --registry=https://registry.npmjs.org"
   },
   "husky": {

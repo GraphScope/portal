@@ -51,7 +51,7 @@ npm run dev -- --port=8888 --coordinator=<graphscope_coordinator_endpoint> --cyp
 ```bash
 # 编译前端产物
 npm run ci
-cd packages/studio-website/proxy
+cd packages/studio-website/server
 # 启动前端服务
 npm run dev -- --port=8888 --coordinator=<graphscope_coordinator_endpoint> --cypher_endpoint=<graphscope_cypher_endpoint>
 ```
