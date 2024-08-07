@@ -50,7 +50,12 @@ const ImportFromYAML = (props: IProps) => {
       }
       let schema;
       if (appMode === 'DATA_MODELING') {
-        schema = transSchemaToOptions(jsonContent);
+        schema = transSchemaToOptions(jsonContent, () => {
+          return {
+            disabled: false,
+            saved: false,
+          };
+        });
       }
       if (appMode === 'DATA_IMPORTING') {
         schema = transMappingSchemaToOptions({} as any, jsonContent, { nodes, edges } as any);

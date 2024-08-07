@@ -10,21 +10,24 @@ export type DeepRequired<T> = T extends (...args: any[]) => any
     ? { [K in keyof T]-?: DeepRequired<T[K]> }
     : T;
 
-export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchemaResponse>): ISchemaOptions {
+export function transSchemaToOptions(
+  originalSchema: DeepRequired<GetGraphSchemaResponse>,
+  extraData = (_item: any) => ({}),
+): ISchemaOptions {
   const { vertex_types, edge_types } = originalSchema || { vertex_types: [], edge_types: [] };
   const idMappingforNode: Record<string, string> = {};
   const nodes: ISchemaNode[] = vertex_types.map(item => {
     const { primary_keys, properties = [], type_name } = item;
     const id = uuidv4();
     idMappingforNode[type_name] = id;
+    const extra = extraData(item);
     return {
       id,
       data: {
         label: type_name,
         primary: primary_keys[0],
         /** 查询中单独节点内是否可以编辑 */
-        disabled: true,
-        saved: true,
+        ...extra,
         properties: properties.map((item, index) => {
           const { property_name, property_type } = item;
           return {
@@ -50,6 +53,7 @@ export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchema
   if (edge_types) {
     edge_types.forEach(edge => {
       const { type_name, properties = [], vertex_type_pair_relations } = edge;
+      const extra = extraData(edge);
       vertex_type_pair_relations.forEach(c => {
         const { destination_vertex, source_vertex, relation } = c;
         const source = idMappingforNode[source_vertex];
@@ -61,8 +65,7 @@ export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchema
           data: {
             label: type_name,
             /** 查询中单独边内是否可以编辑 */
-            disabled: true,
-            saved: true,
+            ...extra,
             properties: properties.map(p => {
               return {
                 key: uuidv4(),
@@ -82,7 +85,10 @@ export function transSchemaToOptions(originalSchema: DeepRequired<GetGraphSchema
   return { nodes, edges };
 }
 /** yaml 上传文件时添加可编辑标识 disabled为false */
-export function appendData(originalSchema: ISchemaOptions, options: { disabled: boolean }): ISchemaOptions {
+export function appendData(
+  originalSchema: ISchemaOptions,
+  options: { disabled: boolean; saved: boolean },
+): ISchemaOptions {
   const { nodes, edges } = originalSchema || { nodes: [], edges: [] };
   const updatedNodes = nodes.map(item => ({
     ...item,
