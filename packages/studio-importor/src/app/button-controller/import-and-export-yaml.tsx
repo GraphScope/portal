@@ -28,7 +28,7 @@ const APP_MODE_YAML_TITLE: {
 const Content = () => {
   const { token } = useToken();
   const { store } = useContext();
-  const { nodes, edges, elementOptions, appMode } = store;
+  const { nodes, edges, appMode } = store;
   const { importText, exportText } = APP_MODE_YAML_TITLE[appMode];
 
   /** export yaml */
@@ -47,7 +47,7 @@ const Content = () => {
     }
     if (appMode === 'DATA_IMPORTING') {
       const content = transformImportOptionsToSchemaMapping(Utils.fakeSnapshot({ nodes, edges }));
- 
+
       if (type === 'yaml') {
         yamlFile = yaml.dump(content);
       }
@@ -63,7 +63,7 @@ const Content = () => {
     <Flex justify="center" vertical style={{ padding: '20px' }} gap={10}>
       <Typography.Text type="secondary">{importText}</Typography.Text>
       <ImportFromYAML
-        disabled={!elementOptions.isEditable}
+        disabled={nodes.length !== 0}
         style={{ height: '160px' }}
         icon={<Icons.FileYaml style={{ fontSize: '50px', color: token.colorPrimary }} />}
       />

@@ -21,7 +21,6 @@ const ConnectEndpoint: React.FunctionComponent<IConnectEndpointProps> = props =>
   const [form] = Form.useForm();
   const { onConnect, onClose } = props;
   React.useEffect(() => {
-    console.log('effect ... init....');
     form.setFieldsValue({
       query_language: storage.get('query_language'),
       query_endpoint: storage.get('query_endpoint'),

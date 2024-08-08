@@ -40,7 +40,7 @@ prepare [node.js](https://nodejs.org/en) and [pnpm](https://pnpm.io/installation
 # Compile front-end assets
 npm run ci
 # Start the server
-cd packages/studio-website/proxy
+cd packages/studio-website/server
 npm run dev -- --port=8888 --coordinator=<graphscope_coordinator_endpoint> --cypher_endpoint=<graphscope_cypher_endpoint>
 ```
 

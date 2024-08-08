@@ -126,3 +126,4 @@ export { inferredGraphFields } from './inferredGraphFields';
 export { parseJSON } from './parseJSON';
 export { parseSQL } from './parseSQL';
 export { extractProperties } from './inferredSchema';
+export { handleExpand, uniqueElementsBy } from './expand';

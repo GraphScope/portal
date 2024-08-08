@@ -93,7 +93,9 @@ const useInteractive: any = () => {
   );
 
   const onNodesChange = (changes: NodeChange[]) => {
-    if (elementOptions.isConnectable) {
+    const { type } = changes[0];
+
+    if (elementOptions.isConnectable || type === 'position') {
       updateStore(draft => {
         draft.nodes = applyNodeChanges(changes, deepclone(draft.nodes));
       });

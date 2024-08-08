@@ -28,7 +28,14 @@ export function transMappingSchemaToOptions(
   schemaMapping: DeepRequired<SchemaMapping> | {},
   _schemaOptions?: ISchemaOptions,
 ): ISchemaOptions {
-  const schemaOptions = _schemaOptions || transSchemaToOptions(schema);
+  const schemaOptions =
+    _schemaOptions ||
+    transSchemaToOptions(schema, () => {
+      return {
+        disabled: true,
+        saved: true,
+      };
+    });
 
   const { nodes, edges } = schemaOptions;
 

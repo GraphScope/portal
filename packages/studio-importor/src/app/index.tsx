@@ -69,9 +69,10 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         draft.edges = edges;
         draft.appMode = appMode;
         draft.elementOptions = {
-          isEditable: !!nodes.length, // 操作按钮： nodes没有值,导入，删除，添加都可以操作；接口返回有值，只能操作添加按钮。
+          isEditable: !isEmpty, // 操作按钮： nodes没有值,导入，删除，添加都可以操作；接口返回有值，只能操作添加按钮。
           isConnectable: GS_ENGINE_TYPE === 'groot' && appMode === 'DATA_MODELING' ? true : isEmpty, //  初始状态，接口获取画布有 Schema 数据的时候，不可连线;groot时候一直可以连线
         };
+
         draft.currentId = isEmpty ? '' : nodes[0].id;
         draft.currentType = 'nodes';
         draft.isSaveFiles = isSaveFiles;

@@ -28,8 +28,6 @@ const NoEndpointCase: React.FunctionComponent<INoEndpointCaseProps> = props => {
     storage.set('query_endpoint', endpoint);
     storage.set('query_language', language);
     storage.set('query_initiation', initiation);
-    storage.set('query_username', '');
-    storage.set('query_password', '');
     console.log('endpoint....', endpoint);
     if (!endpoint) {
       setState({

@@ -1,5 +1,3 @@
-import exp from 'constants';
-
 export { default as Toolbar } from './Toolbar';
 export { default as ContextMenu } from './ContextMenu';
 export { default as PropertiesPanel } from './PropertiesPanel';

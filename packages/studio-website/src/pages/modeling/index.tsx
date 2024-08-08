@@ -27,7 +27,12 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
       }
     }
 
-    return transSchemaToOptions(schema as any);
+    return transSchemaToOptions(schema as any, () => {
+      return {
+        saved: true,
+        disabled: true,
+      };
+    });
   };
 
   return (
