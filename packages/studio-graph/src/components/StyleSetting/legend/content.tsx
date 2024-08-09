@@ -40,6 +40,16 @@ const styles = {
 const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
   const { color, size, caption, properties, label, onChange, type, captionStatus } = props;
   const { token } = useToken();
+  let _properties = properties;
+
+  if (Array.isArray(properties)) {
+    _properties = properties.reduce((acc, curr) => {
+      return {
+        ...acc,
+        [curr.name]: curr[type],
+      };
+    }, {});
+  }
   console.log('captionStatus', captionStatus);
 
   const handleChange = (key, value) => {
@@ -142,7 +152,7 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
           <FormattedMessage id="Caption" />
         </Typography.Text>
         <Space wrap>
-          {Object.keys(properties)?.map(item => {
+          {Object.keys(_properties)?.map(item => {
             const isActive = caption == item;
             return (
               <span

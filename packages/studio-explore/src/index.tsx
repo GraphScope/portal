@@ -10,19 +10,20 @@ import {
   ZoomFit,
   ClearStatatus,
   RunCluster,
+  SliderFilter,
 } from '@graphscope/studio-graph';
 
-import { Workflow, Upload, EmbedSchema, Cluster } from './components';
+import { Workflow, Upload, EmbedSchema, Cluster, Summarize } from './components';
 
 import { Divider } from 'antd';
 
 interface QueryGraphProps {}
 
 const ToogleButton = () => {
-  const { toggleRightSide } = useSection();
+  const { toggleLeftSide } = useSection();
   return (
     <div>
-      <Button icon={<Icons.Sidebar revert />} onClick={() => toggleRightSide()} type="text" />
+      <Button icon={<Icons.Sidebar />} onClick={() => toggleLeftSide()} type="text" />
     </div>
   );
 };
@@ -48,6 +49,12 @@ const ExploreApp: React.FunctionComponent<QueryGraphProps> = props => {
       icon: <Icons.Cluster />,
       children: <Cluster />,
     },
+    {
+      key: 'Summarize',
+      label: 'Step 4: Summarize',
+      icon: <Icons.Cluster />,
+      children: <Summarize />,
+    },
   ];
   const items = [
     {
@@ -67,6 +74,12 @@ const ExploreApp: React.FunctionComponent<QueryGraphProps> = props => {
       label: 'Style',
       value: 'Style',
       children: <StyleSetting />,
+    },
+    {
+      key: 'SliderFilter',
+      label: 'SliderFilter',
+      value: 'SliderFilter',
+      children: <SliderFilter />,
     },
   ];
   return (
@@ -89,7 +102,7 @@ const ExploreApp: React.FunctionComponent<QueryGraphProps> = props => {
           leftSide={<SegmentedTabs items={items} block />}
           autoResize={false}
           leftSideStyle={{
-            width: '650px',
+            width: '50%',
           }}
           defaultCollapsed={{
             leftSide: false,

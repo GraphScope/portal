@@ -55,6 +55,7 @@ const SaveButton = () => {
         //@ts-ignore
         const style = getStyleConfig(schema, draft.graphId);
         draft.data = newData;
+        draft.source = newData;
         draft.nodeStyle = style.nodeStyle;
         draft.edgeStyle = style.edgeStyle;
         draft.dataMap = getDataMap(newData);
@@ -88,7 +89,7 @@ const SaveButton = () => {
 
 const EmbedSchema: React.FunctionComponent<IDesignSchemaProps> = props => {
   return (
-    <div style={{ height: '300px' }}>
+    <div>
       <ImportorApp
         appMode="DATA_MODELING"
         defaultCollapsed={{
