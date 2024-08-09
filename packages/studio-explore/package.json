@@ -21,7 +21,9 @@
   "dependencies": {
     "localforage": "latest",
     "d3-force": "latest",
+    "@graphscope/studio-importor": "workspace:*",
     "@graphscope/studio-components": "workspace:*",
+    "@graphscope/studio-graph": "workspace:*",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },

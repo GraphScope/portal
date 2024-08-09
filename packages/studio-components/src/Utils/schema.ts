@@ -92,7 +92,7 @@ export const generatorSchemaByGraphData = (graphData: ISchema, defaultOptions?: 
     if (!nodeSchemas.has(label)) {
       const nodeSchema = {
         label,
-        properties: extractProperties(node.data),
+        properties: extractProperties(node.data || node.properties),
       };
       nodeSchemas.set(label, nodeSchema);
     }
@@ -113,7 +113,7 @@ export const generatorSchemaByGraphData = (graphData: ISchema, defaultOptions?: 
         label,
         source: getLabel(currentSource, defaultlabelKey, nodeLabelFromProperties),
         target: getLabel(currentTarget, defaultlabelKey, nodeLabelFromProperties),
-        properties: extractProperties(edge.data),
+        properties: extractProperties(edge.data || edge.properties),
       };
       edgeSchemas.set(label, edgeSchema);
     }

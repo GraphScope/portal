@@ -1,20 +1,44 @@
 import { pack, hierarchy } from 'd3-hierarchy';
 import { Utils } from '@graphscope/studio-components';
-import { handleStyle } from '../../graph/handleStyle';
+import { handleStyle } from '../graph/handleStyle';
 
 interface NodeData {
   children: NodeData[];
   name: string;
 }
-export const getGroups = (nodes, { width, height, screen2GraphCoords, nodeStyle }) => {
+
+export function get(obj, path) {
+  if (obj == null || typeof path !== 'string') return undefined;
+
+  let keys = 0,
+    key = '',
+    len = path.length,
+    result = obj;
+
+  while (keys < len) {
+    const char = path[keys];
+    if (char === '.') {
+      result = result[key];
+      if (result == null) return undefined;
+      key = '';
+    } else {
+      key += char;
+    }
+    keys++;
+  }
+
+  return result[key];
+}
+
+export const getGroups = (nodes, { width, height, screen2GraphCoords, nodeStyle, clusterKey }) => {
   const groupedData = Utils.groupBy(nodes, node => {
-    return node.label;
+    return get(node, clusterKey);
   });
 
   const root: NodeData = { name: 'root', children: [] };
 
-  for (const [label, nodes] of Object.entries(groupedData)) {
-    root.children.push({ name: label, children: nodes as NodeData[] });
+  for (const [key, nodes] of Object.entries(groupedData)) {
+    root.children.push({ name: key, children: nodes as NodeData[] });
   }
   const rootNode = hierarchy<NodeData>(root).sort((a, b) => {
     try {
@@ -42,12 +66,17 @@ export const getGroups = (nodes, { width, height, screen2GraphCoords, nodeStyle 
     const { color } = handleStyle({ label: d.data.name }, nodeStyle, 'node');
     return {
       id: d.data.name,
-      label: d.data.name,
+      cluster: d.data.name,
       x: x,
       y: y,
       r: (d as any).r,
       color,
     };
   });
-  return groups;
+
+  const groupsMap = new Map();
+  groups.forEach(group => {
+    groupsMap.set(group.id, group);
+  });
+  return { groups, groupsMap };
 };

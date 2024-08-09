@@ -41,6 +41,10 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
       key={graphId}
       /** 创建图模型 */
       appMode="DATA_MODELING"
+      defaultCollapsed={{
+        leftSide: true,
+        rightSide: true,
+      }}
       //@ts-ignore
       queryGraphSchema={queryGraphSchema}
       /** 属性下拉选项值 */
@@ -50,10 +54,6 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
         });
       }}
       GS_ENGINE_TYPE={GS_ENGINE_TYPE}
-      defaultCollapsed={{
-        leftSide: true,
-        rightSide: true,
-      }}
       onDeleteLabel={deleteVertexTypeOrEdgeType}
       onCreateLabel={createVertexTypeOrEdgeType}
     >

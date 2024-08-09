@@ -67,7 +67,7 @@ const SliderFilter: React.FunctionComponent<ISliderFilterProps> = props => {
         Add Filter
       </Button>
 
-      <Slider range defaultValue={[0, 0.7]} max={1} min={0} step={0.01} onChangeComplete={onChangeComplete} />
+      <Slider range defaultValue={[0, 1]} max={1} min={0} step={0.01} onChangeComplete={onChangeComplete} />
       <Button block onClick={handleRest}>
         reset
       </Button>

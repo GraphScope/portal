@@ -46,37 +46,37 @@ export const nodeCanvasObject =
 
     const showTextInCircle = R * globalScale > 14;
 
-    // if (showTextInCircle) {
-    //   const fontSize = 1;
-    //   ctx.font = `${fontSize}px Sans-Serif`;
-    //   ctx.fillStyle = NODE_TEXT_COLOR;
-    //   ctx.textAlign = 'center';
-    //   ctx.textBaseline = 'middle';
-    //   ctx.fillStyle = '#000';
-    //   drawText(ctx, {
-    //     text: textLabel,
-    //     x: node.x + R,
-    //     y: node.y + R,
-    //     maxWidth: 16,
-    //     lineHeight: fontSize,
-    //   });
-    // } else
-
     if (showTextInCircle && captionStatus !== 'hidden' && textLabel) {
-      const fontSize = 12 / globalScale;
+      const fontSize = 14 / globalScale;
       ctx.font = `${fontSize}px Sans-Serif`;
-      const textWidth = ctx.measureText(textLabel).width;
-      //   const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
       ctx.fillStyle = NODE_TEXT_COLOR;
-      //@ts-ignore
-      //   ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillStyle = color;
-      ctx.fillText(textLabel, node.x, node.y + R + 2);
-      //@ts-ignore
-      //   node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
+      ctx.fillStyle = '#fff';
+      drawText(ctx, {
+        text: textLabel,
+        x: node.x,
+        y: node.y + fontSize / 2,
+        maxWidth: R * 2 * 0.8, //预留 20% pandding
+        lineHeight: fontSize * 1.2,
+      });
     }
+    // } else if (captionStatus !== 'hidden' && textLabel) {
+    // const fontSize = 12 / globalScale;
+    // ctx.font = `${fontSize}px Sans-Serif`;
+    // const textWidth = ctx.measureText(textLabel).width;
+    // const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+    // ctx.fillStyle = NODE_TEXT_COLOR;
+    // //@ts-ignore
+    // ctx.fillRect(node.x - bckgDimensions[0] / 2, 1.2 * R + node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+    // ctx.textAlign = 'center';
+    // ctx.textBaseline = 'middle';
+    // ctx.fillStyle = color;
+    // ctx.fillText(textLabel, node.x, node.y + 1.2 * R);
+    //@ts-ignore
+    //   node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
+
+    // }
     ctx.restore();
     return;
   };
