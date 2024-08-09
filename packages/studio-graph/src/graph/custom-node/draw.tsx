@@ -15,9 +15,7 @@ export function drawText(ctx: CanvasRenderingContext2D, options: DrawTextOptions
   for (let n = 0; n < words.length; n++) {
     const testLine = line + words[n] + ' ';
     const metrics = ctx.measureText(testLine);
-    const testWidth = metrics.width;
-
-    if (testWidth > maxWidth && n > 0) {
+    if (metrics.width > maxWidth && n > 0) {
       lines.push(line.trim());
       line = words[n] + ' ';
     } else {
@@ -27,10 +25,11 @@ export function drawText(ctx: CanvasRenderingContext2D, options: DrawTextOptions
   lines.push(line.trim());
 
   const totalHeight = lines.length * lineHeight;
-  let startY = y - totalHeight / 2;
-  lines.forEach((line, index) => {
-    const textWidth = ctx.measureText(line).width;
-    const startX = x - textWidth / 2;
-    ctx.fillText(line, startX, startY + index * lineHeight);
-  });
+  const startY = y - totalHeight / 2;
+
+  if (totalHeight < maxWidth) {
+    lines.forEach((line, index) => {
+      ctx.fillText(line, x, startY + index * lineHeight);
+    });
+  }
 }
