@@ -1,10 +1,13 @@
-import { CypherDriver, CypherSchemaData, MockDriver, GremlinDriver } from '@graphscope/studio-query';
+import { CypherSchemaData, MockDriver } from '@graphscope/studio-query';
+import { GremlinDriver, CypherDriver, queryGraph, cancelGraph } from '@graphscope/studio-driver';
+import type { QueryParams } from '@graphscope/studio-driver';
 import type { IStudioQueryProps, IStatement } from '@graphscope/studio-query';
 import localforage from 'localforage';
 import { GraphApiFactory, ServiceApiFactory, StoredProcedureApiFactory } from '@graphscope/studio-server';
 import { transformSchema } from './utils/schema';
 import { handleError, handleResponse } from '@/components/utils/handleServer';
 import { Utils } from '@graphscope/studio-components';
+const { storage } = Utils;
 const DB_QUERY_HISTORY = localforage.createInstance({
   name: 'DB_QUERY_HISTORY',
 });
@@ -24,15 +27,15 @@ export const queryEndpoint = async (): Promise<{
   cypher_endpoint: string;
   gremlin_endpoint: string;
 }> => {
-  return fetch('/query_endpoint')
+  return fetch('/graph/endpoint')
     .then(res => {
       return res.json();
     })
     .then(res => res.data)
     .catch(() => {
       return {
-        cypher_endpoint: 'mock',
-        gremlin_endpoint: 'mock',
+        cypher_endpoint: null,
+        gremlin_endpoint: null,
       };
     });
 };
@@ -89,7 +92,7 @@ export const queryStatements: IStudioQueryProps['queryStatements'] = async type 
         if (res.status === 200) {
           return res.data.map(item => {
             const { name, params, description, ...others } = item;
-            const script = params.length > 0? `CALL ${name}("")`:`CALL ${name}()`
+            const script = params.length > 0 ? `CALL ${name}("")` : `CALL ${name}()`;
             return {
               ...others,
               name: description,
@@ -157,18 +160,83 @@ export const getDriver = async (language: 'cypher' | 'gremlin' = 'cypher') => {
   }
   return driver_config.gremlin_driver;
 };
+
 export const queryGraphData = async (params: IStatement) => {
   createStatements('history', params);
-  const { language } = params;
-  console.log('params', params);
-  const driver = await getDriver(language);
-  //@ts-ignore
-  return driver.query(params.script);
-};
-export const handleCancelQuery = async (params: IStatement) => {
-  const { language } = params;
-  const driver = await getDriver(language);
 
-  driver.close();
-  console.log('driver', driver);
+  const query_language = storage.get<'cypher' | 'gremlin'>('query_language') || 'cypher';
+  const query_endpoint = storage.get<string>('query_endpoint') || '';
+  const query_initiation = storage.get<'Server' | 'Browser'>('query_initiation');
+  const query_username = storage.get<string>('query_username');
+  const query_password = storage.get<string>('query_password');
+
+  const _params: QueryParams = {
+    script: params.script,
+    language: query_language,
+    endpoint: query_endpoint,
+    username: query_username,
+    password: query_password,
+  };
+
+  if (query_initiation === 'Browser') {
+    return queryGraph(_params);
+  }
+  if (query_initiation === 'Server') {
+    return await fetch('/graph/query', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(_params),
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res.success) {
+          return res.data;
+        }
+        return {
+          nodes: [],
+          edges: [],
+        };
+      });
+  }
+};
+
+export const handleCancelQuery = async (params: IStatement) => {
+  const query_language = storage.get<'cypher' | 'gremlin'>('query_language') || 'cypher';
+  const query_endpoint = storage.get<string>('query_endpoint') || '';
+  const query_initiation = storage.get<'Server' | 'Browser'>('query_initiation');
+  const query_username = storage.get<string>('query_username');
+  const query_password = storage.get<string>('query_password');
+
+  const _params: QueryParams = {
+    script: params.script,
+    language: query_language,
+    endpoint: query_endpoint,
+    username: query_username,
+    password: query_password,
+  };
+
+  if (query_initiation === 'Browser') {
+    return cancelGraph(_params);
+  }
+  if (query_initiation === 'Server') {
+    return await fetch('/graph/cancel', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(_params),
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res.success) {
+          return res.data;
+        }
+        return {
+          nodes: [],
+          edges: [],
+        };
+      });
+  }
 };

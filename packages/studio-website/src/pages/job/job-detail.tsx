@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { history } from 'umi';
 import { getJobById } from './service';
 import { Utils, useThemeContainer } from '@graphscope/studio-components';
 import Section from '@/components/section';
@@ -11,10 +12,14 @@ const Detail: React.FunctionComponent = () => {
   /** 获取详情job */
   useEffect(() => {
     const fetchJobDetails = async () => {
-      const response = await getJobById(jobId);
-      //@ts-ignore
-      const { log } = response;
-      setDetailData(log);
+      try {
+        const response = await getJobById(jobId);
+        //@ts-ignore
+        const { log } = response;
+        setDetailData(log);
+      } catch (error) {
+        history.push('/job');
+      }
     };
 
     if (jobId) {

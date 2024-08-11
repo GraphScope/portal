@@ -1,4 +1,30 @@
 import { defineConfig } from 'umi';
+import dotenv from 'dotenv';
+const { parsed } = dotenv.configDotenv();
+const { PROXY_URL, BACKEND_URL, SLOT_URL = [] } = parsed || {};
+console.log(SLOT_URL);
+let headScripts;
+let externals;
+
+if (process.env.NODE_ENV === 'development') {
+  // 开发环境代码
+  headScripts = [];
+  externals = {
+    'node:os': 'commonjs2 node:os',
+  };
+}
+if (process.env.NODE_ENV === 'production') {
+  headScripts = [
+    'https://gw.alipayobjects.com/os/lib/react/18.2.0/umd/react.production.min.js',
+    'https://gw.alipayobjects.com/os/lib/react-dom/18.2.0/umd/react-dom.production.min.js',
+    ...SLOT_URL,
+  ];
+  externals = {
+    'node:os': 'commonjs2 node:os',
+    react: 'React',
+    'react-dom': 'ReactDOM',
+  };
+}
 
 export default defineConfig({
   routes: [
@@ -6,18 +32,12 @@ export default defineConfig({
     { path: '/graphs', component: 'instance' },
     { path: '/graphs/create', component: 'instance/create' },
     { path: '/setting', component: 'setting' },
-    // { path: '/instance/create', component: 'instance/create-instance' },
-    // { path: '/instance/view-schema', component: 'instance/view-schema' },
-    // { path: '/instance/import-data', component: 'instance/import-data' },
-
-    // { path: '/query-app', component: 'query/app', layout: false },
     { path: '/job', component: 'job' },
     { path: '/job/detail', component: 'job/job-detail' },
     { path: '/extension', component: 'extension' },
     { path: '/extension/:name', component: 'extension/create-plugins' },
     { path: '/alert', component: 'alert' },
     { path: '/deployment', component: 'deployment' },
-
     { path: '/modeling', component: 'modeling' },
     { path: '/importing', component: 'importing' },
     { path: '/querying', component: 'query' },
@@ -26,13 +46,8 @@ export default defineConfig({
   jsMinifier: 'terser',
   npmClient: 'pnpm',
   monorepoRedirect: {},
-  externals: {
-    // '@antv/g2': 'G2',
-    'node:os': 'commonjs2 node:os',
-    // '@graphscope/_test_gremlin_': 'GS_GREMLIN',
-    // react: 'React',
-    // 'react-dom': 'ReactDOM',
-  },
+  externals,
+  headScripts,
   mfsu: {
     shared: {
       react: {
@@ -40,16 +55,13 @@ export default defineConfig({
       },
     },
   },
-
   proxy: {
     '/api': {
-      target:
-        // 'http://47.242.172.5:8080', //interactive
-        // 'http://47.242.172.5:8081/', //groot
-        // 'https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/0.9.1',
-        // 'https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/1.0.0',
-        'http://54.157.222.57',
-
+      target: PROXY_URL,
+      changeOrigin: true,
+    },
+    '/graph': {
+      target: BACKEND_URL,
       changeOrigin: true,
     },
   },
@@ -59,9 +71,4 @@ export default defineConfig({
   // codeSplitting: {
   //   jsStrategy: 'granularChunks',
   // },
-  headScripts: [
-    // 'https://gw.alipayobjects.com/os/lib/antv/g2/5.1.14/dist/g2.min.js',
-    // 'https://gw.alipayobjects.com/os/lib/react/18.2.0/umd/react.production.min.js',
-    // 'https://gw.alipayobjects.com/os/lib/react-dom/18.2.0/umd/react-dom.production.min.js',
-  ],
 });

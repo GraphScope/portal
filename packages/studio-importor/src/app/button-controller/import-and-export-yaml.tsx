@@ -1,6 +1,5 @@
-import { Button, Tooltip, Popover, Flex, Typography, Divider, theme } from 'antd';
+import { Button, Popover, Flex, Typography, Divider, theme, Space } from 'antd';
 import * as React from 'react';
-import { FileExcelFilled } from '@ant-design/icons';
 import { Utils, Icons } from '@graphscope/studio-components';
 import { useContext } from '../useContext';
 import { transOptionsToSchema } from '../utils/modeling';
@@ -18,32 +17,44 @@ const APP_MODE_YAML_TITLE: {
   };
 } = {
   DATA_MODELING: {
-    importText: 'Import YAML file to generate graph model',
-    exportText: 'Save graph model to local YAML file',
+    importText: 'Import YAML or JSON file to generate graph model',
+    exportText: 'Save graph model to local YAML or JSON file',
   },
   DATA_IMPORTING: {
-    importText: 'Import YAML file to generate graph loading config',
-    exportText: 'Save graph loading config to local YAML file',
+    importText: 'Import YAML or JSON file to generate graph loading config',
+    exportText: 'Save graph loading config to local YAML or JSON file',
   },
 };
 const Content = () => {
   const { token } = useToken();
   const { store } = useContext();
-  const { nodes, edges, elementOptions, appMode } = store;
+  const { nodes, edges, appMode } = store;
   const { importText, exportText } = APP_MODE_YAML_TITLE[appMode];
 
   /** export yaml */
-  const handleExport = () => {
+  const handleExport = (type: string) => {
+    let yamlFile;
     if (appMode === 'DATA_MODELING') {
       const content = transOptionsToSchema(Utils.fakeSnapshot({ nodes, edges }));
-      const yamlFile = yaml.dump(content);
-      Utils.download('create-model.yaml', yamlFile);
+      if (type === 'yaml') {
+        yamlFile = yaml.dump(content);
+      }
+      if (type === 'json') {
+        yamlFile = JSON.stringify(content);
+      }
+      Utils.download(`create-model.${type}`, yamlFile);
       return;
     }
     if (appMode === 'DATA_IMPORTING') {
-      const content = transformImportOptionsToSchemaMapping( Utils.fakeSnapshot({ nodes, edges }));
-      const yamlFile = yaml.dump(content);
-      Utils.download('loading-config.yaml', yamlFile);
+      const content = transformImportOptionsToSchemaMapping(Utils.fakeSnapshot({ nodes, edges }));
+
+      if (type === 'yaml') {
+        yamlFile = yaml.dump(content);
+      }
+      if (type === 'json') {
+        yamlFile = JSON.stringify(content);
+      }
+      Utils.download(`loading-config.${type}`, yamlFile);
       return;
     }
   };
@@ -52,13 +63,20 @@ const Content = () => {
     <Flex justify="center" vertical style={{ padding: '20px' }} gap={10}>
       <Typography.Text type="secondary">{importText}</Typography.Text>
       <ImportFromYAML
-        disabled={!elementOptions.isEditable}
+        disabled={nodes.length !== 0}
         style={{ height: '160px' }}
         icon={<Icons.FileYaml style={{ fontSize: '50px', color: token.colorPrimary }} />}
       />
       <Divider style={{ margin: '12px  0px' }} />
       <Typography.Text type="secondary">{exportText}</Typography.Text>
-      <Button onClick={handleExport}>Export</Button>
+      <Flex gap={10}>
+        <Button style={{ width: '50%' }} onClick={() => handleExport('yaml')}>
+          YAML Export
+        </Button>
+        <Button style={{ width: '50%' }} onClick={() => handleExport('json')}>
+          JSON Export
+        </Button>
+      </Flex>
     </Flex>
   );
 };

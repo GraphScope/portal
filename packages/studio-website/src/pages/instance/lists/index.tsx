@@ -3,12 +3,11 @@ import { Row, Col, Card, Skeleton } from 'antd';
 import { history } from 'umi';
 import InstaceCard, { InstaceCardType } from './instance-card';
 import Section from '@/components/section';
-import { PlusOutlined } from '@ant-design/icons';
-import { FormattedMessage } from 'react-intl';
 import { useContext } from '@/layouts/useContext';
 import { useThemeContainer } from '@graphscope/studio-components';
+import InteractiveCase from './interactive-case';
+import CreateGraph from './create-graph';
 import { listGraphs } from './service';
-const { GS_ENGINE_TYPE } = window;
 const InstanceCard: React.FC = () => {
   const { store } = useContext();
   const { draftGraph } = store;
@@ -69,28 +68,11 @@ const InstanceCard: React.FC = () => {
             </Card>
           </Col>
         )}
-        {GS_ENGINE_TYPE === 'interactive' && (
-          <Col span={12}>
-            <Card
-              title={<FormattedMessage id="New graph" />}
-              styles={{ header: { fontSize: '30px', color: '#ccc' }, body: { width: '100%' } }}
-              style={{ background: instanceBackground }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  height: '164px',
-                  justifyContent: 'center',
-                  alignContent: 'center',
-                  cursor: 'pointer',
-                }}
-                onClick={handleCreate}
-              >
-                <PlusOutlined style={{ fontSize: '80px', color: '#ccc' }} />
-              </div>
-            </Card>
-          </Col>
-        )}
+        <Col span={12}>
+          <InteractiveCase>
+            <CreateGraph onCreate={handleCreate} />
+          </InteractiveCase>
+        </Col>
       </Row>
     </Section>
   );

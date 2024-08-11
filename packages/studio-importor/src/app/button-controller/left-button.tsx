@@ -4,13 +4,11 @@ import { useContext } from '../useContext';
 import { Icons, useSection } from '@graphscope/studio-components';
 import { FormattedMessage } from 'react-intl';
 interface ILeftButtonProps {}
-
 const LeftButton: React.FunctionComponent<ILeftButtonProps> = props => {
-  const { updateStore, store } = useContext();
+  const { store } = useContext();
   const { elementOptions } = store;
   const { toggleLeftSide } = useSection();
-  const disabled = !elementOptions.isConnectable;
-  const tooltipText = disabled ? (
+  const tooltipText = elementOptions.isEditable ? (
     <FormattedMessage id="The current mode is preview only, and does not support opening multi-source modeling" />
   ) : (
     <FormattedMessage id="Expand or collapse multi-source modeling" />
@@ -19,8 +17,8 @@ const LeftButton: React.FunctionComponent<ILeftButtonProps> = props => {
     <Tooltip title={tooltipText} placement="right">
       <Button
         type="text"
-        disabled={!elementOptions.isConnectable}
-        icon={<Icons.Sidebar disabled={disabled} />}
+        disabled={elementOptions.isEditable}
+        icon={<Icons.Sidebar disabled={elementOptions.isEditable} />}
         // onClick={() => {
         //   updateStore(draft => {
         //     draft.collapsed.left = !draft.collapsed.left;

@@ -9,15 +9,18 @@ import {
   createStatements,
 } from './services';
 import { useContext } from '@/layouts/useContext';
-import EmptyModelCase from './empty-model-case';
+import NoEndpointCase from './no-endpoint-case';
 import StoppedServiceCase from './stopped-service-case';
 import SelectGraph from '@/layouts/select-graph';
+
 import { Utils } from '@graphscope/studio-components';
 
 const getPrefixParams = () => {
   const { GS_ENGINE_TYPE } = window;
-  const language = GS_ENGINE_TYPE === 'groot' ? 'gremlin' : 'cypher';
-  let globalScript = GS_ENGINE_TYPE === 'groot' ? 'g.V().limit 10' : 'Match (n) return n limit 10';
+  const language =
+    Utils.storage.get<'cypher' | 'gremlin'>('query_language') ||
+    (GS_ENGINE_TYPE === 'interactive' ? 'cypher' : 'gremlin');
+  let globalScript = GS_ENGINE_TYPE === 'groot' ? 'g.V().limit(500)' : 'Match (n) return n limit 500';
   let welcome;
   let autoRun = false;
   let collapsed = true;
@@ -53,18 +56,18 @@ const getPrefixParams = () => {
     globalScript,
   };
 };
+export interface IQueryModuleState {
+  isEmptyModel: boolean;
+  isStoppedServer: boolean;
+  isReady: boolean;
+}
 const QueryModule = () => {
   const { store } = useContext();
   const { graphId, displaySidebarPosition, displaySidebarType } = store;
   const { language, globalScript, welcome, autoRun, collapsed } = getPrefixParams();
-  console.log('graphId', graphId);
-  if (!graphId) {
-    return <EmptyModelCase />;
-  }
+
   return (
     <>
-      <EmptyModelCase />
-      <StoppedServiceCase />
       <StudioQuery
         autoRun={autoRun}
         welcome={welcome}
@@ -96,6 +99,8 @@ const QueryModule = () => {
         sidebarStyle={{ width: '320px', padding: '0px' }}
         sidebarCollapsed={collapsed}
       ></StudioQuery>
+      <StoppedServiceCase />
+      <NoEndpointCase />
     </>
   );
 };

@@ -2,7 +2,7 @@ import * as React from 'react';
 import ImportApp, { transSchemaToOptions } from '@graphscope/studio-importor';
 import { useContext } from '../../layouts/useContext';
 import { Toolbar } from '@graphscope/studio-components';
-import { getSchema } from './services';
+import { getSchema, createVertexTypeOrEdgeType, deleteVertexTypeOrEdgeType } from './services';
 import Save from './save-modeling';
 import SelectGraph from '@/layouts/select-graph';
 
@@ -26,7 +26,13 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
         schema = { vertex_types: [], edge_types: [] };
       }
     }
-    return transSchemaToOptions(schema as any);
+
+    return transSchemaToOptions(schema as any, () => {
+      return {
+        saved: true,
+        disabled: true,
+      };
+    });
   };
 
   return (
@@ -48,6 +54,8 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
         leftSide: true,
         rightSide: true,
       }}
+      onDeleteLabel={deleteVertexTypeOrEdgeType}
+      onCreateLabel={createVertexTypeOrEdgeType}
     >
       <Toolbar style={{ top: '12px', right: '124px', left: 'unset' }} direction="horizontal">
         <SelectGraph />

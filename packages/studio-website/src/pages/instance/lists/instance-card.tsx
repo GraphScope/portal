@@ -206,7 +206,6 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   if (status === 'Running') btnIcon = <PauseCircleOutlined />;
   /** 按钮中英文宽度 */
   let btnWidth = locale === 'zh-CN' ? '115px' : '130px';
-
   return (
     <Card
       styles={{ header: { fontSize: '30px' } }}
@@ -214,16 +213,18 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
       style={{ background: instanceBackground }}
       extra={
         <Space>
-          <Tooltip title={tooltipContext}>
-            <Button
-              type="text"
-              icon={btnIcon}
-              loading={isLoading}
-              onClick={() => {
-                handleClick(id, status);
-              }}
-            />
-          </Tooltip>
+          {btnIcon && (
+            <Tooltip title={tooltipContext}>
+              <Button
+                type="text"
+                icon={btnIcon}
+                loading={isLoading}
+                onClick={() => {
+                  handleClick(id, status);
+                }}
+              />
+            </Tooltip>
+          )}
           {window.GS_ENGINE_TYPE === 'interactive' && (
             <Dropdown menu={{ items, onClick }}>
               <Button type="text" icon={<MoreOutlined />} />

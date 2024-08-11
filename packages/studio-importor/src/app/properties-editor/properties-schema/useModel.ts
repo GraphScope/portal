@@ -1,7 +1,11 @@
 import React from 'react';
 import { useContext } from '../../useContext';
 import { Property } from '@graphscope/studio-components';
-export default function useModel({ type, id }) {
+interface IuseModel {
+  type: string;
+  id: string;
+}
+export default function useModel({ type, id }: IuseModel) {
   const { updateStore } = useContext();
   /** 修改label */
   const handleChangeLabel = e => {
@@ -26,8 +30,6 @@ export default function useModel({ type, id }) {
   };
 
   const handleProperty = e => {
-    console.log('e|||||', e);
-
     updateStore(draft => {
       if (type === 'edges') {
         draft.edges.map(item => {
@@ -65,6 +67,7 @@ export default function useModel({ type, id }) {
       });
     });
   };
+
   return {
     handleChangeLabel,
     handleDataFieldsChange,

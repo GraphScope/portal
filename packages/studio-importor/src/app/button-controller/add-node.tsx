@@ -45,13 +45,7 @@ const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
 
   return (
     <Tooltip title={tooltipText} placement="right">
-      <Button
-        disabled={!elementOptions.isConnectable}
-        onClick={handleAddVertex}
-        style={style}
-        type="text"
-        icon={<AddNodeIcon />}
-      ></Button>
+      <Button disabled={disabled} onClick={handleAddVertex} style={style} type="text" icon={<AddNodeIcon />}></Button>
     </Tooltip>
   );
 };

@@ -24,7 +24,7 @@ const styles = {
 };
 const GraphNode = (props: NodeProps) => {
   const { data = {}, id } = props;
-  const { label, filelocation } = data;
+  const { label, filelocation, disabled } = data;
   const { store, updateStore } = useContext();
   const { currentId, theme, elementOptions } = store;
   const { algorithm } = useThemeContainer();
@@ -32,14 +32,14 @@ const GraphNode = (props: NodeProps) => {
   const { token } = useToken();
   const isSelected = id === currentId;
   const isDark = algorithm === 'darkAlgorithm';
-
+  const isConnectable = !elementOptions.isConnectable;
   const [state, updateState] = useState({
     isHover: false,
     contentEditable: false,
   });
 
   const onMouseEnter = () => {
-    if (!elementOptions.isConnectable) {
+    if (isConnectable) {
       return;
     }
     updateState(preState => {
@@ -50,7 +50,7 @@ const GraphNode = (props: NodeProps) => {
     });
   };
   const onMouseLeave = () => {
-    if (!elementOptions.isConnectable) {
+    if (isConnectable) {
       return;
     }
     updateState(preState => {
@@ -79,7 +79,7 @@ const GraphNode = (props: NodeProps) => {
     toggleRightSide(false);
     toggleLeftSide(true);
   };
-  const haloStyle = elementOptions.isConnectable
+  const haloStyle = !isConnectable
     ? {
         ...styles.handler,
         border: state.isHover ? `2px dashed ${theme.primaryColor}` : 'none',
@@ -152,7 +152,7 @@ const GraphNode = (props: NodeProps) => {
           id={id}
           text={label}
           onTextChange={hanleChangeLabel}
-          disabled={!elementOptions.isEditable}
+          disabled={disabled}
           style={{ color: isDark ? '#D7D7D7' : '#000' }}
         />
       </div>

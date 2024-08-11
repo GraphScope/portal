@@ -8,8 +8,11 @@ import type { ForceGraph3DInstance } from '3d-force-graph';
 import { Utils } from '@graphscope/studio-components';
 import mitt from 'mitt';
 import { handleStyle } from './handleStyle';
-import { nodeCanvasObject } from './nodeCanvasObject';
+// import { nodeCanvasObject } from './nodeCanvasObject';
+import { nodeCanvasObject } from './custom-node';
 import { BASIC_NODE_R, SELECTED_EDGE_COLOR } from './const';
+// import * as d3 from 'd3-force';
+import * as d3 from 'd3-force-3d';
 
 export default function useGraph<P extends GraphProps>(props: P) {
   const {
@@ -55,6 +58,13 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .linkWidth(edge => handleStyle(edge, edgeStyle, 'edge').width)
         .linkColor(edge => handleStyle(edge, edgeStyle, 'edge').color)
 
+        /** force */
+        .d3Force(
+          'collide',
+          d3.forceCollide().radius(node => {
+            return handleStyle(node, nodeStyle).size + 5;
+          }),
+        )
         /** interaction */
         .onNodeHover(node => {
           emitterRef.current?.emit('node:hover', node);
@@ -100,7 +110,7 @@ export default function useGraph<P extends GraphProps>(props: P) {
 
     graphRef.current = graph;
     setIsReady(true);
-    onInit?.(graph, emitterRef.current);
+    onInit?.(graph, emitterRef.current, { width, height });
 
     /** 监听容器 DOM 尺寸变化 */
     const handleResize = Utils.debounce(() => {
@@ -171,9 +181,9 @@ export default function useGraph<P extends GraphProps>(props: P) {
         })
         .linkDirectionalParticles(1)
         .linkDirectionalParticleWidth((edge: any) => {
-          const { size } = handleStyle(edge, edgeStyle, 'edge');
           const match = edgeStatus[edge.id];
           if (match && match.selected) {
+            const { size } = handleStyle(edge, edgeStyle, 'edge');
             return size + 1;
           }
           return 0;

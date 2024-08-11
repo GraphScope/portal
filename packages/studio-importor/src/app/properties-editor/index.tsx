@@ -1,21 +1,22 @@
 import React, { useEffect, useRef } from 'react';
-import { Collapse } from 'antd';
+import { Collapse, Space } from 'antd';
 import PropertiesSchema from './properties-schema';
 import { useContext } from '../useContext';
-import { SegmentedTabs } from '@graphscope/studio-components';
+import { SegmentedTabs, Utils } from '@graphscope/studio-components';
 import { CaretRightOutlined } from '@ant-design/icons';
 import type { ImportorProps } from '../typing';
 import ValidateInfo from './properties-schema/validate-info';
+import SaveButton from './properties-schema/save';
+import DeleteButton from './properties-schema/delete';
 import ScrollContainer, { disableScroll } from './scroll-container';
 type IPropetiesEditorProps = Pick<
   ImportorProps,
-  'appMode' | 'handleUploadFile' | 'queryPrimitiveTypes' | 'batchUploadFiles'
+  'appMode' | 'handleUploadFile' | 'queryPrimitiveTypes' | 'batchUploadFiles' | 'onCreateLabel' | 'onDeleteLabel'
 >;
-
 const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props => {
   const { store, updateStore } = useContext();
   const { nodes, edges, currentType, currentId, elementOptions } = store;
-  const { appMode, handleUploadFile, queryPrimitiveTypes, batchUploadFiles } = props;
+  const { appMode, handleUploadFile, queryPrimitiveTypes, batchUploadFiles, onCreateLabel, onDeleteLabel } = props;
   const ids = new Set();
   const itemRefs = [...nodes, ...edges].reduce((acc, curr) => {
     acc[curr.id] = { ref: React.createRef(), file: curr.data.label + '.csv' };
@@ -34,25 +35,31 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
 
   const activeKey = autoUpload ? [...ids.values()] : [currentId];
   const accordion = autoUpload ? false : true;
-  console.log('autoUpload', autoUpload);
 
   const NODES_SCROLL_ITEMS = {};
   const EDGES_SCROLL_ITEMS = {};
+  const nodesMap = {};
 
   const nodes_items = nodes.map((item, index) => {
     const { id, data } = item;
     const { label, properties = [], filelocation } = data || { label: id };
     NODES_SCROLL_ITEMS[id] = { index: index };
+    nodesMap[id] = item;
+
     return {
       key: id,
       label: label,
       extra: (
-        <ValidateInfo
-          type="nodes"
-          filelocation={filelocation}
-          appMode={appMode}
-          properties={JSON.parse(JSON.stringify(properties))}
-        />
+        <Space>
+          <SaveButton schema={item} type="nodes" onCreateLabel={onCreateLabel} />
+          <DeleteButton schema={item} type="nodes" onDeleteLabel={onDeleteLabel} />
+          <ValidateInfo
+            type="nodes"
+            filelocation={filelocation}
+            appMode={appMode}
+            properties={JSON.parse(JSON.stringify(properties))}
+          />
+        </Space>
       ),
       children: (
         <PropertiesSchema
@@ -62,7 +69,6 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
           queryPrimitiveTypes={queryPrimitiveTypes}
           handleUploadFile={handleUploadFile}
           appMode={appMode}
-          disabled={!elementOptions.isEditable}
         />
       ),
     };
@@ -71,16 +77,21 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     const { id, data } = item;
     const { label, properties = [], filelocation } = data || { label: id };
     EDGES_SCROLL_ITEMS[id] = { index: index };
+
     return {
       key: id,
       label: label,
       extra: (
-        <ValidateInfo
-          type="edges"
-          filelocation={filelocation}
-          appMode={appMode}
-          properties={JSON.parse(JSON.stringify(properties))}
-        />
+        <Space>
+          <SaveButton nodesMap={nodesMap} schema={item} type="edges" onCreateLabel={onCreateLabel} />
+          <DeleteButton nodesMap={nodesMap} schema={item} type="edges" onDeleteLabel={onDeleteLabel} />
+          <ValidateInfo
+            type="edges"
+            filelocation={filelocation}
+            appMode={appMode}
+            properties={JSON.parse(JSON.stringify(properties))}
+          />
+        </Space>
       ),
       children: (
         <PropertiesSchema
@@ -90,7 +101,6 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
           queryPrimitiveTypes={queryPrimitiveTypes}
           handleUploadFile={handleUploadFile}
           appMode={appMode}
-          disabled={!elementOptions.isEditable}
         />
       ),
     };
@@ -128,7 +138,6 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
             };
           }, {});
           //@ts-ignore
-          console.log('res', res, window.ITEM_REFS);
           res.forEach(file => {
             //@ts-ignore
             const match = fileRef[file.name];

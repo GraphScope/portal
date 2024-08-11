@@ -73,7 +73,7 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
     return (
       <>
         <Button type="primary" onClick={handleBind}>
-          <FormattedMessage id="Batch data binding" />
+          <FormattedMessage id="Data source binding" />
         </Button>
         <Modal title="" open={open} footer={null} closable={false} width={1000}>
           <SplitSection

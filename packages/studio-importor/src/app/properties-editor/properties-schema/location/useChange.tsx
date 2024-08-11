@@ -39,8 +39,8 @@ export const useChange = ({ type, id }) => {
     updateStore(draft => {
       draft[type].forEach((item: ISchemaNode | ISchemaEdge) => {
         if (item.id === id) {
+          item.data.dataFields = [];
           item.data.filelocation = e.target.value;
-
           item.data.properties?.forEach((p, pIndex) => {
             p.token = '';
             p.index = pIndex;

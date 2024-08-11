@@ -1,11 +1,11 @@
 import { GraphApiFactory, UtilsApiFactory } from '@graphscope/studio-server';
-
-import { transOptionsToSchema } from '@graphscope/studio-importor';
+import { transOptionsToSchema, ISchemaNode } from '@graphscope/studio-importor';
 import { cloneDeep } from 'lodash';
 import { notification } from '@/pages/utils';
+import { Utils, Property } from '@graphscope/studio-components';
 
+const { getSearchParams } = Utils;
 const { GS_ENGINE_TYPE } = window;
-
 export const createGraph = async (graph_id: string, params: { graphName: string; nodes: any[]; edges: any[] }) => {
   const { graphName, nodes, edges } = params;
   let graphs;
@@ -78,11 +78,87 @@ export const getSchema = async (graph_id: string) => {
       .catch(error => {
         notification('error', error);
       });
+
     // schema = transformDataMapToGrootSchema(JSON.parse(JSON.stringify(schema)));
   }
+  console.log(schema);
   return schema;
 };
+/** groot interface */
+/** 删除节点或边 */
+export const deleteVertexTypeOrEdgeType = async (
+  type: string,
+  label: string,
+  sourceVertexType?: string,
+  destinationVertexType?: string,
+) => {
+  if (window.GS_ENGINE_TYPE === 'interactive') {
+    // interactive 图引擎，一旦创建模型，就无法删除，永远返回true
+    return false;
+  }
+  let response: boolean = false;
+  const graph_id = getSearchParams('graph_id') || '';
+  if (type === 'nodes') {
+    try {
+      const res = await GraphApiFactory(undefined, location.origin).deleteVertexTypeByName(graph_id, label);
+      response = true;
+      notification('success', res.data);
+    } catch (error) {
+      notification('error', error);
+    }
+  }
+  if (type === 'edges' && sourceVertexType && destinationVertexType) {
+    try {
+      const res = await GraphApiFactory(undefined, location.origin).deleteEdgeTypeByName(
+        graph_id,
+        label,
+        sourceVertexType,
+        destinationVertexType,
+      );
+      response = true;
+      notification('success', res.data);
+    } catch (error) {
+      notification('error', error);
+    }
+  }
+  return response;
+};
 
+/** groot 单独创建节点或边 */
+export const createVertexTypeOrEdgeType = async (
+  type: string,
+  params: { nodes?: ISchemaNode[]; label: string; source?: string; target?: string; properties: Property[] },
+  nodes?: any,
+) => {
+  let response: boolean = false;
+  const graph_id = getSearchParams('graph_id') || '';
+  const { label, source = '', target = '', properties } = params;
+  if (type === 'nodes') {
+    // const vertexType = transformGrootCreateVertexToOptions({ label, properties });
+    //@ts-ignore
+    const { vertex_types } = transOptionsToSchema({ nodes: [params], edges: [] });
+    try {
+      const res = await GraphApiFactory(undefined, location.origin).createVertexType(graph_id, vertex_types[0]);
+      notification('success', res.data);
+      response = true;
+    } catch (error) {
+      notification('error', error);
+    }
+  }
+  if (type === 'edges') {
+    //@ts-ignore
+    const { edge_types } = transOptionsToSchema({ nodes: nodes, edges: [params] });
+    console.log('edge_types', edge_types, params);
+    try {
+      const res = await GraphApiFactory(undefined, location.origin).createEdgeType(graph_id, edge_types[0]);
+      notification('success', res.data);
+      response = true;
+    } catch (error) {
+      notification('error', error);
+    }
+  }
+  return response;
+};
 export const queryPrimitiveTypes = () => {
   if (GS_ENGINE_TYPE === 'groot') {
     return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {

@@ -5,6 +5,7 @@ export default {
   'navbar.extension': 'Extensions',
   'navbar.alert': 'Alerts',
   'navbar.setting': 'Settings',
+  'navbar.deployment': 'Deployment',
   'Query App': 'Query App',
   Schema: 'Schema',
   /** graphs */

@@ -11,7 +11,7 @@ interface IExtraComponentProps {
   properties: Property[];
   filelocation?: string;
 }
-
+const { GS_ENGINE_TYPE } = window as unknown as { GS_ENGINE_TYPE: string };
 const ValidateInfo: React.FC<IExtraComponentProps> = ({
   appMode = 'DATA_IMPORTING',
   type,
@@ -20,15 +20,14 @@ const ValidateInfo: React.FC<IExtraComponentProps> = ({
 }) => {
   const tooltip = validateProperties({ appMode, type, properties, filelocation });
   const { token } = useToken();
-  return (
-    <div style={{ height: '14px' }}>
-      {tooltip && (
-        <Tooltip title={<FormattedMessage id={`${tooltip}`} />}>
-          <Button type="text" size="small" icon={<WarningOutlined style={{ color: token.colorErrorActive }} />} />
-        </Tooltip>
-      )}
-    </div>
-  );
+  if (tooltip) {
+    return (
+      <Tooltip title={<FormattedMessage id={`${tooltip}`} />}>
+        <Button type="text" size="small" icon={<WarningOutlined style={{ color: token.colorErrorActive }} />} />
+      </Tooltip>
+    );
+  }
+  return null;
 };
 
 export function validateProperties({
@@ -63,7 +62,7 @@ export function validateProperties({
     }
 
     if (type === 'edges') {
-      if (properties.length > 1) {
+      if (GS_ENGINE_TYPE === 'interactive' && properties.length > 1) {
         return 'A edge can only have one property.';
       }
       if (!properties.every(({ type }) => type)) {

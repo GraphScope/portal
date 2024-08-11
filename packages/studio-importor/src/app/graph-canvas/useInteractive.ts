@@ -12,7 +12,6 @@ import { useContext } from '../useContext';
 import { transformEdges } from '../elements';
 
 import { getBBox, createEdgeLabel, createNodeLabel } from '../utils';
-
 let timer: any = null;
 const useInteractive: any = () => {
   const { store, updateStore } = useContext();
@@ -94,7 +93,9 @@ const useInteractive: any = () => {
   );
 
   const onNodesChange = (changes: NodeChange[]) => {
-    if (elementOptions.isConnectable) {
+    const { type } = changes[0];
+
+    if (elementOptions.isConnectable || type === 'position') {
       updateStore(draft => {
         draft.nodes = applyNodeChanges(changes, deepclone(draft.nodes));
       });

@@ -8,7 +8,7 @@ import {
   DEFAULT_EDGE_COLOR,
   DEFAULT_NODE_COLOR,
   DEFAULT_EDGE_WIDTH,
-  DEFAULT_NODE_SISE,
+  DEFAULT_NODE_SIZE,
 } from '../../graph/const';
 const { storage } = Utils;
 export function getStyleConfig(schema: ISchema, graphId: string) {
@@ -25,7 +25,7 @@ export function getStyleConfig(schema: ISchema, graphId: string) {
     const { label } = item;
     defaultStyle.nodeStyle[label] = {
       label: item.label,
-      size: DEFAULT_NODE_SISE,
+      size: DEFAULT_NODE_SIZE,
       color: colors[index],
       caption: Object.keys(item.properties || {})[0] || '',
       captionStatus: 'hidden',

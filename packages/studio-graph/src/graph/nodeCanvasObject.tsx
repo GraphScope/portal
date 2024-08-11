@@ -44,9 +44,25 @@ export const nodeCanvasObject =
       //@TODO
     }
 
-    //text shape
-    if (captionStatus !== 'hidden' && textLabel) {
-      const fontSize = 12 / globalScale;
+    const showTextInCircle = R * globalScale > 30;
+
+    if (showTextInCircle) {
+      const fontSize = 1;
+      console.log('fontSize', globalScale, fontSize);
+      ctx.font = `${fontSize}px Sans-Serif`;
+      const textWidth = ctx.measureText(textLabel).width;
+      //   const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+      ctx.fillStyle = NODE_TEXT_COLOR;
+      ctx.strokeStyle = '#000';
+
+      //@ts-ignore
+      //   ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#fff';
+      ctx.fillText(textLabel, node.x, node.y);
+    } else if (captionStatus !== 'hidden' && textLabel) {
+      const fontSize = 6 / globalScale;
       ctx.font = `${fontSize}px Sans-Serif`;
       const textWidth = ctx.measureText(textLabel).width;
       //   const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding

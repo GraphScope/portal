@@ -4,7 +4,7 @@ import type { UploadProps } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import yaml from 'js-yaml';
 
-import { transSchemaToOptions } from '../../utils/modeling';
+import { transSchemaToOptions, appendData } from '../../utils/modeling';
 import { transMappingSchemaToOptions } from '../../utils/importing';
 import { useContext } from '../../useContext';
 import { transformEdges, transformGraphNodes } from '../../elements';
@@ -40,25 +40,31 @@ const ImportFromYAML = (props: IProps) => {
     const { type } = file as File;
 
     try {
+      const content = await Utils.parseFile(file as File);
+      let jsonContent;
       if (type === 'application/x-yaml') {
-        const content = await Utils.parseFile(file as File);
-
-        const jsonContent = hackContent(yaml.load(content));
-        let schema;
-        if (appMode === 'DATA_MODELING') {
-          schema = transSchemaToOptions(jsonContent);
-        }
-        if (appMode === 'DATA_IMPORTING') {
-          schema = transMappingSchemaToOptions({} as any, jsonContent, { nodes, edges } as any);
-        }
-
-        console.log(content, schema);
-        updateStore(draft => {
-          draft.hasLayouted = false;
-          draft.nodes = transformGraphNodes(schema.nodes, 'graph');
-          draft.edges = transformEdges(schema.edges, 'graph');
+        jsonContent = hackContent(yaml.load(content));
+      }
+      if (type === 'application/json') {
+        jsonContent = JSON.parse(content);
+      }
+      let schema;
+      if (appMode === 'DATA_MODELING') {
+        schema = transSchemaToOptions(jsonContent, () => {
+          return {
+            disabled: false,
+            saved: false,
+          };
         });
       }
+      if (appMode === 'DATA_IMPORTING') {
+        schema = transMappingSchemaToOptions({} as any, jsonContent, { nodes, edges } as any);
+      }
+      updateStore(draft => {
+        draft.hasLayouted = false;
+        draft.nodes = transformGraphNodes(schema.nodes, 'graph');
+        draft.edges = transformEdges(schema.edges, 'graph');
+      });
     } catch (error) {
       console.error('解析文件失败:', error);
       message.error('解析文件失败');
@@ -69,7 +75,7 @@ const ImportFromYAML = (props: IProps) => {
     <div style={{ height: '100%', width: '100%' }}>
       <Dragger
         disabled={appMode === 'DATA_MODELING' ? disabled : false}
-        accept={'.yaml'}
+        accept={'.yaml,.json'}
         customRequest={customRequest}
         showUploadList={false}
         multiple={true}

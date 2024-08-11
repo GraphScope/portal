@@ -1,25 +1,32 @@
-import React, { memo, forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import { Typography, Flex, Input } from 'antd';
 import { PropertiesList } from '@graphscope/studio-components';
 import useModel from './useModel';
 import LocationField from './location';
 import SourceTarget from './source-target';
-import GrootCase from './groot-case';
-import type { ISchemaEdge, ISchemaNode, ISchemaOptions, ImportorProps, Option, IEdgeData } from '../../typing';
-import { useContext } from '../../useContext';
+
+import type { ISchemaEdge, ImportorProps, Option } from '../../typing';
+
 export type IPropertiesSchemaProps = Pick<ImportorProps, 'appMode' | 'queryPrimitiveTypes' | 'handleUploadFile'> & {
   schema: ISchemaEdge;
   type: 'nodes' | 'edges';
-  disabled?: boolean;
 };
 
 const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
-  const { schema, type, appMode, queryPrimitiveTypes, disabled, handleUploadFile } = props;
+  const { schema, type, appMode, queryPrimitiveTypes, handleUploadFile } = props;
   const { id, source, target, data } = schema;
-
-  const { dataFields, properties = [], label, source_vertex_fields, target_vertex_fields, filelocation } = data || {};
-  const { handleChangeLabel, handleProperty } = useModel({ type, id });
-
+  const {
+    dataFields,
+    properties = [],
+    label,
+    source_vertex_fields,
+    target_vertex_fields,
+    disabled = false,
+  } = data || {};
+  const { handleChangeLabel, handleProperty } = useModel({
+    type,
+    id,
+  });
   /** 判断是否为导入数据 */
   const mappingColumn =
     appMode === 'DATA_IMPORTING'
@@ -59,7 +66,6 @@ const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
           disabled={disabled}
           mappingColumn={mappingColumn as ImportorProps['mappingColumn']}
         />
-        <GrootCase />
       </Flex>
     </div>
   );
