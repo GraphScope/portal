@@ -18,6 +18,7 @@ export type IStore = {
       [key: string]: any;
     }
   >;
+  groups: any[];
   width: number;
   height: number;
   render: '2D' | '3D';
@@ -41,6 +42,7 @@ export const initialStore: IStore = {
     nodes: [],
     edges: [],
   },
+  groups: [],
   width: 200,
   height: 500,
   dataMap: {},

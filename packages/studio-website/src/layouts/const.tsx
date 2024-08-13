@@ -88,6 +88,9 @@ export const SIDE_MENU: MenuProps['items'] =
           key: '/graphs',
           icon: <FontAwesomeIcon icon={faCoins} />,
         },
+        {
+          type: 'divider',
+        },
         ...TOOLS_MENU,
         {
           type: 'divider',

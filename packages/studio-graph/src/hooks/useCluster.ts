@@ -11,6 +11,7 @@ import {
 import * as d3Force from 'd3-force';
 import { handleStyle } from '../graph/handleStyle';
 import { Utils } from '@graphscope/studio-components';
+import { useEffect } from 'react';
 
 /**
  * 自定义力：为每个分组添加向心力
@@ -74,7 +75,7 @@ function forceCluster(groupMap, clusterKey) {
 }
 
 const useCluster = () => {
-  const { store } = useContext();
+  const { store, updateStore } = useContext();
   const { graph, render, nodeStyle, width, height } = store;
   const data = Utils.fakeSnapshot(store.data);
   const enableCluster = (clusterKey = 'label') => {
@@ -122,6 +123,9 @@ const useCluster = () => {
             ctx.fillText(text, textX, textY);
           });
         });
+      updateStore(draft => {
+        draft.groups = groups;
+      });
     }
     if (render === '3D' && graph) {
       const { groupsMap } = getGroups(data.nodes, {

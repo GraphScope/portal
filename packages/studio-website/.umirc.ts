@@ -66,6 +66,8 @@ export default defineConfig({
       changeOrigin: true,
     },
   },
+  // 只设置 dev 阶段的 sourcemap
+  devtool: process.env.NODE_ENV === 'development' ? 'eval' : false,
   // analyze: {
   //   analyzerPort: 'auto',
   // },
