@@ -12,8 +12,19 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/api/query', (req, res) => {
+  const { type, weight, name, fileType } = req.query;
+
+  if (fileType === 'json') {
+    const data = fs.readFileSync(path.resolve(__dirname, 'data', `${name}.json`), 'utf8');
+    res.send({
+      success: true,
+      data: JSON.parse(data),
+    });
+    return;
+  }
+
   const results = [];
-  const { type, weight, name } = req.query;
+
   let filename = `${name}.csv`;
   if (weight) {
     filename = `${name}_${weight}.csv`;
@@ -88,6 +99,8 @@ app.get('/api/query', (req, res) => {
     stream.on('error', () => clearTimeout(timeout));
   });
 });
+
+app.get('/api/json', () => {});
 
 // 全局错误处理程序
 process.on('uncaughtException', err => {

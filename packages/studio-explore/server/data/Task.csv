@@ -1,221 +1,137 @@
-id|name
-41177ff2-ba2b-5574-b663-9689498f0829|Efficient and Scalable Subgraph Enumeration
-ef73ba98-ea7a-55c4-aa3d-e2319fc788d8|Scalable Graph Processing in Parallel Computing Environments
-15a1041e-0d37-5f50-8ec5-d8617041836a|Efficient Task Scheduling for Subgraph Isomorphism Search in Graph Processing Accelerators.
-21c0336e-cde4-5113-a82f-700d1f34c220|Efficient parallel Gibbs sampling for large Markov Random Fields.
-fc214242-7f6c-5bd1-a1a0-0a10c379cb79|Efficient Triangle Counting in Large-Scale Graphs
-a1081de9-8c9c-5db6-b1f1-25f26f7f6cc9|Efficient Execution of Graph-Based Applications on FPGAs
-c9a54ada-bdaa-5ebd-8dda-2db82861a7b3|Efficient processing of large-scale graph computations
-20029953-02c1-5110-a649-39660e071a02|Optimizing vertex-centric graph processing frameworks for efficient large-scale graph data analysis.
-4de87b73-8f62-5cd2-a982-6b4d7707e4d1|Scalable Graph Partitioning for Efficient Big Graph Data Processing
-cc76b09f-595a-595c-8c43-3cce8b1ae47e|Energy-efficient communication protocols for wireless radio networks.
-8df236e2-a898-5b64-bdc0-1f86f3b0d5a3|Distributed graph coloring in sparse graphs with low arboricity.
-4dbea1f2-ba40-5fe0-9dcd-1ee4311a0db3|Distributed Approximation of Minimum Weighted Vertex Cover
-928f5863-e5e3-57a0-bdd2-700ef5af02ca|Development of Distributed Parallel Computing Frameworks
-dd08ecb9-7e43-5f66-b593-349bb0486f25|Accelerating Graph Mining Applications on Specialized Architectures.
-e95bfb79-be04-5e0a-8c33-3ac619011f90|Energy Efficiency in Large-Scale Distributed Systems
-90ef7a08-f371-56a4-bc71-a2ac5e6b9f90|Efficient processing of large-scale graphs on distributed computing architectures.
-ad1a9098-7d15-51d9-a2c1-a8c5c55e40bb|Approximating maximum matching in distributed graphs with limited communication.
-b7318371-148f-5852-99f5-e3ad9aa7f8a5|Decentralized Minimal Weighted Vertex Cover in Distributed Networks
-a2b84328-7ff9-5ddf-9bec-44d5299f5fd3|Identifying K-Shortest Paths in Dynamic Undirected Graphs
-8d9b1c34-9b26-5ef3-a22f-cba76d84a057|Efficient Distributed Algorithms for Graph Optimization Problems in the CONGEST Model.
-056261d3-7d82-5a2e-b981-d6ab53817b13|Distributed Graph Neural Network Training
-1f5662d1-a80c-5521-8153-7f6f4d45ca39|Efficient Software Graph Processing Frameworks
-ee8f5128-edde-5bc6-a263-ca003381dd38|Optimizing memory usage in vertex-centric graph processing on GPUs.
-d68ac852-19ab-51ab-9367-dbfea0f3c81d|Efficient Execution of Machine Learning Algorithms
-79ad3dee-9b50-51db-9ab2-b2266e5811b9|Cold Start User Recommendation using Knowledge Graph Embedding and Graph Neural Networks
-106acd7a-c03a-566d-bd90-aec365cde3d7|Distributed Triangle Counting in Graph Streams
-36b4c10e-3d16-5335-b35e-db40df93106e|Efficient Distributed Graph Computation with Partition Transparency
-ee55481a-618f-588e-ab37-3f45b01d2232|Distributed Structural Clustering Algorithm for Large-Scale Graphs
-293b24de-3fd7-58ea-88ad-24bc2e20e269|Distributed Minimum Weighted Vertex Cover
-3b8abb06-4287-5977-a92b-1abf749fa537|Efficient processing of iterative graph algorithms on dynamic graphs.
-16abbd78-b361-5bfa-ab2b-4f64f61f1dae|Hybrid Algorithm for Efficient Graph Coloring
-9889f8df-3138-53db-9a05-6424acdbcee7|Efficient Graph Coloring Algorithm Development
-e2aa7024-7423-5dd9-af18-8a1f89ae72e7|Identifying diverse teams from large social networks.
-8eb5f009-e19f-5f6b-8fe4-82aadf692e69|Efficient Incremental Processing of Large-Scale Streaming Graphs
-a457ae18-3d53-5606-a49f-e3e1b5751f62|Local Complexity of Maximal Independent Set Problem in Distributed Networks
-8462d553-c67e-5afd-8991-86e5bd2ccbc3|Efficient Distributed Algorithms for Computing Maximal Independent Sets in Graphs.
-033f0867-d40c-5be4-842a-982a023153b4|Efficient processing of graph simulation queries in large-scale graph data.
-61e38117-7d2e-5c00-8a88-0082fb1ba3c0|Efficient Execution of Asynchronous Graph Algorithms on Distributed Systems
-9b1a1ec9-d766-5bf7-84c2-ac516c36ea84|Continuous pattern detection over evolving graphs
-e8ce73cc-9711-5cc4-bbaf-55f16f9e7a79|Efficient processing of large-scale graph data in distributed computing environments.
-f537c3f9-6550-5fae-8fb6-f152ab9b8a21|Efficient parallel k-truss detection in massive graphs
-762e507d-fd56-56cd-bc5e-eea417faeb2c|Efficient large-scale graph processing on Graphics Processing Units (GPUs).
-dc137c74-a8c7-580e-b8af-00996628b94f|Efficient Distributed Processing of Large-Scale Neighborhood-Centric Graph Analytics.
-f6ad863d-cacd-54e2-bd80-87e1fbe2166e|Efficient Triangle Counting in Distributed Memory Architectures
-9eac8033-bf66-5379-9139-5b694bbbc644|Pattern matching in streaming graphs
-80170b2e-3e72-52fc-91be-b1cf2156c44c|Efficient Distributed Algorithms for Graph Problems
-60f92c9e-dfce-59ce-b792-384d8506e2b3|Scalable computation of maximum cardinality matchings in bipartite graphs
-771a2358-ddbd-531c-bc47-6ca485a4bfc1|Efficient processing of large-scale graphs in distributed systems.
-a89e6f7c-05f2-5332-ac18-fe82cbad6877|Distributed Triangle Finding in Communication-Restricted Networks
-fc4fee86-f3df-55d0-ba90-ebbb23b5664c|Efficient parallelization of triangle counting in large-scale graphs.
-8a1bb92d-9d40-57d5-bcca-e12c7c9e7186|Designing efficient, scalable, and user-friendly distributed graph processing systems.
-20820f20-967e-5b90-b04b-749e1b44b231|Community Search in Graphs
-0992f71e-f38a-5a70-a8d0-1b1c1687fcbc|Efficient Execution of Graph-Structured Computations in Distributed Systems
-fbc45605-59c4-54fd-bac9-77fa064972a5|Efficient Maintenance of Trussness in Fully Dynamic Graphs
-1433a044-d92e-5b9b-bdc6-a5f774e845d5|Efficient parallelization of graph algorithms on large-scale distributed memory systems.
-18a92a79-2a69-54b6-a601-a46515bb3c63|Scalable graph pattern matching for large-scale graph data.
-89dcb6f6-19d7-54b4-9352-f9dcee3678d1|Hierarchical Density-Based Spatial Clustering with Added Noise (HDBSCAN)
-7ca268a2-0dc2-5e62-8131-5e63bf7e46d5|Efficient Query Routing in Distributed Graph Processing Systems
-5f2a0547-5091-54a0-a7dc-b3a40e93e0fe|Scalable Text Clustering for Big Data Analytics
-4a852a90-5626-5311-8c59-1b0352ddf097|Scalable and Fault-Tolerant Distributed Algorithms for Solving Complex Computational Problems
-a910cb90-b7cc-5b4c-994c-c8e19bdedc7f|Efficient processing of large-scale graph traversal on supercomputers.
-00a9bee8-cd1c-5ef7-8378-4c4a3af43547|Efficient update of Single Source Shortest Paths in dynamic networks.
-d115cee9-2773-5507-b6ce-ce3657a61370|Distributed Vertex Graph Coloring
-302de0f7-1196-53bb-889d-f3df206a2b0d|Distributed Graph Coloring
-43e69129-7365-54bd-aeab-16f735763df5|Scalable graph processing for large-scale graph data analysis.
-6eab57c8-bff9-5da9-9a6f-473762a2e2e0|Efficient Large Graph Processing
-5e80ba66-736f-5eba-8a86-3514615b9192|Scalable Graph Processing Systems
-6f492e9a-a5fa-5fc0-bc49-29c9c0de671e|Scalable Maximal Clique Enumeration in Large Graphs
-71327753-8af1-5a2b-b8c3-029349850034|Efficient processing of large-scale graph data on parallel platforms.
-fd4d30ad-4fd3-5edb-8e83-5d784215ef14|Distributed subgraph-centric graph processing
-e2cc1a4f-8868-576e-bb30-ccff3b09940d|Efficient computation of graph centrality measures on large-scale graphs.
-73a3e1d6-f9b1-5cc4-80bf-fb9042f8df45|Scalable and Open Distributed Systems
-3e960857-4808-56e3-bfb7-f0f923268327|Efficient computation of connected components in massive graphs.
-d71cc949-4bfe-5979-ab8e-cadc2376f792|Scalable Distributed Graph Processing for Large-Scale Graph Computations
-e20e5a0f-f4d2-5f3a-8235-09fcc97b6749|Efficient Multiple Pattern Detection in Large Graphs
-48fc22b3-b9d8-51cb-a94e-8a51aa71580d|Distributed graph coloring with optimal number of colors.
-e757f1a1-4196-5939-ae76-56f6eece4e64|Efficient distributed memory triangle counting in large-scale graphs.
-782a3cc4-5996-5527-9ebf-a843bd3d093a|Optimizing graph processing algorithms in distributed systems for large-scale graph analysis.
-4d684eeb-8587-52f9-92a8-2e546aec7421|Community Detection in Directed Networks
-e4fa5579-4d34-5eb4-ba11-ab63393faced|Efficient processing of large-scale graph data in distributed systems.
-a8f9e5d4-f6c7-53e0-ba6d-d580f44bfcd2|Efficient Approximate Pattern Matching in Large Graphs
-eeaf25ba-caa1-5780-a853-1884b3640b58|Efficient Large-Scale Graph Processing with Reduced Message Passing Overhead
-a03ab34a-3b22-5cc9-8c38-daeb9c02fa4d|Efficient querying of large-scale data graphs with cyclic query graphs.
-fdaafb44-eabb-5a0b-83a6-6a939a8d11ca|Efficient updating of betweenness centrality in dynamic graphs.
-e2d74d6f-5b29-5d40-9efe-0df682607ce9|Community Search over Big Graphs
-f5738410-c19a-5ffa-b81a-95ae79e6d3f6|Translating High-Level Parallel Programming Languages to Low-Level Models
-be5d6bc5-b6f5-58aa-a365-d8e0039c946e|Optimization of length-constrained flows in networks.
-24735d28-1ca1-585e-b7d4-c30711b8c7f4|Scalable graph mining for large graph analytics.
-443f575e-41fb-5e65-8af0-3415c457be35|Distributed computation of random walk betweenness centrality in networks.
-68f00c61-4944-5233-847f-38fce55b16d1|Asynchronous Graph Processing for Efficient Belief Propagation
-d1724881-e609-51d2-9fa0-f4ab6deaf879|Scalable parallel algorithm for Single-Source Shortest Paths in large-scale graphs
-3fd49a67-eebf-5280-8267-345b96eb288a|Efficient identification of strongly connected components in distributed graphs.
-8224a47f-e345-5771-a671-b59e27917f01|Efficient computation of connected components in large-scale graphs.
-001a2fb0-bf60-554a-8b13-ebcc5ae41c5c|Efficient k-coloring in the LOCAL model of distributed computing.
-893f0393-d64f-5cc7-b34a-6716359b440b|Efficient evaluation of graph queries in a distributed setting.
-3895e0eb-b8c6-5d1f-8142-5c7817eaf269|Efficient parallelization of graph algorithms on multi-core architectures.
-3096f822-0c1a-51b3-adbd-63b914741fcb|Efficient local subgraph counting in large graphs.
-88d8800f-e8b4-59cf-8bb6-ac0cfcab48fc|Scheduling of Packets in Input-Queued Switches
-5ba80fb0-369b-5b91-b581-102ccf7142de|Efficient processing of multiple Timing iterative Graph Processing (TGP) jobs on dynamic graphs.
-6496dd94-4fe6-5ae5-92ea-1aa179150318|Distributed System Design for Ubiquitous Computing
-92aefbc8-6a85-577e-873a-ab0bf213e6b6|Distributed Community Detection in Large-Scale Networks
-31045f91-4a28-5e61-af02-00225e250f9f|Time slot allocation in multi-channel TDMA wireless networks.
-4a2ed31b-1ad9-536d-a05f-491497f9e911|Efficient k-Clique Mining in Large Networks
-57d35ee1-d70e-5a84-b5f8-f49f6813c9a2|Efficient processing of large-scale graph algorithms
-29cbd14d-99c5-5c22-9d71-9c0c28f8590c|Task Allocation and Load Balancing in Distributed Systems
-397d5f2e-f24c-5e58-8055-f75f53ca7579|Efficient processing of large-scale graph data
-cffc74c0-d99d-58d8-af97-a4c2ebc73f28|Efficiently processing SPARQL queries over distributed RDF graphs.
-724dbab0-432f-564c-be3e-11cde1a38571|Community Search in Large Graphs
-3b40dd89-817d-513b-aebb-e90495766a48|Efficient subgraph matching in large-scale graphs.
-bb8ebec5-23b6-5eb7-860e-7068d9345c46|Efficient Graph Analytics on Processing-In-Memory Architectures
-88cf996c-6c66-53ca-bbeb-b8b3f30e707b|Distributed Scheduling for Wireless Networks with Fading Channels
-9132e3e0-3216-5a2d-94a0-d464e74799f3|Exploiting community structure to improve temporal locality in graph algorithms
-7d814873-b744-5ac8-838e-3deaa5cc113e|Efficient self-stabilizing algorithm for 1-maximal matching in arbitrary networks.
-67b3ad9a-ce77-5f2d-a8e9-1e793844461e|Distributed Maximum Independent Set Approximation in Weighted Graphs
-89349f22-6e2b-50b1-88ce-d6e898bf4c7d|Scalable Single-Source Shortest Path algorithms on large-scale power-law graphs
-86b8d37e-7c84-5e87-8a1b-e8872eda070e|Efficient Graph Processing on HBM-enabled FPGAs
-d3ce4611-f180-58dd-8162-4475ce4ccca4|Efficient Large-Scale Graph Processing in Distributed Computing Systems
-51c6d774-b69a-50ba-9771-e5f79c792f2e|Efficient processing of large-scale power-law graphs in distributed graph computing systems.
-43fcfc7d-f2f5-5659-bbb6-4b7f007fc40d|Distributed subgraph listing in limited-bandwidth networks
-0cec1bd3-dc5f-5a57-b2ae-bd26196f64b1|Optimizing the round-congestion tradeoff in vertex-centric systems for efficient graph processing.
-204952cc-3ef0-5cee-9a74-64d7d8d18698|Vertex-centric framework for graph processing on FPGAs
-08bafaf8-7cdf-52cf-ac17-bfad7769e2b3|Efficient Distributed Algorithm for Maximum Fractional Matching in the CONGEST Model.
-2a30012f-09e0-5ed6-9831-519223d862ee|Efficient Distributed Computation of PageRank in Large-Scale Networks.
-777ae3c8-6619-5022-8004-0f6c119f777f|Optimizing graph algorithms on heterogeneous and distributed systems.
-fa58c01b-0da0-5c59-9f5c-a70569d835d9|Efficient processing of large-scale graph data using distributed computing systems.
-a0b3510a-429a-5e36-b1dd-074761891384|Efficient processing of large-scale graph data on FPGAs.
-eea9ac29-c34c-51da-9070-20e5e209e660|Optimization-based community detection in complex networks
-68f93ac2-ceb8-590f-8fc2-c365ec6ea9d8|Optimizing Query Decomposition in Distributed Query Processing Systems
-1e37a627-ca2d-55a1-9f87-24d628e28f48|Efficient Distributed Graph Processing for Loop-Carried Dependencies.
-b7c47cbb-4196-5f54-8e93-243768b01609|Efficient computation of the Bi-index for large-scale bipartite graphs.
-f4cfba65-95e8-5d14-81ef-d0b3f55ed395|Efficient Hypergraph Processing via Overlap-Induced Locality
-9ec3e4f8-13e8-5795-ac36-688426acfb8a|Efficient parallel subgraph listing on large-scale undirected graphs.
-9edb2d41-ddaa-546f-b4bb-871221eb7f7f|Efficient querying of distributed and fragmented big graphs.
-1d4dc628-5223-5c7a-8e32-279b05e07dae|Designing energy-efficient distributed algorithms for the Maximal Independent Set problem.
-8cfd5ff4-d3ec-5a5e-bb5a-14ea4de28e41|Efficient incremental maintenance of closeness centrality scores in dynamic networks.
-6adab221-5a24-5f9a-89b9-2b55db089eeb|Efficient parallel graph coloring for large-scale graphs.
-1b12b804-40ec-534c-86b4-9c5a40c563e1|Efficient processing of massive random walks on large-scale graphs.
-eb442cd7-6de0-52c8-8469-ea55ff081ae5|Efficient parallelization of Breadth-First Search on GPUs for large-scale graph processing.
-9def9610-8323-55d6-a758-db761bf61501|Scalable Triangle Counting in Large-Scale Graphs
-30cab616-de63-562c-83de-c58e961fbdac|Efficient handling of straggler tasks in Bulk Synchronous Parallel systems
-3dd34e09-7fd6-517f-af81-2af0a8f969ca|Optimizing Graph Processing on Edge-Centric Accelerators
-776b006b-0b32-5e0b-89ec-329bd0931cc2|Efficient PageRank computation in the congested clique model.
-6b76b77a-6834-5bbb-9578-b45444fcbb11|Limitations and Inefficiencies of Vertex-Centric Graph Processing Algorithms
-8257ec1d-e83b-5101-8841-f73cd1646136|Efficient and Scalable Subgraph Mining in Large Graphs
-a0130409-7496-5c79-97f8-b42fd1c1621f|Efficient and scalable distributed graph pattern mining
-fcf48faf-0d46-57b3-b229-e7c7ad878785|Efficient Distributed Graph Mining
-4bc22b6b-5a3d-52e9-a9f3-e644ee14187d|Distributed approximation of weighted vertex covers and matchings in graphs.
-489ecc09-8b21-5cb7-8ef6-8927188dd96f|Efficient parallel algorithms for All-Pairs Similarity Search in high-dimensional sparse data.
-b8cff333-eda7-5473-b9b0-4f1a86d7fb58|Subgraph enumeration in a distributed environment
-97b56f72-ac09-5eac-a5fa-296c3c1cc86f|Efficient processing of neighborhood-centric graph analysis tasks.
-f9616854-bbb5-55f4-a944-fdd66dd7f34b|Graph Pattern Mining (GPM)
-a67f14c2-9ec7-5118-bea2-d3ce358c798b|Efficient parallel processing of graph queries in distributed computing environments.
-9b62f136-6ba8-5da2-988a-d21ac184a2c4|Efficient processing of set reachability queries in distributed graph systems.
-0b530302-859a-5bd0-bd0e-3a3d7edd1b22|Efficient distributed computation of triangle enumeration and expander decomposition in massive graphs.
-eb1986b1-4503-51ca-a379-12d226e357a6|Scalable Triangle Enumeration in Massive Graphs
-2276b63d-917c-594c-ad35-c39192851a9b|Balanced graph partitioning for distributed parallel processing
-d299f859-df58-528a-8be9-f006c842f62e|Efficiently processing and querying large-scale RDF data.
-8e4d0b7f-2ae4-5c98-ab28-523acafab771|Lower bound for round complexity of locally checkable problems on hypergraphs.
-277ffc69-bd44-504c-8fb9-2a160a712cd9|Efficient Triangle Counting in Massive Graphs
-a6adb775-d6a0-5499-bf07-b518439a2f2b|Community Detection in Social Networks considering Social Influence
-cca15919-aa7f-5aca-a182-1765f96ba5a6|Efficient processing of graph simulation queries in large-scale graph datasets.
-4560d0e5-1e4c-584e-82a0-2fb28093f6c5|Distributed Triangle Detection in the CONGEST model
-cff074d9-9f63-5a55-9974-6283389cd8e9|Optimization of Distributed Aggregation in Large-Scale Data Processing Systems
-23feef02-912c-5090-baeb-d75d49d8a6fa|Simplifying parallel graph processing algorithm development
-6e4f09d6-d2bd-51cd-bee2-e328a1797a8a|Efficient Detection of Connected Components in Large-Scale Graphs
-690438cf-59d5-53d6-b1b5-f0bbcdcba613|Scheduling of Input-Queued Switches in High-Performance Datacenter Networks.
-71940a3f-1244-598d-95f9-0838896fa0c8|Distributed Vertex Cover Reconfiguration
-82876792-faf6-53b3-bfca-ee81e21c3365|Efficient Task Scheduling and Memory Management in Multi-Threaded Accelerator Architectures.
-807e8c06-6071-5dc9-bf08-ca6bb848db82|Efficient Mining of Large-Scale Graph Data
-e7f9c39e-75f4-565b-a380-e8c8eb8833f6|Efficient Failure Recovery in Distributed Graph Processing Systems
-046b0758-0230-5e3b-91d1-5c29ad4ae70d|Efficient Distributed Algorithms for Graph Problems in the CONGEST Model.
-809171a3-ebd7-59b6-b234-1965c9a80ee5|Distributed Minimum Weighted Vertex Cover Approximation
-6b6ba767-2e63-504b-b72d-a4955d52135c|Distributed processing of large-scale natural graphs
-199f6dfd-a6ea-5996-9eac-b88a1f5b3c7d|Decentralized Minimum Vertex Cover in Complex Networks
-3cf36529-c850-580d-bf58-4503b9a4cdc2|Distributed Large-Scale Graph Processing
-315d78ea-3e00-5910-ba06-c617a6f56b67|Scalable processing of massive graphs in production environments.
-9f5daf67-6224-563d-983a-132e5fc7f1d2|Efficient Execution of Graph Pattern Matching Queries
-c9c1d9bd-f2a7-5bd1-82ca-4de387d6aa0c|Designing and Managing Large-Scale Distributed Socio-Technical Systems
-8eb46fbf-3886-505d-83c7-18bb845f6d1a|Flexible Graph Pattern Matching in Social Network Analysis
-7ff4566d-e6e6-5a17-afca-58f38e27e864|Efficient processing of iterative graph algorithms on large-scale directed graphs.
-7167e106-7fa1-529d-ace1-a192d48f9f43|Efficient computation of Personalized PageRank vectors in large-scale graphs.
-0d493110-24ea-5b9b-818d-08b839eed429|Decentralized computation of betweenness centrality in large-scale networks.
-e60098f9-ef90-50b6-9692-5f76c2e846c9|Computing Maximum Independent Set in Large-Scale Dynamic Graphs.
-fba52580-e743-5f23-a902-2d0dd3c88d21|Localized Distributed Algorithm for Minimum Vertex Cover Problem
-2da06741-60a3-5d1c-9472-b0439c90e8ff|Efficient Large-Scale Graph Processing Beyond Vertex-Centric Models
-e6e3549d-181c-56e6-a32b-3453a7084b19|Efficient Iterative Graph Processing on GPUs
-5f48c579-5da3-50e8-ac62-7912fe247c63|Distributed Graph Realization in P2P Overlay Networks
-dcc9b6b4-3d45-53d6-aca0-20da4f751b0c|Efficient analysis of butterfly structures in large dynamic bipartite graphs.
-992329bf-cc57-55bd-9d79-8c97d9423c4b|Efficient Edge-Centric Graph Processing on FPGAs.
-9396b49b-380f-522c-a1ef-a9fe21fe5ed2|Characterizing the distribution of betweenness centrality in random trees
-ac0beaf9-63ba-504c-b7fe-dbc55be23fc3|Efficient Subgraph Matching in Large-Scale Graph Datasets
-4df9a659-3fc9-5359-83aa-89e56f1edeb8|Efficient distributed triangle counting in large-scale graphs.
-4b2039bc-2912-5a9f-8ad7-bf04d7388178|Efficient parallel processing of large-scale graph problems.
-f89e2f4a-f910-5542-8e01-3009bc843b65|Efficient processing and analysis of large-scale free graphs.
-0a59b6dc-5000-5c6e-bcb7-229bb96bbe53|Distributed Multimodal Path Query Processing
-af222aa3-0628-5ded-8a42-dda4da22ebef|Efficient parallelization of connected component labeling for large-scale graphs.
-dbd5d28b-e6e1-52ca-b0e9-5d23ad2a4c92|Evaluating and Comparing Parallel Programming Technologies for HPC Systems
-34126773-1233-571f-8c0b-84446555ab98|Scalable community detection in large-scale networks.
-08f0244c-02d6-5e84-bbdc-42ab0ab4d6eb|Designing efficient oblivious routing schemes for distributed transshipment problems.
-a7a57862-6871-5ca1-8fae-b3a4d873c35f|Efficient computation of graph-based iterative algorithms in a distributed setting.
-7d80185f-0a2d-5436-8c8f-9256e518daa8|Distributed Algorithm for Minimum Weight Vertex Cover Problem
-20934731-c684-5e4e-9a8d-e04122d73a78|Efficient Community Detection in Large-Scale Social Networks
-2fa9279f-1e7d-5bb7-963a-cca84a9888f2|Large-scale Clustered Graph Partitioning (LCGP)
-634755a3-f7c3-5ab0-8ff7-3799e9827033|Distributed Minimum Cut Approximation in Network Graphs
-8f4b4761-4c57-51a9-9432-caa5051acd03|Maintaining core decomposition in large dynamic graphs.
-2de61511-7ba2-55e7-96b8-ada5bd7781ac|Efficient processing of large-scale graph analysis applications
-ab12d394-5012-5c6f-9da4-5cb1efe83441|Distributed Algorithm for Minimum Vertex Cover Problem
-31d3c86f-df1d-520a-ad1e-4c4a78647eca|Efficient processing of large-scale graph algorithms on GPUs.
-98447463-3199-5619-9fcb-dea45033a2b1|Efficient Distributed Computation of Local Clustering Coefficient in Large-Scale Graphs
-b923acbf-6eb4-5254-9179-d293bff0135a|Co-design approach for resource management in Cyber-Physical Systems
-39d6aebb-d44e-5852-aab3-f851a688b67b|Scalable Subgraph Enumeration in Large Graph Data
-9eddc0cb-9a7b-5915-b91c-7fedd1d7ea0e|Efficient Large-Scale Graph Processing on GPUs
-505b85ea-be03-599a-9382-5e8da23e3eeb|Exact Matching of Template Graphs in Large Background Graphs
-407a5316-dc19-583f-9e5e-a826c1a3fb4e|Efficient and Precise Identification of Subgraph Patterns in Large-Scale Distributed Graphs.
-73f01f6b-447b-5f4a-a109-2999234f3f22|Optimizing Vehicle Routing in Vehicular Ad-hoc Networks
-1556e6a8-6f50-5bfc-bb86-a59394b8127b|Distributed Aggregation Scheduling Problem (DASP)
-2ae54d37-17c8-560d-b077-c376fd223bee|Optimizing PageRank computation on shared-memory platforms.
-4efc7864-74fa-5b0f-b02f-d7ce625311ec|Efficient distributed mining of frequent patterns in large graphs.
-bbe996d4-c0eb-5f08-a0b5-71738338c5fa|Efficient Large-Scale Graph Processing and Analysis
-5729c3db-4f31-501f-b79c-e84d69d3d9ee|Efficient processing of large-scale graph algorithms on novel memory systems.
+id|name|cluster_id
+41177ff2-ba2b-5574-b663-9689498f0829|Efficient and Scalable Subgraph Enumeration|0
+fc214242-7f6c-5bd1-a1a0-0a10c379cb79|Efficient Triangle Counting in Large-Scale Graphs|2
+b6e3a9e2-fbe7-5c0a-a505-4bb3b2c5d310|Pattern matching in large graphs|4
+cc76b09f-595a-595c-8c43-3cce8b1ae47e|Energy-efficient communication protocols for wireless radio networks.|
+8df236e2-a898-5b64-bdc0-1f86f3b0d5a3|Distributed graph coloring in sparse graphs with low arboricity.|5
+4dbea1f2-ba40-5fe0-9dcd-1ee4311a0db3|Distributed Approximation of Minimum Weighted Vertex Cover|1
+928f5863-e5e3-57a0-bdd2-700ef5af02ca|Development of Distributed Parallel Computing Frameworks|
+dd08ecb9-7e43-5f66-b593-349bb0486f25|Accelerating Graph Mining Applications on Specialized Architectures.|
+e95bfb79-be04-5e0a-8c33-3ac619011f90|Energy Efficiency in Large-Scale Distributed Systems|
+3025df8c-e37d-5e8d-9849-90a54d4c2291|Scalability of graph pattern matching algorithms|4
+ad1a9098-7d15-51d9-a2c1-a8c5c55e40bb|Approximating maximum matching in distributed graphs with limited communication.|1
+b7318371-148f-5852-99f5-e3ad9aa7f8a5|Decentralized Minimal Weighted Vertex Cover in Distributed Networks|1
+a2b84328-7ff9-5ddf-9bec-44d5299f5fd3|Identifying K-Shortest Paths in Dynamic Undirected Graphs|
+8d9b1c34-9b26-5ef3-a22f-cba76d84a057|Efficient Distributed Algorithms for Graph Optimization Problems in the CONGEST Model.|3
+106acd7a-c03a-566d-bd90-aec365cde3d7|Distributed Triangle Counting in Graph Streams|2
+ee55481a-618f-588e-ab37-3f45b01d2232|Distributed Structural Clustering Algorithm for Large-Scale Graphs|
+293b24de-3fd7-58ea-88ad-24bc2e20e269|Distributed Minimum Weighted Vertex Cover|1
+16abbd78-b361-5bfa-ab2b-4f64f61f1dae|Hybrid Algorithm for Efficient Graph Coloring|5
+9889f8df-3138-53db-9a05-6424acdbcee7|Efficient Graph Coloring Algorithm Development|5
+e2aa7024-7423-5dd9-af18-8a1f89ae72e7|Identifying diverse teams from large social networks.|
+a457ae18-3d53-5606-a49f-e3e1b5751f62|Local Complexity of Maximal Independent Set Problem in Distributed Networks|7
+8462d553-c67e-5afd-8991-86e5bd2ccbc3|Efficient Distributed Algorithms for Computing Maximal Independent Sets in Graphs.|7
+9b1a1ec9-d766-5bf7-84c2-ac516c36ea84|Continuous pattern detection over evolving graphs|4
+f537c3f9-6550-5fae-8fb6-f152ab9b8a21|Efficient parallel k-truss detection in massive graphs|
+f6ad863d-cacd-54e2-bd80-87e1fbe2166e|Efficient Triangle Counting in Distributed Memory Architectures|2
+9eac8033-bf66-5379-9139-5b694bbbc644|Pattern matching in streaming graphs|4
+80170b2e-3e72-52fc-91be-b1cf2156c44c|Efficient Distributed Algorithms for Graph Problems|3
+60f92c9e-dfce-59ce-b792-384d8506e2b3|Scalable computation of maximum cardinality matchings in bipartite graphs|1
+a89e6f7c-05f2-5332-ac18-fe82cbad6877|Distributed Triangle Finding in Communication-Restricted Networks|2
+fc4fee86-f3df-55d0-ba90-ebbb23b5664c|Efficient parallelization of triangle counting in large-scale graphs.|2
+20820f20-967e-5b90-b04b-749e1b44b231|Community Search in Graphs|
+762e507d-fd56-56cd-bc5e-eea417faeb2c|Efficient large-scale graph processing on Graphics Processing Units (GPUs).|3
+fbc45605-59c4-54fd-bac9-77fa064972a5|Efficient Maintenance of Trussness in Fully Dynamic Graphs|
+1433a044-d92e-5b9b-bdc6-a5f774e845d5|Efficient parallelization of graph algorithms on large-scale distributed memory systems.|3
+89dcb6f6-19d7-54b4-9352-f9dcee3678d1|Hierarchical Density-Based Spatial Clustering with Added Noise (HDBSCAN)|
+5f2a0547-5091-54a0-a7dc-b3a40e93e0fe|Scalable Text Clustering for Big Data Analytics|
+a910cb90-b7cc-5b4c-994c-c8e19bdedc7f|Efficient processing of large-scale graph traversal on supercomputers.|3
+00a9bee8-cd1c-5ef7-8378-4c4a3af43547|Efficient update of Single Source Shortest Paths in dynamic networks.|
+d115cee9-2773-5507-b6ce-ce3657a61370|Distributed Vertex Graph Coloring|5
+302de0f7-1196-53bb-889d-f3df206a2b0d|Distributed Graph Coloring|5
+6f492e9a-a5fa-5fc0-bc49-29c9c0de671e|Scalable Maximal Clique Enumeration in Large Graphs|0
+e2cc1a4f-8868-576e-bb30-ccff3b09940d|Efficient computation of graph centrality measures on large-scale graphs.|6
+cb7052d7-8e14-586d-86e0-5dadf9429cc4|Graph pattern matching in large-scale graphs|4
+3e960857-4808-56e3-bfb7-f0f923268327|Efficient computation of connected components in massive graphs.|8
+e20e5a0f-f4d2-5f3a-8235-09fcc97b6749|Efficient Multiple Pattern Detection in Large Graphs|4
+48fc22b3-b9d8-51cb-a94e-8a51aa71580d|Distributed graph coloring with optimal number of colors.|5
+e757f1a1-4196-5939-ae76-56f6eece4e64|Efficient distributed memory triangle counting in large-scale graphs.|2
+4d684eeb-8587-52f9-92a8-2e546aec7421|Community Detection in Directed Networks|10
+a8f9e5d4-f6c7-53e0-ba6d-d580f44bfcd2|Efficient Approximate Pattern Matching in Large Graphs|4
+a03ab34a-3b22-5cc9-8c38-daeb9c02fa4d|Efficient querying of large-scale data graphs with cyclic query graphs.|3
+fdaafb44-eabb-5a0b-83a6-6a939a8d11ca|Efficient updating of betweenness centrality in dynamic graphs.|6
+be5d6bc5-b6f5-58aa-a365-d8e0039c946e|Optimization of length-constrained flows in networks.|
+24735d28-1ca1-585e-b7d4-c30711b8c7f4|Scalable graph mining for large graph analytics.|0
+443f575e-41fb-5e65-8af0-3415c457be35|Distributed computation of random walk betweenness centrality in networks.|6
+d1724881-e609-51d2-9fa0-f4ab6deaf879|Scalable parallel algorithm for Single-Source Shortest Paths in large-scale graphs|11
+3fd49a67-eebf-5280-8267-345b96eb288a|Efficient identification of strongly connected components in distributed graphs.|8
+8224a47f-e345-5771-a671-b59e27917f01|Efficient computation of connected components in large-scale graphs.|8
+001a2fb0-bf60-554a-8b13-ebcc5ae41c5c|Efficient k-coloring in the LOCAL model of distributed computing.|5
+3096f822-0c1a-51b3-adbd-63b914741fcb|Efficient local subgraph counting in large graphs.|0
+88d8800f-e8b4-59cf-8bb6-ac0cfcab48fc|Scheduling of Packets in Input-Queued Switches|12
+92aefbc8-6a85-577e-873a-ab0bf213e6b6|Distributed Community Detection in Large-Scale Networks|10
+4a2ed31b-1ad9-536d-a05f-491497f9e911|Efficient k-Clique Mining in Large Networks|0
+cffc74c0-d99d-58d8-af97-a4c2ebc73f28|Efficiently processing SPARQL queries over distributed RDF graphs.|13
+3b40dd89-817d-513b-aebb-e90495766a48|Efficient subgraph matching in large-scale graphs.|0
+88cf996c-6c66-53ca-bbeb-b8b3f30e707b|Distributed Scheduling for Wireless Networks with Fading Channels|
+7d814873-b744-5ac8-838e-3deaa5cc113e|Efficient self-stabilizing algorithm for 1-maximal matching in arbitrary networks.|1
+67b3ad9a-ce77-5f2d-a8e9-1e793844461e|Distributed Maximum Independent Set Approximation in Weighted Graphs|7
+89349f22-6e2b-50b1-88ce-d6e898bf4c7d|Scalable Single-Source Shortest Path algorithms on large-scale power-law graphs|11
+43fcfc7d-f2f5-5659-bbb6-4b7f007fc40d|Distributed subgraph listing in limited-bandwidth networks|0
+08bafaf8-7cdf-52cf-ac17-bfad7769e2b3|Efficient Distributed Algorithm for Maximum Fractional Matching in the CONGEST Model.|
+2a30012f-09e0-5ed6-9831-519223d862ee|Efficient Distributed Computation of PageRank in Large-Scale Networks.|9
+68f93ac2-ceb8-590f-8fc2-c365ec6ea9d8|Optimizing Query Decomposition in Distributed Query Processing Systems|
+b7c47cbb-4196-5f54-8e93-243768b01609|Efficient computation of the Bi-index for large-scale bipartite graphs.|1
+9ec3e4f8-13e8-5795-ac36-688426acfb8a|Efficient parallel subgraph listing on large-scale undirected graphs.|0
+9edb2d41-ddaa-546f-b4bb-871221eb7f7f|Efficient querying of distributed and fragmented big graphs.|3
+1d4dc628-5223-5c7a-8e32-279b05e07dae|Designing energy-efficient distributed algorithms for the Maximal Independent Set problem.|7
+8cfd5ff4-d3ec-5a5e-bb5a-14ea4de28e41|Efficient incremental maintenance of closeness centrality scores in dynamic networks.|6
+6adab221-5a24-5f9a-89b9-2b55db089eeb|Efficient parallel graph coloring for large-scale graphs.|5
+eb442cd7-6de0-52c8-8469-ea55ff081ae5|Efficient parallelization of Breadth-First Search on GPUs for large-scale graph processing.|3
+9def9610-8323-55d6-a758-db761bf61501|Scalable Triangle Counting in Large-Scale Graphs|2
+30cab616-de63-562c-83de-c58e961fbdac|Efficient handling of straggler tasks in Bulk Synchronous Parallel systems|
+776b006b-0b32-5e0b-89ec-329bd0931cc2|Efficient PageRank computation in the congested clique model.|9
+8257ec1d-e83b-5101-8841-f73cd1646136|Efficient and Scalable Subgraph Mining in Large Graphs|0
+a0130409-7496-5c79-97f8-b42fd1c1621f|Efficient and scalable distributed graph pattern mining|0
+fcf48faf-0d46-57b3-b229-e7c7ad878785|Efficient Distributed Graph Mining|0
+4bc22b6b-5a3d-52e9-a9f3-e644ee14187d|Distributed approximation of weighted vertex covers and matchings in graphs.|1
+489ecc09-8b21-5cb7-8ef6-8927188dd96f|Efficient parallel algorithms for All-Pairs Similarity Search in high-dimensional sparse data.|
+b8cff333-eda7-5473-b9b0-4f1a86d7fb58|Subgraph enumeration in a distributed environment|0
+f9616854-bbb5-55f4-a944-fdd66dd7f34b|Graph Pattern Mining (GPM)|0
+a67f14c2-9ec7-5118-bea2-d3ce358c798b|Efficient parallel processing of graph queries in distributed computing environments.|3
+9b62f136-6ba8-5da2-988a-d21ac184a2c4|Efficient processing of set reachability queries in distributed graph systems.|3
+0b530302-859a-5bd0-bd0e-3a3d7edd1b22|Efficient distributed computation of triangle enumeration and expander decomposition in massive graphs.|2
+eb1986b1-4503-51ca-a379-12d226e357a6|Scalable Triangle Enumeration in Massive Graphs|2
+2276b63d-917c-594c-ad35-c39192851a9b|Balanced graph partitioning for distributed parallel processing|
+d299f859-df58-528a-8be9-f006c842f62e|Efficiently processing and querying large-scale RDF data.|13
+8e4d0b7f-2ae4-5c98-ab28-523acafab771|Lower bound for round complexity of locally checkable problems on hypergraphs.|
+277ffc69-bd44-504c-8fb9-2a160a712cd9|Efficient Triangle Counting in Massive Graphs|2
+b18f1663-940b-5847-9406-7e9e59656d65|computation and update maintenance of maximal cliques in a graph|0
+4560d0e5-1e4c-584e-82a0-2fb28093f6c5|Distributed Triangle Detection in the CONGEST model|2
+6e4f09d6-d2bd-51cd-bee2-e328a1797a8a|Efficient Detection of Connected Components in Large-Scale Graphs|8
+690438cf-59d5-53d6-b1b5-f0bbcdcba613|Scheduling of Input-Queued Switches in High-Performance Datacenter Networks.|12
+71940a3f-1244-598d-95f9-0838896fa0c8|Distributed Vertex Cover Reconfiguration|
+82876792-faf6-53b3-bfca-ee81e21c3365|Efficient Task Scheduling and Memory Management in Multi-Threaded Accelerator Architectures.|
+807e8c06-6071-5dc9-bf08-ca6bb848db82|Efficient Mining of Large-Scale Graph Data|0
+809171a3-ebd7-59b6-b234-1965c9a80ee5|Distributed Minimum Weighted Vertex Cover Approximation|1
+199f6dfd-a6ea-5996-9eac-b88a1f5b3c7d|Decentralized Minimum Vertex Cover in Complex Networks|1
+9f5daf67-6224-563d-983a-132e5fc7f1d2|Efficient Execution of Graph Pattern Matching Queries|4
+8eb46fbf-3886-505d-83c7-18bb845f6d1a|Flexible Graph Pattern Matching in Social Network Analysis|4
+7167e106-7fa1-529d-ace1-a192d48f9f43|Efficient computation of Personalized PageRank vectors in large-scale graphs.|9
+0d493110-24ea-5b9b-818d-08b839eed429|Decentralized computation of betweenness centrality in large-scale networks.|6
+4854e21f-09f3-5a67-b02d-379120279df7|k-core decomposition of large graphs|14
+e60098f9-ef90-50b6-9692-5f76c2e846c9|Computing Maximum Independent Set in Large-Scale Dynamic Graphs.|7
+fba52580-e743-5f23-a902-2d0dd3c88d21|Localized Distributed Algorithm for Minimum Vertex Cover Problem|1
+dcc9b6b4-3d45-53d6-aca0-20da4f751b0c|Efficient analysis of butterfly structures in large dynamic bipartite graphs.|
+992329bf-cc57-55bd-9d79-8c97d9423c4b|Efficient Edge-Centric Graph Processing on FPGAs.|3
+9396b49b-380f-522c-a1ef-a9fe21fe5ed2|Characterizing the distribution of betweenness centrality in random trees|6
+ac0beaf9-63ba-504c-b7fe-dbc55be23fc3|Efficient Subgraph Matching in Large-Scale Graph Datasets|0
+4df9a659-3fc9-5359-83aa-89e56f1edeb8|Efficient distributed triangle counting in large-scale graphs.|2
+9086b98f-f21f-517b-9d6f-8c96d9fa4722|Distributed 1-coloring problem|5
+f89e2f4a-f910-5542-8e01-3009bc843b65|Efficient processing and analysis of large-scale free graphs.|
+0a59b6dc-5000-5c6e-bcb7-229bb96bbe53|Distributed Multimodal Path Query Processing|
+af222aa3-0628-5ded-8a42-dda4da22ebef|Efficient parallelization of connected component labeling for large-scale graphs.|8
+34126773-1233-571f-8c0b-84446555ab98|Scalable community detection in large-scale networks.|10
+08f0244c-02d6-5e84-bbdc-42ab0ab4d6eb|Designing efficient oblivious routing schemes for distributed transshipment problems.|
+7d80185f-0a2d-5436-8c8f-9256e518daa8|Distributed Algorithm for Minimum Weight Vertex Cover Problem|1
+634755a3-f7c3-5ab0-8ff7-3799e9827033|Distributed Minimum Cut Approximation in Network Graphs|
+854b8111-9d7a-5618-84d4-9c6471815144|Efficient processing of triangles in massive scale temporal graphs with metadata|
+8f4b4761-4c57-51a9-9432-caa5051acd03|Maintaining core decomposition in large dynamic graphs.|14
+ab12d394-5012-5c6f-9da4-5cb1efe83441|Distributed Algorithm for Minimum Vertex Cover Problem|1
+98447463-3199-5619-9fcb-dea45033a2b1|Efficient Distributed Computation of Local Clustering Coefficient in Large-Scale Graphs|
+39d6aebb-d44e-5852-aab3-f851a688b67b|Scalable Subgraph Enumeration in Large Graph Data|0
+505b85ea-be03-599a-9382-5e8da23e3eeb|Exact Matching of Template Graphs in Large Background Graphs|4
+1556e6a8-6f50-5bfc-bb86-a59394b8127b|Distributed Aggregation Scheduling Problem (DASP)|
+c509a080-5b05-57a0-82d9-fbad631cd16f|Subgraph Isomorphism Problem|
+2ae54d37-17c8-560d-b077-c376fd223bee|Optimizing PageRank computation on shared-memory platforms.|9
+4efc7864-74fa-5b0f-b02f-d7ce625311ec|Efficient distributed mining of frequent patterns in large graphs.|0
