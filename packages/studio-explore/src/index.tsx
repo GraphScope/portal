@@ -13,7 +13,7 @@ import {
   SliderFilter,
 } from '@graphscope/studio-graph';
 
-import { Workflow, Upload, EmbedSchema, Cluster, Summarize } from './components';
+import { Workflow, Upload, EmbedSchema, Cluster, Summarize, ClusterInfo } from './components';
 
 import { Divider } from 'antd';
 
@@ -102,7 +102,7 @@ const ExploreApp: React.FunctionComponent<QueryGraphProps> = props => {
           leftSide={<SegmentedTabs items={items} block />}
           autoResize={false}
           leftSideStyle={{
-            width: '50%',
+            width: '450px',
           }}
           defaultCollapsed={{
             leftSide: false,
@@ -111,6 +111,7 @@ const ExploreApp: React.FunctionComponent<QueryGraphProps> = props => {
         >
           <Canvas />
           <ClearStatatus />
+          <ClusterInfo />
           <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
             <ToogleButton />
             <Divider style={{ margin: '0px' }} />

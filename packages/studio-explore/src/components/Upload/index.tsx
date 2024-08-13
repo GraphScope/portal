@@ -33,10 +33,8 @@ export async function query(params: Params) {
     })
     .catch(err => {
       return {
-        data: {
-          nodes: [],
-          edges: [],
-        },
+        nodes: [],
+        edges: [],
       };
     });
 }
@@ -71,7 +69,7 @@ const Upload: React.FunctionComponent<IUploadProps> = props => {
       name: 'Paper',
     }).then(res => {
       setState(preState => {
-        const columns = Object.keys(res[0]).map(key => {
+        const columns = Object.keys(res[0] || {}).map(key => {
           return {
             title: key,
             dataIndex: key,
