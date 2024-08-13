@@ -42,7 +42,6 @@ export default defineConfig({
     { path: '/importing', component: 'importing' },
     { path: '/querying', component: 'query' },
     { path: '/exploring', component: 'exploring' },
-    { path: '/llm', component: 'llm' },
   ],
   jsMinifier: 'terser',
   npmClient: 'pnpm',
