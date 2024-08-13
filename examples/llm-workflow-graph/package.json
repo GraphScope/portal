@@ -1,0 +1,35 @@
+{
+  "name": "llm-workflow-graph",
+  "version": "0.1.0",
+  "description": "",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GraphScope/portal.git"
+  },
+  "files": [
+    "es",
+    "lib",
+    "dist"
+  ],
+  "scripts": {
+    "start": "vite dev",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "d3-force": "latest",
+    "@graphscope/studio-importor": "workspace:*",
+    "@graphscope/studio-components": "workspace:*",
+    "@graphscope/studio-graph": "workspace:*",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.12",
+    "@vitejs/plugin-react": "^4.2.1"
+  },
+  "author": "",
+  "license": "ISC"
+}
