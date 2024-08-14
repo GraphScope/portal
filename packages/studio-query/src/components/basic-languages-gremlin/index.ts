@@ -40,6 +40,7 @@ export const language: languages.IMonarchLanguage = {
   ],
 
   keywords: [
+    'g',
     'V',
     'E',
     'out',
