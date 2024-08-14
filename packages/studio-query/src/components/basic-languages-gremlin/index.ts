@@ -225,8 +225,8 @@ const StepMap = {};
 
 function generateSuggestionsForLastWord(lastWord) {
   const contextSpecificSuggestions = {
-    g: ['V', 'E', 'match'],
-    V: [...edgeStep, ...common],
+    g: ['V', 'E'],
+    V: [...edgeStep, 'match', ...common],
     E: [...vertexStep, ...common],
     ...StepMap,
   };
