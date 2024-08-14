@@ -1,4 +1,4 @@
-import { CypherSchemaData, MockDriver } from '@graphscope/studio-query';
+import { CypherSchemaData } from '@graphscope/studio-query';
 import { GremlinDriver, CypherDriver, queryGraph, cancelGraph } from '@graphscope/studio-driver';
 import type { QueryParams } from '@graphscope/studio-driver';
 import type { IStudioQueryProps, IStatement } from '@graphscope/studio-query';
@@ -147,7 +147,7 @@ export const getDriver = async (language: 'cypher' | 'gremlin' = 'cypher') => {
   const { gremlin_endpoint, cypher_endpoint, gremlin_driver, cypher_driver } = driver_config;
 
   if (cypher_endpoint === 'mock' && gremlin_endpoint === 'mock') {
-    return new MockDriver(cypher_endpoint);
+    return;
   }
   if (cypher_endpoint && !cypher_driver) {
     driver_config.cypher_driver = new CypherDriver(cypher_endpoint);

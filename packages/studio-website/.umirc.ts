@@ -1,6 +1,9 @@
 import { defineConfig } from 'umi';
+import MonacoEditorWebpackPlugin from 'monaco-editor-webpack-plugin';
 import dotenv from 'dotenv';
+
 const { parsed } = dotenv.configDotenv();
+
 const { PROXY_URL, BACKEND_URL, SLOT_URL = '' } = parsed || {};
 let headScripts;
 let externals;
@@ -47,6 +50,15 @@ export default defineConfig({
   monorepoRedirect: {},
   externals,
   headScripts,
+  // 其他 Umi 配置项
+  chainWebpack(config) {
+    config.plugin('monaco-editor-webpack-plugin').use(MonacoEditorWebpackPlugin, [
+      {
+        //@ts-ignore
+        languages: ['cypher', 'gremlin'], // 只加载 cypher 语言
+      },
+    ]);
+  },
   mfsu: {
     shared: {
       react: {

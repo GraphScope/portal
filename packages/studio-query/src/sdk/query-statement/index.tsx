@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Statement } from '../..';
 import type { IStatement } from '../..';
-import { CypherDriver, GremlinDriver } from '../../index';
+import { CypherDriver, GremlinDriver } from '@graphscope/studio-driver';
 import ConnectEndpoint, { IConnectEndpointProps } from './connect-endpoint';
 import { ThemeProvider } from '@graphscope/studio-components';
 import locales from '../../locales';

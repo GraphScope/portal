@@ -23,11 +23,11 @@
     "@fortawesome/react-fontawesome": "latest",
     "@graphscope/studio-components": "workspace:*",
     "@graphscope/studio-driver": "workspace:*",
+    "@graphscope/studio-explore": "workspace:*",
     "@graphscope/studio-graph": "workspace:*",
     "@graphscope/studio-importor": "workspace:*",
     "@graphscope/studio-query": "workspace:*",
     "@graphscope/studio-server": "workspace:*",
-    "@graphscope/studio-explore": "workspace:*",
     "@uiw/react-codemirror": "^4.21.21",
     "antd": "^5.17.0",
     "js-yaml": "^4.1.0",
@@ -49,6 +49,7 @@
     "@umijs/lint": "latest",
     "dotenv": "^16.4.5",
     "eslint": "latest",
+    "monaco-editor-webpack-plugin": "^7.1.0",
     "react-intl": "^6.6.1",
     "typescript": "^5.3.3"
   }
