@@ -20,6 +20,7 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
   React.useEffect(() => {
     emitter?.on('node:click', (node: any) => {
       const { id } = node;
+
       const { neighbors, links } = dataMap[id];
       const slNodes = neighbors.reduce(
         (acc, curr) => {

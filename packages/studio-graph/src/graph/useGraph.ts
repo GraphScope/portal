@@ -8,10 +8,9 @@ import type { ForceGraph3DInstance } from '3d-force-graph';
 import { Utils } from '@graphscope/studio-components';
 import mitt from 'mitt';
 import { handleStyle } from './handleStyle';
-// import { nodeCanvasObject } from './nodeCanvasObject';
 import { nodeCanvasObject } from './custom-node';
+// import { linkCanvasObject } from './custom-edge';
 import { BASIC_NODE_R, SELECTED_EDGE_COLOR } from './const';
-// import * as d3 from 'd3-force';
 import * as d3 from 'd3-force-3d';
 
 export default function useGraph<P extends GraphProps>(props: P) {
@@ -57,6 +56,11 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .linkLabel(edge => handleStyle(edge, edgeStyle, 'edge').caption)
         .linkWidth(edge => handleStyle(edge, edgeStyle, 'edge').width)
         .linkColor(edge => handleStyle(edge, edgeStyle, 'edge').color)
+        // custom edge
+        // .linkCanvasObjectMode(() => 'after')
+        // .linkCanvasObject((link, ctx, globalScale) => {
+        //   linkCanvasObject(link, ctx, globalScale)(edgeStyle, edgeStatus);
+        // })
 
         /** force */
         .d3Force(
