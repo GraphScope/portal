@@ -28,9 +28,9 @@ export const conf: languages.LanguageConfiguration = {
   ],
 };
 
-export const language = <languages.IMonarchLanguage>{
+export const language: languages.IMonarchLanguage = {
   defaultToken: '',
-  tokenPostfix: `.gremlin`,
+  tokenPostfix: '.gremlin',
   ignoreCase: true,
 
   brackets: [
@@ -42,129 +42,46 @@ export const language = <languages.IMonarchLanguage>{
   keywords: [
     'V',
     'E',
-    'addV',
-    'addE',
-    'has',
-    'hasNot',
     'out',
     'in',
     'both',
-    'outE',
-    'inE',
-    'bothE',
-    'outV',
-    'inV',
-    'bothV',
+    'has',
+    'hasLabel',
+    'limit',
     'order',
     'by',
     'select',
-    'where',
-    'group',
-    'groupCount',
     'count',
-    'sum',
-    'max',
-    'min',
-    'mean',
-    'and',
-    'or',
-    'not',
-    'emit',
-    'until',
-    'repeat',
-    'simplePath',
-    'timeLimit',
-    'tree',
-    'path',
-    'local',
-    'limit',
-    'range',
-    'skip',
-    'tail',
-    'union',
-    'fold',
-    'unfold',
-    'as',
-    'select',
-    'match',
-    'project',
-    'flatMap',
-    'choose',
-    'coalesce',
-    'where',
+    'filter',
+    'map',
     'dedup',
-    'subgraph',
-    'valueMap',
-    'constant',
-    'inject',
-    'option',
-    'sideEffect',
-    'store',
-    'aggregate',
-    'order',
-    'coin',
-    'sample',
-    'emit',
-    'barrier',
+    'outE',
+    'inE',
+    'bothE',
   ],
+
   builtinLiterals: ['true', 'false', 'null'],
   builtinFunctions: [
     'values',
     'keys',
-    'property',
-    'valueMap',
-    'elementMap',
-    'label',
     'id',
-    'identity',
-    'count',
+    'label',
+    'property',
+    'outV',
+    'inV',
+    'bothV',
     'sum',
-    'max',
-    'min',
     'mean',
-    'and',
-    'or',
-    'not',
+    'min',
+    'max',
     'coalesce',
-    'constant',
-    'choose',
-    'filter',
-    'hasNext',
-    'next',
-    'toList',
-    'toSet',
-    'iterate',
-    'to',
-    'from',
-    'path',
-    'order',
-    'by',
+    'is',
+    'not',
+    'range',
+    'fold',
   ],
 
-  operators: [
-    // Math operators
-    '+',
-    '-',
-    '*',
-    '/',
-    '%',
-    '^',
-    // Comparison operators
-    '=',
-    '<>',
-    '<',
-    '>',
-    '<=',
-    '>=',
-    '==',
-    '!=',
-    // Traversal operators
-    '.',
-    '->',
-    '<-',
-    '-->',
-    '<--',
-  ],
+  operators: ['+', '-', '*', '/', '%', '^', '=', '<>', '<', '>', '<=', '>='],
 
   escapes: /\\(?:[tbnrf\\"'`]|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
   digits: /\d+/,
@@ -178,39 +95,24 @@ export const language = <languages.IMonarchLanguage>{
       { include: '@numbers' },
       { include: '@strings' },
 
-      // Gremlin labels on vertices/edges, e.g. (v:Label)-[e:EdgeLabel]
       [/:[a-zA-Z_][\w]*/, 'type.identifier'],
+
       [
         /[a-zA-Z_][\w]*(?=\()/,
         {
           cases: {
             '@builtinFunctions': 'predefined.function',
-          },
-        },
-      ],
-      [
-        /[a-zA-Z_$][\w$]*/,
-        {
-          cases: {
             '@keywords': 'keyword',
-            '@builtinLiterals': 'predefined.literal',
             '@default': 'identifier',
           },
         },
       ],
+
       [/`/, 'identifier.escape', '@identifierBacktick'],
 
-      // delimiter and operator after number because of `.\d` floats and `:` in labels
       [/[;,.:|]/, 'delimiter'],
-      [
-        /[<>=%+\-*/^]+/,
-        {
-          cases: {
-            '@operators': 'delimiter',
-            '@default': '',
-          },
-        },
-      ],
+      [/[\+\-\*\/\^%]+/, 'delimiter.operator'],
+      [/[\!<>\?=\|&]/, 'delimiter'],
     ],
     numbers: [
       [/-?(@digits)[eE](-?(@digits))?/, 'number.float'],
@@ -220,8 +122,8 @@ export const language = <languages.IMonarchLanguage>{
       [/-?(@digits)/, 'number'],
     ],
     strings: [
-      [/"([^"\\]|\\.)*$/, 'string.invalid'], // non-terminated string
-      [/'([^'\\]|\\.)*$/, 'string.invalid'], // non-terminated string
+      [/"([^"\\]|\\.)*$/, 'string.invalid'],
+      [/'([^'\\]|\\.)*$/, 'string.invalid'],
       [/"/, 'string', '@stringDouble'],
       [/'/, 'string', '@stringSingle'],
     ],
@@ -256,3 +158,87 @@ export const language = <languages.IMonarchLanguage>{
     ],
   },
 };
+
+export function registerGremlinLanguage(): void {
+  languages.register({ id: 'gremlin' });
+  languages.setMonarchTokensProvider('gremlin', language);
+  languages.setLanguageConfiguration('gremlin', conf);
+
+  languages.registerCompletionItemProvider('gremlin', {
+    triggerCharacters: ['.'],
+    provideCompletionItems: function (model, position) {
+      const lineContent = model.getLineContent(position.lineNumber);
+      const textBeforeCursor = lineContent.slice(0, position.column - 1).trim();
+
+      // 提取最后一个词
+      const lastWord = extractLastWord(textBeforeCursor);
+
+      // 根据最后一个词生成补全建议
+      const suggestions = generateSuggestionsForLastWord(lastWord);
+
+      return { suggestions: suggestions };
+    },
+  });
+}
+
+// 提取文本中的最后一个词
+function extractLastWord(text) {
+  // 移除所有括号及其内容
+  const cleanText = text.replace(/\(.*?\)/g, '');
+  // 按空白字符和句点分割文本，过滤掉空白字符
+  const words = cleanText.split(/\s|\./).filter(Boolean);
+  return words.length > 0 ? words[words.length - 1] : '';
+}
+
+const project = ['id', 'label', 'constant', 'valueMap', 'values', 'elementMap', 'select'];
+
+const aggregate = ['count', 'fold', 'sum', 'min', 'max', 'mean', 'group', 'groupCount'];
+
+const filter = [
+  'hasId',
+  'hasLabel',
+  'has',
+  'hasNot',
+  'is',
+  'where',
+  'not',
+  'dedup',
+  'order',
+  'limit',
+  'coin',
+  'sample',
+  'union',
+];
+const common = [...aggregate, ...filter, ...project];
+
+const vertexStep = ['outV', 'inV', 'otherV', 'bothV'];
+const edgeStep = ['outE', 'inE', 'bothE', 'out', 'in', 'both'];
+
+const StepMap = {};
+[...vertexStep, 'out', 'in', 'both'].forEach(item => {
+  StepMap[item] = [...edgeStep, ...common];
+});
+
+['outE', 'inE', 'bothE'].forEach(item => {
+  StepMap[item] = [...vertexStep, ...common];
+});
+
+function generateSuggestionsForLastWord(lastWord) {
+  const contextSpecificSuggestions = {
+    g: ['V', 'E', 'match'],
+    V: [...edgeStep, ...common],
+    E: [...vertexStep, ...common],
+    ...StepMap,
+  };
+
+  // 获取具体上下文的补全建议
+  const specificSuggestions = contextSpecificSuggestions[lastWord] || [];
+  return specificSuggestions.map(key => {
+    return {
+      label: key,
+      kind: languages.CompletionItemKind.Function,
+      documentation: key,
+      insertText: `${key}()`,
+    };
+  });
+}

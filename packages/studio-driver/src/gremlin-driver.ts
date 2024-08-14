@@ -29,7 +29,7 @@ export interface Table {
 class CypherDriver {
   private driver: any;
   private uri: string;
-  constructor(uri: string, username: string = '', password: string = '') {
+  constructor(uri: string, username: string = 'admin', password: string = 'password') {
     try {
       const authenticator = new gremlin.driver.auth.PlainTextSaslAuthenticator(username, password);
       const client = new gremlin.driver.Client(uri, {
@@ -107,7 +107,11 @@ class CypherDriver {
         await this.handleTableResult(tableResult, value);
       } else {
         mode = 'table';
-        if (typeof value === 'number' || typeof value === 'string' || value instanceof BigNumber) {
+        if (
+          typeof value === 'number' ||
+          typeof value === 'string'
+          //  || value instanceof BigNumber
+        ) {
           // e.g. `g.V().count()`, `g.V().id()`, `g.V().label()`
           tableResult.push(value);
         } else {
@@ -139,15 +143,18 @@ class CypherDriver {
       for (const edgeKey in edgeItemsMapping) {
         edges.push(edgeItemsMapping[edgeKey]);
       }
-      console.log({
-        nodes,
-        edges,
-        mode,
-        tableResult,
-      });
       return {
         nodes,
         edges,
+        mode,
+        table: tableResult,
+        raw: result,
+      };
+    }
+    if (mode === 'table') {
+      return {
+        nodes: [],
+        edges: [],
         mode,
         table: tableResult,
         raw: result,

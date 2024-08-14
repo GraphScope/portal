@@ -3,14 +3,10 @@ import { useThemeContainer } from '@graphscope/studio-components';
 import './index.css';
 import { editor, languages } from 'monaco-editor';
 import 'monaco-editor/esm/vs/basic-languages/cypher/cypher.contribution';
-import { language, conf } from '../basic-languages-gremlin/index';
+import { registerGremlinLanguage } from '../basic-languages-gremlin/index';
 
 // 注册 Gremlin 语言
-languages.register({ id: 'gremlin' });
-// 注册语法高亮
-languages.setMonarchTokensProvider('gremlin', language);
-// 注册配置
-languages.setLanguageConfiguration('gremlin', conf);
+registerGremlinLanguage();
 
 function countLines(str) {
   // 使用正则表达式匹配换行符，并计算匹配到的数量，即为行数
