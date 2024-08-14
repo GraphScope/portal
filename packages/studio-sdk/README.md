@@ -1,1 +1,0 @@
-# GraphScope Studio SDK
