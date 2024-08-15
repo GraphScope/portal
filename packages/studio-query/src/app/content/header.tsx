@@ -1,4 +1,4 @@
-import React, { lazy, useRef, useState, Suspense } from 'react';
+import React, { useRef, useState, Suspense } from 'react';
 import { InsertRowAboveOutlined, OrderedListOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { Segmented, Button, Space, Flex } from 'antd';
 import { IStudioQueryProps, localStorageVars } from '../context';
@@ -10,7 +10,7 @@ import { useThemeContainer } from '@graphscope/studio-components';
 import Loading from './loading';
 import ToggleButton from './toggle-button';
 
-const CypherEditor = lazy(() => import('../../cypher-editor'));
+import CypherEditor from '../../components/cypher-editor';
 
 interface IHeaderProps {
   connectComponent?: IStudioQueryProps['connectComponent'];
@@ -147,23 +147,20 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
         </Space>
       </Flex>
       <Flex justify="space-between" style={{ marginTop: '8px' }}>
-        <Suspense fallback={<Loading />}>
-          <CypherEditor
-            language={language}
-            onChangeContent={onChangeContent}
-            value={globalScript}
-            ref={editorRef}
-            maxRows={25}
-            minRows={minRows}
-            clear={state.clear}
-            onInit={() => {
-              if (autoRun) {
-                console.log('>>>>>>>> autoRun >>>>>>>>>>>>>>>>>>>>>>', autoRun);
-                handleQuery();
-              }
-            }}
-          />
-        </Suspense>
+        <CypherEditor
+          language={language}
+          onChangeContent={onChangeContent}
+          value={globalScript}
+          ref={editorRef}
+          maxRows={25}
+          minRows={minRows}
+          clear={state.clear}
+          onInit={() => {
+            if (autoRun) {
+              handleQuery();
+            }
+          }}
+        />
         <div style={{ flexBasis: '48px', flexShrink: 0 }}>
           <Button
             style={{ marginLeft: '10px' }}

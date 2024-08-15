@@ -1,5 +1,5 @@
 import * as React from 'react';
-import CypherEdit from '../../cypher-editor';
+import CypherEdit from '../../components/cypher-editor';
 import { Space, Button, Flex, Tooltip, Typography } from 'antd';
 import type { GlobalToken } from 'antd';
 import { PlayCircleOutlined, CloseOutlined, ShareAltOutlined } from '@ant-design/icons';

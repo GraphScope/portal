@@ -1,9 +1,12 @@
 import React, { forwardRef, useEffect } from 'react';
-import { editor } from 'monaco-editor';
-import 'monaco-editor/esm/vs/editor/editor.api';
-require('monaco-editor/esm/vs/basic-languages/cypher/cypher');
-import './index.css';
 import { useThemeContainer } from '@graphscope/studio-components';
+import './index.css';
+import { editor, languages } from 'monaco-editor';
+import 'monaco-editor/esm/vs/basic-languages/cypher/cypher.contribution';
+import { registerGremlinLanguage } from '../basic-languages-gremlin/index';
+
+// 注册 Gremlin 语言
+registerGremlinLanguage();
 
 function countLines(str) {
   // 使用正则表达式匹配换行符，并计算匹配到的数量，即为行数
@@ -57,6 +60,7 @@ const Editor = forwardRef((props: IEditor, editorRef: any) => {
   let codeEditor: editor.IStandaloneCodeEditor;
   const MAGIC_NUMBER = onChangeContent ? 0 : 1;
   const { algorithm } = useThemeContainer();
+
   const isDark = algorithm === 'darkAlgorithm';
   useEffect(() => {
     if (editorRef && editorRef.current) {
@@ -66,7 +70,7 @@ const Editor = forwardRef((props: IEditor, editorRef: any) => {
 
       //@TODO hard code
       codeEditor = editor.create(editorRef.current, {
-        language: LANGUAGE[language],
+        language: 'gremlin', //LANGUAGE[language],
         value,
         theme: isDark ? 'vs-dark' : THEMES[language], // 'vs' (default), 'vs-dark', 'hc-black', 'hc-light'
         suggestLineHeight: 20,

@@ -1,4 +1,4 @@
-import { CypherSchemaData } from '../cypher-editor';
+import { CypherSchemaData } from '../components/cypher-editor';
 import type { IStatement } from '../app/context';
 export interface IEditorProps {
   id: string;
