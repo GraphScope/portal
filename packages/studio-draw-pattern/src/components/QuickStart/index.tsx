@@ -1,6 +1,7 @@
 import React from 'react';
 import { Preview } from './Preview';
 import { QuickStartItem } from './QuickStartItem';
+import { RocketOutlined } from '@ant-design/icons';
 
 export const QuickStart = () => {
   return (
@@ -14,15 +15,17 @@ export const QuickStart = () => {
       }}
     >
       <Preview></Preview>
-      <div id="items-wrapper" style={{ display: 'flex', flexDirection: 'column', height: '70%' }}>
-        <span style={{ fontSize: '1.2rem', marginLeft: '1rem' }}>快速开始</span>
+      <div id="items-wrapper" style={{ display: 'flex', flexDirection: 'column', height: '70%', gap: '0.3rem' }}>
+        <span style={{ fontSize: '1rem' }}>
+          <RocketOutlined />
+          快速开始
+        </span>
         <div
           style={{
             overflow: 'scroll',
             display: 'flex',
             flexDirection: 'column',
             gap: '0.6rem',
-            padding: '1rem',
           }}
         >
           <QuickStartItem></QuickStartItem>

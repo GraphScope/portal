@@ -12,10 +12,10 @@ export const Preview = () => {
         flexDirection: 'column',
         gap: '0.6rem',
         flexBasis: '30%',
-        margin: '1rem',
+        marginTop: '1rem',
       }}
     >
-      <span style={{ fontSize: '1.2rem' }}>Model Preview</span>
+      <span style={{ fontSize: '1rem' }}>Model Preview</span>
       <div style={{ flexGrow: '1', backgroundColor: 'white' }}>this is preview area</div>
     </div>
   );
