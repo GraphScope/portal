@@ -1,7 +1,7 @@
 {
   "name": "@graphscope/studio-driver",
   "version": "0.1.0",
-  "description": "A React toolkit for graph analysis based on g6",
+  "description": "A library provides a unified interface for interacting with graph databases",
   "main": "lib/index.js",
   "module": "es/index.js",
   "types": "lib/index.d.ts",
