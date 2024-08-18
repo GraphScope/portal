@@ -5,6 +5,7 @@ import { CheckCircleOutlined, CheckOutlined } from '@ant-design/icons';
 import { EditableText, useThemeContainer, useSection } from '@graphscope/studio-components';
 const { useToken } = theme;
 import { useContext } from '../../canvas/useContext';
+import { LazyLoad } from '../middle-component/lazy-load';
 
 const R = 50;
 const HALO_LINE_WIDTH = 16;
@@ -160,4 +161,10 @@ const GraphNode = (props: NodeProps) => {
   );
 };
 
-export default memo(GraphNode);
+const LazyGraphNode = (props: NodeProps) => (
+  <LazyLoad type="NODE">
+    <GraphNode {...props} />
+  </LazyLoad>
+);
+
+export default memo(LazyGraphNode);

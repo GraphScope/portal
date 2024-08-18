@@ -19,23 +19,25 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@graphscope/studio-importor": "workspace:*",
     "@graphscope/studio-components": "workspace:*",
-    "html-to-image": "^1.11.11",
     "d3-force": "latest",
     "dagre": "latest",
+    "html-to-image": "^1.11.11",
+    "lodash": "^4.17.21",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-intl": "^6.6.1",
     "reactflow": "latest",
+    "rxjs": "^7.8.1",
     "uuid": "^9.0.1",
     "valtio": "1.12.0",
-    "zustand": "^4.5.5",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
     "@types/d3-force": "latest",
-    "vite": "^5.0.12",
-    "@vitejs/plugin-react": "^4.2.1"
+    "@types/lodash": "^4.14.202",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.12"
   },
   "author": "",
   "license": "ISC"

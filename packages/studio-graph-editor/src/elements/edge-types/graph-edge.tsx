@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useCallback } from 'react';
 import { useStore } from 'reactflow';
 import type { EdgeProps } from 'reactflow';
