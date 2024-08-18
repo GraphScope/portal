@@ -1,8 +1,10 @@
 import { Position, MarkerType } from 'reactflow';
 import processEdges from './processEdges';
 import dagre from 'dagre';
-import { ISchemaEdge, ISchemaNode, ISchemaOptions } from '../canvas/typing';
 import { v4 as uuidv4 } from 'uuid';
+import { ISchemaEdge } from '../types/edge';
+import { ISchemaNode } from '../types/node';
+import { ISchemaOptions } from '../types/other';
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));

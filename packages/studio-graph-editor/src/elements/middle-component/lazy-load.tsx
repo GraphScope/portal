@@ -1,9 +1,9 @@
-import React, { memo, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { BehaviorSubject } from 'rxjs';
-import { filter, distinctUntilChanged } from 'rxjs/operators';
 
 interface LazyLoadProps {
   children: React.ReactNode;
+  //TODO: future lazy load edge
   type: 'EDGE' | 'NODE';
 }
 
@@ -18,12 +18,7 @@ export const LazyLoad: React.FC<LazyLoadProps> = ({ children, type = 'NODE' }) =
 
   useEffect(() => {
     // 订阅可见性状态变化
-    const subscription = visibility$
-      .pipe(
-        distinctUntilChanged(), // 确保只对状态变化作出反应
-        filter(isVisible => isVisible), // 仅在节点可见时继续
-      )
-      .subscribe(setVisible);
+    const subscription = visibility$.subscribe(setVisible);
 
     const observer = new IntersectionObserver(
       ([entry]) => {
