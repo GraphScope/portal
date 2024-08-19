@@ -1,6 +1,6 @@
 import { transformGraphNodes, transformEdges } from '../../elements/index';
 import { ISchemaNode, ISchemaOptions } from '../../typing';
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 import { ParsedFile } from '@graphscope/studio-components';
 type IMeta = ParsedFile['meta'];
 const DATA_TYPE_MAPPING = {
@@ -52,7 +52,7 @@ export const transform = (schemaData: ISchema): ISchemaOptions => {
           return {
             name,
             type: dataType === 'DT_DOUBLE' && IS_PK ? 'DT_SIGNED_INT64' : dataType,
-            key: uuid(),
+            key: uuidv4(),
             disable: false,
             primaryKey: IS_PK,
           };
@@ -89,7 +89,7 @@ export const transform = (schemaData: ISchema): ISchemaOptions => {
             return {
               name,
               type: IS_PK ? 'DT_SIGNED_INT32' : DATA_TYPE_MAPPING[type],
-              key: uuid(),
+              key: uuidv4(),
               disable: false,
               primaryKey: false,
             };

@@ -11,6 +11,9 @@ interface IModelingProps {}
 const EmbedSchema: React.FunctionComponent<IModelingProps> = props => {
   return (
     <ImportorApp
+      style={{
+        height: 'calc(100vh - 100px)',
+      }}
       appMode="DATA_MODELING"
       defaultCollapsed={{
         leftSide: true,

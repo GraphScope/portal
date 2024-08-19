@@ -2,7 +2,7 @@ import { Position, MarkerType } from 'reactflow';
 import processEdges from './processEdges';
 import dagre from 'dagre';
 import { ISchemaEdge, ISchemaNode, ISchemaOptions } from '../typing';
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -101,7 +101,7 @@ export function transEdge2Entity(data: ISchemaOptions): ISchemaOptions {
   const entity: ISchemaNode[] = edges.map(item => {
     const { source, target, id, data, ...others } = item;
     relationship.push({
-      id: uuid(),
+      id: uuidv4(),
       source: source,
       target: id,
       type: 'smoothstep',
@@ -111,7 +111,7 @@ export function transEdge2Entity(data: ISchemaOptions): ISchemaOptions {
       },
     });
     relationship.push({
-      id: uuid(),
+      id: uuidv4(),
       source: id,
       target: target,
       type: 'smoothstep',

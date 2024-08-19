@@ -46,6 +46,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
     batchUploadFiles,
     onCreateLabel,
     onDeleteLabel,
+    style,
   } = props;
   const { store, updateStore } = useContext();
 
@@ -98,7 +99,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         leftSideStyle={leftSideStyle}
         rightSideStyle={rightSideStyle}
         defaultCollapsed={defaultCollapsed}
-        style={{ height: 'calc(100vh - 50px)' }}
+        style={{ height: 'calc(100vh - 50px)', ...style }}
         splitBorder
       >
         <ReactFlowProvider>
