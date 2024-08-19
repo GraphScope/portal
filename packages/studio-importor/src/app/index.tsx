@@ -47,6 +47,8 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
     onCreateLabel,
     onDeleteLabel,
     style,
+    leftSide,
+    rightSide,
   } = props;
   const { store, updateStore } = useContext();
 
@@ -84,17 +86,19 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   return (
     <ThemeProvider locales={locales}>
       <Section
-        leftSide={<ImportSchema />}
+        leftSide={leftSide || <ImportSchema />}
         rightSide={
-          <PropertiesEditor
-            appMode={appMode}
-            /**  第二项 */
-            queryPrimitiveTypes={queryPrimitiveTypes}
-            handleUploadFile={handleUploadFile}
-            batchUploadFiles={batchUploadFiles}
-            onCreateLabel={onCreateLabel}
-            onDeleteLabel={onDeleteLabel}
-          />
+          rightSide || (
+            <PropertiesEditor
+              appMode={appMode}
+              /**  第二项 */
+              queryPrimitiveTypes={queryPrimitiveTypes}
+              handleUploadFile={handleUploadFile}
+              batchUploadFiles={batchUploadFiles}
+              onCreateLabel={onCreateLabel}
+              onDeleteLabel={onDeleteLabel}
+            />
+          )
         }
         leftSideStyle={leftSideStyle}
         rightSideStyle={rightSideStyle}

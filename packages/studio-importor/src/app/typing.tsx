@@ -85,6 +85,8 @@ export interface ImportorProps {
     rightSide: boolean;
   }>;
   style?: React.CSSProperties;
+  leftSide?: React.ReactNode;
+  rightSide?: React.ReactNode;
   leftSideStyle?: React.CSSProperties;
   rightSideStyle?: React.CSSProperties;
   elementOptions?: {
