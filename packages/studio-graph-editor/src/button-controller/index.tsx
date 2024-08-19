@@ -20,4 +20,4 @@ const ButtonController: React.FunctionComponent<IButtonControllerProps> = props 
   );
 };
 
-export default ButtonController;
+export default React.memo(ButtonController);

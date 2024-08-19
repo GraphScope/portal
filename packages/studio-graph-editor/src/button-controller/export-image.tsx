@@ -5,7 +5,7 @@ import { Utils } from '@graphscope/studio-components';
 import { toSvg } from 'html-to-image';
 interface ILeftButtonProps {}
 
-const ExportImage: React.FunctionComponent<ILeftButtonProps> = props => {
+const ExportImage: React.FunctionComponent<ILeftButtonProps> = () => {
   console.log('ExportImage >> ');
   const onClick = async () => {
     // we calculate a transform for the nodes so that all nodes are visible

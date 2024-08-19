@@ -30,7 +30,7 @@
     "reactflow": "latest",
     "rxjs": "^7.8.1",
     "uuid": "^9.0.1",
-    "valtio": "1.12.0",
+    "valtio": "2.0.0-rc.1",
     "zustand": "^4.5.5"
   },
   "devDependencies": {

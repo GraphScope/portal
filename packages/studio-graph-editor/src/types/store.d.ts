@@ -1,3 +1,4 @@
+import { EdgeChange, NodeChange, OnConnect } from 'reactflow';
 import { ISchemaEdge } from './edge';
 import { ISchemaNode } from './node';
 
@@ -29,3 +30,22 @@ export type IStore = {
     primaryColor: string;
   };
 };
+
+export interface GraphProps {
+  setting: IStore;
+  nodes: ISchemaNode[];
+  edges: ISchemaEdge[];
+}
+
+export interface GraphState extends GraphProps {
+  onNodesChange: (nodes: NodeChange[]) => void;
+  onEdgesChange: (edges: EdgeChange[]) => void;
+  onConnect: OnConnect;
+  addNode: (node: ISchemaNode) => void;
+  addEdge: (edge: ISchemaEdge) => void;
+  deleteNode: (nodeId: string) => void;
+  deleteEdge: (edgeId: string) => void;
+  setNodes: (nodes: ISchemaNode[]) => void;
+  setEdges: (edges: ISchemaEdge[]) => void;
+  setSetting: (setting: Partial<IStore>) => void;
+}

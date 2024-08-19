@@ -3,7 +3,7 @@ import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 import { Utils } from '@graphscope/studio-components';
 import { IStore } from '../types/store';
 
-export const initialStore: IStore = {
+export const defaultStore: IStore = {
   /** APP类型 */
   appMode: 'DATA_MODELING',
   /**不可编辑状态 */
@@ -60,7 +60,7 @@ export const useMultipleInstance = initialStore => {
 
 export function useContext(): ContextType {
   const id = 'root-1';
-  const currentStore = getProxyStoreById(id, proxy(Utils.fakeSnapshot(initialStore)));
+  const currentStore = getProxyStoreById(id, proxy(Utils.fakeSnapshot(defaultStore)));
 
   // const { id, currentStore } = useMultipleInstance(proxy(Utils.fakeSnapshot(initialStore)));
   const store = useSnapshot(currentStore);
