@@ -17,6 +17,7 @@ export { default as SideTabs } from './SideTabs';
 export { default as ResizablePanels } from './ResizablePanel';
 export { default as FullScreen } from './FullScreen';
 export { default as Slot } from './Slot';
+export { default as ContentSection } from './ContentSection';
 /** all */
 export * as Utils from './Utils';
 export * as Icons from './Icons';

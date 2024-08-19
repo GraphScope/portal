@@ -20,6 +20,7 @@ interface ISectionProps {
     leftSide: boolean;
     rightSide: boolean;
   }>;
+
   splitBorder?: boolean;
 
   /** 主要区域 */
@@ -36,17 +37,19 @@ const getStyles = (props, collapsed: { leftSide: boolean; rightSide: boolean }, 
   const dafaultPadding = '0px 12px';
   const { splitBorder, leftSideStyle = {}, rightSideStyle = {} } = props;
   const borderStyle = splitBorder ? `1px solid ${token.colorBorder}` : 'unset';
+  const leftCollapsedWidth = leftSideStyle.minWidth || '0px';
+  const rightCollapsedWidth = rightSideStyle.minWidth || '0px';
 
   return {
     leftSideStyle: {
       ...leftSideStyle,
-      borderRight: collapsed.leftSide ? 'unset' : borderStyle,
-      width: collapsed.leftSide ? '0px' : leftSideStyle.width || dafaultWidth,
+      borderRight: collapsed.leftSide && leftCollapsedWidth === '0px' ? 'unset' : borderStyle,
+      width: collapsed.leftSide ? leftCollapsedWidth : leftSideStyle.width || dafaultWidth,
       padding: collapsed.leftSide ? '0px' : leftSideStyle.padding || dafaultPadding,
       overflow: 'hidden',
       transition: 'all 0.2s ease',
       boxSizing: 'border-box',
-      opacity: collapsed.leftSide ? 0 : 1,
+      opacity: collapsed.leftSide && leftCollapsedWidth === '0px' ? 0 : 1,
       flexShrink: 0,
     },
     rightSideStyle: {
@@ -57,7 +60,7 @@ const getStyles = (props, collapsed: { leftSide: boolean; rightSide: boolean }, 
       flexShrink: 0,
       ...rightSideStyle,
       borderLeft: borderStyle,
-      width: collapsed.rightSide ? '0px' : rightSideStyle.width || dafaultWidth,
+      width: collapsed.rightSide ? rightCollapsedWidth : rightSideStyle.width || dafaultWidth,
       padding: collapsed.rightSide ? '0px' : rightSideStyle.padding || dafaultPadding,
     },
   };
