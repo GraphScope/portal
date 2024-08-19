@@ -1,5 +1,5 @@
 import { proxy, useSnapshot } from 'valtio';
-import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
+// import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 import { Utils } from '@graphscope/studio-components';
 import { IStore } from '../types/store';
 
@@ -30,10 +30,10 @@ export const defaultStore: IStore = {
   },
 };
 
-type ContextType = {
-  store: Snapshot<IStore>;
-  updateStore: (fn: (draft: IStore) => void) => void;
-};
+// type ContextType = {
+//   store: Snapshot<IStore>;
+//   updateStore: (fn: (draft: IStore) => void) => void;
+// };
 
 export const StoreMap = {};
 
@@ -58,7 +58,7 @@ export const useMultipleInstance = initialStore => {
   };
 };
 
-export function useContext(): ContextType {
+export function useContext() {
   const id = 'root-1';
   const currentStore = getProxyStoreById(id, proxy(Utils.fakeSnapshot(defaultStore)));
 

@@ -13,6 +13,7 @@ import { transformEdges } from '../elements';
 
 import { getBBox, createEdgeLabel, createNodeLabel } from '../elements/utils';
 import { Utils } from '@graphscope/studio-components';
+import { useGraphContext } from '..';
 const { fakeSnapshot } = Utils;
 let timer: any = null;
 const useInteractive: any = () => {
@@ -20,6 +21,7 @@ const useInteractive: any = () => {
   const { screenToFlowPosition, fitBounds, fitView } = useReactFlow();
   const { displayMode, nodes, edges, hasLayouted, elementOptions } = store;
   const connectingNodeId = useRef(null);
+  const { onNodesChange: handleNodesChange, onEdgesChange: handleEdgesChange } = useGraphContext();
 
   const onConnectStart = useCallback((_, { nodeId }) => {
     connectingNodeId.current = nodeId;
@@ -96,23 +98,22 @@ const useInteractive: any = () => {
 
   const onNodesChange = (changes: NodeChange[]) => {
     const { type } = changes[0];
-    console.log(changes);
+    // console.log(changes);
 
     if (elementOptions.isConnectable || type === 'position') {
       updateStore(draft => {
-        draft.nodes = applyNodeChanges(
-          changes,
-          // draft.nodes,
-          deepclone(draft.nodes),
-        );
+        const newNodes = applyNodeChanges(changes, deepclone(draft.nodes));
+        handleNodesChange && handleNodesChange(newNodes);
+        return (draft.nodes = newNodes);
       });
     }
   };
   const onEdgesChange = (changes: EdgeChange[]) => {
     if (elementOptions.isConnectable) {
       updateStore(draft => {
-        //@ts-ignore
-        draft.edges = applyEdgeChanges(changes, deepclone(draft.edges));
+        const newEdges = applyEdgeChanges(changes, deepclone(draft.edges));
+        // handleEdgesChange && handleEdgesChange(newEdges);
+        return (draft.edges = newEdges);
       });
     }
   };
@@ -122,6 +123,10 @@ const useInteractive: any = () => {
     const bbox = getBBox(nodes);
     fitBounds(bbox, { duration: 600 });
   };
+
+  useEffect(() => {
+    handleEdgesChange && handleEdgesChange(edges);
+  }, [edges]);
 
   useEffect(() => {
     console.log('effect.....');

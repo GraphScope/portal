@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, MouseEventHandler, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { Tag, Button, theme } from 'antd';
 import { CheckCircleOutlined, CheckOutlined } from '@ant-design/icons';
@@ -6,6 +6,7 @@ import { EditableText, useThemeContainer, useSection } from '@graphscope/studio-
 const { useToken } = theme;
 import { useContext } from '../../canvas/useContext';
 import { LazyLoad } from '../middle-component/lazy-load';
+import { GraphContext, useGraphContext } from '../..';
 
 const R = 50;
 const HALO_LINE_WIDTH = 16;
@@ -24,6 +25,7 @@ const styles = {
   },
 };
 const GraphNode = (props: NodeProps) => {
+  const { onNodeClick } = useGraphContext();
   const { data = {}, id } = props;
   const { label, filelocation, disabled } = data;
   const { store, updateStore } = useContext();
@@ -71,7 +73,7 @@ const GraphNode = (props: NodeProps) => {
       }
     });
   };
-  const onClick = () => {
+  const onClick: MouseEventHandler<HTMLDivElement> = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     updateStore(draft => {
       draft.currentType = 'nodes';
       draft.currentId = id;
@@ -79,6 +81,7 @@ const GraphNode = (props: NodeProps) => {
     });
     toggleRightSide(false);
     toggleLeftSide(true);
+    onNodeClick && onNodeClick(data, event);
   };
   const haloStyle = !isConnectable
     ? {

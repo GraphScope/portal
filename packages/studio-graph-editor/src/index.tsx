@@ -5,23 +5,63 @@ import { ReactFlowProvider } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { IntlProvider } from 'react-intl';
 import locales from './locales';
+import { ISchemaNode } from './types/node';
+import { ISchemaEdge } from './types/edge';
+import { useContext } from './canvas/useContext';
 interface IGraphProps {
   locale?: 'zh-CN' | 'en-US';
   children?: React.ReactNode;
+
+  // base API
+  onNodeClick?: (value: ISchemaNode, event: React.MouseEvent) => void;
+  onEdgeClick?: (value: ISchemaEdge, event: React.MouseEvent) => void;
+  onNodesChange?: (nodes: ISchemaNode[]) => void;
+  onEdgesChange?: (edges: ISchemaEdge[]) => void;
+  controlElements?: React.ReactNode;
+
+  // quick start API
+  isShowPopover?: boolean;
+  triggerPopover?: 'click' | 'hover';
+  popoverContent?: React.ReactNode;
 }
 
-const Graph: React.FunctionComponent<IGraphProps> = props => {
+export const useGraphContext = () => {
+  const context = React.useContext(GraphContext);
+  if (context === undefined) {
+    throw new Error('useGraphContext must be used within a GraphProvider');
+  }
+  return context;
+};
+
+export const GraphContext = React.createContext<IGraphProps | undefined>(undefined);
+
+const Graph: React.FunctionComponent<IGraphProps> = React.forwardRef((props, ref) => {
   const { locale = 'en-US' } = props;
   const messages = locales[locale];
+  const { updateStore } = useContext();
+
+  React.useImperativeHandle(ref, () => {
+    return {
+      clearCanvas() {
+        updateStore(draft => {
+          draft.nodes = [];
+          draft.edges = [];
+        });
+      },
+    };
+  });
+
   return (
     <IntlProvider messages={messages} locale={locale}>
       {/* <MultipleInstance> */}
-      <ReactFlowProvider>
-        <Canvas>{props.children}</Canvas>
-      </ReactFlowProvider>
+      <GraphContext.Provider value={{ ...props }}>
+        <ReactFlowProvider>
+          <Canvas>{props.children}</Canvas>
+        </ReactFlowProvider>
+      </GraphContext.Provider>
       {/* </MultipleInstance> */}
     </IntlProvider>
   );
-};
+});
 
 export default Graph;
