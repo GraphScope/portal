@@ -9,7 +9,15 @@ interface IContainerProps {
 const Container: React.FunctionComponent<IContainerProps> = props => {
   const { breadcrumb, children } = props;
   return (
-    <div style={{ boxSizing: 'border-box', padding: '20px', height: 'calc(100% - 50px)', background: '#fff' }}>
+    <div
+      style={{
+        boxSizing: 'border-box',
+        padding: '20px',
+        height: 'calc(100% - 50px)',
+        background: '#fff',
+        position: 'relative',
+      }}
+    >
       <CreateHeaderPortal>
         <Breadcrumb items={breadcrumb} />
       </CreateHeaderPortal>

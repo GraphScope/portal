@@ -16,8 +16,7 @@ const Workflow: React.FunctionComponent<IWorkflowProps> = props => {
 
   return (
     <div style={{ overflow: 'scroll', height: '100%' }}>
-      <Collapse items={items} defaultActiveKey={['1']} />
-
+      <Collapse items={items} defaultActiveKey={items.map(item => item.key)} />
       {/* {items.map((item, index) => {
         const { label, icon, children } = item;
         return (

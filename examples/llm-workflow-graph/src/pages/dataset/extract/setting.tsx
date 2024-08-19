@@ -38,11 +38,7 @@ const ExractSetting: React.FunctionComponent<IConnectEndpointProps> = props => {
   };
 
   return (
-    <Flex vertical style={{ padding: '12px 24px' }}>
-      <Title level={3} style={{ marginBottom: '12px' }}>
-        <FormattedMessage id="Extract Setting" />
-      </Title>
-
+    <Flex vertical style={{ padding: '12px 32px' }}>
       <Form layout="vertical" form={form}>
         <Form.Item<FieldType> label={<FormattedMessage id="LLM Model" />} name="model">
           <Select

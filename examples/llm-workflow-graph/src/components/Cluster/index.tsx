@@ -8,7 +8,7 @@ const Cluster: React.FunctionComponent<IClusterProps> = props => {
   const { data } = store;
   const { enableCluster, disableCluster } = useCluster();
   const [state, setState] = React.useState({
-    clusterKey: 'label',
+    clusterKey: 'properties.cluster_id',
   });
   const handleChange = value => {
     setState(preState => {
@@ -43,10 +43,15 @@ const Cluster: React.FunctionComponent<IClusterProps> = props => {
       };
     }),
   ];
-  console.log('firstNode', firstNode, options);
+
   return (
     <div>
-      <Select defaultValue="lucy" style={{ width: '100%' }} onChange={handleChange} options={options} />
+      <Select
+        defaultValue="properties.cluster_id"
+        style={{ width: '100%' }}
+        onChange={handleChange}
+        options={options}
+      />
       <Button type="primary" onClick={handleCluster} block style={{ marginTop: '24px' }}>
         Cluster
       </Button>

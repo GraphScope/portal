@@ -3,13 +3,20 @@ import { Typography, Table, Space, Flex, Button, Checkbox, Switch } from 'antd';
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 import { Icons } from '@graphscope/studio-components';
 import { render } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 interface IListProps {}
 
 const List: React.FunctionComponent<IListProps> = props => {
+  const navigate = useNavigate();
   const [state, setState] = useState({
     more: false,
   });
   const { more } = state;
+  const handleCluster = record => {
+    console.log(record);
+    const { entity } = record;
+    navigate(`/dataset/cluster?id=${entity}`);
+  };
   const dataSource = [
     {
       key: 'challenge',
@@ -66,9 +73,19 @@ const List: React.FunctionComponent<IListProps> = props => {
     },
     {
       title: 'Operator',
-      render: () => {
+      render: record => {
         // return <Button icon={<Icons.Cluster />} size="small" type="text" />;
-        return <Typography.Link>cluster</Typography.Link>;
+        const { clustered } = record;
+        return (
+          <Typography.Link
+            disabled={clustered}
+            onClick={() => {
+              handleCluster(record);
+            }}
+          >
+            cluster
+          </Typography.Link>
+        );
       },
       fixed: 'right',
       width: 80,
