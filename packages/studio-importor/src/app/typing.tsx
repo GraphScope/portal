@@ -59,7 +59,7 @@ export interface ImportorProps {
     primaryColor: string;
     mode: 'darkAlgorithm' | 'defaultAlgorithm';
   };
-  appMode: 'DATA_MODELING' | 'DATA_IMPORTING';
+  appMode: 'DATA_MODELING' | 'DATA_IMPORTING' | 'PURE';
   GS_ENGINE_TYPE: 'groot' | 'interactive';
   /**  第二项 */
   queryPrimitiveTypes: () => {

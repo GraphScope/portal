@@ -67,6 +67,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
       };
       const { nodes, edges } = schemaOptions || { nodes: [], edges: [] };
       const isEmpty = nodes.length === 0;
+
       updateStore(draft => {
         draft.nodes = nodes;
         draft.edges = edges;
@@ -82,6 +83,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
       });
     })();
   }, []);
+  const IS_PURE = appMode === 'PURE';
 
   return (
     <ThemeProvider locales={locales}>
@@ -107,9 +109,10 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         splitBorder
       >
         <ReactFlowProvider>
-          <ButtonController />
-          {children}
+          {!IS_PURE && <ButtonController />}
+
           <GraphCanvas />
+          {children}
         </ReactFlowProvider>
       </Section>
     </ThemeProvider>

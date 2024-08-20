@@ -6,7 +6,7 @@ import { fakeSnapshot } from './utils';
 import { ISchemaNode, ISchemaEdge } from './typing';
 export type IStore = {
   /** APP类型 */
-  appMode: 'DATA_MODELING' | 'DATA_IMPORTING';
+  appMode: 'DATA_MODELING' | 'DATA_IMPORTING' | 'PURE';
   /**不可编辑状态 */
   disabled: boolean;
 
