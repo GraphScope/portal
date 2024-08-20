@@ -4,7 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import { Utils } from '@graphscope/studio-components';
 const { storage } = Utils;
 const { Title, Text } = Typography;
-
+import { updateExtractConfig, getExtractConfig } from '../service';
+import { useNavigate } from 'react-router-dom';
 export type FieldType = {
   model: string;
   base_url: string;
@@ -18,23 +19,26 @@ export interface IConnectEndpointProps {
 }
 const ExractSetting: React.FunctionComponent<IConnectEndpointProps> = props => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
   const { onStart, onClose } = props;
-  //   React.useEffect(() => {
-  //     form.setFieldsValue({
-  //       query_language: storage.get('query_language'),
-  //       query_endpoint: storage.get('query_endpoint'),
-  //       query_initiation: storage.get('query_initiation'),
-  //       query_username: storage.get('query_username'),
-  //       query_password: storage.get('query_password'),
-  //     });
-  //   }, []);
-  const handleConnect = () => {
-    const values = form.getFieldsValue(true);
-    console.log('form.getFieldsValue()', values);
-    Object.keys(values).forEach(key => {
-      storage.set(key, values[key]);
+  React.useEffect(() => {
+    // form.setFieldsValue({
+    //   model: 'Qwen-Max',
+    //   base_url: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+    //   api_key: '',
+    //   model_kargs: '{\n  "temperature": 0,\n  "stop": [\n    ""\n  ],\n  "max_tokens": 1024,\n  "streaming": true\n}',
+    // });
+    const datasetId = Utils.getSearchParams('id');
+    getExtractConfig(datasetId).then(res => {
+      form.setFieldsValue(res);
     });
+  }, []);
+  const handleConnect = async () => {
+    const values = form.getFieldsValue(true);
     onStart && onStart(form.getFieldsValue(true));
+    const datasetId = Utils.getSearchParams('id');
+    await updateExtractConfig(datasetId, values);
+    navigate('/dataset');
   };
 
   return (
@@ -58,7 +62,7 @@ const ExractSetting: React.FunctionComponent<IConnectEndpointProps> = props => {
         </Form.Item>
 
         <Form.Item<FieldType> label={<FormattedMessage id="Model Kargs" />} name="model_kargs">
-          <Input.TextArea rows={4} />
+          <Input.TextArea rows={8} />
         </Form.Item>
 
         <Form.Item style={{ marginTop: '48px' }}>

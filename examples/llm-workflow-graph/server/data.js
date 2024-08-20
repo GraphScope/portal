@@ -34,4 +34,4 @@ const store = {
   entity: [],
 };
 
-module.exports = { store };
+module.exports = { store, entity };
