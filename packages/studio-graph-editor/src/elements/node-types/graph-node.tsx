@@ -43,6 +43,7 @@ const GraphNode = (props: NodeProps) => {
   });
   const [visible, setVisible] = useState<boolean>(false);
   const nodeRef = useRef<HTMLDivElement>(null);
+  const { isShowPopover = false, triggerPopover = 'click', popoverCustomContent } = useGraphContext();
 
   const onMouseEnter = () => {
     if (isConnectable) {
@@ -90,7 +91,7 @@ const GraphNode = (props: NodeProps) => {
     toggleRightSide(false);
     toggleLeftSide(true);
     onNodeClick && onNodeClick(data, event);
-    setVisible(true);
+    triggerPopover === 'click' && setVisible(true);
   };
   const haloStyle = !isConnectable
     ? {
@@ -111,16 +112,15 @@ const GraphNode = (props: NodeProps) => {
     return isSelected ? `4px solid ${theme.primaryColor}` : '2px solid #000';
   };
 
-  // 监听用户 click position
+  // 监听用户 click || hover position
   useEffect(() => {
     function handleClickOutside(event) {
       if (nodeRef.current && !nodeRef.current.contains(event.target)) setVisible(false);
     }
 
-    document.addEventListener('click', handleClickOutside);
-
+    triggerPopover === 'click' && document.addEventListener('click', handleClickOutside);
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      triggerPopover === 'click' && document.removeEventListener('click', handleClickOutside);
     };
   }, [nodeRef]);
 
@@ -135,10 +135,6 @@ const GraphNode = (props: NodeProps) => {
         match.data.label = event.target.value;
       }
     });
-  };
-
-  const handlePropertiesListChange = (value: Property[]) => {
-    console.log(value);
   };
 
   const typeColumn: Option[] = [
@@ -156,7 +152,11 @@ const GraphNode = (props: NodeProps) => {
   };
 
   return (
-    <div ref={nodeRef}>
+    <div
+      ref={nodeRef}
+      onMouseLeave={() => triggerPopover === 'hover' && setVisible(false)}
+      onMouseEnter={() => triggerPopover === 'hover' && setVisible(true)}
+    >
       <div
         data-nodeid={id}
         style={{ boxSizing: 'border-box', width: '100px', height: '100px' }}
@@ -216,12 +216,12 @@ const GraphNode = (props: NodeProps) => {
           />
         </div>
       </div>
-      {visible && (
+      {visible && isShowPopover && (
         <div
           style={{
             position: 'absolute',
             top: '50%',
-            left: '120px',
+            left: '110px',
             backgroundColor: 'white',
             width: '400px',
             minHeight: '300px',
@@ -232,9 +232,13 @@ const GraphNode = (props: NodeProps) => {
             padding: '20px',
           }}
         >
-          <span>label</span>
-          <Input value={currentNode.data.label} onChange={handleLabelChange}></Input>
-          {/* <PropertiesList typeColumn={{ options: typeColumn }} onChange={handleChange}></PropertiesList> */}
+          {popoverCustomContent ?? (
+            <>
+              <span>label</span>
+              <Input value={currentNode.data.label} onChange={handleLabelChange}></Input>
+              <PropertiesList typeColumn={{ options: typeColumn }} onChange={handleChange}></PropertiesList>
+            </>
+          )}
         </div>
       )}
     </div>

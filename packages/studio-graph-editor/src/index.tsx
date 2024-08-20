@@ -19,11 +19,14 @@ interface IGraphProps {
   onEdgesChange?: (edges: ISchemaEdge[]) => void;
   controlElements?: React.ReactNode;
 
-  // quick start API
+  // quick start API, 没用明白组件 PropertiesList 建议自己封装
+  // if want to show properties, you can set this to true
   isShowPopover?: boolean;
   triggerPopover?: 'click' | 'hover';
-  popoverContent?: React.ReactNode;
+  popoverCustomContent?: React.ReactNode;
 }
+
+export const GraphContext = React.createContext<IGraphProps>({});
 
 export const useGraphContext = () => {
   const context = React.useContext(GraphContext);
@@ -32,8 +35,6 @@ export const useGraphContext = () => {
   }
   return context;
 };
-
-export const GraphContext = React.createContext<IGraphProps | undefined>(undefined);
 
 const Graph: React.FunctionComponent<IGraphProps> = React.forwardRef((props, ref) => {
   const { locale = 'en-US' } = props;
