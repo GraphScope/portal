@@ -3,7 +3,7 @@ import { Table, ConfigProvider } from 'antd';
 import MiddleWare from './middle-ware';
 interface IQueryTableProps {
   data: {
-    fields: { [key: string]: string }[];
+    fields: { [key: string]: string; analyticType: 'dimension' | 'measure' }[];
     dataSource: { [key: string]: string }[];
   };
 }
