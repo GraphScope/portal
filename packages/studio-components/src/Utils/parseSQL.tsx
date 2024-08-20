@@ -1,7 +1,8 @@
 import { Parser } from 'sql-ddl-to-json-schema';
 
 const parser = new Parser('mysql');
-import { uuid } from 'uuidv4';
+// import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 import { parseFile } from './parseCSV';
 import type { ParsedFile } from './parseCSV';
 
@@ -35,7 +36,7 @@ export async function parseSQL(file: File): Promise<ParsedFile[]> {
     const sourceField = inferredSource?.reference.table;
     const targetField = inferredTarget?.reference.table;
     return {
-      id: uuid(),
+      id: uuidv4(),
       meta: {
         type: 'sql',
         size: 'table',

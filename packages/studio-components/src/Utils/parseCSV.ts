@@ -1,5 +1,6 @@
 import { inferredGraphFields } from './inferredGraphFields';
-import { uuid } from 'uuidv4';
+// import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 
 export const parseFile = async (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -136,7 +137,7 @@ export const parseCSV = async (file: File): Promise<ParsedFile> => {
   return {
     meta: { type: 'csv', header, delimiter, size: getFileSize(file.size), name: file.name, graphFields },
     contents,
-    id: uuid(),
+    id: uuidv4(),
   };
 };
 
