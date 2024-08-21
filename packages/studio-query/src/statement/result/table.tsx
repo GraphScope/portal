@@ -27,24 +27,8 @@ const RowTable = ({ data }) => {
 
   return <Table columns={columns} dataSource={dataSource} />;
 };
+
 const GraphTable = ({ nodes, edges }) => {
-  const columns = [
-    {
-      title: 'id',
-      dataIndex: 'id',
-      key: 'id',
-    },
-    {
-      title: 'label',
-      dataIndex: 'label',
-      key: 'label',
-    },
-    {
-      title: 'properties',
-      dataIndex: 'properties',
-      key: 'properties',
-    },
-  ];
   const nodeLabelMap = {};
   const nodeSource = nodes.map(item => {
     const { id, label, properties } = item;
@@ -53,7 +37,7 @@ const GraphTable = ({ nodes, edges }) => {
       key: id,
       id,
       label,
-      properties: JSON.stringify({ ...properties, ...{ id1: 2, name1: 'vadas', age1: 27 } }, null, 2),
+      properties: JSON.stringify({ ...properties }, null, 2),
     };
   });
   const edgeSource = edges.map(item => {
@@ -68,7 +52,29 @@ const GraphTable = ({ nodes, edges }) => {
   });
 
   const dataSource = [...nodeSource, ...edgeSource];
-  return <Table columns={columns} dataSource={dataSource} />;
+
+  const result = dataSource.map(item => {
+    const { id, label, properties } = item;
+    const expandColumns = properties && JSON.parse(properties);
+    return {
+      id,
+      label,
+      ...expandColumns,
+    };
+  });
+
+  const FirstRow = result[0];
+  const columns = Object.keys(FirstRow).map(key => {
+    return {
+      title: key,
+      dataIndex: key,
+      key: key,
+      ellipsis: true,
+      width: 160,
+    };
+  });
+
+  return <Table style={{ width: '100%' }} columns={columns} dataSource={result} scroll={{ x: 500 }} />;
 };
 
 const TableView: React.FunctionComponent<ITableViewProps> = props => {
