@@ -4,7 +4,7 @@ import TableView from './table';
 import RawView from './raw';
 import GraphView from './graph';
 import { useIntl } from 'react-intl';
-
+import type { IEditorProps } from '../typing';
 import { DeploymentUnitOutlined, TableOutlined, BarChartOutlined, CodeOutlined } from '@ant-design/icons';
 
 interface IResultProps {
@@ -12,7 +12,7 @@ interface IResultProps {
   isFetching: boolean;
   schemaData: any;
   graphId: string;
-  onQuery: (params: any) => Promise<any>;
+  onQuery: IEditorProps['onQuery'];
 }
 
 /**

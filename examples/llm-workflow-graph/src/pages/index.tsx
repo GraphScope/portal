@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom';
-import { ThemeProvider } from '@graphscope/studio-components';
+
 import Layout from '../layout';
 import { ConfigProvider } from 'antd';
 import locales from '../locales';
@@ -14,7 +14,6 @@ const routes = [
   { path: '/dataset/embed', component: React.lazy(() => import('./dataset/embed')) },
   { path: '/dataset/extract', component: React.lazy(() => import('./dataset/extract')) },
   { path: '/dataset/cluster', component: React.lazy(() => import('./dataset/cluster')) },
-  { path: '/explore/all', component: React.lazy(() => import('./explore')) },
 ];
 
 const Pages: React.FunctionComponent<IPagesProps> = props => {
