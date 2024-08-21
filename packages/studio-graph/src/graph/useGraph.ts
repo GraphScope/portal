@@ -56,6 +56,8 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .linkLabel(edge => handleStyle(edge, edgeStyle, 'edge').caption)
         .linkWidth(edge => handleStyle(edge, edgeStyle, 'edge').width)
         .linkColor(edge => handleStyle(edge, edgeStyle, 'edge').color)
+        .linkDirectionalArrowLength(3)
+        .linkDirectionalArrowRelPos(0.9)
         // custom edge
         // .linkCanvasObjectMode(() => 'after')
         // .linkCanvasObject((link, ctx, globalScale) => {
@@ -98,6 +100,8 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .linkLabel((edge: any) => edge && edge.properties && edge.properties[handleStyle(edge, edgeStyle).caption])
         .linkWidth(edge => handleStyle(edge, edgeStyle, 'edge').width)
         .linkColor(edge => handleStyle(edge, edgeStyle, 'edge').color)
+        .linkDirectionalArrowLength(3)
+        .linkDirectionalArrowRelPos(0.9)
 
         .graphData(Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges }))
         .cooldownTime(15000)

@@ -143,7 +143,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
         antdToken={token}
       />
 
-      <Result data={data} isFetching={isFetching} schemaData={schemaData} graphId={graphId} />
+      <Result data={data} isFetching={isFetching} schemaData={schemaData} graphId={graphId} onQuery={onQuery} />
     </div>
   );
 };

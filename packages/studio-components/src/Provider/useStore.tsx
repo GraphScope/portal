@@ -21,6 +21,8 @@ export const useStore = (algorithm: ThemeProviderType['algorithm']) => {
       itemMarginInline: 4,
       iconSize: 14,
       collapsedWidth: 50,
+      horizontalLineHeight: 32,
+      itemHeight: 32,
     },
     Typography: {
       titleMarginBottom: '0.2em',

@@ -1,9 +1,11 @@
 import React from 'react';
 import { QueryGraph } from '@graphscope/studio-graph';
+
 interface IGraphViewProps {
   data: any;
   schemaData: any;
   graphId: string;
+  onQuery: (params: any) => Promise<any>;
 }
 export function transGraphSchema(schema) {
   return {
@@ -21,7 +23,7 @@ export function transGraphSchema(schema) {
     }),
     edges: schema.edges.map(item => {
       const { properties, constraints, ...others } = item;
-      const [source, target] = constraints;
+      const [source, target] = constraints[0];
       return {
         ...others,
         source,
@@ -38,12 +40,12 @@ export function transGraphSchema(schema) {
 }
 
 const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
-  const { data, schemaData, graphId } = props;
+  const { data, schemaData, graphId, onQuery } = props;
   const graphSchema = transGraphSchema(schemaData);
 
   return (
     <div style={{ width: '100%' }}>
-      <QueryGraph data={data} schema={graphSchema} graphId={graphId} />
+      <QueryGraph data={data} schema={graphSchema} graphId={graphId} onQuery={onQuery} />
     </div>
   );
 };

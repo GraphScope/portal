@@ -13,7 +13,7 @@ export const nodeCanvasObject =
 
     const style = handleStyle(node, nodeStyle);
     const status = handleStatus(node, nodeStatus);
-    const { color, size, caption, captionStatus, icon } = style;
+    const { color, size, caption, captionStatus, icon, captionMode } = style;
     const { selected, hovering } = status;
     //@ts-ignore
     const textLabel = node.properties && node.properties[caption];
@@ -46,8 +46,8 @@ export const nodeCanvasObject =
 
     const showTextInCircle = R * globalScale > 14;
 
-    if (showTextInCircle && captionStatus !== 'hidden' && textLabel) {
-      const fontSize = 14 / globalScale;
+    if (captionMode === 'inner') {
+      const fontSize = 16 / globalScale;
       ctx.font = `${fontSize}px Sans-Serif`;
       ctx.fillStyle = NODE_TEXT_COLOR;
       ctx.textAlign = 'center';
@@ -61,20 +61,21 @@ export const nodeCanvasObject =
         lineHeight: fontSize * 1.2,
       });
     }
+
     // } else if (captionStatus !== 'hidden' && textLabel) {
-    // const fontSize = 12 / globalScale;
-    // ctx.font = `${fontSize}px Sans-Serif`;
-    // const textWidth = ctx.measureText(textLabel).width;
-    // const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
-    // ctx.fillStyle = NODE_TEXT_COLOR;
-    // //@ts-ignore
-    // ctx.fillRect(node.x - bckgDimensions[0] / 2, 1.2 * R + node.y - bckgDimensions[1] / 2, ...bckgDimensions);
-    // ctx.textAlign = 'center';
-    // ctx.textBaseline = 'middle';
-    // ctx.fillStyle = color;
-    // ctx.fillText(textLabel, node.x, node.y + 1.2 * R);
+    const fontSize = 12 / globalScale;
+    ctx.font = `${fontSize}px Sans-Serif`;
+    const textWidth = ctx.measureText(textLabel).width;
+    const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+    ctx.fillStyle = NODE_TEXT_COLOR;
     //@ts-ignore
-    //   node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
+    ctx.fillRect(node.x - bckgDimensions[0] / 2, 1.2 * R + node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = color;
+    ctx.fillText(textLabel, node.x, node.y + 1.2 * R);
+    // @ts-ignore
+    node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
 
     // }
     ctx.restore();

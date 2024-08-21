@@ -19,6 +19,9 @@ import {
   ClearStatatus,
   SegmentedTabs,
   RunCluster,
+  ContextMenu,
+  NeighborQuery,
+  DeleteNode,
 } from '../components';
 
 import { Divider } from 'antd';
@@ -27,6 +30,7 @@ interface QueryGraphProps {
   data: any;
   schema: any;
   graphId: string;
+  onQuery: (params: any) => Promise<any>;
 }
 
 const ToogleButton = () => {
@@ -39,7 +43,7 @@ const ToogleButton = () => {
 };
 
 const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
-  const { data, schema, graphId } = props;
+  const { data, schema, graphId, onQuery } = props;
   console.log('data>>>>', data);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const items = [
@@ -82,6 +86,11 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
           <Prepare data={data} schema={schema} graphId={graphId} />
           <Canvas />
           <ClearStatatus />
+
+          <ContextMenu>
+            <NeighborQuery onQuery={onQuery} />
+            <DeleteNode />
+          </ContextMenu>
           <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
             <ToogleButton />
             <Divider style={{ margin: '0px' }} />
