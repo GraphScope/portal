@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Button } from 'antd';
+import { FilterOutlined, BookOutlined } from '@ant-design/icons';
 
 import {
   MultipleInstance,
@@ -23,8 +24,8 @@ import {
   SliderFilter,
 } from '@graphscope/studio-graph';
 
-import { Workflow, Upload, EmbedSchema, Cluster, Summarize, ClusterInfo, FetchGraph } from '../../../components';
-
+import { Workflow, Cluster, Summarize, ClusterInfo, FetchGraph, FilterCluster } from '../../../components';
+import {} from '../../dataset/service';
 import { Divider } from 'antd';
 
 interface QueryGraphProps {}
@@ -40,11 +41,12 @@ const ToogleButton = () => {
 
 const ClusterGraph: React.FunctionComponent<QueryGraphProps> = props => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+
   const workflows = [
     {
       key: 'SliderFilter',
-      label: 'Weight Filter',
-      icon: <Icons.Cluster />,
+      label: 'Filter weight',
+      icon: <FilterOutlined color="#000" />,
       children: <SliderFilter />,
     },
     {
@@ -54,9 +56,15 @@ const ClusterGraph: React.FunctionComponent<QueryGraphProps> = props => {
       children: <Cluster />,
     },
     {
+      key: 'Filter cluster',
+      label: 'Filter cluster',
+      icon: <FilterOutlined color="#000" />,
+      children: <FilterCluster />,
+    },
+    {
       key: 'Summarize',
       label: 'LLM Summarize',
-      icon: <Icons.Cluster />,
+      icon: <BookOutlined color="#000" />,
       children: <Summarize />,
     },
   ];
@@ -65,7 +73,7 @@ const ClusterGraph: React.FunctionComponent<QueryGraphProps> = props => {
       key: 'Workflow',
       label: 'Workflow',
       value: 'Workflow',
-      children: <Workflow items={workflows} />,
+      children: <Workflow items={workflows} type="timeline" />,
     },
     {
       key: 'Info',

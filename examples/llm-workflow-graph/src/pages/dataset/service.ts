@@ -93,3 +93,40 @@ export const updateEmbedSchema = async (id, params) => {
       }
     });
 };
+
+export const updateClusterSummarize = async (datasetId, params) => {
+  return fetch(baseURL + '/dataset/entity', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ datasetId, ...params }),
+  })
+    .then(res => res.json())
+    .then(res => {
+      if (res.success) {
+        return res.data;
+      }
+    });
+};
+
+export const downloadDataset = async () => {
+  return fetch(baseURL + '/download/dataset', { method: 'GET' })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.blob();
+    })
+    .then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'dataset.zip');
+      document.body.appendChild(link);
+      link.click();
+    })
+    .catch(error => {
+      console.error('Failed to download ZIP:', error);
+    });
+};

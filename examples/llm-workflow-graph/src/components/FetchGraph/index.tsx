@@ -16,26 +16,11 @@ const FetchGraph: React.FunctionComponent<IUploadProps> = props => {
     isReady: false,
     columns: [],
   });
-  const handleClick = async () => {
-    const res = await query({
-      name: 'Paper',
-      type: 'nodes',
-    });
-
-    updateStore(draft => {
-      draft.graphId = 'workflow';
-      draft.data = res;
-      draft.source = res;
-      draft.dataMap = getDataMap(res);
-      draft.schema = Utils.generatorSchemaByGraphData(res);
-    });
-  };
 
   React.useEffect(() => {
-    const id = Utils.getSearchParams('id') || 'Paper';
-    console.log('id', id);
+    const entityId = Utils.getSearchParams('entityId') || 'Paper';
     query({
-      name: id,
+      name: entityId,
     }).then(res => {
       updateStore(draft => {
         const schema = Utils.generatorSchemaByGraphData(res);

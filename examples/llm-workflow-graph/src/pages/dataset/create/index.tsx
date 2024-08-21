@@ -8,6 +8,7 @@ interface ICreateProps {}
 import { Flex, Typography, Button, Select, Input, Row, Col, Result, Form, Upload } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { Utils } from '@graphscope/studio-components';
+import { useNavigate } from 'react-router-dom';
 const { storage } = Utils;
 const { Title, Text } = Typography;
 
@@ -21,6 +22,7 @@ export type FieldType = {
 export interface IConnectEndpointProps {}
 const Setting: React.FunctionComponent<IConnectEndpointProps> = props => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
   const [state, setState] = useState({
     loading: false,
@@ -56,6 +58,7 @@ const Setting: React.FunctionComponent<IConnectEndpointProps> = props => {
         loading: false,
       };
     });
+    navigate('/dataset');
   };
 
   return (

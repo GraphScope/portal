@@ -18,6 +18,7 @@ export { default as ResizablePanels } from './ResizablePanel';
 export { default as FullScreen } from './FullScreen';
 export { default as Slot } from './Slot';
 export { default as ContentSection } from './ContentSection';
+export { default as TypingText } from './TypingText';
 /** all */
 export * as Utils from './Utils';
 export * as Icons from './Icons';

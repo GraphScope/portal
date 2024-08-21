@@ -16,7 +16,7 @@ export interface IDataset {
       prompt?: string;
     }[];
   };
-  status: string;
+  status: 'WAITING_EMBEDDING' | 'WAITING_EXTRACT' | 'WAITING_CLUSTER';
 }
 
 export interface IEntity {
@@ -24,5 +24,6 @@ export interface IEntity {
   name: string;
   value: number;
   cost: number;
-  clustered: boolean;
+  summarized: boolean;
+  count?: number;
 }

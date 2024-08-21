@@ -16,6 +16,7 @@ const Container: React.FunctionComponent<IContainerProps> = props => {
         height: 'calc(100% - 50px)',
         background: '#fff',
         position: 'relative',
+        overflowY: 'scroll',
       }}
     >
       <CreateHeaderPortal>

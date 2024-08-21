@@ -1,6 +1,6 @@
 interface Params {
   name: string;
-  type?: 'nodes' | 'edges';
+  type?: 'nodes' | 'edges' | 'cluster';
   weight?: string;
   [key: string]: any;
 }

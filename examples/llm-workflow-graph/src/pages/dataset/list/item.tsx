@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Typography, Flex, Space, Button, theme } from 'antd';
+import { Typography, Flex, Space, Button, theme, Divider } from 'antd';
 
 import { useNavigate } from 'react-router-dom';
 
 import { GraphList, GraphSchema } from '../../components';
 import type { IDataset } from '../typing';
 import GraphView from '../embed/view';
-
+import { downloadDataset } from '../service';
 const { useToken } = theme;
 
 const styles: Record<string, React.CSSProperties> = {
@@ -23,8 +23,16 @@ const styles: Record<string, React.CSSProperties> = {
 };
 
 const List: React.FunctionComponent<IDataset> = props => {
-  const { id, schema } = props;
+  const { id, schema, entity, status } = props;
+  console.log(props);
+  let summarized = false;
+  if (entity.length > 0) {
+    summarized = entity.every(item => {
+      return item.summarized === true;
+    });
+  }
   const navigation = useNavigate();
+
   return (
     <Flex vertical flex={1} style={styles.container} gap={8}>
       <Flex justify="space-between" align="center" style={styles.card}>
@@ -34,22 +42,24 @@ const List: React.FunctionComponent<IDataset> = props => {
             onClick={() => {
               navigation(`/dataset/embed?id=${id}`);
             }}
+            type={status === 'WAITING_EMBEDDING' ? 'primary' : 'default'}
           >
             Embed Graph
           </Button>
+          <Divider style={{ width: '40px' }} />
+
           <Button
             onClick={() => {
               navigation(`/dataset/extract?id=${id}`);
             }}
+            disabled={status === 'WAITING_EMBEDDING'}
+            type={status === 'WAITING_EXTRACT' ? 'primary' : 'default'}
           >
             Extract
           </Button>
-          <Button
-            onClick={() => {
-              navigation('/explore/all');
-            }}
-          >
-            View Graph
+          <Divider style={{ width: '40px' }} />
+          <Button disabled={!summarized} type={summarized ? 'primary' : 'default'} onClick={downloadDataset}>
+            Download
           </Button>
         </Space>
       </Flex>
@@ -58,7 +68,7 @@ const List: React.FunctionComponent<IDataset> = props => {
           <GraphView data={schema} />
         </Flex>
         <Flex flex={1} style={styles.card}>
-          <GraphList></GraphList>
+          <GraphList dataSource={entity} datasetId={id}></GraphList>
         </Flex>
       </Flex>
     </Flex>

@@ -2,36 +2,17 @@ const entity = [
   {
     id: 'Challenge',
     value: 326,
-    cost: '1 hours',
-    clustered: false,
+    cost: '1 min',
+    summarized: false,
   },
   {
     id: 'Task',
     value: 136,
-    cost: '2 hours',
-    clustered: false,
-  },
-  {
-    id: 'Paper',
-    value: 142,
-    cost: '3 hours',
-    clustered: true,
-  },
-];
-const dataset = [
-  {
-    fileType: 'pdf',
-    value: 142,
-    status: 'running',
-    schema: {},
-    extract: {},
-    entity: entity,
+    cost: '2 min',
+    summarized: false,
   },
 ];
 
-const store = {
-  dataset: {},
-  entity: [],
-};
+const dataset = {};
 
-module.exports = { store, entity };
+module.exports = { dataset, entity };

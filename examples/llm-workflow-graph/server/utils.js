@@ -3,7 +3,7 @@ const path = require('path');
 const csvParser = require('csv-parser');
 
 const queryLocalFile = async filename => {
-  const filePath = path.resolve(__dirname, 'data', filename);
+  const filePath = path.resolve(__dirname, 'data/raw', filename);
 
   // 检查文件是否存在
   try {

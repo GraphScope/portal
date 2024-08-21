@@ -1,0 +1,382 @@
+[
+    {
+        "cluster_id": "Task_0",
+        "nodes": [
+            "397d5f2e-f24c-5e58-8055-f75f53ca7579",
+            "57d35ee1-d70e-5a84-b5f8-f49f6813c9a2",
+            "eb442cd7-6de0-52c8-8469-ea55ff081ae5",
+            "e4fa5579-4d34-5eb4-ba11-ab63393faced",
+            "2de61511-7ba2-55e7-96b8-ada5bd7781ac",
+            "90ef7a08-f371-56a4-bc71-a2ac5e6b9f90",
+            "20029953-02c1-5110-a649-39660e071a02",
+            "d71cc949-4bfe-5979-ab8e-cadc2376f792",
+            "6b6ba767-2e63-504b-b72d-a4955d52135c",
+            "782a3cc4-5996-5527-9ebf-a843bd3d093a",
+            "61e38117-7d2e-5c00-8a88-0082fb1ba3c0",
+            "e8ce73cc-9711-5cc4-bbaf-55f16f9e7a79",
+            "c9a54ada-bdaa-5ebd-8dda-2db82861a7b3",
+            "2da06741-60a3-5d1c-9472-b0439c90e8ff",
+            "4b2039bc-2912-5a9f-8ad7-bf04d7388178",
+            "5e80ba66-736f-5eba-8a86-3514615b9192",
+            "31d3c86f-df1d-520a-ad1e-4c4a78647eca",
+            "2ae7145f-f4e4-5472-bba5-fd24a3cfe093",
+            "fd4d30ad-4fd3-5edb-8e83-5d784215ef14",
+            "3cf36529-c850-580d-bf58-4503b9a4cdc2",
+            "0992f71e-f38a-5a70-a8d0-1b1c1687fcbc",
+            "eeaf25ba-caa1-5780-a853-1884b3640b58",
+            "23feef02-912c-5090-baeb-d75d49d8a6fa",
+            "6b76b77a-6834-5bbb-9578-b45444fcbb11",
+            "51c6d774-b69a-50ba-9771-e5f79c792f2e",
+            "be3a4e42-e876-56a9-8e0e-9306cdc212cc",
+            "dc137c74-a8c7-580e-b8af-00996628b94f",
+            "6eab57c8-bff9-5da9-9a6f-473762a2e2e0",
+            "771a2358-ddbd-531c-bc47-6ca485a4bfc1",
+            "9eddc0cb-9a7b-5915-b91c-7fedd1d7ea0e",
+            "8a1bb92d-9d40-57d5-bcca-e12c7c9e7186",
+            "762e507d-fd56-56cd-bc5e-eea417faeb2c",
+            "315d78ea-3e00-5910-ba06-c617a6f56b67",
+            "e6e3549d-181c-56e6-a32b-3453a7084b19",
+            "bbe996d4-c0eb-5f08-a0b5-71738338c5fa",
+            "ef73ba98-ea7a-55c4-aa3d-e2319fc788d8",
+            "fa58c01b-0da0-5c59-9f5c-a70569d835d9",
+            "5729c3db-4f31-501f-b79c-e84d69d3d9ee",
+            "1433a044-d92e-5b9b-bdc6-a5f774e845d5",
+            "d2559519-e29b-5fcf-b11d-2e28b5cfcbb8",
+            "71327753-8af1-5a2b-b8c3-029349850034",
+            "d3ce4611-f180-58dd-8162-4475ce4ccca4",
+            "ee8f5128-edde-5bc6-a263-ca003381dd38",
+            "3895e0eb-b8c6-5d1f-8142-5c7817eaf269"
+        ],
+        "summary": {
+            "id": "Task_0",
+            "name": "Optimized Parallel Processing for Large-Scale Graphs (OPPLSG)",
+            "description": "This cluster focuses on Efficient Parallelization Techniques for Large-Scale Graph Computations, specifically targeting advancements in distributed and GPU-based systems. It delves into methods to enhance the execution of graph algorithms, such as Breadth-First Search and iterative processes, by minimizing communication overhead and optimizing load balance in distributed environments. The cluster also explores alternatives beyond vertex-centric models, leveraging subgraph-centric approaches and novel memory systems, while addressing scalability challenges inherent to processing power-law graphs and natural graphs. Additionally, it emphasizes the design of user-friendly systems and the optimization of memory usage, particularly in GPU-centric processing, to facilitate the development and execution of complex graph analyses in both research and production settings."
+        }
+    },
+    {
+        "cluster_id": "Task_1",
+        "nodes": [
+            "9f5daf67-6224-563d-983a-132e5fc7f1d2",
+            "3b40dd89-817d-513b-aebb-e90495766a48",
+            "89b444bb-30e4-5dc9-8315-4223d21eee49",
+            "22cb5e08-dc1c-5505-95ae-faa8bd3003de",
+            "b6e3a9e2-fbe7-5c0a-a505-4bb3b2c5d310",
+            "ac0beaf9-63ba-504c-b7fe-dbc55be23fc3",
+            "3025df8c-e37d-5e8d-9849-90a54d4c2291",
+            "18a92a79-2a69-54b6-a601-a46515bb3c63",
+            "a67f14c2-9ec7-5118-bea2-d3ce358c798b",
+            "cb7052d7-8e14-586d-86e0-5dadf9429cc4",
+            "a8f9e5d4-f6c7-53e0-ba6d-d580f44bfcd2",
+            "027b0017-4481-5ed9-9c6d-90383d69c8d5",
+            "9eac8033-bf66-5379-9139-5b694bbbc644",
+            "8eb46fbf-3886-505d-83c7-18bb845f6d1a",
+            "dddae21a-813a-5d83-9f6c-7c28c43acb8b",
+            "893f0393-d64f-5cc7-b34a-6716359b440b",
+            "c24fa6df-c64d-570d-8e1b-aa123dcc9c9d"
+        ],
+        "summary": {
+            "id": "Task_1",
+            "name": "Distributed Subgraph Matching Efficiency",
+            "description": "This cluster focuses on the Efficient Subgraph Matching in Distributed Graph Data Processing, specifically addressing the challenges and optimizations related to executing graph pattern matching queries across large-scale networks. The core theme revolves around developing algorithms and strategies to enhance the scalability, load balance, and communication efficiency when performing subgraph matching tasks within distributed computing environments. These advancements aim to improve the overall performance and effectiveness of analyzing complex patterns in massive graph datasets, such as those encountered in social network analysis and streaming graph data, by tackling issues like query evaluation, approximation techniques, and flexible pattern matching approaches."
+        }
+    },
+    {
+        "cluster_id": "Task_2",
+        "nodes": [
+            "b687b6ce-80a1-5964-b7bf-987cb783e483",
+            "9def9610-8323-55d6-a758-db761bf61501",
+            "ec708443-b903-585f-8337-df83abe94c95",
+            "87c4478d-c456-5af0-83f1-0e2abdc17a98",
+            "277ffc69-bd44-504c-8fb9-2a160a712cd9",
+            "fc214242-7f6c-5bd1-a1a0-0a10c379cb79",
+            "f6ad863d-cacd-54e2-bd80-87e1fbe2166e",
+            "0b530302-859a-5bd0-bd0e-3a3d7edd1b22",
+            "fc4fee86-f3df-55d0-ba90-ebbb23b5664c",
+            "e757f1a1-4196-5939-ae76-56f6eece4e64",
+            "4df9a659-3fc9-5359-83aa-89e56f1edeb8",
+            "eb1986b1-4503-51ca-a379-12d226e357a6",
+            "106acd7a-c03a-566d-bd90-aec365cde3d7",
+            "d8ba0c58-f99f-5373-9b3b-b0ac37e895dc"
+        ],
+        "summary": {
+            "id": "Task_2",
+            "name": "Optimized Triangle Enumeration in Massive Graphs",
+            "description": "This cluster focuses on the specific challenge of performing Efficient Triangle Enumeration within Large-Scale Graphs, addressing the computational and algorithmic complexities inherent in accurately and swiftly identifying all triangles within massive network structures. The core theme revolves around optimizing the triangle counting process in distributed and parallel computing environments, targeting enhancements in memory usage, load balancing, and communication efficiency to handle the scale and dynamics of big data graph processing. Techniques explored include innovative distributed memory architectures and real-time processing of graph streams, thereby pushing the boundaries of current capabilities in graph analysis and computational topology."
+        }
+    },
+    {
+        "cluster_id": "Task_3",
+        "nodes": [
+            "001a2fb0-bf60-554a-8b13-ebcc5ae41c5c",
+            "9086b98f-f21f-517b-9d6f-8c96d9fa4722",
+            "48fc22b3-b9d8-51cb-a94e-8a51aa71580d",
+            "6adab221-5a24-5f9a-89b9-2b55db089eeb",
+            "b6941a90-79b1-5799-817a-6a60d82a4d85",
+            "302de0f7-1196-53bb-889d-f3df206a2b0d",
+            "d115cee9-2773-5507-b6ce-ce3657a61370",
+            "1020be09-2d1d-5aa0-b118-4bc316a34835",
+            "69135b40-6b42-50a6-aa96-7bc657031ca8",
+            "8df236e2-a898-5b64-bdc0-1f86f3b0d5a3",
+            "56ef748a-55b9-5c75-a4be-8d36e26ea717",
+            "c6b0059f-94fd-53e5-b81b-deb07d55b59f"
+        ],
+        "summary": {
+            "id": "Task_3",
+            "name": "Optimal Distributed Graph Coloring",
+            "description": "This cluster revolves around the central theme of advancing distributed graph coloring algorithms, with a particular emphasis on achieving efficiency and optimality in color usage. The cluster delves into various aspects of the problem, including the development of efficient k-coloring strategies in the LOCAL model of distributed computing, tackling the challenge of distributed 1-coloring, and exploring fractional coloring techniques. A key focus is on addressing the distributed vertex and edge coloring problems in large-scale graphs while maintaining algorithmic efficiency, especially for sparse graphs with low arboricity. By investigating deterministic approaches and load balance optimizations, the cluster contributes to overcoming the inherent complexities of distributed systems to achieve optimal coloring solutions. Overall, this cluster represents a concerted effort towards pushing the boundaries of distributed graph coloring algorithms, ensuring both computational effectiveness and theoretical rigor."
+        }
+    },
+    {
+        "cluster_id": "Task_4",
+        "nodes": [
+            "dbdf3927-c48d-505a-8c2b-99c935185e6f",
+            "ab12d394-5012-5c6f-9da4-5cb1efe83441",
+            "199f6dfd-a6ea-5996-9eac-b88a1f5b3c7d",
+            "fba52580-e743-5f23-a902-2d0dd3c88d21",
+            "6d63e3e7-3647-5773-a163-a9c759dfaf4d",
+            "7d80185f-0a2d-5436-8c8f-9256e518daa8",
+            "4bc22b6b-5a3d-52e9-a9f3-e644ee14187d",
+            "293b24de-3fd7-58ea-88ad-24bc2e20e269",
+            "809171a3-ebd7-59b6-b234-1965c9a80ee5",
+            "b7318371-148f-5852-99f5-e3ad9aa7f8a5",
+            "4dbea1f2-ba40-5fe0-9dcd-1ee4311a0db3"
+        ],
+        "summary": {
+            "id": "Task_4",
+            "name": "Distributed Vertex Cover Optimization",
+            "description": "This cluster revolves around the development and analysis of distributed algorithms designed to approximate the Minimum Weighted Vertex Cover problem in various network topologies, including anonymous and complex networks. The core focus is on decentralized solutions that efficiently address the challenge of identifying a set of vertices with the minimum total weight that cover all edges in a graph, thereby optimizing resource utilization while minimizing communication overhead. These algorithms tackle issues such as load balancing and localized computations to achieve effective approximations in large-scale distributed systems, highlighting advancements in addressing the computational complexity and scalability concerns inherent to the vertex cover problem in distributed environments."
+        }
+    },
+    {
+        "cluster_id": "Task_5",
+        "nodes": [
+            "8cfd5ff4-d3ec-5a5e-bb5a-14ea4de28e41",
+            "fdaafb44-eabb-5a0b-83a6-6a939a8d11ca",
+            "1d0bb8f4-58b2-5004-a88c-a0045f235786",
+            "61a56de6-2a8c-53bd-906c-45260563dd38",
+            "0d493110-24ea-5b9b-818d-08b839eed429",
+            "443f575e-41fb-5e65-8af0-3415c457be35",
+            "e2cc1a4f-8868-576e-bb30-ccff3b09940d",
+            "4243a0de-ff43-5269-bd28-21576fee92bc",
+            "7f1ad190-296a-5bf1-a30e-37314c0e4198",
+            "1b12b804-40ec-534c-86b4-9c5a40c563e1"
+        ],
+        "summary": {
+            "id": "Task_5",
+            "name": "Distributed Centrality Computation in Dynamic Graphs",
+            "description": "This cluster revolves around the central challenge of efficiently computing centrality measures in dynamic and large-scale networks. The primary focus is on developing methodologies to handle the computational intensity and scalability issues associated with incrementally maintaining and updating centrality scores, such as closeness and betweenness centralities, in response to changes in network topology. These innovations address the need for decentralized and distributed algorithms capable of processing massive random walks, spanning trees, and complex network structures, thereby optimizing the understanding of network influence and information flow. By tackling load balance problems and communication overhead, these approaches aim to enhance the overall efficiency and practicality of analyzing real-time, evolving networks."
+        }
+    },
+    {
+        "cluster_id": "Task_6",
+        "nodes": [
+            "e0031999-259a-5a98-9881-87aff1b59ca3",
+            "41177ff2-ba2b-5574-b663-9689498f0829",
+            "807e8c06-6071-5dc9-bf08-ca6bb848db82",
+            "39d6aebb-d44e-5852-aab3-f851a688b67b",
+            "9747cae7-225b-57c9-ae6f-51e74e9d1792",
+            "3096f822-0c1a-51b3-adbd-63b914741fcb",
+            "c4bb5cb8-16d7-5d31-a6ce-582fa2681219",
+            "b8cff333-eda7-5473-b9b0-4f1a86d7fb58",
+            "8257ec1d-e83b-5101-8841-f73cd1646136"
+        ],
+        "summary": {
+            "id": "Task_6",
+            "name": "Scalable Distributed Subgraph Enumeration",
+            "description": "The cluster revolves around the central challenge of efficiently performing subgraph enumeration in large-scale distributed graph datasets. It focuses on developing methods to overcome issues related to scalability, load balancing, and communication overhead inherent in distributed systems when dealing with complex subgraph patterns. By emphasizing efficient algorithms and mining techniques, this cluster addresses the need for optimized processing and enumeration of subgraphs across vast graph databases, thereby pushing the boundaries of what is possible in large data graph analysis within a distributed computing context."
+        }
+    },
+    {
+        "cluster_id": "Task_7",
+        "nodes": [
+            "9694479e-abc3-571d-bd91-08f979358c05",
+            "2ae54d37-17c8-560d-b077-c376fd223bee",
+            "2a30012f-09e0-5ed6-9831-519223d862ee",
+            "8c368d99-1abd-5bee-b435-3a8b22a67fb6",
+            "776b006b-0b32-5e0b-89ec-329bd0931cc2",
+            "0d32f952-5f46-5a63-902b-291d39109943",
+            "7167e106-7fa1-529d-ace1-a192d48f9f43"
+        ],
+        "summary": {
+            "id": "Task_7",
+            "name": "Personalized PageRank at Scale",
+            "description": "This cluster is centered around the Efficient Computation of Personalized PageRank Vectors in large-scale graph environments. It specifically addresses challenges related to processing personalized PageRank, a variant of the standard PageRank algorithm that assigns importance to vertices based on individual starting points or personalization, within both distributed and shared-memory systems. The cluster's core theme revolves around optimizing computational efficiency and managing scalability issues when dealing with extensive networks, ensuring effective load balancing, and mitigating communication overheads, particularly under congested conditions such as the clique model. By focusing on these optimizations, the research encapsulated in this cluster contributes to advancing the state-of-the-art in analyzing and understanding complex network structures through personalized node ranking."
+        }
+    },
+    {
+        "cluster_id": "Task_8",
+        "nodes": [
+            "204952cc-3ef0-5cee-9a74-64d7d8d18698",
+            "a1081de9-8c9c-5db6-b1f1-25f26f7f6cc9",
+            "992329bf-cc57-55bd-9d79-8c97d9423c4b",
+            "a0b3510a-429a-5e36-b1dd-074761891384",
+            "86b8d37e-7c84-5e87-8a1b-e8872eda070e"
+        ],
+        "summary": {
+            "id": "Task_8",
+            "name": "FPGA-Accelerated Graph Processing Efficiency",
+            "description": "This cluster revolves around the optimization of graph processing tasks by leveraging Field-Programmable Gate Array (FPGA) technology, with a particular emphasis on enhancing efficiency. The core theme addresses the challenge of performing large-scale graph data computations swiftly and effectively through FPGA-based architectures. Specifically, it delves into vertex-centric and edge-centric methodologies tailored for FPGAs, alongside the exploitation of High-Bandwidth Memory (HBM)-enabled FPGAs to further accelerate processing speeds and manage data-intensive operations inherent to graph-based applications. The cluster's focus is thus on innovating hardware-accelerated solutions that tackle the bottlenecks in conventional systems, thereby pushing the boundaries of scalable and efficient graph processing."
+        }
+    },
+    {
+        "cluster_id": "Task_9",
+        "nodes": [
+            "cffc74c0-d99d-58d8-af97-a4c2ebc73f28",
+            "5af271be-55d9-534a-832a-8b359988ad8e",
+            "e7c27378-d6d3-5230-b7b1-de26ae907c2f",
+            "092bd088-b560-5526-8d33-27392d18f12f",
+            "d299f859-df58-528a-8be9-f006c842f62e"
+        ],
+        "summary": {
+            "id": "Task_9",
+            "name": "Distributed RDF Query Optimization",
+            "description": "This cluster focuses on the specific challenge of optimizing the efficiency of processing and querying Large-Scale RDF (Resource Description Framework) data distributed across systems. It delves into advanced methods for managing and evaluating SPARQL queries effectively over these\u5e9e\u5927\u7684, distributed knowledge graphs, emphasizing load balance, communication optimization, and strategies to minimize latency in query execution. The core theme revolves around developing mechanisms that enhance the performance and scalability of distributed RDF data processing tasks, ensuring effective utilization of resources while tackling the inherent complexity of distributed environments."
+        }
+    },
+    {
+        "cluster_id": "Task_11",
+        "nodes": [
+            "3e960857-4808-56e3-bfb7-f0f923268327",
+            "6e4f09d6-d2bd-51cd-bee2-e328a1797a8a",
+            "10d00f4a-cbb8-5003-85c3-b345d6c061e9",
+            "3fd49a67-eebf-5280-8267-345b96eb288a",
+            "8224a47f-e345-5771-a671-b59e27917f01"
+        ],
+        "summary": {
+            "id": "Task_11",
+            "name": "Efficient Identification of Connected Components in Massive Graphs",
+            "description": "This cluster revolves around the \"Efficient Computation of Connected Components in Massive Graphs,\" highlighting the central theme of developing algorithms and methods to effectively identify and manage connected components within extraordinarily large-scale graph datasets. The core focus is on overcoming computational and scalability barriers inherent in processing such massive structures, emphasizing optimization for speed, efficiency, and resource management without sacrificing accuracy. The descriptions converge on addressing the need for advanced techniques to handle the complexity of connectivity patterns in big data graph analysis, specifically targeting strong and standard connected components in distributed environments."
+        }
+    },
+    {
+        "cluster_id": "Task_12",
+        "nodes": [
+            "6499a574-2b72-5cdc-bc38-bcd5c9518de5",
+            "99209112-68e1-54b5-9a69-fc69cc2d61d9",
+            "8f4b4761-4c57-51a9-9432-caa5051acd03",
+            "86a36942-e68a-55ca-b7da-f36f5139713b",
+            "4854e21f-09f3-5a67-b02d-379120279df7"
+        ],
+        "summary": {
+            "id": "Task_12",
+            "name": "Distributed Dynamic Core Decomposition",
+            "description": "This cluster focuses on the challenges and algorithms related to performing k-core decomposition in large-scale, dynamically changing graphs within a distributed computing environment. The core theme revolves around efficiently maintaining and updating the k-core structure while handling the complexities introduced by graph dynamics, such as node and edge additions/deletions, in a distributed setting. The research addresses both the computational intensity and communication overhead inherent in distributed processing, specifically tailored for understanding the connectivity patterns and central nodes in massive, evolving networks."
+        }
+    },
+    {
+        "cluster_id": "Task_13",
+        "nodes": [
+            "8462d553-c67e-5afd-8991-86e5bd2ccbc3",
+            "a457ae18-3d53-5606-a49f-e3e1b5751f62",
+            "1d4dc628-5223-5c7a-8e32-279b05e07dae",
+            "e60098f9-ef90-50b6-9692-5f76c2e846c9"
+        ],
+        "summary": {
+            "id": "Task_13",
+            "name": "Maximal Independent Set Challenges in Dynamic & Distributed Graphs",
+            "description": "This cluster revolves around the \"Optimization of Energy-Efficient Algorithms for Maximal Independent Sets,\" specifically addressing the intricate issues related to designing and implementing efficient distributed algorithms that tackle the Maximal Independent Set (MIS) problem in graphs. Focusing on reducing energy consumption and managing complexity in dynamic, large-scale networks, the cluster delves into local computational complexities and the need for adaptability in handling graph dynamics while maintaining algorithmic efficiency. The core theme emphasizes advancements and obstacles in achieving optimal load balance and communication efficiency to compute MIS effectively, thereby highlighting the pivotal role of algorithm design in overcoming scalability and performance barriers in distributed systems."
+        }
+    },
+    {
+        "cluster_id": "Task_14",
+        "nodes": [
+            "8d9b1c34-9b26-5ef3-a22f-cba76d84a057",
+            "80170b2e-3e72-52fc-91be-b1cf2156c44c",
+            "046b0758-0230-5e3b-91d1-5c29ad4ae70d"
+        ],
+        "summary": {
+            "id": "Task_14",
+            "name": "CONGEST-Model Graph Optimization Efficiency",
+            "description": "This cluster delves into the intricacies of designing and analyzing efficient distributed algorithms specifically tailored for solving graph optimization problems within the constraints of the CONGEST model. The core focus lies in addressing the inherent communication challenges and latency issues prevalent in this model, where the aim is to minimize the number of rounds required to disseminate information while effectively managing limited bandwidth. By concentrating on algorithmic innovations for load balancing, minimizing communication overhead, and achieving optimal time complexity, this cluster contributes to advancing the state-of-the-art in distributed graph processing under stringent computational and communicational restrictions."
+        }
+    },
+    {
+        "cluster_id": "Task_15",
+        "nodes": [
+            "7ff4566d-e6e6-5a17-afca-58f38e27e864",
+            "3b8abb06-4287-5977-a92b-1abf749fa537",
+            "5ba80fb0-369b-5b91-b581-102ccf7142de"
+        ],
+        "summary": {
+            "id": "Task_15",
+            "name": "Dynamic Graph Iterative Processing Efficiency",
+            "description": "This cluster focuses on the optimization of iterative graph algorithm execution in scenarios characterized by dynamically changing graph structures. It specifically addresses the challenges related to maintaining efficiency and scalability when processing both large-scale directed graphs and handling graph dynamics, such as real-time updates and evolving network topologies. A core aspect includes the efficient management of multiple concurrent Timing Iterative Graph Processing (TGP) jobs, ensuring effective resource allocation and job scheduling amidst the inherent complexity and variability of these dynamic systems."
+        }
+    },
+    {
+        "cluster_id": "Task_16",
+        "nodes": [
+            "d6d396a2-0110-5c29-9309-b8cd6cc8479d",
+            "ab19202c-6ecf-53a6-a4cf-03ddd56db483",
+            "61ae79dc-7c97-56b2-a55d-c51d4297f2ab"
+        ],
+        "summary": {
+            "id": "Task_16",
+            "name": "Minimizing Latency in Distributed Shortest Path Algorithms",
+            "description": "This cluster focuses specifically on the optimization of algorithms and methodologies for solving the Single Source Shortest Path (SSSP) problem within distributed computing environments. The core theme revolves around addressing the challenges inherent in efficiently computing the shortest path from a single node to all other nodes across a distributed graph, emphasizing the need for effective communication, synchronization, and load balancing strategies to mitigate computational overhead and enhance scalability. By concentrating on the SSSP problem, this cluster delves into advanced techniques aimed at improving the performance and reliability of distributed shortest path computations."
+        }
+    },
+    {
+        "cluster_id": "Task_17",
+        "nodes": [
+            "3b3a0eb4-6466-57ad-af6a-85cacee66330",
+            "6f492e9a-a5fa-5fc0-bc49-29c9c0de671e",
+            "970ad75d-8f99-5c99-afa8-573163adbeb0"
+        ],
+        "summary": {
+            "id": "Task_17",
+            "name": "Efficient Maximal Clique Enumeration in Large-Scale Graphs",
+            "description": "This cluster is centered around the specific challenge of optimizing algorithms for maximal clique enumeration in large-scale graph datasets. The core theme revolves around developing methodologies to efficiently identify all maximal cliques\u2014subgraphs in which every vertex is connected to every other vertex\u2014within massive networks. The research focus is on scalability, addressing computational intensity and memory constraints inherent in processing huge graphs, thereby pushing the boundaries of what is possible in understanding complex graph structures and their inherent communities. By concentrating on advancements in this narrow but crucial area, the cluster contributes to enhancing our ability to analyze social networks, biological systems, and other complex interactions at an unprecedented scale."
+        }
+    },
+    {
+        "cluster_id": "Task_18",
+        "nodes": [
+            "aa3d6b32-e57e-5044-91f0-601f2a798e08",
+            "21b38a9a-2244-51af-a12f-40527add323a",
+            "e4d6dfbe-9461-5538-b21f-648cb0f826ce"
+        ],
+        "summary": {
+            "id": "Task_18",
+            "name": "Distributed Minimum Spanning Tree Optimization",
+            "description": "This cluster focuses on the Distributed Minimum Spanning Tree (MST) problem, specifically addressing the challenges in efficiently computing Minimum Degree Spanning Trees (MDSTs) across distributed systems. The core theme revolves around the development of algorithms and strategies for optimizing the computation of MSTs in distributed environments, tackling issues such as load balancing, communication overhead, and synchronization to enhance the scalability and performance of these computations. By concentrating on MDSTs, this cluster delves into advanced graph processing techniques that aim to minimize the degree of nodes in the spanning tree, a critical aspect for various network design and optimization applications."
+        }
+    },
+    {
+        "cluster_id": "Task_20",
+        "nodes": [
+            "4efc7864-74fa-5b0f-b02f-d7ce625311ec",
+            "a0130409-7496-5c79-97f8-b42fd1c1621f",
+            "fcf48faf-0d46-57b3-b229-e7c7ad878785"
+        ],
+        "summary": {
+            "id": "Task_20",
+            "name": "Distributed Graph Pattern Mining Efficiency",
+            "description": "The cluster focuses on Efficient Distributed Graph Pattern Mining, specifically addressing the challenges inherent in extracting frequent patterns from massive graphs across distributed systems. This concentration underscores the need for optimized algorithms and systems designed to handle the complex nature of graph data while maintaining scalability and computational efficiency, thereby tackling the core issue of effectively managing and processing large-scale graph data in distributed environments."
+        }
+    },
+    {
+        "cluster_id": "Task_21",
+        "nodes": [
+            "015b97ce-b638-500f-a507-1b90b751327c",
+            "ad1a9098-7d15-51d9-a2c1-a8c5c55e40bb"
+        ],
+        "summary": {
+            "id": "Task_21",
+            "name": "Efficient Approximate Matching Under Communication Constraints",
+            "description": "This cluster focuses on the design and analysis of deterministic distributed algorithms tailored for approximating maximum matchings in graph datasets while imposing constraints on communication. The core theme revolves around optimizing the trade-off between computational efficiency and the accuracy of matchings under limited communication bandwidth, thereby addressing a pivotal challenge in distributed graph processing where communication overhead is a primary bottleneck."
+        }
+    },
+    {
+        "cluster_id": "Task_28",
+        "nodes": [
+            "34126773-1233-571f-8c0b-84446555ab98",
+            "92aefbc8-6a85-577e-873a-ab0bf213e6b6"
+        ],
+        "summary": {
+            "id": "Task_28",
+            "name": "Scalable Distributed Community Detection",
+            "description": "This cluster focuses on the Scalability and Efficiency in Large-Scale Network Community Detection addressing the central challenge of designing algorithms and systems capable of efficiently identifying communities in massive networks. It delves into methods for handling the computational complexity and vast data sizes inherent to these networks, while ensuring effective distribution of processing tasks to mitigate bottlenecks and optimize resource utilization. By concentrating on scalable solutions for community detection, the cluster targets the heart of managing big data in complex network structures, pushing the boundaries of what is possible in understanding and analyzing the structure of large-scale interconnected systems."
+        }
+    }
+]
