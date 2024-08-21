@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, Flex, Space } from 'antd';
+import { Typography, Flex, Table } from 'antd';
 import { FormattedMessage } from 'react-intl';
 const { Title } = Typography;
 import { useContext } from '../../hooks/useContext';
@@ -73,6 +73,21 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
     });
   };
   const style = nodeStyle[id] || nodeStyle[label];
+  const dataSource = Object.entries(properties).map(item => {
+    const [key, value] = item;
+    return {
+      name: key,
+      dse: value,
+    };
+  });
+  const FirstRow = dataSource[0];
+  const columns = Object.keys(FirstRow).map(key => {
+    return {
+      title: key,
+      dataIndex: key,
+      key: key,
+    };
+  });
 
   return (
     <div>
@@ -89,23 +104,14 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
           onChange={onChange}
         />
       </Flex>
-
-      <table
-        style={{
-          borderSpacing: '0px',
-        }}
-      >
-        <tbody>
-          {Object.keys(properties).map((key, i) => {
-            return (
-              <tr style={{ backgroundColor: i % 2 == 1 ? '' : '#F7F6F6' }} key={key}>
-                <td style={{ minWidth: '80px', margin: '0px', padding: '4px' }}>{key}</td>
-                <td style={{ minWidth: '120px', fontSize: '14px', padding: '4px' }}>{properties[key]}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <Table
+        style={{ height: '100%' }}
+        showHeader={false}
+        columns={columns}
+        dataSource={dataSource}
+        scroll={{ y: 410 }}
+        pagination={false}
+      />
     </div>
   );
 };
