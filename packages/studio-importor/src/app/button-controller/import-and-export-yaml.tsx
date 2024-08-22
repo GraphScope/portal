@@ -24,6 +24,10 @@ const APP_MODE_YAML_TITLE: {
     importText: 'Import YAML or JSON file to generate graph loading config',
     exportText: 'Save graph loading config to local YAML or JSON file',
   },
+  PURE: {
+    importText: 'Import YAML or JSON file to generate graph loading config',
+    exportText: 'Save graph loading config to local YAML or JSON file',
+  },
 };
 const Content = () => {
   const { token } = useToken();

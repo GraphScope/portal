@@ -13,3 +13,5 @@ export { default as SegmentedTabs } from './SegmentedTabs';
 export { default as SliderFilter } from './SliderFilter';
 export { default as RunCluster } from './RunCluster';
 export { default as LayoutSetting } from './LayoutSetting';
+export { default as NeighborQuery } from './ContextMenu/NeighborQuery';
+export { default as DeleteNode } from './ContextMenu/DeleteNode';
