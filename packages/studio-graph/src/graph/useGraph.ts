@@ -12,6 +12,7 @@ import { nodeCanvasObject } from './custom-node';
 // import { linkCanvasObject } from './custom-edge';
 import { BASIC_NODE_R, SELECTED_EDGE_COLOR } from './const';
 import * as d3 from 'd3-force-3d';
+console.log(d3);
 
 export default function useGraph<P extends GraphProps>(props: P) {
   const {
@@ -52,6 +53,10 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .nodeCanvasObject((node, ctx, globalScale) => {
           nodeCanvasObject(node, ctx, globalScale)(nodeStyle, nodeStatus);
         })
+        // .nodePointerAreaPaint((node, color, ctx, globalScale) => {
+        //   console.log(node, color, ctx, globalScale);
+        //   nodeCanvasObject(node, ctx, globalScale)(nodeStyle, nodeStatus);
+        // })
         /** edge */
         .linkLabel(edge => handleStyle(edge, edgeStyle, 'edge').caption)
         .linkWidth(edge => handleStyle(edge, edgeStyle, 'edge').width)
@@ -71,6 +76,7 @@ export default function useGraph<P extends GraphProps>(props: P) {
             return handleStyle(node, nodeStyle).size + 5;
           }),
         )
+
         /** interaction */
         .onNodeHover(node => {
           emitterRef.current?.emit('node:hover', node);
@@ -143,6 +149,7 @@ export default function useGraph<P extends GraphProps>(props: P) {
   }, [render]);
   useEffect(() => {
     if (graphRef.current) {
+      console.log('render>>>> data', data);
       graphRef.current.graphData(Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges }));
     }
   }, [data]);

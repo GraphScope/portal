@@ -62,6 +62,7 @@ export const initialStore: IStore = {
 };
 
 type ContextType = {
+  id: string;
   store: Snapshot<IStore>;
   updateStore: (fn: (draft: IStore) => void) => void;
 };
@@ -71,6 +72,7 @@ export function useContext(): ContextType {
   const store = useSnapshot(currentStore);
 
   return {
+    id,
     store,
     updateStore: (fn: (draft) => void) => {
       return fn(currentStore);

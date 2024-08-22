@@ -38,9 +38,9 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
 
   const items = [
     {
-      key: 'NeighborQuery',
+      key: 'CommonNeighbor',
       // icon: <ShareAltOutlined />,
-      label: 'NeighborQuery',
+      label: 'CommonNeighbor',
       children: itemChildren,
     },
   ];

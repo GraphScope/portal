@@ -22,6 +22,8 @@ import {
   ContextMenu,
   NeighborQuery,
   DeleteNode,
+  CommonNeighbor,
+  Brush,
 } from '../components';
 
 import { Divider } from 'antd';
@@ -61,6 +63,11 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       children: <StyleSetting />,
     },
   ];
+
+  const onSelectNodes = values => {
+    console.log(values);
+  };
+
   return (
     <div
       style={{
@@ -86,9 +93,11 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
           <Prepare data={data} schema={schema} graphId={graphId} />
           <Canvas />
           <ClearStatatus />
+          {/* <Brush onSelectNodes={onSelectNodes} /> */}
 
           <ContextMenu>
             <NeighborQuery onQuery={onQuery} />
+            <CommonNeighbor onQuery={onQuery} />
             <DeleteNode />
           </ContextMenu>
           <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
