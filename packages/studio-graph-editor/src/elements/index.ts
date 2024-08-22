@@ -100,6 +100,7 @@ export function transEdge2Entity(data: ISchemaOptions): ISchemaOptions {
   const { nodes, edges } = data;
   const relationship: ISchemaEdge[] = [];
   /** 把边也当作一个实体去处理 */
+  // @ts-ignore
   const entity: ISchemaNode[] = edges.map(item => {
     const { source, target, id, data, ...others } = item;
     relationship.push({

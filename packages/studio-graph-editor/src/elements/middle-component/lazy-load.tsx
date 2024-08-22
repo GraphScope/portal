@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import { BehaviorSubject } from 'rxjs';
 
 interface LazyLoadProps {
@@ -42,7 +42,7 @@ export const LazyLoad: React.FC<LazyLoadProps> = ({ children, type = 'NODE' }) =
     };
   }, []);
 
-  const GraphNode = useMemo(() => visible && <Suspense fallback={<Loading />}>{children}</Suspense>, [visible]);
+  const GraphNode = visible && <Suspense fallback={<Loading />}>{children}</Suspense>;
 
   return (
     <div ref={wrapperRef} style={{ height: '100px', width: '100px' }}>

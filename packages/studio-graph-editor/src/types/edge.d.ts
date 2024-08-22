@@ -26,4 +26,4 @@ export interface IEdgeData {
   [key: string]: any;
 }
 
-export type ISchemaEdge = Edge<IEdgeData> & { data?: IEdgeData };
+export type ISchemaEdge = Edge<IEdgeData> & { data: IEdgeData };

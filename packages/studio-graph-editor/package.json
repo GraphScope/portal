@@ -2,7 +2,9 @@
   "name": "@graphscope/studio-graph-editor",
   "version": "0.1.0",
   "description": "",
-  "main": "./src/index.tsx",
+  "main": "./dist/studio-graph-editor.umd.js",
+  "module": "./dist/studio-graph-editor.es.js",
+  "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/GraphScope/portal.git"
@@ -14,7 +16,7 @@
   ],
   "scripts": {
     "start": "vite dev",
-    "build": "vite build"
+    "build": "vite build && tsc"
   },
   "dependencies": {
     "@graphscope/studio-components": "workspace:*",
