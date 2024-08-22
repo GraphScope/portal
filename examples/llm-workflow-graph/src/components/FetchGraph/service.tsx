@@ -5,7 +5,7 @@ interface Params {
   [key: string]: any;
 }
 export async function query(params: Params) {
-  const baseURL = 'http://localhost:7777/api/query';
+  const baseURL = 'http://localhost:9999/api/query';
 
   const url = new URL(baseURL);
   url.search = new URLSearchParams(params).toString();

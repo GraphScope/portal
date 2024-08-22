@@ -7,10 +7,12 @@ const { dataset, entity } = require('./data');
 const cors = require('cors');
 const app = express();
 
-const port = 7777;
+const port = 9999;
 
 app.use(cors());
 app.use(express.json());
+const WORKSPACE = path.dirname(__dirname);
+app.use(express.static(WORKSPACE + '/dist'));
 
 const status = {
   WAITING_EMBEDDING: 'WAITING_EMBEDDING',
@@ -158,6 +160,11 @@ app.get('/api/download/dataset', (req, res) => {
       res.status(500).send('Error downloading file.');
     }
   });
+});
+
+app.get('*', (req, res) => {
+  console.log('path>>>>>>', req.params);
+  res.sendFile(path.join(WORKSPACE, '/dist', 'index.html'));
 });
 
 app.listen(port);
