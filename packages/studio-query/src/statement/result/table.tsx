@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Space, Typography, Flex, Button, Tooltip, Segmented } from 'antd';
+import { Table, Space, Typography, Flex, Button, Tooltip, Segmented, Popover } from 'antd';
 import { FileExcelOutlined, BarChartOutlined, TableOutlined } from '@ant-design/icons';
 import ChartView from './chart';
 import { useIntl } from 'react-intl';
@@ -52,6 +52,12 @@ const GraphTable = ({ nodes, edges }) => {
   });
 
   const dataSource = [...nodeSource, ...edgeSource];
+  /** 处理table columns字符过长展示 */
+  function truncateText(str, maxLength) {
+    if (str.length > maxLength) {
+      return str.substring(0, maxLength) + '...';
+    }
+  }
 
   const result = dataSource.map(item => {
     const { id, label, properties } = item;
@@ -69,8 +75,30 @@ const GraphTable = ({ nodes, edges }) => {
       title: key,
       dataIndex: key,
       key: key,
-      ellipsis: true,
-      width: 160,
+      width: 180,
+      render: record => {
+        if (record.length > 30) {
+          return (
+            <Popover
+              content={
+                <div
+                  style={{
+                    width: '500px',
+                    wordBreak: 'break-word',
+                    overflowWrap: 'break-word',
+                    whiteSpace: 'pre-wrap',
+                  }}
+                >
+                  {record}
+                </div>
+              }
+            >
+              {truncateText(record, 30)}
+            </Popover>
+          );
+        }
+        return <>{record}</>;
+      },
     };
   });
 
