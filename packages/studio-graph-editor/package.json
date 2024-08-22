@@ -1,10 +1,8 @@
 {
-  "name": "@graphscope/studtio-graph-editor",
+  "name": "@graphscope/studio-graph-editor",
   "version": "0.1.0",
   "description": "",
-  "main": "lib/index.js",
-  "module": "es/index.js",
-  "types": "lib/index.d.ts",
+  "main": "./src/index.tsx",
   "repository": {
     "type": "git",
     "url": "https://github.com/GraphScope/portal.git"

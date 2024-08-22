@@ -1,4 +1,5 @@
 import React from 'react';
+import Graph from '@graphscope/studio-graph-editor';
 export const Preview = () => {
   return (
     <div
@@ -16,7 +17,9 @@ export const Preview = () => {
       }}
     >
       <span style={{ fontSize: '1rem' }}>Model Preview</span>
-      <div style={{ flexGrow: '1', backgroundColor: 'white' }}>this is preview area</div>
+      <div style={{ flexGrow: '1', backgroundColor: 'white' }}>
+        <Graph></Graph>
+      </div>
     </div>
   );
 };
