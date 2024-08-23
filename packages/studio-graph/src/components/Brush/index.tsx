@@ -9,11 +9,25 @@ interface IBrushProps {
 
 const Brush: React.FunctionComponent<IBrushProps> = props => {
   const { onSelect } = props;
-  const { store } = useContext();
+  const { store, updateStore } = useContext();
   const { graph } = store;
 
   const brushRef = useRef<SVGSVGElement>(null);
   const [isBrushActive, setIsBrushActive] = useState(false);
+  const handleSelect = selectedNodes => {
+    const nodeStatus = selectedNodes.reduce((acc, curr) => {
+      return {
+        ...acc,
+        [curr.id]: {
+          selected: true,
+        },
+      };
+    }, {});
+    updateStore(draft => {
+      draft.nodeStatus = nodeStatus;
+    });
+    onSelect && onSelect(selectedNodes);
+  };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -22,6 +36,9 @@ const Brush: React.FunctionComponent<IBrushProps> = props => {
         setIsBrushActive(preState => {
           return !preState;
         });
+      }
+      if (event.key === 'Escape' || event.key === 'Enter') {
+        setIsBrushActive(false);
       }
     };
 
@@ -52,7 +69,7 @@ const Brush: React.FunctionComponent<IBrushProps> = props => {
             //@ts-ignore
             return node.x >= p0.x && node.x <= p1.x && node.y >= p0.y && node.y <= p1.y;
           });
-          onSelect(selectedNodes);
+          handleSelect(selectedNodes);
         });
 
       svg.append('g').attr('class', 'brush').call(brush);

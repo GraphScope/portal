@@ -24,6 +24,7 @@ import {
   DeleteNode,
   CommonNeighbor,
   Brush,
+  Loading,
 } from '../components';
 
 import { Divider } from 'antd';
@@ -94,7 +95,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
           <Canvas />
           <ClearStatatus />
           <Brush onSelect={onSelectNodes} />
-
+          <Loading />
           <ContextMenu>
             <NeighborQuery onQuery={onQuery} />
             <CommonNeighbor onQuery={onQuery} />

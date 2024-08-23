@@ -31,6 +31,7 @@ export type IStore = {
   edgeStatus: Record<string, StatusConfig>;
   graphId: string;
   schema: any;
+  isLoading: boolean;
 };
 
 export const initialStore: IStore = {
@@ -59,6 +60,7 @@ export const initialStore: IStore = {
     nodes: [],
     edges: [],
   },
+  isLoading: false,
 };
 
 type ContextType = {

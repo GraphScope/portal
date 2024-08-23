@@ -3,89 +3,113 @@ import { Typography, Button, Menu } from 'antd';
 import { useContext } from '../../../hooks/useContext';
 import { Utils } from '@graphscope/studio-components';
 import { getDataMap } from '../../Prepare/utils';
+import { BranchesOutlined } from '@ant-design/icons';
+import { handleExpand } from '../NeighborQuery/utils';
 
 interface INeighborQueryProps {
   onQuery: (params: any) => Promise<any>;
 }
 
-const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
-  const { onQuery } = props;
-  const { store, updateStore } = useContext();
-  const { nodeStatus, schema, dataMap, emitter } = store;
-
-  const selectId =
-    Object.keys(nodeStatus).filter(key => {
-      return nodeStatus[key].selected;
-    })[0] || '';
-  const selectNode = dataMap[selectId] || {};
-
-  const relatedEdges = schema.edges.filter(item => {
-    return item.source === selectNode.label;
-  });
-  const itemChildren = relatedEdges.map(item => {
-    const { source, target, label } = item;
-    if (source === target) {
-      return {
-        key: `(a:${source})-[b:${label}]-(c:${target})`,
-        label: `[${label}]-(${target})`,
-      };
-    }
-    return {
-      key: `(a:${source})-[b:${label}]->(c:${target})`,
-      label: `[${label}]->(${target})`,
-    };
-  });
-
-  const items = [
-    {
-      key: 'CommonNeighbor',
-      // icon: <ShareAltOutlined />,
-      label: 'CommonNeighbor',
-      children: itemChildren,
-    },
-  ];
-
-  const onClick = async ({ key }) => {
+const getScript = (selectedIds, dataMap) => {
+  const scripts = selectedIds.map((id, index) => {
+    const selectNode = dataMap[id];
     const { name, title } = selectNode.properties;
-    let script = '';
+    const currentPoint = `p${index}`;
+    const currentLink = `l${index}`;
+
+    let whereScript = '';
     if (name) {
-      script = `
-      MATCH ${key}
-        WHERE a.name = "${name}"
-        RETURN a, b, c
+      whereScript = `${currentPoint}.name = "${name}"
       `;
     }
     if (title) {
-      script = `
-      MATCH ${key}
-        WHERE a.title = "${title}"
-        RETURN a, b, c
+      whereScript = `${currentPoint}.title = "${title}"
       `;
     }
 
-    console.log(script);
-    /**
-     * 
-     * 
-     * MATCH (p1:Paper)<-[c1:Cite]-(p2:Paper)
- WHERE p1.title = 'Parallel Subgraph Listing in a Large-Scale Graph'
- RETURN p1, c1, p2
-     */
+    let matchScript = `
+(${currentPoint})-[${currentLink}]-(neighbor)`;
+    return {
+      whereScript,
+      matchScript,
+      returnScript: currentPoint + ',' + currentLink,
+    };
+  });
+  const matchScript = scripts.map(item => item.matchScript).join(',');
+  const whereScript = scripts.map(item => item.whereScript).join(' AND ');
+  const returnScript = scripts.map(item => item.returnScript).join(',');
+
+  console.log(`
+  MATCH ${matchScript} 
+  WHERE ${whereScript} 
+  RETURN ${returnScript},neighbor
+  `);
+
+  return `
+  MATCH ${matchScript} 
+  WHERE ${whereScript} 
+  RETURN ${returnScript},neighbor
+  `;
+};
+const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
+  const { onQuery } = props;
+  const { store, updateStore } = useContext();
+  const { nodeStatus, schema, dataMap, emitter, graph } = store;
+  console.log(nodeStatus);
+  const handleClick = async () => {
+    updateStore(draft => {
+      draft.isLoading = true;
+    });
+    const selectedIds = Object.keys(nodeStatus).filter((key, index) => {
+      return nodeStatus[key].selected;
+    });
+
+    const script = getScript(selectedIds, dataMap);
+
     const res = await onQuery({
       script,
       language: 'cypher',
     });
-    console.log(res);
+
     if (res.nodes.length > 0) {
+      const _nodeStatus = res.nodes.reduce((acc, curr) => {
+        return {
+          ...acc,
+          [curr.id]: {
+            selected: true,
+          },
+        };
+      }, {});
+
       updateStore(draft => {
-        draft.data = Utils.handleExpand(draft.data, res);
-        draft.dataMap = getDataMap(draft.data);
+        const newData = handleExpand(graph, res, selectedIds[0]);
+
+        draft.data = newData;
+        draft.dataMap = getDataMap(newData);
+        draft.isLoading = false;
+        draft.nodeStatus = _nodeStatus;
       });
+      if (graph) {
+        setTimeout(() => {
+          const expandNodes = res.nodes.map(item => item.id);
+          graph.zoomToFit(500, 20, (node: any) => {
+            return expandNodes.indexOf(node.id) !== -1;
+          });
+        }, 3000);
+      }
     }
-    emitter?.emit('canvas:click');
+    // emitter?.emit('canvas:click');
   };
+
   return (
-    <Menu onClick={onClick} style={{ margin: '0px', padding: '0px', width: '103%' }} mode="vertical" items={items} />
+    <Button
+      onClick={handleClick}
+      icon={<BranchesOutlined />}
+      type="text"
+      style={{ width: '100%', justifyContent: 'left' }}
+    >
+      CommonNeighbor
+    </Button>
   );
 };
 

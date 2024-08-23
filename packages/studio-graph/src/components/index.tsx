@@ -17,3 +17,4 @@ export { default as NeighborQuery } from './ContextMenu/NeighborQuery';
 export { default as CommonNeighbor } from './ContextMenu/CommonNeighbor';
 export { default as DeleteNode } from './ContextMenu/DeleteNode';
 export { default as Brush } from './Brush';
+export { default as Loading } from './Loading';

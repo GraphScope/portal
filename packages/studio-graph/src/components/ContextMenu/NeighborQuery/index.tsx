@@ -3,20 +3,24 @@ import { Typography, Button, Menu } from 'antd';
 import { useContext } from '../../../hooks/useContext';
 import { Utils } from '@graphscope/studio-components';
 import { getDataMap } from '../../Prepare/utils';
-
+import { handleExpand } from './utils';
+import type { ForceGraphInstance } from 'force-graph';
 interface INeighborQueryProps {
   onQuery: (params: any) => Promise<any>;
 }
 
+const getScript = (ids, dataMap) => {};
+
 const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
   const { onQuery } = props;
   const { store, updateStore } = useContext();
-  const { nodeStatus, schema, dataMap, emitter } = store;
+  const { nodeStatus, schema, dataMap, emitter, graph } = store;
 
   const selectId =
     Object.keys(nodeStatus).filter(key => {
       return nodeStatus[key].selected;
     })[0] || '';
+
   const selectNode = dataMap[selectId] || {};
 
   const relatedEdges = schema.edges.filter(item => {
@@ -63,23 +67,17 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
       `;
     }
 
-    console.log(script);
-    /**
-     * 
-     * 
-     * MATCH (p1:Paper)<-[c1:Cite]-(p2:Paper)
- WHERE p1.title = 'Parallel Subgraph Listing in a Large-Scale Graph'
- RETURN p1, c1, p2
-     */
     const res = await onQuery({
       script,
       language: 'cypher',
     });
-    console.log(res);
-    if (res.nodes.length > 0) {
+
+    if (res.nodes.length > 0 && graph) {
+      const newData = handleExpand(graph, res, selectId);
+
       updateStore(draft => {
-        draft.data = Utils.handleExpand(draft.data, res);
-        draft.dataMap = getDataMap(draft.data);
+        draft.data = newData;
+        draft.dataMap = getDataMap(newData);
       });
     }
     emitter?.emit('canvas:click');
