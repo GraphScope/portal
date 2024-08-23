@@ -12,6 +12,12 @@ export default defineConfig(({ mode }) => {
           fileName: format => `studio-graph-editor.${format}.js`,
         },
         outDir: './dist',
+        rollupOptions: {
+          external: ['react', 'react-dom'],
+        },
+      },
+      resolve: {
+        dedupe: ['react', 'react-dom'],
       },
       plugins: [react()],
     };

@@ -18,6 +18,10 @@
     "start": "vite dev",
     "build": "vite build && tsc"
   },
+  "peerDependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
   "dependencies": {
     "@graphscope/studio-components": "workspace:*",
     "antd": "^5.17.0",
@@ -25,8 +29,6 @@
     "dagre": "latest",
     "html-to-image": "^1.11.11",
     "lodash": "^4.17.21",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
     "react-intl": "^6.6.1",
     "reactflow": "latest",
     "rxjs": "^7.8.1",
