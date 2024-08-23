@@ -1,60 +1,80 @@
-import React, { useRef, useEffect } from 'react';
-
-import { useContext } from '../../hooks/useContext';
+import React, { useEffect, useRef, useState } from 'react';
 import { brush as d3Brush } from 'd3-brush';
 import { select } from 'd3-selection';
+import { useContext } from '../../hooks/useContext';
+
 interface IBrushProps {
-  onSelectNodes: (e: any) => void;
+  onSelect: (values: any) => void;
 }
 
 const Brush: React.FunctionComponent<IBrushProps> = props => {
-  const { onSelectNodes } = props;
-  const { id, store } = useContext();
-  const { graph, height, width, data } = store;
-  const svgRef = useRef(null);
-  const selectedNodesRef = useRef([]);
+  const { onSelect } = props;
+  const { store } = useContext();
+  const { graph } = store;
+
+  const brushRef = useRef<SVGSVGElement>(null);
+  const [isBrushActive, setIsBrushActive] = useState(false);
 
   useEffect(() => {
-    if (svgRef.current) {
-      const handleBrush = selection => {
-        if (!selection) return;
-
-        const [[x0, y0], [x1, y1]] = selection;
-        const newSelectedNodes = data.nodes.filter(node => {
-          //@ts-ignore
-          const { x, y, z } = graph?.graph2ScreenCoords(node.x, node.y, 0);
-          return x0 <= x && x <= x1 && y0 <= y && y <= y1;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Shift') {
+        console.log('Shift key pressed');
+        setIsBrushActive(preState => {
+          return !preState;
         });
-        console.log(newSelectedNodes);
-      };
-      const svg = select(svgRef.current);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    const svg = select(brushRef.current);
+    if (isBrushActive && graph) {
+      const { nodes = [] } = graph.graphData() || {};
       const brush = d3Brush()
         .extent([
           [0, 0],
-          [width, height],
+          //@ts-ignore
+          [svg.node().clientWidth, svg.node().clientHeight],
         ])
-        .on('start', () => {
-          selectedNodesRef.current = [];
-        })
-        .on('brush', event => handleBrush(event.selection))
-        .on('end', () => onSelectNodes(selectedNodesRef.current));
+        .on('end', event => {
+          if (!event.selection) return;
+          const [[x0, y0], [x1, y1]] = event.selection;
 
-      svg.selectAll('g.brush').remove(); // Remove any existing brush group
-      svg
-        .append('g')
-        .attr('class', 'brush')
-        .call(brush)
-        .append('rect')
-        .attr('width', width)
-        .attr('height', height)
-        .attr('fill', 'none')
-        .attr('pointer-events', 'all');
+          const p0 = graph.screen2GraphCoords(x0, y0, 0);
+          const p1 = graph.screen2GraphCoords(x1, y1, 0);
 
-      svg.style('pointer-events', 'none');
+          const selectedNodes = nodes.filter(node => {
+            //@ts-ignore
+            return node.x >= p0.x && node.x <= p1.x && node.y >= p0.y && node.y <= p1.y;
+          });
+          onSelect(selectedNodes);
+        });
+
+      svg.append('g').attr('class', 'brush').call(brush);
     }
-  }, [width, height, onSelectNodes]);
-
-  return <svg ref={svgRef} width={width} height={height} style={{ position: 'absolute', top: '0px' }}></svg>;
+    return () => {
+      svg.select('.brush').remove();
+    };
+  }, [isBrushActive, onSelect, graph]);
+  const style: React.CSSProperties = isBrushActive
+    ? {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        display: 'block',
+        background: 'rgba(0, 0, 0, 0.05)',
+      }
+    : {
+        display: 'none',
+      };
+  return <svg ref={brushRef} style={style} />;
 };
 
 export default Brush;

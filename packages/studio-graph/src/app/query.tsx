@@ -93,7 +93,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
           <Prepare data={data} schema={schema} graphId={graphId} />
           <Canvas />
           <ClearStatatus />
-          {/* <Brush onSelectNodes={onSelectNodes} /> */}
+          <Brush onSelect={onSelectNodes} />
 
           <ContextMenu>
             <NeighborQuery onQuery={onQuery} />
