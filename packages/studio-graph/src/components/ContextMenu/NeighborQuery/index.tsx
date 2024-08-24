@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useRef } from 'react';
 import { Typography, Button, Menu } from 'antd';
 import { useContext } from '../../../hooks/useContext';
 import { Utils } from '@graphscope/studio-components';
@@ -15,6 +15,7 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
   const { onQuery } = props;
   const { store, updateStore } = useContext();
   const { nodeStatus, schema, dataMap, emitter, graph } = store;
+  const MenuRef = useRef<HTMLDivElement>(null);
 
   const selectId =
     Object.keys(nodeStatus).filter(key => {
@@ -83,7 +84,20 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
     emitter?.emit('canvas:click');
   };
   return (
-    <Menu onClick={onClick} style={{ margin: '0px', padding: '0px', width: '103%' }} mode="vertical" items={items} />
+    <div ref={MenuRef}>
+      <Menu
+        getPopupContainer={node => {
+          if (MenuRef.current) {
+            return MenuRef.current;
+          }
+          return node;
+        }}
+        onClick={onClick}
+        style={{ margin: '0px', padding: '0px', width: '103%' }}
+        mode="vertical"
+        items={items}
+      />
+    </div>
   );
 };
 

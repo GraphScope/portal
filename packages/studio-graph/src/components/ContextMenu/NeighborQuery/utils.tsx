@@ -50,12 +50,10 @@ const fixNodePositions = nodes => {
 
 export const handleExpand = (graph, expandData, selectId) => {
   const { nodes, links } = graph.graphData();
-  const edges = links.map(item => {
+  const edges = links.map((item: any) => {
     return {
       ...item,
-      //@ts-ignore
       source: item.source.id,
-      //@ts-ignore
       target: item.target.id,
     };
   });
