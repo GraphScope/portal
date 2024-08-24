@@ -44,24 +44,9 @@ export const nodeCanvasObject =
       //@TODO
     }
 
-    if (captionMode === 'inner') {
-      const fontSize = 16 / globalScale;
-      ctx.font = `${fontSize}px Sans-Serif`;
-      ctx.fillStyle = NODE_TEXT_COLOR;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#fff';
-      drawText(ctx, {
-        text: textLabel,
-        x: node.x,
-        y: node.y + fontSize / 2,
-        maxWidth: R * 2 * 0.8, //预留 20% pandding
-        lineHeight: fontSize * 1.2,
-      });
-    } else if (captionStatus !== 'hidden' && textLabel) {
+    if (captionStatus !== 'hidden' && textLabel) {
       const fontSize = Math.min(0.5 * globalScale, 14 / globalScale);
-      // console.log(globalScale, 12 / globalScale, fontSize);
-      if (true) {
+      if (globalScale > 4 && globalScale < 15) {
         ctx.font = `${fontSize}px Sans-Serif`;
         const textWidth = ctx.measureText(textLabel).width;
         const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
@@ -74,6 +59,21 @@ export const nodeCanvasObject =
         ctx.fillText(textLabel, node.x, node.y + 1.2 * R);
         // @ts-ignore
         node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
+      }
+      if (globalScale >= 15) {
+        const fontSize = 16 / globalScale;
+        ctx.font = `${fontSize}px Sans-Serif`;
+        ctx.fillStyle = NODE_TEXT_COLOR;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#fff';
+        drawText(ctx, {
+          text: textLabel,
+          x: node.x,
+          y: node.y + fontSize / 2,
+          maxWidth: R * 2 * 0.8, //预留 20% pandding
+          lineHeight: fontSize * 1.2,
+        });
       }
     }
     ctx.restore();

@@ -149,7 +149,6 @@ export default function useGraph<P extends GraphProps>(props: P) {
   }, [render]);
   useEffect(() => {
     if (graphRef.current) {
-      console.log('render>>>> data', data);
       graphRef.current.graphData(Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges }));
     }
   }, [data]);

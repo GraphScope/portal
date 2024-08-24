@@ -66,7 +66,7 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
   };
   const activeStyle = `2px solid ${token.colorPrimary}`;
   return (
-    <div style={{ maxWidth: '380px', overflow: 'hidden' }}>
+    <div style={{ maxWidth: '220px', overflow: 'hidden', padding: '12px' }}>
       <Flex gap={12} style={{ padding: '6px 0px' }}>
         <Typography.Text style={{ flexShrink: 0 }}>
           <FormattedMessage id="Color" />
