@@ -1,4 +1,29 @@
 import { Utils } from '@graphscope/studio-components';
+export const applyStatus = (
+  { nodes = [], edges = [] },
+  apply = item => {
+    return {
+      selected: true,
+    };
+  },
+) => {
+  const nodeStatus = nodes.reduce((acc, curr: any) => {
+    return {
+      ...acc,
+      [curr.id]: apply(curr),
+    };
+  }, {});
+  const edgeStatus = edges.reduce((acc, curr: any) => {
+    return {
+      ...acc,
+      [curr.id]: apply(curr),
+    };
+  }, {});
+  return {
+    nodeStatus,
+    edgeStatus,
+  };
+};
 export const applyPositions = (nodes, centerNode, radius = 5) => {
   const angleStep = (2 * Math.PI) / nodes.length;
   return nodes.map((item, index) => {

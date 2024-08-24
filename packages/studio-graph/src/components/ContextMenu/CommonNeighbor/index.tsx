@@ -4,7 +4,7 @@ import { useContext } from '../../../hooks/useContext';
 import { Utils } from '@graphscope/studio-components';
 import { getDataMap } from '../../Prepare/utils';
 import { BranchesOutlined } from '@ant-design/icons';
-import { handleExpand } from '../NeighborQuery/utils';
+import { handleExpand, applyStatus } from '../NeighborQuery/utils';
 
 interface INeighborQueryProps {
   onQuery: (params: any) => Promise<any>;
@@ -60,6 +60,7 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
     updateStore(draft => {
       draft.isLoading = true;
     });
+    emitter?.emit('canvas:click');
     const selectedIds = Object.keys(nodeStatus).filter((key, index) => {
       return nodeStatus[key].selected;
     });
@@ -72,33 +73,19 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
     });
 
     if (res.nodes.length > 0) {
-      const _nodeStatus = res.nodes.reduce((acc, curr) => {
-        return {
-          ...acc,
-          [curr.id]: {
-            selected: true,
-          },
-        };
-      }, {});
+      const { nodeStatus, edgeStatus } = applyStatus(res, item => {
+        return { selected: true };
+      });
 
       updateStore(draft => {
         const newData = handleExpand(graph, res, selectedIds[0]);
-
         draft.data = newData;
         draft.dataMap = getDataMap(newData);
         draft.isLoading = false;
-        draft.nodeStatus = _nodeStatus;
+        draft.nodeStatus = nodeStatus;
+        draft.edgeStatus = edgeStatus;
       });
-      if (graph) {
-        setTimeout(() => {
-          const expandNodes = res.nodes.map(item => item.id);
-          graph.zoomToFit(500, 20, (node: any) => {
-            return expandNodes.indexOf(node.id) !== -1;
-          });
-        }, 3000);
-      }
     }
-    // emitter?.emit('canvas:click');
   };
 
   return (

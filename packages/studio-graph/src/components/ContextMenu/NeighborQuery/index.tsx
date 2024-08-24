@@ -3,7 +3,7 @@ import { Typography, Button, Menu } from 'antd';
 import { useContext } from '../../../hooks/useContext';
 import { Utils } from '@graphscope/studio-components';
 import { getDataMap } from '../../Prepare/utils';
-import { handleExpand } from './utils';
+import { handleExpand, applyStatus } from './utils';
 import type { ForceGraphInstance } from 'force-graph';
 interface INeighborQueryProps {
   onQuery: (params: any) => Promise<any>;
@@ -51,6 +51,7 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
   ];
 
   const onClick = async ({ key }) => {
+    emitter?.emit('canvas:click');
     const { name, title } = selectNode.properties;
     let script = '';
     if (name) {
@@ -74,14 +75,17 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
     });
 
     if (res.nodes.length > 0 && graph) {
+      const { nodeStatus, edgeStatus } = applyStatus(res, item => {
+        return { selected: true };
+      });
       const newData = handleExpand(graph, res, selectId);
-
       updateStore(draft => {
         draft.data = newData;
         draft.dataMap = getDataMap(newData);
+        draft.nodeStatus = nodeStatus;
+        draft.edgeStatus = edgeStatus;
       });
     }
-    emitter?.emit('canvas:click');
   };
   return (
     <div ref={MenuRef}>
