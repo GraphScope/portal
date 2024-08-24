@@ -25,6 +25,9 @@ import {
   CommonNeighbor,
   Brush,
   Loading,
+  DeleteLeafNodes,
+  Report,
+  Export,
 } from '../components';
 
 import { Divider } from 'antd';
@@ -63,6 +66,12 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       value: 'Style',
       children: <StyleSetting />,
     },
+    {
+      key: 'Report',
+      label: 'Report',
+      value: 'Report',
+      children: <Report />,
+    },
   ];
 
   const onSelectNodes = values => {
@@ -99,6 +108,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
           <ContextMenu>
             <NeighborQuery onQuery={onQuery} />
             <CommonNeighbor onQuery={onQuery} />
+            <DeleteLeafNodes />
             <DeleteNode />
           </ContextMenu>
           <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
@@ -108,6 +118,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
             <FullScreen containerRef={containerRef} />
             <ZoomFit />
             <RunCluster />
+            <Export />
           </Toolbar>
         </Section>
       </MultipleInstance>
