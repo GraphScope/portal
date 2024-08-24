@@ -77,7 +77,7 @@ const GraphTable = ({ nodes, edges }) => {
       key: key,
       width: 180,
       render: record => {
-        if (record.length > 30) {
+        if (String(record).length > 30) {
           return (
             <Popover
               content={
@@ -93,7 +93,7 @@ const GraphTable = ({ nodes, edges }) => {
                 </div>
               }
             >
-              {truncateText(record, 30)}
+              {truncateText(String(record), 30)}
             </Popover>
           );
         }
