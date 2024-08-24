@@ -27,7 +27,11 @@ const Workflow: React.FunctionComponent<IWorkflowProps> = props => {
         ),
       };
     });
-    return <Timeline items={_items} style={{ padding: '12px' }} />;
+    return (
+      <div style={{ overflow: 'scroll', height: '100%' }}>
+        <Timeline items={_items} style={{ padding: '12px' }} />
+      </div>
+    );
   }
 
   return (

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, Flex, Space, Button, Tag, theme } from 'antd';
+import { Typography, Flex, Space, Button, Tag, theme, Result } from 'antd';
 import { Container } from '../../components';
 import { useNavigate } from 'react-router-dom';
 
@@ -45,6 +45,7 @@ const List: React.FunctionComponent<IListProps> = props => {
   React.useEffect(() => {
     queryData();
   }, []);
+  const isEmpty = lists.length === 0;
   return (
     <Container
       breadcrumb={[
@@ -68,6 +69,23 @@ const List: React.FunctionComponent<IListProps> = props => {
       {lists.map(item => {
         return <ListItem key={item.id} {...item} />;
       })}
+      {isEmpty && (
+        <Result
+          status="404"
+          title="No dataset available"
+          subTitle="Please click the button below to 「Create Dataset」."
+          extra={
+            <Button
+              onClick={() => {
+                navigation('/dataset/create');
+              }}
+              type="primary"
+            >
+              Create Dataset
+            </Button>
+          }
+        />
+      )}
     </Container>
   );
 };

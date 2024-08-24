@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Select } from 'antd';
+import { Select, Space, Button, Flex, Tooltip } from 'antd';
 import { useContext, useCluster } from '@graphscope/studio-graph';
 import { query } from '../FetchGraph/service';
 import { Utils } from '@graphscope/studio-components';
@@ -34,8 +34,10 @@ const FilterCluster: React.FunctionComponent<IFilterClusterProps> = props => {
   const { source } = store;
   const [state, setState] = useState({
     options: [],
+    clusterIds: [],
+    value: [] as string[],
   });
-  const { options } = state;
+  const { options, value } = state;
 
   const { enableCluster } = useCluster();
   React.useEffect(() => {
@@ -43,12 +45,11 @@ const FilterCluster: React.FunctionComponent<IFilterClusterProps> = props => {
     const groups = Utils.groupBy(source.nodes, node => {
       return get(node, 'properties.cluster_id');
     });
-    console.log(groups);
+
     query({
       name: entityId,
       type: 'cluster',
     }).then(res => {
-      console.log('res', res);
       const topIds = res.map(item => item.cluster_id);
       const topOptions = res.map(item => {
         return {
@@ -62,7 +63,6 @@ const FilterCluster: React.FunctionComponent<IFilterClusterProps> = props => {
       });
       const options = Object.keys(groups)
         .map(key => {
-          console.log(key);
           return {
             label: key,
             value: key,
@@ -75,6 +75,7 @@ const FilterCluster: React.FunctionComponent<IFilterClusterProps> = props => {
       setState(preState => {
         return {
           ...preState,
+          clusterIds: topIds,
           options: [...topOptions, ...options],
         };
       });
@@ -82,7 +83,12 @@ const FilterCluster: React.FunctionComponent<IFilterClusterProps> = props => {
   }, [source]);
 
   const handleChange = (ids: string[]) => {
-    console.log(ids);
+    setState(preState => {
+      return {
+        ...preState,
+        value: ids,
+      };
+    });
     if (ids.length === 0) {
       updateStore(draft => {
         //@ts-ignore
@@ -113,17 +119,26 @@ const FilterCluster: React.FunctionComponent<IFilterClusterProps> = props => {
         edges: newEdges,
       };
     });
-    console.log('newNodes', newNodes, newEdges);
   };
+  const onRecommend = () => {
+    handleChange(state.clusterIds);
+  };
+
   return (
-    <Select
-      mode="multiple"
-      placeholder="Please select cluster"
-      defaultValue={[]}
-      onChange={handleChange}
-      style={{ width: '100%' }}
-      options={options}
-    />
+    <Flex justify="space-between" gap={8}>
+      <Select
+        mode="multiple"
+        placeholder="Please select cluster"
+        defaultValue={[]}
+        value={value}
+        onChange={handleChange}
+        style={{ width: '100%' }}
+        options={options}
+      />
+      <Tooltip title="Algorithm Recommendation">
+        <Button onClick={onRecommend} icon={<LikeOutlined style={{ color: 'lightgreen' }} />}></Button>
+      </Tooltip>
+    </Flex>
   );
 };
 

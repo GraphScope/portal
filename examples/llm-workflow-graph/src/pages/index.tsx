@@ -1,8 +1,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom';
-
 import Layout from '../layout';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, Skeleton } from 'antd';
 import locales from '../locales';
 import { IntlProvider } from 'react-intl';
 interface IPagesProps {}
@@ -28,7 +27,7 @@ const Pages: React.FunctionComponent<IPagesProps> = props => {
         key={index}
         path={path}
         element={
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<></>}>
             {/** @ts-ignore */}
             <Component />
           </Suspense>
