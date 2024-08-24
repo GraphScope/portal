@@ -7,9 +7,10 @@ interface IDeleteLeafNodesProps {}
 
 const DeleteLeafNodes: React.FunctionComponent<IDeleteLeafNodesProps> = props => {
   const { store, updateStore } = useContext();
-  const { nodeStatus, graph, dataMap } = store;
+  const { nodeStatus, graph, dataMap, emitter } = store;
 
   const handleClick = () => {
+    emitter?.emit('canvas:click');
     const selectedIds = Object.keys(nodeStatus).filter((key, index) => {
       return nodeStatus[key].selected;
     });
@@ -17,7 +18,6 @@ const DeleteLeafNodes: React.FunctionComponent<IDeleteLeafNodesProps> = props =>
 
     if (graph && selectId) {
       const data = removeLeafNodes(graph.graphData(), selectId);
-      console.log('data', data);
       updateStore(draft => {
         //@ts-ignore
         draft.data = data;

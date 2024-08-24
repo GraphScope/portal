@@ -7,9 +7,10 @@ interface INeighborQueryProps {}
 
 const DeleteNode: React.FunctionComponent<INeighborQueryProps> = props => {
   const { store, updateStore } = useContext();
-  const { nodeStatus } = store;
+  const { nodeStatus, emitter } = store;
 
   const handleClick = () => {
+    emitter?.emit('canvas:click');
     const selectedIds = Object.keys(nodeStatus).filter((key, index) => {
       return nodeStatus[key].selected;
     });
@@ -23,7 +24,6 @@ const DeleteNode: React.FunctionComponent<INeighborQueryProps> = props => {
       draft.data = newData;
       draft.dataMap = getDataMap(newData);
     });
-    console.log('DeleteNode', nodeStatus);
   };
   return (
     <Button
