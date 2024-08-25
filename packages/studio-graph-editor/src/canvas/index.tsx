@@ -64,14 +64,15 @@ const SchemaGraph: React.FunctionComponent<ISchemaGraphProps> = props => {
           //@ts-ignore
           nodes={fakeSnapshot(nodes)}
           edges={fakeSnapshot(edges)}
-          onNodesChange={!disabled && onNodesChange}
-          onEdgesChange={!disabled && onEdgesChange}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
           connectionLineComponent={ConnectionLine}
           onConnectStart={onConnectStart}
           onConnectEnd={onConnectEnd}
           zoomOnDoubleClick={false}
+
           // onDoubleClick={onDoubleClick}
         >
           <ArrowMarker selectedColor={theme.primaryColor} color={isDark ? '#d7d7d7' : '#000'} />

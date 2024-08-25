@@ -98,18 +98,16 @@ const GraphNode = (props: NodeProps) => {
     onNodeClick && onNodeClick(data, event);
     triggerPopover === 'click' && setVisible(true);
   };
-  const haloStyle = !isConnectable
-    ? {
-        ...styles.handler,
-        border: state.isHover ? `2px dashed ${theme.primaryColor}` : 'none',
-        background: state.isHover ? '#fafafa' : 'transparent',
-        cursor: 'copy',
-      }
-    : {
-        cursor: 'not-allow',
-        background: 'transparent',
-        border: 'none',
-      };
+  const haloStyle =
+    graphDisabled || isConnectable
+      ? { cursor: 'not-allow', background: 'transparent', border: 'none' }
+      : {
+          ...styles.handler,
+          cursor: 'copy',
+          background: state.isHover ? '#fafafa' : 'transparent',
+          border: state.isHover ? `2px dashed ${theme.primaryColor}` : 'none',
+        };
+
   const getBorder = () => {
     if (isDark) {
       return isSelected ? `4px solid ${theme.primaryColor}` : '2px solid #d7d7d7';
@@ -169,21 +167,17 @@ const GraphNode = (props: NodeProps) => {
         onMouseLeave={onMouseLeave}
         onClick={onClick}
       >
-        {!graphDisabled && (
-          <>
-            <Handle
-              type="target"
-              position={Position.Left}
-              id="left"
-              style={{
-                background: 'transparent',
-                position: 'relative',
-                border: 'none',
-              }}
-            />
-            <Handle type="source" position={Position.Right} id="right" style={haloStyle}></Handle>
-          </>
-        )}
+        <Handle
+          type="target"
+          position={Position.Left}
+          id="left"
+          style={{
+            background: 'transparent',
+            position: 'relative',
+            border: 'none',
+          }}
+        />
+        <Handle type="source" position={Position.Right} id="right" style={haloStyle}></Handle>
         <div
           style={{
             position: 'absolute',
