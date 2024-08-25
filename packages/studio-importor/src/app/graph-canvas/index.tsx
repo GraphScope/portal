@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { ReactFlow, Controls, Background, MiniMap } from 'reactflow';
-import { EmptyCanvas, useThemeContainer } from '@graphscope/studio-components';
+import { EmptyCanvas, useThemeContainer, useMultipleInstance } from '@graphscope/studio-components';
 import { nodeTypes } from '../elements/node-types';
 import { edgeTypes } from '../elements/edge-types';
 import ConnectionLine from '../elements/connection-line';
@@ -18,7 +18,7 @@ const fakeSnapshot = obj => {
 
 const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   const { store, onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } = useInteractive();
-  const { nodes, edges, theme, collapsed } = store;
+  const { nodes, edges, theme, collapsed, appMode } = store;
   const { algorithm } = useThemeContainer();
   const isEmpty = nodes.length === 0;
   const isDark = algorithm === 'darkAlgorithm';
@@ -31,6 +31,8 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
       }}
     />
   );
+  const IS_PURE = appMode === 'PURE';
+
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <div style={{ height: '100%', width: '100%', position: 'absolute' }}>
@@ -49,13 +51,15 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           // onDoubleClick={onDoubleClick}
         >
           <ArrowMarker selectedColor={theme.primaryColor} color={isDark ? '#d7d7d7' : '#000'} />
-          <Controls
-            style={{
-              gap: '4px',
-              boxShadow:
-                '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)',
-            }}
-          />
+          {!IS_PURE && (
+            <Controls
+              style={{
+                gap: '4px',
+                boxShadow:
+                  '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)',
+              }}
+            />
+          )}
           <Background
             style={{
               // background: '#f4f5f5',
@@ -63,7 +67,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
             }}
           />
           {isEmpty && <EmptyCanvas description={description} />}
-          <MiniMap style={{ backgroundColor: isDark ? '#161616' : '' }} />
+          {!IS_PURE && <MiniMap style={{ backgroundColor: isDark ? '#161616' : '' }} />}
         </ReactFlow>
       </div>
     </div>

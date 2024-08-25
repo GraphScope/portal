@@ -7,7 +7,7 @@ type GraphRef = any | null;
 
 const Graph = memo(
   forwardRef<GraphRef, PropsWithChildren<GraphProps>>((props, ref) => {
-    const { style, children, ...restProps } = props;
+    const { id, style, children, ...restProps } = props;
     const { graph, containerRef, isReady } = useGraph<GraphProps>(restProps);
     useImperativeHandle(ref, () => graph!, [isReady]);
     const containerStyle: CSSProperties = {
@@ -15,7 +15,7 @@ const Graph = memo(
       position: 'relative',
       ...style,
     };
-    return <div ref={containerRef} style={containerStyle}></div>;
+    return <div id={`GRAPH_${id}`} ref={containerRef} style={containerStyle}></div>;
   }),
 );
 

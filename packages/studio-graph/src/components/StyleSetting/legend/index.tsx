@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useRef } from 'react';
 import { memo } from 'react';
 import { Tag, Popover, Button, Space } from 'antd';
 import LengendContent from './content';
@@ -12,9 +12,20 @@ export type ILegendProps = ILengendContentProps & {
 const Legend: React.FunctionComponent<ILegendProps> = props => {
   const { label, color, count } = props;
   const text = count ? `${label} (${count})` : label;
+  const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <Popover trigger="click" placement="left" content={<LengendContent {...props} />}>
+    <Popover
+      getPopupContainer={node => {
+        if (containerRef.current) {
+          return containerRef.current;
+        }
+        return node;
+      }}
+      trigger="click"
+      placement="left"
+      content={<LengendContent {...props} />}
+    >
       <Tag
         style={{ borderRadius: '8px', backgroundColor: color, cursor: 'pointer', minWidth: '60px', minHeight: '22px' }}
         bordered={false}

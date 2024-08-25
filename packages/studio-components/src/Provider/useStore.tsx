@@ -20,7 +20,9 @@ export const useStore = (algorithm: ThemeProviderType['algorithm']) => {
       iconMarginInlineEnd: 14,
       itemMarginInline: 4,
       iconSize: 14,
-      collapsedWidth: 60,
+      collapsedWidth: 50,
+      horizontalLineHeight: 32,
+      itemHeight: 32,
     },
     Typography: {
       titleMarginBottom: '0.2em',

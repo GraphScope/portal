@@ -6,8 +6,6 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
 
-app.use(express.json());
-
 // 获取传递的参数
 const args = process.argv.slice(2);
 
@@ -20,7 +18,12 @@ args.forEach(arg => {
 
 const WORKSPACE = path.dirname(__dirname);
 
-const { port = 8888, coordinator = 'http://127.0.0.1:8080', cypher_endpoint, gremlin_endpoint } = params;
+const {
+  port = 8888,
+  coordinator = 'http://127.0.0.1:8080',
+  cypher_endpoint = 'neo4j://127.0.0.1:7687',
+  gremlin_endpoint,
+} = params;
 
 // static
 app.use(express.static(WORKSPACE + '/dist'));
@@ -32,6 +35,12 @@ app.use(
     changeOrigin: true,
   }),
 );
+
+/**
+ * 如果在 Express 中使用 body-parser 或 express.json() 中间件来解析请求体
+ * 可能会导致 http-proxy-middleware 无法正确代理请求。因为请求体已经被消费过，导致代理请求时无法再发送。
+ */
+app.use(express.json());
 
 app.get('/graph/endpoint', (req, res) => {
   res.send({

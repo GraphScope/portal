@@ -12,6 +12,7 @@ import { nodeCanvasObject } from './custom-node';
 // import { linkCanvasObject } from './custom-edge';
 import { BASIC_NODE_R, SELECTED_EDGE_COLOR } from './const';
 import * as d3 from 'd3-force-3d';
+console.log(d3);
 
 export default function useGraph<P extends GraphProps>(props: P) {
   const {
@@ -52,10 +53,16 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .nodeCanvasObject((node, ctx, globalScale) => {
           nodeCanvasObject(node, ctx, globalScale)(nodeStyle, nodeStatus);
         })
+        // .nodePointerAreaPaint((node, color, ctx, globalScale) => {
+        //   console.log(node, color, ctx, globalScale);
+        //   nodeCanvasObject(node, ctx, globalScale)(nodeStyle, nodeStatus);
+        // })
         /** edge */
         .linkLabel(edge => handleStyle(edge, edgeStyle, 'edge').caption)
         .linkWidth(edge => handleStyle(edge, edgeStyle, 'edge').width)
         .linkColor(edge => handleStyle(edge, edgeStyle, 'edge').color)
+        .linkDirectionalArrowLength(3)
+        .linkDirectionalArrowRelPos(0.9)
         // custom edge
         // .linkCanvasObjectMode(() => 'after')
         // .linkCanvasObject((link, ctx, globalScale) => {
@@ -69,6 +76,7 @@ export default function useGraph<P extends GraphProps>(props: P) {
             return handleStyle(node, nodeStyle).size + 5;
           }),
         )
+
         /** interaction */
         .onNodeHover(node => {
           emitterRef.current?.emit('node:hover', node);
@@ -98,6 +106,8 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .linkLabel((edge: any) => edge && edge.properties && edge.properties[handleStyle(edge, edgeStyle).caption])
         .linkWidth(edge => handleStyle(edge, edgeStyle, 'edge').width)
         .linkColor(edge => handleStyle(edge, edgeStyle, 'edge').color)
+        .linkDirectionalArrowLength(3)
+        .linkDirectionalArrowRelPos(0.9)
 
         .graphData(Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges }))
         .cooldownTime(15000)

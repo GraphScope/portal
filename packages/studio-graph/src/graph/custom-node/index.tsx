@@ -7,13 +7,13 @@ import { drawText } from './draw';
 export const nodeCanvasObject =
   (node: NodeObject, ctx: CanvasRenderingContext2D, globalScale: number) =>
   (nodeStyle: StyleConfig, nodeStatus: any) => {
-    if (!node.x || !node.y) {
+    if (node.x === undefined || node.y === undefined) {
       return;
     }
 
     const style = handleStyle(node, nodeStyle);
     const status = handleStatus(node, nodeStatus);
-    const { color, size, caption, captionStatus, icon } = style;
+    const { color, size, caption, captionStatus, icon, captionMode } = style;
     const { selected, hovering } = status;
     //@ts-ignore
     const textLabel = node.properties && node.properties[caption];
@@ -44,39 +44,38 @@ export const nodeCanvasObject =
       //@TODO
     }
 
-    const showTextInCircle = R * globalScale > 14;
-
-    if (showTextInCircle && captionStatus !== 'hidden' && textLabel) {
-      const fontSize = 14 / globalScale;
-      ctx.font = `${fontSize}px Sans-Serif`;
-      ctx.fillStyle = NODE_TEXT_COLOR;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#fff';
-      drawText(ctx, {
-        text: textLabel,
-        x: node.x,
-        y: node.y + fontSize / 2,
-        maxWidth: R * 2 * 0.8, //预留 20% pandding
-        lineHeight: fontSize * 1.2,
-      });
+    if (captionStatus !== 'hidden' && textLabel) {
+      const fontSize = Math.min(0.5 * globalScale, 14 / globalScale);
+      if (globalScale > 4 && globalScale < 15) {
+        ctx.font = `${fontSize}px Sans-Serif`;
+        const textWidth = ctx.measureText(textLabel).width;
+        const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+        ctx.fillStyle = NODE_TEXT_COLOR;
+        //@ts-ignore
+        ctx.fillRect(node.x - bckgDimensions[0] / 2, 1.2 * R + node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = color;
+        ctx.fillText(textLabel, node.x, node.y + 1.2 * R);
+        // @ts-ignore
+        node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
+      }
+      if (globalScale >= 15) {
+        const fontSize = 16 / globalScale;
+        ctx.font = `${fontSize}px Sans-Serif`;
+        ctx.fillStyle = NODE_TEXT_COLOR;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#fff';
+        drawText(ctx, {
+          text: textLabel,
+          x: node.x,
+          y: node.y + fontSize / 2,
+          maxWidth: R * 2 * 0.8, //预留 20% pandding
+          lineHeight: fontSize * 1.2,
+        });
+      }
     }
-    // } else if (captionStatus !== 'hidden' && textLabel) {
-    // const fontSize = 12 / globalScale;
-    // ctx.font = `${fontSize}px Sans-Serif`;
-    // const textWidth = ctx.measureText(textLabel).width;
-    // const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
-    // ctx.fillStyle = NODE_TEXT_COLOR;
-    // //@ts-ignore
-    // ctx.fillRect(node.x - bckgDimensions[0] / 2, 1.2 * R + node.y - bckgDimensions[1] / 2, ...bckgDimensions);
-    // ctx.textAlign = 'center';
-    // ctx.textBaseline = 'middle';
-    // ctx.fillStyle = color;
-    // ctx.fillText(textLabel, node.x, node.y + 1.2 * R);
-    //@ts-ignore
-    //   node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
-
-    // }
     ctx.restore();
     return;
   };

@@ -6,7 +6,8 @@ export const components = {
     iconMarginInlineEnd: 14,
     itemMarginInline: 4,
     iconSize: 14,
-    collapsedWidth: 60,
+    collapsedWidth: 50,
+    itemActiveBg: '#eaeaea',
   },
   Typography: {
     titleMarginBottom: '0.2em',

@@ -19,6 +19,15 @@ import {
   ClearStatatus,
   SegmentedTabs,
   RunCluster,
+  ContextMenu,
+  NeighborQuery,
+  DeleteNode,
+  CommonNeighbor,
+  Brush,
+  Loading,
+  DeleteLeafNodes,
+  Report,
+  Export,
 } from '../components';
 
 import { Divider } from 'antd';
@@ -27,6 +36,7 @@ interface QueryGraphProps {
   data: any;
   schema: any;
   graphId: string;
+  onQuery: (params: any) => Promise<any>;
 }
 
 const ToogleButton = () => {
@@ -39,7 +49,7 @@ const ToogleButton = () => {
 };
 
 const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
-  const { data, schema, graphId } = props;
+  const { data, schema, graphId, onQuery } = props;
   console.log('data>>>>', data);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const items = [
@@ -56,7 +66,18 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       value: 'Style',
       children: <StyleSetting />,
     },
+    {
+      key: 'Report',
+      label: 'Report',
+      value: 'Report',
+      children: <Report />,
+    },
   ];
+
+  const onSelectNodes = values => {
+    console.log(values);
+  };
+
   return (
     <div
       style={{
@@ -82,6 +103,14 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
           <Prepare data={data} schema={schema} graphId={graphId} />
           <Canvas />
           <ClearStatatus />
+          <Brush onSelect={onSelectNodes} />
+          <Loading />
+          <ContextMenu>
+            <NeighborQuery onQuery={onQuery} />
+            <CommonNeighbor onQuery={onQuery} />
+            <DeleteLeafNodes />
+            <DeleteNode />
+          </ContextMenu>
           <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
             <ToogleButton />
             <Divider style={{ margin: '0px' }} />
@@ -89,6 +118,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
             <FullScreen containerRef={containerRef} />
             <ZoomFit />
             <RunCluster />
+            <Export />
           </Toolbar>
         </Section>
       </MultipleInstance>

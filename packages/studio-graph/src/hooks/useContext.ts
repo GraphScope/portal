@@ -31,6 +31,7 @@ export type IStore = {
   edgeStatus: Record<string, StatusConfig>;
   graphId: string;
   schema: any;
+  isLoading: boolean;
 };
 
 export const initialStore: IStore = {
@@ -59,9 +60,11 @@ export const initialStore: IStore = {
     nodes: [],
     edges: [],
   },
+  isLoading: false,
 };
 
 type ContextType = {
+  id: string;
   store: Snapshot<IStore>;
   updateStore: (fn: (draft: IStore) => void) => void;
 };
@@ -71,6 +74,7 @@ export function useContext(): ContextType {
   const store = useSnapshot(currentStore);
 
   return {
+    id,
     store,
     updateStore: (fn: (draft) => void) => {
       return fn(currentStore);

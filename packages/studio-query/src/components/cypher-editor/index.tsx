@@ -58,7 +58,7 @@ interface IEditor extends CypherEditorProps {
 const Editor = forwardRef((props: IEditor, editorRef: any) => {
   const { value, language = 'cypher', maxRows = 10, minRows = 1, onChangeContent, clear, onInit } = props;
   let codeEditor: editor.IStandaloneCodeEditor;
-  const MAGIC_NUMBER = onChangeContent ? 0 : 1;
+  const MAGIC_NUMBER = onChangeContent ? 0 : countLines(value);
   const { algorithm } = useThemeContainer();
 
   const isDark = algorithm === 'darkAlgorithm';

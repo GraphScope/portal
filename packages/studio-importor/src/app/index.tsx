@@ -46,6 +46,9 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
     batchUploadFiles,
     onCreateLabel,
     onDeleteLabel,
+    style,
+    leftSide,
+    rightSide,
   } = props;
   const { store, updateStore } = useContext();
 
@@ -64,6 +67,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
       };
       const { nodes, edges } = schemaOptions || { nodes: [], edges: [] };
       const isEmpty = nodes.length === 0;
+
       updateStore(draft => {
         draft.nodes = nodes;
         draft.edges = edges;
@@ -79,32 +83,36 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
       });
     })();
   }, []);
+  const IS_PURE = appMode === 'PURE';
 
   return (
     <ThemeProvider locales={locales}>
       <Section
-        leftSide={<ImportSchema />}
+        leftSide={leftSide || <ImportSchema />}
         rightSide={
-          <PropertiesEditor
-            appMode={appMode}
-            /**  第二项 */
-            queryPrimitiveTypes={queryPrimitiveTypes}
-            handleUploadFile={handleUploadFile}
-            batchUploadFiles={batchUploadFiles}
-            onCreateLabel={onCreateLabel}
-            onDeleteLabel={onDeleteLabel}
-          />
+          rightSide || (
+            <PropertiesEditor
+              appMode={appMode}
+              /**  第二项 */
+              queryPrimitiveTypes={queryPrimitiveTypes}
+              handleUploadFile={handleUploadFile}
+              batchUploadFiles={batchUploadFiles}
+              onCreateLabel={onCreateLabel}
+              onDeleteLabel={onDeleteLabel}
+            />
+          )
         }
         leftSideStyle={leftSideStyle}
         rightSideStyle={rightSideStyle}
         defaultCollapsed={defaultCollapsed}
-        style={{ height: 'calc(100vh - 50px)' }}
+        style={{ height: 'calc(100vh - 50px)', ...style }}
         splitBorder
       >
         <ReactFlowProvider>
-          <ButtonController />
-          {children}
+          {!IS_PURE && <ButtonController />}
+
           <GraphCanvas />
+          {children}
         </ReactFlowProvider>
       </Section>
     </ThemeProvider>

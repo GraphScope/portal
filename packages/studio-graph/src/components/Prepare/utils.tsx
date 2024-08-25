@@ -56,7 +56,9 @@ export function getDataMap(data) {
     };
   });
   data.edges.forEach(edge => {
-    const { source, target, id } = edge;
+    const { id } = edge;
+    const source = edge.source.id || edge.source; //兼容force-graph source-object
+    const target = edge.target.id || edge.target;
     dataMap[id] = edge;
     const sourceNode = dataMap[source];
     const targetNode = dataMap[target];

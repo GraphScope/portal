@@ -2,7 +2,7 @@ import { Parser } from 'sql-ddl-to-json-schema';
 const parser = new Parser('mysql');
 import type { ParsedFile } from '@graphscope/studio-components';
 import { ISchemaEdge, ISchemaNode } from '../../typing';
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 
 export const covertSchemaByTables = (tables: ParsedFile[]) => {
   const nodes: ISchemaNode[] = [];
@@ -26,7 +26,7 @@ export const covertSchemaByTables = (tables: ParsedFile[]) => {
             return {
               name,
               type: type.datatype,
-              key: uuid(),
+              key: uuidv4(),
               disable: false,
               primaryKey: false,
             };
@@ -36,7 +36,7 @@ export const covertSchemaByTables = (tables: ParsedFile[]) => {
     }
     if (type === 'Edge') {
       edges.push({
-        id: uuid(),
+        id: uuidv4(),
         source: sourceField || '',
         target: targetField || '',
         data: {
@@ -46,7 +46,7 @@ export const covertSchemaByTables = (tables: ParsedFile[]) => {
             return {
               name,
               type: type.datatype,
-              key: uuid(),
+              key: uuidv4(),
               disable: false,
               primaryKey: false,
             };
