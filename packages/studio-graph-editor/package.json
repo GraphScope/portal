@@ -2,8 +2,8 @@
   "name": "@graphscope/studio-graph-editor",
   "version": "0.1.0",
   "description": "",
-  "main": "./dist/studio-graph-editor.umd.js",
-  "module": "./dist/studio-graph-editor.es.js",
+  "main": "./src/index.tsx",
+  "module": "./src/index.tsx",
   "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",

@@ -1,5 +1,5 @@
 import React from 'react';
-import Graph from '@graphscope/studio-graph-editor';
+import { Graph } from '@graphscope/studio-graph-editor';
 export const Preview = () => {
   return (
     <div
