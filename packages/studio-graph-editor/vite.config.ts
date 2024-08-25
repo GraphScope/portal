@@ -23,7 +23,7 @@ export default defineConfig(({ mode }) => {
     };
   } else {
     return {
-      root: './public',
+      root: './',
       server: {
         port: 8000,
         open: '/',

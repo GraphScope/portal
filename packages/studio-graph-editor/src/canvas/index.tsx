@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { CSSProperties, useEffect } from 'react';
 import { ReactFlow, Controls, Background, MiniMap } from 'reactflow';
 import { EmptyCanvas, useThemeContainer, Utils } from '@graphscope/studio-components';
 import { nodeTypes } from '../elements/node-types';
@@ -13,6 +13,8 @@ import { FormattedMessage } from 'react-intl';
 
 interface ISchemaGraphProps {
   children?: React.ReactNode;
+  className?: string;
+  style?: CSSProperties;
 }
 const { fakeSnapshot } = Utils;
 const SchemaGraph: React.FunctionComponent<ISchemaGraphProps> = props => {
@@ -33,7 +35,7 @@ const SchemaGraph: React.FunctionComponent<ISchemaGraphProps> = props => {
     />
   );
   return (
-    <div style={{ height: '100%', width: '100%' }}>
+    <div style={{ height: '100%', width: '100%', ...props.style }} className={props.className}>
       <div style={{ height: '100%', width: '100%', position: 'absolute' }}>
         <ReactFlow
           nodes={fakeSnapshot(nodes)}

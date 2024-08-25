@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import SchemaGraph from '../src/index';
+import SchemaGraph from './src/index';
 
 interface IAppProps {}
 

@@ -17,7 +17,9 @@ interface IGraphProps {
   onEdgeClick?: (value: ISchemaEdge, event: React.MouseEvent) => void;
   onNodesChange?: (nodes: ISchemaNode[]) => void;
   onEdgesChange?: (edges: ISchemaEdge[]) => void;
+  className?: string;
   controlElements?: React.ReactNode;
+  style?: React.CSSProperties;
 
   // quick start API, 没用明白组件 PropertiesList 建议自己封装
   // if want to show properties, you can set this to true
@@ -57,7 +59,7 @@ const Graph: React.FunctionComponent<IGraphProps> = React.forwardRef((props, ref
       {/* <MultipleInstance> */}
       <GraphContext.Provider value={{ ...props }}>
         <ReactFlowProvider>
-          <Canvas>{props.children}</Canvas>
+          <Canvas className={props.className}>{props.children}</Canvas>
         </ReactFlowProvider>
       </GraphContext.Provider>
       {/* </MultipleInstance> */}
