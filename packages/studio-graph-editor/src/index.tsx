@@ -37,8 +37,7 @@ export const useGraphContext = () => {
   }
   return context;
 };
-
-const Graph: React.FunctionComponent<IGraphProps> = React.forwardRef((props, ref) => {
+export const Graph: React.FunctionComponent<IGraphProps> = React.forwardRef((props, ref) => {
   const { locale = 'en-US' } = props;
   const messages = locales[locale];
   const { updateStore } = useContext();
@@ -66,5 +65,3 @@ const Graph: React.FunctionComponent<IGraphProps> = React.forwardRef((props, ref
     </IntlProvider>
   );
 });
-
-export default Graph;

@@ -1,15 +1,16 @@
 import * as React from 'react';
-import ReactDOM from 'react-dom';
-import SchemaGraph from './src/index';
+import { Graph } from './src/index';
+import { createRoot } from 'react-dom/client';
 
 interface IAppProps {}
 
 const DrawGraph: React.FunctionComponent<IAppProps> = props => {
   return (
     <div>
-      <SchemaGraph locale="en-US" />
+      <Graph locale="en-US" />
     </div>
   );
 };
 
-ReactDOM.render(<DrawGraph />, document.getElementById('root') as HTMLElement);
+// ReactDOM.render(<DrawGraph />, document.getElementById('root') as HTMLElement);
+createRoot(document.getElementById('root')!).render(<DrawGraph />);
