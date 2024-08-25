@@ -20,6 +20,12 @@ interface IGraphProps {
   className?: string;
   controlElements?: React.ReactNode;
   style?: React.CSSProperties;
+  defaultNodes?: ISchemaNode[];
+  defaultEdges?: ISchemaEdge[];
+  isMiniMap?: boolean;
+  isControlButton?: boolean;
+  isPreview?: boolean;
+  disabled?: boolean;
 
   // quick start API, 没用明白组件 PropertiesList 建议自己封装
   // if want to show properties, you can set this to true

@@ -43,7 +43,12 @@ const GraphNode = (props: NodeProps) => {
   });
   const [visible, setVisible] = useState<boolean>(false);
   const nodeRef = useRef<HTMLDivElement>(null);
-  const { isShowPopover = false, triggerPopover = 'click', popoverCustomContent } = useGraphContext();
+  const {
+    isShowPopover = false,
+    triggerPopover = 'click',
+    disabled: graphDisabled = false,
+    popoverCustomContent,
+  } = useGraphContext();
 
   const onMouseEnter = () => {
     if (isConnectable) {
@@ -164,19 +169,21 @@ const GraphNode = (props: NodeProps) => {
         onMouseLeave={onMouseLeave}
         onClick={onClick}
       >
-        <Handle
-          type="target"
-          position={Position.Left}
-          id="left"
-          style={{
-            background: 'transparent',
-            position: 'relative',
-            border: 'none',
-          }}
-        />
-
-        <Handle type="source" position={Position.Right} id="right" style={haloStyle}></Handle>
-
+        {!graphDisabled && (
+          <>
+            <Handle
+              type="target"
+              position={Position.Left}
+              id="left"
+              style={{
+                background: 'transparent',
+                position: 'relative',
+                border: 'none',
+              }}
+            />
+            <Handle type="source" position={Position.Right} id="right" style={haloStyle}></Handle>
+          </>
+        )}
         <div
           style={{
             position: 'absolute',
@@ -209,7 +216,7 @@ const GraphNode = (props: NodeProps) => {
           )}
           <EditableText
             id={id}
-            text={currentNode.data.label}
+            text={currentNode?.data.label ?? props.data.label}
             onTextChange={hanleChangeLabel}
             disabled={disabled}
             style={{ color: isDark ? '#D7D7D7' : '#000' }}

@@ -1,6 +1,29 @@
 import React from 'react';
-import { Graph } from '@graphscope/studio-graph-editor';
+import { QuickStart } from './QuickStart';
+import { Canvas } from './Canvas';
+import { Section } from '@graphscope/studio-components';
 
 export const DrawPattern = () => {
-  return <Graph></Graph>;
+  return (
+    <Section
+      style={{}}
+      leftSide={
+        <div
+          id="quick-start-wrapper"
+          style={{
+            height: '100%',
+            width: '100%',
+            boxSizing: 'border-box',
+          }}
+        >
+          <QuickStart></QuickStart>
+        </div>
+      }
+      children={
+        <div id="canvas-wrapper" style={{ height: '100%', width: '100%', backgroundColor: '#E6F4FF' }}>
+          <Canvas></Canvas>
+        </div>
+      }
+    />
+  );
 };
