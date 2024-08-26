@@ -1,4 +1,4 @@
-import { Property } from "./property";
+import { Property } from './property';
 
 export interface Edge {
   edgeKey: string;
@@ -6,6 +6,9 @@ export interface Edge {
   targetNode: string;
   sourceNode: string;
   statement?: string;
-  variable?: string;
-  properties?: Property[];
+  data: {
+    label?: string;
+    properties?: Property[];
+    variable?: string;
+  };
 }

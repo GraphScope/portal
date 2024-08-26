@@ -3,10 +3,14 @@ import { Graph } from '@graphscope/studio-graph-editor';
 import { defaultEdges, defaultNodes } from './data';
 import { ISchemaNode } from '@graphscope/studio-graph-editor/dist/types/node';
 import { ISchemaEdge } from '@graphscope/studio-graph-editor/dist/types/edge';
+import { useTransform } from '../../hooks/transform/useTransform';
 export const Preview = () => {
+  const { transformNodes, transformEdges } = useTransform();
   const handleSelectionChange = (nodes: ISchemaNode[], edges: ISchemaEdge[]) => {
-    console.log('选中的节点', nodes, edges);
+    transformNodes(nodes);
+    transformEdges(edges);
   };
+
   return (
     <div
       style={{

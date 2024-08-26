@@ -20,15 +20,26 @@ const updateNodes = (state: NodeState, newNodes: Node[]) => {
 export const useNodeStore = create<NodeState>()(set => ({
   nodes: [],
 
-  addNode: node => set(state => updateNodes(state, [...state.nodes, node])),
+  addNode: node =>
+    set(state => {
+      // 检查节点是否已存在
+      if (state.nodes.some(n => n.nodeKey === node.nodeKey)) {
+        return state; // 如果已存在，则返回当前状态，不进行添加
+      }
+      return updateNodes(state, [...state.nodes, node]);
+    }),
 
   deleteNode: nodeKey =>
-    set(state =>
-      updateNodes(
+    set(state => {
+      // 检查节点是否存在
+      if (!state.nodes.some(n => n.nodeKey === nodeKey)) {
+        return state; // 如果不存在，则返回当前状态，不进行删除
+      }
+      return updateNodes(
         state,
         state.nodes.filter(n => n.nodeKey !== nodeKey),
-      ),
-    ),
+      );
+    }),
 
   clearNode: () =>
     set(() => {
@@ -37,12 +48,16 @@ export const useNodeStore = create<NodeState>()(set => ({
     }),
 
   editNode: node =>
-    set(state =>
-      updateNodes(
+    set(state => {
+      // 检查节点是否存在
+      if (!state.nodes.some(n => n.nodeKey === node.nodeKey)) {
+        return state; // 如果不存在，则返回当前状态，不进行编辑
+      }
+      return updateNodes(
         state,
         state.nodes.map(n => (n.nodeKey === node.nodeKey ? node : n)),
-      ),
-    ),
+      );
+    }),
 }));
 
 export const nodeStore$ = nodesSubject.asObservable();
