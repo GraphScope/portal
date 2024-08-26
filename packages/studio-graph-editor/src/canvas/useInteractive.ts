@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { useReactFlow, applyEdgeChanges, applyNodeChanges } from 'reactflow';
+import { useReactFlow, applyEdgeChanges, applyNodeChanges, useOnSelectionChange } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';
 import { createStaticForceLayout } from '../elements/forceLayout';
 
@@ -14,6 +14,7 @@ import { transformEdges } from '../elements';
 import { getBBox, createEdgeLabel, createNodeLabel } from '../elements/utils';
 import { Utils } from '@graphscope/studio-components';
 import { useGraphContext } from '..';
+import { ISchemaEdge } from '../types/edge';
 const { fakeSnapshot } = Utils;
 let timer: any = null;
 const useInteractive: any = () => {
@@ -21,7 +22,7 @@ const useInteractive: any = () => {
   const { screenToFlowPosition, fitBounds, fitView } = useReactFlow();
   const { displayMode, nodes, edges, hasLayouted, elementOptions } = store;
   const connectingNodeId = useRef(null);
-  const { onNodesChange: handleNodesChange, onEdgesChange: handleEdgesChange } = useGraphContext();
+  const { onNodesChange: handleNodesChange, onEdgesChange: handleEdgesChange, onSelectionChange } = useGraphContext();
 
   const onConnectStart = useCallback((_, { nodeId }) => {
     connectingNodeId.current = nodeId;
@@ -109,6 +110,15 @@ const useInteractive: any = () => {
       });
     }
   };
+
+  useOnSelectionChange({
+    onChange: useCallback(
+      ({ nodes, edges }) => {
+        onSelectionChange && onSelectionChange(nodes, edges as unknown as ISchemaEdge[]);
+      },
+      [onSelectionChange],
+    ),
+  });
   const onEdgesChange = (changes: EdgeChange[]) => {
     if (elementOptions.isConnectable) {
       updateStore(draft => {

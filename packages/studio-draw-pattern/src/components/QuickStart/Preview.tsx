@@ -1,7 +1,12 @@
 import React from 'react';
 import { Graph } from '@graphscope/studio-graph-editor';
 import { defaultEdges, defaultNodes } from './data';
+import { ISchemaNode } from '@graphscope/studio-graph-editor/dist/types/node';
+import { ISchemaEdge } from '@graphscope/studio-graph-editor/dist/types/edge';
 export const Preview = () => {
+  const handleSelectionChange = (nodes: ISchemaNode[], edges: ISchemaEdge[]) => {
+    console.log('选中的节点', nodes, edges);
+  };
   return (
     <div
       style={{
@@ -27,6 +32,7 @@ export const Preview = () => {
           defaultEdges={defaultEdges}
           defaultNodes={defaultNodes}
           graphId="preview"
+          onSelectionChange={handleSelectionChange}
         ></Graph>
       </div>
     </div>
