@@ -6,7 +6,7 @@ import { BehaviorSubject, map } from 'rxjs';
 export const Canvas = () => {
   return (
     <div style={{ height: '100%', width: '100%' }}>
-      <Graph></Graph>
+      <Graph graphId="edit"></Graph>
     </div>
   );
 };

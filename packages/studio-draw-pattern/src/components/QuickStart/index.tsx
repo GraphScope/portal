@@ -58,10 +58,12 @@ export const QuickStart = () => {
         </span>
         <div
           style={{
-            overflow: 'scroll',
+            overflowY: 'scroll',
             display: 'flex',
             flexDirection: 'column',
             gap: '0.6rem',
+            scrollbarWidth: 'none', // Firefox 隐藏滚动条
+            msOverflowStyle: 'none', // Internet Explorer 和 Edge 隐藏滚动条
           }}
         >
           {quickStartItems.map(item => {

@@ -26,6 +26,7 @@ interface IGraphProps {
   isControlButton?: boolean;
   isPreview?: boolean;
   disabled?: boolean;
+  graphId?: string;
 
   // quick start API, 没用明白组件 PropertiesList 建议自己封装
   // if want to show properties, you can set this to true

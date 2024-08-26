@@ -6,7 +6,7 @@ import { Section } from '@graphscope/studio-components';
 export const DrawPattern = () => {
   return (
     <Section
-      style={{}}
+      splitBorder={true}
       leftSide={
         <div
           id="quick-start-wrapper"

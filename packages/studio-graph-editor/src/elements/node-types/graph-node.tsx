@@ -93,8 +93,8 @@ const GraphNode = (props: NodeProps) => {
       draft.currentId = id;
       // draft.collapsed.right = false;
     });
-    toggleRightSide(false);
-    toggleLeftSide(true);
+    // toggleRightSide(false);
+    // toggleLeftSide(true);
     onNodeClick && onNodeClick(data, event);
     triggerPopover === 'click' && setVisible(true);
   };
@@ -212,7 +212,7 @@ const GraphNode = (props: NodeProps) => {
             id={id}
             text={currentNode?.data.label ?? props.data.label}
             onTextChange={hanleChangeLabel}
-            disabled={disabled}
+            disabled={disabled || graphDisabled}
             style={{ color: isDark ? '#D7D7D7' : '#000' }}
           />
         </div>

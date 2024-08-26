@@ -26,6 +26,7 @@ export const Preview = () => {
           isPreview={true}
           defaultEdges={defaultEdges}
           defaultNodes={defaultNodes}
+          graphId="preview"
         ></Graph>
       </div>
     </div>
