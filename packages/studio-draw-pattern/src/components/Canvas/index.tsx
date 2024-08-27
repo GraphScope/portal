@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { useNodeStore } from '../../stores/useNodeStore';
 import { useEdgeStore } from '../../stores/useEdgeStore';
 import { ISchemaEdge } from '@graphscope/studio-graph-editor/dist/types/edge';
+import { useGenerateRelation } from '../../hooks/generateRelation/useGenerateRelation';
 
 export const Canvas = () => {
   const nodes = useNodeStore(state => state.nodes);
@@ -10,6 +11,17 @@ export const Canvas = () => {
 
   const deTransformNodes = useMemo(() => nodes.map(node => node.data), [nodes]);
   const deTransformEdges = useMemo(() => edges.map(edge => edge.data), [edges]);
+
+  const { generateRelation } = useGenerateRelation();
+
+  useEffect(() => {
+    console.log('这个是边界edges', edges);
+    generateRelation(nodes, edges);
+  }, [edges]);
+
+  useEffect(() => {
+    console.log('这个是节点nodes', nodes);
+  }, [nodes]);
 
   const MyGraph = useCallback(
     () => (
