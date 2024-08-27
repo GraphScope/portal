@@ -8,7 +8,7 @@ export const Preview = () => {
   const { transformNodes, transformEdges } = useTransform();
   const handleSelectionChange = (nodes: ISchemaNode[], edges: ISchemaEdge[]) => {
     transformNodes(nodes);
-    transformEdges(edges);
+    transformEdges(edges, nodes);
   };
 
   return (

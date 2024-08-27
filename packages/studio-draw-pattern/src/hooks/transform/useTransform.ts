@@ -1,5 +1,5 @@
 import { ISchemaNode } from '@graphscope/studio-graph-editor/dist/types/node';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { Node } from '../../types/node';
 import { ISchemaEdge } from '@graphscope/studio-graph-editor/dist/types/edge';
 import { Edge } from '../../types/edge';
@@ -14,7 +14,7 @@ export const useTransform = () => {
     return {
       nodeKey: node.id,
       data: {
-        ...node.data,
+        ...node,
       },
     } as Node;
   }, []);
@@ -23,7 +23,7 @@ export const useTransform = () => {
     return {
       edgeKey: edge.id,
       data: {
-        ...edge.data,
+        ...edge,
       },
     } as Edge;
   }, []);
@@ -34,10 +34,17 @@ export const useTransform = () => {
     });
   }, []);
 
-  const transformEdges = useCallback((edges: ISchemaEdge[]) => {
+  const transformEdges = useCallback((edges: ISchemaEdge[], nodes: ISchemaNode[]) => {
     edges.map(edge => {
-      edge && addEdge && addEdge(transformEdge(edge));
+      checkEdgeExist(edge, nodes) && edge && addEdge && addEdge(transformEdge(edge));
     });
+  }, []);
+
+  // 判断 edge 的 source & node 是否存在，要求必须这条的 edge 的 source & node 节点都存在，才能添加到 store 中
+  const checkEdgeExist = useCallback((edge: ISchemaEdge, nodes: ISchemaNode[]) => {
+    const isSourceExist = nodes.some(node => node.id === edge.source);
+    const isTargetExist = nodes.some(node => node.id === edge.target);
+    return isSourceExist && isTargetExist;
   }, []);
 
   return { transformNode, transformEdge, transformNodes, transformEdges };
