@@ -17,6 +17,9 @@ export const Canvas = () => {
         graphId="edit"
         defaultNodes={deTransformNodes}
         defaultEdges={deTransformEdges as unknown as ISchemaEdge[]}
+        onNodesChange={nodes => console.log('节点发生变化', nodes)}
+        isShowPopover={true}
+        popoverCustomContent={<></>}
       />
     ),
     [deTransformNodes, deTransformEdges],

@@ -1,7 +1,6 @@
 import React, { ReactNode, useCallback, useMemo } from 'react';
 import templates from './quickStartTemplate';
 import { useTransform } from '../../hooks/transform/useTransform';
-import { ISchemaEdge } from '@graphscope/studio-graph-editor/dist/types/edge';
 
 interface QuickStartProps {
   title: string;

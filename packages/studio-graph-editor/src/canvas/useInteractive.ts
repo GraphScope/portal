@@ -105,7 +105,7 @@ const useInteractive: any = () => {
       updateStore(draft => {
         const newNodes = applyNodeChanges(changes, deepclone(draft.nodes));
         console.log(JSON.stringify(newNodes));
-        handleNodesChange && handleNodesChange(newNodes);
+        handleNodesChange && handleNodesChange(fakeSnapshot(newNodes));
         return (draft.nodes = newNodes);
       });
     }

@@ -233,12 +233,10 @@ const GraphNode = (props: NodeProps) => {
             padding: '20px',
           }}
         >
+          <span>label</span>
+          <Input value={currentNode.data.label} onChange={handleLabelChange}></Input>
           {popoverCustomContent ?? (
-            <>
-              <span>label</span>
-              <Input value={currentNode.data.label} onChange={handleLabelChange}></Input>
-              <PropertiesList typeColumn={{ options: typeColumn }} onChange={handleChange}></PropertiesList>
-            </>
+            <PropertiesList typeColumn={{ options: typeColumn }} onChange={handleChange}></PropertiesList>
           )}
         </div>
       )}
