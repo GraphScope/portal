@@ -22,11 +22,6 @@ const items: SegmentedTabsProps['items'] = [
     key: 'SQL',
     children: <ImportFromSQL />,
   },
-  {
-    label: 'YAML',
-    key: 'YAML',
-    children: <ImportFromYAML />,
-  },
 ];
 
 const ImportSchema: React.FunctionComponent<IImportSchemaProps> = props => {
