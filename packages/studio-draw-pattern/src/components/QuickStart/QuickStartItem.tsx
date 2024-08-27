@@ -1,12 +1,29 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useCallback, useMemo } from 'react';
+import templates from './quickStartTemplate';
+import { useTransform } from '../../hooks/transform/useTransform';
+import { ISchemaEdge } from '@graphscope/studio-graph-editor/dist/types/edge';
 
 interface QuickStartProps {
   title: string;
   svgSrc: ReactNode;
+  id: string;
 }
-export const QuickStartItem: React.FC<QuickStartProps> = ({ title, svgSrc }) => {
+export const QuickStartItem: React.FC<QuickStartProps> = ({ title, svgSrc, id }) => {
+  const template = useMemo(() => templates.find(item => item.templateId === id), [templates]);
+  const { transformNodes, transformEdges } = useTransform();
+
+  const handleClick = useCallback(() => {
+    if (template) {
+      transformNodes(template.nodes);
+      transformEdges(template.edges, template.nodes);
+    }
+  }, [template]);
+
   return (
-    <div style={{ border: '1px solid #E3E3E3', borderRadius: '5px', padding: '0.8rem' }}>
+    <div
+      style={{ border: '1px solid #E3E3E3', borderRadius: '5px', padding: '0.8rem', cursor: 'pointer' }}
+      onClick={handleClick}
+    >
       {title}
       <div
         style={{
