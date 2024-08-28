@@ -32,7 +32,33 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
     />
   );
   const IS_PURE = appMode === 'PURE';
+  /** reactflow 居中 */
+  const onReactFlowInit = reactFlowInstance => centerView(reactFlowInstance);
+  const centerView = reactFlowInstance => {
+    if (reactFlowInstance) {
+      const allNodes = reactFlowInstance.toObject().nodes;
+      let minX = Infinity,
+        maxX = -Infinity,
+        minY = Infinity,
+        maxY = -Infinity;
 
+      allNodes.forEach(node => {
+        if (node.position.x < minX) minX = node.position.x;
+        if (node.position.x > maxX) maxX = node.position.x;
+        if (node.position.y < minY) minY = node.position.y;
+        if (node.position.y > maxY) maxY = node.position.y;
+      });
+
+      const centerX = (minX + maxX) / 2;
+      const centerY = (minY + maxY) / 2;
+
+      reactFlowInstance.fitView({
+        x: centerX,
+        y: centerY,
+        padding: 0.25,
+      });
+    }
+  };
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <div style={{ height: '100%', width: '100%', position: 'absolute' }}>
@@ -48,6 +74,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           onConnectStart={onConnectStart}
           onConnectEnd={onConnectEnd}
           zoomOnDoubleClick={false}
+          onInit={onReactFlowInit}
           // onDoubleClick={onDoubleClick}
         >
           <ArrowMarker selectedColor={theme.primaryColor} color={isDark ? '#d7d7d7' : '#000'} />
