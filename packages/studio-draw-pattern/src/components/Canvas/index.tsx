@@ -15,13 +15,8 @@ export const Canvas = () => {
   const { generateRelation } = useGenerateRelation();
 
   useEffect(() => {
-    console.log('这个是边界edges', edges);
-    generateRelation(nodes, edges);
+    generateRelation(edges);
   }, [edges]);
-
-  useEffect(() => {
-    console.log('这个是节点nodes', nodes);
-  }, [nodes]);
 
   const MyGraph = useCallback(
     () => (

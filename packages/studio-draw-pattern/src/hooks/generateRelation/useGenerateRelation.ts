@@ -1,33 +1,52 @@
 import { useNodeStore } from '../../stores/useNodeStore';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { Node } from '../../types/node';
 import { Edge } from '../../types/edge';
 
 export const useGenerateRelation = () => {
   const editNode = useNodeStore(state => state.editNode);
+  const nodes = useNodeStore(state => state.nodes);
 
-  const generateRelation = useCallback((nodes: Node[], edges: Edge[]) => {
-    console.log('开始生成');
-    edges.map(edge => {
-      const sourceNode = nodes.find(node => node.nodeKey === edge.sourceNode);
-      if (sourceNode && editNode) {
-        console.log('生成出节点关系');
-        editNode({
-          ...sourceNode,
-          outRelations: [...(sourceNode.outRelations || []), edge.edgeKey],
-        });
-      }
+  const generateRelation = useCallback(
+    (edges: Edge[]) => {
+      const newNodes = [...nodes]; // 创建节点副本来存储中间状态
+      edges.forEach(edge => {
+        const sourceNodeIndex = newNodes.findIndex(node => node.nodeKey === edge.sourceNode);
+        const targetNodeIndex = newNodes.findIndex(node => node.nodeKey === edge.targetNode);
 
-      const targetNode = nodes.find(node => node.nodeKey === edge.targetNode);
-      if (targetNode && editNode) {
-        console.log('生成进节点关系');
-        editNode({
-          ...targetNode,
-          inRelations: [...(targetNode.inRelations || []), edge.edgeKey],
-        });
-      }
-    });
-  }, []);
+        if (sourceNodeIndex !== -1 && targetNodeIndex !== -1) {
+          const sourceNode = newNodes[sourceNodeIndex];
+          const targetNode = newNodes[targetNodeIndex];
+
+          if (sourceNode === targetNode) {
+            newNodes[sourceNodeIndex] = {
+              ...sourceNode,
+              outRelations: [...(sourceNode.outRelations || []), edge.edgeKey],
+              inRelations: [...(sourceNode.inRelations || []), edge.edgeKey],
+            };
+          } else {
+            if (sourceNode) {
+              newNodes[sourceNodeIndex] = {
+                ...sourceNode,
+                outRelations: [...(sourceNode.outRelations || []), edge.edgeKey],
+              };
+            }
+            if (targetNode) {
+              newNodes[targetNodeIndex] = {
+                ...targetNode,
+                inRelations: [...(targetNode.inRelations || []), edge.edgeKey],
+              };
+            }
+          }
+        }
+      });
+
+      newNodes.forEach(node => {
+        editNode && editNode(node); // 一次性更新状态
+      });
+    },
+    [nodes],
+  );
 
   return { generateRelation };
 };
