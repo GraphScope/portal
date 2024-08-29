@@ -4,6 +4,7 @@ import { useNodeStore } from '../../stores/useNodeStore';
 import { useEdgeStore } from '../../stores/useEdgeStore';
 import { ISchemaEdge } from '@graphscope/studio-graph-editor/dist/types/edge';
 import { useGenerateRelation } from '../../hooks/generateRelation/useGenerateRelation';
+import PopoverContent from './PopoverContent';
 
 export const Canvas = () => {
   const nodes = useNodeStore(state => state.nodes);
@@ -26,7 +27,7 @@ export const Canvas = () => {
         defaultEdges={deTransformEdges as unknown as ISchemaEdge[]}
         onNodesChange={nodes => console.log('节点发生变化', nodes)}
         isShowPopover={true}
-        popoverCustomContent={<></>}
+        popoverCustomContent={<PopoverContent></PopoverContent>}
       />
     ),
     [deTransformNodes, deTransformEdges],

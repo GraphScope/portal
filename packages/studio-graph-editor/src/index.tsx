@@ -31,6 +31,7 @@ interface IGraphProps {
   // quick start API, 没用明白组件 PropertiesList 建议自己封装
   // if want to show properties, you can set this to true
   isShowPopover?: boolean;
+  // TODO: hover 功能未来提供
   triggerPopover?: 'click' | 'hover';
   popoverCustomContent?: React.ReactNode;
   onSelectionChange?: (nodes: ISchemaNode[], edges: ISchemaEdge[]) => void;

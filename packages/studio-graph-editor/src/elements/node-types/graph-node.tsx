@@ -1,7 +1,7 @@
 import React, { ChangeEvent, memo, MouseEventHandler, useEffect, useRef, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { Tag, Button, theme, Popover, Input } from 'antd';
-import { CheckCircleOutlined, CheckOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { EditableText, useThemeContainer, useSection, PropertiesList, Property } from '@graphscope/studio-components';
 const { useToken } = theme;
 import { useContext } from '../../canvas/useContext';
@@ -115,18 +115,6 @@ const GraphNode = (props: NodeProps) => {
     return isSelected ? `4px solid ${theme.primaryColor}` : '2px solid #000';
   };
 
-  // 监听用户 click || hover position
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (nodeRef.current && !nodeRef.current.contains(event.target)) setVisible(false);
-    }
-
-    triggerPopover === 'click' && document.addEventListener('click', handleClickOutside);
-    return () => {
-      triggerPopover === 'click' && document.removeEventListener('click', handleClickOutside);
-    };
-  }, [nodeRef]);
-
   const handleLabelChange = (event: ChangeEvent) => {
     // @ts-ignore
 
@@ -157,8 +145,8 @@ const GraphNode = (props: NodeProps) => {
   return (
     <div
       ref={nodeRef}
-      onMouseLeave={() => triggerPopover === 'hover' && setVisible(false)}
-      onMouseEnter={() => triggerPopover === 'hover' && setVisible(true)}
+      // onMouseLeave={() => triggerPopover === 'hover' && setVisible(false)}
+      // onMouseEnter={() => triggerPopover === 'hover' && setVisible(true)}
     >
       <div
         data-nodeid={id}
@@ -233,11 +221,27 @@ const GraphNode = (props: NodeProps) => {
             padding: '20px',
           }}
         >
-          <span>label</span>
-          <Input value={currentNode.data.label} onChange={handleLabelChange}></Input>
-          {popoverCustomContent ?? (
-            <PropertiesList typeColumn={{ options: typeColumn }} onChange={handleChange}></PropertiesList>
-          )}
+          <div
+            style={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              height: '40px',
+            }}
+          >
+            <h3>Floating Window</h3>
+            <Button type="primary" style={{ height: '30px', width: '30px' }} onClick={() => setVisible(false)}>
+              <CloseOutlined />
+            </Button>
+          </div>
+          <div style={{ marginTop: '10px' }}>
+            <span style={{ paddingBottom: '5px', marginLeft: '5px' }}>Label</span>
+            <Input value={currentNode.data.label} onChange={handleLabelChange} style={{ marginTop: '5px' }}></Input>
+            {popoverCustomContent ?? (
+              <PropertiesList typeColumn={{ options: typeColumn }} onChange={handleChange}></PropertiesList>
+            )}
+          </div>
         </div>
       )}
     </div>
