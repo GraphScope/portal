@@ -20,17 +20,21 @@ There are two ways to start graphscope portal
 ```bash
 # Pull the image
 docker pull registry.cn-hongkong.aliyuncs.com/graphscope/portal:latest
+```
+
+```bash
 # Run the container
-docker run -it -p 8888:8888 --name my-portal registry.cn-hongkong.aliyuncs.com/graphscope/portal:latest
-# Enter the container and start the service
-npm run dev -- --port=8888 --coordinator=<graphscope_coordinator_endpoint> --cypher_endpoint=<graphscope_cypher_endpoint>
+docker run -it
+--name my-portal
+-p 8888:8888
+-e COORDINATOR=http://host.docker.internal:8080
+registry.cn-hongkong.aliyuncs.com/graphscope/portal:latest
 ```
 
 > Description of Startup Parameters
 
-- `coordinator` is the address of the GraphScope engine
-- `port` is the frontend service port number 8888.
-- `cypher_endpoint` is the query address for the GraphScope Interactive engine, default is neo4j://<graphscope_cypher_endpoint>:7687
+- `COORDINATOR` refers to the GraphScope engine address. If you have also started the GraphScope engine locally using Docker, you can directly use `host.docker.internal:8080` as the `COORDINATOR` parameter.
+- `PORT` is the port number for the frontend service, defaulting to 8888.
 
 ### Building from the source code
 
