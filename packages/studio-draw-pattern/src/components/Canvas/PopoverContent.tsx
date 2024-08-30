@@ -1,30 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Row, Col, Table } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Property } from '../../types/property';
 
-const { TextArea } = Input;
-
-interface Item {
-  name: string;
-  compare: string;
-  value: string;
+interface PopoverContentProps {
+  currentId?: string;
+  onChange?: (value: { currentId: string; properties: Property[] }) => void;
 }
 
-const PopoverContent: React.FC = () => {
-  const [items, setItems] = useState<Item[]>([{ name: 'property_0', compare: '', value: '' }]);
+const PopoverContent: React.FC<PopoverContentProps> = ({ currentId, onChange }) => {
+  const [items, setItems] = useState<Property[]>([]);
+
+  useEffect(() => {
+    console.log('id change', currentId);
+  }, [currentId]);
+
+  useEffect(() => {
+    onChange && onChange({ currentId: currentId ?? '', properties: items });
+  }, [items, currentId]);
 
   const addItem = () => {
-    setItems([...items, { name: '', compare: '', value: '' }]);
+    setItems([...items, { id: Date.now().toString(), name: '', compare: '', value: '' }]);
   };
 
-  const removeItem = (index: number) => {
-    const newItems = items.filter((_, i) => i !== index);
+  const removeItem = (id: string) => {
+    const newItems = items.filter(item => item.id !== id);
     setItems(newItems);
   };
 
-  const handleChange = (index: number, key: keyof Item, value: string) => {
-    const newItems = [...items];
-    newItems[index][key] = value;
+  const handleChange = (id: string, key: keyof Property, value: string) => {
+    const newItems = items.map(item => (item.id === id ? { ...item, [key]: value } : item));
     setItems(newItems);
   };
 
@@ -32,11 +37,11 @@ const PopoverContent: React.FC = () => {
     {
       title: 'Name',
       dataIndex: 'name',
-      render: (_: any, record: Item, index: number) => (
+      render: (_: any, record: Property) => (
         <Input
           placeholder="Name"
           value={record.name}
-          onChange={e => handleChange(index, 'name', e.target.value)}
+          onChange={e => handleChange(record.id, 'name', e.target.value)}
           style={{ width: '100%' }}
         />
       ),
@@ -45,11 +50,11 @@ const PopoverContent: React.FC = () => {
     {
       title: 'Compare',
       dataIndex: 'compare',
-      render: (_: any, record: Item, index: number) => (
+      render: (_: any, record: Property) => (
         <Input
           placeholder="Compare"
           value={record.compare}
-          onChange={e => handleChange(index, 'compare', e.target.value)}
+          onChange={e => handleChange(record.id, 'compare', e.target.value)}
           style={{ width: '100%' }}
         />
       ),
@@ -58,20 +63,21 @@ const PopoverContent: React.FC = () => {
     {
       title: 'Value',
       dataIndex: 'value',
-      render: (_: any, record: Item, index: number) => (
+      render: (_: any, record: Property) => (
         <Input
           placeholder="Value"
           value={record.value}
-          onChange={e => handleChange(index, 'value', e.target.value)}
+          onChange={e => handleChange(record.id, 'value', e.target.value)}
           style={{ width: '100%' }}
         />
       ),
       width: '35%',
     },
     {
+      title: 'Actions',
       dataIndex: 'actions',
-      render: (_: any, record: Item, index: number) => (
-        <Button type="text" icon={<DeleteOutlined />} onClick={() => removeItem(index)}></Button>
+      render: (_: any, record: Property) => (
+        <Button type="text" icon={<DeleteOutlined />} onClick={() => removeItem(record.id)} />
       ),
       width: '10%',
     },
@@ -93,7 +99,7 @@ const PopoverContent: React.FC = () => {
         columns={columns}
         dataSource={items}
         pagination={false}
-        rowKey={(record, index) => index.toString()}
+        rowKey="id" // 使用唯一的 id 作为 rowKey
         bordered
       />
     </Form>

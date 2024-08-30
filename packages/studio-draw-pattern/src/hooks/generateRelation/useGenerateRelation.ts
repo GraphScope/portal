@@ -21,20 +21,20 @@ export const useGenerateRelation = () => {
           if (sourceNode === targetNode) {
             newNodes[sourceNodeIndex] = {
               ...sourceNode,
-              outRelations: [...(sourceNode.outRelations || []), edge.edgeKey],
-              inRelations: [...(sourceNode.inRelations || []), edge.edgeKey],
+              outRelations: new Set([...(sourceNode.outRelations || []), edge.edgeKey]),
+              inRelations: new Set([...(sourceNode.inRelations || []), edge.edgeKey]),
             };
           } else {
             if (sourceNode) {
               newNodes[sourceNodeIndex] = {
                 ...sourceNode,
-                outRelations: [...(sourceNode.outRelations || []), edge.edgeKey],
+                outRelations: new Set([...(sourceNode.outRelations || []), edge.edgeKey]),
               };
             }
             if (targetNode) {
               newNodes[targetNodeIndex] = {
                 ...targetNode,
-                inRelations: [...(targetNode.inRelations || []), edge.edgeKey],
+                inRelations: new Set([...(targetNode.inRelations || []), edge.edgeKey]),
               };
             }
           }

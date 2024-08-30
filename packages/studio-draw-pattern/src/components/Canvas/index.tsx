@@ -1,36 +1,76 @@
 import { Graph } from '@graphscope/studio-graph-editor';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNodeStore } from '../../stores/useNodeStore';
 import { useEdgeStore } from '../../stores/useEdgeStore';
 import { ISchemaEdge } from '@graphscope/studio-graph-editor/dist/types/edge';
 import { useGenerateRelation } from '../../hooks/generateRelation/useGenerateRelation';
 import PopoverContent from './PopoverContent';
+import { Property } from '../../types/property';
+import { useTransform } from '../../hooks/transform/useTransform';
+import { ISchemaNode } from '@graphscope/studio-graph-editor/dist/types/node';
+import _ from 'lodash';
+import { useGraphStore } from '../../stores/useGraphStore';
 
 export const Canvas = () => {
   const nodes = useNodeStore(state => state.nodes);
   const edges = useEdgeStore(state => state.edges);
-
-  const deTransformNodes = useMemo(() => nodes.map(node => node.data), [nodes]);
-  const deTransformEdges = useMemo(() => edges.map(edge => edge.data), [edges]);
+  const editNode = useNodeStore(state => state.editNode);
+  const editEdge = useEdgeStore(state => state.editEdge);
+  const { transformNode, transformEdge } = useTransform();
+  // const [changeSource, setChangeSource] = useState<"internal"|>('');
+  const graphNodes = useGraphStore(state => state.graphNodes);
+  const graphEdges = useGraphStore(state => state.graphEdges);
+  // const {}
 
   const { generateRelation } = useGenerateRelation();
 
   useEffect(() => {
+    console.log('开始产生关系');
     generateRelation(edges);
   }, [edges]);
+
+  useEffect(() => {
+    console.log('节点更新啦', nodes);
+  }, [nodes]);
+
+  const handlePropertiesChange = (value: { currentId: string; properties: Property[] }) => {
+    const currentNode = nodes.find(node => node.nodeKey === value.currentId);
+
+    if (editNode && currentNode) {
+      editNode({
+        ...currentNode,
+        properties: value.properties,
+      });
+    }
+  };
+
+  // let preNodes: ISchemaNode[] = [];
+
+  const handleNodes = useCallback((nodes: ISchemaNode[]) => {
+    nodes.forEach(node => {
+      editNode && editNode(transformNode(node));
+    });
+  }, []);
+
+  const handleEdges = useCallback((edges: ISchemaEdge[]) => {
+    edges.forEach(edge => {
+      editEdge && editEdge(transformEdge(edge));
+    });
+  }, []);
 
   const MyGraph = useCallback(
     () => (
       <Graph
         graphId="edit"
-        defaultNodes={deTransformNodes}
-        defaultEdges={deTransformEdges as unknown as ISchemaEdge[]}
-        onNodesChange={nodes => console.log('节点发生变化', nodes)}
+        defaultNodes={graphNodes}
+        defaultEdges={graphEdges as unknown as ISchemaEdge[]}
+        onNodesChange={handleNodes}
+        onEdgesChange={handleEdges}
         isShowPopover={true}
-        popoverCustomContent={<PopoverContent></PopoverContent>}
+        popoverCustomContent={<PopoverContent onChange={handlePropertiesChange}></PopoverContent>}
       />
     ),
-    [deTransformNodes, deTransformEdges],
+    [graphNodes, graphEdges],
   );
 
   return (

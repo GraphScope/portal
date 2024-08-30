@@ -5,10 +5,13 @@ import { ISchemaEdge } from '@graphscope/studio-graph-editor/dist/types/edge';
 import { Edge } from '../../types/edge';
 import { useNodeStore } from '../../stores/useNodeStore';
 import { useEdgeStore } from '../../stores/useEdgeStore';
+import { useGraphStore } from '../../stores/useGraphStore';
 
 export const useTransform = () => {
   const addNode = useNodeStore(state => state.addNode);
   const addEdge = useEdgeStore(state => state.addEdge);
+  const updateGraphNodes = useGraphStore(state => state.updateGraphNodes);
+  const updateGraphEdges = useGraphStore(state => state.updateGraphEdges);
 
   const transformNode = useCallback((node: ISchemaNode): Node => {
     return {
@@ -34,12 +37,14 @@ export const useTransform = () => {
     nodes.map(node => {
       node && addNode && addNode(transformNode(node));
     });
+    updateGraphNodes && updateGraphNodes(nodes);
   }, []);
 
   const transformEdges = useCallback((edges: ISchemaEdge[], nodes: ISchemaNode[]) => {
     edges.map(edge => {
       checkEdgeExist(edge, nodes) && edge && addEdge && addEdge(transformEdge(edge));
     });
+    updateGraphEdges && updateGraphEdges(edges);
   }, []);
 
   // 判断 edge 的 source & node 是否存在，要求必须这条的 edge 的 source & node 节点都存在，才能添加到 store 中

@@ -115,6 +115,13 @@ const GraphNode = (props: NodeProps) => {
     return isSelected ? `4px solid ${theme.primaryColor}` : '2px solid #000';
   };
 
+  const popoverCustomCloneContent = popoverCustomContent
+    ? // @ts-ignore
+      React.cloneElement(popoverCustomContent, {
+        currentId: id,
+      })
+    : undefined;
+
   const handleLabelChange = (event: ChangeEvent) => {
     // @ts-ignore
 
@@ -238,7 +245,7 @@ const GraphNode = (props: NodeProps) => {
           <div style={{ marginTop: '10px' }}>
             <span style={{ paddingBottom: '5px', marginLeft: '5px' }}>Label</span>
             <Input value={currentNode.data.label} onChange={handleLabelChange} style={{ marginTop: '5px' }}></Input>
-            {popoverCustomContent ?? (
+            {popoverCustomCloneContent ?? (
               <PropertiesList typeColumn={{ options: typeColumn }} onChange={handleChange}></PropertiesList>
             )}
           </div>

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { Node } from '../types/node';
 import { Subject } from 'rxjs';
+import _ from 'lodash';
 
 interface NodeState {
   nodes: Node[];
@@ -49,14 +50,13 @@ export const useNodeStore = create<NodeState>()(set => ({
 
   editNode: node =>
     set(state => {
-      // 检查节点是否存在
-      if (!state.nodes.some(n => n.nodeKey === node.nodeKey)) {
-        return state; // 如果不存在，则返回当前状态，不进行编辑
+      const index = state.nodes.findIndex(n => n.nodeKey === node.nodeKey);
+      if (index === -1 || _.isEqual(state.nodes[index], node)) {
+        return state; // 如果不存在或节点没有变化，则不更新引用
       }
-      return updateNodes(
-        state,
-        state.nodes.map(n => (n.nodeKey === node.nodeKey ? node : n)),
-      );
+      const newNodes = [...state.nodes];
+      newNodes[index] = { ...newNodes[index], ...node };
+      return updateNodes(state, newNodes);
     }),
 }));
 
