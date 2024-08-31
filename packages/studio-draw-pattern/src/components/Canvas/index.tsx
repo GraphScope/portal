@@ -10,6 +10,8 @@ import { useTransform } from '../../hooks/transform/useTransform';
 import { ISchemaNode } from '@graphscope/studio-graph-editor/dist/types/node';
 import _ from 'lodash';
 import { useGraphStore } from '../../stores/useGraphStore';
+import { useEncodeCypher } from '../../hooks/Cypher/useEncodeCypher';
+import { Button } from 'antd';
 
 export const Canvas = () => {
   const nodes = useNodeStore(state => state.nodes);
@@ -22,6 +24,8 @@ export const Canvas = () => {
   const graphEdges = useGraphStore(state => state.graphEdges);
   // const {}
 
+  const { encodeProperties, encodeNodes, encodeEdges } = useEncodeCypher();
+
   const { generateRelation } = useGenerateRelation();
 
   useEffect(() => {
@@ -32,6 +36,10 @@ export const Canvas = () => {
   useEffect(() => {
     console.log('节点更新啦', nodes);
   }, [nodes]);
+
+  useEffect(() => {
+    console.log('关系更新啦', edges);
+  }, [edges]);
 
   const handlePropertiesChange = (value: { currentId: string; properties: Property[] }) => {
     const currentNode = nodes.find(node => node.nodeKey === value.currentId);
@@ -76,6 +84,16 @@ export const Canvas = () => {
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <MyGraph></MyGraph>
+      <Button
+        onClick={() => {
+          encodeEdges();
+          encodeNodes();
+          encodeProperties();
+        }}
+        style={{ position: 'absolute', top: '10px' }}
+      >
+        Start Encode
+      </Button>
     </div>
   );
 };

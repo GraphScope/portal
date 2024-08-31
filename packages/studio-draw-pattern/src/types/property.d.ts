@@ -4,4 +4,5 @@ export interface Property {
   type?: string;
   compare: string;
   id: string;
+  statement?: string;
 }
