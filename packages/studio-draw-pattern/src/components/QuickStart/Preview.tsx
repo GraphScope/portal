@@ -37,7 +37,7 @@ export const Preview = () => {
           defaultNodes={defaultNodes}
           graphId="preview"
           onSelectionChange={handleSelectionChange}
-        ></Graph>
+        />
       </div>
     </div>
   );

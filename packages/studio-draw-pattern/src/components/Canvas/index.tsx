@@ -41,6 +41,10 @@ export const Canvas = () => {
     console.log('关系更新啦', edges);
   }, [edges]);
 
+  useEffect(() => {
+    console.log('图表发生变化', graphEdges, graphNodes);
+  }, [graphEdges, graphNodes]);
+
   const handlePropertiesChange = (value: { currentId: string; properties: Property[] }) => {
     const currentNode = nodes.find(node => node.nodeKey === value.currentId);
 

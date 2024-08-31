@@ -22,8 +22,8 @@ export const useEncodeCypher = () => {
             statement: `${property.name} ${property.compare} ${property.value}`,
           };
         });
-      const isChange = _.isEqual(node.properties, newProperties);
-      isChange && editNode && editNode({ ...node, properties: newProperties });
+      const isEqual = _.isEqual(node.properties, newProperties);
+      !isEqual && editNode && editNode({ ...node, properties: newProperties });
     });
   }, [nodes]);
 

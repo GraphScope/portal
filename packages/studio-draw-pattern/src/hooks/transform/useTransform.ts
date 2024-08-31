@@ -10,8 +10,8 @@ import { useGraphStore } from '../../stores/useGraphStore';
 export const useTransform = () => {
   const addNode = useNodeStore(state => state.addNode);
   const addEdge = useEdgeStore(state => state.addEdge);
-  const updateGraphNodes = useGraphStore(state => state.updateGraphNodes);
-  const updateGraphEdges = useGraphStore(state => state.updateGraphEdges);
+  const updateGraphNode = useGraphStore(state => state.updateGraphNode);
+  const updateGraphEdge = useGraphStore(state => state.updateGraphEdge);
 
   const transformNode = useCallback((node: ISchemaNode): Node => {
     return {
@@ -36,15 +36,16 @@ export const useTransform = () => {
   const transformNodes = useCallback((nodes: ISchemaNode[]) => {
     nodes.map(node => {
       node && addNode && addNode(transformNode(node));
+      updateGraphNode(node);
     });
-    updateGraphNodes && updateGraphNodes(nodes);
   }, []);
 
   const transformEdges = useCallback((edges: ISchemaEdge[], nodes: ISchemaNode[]) => {
     edges.map(edge => {
-      checkEdgeExist(edge, nodes) && edge && addEdge && addEdge(transformEdge(edge));
+      const isEdgeExist = checkEdgeExist(edge, nodes);
+      isEdgeExist && edge && addEdge && addEdge(transformEdge(edge));
+      isEdgeExist && updateGraphEdge(edge);
     });
-    updateGraphEdges && updateGraphEdges(edges);
   }, []);
 
   // 判断 edge 的 source & node 是否存在，要求必须这条的 edge 的 source & node 节点都存在，才能添加到 store 中
