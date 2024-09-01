@@ -24,7 +24,7 @@ export const Canvas = () => {
   const graphEdges = useGraphStore(state => state.graphEdges);
   // const {}
 
-  const { encodeProperties, encodeNodes, encodeEdges } = useEncodeCypher();
+  const { encodeProperties, encodeNodes, encodeEdges, generateMATCH } = useEncodeCypher();
 
   const { generateRelation } = useGenerateRelation();
 
@@ -93,6 +93,7 @@ export const Canvas = () => {
           encodeEdges();
           encodeNodes();
           encodeProperties();
+          generateMATCH();
         }}
         style={{ position: 'absolute', top: '10px' }}
       >

@@ -11,4 +11,5 @@ export interface Edge {
   sourceNode?: string;
   statement?: string;
   data: EdgeData;
+  isErgodic: boolean;
 }

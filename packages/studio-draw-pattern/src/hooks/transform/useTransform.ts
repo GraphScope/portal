@@ -30,6 +30,7 @@ export const useTransform = () => {
       data: {
         ...edge,
       },
+      isErgodic: false,
     } as Edge;
   }, []);
 

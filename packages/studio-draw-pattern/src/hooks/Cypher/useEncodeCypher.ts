@@ -4,6 +4,8 @@ import { Property } from '../../types/property';
 import _ from 'lodash';
 import { useEdgeStore } from '../../stores/useEdgeStore';
 import { Node } from '../../types/node';
+import { Edge } from '../../types/edge';
+import { isArrayExist } from '../../utils';
 
 // 目前 GPE 只设计 model.json
 export const useEncodeCypher = () => {
@@ -42,9 +44,54 @@ export const useEncodeCypher = () => {
     });
   }, [edges]);
 
+  const generateMATCH = useCallback(() => {
+    let edgesSnapShot = _.cloneDeep(edges);
+    const currentEdge = edgesSnapShot.find(edge => !edge.isErgodic);
+    let targetCurrentEdge: Edge | undefined = currentEdge;
+    let sourceCurrentEdge: Edge | undefined = currentEdge;
+    let targetNode: Node | undefined = nodes.find(node => node.nodeKey === currentEdge?.targetNode);
+    let sourceNode: Node | undefined = nodes.find(node => node.nodeKey === currentEdge?.sourceNode);
+    // when use it, set it's isErgodic true
+    if (currentEdge) currentEdge.isErgodic = true;
+
+    let MATCH = `[${currentEdge?.edgeKey}${currentEdge?.statement}]`;
+    // 当前 egde target遍历
+    if (targetNode) {
+      while (true) {
+        const isExistProperty = !!targetNode.properties;
+        const nodeStatement = `(${targetNode.nodeKey}${targetNode.statement})`;
+        MATCH = `${MATCH}->${nodeStatement}`;
+        if (!targetNode.outRelations) break;
+        const targetEdges = edgesSnapShot.filter(edge => isArrayExist(edge.edgeKey, [...targetNode!.outRelations!]));
+        targetCurrentEdge = targetEdges.find(edge => !edge.isErgodic);
+        if (!targetCurrentEdge) break;
+        MATCH = `${MATCH}-[${targetCurrentEdge?.edgeKey}${targetCurrentEdge?.statement}]]`;
+        targetNode = nodes.find(node => node.nodeKey === targetCurrentEdge?.targetNode);
+        if (!targetNode) throw new Error('targetNode is not exist');
+      }
+    }
+    // 当前 edge source遍历
+    if (sourceNode) {
+      while (true) {
+        const isExistProperty = !!sourceNode.properties;
+        const nodeStatement = `(${sourceNode.nodeKey}${sourceNode.statement})`;
+        MATCH = `${nodeStatement}-${MATCH}`;
+        if (!sourceNode.outRelations) break;
+        const sourceEdges = edgesSnapShot.filter(edge => isArrayExist(edge.edgeKey, [...sourceNode!.outRelations!]));
+        sourceCurrentEdge = sourceEdges.find(edge => !edge.isErgodic);
+        if (!sourceCurrentEdge) break;
+        MATCH = `[${sourceCurrentEdge?.edgeKey}${sourceCurrentEdge?.statement}]->${MATCH}`;
+        sourceNode = nodes.find(node => node.nodeKey === sourceCurrentEdge?.sourceNode);
+        if (!sourceNode) throw new Error('sourceNode is not exist');
+      }
+    }
+    return MATCH;
+  }, [nodes, edges]);
+
   return {
     encodeProperties,
     encodeNodes,
     encodeEdges,
+    generateMATCH,
   };
 };
