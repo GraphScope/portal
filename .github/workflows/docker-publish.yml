@@ -6,19 +6,10 @@ name: Publish Docker Container
 # documentation.
 
 on:
-  # schedule:
-  #   - cron: '38 23 * * *'
   push:
-    # branches: [ "main" ]
-    tags: [ 'v*.*.*' ]
-  # pull_request:
-  #   branches: [ "main" ]
+    # tags:
+    #   - 'v*'
   workflow_dispatch:
-    inputs:
-      tags:
-        description: 'image tag'
-        required: true
-        default: 'latest'
 
 env:
   # Use docker.io for Docker Hub if empty
