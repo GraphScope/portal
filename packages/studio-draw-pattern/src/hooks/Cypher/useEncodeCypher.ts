@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useNodeStore } from '../../stores/useNodeStore';
 import { Property } from '../../types/property';
 import _ from 'lodash';
@@ -21,7 +21,7 @@ export const useEncodeCypher = () => {
         node.properties.map((property: Property) => {
           return {
             ...property,
-            statement: `${property.name} ${property.compare} ${property.value}`,
+            statement: `${node.nodeKey}.${property.name} ${property.compare} ${property.value}`,
           };
         });
       const isEqual = _.isEqual(node.properties, newProperties);
@@ -85,13 +85,31 @@ export const useEncodeCypher = () => {
         if (!sourceNode) throw new Error('sourceNode is not exist');
       }
     }
+
+    MATCH = `MATCH ${MATCH}`;
+    console.log('MATCH语句生成结束，生成的MATCH语句是：', MATCH);
     return MATCH;
   }, [nodes, edges]);
+
+  const generateWHERE = useCallback(() => {
+    let propertiesStatement: string[] = [];
+    nodes.forEach(node => {
+      // WHERE  = node.properties.
+      const propertiesSingleNodeStatement = node.properties?.map(property => `${property.statement}`);
+
+      if (propertiesSingleNodeStatement)
+        propertiesStatement = [...propertiesStatement, ...propertiesSingleNodeStatement];
+    });
+
+    const WHERE = `WHERE ${propertiesStatement.join(' AND ')}`;
+    return WHERE;
+  }, [nodes]);
 
   return {
     encodeProperties,
     encodeNodes,
     encodeEdges,
     generateMATCH,
+    generateWHERE,
   };
 };
