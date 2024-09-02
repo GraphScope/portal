@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography, Collapse } from 'antd';
+import { Typography, Collapse, Timeline } from 'antd';
 
 const { Title } = Typography;
 interface IWorkflowProps {
@@ -9,24 +9,34 @@ interface IWorkflowProps {
     icon: React.ReactNode;
     children: React.ReactNode;
   }[];
+  type?: 'collapse' | 'timeline';
 }
 
 const Workflow: React.FunctionComponent<IWorkflowProps> = props => {
-  const { items } = props;
+  const { items, type } = props;
+  if (type === 'timeline') {
+    const _items = items.map(item => {
+      return {
+        color: '#000',
+        dot: item.icon,
+        children: (
+          <div>
+            <Typography.Text>{item.label}</Typography.Text>
+            <div style={{ padding: '24px 24px 24px 0px' }}>{item.children}</div>
+          </div>
+        ),
+      };
+    });
+    return (
+      <div style={{ overflow: 'scroll', height: '100%' }}>
+        <Timeline items={_items} style={{ padding: '12px' }} />
+      </div>
+    );
+  }
 
   return (
     <div style={{ overflow: 'scroll', height: '100%' }}>
-      <Collapse items={items} defaultActiveKey={['1']} />
-
-      {/* {items.map((item, index) => {
-        const { label, icon, children } = item;
-        return (
-          <div key={index}>
-            <Title> {label}</Title>
-            {children}
-          </div>
-        );
-      })} */}
+      <Collapse items={items} defaultActiveKey={items.map(item => item.key)} />
     </div>
   );
 };

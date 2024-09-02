@@ -59,7 +59,7 @@ export interface ImportorProps {
     primaryColor: string;
     mode: 'darkAlgorithm' | 'defaultAlgorithm';
   };
-  appMode: 'DATA_MODELING' | 'DATA_IMPORTING';
+  appMode: 'DATA_MODELING' | 'DATA_IMPORTING' | 'PURE';
   GS_ENGINE_TYPE: 'groot' | 'interactive';
   /**  第二项 */
   queryPrimitiveTypes: () => {
@@ -84,6 +84,9 @@ export interface ImportorProps {
     leftSide: boolean;
     rightSide: boolean;
   }>;
+  style?: React.CSSProperties;
+  leftSide?: React.ReactNode;
+  rightSide?: React.ReactNode;
   leftSideStyle?: React.CSSProperties;
   rightSideStyle?: React.CSSProperties;
   elementOptions?: {

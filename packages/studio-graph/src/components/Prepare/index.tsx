@@ -15,7 +15,6 @@ const Prepare: React.FunctionComponent<IPrepareProps> = props => {
   React.useEffect(() => {
     if (data) {
       const style = getStyleConfig(schema, graphId);
-      console.log('Prepare >>>>>>', style);
       updateStore(draft => {
         draft.data = data;
         draft.source = data;

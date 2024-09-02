@@ -21,25 +21,30 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "3d-force-graph": "^1.73.3",
     "@antv/g6": "latest",
     "@graphscope/studio-components": "workspace:*",
+    "@tweenjs/tween.js": "^25.0.0",
+    "@types/d3-selection": "^3.0.10",
+    "d3-brush": "^3.0.0",
+    "d3-force": "^3.0.0",
     "d3-force-3d": "^3.0.5",
     "d3-hierarchy": "^3.1.2",
-    "d3-force": "^3.0.0",
+    "d3-selection": "^3.0.0",
+    "force-graph": "^1.43.5",
+    "jspdf": "^2.5.1",
+    "mitt": "^3.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-intl": "^6.6.1",
     "uuidv4": "latest",
-    "valtio": "latest",
-    "3d-force-graph": "^1.73.3",
-    "@tweenjs/tween.js": "^25.0.0",
-    "force-graph": "^1.43.5",
-    "mitt": "^3.0.1"
+    "valtio": "latest"
   },
   "publishConfig": {
     "access": "public"
   },
   "devDependencies": {
+    "@types/d3-brush": "^3.0.6",
     "@types/d3-force": "^3.0.10",
     "@types/d3-hierarchy": "^3.1.7"
   }

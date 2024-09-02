@@ -19,16 +19,19 @@
     "build": "vite build"
   },
   "dependencies": {
-    "d3-force": "latest",
-    "@graphscope/studio-importor": "workspace:*",
     "@graphscope/studio-components": "workspace:*",
     "@graphscope/studio-graph": "workspace:*",
+    "@graphscope/studio-importor": "workspace:*",
+    "d3-force": "latest",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-intl": "^6.6.8",
+    "react-router-dom": "^6.26.1",
+    "typewriter-effect": "^2.21.0"
   },
   "devDependencies": {
-    "vite": "^5.0.12",
-    "@vitejs/plugin-react": "^4.2.1"
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.12"
   },
   "author": "",
   "license": "ISC"

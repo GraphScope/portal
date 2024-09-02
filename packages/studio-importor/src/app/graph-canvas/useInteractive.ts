@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useReactFlow, applyEdgeChanges, applyNodeChanges } from 'reactflow';
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 import { createStaticForceLayout } from '../elements/forceLayout';
 import { fakeSnapshot } from '../utils/index';
 const deepclone = obj => {
@@ -34,8 +34,8 @@ const useInteractive: any = () => {
       // 空白画板需要添加节点
       if (targetIsPane) {
         // we need to remove the wrapper bounds, in order to get the correct position
-        const nodeId = uuid();
-        const edgeId = uuid();
+        const nodeId = uuidv4();
+        const edgeId = uuidv4();
         /** 这里计算的 position 是 handle 的位置，对GraphNode 而言，就是圆心的坐标 */
         const newPosition = screenToFlowPosition({
           x: event.clientX,
@@ -67,7 +67,7 @@ const useInteractive: any = () => {
       } else {
         const { nodeid } = event.target.dataset;
 
-        const edgeId = uuid();
+        const edgeId = uuidv4();
         const edgeLabel = createEdgeLabel();
 
         updateStore(draft => {

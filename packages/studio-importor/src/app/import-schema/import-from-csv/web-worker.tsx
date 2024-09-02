@@ -48,10 +48,12 @@ export const getSchemaData = files => {
       if (value === null) return 'null';
       if (Array.isArray(value)) return 'array';
       if (value instanceof Date) return 'date';
-      if (!isNaN(value) && Object.prototype.toString.call(value) !== '[object Boolean]') return 'number';
-      if (Object.prototype.toString.call(value) === '[object String]' && isValidDate(value)) return 'date';
-      return 'string';
+      if (Object.prototype.toString.call(value) === '[object Number]' && !isNaN(value)) return 'number';
+      if (Object.prototype.toString.call(value) === '[object Boolean]') return 'boolean';
+      if (Object.prototype.toString.call(value) === '[object Object]') return 'object';
+      return Object.prototype.toString.call(value).slice(8, -1).toLowerCase();
     };
+
     /**
      * 检查字符串是否为有效日期
      * @param {string} dateStr - 要检查的字符串

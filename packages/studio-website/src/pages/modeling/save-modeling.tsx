@@ -46,13 +46,6 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
 
   const handleSave = async () => {
     const schema = { nodes, edges };
-    setState(preState => {
-      return {
-        ...preState,
-        open: true,
-      };
-    });
-
     if (schema) {
       let _status = '',
         _message = '';
@@ -87,6 +80,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
           status: _status,
           message: _message,
           schema: schema,
+          open: true,
           //@ts-ignore
           id: graph_id ?? id,
         };

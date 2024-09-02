@@ -2,113 +2,169 @@ const express = require('express');
 const path = require('path');
 const csv = require('csv-parser');
 const fs = require('fs');
-
+const { queryLocalFile, uuid } = require('./utils');
+const { dataset, entity } = require('./data');
 const cors = require('cors');
 const app = express();
 
-const port = 7777;
+const port = 9999;
 
 app.use(cors());
 app.use(express.json());
+const WORKSPACE = path.dirname(__dirname);
+app.use(express.static(WORKSPACE + '/dist'));
 
-app.get('/api/query', (req, res) => {
-  const { type, weight, name, fileType } = req.query;
+const status = {
+  WAITING_EMBEDDING: 'WAITING_EMBEDDING',
+  WAITING_EXTRACT: 'WAITING_EXTRACT',
+  WAITING_CLUSTER: 'WAITING_CLUSTER',
+};
 
-  if (fileType === 'json') {
-    const data = fs.readFileSync(path.resolve(__dirname, 'data', `${name}.json`), 'utf8');
+/** query graph data */
+app.get('/api/query', async (req, res) => {
+  const { name, type } = req.query;
+  if (type === 'cluster') {
+    const data = await queryLocalFile(`${name}_clusters.json`);
     res.send({
       success: true,
-      data: JSON.parse(data),
+      data,
     });
     return;
   }
-
-  const results = [];
-
-  let filename = `${name}.csv`;
-  if (weight) {
-    filename = `${name}_${weight}.csv`;
-  }
-
-  const filePath = path.resolve(__dirname, 'data', filename);
-
-  // 检查文件是否存在
-  fs.access(filePath, fs.constants.F_OK, err => {
-    if (err) {
-      console.error('File does not exist:', filePath);
-      return res.status(404).send({
-        success: false,
-        message: 'File not found',
-      });
-    }
-
-    const stream = fs
-      .createReadStream(filePath)
-      .pipe(csv({ separator: '|' }))
-      .on('data', data => results.push(data))
-      .on('end', () => {
-        let data = results;
-        if (type === 'nodes') {
-          data = {
-            nodes: results.map(item => ({
-              id: item.id,
-              label: name,
-              properties: item,
-            })),
-            edges: [],
-          };
-        }
-        if (type === 'edges') {
-          data = {
-            nodes: [],
-            edges: results.map(item => ({
-              id: `${item.source}_${item.target}`,
-              source: item.source,
-              target: item.target,
-              label: name,
-              properties: item,
-            })),
-          };
-        }
-
-        res.send({
-          success: true,
-          data,
-        });
-      })
-      .on('error', err => {
-        console.error('Stream error:', err);
-        res.status(500).send({
-          success: false,
-          message: err.message,
-        });
-      });
-
-    // 超时机制，防止流操作意外阻塞
-    const timeout = setTimeout(() => {
-      console.error('Stream processing timeout');
-      stream.destroy();
-      res.status(500).send({
-        success: false,
-        message: 'Stream processing timeout',
-      });
-    }, 10000); // 10秒超时
-
-    // 清除超时定时器
-    stream.on('end', () => clearTimeout(timeout));
-    stream.on('error', () => clearTimeout(timeout));
+  const nodes = await queryLocalFile(`${name}.json`);
+  const edges = await queryLocalFile(`${name}_IsSimilar_${name}.json`);
+  res.send({
+    success: true,
+    data: {
+      nodes: nodes.map(item => {
+        return {
+          id: item.id,
+          label: name,
+          properties: { ...item, cluster_id: item.cluster_id || 'unset' },
+        };
+      }),
+      edges: edges.map(item => {
+        return {
+          id: item.id,
+          source: item.source,
+          target: item.target,
+          label: name,
+          properties: item,
+        };
+      }),
+    },
   });
 });
 
-app.get('/api/json', () => {});
-
-// 全局错误处理程序
-process.on('uncaughtException', err => {
-  console.error('Uncaught Exception:', err);
+/** dataset */
+app.get('/api/dataset/list', async (req, res) => {
+  res.send({
+    success: true,
+    data: Object.keys(dataset).map(key => {
+      return {
+        id: key,
+        ...dataset[key],
+      };
+    }),
+  });
+});
+app.post('/api/dataset/create', async (req, res) => {
+  const datasetId = uuid();
+  dataset[datasetId] = {
+    ...req.body,
+    status: status.WAITING_EMBEDDING,
+    schema: {},
+    extract: {},
+    entity: [],
+  };
+  res.send({
+    success: true,
+    data: datasetId,
+  });
 });
 
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+/** query embed schema */
+app.post('/api/dataset/embed', async (req, res) => {
+  const { datasetId, ...others } = req.body;
+  const prev = dataset[datasetId];
+  dataset[datasetId] = {
+    ...prev,
+    status: status.WAITING_EXTRACT,
+    schema: others,
+  };
+  res.send({
+    success: true,
+    data: datasetId,
+  });
+});
+app.get('/api/dataset/embed', async (req, res) => {
+  const { datasetId } = req.query;
+  const prev = dataset[datasetId];
+  res.send({
+    success: true,
+    data: (prev && prev.schema) || {},
+  });
+});
+
+/** extract */
+app.post('/api/dataset/extract', async (req, res) => {
+  const { datasetId, ...others } = req.body;
+  const prev = dataset[datasetId];
+  dataset[datasetId] = {
+    ...prev,
+    status: status.WAITING_CLUSTER,
+    extract: others,
+    entity: entity,
+  };
+  res.send({
+    success: true,
+    data: datasetId,
+  });
+});
+app.get('/api/dataset/extract', async (req, res) => {
+  const { datasetId } = req.query;
+  const prev = dataset[datasetId];
+  console.log('extract', prev);
+  res.send({
+    success: true,
+    data: (prev && prev.extract) || {},
+  });
+});
+
+app.post('/api/dataset/entity', async (req, res) => {
+  const { datasetId, entityId, summarized, count } = req.body;
+  console.log(req.body);
+  const prev = dataset[datasetId];
+  dataset[datasetId] = {
+    ...prev,
+    entity: entity.map(item => {
+      if (item.id === entityId) {
+        item.summarized = summarized;
+        item.count = count;
+      }
+      return item;
+    }),
+  };
+  res.send({
+    success: true,
+    data: {},
+  });
+});
+
+// 设置路由来处理ZIP文件的下载
+app.get('/api/download/dataset', (req, res) => {
+  const filePath = path.resolve(__dirname, 'data', 'dataset.zip');
+  res.download(filePath, err => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error downloading file.');
+    }
+  });
+});
+
+app.get('*', (req, res) => {
+  console.log('path>>>>>>', req.params);
+  res.sendFile(path.join(WORKSPACE, '/dist', 'index.html'));
 });
 
 app.listen(port);

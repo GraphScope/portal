@@ -20,15 +20,13 @@
   },
   "author": "",
   "license": "ISC",
-  "peerDependencies": {
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
-  },
   "dependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-intl": "latest",
     "react-resizable-panels": "^2.0.20",
     "sql-ddl-to-json-schema": "latest",
-    "uuid": "^9.0.1",
+    "typewriter-effect": "^2.21.0",
     "uuidv4": "latest"
   },
   "publishConfig": {

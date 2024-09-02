@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { query } from '../Upload';
+import { query } from '../FetchGraph/service';
 import { Typography, Card, Divider } from 'antd';
-
+import { TypingText, Utils } from '@graphscope/studio-components';
 interface IContentProps {
   id: string | null;
 }
@@ -17,6 +17,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
     if (!id) {
       return;
     }
+    const entityId = Utils.getSearchParams('entityId') || '';
     setState(preState => {
       return {
         ...preState,
@@ -24,8 +25,8 @@ const Content: React.FunctionComponent<IContentProps> = props => {
       };
     });
     query({
-      name: 'challenge_clusters',
-      fileType: 'json',
+      name: entityId,
+      type: 'cluster',
     }).then(res => {
       setState(preState => {
         return {
@@ -57,7 +58,9 @@ const Content: React.FunctionComponent<IContentProps> = props => {
         <Typography.Text>{name}</Typography.Text>
         <Divider style={{ margin: '12px 0px' }} />
         <Typography.Text type="secondary">Summarize Cluster Description</Typography.Text> <br />
-        <Typography.Paragraph>{description}</Typography.Paragraph>
+        <Typography.Paragraph>
+          <TypingText>{description}</TypingText>
+        </Typography.Paragraph>
       </Card>
     );
   }

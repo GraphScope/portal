@@ -1,10 +1,15 @@
 import * as React from 'react';
 import { useContext } from '../../hooks/useContext';
+import { Flex, theme } from 'antd';
 
-export interface IContextMenuProps {}
+export interface IContextMenuProps {
+  children: React.ReactNode;
+}
 
 const ContextMenu: React.FunctionComponent<IContextMenuProps> = props => {
-  const { store } = useContext();
+  const { children } = props;
+  const { store, updateStore } = useContext();
+  const { token } = theme.useToken();
   const { graph, emitter } = store;
   const [state, setState] = React.useState({
     visible: false,
@@ -18,7 +23,7 @@ const ContextMenu: React.FunctionComponent<IContextMenuProps> = props => {
       emitter.on('node:contextmenu', params => {
         //@ts-ignore
         const { node, evt } = params;
-        console.log('onNodeRightClick >>>>>>>', node, evt);
+
         const { offsetX, offsetY } = evt;
         setState(preState => {
           return {
@@ -29,10 +34,19 @@ const ContextMenu: React.FunctionComponent<IContextMenuProps> = props => {
             y: offsetY,
           };
         });
+        updateStore(draft => {
+          const prev = draft.nodeStatus[node.id];
+          if (prev) {
+            prev.selected = true;
+          } else {
+            draft.nodeStatus[node.id] = {
+              selected: true,
+            };
+          }
+        });
       });
 
       emitter.on('node:click', () => {
-        console.log('ContextMenu >>> node click');
         setState(preState => {
           return {
             ...preState,
@@ -44,6 +58,17 @@ const ContextMenu: React.FunctionComponent<IContextMenuProps> = props => {
         });
       });
     }
+    emitter?.on('canvas:click', () => {
+      setState(preState => {
+        return {
+          ...preState,
+          visible: false,
+          data: {},
+          x: 0,
+          y: 0,
+        };
+      });
+    });
     return () => {
       emitter?.off('node:click');
       emitter?.off('node:contextmenu');
@@ -58,13 +83,18 @@ const ContextMenu: React.FunctionComponent<IContextMenuProps> = props => {
         position: 'absolute',
         left: x,
         top: y,
-        width: 100,
-        height: 100,
-        backgroundColor: 'red',
+        width: 180,
+        height: 'auto',
+        backgroundColor: token.colorBgContainer,
+        boxShadow: token.boxShadow,
         zIndex: 100,
+        padding: '4px',
+        borderRadius: '8px',
       }}
     >
-      {x} | {y}
+      <Flex vertical gap={8}>
+        {children}
+      </Flex>
     </div>
   );
 };
