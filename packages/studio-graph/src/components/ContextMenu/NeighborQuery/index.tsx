@@ -41,17 +41,29 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
     };
   });
 
+  const extraItems =
+    relatedEdges.length > 1
+      ? [
+          {
+            key: `(a)-[b]-(c)`,
+            label: `All Neighbors`,
+          },
+        ]
+      : [];
   const items = [
     {
       key: 'NeighborQuery',
       // icon: <ShareAltOutlined />,
       label: 'NeighborQuery',
-      children: itemChildren,
+      children: [...extraItems, ...itemChildren],
     },
   ];
 
   const onClick = async ({ key }) => {
     emitter?.emit('canvas:click');
+    updateStore(draft => {
+      draft.isLoading = true;
+    });
     const { name, title } = selectNode.properties;
     let script = '';
     if (name) {
@@ -84,9 +96,13 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
         draft.dataMap = getDataMap(newData);
         draft.nodeStatus = nodeStatus;
         draft.edgeStatus = edgeStatus;
+        draft.isLoading = false;
       });
     }
   };
+  if (itemChildren.length === 0) {
+    return null;
+  }
   return (
     <div ref={MenuRef}>
       <Menu

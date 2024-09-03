@@ -1,7 +1,9 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useContext } from './useContext';
 import useWidth from './useWidth';
 import { useThemeContainer } from '@graphscope/studio-components';
+import { DeploymentApiFactory } from '@graphscope/studio-server';
+import { Skeleton } from 'antd';
 
 interface ContainerProps {
   sidebar: React.ReactNode;
@@ -18,8 +20,37 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
   const { store } = useContext();
   const { collapse } = store;
   const ContainerWidth = useWidth();
-  console.log('ContainerWidth', ContainerWidth);
   const { containerBackground } = useThemeContainer();
+  const [state, setState] = useState({
+    isReady: false,
+    engineType: 'interactive',
+  });
+  const depolymentInfo = async () => {
+    await DeploymentApiFactory(undefined)
+      .getDeploymentInfo()
+      .then(res => {
+        const { data } = res;
+        if (data) {
+          const { engine, storage, frontend } = data;
+          const interactive = engine === 'Hiactor' && storage === 'MutableCSR' && frontend === 'Cypher/Gremlin';
+          const engineType = interactive ? 'interactive' : 'groot';
+          setState(preState => {
+            return {
+              ...preState,
+              engineType,
+              isReady: true,
+            };
+          });
+          console.log('res', res, engineType);
+          window.GS_ENGINE_TYPE = engineType;
+        }
+      });
+  };
+  useEffect(() => {
+    depolymentInfo();
+  }, []);
+  const { isReady } = state;
+
   return (
     <div
       className="gs-root"
@@ -60,7 +91,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
             bottom: '0px',
           }}
         >
-          {sidebar}
+          {isReady ? sidebar : <Skeleton />}
         </div>
         <div
           className="gs-main"
@@ -85,7 +116,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
             }}
             className="gs-content"
           >
-            {content}
+            {isReady ? content : <Skeleton />}
           </div>
           <div
             className="gs-footer"
@@ -95,7 +126,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
               color: '#ddd',
             }}
           >
-            {footer}
+            {isReady ? footer : <Skeleton />}
           </div>
         </div>
       </div>
