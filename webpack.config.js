@@ -23,7 +23,7 @@ module.exports = (env, argv) => {
     : [
         new MiniCssExtractPlugin(),
         new webpack.ProvidePlugin({
-          process: 'process/browser',
+          // process: 'process/browser',
           Buffer: ['buffer', 'Buffer'],
         }),
       ];
