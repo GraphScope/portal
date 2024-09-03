@@ -4,13 +4,14 @@ FROM node:18-alpine AS builder
 # 设置工作目录
 WORKDIR /app
 
-# 安装 Git 和 pnpm
-RUN apk add --no-cache git && \
-    npm install -g pnpm
+# 安装 pnpm
+RUN npm install -g pnpm
+
+# 复制当前目录的内容到容器中
+COPY . .
 
 # 从 Git 仓库中克隆项目
-RUN git clone --depth=1 https://github.com/GraphScope/portal.git . && \
-    pnpm install && \
+RUN pnpm install && \
     npm run ci
 
 # 清理不必要的文件
@@ -34,7 +35,7 @@ RUN npm install
 
 # 设置环境变量
 ENV PORT=8888
-ENV COORDINATOR=http://127.0.0.1:8080
+ENV COORDINATOR=http://host.docker.internal:8080
 ENV CYPHER_ENDPOINT=neo4j://127.0.0.1:7687
 ENV GREMLIN_ENDPOINT=ws://127.0.0.1:12312/gremlin
 
