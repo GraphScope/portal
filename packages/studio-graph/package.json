@@ -42,7 +42,8 @@
     "valtio": "^1.13.2"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
     "@types/d3-brush": "^3.0.6",

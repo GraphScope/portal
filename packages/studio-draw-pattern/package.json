@@ -18,7 +18,8 @@
     "compiled"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
     "@swc/core": "^1.7.0",

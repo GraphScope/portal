@@ -19,6 +19,10 @@
     "build": "father build",
     "prepublishOnly": "npm run build"
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "dependencies": {
     "localforage": "latest",
     "d3-force": "latest",

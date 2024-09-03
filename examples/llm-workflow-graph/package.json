@@ -33,6 +33,10 @@
     "@vitejs/plugin-react": "^4.2.1",
     "vite": "^5.0.12"
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "author": "",
   "license": "ISC"
 }
