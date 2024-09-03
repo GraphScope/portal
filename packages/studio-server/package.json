@@ -18,6 +18,10 @@
     "type": "git",
     "url": "https://github.com/GraphScope/graphscope-components.git"
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "files": [
     "es",
     "lib",

@@ -15,6 +15,10 @@
     "lint": "umi lint",
     "prepublishOnly": "npm run build"
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
     "@antv/graphin": "^2.7.27",
