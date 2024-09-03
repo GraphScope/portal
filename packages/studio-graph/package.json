@@ -38,7 +38,7 @@
     "react-dom": "18.2.0",
     "react-intl": "^6.6.1",
     "uuidv4": "latest",
-    "valtio": "latest"
+    "valtio": "^1.13.2"
   },
   "publishConfig": {
     "access": "public"
