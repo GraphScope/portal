@@ -17,7 +17,8 @@ const fakeSnapshot = obj => {
 };
 
 const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
-  const { store, onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } = useInteractive();
+  const { store, onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd, onReactFlowInit } =
+    useInteractive();
   const { nodes, edges, theme, collapsed, appMode } = store;
   const { algorithm } = useThemeContainer();
   const isEmpty = nodes.length === 0;
@@ -48,6 +49,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           onConnectStart={onConnectStart}
           onConnectEnd={onConnectEnd}
           zoomOnDoubleClick={false}
+          onInit={onReactFlowInit}
           // onDoubleClick={onDoubleClick}
         >
           <ArrowMarker selectedColor={theme.primaryColor} color={isDark ? '#d7d7d7' : '#000'} />

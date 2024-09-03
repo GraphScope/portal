@@ -69,7 +69,13 @@ const Content = () => {
       <ImportFromYAML
         disabled={nodes.length !== 0}
         style={{ height: '160px' }}
-        icon={<Icons.FileYaml style={{ fontSize: '50px', color: token.colorPrimary }} />}
+        icon={
+          <Flex justify="center" align="center" gap={6}>
+            <Icons.FileYaml style={{ fontSize: '50px', color: token.colorPrimary }} />
+            <Typography.Text type="secondary">or</Typography.Text>
+            <Icons.FileJson style={{ fontSize: '50px', color: token.colorPrimary }} />
+          </Flex>
+        }
       />
       <Divider style={{ margin: '12px  0px' }} />
       <Typography.Text type="secondary">{exportText}</Typography.Text>

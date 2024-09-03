@@ -115,7 +115,31 @@ const useInteractive: any = () => {
     const bbox = getBBox(nodes);
     fitBounds(bbox, { duration: 600 });
   };
+  const onReactFlowInit = reactFlowInstance => {
+    if (reactFlowInstance) {
+      const allNodes = reactFlowInstance.toObject().nodes;
+      let minX = Infinity,
+        maxX = -Infinity,
+        minY = Infinity,
+        maxY = -Infinity;
 
+      allNodes.forEach(node => {
+        if (node.position.x < minX) minX = node.position.x;
+        if (node.position.x > maxX) maxX = node.position.x;
+        if (node.position.y < minY) minY = node.position.y;
+        if (node.position.y > maxY) maxY = node.position.y;
+      });
+
+      const centerX = (minX + maxX) / 2;
+      const centerY = (minY + maxY) / 2;
+
+      reactFlowInstance.fitView({
+        x: centerX,
+        y: centerY,
+        padding: 0.25,
+      });
+    }
+  };
   useEffect(() => {
     if (nodes.length > 0) {
       // 交互
@@ -155,6 +179,7 @@ const useInteractive: any = () => {
     onNodesChange,
     onConnectStart,
     onConnectEnd,
+    onReactFlowInit,
   };
 };
 

@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Spin } from 'antd';
 import GraphCanvas from './graph-canvas';
 import PropertiesEditor from './properties-editor';
 import ImportSchema from './import-schema';
 
 import { ReactFlowProvider } from 'reactflow';
-import { ThemeProvider, Section } from '@graphscope/studio-components';
+import { ThemeProvider, Section, Icons, LoadingGraph } from '@graphscope/studio-components';
 import 'reactflow/dist/style.css';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
@@ -51,9 +52,18 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
     rightSide,
   } = props;
   const { store, updateStore } = useContext();
-
+  const [state, updateState] = useState({
+    loading: false,
+  });
+  const { loading } = state;
   useEffect(() => {
     (async () => {
+      updateState(preset => {
+        return {
+          ...preset,
+          loading: true,
+        };
+      });
       let schema: ISchemaOptions = { nodes: [], edges: [] };
       if (appMode === 'DATA_MODELING' && queryGraphSchema) {
         schema = await queryGraphSchema();
@@ -80,6 +90,12 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         draft.currentId = isEmpty ? '' : nodes[0].id;
         draft.currentType = 'nodes';
         draft.isSaveFiles = isSaveFiles;
+      });
+      updateState(preset => {
+        return {
+          ...preset,
+          loading: false,
+        };
       });
     })();
   }, []);
@@ -110,8 +126,15 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
       >
         <ReactFlowProvider>
           {!IS_PURE && <ButtonController />}
-
-          <GraphCanvas />
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+            {loading ? (
+              <LoadingGraph>
+                <Icons.Cluster style={{ fontSize: '160px', color: '#F5F6F8' }} />
+              </LoadingGraph>
+            ) : (
+              <GraphCanvas />
+            )}
+          </div>
           {children}
         </ReactFlowProvider>
       </Section>
