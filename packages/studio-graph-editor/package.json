@@ -16,7 +16,8 @@
   ],
   "scripts": {
     "start": "vite dev",
-    "build": "vite build"
+    "build": "vite build",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@graphscope/studio-importor": "workspace:*",

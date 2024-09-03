@@ -16,7 +16,8 @@
   ],
   "scripts": {
     "start": "father dev",
-    "build": "father build"
+    "build": "father build",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "localforage": "latest",

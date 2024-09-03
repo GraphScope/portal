@@ -12,7 +12,8 @@
     "build:interactive": "umi build  --engineType=interactive",
     "build:groot": "umi build --engineType=groot",
     "build:analysis": "ANALYZE=1 umi build  --engineType=interactive",
-    "lint": "umi lint"
+    "lint": "umi lint",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
