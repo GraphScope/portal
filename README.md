@@ -19,7 +19,7 @@ There are two ways to start graphscope portal
 
 ```bash
 # Pull the image
-docker pull registry.cn-hongkong.aliyuncs.com/graphscope/portal:latest
+docker pull ghcr.io/graphscope/portal:update-importor
 ```
 
 ```bash
@@ -28,13 +28,29 @@ docker run -it
 --name my-portal
 -p 8888:8888
 -e COORDINATOR=http://host.docker.internal:8080
-registry.cn-hongkong.aliyuncs.com/graphscope/portal:latest
+ghcr.io/graphscope/portal:update-importor
 ```
 
 > Description of Startup Parameters
 
 - `COORDINATOR` refers to the GraphScope engine address. If you have also started the GraphScope engine locally using Docker, you can directly use `host.docker.internal:8080` as the `COORDINATOR` parameter.
 - `PORT` is the port number for the frontend service, defaulting to 8888.
+
+### Using GraphScope Engine ()
+
+```bash
+# Pull Graphscope Interactive engine, Apple M2 clip
+docker pull registry.cn-beijing.aliyuncs.com/graphscope/interactive:0.28.0-arm64
+```
+
+```bash
+# Run the container
+docker run -d
+--name gs-interactive-instance
+--label flex=interactive
+-p 8081:8080 -p 7777:7777 -p 10001:10000 -p 7688:7687
+registry.cn-beijing.aliyuncs.com/graphscope/interactive:0.28.0-arm64 --enable-coordinator
+```
 
 ### Building from the source code
 
