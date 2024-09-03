@@ -12,7 +12,7 @@
     "docs:build": "pnpm i && rm -rf package-lock.json && npm run build &&  dumi build",
     "version": "changeset version",
     "logs": "cd packages/studio-website/server && npm run logs",
-    "publish": "pnpm publish -r --registry=https://registry.npmjs.org --dry-run"
+    "publish": "pnpm publish -r"
   },
   "husky": {
     "hooks": {
