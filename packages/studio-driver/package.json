@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/studio-driver",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A library provides a unified interface for interacting with graph databases",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -16,7 +16,8 @@
   ],
   "scripts": {
     "start": "father dev",
-    "build": "father build"
+    "build": "father build",
+    "prepublishOnly": "npm run build"
   },
   "author": "",
   "license": "ISC",

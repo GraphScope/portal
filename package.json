@@ -10,8 +10,9 @@
     "start": "turbo run start",
     "docs": "dumi dev",
     "docs:build": "pnpm i && rm -rf package-lock.json && npm run build &&  dumi build",
+    "version": "changeset version",
     "logs": "cd packages/studio-website/server && npm run logs",
-    "publish": "pnpm publish -r --registry=https://registry.npmjs.org"
+    "publish": "pnpm publish -r"
   },
   "husky": {
     "hooks": {
@@ -51,6 +52,7 @@
     "@babel/plugin-proposal-private-methods": "^7.18.6",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-react": "^7.24.7",
+    "@changesets/cli": "^2.27.7",
     "@types/node": "latest",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.0",

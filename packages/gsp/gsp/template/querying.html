@@ -37,8 +37,6 @@
           // 必须的两个脚本加载完成后，再加载其他的 JavaScript 文件
           return Promise.all([
             loadScript('http://127.0.0.1:5500/packages/studio-query/dist/index.min.js'),
-            loadScript('http://127.0.0.1:5500/packages/studio-query/dist/5.index.min.js'),
-            loadScript('http://127.0.0.1:5500/packages/studio-query/dist/597.index.min.js'),
             loadCSS('http://127.0.0.1:5500/packages/studio-query/dist/index.css'),
           ]);
         })

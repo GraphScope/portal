@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/studio-importor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A data modeling and import module in GraphStudio",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -17,7 +17,8 @@
   "scripts": {
     "start": "father dev",
     "build": "father build",
-    "build:umd": "webpack  --mode production  -c ../../webpack.config.js --env path=/packages/studio-importor"
+    "build:umd": "webpack  --mode production  -c ../../webpack.config.js --env path=/packages/studio-importor",
+    "prepublishOnly": "npm run build && npm run build:umd"
   },
   "dependencies": {
     "@graphscope/studio-components": "workspace:*",
