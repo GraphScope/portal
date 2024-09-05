@@ -4,13 +4,13 @@
     "pnpm": "^9"
   },
   "scripts": {
-    "prepare": "pnpm i && rm -rf package-lock.json",
-    "ci": "npm run prepare && npm run build && npm run build:site",
+    "prev": "pnpm i && rm -rf package-lock.json",
+    "ci": "npm run prev && npm run build && npm run build:site",
     "start": "turbo run start",
     "build": "turbo run build --no-cache",
     "build:site": "cd packages/studio-website && npm run build",
     "build:examples": "pnpm i && rm -rf package-lock.json && npm run build && cd examples/graph-apps && npm run build:site",
-    "build:docs": "npm run prepare && npm run build &&  dumi build",
+    "build:docs": "npm run prev && npm run build &&  dumi build",
     "docs": "dumi dev",
     "version": "changeset version",
     "publish": "pnpm publish -r"
