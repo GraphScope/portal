@@ -1,5 +1,5 @@
 {
-  "name": "llm-workflow-graph",
+  "name": "@graphscope/graphy-data",
   "version": "0.1.1",
   "description": "",
   "main": "lib/index.js",
