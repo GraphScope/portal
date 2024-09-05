@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 
 import { Button } from 'antd';
 
-import { MultipleInstance, Section, useSection, Icons, FullScreen } from '@graphscope/studio-components';
+import { MultipleInstance, Section, useSection, Icons, FullScreen, SegmentedTabs } from '@graphscope/studio-components';
 import {
   Toolbar,
   SwitchEngine,
@@ -12,6 +12,7 @@ import {
   ClearStatatus,
   RunCluster,
   LoadCSV,
+  StyleSetting,
 } from '@graphscope/studio-graph';
 
 interface QueryGraphProps {}
@@ -35,6 +36,20 @@ const ToogleRightButton = () => {
 
 const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const items = [
+    {
+      key: 'CSV',
+      label: 'CSV',
+      value: 'CSV',
+      children: <LoadCSV />,
+    },
+    {
+      key: 'Style',
+      label: 'Style',
+      value: 'Style',
+      children: <StyleSetting />,
+    },
+  ];
 
   return (
     <MultipleInstance>
@@ -53,7 +68,7 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
         <Section
           splitBorder
           rightSide={null}
-          leftSide={<LoadCSV />}
+          leftSide={<SegmentedTabs items={items} block />}
           autoResize={false}
           rightSideStyle={{
             width: '350px',
