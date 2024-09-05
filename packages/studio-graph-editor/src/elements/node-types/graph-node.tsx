@@ -244,7 +244,7 @@ const GraphNode = (props: NodeProps) => {
           </div>
           <div style={{ marginTop: '10px' }}>
             <span style={{ paddingBottom: '5px', marginLeft: '5px' }}>Label</span>
-            <Input value={currentNode.data.label} onChange={handleLabelChange} style={{ marginTop: '5px' }}></Input>
+            <Input value={currentNode?.data.label} onChange={handleLabelChange} style={{ marginTop: '5px' }}></Input>
             {popoverCustomCloneContent ?? (
               <PropertiesList typeColumn={{ options: typeColumn }} onChange={handleChange}></PropertiesList>
             )}

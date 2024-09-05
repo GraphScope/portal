@@ -19,7 +19,6 @@ export const Canvas = () => {
   const editNode = useNodeStore(state => state.editNode);
   const editEdge = useEdgeStore(state => state.editEdge);
   const { transformNode, transformEdge } = useTransform();
-  // const [changeSource, setChangeSource] = useState<"internal"|>('');
   const graphNodes = useGraphStore(state => state.graphNodes);
   const graphEdges = useGraphStore(state => state.graphEdges);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -78,7 +77,7 @@ export const Canvas = () => {
   const MyGraph = useCallback(
     () => (
       <Graph
-        graphId="edit"
+        graphId="edit-graph"
         defaultNodes={graphNodes}
         defaultEdges={graphEdges as unknown as ISchemaEdge[]}
         onNodesChange={handleNodes}

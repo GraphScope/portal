@@ -35,7 +35,7 @@ export const Preview = () => {
           isPreview={true}
           defaultEdges={defaultEdges}
           defaultNodes={defaultNodes}
-          graphId="preview"
+          graphId="preview-graph"
           onSelectionChange={handleSelectionChange}
         />
       </div>

@@ -106,7 +106,7 @@ const useInteractive: any = () => {
         const newNodes = applyNodeChanges(changes, deepclone(draft.nodes));
         console.log(JSON.stringify(newNodes));
         handleNodesChange && handleNodesChange(fakeSnapshot(newNodes));
-        return (draft.nodes = newNodes);
+        draft.nodes = newNodes;
       });
     }
   };
@@ -125,7 +125,7 @@ const useInteractive: any = () => {
         const newEdges = applyEdgeChanges(changes, deepclone(draft.edges));
         console.log(JSON.stringify(newEdges));
         // handleEdgesChange && handleEdgesChange(newEdges);
-        return (draft.edges = newEdges);
+        draft.edges = newEdges;
       });
     }
   };
@@ -147,11 +147,6 @@ const useInteractive: any = () => {
   useEffect(() => {
     console.log('effect.....');
     if (nodes.length > 0) {
-      // 交互
-      // if (hasLayouted) {
-      //   onDoubleClick();
-      // }
-      // 布局
       if (!hasLayouted) {
         console.log('effect......layout');
         const graph = createStaticForceLayout(fakeSnapshot(nodes), fakeSnapshot(edges));
@@ -168,6 +163,7 @@ const useInteractive: any = () => {
       }
     }
   }, [nodes, edges, hasLayouted]);
+
   useEffect(() => {
     /** 把marker 放到 reactflow 内部，目的是为了导出的时候 dom 不丢失 */
     const marker = document.getElementById('arrow-marker-svg');

@@ -37,6 +37,7 @@ const SchemaGraph: React.FunctionComponent<ISchemaGraphProps> = props => {
     isControlButton = true,
     isPreview = false,
     disabled = false,
+    graphId,
   } = useGraphContext();
   const description = (
     <FormattedMessage
