@@ -12,16 +12,6 @@ interface IPagesProps {}
 
 const APP_INFO = [
   {
-    name: 'Graph Data Query Scenarios',
-    description:
-      'Using powerful query languages like Cypher and Gremlin, enabling you to extract meaningful insights from complex networks of interconnected data',
-    icon: 'https://www.connectedpapers.com/img/ScienceMapping.2218dc18.png',
-    category: 'Graph Database',
-    link: '/paper-reading',
-    dataset: 'https://github.com/csuvis/CyberAssetGraphData',
-    github: '',
-  },
-  {
     name: 'Online Visual Graph Tool',
     description:
       'Allows users to upload JSON and CSV files, making it easy to explore, analyze, and visualize complex graph data with intuitive interfaces for building and understanding network relationships',
@@ -54,10 +44,20 @@ const APP_INFO = [
     name: 'GitHub Collaboration Network',
     description:
       'Explore the GitHub Collaboration Network, where developers connect, share code, and collaborate on projects to drive innovation and solve complex problems together.',
-    icon: 'https://www.connectedpapers.com/img/ScienceMapping.2218dc18.png',
+    icon: 'https://img.alicdn.com/imgextra/i2/O1CN012aZmLu1ss4UHcDQ2T_!!6000000005821-0-tps-2210-1502.jpg',
     link: '/paper-reading',
     category: 'Social Network',
     dataset: 'https://github.com/csuvis/CyberAssetGraphData',
+  },
+  {
+    name: 'Graph Data Query Scenarios',
+    description:
+      'Using powerful query languages like Cypher and Gremlin, enabling you to extract meaningful insights from complex networks of interconnected data',
+    icon: 'https://www.connectedpapers.com/img/ScienceMapping.2218dc18.png',
+    category: 'Graph Database',
+    link: '/paper-reading',
+    dataset: 'https://github.com/csuvis/CyberAssetGraphData',
+    github: '',
   },
 ];
 const Home = () => {
