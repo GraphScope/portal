@@ -18,6 +18,15 @@ interface IPaperDetailProps {
 
 const PaperInfo: React.FC<IPaperDetailProps> = props => {
   const { title, authors, time, citations, description } = props;
+  const IconButton: React.FC<{ icon: React.ReactNode; tooltipTitle: string; disabled: boolean }> = ({
+    icon,
+    tooltipTitle,
+    ...props
+  }) => (
+    <Tooltip title={tooltipTitle}>
+      <Button type="text" {...props} icon={icon} />
+    </Tooltip>
+  );
   return (
     <Flex vertical style={{ padding: 24 }} gap={6}>
       {title && <Title level={4}>{title}</Title>}
@@ -42,11 +51,9 @@ const PaperInfo: React.FC<IPaperDetailProps> = props => {
       )}
       <Flex justify="start" align="center">
         <Text type="secondary">Open in:</Text>
-        <Tooltip title="PDF">
-          <Button type="text" icon={<Pdf />} disabled />
-        </Tooltip>
-        <Button type="text" disabled icon={<Pubmed />} />
-        <Button type="text" disabled icon={<Doi />} />
+        <IconButton icon={<Pdf />} tooltipTitle="PDF" disabled />
+        <IconButton icon={<Pubmed />} tooltipTitle="PubMed" disabled />
+        <IconButton icon={<Doi />} tooltipTitle="DOI" disabled />
       </Flex>
       <Flex justify="start" align="center" gap={6}>
         <Button type="text" icon={<DeploymentUnitOutlined />}>
