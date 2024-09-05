@@ -20,9 +20,11 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
+  "peerDependencies": {
     "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "dependencies": {
     "react-intl": "latest",
     "react-resizable-panels": "^2.0.20",
     "sql-ddl-to-json-schema": "latest",
