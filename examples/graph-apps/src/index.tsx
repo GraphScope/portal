@@ -5,7 +5,7 @@ import { Flex, Card, Typography, Divider, Tag } from 'antd';
 import { ConfigProvider, Skeleton, Space, Button } from 'antd';
 import { GithubOutlined, ReadOutlined } from '@ant-design/icons';
 // import locales from '../locales';
-// import { IntlProvider } from 'react-intl';
+import { IntlProvider } from 'react-intl';
 import PaperReading from './paper-reading';
 
 interface IPagesProps {}
@@ -21,14 +21,13 @@ const APP_INFO = [
     dataset: 'https://github.com/csuvis/CyberAssetGraphData',
     github: '',
   },
-
   {
-    name: 'Discover Network Vulnerability Risks',
+    name: 'Online Visual Graph Tool',
     description:
-      'Identify Network Vulnerability Risks by detecting weaknesses and exposures in network infrastructure, enabling proactive security measures to prevent potential threats and safeguard critical systems.',
+      'Allows users to upload JSON and CSV files, making it easy to explore, analyze, and visualize complex graph data with intuitive interfaces for building and understanding network relationships',
     icon: 'https://www.connectedpapers.com/img/ScienceMapping.2218dc18.png',
-    category: 'Cyber Security',
-    link: '/paper-reading',
+    category: 'Graph Visualization',
+    link: '/online-visual-tool',
     dataset: 'https://github.com/csuvis/CyberAssetGraphData',
     github: '',
   },
@@ -40,6 +39,16 @@ const APP_INFO = [
     link: '/paper-reading',
     category: 'Knowledge Graph',
     dataset: 'https://github.com/csuvis/CyberAssetGraphData',
+  },
+  {
+    name: 'Discover Network Vulnerability Risks',
+    description:
+      'Identify Network Vulnerability Risks by detecting weaknesses and exposures in network infrastructure, enabling proactive security measures to prevent potential threats and safeguard critical systems.',
+    icon: 'https://www.connectedpapers.com/img/ScienceMapping.2218dc18.png',
+    category: 'Cyber Security',
+    link: '/paper-reading',
+    dataset: 'https://github.com/csuvis/CyberAssetGraphData',
+    github: '',
   },
   {
     name: 'GitHub Collaboration Network',
@@ -105,11 +114,12 @@ const Home = () => {
 const routes = [
   { path: '/', component: Home },
   { path: '/paper-reading', component: React.lazy(() => import('./paper-reading')) },
+  { path: '/online-visual-tool', component: React.lazy(() => import('./online-visual-tool')) },
 ];
 
 const GraphApps: React.FunctionComponent<IPagesProps> = props => {
-  //   const locale = 'en-US';
-  //   const messages = locales[locale];
+  const locale = 'en-US';
+  const messages = {};
   const routeComponents = routes.map(({ path, component: Component }, index) => {
     return (
       <Route
@@ -139,11 +149,11 @@ const GraphApps: React.FunctionComponent<IPagesProps> = props => {
         },
       }}
     >
-      {/* <IntlProvider messages={messages} locale={locale}> */}
-      <BrowserRouter>
-        <Routes>{routeComponents}</Routes>
-      </BrowserRouter>
-      {/* </IntlProvider> */}
+      <IntlProvider messages={messages} locale={locale}>
+        <BrowserRouter>
+          <Routes>{routeComponents}</Routes>
+        </BrowserRouter>
+      </IntlProvider>
     </ConfigProvider>
   );
 };
