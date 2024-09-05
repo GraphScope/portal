@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { SettingFilled, DatabaseOutlined } from '@ant-design/icons';
+import { SettingFilled, DatabaseOutlined, DeploymentUnitOutlined, AppstoreOutlined } from '@ant-design/icons';
 
 import { MenuProps } from 'antd';
 
@@ -10,9 +10,11 @@ export const SIDE_MENU: MenuProps['items'] = [
     key: '/dataset',
     icon: <DatabaseOutlined />,
   },
-  // {
-  //   type: 'divider',
-  // },
+  {
+    label: <FormattedMessage id="Explore" />,
+    key: '/explore',
+    icon: <DeploymentUnitOutlined />,
+  },
 ];
 
 export const STATUS_MAP = {

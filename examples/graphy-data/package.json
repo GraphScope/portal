@@ -1,5 +1,5 @@
 {
-  "name": "llm-workflow-graph",
+  "name": "@graphscope/graphy-data",
   "version": "0.1.1",
   "description": "",
   "main": "lib/index.js",
@@ -22,6 +22,8 @@
     "@graphscope/studio-components": "workspace:*",
     "@graphscope/studio-graph": "workspace:*",
     "@graphscope/studio-importor": "workspace:*",
+    "@graphscope/studio-query": "workspace:*",
+    "@graphscope/graph-apps": "workspace:*",
     "d3-force": "latest",
     "react": "18.2.0",
     "react-dom": "18.2.0",

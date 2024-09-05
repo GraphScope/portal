@@ -75,6 +75,18 @@ const List: React.FunctionComponent<IDataset> = props => {
               STEP 3
             </Button>
           </Tooltip>
+          <Divider style={{ width: '40px' }} />
+          <Tooltip title="Download the dataset and import it into the graph database for further analysis.">
+            <Button
+              icon={<FileZipOutlined />}
+              type={summarized ? 'primary' : 'default'}
+              onClick={() => {
+                navigation(`/explore?id=${id}`);
+              }}
+            >
+              Explore
+            </Button>
+          </Tooltip>
         </Space>
       </Flex>
       <Flex justify="space-between" gap={8}>

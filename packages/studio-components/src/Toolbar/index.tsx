@@ -4,10 +4,12 @@ interface IToolbarProps {
   children: React.ReactNode;
   style?: React.CSSProperties;
   direction?: 'horizontal' | 'vertical';
+  noSpace?: boolean;
 }
 
 const Toolbar: React.FunctionComponent<IToolbarProps> = props => {
-  const { children, style, direction = 'vertical' } = props;
+  const { children, style, direction = 'vertical', noSpace } = props;
+  const _children = noSpace ? children : <Space direction={direction}>{children}</Space>;
   return (
     <div
       style={{
@@ -25,7 +27,7 @@ const Toolbar: React.FunctionComponent<IToolbarProps> = props => {
         ...style,
       }}
     >
-      <Space direction={direction}>{children}</Space>
+      {_children}
     </div>
   );
 };

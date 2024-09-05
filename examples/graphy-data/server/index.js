@@ -32,7 +32,10 @@ app.get('/api/query', async (req, res) => {
     return;
   }
   const nodes = await queryLocalFile(`${name}.json`);
-  const edges = await queryLocalFile(`${name}_IsSimilar_${name}.json`);
+  const edges =
+    name === 'Paper'
+      ? await queryLocalFile(`${name}_Cite_${name}.json`)
+      : await queryLocalFile(`${name}_IsSimilar_${name}.json`);
   res.send({
     success: true,
     data: {

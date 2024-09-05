@@ -1,0 +1,45 @@
+{
+  "name": "@graphscope/graph-apps",
+  "version": "0.1.1",
+  "description": "",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GraphScope/portal.git"
+  },
+  "files": [
+    "es",
+    "lib",
+    "dist"
+  ],
+  "scripts": {
+    "start": "father dev",
+    "build": "father build",
+    "start:site": "vite dev",
+    "build:site": "vite build"
+  },
+  "dependencies": {
+    "@graphscope/studio-components": "workspace:*",
+    "@graphscope/studio-graph": "workspace:*",
+    "@graphscope/studio-importor": "workspace:*",
+    "@graphscope/studio-query": "workspace:*",
+    "d3-force": "latest",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-intl": "^6.6.8",
+    "react-router-dom": "^6.26.1",
+    "typewriter-effect": "^2.21.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.12"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "author": "",
+  "license": "ISC"
+}
