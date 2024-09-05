@@ -15,6 +15,7 @@ import { getBBox, createEdgeLabel, createNodeLabel } from '../elements/utils';
 import { Utils } from '@graphscope/studio-components';
 import { useGraphContext } from '..';
 import { ISchemaEdge } from '../types/edge';
+import _ from 'lodash';
 const { fakeSnapshot } = Utils;
 let timer: any = null;
 const useInteractive: any = () => {
@@ -106,7 +107,8 @@ const useInteractive: any = () => {
         const newNodes = applyNodeChanges(changes, deepclone(draft.nodes));
         console.log(JSON.stringify(newNodes));
         handleNodesChange && handleNodesChange(fakeSnapshot(newNodes));
-        draft.nodes = newNodes;
+        const isEqual = _.isEqual(draft.nodes, newNodes);
+        if (!isEqual) draft.nodes = newNodes;
       });
     }
   };
