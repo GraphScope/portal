@@ -7,8 +7,8 @@ interface DrawTextOptions {
 }
 
 export function drawText(ctx: CanvasRenderingContext2D, options: DrawTextOptions): void {
-  const { text, x, y, maxWidth, lineHeight } = options;
-  const words = text.split(' ');
+  const { text = '', x, y, maxWidth, lineHeight } = options;
+  const words = String(text).split(' ');
   let line = '';
   const lines: string[] = [];
 

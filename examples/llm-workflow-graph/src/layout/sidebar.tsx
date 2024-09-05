@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { GithubOutlined, ReadOutlined, LinkOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu, Flex, Button, theme, Tooltip } from 'antd';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate, useMatch } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 
 import { Utils, Logo, useSection } from '@graphscope/studio-components';
@@ -41,8 +41,8 @@ const Sidebar: React.FunctionComponent = () => {
         <Menu
           inlineCollapsed={collapsed.leftSide}
           onClick={onClick}
-          defaultSelectedKeys={['/dataset']}
-          // selectedKeys={[defaultPath]}
+          defaultSelectedKeys={[location.pathname]}
+          selectedKeys={[location.pathname]}
           items={SIDE_MENU}
           mode="vertical"
           style={{

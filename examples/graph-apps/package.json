@@ -1,5 +1,5 @@
 {
-  "name": "llm-workflow-graph",
+  "name": "@graphscope/graph-apps",
   "version": "0.1.1",
   "description": "",
   "main": "lib/index.js",
@@ -15,15 +15,16 @@
     "dist"
   ],
   "scripts": {
-    "start": "vite dev",
-    "build": "vite build"
+    "start": "father dev",
+    "build": "father build",
+    "start:site": "vite dev",
+    "build:site": "vite build"
   },
   "dependencies": {
     "@graphscope/studio-components": "workspace:*",
     "@graphscope/studio-graph": "workspace:*",
     "@graphscope/studio-importor": "workspace:*",
     "@graphscope/studio-query": "workspace:*",
-    "@graphscope/graph-apps": "workspace:*",
     "d3-force": "latest",
     "react": "18.2.0",
     "react-dom": "18.2.0",
