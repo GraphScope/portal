@@ -7,7 +7,7 @@
     "ci": "pnpm i && rm -rf package-lock.json && npm run build && npm run build:site",
     "build": "turbo run build --no-cache",
     "build:site": "cd packages/studio-website && npm run build",
-    "build:example:apps": "cd example/graph-apps && npm run build:site",
+    "build:example:apps": "cd examples/graph-apps && npm run build:site",
     "start": "turbo run start",
     "docs": "dumi dev",
     "docs:build": "pnpm i && rm -rf package-lock.json && npm run build &&  dumi build",
