@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Row, Col, Table, Select } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Property } from '../../types/property';
+import { useNodeStore } from '../../stores/useNodeStore';
 
 interface PopoverContentProps {
   currentId?: string;
@@ -9,7 +10,8 @@ interface PopoverContentProps {
 }
 
 const PopoverContent: React.FC<PopoverContentProps> = ({ currentId, onChange }) => {
-  const [items, setItems] = useState<Property[]>([]);
+  const nodes = useNodeStore(state => state.nodes);
+  const [items, setItems] = useState<Property[]>(nodes.find(node => node.nodeKey === currentId)?.properties ?? []);
 
   useEffect(() => {
     console.log('id change', currentId);
@@ -52,6 +54,7 @@ const PopoverContent: React.FC<PopoverContentProps> = ({ currentId, onChange }) 
       dataIndex: 'compare',
       render: (_: any, record: Property) => (
         <Select
+          defaultValue={record.compare}
           onChange={value => handleChange(record.id, 'compare', value)}
           style={{ width: '100%' }}
           options={[
