@@ -1,6 +1,6 @@
-import React, { ReactNode, useCallback, useMemo } from 'react';
-import templates from './quickStartTemplate';
+import React, { ReactNode, useCallback, useMemo, useRef } from 'react';
 import { useTransform } from '../../hooks/transform/useTransform';
+import { useGenerateTemplate } from '../../hooks/generateTemplate/useGenerateTemplate';
 
 interface QuickStartProps {
   title: string;
@@ -8,15 +8,26 @@ interface QuickStartProps {
   id: string;
 }
 export const QuickStartItem: React.FC<QuickStartProps> = ({ title, svgSrc, id }) => {
-  const template = useMemo(() => templates.find(item => item.templateId === id), [templates]);
   const { transformNodes, transformEdges } = useTransform();
+  const { generateSelfLoop, generateTriangleLoop } = useGenerateTemplate();
 
   const handleClick = useCallback(() => {
-    if (template) {
-      transformNodes(template.nodes);
-      transformEdges(template.edges, template.nodes);
+    const triangleLoopData = generateTriangleLoop();
+    const selfLoopData = generateSelfLoop();
+
+    switch (id) {
+      case 'triangle-loop':
+        transformNodes(triangleLoopData.nodes);
+        transformEdges(triangleLoopData.edges, triangleLoopData.nodes);
+        break;
+      case 'self-loop':
+        transformNodes(selfLoopData.nodes);
+        transformEdges(selfLoopData.edges, selfLoopData.nodes);
+        break;
+      default:
+        break;
     }
-  }, [template]);
+  }, []);
 
   return (
     <div

@@ -133,16 +133,12 @@ const useInteractive: any = () => {
     if (elementOptions.isConnectable) {
       updateStore(draft => {
         const newEdges = applyEdgeChanges(changes, deepclone(draft.edges));
-        console.log(JSON.stringify(newEdges));
+        // console.log(JSON.stringify(newEdges));
         // handleEdgesChange && handleEdgesChange(newEdges);
         draft.edges = newEdges;
       });
     }
   };
-
-  useEffect(() => {
-    console.log(JSON.stringify(fakeSnapshot(edges)));
-  }, [edges]);
 
   const onDoubleClick = () => {
     //@ts-ignore

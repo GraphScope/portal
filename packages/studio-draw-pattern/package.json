@@ -25,6 +25,7 @@
     "@types/lodash": "^4.14.202",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "@types/uuid": "^9.0.8",
     "father": "^4.4.5",
     "typescript": "^5.5.4"
   },
@@ -37,6 +38,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rxjs": "^7.8.1",
+    "uuid": "^10.0.0",
     "zustand": "^4.5.5"
   }
 }
