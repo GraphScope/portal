@@ -1,4 +1,4 @@
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 import { Property } from './typing';
 
 export interface IState {
@@ -17,7 +17,7 @@ let index = 0;
 export default function useStore(): IStore {
   const handleAdd = (state: IState): Property[] => {
     const newProperty = {
-      key: uuid(),
+      key: uuidv4(),
       name: `property_${index++}`,
       type: '',
       primaryKey: false,

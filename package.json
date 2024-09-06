@@ -4,14 +4,15 @@
     "pnpm": "^9"
   },
   "scripts": {
-    "ci": "pnpm i && rm -rf package-lock.json && npm run build && npm run build:site",
+    "prev": "pnpm i && rm -rf package-lock.json",
+    "ci": "npm run prev && npm run build && npm run build:site",
+    "start": "turbo run start",
     "build": "turbo run build --no-cache",
     "build:site": "cd packages/studio-website && npm run build",
-    "start": "turbo run start",
+    "build:examples": "pnpm i && rm -rf package-lock.json && npm run build && cd examples/graph-apps && npm run build:site",
+    "build:docs": "npm run prev && npm run build &&  dumi build",
     "docs": "dumi dev",
-    "docs:build": "pnpm i && rm -rf package-lock.json && npm run build &&  dumi build",
     "version": "changeset version",
-    "logs": "cd packages/studio-website/server && npm run logs",
     "publish": "pnpm publish -r"
   },
   "husky": {

@@ -1,9 +1,8 @@
 import React, { useRef } from 'react';
-import ReactDOM from 'react-dom';
 import { Button } from 'antd';
 import { ImportFiles, Utils } from '@graphscope/studio-components';
 import { useContext } from '../../hooks/useContext';
-import { uuid } from 'uuidv4';
+
 import { getStyleConfig, getDataMap } from '../Prepare/utils';
 
 export interface IImportFromCSVProps {}
@@ -116,7 +115,7 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
       edges: [...edgeSchemas.values()],
     };
 
-    const id = graphId || uuid();
+    const id = graphId || String(new Date());
     const style = getStyleConfig(schema, id);
     updateStore(draft => {
       draft.data = {

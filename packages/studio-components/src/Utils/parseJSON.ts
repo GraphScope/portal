@@ -1,7 +1,7 @@
 import { inferredGraphFields } from './inferredGraphFields';
 import { parseFile, extractHeaderAndDelimiter, getFileSize } from './parseCSV';
 import type { ParsedFile } from './parseCSV';
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 
 function byteSize(str) {
   return new Blob([str]).size;
@@ -17,7 +17,7 @@ export const parseJSON = async (file: File): Promise<ParsedFile[]> => {
     const fileString = JSON.stringify(item);
     const size = getFileSize(byteSize(fileString));
     return {
-      id: uuid(),
+      id: uuidv4(),
       contents: fileString,
       data: item,
       meta: {
