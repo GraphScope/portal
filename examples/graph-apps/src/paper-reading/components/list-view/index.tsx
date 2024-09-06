@@ -60,7 +60,7 @@ const ListView: React.FC<IListViewProps> = props => {
   const columns: TableColumnsType<DataType> = [
     {
       title: 'Title',
-      sorter: (a, b) => a.title.length - b.title.length,
+      sorter: (a, b) => a.title.localeCompare(b.title),
       render: (all: DataType) => {
         const { key, title } = all;
         return <span style={{ color: currentIndex === key ? '#035282' : '#020202' }}>{ellipsisText(title)}</span>;
@@ -70,7 +70,7 @@ const ListView: React.FC<IListViewProps> = props => {
     {
       title: 'Authors',
       dataIndex: 'authors',
-      sorter: (a, b) => a.authors.length - b.authors.length,
+      sorter: (a, b) => a.authors.localeCompare(b.authors),
       width: '25%',
     },
     {
