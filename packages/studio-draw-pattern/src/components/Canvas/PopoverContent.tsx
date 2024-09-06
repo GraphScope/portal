@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Row, Col, Table } from 'antd';
+import { Form, Input, Button, Row, Col, Table, Select } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Property } from '../../types/property';
 
@@ -51,11 +51,15 @@ const PopoverContent: React.FC<PopoverContentProps> = ({ currentId, onChange }) 
       title: 'Compare',
       dataIndex: 'compare',
       render: (_: any, record: Property) => (
-        <Input
-          placeholder="Compare"
-          value={record.compare}
-          onChange={e => handleChange(record.id, 'compare', e.target.value)}
+        <Select
+          onChange={value => handleChange(record.id, 'compare', value)}
           style={{ width: '100%' }}
+          options={[
+            { value: '>', label: '>' },
+            { value: '=', label: '=' },
+            { value: '<', label: '<' },
+          ]}
+          className="nospan nodrag"
         />
       ),
       width: '20%',
