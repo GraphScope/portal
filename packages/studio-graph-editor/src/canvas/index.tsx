@@ -23,7 +23,7 @@ const { fakeSnapshot } = Utils;
 const SchemaGraph: React.FunctionComponent<ISchemaGraphProps> = props => {
   const { children } = props;
   const { store, updateStore } = useContext();
-  const { onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } = useInteractive();
+  const { onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } = useInteractive();
   const { nodes, edges, theme } = store;
   const { algorithm } = useThemeContainer();
   const isEmpty = nodes.length === 0;

@@ -3,7 +3,8 @@ import { QuickStart } from './QuickStart';
 import { Canvas } from './Canvas';
 import { Section } from '@graphscope/studio-components';
 
-export const DrawPattern = () => {
+export interface DrawPatternProps {}
+export const DrawPattern: React.FC<DrawPatternProps> = props => {
   return (
     <Section
       splitBorder={true}
@@ -16,12 +17,12 @@ export const DrawPattern = () => {
             boxSizing: 'border-box',
           }}
         >
-          <QuickStart></QuickStart>
+          <QuickStart />
         </div>
       }
       children={
         <div id="canvas-wrapper" style={{ height: '100%', width: '100%', backgroundColor: '#E6F4FF' }}>
-          <Canvas></Canvas>
+          <Canvas />
         </div>
       }
     />

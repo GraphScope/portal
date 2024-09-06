@@ -23,7 +23,12 @@ const useInteractive: any = () => {
   const { screenToFlowPosition, fitBounds, fitView } = useReactFlow();
   const { displayMode, nodes, edges, hasLayouted, elementOptions } = store;
   const connectingNodeId = useRef(null);
-  const { onNodesChange: handleNodesChange, onEdgesChange: handleEdgesChange, onSelectionChange } = useGraphContext();
+  const {
+    onNodesChange: handleNodesChange,
+    onEdgesChange: handleEdgesChange,
+    onSelectionChange,
+    disabled,
+  } = useGraphContext();
 
   const onConnectStart = useCallback((_, { nodeId }) => {
     connectingNodeId.current = nodeId;
@@ -99,6 +104,7 @@ const useInteractive: any = () => {
   );
 
   const onNodesChange = (changes: NodeChange[]) => {
+    if (disabled) return;
     const { type } = changes[0];
     // console.log(changes);
 
@@ -122,6 +128,8 @@ const useInteractive: any = () => {
     ),
   });
   const onEdgesChange = (changes: EdgeChange[]) => {
+    if (disabled) return;
+
     if (elementOptions.isConnectable) {
       updateStore(draft => {
         const newEdges = applyEdgeChanges(changes, deepclone(draft.edges));

@@ -50,7 +50,7 @@ export const QuickStart = () => {
         gap: '0.8rem',
       }}
     >
-      <Preview></Preview>
+      <Preview />
       <div id="items-wrapper" style={{ display: 'flex', flexDirection: 'column', height: '70%', gap: '0.3rem' }}>
         <span style={{ fontSize: '1rem' }}>
           <RocketOutlined />
