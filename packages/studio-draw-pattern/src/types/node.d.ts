@@ -13,4 +13,5 @@ export interface Node {
   isErgodic?: boolean;
   data: NodeData;
   properties?: Property[];
+  variable: string;
 }

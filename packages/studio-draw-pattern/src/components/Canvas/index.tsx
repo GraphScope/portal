@@ -12,6 +12,7 @@ import _ from 'lodash';
 import { useGraphStore } from '../../stores/useGraphStore';
 import { useEncodeCypher } from '../../hooks/Cypher/useEncodeCypher';
 import { Button, Input, Modal } from 'antd';
+import { getSequentialLetter } from '../../utils';
 
 export const Canvas = () => {
   const nodes = useNodeStore(state => state.nodes);
@@ -54,6 +55,7 @@ export const Canvas = () => {
         editNode({
           ...currentNode,
           properties: value.properties,
+          variable: getSequentialLetter()(),
         });
       }
     },

@@ -21,7 +21,7 @@ export const useEncodeCypher = () => {
         node.properties.map((property: Property) => {
           return {
             ...property,
-            statement: `${node.nodeKey}.${property.name} ${property.compare} ${property.value}`,
+            statement: `${property.name} ${property.compare} ${property.value}`,
           };
         });
       const isEqual = _.isEqual(node.properties, newProperties);
@@ -54,18 +54,20 @@ export const useEncodeCypher = () => {
     // when use it, set it's isErgodic true
     if (currentEdge) currentEdge.isErgodic = true;
 
-    let MATCH = `[${currentEdge?.edgeKey}${currentEdge?.statement}]`;
+    let MATCH = `[${currentEdge?.statement}]`;
     // 当前 egde target遍历
     if (targetNode) {
       while (true) {
         const isExistProperty = !!targetNode.properties;
-        const nodeStatement = `(${targetNode.nodeKey}${targetNode.statement})`;
+        const nodeStatement = targetNode.variable
+          ? `(${targetNode.variable}${targetNode.statement})`
+          : `(${targetNode.statement})`;
         MATCH = `${MATCH}->${nodeStatement}`;
         if (!targetNode.outRelations) break;
         const targetEdges = edgesSnapShot.filter(edge => isArrayExist(edge.edgeKey, [...targetNode!.outRelations!]));
         targetCurrentEdge = targetEdges.find(edge => !edge.isErgodic);
         if (!targetCurrentEdge) break;
-        MATCH = `${MATCH}-[${targetCurrentEdge?.edgeKey}${targetCurrentEdge?.statement}]]`;
+        MATCH = `${MATCH}-[${targetCurrentEdge?.statement}]`;
         targetNode = nodes.find(node => node.nodeKey === targetCurrentEdge?.targetNode);
         if (!targetNode) throw new Error('targetNode is not exist');
       }
@@ -74,13 +76,15 @@ export const useEncodeCypher = () => {
     if (sourceNode) {
       while (true) {
         const isExistProperty = !!sourceNode.properties;
-        const nodeStatement = `(${sourceNode.nodeKey}${sourceNode.statement})`;
+        const nodeStatement = sourceNode.variable
+          ? `(${sourceNode.variable}${sourceNode.statement})`
+          : `(${sourceNode.statement})`;
         MATCH = `${nodeStatement}-${MATCH}`;
         if (!sourceNode.outRelations) break;
         const sourceEdges = edgesSnapShot.filter(edge => isArrayExist(edge.edgeKey, [...sourceNode!.outRelations!]));
         sourceCurrentEdge = sourceEdges.find(edge => !edge.isErgodic);
         if (!sourceCurrentEdge) break;
-        MATCH = `[${sourceCurrentEdge?.edgeKey}${sourceCurrentEdge?.statement}]->${MATCH}`;
+        MATCH = `[${sourceCurrentEdge?.statement}]->${MATCH}`;
         sourceNode = nodes.find(node => node.nodeKey === sourceCurrentEdge?.sourceNode);
         if (!sourceNode) throw new Error('sourceNode is not exist');
       }
@@ -94,8 +98,9 @@ export const useEncodeCypher = () => {
   const generateWHERE = useCallback(() => {
     let propertiesStatement: string[] = [];
     nodes.forEach(node => {
+      console.log(node);
       // WHERE  = node.properties.
-      const propertiesSingleNodeStatement = node.properties?.map(property => `${property.statement}`);
+      const propertiesSingleNodeStatement = node.properties?.map(property => `${node.variable}.${property.statement}`);
 
       if (propertiesSingleNodeStatement)
         propertiesStatement = [...propertiesStatement, ...propertiesSingleNodeStatement];
