@@ -15,10 +15,12 @@ import { Button, Input, Modal } from 'antd';
 import { getSequentialLetter } from '../../utils';
 
 export const Canvas = () => {
-  const nodes = useNodeStore(state => state.nodes);
-  const edges = useEdgeStore(state => state.edges);
+  const nodesStore = useNodeStore(state => state.nodes);
+  const edgesStore = useEdgeStore(state => state.edges);
   const editNode = useNodeStore(state => state.editNode);
   const editEdge = useEdgeStore(state => state.editEdge);
+  const addNode = useNodeStore(state => state.addNode);
+  const addEdge = useEdgeStore(state => state.addEdge);
   const { transformNode, transformEdge } = useTransform();
   const graphNodes = useGraphStore(state => state.graphNodes);
   const graphEdges = useGraphStore(state => state.graphEdges);
@@ -26,22 +28,22 @@ export const Canvas = () => {
 
   const { encodeProperties, encodeNodes, encodeEdges, generateMATCH, generateWHERE } = useEncodeCypher();
 
-  const MATCH: string = useMemo(() => (isModalOpen ? generateMATCH() : ''), [isModalOpen]);
+  const MATCHs: string[] = useMemo(() => (isModalOpen ? generateMATCH() : []), [isModalOpen]);
   const WHERE: string = useMemo(() => (isModalOpen ? generateWHERE() : ''), [isModalOpen]);
   const { generateRelation } = useGenerateRelation();
 
   useEffect(() => {
     console.log('开始产生关系');
-    generateRelation(edges);
-  }, [edges]);
+    generateRelation(edgesStore);
+  }, [edgesStore]);
 
   useEffect(() => {
-    console.log('节点更新啦', nodes);
-  }, [nodes]);
+    console.log('节点更新啦', nodesStore);
+  }, [nodesStore]);
 
   useEffect(() => {
-    console.log('关系更新啦', edges);
-  }, [edges]);
+    console.log('关系更新啦', edgesStore);
+  }, [edgesStore]);
 
   useEffect(() => {
     console.log('图表发生变化', graphEdges, graphNodes);
@@ -49,7 +51,7 @@ export const Canvas = () => {
 
   const handlePropertiesChange = useCallback(
     (value: { currentId: string; properties: Property[] }) => {
-      const currentNode = nodes.find(node => node.nodeKey === value.currentId);
+      const currentNode = nodesStore.find(node => node.nodeKey === value.currentId);
 
       if (editNode && currentNode) {
         editNode({
@@ -59,22 +61,34 @@ export const Canvas = () => {
         });
       }
     },
-    [nodes],
+    [nodesStore],
   );
 
   // let preNodes: ISchemaNode[] = [];
 
-  const handleNodes = useCallback((nodes: ISchemaNode[]) => {
-    nodes.forEach(node => {
-      editNode && editNode(transformNode(node));
-    });
-  }, []);
+  const handleNodes = useCallback(
+    (nodes: ISchemaNode[]) => {
+      nodes.forEach(node => {
+        const isExist = nodesStore.some(nodeStore => nodeStore.nodeKey === node.id);
+        if (isExist) editNode && editNode(transformNode(node));
+        if (!isExist) addNode && addNode(transformNode(node));
+        editNode && editNode(transformNode(node));
+      });
+    },
+    [nodesStore],
+  );
 
-  const handleEdges = useCallback((edges: ISchemaEdge[]) => {
-    edges.forEach(edge => {
-      editEdge && editEdge(transformEdge(edge));
-    });
-  }, []);
+  const handleEdges = useCallback(
+    (edges: ISchemaEdge[]) => {
+      console.log('edges', edges);
+      edges.forEach(edge => {
+        const isExist = edgesStore.some(edgeStore => edgeStore.edgeKey === edge.id);
+        if (isExist) editEdge && editEdge(transformEdge(edge));
+        if (!isExist) addEdge && addEdge(transformEdge(edge));
+      });
+    },
+    [edgesStore],
+  );
 
   const MyGraph = useCallback(
     () => (
@@ -91,7 +105,7 @@ export const Canvas = () => {
     [graphNodes, graphEdges],
   );
   useEffect(() => {
-    console.log('节点变化啦', nodes);
+    console.log('节点变化啦', nodesStore);
   }, [isModalOpen]);
 
   return (
@@ -116,7 +130,7 @@ export const Canvas = () => {
         onCancel={() => setIsModalOpen(false)}
       >
         MATCH 语句：<br></br>
-        <Input.TextArea value={MATCH} style={{ height: '5rem' }}></Input.TextArea>
+        <Input.TextArea value={MATCHs} style={{ height: '5rem' }}></Input.TextArea>
         WHERE 语句 <br></br>
         <Input.TextArea value={WHERE} style={{ height: '5rem' }}></Input.TextArea>
         Desc 描述

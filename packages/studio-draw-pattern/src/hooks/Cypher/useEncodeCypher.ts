@@ -46,53 +46,71 @@ export const useEncodeCypher = () => {
 
   const generateMATCH = useCallback(() => {
     let edgesSnapShot = _.cloneDeep(edges);
-    const currentEdge = edgesSnapShot.find(edge => !edge.isErgodic);
-    let targetCurrentEdge: Edge | undefined = currentEdge;
-    let sourceCurrentEdge: Edge | undefined = currentEdge;
-    let targetNode: Node | undefined = nodes.find(node => node.nodeKey === currentEdge?.targetNode);
-    let sourceNode: Node | undefined = nodes.find(node => node.nodeKey === currentEdge?.sourceNode);
-    // when use it, set it's isErgodic true
-    if (currentEdge) currentEdge.isErgodic = true;
 
-    let MATCH = `[${currentEdge?.statement}]`;
-    // 当前 egde target遍历
-    if (targetNode) {
-      while (true) {
-        const isExistProperty = !!targetNode.properties;
-        const nodeStatement = targetNode.variable
-          ? `(${targetNode.variable}${targetNode.statement})`
-          : `(${targetNode.statement})`;
-        MATCH = `${MATCH}->${nodeStatement}`;
-        if (!targetNode.outRelations) break;
-        const targetEdges = edgesSnapShot.filter(edge => isArrayExist(edge.edgeKey, [...targetNode!.outRelations!]));
-        targetCurrentEdge = targetEdges.find(edge => !edge.isErgodic);
-        if (!targetCurrentEdge) break;
-        MATCH = `${MATCH}-[${targetCurrentEdge?.statement}]`;
-        targetNode = nodes.find(node => node.nodeKey === targetCurrentEdge?.targetNode);
-        if (!targetNode) throw new Error('targetNode is not exist');
+    console.log(edgesSnapShot);
+
+    const MATCHs: string[] = [];
+
+    while (true) {
+      const currentEdge = edgesSnapShot.find(edge => !edge.isErgodic);
+      console.log('currentEdge', currentEdge);
+      console.log('edgesSnapShot', edgesSnapShot);
+      if (!currentEdge) break;
+      let targetCurrentEdge: Edge | undefined = currentEdge;
+      let sourceCurrentEdge: Edge | undefined = currentEdge;
+      let targetNode: Node | undefined = nodes.find(node => node.nodeKey === currentEdge?.targetNode);
+      let sourceNode: Node | undefined = nodes.find(node => node.nodeKey === currentEdge?.sourceNode);
+      // when use it, set it's isErgodic true
+      if (currentEdge) currentEdge.isErgodic = true;
+
+      let MATCH = `[${currentEdge?.statement}]`;
+      // 当前 egde target遍历
+      if (targetNode) {
+        while (true) {
+          const isExistProperty = !!targetNode.properties;
+          const nodeStatement = targetNode.variable
+            ? `(${targetNode.variable}${targetNode.statement})`
+            : `(${targetNode.statement})`;
+          MATCH = `${MATCH}->${nodeStatement}`;
+          targetCurrentEdge.isErgodic = true;
+          if (!targetNode.outRelations) break;
+          const targetEdges = edgesSnapShot.filter(edge => isArrayExist(edge.edgeKey, [...targetNode!.outRelations!]));
+          targetCurrentEdge = targetEdges.find(edge => !edge.isErgodic);
+          if (!targetCurrentEdge) break;
+          MATCH = `${MATCH}-[${targetCurrentEdge?.statement}]`;
+          targetNode = nodes.find(node => node.nodeKey === targetCurrentEdge?.targetNode);
+          if (!targetNode) throw new Error('targetNode is not exist');
+        }
       }
-    }
-    // 当前 edge source遍历
-    if (sourceNode) {
-      while (true) {
-        const isExistProperty = !!sourceNode.properties;
-        const nodeStatement = sourceNode.variable
-          ? `(${sourceNode.variable}${sourceNode.statement})`
-          : `(${sourceNode.statement})`;
-        MATCH = `${nodeStatement}-${MATCH}`;
-        if (!sourceNode.outRelations) break;
-        const sourceEdges = edgesSnapShot.filter(edge => isArrayExist(edge.edgeKey, [...sourceNode!.outRelations!]));
-        sourceCurrentEdge = sourceEdges.find(edge => !edge.isErgodic);
-        if (!sourceCurrentEdge) break;
-        MATCH = `[${sourceCurrentEdge?.statement}]->${MATCH}`;
-        sourceNode = nodes.find(node => node.nodeKey === sourceCurrentEdge?.sourceNode);
-        if (!sourceNode) throw new Error('sourceNode is not exist');
+      // 当前 edge source遍历
+      if (sourceNode) {
+        while (true) {
+          console.log('sourceNode 源节点', sourceNode);
+          const isExistProperty = !!sourceNode.properties;
+          const nodeStatement = sourceNode.variable
+            ? `(${sourceNode.variable}${sourceNode.statement})`
+            : `(${sourceNode.statement})`;
+          MATCH = `${nodeStatement}-${MATCH}`;
+          sourceCurrentEdge.isErgodic = true;
+          if (!sourceNode.inRelations) break;
+          const sourceEdges = edgesSnapShot.filter(edge => isArrayExist(edge.edgeKey, [...sourceNode!.inRelations!]));
+          sourceCurrentEdge = sourceEdges.find(edge => !edge.isErgodic);
+          console.log('继续往前走 sourceCurrentEdge', sourceCurrentEdge);
+          if (!sourceCurrentEdge) break;
+          MATCH = `[${sourceCurrentEdge?.statement}]->${MATCH}`;
+          sourceNode = nodes.find(node => node.nodeKey === sourceCurrentEdge?.sourceNode);
+          if (!sourceNode) throw new Error('sourceNode is not exist');
+        }
       }
+
+      MATCH = `MATCH ${MATCH}`;
+      console.log('MATCH语句生成结束，生成的MATCH语句是：', MATCH);
+      MATCHs.push(MATCH);
     }
 
-    MATCH = `MATCH ${MATCH}`;
-    console.log('MATCH语句生成结束，生成的MATCH语句是：', MATCH);
-    return MATCH;
+    console.log('MATCHs', JSON.stringify(MATCHs));
+
+    return MATCHs;
   }, [nodes, edges]);
 
   const generateWHERE = useCallback(() => {
