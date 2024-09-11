@@ -12,7 +12,6 @@ import { nodeCanvasObject } from './custom-node';
 // import { linkCanvasObject } from './custom-edge';
 import { BASIC_NODE_R, SELECTED_EDGE_COLOR } from './const';
 import * as d3 from 'd3-force-3d';
-console.log(d3);
 
 export default function useGraph<P extends GraphProps>(props: P) {
   const {

@@ -17,6 +17,7 @@ export const nodeCanvasObject =
     const { selected, hovering } = status;
     //@ts-ignore
     const textLabel = node.properties && node.properties[caption];
+
     const R = Math.sqrt(Math.max(0, size)) * BASIC_NODE_R + 1;
 
     // halo shape
@@ -44,7 +45,7 @@ export const nodeCanvasObject =
       //@TODO
     }
 
-    if (captionStatus !== 'hidden' && textLabel) {
+    if (captionStatus === 'display' && textLabel) {
       const fontSize = Math.min(0.5 * globalScale, 14 / globalScale);
       if (globalScale > 4 && globalScale < 15) {
         ctx.font = `${fontSize}px Sans-Serif`;

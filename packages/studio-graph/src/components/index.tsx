@@ -21,3 +21,4 @@ export { default as Loading } from './Loading';
 export { default as DeleteLeafNodes } from './ContextMenu/DeleteLeafNodes';
 export { default as Report } from './Report';
 export { default as Export } from './Export';
+export { default as BasicInteraction } from './BasicInteraction';
