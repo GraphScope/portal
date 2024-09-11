@@ -6,18 +6,29 @@ import Pdf from './Icons/pdf';
 import Pubmed from './Icons/Pubmed';
 import Doi from './Icons/Doi';
 import BookMark from './Icons/BookMark';
+import { useContext } from '@graphscope/studio-graph';
 const { Title, Text, Paragraph } = Typography;
 
-interface IPaperDetailProps {
-  title: string;
-  authors: string;
-  time: string;
-  citations: string;
-  description: string;
-}
+interface IPaperDetailProps {}
 
 const PaperInfo: React.FC<IPaperDetailProps> = props => {
-  const { title, authors, time, citations, description } = props;
+  const { store } = useContext();
+  const { nodeStatus, data } = store;
+
+  const selectNode = data.nodes.find(item => {
+    const match = nodeStatus[item.id];
+    if (match && match.selected) {
+      return match;
+    }
+  });
+
+  if (!selectNode) {
+    return <div>No node selected</div>;
+  }
+  //@ts-ignore
+  const { title, authors, time, citations, problem_def: description } = selectNode.properties;
+  console.log('nodeStatus', nodeStatus, selectNode);
+
   const IconButton: React.FC<{ icon: React.ReactNode; tooltipTitle: string; disabled: boolean }> = ({
     icon,
     tooltipTitle,

@@ -21,6 +21,7 @@
     "build:site": "vite build"
   },
   "dependencies": {
+    "@graphscope/studio-driver": "workspace:*",
     "@graphscope/studio-components": "workspace:*",
     "@graphscope/studio-graph": "workspace:*",
     "@graphscope/studio-importor": "workspace:*",
