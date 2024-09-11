@@ -23,10 +23,10 @@ export const encodeProperties = (
 
 export const encodeNodes = (nodes: Node[], encodeSingleNodeCallback: (preNode: Node, currentNode: Node) => void) => {
   nodes.forEach(node => {
-    const newStatement = node.data.data.label && `:${node.data.data.label}`;
+    const newStatement = node.data?.data && node.data.data.label && `:${node.data.data.label}`;
     const newNodes: Node = {
       ...node,
-      statement: newStatement,
+      statement: newStatement ?? '',
     };
     encodeSingleNodeCallback(node, newNodes);
   });

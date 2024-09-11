@@ -10,7 +10,8 @@
     "build:deps": "father prebundle",
     "prepublishOnly": "father doctor && npm run build",
     "start:site": "vite dev",
-    "build:site": "vite build"
+    "build:site": "vite build",
+    "test": "vitest"
   },
   "keywords": [],
   "authors": [],
