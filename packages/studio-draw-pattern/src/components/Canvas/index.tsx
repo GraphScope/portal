@@ -10,7 +10,7 @@ import { useTransform } from '../../hooks/transform/useTransform';
 import { ISchemaNode } from '@graphscope/studio-graph-editor/dist/types/node';
 import _ from 'lodash';
 import { useGraphStore } from '../../stores/useGraphStore';
-import { useEncodeCypher } from '../../hooks/Cypher/useEncodeCypher';
+import { useEncodeCypher } from '../../hooks/cypher/useEncodeCypher';
 import { Button, Input, Modal } from 'antd';
 import { getSequentialLetter } from '../../utils';
 

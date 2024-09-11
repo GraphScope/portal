@@ -6,6 +6,7 @@ import { useEdgeStore } from '../../stores/useEdgeStore';
 import { Node } from '../../types/node';
 import { Edge } from '../../types/edge';
 import { isArrayExist } from '../../utils';
+import { encodeNodes, encodeEdges, generateMATCH, generateWHERE, encodeProperties } from '../../utils/encode';
 
 // 目前 GPE 只设计 model.json
 export const useEncodeCypher = () => {
@@ -14,125 +15,46 @@ export const useEncodeCypher = () => {
   const edges = useEdgeStore(state => state.edges);
   const editEdge = useEdgeStore(state => state.editEdge);
 
-  const encodeProperties = useCallback(() => {
-    nodes.forEach((node: Node) => {
-      const newProperties =
-        node.properties &&
-        node.properties.map((property: Property) => {
-          return {
-            ...property,
-            statement: `${property.name} ${property.compare} ${property.value}`,
-          };
-        });
-      const isEqual = _.isEqual(node.properties, newProperties);
-      !isEqual && editNode && editNode({ ...node, properties: newProperties });
-    });
+  const updateNodeProperties = useCallback(() => {
+    const editProperties = (node: Node, pre: Property[], current: Property[]) => {
+      const isEqual = _.isEqual(pre, current);
+      !isEqual && editNode && editNode({ ...node, properties: current });
+    };
+
+    encodeProperties(nodes, editProperties);
   }, [nodes]);
 
-  const encodeNodes = useCallback(() => {
-    nodes.forEach(node => {
-      const newStatement = node.data.data.label && `:${node.data.data.label}`;
-      newStatement && editNode && editNode({ ...node, statement: newStatement });
-    });
+  const updateNodeStatements = useCallback(() => {
+    const editNodeStatement = (pre: Node, current: Node) => {
+      const isEqual = _.isEqual(pre.statement, current.statement);
+      !isEqual && editNode && editNode({ ...current });
+    };
+
+    encodeNodes(nodes, editNodeStatement);
   }, [nodes]);
 
-  const encodeEdges = useCallback(() => {
-    edges.forEach(edge => {
-      // @ts-ignore
-      const newStatement = edge.data.data.label && `:${edge.data.data.label}`;
-      newStatement && editEdge && editEdge({ ...edge, statement: newStatement });
-    });
+  const updateEdgeStatements = useCallback(() => {
+    const editEdgeStatement = (pre: Edge, current: Edge) => {
+      const isEqual = _.isEqual(pre.statement, current.statement);
+      !isEqual && editEdge && editEdge({ ...current });
+    };
+
+    encodeEdges(edges, editEdgeStatement);
   }, [edges]);
 
-  const generateMATCH = useCallback(() => {
-    let edgesSnapShot = _.cloneDeep(edges);
-
-    console.log(edgesSnapShot);
-
-    const MATCHs: string[] = [];
-
-    while (true) {
-      const currentEdge = edgesSnapShot.find(edge => !edge.isErgodic);
-      console.log('currentEdge', currentEdge);
-      console.log('edgesSnapShot', edgesSnapShot);
-      if (!currentEdge) break;
-      let targetCurrentEdge: Edge | undefined = currentEdge;
-      let sourceCurrentEdge: Edge | undefined = currentEdge;
-      let targetNode: Node | undefined = nodes.find(node => node.nodeKey === currentEdge?.targetNode);
-      let sourceNode: Node | undefined = nodes.find(node => node.nodeKey === currentEdge?.sourceNode);
-      // when use it, set it's isErgodic true
-      if (currentEdge) currentEdge.isErgodic = true;
-
-      let MATCH = `[${currentEdge?.statement}]`;
-      // 当前 egde target遍历
-      if (targetNode) {
-        while (true) {
-          const isExistProperty = !!targetNode.properties;
-          const nodeStatement = targetNode.variable
-            ? `(${targetNode.variable}${targetNode.statement})`
-            : `(${targetNode.statement})`;
-          MATCH = `${MATCH}->${nodeStatement}`;
-          targetCurrentEdge.isErgodic = true;
-          if (!targetNode.outRelations) break;
-          const targetEdges = edgesSnapShot.filter(edge => isArrayExist(edge.edgeKey, [...targetNode!.outRelations!]));
-          targetCurrentEdge = targetEdges.find(edge => !edge.isErgodic);
-          if (!targetCurrentEdge) break;
-          MATCH = `${MATCH}-[${targetCurrentEdge?.statement}]`;
-          targetNode = nodes.find(node => node.nodeKey === targetCurrentEdge?.targetNode);
-          if (!targetNode) throw new Error('targetNode is not exist');
-        }
-      }
-      // 当前 edge source遍历
-      if (sourceNode) {
-        while (true) {
-          console.log('sourceNode 源节点', sourceNode);
-          const isExistProperty = !!sourceNode.properties;
-          const nodeStatement = sourceNode.variable
-            ? `(${sourceNode.variable}${sourceNode.statement})`
-            : `(${sourceNode.statement})`;
-          MATCH = `${nodeStatement}-${MATCH}`;
-          sourceCurrentEdge.isErgodic = true;
-          if (!sourceNode.inRelations) break;
-          const sourceEdges = edgesSnapShot.filter(edge => isArrayExist(edge.edgeKey, [...sourceNode!.inRelations!]));
-          sourceCurrentEdge = sourceEdges.find(edge => !edge.isErgodic);
-          console.log('继续往前走 sourceCurrentEdge', sourceCurrentEdge);
-          if (!sourceCurrentEdge) break;
-          MATCH = `[${sourceCurrentEdge?.statement}]->${MATCH}`;
-          sourceNode = nodes.find(node => node.nodeKey === sourceCurrentEdge?.sourceNode);
-          if (!sourceNode) throw new Error('sourceNode is not exist');
-        }
-      }
-
-      MATCH = `MATCH ${MATCH}`;
-      console.log('MATCH语句生成结束，生成的MATCH语句是：', MATCH);
-      MATCHs.push(MATCH);
-    }
-
-    console.log('MATCHs', JSON.stringify(MATCHs));
-
-    return MATCHs;
+  const createMatchClauses = useCallback(() => {
+    return generateMATCH(nodes, edges);
   }, [nodes, edges]);
 
-  const generateWHERE = useCallback(() => {
-    let propertiesStatement: string[] = [];
-    nodes.forEach(node => {
-      console.log(node);
-      // WHERE  = node.properties.
-      const propertiesSingleNodeStatement = node.properties?.map(property => `${node.variable}.${property.statement}`);
-
-      if (propertiesSingleNodeStatement)
-        propertiesStatement = [...propertiesStatement, ...propertiesSingleNodeStatement];
-    });
-
-    const WHERE = `WHERE ${propertiesStatement.join(' AND ')}`;
-    return WHERE;
+  const createWhereClause = useCallback(() => {
+    return generateWHERE(nodes);
   }, [nodes]);
 
   return {
-    encodeProperties,
-    encodeNodes,
-    encodeEdges,
-    generateMATCH,
-    generateWHERE,
+    encodeProperties: updateNodeProperties,
+    encodeNodes: updateNodeStatements,
+    encodeEdges: updateEdgeStatements,
+    generateMATCH: createMatchClauses,
+    generateWHERE: createWhereClause,
   };
 };

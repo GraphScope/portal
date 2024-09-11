@@ -1,3 +1,3 @@
 export * from './components/DrawPattern';
-export * from './hooks/Cypher/useDecodeCypher';
-export * from './hooks/Cypher/useEncodeCypher';
+export * from './hooks/cypher/useDecodeCypher';
+export * from './hooks/cypher/useEncodeCypher';
