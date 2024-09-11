@@ -28,7 +28,7 @@ export const Canvas = () => {
 
   const { encodeProperties, encodeNodes, encodeEdges, generateMATCH, generateWHERE } = useEncodeCypher();
 
-  const MATCHs: string[] = useMemo(() => (isModalOpen ? generateMATCH() : []), [isModalOpen]);
+  const MATCHs: string = useMemo(() => (isModalOpen ? generateMATCH().join('\n') : ''), [isModalOpen]);
   const WHERE: string = useMemo(() => (isModalOpen ? generateWHERE() : ''), [isModalOpen]);
   const { generateRelation } = useGenerateRelation();
 
