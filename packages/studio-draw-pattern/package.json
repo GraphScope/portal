@@ -8,7 +8,9 @@
     "dev": "father dev",
     "build": "father build",
     "build:deps": "father prebundle",
-    "prepublishOnly": "father doctor && npm run build"
+    "prepublishOnly": "father doctor && npm run build",
+    "start:site": "vite dev",
+    "build:site": "vite build"
   },
   "keywords": [],
   "authors": [],
