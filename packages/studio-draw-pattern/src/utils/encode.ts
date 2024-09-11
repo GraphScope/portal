@@ -82,6 +82,7 @@ export const generateMATCH = (nodes: Node[], edges: Edge[]) => {
     // 当前 egde target遍历
     if (targetNode) {
       while (true) {
+        // 是否存在目标节点
         const isExistProperty = !!targetNode.properties;
         const nodeStatement = targetNode.variable
           ? `(${targetNode.variable}${targetNode.statement})`
@@ -100,6 +101,7 @@ export const generateMATCH = (nodes: Node[], edges: Edge[]) => {
     // 当前 edge source遍历
     if (sourceNode) {
       while (true) {
+        // 是否存在源节点
         console.log('sourceNode 源节点', sourceNode);
         const isExistProperty = !!sourceNode.properties;
         const nodeStatement = sourceNode.variable
