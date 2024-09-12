@@ -54,14 +54,18 @@ export const encodeEdges = (edges: Edge[], encodeSingleEdgeCallback: (preEdge: E
 export const generateWHERE = (nodes: Node[]) => {
   let propertiesStatement: string[] = [];
   nodes.forEach(node => {
-    const propertiesSingleNodeStatement = node.properties?.map(property => `${node.variable}.${property.statement}`);
+    const propertiesSingleNodeStatement = node.properties?.map(property => {
+      const statement = property.statement
+        ? property.statement
+        : `${property.name} ${property.compare} ${property.value}`;
+      return `${node.variable}.${statement}`;
+    });
 
     if (propertiesSingleNodeStatement) {
       propertiesStatement = [...propertiesStatement, ...propertiesSingleNodeStatement];
     }
   });
 
-  // TODO: 目前只有 AND， 未来想一个更好的交互方式展示其他比如说 NOT， OR
   const WHERE = `WHERE ${propertiesStatement.join(' AND ')}`;
   return WHERE;
 };
