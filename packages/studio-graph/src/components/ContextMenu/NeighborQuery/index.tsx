@@ -11,10 +11,10 @@ interface INeighborQueryProps {
 
 const getScript = (ids, dataMap) => {};
 
-const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
+const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
   const { onQuery } = props;
   const { store, updateStore } = useContext();
-  const { nodeStatus, schema, dataMap, emitter, graph } = store;
+  const { nodeStatus, schema, dataMap, emitter, graph, data } = store;
   const MenuRef = useRef<HTMLDivElement>(null);
 
   const selectId =
@@ -22,7 +22,10 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
       return nodeStatus[key].selected;
     })[0] || '';
 
-  const selectNode = dataMap[selectId] || {};
+  const selectNode = data.nodes.find(item => item.id === selectId); // dataMap[selectId] || {};
+  if (!selectNode) {
+    return null;
+  }
 
   const relatedEdges = schema.edges.filter(item => {
     return item.source === selectNode.label;
@@ -40,6 +43,7 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
       label: `[${label}]->(${target})`,
     };
   });
+  console.log(itemChildren);
 
   const extraItems =
     relatedEdges.length > 1
@@ -64,6 +68,7 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
     updateStore(draft => {
       draft.isLoading = true;
     });
+    //@ts-ignore
     const { name, title } = selectNode.properties;
     let script = '';
     if (name) {
@@ -121,4 +126,4 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
   );
 };
 
-export default CommonNeighbor;
+export default NeighborNeighbor;

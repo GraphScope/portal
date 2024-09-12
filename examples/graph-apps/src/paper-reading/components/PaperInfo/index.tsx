@@ -1,12 +1,13 @@
 import React from 'react';
-import { Flex, Typography, Button, Tooltip } from 'antd';
-import { EllipsisOutlined, DeploymentUnitOutlined, PlusOutlined } from '@ant-design/icons';
+import { Flex, Typography, Button, Tooltip, Divider, Space, Collapse } from 'antd';
+import { EllipsisOutlined, DeploymentUnitOutlined, PlusOutlined, ReadOutlined } from '@ant-design/icons';
 import Authors from './Authors';
 import Pdf from './Icons/pdf';
 import Pubmed from './Icons/Pubmed';
 import Doi from './Icons/Doi';
 import BookMark from './Icons/BookMark';
 import { useContext } from '@graphscope/studio-graph';
+import Insight from './Insight';
 const { Title, Text, Paragraph } = Typography;
 
 interface IPaperDetailProps {}
@@ -41,11 +42,7 @@ const PaperInfo: React.FC<IPaperDetailProps> = props => {
   return (
     <Flex vertical style={{ padding: 24 }} gap={6}>
       {title && <Title level={4}>{title}</Title>}
-      {authors && (
-        <Text type="secondary">
-          <Authors str={authors} />
-        </Text>
-      )}
+      {authors && <Text type="secondary">{authors}</Text>}
       {time && (
         <Flex justify="space-between" align="top">
           <Text type="secondary">{time}</Text>
@@ -61,19 +58,17 @@ const PaperInfo: React.FC<IPaperDetailProps> = props => {
         </Flex>
       )}
       <Flex justify="start" align="center">
-        <Text type="secondary">Open in:</Text>
+        <Text type="secondary" style={{ marginRight: '12px' }}>
+          Open in:
+        </Text>
         <IconButton icon={<Pdf />} tooltipTitle="PDF" disabled />
         <IconButton icon={<Pubmed />} tooltipTitle="PubMed" disabled />
         <IconButton icon={<Doi />} tooltipTitle="DOI" disabled />
       </Flex>
-      <Flex justify="start" align="center" gap={6}>
-        <Button type="text" icon={<DeploymentUnitOutlined />}>
-          Open graph
-        </Button>
-        <Button type="text" icon={<PlusOutlined />}>
-          Add origin
-        </Button>
+      <Flex vertical align="start" gap={8}>
+        <Insight />
       </Flex>
+      <Divider style={{ margin: '12px 0px' }} />
       {description && <Paragraph>{description}</Paragraph>}
     </Flex>
   );

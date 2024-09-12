@@ -11,10 +11,17 @@ import {
   ClearStatatus,
   RunCluster,
   BasicInteraction,
+  ContextMenu,
+  Loading,
+  NeighborQuery,
+  CommonNeighbor,
+  DeleteLeafNodes,
+  DeleteNode,
+  ClearCanvas,
 } from '@graphscope/studio-graph';
 
 import { FetchGraph, Searchbar, PaperList, PaperInfo } from './components';
-
+import { queryCypher } from './service';
 interface QueryGraphProps {}
 
 const ToogleLeftButton = () => {
@@ -87,12 +94,20 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
           <BasicInteraction />
           <FetchGraph />
           <ClearStatatus />
+          <Loading />
+          <ContextMenu>
+            <NeighborQuery onQuery={queryCypher} />
+            <CommonNeighbor onQuery={queryCypher} />
+            <DeleteLeafNodes />
+            <DeleteNode />
+          </ContextMenu>
 
           <Toolbar style={{ position: 'absolute', top: '80px', right: '20px', left: 'unset' }}>
             <SwitchEngine />
             <ZoomFit />
             <RunCluster />
             <FullScreen containerRef={containerRef} />
+            <ClearCanvas />
           </Toolbar>
         </Section>
       </div>
