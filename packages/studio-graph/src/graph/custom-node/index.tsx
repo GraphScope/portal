@@ -14,6 +14,7 @@ export const nodeCanvasObject =
     const style = handleStyle(node, nodeStyle);
     const status = handleStatus(node, nodeStatus);
     const { color, size, caption, captionStatus, icon, captionMode } = style;
+
     const { selected, hovering } = status;
     //@ts-ignore
     const textLabel = node.properties && node.properties[caption];

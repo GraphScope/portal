@@ -11,7 +11,15 @@ import { handleStyle } from './handleStyle';
 import { nodeCanvasObject } from './custom-node';
 // import { linkCanvasObject } from './custom-edge';
 import { BASIC_NODE_R, SELECTED_EDGE_COLOR } from './const';
-import * as d3 from 'd3-force-3d';
+
+import {
+  // forceSimulation as d3ForceSimulation,
+  // forceLink as d3ForceLink,
+  // forceManyBody as d3ForceManyBody,
+  // forceRadial as d3ForceRadial,
+  forceCenter as d3ForceCenter,
+  forceCollide as d3ForceCollide,
+} from 'd3-force-3d';
 
 export default function useGraph<P extends GraphProps>(props: P) {
   const {
@@ -71,10 +79,11 @@ export default function useGraph<P extends GraphProps>(props: P) {
         /** force */
         .d3Force(
           'collide',
-          d3.forceCollide().radius(node => {
+          d3ForceCollide().radius(node => {
             return handleStyle(node, nodeStyle).size + 5;
           }),
         )
+        .d3Force('center', d3ForceCenter().strength(1))
 
         /** interaction */
         .onNodeHover(node => {

@@ -28,7 +28,7 @@ export function getStyleConfig(schema: ISchema, graphId: string) {
       size: DEFAULT_NODE_SIZE,
       color: colors[index],
       caption: Object.keys(item.properties || {})[0] || 'id',
-      captionStatus: 'hidden',
+      captionStatus: 'display',
     };
   });
   schema.edges.forEach((item, index) => {
@@ -38,7 +38,7 @@ export function getStyleConfig(schema: ISchema, graphId: string) {
       size: DEFAULT_EDGE_WIDTH,
       color: DEFAULT_EDGE_COLOR,
       caption: Object.keys(item.properties || {})[0] || 'id',
-      captionStatus: 'hidden',
+      captionStatus: 'display',
     };
   });
 
