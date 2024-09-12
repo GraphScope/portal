@@ -6,14 +6,14 @@ import { MultipleInstance, Section, useSection, Icons, FullScreen } from '@graph
 import {
   Toolbar,
   SwitchEngine,
-  PropertiesPanel,
   Canvas,
   ZoomFit,
   ClearStatatus,
   RunCluster,
+  BasicInteraction,
 } from '@graphscope/studio-graph';
 
-import { FetchGraph, Searchbar, PaperList } from './components';
+import { FetchGraph, Searchbar, PaperList, PaperInfo } from './components';
 
 interface QueryGraphProps {}
 
@@ -53,14 +53,16 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
       >
         <Section
           splitBorder
-          rightSide={<PropertiesPanel />}
           leftSide={<PaperList />}
+          rightSide={<PaperInfo />}
           autoResize={false}
           rightSideStyle={{
-            width: '250px',
+            width: '400px',
+            boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
           }}
           leftSideStyle={{
             width: '380px',
+            boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
           }}
           defaultCollapsed={{
             leftSide: false,
@@ -82,6 +84,7 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
           </Toolbar>
 
           <Canvas />
+          <BasicInteraction />
           <FetchGraph />
           <ClearStatatus />
 

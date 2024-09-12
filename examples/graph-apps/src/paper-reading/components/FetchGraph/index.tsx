@@ -1,39 +1,44 @@
 import * as React from 'react';
-import { Button, Table, TableProps } from 'antd';
-import { useContext, getDataMap, getStyleConfig } from '@graphscope/studio-graph';
-import { Utils } from '@graphscope/studio-components';
-import { query } from './service';
+
+import { useContext, getStyleConfig } from '@graphscope/studio-graph';
+import { queryCypher, queryCypherSchema } from './service';
+
 interface IUploadProps {}
 
 const FetchGraph: React.FunctionComponent<IUploadProps> = props => {
-  const { updateStore } = useContext();
-  const [state, setState] = React.useState<{
-    lists: any[];
-    isReady: boolean;
-    columns: any[];
-  }>({
-    lists: [],
-    isReady: false,
-    columns: [],
-  });
+  const { updateStore, store } = useContext();
+  const { graphId } = store;
 
-  React.useEffect(() => {
-    const entityId = Utils.getSearchParams('entityId') || 'Paper';
-    query({
-      name: entityId,
-    }).then(res => {
-      updateStore(draft => {
-        const schema = Utils.generatorSchemaByGraphData(res);
-        //@ts-ignore
-        const style = getStyleConfig(schema, draft.graphId);
-        draft.data = res;
-        draft.source = res;
-        draft.dataMap = getDataMap(res);
-        draft.schema = schema;
-        draft.nodeStyle = style.nodeStyle;
-        draft.edgeStyle = style.edgeStyle;
-      });
+  const initGraph = async () => {
+    updateStore(draft => {
+      draft.isLoading = true;
     });
+    const data = await queryCypher({
+      script: '',
+    });
+    const schema = await queryCypherSchema();
+    const style = getStyleConfig(schema, graphId);
+    const nodeStyles = Object.keys(style.nodeStyle).reduce((acc, curr) => {
+      return {
+        ...acc,
+        [curr]: {
+          ...style.nodeStyle[curr],
+          caption: 'title',
+        },
+      };
+    }, {});
+    console.log('data', data, schema);
+    updateStore(draft => {
+      draft.data = data;
+      draft.source = data;
+      draft.schema = schema;
+      draft.nodeStyle = nodeStyles;
+      draft.edgeStyle = style.edgeStyle;
+      draft.isLoading = false;
+    });
+  };
+  React.useEffect(() => {
+    initGraph();
   }, []);
 
   return null;

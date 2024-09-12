@@ -13,15 +13,15 @@ interface IImportSchemaProps {
 
 const items: SegmentedTabsProps['items'] = [
   {
-    label: 'CSV',
-    key: 'CSV',
+    label: 'File',
+    key: 'File',
     children: <ImportFromCSV />,
   },
-  {
-    label: 'SQL DDL',
-    key: 'SQL',
-    children: <ImportFromSQL />,
-  },
+  // {
+  //   label: 'SQL DDL',
+  //   key: 'SQL',
+  //   children: <ImportFromSQL />,
+  // },
 ];
 
 const ImportSchema: React.FunctionComponent<IImportSchemaProps> = props => {

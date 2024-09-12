@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Tooltip, Button, Collapse, CollapseProps, Input, Flex, Typography, Skeleton } from 'antd';
-import { FileTextOutlined } from '@ant-design/icons';
-import { useContext } from './../../hooks/useContext';
+
+import { useContext } from '@graphscope/studio-graph';
 import { TypingText } from '@graphscope/studio-components';
 import GeneratePdf from './GeneratePdf';
 interface IReportProps {}

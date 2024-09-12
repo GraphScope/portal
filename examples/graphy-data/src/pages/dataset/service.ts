@@ -18,12 +18,13 @@ export const queryDataset = async () => {
 };
 
 export const createDataset = async params => {
+  const { file } = params;
+  const formData = new FormData();
+  formData.append('file', file); // 添加文件到表单数据中
+
   return fetch(baseURL + '/dataset/create', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(params),
+    body: formData,
   })
     .then(res => res.json())
     .then(res => {

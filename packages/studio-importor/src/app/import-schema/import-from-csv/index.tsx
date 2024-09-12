@@ -53,10 +53,10 @@ const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
       upload={{
         accept: '.csv',
         //@ts-ignore
-        title: <FormattedMessage id="Click or drag file to this area to upload" />,
+        title: <FormattedMessage id="Click or drag file to this area to parse it" />,
         //@ts-ignore
         description: (
-          <FormattedMessage id="If you already have CSV data, feel free to upload it here, and the system will automatically infer possible graph models for you." />
+          <FormattedMessage id="If you already have CSV data, feel free to parse it here, and the system will automatically infer possible graph models for you." />
         ),
       }}
     >
