@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom';
 import { Container } from '../../components';
 import { InboxOutlined } from '@ant-design/icons';
 import { createDataset } from '../service';
+
 interface ICreateProps {}
 
-import { Flex, Typography, Button, Select, Input, Row, Col, Result, Form, Upload } from 'antd';
+import { Flex, Typography, Button, Select, Input, Row, Col, Result, Form, Upload, UploadProps } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { Utils } from '@graphscope/studio-components';
 import { useNavigate } from 'react-router-dom';
@@ -26,6 +27,7 @@ const Setting: React.FunctionComponent<IConnectEndpointProps> = props => {
 
   const [state, setState] = useState({
     loading: false,
+    file: new File([''], 'unkown.pdf'),
   });
   const { loading } = state;
   //   React.useEffect(() => {
@@ -39,7 +41,6 @@ const Setting: React.FunctionComponent<IConnectEndpointProps> = props => {
   //   }, []);
   const handleConnect = async () => {
     const values = form.getFieldsValue(true);
-    console.log('form.getFieldsValue()', values);
     Object.keys(values).forEach(key => {
       storage.set(key, values[key]);
     });
@@ -49,7 +50,9 @@ const Setting: React.FunctionComponent<IConnectEndpointProps> = props => {
         loading: true,
       };
     });
-    await createDataset({}).then(res => {
+    await createDataset({
+      file: state.file,
+    }).then(res => {
       console.log(res);
     });
     setState(preState => {
@@ -59,6 +62,17 @@ const Setting: React.FunctionComponent<IConnectEndpointProps> = props => {
       };
     });
     navigate('/dataset');
+  };
+
+  const customRequest: UploadProps['customRequest'] = async options => {
+    const { file } = options;
+
+    setState(preState => {
+      return {
+        ...preState,
+        file: file,
+      };
+    });
   };
 
   return (
@@ -89,7 +103,7 @@ const Setting: React.FunctionComponent<IConnectEndpointProps> = props => {
               boxSizing: 'border-box',
             }}
           >
-            <Upload>
+            <Upload customRequest={customRequest}>
               <Flex align="center" vertical>
                 <Typography.Link>
                   <InboxOutlined style={{ fontSize: '40px' }} />
