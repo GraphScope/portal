@@ -9,7 +9,7 @@ describe('encodeEdges', () => {
         edgeKey: 'e1',
         isErgodic: false,
         data: {
-          label: 'KNOWS',
+          data: { label: 'KNOWS' },
         },
       },
     ];
@@ -31,7 +31,9 @@ describe('encodeEdges', () => {
         edgeKey: 'e2',
         isErgodic: false,
         data: {
-          label: '',
+          data: {
+            label: '',
+          },
         },
       },
     ];
@@ -41,7 +43,7 @@ describe('encodeEdges', () => {
 
     const expectedEdge = {
       ...edges[0],
-      statement: undefined,
+      statement: '',
     };
 
     expect(callback).toHaveBeenCalledWith(edges[0], expectedEdge);
@@ -53,7 +55,6 @@ describe('encodeEdges', () => {
         edgeKey: 'e1',
         isErgodic: false,
         data: {
-          label: '',
           data: {
             label: 'FRIEND',
           },
@@ -63,7 +64,9 @@ describe('encodeEdges', () => {
         edgeKey: 'e2',
         isErgodic: false,
         data: {
-          label: 'LIKES',
+          data: {
+            label: 'LIKES',
+          },
         },
       },
     ];
@@ -99,7 +102,7 @@ describe('encodeEdges', () => {
 
     const expectedEdge = {
       ...edges[0],
-      statement: undefined,
+      statement: '',
     };
 
     expect(callback).toHaveBeenCalledWith(edges[0], expectedEdge);
@@ -112,7 +115,9 @@ describe('encodeEdges', () => {
         isErgodic: false,
         statement: ':OLD_STATEMENT',
         data: {
-          label: 'NEW_LABEL',
+          data: {
+            label: 'NEW_LABEL',
+          },
         },
       },
     ];
@@ -141,7 +146,7 @@ describe('encodeEdges', () => {
 
     const expectedEdge = {
       ...edges[0],
-      statement: undefined,
+      statement: '',
     };
 
     expect(callback).toHaveBeenCalledWith(edges[0], expectedEdge);
@@ -153,7 +158,9 @@ describe('encodeEdges', () => {
         edgeKey: 'e6',
         isErgodic: false,
         data: {
-          label: 'LOVES',
+          data: {
+            label: 'LOVES',
+          },
         },
       },
     ];
@@ -177,7 +184,9 @@ describe('encodeEdges', () => {
         sourceNode: 'n1',
         targetNode: 'n1',
         data: {
-          label: 'SELF_LOOP',
+          data: {
+            label: 'SELF_LOOP',
+          },
         },
       },
     ];
@@ -198,7 +207,7 @@ describe('encodeEdges', () => {
 
     const callback = vi.fn();
     expect(() => encodeEdges(edges, callback)).not.toThrow();
-    expect(callback).not.toHaveBeenCalled();
+    expect(callback).toHaveBeenCalledTimes(0);
   });
 
   it('should call callback for every edge', () => {
@@ -207,14 +216,18 @@ describe('encodeEdges', () => {
         edgeKey: 'e8',
         isErgodic: false,
         data: {
-          label: 'CONNECTED_TO',
+          data: {
+            label: 'CONNECTED_TO',
+          },
         },
       },
       {
         edgeKey: 'e9',
         isErgodic: false,
         data: {
-          label: 'OWNS',
+          data: {
+            label: 'OWNS',
+          },
         },
       },
     ];

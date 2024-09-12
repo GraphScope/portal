@@ -3,6 +3,7 @@ import { Property } from './property';
 
 export interface EdgeData extends ISchemaEdge {
   variable?: string;
+  data?: IEdgeData;
 }
 export interface Edge {
   edgeKey: string;

@@ -22,26 +22,33 @@ export const encodeProperties = (
 };
 
 export const encodeNodes = (nodes: Node[], encodeSingleNodeCallback: (preNode: Node, currentNode: Node) => void) => {
-  nodes.forEach(node => {
-    const newStatement = node.data?.data && node.data.data.label && `:${node.data.data.label}`;
-    const newNodes: Node = {
-      ...node,
-      statement: newStatement ?? '',
-    };
-    encodeSingleNodeCallback(node, newNodes);
-  });
+  if (!nodes) return;
+
+  nodes
+    .filter(node => node !== undefined)
+    .forEach(node => {
+      const newStatement = node.data?.data?.label && `:${node.data.data.label}`;
+      const newNodes: Node = {
+        ...node,
+        statement: newStatement ?? '',
+      };
+      encodeSingleNodeCallback(node, newNodes);
+    });
 };
 
 export const encodeEdges = (edges: Edge[], encodeSingleEdgeCallback: (preEdge: Edge, currentEdge: Edge) => void) => {
-  edges.forEach(edge => {
-    // @ts-ignore
-    const newStatement = edge.data.data.label && `:${edge.data.data.label}`;
-    const newEdges: Edge = {
-      ...edge,
-      statement: newStatement,
-    };
-    encodeSingleEdgeCallback(edge, newEdges);
-  });
+  if (!edges) return;
+
+  edges
+    .filter(edge => edge !== undefined)
+    .forEach(edge => {
+      const newStatement = edge?.data?.data?.label && `:${edge.data.data.label}`;
+      const newEdges: Edge = {
+        ...edge,
+        statement: newStatement ?? '',
+      };
+      encodeSingleEdgeCallback(edge, newEdges);
+    });
 };
 
 export const generateWHERE = (nodes: Node[]) => {
