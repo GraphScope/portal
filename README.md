@@ -45,11 +45,11 @@ docker pull registry.cn-beijing.aliyuncs.com/graphscope/interactive:0.28.0-arm64
 
 ```bash
 # Run the container
-docker run -d
---name gs-interactive-instance
---label flex=interactive
--p 8081:8080 -p 7777:7777 -p 10001:10000 -p 7688:7687
-registry.cn-beijing.aliyuncs.com/graphscope/interactive:0.28.0-arm64 --enable-coordinator
+docker run -d \
+--name gs-interactive \
+--label flex=interactive \
+-p 8080:8080 -p 7777:7777 -p 10000:10000 -p 7687:7687 \
+registry.cn-beijing.aliyuncs.com/graphscope/interactive:v0.24.2-arm64 --enable-coordinator
 ```
 
 ### Building from the source code
