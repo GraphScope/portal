@@ -1,7 +1,7 @@
 import * as React from 'react';
 import jsPDF from 'jspdf';
 import { Button } from 'antd';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '@graphscope/studio-graph';
 interface IGeneratePdfProps {
   title: string;
   description: string;

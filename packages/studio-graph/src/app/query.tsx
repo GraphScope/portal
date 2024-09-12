@@ -26,7 +26,6 @@ import {
   Brush,
   Loading,
   DeleteLeafNodes,
-  Report,
   Export,
 } from '../components';
 
@@ -65,12 +64,6 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       label: 'Style',
       value: 'Style',
       children: <StyleSetting />,
-    },
-    {
-      key: 'Report',
-      label: 'Report',
-      value: 'Report',
-      children: <Report />,
     },
   ];
 

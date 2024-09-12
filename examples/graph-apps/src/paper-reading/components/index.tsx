@@ -2,5 +2,6 @@ import Searchbar from './Searchbar';
 import PaperList from './PaperList';
 import FetchGraph from './FetchGraph';
 import PaperInfo from './PaperInfo';
+import Report from './Report';
 
-export { Searchbar, PaperList, FetchGraph, PaperInfo };
+export { Searchbar, PaperList, FetchGraph, PaperInfo, Report };
