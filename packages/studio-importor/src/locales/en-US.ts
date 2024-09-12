@@ -51,4 +51,7 @@ export default {
     'The data loading task has been successfully created. You can view detailed logs in the job center.',
   'Goto Jobs': 'Goto Jobs',
   'Please select a primate type.': 'Please select a primate type.',
+  'Click or drag file to this area to parse it': 'Click or drag file to this area to parse it',
+  'If you already have CSV data, feel free to parse it here, and the system will automatically infer possible graph models for you.':
+    'If you already have CSV data, feel free to parse it here, and the system will automatically infer possible graph models for you.',
 };
