@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useContext } from '@graphscope/studio-graph';
-import { Typography, Flex } from 'antd';
+import { Typography, Flex, Divider } from 'antd';
+import { Logo } from '@graphscope/studio-components';
 
 interface IPaperListProps {}
 
@@ -62,7 +63,9 @@ const PaperList: React.FunctionComponent<IPaperListProps> = props => {
   const { nodes = [] } = data;
 
   return (
-    <Flex justify="space-between" vertical style={{ height: '100%', overflowY: 'scroll' }}>
+    <Flex align="center" vertical style={{ height: '100%', overflowY: 'scroll', padding: '24px 0px' }}>
+      <Logo style={{ width: '200px', transform: 'scale(1.7)', margin: '12px 0px 12px 0px' }} />
+      <Divider />
       {nodes.map(item => {
         const { properties, id } = item;
 

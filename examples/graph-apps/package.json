@@ -21,18 +21,19 @@
     "build:site": "vite build"
   },
   "dependencies": {
-    "@graphscope/studio-driver": "workspace:*",
     "@graphscope/studio-components": "workspace:*",
+    "@graphscope/studio-driver": "workspace:*",
     "@graphscope/studio-graph": "workspace:*",
     "@graphscope/studio-importor": "workspace:*",
     "@graphscope/studio-query": "workspace:*",
     "d3-force": "latest",
+    "jspdf": "^2.5.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-highlight-words": "^0.20.0",
     "react-intl": "^6.6.8",
     "react-router-dom": "^6.26.1",
-    "typewriter-effect": "^2.21.0",
-    "jspdf": "^2.5.1"
+    "typewriter-effect": "^2.21.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
