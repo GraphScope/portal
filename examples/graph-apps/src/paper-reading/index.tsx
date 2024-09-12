@@ -6,7 +6,6 @@ import { MultipleInstance, Section, useSection, Icons, FullScreen } from '@graph
 import {
   Toolbar,
   SwitchEngine,
-  PropertiesPanel,
   Canvas,
   ZoomFit,
   ClearStatatus,
