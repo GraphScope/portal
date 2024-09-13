@@ -42,15 +42,15 @@ const getStyles = (props, collapsed: { leftSide: boolean; rightSide: boolean }, 
 
   return {
     leftSideStyle: {
+      overflow: 'hidden',
+      transition: 'all 0.2s ease',
+      boxSizing: 'border-box',
+      flexShrink: 0,
       ...leftSideStyle,
       borderRight: collapsed.leftSide && leftCollapsedWidth === '0px' ? 'unset' : borderStyle,
       width: collapsed.leftSide ? leftCollapsedWidth : leftSideStyle.width || dafaultWidth,
       padding: collapsed.leftSide ? '0px' : leftSideStyle.padding || dafaultPadding,
-      overflow: 'hidden',
-      transition: 'all 0.2s ease',
-      boxSizing: 'border-box',
       opacity: collapsed.leftSide && leftCollapsedWidth === '0px' ? 0 : 1,
-      flexShrink: 0,
     },
     rightSideStyle: {
       position: 'relative',
