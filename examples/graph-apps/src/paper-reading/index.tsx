@@ -77,6 +77,7 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
           }}
           leftSideStyle={{
             width: '380px',
+            padding: '0px',
             boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
             overflow: 'scroll',
           }}

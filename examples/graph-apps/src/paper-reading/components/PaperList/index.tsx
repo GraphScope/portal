@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useContext } from '@graphscope/studio-graph';
-import { Typography, Flex, Divider } from 'antd';
+import { Typography, Flex, Divider, Result, theme } from 'antd';
 import { Logo } from '@graphscope/studio-components';
 
 interface IPaperListProps {}
 
 const Item = props => {
   const { title, authors, published, id } = props;
-
+  const { token } = theme.useToken();
   const [state, setState] = React.useState({
     selected: false,
   });
@@ -44,7 +44,13 @@ const Item = props => {
       justify="space-between"
       vertical
       gap={8}
-      style={{ borderBottom: '1px solid #ccc', padding: '8px', width: '100%', ...style }}
+      style={{
+        borderTop: `1px solid ${token.colorBorder}`,
+        boxSizing: 'border-box',
+        padding: '12px',
+        width: '100%',
+        ...style,
+      }}
       onClick={onClick}
     >
       <Typography.Text>{title}</Typography.Text>
@@ -61,16 +67,18 @@ const PaperList: React.FunctionComponent<IPaperListProps> = props => {
   const { store } = useContext();
   const { data } = store;
   const { nodes = [] } = data;
+  const isEmpty = nodes.length === 0;
 
   return (
-    <Flex align="center" vertical style={{ height: '100%', padding: '24px 0px' }}>
-      <Logo style={{ width: '200px', transform: 'scale(1.7)', margin: '12px 0px 12px 0px' }} />
-      <Divider />
+    <Flex align="center" vertical style={{ padding: '24px 0px' }}>
+      <Logo style={{ width: '200px', transform: 'scale(1.7)', margin: '12px 0px 30px 0px' }} />
+
       {nodes.map(item => {
         const { properties, id } = item;
 
         return <Item {...properties} id={id} />;
       })}
+      {isEmpty && <Result status="404" title="No data" subTitle="Sorry, the page you visited does not exist." />}
     </Flex>
   );
 };
