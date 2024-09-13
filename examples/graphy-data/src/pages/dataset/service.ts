@@ -80,12 +80,37 @@ export const getEmbedSchema = async id => {
 };
 
 export const updateEmbedSchema = async (id, params) => {
+  const { nodes, edges } = params;
+  const idMapping = new Map();
+  const _nodes = nodes.map(item => {
+    const { id, data } = item;
+    const { label, prompts = '', output = '' } = data;
+    idMapping.set(id, label);
+    return {
+      name: label,
+      query: prompts,
+      output_schema: output,
+      extract_from: [],
+    };
+  });
+  const _edges = edges.map(item => {
+    const { source, target } = item;
+    return {
+      source: idMapping.get(source),
+      target: idMapping.get(target),
+    };
+  });
+  const workflow_json = {
+    nodes: _nodes,
+    edges: _edges,
+  };
+
   return fetch(baseURL + '/dataset/embed', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ datasetId: id, ...params }),
+    body: JSON.stringify({ dataset_id: id, workflow_json }),
   })
     .then(res => res.json())
     .then(res => {
