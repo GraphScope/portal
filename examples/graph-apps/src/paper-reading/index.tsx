@@ -18,9 +18,10 @@ import {
   DeleteLeafNodes,
   DeleteNode,
   ClearCanvas,
+  StyleSetting,
 } from '@graphscope/studio-graph';
 
-import { FetchGraph, Searchbar, PaperList, PaperInfo } from './components';
+import { FetchGraph, Searchbar, PaperList, PaperInfo, Statistics } from './components';
 import { queryCypher } from './service';
 interface QueryGraphProps {}
 
@@ -61,15 +62,23 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
         <Section
           splitBorder
           leftSide={<PaperList />}
-          rightSide={<PaperInfo />}
+          rightSide={
+            <PaperInfo>
+              <Statistics>
+                <StyleSetting />
+              </Statistics>
+            </PaperInfo>
+          }
           autoResize={false}
           rightSideStyle={{
             width: '400px',
             boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
+            overflowY: 'scroll',
           }}
           leftSideStyle={{
             width: '380px',
             boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
+            overflow: 'scroll',
           }}
           defaultCollapsed={{
             leftSide: false,

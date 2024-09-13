@@ -10,9 +10,12 @@ import { useContext } from '@graphscope/studio-graph';
 import Insight from './Insight';
 const { Title, Text, Paragraph } = Typography;
 
-interface IPaperDetailProps {}
+interface IPaperDetailProps {
+  children?: React.ReactNode;
+}
 
 const PaperInfo: React.FC<IPaperDetailProps> = props => {
+  const { children } = props;
   const { store } = useContext();
   const { nodeStatus, data } = store;
 
@@ -24,7 +27,7 @@ const PaperInfo: React.FC<IPaperDetailProps> = props => {
   });
 
   if (!selectNode) {
-    return <div>No node selected</div>;
+    return <div>{children}</div>;
   }
   //@ts-ignore
   const { title, authors, time, citations, problem_def: description } = selectNode.properties;

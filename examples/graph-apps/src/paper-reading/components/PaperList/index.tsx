@@ -44,7 +44,7 @@ const Item = props => {
       justify="space-between"
       vertical
       gap={8}
-      style={{ borderBottom: '1px solid #ccc', padding: '8px', ...style }}
+      style={{ borderBottom: '1px solid #ccc', padding: '8px', width: '100%', ...style }}
       onClick={onClick}
     >
       <Typography.Text>{title}</Typography.Text>
@@ -63,7 +63,7 @@ const PaperList: React.FunctionComponent<IPaperListProps> = props => {
   const { nodes = [] } = data;
 
   return (
-    <Flex align="center" vertical style={{ height: '100%', overflowY: 'scroll', padding: '24px 0px' }}>
+    <Flex align="center" vertical style={{ height: '100%', padding: '24px 0px' }}>
       <Logo style={{ width: '200px', transform: 'scale(1.7)', margin: '12px 0px 12px 0px' }} />
       <Divider />
       {nodes.map(item => {
