@@ -73,7 +73,7 @@ const fixNodePositions = nodes => {
   });
 };
 
-export const handleExpand = (graph, expandData, selectId) => {
+export const handleExpand = (graph, expandData, selectIds: string[]) => {
   const { nodes, links } = graph.graphData();
   const edges = links.map((item: any) => {
     return {
@@ -82,7 +82,7 @@ export const handleExpand = (graph, expandData, selectId) => {
       target: item.target.id,
     };
   });
-  const expandNode = nodes.find(node => node.id === selectId);
+  const expandNode = nodes.filter(node => selectIds.indexOf(node.id) !== -1);
   const expandNodes = applyPositions(expandData.nodes, expandNode);
   const newData = Utils.handleExpand(
     {

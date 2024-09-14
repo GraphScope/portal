@@ -17,16 +17,13 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
   const { nodeStatus, schema, dataMap, emitter, graph, data } = store;
   const MenuRef = useRef<HTMLDivElement>(null);
 
-  const selectId =
-    Object.keys(nodeStatus).filter(key => {
-      return nodeStatus[key].selected;
-    })[0] || '';
-
-  const selectNode = data.nodes.find(item => item.id === selectId); // dataMap[selectId] || {};
+  const selectIds = Object.keys(nodeStatus).filter(key => {
+    return nodeStatus[key].selected;
+  });
+  const selectNode = data.nodes.find(item => item.id === selectIds[0]); // dataMap[selectId] || {};
   if (!selectNode) {
     return null;
   }
-
   const relatedEdges = schema.edges.filter(item => {
     return item.source === selectNode.label;
   });
@@ -68,23 +65,13 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
     updateStore(draft => {
       draft.isLoading = true;
     });
-    //@ts-ignore
-    const { name, title } = selectNode.properties;
-    let script = '';
-    if (name) {
-      script = `
-      MATCH ${key}
-        WHERE a.name = "${name}"
-        RETURN a, b, c
-      `;
-    }
-    if (title) {
-      script = `
-      MATCH ${key}
-        WHERE a.title = "${title}"
-        RETURN a, b, c
-      `;
-    }
+
+    const script = `
+    MATCH ${key}
+    WHERE  elementId(a) IN [${selectIds}] 
+    RETURN a,b,c
+    `;
+    console.log('script', script);
 
     const res = await onQuery({
       script,
@@ -95,7 +82,7 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
       const { nodeStatus, edgeStatus } = applyStatus(res, item => {
         return { selected: true };
       });
-      const newData = handleExpand(graph, res, selectId);
+      const newData = handleExpand(graph, res, selectIds);
       updateStore(draft => {
         draft.data = newData;
         draft.dataMap = getDataMap(newData);
