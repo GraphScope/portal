@@ -73,6 +73,18 @@ const GraphNode = (props: NodeProps) => {
     });
   };
 
+  // 监听用户 click outside event
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (nodeRef.current && !nodeRef.current.contains(event.target)) setVisible(false);
+    }
+
+    triggerPopover === 'click' && document.addEventListener('click', handleClickOutside);
+    return () => {
+      triggerPopover === 'click' && document.removeEventListener('click', handleClickOutside);
+    };
+  }, [nodeRef]);
+
   const currentNode = store.nodes.find(node => node.id === id);
 
   const hanleChangeLabel = value => {
@@ -152,6 +164,7 @@ const GraphNode = (props: NodeProps) => {
   return (
     <div
       ref={nodeRef}
+      id={id}
       // onMouseLeave={() => triggerPopover === 'hover' && setVisible(false)}
       // onMouseEnter={() => triggerPopover === 'hover' && setVisible(true)}
     >

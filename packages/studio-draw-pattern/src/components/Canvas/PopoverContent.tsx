@@ -64,6 +64,8 @@ const PopoverContent: React.FC<PopoverContentProps> = ({ currentId, onChange }) 
             { value: '<', label: '<' },
           ]}
           className="nospan nodrag"
+          // @ts-ignore
+          getPopupContainer={() => document.getElementById(currentId!)}
         />
       ),
       width: '20%',
