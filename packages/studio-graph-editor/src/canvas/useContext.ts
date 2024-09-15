@@ -63,6 +63,8 @@ export function useContext() {
   const { graphId } = useGraphContext();
   const id = graphId ?? 'root-1';
   const currentStore = getProxyStoreById(id, proxy(Utils.fakeSnapshot(defaultStore)));
+  const onNodesChange = useGraphContext().onNodesChange;
+  const onEdgesChange = useGraphContext().onEdgesChange;
 
   // const { id, currentStore } = useMultipleInstance(proxy(Utils.fakeSnapshot(initialStore)));
   const store = useSnapshot(currentStore);

@@ -8,6 +8,7 @@ interface EdgeState {
   deleteEdge?: (edgeKey: string) => void;
   clearEdge?: () => void;
   editEdge?: (edge: Edge) => void;
+  replaceEdges?: (edges: Edge[]) => void;
 }
 
 const edgeSubject = new Subject<EdgeState>();
@@ -48,6 +49,13 @@ export const useEdgeStore = create<EdgeState>((set, get) => ({
     set(() => {
       edgeSubject.next({ edges: [] });
       return { edges: [] };
+    });
+  },
+
+  replaceEdges: (edges: Edge[]) => {
+    set(() => {
+      edgeSubject.next({ edges });
+      return { edges };
     });
   },
 

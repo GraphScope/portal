@@ -9,6 +9,7 @@ interface NodeState {
   deleteNode?: (nodeKey: string) => void;
   clearNode?: () => void;
   editNode?: (node: Node) => void;
+  replaceNodes?: (nodes: Node[]) => void;
 }
 
 const nodesSubject = new Subject<NodeState>();
@@ -46,6 +47,12 @@ export const useNodeStore = create<NodeState>()(set => ({
     set(() => {
       nodesSubject.next({ nodes: [] });
       return { nodes: [] };
+    }),
+
+  replaceNodes: (nodes: Node[]) =>
+    set(() => {
+      nodesSubject.next({ nodes });
+      return { nodes };
     }),
 
   editNode: node =>

@@ -17,15 +17,13 @@ import { getSequentialLetter } from '../../utils';
 export const Canvas = () => {
   const nodesStore = useNodeStore(state => state.nodes);
   const edgesStore = useEdgeStore(state => state.edges);
+  const replaceNodes = useNodeStore(state => state.replaceNodes);
+  const replaceEdges = useEdgeStore(state => state.replaceEdges);
   const editNode = useNodeStore(state => state.editNode);
-  const editEdge = useEdgeStore(state => state.editEdge);
-  const addNode = useNodeStore(state => state.addNode);
-  const addEdge = useEdgeStore(state => state.addEdge);
   const { transformNode, transformEdge } = useTransform();
   const graphNodes = useGraphStore(state => state.graphNodes);
   const graphEdges = useGraphStore(state => state.graphEdges);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
   const { encodeProperties, encodeNodes, encodeEdges, generateMATCH, generateWHERE } = useEncodeCypher();
 
   const MATCHs: string = useMemo(() => (isModalOpen ? generateMATCH().join('\n') : ''), [isModalOpen]);
@@ -43,10 +41,6 @@ export const Canvas = () => {
   useEffect(() => {
     console.log('关系更新啦', edgesStore);
   }, [edgesStore]);
-
-  // useEffect(() => {
-  //   console.log('图表发生变化', graphEdges, graphNodes);
-  // }, [graphEdges, graphNodes]);
 
   const handlePropertiesChange = useCallback(
     (value: { currentId: string; properties: Property[] }) => {
@@ -67,22 +61,20 @@ export const Canvas = () => {
 
   const handleNodes = useCallback(
     (nodes: ISchemaNode[]) => {
-      nodes.forEach(node => {
-        const isExist = nodesStore.some(nodeStore => nodeStore.nodeKey === node.id);
-        if (isExist) editNode && editNode(transformNode(node));
-        if (!isExist) addNode && addNode(transformNode(node));
+      const newNodes = nodes.map(node => {
+        return transformNode(node);
       });
+      replaceNodes && replaceNodes(newNodes);
     },
     [nodesStore],
   );
 
   const handleEdges = useCallback(
     (edges: ISchemaEdge[]) => {
-      edges.forEach(edge => {
-        const isExist = edgesStore.some(edgeStore => edgeStore.edgeKey === edge.id);
-        if (isExist) editEdge && editEdge(transformEdge(edge));
-        if (!isExist) addEdge && addEdge(transformEdge(edge));
+      const newEdges = edges.map(edge => {
+        return transformEdge(edge);
       });
+      replaceEdges && replaceEdges(newEdges);
     },
     [edgesStore],
   );

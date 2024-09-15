@@ -61,6 +61,24 @@ const useInteractive: any = () => {
           type: 'graph-node',
           data: { label: createNodeLabel() },
         };
+        const newEgde = {
+          id: edgeId,
+          //@ts-ignore
+          source: connectingNodeId.current,
+          target: nodeId,
+          type: 'graph-edge',
+          data: {
+            label: createEdgeLabel(),
+          },
+        };
+
+        // handleEdgesChange && handleEdgesChange([...fakeSnapshot(edges), newEgde]);
+        // handleNodesChange && handleNodesChange([...fakeSnapshot(nodes), newNode]);
+        console.log(
+          'handleChange 时的 edges 和 nodes',
+          [...fakeSnapshot(edges), newEgde],
+          [...fakeSnapshot(nodes), newNode],
+        );
 
         updateStore(draft => {
           draft.nodes.push(newNode);
@@ -97,8 +115,8 @@ const useInteractive: any = () => {
             ],
             displayMode,
           );
+          // handleEdgesChange && handleEdgesChange(newEdges);
           draft.edges = newEdges;
-          handleEdgesChange && handleEdgesChange(newEdges);
         });
       }
     },
@@ -113,8 +131,7 @@ const useInteractive: any = () => {
     if (elementOptions.isConnectable || type === 'position') {
       updateStore(draft => {
         const newNodes = applyNodeChanges(changes, deepclone(draft.nodes));
-        console.log(JSON.stringify(newNodes));
-        handleNodesChange && handleNodesChange(fakeSnapshot(newNodes));
+        handleNodesChange && handleNodesChange(newNodes);
         const isEqual = _.isEqual(draft.nodes, newNodes);
         if (!isEqual) draft.nodes = newNodes;
       });
@@ -135,7 +152,7 @@ const useInteractive: any = () => {
     if (elementOptions.isConnectable) {
       updateStore(draft => {
         const newEdges = applyEdgeChanges(changes, deepclone(draft.edges));
-        // handleEdgesChange && handleEdgesChange(newEdges);
+        // handleEdgesChange && handleEdgesChange(newEdges as unknown as ISchemaEdge[]);
         draft.edges = newEdges;
       });
     }
@@ -148,10 +165,8 @@ const useInteractive: any = () => {
   };
 
   useEffect(() => {
-    console.log('effect.....');
     if (nodes.length > 0) {
       if (!hasLayouted) {
-        console.log('effect......layout');
         const graph = createStaticForceLayout(fakeSnapshot(nodes), fakeSnapshot(edges));
         clearTimeout(timer);
         timer = setTimeout(() => {
@@ -166,6 +181,12 @@ const useInteractive: any = () => {
       }
     }
   }, [nodes, edges, hasLayouted]);
+
+  useEffect(() => {
+    console.log('监听时的 edges 和 nodes', edges, nodes);
+    handleEdgesChange && handleEdgesChange(edges);
+    handleNodesChange && handleNodesChange(nodes);
+  }, [edges, nodes]);
 
   useEffect(() => {
     /** 把marker 放到 reactflow 内部，目的是为了导出的时候 dom 不丢失 */
