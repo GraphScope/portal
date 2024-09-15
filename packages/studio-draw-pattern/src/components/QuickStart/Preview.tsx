@@ -4,9 +4,22 @@ import { defaultEdges, defaultNodes } from './data';
 import { ISchemaNode } from '@graphscope/studio-graph-editor/dist/types/node';
 import { ISchemaEdge } from '@graphscope/studio-graph-editor/dist/types/edge';
 import { useTransform } from '../../hooks/transform/useTransform';
+import { useGraphStore } from '../../stores/useGraphStore';
+import { useNodeStore } from '../../stores/useNodeStore';
+import { useEdgeStore } from '../../stores/useEdgeStore';
 export const Preview = () => {
   const { transformNodes, transformEdges } = useTransform();
+
+  const clearGraphStore = useGraphStore(state => state.clearGraphStore);
+  const clearNode = useNodeStore(state => state.clearNode);
+  const clearEdge = useEdgeStore(state => state.clearEdge);
   const handleSelectionChange = (nodes: ISchemaNode[], edges: ISchemaEdge[]) => {
+    // 每次 selection change 都要清空 store;
+    clearGraphStore();
+    clearEdge && clearEdge();
+    clearNode && clearNode();
+
+    // 将 nodes 和 edges 转换为 新格式 ，来适配 MATCH 语句
     transformNodes(nodes);
     transformEdges(edges, nodes);
   };

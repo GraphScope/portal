@@ -83,7 +83,7 @@ const useInteractive: any = () => {
 
         updateStore(draft => {
           // 可能存在多边，所以需要走一遍 transform 函数
-          draft.edges = transformEdges(
+          const newEdges = transformEdges(
             [
               ...draft.edges,
               {
@@ -91,12 +91,14 @@ const useInteractive: any = () => {
                 data: {
                   label: edgeLabel,
                 },
-                source: connectingNodeId.current || '',
-                target: nodeid,
+                source: nodeid,
+                target: connectingNodeId.current || '',
               },
             ],
             displayMode,
           );
+          draft.edges = newEdges;
+          handleEdgesChange && handleEdgesChange(newEdges);
         });
       }
     },
@@ -133,7 +135,6 @@ const useInteractive: any = () => {
     if (elementOptions.isConnectable) {
       updateStore(draft => {
         const newEdges = applyEdgeChanges(changes, deepclone(draft.edges));
-        // console.log(JSON.stringify(newEdges));
         // handleEdgesChange && handleEdgesChange(newEdges);
         draft.edges = newEdges;
       });
@@ -145,10 +146,6 @@ const useInteractive: any = () => {
     const bbox = getBBox(nodes);
     fitBounds(bbox, { duration: 600 });
   };
-
-  useEffect(() => {
-    handleEdgesChange && handleEdgesChange(edges);
-  }, [edges]);
 
   useEffect(() => {
     console.log('effect.....');

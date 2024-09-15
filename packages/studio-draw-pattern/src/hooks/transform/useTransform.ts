@@ -35,7 +35,7 @@ export const useTransform = () => {
   }, []);
 
   const transformNodes = useCallback((nodes: ISchemaNode[]) => {
-    console.log('传入的节点', nodes);
+    // console.log('传入的节点', nodes);
     nodes.map(node => {
       node && addNode && addNode(transformNode(node));
       updateGraphNode(node);
@@ -43,7 +43,7 @@ export const useTransform = () => {
   }, []);
 
   const transformEdges = useCallback((edges: ISchemaEdge[], nodes: ISchemaNode[]) => {
-    console.log('传入的路径', edges);
+    // console.log('传入的路径', edges);
     edges.map(edge => {
       const isEdgeExist = checkEdgeExist(edge, nodes);
       isEdgeExist && edge && addEdge && addEdge(transformEdge(edge));

@@ -1,6 +1,9 @@
 import React, { ReactNode, useCallback, useMemo, useRef } from 'react';
 import { useTransform } from '../../hooks/transform/useTransform';
 import { useGenerateTemplate } from '../../hooks/generateTemplate/useGenerateTemplate';
+import { useGraphStore } from '../../stores/useGraphStore';
+import { useNodeStore } from '../../stores/useNodeStore';
+import { useEdgeStore } from '../../stores/useEdgeStore';
 
 interface QuickStartProps {
   title: string;
@@ -11,16 +14,25 @@ export const QuickStartItem: React.FC<QuickStartProps> = ({ title, svgSrc, id })
   const { transformNodes, transformEdges } = useTransform();
   const { generateSelfLoop, generateTriangleLoop } = useGenerateTemplate();
 
-  const handleClick = useCallback(() => {
-    const triangleLoopData = generateTriangleLoop();
-    const selfLoopData = generateSelfLoop();
+  const clearGraphStore = useGraphStore(state => state.clearGraphStore);
+  const clearNode = useNodeStore(state => state.clearNode);
+  const clearEdge = useEdgeStore(state => state.clearEdge);
 
+  const handleClick = useCallback(() => {
+    // 每次 selection change 都要清空 store
+    clearNode && clearNode();
+    clearEdge && clearEdge();
+    clearGraphStore();
+
+    // 根据 template id 获取模板数据
     switch (id) {
       case 'triangle-loop':
+        const triangleLoopData = generateTriangleLoop();
         transformNodes(triangleLoopData.nodes);
         transformEdges(triangleLoopData.edges, triangleLoopData.nodes);
         break;
       case 'self-loop':
+        const selfLoopData = generateSelfLoop();
         transformNodes(selfLoopData.nodes);
         transformEdges(selfLoopData.edges, selfLoopData.nodes);
         break;

@@ -8,7 +8,7 @@ export const useGenerateTemplate = () => {
       nodes: [
         {
           id: nodeId,
-          position: { x: 260, y: 497.5 },
+          position: { x: 400, y: 400 },
           type: 'graph-node',
           data: { label: 'Vertex_1' },
           width: 100,

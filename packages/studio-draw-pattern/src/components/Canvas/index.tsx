@@ -33,7 +33,6 @@ export const Canvas = () => {
   const { generateRelation } = useGenerateRelation();
 
   useEffect(() => {
-    console.log('开始产生关系');
     generateRelation(edgesStore);
   }, [edgesStore]);
 
@@ -45,9 +44,9 @@ export const Canvas = () => {
     console.log('关系更新啦', edgesStore);
   }, [edgesStore]);
 
-  useEffect(() => {
-    console.log('图表发生变化', graphEdges, graphNodes);
-  }, [graphEdges, graphNodes]);
+  // useEffect(() => {
+  //   console.log('图表发生变化', graphEdges, graphNodes);
+  // }, [graphEdges, graphNodes]);
 
   const handlePropertiesChange = useCallback(
     (value: { currentId: string; properties: Property[] }) => {
@@ -72,7 +71,6 @@ export const Canvas = () => {
         const isExist = nodesStore.some(nodeStore => nodeStore.nodeKey === node.id);
         if (isExist) editNode && editNode(transformNode(node));
         if (!isExist) addNode && addNode(transformNode(node));
-        editNode && editNode(transformNode(node));
       });
     },
     [nodesStore],
@@ -80,7 +78,6 @@ export const Canvas = () => {
 
   const handleEdges = useCallback(
     (edges: ISchemaEdge[]) => {
-      console.log('edges', edges);
       edges.forEach(edge => {
         const isExist = edgesStore.some(edgeStore => edgeStore.edgeKey === edge.id);
         if (isExist) editEdge && editEdge(transformEdge(edge));
@@ -90,8 +87,8 @@ export const Canvas = () => {
     [edgesStore],
   );
 
-  const MyGraph = useCallback(
-    () => (
+  const MyGraph = useCallback(() => {
+    return (
       <Graph
         graphId="edit-graph"
         defaultNodes={graphNodes}
@@ -101,12 +98,8 @@ export const Canvas = () => {
         isShowPopover={true}
         popoverCustomContent={<PopoverContent onChange={handlePropertiesChange}></PopoverContent>}
       />
-    ),
-    [graphNodes, graphEdges],
-  );
-  useEffect(() => {
-    console.log('节点变化啦', nodesStore);
-  }, [isModalOpen]);
+    );
+  }, [graphNodes, graphEdges]);
 
   return (
     <div style={{ height: '100%', width: '100%' }}>

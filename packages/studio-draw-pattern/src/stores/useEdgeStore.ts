@@ -44,6 +44,7 @@ export const useEdgeStore = create<EdgeState>((set, get) => ({
   },
 
   clearEdge: () => {
+    // console.log('路径进行清除');
     set(() => {
       edgeSubject.next({ edges: [] });
       return { edges: [] };
