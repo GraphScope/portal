@@ -1,23 +1,21 @@
 import _ from 'lodash';
 import { Edge } from '../types/edge';
 import { Node } from '../types/node';
-import { Property } from '../types/property';
+import { Properties, Property } from '../types/property';
 import { isArrayExist } from '.';
 
 export const encodeProperties = (
-  nodes: Node[],
-  encodeCallback: (currentNode: Node, preProperties: Property[], currentProperties: Property[]) => void,
+  encodeCallback: (changeProperties: Properties, preProperties: Property[], currentProperties: Property[]) => void,
+  properties: Properties[],
 ) => {
-  nodes.forEach((node: Node) => {
-    const newProperties =
-      node.properties &&
-      node.properties.map((property: Property) => {
-        return {
-          ...property,
-          statement: `${property.name} ${property.compare} ${property.value}`,
-        };
-      });
-    encodeCallback(node, node.properties ?? [], newProperties ?? []);
+  properties.forEach(properties => {
+    const newProperties = properties.data.map(property => {
+      return {
+        ...property,
+        statement: `${property.name} ${property.compare} ${property.value}`,
+      };
+    });
+    encodeCallback(properties, properties.data ?? [], newProperties ?? []);
   });
 };
 
@@ -51,23 +49,17 @@ export const encodeEdges = (edges: Edge[], encodeSingleEdgeCallback: (preEdge: E
     });
 };
 
-export const generateWHERE = (nodes: Node[]) => {
-  let propertiesStatement: string[] = [];
-  nodes.forEach(node => {
-    const propertiesSingleNodeStatement = node.properties?.map(property => {
-      const statement = property.statement
-        ? property.statement
-        : `${property.name} ${property.compare} ${property.value}`;
-      return `${node.variable}.${statement}`;
+export const generateWHERE = (nodes: Node[], properties: Properties[]) => {
+  const WHEREs: string[] = [];
+  console.log('属性', properties);
+  properties.forEach(properties => {
+    const currentNode = nodes.find(node => node.nodeKey === properties.belongId);
+    const currentProperties = properties.data?.map(property => {
+      return `${currentNode?.variable}.${property.name} ${property.compare} ${property.value}`;
     });
-
-    if (propertiesSingleNodeStatement) {
-      propertiesStatement = [...propertiesStatement, ...propertiesSingleNodeStatement];
-    }
+    WHEREs.push(`WHERE ${currentProperties?.join(' AND ')}`);
   });
-
-  const WHERE = `WHERE ${propertiesStatement.join(' AND ')}`;
-  return WHERE;
+  return WHEREs.join('\n');
 };
 
 export const generateMATCH = (nodes: Node[], edges: Edge[]) => {
@@ -94,7 +86,7 @@ export const generateMATCH = (nodes: Node[], edges: Edge[]) => {
     if (targetNode) {
       while (true) {
         // 是否存在目标节点
-        const isExistProperty = !!targetNode.properties;
+        // const isExistProperty = !!targetNode.properties;
         const nodeStatement = targetNode.variable
           ? `(${targetNode.variable}${targetNode.statement})`
           : `(${targetNode.statement})`;
@@ -114,7 +106,7 @@ export const generateMATCH = (nodes: Node[], edges: Edge[]) => {
       while (true) {
         // 是否存在源节点
         console.log('sourceNode 源节点', sourceNode);
-        const isExistProperty = !!sourceNode.properties;
+        // const isExistProperty = !!sourceNode.properties;
         const nodeStatement = sourceNode.variable
           ? `(${sourceNode.variable}${sourceNode.statement})`
           : `(${sourceNode.statement})`;

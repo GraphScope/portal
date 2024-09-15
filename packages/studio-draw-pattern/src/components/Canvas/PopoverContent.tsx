@@ -3,6 +3,7 @@ import { Form, Input, Button, Row, Col, Table, Select } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Property } from '../../types/property';
 import { useNodeStore } from '../../stores/useNodeStore';
+import { usePropertiesStore } from '../../stores/usePropertiesStore';
 
 interface PopoverContentProps {
   currentId?: string;
@@ -10,8 +11,8 @@ interface PopoverContentProps {
 }
 
 const PopoverContent: React.FC<PopoverContentProps> = ({ currentId, onChange }) => {
-  const nodes = useNodeStore(state => state.nodes);
-  const [items, setItems] = useState<Property[]>(nodes.find(node => node.nodeKey === currentId)?.properties ?? []);
+  const properties = usePropertiesStore(state => state.properties);
+  const [items, setItems] = useState<Property[]>(properties.find(item => item.belongId === currentId)?.data ?? []);
 
   useEffect(() => {
     console.log('id change', currentId);

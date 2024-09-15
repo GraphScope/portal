@@ -7,14 +7,17 @@ import { useTransform } from '../../hooks/transform/useTransform';
 import { useGraphStore } from '../../stores/useGraphStore';
 import { useNodeStore } from '../../stores/useNodeStore';
 import { useEdgeStore } from '../../stores/useEdgeStore';
+import { usePropertiesStore } from '../../stores/usePropertiesStore';
 export const Preview = () => {
   const { transformNodes, transformEdges } = useTransform();
 
   const clearGraphStore = useGraphStore(state => state.clearGraphStore);
   const clearNode = useNodeStore(state => state.clearNode);
   const clearEdge = useEdgeStore(state => state.clearEdge);
+  const clearProperties = usePropertiesStore(state => state.clearProperties);
   const handleSelectionChange = (nodes: ISchemaNode[], edges: ISchemaEdge[]) => {
     // 每次 selection change 都要清空 store;
+    clearProperties();
     clearGraphStore();
     clearEdge && clearEdge();
     clearNode && clearNode();

@@ -1,12 +1,13 @@
 import { useCallback } from 'react';
 import { useNodeStore } from '../../stores/useNodeStore';
-import { Property } from '../../types/property';
+import { Properties, Property } from '../../types/property';
 import _ from 'lodash';
 import { useEdgeStore } from '../../stores/useEdgeStore';
 import { Node } from '../../types/node';
 import { Edge } from '../../types/edge';
 import { isArrayExist } from '../../utils';
 import { encodeNodes, encodeEdges, generateMATCH, generateWHERE, encodeProperties } from '../../utils/encode';
+import { usePropertiesStore } from '../../stores/usePropertiesStore';
 
 // 目前 GPE 只设计 model.json
 export const useEncodeCypher = () => {
@@ -14,15 +15,17 @@ export const useEncodeCypher = () => {
   const editNode = useNodeStore(state => state.editNode);
   const edges = useEdgeStore(state => state.edges);
   const editEdge = useEdgeStore(state => state.editEdge);
+  const properties = usePropertiesStore(state => state.properties);
+  const updateProperties = usePropertiesStore(state => state.updateProperties);
 
   const updateNodeProperties = useCallback(() => {
-    const editProperties = (node: Node, pre: Property[], current: Property[]) => {
+    const editProperties = (changeProperties: Properties, pre: Property[], current: Property[]) => {
       const isEqual = _.isEqual(pre, current);
-      !isEqual && editNode && editNode({ ...node, properties: current });
+      !isEqual && updateProperties([...properties, { ...changeProperties, data: current }]);
     };
 
-    encodeProperties(nodes, editProperties);
-  }, [nodes]);
+    encodeProperties(editProperties, properties);
+  }, [nodes, properties]);
 
   const updateNodeStatements = useCallback(() => {
     const editNodeStatement = (pre: Node, current: Node) => {
@@ -47,8 +50,8 @@ export const useEncodeCypher = () => {
   }, [nodes, edges]);
 
   const createWhereClause = useCallback(() => {
-    return generateWHERE(nodes);
-  }, [nodes]);
+    return generateWHERE(nodes, properties);
+  }, [nodes, properties]);
 
   return {
     encodeProperties: updateNodeProperties,

@@ -4,6 +4,7 @@ import { useGenerateTemplate } from '../../hooks/generateTemplate/useGenerateTem
 import { useGraphStore } from '../../stores/useGraphStore';
 import { useNodeStore } from '../../stores/useNodeStore';
 import { useEdgeStore } from '../../stores/useEdgeStore';
+import { usePropertiesStore } from '../../stores/usePropertiesStore';
 
 interface QuickStartProps {
   title: string;
@@ -17,12 +18,14 @@ export const QuickStartItem: React.FC<QuickStartProps> = ({ title, svgSrc, id })
   const clearGraphStore = useGraphStore(state => state.clearGraphStore);
   const clearNode = useNodeStore(state => state.clearNode);
   const clearEdge = useEdgeStore(state => state.clearEdge);
+  const clearProperties = usePropertiesStore(state => state.clearProperties);
 
   const handleClick = useCallback(() => {
     // 每次 selection change 都要清空 store
     clearNode && clearNode();
     clearEdge && clearEdge();
     clearGraphStore();
+    clearProperties();
 
     // 根据 template id 获取模板数据
     switch (id) {

@@ -6,3 +6,9 @@ export interface Property {
   id: string;
   statement?: string;
 }
+
+export interface Properties {
+  belongId: string;
+  belongType: 'node' | 'edge';
+  data: Property[];
+}

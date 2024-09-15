@@ -13,19 +13,20 @@ import { useGraphStore } from '../../stores/useGraphStore';
 import { useEncodeCypher } from '../../hooks/cypher/useEncodeCypher';
 import { Button, Input, Modal } from 'antd';
 import { getSequentialLetter } from '../../utils';
+import { usePropertiesStore } from '../../stores/usePropertiesStore';
 
 export const Canvas = () => {
   const nodesStore = useNodeStore(state => state.nodes);
   const edgesStore = useEdgeStore(state => state.edges);
   const replaceNodes = useNodeStore(state => state.replaceNodes);
   const replaceEdges = useEdgeStore(state => state.replaceEdges);
-  const editNode = useNodeStore(state => state.editNode);
   const { transformNode, transformEdge } = useTransform();
   const graphNodes = useGraphStore(state => state.graphNodes);
   const graphEdges = useGraphStore(state => state.graphEdges);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { encodeProperties, encodeNodes, encodeEdges, generateMATCH, generateWHERE } = useEncodeCypher();
-
+  const updateProperties = usePropertiesStore(state => state.updateProperties);
+  const properties = usePropertiesStore(state => state.properties);
   const MATCHs: string = useMemo(() => (isModalOpen ? generateMATCH().join('\n') : ''), [isModalOpen]);
   const WHERE: string = useMemo(() => (isModalOpen ? generateWHERE() : ''), [isModalOpen]);
   const { generateRelation } = useGenerateRelation();
@@ -44,25 +45,30 @@ export const Canvas = () => {
 
   const handlePropertiesChange = useCallback(
     (value: { currentId: string; properties: Property[] }) => {
-      const currentNode = nodesStore.find(node => node.nodeKey === value.currentId);
-
-      if (editNode && currentNode) {
-        editNode({
-          ...currentNode,
-          properties: value.properties,
-          variable: getSequentialLetter()(),
-        });
-      }
+      updateProperties([
+        ...properties,
+        {
+          belongId: value.currentId,
+          belongType: 'node',
+          data: value.properties,
+        },
+      ]);
     },
     [nodesStore],
   );
 
-  // let preNodes: ISchemaNode[] = [];
-
   const handleNodes = useCallback(
     (nodes: ISchemaNode[]) => {
+      console.log('nodesStore', nodesStore);
       const newNodes = nodes.map(node => {
-        return transformNode(node);
+        const currentNode = nodesStore.find(graphNode => graphNode.nodeKey === node.id);
+        console.log('currentNode', currentNode, nodesStore);
+        if (currentNode)
+          return {
+            ...currentNode,
+            ...transformNode(node),
+          };
+        else return transformNode(node);
       });
       replaceNodes && replaceNodes(newNodes);
     },
@@ -72,7 +78,13 @@ export const Canvas = () => {
   const handleEdges = useCallback(
     (edges: ISchemaEdge[]) => {
       const newEdges = edges.map(edge => {
-        return transformEdge(edge);
+        const currentEdge = edgesStore.find(graphEdge => graphEdge.edgeKey === edge.id);
+        if (currentEdge)
+          return {
+            ...currentEdge,
+            ...transformEdge(edge),
+          };
+        else return transformEdge(edge);
       });
       replaceEdges && replaceEdges(newEdges);
     },
