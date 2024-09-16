@@ -11,7 +11,8 @@
     "prepublishOnly": "father doctor && npm run build",
     "start:site": "vite dev",
     "build:site": "vite build",
-    "test": "vitest"
+    "test": "vitest",
+    "ci": "cd ../studio-components && npm run build && cd ../studio-draw-pattern && npm run build:site "
   },
   "keywords": [],
   "authors": [],
