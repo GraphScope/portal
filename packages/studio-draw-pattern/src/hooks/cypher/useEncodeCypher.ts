@@ -19,25 +19,26 @@ export const useEncodeCypher = () => {
   const addVariableForNode = useNodeStore(state => state.addVariableForNode);
 
   const updateNodeProperties = useCallback(() => {
-    let count = 0;
     const editProperties = (changeProperties: Properties, pre: Property[], current: Property[]) => {
       const isEqual = _.isEqual(pre, current);
-      let newVariableName = `n${count}`;
-
-      const currentNode = nodes.find(node => node.nodeKey === changeProperties.belongId);
-      currentNode && addVariableForNode && addVariableForNode(currentNode.nodeKey, newVariableName);
       !isEqual && editPropertiesStore({ ...changeProperties, data: current });
-
-      count++;
     };
 
     encodeProperties(editProperties, properties);
   }, [nodes, properties]);
 
   const updateNodeStatements = useCallback(() => {
+    let count = 0;
+
     const editNodeStatement = (pre: Node, current: Node) => {
       const isEqual = _.isEqual(pre.statement, current.statement);
+      let newVariableName = `n${count}`;
+
+      addVariableForNode && addVariableForNode(current.nodeKey, newVariableName);
+
       !isEqual && editNode && editNode({ ...current });
+
+      count++;
     };
 
     encodeNodes(nodes, editNodeStatement);
