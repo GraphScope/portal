@@ -15,6 +15,7 @@ export const encodeProperties = (
         statement: `${property.name} ${property.compare} ${property.value}`,
       };
     });
+    console.log('newProperties', newProperties);
     encodeCallback(properties, properties.data ?? [], newProperties ?? []);
   });
 };
@@ -55,10 +56,11 @@ export const generateWHERE = (nodes: Node[], properties: Properties[]) => {
   properties.forEach(properties => {
     const currentNode = nodes.find(node => node.nodeKey === properties.belongId);
     const currentProperties = properties.data?.map(property => {
-      return `${currentNode?.variable}.${property.name} ${property.compare} ${property.value}`;
+      return `${currentNode?.variable}.${property.statement}`;
     });
     WHEREs.push(`WHERE ${currentProperties?.join(' AND ')}`);
   });
+  console.log('WHEREs', WHEREs);
   return WHEREs.join('\n');
 };
 

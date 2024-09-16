@@ -17,11 +17,12 @@ export const useEncodeCypher = () => {
   const editEdge = useEdgeStore(state => state.editEdge);
   const properties = usePropertiesStore(state => state.properties);
   const updateProperties = usePropertiesStore(state => state.updateProperties);
+  const editPropertiesStore = usePropertiesStore(state => state.editProperties);
 
   const updateNodeProperties = useCallback(() => {
     const editProperties = (changeProperties: Properties, pre: Property[], current: Property[]) => {
       const isEqual = _.isEqual(pre, current);
-      !isEqual && updateProperties([...properties, { ...changeProperties, data: current }]);
+      !isEqual && editPropertiesStore({ ...changeProperties, data: current });
     };
 
     encodeProperties(editProperties, properties);

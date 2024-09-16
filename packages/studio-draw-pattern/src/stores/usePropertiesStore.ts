@@ -5,6 +5,7 @@ interface PropertiesStore {
   properties: Properties[];
   updateProperties: (properties: Properties[]) => void;
   clearProperties: () => void;
+  editProperties: (property: Properties) => void;
 }
 
 export const usePropertiesStore = create<PropertiesStore>()(set => ({
@@ -20,4 +21,24 @@ export const usePropertiesStore = create<PropertiesStore>()(set => ({
 
   // 清空所有属性
   clearProperties: () => set({ properties: [] }),
+
+  // 编辑属性
+  editProperties: (property: Properties) =>
+    set(state => {
+      const existingProperty = state.properties.find(item => item.belongId === property.belongId);
+
+      if (existingProperty) {
+        // If the property exists, update it
+        return {
+          properties: state.properties.map(item =>
+            item.belongId === property.belongId ? { ...item, ...property } : item,
+          ),
+        };
+      } else {
+        // If the property doesn't exist, add it
+        return {
+          properties: [...state.properties, property],
+        };
+      }
+    }),
 }));
