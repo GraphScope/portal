@@ -72,8 +72,6 @@ export const generateMATCH = (nodes: Node[], edges: Edge[]) => {
 
   while (true) {
     const currentEdge = edgesSnapShot.find(edge => !edge.isErgodic);
-    console.log('currentEdge', currentEdge);
-    console.log('edgesSnapShot', edgesSnapShot);
     if (!currentEdge) break;
     let targetCurrentEdge: Edge | undefined = currentEdge;
     let sourceCurrentEdge: Edge | undefined = currentEdge;
