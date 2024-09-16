@@ -39,7 +39,7 @@ export const useGenerateTemplate = () => {
       nodes: [
         {
           id: node1Id,
-          position: { x: 702, y: 572 },
+          position: { x: 400, y: 200 },
           type: 'graph-node',
           data: { label: 'Vertex_1' },
           width: 100,
@@ -50,7 +50,7 @@ export const useGenerateTemplate = () => {
         },
         {
           id: node2Id,
-          position: { x: 877.25, y: 324.75 },
+          position: { x: 200, y: 400 },
           type: 'graph-node',
           data: { label: 'Vertex_2' },
           width: 100,
@@ -61,7 +61,7 @@ export const useGenerateTemplate = () => {
         },
         {
           id: node3Id,
-          position: { x: 1104.75, y: 570.75 },
+          position: { x: 500, y: 480 },
           type: 'graph-node',
           data: { label: 'Vertex_3' },
           width: 100,
