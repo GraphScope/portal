@@ -59,9 +59,9 @@ export const Canvas = () => {
 
   const handleNodes = useCallback(
     (nodes: ISchemaNode[]) => {
+      console.log('这次的节点', nodes);
       const newNodes = nodes.map(node => {
         const currentNode = nodesStore.find(graphNode => graphNode.nodeKey === node.id);
-        console.log('currentNode', currentNode);
         if (currentNode)
           return {
             ...currentNode,
@@ -76,6 +76,7 @@ export const Canvas = () => {
 
   const handleEdges = useCallback(
     (edges: ISchemaEdge[]) => {
+      console.log('这次的边界', edges);
       const newEdges = edges.map(edge => {
         const currentEdge = edgesStore.find(graphEdge => graphEdge.edgeKey === edge.id);
         if (currentEdge)

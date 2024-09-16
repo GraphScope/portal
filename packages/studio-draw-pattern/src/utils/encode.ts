@@ -66,7 +66,13 @@ export const generateWHERE = (nodes: Node[], properties: Properties[]) => {
 export const generateMATCH = (nodes: Node[], edges: Edge[]) => {
   let edgesSnapShot = _.cloneDeep(edges);
 
-  console.log(edgesSnapShot);
+  if (edges.length === 0) {
+    const MATCHs = nodes.map(node => {
+      return `MATCH: (${node.variable}${node.statement})`;
+    });
+
+    return MATCHs;
+  }
 
   const MATCHs: string[] = [];
 
