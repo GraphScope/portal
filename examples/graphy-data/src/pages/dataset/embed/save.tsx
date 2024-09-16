@@ -5,7 +5,7 @@ import { Button } from 'antd';
 import { Toolbar, Utils } from '@graphscope/studio-components';
 import { updateEmbedSchema, getEmbedSchema } from '../service';
 import { useNavigate } from 'react-router-dom';
-
+import { transformDataToSchema } from './transform';
 const SaveButton = () => {
   const { store, updateStore } = useContext();
   const { nodes, edges } = store;
@@ -13,18 +13,18 @@ const SaveButton = () => {
   React.useEffect(() => {
     const datasetId = Utils.getSearchParams('id');
     getEmbedSchema(datasetId).then(res => {
-      console.log(res);
       if (res) {
+        const { nodes, edges } = transformDataToSchema(res);
+        console.log(res, nodes);
         updateStore(draft => {
-          draft.nodes = res.nodes || [];
-          draft.edges = res.edges || [];
+          draft.nodes = nodes;
+          draft.edges = edges;
         });
       }
     });
   }, []);
 
   const handleClick = async () => {
-    console.log(nodes, edges);
     const datasetId = Utils.getSearchParams('id');
     await updateEmbedSchema(datasetId, {
       nodes: nodes,

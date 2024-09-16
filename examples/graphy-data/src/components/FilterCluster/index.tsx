@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Select, Space, Button, Flex, Tooltip } from 'antd';
 import { useContext, useCluster } from '@graphscope/studio-graph';
-import { query } from '../FetchGraph/service';
+// import { query } from '../FetchGraph/service';
 import { Utils } from '@graphscope/studio-components';
 import { LikeOutlined } from '@ant-design/icons';
 interface IFilterClusterProps {}
@@ -45,12 +45,14 @@ const FilterCluster: React.FunctionComponent<IFilterClusterProps> = props => {
     const groups = Utils.groupBy(source.nodes, node => {
       return get(node, 'properties.cluster_id');
     });
-
+    //@ts-ignore
     query({
       name: entityId,
       type: 'cluster',
     }).then(res => {
+      //@ts-ignore
       const topIds = res.map(item => item.cluster_id);
+      //@ts-ignore
       const topOptions = res.map(item => {
         return {
           label: (

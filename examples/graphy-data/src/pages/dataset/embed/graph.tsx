@@ -4,6 +4,7 @@ import ImportorApp from '@graphscope/studio-importor';
 import { Button } from 'antd';
 import { Toolbar, Utils, MultipleInstance } from '@graphscope/studio-components';
 import RightSide from './right-side';
+import ImportSchema from './import-schema';
 
 import SaveButton from './save';
 
@@ -35,6 +36,7 @@ const EmbedSchema: React.FunctionComponent<IModelingProps> = props => {
       >
         <Toolbar style={{ top: '12px', right: '124px', left: 'unset' }} direction="horizontal">
           <SaveButton />
+          <ImportSchema />
         </Toolbar>
       </ImportorApp>
     </MultipleInstance>

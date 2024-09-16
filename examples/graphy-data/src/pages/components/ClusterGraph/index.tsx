@@ -22,9 +22,19 @@ import {
   ClearStatatus,
   RunCluster,
   SliderFilter,
+  Loading,
+  BasicInteraction,
 } from '@graphscope/studio-graph';
 
-import { Workflow, Cluster, Summarize, ClusterInfo, FetchGraph, FilterCluster } from '../../../components';
+import {
+  Workflow,
+  Cluster,
+  Summarize,
+  ClusterInfo,
+  FetchGraph,
+  FilterCluster,
+  FetchCluster,
+} from '../../../components';
 import {} from '../../dataset/service';
 import { Divider } from 'antd';
 
@@ -44,23 +54,23 @@ const ClusterGraph: React.FunctionComponent<QueryGraphProps> = props => {
 
   const workflows = [
     {
-      key: 'SliderFilter',
-      label: 'Filter weight',
+      key: 'Current extraction progress',
+      label: 'Current extraction progress',
       icon: <FilterOutlined color="#000" />,
-      children: <SliderFilter />,
+      children: <FetchGraph />,
     },
     {
       key: 'Cluster',
       label: 'Cluster entity',
       icon: <Icons.Cluster />,
-      children: <Cluster />,
+      children: <FetchCluster />,
     },
-    {
-      key: 'Filter cluster',
-      label: 'Filter cluster',
-      icon: <FilterOutlined color="#000" />,
-      children: <FilterCluster />,
-    },
+    // {
+    //   key: 'Filter cluster',
+    //   label: 'Filter cluster',
+    //   icon: <FilterOutlined color="#000" />,
+    //   children: <FilterCluster />,
+    // },
     {
       key: 'Summarize',
       label: 'LLM Summarize',
@@ -116,15 +126,17 @@ const ClusterGraph: React.FunctionComponent<QueryGraphProps> = props => {
           }}
         >
           <Canvas />
-          <FetchGraph />
+
           <ClearStatatus />
           <ClusterInfo />
+          <BasicInteraction />
+          <Loading />
           <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
             <ToogleButton />
             <Divider style={{ margin: '0px' }} />
             <SwitchEngine />
             <ZoomFit />
-            <RunCluster />
+            {/* <RunCluster /> */}
             <FullScreen containerRef={containerRef} />
           </Toolbar>
         </Section>

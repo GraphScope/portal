@@ -1,9 +1,10 @@
 const baseURL = 'http://localhost:9999/api';
+import { Utils } from '@graphscope/studio-components';
 
 const url = new URL(baseURL);
 // url.search = new URLSearchParams(params).toString();
 export const queryDataset = async () => {
-  return fetch(baseURL + '/dataset/list', {
+  return fetch(baseURL + '/dataset', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -22,7 +23,7 @@ export const createDataset = async params => {
   const formData = new FormData();
   formData.append('file', file); // 添加文件到表单数据中
 
-  return fetch(baseURL + '/dataset/create', {
+  return fetch(baseURL + '/dataset', {
     method: 'POST',
     body: formData,
   })
@@ -35,12 +36,17 @@ export const createDataset = async params => {
 };
 
 export const updateExtractConfig = async (id, params) => {
-  return fetch(baseURL + '/dataset/extract', {
+  console.log('params', params);
+  let { model_kwargs, ...others } = params;
+  try {
+    model_kwargs = JSON.parse(model_kwargs);
+  } catch (error) {}
+  return fetch(baseURL + '/llm/config', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ datasetId: id, ...params }),
+    body: JSON.stringify({ dataset_id: id, model_kwargs, ...others }),
   })
     .then(res => res.json())
     .then(res => {
@@ -50,7 +56,47 @@ export const updateExtractConfig = async (id, params) => {
     });
 };
 export const getExtractConfig = async id => {
-  return fetch(baseURL + `/dataset/extract?datasetId=${id}`, {
+  return fetch(baseURL + `/llm/config?dataset_id=${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(res => res.json())
+    .then(res => {
+      if (res.success) {
+        let { model_kwargs, ...others } = res.data;
+        try {
+          model_kwargs = JSON.stringify(model_kwargs, null, 2);
+        } catch (error) {
+          model_kwargs = '{}';
+        }
+        return {
+          model_kwargs,
+          ...others,
+        };
+      }
+    });
+};
+
+export const runExtract = async id => {
+  return fetch(baseURL + '/dataset/extract', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ dataset_id: id }),
+  })
+    .then(res => res.json())
+    .then(res => {
+      if (res.success) {
+        return res.data;
+      }
+    });
+};
+
+export const getExtractResult = async (id: string) => {
+  return fetch(`${baseURL}/dataset/extract?dataset_id=${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -65,7 +111,7 @@ export const getExtractConfig = async id => {
 };
 
 export const getEmbedSchema = async id => {
-  return fetch(baseURL + `/dataset/embed?datasetId=${id}`, {
+  return fetch(baseURL + `/dataset/workflow/config?dataset_id=${id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -74,38 +120,39 @@ export const getEmbedSchema = async id => {
     .then(res => res.json())
     .then(res => {
       if (res.success) {
-        return res.data;
+        return (res.data && res.data.workflow_json) || { nodes: [], edges: [] };
       }
     });
 };
 
 export const updateEmbedSchema = async (id, params) => {
   const { nodes, edges } = params;
-  const idMapping = new Map();
-  const _nodes = nodes.map(item => {
-    const { id, data } = item;
-    const { label, prompts = '', output = '' } = data;
-    idMapping.set(id, label);
-    return {
-      name: label,
-      query: prompts,
-      output_schema: output,
-      extract_from: [],
-    };
-  });
-  const _edges = edges.map(item => {
-    const { source, target } = item;
-    return {
-      source: idMapping.get(source),
-      target: idMapping.get(target),
-    };
-  });
+
   const workflow_json = {
-    nodes: _nodes,
-    edges: _edges,
+    nodes: nodes.map(item => {
+      const { id, data } = item;
+      const { label, query = '', output_schema = '' } = data;
+      return {
+        id,
+        name: label,
+        query,
+        output_schema: output_schema,
+        extract_from: [],
+      };
+    }),
+
+    edges: edges.map(item => {
+      const { id, data } = item;
+      return {
+        id,
+        source: item.source,
+        target: item.target,
+        label: data.label,
+      };
+    }),
   };
 
-  return fetch(baseURL + '/dataset/embed', {
+  return fetch(baseURL + '/dataset/workflow/config', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -156,3 +203,126 @@ export const downloadDataset = async () => {
       console.error('Failed to download ZIP:', error);
     });
 };
+
+export const runCluster = async (datasetId, entityId) => {
+  return fetch(baseURL + '/dataset/clustering', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ dataset_id: datasetId, workflow_node_name: entityId }),
+  })
+    .then(res => res.json())
+    .then(res => {
+      if (res.success) {
+        const nodes = res.data.nodes.map(item => {
+          const { id } = item;
+          return {
+            id,
+            label: entityId,
+            properties: item,
+          };
+        });
+        const edges = res.data.edges.map(item => {
+          return {
+            id: Utils.uuid(),
+            ...item,
+          };
+        });
+        return { nodes, edges };
+      }
+      return {
+        nodes: [],
+        edges: [],
+      };
+    });
+};
+
+export const runSummarize = async (datasetId, { entityId, cluster_ids }) => {
+  return fetch(baseURL + '/dataset/summarizing', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      dataset_id: datasetId,
+      cluster_ids,
+      workflow_node_name: entityId,
+    }),
+  })
+    .then(res => res.json())
+    .then(res => {
+      if (res.success) {
+        const nodes = res.data.nodes.map(item => {
+          const { id } = item;
+          return {
+            id,
+            label: entityId,
+            properties: item,
+          };
+        });
+        return { nodes, edges: res.data.edges };
+      }
+      return {
+        nodes: [],
+        edges: [],
+      };
+    });
+};
+
+export async function getExtractResultByEntity(params: any) {
+  const url = new URL(`${baseURL}/dataset/extract`);
+  url.search = new URLSearchParams(params).toString();
+  return await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(res => res.json())
+    .then(res => {
+      if (res.success && res.data && res.data.progress === 1) {
+        try {
+          const { papers, node_name } = res.data.nodes[0];
+          const nodes: any[] = [];
+          const edges: any[] = [];
+          papers.forEach(paper => {
+            const { id, name, data } = paper;
+            nodes.push({
+              id,
+              label: 'Paper',
+              properties: {
+                name,
+              },
+            });
+            data.forEach(d => {
+              nodes.push({
+                id: d.id,
+                label: node_name,
+                properties: d,
+              });
+              edges.push({
+                id: Utils.uuid(),
+                source: id,
+                target: d.id,
+              });
+            });
+          });
+          return {
+            nodes,
+            edges,
+          };
+        } catch (error) {}
+      }
+      return {
+        nodes: [],
+        edges: [],
+      };
+    })
+    .catch(err => {
+      return {
+        nodes: [],
+        edges: [],
+      };
+    });
+}

@@ -19,6 +19,7 @@ import {
   DeleteNode,
   ClearCanvas,
   StyleSetting,
+  Brush,
 } from '@graphscope/studio-graph';
 
 import { FetchGraph, Searchbar, PaperList, PaperInfo, Statistics } from './components';
@@ -103,6 +104,7 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
           <Canvas />
           <BasicInteraction />
           <FetchGraph />
+          <Brush />
           <ClearStatatus />
           <Loading />
           <ContextMenu>

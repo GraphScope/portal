@@ -1,57 +1,51 @@
-import React, { useState } from 'react';
-import { Typography, Table, Space, Flex, Button, Checkbox, Switch } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Typography, Table, Space, Flex, Button, Checkbox, Switch, Progress } from 'antd';
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 import { Utils } from '@graphscope/studio-components';
 import { render } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import type { IEntity } from '../../dataset/typing';
+import { getExtractResult } from '../../dataset/service';
 interface IListProps {
   dataSource: IEntity[];
   datasetId: string;
 }
 
 const List: React.FunctionComponent<IListProps> = props => {
-  const { dataSource, datasetId } = props;
+  const { datasetId } = props;
   const navigate = useNavigate();
   const [state, setState] = useState({
     more: false,
+    dataSource: [],
   });
-  const { more } = state;
+  const { more, dataSource } = state;
+  const queryEntities = async () => {
+    const data = await getExtractResult(datasetId);
+    console.log('data', data);
+    const dataSource = data.nodes.map(item => {
+      const { node_name, papers } = item;
+      console.log(papers.length / 4, Math.round(papers.length / 4));
+      return {
+        id: node_name,
+        progress: (papers.length / 4) * 100,
+      };
+    });
+    setState(preState => {
+      return {
+        ...preState,
+        dataSource: dataSource,
+      };
+    });
+  };
+  useEffect(() => {
+    queryEntities();
+  }, []);
   const handleCluster = record => {
     console.log(record);
     const { id } = record;
     navigate(`/dataset/cluster?datasetId=${datasetId}&entityId=${id}`);
   };
-  // const dataSource = [
-  //   {
-  //     key: 'challenge',
-  //     entity: 'Challenge',
-  //     cost: '1 hours',
-  //     enums: '110',
-  //     clustered: true,
-  //   },
-  //   {
-  //     key: 'task',
-  //     entity: 'Task',
-  //     cost: '2 hours',
-  //     enums: '210',
-  //     clustered: false,
-  //   },
-  //   {
-  //     key: 'solution',
-  //     entity: 'Solution',
-  //     cost: '1 hours',
-  //     enums: '310',
-  //     clustered: false,
-  //   },
-  //   {
-  //     key: 'Paper',
-  //     entity: 'Paper',
-  //     cost: '3 hours',
-  //     enums: '410',
-  //     clustered: false,
-  //   },
-  // ];
+
   const columns = [
     {
       title: 'Entity',
@@ -59,9 +53,11 @@ const List: React.FunctionComponent<IListProps> = props => {
       dataIndex: 'id',
     },
     {
-      title: 'Cost',
-      dataIndex: 'cost',
-      key: 'cost',
+      title: 'Progress',
+      dataIndex: 'progress',
+      render: value => {
+        return <Progress percent={value} size="small" status="active" />;
+      },
     },
     {
       title: 'Original Enums',
@@ -109,6 +105,7 @@ const List: React.FunctionComponent<IListProps> = props => {
   };
   const height = more ? 'auto' : '160px';
   const icon = more ? <CaretDownOutlined /> : <CaretUpOutlined />;
+
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <Flex justify="space-between" style={{ paddingBottom: '8px' }}>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, Flex, List, Typography } from 'antd';
-import { query } from '../FetchGraph/service';
+// import { query } from '../FetchGraph/service';
 import { useContext, useCluster } from '@graphscope/studio-graph';
 import { updateClusterSummarize } from '../../pages/dataset/service';
 import { Utils } from '@graphscope/studio-components';

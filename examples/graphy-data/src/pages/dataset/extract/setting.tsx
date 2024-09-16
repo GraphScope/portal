@@ -4,13 +4,13 @@ import { FormattedMessage } from 'react-intl';
 import { Utils } from '@graphscope/studio-components';
 const { storage } = Utils;
 const { Title, Text } = Typography;
-import { updateExtractConfig, getExtractConfig } from '../service';
+import { updateExtractConfig, getExtractConfig, runExtract } from '../service';
 import { useNavigate } from 'react-router-dom';
 export type FieldType = {
-  model: string;
+  llm_model: string;
   base_url: string;
   api_key: string;
-  model_kargs: string;
+  model_kwargs: string;
 };
 
 export interface IConnectEndpointProps {
@@ -23,10 +23,10 @@ const ExractSetting: React.FunctionComponent<IConnectEndpointProps> = props => {
   const { onStart, onClose } = props;
   React.useEffect(() => {
     // form.setFieldsValue({
-    //   model: 'Qwen-Max',
+    //   llm_model: 'qwen-plus',
     //   base_url: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
     //   api_key: '',
-    //   model_kargs: '{\n  "temperature": 0,\n  "stop": [\n    ""\n  ],\n  "max_tokens": 1024,\n  "streaming": true\n}',
+    //   model_kwargs: '{\n  "temperature": 0,\n  "stop": [\n    ""\n  ],\n  "max_tokens": 1024,\n  "streaming": true\n}',
     // });
     const datasetId = Utils.getSearchParams('id');
     getExtractConfig(datasetId).then(res => {
@@ -38,17 +38,23 @@ const ExractSetting: React.FunctionComponent<IConnectEndpointProps> = props => {
     onStart && onStart(form.getFieldsValue(true));
     const datasetId = Utils.getSearchParams('id');
     await updateExtractConfig(datasetId, values);
+    // navigate('/dataset');
+  };
+  const handleStartExtract = async () => {
+    const datasetId = Utils.getSearchParams('id');
+    const data = await runExtract(datasetId);
+    console.log('data', data);
     navigate('/dataset');
   };
 
   return (
     <Flex vertical style={{ padding: '12px 32px' }}>
       <Form layout="vertical" form={form}>
-        <Form.Item<FieldType> label={<FormattedMessage id="LLM Model" />} name="model">
+        <Form.Item<FieldType> label={<FormattedMessage id="LLM Model" />} name="llm_model">
           <Select
             allowClear
             options={[
-              { label: 'Qwen-Max', value: 'Qwen-Max' },
+              { label: 'Qwen-Plus', value: 'qwen-plus' },
               { label: 'OpenAI', value: 'OpenAI' },
               { label: 'Ollama', value: 'Ollama' },
             ]}
@@ -61,7 +67,7 @@ const ExractSetting: React.FunctionComponent<IConnectEndpointProps> = props => {
           <Input />
         </Form.Item>
 
-        <Form.Item<FieldType> label={<FormattedMessage id="Model Kargs" />} name="model_kargs">
+        <Form.Item<FieldType> label={<FormattedMessage id="Model Kargs" />} name="model_kwargs">
           <Input.TextArea rows={8} />
         </Form.Item>
 
@@ -73,7 +79,15 @@ const ExractSetting: React.FunctionComponent<IConnectEndpointProps> = props => {
               style={{ marginBottom: '12px', marginRight: '12px' }}
               onClick={handleConnect}
             >
-              <FormattedMessage id="Start Extract" />
+              <FormattedMessage id="Save Extract Setting" />
+            </Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginBottom: '12px', marginRight: '12px' }}
+              onClick={handleStartExtract}
+            >
+              Start Extract
             </Button>
           </Flex>
         </Form.Item>

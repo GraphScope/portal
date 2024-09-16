@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Button, Table, TableProps } from 'antd';
+import { Button, Flex, Table, TableProps, Typography, Progress } from 'antd';
 import { useContext, getDataMap, getStyleConfig } from '@graphscope/studio-graph';
 import { Utils } from '@graphscope/studio-components';
-import { query } from './service';
+import { getExtractResultByEntity } from '../../pages/dataset/service';
 interface IUploadProps {}
 
 const FetchGraph: React.FunctionComponent<IUploadProps> = props => {
@@ -18,9 +18,10 @@ const FetchGraph: React.FunctionComponent<IUploadProps> = props => {
   });
 
   React.useEffect(() => {
-    const entityId = Utils.getSearchParams('entityId') || 'Paper';
-    query({
-      name: entityId,
+    const entityId = Utils.getSearchParams('entityId') || 'Challenge';
+    getExtractResultByEntity({
+      workflow_node_names: entityId,
+      dataset_id: Utils.getSearchParams('datasetId'),
     }).then(res => {
       updateStore(draft => {
         const schema = Utils.generatorSchemaByGraphData(res);
@@ -36,7 +37,11 @@ const FetchGraph: React.FunctionComponent<IUploadProps> = props => {
     });
   }, []);
 
-  return null;
+  return (
+    <Flex vertical gap={12}>
+      <Progress />
+    </Flex>
+  );
 };
 
 export default FetchGraph;

@@ -66,7 +66,7 @@ const Setting: React.FunctionComponent<IConnectEndpointProps> = props => {
 
   const customRequest: UploadProps['customRequest'] = async options => {
     const { file } = options;
-
+    //@ts-ignore
     setState(preState => {
       return {
         ...preState,
