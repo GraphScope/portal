@@ -15,7 +15,6 @@ export const encodeProperties = (
         statement: `${property.name} ${property.compare} ${property.value}`,
       };
     });
-    console.log('newProperties', newProperties);
     encodeCallback(properties, properties.data ?? [], newProperties ?? []);
   });
 };
@@ -52,7 +51,6 @@ export const encodeEdges = (edges: Edge[], encodeSingleEdgeCallback: (preEdge: E
 
 export const generateWHERE = (nodes: Node[], properties: Properties[]) => {
   const WHEREs: string[] = [];
-  console.log('属性', properties);
   properties.forEach(properties => {
     const currentNode = nodes.find(node => node.nodeKey === properties.belongId);
     const currentProperties = properties.data?.map(property => {
@@ -60,7 +58,6 @@ export const generateWHERE = (nodes: Node[], properties: Properties[]) => {
     });
     WHEREs.push(`WHERE ${currentProperties?.join(' AND ')}`);
   });
-  console.log('WHEREs', WHEREs);
   return WHEREs.join('\n');
 };
 
@@ -126,11 +123,8 @@ export const generateMATCH = (nodes: Node[], edges: Edge[]) => {
     }
 
     MATCH = `MATCH ${MATCH}`;
-    console.log('MATCH语句生成结束，生成的MATCH语句是：', MATCH);
     MATCHs.push(MATCH);
   }
-
-  console.log('MATCHs', JSON.stringify(MATCHs));
 
   return MATCHs;
 };

@@ -10,6 +10,7 @@ interface NodeState {
   clearNode?: () => void;
   editNode?: (node: Node) => void;
   replaceNodes?: (nodes: Node[]) => void;
+  addVariableForNode?: (nodeKey: string, variableName: string) => void;
 }
 
 const nodesSubject = new Subject<NodeState>();
@@ -53,6 +54,19 @@ export const useNodeStore = create<NodeState>()(set => ({
     set(() => {
       nodesSubject.next({ nodes });
       return { nodes };
+    }),
+
+  addVariableForNode: (nodeKey: string, variableName: string) =>
+    set(state => {
+      const currentNode = state.nodes.find(node => node.nodeKey === nodeKey);
+      if (currentNode?.variable) return state;
+      const newNodes = state.nodes.map(node => {
+        if (node.nodeKey === nodeKey) {
+          return { ...node, variable: variableName };
+        }
+        return node;
+      });
+      return updateNodes(state, newNodes);
     }),
 
   editNode: node =>

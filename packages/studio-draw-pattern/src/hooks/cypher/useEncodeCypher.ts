@@ -5,7 +5,6 @@ import _ from 'lodash';
 import { useEdgeStore } from '../../stores/useEdgeStore';
 import { Node } from '../../types/node';
 import { Edge } from '../../types/edge';
-import { isArrayExist } from '../../utils';
 import { encodeNodes, encodeEdges, generateMATCH, generateWHERE, encodeProperties } from '../../utils/encode';
 import { usePropertiesStore } from '../../stores/usePropertiesStore';
 
@@ -16,13 +15,20 @@ export const useEncodeCypher = () => {
   const edges = useEdgeStore(state => state.edges);
   const editEdge = useEdgeStore(state => state.editEdge);
   const properties = usePropertiesStore(state => state.properties);
-  const updateProperties = usePropertiesStore(state => state.updateProperties);
   const editPropertiesStore = usePropertiesStore(state => state.editProperties);
+  const addVariableForNode = useNodeStore(state => state.addVariableForNode);
 
   const updateNodeProperties = useCallback(() => {
+    let count = 0;
     const editProperties = (changeProperties: Properties, pre: Property[], current: Property[]) => {
       const isEqual = _.isEqual(pre, current);
+      let newVariableName = `n${count}`;
+
+      const currentNode = nodes.find(node => node.nodeKey === changeProperties.belongId);
+      currentNode && addVariableForNode && addVariableForNode(currentNode.nodeKey, newVariableName);
       !isEqual && editPropertiesStore({ ...changeProperties, data: current });
+
+      count++;
     };
 
     encodeProperties(editProperties, properties);

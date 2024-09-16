@@ -12,7 +12,6 @@ import _ from 'lodash';
 import { useGraphStore } from '../../stores/useGraphStore';
 import { useEncodeCypher } from '../../hooks/cypher/useEncodeCypher';
 import { Button, Input, Modal } from 'antd';
-import { getSequentialLetter } from '../../utils';
 import { usePropertiesStore } from '../../stores/usePropertiesStore';
 
 export const Canvas = () => {
@@ -30,6 +29,7 @@ export const Canvas = () => {
   const MATCHs: string = useMemo(() => (isModalOpen ? generateMATCH().join('\n') : ''), [isModalOpen]);
   const WHERE: string = useMemo(() => (isModalOpen ? generateWHERE() : ''), [isModalOpen]);
   const { generateRelation } = useGenerateRelation();
+  const editNode = useNodeStore(state => state.editNode);
 
   useEffect(() => {
     generateRelation(edgesStore);
@@ -59,10 +59,9 @@ export const Canvas = () => {
 
   const handleNodes = useCallback(
     (nodes: ISchemaNode[]) => {
-      console.log('nodesStore', nodesStore);
       const newNodes = nodes.map(node => {
         const currentNode = nodesStore.find(graphNode => graphNode.nodeKey === node.id);
-        console.log('currentNode', currentNode, nodesStore);
+        console.log('currentNode', currentNode);
         if (currentNode)
           return {
             ...currentNode,
