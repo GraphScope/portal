@@ -1,188 +1,205 @@
-import { Node } from '../../src/types/node';
+import { describe, it, expect, vi } from 'vitest';
+import { Properties, Property } from '../../src/types/property';
 import { encodeProperties } from '../../src/utils/encode';
-import { expect, test, describe, vi } from 'vitest';
 
 describe('encodeProperties', () => {
-  test('should encode properties correctly for a single node', () => {
-    const nodes: Node[] = [
+  const encodeCallback = vi.fn();
+
+  const sampleProperty: Property = {
+    name: 'age',
+    value: 30,
+    compare: '>',
+    id: '1',
+  };
+
+  const sampleProperties: Properties = {
+    belongId: '123',
+    belongType: 'node',
+    data: [sampleProperty],
+  };
+
+  const sampleProperty2: Property = {
+    name: 'height',
+    value: 170,
+    compare: '=',
+    id: '2',
+  };
+
+  const sampleProperties2: Properties = {
+    belongId: '456',
+    belongType: 'edge',
+    data: [sampleProperty2],
+  };
+
+  it('should generate correct statement for each property', () => {
+    encodeProperties(encodeCallback, [sampleProperties]);
+
+    expect(encodeCallback).toHaveBeenCalledWith(sampleProperties, sampleProperties.data, [
       {
-        nodeKey: '1',
-        variable: 'n1',
-        properties: [{ name: 'age', compare: '>', value: 30, id: '1' }],
+        ...sampleProperty,
+        statement: 'age > 30',
       },
-    ];
-
-    const callback = vi.fn();
-
-    encodeProperties(nodes, callback);
-
-    expect(callback).toHaveBeenCalledWith(nodes[0], nodes[0].properties, [
-      { name: 'age', compare: '>', value: 30, id: '1', statement: 'age > 30' },
     ]);
   });
 
-  test('should handle multiple properties for a single node', () => {
-    const nodes: Node[] = [
+  it('should handle empty properties array', () => {
+    encodeProperties(encodeCallback, []);
+
+    expect(encodeCallback).toHaveBeenCalled(0);
+  });
+
+  it('should handle properties with empty data array', () => {
+    const emptyDataProperties: Properties = {
+      belongId: '999',
+      belongType: 'node',
+      data: [],
+    };
+
+    encodeProperties(encodeCallback, [emptyDataProperties]);
+
+    expect(encodeCallback).toHaveBeenCalledWith(emptyDataProperties, [], []);
+  });
+
+  it('should handle properties with missing type', () => {
+    const missingTypeProperty: Property = {
+      name: 'weight',
+      value: 70,
+      compare: '>=',
+      id: '4',
+    };
+
+    const missingTypeProperties: Properties = {
+      belongId: '101',
+      belongType: 'edge',
+      data: [missingTypeProperty],
+    };
+
+    encodeProperties(encodeCallback, [missingTypeProperties]);
+
+    expect(encodeCallback).toHaveBeenCalledWith(missingTypeProperties, missingTypeProperties.data, [
       {
-        nodeKey: '1',
-        variable: 'n1',
-        properties: [
-          { name: 'age', compare: '>', value: 30, id: '1' },
-          { name: 'name', compare: '=', value: 'Alice', id: '2' },
-        ],
+        ...missingTypeProperty,
+        statement: 'weight >= 70',
       },
-    ];
-
-    const callback = vi.fn();
-
-    encodeProperties(nodes, callback);
-
-    expect(callback).toHaveBeenCalledWith(nodes[0], nodes[0].properties, [
-      { name: 'age', compare: '>', value: 30, id: '1', statement: 'age > 30' },
-      { name: 'name', compare: '=', value: 'Alice', id: '2', statement: 'name = Alice' },
     ]);
   });
 
-  test('should handle node with no properties', () => {
-    const nodes: Node[] = [
+  it('should handle properties with number value as 0', () => {
+    const zeroValueProperty: Property = {
+      name: 'score',
+      value: 0,
+      compare: '=',
+      id: '5',
+    };
+
+    const zeroValueProperties: Properties = {
+      belongId: '102',
+      belongType: 'node',
+      data: [zeroValueProperty],
+    };
+
+    encodeProperties(encodeCallback, [zeroValueProperties]);
+
+    expect(encodeCallback).toHaveBeenCalledWith(zeroValueProperties, zeroValueProperties.data, [
       {
-        nodeKey: '1',
-        variable: 'n1',
-        properties: [],
+        ...zeroValueProperty,
+        statement: 'score = 0',
       },
-    ];
-
-    const callback = vi.fn();
-
-    encodeProperties(nodes, callback);
-
-    expect(callback).toHaveBeenCalledWith(nodes[0], [], []);
-  });
-
-  test('should handle node with undefined properties', () => {
-    const nodes: Node[] = [
-      {
-        nodeKey: '1',
-        variable: 'n1',
-      } as Node,
-    ];
-
-    const callback = vi.fn();
-
-    encodeProperties(nodes, callback);
-
-    expect(callback).toHaveBeenCalledWith(nodes[0], [], []);
-  });
-
-  test('should call callback for each node', () => {
-    const nodes: Node[] = [
-      {
-        nodeKey: '1',
-        variable: 'n1',
-        properties: [{ name: 'age', compare: '>', value: 30, id: '1' }],
-      },
-      {
-        nodeKey: '2',
-        variable: 'n2',
-        properties: [{ name: 'height', compare: '>', value: 180, id: '2' }],
-      },
-    ];
-
-    const callback = vi.fn();
-
-    encodeProperties(nodes, callback);
-
-    expect(callback).toHaveBeenCalledTimes(2);
-    expect(callback).toHaveBeenCalledWith(nodes[0], nodes[0].properties, [
-      { name: 'age', compare: '>', value: 30, id: '1', statement: 'age > 30' },
-    ]);
-    expect(callback).toHaveBeenCalledWith(nodes[1], nodes[1].properties, [
-      { name: 'height', compare: '>', value: 180, id: '2', statement: 'height > 180' },
     ]);
   });
 
-  test('should generate correct statement for number properties', () => {
-    const nodes: Node[] = [
+  it('should handle properties with empty name', () => {
+    const emptyNameProperty: Property = {
+      name: '',
+      value: 100,
+      compare: '<',
+      id: '6',
+    };
+
+    const emptyNameProperties: Properties = {
+      belongId: '103',
+      belongType: 'node',
+      data: [emptyNameProperty],
+    };
+
+    encodeProperties(encodeCallback, [emptyNameProperties]);
+
+    expect(encodeCallback).toHaveBeenCalledWith(emptyNameProperties, emptyNameProperties.data, [
       {
-        nodeKey: '1',
-        variable: 'n1',
-        properties: [{ name: 'age', compare: '<=', value: 25, id: '1' }],
+        ...emptyNameProperty,
+        statement: ' < 100',
       },
-    ];
-
-    const callback = vi.fn();
-
-    encodeProperties(nodes, callback);
-
-    expect(callback).toHaveBeenCalledWith(nodes[0], nodes[0].properties, [
-      { name: 'age', compare: '<=', value: 25, id: '1', statement: 'age <= 25' },
     ]);
   });
 
-  test('should generate correct statement for string properties', () => {
-    const nodes: Node[] = [
+  it('should handle properties with empty compare operator', () => {
+    const emptyCompareProperty: Property = {
+      name: 'length',
+      value: 200,
+      compare: '',
+      id: '7',
+    };
+
+    const emptyCompareProperties: Properties = {
+      belongId: '104',
+      belongType: 'edge',
+      data: [emptyCompareProperty],
+    };
+
+    encodeProperties(encodeCallback, [emptyCompareProperties]);
+
+    expect(encodeCallback).toHaveBeenCalledWith(emptyCompareProperties, emptyCompareProperties.data, [
       {
-        nodeKey: '1',
-        variable: 'n1',
-        properties: [{ name: 'name', compare: '=', value: 'Bob', id: '2' }],
+        ...emptyCompareProperty,
+        statement: 'length  200',
       },
-    ];
-
-    const callback = vi.fn();
-
-    encodeProperties(nodes, callback);
-
-    expect(callback).toHaveBeenCalledWith(nodes[0], nodes[0].properties, [
-      { name: 'name', compare: '=', value: 'Bob', id: '2', statement: 'name = Bob' },
     ]);
   });
 
-  test('should handle nodes without variable', () => {
-    const nodes: Node[] = [
+  it('should not fail when property has no compare or value', () => {
+    const incompleteProperty: Property = {
+      name: 'depth',
+      // @ts-ignore
+      value: undefined,
+      // @ts-ignore
+      compare: undefined,
+      id: '8',
+    };
+
+    const incompleteProperties: Properties = {
+      belongId: '105',
+      belongType: 'edge',
+      data: [incompleteProperty],
+    };
+
+    encodeProperties(encodeCallback, [incompleteProperties]);
+
+    expect(encodeCallback).toHaveBeenCalledWith(incompleteProperties, incompleteProperties.data, [
       {
-        nodeKey: '1',
-        properties: [{ name: 'age', compare: '>', value: 30, id: '1' }],
-      } as Node,
-    ];
-
-    const callback = vi.fn();
-
-    encodeProperties(nodes, callback);
-
-    expect(callback).toHaveBeenCalledWith(nodes[0], nodes[0].properties, [
-      { name: 'age', compare: '>', value: 30, id: '1', statement: 'age > 30' },
-    ]);
-  });
-
-  test('should handle nodes with different types of compare operators', () => {
-    const nodes: Node[] = [
-      {
-        nodeKey: '1',
-        variable: 'n1',
-        properties: [
-          { name: 'age', compare: '>=', value: 20, id: '1' },
-          { name: 'name', compare: '!=', value: 'Charlie', id: '2' },
-        ],
+        ...incompleteProperty,
+        statement: 'depth undefined undefined',
       },
-    ];
-
-    const callback = vi.fn();
-
-    encodeProperties(nodes, callback);
-
-    expect(callback).toHaveBeenCalledWith(nodes[0], nodes[0].properties, [
-      { name: 'age', compare: '>=', value: 20, id: '1', statement: 'age >= 20' },
-      { name: 'name', compare: '!=', value: 'Charlie', id: '2', statement: 'name != Charlie' },
     ]);
   });
 
-  test('should work when no nodes are passed', () => {
-    const nodes: Node[] = [];
+  it('should work correctly when property list has multiple values', () => {
+    const multipleProperties: Properties = {
+      belongId: '106',
+      belongType: 'node',
+      data: [sampleProperty, sampleProperty2],
+    };
 
-    const callback = vi.fn();
+    encodeProperties(encodeCallback, [multipleProperties]);
 
-    encodeProperties(nodes, callback);
-
-    expect(callback).not.toHaveBeenCalled();
+    expect(encodeCallback).toHaveBeenCalledWith(multipleProperties, multipleProperties.data, [
+      {
+        ...sampleProperty,
+        statement: 'age > 30',
+      },
+      {
+        ...sampleProperty2,
+        statement: 'height = 170',
+      },
+    ]);
   });
 });

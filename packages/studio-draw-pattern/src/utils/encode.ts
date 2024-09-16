@@ -8,14 +8,14 @@ export const encodeProperties = (
   encodeCallback: (changeProperties: Properties, preProperties: Property[], currentProperties: Property[]) => void,
   properties: Properties[],
 ) => {
+  if (properties.length === 0) return;
+
   properties.forEach(properties => {
-    const newProperties = properties.data.map(property => {
-      return {
-        ...property,
-        statement: `${property.name} ${property.compare} ${property.value}`,
-      };
-    });
-    encodeCallback(properties, properties.data ?? [], newProperties ?? []);
+    const newProperties = properties.data.map(property => ({
+      ...property,
+      statement: `${property.name} ${property.compare} ${property.value}`,
+    }));
+    encodeCallback(properties, properties.data, newProperties);
   });
 };
 
@@ -51,10 +51,12 @@ export const encodeEdges = (edges: Edge[], encodeSingleEdgeCallback: (preEdge: E
 
 export const generateWHERE = (nodes: Node[], properties: Properties[]) => {
   const WHEREs: string[] = [];
+  if (nodes.length === 0) return '';
   properties.forEach(properties => {
     const currentNode = nodes.find(node => node.nodeKey === properties.belongId);
+    if (!currentNode) return '';
     const currentProperties = properties.data?.map(property => {
-      return `${currentNode?.variable}.${property.statement}`;
+      return `${currentNode.variable}.${property.statement}`;
     });
     WHEREs.push(`WHERE ${currentProperties?.join(' AND ')}`);
   });

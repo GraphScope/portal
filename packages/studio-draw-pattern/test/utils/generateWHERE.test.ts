@@ -1,89 +1,207 @@
-import { describe, it, expect } from 'vitest';
-import { Property } from '../../src/types/property';
-import { Node } from '../../src/types/node';
+import { describe, it, expect, vi } from 'vitest';
+import { Properties, Property } from '../../src/types/property';
 import { generateWHERE } from '../../src/utils/encode';
 
-// 模拟 Node 和 Property 类型的数据
-const createNode = (variable: string, properties: Property[]): Node => ({
-  nodeKey: 'key1',
-  variable,
-  properties,
-  data: { id: '1', data: { label: 'test' }, position: { x: 0, y: 0 } },
-});
-
-const createProperty = (name: string, value: string | number, compare: string): Property => ({
-  name,
-  value,
-  compare,
-  id: 'prop1',
-  statement: `${name} ${compare} ${value}`,
-});
+// 模拟的 Node 类型定义
+interface Node {
+  nodeKey: string;
+  variable: string;
+}
 
 describe('generateWHERE', () => {
-  it('should return empty WHERE when nodes have no properties', () => {
-    const nodes: Node[] = [createNode('n', [])];
-    const result = generateWHERE(nodes);
+  const sampleNode: Node = {
+    nodeKey: '123',
+    variable: 'node1',
+  };
+
+  const sampleNode2: Node = {
+    nodeKey: '456',
+    variable: 'node2',
+  };
+
+  const sampleProperty: Property = {
+    name: 'age',
+    value: 30,
+    compare: '>',
+    id: '1',
+    statement: 'age > 30',
+  };
+
+  const sampleProperties: Properties = {
+    belongId: '123',
+    belongType: 'node',
+    data: [sampleProperty],
+  };
+
+  const sampleProperty2: Property = {
+    name: 'height',
+    value: 170,
+    compare: '=',
+    id: '2',
+    statement: 'height = 170',
+  };
+
+  const sampleProperties2: Properties = {
+    belongId: '456',
+    belongType: 'edge',
+    data: [sampleProperty2],
+  };
+
+  it('should generate WHERE clause for a single property', () => {
+    const nodes = [sampleNode];
+    const properties = [sampleProperties];
+
+    const result = generateWHERE(nodes, properties);
+
+    expect(result).toBe('WHERE node1.age > 30');
+  });
+
+  it('should handle multiple properties for a single node', () => {
+    const propertiesWithMultiple = {
+      belongId: '123',
+      belongType: 'node',
+      data: [
+        { ...sampleProperty, statement: 'age > 30' },
+        { ...sampleProperty2, statement: 'height = 170' },
+      ],
+    };
+
+    const nodes = [sampleNode];
+    const properties = [propertiesWithMultiple as Properties];
+
+    const result = generateWHERE(nodes, properties);
+
+    expect(result).toBe('WHERE node1.age > 30 AND node1.height = 170');
+  });
+
+  it('should handle multiple nodes', () => {
+    const propertiesForNode1 = {
+      belongId: '123',
+      belongType: 'node',
+      data: [sampleProperty],
+    };
+
+    const propertiesForNode2 = {
+      belongId: '456',
+      belongType: 'edge',
+      data: [sampleProperty2],
+    };
+
+    const nodes = [sampleNode, sampleNode2];
+    const properties = [propertiesForNode1 as Properties, propertiesForNode2 as Properties];
+
+    const result = generateWHERE(nodes, properties);
+
+    expect(result).toBe('WHERE node1.age > 30\nWHERE node2.height = 170');
+  });
+
+  it('should handle empty properties array', () => {
+    const nodes = [sampleNode];
+    const properties: Properties[] = [];
+
+    const result = generateWHERE(nodes, properties);
+
+    expect(result).toBe('');
+  });
+
+  it('should handle empty nodes array', () => {
+    const properties = [sampleProperties];
+
+    const result = generateWHERE([], properties);
+
+    expect(result).toBe('');
+  });
+
+  it('should handle nodes not matching any properties', () => {
+    const properties = [sampleProperties];
+    const nodes = [sampleNode2]; // Node does not match the property belongId
+
+    const result = generateWHERE(nodes, properties);
+
+    expect(result).toBe('');
+  });
+
+  it('should handle properties with no data', () => {
+    const propertiesWithNoData: Properties = {
+      belongId: '123',
+      belongType: 'node',
+      data: [],
+    };
+
+    const nodes = [sampleNode];
+    const properties = [propertiesWithNoData];
+
+    const result = generateWHERE(nodes, properties);
+
     expect(result).toBe('WHERE ');
   });
 
-  it('should generate correct WHERE for a single node with properties', () => {
-    const properties = [createProperty('age', 30, '>'), createProperty('name', 'John', '=')];
-    const nodes: Node[] = [createNode('n', properties)];
-    const result = generateWHERE(nodes);
-    expect(result).toBe('WHERE n.age > 30 AND n.name = John');
+  it('should handle properties with empty statements', () => {
+    const emptyStatementProperty: Property = {
+      name: 'empty',
+      value: '',
+      compare: '',
+      id: '3',
+      statement: '',
+    };
+
+    const propertiesWithEmptyStatement: Properties = {
+      belongId: '123',
+      belongType: 'node',
+      data: [emptyStatementProperty],
+    };
+
+    const nodes = [sampleNode];
+    const properties = [propertiesWithEmptyStatement];
+
+    const result = generateWHERE(nodes, properties);
+
+    expect(result).toBe('WHERE node1.');
   });
 
-  it('should generate correct WHERE for multiple nodes with properties', () => {
-    const node1 = createNode('n1', [createProperty('age', 25, '>')]);
-    const node2 = createNode('n2', [createProperty('name', 'Alice', '=')]);
-    const result = generateWHERE([node1, node2]);
-    expect(result).toBe('WHERE n1.age > 25 AND n2.name = Alice');
+  it('should handle properties with complex statements', () => {
+    const complexProperty: Property = {
+      name: 'complex',
+      value: 'complexValue',
+      compare: 'LIKE',
+      id: '4',
+      statement: 'complex LIKE complexValue',
+    };
+
+    const complexProperties: Properties = {
+      belongId: '123',
+      belongType: 'node',
+      data: [complexProperty],
+    };
+
+    const nodes = [sampleNode];
+    const properties = [complexProperties];
+
+    const result = generateWHERE(nodes, properties);
+
+    expect(result).toBe('WHERE node1.complex LIKE complexValue');
   });
 
-  it('should handle nodes with no properties', () => {
-    const node1 = createNode('n1', [createProperty('age', 25, '>')]);
-    const node2 = createNode('n2', []);
-    const result = generateWHERE([node1, node2]);
-    expect(result).toBe('WHERE n1.age > 25');
-  });
+  it('should handle properties with variable values', () => {
+    const variableProperty: Property = {
+      name: 'var',
+      value: '${value}',
+      compare: '=',
+      id: '5',
+      statement: 'var = ${value}',
+    };
 
-  it('should handle missing property statements gracefully', () => {
-    const properties = [{ name: 'age', value: 30, compare: '>', id: 'prop1' }] as Property[];
-    const nodes: Node[] = [createNode('n', properties)];
-    const result = generateWHERE(nodes);
-    expect(result).toBe('WHERE n.age > 30');
-  });
+    const variableProperties: Properties = {
+      belongId: '123',
+      belongType: 'node',
+      data: [variableProperty],
+    };
 
-  it('should handle nodes with missing variable', () => {
-    const nodes: Node[] = [{ ...createNode('', [createProperty('age', 30, '>')]) }];
-    const result = generateWHERE(nodes);
-    expect(result).toBe('WHERE .age > 30');
-  });
+    const nodes = [sampleNode];
+    const properties = [variableProperties];
 
-  it('should return correct WHERE when multiple nodes have mixed property existence', () => {
-    const node1 = createNode('n1', [createProperty('age', 30, '>')]);
-    const node2 = createNode('n2', []);
-    const node3 = createNode('n3', [createProperty('name', 'Alice', '=')]);
-    const result = generateWHERE([node1, node2, node3]);
-    expect(result).toBe('WHERE n1.age > 30 AND n3.name = Alice');
-  });
+    const result = generateWHERE(nodes, properties);
 
-  it('should handle properties with different comparators correctly', () => {
-    const properties = [createProperty('age', 30, '>'), createProperty('name', 'John', '!=')];
-    const nodes: Node[] = [createNode('n', properties)];
-    const result = generateWHERE(nodes);
-    expect(result).toBe('WHERE n.age > 30 AND n.name != John');
-  });
-
-  it('should return empty WHERE for an empty node array', () => {
-    const result = generateWHERE([]);
-    expect(result).toBe('WHERE ');
-  });
-
-  it('should handle duplicate property statements', () => {
-    const properties = [createProperty('age', 30, '>'), createProperty('age', 30, '>')];
-    const nodes: Node[] = [createNode('n', properties)];
-    const result = generateWHERE(nodes);
-    expect(result).toBe('WHERE n.age > 30 AND n.age > 30');
+    expect(result).toBe('WHERE node1.var = ${value}');
   });
 });
