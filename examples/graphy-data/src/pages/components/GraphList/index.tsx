@@ -22,12 +22,12 @@ const List: React.FunctionComponent<IListProps> = props => {
   const queryEntities = async () => {
     const data = await getExtractResult(datasetId);
     console.log('data', data);
-    const dataSource = data.nodes.map(item => {
-      const { node_name, papers } = item;
-      console.log(papers.length / 4, Math.round(papers.length / 4));
+    const dataSource = data.map(item => {
+      const { node_name, papers, progress } = item;
+
       return {
         id: node_name,
-        progress: (papers.length / 4) * 100,
+        progress,
       };
     });
     setState(preState => {

@@ -8,14 +8,11 @@ interface IUploadProps {}
 const FetchGraph: React.FunctionComponent<IUploadProps> = props => {
   const { updateStore } = useContext();
   const [state, setState] = React.useState<{
-    lists: any[];
-    isReady: boolean;
-    columns: any[];
+    progress: number;
   }>({
-    lists: [],
-    isReady: false,
-    columns: [],
+    progress: 0,
   });
+  const { progress } = state;
 
   React.useEffect(() => {
     const entityId = Utils.getSearchParams('entityId') || 'Challenge';
@@ -34,12 +31,18 @@ const FetchGraph: React.FunctionComponent<IUploadProps> = props => {
         draft.nodeStyle = style.nodeStyle;
         draft.edgeStyle = style.edgeStyle;
       });
+      setState(preState => {
+        return {
+          ...preState,
+          progress: res.progress,
+        };
+      });
     });
   }, []);
 
   return (
     <Flex vertical gap={12}>
-      <Progress />
+      <Progress percent={progress} />
     </Flex>
   );
 };

@@ -232,11 +232,14 @@ export const runCluster = async (datasetId, entityId) => {
     .then(res => {
       if (res.success) {
         const nodes = res.data.nodes.map(item => {
-          const { id } = item;
+          const { id, cluster_id = 'unknown' } = item;
           return {
             id,
-            label: entityId,
-            properties: item,
+            label: cluster_id,
+            properties: {
+              ...item,
+              cluster_id,
+            },
           };
         });
         const edges = res.data.edges.map(item => {
@@ -297,9 +300,9 @@ export async function getExtractResultByEntity(params: any) {
   })
     .then(res => res.json())
     .then(res => {
-      if (res.success && res.data && res.data.progress === 1) {
+      if (res.success && res.data) {
         try {
-          const { papers, node_name } = res.data.nodes[0];
+          const { papers, node_name, progress } = res.data[0];
           const nodes: any[] = [];
           const edges: any[] = [];
           papers.forEach(paper => {
@@ -327,18 +330,21 @@ export async function getExtractResultByEntity(params: any) {
           return {
             nodes,
             edges,
+            progress,
           };
         } catch (error) {}
       }
       return {
         nodes: [],
         edges: [],
+        progress: 0,
       };
     })
     .catch(err => {
       return {
         nodes: [],
         edges: [],
+        progress: 0,
       };
     });
 }
