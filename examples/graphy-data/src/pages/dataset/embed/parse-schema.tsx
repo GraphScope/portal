@@ -56,7 +56,6 @@ const ImportSchema = (props: IProps) => {
             },
           };
         });
-        debugger;
 
         updateStore(draft => {
           draft.hasLayouted = false;

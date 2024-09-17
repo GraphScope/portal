@@ -29,7 +29,7 @@ const Content: React.FunctionComponent<IContentProps> = props => {
     const datasetId = Utils.getSearchParams('datasetId');
     runSummarize(datasetId, {
       entityId: entityId,
-      cluster_ids: combo.children,
+      cluster_ids: [id],
     }).then(res => {
       console.log('res', res);
       setState(preState => {

@@ -13,13 +13,18 @@ const FetchGraph: React.FunctionComponent<IUploadProps> = props => {
     progress: 0,
   });
   const { progress } = state;
+  const timerId = React.useRef<any>(null);
+  const currentProgress = React.useRef<number>(0);
 
-  React.useEffect(() => {
+  const queryGraph = async () => {
     const entityId = Utils.getSearchParams('entityId') || 'Challenge';
-    getExtractResultByEntity({
+    const res = await getExtractResultByEntity({
       workflow_node_names: entityId,
       dataset_id: Utils.getSearchParams('datasetId'),
-    }).then(res => {
+    });
+
+    if (res.progress !== currentProgress.current) {
+      currentProgress.current = res.progress;
       updateStore(draft => {
         const schema = Utils.generatorSchemaByGraphData(res);
         //@ts-ignore
@@ -34,15 +39,30 @@ const FetchGraph: React.FunctionComponent<IUploadProps> = props => {
       setState(preState => {
         return {
           ...preState,
-          progress: res.progress,
         };
       });
-    });
+    }
+
+    const isComplete = res.progress === 100;
+    clearTimeout(timerId.current);
+    if (!isComplete) {
+      const tid = setTimeout(() => {
+        queryGraph();
+      }, 1000);
+      timerId.current = tid;
+    }
+  };
+
+  React.useEffect(() => {
+    queryGraph();
+    return () => {
+      clearTimeout(timerId.current);
+    };
   }, []);
 
   return (
     <Flex vertical gap={12}>
-      <Progress percent={progress} />
+      <Progress percent={currentProgress.current} status="active" />
     </Flex>
   );
 };

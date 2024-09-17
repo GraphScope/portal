@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Typography, Table, Space, Flex, Button, Checkbox, Switch, Progress } from 'antd';
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 import { Utils } from '@graphscope/studio-components';
@@ -18,27 +18,44 @@ const List: React.FunctionComponent<IListProps> = props => {
     more: false,
     dataSource: [],
   });
+  const timerId = useRef<any>(null);
+  const indexRef = useRef<string>('');
   const { more, dataSource } = state;
   const queryEntities = async () => {
+    clearTimeout(timerId.current);
     const data = await getExtractResult(datasetId);
-    console.log('data', data);
     const dataSource = data.map(item => {
       const { node_name, papers, progress } = item;
-
       return {
         id: node_name,
         progress,
       };
     });
-    setState(preState => {
-      return {
-        ...preState,
-        dataSource: dataSource,
-      };
-    });
+    const currentId = dataSource.map(item => item.progress).join('_');
+
+    if (currentId !== indexRef.current) {
+      indexRef.current = currentId;
+      setState(preState => {
+        return {
+          ...preState,
+          dataSource: dataSource,
+        };
+      });
+    }
+
+    const isComplete = dataSource.every(item => item.progress === 100);
+    if (!isComplete) {
+      const tid = setTimeout(() => {
+        queryEntities();
+      }, 1000);
+      timerId.current = tid;
+    }
   };
   useEffect(() => {
     queryEntities();
+    return () => {
+      clearTimeout(timerId.current);
+    };
   }, []);
   const handleCluster = record => {
     console.log(record);
@@ -59,11 +76,7 @@ const List: React.FunctionComponent<IListProps> = props => {
         return <Progress percent={value} size="small" status="active" />;
       },
     },
-    {
-      title: 'Original Enums',
-      key: 'value',
-      dataIndex: 'value',
-    },
+
     {
       title: 'Cluster Enums',
       key: 'count',

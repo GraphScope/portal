@@ -21,7 +21,8 @@ const FetchCluster: React.FunctionComponent<IClusterProps> = props => {
     });
     const entityId = Utils.getSearchParams('entityId');
     const datasetId = Utils.getSearchParams('datasetId');
-    const data = await runCluster(datasetId, entityId);
+    const clusterData = await runCluster(datasetId, entityId);
+    const newData = Utils.handleExpand(data, clusterData);
     if (data.nodes.length === 0) {
       notification.info({
         message: 'No cluster data',
@@ -34,8 +35,8 @@ const FetchCluster: React.FunctionComponent<IClusterProps> = props => {
     }
     updateStore(draft => {
       draft.isLoading = false;
-      draft.data = data;
-      draft.source = data;
+      draft.data = newData;
+      draft.source = newData;
     });
     setState(preState => {
       return {
@@ -44,13 +45,13 @@ const FetchCluster: React.FunctionComponent<IClusterProps> = props => {
       };
     });
   };
-  React.useEffect(() => {
-    if (layout) {
-      enableCluster(state.clusterKey);
-    } else {
-      disableCluster();
-    }
-  }, [layout]);
+  // React.useEffect(() => {
+  //   if (layout) {
+  //     enableCluster(state.clusterKey);
+  //   } else {
+  //     disableCluster();
+  //   }
+  // }, [layout]);
 
   const firstNode = data.nodes[0] || {};
 

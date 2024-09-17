@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 
 import { useContext } from '@graphscope/studio-importor';
 import { Button } from 'antd';
@@ -10,6 +10,7 @@ const SaveButton = () => {
   const { store, updateStore } = useContext();
   const { nodes, edges } = store;
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   React.useEffect(() => {
     const datasetId = Utils.getSearchParams('id');
     getEmbedSchema(datasetId).then(res => {
@@ -25,6 +26,7 @@ const SaveButton = () => {
   }, []);
 
   const handleClick = async () => {
+    setLoading(true);
     const datasetId = Utils.getSearchParams('id');
     await updateEmbedSchema(datasetId, {
       nodes: nodes,
@@ -34,7 +36,7 @@ const SaveButton = () => {
   };
 
   return (
-    <Button type="primary" onClick={handleClick}>
+    <Button type="primary" onClick={handleClick} loading={loading}>
       Embed Graph
     </Button>
   );

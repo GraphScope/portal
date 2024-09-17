@@ -6,14 +6,14 @@ import { useNavigate } from 'react-router-dom';
 import { GraphList, GraphSchema } from '../../components';
 import type { IDataset } from '../typing';
 import GraphView from '../embed/view';
-import { downloadDataset } from '../service';
-import { SettingOutlined, FileZipOutlined, DeploymentUnitOutlined } from '@ant-design/icons';
+import { downloadDataset, deleteDataset } from '../service';
+import { SettingOutlined, FileZipOutlined, DeploymentUnitOutlined, DeleteOutlined } from '@ant-design/icons';
 import Steps from './steps';
 // import Steps from './step-custom';
 
 const { useToken } = theme;
 
-const styles: Record<string, React.CSSProperties> = {
+export const styles: Record<string, React.CSSProperties> = {
   container: {
     margin: '24px 0px',
     padding: '12px',
@@ -26,8 +26,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
-const List: React.FunctionComponent<IDataset> = props => {
-  const { id, schema, entity, status } = props;
+const List: React.FunctionComponent<IDataset & { refreshList: () => any }> = props => {
+  const { id, schema, entity, status, refreshList } = props;
   console.log(props);
   let summarized = false;
   if (entity.length > 0) {
@@ -36,12 +36,14 @@ const List: React.FunctionComponent<IDataset> = props => {
     });
   }
   const navigation = useNavigate();
+  const handleDelete = () => {
+    deleteDataset(id);
+    refreshList();
+  };
 
   return (
     <Flex vertical flex={1} style={styles.container} gap={8}>
-      <Flex justify="space-between" align="center" style={styles.card}>
-        <Steps {...props} />
-      </Flex>
+      <Steps {...props} />
       <Flex justify="space-between" gap={8}>
         <Flex style={{ ...styles.card, flexBasis: '300px' }}>
           <GraphView data={schema} />

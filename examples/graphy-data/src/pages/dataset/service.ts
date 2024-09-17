@@ -17,6 +17,20 @@ export const queryDataset = async () => {
       }
     });
 };
+export const deleteDataset = async (id: string) => {
+  return fetch(`${baseURL}/dataset/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(res => res.json())
+    .then(res => {
+      if (res.success) {
+        return res.data;
+      }
+    });
+};
 
 export const createDataset = async params => {
   const { file } = params;
@@ -232,7 +246,7 @@ export const runCluster = async (datasetId, entityId) => {
     .then(res => {
       if (res.success) {
         const nodes = res.data.nodes.map(item => {
-          const { id, cluster_id = 'unknown' } = item;
+          const { id, cluster_id = 'Unclustered' } = item;
           return {
             id,
             label: cluster_id,
@@ -272,7 +286,7 @@ export const runSummarize = async (datasetId, { entityId, cluster_ids }) => {
     .then(res => res.json())
     .then(res => {
       if (res.success) {
-        const nodes = res.data.nodes.map(item => {
+        const nodes = res.data.map(item => {
           const { id } = item;
           return {
             id,
@@ -280,12 +294,9 @@ export const runSummarize = async (datasetId, { entityId, cluster_ids }) => {
             properties: item,
           };
         });
-        return { nodes, edges: res.data.edges };
+        return nodes;
       }
-      return {
-        nodes: [],
-        edges: [],
-      };
+      return [];
     });
 };
 

@@ -32,11 +32,10 @@ const Content = () => {
       />
       <Divider style={{ margin: '12px  0px' }} />
       <Typography.Text type="secondary">Save graph workflow config to local JSON file</Typography.Text>
-      <Flex gap={10}>
-        <Button style={{ width: '50%' }} onClick={() => handleExport('json')}>
-          JSON Export
-        </Button>
-      </Flex>
+
+      <Button style={{ width: '100%' }} onClick={() => handleExport('json')}>
+        Export File
+      </Button>
     </Flex>
   );
 };
