@@ -12,12 +12,13 @@ import { useContext } from '../useContext';
 import { transformEdges } from '../elements';
 
 import { getBBox, createEdgeLabel, createNodeLabel } from '../utils';
-let timer: any = null;
+
 const useInteractive: any = () => {
   const { store, updateStore } = useContext();
   const { screenToFlowPosition, fitBounds, fitView } = useReactFlow();
   const { displayMode, nodes, edges, hasLayouted, elementOptions } = store;
   const connectingNodeId = useRef(null);
+  const timerRef = useRef<any>(null);
 
   const onConnectStart = useCallback((_, { nodeId }) => {
     connectingNodeId.current = nodeId;
@@ -125,11 +126,14 @@ const useInteractive: any = () => {
       // 布局
       if (!hasLayouted) {
         const graph = createStaticForceLayout(fakeSnapshot(nodes), fakeSnapshot(edges));
-        clearTimeout(timer);
-        timer = setTimeout(() => {
+        if (timerRef.current) {
+          clearTimeout(timerRef.current);
+        }
+        const timerId = setTimeout(() => {
           const bbox = getBBox(graph.nodes);
           fitBounds(bbox, { duration: 300 });
         }, 300);
+        timerRef.current = timerId;
         updateStore(draft => {
           draft.hasLayouted = true;
           draft.nodes = graph.nodes;
