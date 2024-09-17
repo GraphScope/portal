@@ -127,7 +127,7 @@ const Setting: React.FunctionComponent<IConnectEndpointProps> = props => {
               onClick={handleConnect}
               loading={loading}
             >
-              <FormattedMessage id="Start Extract" />
+              <FormattedMessage id="Create dataset" />
             </Button>
           </Flex>
         </Form.Item>

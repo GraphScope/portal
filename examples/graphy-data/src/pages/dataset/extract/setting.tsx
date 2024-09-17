@@ -81,14 +81,6 @@ const ExractSetting: React.FunctionComponent<IConnectEndpointProps> = props => {
             >
               <FormattedMessage id="Save Extract Setting" />
             </Button>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{ marginBottom: '12px', marginRight: '12px' }}
-              onClick={handleStartExtract}
-            >
-              Start Extract
-            </Button>
           </Flex>
         </Form.Item>
       </Form>

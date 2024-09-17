@@ -183,8 +183,14 @@ export const updateClusterSummarize = async (datasetId, params) => {
     });
 };
 
-export const downloadDataset = async () => {
-  return fetch(baseURL + '/download/dataset', { method: 'GET' })
+export const downloadDataset = async (dataset_id: string) => {
+  return fetch(baseURL + '/dataset/graphy', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ dataset_id }),
+  })
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
