@@ -65,7 +65,15 @@ export const getExtractConfig = async id => {
     .then(res => res.json())
     .then(res => {
       if (res.success) {
-        let { model_kwargs, ...others } = res.data;
+        let {
+          model_kwargs = {
+            streaming: true,
+          },
+          llm_model = 'qwen-plus',
+          base_url = 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+          ...others
+        } = res.data;
+
         try {
           model_kwargs = JSON.stringify(model_kwargs, null, 2);
         } catch (error) {
@@ -73,6 +81,8 @@ export const getExtractConfig = async id => {
         }
         return {
           model_kwargs,
+          llm_model,
+          base_url,
           ...others,
         };
       }

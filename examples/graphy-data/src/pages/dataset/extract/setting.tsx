@@ -22,12 +22,6 @@ const ExractSetting: React.FunctionComponent<IConnectEndpointProps> = props => {
   const navigate = useNavigate();
   const { onStart, onClose } = props;
   React.useEffect(() => {
-    // form.setFieldsValue({
-    //   llm_model: 'qwen-plus',
-    //   base_url: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
-    //   api_key: '',
-    //   model_kwargs: '{\n  "temperature": 0,\n  "stop": [\n    ""\n  ],\n  "max_tokens": 1024,\n  "streaming": true\n}',
-    // });
     const datasetId = Utils.getSearchParams('id');
     getExtractConfig(datasetId).then(res => {
       form.setFieldsValue(res);
@@ -38,7 +32,7 @@ const ExractSetting: React.FunctionComponent<IConnectEndpointProps> = props => {
     onStart && onStart(form.getFieldsValue(true));
     const datasetId = Utils.getSearchParams('id');
     await updateExtractConfig(datasetId, values);
-    // navigate('/dataset');
+    navigate('/dataset');
   };
   const handleStartExtract = async () => {
     const datasetId = Utils.getSearchParams('id');

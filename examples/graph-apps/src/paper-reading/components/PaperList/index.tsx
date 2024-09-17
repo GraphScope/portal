@@ -66,7 +66,10 @@ const Item = props => {
 const PaperList: React.FunctionComponent<IPaperListProps> = props => {
   const { store } = useContext();
   const { data } = store;
-  const { nodes = [] } = data;
+
+  const nodes = data.nodes.filter(item => {
+    return item.label === 'Paper';
+  });
   const isEmpty = nodes.length === 0;
 
   return (

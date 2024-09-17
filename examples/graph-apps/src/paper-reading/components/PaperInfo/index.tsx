@@ -29,8 +29,19 @@ const PaperInfo: React.FC<IPaperDetailProps> = props => {
   if (!selectNode) {
     return <div>{children}</div>;
   }
+  const { label, properties } = selectNode;
+  if (label !== 'Paper') {
+    const { name, description } = properties || {};
+    return (
+      <Flex vertical style={{ padding: 24 }} gap={6}>
+        <Title level={4}>{name}</Title>
+        <Text>{description}</Text>
+      </Flex>
+    );
+  }
+
   //@ts-ignore
-  const { title, authors, time, citations, problem_def: description } = selectNode.properties;
+  const { title, authors, time, citations, problem_def: description } = properties;
   console.log('nodeStatus', nodeStatus, selectNode);
 
   const IconButton: React.FC<{ icon: React.ReactNode; tooltipTitle: string; disabled: boolean }> = ({
