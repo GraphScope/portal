@@ -31,3 +31,28 @@ export async function queryCypherSchema() {
     };
   }
 }
+export const queryLLM = async params => {
+  const baseURL = 'http://localhost:9999/api';
+  return fetch(`${baseURL}/llm/report/prepare`, {
+    method: 'POST',
+    body: JSON.stringify(params),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then(res => {
+    return res.json();
+  });
+};
+
+export const queryLLMResult = async params => {
+  const baseURL = 'http://localhost:9999/api';
+  return fetch(`${baseURL}/llm/report/generate`, {
+    method: 'POST',
+    body: JSON.stringify(params),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then(res => {
+    return res.json();
+  });
+};

@@ -79,11 +79,11 @@ const PaperInfo: React.FC<IPaperDetailProps> = props => {
         <IconButton icon={<Pubmed />} tooltipTitle="PubMed" disabled />
         <IconButton icon={<Doi />} tooltipTitle="DOI" disabled />
       </Flex>
+      {description && <Paragraph>{description}</Paragraph>}
+      <Divider style={{ margin: '12px 0px' }} />
       <Flex vertical align="start" gap={8}>
         <Insight />
       </Flex>
-      <Divider style={{ margin: '12px 0px' }} />
-      {description && <Paragraph>{description}</Paragraph>}
     </Flex>
   );
 };
