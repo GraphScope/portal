@@ -16,7 +16,7 @@
   "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/GraphScope/graphscope-components.git"
+    "url": "https://github.com/GraphScope/portal.git"
   },
   "publishConfig": {
     "access": "public",

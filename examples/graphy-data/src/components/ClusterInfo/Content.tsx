@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { query } from '../FetchGraph/service';
-import { Typography, Card, Divider } from 'antd';
+
+import { Typography, Card, Divider, Skeleton } from 'antd';
 import { TypingText, Utils } from '@graphscope/studio-components';
+import { runSummarize } from '../../pages/dataset/service';
 interface IContentProps {
   id: string | null;
+  combo: any;
 }
 
 const Content: React.FunctionComponent<IContentProps> = props => {
-  const { id } = props;
+  const { id, combo } = props;
   const [state, setState] = useState({
     lists: [],
     loading: false,
@@ -24,10 +26,12 @@ const Content: React.FunctionComponent<IContentProps> = props => {
         loading: true,
       };
     });
-    query({
-      name: entityId,
-      type: 'cluster',
+    const datasetId = Utils.getSearchParams('datasetId');
+    runSummarize(datasetId, {
+      entityId: entityId,
+      cluster_ids: [id],
     }).then(res => {
+      console.log('res', res);
       setState(preState => {
         return {
           ...preState,
@@ -38,8 +42,23 @@ const Content: React.FunctionComponent<IContentProps> = props => {
     });
   }, [id]);
   if (state.loading) {
-    return <>loading ... </>;
+    return (
+      <>
+        <Card hoverable style={{ width: '300px', height: '100%', overflow: 'scroll' }}>
+          <Typography.Text type="secondary">Summarizing ...</Typography.Text> <br />
+          <br />
+          <br />
+          <br />
+          <Skeleton active />
+          <br />
+          <br />
+          <br />
+          <Skeleton active />
+        </Card>
+      </>
+    );
   }
+  console.log(lists, id);
 
   const current = lists.find(item => {
     //@ts-ignore

@@ -6,11 +6,13 @@ interface IClusterInfoProps {}
 const ClusterInfo: React.FunctionComponent<IClusterInfoProps> = props => {
   const { store } = useContext();
   const { groups, graph } = store;
+  console.log('groups', groups);
   const [state, setState] = useState({
     visible: false,
     id: null,
     x: 0,
     y: 0,
+    combo: {},
   });
   const hiddenComboInfo = () => {
     setState(preState => {
@@ -27,6 +29,7 @@ const ClusterInfo: React.FunctionComponent<IClusterInfoProps> = props => {
         ...preState,
         visible: true,
         id: combo.id,
+        combo: combo,
         x: ev.offsetX,
         y: ev.offsetY,
       };
@@ -70,7 +73,8 @@ const ClusterInfo: React.FunctionComponent<IClusterInfoProps> = props => {
       }
     };
   }, [groups]);
-  const { x, y, id, visible } = state;
+  const { x, y, id, visible, combo } = state;
+  console.log('combo', combo);
   return (
     <div
       style={{
@@ -85,7 +89,7 @@ const ClusterInfo: React.FunctionComponent<IClusterInfoProps> = props => {
           'rgba(0, 0, 0, 0.08) 0px 6px 16px 0px, rgba(0, 0, 0, 0.12) 0px 3px 6px -4px, rgba(0, 0, 0, 0.05) 0px 9px 28px 8px',
       }}
     >
-      <Content id={id} />
+      <Content id={id} combo={state.combo} />
     </div>
   );
 };

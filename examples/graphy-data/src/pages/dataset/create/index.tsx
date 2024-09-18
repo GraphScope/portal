@@ -66,7 +66,7 @@ const Setting: React.FunctionComponent<IConnectEndpointProps> = props => {
 
   const customRequest: UploadProps['customRequest'] = async options => {
     const { file } = options;
-
+    //@ts-ignore
     setState(preState => {
       return {
         ...preState,
@@ -127,7 +127,7 @@ const Setting: React.FunctionComponent<IConnectEndpointProps> = props => {
               onClick={handleConnect}
               loading={loading}
             >
-              <FormattedMessage id="Start Extract" />
+              <FormattedMessage id="Create dataset" />
             </Button>
           </Flex>
         </Form.Item>

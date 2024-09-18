@@ -48,7 +48,7 @@ export const nodeCanvasObject =
 
     if (captionStatus === 'display' && textLabel) {
       const fontSize = Math.min(0.5 * globalScale, 14 / globalScale);
-      if (globalScale > 4 && globalScale < 15) {
+      if (globalScale > 3 && globalScale < 15) {
         ctx.font = `${fontSize}px Sans-Serif`;
         const textWidth = ctx.measureText(textLabel).width;
         const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding

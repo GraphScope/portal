@@ -5,7 +5,7 @@ import { Button } from 'antd';
 import { Toolbar, Utils, MultipleInstance } from '@graphscope/studio-components';
 
 import SaveButton from './save';
-
+import { transformDataToSchema } from './transform';
 interface IModelingProps {
   data: any;
 }
@@ -21,10 +21,10 @@ const Init = ({ data }) => {
   const { updateStore } = useContext();
   React.useEffect(() => {
     timer = setTimeout(() => {
-      console.log('data>>>>>', data);
+      const { nodes, edges } = transformDataToSchema(data);
       updateStore(draft => {
-        draft.nodes = data.nodes || [];
-        draft.edges = data.edges || [];
+        draft.nodes = nodes;
+        draft.edges = edges;
       });
     }, 0);
     return () => {

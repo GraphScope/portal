@@ -78,7 +78,7 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
       });
 
       updateStore(draft => {
-        const newData = handleExpand(graph, res, selectedIds[0]);
+        const newData = handleExpand(graph, res, selectedIds);
         draft.data = newData;
         draft.dataMap = getDataMap(newData);
         draft.isLoading = false;

@@ -34,7 +34,7 @@ const List: React.FunctionComponent<IListProps> = props => {
   const { lists } = state;
   const queryData = async () => {
     const data = await queryDataset();
-    console.log('data', data);
+
     setState(preState => {
       return {
         ...preState,
@@ -67,7 +67,7 @@ const List: React.FunctionComponent<IListProps> = props => {
         </Button>
       </Flex>
       {lists.map(item => {
-        return <ListItem key={item.id} {...item} />;
+        return <ListItem key={item.id} {...item} refreshList={queryData} />;
       })}
       {isEmpty && (
         <Result

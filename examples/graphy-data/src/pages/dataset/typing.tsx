@@ -16,7 +16,8 @@ export interface IDataset {
       prompt?: string;
     }[];
   };
-  status: 'WAITING_EMBEDDING' | 'WAITING_EXTRACT' | 'WAITING_CLUSTER';
+  status: 'initialized' | 'waiting_workflow_config' | 'waiting_extract' | 'extracting';
+  refreshList?: () => any;
 }
 
 export interface IEntity {

@@ -5,7 +5,7 @@ import { Utils } from '@graphscope/studio-components';
 import Highlighter from 'react-highlight-words';
 import './index.css';
 import { useContext } from '@graphscope/studio-graph';
-import { queryCypher } from '../FetchGraph/service';
+import { queryCypher } from '../../service';
 
 const { getSearchParams, debounce } = Utils;
 interface ISearchbarProps {}

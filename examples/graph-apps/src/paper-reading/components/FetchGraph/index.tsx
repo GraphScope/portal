@@ -1,7 +1,6 @@
 import * as React from 'react';
-
 import { useContext, getStyleConfig } from '@graphscope/studio-graph';
-import { queryCypher, queryCypherSchema } from './service';
+import { queryCypher, queryCypherSchema } from '../../service';
 
 interface IUploadProps {}
 

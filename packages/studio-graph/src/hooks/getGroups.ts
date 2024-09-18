@@ -71,6 +71,8 @@ export const getGroups = (nodes, { width, height, screen2GraphCoords, nodeStyle,
       y: y,
       r: (d as any).r,
       color,
+      //@ts-ignore
+      children: d.data.children.map(child => child.id),
     };
   });
 

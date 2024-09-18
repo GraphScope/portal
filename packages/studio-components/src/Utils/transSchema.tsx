@@ -1,12 +1,10 @@
 type ISchemaEdge = {
-  id: string;
   label: string;
   source: string;
   target: string;
   properties: any;
 };
 type ISchemaNode = {
-  id: string;
   label: string;
   properties: any;
 };
@@ -24,16 +22,13 @@ export type DeepRequired<T> = T extends (...args: any[]) => any
 
 export function transSchema(originalSchema: any): ISchemaOptions {
   const { vertex_types, edge_types } = originalSchema || { vertex_types: [], edge_types: [] };
-  const idMappingforNode: Record<string, string> = {};
+
   const nodes: ISchemaNode[] = vertex_types.map(item => {
     const { primary_keys, properties = [], type_name } = item;
-    const id = uuidv4();
-    idMappingforNode[type_name] = id;
 
     return {
-      id,
       label: type_name,
-      properties: properties.map((item, index) => {
+      properties: properties.map(item => {
         const { property_name, property_type } = item;
         return {
           name: property_name,
@@ -53,12 +48,9 @@ export function transSchema(originalSchema: any): ISchemaOptions {
 
       vertex_type_pair_relations.forEach(c => {
         const { destination_vertex, source_vertex, relation } = c;
-        const source = idMappingforNode[source_vertex];
-        const target = idMappingforNode[destination_vertex];
         edges.push({
-          id: uuidv4(),
-          source,
-          target,
+          source: source_vertex,
+          target: destination_vertex,
           label: type_name,
           properties: properties.map(p => {
             return {

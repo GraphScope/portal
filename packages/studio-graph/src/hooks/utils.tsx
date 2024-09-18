@@ -20,7 +20,6 @@ export function getDataMap(data) {
   data.edges.forEach((edge, index) => {
     const source = edge.source.id || edge.source; // 兼容force-graph source-object
     const target = edge.target.id || edge.target;
-
     const { id } = edge;
     if (!id) {
       throw new Error('edge id is required');

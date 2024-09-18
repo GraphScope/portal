@@ -1,57 +1,68 @@
-import React, { useState } from 'react';
-import { Typography, Table, Space, Flex, Button, Checkbox, Switch } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { Typography, Table, Space, Flex, Button, Checkbox, Switch, Progress } from 'antd';
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 import { Utils } from '@graphscope/studio-components';
 import { render } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import type { IEntity } from '../../dataset/typing';
+import { getExtractResult } from '../../dataset/service';
 interface IListProps {
   dataSource: IEntity[];
   datasetId: string;
 }
 
 const List: React.FunctionComponent<IListProps> = props => {
-  const { dataSource, datasetId } = props;
+  const { datasetId } = props;
   const navigate = useNavigate();
   const [state, setState] = useState({
     more: false,
+    dataSource: [],
   });
-  const { more } = state;
+  const timerId = useRef<any>(null);
+  const indexRef = useRef<string>('');
+  const { more, dataSource } = state;
+  const queryEntities = async () => {
+    clearTimeout(timerId.current);
+    const data = await getExtractResult(datasetId);
+    const dataSource = data.map(item => {
+      const { node_name, papers, progress } = item;
+      return {
+        id: node_name,
+        progress,
+      };
+    });
+    const currentId = dataSource.map(item => item.progress).join('_');
+
+    if (currentId !== indexRef.current) {
+      indexRef.current = currentId;
+      setState(preState => {
+        return {
+          ...preState,
+          dataSource: dataSource,
+        };
+      });
+    }
+
+    const isComplete = dataSource.every(item => item.progress === 100);
+    if (!isComplete) {
+      const tid = setTimeout(() => {
+        queryEntities();
+      }, 1000);
+      timerId.current = tid;
+    }
+  };
+  useEffect(() => {
+    queryEntities();
+    return () => {
+      clearTimeout(timerId.current);
+    };
+  }, []);
   const handleCluster = record => {
     console.log(record);
     const { id } = record;
     navigate(`/dataset/cluster?datasetId=${datasetId}&entityId=${id}`);
   };
-  // const dataSource = [
-  //   {
-  //     key: 'challenge',
-  //     entity: 'Challenge',
-  //     cost: '1 hours',
-  //     enums: '110',
-  //     clustered: true,
-  //   },
-  //   {
-  //     key: 'task',
-  //     entity: 'Task',
-  //     cost: '2 hours',
-  //     enums: '210',
-  //     clustered: false,
-  //   },
-  //   {
-  //     key: 'solution',
-  //     entity: 'Solution',
-  //     cost: '1 hours',
-  //     enums: '310',
-  //     clustered: false,
-  //   },
-  //   {
-  //     key: 'Paper',
-  //     entity: 'Paper',
-  //     cost: '3 hours',
-  //     enums: '410',
-  //     clustered: false,
-  //   },
-  // ];
+
   const columns = [
     {
       title: 'Entity',
@@ -59,15 +70,13 @@ const List: React.FunctionComponent<IListProps> = props => {
       dataIndex: 'id',
     },
     {
-      title: 'Cost',
-      dataIndex: 'cost',
-      key: 'cost',
+      title: 'Progress',
+      dataIndex: 'progress',
+      render: value => {
+        return <Progress percent={value} size="small" status="active" />;
+      },
     },
-    {
-      title: 'Original Enums',
-      key: 'value',
-      dataIndex: 'value',
-    },
+
     {
       title: 'Cluster Enums',
       key: 'count',
@@ -109,6 +118,7 @@ const List: React.FunctionComponent<IListProps> = props => {
   };
   const height = more ? 'auto' : '160px';
   const icon = more ? <CaretDownOutlined /> : <CaretUpOutlined />;
+
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <Flex justify="space-between" style={{ paddingBottom: '8px' }}>

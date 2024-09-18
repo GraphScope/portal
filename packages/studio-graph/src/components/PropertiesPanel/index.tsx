@@ -19,34 +19,8 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
 
   React.useEffect(() => {
     emitter?.on('node:click', (node: any) => {
-      const { id } = node;
-      console.log('PropertiesPanel node', node);
-
-      const { neighbors, links } = dataMap[id];
-      const slNodes = neighbors.reduce(
-        (acc, curr) => {
-          return {
-            ...acc,
-            [curr]: { hovering: true },
-          };
-        },
-        {
-          [id]: { selected: true },
-        },
-      );
-      const slEdges = links.reduce((acc, curr) => {
-        return {
-          ...acc,
-          [curr]: { selected: true },
-        };
-      }, {});
       if (node) {
-        //@ts-ignore
         setData(node);
-        updateStore(draft => {
-          draft.nodeStatus = slNodes;
-          draft.edgeStatus = slEdges;
-        });
       }
     });
 

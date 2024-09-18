@@ -21,6 +21,7 @@
     "build:site": "vite build"
   },
   "dependencies": {
+    "@antv/g2": "5.1.13",
     "@graphscope/studio-components": "workspace:*",
     "@graphscope/studio-driver": "workspace:*",
     "@graphscope/studio-graph": "workspace:*",

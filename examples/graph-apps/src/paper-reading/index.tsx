@@ -11,10 +11,19 @@ import {
   ClearStatatus,
   RunCluster,
   BasicInteraction,
+  ContextMenu,
+  Loading,
+  NeighborQuery,
+  CommonNeighbor,
+  DeleteLeafNodes,
+  DeleteNode,
+  ClearCanvas,
+  StyleSetting,
+  Brush,
 } from '@graphscope/studio-graph';
 
-import { FetchGraph, Searchbar, PaperList, PaperInfo } from './components';
-
+import { FetchGraph, Searchbar, PaperList, PaperInfo, Statistics } from './components';
+import { queryCypher } from './service';
 interface QueryGraphProps {}
 
 const ToogleLeftButton = () => {
@@ -54,15 +63,24 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
         <Section
           splitBorder
           leftSide={<PaperList />}
-          rightSide={<PaperInfo />}
+          rightSide={
+            <PaperInfo>
+              <Statistics>
+                <StyleSetting />
+              </Statistics>
+            </PaperInfo>
+          }
           autoResize={false}
           rightSideStyle={{
             width: '400px',
             boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
+            overflowY: 'scroll',
           }}
           leftSideStyle={{
             width: '380px',
+            padding: '0px',
             boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
+            overflow: 'scroll',
           }}
           defaultCollapsed={{
             leftSide: false,
@@ -86,13 +104,22 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
           <Canvas />
           <BasicInteraction />
           <FetchGraph />
+          <Brush />
           <ClearStatatus />
+          <Loading />
+          <ContextMenu>
+            <NeighborQuery onQuery={queryCypher} />
+            <CommonNeighbor onQuery={queryCypher} />
+            <DeleteLeafNodes />
+            <DeleteNode />
+          </ContextMenu>
 
           <Toolbar style={{ position: 'absolute', top: '80px', right: '20px', left: 'unset' }}>
             <SwitchEngine />
             <ZoomFit />
             <RunCluster />
             <FullScreen containerRef={containerRef} />
+            <ClearCanvas />
           </Toolbar>
         </Section>
       </div>
