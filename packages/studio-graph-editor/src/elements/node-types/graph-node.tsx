@@ -164,7 +164,6 @@ const GraphNode = (props: NodeProps) => {
   return (
     <div
       ref={nodeRef}
-      id={id}
       // onMouseLeave={() => triggerPopover === 'hover' && setVisible(false)}
       // onMouseEnter={() => triggerPopover === 'hover' && setVisible(true)}
     >
@@ -227,6 +226,7 @@ const GraphNode = (props: NodeProps) => {
       </div>
       {visible && isShowPopover && (
         <div
+          id={id}
           style={{
             position: 'absolute',
             top: '50%',
