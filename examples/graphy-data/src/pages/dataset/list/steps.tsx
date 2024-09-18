@@ -8,7 +8,13 @@ import type { IDataset } from '../typing';
 import { Utils } from '@graphscope/studio-components';
 import { downloadDataset, runExtract, deleteDataset } from '../service';
 import { styles } from './item';
-import { SettingOutlined, FileZipOutlined, DeploymentUnitOutlined, DeleteOutlined } from '@ant-design/icons';
+import {
+  SettingOutlined,
+  FileZipOutlined,
+  DeploymentUnitOutlined,
+  DeleteOutlined,
+  GlobalOutlined,
+} from '@ant-design/icons';
 const { useToken } = theme;
 
 const getCurrentValue = status => {
@@ -24,6 +30,12 @@ const getCurrentValue = status => {
   if (status === 'extracting') {
     return 2;
   }
+  if (status === 'waiting_cluster') {
+    return 2;
+  }
+  if (status === 'summarized') {
+    return 2;
+  }
 };
 const DatasetSteps: React.FunctionComponent<IDataset> = props => {
   const { id, schema, entity, status, refreshList } = props;
@@ -32,7 +44,7 @@ const DatasetSteps: React.FunctionComponent<IDataset> = props => {
 
   const handleStartExtract = async () => {
     const data = await runExtract(id);
-    console.log('data', data);
+    refreshList && refreshList();
   };
   const handleDownload = async () => {
     const data = await runExtract(id);
@@ -49,7 +61,7 @@ const DatasetSteps: React.FunctionComponent<IDataset> = props => {
         //   style={{ marginTop: '12px' }}
         //   progressDot
         current={current}
-        percent={status === 'extracting' ? 50 : 50}
+        percent={status === 'extracting' ? 50 : 100}
         items={[
           {
             title: (
@@ -74,7 +86,7 @@ const DatasetSteps: React.FunctionComponent<IDataset> = props => {
                   }}
                   type={current === 1 ? 'primary' : 'text'}
                 >
-                  Embed Graph Schema
+                  Define Extract Workflow
                 </Button>
               </Tooltip>
             ),
@@ -86,7 +98,7 @@ const DatasetSteps: React.FunctionComponent<IDataset> = props => {
                 size="small"
                 onClick={handleStartExtract}
               >
-                Run Extract Entity
+                {status === 'extracting' ? 'Extracting' : 'Run Extract Entity'}
               </Button>
             ),
           },
@@ -94,6 +106,14 @@ const DatasetSteps: React.FunctionComponent<IDataset> = props => {
       />
 
       <Space>
+        <Tooltip title="Import into GraphScope for graph analysis">
+          <Button
+            icon={<GlobalOutlined />}
+            onClick={() => {
+              window.open(`http://localhost:8001/paper-reading`, '_blank');
+            }}
+          ></Button>
+        </Tooltip>
         <Tooltip title="Download extracted graph dataset">
           <Button
             icon={<FileZipOutlined />}

@@ -14,16 +14,16 @@ const text = `
 const getItems: (panelStyle: CSSProperties) => CollapseProps['items'] = panelStyle => [
   {
     key: '1',
-    label: 'What Are the Solutions for Paper-Related Challenges?',
-    children: <FindPath />,
-    style: panelStyle,
-  },
-  {
-    key: '2',
-    label: 'What Is the Related Work in This Paper?',
+    label: 'Please write related work for this paper',
     children: <RelatedWork />,
     style: panelStyle,
   },
+  // {
+  //   key: '2',
+  //   label: 'What Are the Solutions for Paper-Related Challenges?',
+  //   children: <FindPath />,
+  //   style: panelStyle,
+  // },
 ];
 
 const Insight: React.FC = () => {

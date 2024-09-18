@@ -73,15 +73,16 @@ const List: React.FunctionComponent<IListProps> = props => {
       title: 'Progress',
       dataIndex: 'progress',
       render: value => {
-        return <Progress percent={value} size="small" status="active" />;
+        return <Progress percent={value} size="small" status="active" style={{ width: '80%' }} />;
       },
     },
-
-    {
-      title: 'Cluster Enums',
-      key: 'count',
-      dataIndex: 'count',
-    },
+    // {
+    //   title: 'Cluster Enums',
+    //   render: record => {
+    //     console.log('record', record);
+    //     return <div>2</div>;
+    //   },
+    // },
     {
       title: 'Clustered',
       key: 'summarized',

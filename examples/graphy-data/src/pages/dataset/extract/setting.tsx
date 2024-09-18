@@ -57,9 +57,9 @@ const ExractSetting: React.FunctionComponent<IConnectEndpointProps> = props => {
         <Form.Item<FieldType> label={<FormattedMessage id="Base URL" />} name="base_url">
           <Input />
         </Form.Item>
-        <Form.Item<FieldType> label={<FormattedMessage id="API Key" />} name="api_key">
+        {/* <Form.Item<FieldType> label={<FormattedMessage id="API Key" />} name="api_key">
           <Input />
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item<FieldType> label={<FormattedMessage id="Model Kargs" />} name="model_kwargs">
           <Input.TextArea rows={8} />
