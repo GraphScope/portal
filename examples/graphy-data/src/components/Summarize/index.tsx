@@ -21,11 +21,14 @@ const Summarize: React.FunctionComponent<ISummarizeProps> = props => {
   };
 
   return (
-    <div>
-      <Button onClick={handleClick} style={{ width: '100%' }}>
-        Summarize and Save
-      </Button>
-    </div>
+    <Flex vertical gap={12}>
+      <Typography.Text type="secondary">
+        Click on the cluster's Combo title to start summarizing with LLM.
+      </Typography.Text>
+      {/* <Button onClick={handleClick} style={{ width: '100%' }}>
+        Summarize All
+      </Button> */}
+    </Flex>
   );
 };
 

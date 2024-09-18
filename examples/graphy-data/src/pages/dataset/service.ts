@@ -249,7 +249,7 @@ export const runCluster = async (datasetId, entityId) => {
           const { id, cluster_id = 'Unclustered' } = item;
           return {
             id,
-            label: cluster_id,
+            label: entityId,
             properties: {
               ...item,
               cluster_id,
@@ -262,6 +262,7 @@ export const runCluster = async (datasetId, entityId) => {
             ...item,
           };
         });
+        console.log(nodes, edges);
         return { nodes, edges };
       }
       return {
@@ -286,15 +287,7 @@ export const runSummarize = async (datasetId, { entityId, cluster_ids }) => {
     .then(res => res.json())
     .then(res => {
       if (res.success) {
-        const nodes = res.data.map(item => {
-          const { id } = item;
-          return {
-            id,
-            label: entityId,
-            properties: item,
-          };
-        });
-        return nodes;
+        return res.data;
       }
       return [];
     });
