@@ -11,10 +11,18 @@ export const encodeProperties = (
   if (properties.length === 0) return;
 
   properties.forEach(properties => {
-    const newProperties = properties.data.map(property => ({
-      ...property,
-      statement: `${property.name} ${property.compare} ${property.value}`,
-    }));
+    const newProperties = properties.data.map(property => {
+      // 检查 name, compare 和 value 是否存在
+      if (!property.name || !property.compare || !property.value) {
+        return property; // 如果其中一个不存在，返回原始的 property，不修改 statement
+      }
+
+      return {
+        ...property,
+        statement: `${property.name} ${property.compare} ${property.value}`,
+      };
+    });
+
     encodeCallback(properties, properties.data, newProperties);
   });
 };
@@ -52,14 +60,22 @@ export const encodeEdges = (edges: Edge[], encodeSingleEdgeCallback: (preEdge: E
 export const generateWHERE = (nodes: Node[], properties: Properties[]) => {
   const WHEREs: string[] = [];
   if (nodes.length === 0) return '';
+
   properties.forEach(properties => {
     const currentNode = nodes.find(node => node.nodeKey === properties.belongId);
-    if (!currentNode) return '';
-    const currentProperties = properties.data?.map(property => {
-      return `${currentNode.variable}.${property.statement}`;
-    });
-    WHEREs.push(`WHERE ${currentProperties?.join(' AND ')}`);
+    if (!currentNode) return;
+
+    const currentProperties = properties.data
+      ?.filter(property => property.statement) // 过滤掉没有 statement 的属性
+      .map(property => {
+        return `${currentNode.variable}.${property.statement}`;
+      });
+
+    if (currentProperties && currentProperties.length > 0) {
+      WHEREs.push(`WHERE ${currentProperties.join(' AND ')}`);
+    }
   });
+
   return WHEREs.join('\n');
 };
 
