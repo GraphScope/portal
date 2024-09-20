@@ -26,7 +26,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
     engineType: 'interactive',
   });
   const depolymentInfo = async () => {
-    await DeploymentApiFactory(undefined)
+    await DeploymentApiFactory(undefined, location.origin)
       .getDeploymentInfo()
       .then(res => {
         const { data } = res;
@@ -41,7 +41,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
               isReady: true,
             };
           });
-          console.log('res', res, engineType);
+
           window.GS_ENGINE_TYPE = engineType;
         }
       });
