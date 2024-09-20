@@ -1,6 +1,6 @@
 import React, { forwardRef, useState, LegacyRef } from 'react';
 import UploadFile from './update-file';
-import { Button, Collapse, Space } from 'antd';
+import { Button, Collapse, Space, Typography } from 'antd';
 import Mapping from './mapping';
 import type { ParsedFile } from '../Utils/parseCSV';
 
@@ -95,18 +95,21 @@ const ImportFromCSV = forwardRef((props: IImportFromFileProps, ref: LegacyRef<HT
         {isEmpty ? (
           <UploadFile isSaveFiles={isSaveFiles} onChange={onChange} {...upload} />
         ) : (
-          <Collapse
-            expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-            items={items}
-            defaultActiveKey={['0']}
-          />
+          <>
+            {/* <Typography.Text type="secondary">fffdsaf</Typography.Text> */}
+            <Collapse
+              expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+              items={items}
+              defaultActiveKey={['0']}
+            />
+          </>
         )}
       </div>
       {!isEmpty && (
         <div
           style={{
             position: 'absolute',
-            left: '0px',
+            left: 'unset',
             right: '0px',
             bottom: '0px',
           }}

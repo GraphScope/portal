@@ -57,7 +57,7 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
       onDeleteLabel={deleteVertexTypeOrEdgeType}
       onCreateLabel={createVertexTypeOrEdgeType}
     >
-      <Toolbar style={{ top: '12px', right: '124px', left: 'unset' }} direction="horizontal">
+      <Toolbar style={{ top: '12px', left: '24px', right: 'unset' }} direction="horizontal">
         <SelectGraph />
         <Save />
       </Toolbar>

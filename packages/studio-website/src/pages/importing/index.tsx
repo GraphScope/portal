@@ -67,7 +67,7 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
       }}
       batchUploadFiles={batchUploadFiles}
     >
-      <Toolbar style={{ top: '12px', right: '124px', left: 'unset' }} direction="horizontal">
+      <Toolbar style={{ top: '12px', left: '24px', right: 'unset' }} direction="horizontal">
         <SelectGraph />
         <StartImporting />
       </Toolbar>
