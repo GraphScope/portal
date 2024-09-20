@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/graph-apps",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -18,7 +18,8 @@
     "start": "father dev",
     "build": "father build",
     "start:site": "vite dev",
-    "build:site": "vite build"
+    "build:site": "vite build",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@antv/g2": "5.1.13",
