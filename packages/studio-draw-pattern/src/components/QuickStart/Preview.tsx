@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Graph } from '@graphscope/studio-graph-editor';
-import { defaultEdges, defaultNodes } from './data';
 import { ISchemaNode } from '@graphscope/studio-graph-editor/dist/types/node';
 import { ISchemaEdge } from '@graphscope/studio-graph-editor/dist/types/edge';
 import { useTransform } from '../../hooks/transform/useTransform';
@@ -8,6 +7,7 @@ import { useGraphStore } from '../../stores/useGraphStore';
 import { useNodeStore } from '../../stores/useNodeStore';
 import { useEdgeStore } from '../../stores/useEdgeStore';
 import { usePropertiesStore } from '../../stores/usePropertiesStore';
+import { DrawPatternContext } from '../DrawPattern';
 export const Preview = () => {
   const { transformNodes, transformEdges } = useTransform();
 
@@ -26,6 +26,8 @@ export const Preview = () => {
     transformNodes(nodes);
     transformEdges(edges, nodes);
   };
+
+  const { previewGraph } = useContext(DrawPatternContext);
 
   return (
     <div
@@ -49,8 +51,9 @@ export const Preview = () => {
           isMiniMap={false}
           disabled={true}
           isPreview={true}
-          defaultEdges={defaultEdges}
-          defaultNodes={defaultNodes}
+          defaultEdges={previewGraph?.edges}
+          // @ts-ignore
+          defaultNodes={previewGraph?.nodes}
           graphId="preview-graph"
           onSelectionChange={handleSelectionChange}
         />
