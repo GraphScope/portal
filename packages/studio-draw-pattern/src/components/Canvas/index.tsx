@@ -1,5 +1,5 @@
 import { Graph } from '@graphscope/studio-graph-editor';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useNodeStore } from '../../stores/useNodeStore';
 import { useEdgeStore } from '../../stores/useEdgeStore';
 import { ISchemaEdge } from '@graphscope/studio-graph-editor/dist/types/edge';
@@ -13,8 +13,10 @@ import { useGraphStore } from '../../stores/useGraphStore';
 import { useEncodeCypher } from '../../hooks/cypher/useEncodeCypher';
 import { Button, Input, Modal } from 'antd';
 import { usePropertiesStore } from '../../stores/usePropertiesStore';
+import { DrawPatternContext, DrawPatternValue } from '../DrawPattern';
 
 export const Canvas = () => {
+  const [descState, setDescState] = useState<string>();
   const nodesStore = useNodeStore(state => state.nodes);
   const edgesStore = useEdgeStore(state => state.edges);
   const replaceNodes = useNodeStore(state => state.replaceNodes);
@@ -27,9 +29,9 @@ export const Canvas = () => {
   const updateProperties = usePropertiesStore(state => state.updateProperties);
   const properties = usePropertiesStore(state => state.properties);
   const MATCHs: string = useMemo(() => (isModalOpen ? generateMATCH().join('\n') : ''), [isModalOpen]);
-  const WHERE: string = useMemo(() => (isModalOpen ? generateWHERE() : ''), [isModalOpen]);
+  const WHEREs: string = useMemo(() => (isModalOpen ? generateWHERE() : ''), [isModalOpen]);
   const { generateRelation } = useGenerateRelation();
-  const editNode = useNodeStore(state => state.editNode);
+  const { onClick } = useContext(DrawPatternContext);
 
   useEffect(() => {
     generateRelation(edgesStore);
@@ -123,15 +125,23 @@ export const Canvas = () => {
       <Modal
         title="Generate Cypher Code"
         open={isModalOpen}
-        onOk={() => setIsModalOpen(true)}
+        onOk={() => {
+          setIsModalOpen(true);
+          const newState: DrawPatternValue = {
+            MATCHs: MATCHs,
+            WHEREs: WHEREs,
+            description: descState ?? '',
+          };
+          onClick && onClick(newState);
+        }}
         onCancel={() => setIsModalOpen(false)}
       >
         MATCH 语句：<br></br>
         <Input.TextArea value={MATCHs} style={{ height: '5rem' }}></Input.TextArea>
         WHERE 语句 <br></br>
-        <Input.TextArea value={WHERE} style={{ height: '5rem' }}></Input.TextArea>
+        <Input.TextArea value={WHEREs} style={{ height: '5rem' }}></Input.TextArea>
         Desc 描述
-        <Input placeholder="desc"></Input>
+        <Input placeholder="desc" value={descState} onChange={e => setDescState(e.target.value)}></Input>
       </Modal>
     </div>
   );

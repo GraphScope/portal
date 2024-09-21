@@ -11,8 +11,8 @@ export interface GraphProps {
 }
 
 export interface DrawPatternValue {
-  MATCHs: string[];
-  WHEREs: string[];
+  MATCHs: string;
+  WHEREs: string;
   description: string;
 }
 export interface DrawPatternProps {
@@ -23,11 +23,11 @@ export interface DrawPatternProps {
   /**
    * onChange, the MATCH WHERE DESC change callback
    */
-  onChange?: (value: DrawPatternValue) => void;
+  onClick?: (value: DrawPatternValue) => void;
 }
 const defaultDrawPatternProps: DrawPatternProps = {
   previewGraph: undefined,
-  onChange: undefined,
+  onClick: undefined,
 };
 export const DrawPatternContext = createContext<DrawPatternProps>(defaultDrawPatternProps);
 
