@@ -3,11 +3,8 @@ on:
   push:
     branches:
       - '**' # 匹配所有分支
-    # 当有标签为 'release' 的 PR 被更新时触发
-    # 注意这里我们使用了 pull_request_target 事件，因为 pull_request 事件本身不会在 push 时触发
   pull_request_target:
-    branches:
-      - '**' # 匹配所有分支
+    types: [opened, synchronize, reopened, labeled, unlabeled]
 
 jobs:
   publish:
