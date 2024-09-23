@@ -109,8 +109,8 @@ const useInteractive: any = () => {
                 data: {
                   label: edgeLabel,
                 },
-                source: nodeid,
-                target: connectingNodeId.current || '',
+                source: connectingNodeId.current || '',
+                target: nodeid,
               },
             ],
             displayMode,
