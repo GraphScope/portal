@@ -13,6 +13,7 @@ export interface GraphProps {
 export interface DrawPatternValue {
   MATCHs: string;
   WHEREs: string;
+  RETURNs: string;
   description: string;
 }
 export interface DrawPatternProps {

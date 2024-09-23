@@ -8,12 +8,12 @@ import PopoverContent from './PopoverContent';
 import { Property } from '../../types/property';
 import { useTransform } from '../../hooks/transform/useTransform';
 import { ISchemaNode } from '@graphscope/studio-graph-editor';
-import _ from 'lodash';
 import { useGraphStore } from '../../stores/useGraphStore';
 import { useEncodeCypher } from '../../hooks/cypher/useEncodeCypher';
 import { Button, Input, Modal } from 'antd';
 import { usePropertiesStore } from '../../stores/usePropertiesStore';
 import { DrawPatternContext, DrawPatternValue } from '../DrawPattern';
+import _ from 'lodash';
 
 export const Canvas = () => {
   const [descState, setDescState] = useState<string>();
@@ -32,17 +32,20 @@ export const Canvas = () => {
   const WHEREs: string = useMemo(() => (isModalOpen ? generateWHERE() : ''), [isModalOpen]);
   const { generateRelation } = useGenerateRelation();
   const { onClick } = useContext(DrawPatternContext);
+  const [RETURNs, setRETURNs] = useState<string>('');
+
+  useEffect(() => {
+    if (isModalOpen) {
+      setRETURNs(
+        `RETURN ${Array.from({ length: nodesStore.length }, (_, index) => index)
+          .map(value => `n${value}`)
+          .join(', ')}`,
+      );
+    }
+  }, [isModalOpen]);
 
   useEffect(() => {
     generateRelation(edgesStore);
-  }, [edgesStore]);
-
-  useEffect(() => {
-    console.log('节点更新啦', nodesStore);
-  }, [nodesStore]);
-
-  useEffect(() => {
-    console.log('关系更新啦', edgesStore);
   }, [edgesStore]);
 
   const handlePropertiesChange = useCallback(
@@ -61,7 +64,6 @@ export const Canvas = () => {
 
   const handleNodes = useCallback(
     (nodes: ISchemaNode[]) => {
-      console.log('这次的节点', nodes);
       const newNodes = nodes.map(node => {
         const currentNode = nodesStore.find(graphNode => graphNode.id === node.id);
         if (currentNode)
@@ -78,7 +80,6 @@ export const Canvas = () => {
 
   const handleEdges = useCallback(
     (edges: ISchemaEdge[]) => {
-      console.log('这次的边界', edges);
       const newEdges = edges.map(edge => {
         const currentEdge = edgesStore.find(graphEdge => graphEdge.id === edge.id);
         if (currentEdge)
@@ -90,6 +91,7 @@ export const Canvas = () => {
       });
       replaceEdges && replaceEdges(newEdges);
     },
+
     [edgesStore],
   );
 
@@ -128,8 +130,9 @@ export const Canvas = () => {
         onOk={() => {
           setIsModalOpen(true);
           const newState: DrawPatternValue = {
-            MATCHs: MATCHs,
-            WHEREs: WHEREs,
+            MATCHs,
+            WHEREs,
+            RETURNs,
             description: descState ?? '',
           };
           onClick && onClick(newState);
@@ -140,6 +143,12 @@ export const Canvas = () => {
         <Input.TextArea value={MATCHs} style={{ height: '5rem' }}></Input.TextArea>
         WHERE 语句 <br></br>
         <Input.TextArea value={WHEREs} style={{ height: '5rem' }}></Input.TextArea>
+        RETURN 语句 <br></br>
+        <Input.TextArea
+          value={RETURNs}
+          style={{ height: '5rem' }}
+          onChange={e => setRETURNs(e.target.value)}
+        ></Input.TextArea>
         Desc 描述
         <Input placeholder="desc" value={descState} onChange={e => setDescState(e.target.value)}></Input>
       </Modal>
