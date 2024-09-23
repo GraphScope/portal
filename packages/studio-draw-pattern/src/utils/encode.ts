@@ -17,9 +17,12 @@ export const encodeProperties = (
         return property; // 如果其中一个不存在，返回原始的 property，不修改 statement
       }
 
+      const isNumber = !isNaN(Number(property.value));
+      const propertyValue = isNumber ? property.value : `'${property.value}'`;
+
       return {
         ...property,
-        statement: `${property.name} ${property.compare} ${property.value}`,
+        statement: `${property.name} ${property.compare} ${propertyValue}`,
       };
     });
 
