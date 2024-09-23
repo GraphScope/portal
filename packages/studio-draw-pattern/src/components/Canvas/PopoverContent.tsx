@@ -62,6 +62,8 @@ const PopoverContent: React.FC<PopoverContentProps> = ({ currentId, onChange }) 
             { value: '>', label: '>' },
             { value: '=', label: '=' },
             { value: '<', label: '<' },
+            { value: '>=', label: '>=' },
+            { value: '<=', label: '<=' },
           ]}
           className="nospan nodrag"
           // @ts-ignore
