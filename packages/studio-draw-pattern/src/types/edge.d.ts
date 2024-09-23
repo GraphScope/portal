@@ -8,10 +8,10 @@ export interface EdgeData extends ISchemaEdge {
 export interface Edge {
   id: string;
   label?: string;
-  type?: string;
   targetNode?: string;
   sourceNode?: string;
   statement?: string;
   isErgodic?: boolean;
-  properties?: string[];
+  variable?: string;
+  propertiesId?: string;
 }
