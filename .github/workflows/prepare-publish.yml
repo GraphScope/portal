@@ -1,12 +1,19 @@
 name: Prepare Publish npm packages
 on:
   push:
+    branches:
+      - '**' # 匹配所有分支
+    # 当有标签为 'release' 的 PR 被更新时触发
+    # 注意这里我们使用了 pull_request_target 事件，因为 pull_request 事件本身不会在 push 时触发
+  pull_request_target:
+    branches:
+      - '**' # 匹配所有分支
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     # 当具有 release 标签的 PR 被合并时，自动发布包版本
-    if: contains(github.event.pull_request.labels.*.name, 'release')
+    if: github.event_name == 'push' && contains(github.event.pull_request.labels.*.name, 'release')
 
     steps:
       - uses: actions/checkout@v3
