@@ -8,11 +8,6 @@ describe('encodeNodes', () => {
       {
         id: '1',
         variable: 'n1',
-        data: {
-          id: '1',
-          position: { x: 0, y: 0 }, // 添加 position
-          data: { label: 'Person' },
-        },
         properties: [],
       },
     ];
@@ -34,21 +29,11 @@ describe('encodeNodes', () => {
       {
         id: '1',
         variable: 'n1',
-        data: {
-          id: '1',
-          position: { x: 0, y: 0 },
-          data: { label: 'Person' },
-        },
         properties: [],
       },
       {
         id: '2',
         variable: 'n2',
-        data: {
-          id: '2',
-          position: { x: 1, y: 1 },
-          data: { label: 'Car' },
-        },
         properties: [],
       },
     ];
@@ -70,11 +55,6 @@ describe('encodeNodes', () => {
       {
         id: '1',
         variable: 'n1',
-        data: {
-          id: '1',
-          position: { x: 0, y: 0 },
-          data: { label: '' },
-        },
         properties: [],
       },
     ];
@@ -93,12 +73,6 @@ describe('encodeNodes', () => {
       {
         id: '1',
         variable: 'n1',
-        data: {
-          id: '1',
-          position: { x: 0, y: 0 },
-          // @ts-ignore
-          data: {},
-        },
         properties: [],
       },
     ];
@@ -135,10 +109,6 @@ describe('encodeNodes', () => {
       {
         nodeKey: '1',
         variable: 'n1',
-        data: {
-          id: '1',
-          position: { x: 0, y: 0 },
-        },
         properties: [],
       } as unknown as Node,
     ];
@@ -157,11 +127,6 @@ describe('encodeNodes', () => {
       {
         id: '1',
         variable: 'n1',
-        data: {
-          id: '1',
-          position: { x: 0, y: 0 },
-          data: { label: 'Animal' },
-        },
       },
     ];
 
@@ -196,20 +161,10 @@ describe('encodeNodes', () => {
       {
         id: '1',
         variable: 'n1',
-        data: {
-          id: '1',
-          position: { x: 0, y: 0 },
-          data: { label: 'Person' },
-        },
       },
       {
         id: '2',
         variable: 'n2',
-        data: {
-          id: '2',
-          position: { x: 1, y: 1 },
-          data: { label: 'Animal' },
-        },
       },
     ];
 

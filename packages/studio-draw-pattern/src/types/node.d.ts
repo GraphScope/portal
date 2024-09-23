@@ -12,7 +12,6 @@ export interface Node {
   outRelations?: Set<string>;
   statement?: string;
   isErgodic?: boolean;
-  data?: NodeData;
   variable: string;
   properties?: string[];
 }
