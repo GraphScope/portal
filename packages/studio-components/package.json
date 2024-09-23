@@ -23,7 +23,7 @@
   "dependencies": {
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-intl": "latest",
+    "react-intl": "^6.6.1",
     "react-resizable-panels": "^2.0.20",
     "sql-ddl-to-json-schema": "latest",
     "typewriter-effect": "^2.21.0",
