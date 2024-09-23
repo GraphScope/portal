@@ -6,7 +6,7 @@ export interface EdgeData extends ISchemaEdge {
   data?: IEdgeData;
 }
 export interface Edge {
-  edgeKey: string;
+  id: string;
   type?: string;
   targetNode?: string;
   sourceNode?: string;

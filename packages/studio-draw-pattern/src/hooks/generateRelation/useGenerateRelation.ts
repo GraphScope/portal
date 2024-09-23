@@ -11,8 +11,8 @@ export const useGenerateRelation = () => {
     (edges: Edge[]) => {
       const newNodes = [...nodes]; // 创建节点副本来存储中间状态
       edges.forEach(edge => {
-        const sourceNodeIndex = newNodes.findIndex(node => node.nodeKey === edge.sourceNode);
-        const targetNodeIndex = newNodes.findIndex(node => node.nodeKey === edge.targetNode);
+        const sourceNodeIndex = newNodes.findIndex(node => node.id === edge.sourceNode);
+        const targetNodeIndex = newNodes.findIndex(node => node.id === edge.targetNode);
 
         if (sourceNodeIndex !== -1 && targetNodeIndex !== -1) {
           const sourceNode = newNodes[sourceNodeIndex];
@@ -21,20 +21,20 @@ export const useGenerateRelation = () => {
           if (sourceNode === targetNode) {
             newNodes[sourceNodeIndex] = {
               ...sourceNode,
-              outRelations: new Set([...(sourceNode.outRelations || []), edge.edgeKey]),
-              inRelations: new Set([...(sourceNode.inRelations || []), edge.edgeKey]),
+              outRelations: new Set([...(sourceNode.outRelations || []), edge.id]),
+              inRelations: new Set([...(sourceNode.inRelations || []), edge.id]),
             };
           } else {
             if (sourceNode) {
               newNodes[sourceNodeIndex] = {
                 ...sourceNode,
-                outRelations: new Set([...(sourceNode.outRelations || []), edge.edgeKey]),
+                outRelations: new Set([...(sourceNode.outRelations || []), edge.id]),
               };
             }
             if (targetNode) {
               newNodes[targetNodeIndex] = {
                 ...targetNode,
-                inRelations: new Set([...(targetNode.inRelations || []), edge.edgeKey]),
+                inRelations: new Set([...(targetNode.inRelations || []), edge.id]),
               };
             }
           }

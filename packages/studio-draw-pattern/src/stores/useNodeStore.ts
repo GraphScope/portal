@@ -26,7 +26,7 @@ export const useNodeStore = create<NodeState>()(set => ({
   addNode: node =>
     set(state => {
       // 检查节点是否已存在
-      if (state.nodes.some(n => n.nodeKey === node.nodeKey)) {
+      if (state.nodes.some(n => n.id === node.id)) {
         return state; // 如果已存在，则返回当前状态，不进行添加
       }
       return updateNodes(state, [...state.nodes, node]);
@@ -35,12 +35,12 @@ export const useNodeStore = create<NodeState>()(set => ({
   deleteNode: nodeKey =>
     set(state => {
       // 检查节点是否存在
-      if (!state.nodes.some(n => n.nodeKey === nodeKey)) {
+      if (!state.nodes.some(n => n.id === nodeKey)) {
         return state; // 如果不存在，则返回当前状态，不进行删除
       }
       return updateNodes(
         state,
-        state.nodes.filter(n => n.nodeKey !== nodeKey),
+        state.nodes.filter(n => n.id !== nodeKey),
       );
     }),
 
@@ -58,10 +58,10 @@ export const useNodeStore = create<NodeState>()(set => ({
 
   addVariableForNode: (nodeKey: string, variableName: string) =>
     set(state => {
-      const currentNode = state.nodes.find(node => node.nodeKey === nodeKey);
+      const currentNode = state.nodes.find(node => node.id === nodeKey);
       if (currentNode?.variable) return state;
       const newNodes = state.nodes.map(node => {
-        if (node.nodeKey === nodeKey) {
+        if (node.id === nodeKey) {
           return { ...node, variable: variableName };
         }
         return node;
@@ -71,7 +71,7 @@ export const useNodeStore = create<NodeState>()(set => ({
 
   editNode: node =>
     set(state => {
-      const index = state.nodes.findIndex(n => n.nodeKey === node.nodeKey);
+      const index = state.nodes.findIndex(n => n.id === node.id);
       if (index === -1 || _.isEqual(state.nodes[index], node)) {
         return state; // 如果不存在或节点没有变化，则不更新引用
       }

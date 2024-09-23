@@ -6,7 +6,7 @@ describe('encodeEdges', () => {
   it('should encode a single edge correctly', () => {
     const edges: Edge[] = [
       {
-        edgeKey: 'e1',
+        id: 'e1',
         isErgodic: false,
         data: {
           data: { label: 'KNOWS' },
@@ -28,7 +28,7 @@ describe('encodeEdges', () => {
   it('should handle edge with no label', () => {
     const edges: Edge[] = [
       {
-        edgeKey: 'e2',
+        id: 'e2',
         isErgodic: false,
         data: {
           data: {
@@ -52,7 +52,7 @@ describe('encodeEdges', () => {
   it('should encode multiple edges correctly', () => {
     const edges: Edge[] = [
       {
-        edgeKey: 'e1',
+        id: 'e1',
         isErgodic: false,
         data: {
           data: {
@@ -61,7 +61,7 @@ describe('encodeEdges', () => {
         },
       },
       {
-        edgeKey: 'e2',
+        id: 'e2',
         isErgodic: false,
         data: {
           data: {
@@ -90,7 +90,7 @@ describe('encodeEdges', () => {
   it('should handle edge with empty data', () => {
     const edges: Edge[] = [
       {
-        edgeKey: 'e3',
+        id: 'e3',
         isErgodic: false,
         // @ts-ignore
         data: {},
@@ -111,7 +111,7 @@ describe('encodeEdges', () => {
   it('should override existing statement', () => {
     const edges: Edge[] = [
       {
-        edgeKey: 'e4',
+        id: 'e4',
         isErgodic: false,
         statement: ':OLD_STATEMENT',
         data: {
@@ -155,7 +155,7 @@ describe('encodeEdges', () => {
   it('should encode edge with different labels', () => {
     const edges: Edge[] = [
       {
-        edgeKey: 'e6',
+        id: 'e6',
         isErgodic: false,
         data: {
           data: {
@@ -179,7 +179,7 @@ describe('encodeEdges', () => {
   it('should handle self-loop edge', () => {
     const edges: Edge[] = [
       {
-        edgeKey: 'e7',
+        id: 'e7',
         isErgodic: false,
         sourceNode: 'n1',
         targetNode: 'n1',
@@ -213,7 +213,7 @@ describe('encodeEdges', () => {
   it('should call callback for every edge', () => {
     const edges: Edge[] = [
       {
-        edgeKey: 'e8',
+        id: 'e8',
         isErgodic: false,
         data: {
           data: {
@@ -222,7 +222,7 @@ describe('encodeEdges', () => {
         },
       },
       {
-        edgeKey: 'e9',
+        id: 'e9',
         isErgodic: false,
         data: {
           data: {

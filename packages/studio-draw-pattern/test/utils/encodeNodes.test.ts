@@ -6,7 +6,7 @@ describe('encodeNodes', () => {
   test('should encode a single node correctly', () => {
     const nodes: Node[] = [
       {
-        nodeKey: '1',
+        id: '1',
         variable: 'n1',
         data: {
           id: '1',
@@ -32,7 +32,7 @@ describe('encodeNodes', () => {
   test('should handle multiple nodes', () => {
     const nodes: Node[] = [
       {
-        nodeKey: '1',
+        id: '1',
         variable: 'n1',
         data: {
           id: '1',
@@ -42,7 +42,7 @@ describe('encodeNodes', () => {
         properties: [],
       },
       {
-        nodeKey: '2',
+        id: '2',
         variable: 'n2',
         data: {
           id: '2',
@@ -68,7 +68,7 @@ describe('encodeNodes', () => {
   test('should handle nodes with no label', () => {
     const nodes: Node[] = [
       {
-        nodeKey: '1',
+        id: '1',
         variable: 'n1',
         data: {
           id: '1',
@@ -91,7 +91,7 @@ describe('encodeNodes', () => {
   test('should handle nodes with undefined label', () => {
     const nodes: Node[] = [
       {
-        nodeKey: '1',
+        id: '1',
         variable: 'n1',
         data: {
           id: '1',
@@ -115,7 +115,7 @@ describe('encodeNodes', () => {
   test('should not break if node.data is undefined', () => {
     const nodes: Node[] = [
       {
-        nodeKey: '1',
+        id: '1',
         variable: 'n1',
         properties: [],
       } as Node,
@@ -155,7 +155,7 @@ describe('encodeNodes', () => {
   test('should handle nodes with no properties', () => {
     const nodes: Node[] = [
       {
-        nodeKey: '1',
+        id: '1',
         variable: 'n1',
         data: {
           id: '1',
@@ -177,7 +177,7 @@ describe('encodeNodes', () => {
   test('should handle node with only nodeKey and variable', () => {
     const nodes: Node[] = [
       {
-        nodeKey: '1',
+        id: '1',
         variable: 'n1',
       } as Node,
     ];
@@ -194,7 +194,7 @@ describe('encodeNodes', () => {
   test('should call callback for each node in array', () => {
     const nodes: Node[] = [
       {
-        nodeKey: '1',
+        id: '1',
         variable: 'n1',
         data: {
           id: '1',
@@ -203,7 +203,7 @@ describe('encodeNodes', () => {
         },
       },
       {
-        nodeKey: '2',
+        id: '2',
         variable: 'n2',
         data: {
           id: '2',

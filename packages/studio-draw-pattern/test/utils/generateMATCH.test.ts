@@ -19,13 +19,13 @@ describe('generateMATCH', () => {
 
   it('should generate a single MATCH statement for one node and one edge', () => {
     const nodes: Node[] = [
-      { nodeKey: '1', statement: ':A', variable: 'a' },
-      { nodeKey: '2', statement: ':B', variable: 'b' },
+      { id: '1', statement: ':A', variable: 'a' },
+      { id: '2', statement: ':B', variable: 'b' },
     ];
 
     const edges: Edge[] = resetEdgesErgodicState([
       {
-        edgeKey: 'e1',
+        id: 'e1',
         sourceNode: '1',
         targetNode: '2',
         statement: ':r',
@@ -40,13 +40,13 @@ describe('generateMATCH', () => {
 
   it('should handle multiple edges connecting the same nodes', () => {
     const nodes: Node[] = [
-      { nodeKey: '1', statement: ':A', variable: 'a' },
-      { nodeKey: '2', statement: ':B', variable: 'b' },
+      { id: '1', statement: ':A', variable: 'a' },
+      { id: '2', statement: ':B', variable: 'b' },
     ];
 
     const edges: Edge[] = resetEdgesErgodicState([
       {
-        edgeKey: 'e1',
+        id: 'e1',
         sourceNode: '1',
         targetNode: '2',
         statement: ':r1',
@@ -54,7 +54,7 @@ describe('generateMATCH', () => {
         isErgodic: false,
       },
       {
-        edgeKey: 'e2',
+        id: 'e2',
         sourceNode: '1',
         targetNode: '2',
         statement: ':r2',
@@ -69,13 +69,13 @@ describe('generateMATCH', () => {
 
   it('should handle an edge with a property', () => {
     const nodes: Node[] = [
-      { nodeKey: '1', statement: ':A', variable: 'a' },
-      { nodeKey: '2', statement: ':B', variable: 'b' },
+      { id: '1', statement: ':A', variable: 'a' },
+      { id: '2', statement: ':B', variable: 'b' },
     ];
 
     const edges: Edge[] = resetEdgesErgodicState([
       {
-        edgeKey: 'e1',
+        id: 'e1',
         sourceNode: '1',
         targetNode: '2',
         statement: ':r {weight: 2}',
@@ -90,13 +90,13 @@ describe('generateMATCH', () => {
 
   it('should handle loops in the graph', () => {
     const nodes: Node[] = [
-      { nodeKey: '1', statement: ':A', variable: 'a' },
-      { nodeKey: '2', statement: ':B', variable: 'b' },
+      { id: '1', statement: ':A', variable: 'a' },
+      { id: '2', statement: ':B', variable: 'b' },
     ];
 
     const edges: Edge[] = resetEdgesErgodicState([
       {
-        edgeKey: 'e1',
+        id: 'e1',
         sourceNode: '1',
         targetNode: '2',
         statement: ':r1',
@@ -104,7 +104,7 @@ describe('generateMATCH', () => {
         isErgodic: false,
       },
       {
-        edgeKey: 'e2',
+        id: 'e2',
         sourceNode: '2',
         targetNode: '1',
         statement: ':r2',
@@ -119,13 +119,13 @@ describe('generateMATCH', () => {
 
   it('should handle multiple relationships between the same pair of nodes', () => {
     const nodes: Node[] = [
-      { nodeKey: '1', statement: ':A', variable: 'a' },
-      { nodeKey: '2', statement: ':B', variable: 'b' },
+      { id: '1', statement: ':A', variable: 'a' },
+      { id: '2', statement: ':B', variable: 'b' },
     ];
 
     const edges: Edge[] = resetEdgesErgodicState([
       {
-        edgeKey: 'e1',
+        id: 'e1',
         sourceNode: '1',
         targetNode: '2',
         statement: ':r1',
@@ -133,7 +133,7 @@ describe('generateMATCH', () => {
         isErgodic: false,
       },
       {
-        edgeKey: 'e2',
+        id: 'e2',
         sourceNode: '1',
         targetNode: '2',
         statement: ':r2',
@@ -148,7 +148,7 @@ describe('generateMATCH', () => {
 
   it('should handle an empty relations list in nodes', () => {
     const nodes: Node[] = [
-      { nodeKey: '1', statement: ':A', variable: 'a', outRelations: new Set(), inRelations: new Set() },
+      { id: '1', statement: ':A', variable: 'a', outRelations: new Set(), inRelations: new Set() },
     ];
 
     const edges: Edge[] = resetEdgesErgodicState([]);

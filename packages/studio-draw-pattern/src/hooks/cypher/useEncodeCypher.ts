@@ -34,7 +34,7 @@ export const useEncodeCypher = () => {
       const isEqual = _.isEqual(pre.statement, current.statement);
       let newVariableName = `n${count}`;
 
-      addVariableForNode && addVariableForNode(current.nodeKey, newVariableName);
+      addVariableForNode && addVariableForNode(current.id, newVariableName);
 
       !isEqual && editNode && editNode({ ...current });
 

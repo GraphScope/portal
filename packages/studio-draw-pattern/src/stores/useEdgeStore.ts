@@ -24,7 +24,7 @@ export const useEdgeStore = create<EdgeState>((set, get) => ({
   addEdge: edge => {
     set(state => {
       // 检查边是否已存在
-      if (state.edges.some(e => e.edgeKey === edge.edgeKey)) {
+      if (state.edges.some(e => e.id === edge.id)) {
         return state; // 如果已存在，则返回当前状态，不进行添加
       }
       return updateEdges(state, [...state.edges, edge]);
@@ -34,12 +34,12 @@ export const useEdgeStore = create<EdgeState>((set, get) => ({
   deleteEdge: edgeKey => {
     set(state => {
       // 检查边是否存在
-      if (!state.edges.some(e => e.edgeKey === edgeKey)) {
+      if (!state.edges.some(e => e.id === edgeKey)) {
         return state; // 如果不存在，则返回当前状态，不进行删除
       }
       return updateEdges(
         state,
-        state.edges.filter(edge => edge.edgeKey !== edgeKey),
+        state.edges.filter(edge => edge.id !== edgeKey),
       );
     });
   },
@@ -62,12 +62,12 @@ export const useEdgeStore = create<EdgeState>((set, get) => ({
   editEdge: edge => {
     set(state => {
       // 检查边是否存在
-      if (!state.edges.some(e => e.edgeKey === edge.edgeKey)) {
+      if (!state.edges.some(e => e.id === edge.id)) {
         return state; // 如果不存在，则返回当前状态，不进行编辑
       }
       return updateEdges(
         state,
-        state.edges.map(e => (e.edgeKey === edge.edgeKey ? edge : e)),
+        state.edges.map(e => (e.id === edge.id ? edge : e)),
       );
     });
   },

@@ -63,7 +63,7 @@ export const Canvas = () => {
     (nodes: ISchemaNode[]) => {
       console.log('这次的节点', nodes);
       const newNodes = nodes.map(node => {
-        const currentNode = nodesStore.find(graphNode => graphNode.nodeKey === node.id);
+        const currentNode = nodesStore.find(graphNode => graphNode.id === node.id);
         if (currentNode)
           return {
             ...currentNode,
@@ -80,7 +80,7 @@ export const Canvas = () => {
     (edges: ISchemaEdge[]) => {
       console.log('这次的边界', edges);
       const newEdges = edges.map(edge => {
-        const currentEdge = edgesStore.find(graphEdge => graphEdge.edgeKey === edge.id);
+        const currentEdge = edgesStore.find(graphEdge => graphEdge.id === edge.id);
         if (currentEdge)
           return {
             ...currentEdge,
