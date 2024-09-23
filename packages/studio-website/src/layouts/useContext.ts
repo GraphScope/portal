@@ -3,7 +3,7 @@ import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 import { Utils } from '@graphscope/studio-components';
 const { GS_ENGINE_TYPE } = window;
 const { storage } = Utils;
- 
+
 export interface IGraph {
   id: string;
   name: string;
@@ -21,7 +21,7 @@ export interface IGraph {
   stored_procedures: string[];
 }
 /** groot 状态中无需默认创建 */
-const DRAFTGRAPH = (GS_ENGINE_TYPE === 'interactive' && Utils.storage.get('DRAFT_GRAPH')) || {};
+
 export const initialStore = {
   /** 语言 */
   locale: Utils.storage.get('locale') || 'en-US',
@@ -32,7 +32,7 @@ export const initialStore = {
   navStyle: (Utils.storage.get('GS_STUDIO_navStyle') as string) || 'inline',
   graphs: [],
   graphId: Utils.searchParamOf('graph_id'),
-  draftGraph: DRAFTGRAPH,
+  draftGraph: Utils.storage.get('DRAFT_GRAPH') || {},
   draftId: 'DRAFT_GRAPH',
   displaySidebarType: Utils.storage.get<'Sidebar' | 'Segmented'>('displaySidebarType') || 'Sidebar',
   displaySidebarPosition: Utils.storage.get<'left' | 'right'>('displaySidebarPosition') || 'left',

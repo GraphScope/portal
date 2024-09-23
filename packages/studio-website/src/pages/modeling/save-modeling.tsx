@@ -50,6 +50,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
       let _status = '',
         _message = '';
       //@ts-ignore
+
       const graph_id = await createGraph(graphId, {
         nodes: schema.nodes,
         edges: schema.edges,
@@ -70,6 +71,9 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
           _status = 'error';
           _message = error.response.data;
         });
+
+      handleSuccess();
+
       /** groot 接口缺陷，等后期后端完善 */
       const id = Utils.getSearchParams('graph_id');
       await localforage.setItem(`GRAPH_SCHEMA_OPTIONS_${graph_id ?? id}`, Utils.fakeSnapshot(schema));
@@ -88,27 +92,23 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
     }
   };
 
-  const handleGotoGraphs = () => {
+  const handleSuccess = () => {
     Utils.setSearchParams({
       graph_id: state.id,
     });
-    history.push(`/graphs?graph_id=${state.id}`);
-    updateStore(draft => {
-      draft.draftGraph = {};
-      draft.graphId = state.id;
-      draft.currentnNav = '/graphs';
-    });
-  };
-  const handleGotoImporting = () => {
-    Utils.setSearchParams({
-      graph_id: state.id,
-    });
-    history.push(`/importing?graph_id=${state.id}`);
+    Utils.storage.set('DRAFT_GRAPH', {});
     updateStore(draft => {
       draft.draftGraph = {};
       draft.graphId = state.id;
       draft.currentnNav = '/importing';
     });
+  };
+
+  const handleGotoGraphs = () => {
+    history.push(`/graphs?graph_id=${state.id}`);
+  };
+  const handleGotoImporting = () => {
+    history.push(`/importing?graph_id=${state.id}`);
   };
   const handleGoback = () => {
     setState(preState => {
