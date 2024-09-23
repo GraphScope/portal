@@ -7,10 +7,12 @@ export interface NodeData extends ISchemaNode {
 
 export interface Node {
   id: string;
+  label?: string;
   inRelations?: Set<string>;
   outRelations?: Set<string>;
   statement?: string;
   isErgodic?: boolean;
   data?: NodeData;
   variable: string;
+  properties?: string[];
 }

@@ -33,7 +33,7 @@ export const encodeNodes = (nodes: Node[], encodeSingleNodeCallback: (preNode: N
   nodes
     .filter(node => node !== undefined)
     .forEach(node => {
-      const newStatement = node.data?.data?.label && `:${node.data.data.label}`;
+      const newStatement = node.label && `:${node.label}`;
       const newNodes: Node = {
         ...node,
         statement: newStatement ?? '',
@@ -48,7 +48,7 @@ export const encodeEdges = (edges: Edge[], encodeSingleEdgeCallback: (preEdge: E
   edges
     .filter(edge => edge !== undefined)
     .forEach(edge => {
-      const newStatement = edge?.data?.data?.label && `:${edge.data.data.label}`;
+      const newStatement = edge.label && `:${edge.label}`;
       const newEdges: Edge = {
         ...edge,
         statement: newStatement ?? '',

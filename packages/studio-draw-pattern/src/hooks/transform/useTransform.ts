@@ -16,6 +16,7 @@ export const useTransform = () => {
   const transformNode = useCallback((node: ISchemaNode): Node => {
     return {
       id: node.id,
+      label: node.data.label,
       data: {
         ...node,
       },
@@ -25,6 +26,7 @@ export const useTransform = () => {
   const transformEdge = useCallback((edge: ISchemaEdge): Edge => {
     return {
       id: edge.id,
+      label: edge.data.label,
       sourceNode: edge.source,
       targetNode: edge.target,
       data: {
