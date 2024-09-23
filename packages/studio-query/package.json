@@ -20,10 +20,9 @@
   ],
   "scripts": {
     "start": "father dev",
-    "build": "father build",
+    "build": "father build &&  npm run build:umd:sdk",
     "build:umd": "webpack  --mode production  -c ../../webpack.config.js --env path=/packages/studio-query",
-    "build:umd:sdk": "webpack  --mode production  -c ../../webpack.config.js --env path=/packages/studio-query entry=/packages/studio-query/src/sdk/index.tsx global=STUDIO_QUERY_SDK",
-    "prepublishOnly": "npm run build && npm run build:umd:sdk"
+    "build:umd:sdk": "webpack  --mode production  -c ../../webpack.config.js --env path=/packages/studio-query entry=/packages/studio-query/src/sdk/index.tsx global=STUDIO_QUERY_SDK"
   },
   "devDependencies": {
     "father": "^4.4.1"

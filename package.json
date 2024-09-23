@@ -13,8 +13,8 @@
     "build:docs": "npm run prev && npm run build &&  dumi build",
     "docs": "dumi dev",
     "version": "changeset version",
-    "publish": "pnpm publish -r --force",
-    "check:publish": "pnpm publish -r --dry-run"
+    "publish": "npm run prev && npm run build && pnpm publish -r --force",
+    "check:publish": "npm run prev && npm run build && pnpm publish -r --dry-run"
   },
   "husky": {
     "hooks": {

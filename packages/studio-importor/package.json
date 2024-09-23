@@ -20,9 +20,8 @@
   },
   "scripts": {
     "start": "father dev",
-    "build": "father build",
-    "build:umd": "webpack  --mode production  -c ../../webpack.config.js --env path=/packages/studio-importor",
-    "prepublishOnly": "npm run build && npm run build:umd"
+    "build": "father build && npm run build:umd",
+    "build:umd": "webpack  --mode production  -c ../../webpack.config.js --env path=/packages/studio-importor"
   },
   "dependencies": {
     "@graphscope/studio-components": "workspace:*",

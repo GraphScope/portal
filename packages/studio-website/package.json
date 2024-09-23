@@ -12,8 +12,7 @@
     "build:interactive": "umi build  --engineType=interactive",
     "build:groot": "umi build --engineType=groot",
     "build:analysis": "ANALYZE=1 umi build  --engineType=interactive",
-    "lint": "umi lint",
-    "prepublishOnly": "npm run build"
+    "lint": "umi lint"
   },
   "publishConfig": {
     "access": "public",
