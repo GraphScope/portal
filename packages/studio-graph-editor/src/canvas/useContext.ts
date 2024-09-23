@@ -22,8 +22,9 @@ export const defaultStore: IStore = {
   currentId: '',
 
   hasLayouted: false,
+
   elementOptions: {
-    isEditable: true,
+    isEditable: false,
     isConnectable: true,
   },
   theme: {
