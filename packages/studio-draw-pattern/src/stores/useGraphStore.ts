@@ -1,5 +1,5 @@
-import { ISchemaEdge } from '@graphscope/studio-graph-editor/dist/types/edge';
-import { ISchemaNode } from '@graphscope/studio-graph-editor/dist/types/node';
+import { ISchemaEdge } from '@graphscope/studio-graph-editor';
+import { ISchemaNode } from '@graphscope/studio-graph-editor';
 import _ from 'lodash';
 import { create } from 'zustand';
 

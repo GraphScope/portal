@@ -1,7 +1,7 @@
-import { ISchemaNode } from '@graphscope/studio-graph-editor/dist/types/node';
+import { ISchemaNode } from '@graphscope/studio-graph-editor';
 import { useCallback } from 'react';
 import { Node } from '../../types/node';
-import { ISchemaEdge } from '@graphscope/studio-graph-editor/dist/types/edge';
+import { ISchemaEdge } from '@graphscope/studio-graph-editor';
 import { Edge } from '../../types/edge';
 import { useNodeStore } from '../../stores/useNodeStore';
 import { useEdgeStore } from '../../stores/useEdgeStore';

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Row, Col, Table, Select } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Property } from '../../types/property';
-import { useNodeStore } from '../../stores/useNodeStore';
 import { usePropertiesStore } from '../../stores/usePropertiesStore';
 
 interface PopoverContentProps {

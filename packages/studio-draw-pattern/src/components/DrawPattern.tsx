@@ -2,8 +2,8 @@ import React, { createContext } from 'react';
 import { QuickStart } from './QuickStart';
 import { Canvas } from './Canvas';
 import { Section } from '@graphscope/studio-components';
-import { ISchemaNode } from '@graphscope/studio-graph-editor/dist/types/node';
-import { ISchemaEdge } from '@graphscope/studio-graph-editor/dist/types/edge';
+import { ISchemaNode } from '@graphscope/studio-graph-editor';
+import { ISchemaEdge } from '@graphscope/studio-graph-editor';
 
 export interface GraphProps {
   nodes: ISchemaNode[];

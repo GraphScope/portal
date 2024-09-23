@@ -8,6 +8,9 @@ import locales from './locales';
 import { ISchemaNode } from './types/node';
 import { ISchemaEdge } from './types/edge';
 import { useContext } from './canvas/useContext';
+
+export * from './types/edge';
+export * from './types/node';
 interface IGraphProps {
   locale?: 'zh-CN' | 'en-US';
   children?: React.ReactNode;
