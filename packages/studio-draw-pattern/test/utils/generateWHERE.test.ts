@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { Properties, Property } from '../../src/types/property';
+import { PropertySet, Property } from '../../src/types/property';
 import { generateWHERE } from '../../src/utils/encode';
 
 // 模拟的 Node 类型定义
@@ -27,7 +27,7 @@ describe('generateWHERE', () => {
     statement: 'age > 30',
   };
 
-  const sampleProperties: Properties = {
+  const sampleProperties: PropertySet = {
     belongId: '123',
     belongType: 'node',
     data: [sampleProperty],
@@ -41,7 +41,7 @@ describe('generateWHERE', () => {
     statement: 'height = 170',
   };
 
-  const sampleProperties2: Properties = {
+  const sampleProperties2: PropertySet = {
     belongId: '456',
     belongType: 'edge',
     data: [sampleProperty2],
@@ -67,7 +67,7 @@ describe('generateWHERE', () => {
     };
 
     const nodes = [sampleNode];
-    const properties = [propertiesWithMultiple as Properties];
+    const properties = [propertiesWithMultiple as PropertySet];
 
     const result = generateWHERE(nodes, properties);
 
@@ -88,7 +88,7 @@ describe('generateWHERE', () => {
     };
 
     const nodes = [sampleNode, sampleNode2];
-    const properties = [propertiesForNode1 as Properties, propertiesForNode2 as Properties];
+    const properties = [propertiesForNode1 as PropertySet, propertiesForNode2 as PropertySet];
 
     const result = generateWHERE(nodes, properties);
 
@@ -97,7 +97,7 @@ describe('generateWHERE', () => {
 
   it('should handle empty properties array', () => {
     const nodes = [sampleNode];
-    const properties: Properties[] = [];
+    const properties: PropertySet[] = [];
 
     const result = generateWHERE(nodes, properties);
 
@@ -122,7 +122,7 @@ describe('generateWHERE', () => {
   });
 
   it('should handle properties with no data', () => {
-    const propertiesWithNoData: Properties = {
+    const propertiesWithNoData: PropertySet = {
       belongId: '123',
       belongType: 'node',
       data: [],
@@ -145,7 +145,7 @@ describe('generateWHERE', () => {
       statement: '',
     };
 
-    const propertiesWithEmptyStatement: Properties = {
+    const propertiesWithEmptyStatement: PropertySet = {
       belongId: '123',
       belongType: 'node',
       data: [emptyStatementProperty],
@@ -168,7 +168,7 @@ describe('generateWHERE', () => {
       statement: 'complex LIKE complexValue',
     };
 
-    const complexProperties: Properties = {
+    const complexProperties: PropertySet = {
       belongId: '123',
       belongType: 'node',
       data: [complexProperty],
@@ -191,7 +191,7 @@ describe('generateWHERE', () => {
       statement: 'var = ${value}',
     };
 
-    const variableProperties: Properties = {
+    const variableProperties: PropertySet = {
       belongId: '123',
       belongType: 'node',
       data: [variableProperty],

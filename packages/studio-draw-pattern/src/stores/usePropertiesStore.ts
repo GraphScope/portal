@@ -1,18 +1,18 @@
 import { create } from 'zustand';
-import { Properties } from '../types/property';
+import { PropertySet } from '../types/property';
 
 interface PropertiesStore {
-  properties: Properties[];
-  updateProperties: (properties: Properties[]) => void;
+  properties: PropertySet[];
+  updateProperties: (properties: PropertySet[]) => void;
   clearProperties: () => void;
-  editProperties: (property: Properties) => void;
+  editProperties: (property: PropertySet) => void;
 }
 
 export const usePropertiesStore = create<PropertiesStore>()(set => ({
   properties: [],
 
   // 对相同的 belongId 进行一次去重
-  updateProperties: (properties: Properties[]) =>
+  updateProperties: (properties: PropertySet[]) =>
     set(state => {
       return {
         properties: [...new Map([...state.properties, ...properties].map(item => [item.belongId, item])).values()],
@@ -23,7 +23,7 @@ export const usePropertiesStore = create<PropertiesStore>()(set => ({
   clearProperties: () => set({ properties: [] }),
 
   // 编辑属性
-  editProperties: (property: Properties) =>
+  editProperties: (property: PropertySet) =>
     set(state => {
       const existingProperty = state.properties.find(item => item.belongId === property.belongId);
 

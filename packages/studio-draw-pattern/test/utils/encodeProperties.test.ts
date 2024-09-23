@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { Properties, Property } from '../../src/types/property';
+import { PropertySet, Property } from '../../src/types/property';
 import { encodeProperties } from '../../src/utils/encode';
 
 describe('encodeProperties', () => {
@@ -12,7 +12,7 @@ describe('encodeProperties', () => {
     id: '1',
   };
 
-  const sampleProperties: Properties = {
+  const sampleProperties: PropertySet = {
     belongId: '123',
     belongType: 'node',
     data: [sampleProperty],
@@ -25,7 +25,7 @@ describe('encodeProperties', () => {
     id: '2',
   };
 
-  const sampleProperties2: Properties = {
+  const sampleProperties2: PropertySet = {
     belongId: '456',
     belongType: 'edge',
     data: [sampleProperty2],
@@ -49,7 +49,7 @@ describe('encodeProperties', () => {
   });
 
   it('should handle properties with empty data array', () => {
-    const emptyDataProperties: Properties = {
+    const emptyDataProperties: PropertySet = {
       belongId: '999',
       belongType: 'node',
       data: [],
@@ -68,7 +68,7 @@ describe('encodeProperties', () => {
       id: '4',
     };
 
-    const missingTypeProperties: Properties = {
+    const missingTypeProperties: PropertySet = {
       belongId: '101',
       belongType: 'edge',
       data: [missingTypeProperty],
@@ -92,7 +92,7 @@ describe('encodeProperties', () => {
       id: '5',
     };
 
-    const zeroValueProperties: Properties = {
+    const zeroValueProperties: PropertySet = {
       belongId: '102',
       belongType: 'node',
       data: [zeroValueProperty],
@@ -116,7 +116,7 @@ describe('encodeProperties', () => {
       id: '6',
     };
 
-    const emptyNameProperties: Properties = {
+    const emptyNameProperties: PropertySet = {
       belongId: '103',
       belongType: 'node',
       data: [emptyNameProperty],
@@ -140,7 +140,7 @@ describe('encodeProperties', () => {
       id: '7',
     };
 
-    const emptyCompareProperties: Properties = {
+    const emptyCompareProperties: PropertySet = {
       belongId: '104',
       belongType: 'edge',
       data: [emptyCompareProperty],
@@ -166,7 +166,7 @@ describe('encodeProperties', () => {
       id: '8',
     };
 
-    const incompleteProperties: Properties = {
+    const incompleteProperties: PropertySet = {
       belongId: '105',
       belongType: 'edge',
       data: [incompleteProperty],
@@ -183,7 +183,7 @@ describe('encodeProperties', () => {
   });
 
   it('should work correctly when property list has multiple values', () => {
-    const multipleProperties: Properties = {
+    const multipleProperties: PropertySet = {
       belongId: '106',
       belongType: 'node',
       data: [sampleProperty, sampleProperty2],

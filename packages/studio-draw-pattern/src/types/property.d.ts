@@ -7,7 +7,7 @@ export interface Property {
   statement?: string;
 }
 
-export interface Properties {
+export interface PropertySet {
   belongId: string;
   belongType: 'node' | 'edge';
   data: Property[];

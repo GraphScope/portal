@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useNodeStore } from '../../stores/useNodeStore';
-import { Properties, Property } from '../../types/property';
+import { PropertySet, Property } from '../../types/property';
 import _ from 'lodash';
 import { useEdgeStore } from '../../stores/useEdgeStore';
 import { Node } from '../../types/node';
@@ -19,7 +19,7 @@ export const useEncodeCypher = () => {
   const addVariableForNode = useNodeStore(state => state.addVariableForNode);
 
   const updateNodeProperties = useCallback(() => {
-    const editProperties = (changeProperties: Properties, pre: Property[], current: Property[]) => {
+    const editProperties = (changeProperties: PropertySet, pre: Property[], current: Property[]) => {
       const isEqual = _.isEqual(pre, current);
       !isEqual && editPropertiesStore({ ...changeProperties, data: current });
     };

@@ -1,12 +1,12 @@
 import _ from 'lodash';
 import { Edge } from '../types/edge';
 import { Node } from '../types/node';
-import { Properties, Property } from '../types/property';
+import { PropertySet, Property } from '../types/property';
 import { isArrayExist } from '.';
 
 export const encodeProperties = (
-  encodeCallback: (changeProperties: Properties, preProperties: Property[], currentProperties: Property[]) => void,
-  properties: Properties[],
+  encodeCallback: (changeProperties: PropertySet, preProperties: Property[], currentProperties: Property[]) => void,
+  properties: PropertySet[],
 ) => {
   if (properties.length === 0) return;
 
@@ -57,7 +57,7 @@ export const encodeEdges = (edges: Edge[], encodeSingleEdgeCallback: (preEdge: E
     });
 };
 
-export const generateWHERE = (nodes: Node[], properties: Properties[]) => {
+export const generateWHERE = (nodes: Node[], properties: PropertySet[]) => {
   const WHEREs: string[] = [];
   if (nodes.length === 0) return '';
 
