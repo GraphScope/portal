@@ -27,6 +27,7 @@ import {
   Loading,
   DeleteLeafNodes,
   Export,
+  BasicInteraction,
 } from '../components';
 
 import { Divider } from 'antd';
@@ -95,6 +96,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
         >
           <Prepare data={data} schema={schema} graphId={graphId} />
           <Canvas />
+          <BasicInteraction />
           <ClearStatatus />
           <Brush onSelect={onSelectNodes} />
           <Loading />

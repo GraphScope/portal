@@ -9,7 +9,7 @@ const Export: React.FunctionComponent<IReportProps> = props => {
   const { store } = useContext();
   const { data } = store;
   const handleClick = () => {
-    Utils.createDownload(JSON.stringify(data, null, 2), 'graph.json');
+    Utils.createDownload(JSON.stringify({ nodes: data.nodes, edges: data.edges }, null, 2), 'graph.json');
   };
   return (
     <Tooltip title="Export graph json" placement="left">

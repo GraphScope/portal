@@ -111,7 +111,7 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
   const edgeCount = edges.length;
   const totalCount = table.length;
   const intl = useIntl();
-  let description: string;
+  let description: any;
   if (nodeCount === 0 && edgeCount === 0 && totalCount !== 0) {
     description = intl.formatMessage(
       {

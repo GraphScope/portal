@@ -16,8 +16,7 @@
   ],
   "scripts": {
     "start": "father dev",
-    "build": "father build",
-    "prepublishOnly": "npm run build"
+    "build": "father build"
   },
   "publishConfig": {
     "access": "public",
