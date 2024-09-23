@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/studio-importor",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A data modeling and import module in GraphStudio",
   "main": "lib/index.js",
   "module": "es/index.js",
