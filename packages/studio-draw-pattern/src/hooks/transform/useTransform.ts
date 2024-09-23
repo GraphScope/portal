@@ -29,9 +29,6 @@ export const useTransform = () => {
       label: edge.data.label,
       sourceNode: edge.source,
       targetNode: edge.target,
-      data: {
-        ...edge,
-      },
       isErgodic: false,
     } as Edge;
   }, []);

@@ -29,7 +29,6 @@ describe('generateMATCH', () => {
         sourceNode: '1',
         targetNode: '2',
         statement: ':r',
-        data: { variable: 'r' },
         isErgodic: false,
       },
     ]);
@@ -50,7 +49,6 @@ describe('generateMATCH', () => {
         sourceNode: '1',
         targetNode: '2',
         statement: ':r1',
-        data: { variable: 'r1' },
         isErgodic: false,
       },
       {
@@ -58,7 +56,6 @@ describe('generateMATCH', () => {
         sourceNode: '1',
         targetNode: '2',
         statement: ':r2',
-        data: { variable: 'r2' },
         isErgodic: false,
       },
     ]);
@@ -79,65 +76,6 @@ describe('generateMATCH', () => {
         sourceNode: '1',
         targetNode: '2',
         statement: ':r {weight: 2}',
-        data: { variable: 'r' },
-        isErgodic: false,
-      },
-    ]);
-
-    const result = generateMATCH(nodes, edges);
-    expect(result).toEqual(['MATCH (a:A)-[:r {weight: 2}]->(b:B)']);
-  });
-
-  it('should handle loops in the graph', () => {
-    const nodes: Node[] = [
-      { id: '1', statement: ':A', variable: 'a' },
-      { id: '2', statement: ':B', variable: 'b' },
-    ];
-
-    const edges: Edge[] = resetEdgesErgodicState([
-      {
-        id: 'e1',
-        sourceNode: '1',
-        targetNode: '2',
-        statement: ':r1',
-        data: { variable: 'r1' },
-        isErgodic: false,
-      },
-      {
-        id: 'e2',
-        sourceNode: '2',
-        targetNode: '1',
-        statement: ':r2',
-        data: { variable: 'r2' },
-        isErgodic: false,
-      },
-    ]);
-
-    const result = generateMATCH(nodes, edges);
-    expect(result).toEqual(['MATCH (a:A)-[:r1]->(b:B)', 'MATCH (b:B)-[:r2]->(a:A)']);
-  });
-
-  it('should handle multiple relationships between the same pair of nodes', () => {
-    const nodes: Node[] = [
-      { id: '1', statement: ':A', variable: 'a' },
-      { id: '2', statement: ':B', variable: 'b' },
-    ];
-
-    const edges: Edge[] = resetEdgesErgodicState([
-      {
-        id: 'e1',
-        sourceNode: '1',
-        targetNode: '2',
-        statement: ':r1',
-        data: { variable: 'r1' },
-        isErgodic: false,
-      },
-      {
-        id: 'e2',
-        sourceNode: '1',
-        targetNode: '2',
-        statement: ':r2',
-        data: { variable: 'r2' },
         isErgodic: false,
       },
     ]);

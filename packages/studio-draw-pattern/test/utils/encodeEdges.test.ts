@@ -8,9 +8,6 @@ describe('encodeEdges', () => {
       {
         id: 'e1',
         isErgodic: false,
-        data: {
-          data: { label: 'KNOWS' },
-        },
       },
     ];
 
@@ -30,11 +27,6 @@ describe('encodeEdges', () => {
       {
         id: 'e2',
         isErgodic: false,
-        data: {
-          data: {
-            label: '',
-          },
-        },
       },
     ];
 
@@ -54,20 +46,10 @@ describe('encodeEdges', () => {
       {
         id: 'e1',
         isErgodic: false,
-        data: {
-          data: {
-            label: 'FRIEND',
-          },
-        },
       },
       {
         id: 'e2',
         isErgodic: false,
-        data: {
-          data: {
-            label: 'LIKES',
-          },
-        },
       },
     ];
 
@@ -93,7 +75,7 @@ describe('encodeEdges', () => {
         id: 'e3',
         isErgodic: false,
         // @ts-ignore
-        data: {},
+        dat: {},
       },
     ];
 
@@ -114,11 +96,6 @@ describe('encodeEdges', () => {
         id: 'e4',
         isErgodic: false,
         statement: ':OLD_STATEMENT',
-        data: {
-          data: {
-            label: 'NEW_LABEL',
-          },
-        },
       },
     ];
 
@@ -157,11 +134,6 @@ describe('encodeEdges', () => {
       {
         id: 'e6',
         isErgodic: false,
-        data: {
-          data: {
-            label: 'LOVES',
-          },
-        },
       },
     ];
 
@@ -183,11 +155,6 @@ describe('encodeEdges', () => {
         isErgodic: false,
         sourceNode: 'n1',
         targetNode: 'n1',
-        data: {
-          data: {
-            label: 'SELF_LOOP',
-          },
-        },
       },
     ];
 
@@ -215,20 +182,10 @@ describe('encodeEdges', () => {
       {
         id: 'e8',
         isErgodic: false,
-        data: {
-          data: {
-            label: 'CONNECTED_TO',
-          },
-        },
       },
       {
         id: 'e9',
         isErgodic: false,
-        data: {
-          data: {
-            label: 'OWNS',
-          },
-        },
       },
     ];
 
