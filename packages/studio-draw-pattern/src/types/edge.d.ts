@@ -12,6 +12,6 @@ export interface Edge {
   targetNode?: string;
   sourceNode?: string;
   statement?: string;
-  isErgodic: boolean;
+  isErgodic?: boolean;
   properties?: string[];
 }
