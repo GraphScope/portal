@@ -36,6 +36,7 @@ export const DrawPattern: React.FC<DrawPatternProps> = props => {
   return (
     <DrawPatternContext.Provider value={props}>
       <Section
+        defaultCollapsed={{ leftSide: true }}
         splitBorder={true}
         leftSide={
           <div

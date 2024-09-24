@@ -10,10 +10,12 @@ import { useTransform } from '../../hooks/transform/useTransform';
 import { ISchemaNode } from '@graphscope/studio-graph-editor';
 import { useGraphStore } from '../../stores/useGraphStore';
 import { useEncodeCypher } from '../../hooks/cypher/useEncodeCypher';
-import { Button, Input, Modal } from 'antd';
+import { Button, Input, Modal, Tooltip } from 'antd';
 import { usePropertiesStore } from '../../stores/usePropertiesStore';
 import { DrawPatternContext, DrawPatternValue } from '../DrawPattern';
 import _ from 'lodash';
+import { useSection } from '@graphscope/studio-components';
+import { InsertRowRightOutlined } from '@ant-design/icons';
 
 export const Canvas = () => {
   const [descState, setDescState] = useState<string>();
@@ -33,12 +35,13 @@ export const Canvas = () => {
   const { generateRelation } = useGenerateRelation();
   const { onClick } = useContext(DrawPatternContext);
   const [RETURNs, setRETURNs] = useState<string>('');
+  const { toggleLeftSide } = useSection();
 
   useEffect(() => {
     if (isModalOpen) {
       const nodeReturn = Array.from(nodesStore).map(node => `${node.variable}`);
       const edgeReturn = Array.from(edgesStore).map(edge => `${edge.variable}`);
-      setRETURNs(`RETURN ${[...nodeReturn, ...edgeReturn].join(', ')}`);
+      [...nodeReturn, ...edgeReturn].length > 0 && setRETURNs(`RETURN ${[...nodeReturn, ...edgeReturn].join(', ')}`);
     }
   }, [isModalOpen]);
 
@@ -110,6 +113,28 @@ export const Canvas = () => {
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <MyGraph></MyGraph>
+      <div
+        style={{
+          backgroundColor: 'white',
+          position: 'absolute',
+          top: '140px',
+          left: '24px',
+          padding: '4px',
+          borderRadius: '4px',
+          boxShadow:
+            '0px 6px 16px 0px rgba(0, 0, 0, 0.08), 0px 3px 6px -4px rgba(0, 0, 0, 0.12), 0px 9px 28px 8px rgba(0, 0, 0, 0.05)',
+        }}
+      >
+        <Tooltip title={'展开工具栏'} placement="right">
+          <Button
+            onClick={() => {
+              toggleLeftSide();
+            }}
+            type="text"
+            icon={<InsertRowRightOutlined />}
+          ></Button>
+        </Tooltip>
+      </div>
       <Button
         onClick={() => {
           encodeEdges();
@@ -136,6 +161,8 @@ export const Canvas = () => {
           onClick && onClick(newState);
         }}
         onCancel={() => setIsModalOpen(false)}
+        cancelText="取消"
+        okText="查询"
       >
         MATCH 语句：<br></br>
         <Input.TextArea value={MATCHs} style={{ height: '5rem' }}></Input.TextArea>

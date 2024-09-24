@@ -467,7 +467,7 @@ export const useGenerateTemplate = () => {
         {
           id: node1Id,
           position: {
-            x: 394.444360104079,
+            x: 294.444360104079,
             y: 218.78591352988423,
           },
           type: 'graph-node',
@@ -478,7 +478,7 @@ export const useGenerateTemplate = () => {
           height: 100,
           selected: false,
           positionAbsolute: {
-            x: 394.444360104079,
+            x: 294.444360104079,
             y: 218.78591352988423,
           },
           dragging: false,
@@ -486,7 +486,7 @@ export const useGenerateTemplate = () => {
         {
           id: node2Id,
           position: {
-            x: 632.9830537728634,
+            x: 532.9830537728634,
             y: 214.96446600176026,
           },
           type: 'graph-node',
@@ -497,7 +497,7 @@ export const useGenerateTemplate = () => {
           height: 100,
           selected: false,
           positionAbsolute: {
-            x: 632.9830537728634,
+            x: 532.9830537728634,
             y: 214.96446600176026,
           },
           dragging: false,
@@ -505,7 +505,7 @@ export const useGenerateTemplate = () => {
         {
           id: node3Id,
           position: {
-            x: 875.9922071088333,
+            x: 775.9922071088333,
             y: 210.94593515264864,
           },
           type: 'graph-node',
@@ -516,7 +516,7 @@ export const useGenerateTemplate = () => {
           height: 100,
           selected: false,
           positionAbsolute: {
-            x: 875.9922071088333,
+            x: 775.9922071088333,
             y: 210.94593515264864,
           },
           dragging: false,
@@ -524,7 +524,7 @@ export const useGenerateTemplate = () => {
         {
           id: node4Id,
           position: {
-            x: 522.3616593234866,
+            x: 422.3616593234866,
             y: 443.3323212489479,
           },
           type: 'graph-node',
@@ -535,7 +535,7 @@ export const useGenerateTemplate = () => {
           height: 100,
           selected: false,
           positionAbsolute: {
-            x: 522.3616593234866,
+            x: 422.3616593234866,
             y: 443.3323212489479,
           },
           dragging: false,
@@ -543,7 +543,7 @@ export const useGenerateTemplate = () => {
         {
           id: node5Id,
           position: {
-            x: 757.340588627554,
+            x: 657.340588627554,
             y: 428.36785524718766,
           },
           type: 'graph-node',
@@ -554,7 +554,7 @@ export const useGenerateTemplate = () => {
           height: 100,
           selected: false,
           positionAbsolute: {
-            x: 757.340588627554,
+            x: 657.340588627554,
             y: 428.36785524718766,
           },
           dragging: false,
