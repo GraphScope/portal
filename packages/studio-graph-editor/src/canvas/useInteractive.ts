@@ -183,7 +183,7 @@ const useInteractive: any = () => {
   }, [nodes, edges, hasLayouted]);
 
   useEffect(() => {
-    console.log('监听时的 edges 和 nodes', edges, nodes);
+    console.log('监听时的 edges 和 nodes', JSON.stringify(edges), '\n', JSON.stringify(nodes));
     handleEdgesChange && handleEdgesChange(edges);
     handleNodesChange && handleNodesChange(nodes);
   }, [edges, nodes]);

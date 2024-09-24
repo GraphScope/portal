@@ -13,7 +13,14 @@ interface QuickStartProps {
 }
 export const QuickStartItem: React.FC<QuickStartProps> = ({ title, svgSrc, id }) => {
   const { transformNodes, transformEdges } = useTransform();
-  const { generateSelfLoop, generateTriangleLoop } = useGenerateTemplate();
+  const {
+    generateSelfLoop,
+    generateTriangleLoop,
+    generatePaperChallenge,
+    generatePaperChallengeSolution,
+    generatePaperCite,
+    generateComplexPaperCite,
+  } = useGenerateTemplate();
 
   const clearGraphStore = useGraphStore(state => state.clearGraphStore);
   const clearNode = useNodeStore(state => state.clearNode);
@@ -27,20 +34,20 @@ export const QuickStartItem: React.FC<QuickStartProps> = ({ title, svgSrc, id })
     clearGraphStore();
     clearProperties();
 
-    // 根据 template id 获取模板数据
-    switch (id) {
-      case 'triangle-loop':
-        const triangleLoopData = generateTriangleLoop();
-        transformNodes(triangleLoopData.nodes);
-        transformEdges(triangleLoopData.edges, triangleLoopData.nodes);
-        break;
-      case 'self-loop':
-        const selfLoopData = generateSelfLoop();
-        transformNodes(selfLoopData.nodes);
-        transformEdges(selfLoopData.edges, selfLoopData.nodes);
-        break;
-      default:
-        break;
+    const generateDataFunctions: any = {
+      'triangle-loop': generateTriangleLoop,
+      'self-loop': generateSelfLoop,
+      'paper-challenge': generatePaperChallenge,
+      'paper-challenge-solution': generatePaperChallengeSolution,
+      'paper-cite': generatePaperCite,
+      'complex-paper-cite': generateComplexPaperCite,
+    };
+
+    const generateFunction = generateDataFunctions[id];
+    if (generateFunction) {
+      const data = generateFunction();
+      transformNodes(data.nodes);
+      transformEdges(data.edges, data.nodes);
     }
   }, []);
 

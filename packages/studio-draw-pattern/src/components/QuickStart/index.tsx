@@ -37,6 +37,89 @@ const quickStartItems = [
     title: '三角环 Triangle-Loop',
     id: 'triangle-loop',
   },
+  {
+    svgSrc: (
+      <svg width="150" height="222" viewBox="0 0 407 222" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="60" cy="60" r="57" stroke="black" stroke-width="6" />
+        <circle cx="347" cy="162" r="57" stroke="black" stroke-width="6" />
+        <path
+          d="M120 83L141.724 109.982L154.23 77.6773L120 83ZM276.083 140.202L146.262 89.9491L144.096 95.5445L273.917 145.798L276.083 140.202Z"
+          fill="black"
+        />
+      </svg>
+    ),
+    title: 'Paper 的挑战',
+    id: 'paper-challenge',
+  },
+  {
+    svgSrc: (
+      <svg width="130" height="280" viewBox="0 0 550 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="60" cy="238" r="57" stroke="black" stroke-width="6" />
+        <circle cx="347" cy="340" r="57" stroke="black" stroke-width="6" />
+        <path
+          d="M275 321L253.276 294.018L240.77 326.323L275 321ZM250.904 308.455L121.083 258.202L118.917 263.798L248.738 314.051L250.904 308.455Z"
+          fill="black"
+        />
+        <circle cx="490.5" cy="59.5" r="56.5" stroke="black" stroke-width="6" />
+        <path
+          d="M457 124L429.135 144.58L460.89 158.422L457 124ZM391.75 281.199L448.961 149.95L443.461 147.552L386.25 278.801L391.75 281.199Z"
+          fill="black"
+        />
+      </svg>
+    ),
+    title: 'Paper 的 Solution',
+    id: 'paper-challenge-solution',
+  },
+  {
+    svgSrc: (
+      <svg width="180" height="200" viewBox="0 0 737 362" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="60" cy="60" r="57" stroke="black" stroke-width="6" />
+        <circle cx="347" cy="162" r="57" stroke="black" stroke-width="6" />
+        <path
+          d="M275 143L253.276 116.018L240.77 148.323L275 143ZM250.904 130.455L121.083 80.2023L118.917 85.7977L248.738 136.051L250.904 130.455Z"
+          fill="black"
+        />
+        <circle cx="677.5" cy="302.5" r="56.5" stroke="black" stroke-width="6" />
+        <path
+          d="M611 278L590.249 250.262L576.603 282.102L611 278ZM413.818 196.757L585.001 270.122L587.365 264.607L416.182 191.243L413.818 196.757Z"
+          fill="black"
+        />
+      </svg>
+    ),
+    title: 'Paper 的连环引用',
+    id: 'paper-cite',
+  },
+  {
+    svgSrc: (
+      <svg width="200" height="423" viewBox="0 0 837 423" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="60" cy="60" r="57" stroke="black" stroke-width="6" />
+        <circle cx="600" cy="363" r="57" stroke="black" stroke-width="6" />
+        <circle cx="234" cy="363" r="57" stroke="black" stroke-width="6" />
+        <circle cx="408" cy="60" r="57" stroke="black" stroke-width="6" />
+        <path d="M331 60L301 42.6795V77.3205L331 60ZM304 57L137 57V63L304 63V57Z" fill="black" />
+        <circle cx="777.5" cy="60.5" r="56.5" stroke="black" stroke-width="6" />
+        <path d="M704 60L674 42.6795V77.3205L704 60ZM482 63L677 63V57L482 57V63Z" fill="black" />
+        <path
+          d="M213 297L211.456 262.393L182.258 281.034L213 297ZM97.4714 121.614L195.942 275.857L201 272.628L102.529 118.386L97.4714 121.614Z"
+          fill="black"
+        />
+        <path
+          d="M253 297L284.112 281.767L255.364 262.44L253 297ZM369.51 118.326L265.575 272.919L270.554 276.267L374.49 121.674L369.51 118.326Z"
+          fill="black"
+        />
+        <path
+          d="M593 297L587.272 262.836L560.549 284.879L593 297ZM444.686 121.909L573.505 278.08L578.134 274.263L449.314 118.091L444.686 121.909Z"
+          fill="black"
+        />
+        <path
+          d="M612 297L643.229 282.009L614.632 262.459L612 297ZM730.523 118.307L624.761 273.017L629.714 276.404L735.477 121.693L730.523 118.307Z"
+          fill="black"
+        />
+      </svg>
+    ),
+    title: '复杂的 Paper Cite',
+    id: 'complex-paper-cite',
+  },
 ];
 
 export const QuickStart = () => {
