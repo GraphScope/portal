@@ -231,6 +231,8 @@ export default {
   'Querying data': '查询数据',
   Stopped: '已停止',
   Running: '运行中',
+  'Graph id': 'Graph id',
+  'Process id': 'Process id',
   /** query */
   Connect: '连接',
   Cancel: '取消',

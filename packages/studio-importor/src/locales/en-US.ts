@@ -54,4 +54,5 @@ export default {
   'Click or drag file to this area to parse it': 'Click or drag file to this area to parse it',
   'If you already have CSV data, feel free to parse it here, and the system will automatically infer possible graph models for you.':
     'If you already have CSV data, feel free to parse it here, and the system will automatically infer possible graph models for you.',
+  'Data source binding': 'Data source binding',
 };

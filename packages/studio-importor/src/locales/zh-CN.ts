@@ -53,4 +53,5 @@ export default {
   'Click or drag file to this area to parse it': '单击或拖动文件到此区域进行解析',
   'If you already have CSV data, feel free to parse it here, and the system will automatically infer possible graph models for you.':
     '如果您已经有 CSV 数据，请随时将其放置到此处，系统将自动为您推断可能的图模型。',
+  'Data source binding': '数据绑定',
 };
