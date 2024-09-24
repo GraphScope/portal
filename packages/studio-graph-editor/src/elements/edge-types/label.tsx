@@ -97,7 +97,7 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
           <EditableText
             disabled={disabled || graphDisabled}
             id={id}
-            text={label || id}
+            text={label || ''}
             onTextChange={onLabelChange}
             style={{ color: getColor(), fontSize: '10px', lineHeight: '14px', minHeight: '14px' }}
           />
