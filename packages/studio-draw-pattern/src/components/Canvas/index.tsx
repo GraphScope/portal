@@ -36,11 +36,9 @@ export const Canvas = () => {
 
   useEffect(() => {
     if (isModalOpen) {
-      setRETURNs(
-        `RETURN ${Array.from({ length: nodesStore.length }, (_, index) => index)
-          .map(value => `n${value}`)
-          .join(', ')}`,
-      );
+      const nodeReturn = Array.from(nodesStore).map(node => `${node.variable}`);
+      const edgeReturn = Array.from(edgesStore).map(edge => `${edge.variable}`);
+      setRETURNs(`RETURN ${[...nodeReturn, ...edgeReturn].join(', ')}`);
     }
   }, [isModalOpen]);
 
@@ -122,7 +120,7 @@ export const Canvas = () => {
         type="primary"
         style={{ position: 'absolute', bottom: '20px', right: '240px' }}
       >
-        This is your Cypher
+        Export Your Cypher
       </Button>
       <Modal
         title="Generate Cypher Code"

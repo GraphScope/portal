@@ -105,7 +105,7 @@ export const generateMATCH = (nodes: Node[], edges: Edge[]) => {
     // when use it, set it's isErgodic true
     if (currentEdge) currentEdge.isErgodic = true;
 
-    let MATCH = `[${currentEdge?.statement}]`;
+    let MATCH = `[${currentEdge.variable}${currentEdge?.statement}]`;
     // 当前 egde target遍历
     if (targetNode) {
       while (true) {
@@ -120,7 +120,7 @@ export const generateMATCH = (nodes: Node[], edges: Edge[]) => {
         const targetEdges = edgesSnapShot.filter(edge => isArrayExist(edge.id, [...targetNode!.outRelations!]));
         targetCurrentEdge = targetEdges.find(edge => !edge.isErgodic);
         if (!targetCurrentEdge) break;
-        MATCH = `${MATCH}-[${targetCurrentEdge?.statement}]`;
+        MATCH = `${MATCH}-[${targetCurrentEdge.variable}${targetCurrentEdge?.statement}]`;
         targetNode = nodes.find(node => node.id === targetCurrentEdge?.targetNode);
         if (!targetNode) throw new Error('targetNode is not exist');
       }
@@ -139,7 +139,7 @@ export const generateMATCH = (nodes: Node[], edges: Edge[]) => {
         const sourceEdges = edgesSnapShot.filter(edge => isArrayExist(edge.id, [...sourceNode!.inRelations!]));
         sourceCurrentEdge = sourceEdges.find(edge => !edge.isErgodic);
         if (!sourceCurrentEdge) break;
-        MATCH = `[${sourceCurrentEdge?.statement}]->${MATCH}`;
+        MATCH = `[${sourceCurrentEdge.variable}${sourceCurrentEdge?.statement}]->${MATCH}`;
         sourceNode = nodes.find(node => node.id === sourceCurrentEdge?.sourceNode);
         if (!sourceNode) throw new Error('sourceNode is not exist');
       }

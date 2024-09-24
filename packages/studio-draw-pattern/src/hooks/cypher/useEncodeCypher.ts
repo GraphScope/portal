@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useNodeStore } from '../../stores/useNodeStore';
 import { PropertySet, Property } from '../../types/property';
 import _ from 'lodash';
@@ -17,6 +17,7 @@ export const useEncodeCypher = () => {
   const properties = usePropertiesStore(state => state.properties);
   const editPropertiesStore = usePropertiesStore(state => state.editProperties);
   const addVariableForNode = useNodeStore(state => state.addVariableForNode);
+  const addVariableForEdge = useEdgeStore(state => state.addVariableForEdge);
 
   const updateNodeProperties = useCallback(() => {
     const editProperties = (changeProperties: PropertySet, pre: Property[], current: Property[]) => {
@@ -45,12 +46,23 @@ export const useEncodeCypher = () => {
   }, [nodes]);
 
   const updateEdgeStatements = useCallback(() => {
+    let count = 0;
     const editEdgeStatement = (pre: Edge, current: Edge) => {
       const isEqual = _.isEqual(pre.statement, current.statement);
+      let newVariableName = `e${count}`;
+
+      addVariableForEdge && addVariableForEdge(current.id, newVariableName);
+
       !isEqual && editEdge && editEdge({ ...current });
+
+      count++;
     };
 
     encodeEdges(edges, editEdgeStatement);
+  }, [edges]);
+
+  useEffect(() => {
+    console.log('下面是边界\n', edges);
   }, [edges]);
 
   const createMatchClauses = useCallback(() => {
