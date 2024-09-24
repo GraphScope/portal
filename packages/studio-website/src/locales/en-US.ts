@@ -135,6 +135,7 @@ export default {
   'Select or customize your UI theme': 'Select or customize your UI theme',
   'Rounded corners': 'Rounded corners',
   'Corner radians': 'Corner radians',
+  'Appearance Setting': 'Appearance Setting',
   'Change how Untitled UI looks and feels in your browser': 'Change how Untitled UI looks and feels in your browser',
   'Select navigation style': 'Select navigation style',
   'Navigation Style': 'Navigation Style',
@@ -234,6 +235,8 @@ export default {
   'Querying data': 'Querying data',
   Stopped: 'Stopped',
   Running: 'Running',
+  'Graph id': 'Graph id',
+  'Process id': 'Process id',
   /** query */
   Connect: 'Connect',
   Cancel: 'Cancel',
