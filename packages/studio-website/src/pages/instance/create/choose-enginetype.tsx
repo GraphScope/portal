@@ -3,8 +3,8 @@ import { Form, Input, Typography } from 'antd';
 
 import { FormattedMessage, useIntl } from 'react-intl';
 import SelectCards from '@/components/select-cards';
-import { useContext, storeType } from './useContext';
 
+export const storeType = window.GS_ENGINE_TYPE === 'groot' ? 'groot_store' : 'mutable_csr';
 export type FieldType = {
   graphName?: string;
   storeType?: string;
@@ -54,8 +54,7 @@ const engines = gs_all_engines.filter(item => {
 
 const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props => {
   const { form } = props;
-  const { store, updateStore } = useContext();
-  const { mode } = store;
+
   const intl = useIntl();
   const chooseStoreType = (item: any) => {
     // updateStore(draft => {
@@ -91,10 +90,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
         name="graphName"
         rules={[{ required: true, message: '' }, validatePasswords]}
       >
-        <Input
-          placeholder={intl.formatMessage({ id: 'please name your graph instance.' })}
-          disabled={mode === 'view'}
-        />
+        <Input placeholder={intl.formatMessage({ id: 'please name your graph instance.' })} />
       </Form.Item>
 
       <Form.Item<FieldType>
@@ -103,6 +99,7 @@ const ChooseEnginetype: React.FunctionComponent<ChooseEnginetypeProps> = props =
         tooltip=""
         rules={[{ required: true, message: '' }]}
       >
+        {/**@ts-ignore */}
         <SelectCards val={storeType} items={engines} onChange={chooseStoreType} />
       </Form.Item>
     </Form>

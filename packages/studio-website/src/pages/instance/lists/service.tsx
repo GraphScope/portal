@@ -1,10 +1,4 @@
-import {
-  GraphApiFactory,
-  ServiceApiFactory,
-  // DeploymentApiFactory,
-  // LegacyApiFactory,
-  JobApiFactory,
-} from '@graphscope/studio-server';
+import { GraphApiFactory, ServiceApiFactory, JobApiFactory } from '@graphscope/studio-server';
 import { notification } from '@/pages/utils';
 
 export const listGraphs = async () => {
@@ -54,6 +48,7 @@ export const listGraphs = async () => {
       sdk_endpoints: { cypher: '', hqps: '' },
       status: '',
     };
+    //@ts-ignore
     const { vertex_types, edge_types, vertices, edges } = schema;
     return {
       id,
