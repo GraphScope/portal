@@ -1,9 +1,12 @@
-import React, { createContext } from 'react';
+import React, { createContext, useEffect } from 'react';
 import { QuickStart } from './QuickStart';
 import { Canvas } from './Canvas';
 import { Section } from '@graphscope/studio-components';
 import { ISchemaNode } from '@graphscope/studio-graph-editor';
 import { ISchemaEdge } from '@graphscope/studio-graph-editor';
+import { useGraphStore } from '../stores/useGraphStore';
+import { useEdgeStore } from '../stores/useEdgeStore';
+import { useNodeStore } from '../stores/useNodeStore';
 
 export interface GraphProps {
   nodes: ISchemaNode[];
@@ -33,6 +36,19 @@ const defaultDrawPatternProps: DrawPatternProps = {
 export const DrawPatternContext = createContext<DrawPatternProps>(defaultDrawPatternProps);
 
 export const DrawPattern: React.FC<DrawPatternProps> = props => {
+  const clearGraphStore = useGraphStore(state => state.clearGraphStore);
+  const clearEdge = useEdgeStore(state => state.clearEdge);
+  const clearNode = useNodeStore(state => state.clearNode);
+
+  useEffect(() => {
+    return () => {
+      console.log('清空所有数据');
+      clearGraphStore();
+      clearEdge?.();
+      clearNode?.();
+    };
+  }, [clearGraphStore, clearEdge, clearNode]);
+
   return (
     <DrawPatternContext.Provider value={props}>
       <Section
