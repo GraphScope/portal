@@ -75,11 +75,11 @@ const useInteractive: any = () => {
 
         // handleEdgesChange && handleEdgesChange([...fakeSnapshot(edges), newEgde]);
         // handleNodesChange && handleNodesChange([...fakeSnapshot(nodes), newNode]);
-        console.log(
-          'handleChange 时的 edges 和 nodes',
-          [...fakeSnapshot(edges), newEgde],
-          [...fakeSnapshot(nodes), newNode],
-        );
+        // console.log(
+        //   'handleChange 时的 edges 和 nodes',
+        //   [...fakeSnapshot(edges), newEgde],
+        //   [...fakeSnapshot(nodes), newNode],
+        // );
 
         updateStore(draft => {
           draft.nodes.push(newNode);
@@ -184,7 +184,7 @@ const useInteractive: any = () => {
   }, [nodes, edges, hasLayouted]);
 
   useEffect(() => {
-    console.log('监听时的 edges 和 nodes', JSON.stringify(edges), '\n', JSON.stringify(nodes));
+    // console.log('监听时的 edges 和 nodes', JSON.stringify(edges), '\n', JSON.stringify(nodes));
     handleEdgesChange && handleEdgesChange(edges);
     handleNodesChange && handleNodesChange(nodes);
   }, [edges, nodes]);

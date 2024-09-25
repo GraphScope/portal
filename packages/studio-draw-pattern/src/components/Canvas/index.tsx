@@ -15,7 +15,7 @@ import { usePropertiesStore } from '../../stores/usePropertiesStore';
 import { DrawPatternContext, DrawPatternValue } from '../DrawPattern';
 import _ from 'lodash';
 import { useSection } from '@graphscope/studio-components';
-import { InsertRowRightOutlined } from '@ant-design/icons';
+import { InsertRowRightOutlined, SearchOutlined } from '@ant-design/icons';
 
 export const Canvas = () => {
   const [descState, setDescState] = useState<string>();
@@ -42,6 +42,14 @@ export const Canvas = () => {
       const nodeReturn = Array.from(nodesStore).map(node => `${node.variable}`);
       const edgeReturn = Array.from(edgesStore).map(edge => `${edge.variable}`);
       [...nodeReturn, ...edgeReturn].length > 0 && setRETURNs(`RETURN ${[...nodeReturn, ...edgeReturn].join(', ')}`);
+      onClick &&
+        onClick({
+          MATCHs,
+          RETURNs: `RETURN ${[...nodeReturn, ...edgeReturn].join(', ')}`,
+          WHEREs,
+          description: descState ?? '',
+        });
+      // console.log(`RETURN ${[...nodeReturn, ...edgeReturn].join(', ')}`, MATCHs, WHEREs);
     }
   }, [isModalOpen]);
 
@@ -145,12 +153,13 @@ export const Canvas = () => {
         }}
         type="primary"
         style={{ position: 'absolute', bottom: '20px', right: '240px' }}
+        icon={<SearchOutlined />}
       >
-        Export Your Cypher
+        <pre>Cypher</pre>查询
       </Button>
       <Modal
         title="Generate Cypher Code"
-        open={isModalOpen}
+        // open={isModalOpen}
         onOk={() => {
           setIsModalOpen(false);
           const newState: DrawPatternValue = {

@@ -61,10 +61,6 @@ export const useEncodeCypher = () => {
     encodeEdges(edges, editEdgeStatement);
   }, [edges]);
 
-  useEffect(() => {
-    console.log('下面是边界\n', edges);
-  }, [edges]);
-
   const createMatchClauses = useCallback(() => {
     return generateMATCH(nodes, edges);
   }, [nodes, edges]);
