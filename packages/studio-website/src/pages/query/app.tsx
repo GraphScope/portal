@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import StudioQuery from '@graphscope/studio-query';
+import { transformGraphNodes, transformEdges, transSchemaToOptions } from '@graphscope/studio-importor';
 import {
   queryGraphData,
   queryGraphSchema,
@@ -14,7 +15,7 @@ import StoppedServiceCase from './stopped-service-case';
 import SelectGraph from '@/layouts/select-graph';
 
 import { Utils } from '@graphscope/studio-components';
-
+import { getSchema } from '../modeling/services';
 const getPrefixParams = () => {
   const { GS_ENGINE_TYPE } = window;
   const language =
@@ -63,8 +64,38 @@ export interface IQueryModuleState {
 }
 const QueryModule = () => {
   const { store } = useContext();
-  const { graphId, displaySidebarPosition, displaySidebarType } = store;
+  const { graphId, draftId, displaySidebarPosition, displaySidebarType } = store;
   const { language, globalScript, welcome, autoRun, collapsed } = getPrefixParams();
+  const [previewGraphSchema, setPreviewGraphSchema] = useState({ nodes: [], edges: [] });
+
+  useEffect(() => {
+    getQueryGraphSchema().then(data => {
+      const nodes = transformGraphNodes(data.nodes, 'graph');
+      const edges = transformEdges(data.edges, 'graph');
+      // @ts-ignore
+      setPreviewGraphSchema({ nodes, edges });
+    });
+  }, []);
+
+  const getQueryGraphSchema = async () => {
+    if (graphId === draftId) {
+      return transSchemaToOptions({ vertex_types: [], edge_types: [] } as any);
+    }
+    let schema: any = { vertex_types: [], edge_types: [] };
+    if (graphId) {
+      schema = await getSchema(graphId);
+      if (!schema) {
+        schema = { vertex_types: [], edge_types: [] };
+      }
+    }
+
+    return transSchemaToOptions(schema as any, () => {
+      return {
+        saved: true,
+        disabled: true,
+      };
+    });
+  };
 
   return (
     <>
@@ -98,6 +129,7 @@ const QueryModule = () => {
         displaySidebarType={displaySidebarType}
         sidebarStyle={{ width: '320px', padding: '0px' }}
         sidebarCollapsed={collapsed}
+        previewGraphSchema={previewGraphSchema}
       ></StudioQuery>
       <StoppedServiceCase />
       <NoEndpointCase />

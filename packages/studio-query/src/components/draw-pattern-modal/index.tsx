@@ -1,8 +1,9 @@
 import { HighlightOutlined } from '@ant-design/icons';
 import { DrawPattern, DrawPatternValue, GraphProps } from '@graphscope/studio-draw-pattern';
 import { Button, Modal, Tooltip } from 'antd';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useContext } from '../../app/context';
+import { snapshot } from 'valtio';
 
 export interface DrawPatternModalProps {
   previewSchema?: GraphProps;
@@ -11,7 +12,8 @@ export interface DrawPatternModalProps {
 
 export const DrawPatternModal: React.FC<DrawPatternModalProps> = ({ previewSchema, onClick }) => {
   const [visible, setVisiable] = useState<boolean>(false);
-  const { updateStore } = useContext();
+  const { updateStore, store } = useContext();
+  const { previewGraphSchema } = store;
 
   const handleClick = useCallback((value: DrawPatternValue) => {
     setVisiable(false);
@@ -23,7 +25,11 @@ export const DrawPatternModal: React.FC<DrawPatternModalProps> = ({ previewSchem
   }, []);
 
   const MyDrawPattern = useCallback(() => {
-    if (visible) return <DrawPattern onClick={handleClick}></DrawPattern>;
+    // @ts-ignore
+    if (visible)
+      return (
+        <DrawPattern onClick={handleClick} previewGraph={JSON.parse(JSON.stringify(previewGraphSchema))}></DrawPattern>
+      );
     else return <></>;
   }, [visible]);
 

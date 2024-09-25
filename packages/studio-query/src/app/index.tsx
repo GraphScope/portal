@@ -46,6 +46,8 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     sidebarStyle,
 
     welcome,
+
+    previewGraphSchema,
   } = props;
 
   const { store, updateStore } = useContext();
@@ -122,9 +124,10 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         draft.mode = displayMode as 'flow' | 'tabs';
         draft.language = language as 'gremlin' | 'cypher';
         draft.welcome = welcome;
+        draft.previewGraphSchema = previewGraphSchema ?? { nodes: [], edges: [] };
       });
     })();
-  }, []);
+  }, [previewGraphSchema]);
 
   const handleQuery = (value: IStatement) => {
     /** 查询的时候，就可以存储历史记录了 */

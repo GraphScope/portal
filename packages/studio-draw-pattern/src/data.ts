@@ -1,6 +1,6 @@
 export const defaultNodes = [
   {
-    id: 'f5e657d8-083c-44af-8244-c491af293baf',
+    id: '12e9ac26-3b37-40d2-96ff-2c9a6932f8fc',
     data: {
       label: 'Challenge',
       primary: 'id',
@@ -8,7 +8,7 @@ export const defaultNodes = [
       disabled: true,
       properties: [
         {
-          key: '2537c7e6-0bd5-447c-b651-0fac1482f4a7',
+          key: 'dca36905-2d3d-4ed1-b81d-95c5f6a2278c',
           index: 0,
           token: '',
           name: 'id',
@@ -16,7 +16,7 @@ export const defaultNodes = [
           primaryKey: true,
         },
         {
-          key: '3de3201f-1a85-4abb-9393-68cbb9f90ea7',
+          key: '74963cf7-6540-412e-83b5-cc9863b718ee',
           index: 1,
           token: '',
           name: 'name',
@@ -24,7 +24,7 @@ export const defaultNodes = [
           primaryKey: false,
         },
         {
-          key: '4a904c2f-1ede-48b3-9593-9545075fa90f',
+          key: '35caf664-59a9-42a8-8e0a-c6f074061d42',
           index: 2,
           token: '',
           name: 'description',
@@ -36,10 +36,13 @@ export const defaultNodes = [
     type: 'graph-node',
     targetPosition: 'left',
     sourcePosition: 'right',
-    position: { x: 695.4867320028056, y: 476.14063713950435 },
+    position: {
+      x: 0,
+      y: 0,
+    },
   },
   {
-    id: '63ae8bbf-7207-47a5-82ae-6f7fe1e63d1a',
+    id: '2594e7a8-b1e1-4980-b61a-c4ffb36af978',
     data: {
       label: 'Task',
       primary: 'id',
@@ -47,7 +50,7 @@ export const defaultNodes = [
       disabled: true,
       properties: [
         {
-          key: 'ab57f8e3-ff99-40a7-8da4-36aceee1f423',
+          key: '39711669-cff9-4667-a515-55914c8c2aff',
           index: 0,
           token: '',
           name: 'id',
@@ -55,7 +58,7 @@ export const defaultNodes = [
           primaryKey: true,
         },
         {
-          key: 'c8bcfd36-6cc3-411e-be70-388c19e46d11',
+          key: 'bfb6a178-e7ae-4a7a-b505-53d5ca9a7f6d',
           index: 1,
           token: '',
           name: 'name',
@@ -63,7 +66,7 @@ export const defaultNodes = [
           primaryKey: false,
         },
         {
-          key: 'ad9b1d2e-77c1-40a9-91bd-1847ce033f26',
+          key: 'dc183c06-43e4-42da-b198-254d19bd5a20',
           index: 2,
           token: '',
           name: 'description',
@@ -75,10 +78,13 @@ export const defaultNodes = [
     type: 'graph-node',
     targetPosition: 'left',
     sourcePosition: 'right',
-    position: { x: 169.52829526223186, y: 447.7439908492047 },
+    position: {
+      x: 0,
+      y: 0,
+    },
   },
   {
-    id: '5806bd06-ebcd-44f8-b281-9a7345b48b15',
+    id: '4e647684-cb8c-421e-8c36-b7f17fd89469',
     data: {
       label: 'Paper',
       primary: 'id',
@@ -86,7 +92,7 @@ export const defaultNodes = [
       disabled: true,
       properties: [
         {
-          key: 'dc9d6a2c-8164-4ac1-9315-4197d35b4ada',
+          key: '0250dc72-d391-4fef-85d4-3b1577e03852',
           index: 0,
           token: '',
           name: 'id',
@@ -94,7 +100,7 @@ export const defaultNodes = [
           primaryKey: true,
         },
         {
-          key: '9b5bb8d3-e95f-4247-9f58-b9969693e8f9',
+          key: 'dd9d0e1f-14cf-465a-bd86-fabdc4ec4269',
           index: 1,
           token: '',
           name: 'published',
@@ -102,7 +108,7 @@ export const defaultNodes = [
           primaryKey: false,
         },
         {
-          key: '93efe551-63f3-402a-b7ad-f515dc531662',
+          key: '7770fcce-d22c-4bc4-8798-15a4e0f4ae4a',
           index: 2,
           token: '',
           name: 'year',
@@ -110,7 +116,7 @@ export const defaultNodes = [
           primaryKey: false,
         },
         {
-          key: 'f1b77dc0-f8cc-43a5-9321-52be7ebf451a',
+          key: '9c107722-f256-4668-9f8e-ba565cb2e908',
           index: 3,
           token: '',
           name: 'month',
@@ -118,7 +124,7 @@ export const defaultNodes = [
           primaryKey: false,
         },
         {
-          key: '7cad209d-a01b-4262-8503-3a285d76c144',
+          key: 'c72f0f7a-4fa1-4c82-b611-d73002bb320e',
           index: 4,
           token: '',
           name: 'title',
@@ -126,7 +132,7 @@ export const defaultNodes = [
           primaryKey: false,
         },
         {
-          key: '0d2dc6b1-5c69-4db4-9951-814b66dcab53',
+          key: '91648711-5ba8-4a58-acc1-599e19f502fa',
           index: 5,
           token: '',
           name: 'authors',
@@ -134,7 +140,7 @@ export const defaultNodes = [
           primaryKey: false,
         },
         {
-          key: '07a81ea8-4293-4d37-9e5e-d97323412064',
+          key: '0dbadf67-d103-4f7d-b3ba-c165b34eb294',
           index: 6,
           token: '',
           name: 'summary',
@@ -142,7 +148,7 @@ export const defaultNodes = [
           primaryKey: false,
         },
         {
-          key: '75d9b5e3-7bcf-4ee1-9f64-0ebe62aaf283',
+          key: '2a26ed3b-34e6-48e3-b50e-69a02e34d279',
           index: 7,
           token: '',
           name: 'journal_ref',
@@ -150,7 +156,7 @@ export const defaultNodes = [
           primaryKey: false,
         },
         {
-          key: '66f6c93a-d547-492e-be1f-8ed5662df22b',
+          key: 'b625b44d-998e-4c8d-9f3a-c0df62a9a917',
           index: 8,
           token: '',
           name: 'doi',
@@ -158,7 +164,7 @@ export const defaultNodes = [
           primaryKey: false,
         },
         {
-          key: 'fde89821-f8ab-4c79-b3bf-f4cd9742a51d',
+          key: 'e0fc0899-f901-4438-9b3f-e1dc44662489',
           index: 9,
           token: '',
           name: 'primary_category',
@@ -166,7 +172,7 @@ export const defaultNodes = [
           primaryKey: false,
         },
         {
-          key: 'e7dd53fa-e218-4897-94cb-bee44699221e',
+          key: '0bd6d292-c534-4fc1-a8ce-43be04b0e7da',
           index: 10,
           token: '',
           name: 'categories',
@@ -174,7 +180,7 @@ export const defaultNodes = [
           primaryKey: false,
         },
         {
-          key: '82c9ce3a-6dda-4e74-9634-cab658219fb4',
+          key: 'fd0ee405-7807-4a71-b088-0a6a78fec872',
           index: 11,
           token: '',
           name: 'problem_def',
@@ -182,7 +188,7 @@ export const defaultNodes = [
           primaryKey: false,
         },
         {
-          key: '7af26b47-e9e2-4cd4-b72b-1e4487d2de7c',
+          key: 'a3f9ff15-adca-4c26-83d5-d6e2ba0aa987',
           index: 12,
           token: '',
           name: 'keywords',
@@ -194,10 +200,13 @@ export const defaultNodes = [
     type: 'graph-node',
     targetPosition: 'left',
     sourcePosition: 'right',
-    position: { x: 430.7411540902478, y: 395.75620729493716 },
+    position: {
+      x: 0,
+      y: 0,
+    },
   },
   {
-    id: '78f80916-6c58-4e41-aeb8-8aee7684b9ce',
+    id: 'aaefc5d9-28e1-45d1-8953-0d364fef9563',
     data: {
       label: 'Solution',
       primary: 'id',
@@ -205,7 +214,7 @@ export const defaultNodes = [
       disabled: true,
       properties: [
         {
-          key: '9d9c3342-fbac-40d5-97b0-221fa58c692a',
+          key: '86d18911-1e1b-4369-825b-ed17d22f69e9',
           index: 0,
           token: '',
           name: 'id',
@@ -213,7 +222,7 @@ export const defaultNodes = [
           primaryKey: true,
         },
         {
-          key: '830157df-9960-477e-82f4-8b2c1e608fa9',
+          key: 'e3f3614c-e95b-4d0a-88c0-0bc9da1b15ed',
           index: 1,
           token: '',
           name: 'name',
@@ -221,7 +230,7 @@ export const defaultNodes = [
           primaryKey: false,
         },
         {
-          key: '5996553d-6d13-42f9-a576-c90472907873',
+          key: '7b84159a-97af-4c9b-b7f4-9deede3f3a98',
           index: 2,
           token: '',
           name: 'description',
@@ -233,56 +242,97 @@ export const defaultNodes = [
     type: 'graph-node',
     targetPosition: 'left',
     sourcePosition: 'right',
-    position: { x: 508.243818645205, y: 670.3591647146327 },
+    position: {
+      x: 0,
+      y: 0,
+    },
   },
 ];
 
 export const defaultEdges = [
   {
-    id: '4ef9155c-77ad-47be-b27a-648bdb5a8978',
-    source: '5806bd06-ebcd-44f8-b281-9a7345b48b15',
-    target: 'f5e657d8-083c-44af-8244-c491af293baf',
+    id: 'edec3a58-1200-488c-a128-a64709c05aa8',
+    source: '4e647684-cb8c-421e-8c36-b7f17fd89469',
+    target: '4e647684-cb8c-421e-8c36-b7f17fd89469',
     type: 'graph-edge',
-    data: { label: 'Has', saved: true, disabled: true, properties: [], _extra: { count: 1, index: 0, isLoop: false } },
+    data: {
+      label: 'Cite',
+      saved: true,
+      disabled: true,
+      properties: [],
+      _extra: {
+        count: 1,
+        index: 0,
+        isLoop: true,
+      },
+    },
   },
   {
-    id: '4f2923a8-0e0d-4e5a-ae9a-1176dc1aea9e',
-    source: '5806bd06-ebcd-44f8-b281-9a7345b48b15',
-    target: '63ae8bbf-7207-47a5-82ae-6f7fe1e63d1a',
+    id: '4ab92cdd-e253-482b-9e07-385db6925b19',
+    source: '4e647684-cb8c-421e-8c36-b7f17fd89469',
+    target: '12e9ac26-3b37-40d2-96ff-2c9a6932f8fc',
+    type: 'graph-edge',
+    data: {
+      label: 'Has',
+      saved: true,
+      disabled: true,
+      properties: [],
+      _extra: {
+        count: 1,
+        index: 0,
+        isLoop: false,
+      },
+    },
+  },
+  {
+    id: 'c2e53808-0875-42b5-a1c6-02789b912797',
+    source: '4e647684-cb8c-421e-8c36-b7f17fd89469',
+    target: '2594e7a8-b1e1-4980-b61a-c4ffb36af978',
     type: 'graph-edge',
     data: {
       label: 'WorkOn',
       saved: true,
       disabled: true,
       properties: [],
-      _extra: { count: 1, index: 0, isLoop: false },
+      _extra: {
+        count: 1,
+        index: 0,
+        isLoop: false,
+      },
     },
   },
   {
-    id: '3d44a352-07cc-4ec6-ba9a-97ad47190e21',
-    source: '5806bd06-ebcd-44f8-b281-9a7345b48b15',
-    target: '5806bd06-ebcd-44f8-b281-9a7345b48b15',
-    type: 'graph-edge',
-    data: { label: 'Cite', saved: true, disabled: true, properties: [], _extra: { count: 1, index: 0, isLoop: true } },
-  },
-  {
-    id: '6fec5ab4-ca63-4de5-a3a2-743d4c7d42b7',
-    source: 'f5e657d8-083c-44af-8244-c491af293baf',
-    target: '78f80916-6c58-4e41-aeb8-8aee7684b9ce',
+    id: '7432b64a-63f4-4759-948d-9357e0357126',
+    source: '12e9ac26-3b37-40d2-96ff-2c9a6932f8fc',
+    target: 'aaefc5d9-28e1-45d1-8953-0d364fef9563',
     type: 'graph-edge',
     data: {
       label: 'Solvedby',
       saved: true,
       disabled: true,
       properties: [],
-      _extra: { count: 1, index: 0, isLoop: false },
+      _extra: {
+        count: 1,
+        index: 0,
+        isLoop: false,
+      },
     },
   },
   {
-    id: '95939128-e06e-4e2e-980a-6910bed4383d',
-    source: '5806bd06-ebcd-44f8-b281-9a7345b48b15',
-    target: '78f80916-6c58-4e41-aeb8-8aee7684b9ce',
+    id: '8071aa1f-dc3c-49a7-8d6a-10f4ebdc7092',
+    source: '4e647684-cb8c-421e-8c36-b7f17fd89469',
+    target: 'aaefc5d9-28e1-45d1-8953-0d364fef9563',
     type: 'graph-edge',
-    data: { label: 'Use', saved: true, disabled: true, properties: [], _extra: { count: 1, index: 0, isLoop: false } },
+    data: {
+      label: 'Use',
+      saved: true,
+      disabled: true,
+      properties: [],
+      _extra: {
+        count: 1,
+        index: 0,
+        isLoop: false,
+      },
+    },
   },
 ];

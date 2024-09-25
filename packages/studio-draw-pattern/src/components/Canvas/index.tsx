@@ -13,7 +13,7 @@ import { useEncodeCypher } from '../../hooks/cypher/useEncodeCypher';
 import { Button, Input, Modal, Tooltip } from 'antd';
 import { usePropertiesStore } from '../../stores/usePropertiesStore';
 import { DrawPatternContext, DrawPatternValue } from '../DrawPattern';
-import _, { set } from 'lodash';
+import _ from 'lodash';
 import { useSection } from '@graphscope/studio-components';
 import { InsertRowRightOutlined, SearchOutlined } from '@ant-design/icons';
 
@@ -39,6 +39,7 @@ export const Canvas = () => {
   const [RETURNs, setRETURNs] = useState<string>('');
   const { toggleLeftSide } = useSection();
   const [clickTrigger, setClickTrigger] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const nodeReturn = Array.from(nodesStore).map(node => `${node.variable}`);
@@ -158,6 +159,7 @@ export const Canvas = () => {
           encodeNodes();
           encodeProperties();
           setClickTrigger(true);
+          setIsModalOpen(true);
         }}
         type="primary"
         style={{ position: 'absolute', bottom: '20px', right: '240px' }}
@@ -165,36 +167,6 @@ export const Canvas = () => {
       >
         <pre>Cypher</pre>查询
       </Button>
-      {/* <Modal
-        title="Generate Cypher Code"
-        open={isModalOpen}
-        onOk={() => {
-          setIsModalOpen(false);
-          const newState: DrawPatternValue = {
-            MATCHs,
-            WHEREs,
-            RETURNs,
-            description: descState ?? '',
-          };
-          onClick && onClick(newState);
-        }}
-        onCancel={() => setIsModalOpen(false)}
-        cancelText="取消"
-        okText="查询"
-      >
-        MATCH 语句：<br></br>
-        <Input.TextArea value={MATCHs} style={{ height: '5rem' }}></Input.TextArea>
-        WHERE 语句 <br></br>
-        <Input.TextArea value={WHEREs} style={{ height: '5rem' }}></Input.TextArea>
-        RETURN 语句 <br></br>
-        <Input.TextArea
-          value={RETURNs}
-          style={{ height: '5rem' }}
-          onChange={e => setRETURNs(e.target.value)}
-        ></Input.TextArea>
-        Desc 描述
-        <Input placeholder="desc" value={descState} onChange={e => setDescState(e.target.value)}></Input>
-      </Modal> */}
     </div>
   );
 };
