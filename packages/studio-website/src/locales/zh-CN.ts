@@ -150,8 +150,6 @@ export default {
   'Querying page sidebar style': '查询页面侧边栏样式',
   Inline: '内嵌',
   Menu: '菜单',
-  English: '英文',
-  Chinese: '中文',
   left: '左边栏',
   right: '右边栏',
   Sidebar: '侧栏',

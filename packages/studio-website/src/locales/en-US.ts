@@ -149,8 +149,6 @@ export default {
   'Querying page sidebar style': 'Querying page sidebar style',
   Inline: 'Inline',
   Menu: 'Menu',
-  English: 'English',
-  Chinese: 'Chinese',
   left: 'left',
   right: 'right',
   Sidebar: 'Sidebar',
