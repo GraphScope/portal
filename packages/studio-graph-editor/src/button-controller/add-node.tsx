@@ -18,7 +18,7 @@ const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
   const { style } = props;
   const { setCenter } = useReactFlow();
   const { updateStore } = useContext();
-  const { isLabelEmpty } = useGraphContext();
+  const { noDefaultLabel } = useGraphContext();
 
   const tooltipText = <FormattedMessage id="Create new vertex" />;
 
@@ -37,7 +37,7 @@ const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
             y,
           },
           type: 'graph-node',
-          data: { label: isLabelEmpty ? '' : label },
+          data: { label: noDefaultLabel ? '' : label },
         },
       ];
       setCenter(x + 100 / 2, y + 100 / 2, { duration: 600, zoom: 1 });

@@ -28,7 +28,7 @@ const useInteractive: any = () => {
     onEdgesChange: handleEdgesChange,
     onSelectionChange,
     disabled,
-    isLabelEmpty,
+    noDefaultLabel,
   } = useGraphContext();
 
   const onConnectStart = useCallback((_, { nodeId }) => {
@@ -60,7 +60,7 @@ const useInteractive: any = () => {
             y: newPosition.y - 50,
           },
           type: 'graph-node',
-          data: { label: isLabelEmpty ? '' : createNodeLabel() },
+          data: { label: noDefaultLabel ? '' : createNodeLabel() },
         };
         const newEgde = {
           id: edgeId,
@@ -69,7 +69,7 @@ const useInteractive: any = () => {
           target: nodeId,
           type: 'graph-edge',
           data: {
-            label: isLabelEmpty ? '' : createEdgeLabel(),
+            label: noDefaultLabel ? '' : createEdgeLabel(),
           },
         };
 
@@ -90,7 +90,7 @@ const useInteractive: any = () => {
             target: nodeId,
             type: 'graph-edge',
             data: {
-              label: isLabelEmpty ? '' : createEdgeLabel(),
+              label: noDefaultLabel ? '' : createEdgeLabel(),
             },
           });
         });
@@ -108,7 +108,7 @@ const useInteractive: any = () => {
               {
                 id: edgeId,
                 data: {
-                  label: isLabelEmpty ? '' : edgeLabel,
+                  label: noDefaultLabel ? '' : edgeLabel,
                 },
                 source: connectingNodeId.current || '',
                 target: nodeid,

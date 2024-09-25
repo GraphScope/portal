@@ -39,7 +39,7 @@ interface IGraphProps {
   popoverCustomContent?: React.ReactNode;
   onSelectionChange?: (nodes: ISchemaNode[], edges: ISchemaEdge[]) => void;
 
-  isLabelEmpty?: boolean;
+  noDefaultLabel?: boolean;
 }
 
 export const GraphContext = React.createContext<IGraphProps>({});

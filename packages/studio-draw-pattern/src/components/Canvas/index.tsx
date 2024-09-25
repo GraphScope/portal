@@ -100,7 +100,7 @@ export const Canvas = () => {
     return (
       <Graph
         graphId="edit-graph"
-        isLabelEmpty={true}
+        noDefaultLabel={true}
         defaultNodes={graphNodes}
         defaultEdges={graphEdges as unknown as ISchemaEdge[]}
         onNodesChange={handleNodes}
