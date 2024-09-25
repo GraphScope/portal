@@ -38,6 +38,8 @@ interface IGraphProps {
   triggerPopover?: 'click' | 'hover';
   popoverCustomContent?: React.ReactNode;
   onSelectionChange?: (nodes: ISchemaNode[], edges: ISchemaEdge[]) => void;
+
+  isLabelEmpty?: boolean;
 }
 
 export const GraphContext = React.createContext<IGraphProps>({});

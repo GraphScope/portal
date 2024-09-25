@@ -7,6 +7,7 @@ import { FormattedMessage } from 'react-intl';
 const AddNodeIcon = Icons.AddNode;
 import { createNodeLabel } from '../elements/utils';
 import { useContext } from '../canvas/useContext';
+import { useGraphContext } from '..';
 
 interface IAddNodeProps {
   style?: React.CSSProperties;
@@ -17,6 +18,7 @@ const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
   const { style } = props;
   const { setCenter } = useReactFlow();
   const { updateStore } = useContext();
+  const { isLabelEmpty } = useGraphContext();
 
   const tooltipText = <FormattedMessage id="Create new vertex" />;
 
@@ -35,7 +37,7 @@ const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
             y,
           },
           type: 'graph-node',
-          data: { label },
+          data: { label: isLabelEmpty ? '' : label },
         },
       ];
       setCenter(x + 100 / 2, y + 100 / 2, { duration: 600, zoom: 1 });

@@ -7,7 +7,7 @@ interface IAppProps {}
 const DrawGraph: React.FunctionComponent<IAppProps> = props => {
   return (
     <div>
-      <Graph locale="en-US" isShowPopover={true} />
+      <Graph locale="en-US" isShowPopover={true} isLabelEmpty={true} />
     </div>
   );
 };
