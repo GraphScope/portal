@@ -13,7 +13,7 @@ import { useEncodeCypher } from '../../hooks/cypher/useEncodeCypher';
 import { Button, Input, Modal, Tooltip } from 'antd';
 import { usePropertiesStore } from '../../stores/usePropertiesStore';
 import { DrawPatternContext, DrawPatternValue } from '../DrawPattern';
-import _ from 'lodash';
+import _, { set } from 'lodash';
 import { useSection } from '@graphscope/studio-components';
 import { InsertRowRightOutlined, SearchOutlined } from '@ant-design/icons';
 
@@ -26,32 +26,40 @@ export const Canvas = () => {
   const { transformNode, transformEdge } = useTransform();
   const graphNodes = useGraphStore(state => state.graphNodes);
   const graphEdges = useGraphStore(state => state.graphEdges);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { encodeProperties, encodeNodes, encodeEdges, generateMATCH, generateWHERE } = useEncodeCypher();
   const updateProperties = usePropertiesStore(state => state.updateProperties);
   const properties = usePropertiesStore(state => state.properties);
-  const MATCHs: string = useMemo(() => (isModalOpen ? generateMATCH().join('\n') : ''), [isModalOpen]);
-  const WHEREs: string = useMemo(() => (isModalOpen ? generateWHERE() : ''), [isModalOpen]);
+  // const MATCHs: string = useMemo(() => (isModalOpen ? generateMATCH().join('\n') : ''), [isModalOpen]);
+  // const WHEREs: string = useMemo(() => (isModalOpen ? generateWHERE() : ''), [isModalOpen]);
+  const [MATCHs, setMATCHs] = useState<string>('');
+  const [WHEREs, setWHEREs] = useState<string>('');
   const { generateRelation } = useGenerateRelation();
   const { onClick } = useContext(DrawPatternContext);
   const [RETURNs, setRETURNs] = useState<string>('');
   const { toggleLeftSide } = useSection();
+  const [clickTrigger, setClickTrigger] = useState<boolean>(false);
 
   useEffect(() => {
-    if (isModalOpen) {
-      const nodeReturn = Array.from(nodesStore).map(node => `${node.variable}`);
-      const edgeReturn = Array.from(edgesStore).map(edge => `${edge.variable}`);
-      [...nodeReturn, ...edgeReturn].length > 0 && setRETURNs(`RETURN ${[...nodeReturn, ...edgeReturn].join(', ')}`);
+    const nodeReturn = Array.from(nodesStore).map(node => `${node.variable}`);
+    const edgeReturn = Array.from(edgesStore).map(edge => `${edge.variable}`);
+    [...nodeReturn, ...edgeReturn].length > 0 && setRETURNs(`RETURN ${[...nodeReturn, ...edgeReturn].join(', ')}`);
+    clickTrigger &&
+      MATCHs &&
+      RETURNs &&
       onClick &&
-        onClick({
-          MATCHs,
-          WHEREs,
-          RETURNs: `RETURN ${[...nodeReturn, ...edgeReturn].join(', ')}`,
-          description: descState ?? '',
-        });
-      // console.log(`RETURN ${[...nodeReturn, ...edgeReturn].join(', ')}`, MATCHs, WHEREs);
-    }
-  }, [isModalOpen]);
+      onClick({
+        MATCHs,
+        WHEREs,
+        RETURNs: `RETURN ${[...nodeReturn, ...edgeReturn].join(', ')}`,
+        description: descState ?? '',
+      });
+  }, [MATCHs, RETURNs, clickTrigger]);
+
+  useEffect(() => {
+    setMATCHs(generateMATCH().join('\n'));
+    setWHEREs(generateWHERE());
+  }, [nodesStore, edgesStore, properties]);
 
   useEffect(() => {
     generateRelation(edgesStore);
@@ -149,7 +157,7 @@ export const Canvas = () => {
           encodeEdges();
           encodeNodes();
           encodeProperties();
-          setIsModalOpen(true);
+          setClickTrigger(true);
         }}
         type="primary"
         style={{ position: 'absolute', bottom: '20px', right: '240px' }}
@@ -157,9 +165,9 @@ export const Canvas = () => {
       >
         <pre>Cypher</pre>查询
       </Button>
-      <Modal
+      {/* <Modal
         title="Generate Cypher Code"
-        // open={isModalOpen}
+        open={isModalOpen}
         onOk={() => {
           setIsModalOpen(false);
           const newState: DrawPatternValue = {
@@ -186,7 +194,7 @@ export const Canvas = () => {
         ></Input.TextArea>
         Desc 描述
         <Input placeholder="desc" value={descState} onChange={e => setDescState(e.target.value)}></Input>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
