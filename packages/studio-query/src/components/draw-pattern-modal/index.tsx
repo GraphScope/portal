@@ -1,7 +1,8 @@
 import { HighlightOutlined } from '@ant-design/icons';
-import { DrawPattern, GraphProps } from '@graphscope/studio-draw-pattern';
+import { DrawPattern, DrawPatternValue, GraphProps } from '@graphscope/studio-draw-pattern';
 import { Button, Modal, Tooltip } from 'antd';
 import React, { useCallback, useState } from 'react';
+import { useContext } from '../../app/context';
 
 export interface DrawPatternModalProps {
   previewSchema?: GraphProps;
@@ -10,9 +11,19 @@ export interface DrawPatternModalProps {
 
 export const DrawPatternModal: React.FC<DrawPatternModalProps> = ({ previewSchema, onClick }) => {
   const [visible, setVisiable] = useState<boolean>(false);
+  const { updateStore } = useContext();
+
+  const handleClick = useCallback((value: DrawPatternValue) => {
+    setVisiable(false);
+    const script = [value.MATCHs, value.RETURNs, value.WHEREs].join('\n');
+    updateStore(draft => {
+      draft.globalScript = script;
+      draft.autoRun = false;
+    });
+  }, []);
 
   const MyDrawPattern = useCallback(() => {
-    if (visible) return <DrawPattern></DrawPattern>;
+    if (visible) return <DrawPattern onClick={handleClick}></DrawPattern>;
     else return <></>;
   }, [visible]);
 

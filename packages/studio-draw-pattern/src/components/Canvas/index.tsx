@@ -152,7 +152,7 @@ export const Canvas = () => {
         title="Generate Cypher Code"
         open={isModalOpen}
         onOk={() => {
-          setIsModalOpen(true);
+          setIsModalOpen(false);
           const newState: DrawPatternValue = {
             MATCHs,
             WHEREs,
