@@ -28,6 +28,7 @@
     "@graphscope/studio-components": "workspace:*",
     "@graphscope/studio-graph": "workspace:*",
     "@graphscope/studio-driver": "workspace:*",
+    "@graphscope/studio-draw-pattern": "workspace:*",
     "react-json-view": "^1.21.3",
     "react-intl": "^6.6.1",
     "@fortawesome/free-solid-svg-icons": "latest",
