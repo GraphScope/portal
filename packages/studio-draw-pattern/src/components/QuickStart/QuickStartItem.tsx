@@ -27,12 +27,14 @@ export const QuickStartItem: React.FC<QuickStartProps> = ({ title, svgSrc, id })
   const clearEdge = useEdgeStore(state => state.clearEdge);
   const clearProperties = usePropertiesStore(state => state.clearProperties);
 
-  const handleClick = useCallback(() => {
+  const handleClick = () => {
     // 每次 selection change 都要清空 store
     clearNode && clearNode();
     clearEdge && clearEdge();
     clearGraphStore();
     clearProperties();
+
+    console.log('点击的模型', id);
 
     const generateDataFunctions: any = {
       'triangle-loop': generateTriangleLoop,
@@ -44,12 +46,13 @@ export const QuickStartItem: React.FC<QuickStartProps> = ({ title, svgSrc, id })
     };
 
     const generateFunction = generateDataFunctions[id];
+
     if (generateFunction) {
       const data = generateFunction();
       transformNodes(data.nodes);
       transformEdges(data.edges, data.nodes);
     }
-  }, []);
+  };
 
   return (
     <div
@@ -67,6 +70,7 @@ export const QuickStartItem: React.FC<QuickStartProps> = ({ title, svgSrc, id })
           alignItems: 'center',
           justifyContent: 'center',
         }}
+        onClick={handleClick}
       >
         {svgSrc}
       </div>

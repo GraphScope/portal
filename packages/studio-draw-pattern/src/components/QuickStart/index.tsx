@@ -91,7 +91,7 @@ const quickStartItems = [
   },
   {
     svgSrc: (
-      <svg width="200" height="423" viewBox="0 0 837 423" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="200" height="200" viewBox="0 0 837 423" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="60" cy="60" r="57" stroke="black" stroke-width="6" />
         <circle cx="600" cy="363" r="57" stroke="black" stroke-width="6" />
         <circle cx="234" cy="363" r="57" stroke="black" stroke-width="6" />
