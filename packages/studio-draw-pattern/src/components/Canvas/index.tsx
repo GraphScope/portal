@@ -45,8 +45,8 @@ export const Canvas = () => {
       onClick &&
         onClick({
           MATCHs,
-          RETURNs: `RETURN ${[...nodeReturn, ...edgeReturn].join(', ')}`,
           WHEREs,
+          RETURNs: `RETURN ${[...nodeReturn, ...edgeReturn].join(', ')}`,
           description: descState ?? '',
         });
       // console.log(`RETURN ${[...nodeReturn, ...edgeReturn].join(', ')}`, MATCHs, WHEREs);

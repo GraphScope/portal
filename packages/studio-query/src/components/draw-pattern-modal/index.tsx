@@ -15,7 +15,7 @@ export const DrawPatternModal: React.FC<DrawPatternModalProps> = ({ previewSchem
 
   const handleClick = useCallback((value: DrawPatternValue) => {
     setVisiable(false);
-    const script = [value.MATCHs, value.RETURNs, value.WHEREs].join('\n');
+    const script = [value.MATCHs, value.WHEREs, value.RETURNs].join('\n');
     updateStore(draft => {
       draft.globalScript = script;
       draft.autoRun = false;

@@ -34,8 +34,6 @@ export const QuickStartItem: React.FC<QuickStartProps> = ({ title, svgSrc, id })
     clearGraphStore();
     clearProperties();
 
-    console.log('点击的模型', id);
-
     const generateDataFunctions: any = {
       'triangle-loop': generateTriangleLoop,
       'self-loop': generateSelfLoop,
