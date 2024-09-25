@@ -42,7 +42,6 @@ export const DrawPattern: React.FC<DrawPatternProps> = props => {
 
   useEffect(() => {
     return () => {
-      console.log('清空所有数据');
       clearGraphStore();
       clearEdge?.();
       clearNode?.();

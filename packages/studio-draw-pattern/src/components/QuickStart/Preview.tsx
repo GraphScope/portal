@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import { Graph } from '@graphscope/studio-graph-editor';
 import { ISchemaNode } from '@graphscope/studio-graph-editor';
 import { ISchemaEdge } from '@graphscope/studio-graph-editor';
@@ -8,6 +8,7 @@ import { useNodeStore } from '../../stores/useNodeStore';
 import { useEdgeStore } from '../../stores/useEdgeStore';
 import { usePropertiesStore } from '../../stores/usePropertiesStore';
 import { DrawPatternContext } from '../DrawPattern';
+import { updateNodePositions } from '../../utils';
 export const Preview = () => {
   const { transformNodes, transformEdges } = useTransform();
 
@@ -15,19 +16,27 @@ export const Preview = () => {
   const clearNode = useNodeStore(state => state.clearNode);
   const clearEdge = useEdgeStore(state => state.clearEdge);
   const clearProperties = usePropertiesStore(state => state.clearProperties);
-  const handleSelectionChange = (nodes: ISchemaNode[], edges: ISchemaEdge[]) => {
-    // 每次 selection change 都要清空 store;
-    clearProperties();
-    clearGraphStore();
-    clearEdge && clearEdge();
-    clearNode && clearNode();
 
-    // 将 nodes 和 edges 转换为 新格式 ，来适配 MATCH 语句
-    transformNodes(nodes);
-    transformEdges(edges, nodes);
-  };
+  const handleSelectionChange = useCallback((nodes: ISchemaNode[], edges: ISchemaEdge[]) => {
+    // 每次 selection change 都要清空 store;
+    if (nodes.length > 0 && edges.length > 0) {
+      clearProperties();
+      clearGraphStore();
+      clearEdge && clearEdge();
+      clearNode && clearNode();
+
+      // 将 nodes 和 edges 转换为 新格式 ，来适配 MATCH 语句
+      transformNodes(nodes);
+      transformEdges(edges, nodes);
+    }
+  }, []);
 
   const { previewGraph } = useContext(DrawPatternContext);
+
+  const updatePositionNode = useMemo(() => {
+    const newNodes = updateNodePositions(previewGraph?.nodes || []);
+    return newNodes;
+  }, [previewGraph]);
 
   return (
     <div
@@ -52,8 +61,7 @@ export const Preview = () => {
           disabled={true}
           isPreview={true}
           defaultEdges={previewGraph?.edges}
-          // @ts-ignore
-          defaultNodes={previewGraph?.nodes}
+          defaultNodes={updatePositionNode}
           graphId="preview-graph"
           onSelectionChange={handleSelectionChange}
         />

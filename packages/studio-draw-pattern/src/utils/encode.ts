@@ -106,6 +106,7 @@ export const generateMATCH = (nodes: Node[], edges: Edge[]) => {
     if (currentEdge) currentEdge.isErgodic = true;
 
     let MATCH = `[${currentEdge.variable}${currentEdge?.statement}]`;
+
     // 当前 egde target遍历
     if (targetNode) {
       while (true) {

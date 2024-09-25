@@ -1,3 +1,5 @@
+import { ISchemaNode } from '@graphscope/studio-graph-editor';
+
 export function isArrayExist<T>(item: T, arrary: Array<T>): boolean {
   return arrary.indexOf(item) !== -1;
 }
@@ -16,3 +18,34 @@ export function getSequentialLetter(): () => string {
     return letter;
   };
 }
+
+export const updateNodePositions = (nodes: ISchemaNode[]): ISchemaNode[] => {
+  const updatedNodes: ISchemaNode[] = []; // 初始化一个新的数组
+
+  nodes.forEach(node => {
+    let { x, y } = node.position;
+
+    const spacing = 200; // 节点之间的最小间隔
+
+    while (
+      updatedNodes.some(
+        n => n.id !== node.id && Math.abs(n.position.x - x) < spacing && Math.abs(n.position.y - y) < spacing,
+      )
+    ) {
+      x += spacing; // 向右移动
+      // 如果向右移动之后仍然有重叠，尝试向下移动
+      if (
+        updatedNodes.some(
+          n => n.id !== node.id && Math.abs(n.position.x - x) < spacing && Math.abs(n.position.y - y) < spacing,
+        )
+      ) {
+        y += spacing; // 向下移动
+        x -= spacing; // 还原到原来的 x 位置
+      }
+    }
+
+    updatedNodes.push({ ...node, position: { x, y } }); // 将更新后的节点添加到数组
+  });
+
+  return updatedNodes;
+};

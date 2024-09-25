@@ -63,8 +63,8 @@ const SchemaGraph: React.FunctionComponent<ISchemaGraphProps> = props => {
           // nodes={nodes}
           // edges={edges}
           //@ts-ignore
-          nodes={fakeSnapshot(nodes)}
-          edges={fakeSnapshot(edges)}
+          nodes={nodes.length ? fakeSnapshot(nodes) : []}
+          edges={edges.length ? fakeSnapshot(edges) : []}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           nodeTypes={nodeTypes}
