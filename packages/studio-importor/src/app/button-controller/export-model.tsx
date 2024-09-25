@@ -1,5 +1,6 @@
 import { Button, Tooltip } from 'antd';
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import { FileImageOutlined } from '@ant-design/icons';
 import { Utils, Icons } from '@graphscope/studio-components';
@@ -41,7 +42,7 @@ const ExportModel: React.FunctionComponent<ILeftButtonProps> = props => {
   };
 
   return (
-    <Tooltip title="Save graph model to JSON config" placement="right">
+    <Tooltip title={<FormattedMessage id="Save graph model to JSON config" />} placement="right">
       <Button
         type="text"
         icon={<Icons.FileExport />}

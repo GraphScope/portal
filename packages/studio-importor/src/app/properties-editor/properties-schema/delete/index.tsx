@@ -5,6 +5,7 @@ import { useContext } from '../../../useContext';
 import { INTERNAL_Snapshot } from 'valtio';
 import type { ImportorProps, ISchemaNode, ISchemaEdge } from '../../../typing';
 
+import { FormattedMessage } from 'react-intl';
 interface IDeleteButtonProps {
   onDeleteLabel: ImportorProps['onDeleteLabel'];
   nodesMap?: Record<string, ISchemaNode>;
@@ -65,7 +66,7 @@ const DeleteButton: React.FunctionComponent<IDeleteButtonProps> = props => {
   };
   if (appMode === 'DATA_MODELING') {
     return (
-      <Tooltip title="Delete label">
+      <Tooltip title={<FormattedMessage id="Delete label" />}>
         <Button size="small" type="text" loading={state.loading} onClick={handleDelete} icon={<Icons.Trash />}></Button>
       </Tooltip>
     );

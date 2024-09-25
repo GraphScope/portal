@@ -9,11 +9,13 @@ import ValidateInfo from './properties-schema/validate-info';
 import SaveButton from './properties-schema/save';
 import DeleteButton from './properties-schema/delete';
 import ScrollContainer, { disableScroll } from './scroll-container';
+import { useIntl } from 'react-intl';
 type IPropetiesEditorProps = Pick<
   ImportorProps,
   'appMode' | 'handleUploadFile' | 'queryPrimitiveTypes' | 'batchUploadFiles' | 'onCreateLabel' | 'onDeleteLabel'
 >;
 const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props => {
+  const intl = useIntl();
   const { store, updateStore } = useContext();
   const { nodes, edges, currentType, currentId, elementOptions } = store;
   const { appMode, handleUploadFile, queryPrimitiveTypes, batchUploadFiles, onCreateLabel, onDeleteLabel } = props;
@@ -175,7 +177,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
         items={[
           {
             key: 'nodes',
-            label: 'Vertex',
+            label: intl.formatMessage({ id: 'Vertex' }),
             children: (
               <ScrollContainer currentId={currentId} items={NODES_SCROLL_ITEMS}>
                 <Collapse
@@ -192,7 +194,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
           },
           {
             key: 'edges',
-            label: 'Edges',
+            label: intl.formatMessage({ id: 'Edges' }),
             children: (
               <ScrollContainer currentId={currentId} items={EDGES_SCROLL_ITEMS}>
                 <Collapse

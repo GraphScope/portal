@@ -53,4 +53,10 @@ export default {
   Graph: 'Graph',
   Table: 'Table',
   Raw: 'Raw',
+  'Style Setting': 'Style Setting',
+  'You can click on each label to set the color, size, and display text for vertices and edges.':
+    'You can click on each label to set the color, size, and display text for vertices and edges.',
+  'Export graph json': 'Export graph json',
+  'Clustering layout': 'Clustering layout',
+  'Vertex Properties': 'Vertex Properties',
 };

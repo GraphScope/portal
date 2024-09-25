@@ -4,7 +4,7 @@ import { PropertiesList } from '@graphscope/studio-components';
 import useModel from './useModel';
 import LocationField from './location';
 import SourceTarget from './source-target';
-
+import { FormattedMessage } from 'react-intl';
 import type { ISchemaEdge, ImportorProps, Option } from '../../typing';
 
 export type IPropertiesSchemaProps = Pick<ImportorProps, 'appMode' | 'queryPrimitiveTypes' | 'handleUploadFile'> & {
@@ -45,7 +45,9 @@ const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
           <LocationField ref={ref} schema={schema} type={type} handleUploadFile={handleUploadFile} />
         ) : (
           <>
-            <Typography.Text>Label</Typography.Text>
+            <Typography.Text>
+              <FormattedMessage id="Label" />
+            </Typography.Text>
             <Input value={label} onChange={handleChangeLabel} disabled={disabled} />
           </>
         )}

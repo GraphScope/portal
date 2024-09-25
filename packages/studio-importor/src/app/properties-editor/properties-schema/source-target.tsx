@@ -5,6 +5,8 @@ import { MappingFields } from '@graphscope/studio-components';
 import { useContext } from '../../useContext';
 import useModel from './useModel';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
+import { FormattedMessage } from 'react-intl';
+
 import type { ISchemaEdge, ImportorProps, IEdgeData, ISchemaNode } from '../../typing';
 type ISourceTargetProps = {
   mappingColumn: ImportorProps['mappingColumn'];
@@ -48,12 +50,16 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
     <>
       <Flex justify="space-between" gap="12px" align="center">
         <Flex vertical gap="small" flex="1">
-          <Typography.Text>Source</Typography.Text>
+          <Typography.Text>
+            <FormattedMessage id="Source" />
+          </Typography.Text>
           <Input value={source_label} disabled size="small" />
         </Flex>
         {mappingColumn && (
           <Flex vertical gap="small">
-            <Typography.Text>Data Fields</Typography.Text>
+            <Typography.Text>
+              <FormattedMessage id="Data Fields" />
+            </Typography.Text>
             <MappingFields
               value={source_vertex_fields}
               onChange={val => handleDataFieldsChange(val, 'source_vertex_fields', source_primary_key)}
@@ -65,12 +71,16 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
       </Flex>
       <Flex justify="space-between" gap="12px" style={{ marginTop: '4px' }}>
         <Flex vertical gap="small" flex="1">
-          <Typography.Text>Target</Typography.Text>
+          <Typography.Text>
+            <FormattedMessage id="Target" />
+          </Typography.Text>
           <Input value={target_label} disabled size="small" />
         </Flex>
         {mappingColumn && (
           <Flex vertical gap="small">
-            <Typography.Text>Data Fields</Typography.Text>
+            <Typography.Text>
+              <FormattedMessage id="Data Fields" />
+            </Typography.Text>
             <MappingFields
               value={target_vertex_fields}
               onChange={val => handleDataFieldsChange(val, 'target_vertex_fields', target_primary_key)}

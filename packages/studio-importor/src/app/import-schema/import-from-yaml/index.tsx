@@ -3,7 +3,7 @@ import { Space, Tooltip, Upload, Button, message, notification, Typography, Flex
 import type { UploadProps } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import yaml from 'js-yaml';
-
+import { FormattedMessage } from 'react-intl';
 import { transSchemaToOptions, appendData } from '../../utils/modeling';
 import { transMappingSchemaToOptions } from '../../utils/importing';
 import { useContext } from '../../useContext';
@@ -84,9 +84,9 @@ const ImportFromYAML = (props: IProps) => {
         <Flex justify="center" align="center" vertical gap={24}>
           {icon}
           <Typography.Text type="secondary">
-            For the definition and description of the schema model, please refer to the{' '}
+            <FormattedMessage id="For the definition and description of the schema model, please refer to the" />
             <a href="https://graphscope.io/docs/flex/interactive/data_model" target="_blank">
-              document
+              <FormattedMessage id="document" />
             </a>
           </Typography.Text>
         </Flex>
