@@ -147,6 +147,12 @@ export default {
   'Querying page sidebar placement': 'Querying page sidebar placement',
   'Sidebar type': 'Sidebar type',
   'Querying page sidebar style': 'Querying page sidebar style',
+  Inline: 'Inline',
+  Menu: 'Menu',
+  left: 'left',
+  right: 'right',
+  Sidebar: 'Sidebar',
+  Segmented: 'Segmented',
   /** import data */
   Labels: 'Labels',
   'Data sources': 'Data sources',

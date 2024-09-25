@@ -3,6 +3,7 @@ import { Typography, Segmented, Divider } from 'antd';
 import { useContext } from '@/layouts/useContext';
 import { Utils } from '@graphscope/studio-components';
 import SettingParcel from '@/components/setting-parcel';
+import { FormattedMessage } from 'react-intl';
 interface ILocaleSwitchProps {
   value: string;
   onChange: (value: string) => void;
@@ -31,11 +32,11 @@ const NavStyle: React.FunctionComponent = () => {
         <Segmented
           options={[
             {
-              label: 'left',
+              label: <FormattedMessage id="left" />,
               value: 'left',
             },
             {
-              label: 'right',
+              label: <FormattedMessage id="right" />,
               value: 'right',
             },
           ]}
@@ -49,11 +50,11 @@ const NavStyle: React.FunctionComponent = () => {
         <Segmented
           options={[
             {
-              label: 'Sidebar',
+              label: <FormattedMessage id="Sidebar" />,
               value: 'Sidebar',
             },
             {
-              label: 'Segmented',
+              label: <FormattedMessage id="Segmented" />,
               value: 'Segmented',
             },
           ]}

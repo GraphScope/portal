@@ -29,11 +29,9 @@ const InteractTheme: React.FunctionComponent = () => {
     });
   };
   return (
-
     <SettingParcel style={{ margin: '0px' }} title="Select theme" text="Select or customize your UI theme">
-      <SelectCards selectValue={algorithm} items={engines} onChange={changeEngineType} />
+      <SelectCards value={algorithm} items={engines} onChange={changeEngineType} />
     </SettingParcel>
-
   );
 };
 

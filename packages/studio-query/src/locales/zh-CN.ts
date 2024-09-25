@@ -50,4 +50,10 @@ export default {
   Graph: '图展示',
   Table: '表格展示',
   Raw: '原始数据',
+  'Style Setting': '样式设置',
+  'You can click on each label to set the color, size, and display text for vertices and edges.':
+    '您可以单击每个标签来设置顶点和边缘的颜色、大小和显示文本。',
+  'Export graph json': '导出 json',
+  'Clustering layout': '集群布局',
+  'Vertex Properties': '节点属性',
 };

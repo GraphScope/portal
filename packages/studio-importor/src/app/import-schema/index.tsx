@@ -7,6 +7,8 @@ import ImportFromYAML from './import-from-yaml';
 import { SegmentedTabs, Icons } from '@graphscope/studio-components';
 import type { SegmentedTabsProps } from '@graphscope/studio-components';
 
+import { FormattedMessage } from 'react-intl';
+
 interface IImportSchemaProps {
   style?: React.CSSProperties;
   displayType?: 'model' | 'panel';
@@ -46,12 +48,12 @@ const ImportSchema: React.FunctionComponent<IImportSchemaProps> = props => {
   if (displayType === 'model') {
     return (
       <Space>
-        <Tooltip title="Shortcut: parse files into a graph model" placement="left">
+        <Tooltip title={<FormattedMessage id="Shortcut: parse files into a graph model" />} placement="left">
           <Button type="text" onClick={handleClick} style={style} icon={<Icons.FileYaml />}></Button>
         </Tooltip>
 
         <Modal
-          title="Parse files into a graph model"
+          title={<FormattedMessage id="Parse files into a graph model" />}
           open={visible}
           onOk={handleClose}
           onCancel={handleClose}

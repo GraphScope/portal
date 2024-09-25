@@ -55,4 +55,23 @@ export default {
   'If you already have CSV data, feel free to parse it here, and the system will automatically infer possible graph models for you.':
     'If you already have CSV data, feel free to parse it here, and the system will automatically infer possible graph models for you.',
   'Data source binding': 'Data source binding',
+  'Shortcut: parse files into a graph model': 'Shortcut: parse files into a graph model',
+  'Save graph model to svg image': 'Save graph model to svg image',
+  'Save graph model to JSON config': 'Save graph model to JSON config',
+  'Parse files into a graph model': 'Parse files into a graph model',
+  'For the definition and description of the schema model, please refer to the':
+    'For the definition and description of the schema model, please refer to the',
+  document: 'document',
+  Vertex: 'Vertex',
+  Edges: 'Edges',
+  'File type': 'File type',
+  'ID field': 'ID field',
+  'Label field': 'Label field',
+  'Target field': 'Target field',
+  'Source field': 'Source field',
+  'Delete label': 'Delete label',
+  Label: 'Label',
+  'Data Fields': 'Data Fields',
+  'Add Property': 'Add Property',
+  Properties: 'Properties',
 };
