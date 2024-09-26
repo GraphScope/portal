@@ -6,20 +6,8 @@ interface IQueryDataProps {}
 const QueryData: React.FunctionComponent<IQueryDataProps> = props => {
   const handleQuery = async (params: any) => {
     const driver = await getDriver();
-    console.log('driver', driver, params);
     const data = await driver.queryData(params.script);
-    // return data
-    return {
-      nodes: [
-        {
-          id: '1',
-          properties: {
-            name: 'test',
-          },
-        },
-      ],
-      edges: [],
-    };
+    return data;
   };
   return <QueryStatement language="cypher" onQuery={handleQuery} />;
 };
