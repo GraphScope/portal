@@ -32,8 +32,28 @@ export class KuzuDriver {
     this.conn = await result.Connection(this.db);
   }
 
-  async createSchema(schema: string): Promise<void> {
-    const createResult = await this.conn?.execute(schema);
+  async createSchema(schema: { nodes: any[]; edges: any[] }): Promise<void> {
+    const { nodes, edges } = schema;
+    const node_scripts = nodes.map(node => {
+      const { label, properties } = node;
+      const property_scripts = properties.map(property => {
+        const { name, type } = property;
+        return `${name} ${type}`;
+      });
+      return `CREATE NODE TABLE ${label} (${property_scripts.join(', ')})`;
+    });
+    const edge_scripts = edges.map(edge => {
+      const { label, source, target, properties } = edge;
+      const property_scripts = properties.map(property => {
+        const { name, type } = property;
+        return `${name} ${type}`;
+      });
+      return `CREATE REL TABLE ${label} FROM ${source} TO ${target} (${property_scripts.join(', ')})`;
+    });
+
+    console.log(node_scripts.join('; ') + '; ' + edge_scripts.join('; '));
+
+    const createResult = await this.conn?.execute(node_scripts[0]);
     console.log('Schema created: ', createResult.toString());
   }
 
@@ -62,19 +82,3 @@ export class KuzuDriver {
     }
   }
 }
-
-export const testFn = async () => {
-  const kuzuDriver = new KuzuDriver();
-  await kuzuDriver.initialize();
-
-  const createSchema = 'CREATE NODE TABLE User(name STRING, age INT64, PRIMARY KEY (name))';
-  await kuzuDriver.createSchema(createSchema);
-
-  const insertQuery = "CREATE (u:User {name: 'Alice', age: 35})";
-  await kuzuDriver.insertData(insertQuery);
-
-  const query = 'MATCH (n) RETURN n';
-  const queryResult = await kuzuDriver.queryData(query);
-
-  await kuzuDriver.close();
-};
