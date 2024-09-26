@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { SaveOutlined } from '@ant-design/icons';
 import { useContext as useModeling } from '@graphscope/studio-importor';
 import { createGraph, importGraph } from './services';
+import localforage from 'localforage';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -38,7 +39,10 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
       edges: schema.edges,
     });
     //@ts-ignore
-    await importGraph(csvFiles);
+
+    const csvFiles = (await localforage.getItem('DRAFT_GRAPH_FILES')) as File[];
+    const res = await importGraph(csvFiles);
+    console.log('res', res);
 
     setState(preState => {
       return {

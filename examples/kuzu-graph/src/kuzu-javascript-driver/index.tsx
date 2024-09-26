@@ -1,7 +1,7 @@
 import { default as Kuzu } from '@kuzu/kuzu-wasm';
 
 interface IKuzuResult {
-  Database: () => Promise<any>;
+  Database: (params: any) => Promise<any>;
   Connection: (db: any) => Promise<any>;
   FS: Promise<any>;
   execute: (query: string) => Promise<any>;
@@ -15,7 +15,6 @@ interface IKuzuConnection {
   execute: (query: string) => Promise<any>;
   close: () => Promise<void>;
 }
-
 
 export class KuzuDriver {
   private kuzu: typeof Kuzu;
@@ -32,7 +31,8 @@ export class KuzuDriver {
 
   async initialize(): Promise<void> {
     const result: IKuzuResult = await this.kuzu();
-    this.db = await result.Database();
+    //@ts-ignore
+    this.db = await result.Database('test', 0, 10, false, false, 4194304 * 16 * 4);
     this.conn = await result.Connection(this.db);
     this.FS = result.FS;
 
@@ -40,14 +40,13 @@ export class KuzuDriver {
   }
 
   async executeQuery(queries) {
-    let result_list: (string)[] = [];
+    let result_list: string[] = [];
     if (queries instanceof Array) {
       for (const query of queries) {
         let partial_result = await this.executeSingleQuery(query);
         result_list = result_list.concat(partial_result);
       }
-    }
-    else {
+    } else {
       let partial_result = await this.executeSingleQuery(queries);
       result_list = result_list.concat(partial_result);
     }
@@ -56,25 +55,25 @@ export class KuzuDriver {
   }
 
   async executeSingleQuery(query) {
-    let result_list: (string)[] = [];
+    let result_list: string[] = [];
     try {
       let query_list = query.split(';');
-      query_list.forEach((query) => {
+
+      query_list.forEach(query => {
         query = query.trim();
         if (query != '') {
           if (query.startsWith('#') || query.startsWith('//')) return;
-          console.log("execute: ", query);
+          console.log('execute: ', query);
           const query_result = this.conn?.execute(query);
           if (typeof query_result === 'undefined') {
-            result_list.push("");
-          }
-          else {
+            result_list.push('');
+          } else {
             result_list.push(query_result.toString());
           }
         }
       });
     } catch (error) {
-      console.log("execute error");
+      console.log('execute error');
     }
 
     return result_list;
@@ -84,15 +83,15 @@ export class KuzuDriver {
     const input_type_upper = input_type.toUpperCase();
     switch (input_type_upper) {
       case 'DT_STRING':
-          return 'STRING';
+        return 'STRING';
       case 'DT_DOUBLE':
-          return 'DOUBLE';
+        return 'DOUBLE';
       case 'DT_SIGNED_INT32':
-          return 'INT32';
+        return 'INT32';
       case 'DT_SIGNED_INT64':
-          return 'INT64';
+        return 'INT64';
       default:
-          return 'STRING';
+        return 'STRING';
     }
   }
 
@@ -104,13 +103,15 @@ export class KuzuDriver {
         const { name, type, primaryKey } = property;
         return `${name} ${this.typeConvert(type)}`;
       });
-      const primary_keys = properties.map(property => {
-        const { name, type, primaryKey } = property;
-        if (primaryKey) {
-          return `PRIMARY KEY (${name})`
-        }
-        return null
-      }).filter(key => key !== null);
+      const primary_keys = properties
+        .map(property => {
+          const { name, type, primaryKey } = property;
+          if (primaryKey) {
+            return `PRIMARY KEY (${name})`;
+          }
+          return null;
+        })
+        .filter(key => key !== null);
       const final_property_scripts = property_scripts.concat(primary_keys);
       return `CREATE NODE TABLE ${label} (${final_property_scripts.join(', ')});`;
     });
@@ -120,25 +121,49 @@ export class KuzuDriver {
         const { name, type } = property;
         return `${name} ${this.typeConvert(type)}`;
       });
-      return `CREATE REL TABLE ${label} FROM ${source} TO ${target} (${property_scripts.join(', ')});`;
+      if (property_scripts.length === 0) {
+        return `CREATE REL TABLE ${label} (FROM ${source} TO ${target});`;
+      }
+      return `CREATE REL TABLE ${label} (FROM ${source} TO ${target} , ${property_scripts.join(', ')});`;
     });
 
-    // console.log(node_scripts.join('; ') + '; ' + edge_scripts.join('; '));
-    // console.log(node_scripts[0]);
+    /** execute */
+    let result: any[] = [];
 
-    // let full_query = node_scripts.join('; ') + '; ' + edge_scripts.join('; ') + ';';
-    // const createResult = await this.conn?.execute(full_query);
-    const createNodeResult = await this.executeQuery(node_scripts);
-    console.log('Schema created: ', createNodeResult);
-
-    const createEdgeResult = await this.executeQuery(edge_scripts);
-    console.log('Schema created: ', createEdgeResult);
-  }
-
-  async initializeGraph(data_files: File[]): Promise<void> {
-    for (const file of data_files) {
-      console.log(file,this.FS)
+    for (let i = 0; i < node_scripts.length; i++) {
+      console.log('create nodes script: ', node_scripts[i]);
+      const res = await this.conn?.execute(node_scripts[i]);
+      result.push(res.toString());
     }
+    for (let i = 0; i < edge_scripts.length; i++) {
+      console.log('create edges script: ', edge_scripts[i]);
+      const res = await this.conn?.execute(edge_scripts[i]);
+      result.push(res.toString());
+    }
+
+    console.log('Schema created: ', result);
+  }
+  async uploadCsvFile(file: File): Promise<any> {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async e => {
+        //@ts-ignore
+        var fileData = new Uint8Array(e.target.result); // transfer to Uint8Array
+        var fileName = file.name; // get path from user
+        var filePath = 'data/' + fileName;
+        var label_name = file.name.split('.')[0];
+        await this.FS.writeFile(filePath, fileData);
+        const res = await this.conn?.execute(`COPY ${label_name} FROM "${filePath}" (HEADER=true, DELIM="|");`);
+        console.log('File uploaded successfully!', filePath, res.toString());
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  }
+  async loadGraph(data_files: File[]): Promise<any> {
+    for (const file of data_files) {
+      await this.uploadCsvFile(file);
+    }
+    return true;
   }
 
   async insertData(query: string): Promise<void> {
@@ -149,11 +174,46 @@ export class KuzuDriver {
 
   async queryData(query: string): Promise<any> {
     console.time('Query cost');
-    const queryResult = await this.executeQuery(query);
-    // const queryResult = await this.conn?.execute(query);
+    // const queryResult = await this.executeQuery(query);
+    const queryResult = await this.conn?.execute(query);
     console.timeEnd('Query cost');
-    console.log('Query result: ', queryResult);
-    return queryResult;
+    try {
+      const data = JSON.parse(queryResult.table.toString());
+      console.log('data', data);
+      const nodes: any[] = [];
+      const edges: any[] = [];
+      data.map(item => {
+        //@ts-check
+        const { n, e } = item;
+
+        if (n) {
+          const { id, _LABEL, _ID, ...others } = n;
+          nodes.push({
+            id,
+            label: _LABEL,
+            properties: {
+              ...others,
+            },
+          });
+        }
+        if (e) {
+          const { id, _LABEL, _ID, ...others } = n;
+          edges.push({
+            id,
+            label: _LABEL,
+            properties: {
+              ...others,
+            },
+          });
+        }
+      });
+      return { nodes, edges };
+    } catch (error) {
+      return {
+        nodes: [],
+        edges: [],
+      };
+    }
   }
 
   async close(): Promise<void> {

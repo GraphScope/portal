@@ -19,7 +19,6 @@ export const createGraph = async (params: { nodes: any[]; edges: any[] }, graph_
 
   const kuzuDriver = await getDriver();
 
-  const createSchema = 'CREATE NODE TABLE User(name STRING, age INT64, PRIMARY KEY (name))';
   await kuzuDriver.createSchema(schema);
 
   const insertQuery = "CREATE (u:User {name: 'Alice', age: 35})";
@@ -36,9 +35,7 @@ export const createGraph = async (params: { nodes: any[]; edges: any[] }, graph_
 export const importGraph = async (csvFiles: File[]) => {
   console.log('csvFiles', csvFiles);
   const kuzuDriver = await getDriver();
-  
-  await kuzuDriver.initializeGraph(csvFiles);
-  return true;
+  return await kuzuDriver.loadGraph(csvFiles);
 };
 
 export function transform(params) {
