@@ -37,7 +37,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
       //@ts-ignore
       edges: schema.edges,
     });
-
+    //@ts-ignore
     await importGraph(csvFiles);
 
     setState(preState => {

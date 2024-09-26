@@ -1,4 +1,4 @@
-import { KuzuDriver, testFn } from '../../kuzu-javascript-driver/index';
+import { KuzuDriver } from '../../kuzu-javascript-driver/index';
 declare global {
   interface Window {
     kuzuDriver: KuzuDriver; //

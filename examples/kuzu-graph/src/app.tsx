@@ -11,13 +11,8 @@ const App: React.FunctionComponent<IAppProps> = props => {
   const navigate = useNavigate();
   const items = [
     {
-      label: 'Modeling',
+      label: 'Importor',
       key: 'modeling',
-      children: <DataImport />,
-    },
-    {
-      label: 'Importing',
-      key: 'importing',
       children: <DataImport />,
     },
     {
