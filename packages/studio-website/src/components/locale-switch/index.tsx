@@ -8,9 +8,9 @@ export interface ILocaleSwitchProps {
 }
 
 // Predefined options for the language switcher
-const options: { label: React.ReactNode; value: ILocaleSwitchProps['value'] }[] = [
-  { label: <FormattedMessage id="English" />, value: 'en-US' },
-  { label: <FormattedMessage id="Chinese" />, value: 'zh-CN' },
+const options: { label: string; value: ILocaleSwitchProps['value'] }[] = [
+  { label: 'English', value: 'en-US' },
+  { label: '中文', value: 'zh-CN' },
 ];
 
 /**
