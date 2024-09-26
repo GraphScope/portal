@@ -37,7 +37,10 @@ export class KuzuDriver {
     const node_scripts = nodes.map(node => {
       const { label, properties } = node;
       const property_scripts = properties.map(property => {
-        const { name, type } = property;
+        const { name, type, primaryKey } = property;
+        if (primaryKey) {
+          return `${name} ${type} PRIMARY KEY (${name})`;
+        }
         return `${name} ${type}`;
       });
       return `CREATE NODE TABLE ${label} (${property_scripts.join(', ')})`;
@@ -52,6 +55,7 @@ export class KuzuDriver {
     });
 
     console.log(node_scripts.join('; ') + '; ' + edge_scripts.join('; '));
+    console.log(node_scripts[0]);
 
     const createResult = await this.conn?.execute(node_scripts[0]);
     console.log('Schema created: ', createResult.toString());
