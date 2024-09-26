@@ -1,4 +1,5 @@
 import { default as Kuzu } from '@kuzu/kuzu-wasm';
+import { Utils } from '@graphscope/studio-components';
 
 interface IKuzuResult {
   Database: (params: any) => Promise<any>;
@@ -21,12 +22,14 @@ export class KuzuDriver {
   private db: IKuzuDatabase | null;
   private conn: IKuzuConnection | null;
   private FS: any;
+  schema: { nodes: never[]; edges: never[] };
 
   constructor() {
     this.kuzu = Kuzu;
     this.db = null;
     this.conn = null;
     this.FS = null;
+    this.schema = { nodes: [], edges: [] };
   }
 
   async initialize(): Promise<void> {
@@ -97,6 +100,11 @@ export class KuzuDriver {
 
   async createSchema(schema: { nodes: any[]; edges: any[] }): Promise<void> {
     const { nodes, edges } = schema;
+    //@ts-ignore
+    window.KUZU_SCHEMA = schema;
+    //@ts-ignore
+    this.schema = schema;
+
     const node_scripts = nodes.map(node => {
       const { label, properties } = node;
       let property_scripts = properties.map(property => {
@@ -153,15 +161,32 @@ export class KuzuDriver {
         var filePath = 'data/' + fileName;
         var label_name = file.name.split('.')[0];
         await this.FS.writeFile(filePath, fileData);
-        const res = await this.conn?.execute(`COPY ${label_name} FROM "${filePath}" (HEADER=true, DELIM="|");`);
+        const res = await this.conn?.execute(
+          `COPY ${label_name} FROM "${filePath}" (HEADER=true, DELIM="|", ESCAPE='"', QUOTE='"');`,
+        );
         console.log('File uploaded successfully!', filePath, res.toString());
       };
       reader.readAsArrayBuffer(file);
     }
   }
   async loadGraph(data_files: File[]): Promise<any> {
-    for (const file of data_files) {
-      await this.uploadCsvFile(file);
+    for (const node of this.schema.nodes) {
+      const file = data_files.find(item => {
+        //@ts-ignore
+        return item.name === node.label + '.csv';
+      });
+      if (file) {
+        await this.uploadCsvFile(file);
+      }
+    }
+    for (const edge of this.schema.edges) {
+      const file = data_files.find(item => {
+        //@ts-ignore
+        return item.name === edge.label + '.csv';
+      });
+      if (file) {
+        await this.uploadCsvFile(file);
+      }
     }
     return true;
   }
@@ -182,32 +207,45 @@ export class KuzuDriver {
       console.log('data', data);
       const nodes: any[] = [];
       const edges: any[] = [];
-      data.map(item => {
-        //@ts-check
-        const { n, e } = item;
 
-        if (n) {
-          const { id, _LABEL, _ID, ...others } = n;
-          nodes.push({
-            id,
-            label: _LABEL,
-            properties: {
-              ...others,
-            },
-          });
-        }
-        if (e) {
-          const { id, _LABEL, _ID, ...others } = n;
-          edges.push({
-            id,
-            label: _LABEL,
-            properties: {
-              ...others,
-            },
-          });
-        }
+      data.map(record => {
+        Object.values(record).map(item => {
+          //@ts-ignore
+          const { _ID, _SRC, _DST, _LABEL, ...others } = item;
+          const isEdge = _SRC && _DST;
+          const { offset, table } = _ID;
+          const id = `${table}_${offset}`;
+
+          if (isEdge) {
+            const source = `${_SRC.table}_${_SRC.offset}`;
+            const target = `${_DST.table}_${_DST.offset}`;
+            edges.push({
+              id,
+              label: _LABEL,
+              source,
+              target,
+              properties: {
+                ...others,
+              },
+            });
+          } else {
+            nodes.push({
+              id,
+              label: _LABEL,
+              properties: {
+                ...others,
+              },
+            });
+          }
+        });
       });
-      return { nodes, edges };
+      const _nodes = Utils.uniqueElementsBy(nodes, (a, b) => {
+        return a.id === b.id;
+      });
+      const _edges = Utils.uniqueElementsBy(edges, (a, b) => {
+        return a.id === b.id;
+      });
+      return { nodes: _nodes, edges: _edges };
     } catch (error) {
       return {
         nodes: [],

@@ -9,7 +9,8 @@ const QueryData: React.FunctionComponent<IQueryDataProps> = props => {
     const data = await driver.queryData(params.script);
     return data;
   };
-  return <QueryStatement language="cypher" onQuery={handleQuery} />;
+  //@ts-ignore
+  return <QueryStatement language="cypher" onQuery={handleQuery} schemaData={window.KUZU_SCHEMA} />;
 };
 
 export default QueryData;
