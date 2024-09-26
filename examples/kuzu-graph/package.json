@@ -1,0 +1,51 @@
+{
+  "name": "@graphscope/demo-kuzu-graph",
+  "version": "0.1.4",
+  "description": "",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GraphScope/portal.git"
+  },
+  "files": [
+    "es",
+    "lib",
+    "dist"
+  ],
+  "scripts": {
+    "start": "father dev",
+    "build": "father build",
+    "start:site": "vite dev",
+    "build:site": "vite build",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@antv/g2": "5.1.13",
+    "@graphscope/studio-components": "workspace:*",
+    "@graphscope/studio-driver": "workspace:*",
+    "@graphscope/studio-graph": "workspace:*",
+    "@graphscope/studio-importor": "workspace:*",
+    "@graphscope/studio-query": "workspace:*",
+    "@kuzu/kuzu-wasm": "^1.0.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-highlight-words": "^0.20.0",
+    "react-intl": "^6.6.8",
+    "react-router-dom": "^6.26.1",
+    "typewriter-effect": "^2.21.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.12",
+    "vite-plugin-top-level-await": "^1.4.4",
+    "vite-plugin-wasm": "^3.3.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "author": "",
+  "license": "ISC"
+}
