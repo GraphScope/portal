@@ -2,7 +2,7 @@ import { Button, Tooltip } from 'antd';
 import React, { useState } from 'react';
 import { SaveOutlined } from '@ant-design/icons';
 import { useContext as useModeling } from '@graphscope/studio-importor';
-import { createGraph } from './services';
+import { createGraph, importGraph } from './services';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   });
 
   const { store: modelingStore } = useModeling();
-  const { nodes, edges } = modelingStore;
+  const { nodes, edges, csvFiles } = modelingStore;
 
   const handleSave = async () => {
     setState(preState => {
@@ -37,6 +37,8 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
       //@ts-ignore
       edges: schema.edges,
     });
+
+    await importGraph(csvFiles);
 
     setState(preState => {
       return {

@@ -13,6 +13,7 @@ const DataImport: React.FunctionComponent<IDataImportProps> = props => {
           leftSide: true,
           rightSide: true,
         }}
+        isSaveFiles={true}
         /** 属性下拉选项值 */
         queryPrimitiveTypes={() => {
           return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {

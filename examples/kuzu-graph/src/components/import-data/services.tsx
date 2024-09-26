@@ -33,6 +33,11 @@ export const createGraph = async (params: { nodes: any[]; edges: any[] }, graph_
   };
 };
 
+export const importGraph = async (csvFiles: File[]) => {
+  console.log('csvFiles', csvFiles);
+  return true;
+};
+
 export function transform(params) {
   return {
     nodes: params.nodes.map(item => {
