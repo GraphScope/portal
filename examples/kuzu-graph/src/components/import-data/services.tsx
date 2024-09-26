@@ -35,6 +35,9 @@ export const createGraph = async (params: { nodes: any[]; edges: any[] }, graph_
 
 export const importGraph = async (csvFiles: File[]) => {
   console.log('csvFiles', csvFiles);
+  const kuzuDriver = await getDriver();
+  
+  await kuzuDriver.initializeGraph(csvFiles);
   return true;
 };
 
