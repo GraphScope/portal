@@ -152,31 +152,50 @@ export class KuzuDriver {
     console.log('Schema created: ', result);
   }
   async uploadCsvFile(file: File): Promise<any> {
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = async e => {
-        //@ts-ignore
-        var fileData = new Uint8Array(e.target.result); // transfer to Uint8Array
-        var fileName = file.name; // get path from user
-        var filePath = 'data/' + fileName;
-        var label_name = file.name.split('.')[0];
-        await this.FS.writeFile(filePath, fileData);
-        const res = await this.conn?.execute(
-          `COPY ${label_name} FROM "${filePath}" (HEADER=true, DELIM="|", ESCAPE='"', QUOTE='"');`,
-        );
-        console.log('File uploaded successfully!', filePath, res.toString());
-      };
-      reader.readAsArrayBuffer(file);
-    }
+    return new Promise((resolve, reject) => {
+      if (file) {
+          const reader = new FileReader();
+          reader.onload = async e => {
+              try {
+                  //@ts-ignore
+                  var fileData = new Uint8Array(e.target.result);
+                  var fileName = file.name;
+                  var filePath = 'data/' + fileName;
+                  var label_name = file.name.split('.')[0];
+                  await this.FS.writeFile(filePath, fileData);
+                  var res;
+                  res = await this.conn?.execute(
+                      `COPY ${label_name} FROM "${filePath}" (HEADER=true, DELIM="|", ESCAPE='"', QUOTE='"');`,
+                  );
+                  console.log('File uploaded successfully!', filePath)
+                  resolve(res);  // Resolve the Promise
+              } catch (error) {
+                  reject(error);  // Reject the Promise on error
+              }
+          };
+
+          reader.onerror = (error) => {
+              reject(error); // Handle error case
+          };
+
+          reader.readAsArrayBuffer(file);
+      } else {
+          reject(new Error('No file provided'));
+      }
+    });
   }
   async loadGraph(data_files: File[]): Promise<any> {
+    console.log(this.schema)
     for (const node of this.schema.nodes) {
       const file = data_files.find(item => {
         //@ts-ignore
         return item.name === node.label + '.csv';
       });
       if (file) {
-        await this.uploadCsvFile(file);
+        console.log('node: ', file.name);
+        await this.uploadCsvFile(file).then(res => {
+          console.log('Response received:', res.toString());
+        });
       }
     }
     for (const edge of this.schema.edges) {
@@ -185,7 +204,10 @@ export class KuzuDriver {
         return item.name === edge.label + '.csv';
       });
       if (file) {
-        await this.uploadCsvFile(file);
+        console.log('edge: ', file.name);
+        await this.uploadCsvFile(file).then(res => {
+          console.log('Response received:', res.toString());
+        });
       }
     }
     return true;
