@@ -45,7 +45,7 @@ export const DrawPatternModal: React.FC<DrawPatternModalProps> = ({ previewSchem
         ></Button>
       </Tooltip>
       <Modal
-        title="Modal 1000px width"
+        title=""
         centered
         open={visible}
         onOk={() => setVisiable(false)}
