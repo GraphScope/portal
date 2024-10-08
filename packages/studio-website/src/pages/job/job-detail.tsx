@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { history } from 'umi';
 import { getJobById } from './service';
-import { Utils, useCustomTheme } from '@graphscope/studio-components';
+import { Utils, useCustomToken } from '@graphscope/studio-components';
 import Section from '@/components/section';
 const { getSearchParams } = Utils;
 
 const Detail: React.FunctionComponent = () => {
   const jobId = getSearchParams('jobId') || '';
   const [detailData, setDetailData] = useState<string>('');
-  const { jobDetailBorder, jobDetailColor } = useCustomTheme();
+  const { jobDetailBorder, jobDetailColor } = useCustomToken();
   /** 获取详情job */
   useEffect(() => {
     const fetchJobDetails = async () => {

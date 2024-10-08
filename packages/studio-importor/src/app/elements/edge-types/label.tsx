@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EdgeLabelRenderer } from 'reactflow';
-import { EditableText, useThemeContainer, useSection } from '@graphscope/studio-components';
+import { EditableText, useStudioProvier, useSection } from '@graphscope/studio-components';
 import { useContext } from '../../useContext';
 import { CheckOutlined } from '@ant-design/icons';
 import { theme } from 'antd';
@@ -20,8 +20,7 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
   const { token } = useToken();
   const { currentId, theme } = store;
   const isSelected = id === currentId;
-  const { algorithm } = useThemeContainer();
-  const isDark = algorithm === 'darkAlgorithm';
+  const { isLight } = useStudioProvier();
   const onEdgeClick = () => {
     updateStore(draft => {
       draft.currentId = id;
@@ -41,19 +40,19 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
     });
   };
   const getBackground = () => {
-    if (isDark) {
+    if (!isLight) {
       return isSelected ? `${theme.primaryColor}` : '#161616';
     }
     return isSelected ? `${theme.primaryColor}` : '#fff';
   };
   const getBorder = () => {
-    if (isDark) {
+    if (!isLight) {
       return isSelected ? `2px solid ${theme.primaryColor}` : '1px solid #d7d7d7';
     }
     return isSelected ? `2px solid ${theme.primaryColor}` : '1px solid #000';
   };
   const getColor = () => {
-    if (isDark) {
+    if (!isLight) {
       return isSelected ? '#fff' : '#D7D7D7';
     }
     return isSelected ? '#fff' : '#000';

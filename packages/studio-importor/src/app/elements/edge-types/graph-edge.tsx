@@ -12,7 +12,7 @@ import {
 import { useContext } from '../../useContext';
 import LoopEdge from './loop-edge';
 import Label from './label';
-import { useThemeContainer } from '@graphscope/studio-components';
+import { useStudioProvier } from '@graphscope/studio-components';
 
 function GraphEdge(props: EdgeProps) {
   const { id, source, target, style, data } = props;
@@ -22,8 +22,7 @@ function GraphEdge(props: EdgeProps) {
   const targetNode = useStore(useCallback(store => store.nodeInternals.get(target), [target]));
   const { store } = useContext();
   const { currentId, theme } = store;
-  const { algorithm } = useThemeContainer();
-  const isDark = algorithm === 'darkAlgorithm';
+  const { isLight } = useStudioProvier();
   if (!sourceNode || !targetNode) {
     return null;
   }
@@ -63,7 +62,7 @@ function GraphEdge(props: EdgeProps) {
   /** 计算标签和标签背景的旋转角度 */
   let degree = calculateDegree({ x: sourceX, y: sourceY }, { x: targetX, y: targetY });
   const getStroke = () => {
-    if (isDark) {
+    if (!isLight) {
       return isSelected ? theme.primaryColor : '#d7d7d7';
     }
     return isSelected ? theme.primaryColor : '#000';

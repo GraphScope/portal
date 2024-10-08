@@ -1,12 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
-import { IntlProvider } from 'react-intl';
-
 import GraphCanvas from './graph-canvas';
 import PropertiesEditor from './properties-editor';
-import ImportSchema from './import-schema';
 
 import { ReactFlowProvider } from 'reactflow';
-import { Section, useThemeContainer, ThemeProvider } from '@graphscope/studio-components';
+import { Section, StudioProvier } from '@graphscope/studio-components';
 import 'reactflow/dist/style.css';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
@@ -52,9 +49,6 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
     rightSide,
   } = props;
   const { store, updateStore } = useContext();
-  /** 国际化 */
-  const { locale } = useThemeContainer();
-  const messages = locales[locale ?? 'en-US'];
 
   useEffect(() => {
     (async () => {
@@ -90,38 +84,36 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   const IS_PURE = appMode === 'PURE';
 
   return (
-    <ThemeProvider>
-      <IntlProvider messages={messages} locale={locale as 'zh-CN' | 'en-US'}>
-        <Section
-          // leftSide={leftSide || <ImportSchema displayType="model" />}
-          rightSide={
-            rightSide || (
-              <PropertiesEditor
-                appMode={appMode}
-                /**  第二项 */
-                queryPrimitiveTypes={queryPrimitiveTypes}
-                handleUploadFile={handleUploadFile}
-                batchUploadFiles={batchUploadFiles}
-                onCreateLabel={onCreateLabel}
-                onDeleteLabel={onDeleteLabel}
-              />
-            )
-          }
-          leftSideStyle={leftSideStyle}
-          rightSideStyle={rightSideStyle}
-          defaultCollapsed={defaultCollapsed}
-          style={{ height: 'calc(100vh - 50px)', ...style }}
-          splitBorder
-        >
-          <ReactFlowProvider>
-            {!IS_PURE && <ButtonController />}
+    <StudioProvier locales={locales}>
+      <Section
+        // leftSide={leftSide || <ImportSchema displayType="model" />}
+        rightSide={
+          rightSide || (
+            <PropertiesEditor
+              appMode={appMode}
+              /**  第二项 */
+              queryPrimitiveTypes={queryPrimitiveTypes}
+              handleUploadFile={handleUploadFile}
+              batchUploadFiles={batchUploadFiles}
+              onCreateLabel={onCreateLabel}
+              onDeleteLabel={onDeleteLabel}
+            />
+          )
+        }
+        leftSideStyle={leftSideStyle}
+        rightSideStyle={rightSideStyle}
+        defaultCollapsed={defaultCollapsed}
+        style={{ height: 'calc(100vh - 50px)', ...style }}
+        splitBorder
+      >
+        <ReactFlowProvider>
+          {!IS_PURE && <ButtonController />}
 
-            <GraphCanvas />
-            {children}
-          </ReactFlowProvider>
-        </Section>
-      </IntlProvider>
-    </ThemeProvider>
+          <GraphCanvas />
+          {children}
+        </ReactFlowProvider>
+      </Section>
+    </StudioProvier>
   );
 };
 

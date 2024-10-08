@@ -6,8 +6,6 @@ import { useContext } from '../context';
 
 import { countLines } from '../utils';
 import { v4 as uuidv4 } from 'uuid';
-import { useThemeContainer } from '@graphscope/studio-components';
-import Loading from './loading';
 import ToggleButton from './toggle-button';
 
 import CypherEditor from '../../components/cypher-editor';
@@ -124,8 +122,6 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
   };
 
   const minRows = countLines(globalScript);
-  const { algorithm } = useThemeContainer();
-  const isDark = algorithm === 'darkAlgorithm';
 
   return (
     <div

@@ -3,13 +3,12 @@ import { Typography } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { PlayCircleOutlined } from '@ant-design/icons';
 import Image from './image';
-import { useThemeContainer } from '@graphscope/studio-components';
+import { useStudioProvier } from '@graphscope/studio-components';
 
 interface IEmptyProps {}
 
 const Empty: React.FunctionComponent<IEmptyProps> = props => {
-  const { algorithm } = useThemeContainer();
-  const isDark = algorithm === 'darkAlgorithm';
+  const { isLight } = useStudioProvier();
   return (
     <div
       style={{
@@ -21,7 +20,7 @@ const Empty: React.FunctionComponent<IEmptyProps> = props => {
         alignItems: 'center',
       }}
     >
-      <Image isDark={isDark} />
+      <Image isDark={!isLight} />
       <Typography.Text
         type="secondary"
         style={{

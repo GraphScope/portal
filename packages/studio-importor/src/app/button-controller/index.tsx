@@ -1,6 +1,6 @@
 import React from 'react';
 import { Divider } from 'antd';
-import { Toolbar, ThemeProvider, Section } from '@graphscope/studio-components';
+import { Toolbar } from '@graphscope/studio-components';
 import 'reactflow/dist/style.css';
 import RightButton from './right-button';
 import LeftButton from './left-button';

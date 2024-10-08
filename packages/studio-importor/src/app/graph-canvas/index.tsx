@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ReactFlow, Controls, Background, MiniMap } from 'reactflow';
-import { EmptyCanvas, useThemeContainer, useMultipleInstance } from '@graphscope/studio-components';
+import { EmptyCanvas, useStudioProvier } from '@graphscope/studio-components';
 import { nodeTypes } from '../elements/node-types';
 import { edgeTypes } from '../elements/edge-types';
 import ConnectionLine from '../elements/connection-line';
@@ -19,10 +19,9 @@ const fakeSnapshot = obj => {
 const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   const { store, onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } = useInteractive();
   const { nodes, edges, theme, collapsed, appMode } = store;
-  const { algorithm } = useThemeContainer();
+  const { isLight } = useStudioProvier();
   const isEmpty = nodes.length === 0;
-  const isDark = algorithm === 'darkAlgorithm';
-  const rfBG = isDark ? '#161616' : collapsed.left && collapsed.right ? '#fff' : '#f4f5f5';
+  const rfBG = !isLight ? '#161616' : collapsed.left && collapsed.right ? '#fff' : '#f4f5f5';
   const description = (
     <FormattedMessage
       id="Start sketching a model, a vertex label is a named grouping or categorization of nodes within the graph dataset"
@@ -50,7 +49,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           zoomOnDoubleClick={false}
           // onDoubleClick={onDoubleClick}
         >
-          <ArrowMarker selectedColor={theme.primaryColor} color={isDark ? '#d7d7d7' : '#000'} />
+          <ArrowMarker selectedColor={theme.primaryColor} color={!isLight ? '#d7d7d7' : '#000'} />
           {!IS_PURE && (
             <Controls
               style={{
@@ -67,7 +66,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
             }}
           />
           {isEmpty && <EmptyCanvas description={description} />}
-          {!IS_PURE && <MiniMap style={{ backgroundColor: isDark ? '#161616' : '' }} />}
+          {!IS_PURE && <MiniMap style={{ backgroundColor: !isLight ? '#161616' : '' }} />}
         </ReactFlow>
       </div>
     </div>

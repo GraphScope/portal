@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { IntlProvider } from 'react-intl';
 
 import { Statement } from '../..';
 import type { IStatement } from '../..';
 import { CypherDriver, GremlinDriver } from '@graphscope/studio-driver';
 import ConnectEndpoint, { IConnectEndpointProps } from './connect-endpoint';
-import { useThemeContainer } from '@graphscope/studio-components';
+import { StudioProvier } from '@graphscope/studio-components';
 
 import locales from '../../locales';
 
@@ -37,9 +36,6 @@ const QueryStatement = props => {
     schemaData = { nodes: [], edges: [] },
     script = 'Match (n) return n limit 10',
   } = props || {};
-  /** 国际化 */
-  const { locale } = useThemeContainer();
-  const messages = locales[locale ?? 'en-US'];
   const [state, setState] = useState({
     language: props.language,
     endpoint: props.endpoint,
@@ -69,14 +65,14 @@ const QueryStatement = props => {
   };
   if (!endpoint || !language) {
     return (
-      <IntlProvider messages={messages} locale={locale as 'zh-CN' | 'en-US'}>
+      <StudioProvier locales={locales}>
         <ConnectEndpoint onConnect={onConnect} />
-      </IntlProvider>
+      </StudioProvier>
     );
   }
 
   return (
-    <IntlProvider messages={messages} locale={locale as 'zh-CN' | 'en-US'}>
+    <StudioProvier locales={locales}>
       <Statement
         language={language}
         enableImmediateQuery={enableImmediateQuery}
@@ -90,7 +86,7 @@ const QueryStatement = props => {
         onQuery={onQuery}
         onCancel={onCancel}
       />
-    </IntlProvider>
+    </StudioProvier>
   );
 };
 
