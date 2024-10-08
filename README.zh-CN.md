@@ -30,17 +30,17 @@ GraphScope Portal 是一款专为 GraphScope 设计的，基于 Web 的用户交
 
 ```bash
 # 拉取镜像
-docker pull  registry.cn-hongkong.aliyuncs.com/graphscope/portal:latest
+docker pull  ghcr.io/graphscope/portal:latest
 ```
 
 # 运行容器
 
 ```bash
-docker run -it
---name my-portal
--p 8888:8888
--e COORDINATOR=http://host.docker.internal:8080
-registry.cn-hongkong.aliyuncs.com/graphscope/portal:latest
+docker run -it \
+--name my-portal \
+-p 8888:8888 \
+-e COORDINATOR=http://host.docker.internal:8080 \
+ghcr.io/graphscope/portal:latest
 ```
 
 > 启动参数说明
