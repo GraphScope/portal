@@ -4,7 +4,7 @@ import { UngroupOutlined } from '@ant-design/icons';
 import ImportFromCSV from './import-from-csv';
 import ImportFromSQL from './import-from-sql';
 import ImportFromYAML from './import-from-yaml';
-import { SegmentedTabs, Icons } from '@graphscope/studio-components';
+import { SegmentedTabs, Icons, useThemeContainer } from '@graphscope/studio-components';
 import type { SegmentedTabsProps } from '@graphscope/studio-components';
 
 import { FormattedMessage } from 'react-intl';
@@ -33,6 +33,9 @@ const ImportSchema: React.FunctionComponent<IImportSchemaProps> = props => {
     visible: false,
   });
   const { visible } = state;
+  const { algorithm } = useThemeContainer();
+  const isDark = algorithm === 'darkAlgorithm';
+  const color = isDark ? '#fff' : '#000';
   const handleClick = () => {
     updateState({
       ...state,
@@ -49,7 +52,7 @@ const ImportSchema: React.FunctionComponent<IImportSchemaProps> = props => {
     return (
       <Space>
         <Tooltip title={<FormattedMessage id="Shortcut: parse files into a graph model" />} placement="left">
-          <Button type="text" onClick={handleClick} style={style} icon={<Icons.FileYaml />}></Button>
+          <Button type="text" onClick={handleClick} style={style} icon={<Icons.FileYaml style={{ color }} />}></Button>
         </Tooltip>
 
         <Modal

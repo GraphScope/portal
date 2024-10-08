@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Tooltip } from 'antd';
 
-import { Icons } from '@graphscope/studio-components';
+import { Icons, useThemeContainer } from '@graphscope/studio-components';
 import { resetIndex } from '../utils';
 import { FormattedMessage } from 'react-intl';
 interface IAddNodeProps {
@@ -12,6 +12,16 @@ const ClearCanvas: React.FunctionComponent<IAddNodeProps> = props => {
   const { style } = props;
   const { updateStore, store } = useContext();
   const { elementOptions } = store;
+  const { algorithm } = useThemeContainer();
+  const isDark = algorithm === 'darkAlgorithm';
+  /** svg pathFill */
+  let pathFill = () => {
+    if (isDark) {
+      return elementOptions.isEditable ? '#585858' : '#fff';
+    } else {
+      return elementOptions.isEditable ? '#ddd' : '#000';
+    }
+  };
   const tooltipText = elementOptions.isEditable ? (
     <FormattedMessage id="The current mode is preview only, and does not support clearing the model" />
   ) : (
@@ -33,7 +43,7 @@ const ClearCanvas: React.FunctionComponent<IAddNodeProps> = props => {
         onClick={handleClear}
         style={style}
         type="text"
-        icon={<Icons.Trash disabled={elementOptions.isEditable} />}
+        icon={<Icons.Trash fill={pathFill()} />}
       ></Button>
     </Tooltip>
   );

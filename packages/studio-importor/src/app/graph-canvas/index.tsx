@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ReactFlow, Controls, Background, MiniMap } from 'reactflow';
-import { EmptyCanvas, useThemeContainer, useMultipleInstance } from '@graphscope/studio-components';
+import { EmptyCanvas, useThemeContainer } from '@graphscope/studio-components';
 import { nodeTypes } from '../elements/node-types';
 import { edgeTypes } from '../elements/edge-types';
 import ConnectionLine from '../elements/connection-line';
 import ArrowMarker from '../elements/arrow-marker';
 import { PlayCircleOutlined } from '@ant-design/icons';
+import CustomControls from './CustomControls';
 
 import useInteractive from './useInteractive';
 import { FormattedMessage } from 'react-intl';
@@ -19,6 +20,10 @@ const fakeSnapshot = obj => {
 const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   const { store, onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } = useInteractive();
   const { nodes, edges, theme, collapsed, appMode } = store;
+  const [state, updateState] = useState({
+    isLocked: false,
+  });
+  const { isLocked } = state;
   const { algorithm } = useThemeContainer();
   const isEmpty = nodes.length === 0;
   const isDark = algorithm === 'darkAlgorithm';
@@ -48,15 +53,18 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           onConnectStart={onConnectStart}
           onConnectEnd={onConnectEnd}
           zoomOnDoubleClick={false}
+          nodesDraggable={isLocked} // 禁用节点拖拽
           // onDoubleClick={onDoubleClick}
+          proOptions={{ hideAttribution: true }} // 隐藏 reactflow 标识
         >
           <ArrowMarker selectedColor={theme.primaryColor} color={isDark ? '#d7d7d7' : '#000'} />
           {!IS_PURE && (
-            <Controls
-              style={{
-                gap: '4px',
-                boxShadow:
-                  '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)',
+            <CustomControls
+              isLocked={isLocked}
+              handleLocked={val => {
+                updateState(preset => {
+                  return { ...preset, isLocked: val };
+                });
               }}
             />
           )}
