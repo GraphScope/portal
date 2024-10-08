@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { IntlProvider } from 'react-intl';
+
 import { Statement } from '../..';
 import type { IStatement } from '../..';
 import { CypherDriver, GremlinDriver } from '@graphscope/studio-driver';
 import ConnectEndpoint, { IConnectEndpointProps } from './connect-endpoint';
-import { IntlProvider } from '@graphscope/studio-components';
+import { useThemeContainer } from '@graphscope/studio-components';
+
 import locales from '../../locales';
 
 const driver_config: Record<string, any> = {};
@@ -34,6 +37,9 @@ const QueryStatement = props => {
     schemaData = { nodes: [], edges: [] },
     script = 'Match (n) return n limit 10',
   } = props || {};
+  /** 国际化 */
+  const { locale } = useThemeContainer();
+  const messages = locales[locale ?? 'en-US'];
   const [state, setState] = useState({
     language: props.language,
     endpoint: props.endpoint,
@@ -63,14 +69,14 @@ const QueryStatement = props => {
   };
   if (!endpoint || !language) {
     return (
-      <IntlProvider locales={locales}>
+      <IntlProvider messages={messages} locale={locale as 'zh-CN' | 'en-US'}>
         <ConnectEndpoint onConnect={onConnect} />
       </IntlProvider>
     );
   }
 
   return (
-    <IntlProvider locales={locales}>
+    <IntlProvider messages={messages} locale={locale as 'zh-CN' | 'en-US'}>
       <Statement
         language={language}
         enableImmediateQuery={enableImmediateQuery}

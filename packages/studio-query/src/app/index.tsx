@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { IntlProvider } from 'react-intl';
 import Content from './content';
 import SavedStatements from './sidebar/saved-statements';
 import GPTStatements from './sidebar/gpt-statements';
@@ -14,7 +15,7 @@ import { FormattedMessage } from 'react-intl';
 import type { IStudioQueryProps } from './context';
 import { v4 as uuidv4 } from 'uuid';
 import { formatCypherStatement } from './utils';
-import { Utils, IntlProvider, Section } from '@graphscope/studio-components';
+import { Utils, Section, useThemeContainer, ThemeProvider } from '@graphscope/studio-components';
 const { getSearchParams, setSearchParams } = Utils;
 
 import Container from './container';
@@ -39,7 +40,6 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     enableImmediateQuery,
     enableCollapseSidebar,
     logo,
-    locale = 'zh-CN',
     theme,
     connectComponent,
     sidebarCollapsed,
@@ -47,7 +47,8 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
 
     welcome,
   } = props;
-
+  /** 国际化 */
+  const { locale } = useThemeContainer();
   const { store, updateStore } = useContext();
   const { graphId, isReady, collapse, activeNavbar, statements, schemaData, language, defaultCollapsed } = store;
   const enable = !!enableAbsolutePosition && statements.length > 0;
@@ -154,30 +155,32 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         : {
             rightSide: <Sidebar items={navbarOptions} type={displaySidebarType} />,
           };
-
+    const messages = locales[locale ?? 'en-US'];
     return (
-      <IntlProvider locales={locales}>
-        <Section
-          style={{ height: 'calc(100vh - 50px)' }}
-          {...side}
-          defaultCollapsed={{
-            leftSide: sidebarCollapsed,
-            rightSide: sidebarCollapsed,
-          }}
-          leftSideStyle={sidebarStyle}
-          rightSideStyle={sidebarStyle}
-          splitBorder
-        >
-          <Content
-            displaySidebarPosition={displaySidebarPosition}
-            connectComponent={connectComponent}
-            handleCancelQuery={handleCancelQuery}
-            createStatements={createStatements}
-            queryGraphData={handleQuery}
-            enableImmediateQuery={enableImmediateQuery}
-          />
-        </Section>
-      </IntlProvider>
+      <ThemeProvider>
+        <IntlProvider messages={messages} locale={locale as 'zh-CN' | 'en-US'}>
+          <Section
+            style={{ height: 'calc(100vh - 50px)' }}
+            {...side}
+            defaultCollapsed={{
+              leftSide: sidebarCollapsed,
+              rightSide: sidebarCollapsed,
+            }}
+            leftSideStyle={sidebarStyle}
+            rightSideStyle={sidebarStyle}
+            splitBorder
+          >
+            <Content
+              displaySidebarPosition={displaySidebarPosition}
+              connectComponent={connectComponent}
+              handleCancelQuery={handleCancelQuery}
+              createStatements={createStatements}
+              queryGraphData={handleQuery}
+              enableImmediateQuery={enableImmediateQuery}
+            />
+          </Section>
+        </IntlProvider>
+      </ThemeProvider>
     );
   }
   return null;

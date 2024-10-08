@@ -12,7 +12,6 @@ export { default as MultipleInstance } from './MultipleInstance';
 export { default as SplitSection } from './SplitSection';
 export { default as ResultConfig } from './ResultConfig';
 export { default as ThemeProvider } from './Provider';
-export { default as IntlProvider } from './IntlProvider';
 export { default as ImportFiles } from './ImportFiles';
 export { default as SideTabs } from './SideTabs';
 export { default as ResizablePanels } from './ResizablePanel';
@@ -29,7 +28,6 @@ export { useContainer } from './Container/useContainer';
 export { useSection } from './Section/useSection';
 export { useMultipleInstance } from './MultipleInstance/useMultipleInstance';
 export { useThemeContainer } from './Provider/useThemeConfigProvider';
-export { useIntlContainer } from './IntlProvider/useIntlConfigProvider';
 export { useCustomTheme } from './Provider/useCustomTheme';
 /** export typing */
 export type { SegmentedTabsProps } from './SegmentedTabs';
