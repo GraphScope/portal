@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useContext } from './useContext';
 import useWidth from './useWidth';
-import { useThemeContainer } from '@graphscope/studio-components';
+import { useCustomTheme } from '@graphscope/studio-components';
 import { DeploymentApiFactory } from '@graphscope/studio-server';
 import { Skeleton } from 'antd';
 
@@ -20,7 +20,7 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
   const { store } = useContext();
   const { collapse } = store;
   const ContainerWidth = useWidth();
-  const { containerBackground } = useThemeContainer();
+  const { containerBackground } = useCustomTheme();
   const [state, setState] = useState({
     isReady: false,
     engineType: 'interactive',

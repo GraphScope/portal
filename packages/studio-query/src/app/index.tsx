@@ -14,7 +14,7 @@ import { FormattedMessage } from 'react-intl';
 import type { IStudioQueryProps } from './context';
 import { v4 as uuidv4 } from 'uuid';
 import { formatCypherStatement } from './utils';
-import { Utils, ThemeProvider, Section } from '@graphscope/studio-components';
+import { Utils, IntlProvider, Section } from '@graphscope/studio-components';
 const { getSearchParams, setSearchParams } = Utils;
 
 import Container from './container';
@@ -156,7 +156,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
           };
 
     return (
-      <ThemeProvider locales={locales}>
+      <IntlProvider locales={locales}>
         <Section
           style={{ height: 'calc(100vh - 50px)' }}
           {...side}
@@ -177,7 +177,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
             enableImmediateQuery={enableImmediateQuery}
           />
         </Section>
-      </ThemeProvider>
+      </IntlProvider>
     );
   }
   return null;

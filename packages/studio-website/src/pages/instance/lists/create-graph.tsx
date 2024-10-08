@@ -2,13 +2,13 @@ import React from 'react';
 import { Card } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
-import { useThemeContainer } from '@graphscope/studio-components';
+import { useCustomTheme } from '@graphscope/studio-components';
 interface ICreateGraph {
   onCreate: () => void;
 }
 const CreateGraph: React.FC<ICreateGraph> = props => {
   const { onCreate } = props;
-  const { instanceBackground } = useThemeContainer();
+  const { instanceBackground } = useCustomTheme();
   return (
     <Card
       title={<FormattedMessage id="New graph" />}

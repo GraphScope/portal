@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { IColorStore } from './useStore';
+import type { IColorStore } from './getThemeConfig';
 export interface ThemeProviderType extends IColorStore {
   algorithm?: 'defaultAlgorithm' | 'darkAlgorithm';
   components?: { [key: string]: { [key: string]: string | number } };

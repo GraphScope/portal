@@ -3,7 +3,7 @@ import { Statement } from '../..';
 import type { IStatement } from '../..';
 import { CypherDriver, GremlinDriver } from '@graphscope/studio-driver';
 import ConnectEndpoint, { IConnectEndpointProps } from './connect-endpoint';
-import { ThemeProvider } from '@graphscope/studio-components';
+import { IntlProvider } from '@graphscope/studio-components';
 import locales from '../../locales';
 
 const driver_config: Record<string, any> = {};
@@ -63,14 +63,14 @@ const QueryStatement = props => {
   };
   if (!endpoint || !language) {
     return (
-      <ThemeProvider locales={locales}>
+      <IntlProvider locales={locales}>
         <ConnectEndpoint onConnect={onConnect} />
-      </ThemeProvider>
+      </IntlProvider>
     );
   }
 
   return (
-    <ThemeProvider locales={locales}>
+    <IntlProvider locales={locales}>
       <Statement
         language={language}
         enableImmediateQuery={enableImmediateQuery}
@@ -84,7 +84,7 @@ const QueryStatement = props => {
         onQuery={onQuery}
         onCancel={onCancel}
       />
-    </ThemeProvider>
+    </IntlProvider>
   );
 };
 

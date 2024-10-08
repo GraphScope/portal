@@ -4,14 +4,14 @@ import { history } from 'umi';
 import InstaceCard, { InstaceCardType } from './instance-card';
 import Section from '@/components/section';
 import { useContext } from '@/layouts/useContext';
-import { useThemeContainer } from '@graphscope/studio-components';
+import { useCustomTheme } from '@graphscope/studio-components';
 import InteractiveCase from './interactive-case';
 import CreateGraph from './create-graph';
 import { listGraphs } from './service';
 const InstanceCard: React.FC = () => {
   const { store } = useContext();
   const { draftGraph } = store;
-  const { instanceBackground } = useThemeContainer();
+  const { instanceBackground } = useCustomTheme();
   const [state, updateState] = useState<{ isReady: boolean; instanceList: InstaceCardType[] }>({
     instanceList: [],
     isReady: false,

@@ -4,7 +4,7 @@ import PropertiesEditor from './properties-editor';
 import ImportSchema from './import-schema';
 
 import { ReactFlowProvider } from 'reactflow';
-import { ThemeProvider, Section } from '@graphscope/studio-components';
+import { IntlProvider, Section } from '@graphscope/studio-components';
 import 'reactflow/dist/style.css';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
@@ -86,7 +86,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   const IS_PURE = appMode === 'PURE';
 
   return (
-    <ThemeProvider locales={locales}>
+    <IntlProvider locales={locales}>
       <Section
         // leftSide={leftSide || <ImportSchema displayType="model" />}
         rightSide={
@@ -115,7 +115,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
           {children}
         </ReactFlowProvider>
       </Section>
-    </ThemeProvider>
+    </IntlProvider>
   );
 };
 

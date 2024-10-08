@@ -9,7 +9,7 @@ import { useContext } from './useContext';
 import { TOOLS_MENU } from './const';
 import SegmentedSection from './segmented-section';
 import { history } from 'umi';
-import { ThemeProvider } from '@graphscope/studio-components';
+import { ThemeProvider, IntlProvider } from '@graphscope/studio-components';
 const Content = (props: any) => {
   const { children, navStyle } = props;
   const { store } = useContext();
@@ -33,16 +33,18 @@ export default function Layout() {
   const { locale, navStyle } = store;
 
   return (
-    <ThemeProvider locales={locales} locale={locale as 'zh-CN' | 'en-US'}>
-      <Container
-        sidebar={<Sidebar />}
-        content={
-          <Content navStyle={navStyle}>
-            <Outlet />
-          </Content>
-        }
-        footer={<Footer />}
-      />
+    <ThemeProvider>
+      <IntlProvider locales={locales} locale={locale as 'zh-CN' | 'en-US'}>
+        <Container
+          sidebar={<Sidebar />}
+          content={
+            <Content navStyle={navStyle}>
+              <Outlet />
+            </Content>
+          }
+          footer={<Footer />}
+        />
+      </IntlProvider>
     </ThemeProvider>
   );
 }

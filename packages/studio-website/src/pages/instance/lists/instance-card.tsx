@@ -16,7 +16,7 @@ import { faPlayCircle, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import { TOOLS_MENU } from '@/layouts/const';
-import { Utils, useThemeContainer } from '@graphscope/studio-components';
+import { Utils, useCustomTheme } from '@graphscope/studio-components';
 export type InstaceCardType = {
   /** graph id */
   id: string;
@@ -68,7 +68,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
   } = props;
   const { store, updateStore } = useContext();
   const { locale, draftGraph, draftId } = store;
-  const { instanceBackground } = useThemeContainer();
+  const { instanceBackground } = useCustomTheme();
   const [isLoading, updateIsLoading] = useState(false);
   const items: MenuProps['items'] = [
     {

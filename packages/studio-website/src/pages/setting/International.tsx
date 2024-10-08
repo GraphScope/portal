@@ -1,22 +1,24 @@
 import React from 'react';
 import { useContext } from '@/layouts/useContext';
 import LocaleSwitch from '@/components/locale-switch';
-import { useThemeContainer } from '@graphscope/studio-components';
+import { useIntlContainer } from '@graphscope/studio-components';
 import type { ILocaleSwitchProps } from '@/components/locale-switch';
 import SettingParcel from '@/components/setting-parcel';
 
 const International: React.FunctionComponent = () => {
-  const { updateStore } = useContext();
-  const { handleTheme, locale = 'zh-CN' } = useThemeContainer();
-  const handleLocale = (value: ILocaleSwitchProps['value']) => {
-    handleTheme({ locale: value });
+  const { store, updateStore } = useContext();
+  const { locale = 'zh-CN' } = store;
+  const { handleLocale } = useIntlContainer();
+
+  const handleLocales = (value: ILocaleSwitchProps['value']) => {
+    handleLocale({ locale: value });
     updateStore(draft => {
       draft.locale = value;
     });
   };
   return (
     <SettingParcel title="International" text="Select language">
-      <LocaleSwitch value={locale} onChange={value => handleLocale(value)}></LocaleSwitch>
+      <LocaleSwitch value={locale} onChange={value => handleLocales(value)}></LocaleSwitch>
     </SettingParcel>
   );
 };
