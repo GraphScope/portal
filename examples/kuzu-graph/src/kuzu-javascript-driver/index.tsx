@@ -1,5 +1,6 @@
 import { default as Kuzu } from '@kuzu/kuzu-wasm';
 import { Utils } from '@graphscope/studio-components';
+import localforage from 'localforage';
 
 interface IKuzuResult {
   Database: (params: any) => Promise<any>;
@@ -17,12 +18,25 @@ interface IKuzuConnection {
   close: () => Promise<void>;
 }
 
+class FileData {
+  name: string;
+  content: string;
+
+  constructor(name, content) {
+      this.name = name;       // 文件名
+      this.content = content; // 文件内容
+  }
+}
+
 export class KuzuDriver {
-  private kuzu: typeof Kuzu;
-  private db: IKuzuDatabase | null;
-  private conn: IKuzuConnection | null;
-  private FS: any;
+  kuzu: typeof Kuzu;
+  db: IKuzuDatabase | null;
+  conn: IKuzuConnection | null;
+  FS: any;
+  dbname: string;
   schema: { nodes: never[]; edges: never[] };
+  indexdb: any;
+  curDataset: string;
 
   constructor() {
     this.kuzu = Kuzu;
@@ -30,16 +44,23 @@ export class KuzuDriver {
     this.conn = null;
     this.FS = null;
     this.schema = { nodes: [], edges: [] };
+    this.dbname = 'test';
+    this.curDataset = '';
+
+    this.indexdb = localforage.createInstance({
+      name: this.dbname
+    });
   }
 
   async initialize(): Promise<void> {
     const result: IKuzuResult = await this.kuzu();
     //@ts-ignore
-    this.db = await result.Database('test', 0, 10, false, false, 4194304 * 16 * 4);
+    this.db = await result.Database(this.dbname, 0, 10, false, false, 4194304 * 16 * 4);
     this.conn = await result.Connection(this.db);
     this.FS = result.FS;
 
     this.FS?.mkdir('data');
+    // this.FS?.mkdir('export');
   }
 
   async executeQuery(queries) {
@@ -55,6 +76,31 @@ export class KuzuDriver {
     }
 
     return result_list;
+  }
+
+  async existDataset(datasetId: string) {
+    try {
+      const value = await this.indexdb.getItem(datasetId);
+      return value !== null; // 如果存在，返回 true；否则返回 false
+    } catch (err) {
+        console.error(`Error retrieving key "${datasetId}":`, err);
+        return false; // 在发生错误时返回 false
+    }
+  }
+
+  async switchDataset(datasetId: string) {
+    console.log('switch to ', datasetId);
+    if (this.curDataset !== '') {
+      await this.exportData();
+    }
+    
+    const exist = await this.existDataset(datasetId)
+    if (exist) {
+      await this.recoverData(datasetId);
+    }
+
+    this.curDataset = datasetId;
+    return this.curDataset;
   }
 
   async executeSingleQuery(query) {
@@ -221,6 +267,8 @@ export class KuzuDriver {
 
   async queryData(query: string): Promise<any> {
     console.time('Query cost');
+    // await this.exportData();
+    // console.log("finish export data")
     // const queryResult = await this.executeQuery(query);
     const queryResult = await this.conn?.execute(query);
     console.timeEnd('Query cost');
@@ -274,6 +322,78 @@ export class KuzuDriver {
         edges: [],
       };
     }
+  }
+
+  async exportData(): Promise<any> {
+    if (this.curDataset === '')
+      return false;
+
+    var datasetId = this.curDataset;
+
+    let files: FileData[] = [];
+    const exportPath = 'export/';
+
+    try {
+      this.FS.rmdir(exportPath);
+    } catch (error) {
+      console.log(`Directory ${exportPath} not exists`);
+    }
+
+    const query = `EXPORT DATABASE '${exportPath}' (format="csv", HEADER=true, DELIM="|", ESCAPE='"', QUOTE='"');`;
+    var res = await this.conn?.execute(query);
+
+    const dirFiles = this.FS.readdir(exportPath);
+    for (const dir of dirFiles) {
+      if (dir === '.' || dir === '..') {
+        continue;
+      }
+
+      const filePath = exportPath + dir;
+      const content = this.FS.readFile(filePath);
+      const file = new FileData(dir, content);
+      files.push(file);
+    }
+
+    await this.indexdb.setItem(`${datasetId}`, files)
+    .then(() => {
+        console.log(`Value has been updated successfully.`);
+    })
+    .catch(error => {
+        console.error('Error updating value:', error);
+    });
+
+    // var result = await this.indexdb.getItem('DRAFT_GRAPH_FILES')
+    // console.log(result);
+  }
+
+  async recoverData(datasetId: string): Promise<any> {
+    console.log('start recover');
+    const importPath = 'import/';
+    try {
+      this.FS.rmdir(importPath);
+    } catch (error) {
+      console.log(`Directory ${importPath} not exists`);
+    }
+
+    this.FS.mkdir(importPath);
+    var files = await this.indexdb.getItem(`${datasetId}`);
+
+    // var c = 1;
+    for (const file of files) {
+      var fileData = file.content;
+      var fileName = file.name;
+      var filePath = importPath + fileName;
+      await this.FS.writeFile(filePath, fileData);
+      // console.log(c);
+      // c += 1;
+    }
+
+    const query = `IMPORT DATABASE '${importPath}';`;
+    console.log('query: ', query);
+    var res = await this.conn?.execute(query);
+
+    console.log(res.toString());
+    return true;
   }
 
   async close(): Promise<void> {
