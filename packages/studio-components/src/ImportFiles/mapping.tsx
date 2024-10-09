@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Select, Space, Typography, Flex } from 'antd';
 import type { IMeta, ParsedFile } from '../Utils/parseCSV';
-
+import { FormattedMessage } from 'react-intl';
 interface IMappingProps {
   id: string;
   meta: IMeta;
@@ -60,7 +60,9 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
   return (
     <div>
       <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
-        <Typography.Text>File type</Typography.Text>
+        <Typography.Text>
+          <FormattedMessage id="File type" />
+        </Typography.Text>
         <Select
           value={type}
           style={styles.Select}
@@ -74,7 +76,9 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
       {type === 'Vertex' && (
         <>
           <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
-            <Typography.Text>ID field</Typography.Text>
+            <Typography.Text>
+              <FormattedMessage id="ID field" />
+            </Typography.Text>
             <Select
               value={idField}
               style={styles.Select}
@@ -84,7 +88,9 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
           </Flex>
           {FileType === 'json' && (
             <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
-              <Typography.Text>Label field</Typography.Text>
+              <Typography.Text>
+                <FormattedMessage id="Label field" />
+              </Typography.Text>
               <Select
                 value={nodeLabelField}
                 style={styles.Select}
@@ -98,7 +104,9 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
       {type === 'Edge' && (
         <>
           <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
-            <Typography.Text>Source field</Typography.Text>
+            <Typography.Text>
+              <FormattedMessage id="Source field" />
+            </Typography.Text>
             <Select
               value={sourceField}
               style={styles.Select}
@@ -107,7 +115,9 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
             />
           </Flex>
           <Flex align="center" justify="space-between">
-            <Typography.Text>Target field</Typography.Text>
+            <Typography.Text>
+              <FormattedMessage id="Target field" />
+            </Typography.Text>
             <Select
               value={targetField}
               style={styles.Select}
@@ -117,7 +127,9 @@ const Mapping: React.FunctionComponent<IMappingProps> = props => {
           </Flex>
           {FileType === 'json' && (
             <Flex align="center" justify="space-between" style={{ marginBottom: '12px' }}>
-              <Typography.Text>Label field</Typography.Text>
+              <Typography.Text>
+                <FormattedMessage id="Label field" />
+              </Typography.Text>
               <Select
                 value={edgeLabelField}
                 style={styles.Select}

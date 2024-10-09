@@ -1,7 +1,6 @@
 import { inferredGraphFields } from './inferredGraphFields';
 import { parseFile, extractHeaderAndDelimiter, getFileSize } from './parseCSV';
 import type { ParsedFile } from './parseCSV';
-// import { uuid } from 'uuidv4';
 import { v4 as uuidv4 } from 'uuid';
 
 function byteSize(str) {

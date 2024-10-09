@@ -2,6 +2,7 @@ import React, { FunctionComponent, CSSProperties } from 'react';
 import { Button, Space, Tooltip, Popconfirm, Checkbox, Flex, Typography } from 'antd';
 import { PlusOutlined, createFromIconfontCN } from '@ant-design/icons';
 import MapFromFileTable from './MapFromFileTable';
+import { FormattedMessage } from 'react-intl';
 // 使用createFromIconfontCN创建一个IconFont组件，加载自定义图标库
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/a/font_4377140_eryoeoa0lk5.js',
@@ -70,11 +71,11 @@ const Controller = props => {
   return (
     <>
       <Flex justify={'space-between'} style={{ padding: '12px 6px 4px 6px', height: '42px' }} align="center">
-        {title}
+        <FormattedMessage id={title} />
         <>
           {selectedRowKeys.length == 0 ? (
             <Space>
-              <Tooltip title="Add Property">
+              <Tooltip title={<FormattedMessage id="Add Property" />}>
                 <Button icon={<PlusOutlined />} disabled={disabled} onClick={() => addProperty()} size="small" />
               </Tooltip>
               {heder}

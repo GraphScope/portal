@@ -1,4 +1,4 @@
-## GraphScope Studio Website
+## GraphScope Portal
 
 If the network speed is slow during dependency installation, you can set Alibaba's source.
 

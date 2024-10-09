@@ -3,10 +3,11 @@ import { Segmented } from 'antd';
 import { useContext } from '@/layouts/useContext';
 import localStorage from '@/components/utils/localStorage';
 import SettingParcel from '@/components/setting-parcel';
+import { FormattedMessage } from 'react-intl';
 
 interface ILocaleSwitchProps {}
 interface INavStyleOption {
-  label: string;
+  label: React.ReactNode;
   value: string;
 }
 const NavStyle: React.FunctionComponent = () => {
@@ -23,11 +24,11 @@ const NavStyle: React.FunctionComponent = () => {
 
   const options: INavStyleOption[] = [
     {
-      label: 'Inline',
+      label: <FormattedMessage id="Inline" />,
       value: 'inline',
     },
     {
-      label: 'Menu',
+      label: <FormattedMessage id="Menu" />,
       value: 'menu',
     },
   ];

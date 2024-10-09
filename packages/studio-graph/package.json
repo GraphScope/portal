@@ -1,13 +1,13 @@
 {
   "name": "@graphscope/studio-graph",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "description": "A React toolkit for graph analysis based on g6",
   "main": "lib/index.js",
   "module": "es/index.js",
   "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/GraphScope/graphscope-components.git"
+    "url": "https://github.com/GraphScope/portal.git"
   },
   "files": [
     "es",
@@ -32,16 +32,16 @@
     "d3-hierarchy": "^3.1.2",
     "d3-selection": "^3.0.0",
     "force-graph": "^1.43.5",
-    "jspdf": "^2.5.1",
     "mitt": "^3.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-intl": "^6.6.1",
     "uuidv4": "latest",
-    "valtio": "latest"
+    "valtio": "^1.13.2"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
     "@types/d3-brush": "^3.0.6",

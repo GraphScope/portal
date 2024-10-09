@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/studio-draw-pattern",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Experiment draw pattern code for GrapeScope",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
@@ -22,7 +22,8 @@
     "compiled"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
     "@swc/core": "^1.7.0",

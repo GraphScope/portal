@@ -88,7 +88,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   return (
     <ThemeProvider locales={locales}>
       <Section
-        leftSide={leftSide || <ImportSchema />}
+        // leftSide={leftSide || <ImportSchema displayType="model" />}
         rightSide={
           rightSide || (
             <PropertiesEditor

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Space, Tooltip, Upload, Button, message, notification } from 'antd';
+import { Space, Tooltip, Upload, Button, message, notification, Typography, Flex } from 'antd';
 import type { UploadProps } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import yaml from 'js-yaml';
-
+import { FormattedMessage } from 'react-intl';
 import { transSchemaToOptions, appendData } from '../../utils/modeling';
 import { transMappingSchemaToOptions } from '../../utils/importing';
 import { useContext } from '../../useContext';
@@ -81,9 +81,15 @@ const ImportFromYAML = (props: IProps) => {
         multiple={true}
         style={{ height: '100px', width: '100%', ...style }}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <p className="ant-upload-drag-icon">{icon}</p>
-        </div>
+        <Flex justify="center" align="center" vertical gap={24}>
+          {icon}
+          <Typography.Text type="secondary">
+            <FormattedMessage id="For the definition and description of the schema model, please refer to the" />
+            <a href="https://graphscope.io/docs/flex/interactive/data_model" target="_blank">
+              <FormattedMessage id="document" />
+            </a>
+          </Typography.Text>
+        </Flex>
       </Dragger>
     </div>
   );

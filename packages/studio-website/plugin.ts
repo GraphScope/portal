@@ -19,8 +19,7 @@ export default (api: IApi) => {
        }
       </style>
       <script>
-       window.GS_ENGINE_TYPE="${params.engineType}";
-       window.GS_GREMLIN= {};
+   
       </script>
       `,
     ]);

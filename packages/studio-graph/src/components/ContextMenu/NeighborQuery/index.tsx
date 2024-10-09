@@ -11,19 +11,19 @@ interface INeighborQueryProps {
 
 const getScript = (ids, dataMap) => {};
 
-const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
+const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
   const { onQuery } = props;
   const { store, updateStore } = useContext();
-  const { nodeStatus, schema, dataMap, emitter, graph } = store;
+  const { nodeStatus, schema, dataMap, emitter, graph, data } = store;
   const MenuRef = useRef<HTMLDivElement>(null);
 
-  const selectId =
-    Object.keys(nodeStatus).filter(key => {
-      return nodeStatus[key].selected;
-    })[0] || '';
-
-  const selectNode = dataMap[selectId] || {};
-
+  const selectIds = Object.keys(nodeStatus).filter(key => {
+    return nodeStatus[key].selected;
+  });
+  const selectNode = data.nodes.find(item => item.id === selectIds[0]); // dataMap[selectId] || {};
+  if (!selectNode) {
+    return null;
+  }
   const relatedEdges = schema.edges.filter(item => {
     return item.source === selectNode.label;
   });
@@ -40,34 +40,38 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
       label: `[${label}]->(${target})`,
     };
   });
+  console.log(itemChildren);
 
+  const extraItems =
+    relatedEdges.length > 1
+      ? [
+          {
+            key: `(a)-[b]-(c)`,
+            label: `All Neighbors`,
+          },
+        ]
+      : [];
   const items = [
     {
       key: 'NeighborQuery',
       // icon: <ShareAltOutlined />,
       label: 'NeighborQuery',
-      children: itemChildren,
+      children: [...extraItems, ...itemChildren],
     },
   ];
 
   const onClick = async ({ key }) => {
     emitter?.emit('canvas:click');
-    const { name, title } = selectNode.properties;
-    let script = '';
-    if (name) {
-      script = `
-      MATCH ${key}
-        WHERE a.name = "${name}"
-        RETURN a, b, c
-      `;
-    }
-    if (title) {
-      script = `
-      MATCH ${key}
-        WHERE a.title = "${title}"
-        RETURN a, b, c
-      `;
-    }
+    updateStore(draft => {
+      draft.isLoading = true;
+    });
+
+    const script = `
+    MATCH ${key}
+    WHERE  elementId(a) IN [${selectIds}] 
+    RETURN a,b,c
+    `;
+    console.log('script', script);
 
     const res = await onQuery({
       script,
@@ -78,15 +82,19 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
       const { nodeStatus, edgeStatus } = applyStatus(res, item => {
         return { selected: true };
       });
-      const newData = handleExpand(graph, res, selectId);
+      const newData = handleExpand(graph, res, selectIds);
       updateStore(draft => {
         draft.data = newData;
         draft.dataMap = getDataMap(newData);
         draft.nodeStatus = nodeStatus;
         draft.edgeStatus = edgeStatus;
+        draft.isLoading = false;
       });
     }
   };
+  if (itemChildren.length === 0) {
+    return null;
+  }
   return (
     <div ref={MenuRef}>
       <Menu
@@ -105,4 +113,4 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
   );
 };
 
-export default CommonNeighbor;
+export default NeighborNeighbor;

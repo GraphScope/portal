@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Segmented } from 'antd';
-
+import { FormattedMessage } from 'react-intl';
 // Define the props interface for LocaleSwitch
 export interface ILocaleSwitchProps {
   value: 'zh-CN' | 'en-US';

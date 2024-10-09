@@ -26,8 +26,8 @@ import {
   Brush,
   Loading,
   DeleteLeafNodes,
-  Report,
   Export,
+  BasicInteraction,
 } from '../components';
 
 import { Divider } from 'antd';
@@ -66,12 +66,6 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       value: 'Style',
       children: <StyleSetting />,
     },
-    {
-      key: 'Report',
-      label: 'Report',
-      value: 'Report',
-      children: <Report />,
-    },
   ];
 
   const onSelectNodes = values => {
@@ -102,6 +96,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
         >
           <Prepare data={data} schema={schema} graphId={graphId} />
           <Canvas />
+          <BasicInteraction />
           <ClearStatatus />
           <Brush onSelect={onSelectNodes} />
           <Loading />

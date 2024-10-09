@@ -1,7 +1,6 @@
 import { Parser } from 'sql-ddl-to-json-schema';
 
 const parser = new Parser('mysql');
-// import { uuid } from 'uuidv4';
 import { v4 as uuidv4 } from 'uuid';
 import { parseFile } from './parseCSV';
 import type { ParsedFile } from './parseCSV';

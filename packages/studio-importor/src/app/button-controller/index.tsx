@@ -6,9 +6,10 @@ import RightButton from './right-button';
 import LeftButton from './left-button';
 import ClearCanvas from './clear-canvas';
 import AddNode from './add-node';
-import ImportAndExportYaml from './import-and-export-yaml';
 import ExportImage from './export-image';
 import { useContext } from '../useContext';
+import ImportSchema from '../import-schema';
+import ExportModel from './export-model';
 interface IButtonControllerProps {}
 
 const ButtonController: React.FunctionComponent<IButtonControllerProps> = props => {
@@ -17,17 +18,15 @@ const ButtonController: React.FunctionComponent<IButtonControllerProps> = props 
   if (appMode === 'DATA_MODELING') {
     return (
       <>
-        <Toolbar>
-          <LeftButton />
-          <Divider type="horizontal" style={{ margin: '0px' }} />
+        <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }} direction="vertical">
+          <RightButton />
+          <Divider style={{ margin: '0px' }} />
+          <ImportSchema displayType="model" />
+          <Divider style={{ margin: '0px' }} />
           <AddNode />
           <ClearCanvas />
           <ExportImage />
-        </Toolbar>
-        <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }} direction="horizontal">
-          <ImportAndExportYaml />
-          <Divider type="vertical" style={{ margin: '0px' }} />
-          <RightButton />
+          <ExportModel />
         </Toolbar>
       </>
     );
@@ -36,8 +35,6 @@ const ButtonController: React.FunctionComponent<IButtonControllerProps> = props 
     return (
       <>
         <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }} direction="horizontal">
-          <ImportAndExportYaml />
-          <Divider type="vertical" style={{ margin: '0px' }} />
           <RightButton />
         </Toolbar>
       </>

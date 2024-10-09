@@ -4,7 +4,7 @@ import { select } from 'd3-selection';
 import { useContext } from '../../hooks/useContext';
 
 interface IBrushProps {
-  onSelect: (values: any) => void;
+  onSelect?: (values: any) => void;
 }
 
 const Brush: React.FunctionComponent<IBrushProps> = props => {

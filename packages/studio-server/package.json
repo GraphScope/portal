@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/studio-server",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "OpenAPI client for GraphScope Studio",
   "author": "OpenAPI-Generator Contributors",
   "keywords": [
@@ -16,7 +16,11 @@
   "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/GraphScope/graphscope-components.git"
+    "url": "https://github.com/GraphScope/portal.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "files": [
     "es",
@@ -26,8 +30,7 @@
   "scripts": {
     "update:api": "npx @openapitools/openapi-generator-cli generate -i ./openapi_coordinator.yaml -g typescript-axios -o typescript-axios",
     "start": "father dev",
-    "build": "father build",
-    "prepublishOnly": "npm run build"
+    "build": "father build"
   },
   "dependencies": {
     "axios": "^1.6.7"

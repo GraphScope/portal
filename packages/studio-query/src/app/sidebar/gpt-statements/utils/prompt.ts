@@ -232,7 +232,7 @@ export const prompt = `
 
 其他注意事项:
 不支持 "MATCH p=()-[]-() RETURN p" 的写法，请都替换成 "MATCH (a)-[b]-(c) RETURN a,b,c"
-注意返回格式需要 markdown 格式
+注意返回格式需要 markdown cypher 格式
 
 下面是数据库中的 Schema：
 {graphSchema}

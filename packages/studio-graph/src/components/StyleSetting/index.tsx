@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Typography, Flex, Space } from 'antd';
-const { Title } = Typography;
+const { Title, Text } = Typography;
 import { FormattedMessage } from 'react-intl';
 import Legend from './legend';
 import { useContext } from '../../hooks/useContext';
 import { Utils } from '@graphscope/studio-components';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 interface IOverviewProps {}
 
@@ -66,8 +67,15 @@ const StyleSetting: React.FunctionComponent<IOverviewProps> = props => {
   });
 
   return (
-    <div>
-      <Title level={5} style={{ marginTop: '6px' }}>
+    <Flex vertical gap={12}>
+      <Title level={3} style={{ margin: '0px' }}>
+        <FormattedMessage id="Style Setting" />
+      </Title>
+      <Text type="secondary">
+        You can click on each label to set the color, size, and display text for vertices and edges.
+      </Text>
+
+      <Title level={5} style={{ margin: '0px' }}>
         <FormattedMessage id="Vertex Labels" />
       </Title>
       <Space wrap size={[0, 6]}>
@@ -78,7 +86,7 @@ const StyleSetting: React.FunctionComponent<IOverviewProps> = props => {
           );
         })}
       </Space>
-      <Title level={5}>
+      <Title level={5} style={{ margin: '0px' }}>
         <FormattedMessage id="Edge Labels" />
       </Title>
       <Space wrap size={[0, 6]}>
@@ -89,7 +97,7 @@ const StyleSetting: React.FunctionComponent<IOverviewProps> = props => {
           );
         })}
       </Space>
-    </div>
+    </Flex>
   );
 };
 

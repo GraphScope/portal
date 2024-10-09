@@ -1,13 +1,13 @@
 {
   "name": "@graphscope/studio-explore",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "description": "",
   "main": "lib/index.js",
   "module": "es/index.js",
   "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/GraphScope/graphscope-components.git"
+    "url": "https://github.com/GraphScope/portal.git"
   },
   "files": [
     "es",
@@ -17,6 +17,10 @@
   "scripts": {
     "start": "father dev",
     "build": "father build"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
     "localforage": "latest",

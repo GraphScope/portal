@@ -3,7 +3,7 @@
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
     "declaration": true,
-    "target": "es2015",
+    "target": "es2018",
     "moduleResolution": "node",
     "jsx": "react",
     "resolveJsonModule": true,

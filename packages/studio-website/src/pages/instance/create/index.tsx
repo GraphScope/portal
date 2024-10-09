@@ -3,7 +3,7 @@ import React, { memo } from 'react';
 import Section from '@/components/section';
 
 import { useContext } from '@/layouts/useContext';
-import ChooseEnginetype from '../create-instance/choose-enginetype';
+import ChooseEnginetype from './choose-enginetype';
 import { Form, Button, Result } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { Utils } from '@graphscope/studio-components';
@@ -13,7 +13,7 @@ import { history } from 'umi';
 const { GS_ENGINE_TYPE } = window;
 const Create: React.FC = () => {
   const { store, updateStore } = useContext();
-  const { mode, draftId } = store;
+  const { draftId } = store;
   const [form] = Form.useForm();
   const handleCreate = async () => {
     console.log('form', form.getFieldsValue());

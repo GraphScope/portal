@@ -1,6 +1,6 @@
 import { Button, Tooltip } from 'antd';
 import * as React from 'react';
-
+import { FormattedMessage } from 'react-intl';
 import { FileImageOutlined } from '@ant-design/icons';
 import { Utils } from '@graphscope/studio-components';
 
@@ -20,7 +20,7 @@ const ExportImage: React.FunctionComponent<ILeftButtonProps> = props => {
   };
 
   return (
-    <Tooltip title="Save graph model to svg image" placement="right">
+    <Tooltip title={<FormattedMessage id="Save graph model to svg image" />} placement="right">
       <Button type="text" icon={<FileImageOutlined />} onClick={onClick} />
     </Tooltip>
   );

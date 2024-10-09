@@ -30,19 +30,23 @@ GraphScope Portal 是一款专为 GraphScope 设计的，基于 Web 的用户交
 
 ```bash
 # 拉取镜像
-docker pull  registry.cn-hongkong.aliyuncs.com/graphscope/portal:latest
-# 运行容器
-docker run -it -p 8888:8888 --name my-portal registry.cn-hongkong.aliyuncs.com/graphscope/portal:latest
-# 进入容器，启动服务
-npm run dev -- --port=8888 --coordinator=<graphscope_coordinator_endpoint> --cypher_endpoint=<graphscope_cypher_endpoint>
+docker pull  ghcr.io/graphscope/portal:latest
+```
 
+# 运行容器
+
+```bash
+docker run -it \
+--name my-portal \
+-p 8888:8888 \
+-e COORDINATOR=http://host.docker.internal:8080 \
+ghcr.io/graphscope/portal:latest
 ```
 
 > 启动参数说明
 
-- `coordinator` 是 GraphScope 引擎地址（Interactice 和 Groot）
-- `port` 是前端服务端口号 `8888`.
-- `cypher_endpoint` 是 GraphScope Interactive 引擎的查询地址
+- `COORDINATOR` 是 GraphScope 引擎地址,如果你也在本地用 docker 启动了 GraphScope 引擎，可以直接使用 `host.docker.internal:8080` 作为 `COORDINATOR` 参数。
+- `PORT` 是前端服务端口号,默认为 `8888`.
 
 ### 方式二：使用源码编译（本机或者云主机都可）
 

@@ -4,14 +4,17 @@
     "pnpm": "^9"
   },
   "scripts": {
-    "ci": "pnpm i && rm -rf package-lock.json && npm run build && npm run build:site",
+    "prev": "pnpm i && rm -rf package-lock.json",
+    "ci": "npm run prev && npm run build && npm run build:site",
+    "start": "turbo run start",
     "build": "turbo run build --no-cache",
     "build:site": "cd packages/studio-website && npm run build",
-    "start": "turbo run start",
+    "build:examples": "pnpm i && rm -rf package-lock.json && npm run build && cd examples/graph-apps && npm run build:site",
+    "build:docs": "npm run prev && npm run build &&  dumi build",
     "docs": "dumi dev",
-    "docs:build": "pnpm i && rm -rf package-lock.json && npm run build &&  dumi build",
-    "logs": "cd packages/studio-website/server && npm run logs",
-    "publish": "pnpm publish -r --registry=https://registry.npmjs.org"
+    "version": "changeset version",
+    "publish": "npm run prev && npm run build && pnpm publish -r --force",
+    "check:publish": "npm run prev && npm run build && pnpm publish -r --dry-run"
   },
   "husky": {
     "hooks": {
@@ -51,6 +54,7 @@
     "@babel/plugin-proposal-private-methods": "^7.18.6",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@babel/preset-react": "^7.24.7",
+    "@changesets/cli": "^2.27.7",
     "@types/node": "latest",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.0",
