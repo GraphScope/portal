@@ -1,5 +1,4 @@
 import type { ISchema, StyleConfig } from './typing';
-import { useThemeContainer } from '@graphscope/studio-components';
 import { Utils } from '@graphscope/studio-components';
 import {
   colors,

@@ -2,7 +2,7 @@ import React, { memo, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { Tag, Button, theme } from 'antd';
 import { CheckCircleOutlined, CheckOutlined } from '@ant-design/icons';
-import { EditableText, useThemeContainer, useSection } from '@graphscope/studio-components';
+import { EditableText, useStudioProvier, useSection } from '@graphscope/studio-components';
 const { useToken } = theme;
 import { useContext } from '../../canvas/useContext';
 
@@ -27,11 +27,10 @@ const GraphNode = (props: NodeProps) => {
   const { label, filelocation, disabled } = data;
   const { store, updateStore } = useContext();
   const { currentId, theme, elementOptions } = store;
-  const { algorithm } = useThemeContainer();
+  const { isLight } = useStudioProvier();
   const { toggleRightSide, toggleLeftSide } = useSection();
   const { token } = useToken();
   const isSelected = id === currentId;
-  const isDark = algorithm === 'darkAlgorithm';
   const isConnectable = !elementOptions.isConnectable;
   const [state, updateState] = useState({
     isHover: false,
@@ -92,7 +91,7 @@ const GraphNode = (props: NodeProps) => {
         border: 'none',
       };
   const getBorder = () => {
-    if (isDark) {
+    if (!isLight) {
       return isSelected ? `4px solid ${theme.primaryColor}` : '2px solid #d7d7d7';
     }
     return isSelected ? `4px solid ${theme.primaryColor}` : '2px solid #000';
@@ -124,7 +123,7 @@ const GraphNode = (props: NodeProps) => {
           top: 0,
           left: 0,
           border: getBorder(),
-          backgroundColor: isDark ? '#161616' : '#fafafa',
+          backgroundColor: !isLight ? '#161616' : '#fafafa',
           borderRadius: '50%',
           height: NODE_WIDTH,
           width: NODE_WIDTH,
@@ -153,7 +152,7 @@ const GraphNode = (props: NodeProps) => {
           text={label}
           onTextChange={hanleChangeLabel}
           disabled={disabled}
-          style={{ color: isDark ? '#D7D7D7' : '#000' }}
+          style={{ color: !isLight ? '#D7D7D7' : '#000' }}
         />
       </div>
     </div>

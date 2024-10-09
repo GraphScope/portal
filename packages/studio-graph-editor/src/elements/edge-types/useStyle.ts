@@ -1,13 +1,12 @@
 import { useContext } from '../../canvas/useContext';
-import { useThemeContainer } from '@graphscope/studio-components';
+import { useStudioProvier } from '@graphscope/studio-components';
 export const usePathStyle = (id: string) => {
   const { store } = useContext();
   const { currentId, theme } = store;
   const isSelected = id === currentId;
-  const { algorithm } = useThemeContainer();
-  const isDark = algorithm === 'darkAlgorithm';
+  const { isLight } = useStudioProvier();
   const getStyle = () => {
-    if (isDark) {
+    if (!isLight) {
       return isSelected ? theme.primaryColor : '#d7d7d7';
     }
     return isSelected ? theme.primaryColor : '#000';
