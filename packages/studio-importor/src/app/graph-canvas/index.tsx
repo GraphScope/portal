@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ReactFlow, Controls, Background, MiniMap } from 'reactflow';
 import { EmptyCanvas, useStudioProvier } from '@graphscope/studio-components';
 import { nodeTypes } from '../elements/node-types';
@@ -10,6 +10,7 @@ import { PlayCircleOutlined } from '@ant-design/icons';
 import useInteractive from './useInteractive';
 import { FormattedMessage } from 'react-intl';
 
+import CustomControls from './CustomControls';
 interface IGraphEditorProps {}
 
 const fakeSnapshot = obj => {
@@ -19,6 +20,10 @@ const fakeSnapshot = obj => {
 const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   const { store, onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } = useInteractive();
   const { nodes, edges, theme, collapsed, appMode } = store;
+  const [state, updateState] = useState({
+    isLocked: false,
+  });
+  const { isLocked } = state;
   const { isLight } = useStudioProvier();
   const isEmpty = nodes.length === 0;
   const rfBG = !isLight ? '#161616' : collapsed.left && collapsed.right ? '#fff' : '#f4f5f5';
@@ -47,15 +52,18 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           onConnectStart={onConnectStart}
           onConnectEnd={onConnectEnd}
           zoomOnDoubleClick={false}
+          nodesDraggable={isLocked} // 禁用节点拖拽
+          proOptions={{ hideAttribution: true }} // 隐藏 reactflow 标识
           // onDoubleClick={onDoubleClick}
         >
           <ArrowMarker selectedColor={theme.primaryColor} color={!isLight ? '#d7d7d7' : '#000'} />
           {!IS_PURE && (
-            <Controls
-              style={{
-                gap: '4px',
-                boxShadow:
-                  '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)',
+            <CustomControls
+              isLocked={isLocked}
+              handleLocked={val => {
+                updateState(preset => {
+                  return { ...preset, isLocked: val };
+                });
               }}
             />
           )}

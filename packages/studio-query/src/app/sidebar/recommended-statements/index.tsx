@@ -89,7 +89,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
           return (
             <Tag
               key={label}
-              style={{ borderRadius: '8px', backgroundColor: color, cursor: 'pointer', margin: '4px' }}
+              style={{ borderRadius: '8px', backgroundColor: color, cursor: 'pointer', margin: '4px', color: '#000' }}
               bordered={false}
               onClick={() => {
                 handleClick(label, 'edges');

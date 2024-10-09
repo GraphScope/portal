@@ -23,7 +23,7 @@ const Toolbar: React.FunctionComponent<IToolbarProps> = props => {
         zIndex: 999,
         padding: '4px',
         borderRadius: '4px',
-        background: '#fff',
+        // background: '#fff',
         ...style,
       }}
     >
