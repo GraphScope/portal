@@ -6,10 +6,13 @@ interface ILeftButtonProps {}
 const LeftButton: React.FunctionComponent<ILeftButtonProps> = props => {
   const { toggleRightSide } = useSection();
   const { isLight } = useStudioProvier();
+  /** 夜间与白天模式 */
+  const fill = !isLight ? '#ddd' : '#000';
+
   return (
     <Button
       type="text"
-      icon={<Icons.Sidebar revert disabled={!isLight} />}
+      icon={<Icons.Sidebar revert fill={fill} />}
       onClick={() => {
         toggleRightSide();
       }}
