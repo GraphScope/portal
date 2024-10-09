@@ -66,7 +66,8 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
         </Title>
         {nodes.map(item => {
           const { label } = item;
-          const { color } = configMap.nodeStyle[label];
+          /** 如果属性中没有color 就报错 */
+          const { color } = configMap.nodeStyle[label] ?? { color: '#000' };
           return (
             <Tag
               key={label}
@@ -85,7 +86,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
         </Title>
         {edges.map(item => {
           const { label } = item;
-          const { color } = configMap.edgeStyle[label];
+          const { color } = configMap.edgeStyle[label] ?? { color: '#000' };
           return (
             <Tag
               key={label}
