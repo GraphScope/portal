@@ -4,6 +4,7 @@ import { EditableText, useThemeContainer, useSection } from '@graphscope/studio-
 import { useContext } from '../../canvas/useContext';
 import { CheckOutlined } from '@ant-design/icons';
 import { theme } from 'antd';
+import { useGraphContext } from '../..';
 const { useToken } = theme;
 interface ILabelProps {
   id: string;
@@ -22,6 +23,8 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
   const isSelected = id === currentId;
   const { algorithm } = useThemeContainer();
   const isDark = algorithm === 'darkAlgorithm';
+  const { disabled: graphDisabled = false } = useGraphContext();
+
   const onEdgeClick = () => {
     updateStore(draft => {
       draft.currentId = id;
@@ -92,9 +95,9 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
           }}
         >
           <EditableText
-            disabled={disabled}
+            disabled={disabled || graphDisabled}
             id={id}
-            text={label || id}
+            text={label || ''}
             onTextChange={onLabelChange}
             style={{ color: getColor(), fontSize: '10px', lineHeight: '14px', minHeight: '14px' }}
           />

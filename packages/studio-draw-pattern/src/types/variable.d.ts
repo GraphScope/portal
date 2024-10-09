@@ -1,5 +1,5 @@
 export interface Variable {
-  variableKey: string;
+  id: string;
   name: string;
   belongType: string;
   belongKey: string;

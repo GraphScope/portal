@@ -1,51 +1,90 @@
-# 📊 @graphscope/studio-draw-pattern
+# 📊 `@graphscope/studio-draw-pattern`
 
-[![NPM version](https://img.shields.io/npm/v/studio-draw-pattern.svg?style=flat)](https://npmjs.com/package/studio-draw-pattern)
-[![NPM downloads](http://img.shields.io/npm/dm/studio-draw-pattern.svg?style=flat)](https://npmjs.com/package/studio-draw-pattern)
+This section covers the `DrawPattern` component of the `GraphScope Portal`.
 
-## 🛠 工具开发
+## Data Structure
 
-```bash
-$ git clone https://github.com/BQXBQX/studio-draw-pattern.git
-$ pnpm install
+The following diagram illustrates the data structure design:
+
+![data structure](./public/structure.png)
+
+### Key Points:
+
+- **Properties**: In both nodes and edges, the properties store the property ID values.
+- **isErgodic**: This flag is used to determine whether a node has been traversed during generation.
+
+## Component
+
+### Overview
+
+The `DrawPattern` component is designed to handle graph schema previews and provide an interactive interface for users to define graph patterns using `MATCH`, `WHERE`, and `description` values. It allows custom handling of changes through a callback function and renders a user interface split into two sections: a quick start guide and a canvas for graph visualization.
+
+### Props
+
+#### `previewGraph?: GraphProps`
+
+- **Type**: `GraphProps` (an object containing nodes and edges)
+- **Description**: This optional prop allows you to pass in a preview graph, which consists of schema nodes and edges to visualize on the canvas.
+
+**GraphProps Interface**:
+
+```ts
+export interface GraphProps {
+  nodes: ISchemaNode[];
+  edges: ISchemaEdge[];
+}
 ```
 
-```bash
-$ npm run dev
-$ npm run build
+- `nodes`: An array of graph nodes (`ISchemaNode`).
+- `edges`: An array of graph edges (`ISchemaEdge`).
+
+### `onClick?: (value: DrawPatternValue) => void`
+
+- **Type**: `(value: DrawPatternValue) => void`
+- **Description**: An optional callback function that will be triggered when a user action occurs, providing the `MATCH`, `WHERE`, and `description` values.
+
+**DrawPatternValue Interface**:
+
+```ts
+export interface DrawPatternValue {
+  MATCHs: string;
+  WHEREs: string;
+  description: string;
+}
 ```
 
-## 🦴 项目架构
+- `MATCHs`: String representation of the graph pattern’s `MATCH` statement.
+- `WHEREs`: String representation of the `WHERE` conditions.
+- `description`: A string describing the pattern.
 
-主要开发集中在 src 文件夹内
+### Usage Example
 
-```bash
-.
-├── README.md
-├── package.json
-├── pnpm-lock.yaml
-├── src
-│   ├── components   # 相关组件,计划封装为<DrawPattern />组件
-│   ├── hooks        # 相关的React Hook, 计划最后封装两个Hook, useGenerate&useDeconstruct,
-│   ├── index.ts     # 项目入口
-│   ├── stores       # 项目的状态管理,使用valtio进行封装
-│   ├── types        # 项目的所有类型
-│   │   ├── edge.d.ts
-│   │   ├── node.d.ts
-│   │   ├── property.d.ts
-│   │   └── variable.d.ts
-│   └── utils        # 相关工具函数
-└── tsconfig.json
+Here’s how you can use the `DrawPattern` component within a React application:
+
+```tsx
+import React from 'react';
+import { DrawPattern, DrawPatternValue, GraphProps } from './DrawPattern';
+
+const App: React.FC = () => {
+  const graphData: GraphProps = {
+    nodes: [
+      { id: 'node1', label: 'Node 1' },
+      { id: 'node2', label: 'Node 2' },
+    ],
+    edges: [{ source: 'node1', target: 'node2', label: 'Edge 1' }],
+  };
+
+  const handlePatternClick = (value: DrawPatternValue) => {
+    console.log('Pattern clicked:', value);
+  };
+
+  return <DrawPattern previewGraph={graphData} onClick={handlePatternClick} />;
+};
+
+export default App;
 ```
 
-## 🛠 API
+### Explanation
 
-## 🌞 TODO
-
-- [ ] Cypher 语句适配
-- [ ] Cypher Node 正则匹配
-- [ ] Cypher Edge 正则匹配
-- [ ] Cypher MATCH 语句正则匹配
-- [ ] Cypher Node 字符串拼接
-- [ ] Cypher Edge 字符串拼接
-- [ ] Cypher MATCH 字符串拼接
+1. **Graph Data**: You pass graph data (`nodes` and `edges`) to the `previewGraph` prop, allowing the component to visualize the graph schema.
+2. **Callback**: The `onClick` prop is used to handle changes in graph pattern selection, such as when the user defines a `MATCH` or `WHERE` condition.

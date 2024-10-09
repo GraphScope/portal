@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import type { EdgeProps } from 'reactflow';
 import { useContext } from '../../canvas/useContext';
 import { usePathStyle } from './useStyle';
 import Label from './label';
+import { useGraphContext } from '../..';
 
 function LoopEdge(props: EdgeProps) {
   const { id, style, data, sourceX, sourceY } = props;
@@ -11,6 +12,11 @@ function LoopEdge(props: EdgeProps) {
   const { markerEnd, style: pathStyle } = usePathStyle(id);
   const edgePath = generateSelfLoopPath(sourceX, sourceY, { index });
   const labelPositon = getLabelPosition(sourceX, sourceY, { index });
+  const { onEdgeClick } = useGraphContext();
+
+  const handleClick = (event: MouseEvent) => {
+    onEdgeClick && onEdgeClick(data, event);
+  };
 
   return (
     <>
@@ -20,6 +26,7 @@ function LoopEdge(props: EdgeProps) {
         d={edgePath}
         markerEnd={markerEnd}
         style={{ ...style, ...pathStyle }}
+        onClick={handleClick}
       />
 
       <Label

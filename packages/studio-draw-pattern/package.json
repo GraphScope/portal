@@ -8,7 +8,11 @@
     "dev": "father dev",
     "build": "father build",
     "build:deps": "father prebundle",
-    "prepublishOnly": "father doctor && npm run build"
+    "prepublishOnly": "father doctor && npm run build",
+    "start:site": "vite dev",
+    "build:site": "vite build",
+    "test": "vitest",
+    "ci": "cd ../studio-components && npm run build && cd ../studio-draw-pattern && npm run build:site "
   },
   "keywords": [],
   "authors": [],
@@ -23,16 +27,26 @@
   },
   "devDependencies": {
     "@swc/core": "^1.7.0",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
+    "@types/lodash": "^4.14.202",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/uuid": "^9.0.8",
+    "@vitejs/plugin-react": "^4.3.1",
     "father": "^4.4.5",
-    "typescript": "^5.5.4"
-  },
-  "peerDependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "typescript": "^5.5.4",
+    "vite": "^5.4.3",
+    "vitest": "^2.0.5"
   },
   "dependencies": {
-    "valtio": "^1.13.2"
+    "@ant-design/icons": "^5.2.6",
+    "@graphscope/studio-components": "workspace:*",
+    "@graphscope/studio-graph-editor": "workspace:*",
+    "antd": "^5.17.0",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rxjs": "^7.8.1",
+    "uuid": "^10.0.0",
+    "zustand": "^4.5.5"
   }
 }

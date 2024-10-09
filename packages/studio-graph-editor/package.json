@@ -1,10 +1,10 @@
 {
-  "name": "@graphscope/studtio-graph-editor",
-  "version": "0.1.4",
+  "name": "@graphscope/studio-graph-editor",
+  "version": "0.1.0",
   "description": "",
-  "main": "lib/index.js",
-  "module": "es/index.js",
-  "types": "lib/index.d.ts",
+  "main": "./src/index.tsx",
+  "module": "./src/index.tsx",
+  "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/GraphScope/portal.git"
@@ -20,27 +20,31 @@
   },
   "scripts": {
     "start": "vite dev",
-    "build": "vite build",
-    "prepublishOnly": "npm run build"
+    "build": "vite build && tsc"
   },
-  "dependencies": {
-    "@graphscope/studio-importor": "workspace:*",
-    "@graphscope/studio-components": "workspace:*",
-    "html-to-image": "^1.11.11",
-    "d3-force": "latest",
-    "dagre": "latest",
-    "react-intl": "^6.6.1",
-    "reactflow": "latest",
-    "uuid": "^9.0.1",
-    "valtio": "^1.13.2",
-    "zustand": "^4.5.5",
+  "peerDependencies": {
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
+  "dependencies": {
+    "@graphscope/studio-components": "workspace:*",
+    "antd": "^5.17.0",
+    "d3-force": "latest",
+    "dagre": "latest",
+    "html-to-image": "^1.11.11",
+    "lodash": "^4.17.21",
+    "react-intl": "^6.6.1",
+    "reactflow": "latest",
+    "rxjs": "^7.8.1",
+    "uuid": "^9.0.1",
+    "valtio": "2.0.0-rc.1",
+    "zustand": "^4.5.5"
+  },
   "devDependencies": {
     "@types/d3-force": "latest",
-    "vite": "^5.0.12",
-    "@vitejs/plugin-react": "^4.2.1"
+    "@types/lodash": "^4.14.202",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.12"
   },
   "author": "",
   "license": "ISC"

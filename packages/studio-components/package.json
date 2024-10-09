@@ -27,7 +27,8 @@
     "react-resizable-panels": "^2.0.20",
     "sql-ddl-to-json-schema": "latest",
     "typewriter-effect": "^2.21.0",
-    "uuid": "latest"
+    "uuid": "latest",
+    "uuidv4": "latest"
   },
   "publishConfig": {
     "access": "public",

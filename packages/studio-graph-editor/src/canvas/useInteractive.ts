@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { useReactFlow, applyEdgeChanges, applyNodeChanges } from 'reactflow';
+import { useReactFlow, applyEdgeChanges, applyNodeChanges, useOnSelectionChange } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';
 import { createStaticForceLayout } from '../elements/forceLayout';
 
@@ -13,6 +13,9 @@ import { transformEdges } from '../elements';
 
 import { getBBox, createEdgeLabel, createNodeLabel } from '../elements/utils';
 import { Utils } from '@graphscope/studio-components';
+import { useGraphContext } from '..';
+import { ISchemaEdge } from '../types/edge';
+import _ from 'lodash';
 const { fakeSnapshot } = Utils;
 let timer: any = null;
 const useInteractive: any = () => {
@@ -20,6 +23,13 @@ const useInteractive: any = () => {
   const { screenToFlowPosition, fitBounds, fitView } = useReactFlow();
   const { displayMode, nodes, edges, hasLayouted, elementOptions } = store;
   const connectingNodeId = useRef(null);
+  const {
+    onNodesChange: handleNodesChange,
+    onEdgesChange: handleEdgesChange,
+    onSelectionChange,
+    disabled,
+    noDefaultLabel,
+  } = useGraphContext();
 
   const onConnectStart = useCallback((_, { nodeId }) => {
     connectingNodeId.current = nodeId;
@@ -50,8 +60,26 @@ const useInteractive: any = () => {
             y: newPosition.y - 50,
           },
           type: 'graph-node',
-          data: { label: createNodeLabel() },
+          data: { label: noDefaultLabel ? '' : createNodeLabel() },
         };
+        const newEgde = {
+          id: edgeId,
+          //@ts-ignore
+          source: connectingNodeId.current,
+          target: nodeId,
+          type: 'graph-edge',
+          data: {
+            label: noDefaultLabel ? '' : createEdgeLabel(),
+          },
+        };
+
+        // handleEdgesChange && handleEdgesChange([...fakeSnapshot(edges), newEgde]);
+        // handleNodesChange && handleNodesChange([...fakeSnapshot(nodes), newNode]);
+        // console.log(
+        //   'handleChange 时的 edges 和 nodes',
+        //   [...fakeSnapshot(edges), newEgde],
+        //   [...fakeSnapshot(nodes), newNode],
+        // );
 
         updateStore(draft => {
           draft.nodes.push(newNode);
@@ -62,7 +90,7 @@ const useInteractive: any = () => {
             target: nodeId,
             type: 'graph-edge',
             data: {
-              label: createEdgeLabel(),
+              label: noDefaultLabel ? '' : createEdgeLabel(),
             },
           });
         });
@@ -74,13 +102,13 @@ const useInteractive: any = () => {
 
         updateStore(draft => {
           // 可能存在多边，所以需要走一遍 transform 函数
-          draft.edges = transformEdges(
+          const newEdges = transformEdges(
             [
               ...draft.edges,
               {
                 id: edgeId,
                 data: {
-                  label: edgeLabel,
+                  label: noDefaultLabel ? '' : edgeLabel,
                 },
                 source: connectingNodeId.current || '',
                 target: nodeid,
@@ -88,6 +116,8 @@ const useInteractive: any = () => {
             ],
             displayMode,
           );
+          // handleEdgesChange && handleEdgesChange(newEdges);
+          draft.edges = newEdges;
         });
       }
     },
@@ -95,24 +125,36 @@ const useInteractive: any = () => {
   );
 
   const onNodesChange = (changes: NodeChange[]) => {
+    if (disabled) return;
     const { type } = changes[0];
-    console.log(changes);
+    // console.log(changes);
 
     if (elementOptions.isConnectable || type === 'position') {
       updateStore(draft => {
-        draft.nodes = applyNodeChanges(
-          changes,
-          // draft.nodes,
-          deepclone(draft.nodes),
-        );
+        const newNodes = applyNodeChanges(changes, deepclone(draft.nodes));
+        handleNodesChange && handleNodesChange(newNodes);
+        const isEqual = _.isEqual(draft.nodes, newNodes);
+        if (!isEqual) draft.nodes = newNodes;
       });
     }
   };
+
+  useOnSelectionChange({
+    onChange: useCallback(
+      ({ nodes, edges }) => {
+        onSelectionChange && onSelectionChange(nodes, edges as unknown as ISchemaEdge[]);
+      },
+      [onSelectionChange],
+    ),
+  });
   const onEdgesChange = (changes: EdgeChange[]) => {
+    if (disabled) return;
+
     if (elementOptions.isConnectable) {
       updateStore(draft => {
-        //@ts-ignore
-        draft.edges = applyEdgeChanges(changes, deepclone(draft.edges));
+        const newEdges = applyEdgeChanges(changes, deepclone(draft.edges));
+        // handleEdgesChange && handleEdgesChange(newEdges as unknown as ISchemaEdge[]);
+        draft.edges = newEdges;
       });
     }
   };
@@ -124,15 +166,8 @@ const useInteractive: any = () => {
   };
 
   useEffect(() => {
-    console.log('effect.....');
     if (nodes.length > 0) {
-      // 交互
-      // if (hasLayouted) {
-      //   onDoubleClick();
-      // }
-      // 布局
       if (!hasLayouted) {
-        console.log('effect......layout');
         const graph = createStaticForceLayout(fakeSnapshot(nodes), fakeSnapshot(edges));
         clearTimeout(timer);
         timer = setTimeout(() => {
@@ -147,6 +182,13 @@ const useInteractive: any = () => {
       }
     }
   }, [nodes, edges, hasLayouted]);
+
+  useEffect(() => {
+    // console.log('监听时的 edges 和 nodes', JSON.stringify(edges), '\n', JSON.stringify(nodes));
+    handleEdgesChange && handleEdgesChange(edges);
+    handleNodesChange && handleNodesChange(nodes);
+  }, [edges, nodes]);
+
   useEffect(() => {
     /** 把marker 放到 reactflow 内部，目的是为了导出的时候 dom 不丢失 */
     const marker = document.getElementById('arrow-marker-svg');
