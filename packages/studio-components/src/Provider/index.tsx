@@ -60,7 +60,7 @@ const Provider: React.FC<IThemeProvider> = props => {
         components: { ...preState.components, ...components },
         token: { ...preState.token, ...token },
         algorithm: themeConfig.algorithm || preState.algorithm,
-        locale: themeConfig.locale,
+        locale: themeConfig.locale ?? storage.get('locale'),
       };
     });
   };
