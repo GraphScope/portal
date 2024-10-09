@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useCallback } from 'react';
 import { useStore } from 'reactflow';
 import type { EdgeProps } from 'reactflow';
@@ -12,7 +12,10 @@ import {
 import { useContext } from '../../canvas/useContext';
 import LoopEdge from './loop-edge';
 import Label from './label';
+
 import { useStudioProvier } from '@graphscope/studio-components';
+import { useGraphContext } from '../..';
+
 
 function GraphEdge(props: EdgeProps) {
   const { id, source, target, style, data } = props;
@@ -22,6 +25,7 @@ function GraphEdge(props: EdgeProps) {
   const targetNode = useStore(useCallback(store => store.nodeInternals.get(target), [target]));
   const { store } = useContext();
   const { currentId, theme } = store;
+
   const { isLight } = useStudioProvier();
   if (!sourceNode || !targetNode) {
     return null;
@@ -67,8 +71,13 @@ function GraphEdge(props: EdgeProps) {
     }
     return isSelected ? theme.primaryColor : '#000';
   };
+
+  const handleClick = (event: React.MouseEvent) => {
+    onEdgeClick && onEdgeClick(data, event);
+  };
+
   return (
-    <>
+    <g onClick={handleClick}>
       <path
         id={id}
         className="react-flow__edge-path"
@@ -85,7 +94,7 @@ function GraphEdge(props: EdgeProps) {
           transform: `translate(-50%, -50%) translate(${controlPoint.x}px,${controlPoint.y}px) rotate(${degree}deg)`,
         }}
       />
-    </>
+    </g>
   );
 }
 

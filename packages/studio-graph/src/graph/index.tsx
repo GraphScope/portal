@@ -15,6 +15,7 @@ const Graph = memo(
       position: 'relative',
       ...style,
     };
+
     return <div id={`GRAPH_${id}`} ref={containerRef} style={containerStyle}></div>;
   }),
 );

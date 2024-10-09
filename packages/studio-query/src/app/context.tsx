@@ -1,3 +1,4 @@
+import { GraphProps } from '@graphscope/studio-draw-pattern';
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 
@@ -54,6 +55,8 @@ export type IStore<T> = T & {
   };
   /** 默认的折叠状态 */
   defaultCollapsed: boolean;
+
+  previewGraphSchema: GraphProps;
 };
 
 const initialStore: IStore<{}> = {
@@ -85,6 +88,8 @@ const initialStore: IStore<{}> = {
   enableImmediateQuery: false,
   language: 'gremlin',
   defaultCollapsed: true,
+
+  previewGraphSchema: { nodes: [], edges: [] },
 };
 
 type ContextType<T> = {
@@ -178,4 +183,7 @@ export interface IStudioQueryProps {
     title: string;
     description: string;
   };
+
+  // draw-pattern 预览图模板
+  previewGraphSchema?: GraphProps;
 }

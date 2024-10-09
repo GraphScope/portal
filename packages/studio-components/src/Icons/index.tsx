@@ -11,3 +11,4 @@ export { default as ZoomFit } from './ZoomFit';
 export { default as Cluster } from './Cluster';
 export { default as Lock } from './Lock';
 export { default as Unlock } from './Unlock';
+export { default as Lasso } from './Lasso';

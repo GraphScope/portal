@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 import {
   MultipleInstance,
   Section,
@@ -42,9 +42,9 @@ interface QueryGraphProps {
 const ToogleButton = () => {
   const { toggleRightSide } = useSection();
   return (
-    <div>
+    <Tooltip title="Toggle Right Side" placement="left">
       <Button icon={<Icons.Sidebar revert />} onClick={() => toggleRightSide()} type="text" />
-    </div>
+    </Tooltip>
   );
 };
 
@@ -98,7 +98,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
           <Canvas />
           <BasicInteraction />
           <ClearStatatus />
-          <Brush onSelect={onSelectNodes} />
+
           <Loading />
           <ContextMenu>
             <NeighborQuery onQuery={onQuery} />
@@ -109,9 +109,11 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
           <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
             <ToogleButton />
             <Divider style={{ margin: '0px' }} />
-            <SwitchEngine />
             <FullScreen containerRef={containerRef} />
             <ZoomFit />
+            <Brush onSelect={onSelectNodes} />
+            <Divider style={{ margin: '0px' }} />
+            <SwitchEngine />
             <RunCluster />
             <Export />
           </Toolbar>

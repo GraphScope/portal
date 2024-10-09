@@ -158,6 +158,14 @@ export default function useGraph<P extends GraphProps>(props: P) {
   useEffect(() => {
     if (graphRef.current) {
       graphRef.current.graphData(Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges }));
+      let timeIndex = 0;
+      const timer = setInterval(() => {
+        timeIndex++;
+        if (timeIndex >= 4) {
+          clearInterval(timer);
+        }
+        graphRef.current?.zoomToFit(400, 10 * timeIndex);
+      }, 400);
     }
   }, [data]);
   useEffect(() => {

@@ -26,25 +26,38 @@ export const getDriver = async (language: 'cypher' | 'gremlin' = 'cypher', endpo
   }
 };
 
-const QueryStatement = props => {
+export interface IQueryStatementProps {
+  enableImmediateQuery?: boolean;
+  mode?: 'flow' | 'tabs';
+  id?: string;
+  timestamp?: number;
+  graphId?: string;
+  schemaData?: { nodes: any[]; edges: any[] };
+  script?: string;
+  language?: 'cypher' | 'gremlin';
+  endpoint?: string;
+  onQuery?: (params: any) => void;
+}
+const QueryStatement = (props: IQueryStatementProps) => {
   const {
-    enableImmediateQuery,
+    enableImmediateQuery = false,
     mode = 'flow',
     id = '',
     timestamp = Date.now(),
     graphId = '',
     schemaData = { nodes: [], edges: [] },
     script = 'Match (n) return n limit 10',
+    onQuery,
   } = props || {};
   const [state, setState] = useState({
-    language: props.language,
-    endpoint: props.endpoint,
+    language: props.language || 'cypher',
+    endpoint: props.endpoint || '127.0.0.1:7687',
   });
   const { language, endpoint } = state;
 
-  const onQuery = async (params: IStatement) => {
+  const onQueryByEndpoint = async (params: IStatement) => {
     const { language } = params;
-    console.log('params', params);
+
     const driver = await getDriver(language, endpoint);
     //@ts-ignore
     return driver.query(params.script);
@@ -59,11 +72,12 @@ const QueryStatement = props => {
       return {
         ...preState,
         endpoint: params.endpoint,
-        language: params.language,
+        language: params.language as 'cypher' | 'gremlin',
       };
     });
   };
-  if (!endpoint || !language) {
+
+  if (!onQuery && (!endpoint || !language)) {
     return (
       <StudioProvier locales={locales}>
         <ConnectEndpoint onConnect={onConnect} />
@@ -83,7 +97,7 @@ const QueryStatement = props => {
         graphId={graphId}
         schemaData={schemaData}
         script={script}
-        onQuery={onQuery}
+        onQuery={onQuery || onQueryByEndpoint}
         onCancel={onCancel}
       />
     </StudioProvier>

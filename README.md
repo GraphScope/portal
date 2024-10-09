@@ -19,16 +19,16 @@ There are two ways to start graphscope portal
 
 ```bash
 # Pull the image
-docker pull ghcr.io/graphscope/portal:update-importor
+docker pull ghcr.io/graphscope/portal:latest
 ```
 
 ```bash
 # Run the container
-docker run -it
---name my-portal
--p 8888:8888
--e COORDINATOR=http://host.docker.internal:8080
-ghcr.io/graphscope/portal:update-importor
+docker run -it \
+--name my-portal \
+-p 8888:8888 \
+-e COORDINATOR=http://host.docker.internal:8080 \
+ghcr.io/graphscope/portal:latest
 ```
 
 > Description of Startup Parameters

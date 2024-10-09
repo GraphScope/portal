@@ -4,6 +4,7 @@ import { EditableText, useStudioProvier, useSection } from '@graphscope/studio-c
 import { useContext } from '../../canvas/useContext';
 import { CheckOutlined } from '@ant-design/icons';
 import { theme } from 'antd';
+import { useGraphContext } from '../..';
 const { useToken } = theme;
 interface ILabelProps {
   id: string;
@@ -20,7 +21,9 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
   const { token } = useToken();
   const { currentId, theme } = store;
   const isSelected = id === currentId;
+
   const { isLight } = useStudioProvier();
+  const { disabled: graphDisabled = false } = useGraphContext();
   const onEdgeClick = () => {
     updateStore(draft => {
       draft.currentId = id;
@@ -91,9 +94,9 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
           }}
         >
           <EditableText
-            disabled={disabled}
+            disabled={disabled || graphDisabled}
             id={id}
-            text={label || id}
+            text={label || ''}
             onTextChange={onLabelChange}
             style={{ color: getColor(), fontSize: '10px', lineHeight: '14px', minHeight: '14px' }}
           />

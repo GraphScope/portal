@@ -5,6 +5,9 @@
     "declaration": true,
     "target": "es2018",
     "moduleResolution": "node",
+    "emitDeclarationOnly": true, // Only emit type declarations
+    "outDir": "./dist", // Output directory for .d.ts files
+    "rootDir": "./src", // Root directory of your source files
     "jsx": "react",
     "resolveJsonModule": true,
     "strict": true,
@@ -16,5 +19,5 @@
     "isolatedModules": false
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }

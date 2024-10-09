@@ -1,38 +1,10 @@
 import { proxy, useSnapshot } from 'valtio';
-import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
+// import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 import { Utils } from '@graphscope/studio-components';
-import { ISchemaNode, ISchemaEdge } from './typing';
+import { IStore } from '../types/store';
+import { useGraphContext } from '..';
 
-export type IStore = {
-  /** APP类型 */
-  appMode: 'DATA_MODELING' | 'DATA_IMPORTING';
-  /**不可编辑状态 */
-  disabled: boolean;
-  currentType: 'nodes' | 'edges';
-  currentId: string;
-  nodes: ISchemaNode[];
-  edges: ISchemaEdge[];
-  source: {
-    nodes: ISchemaNode[];
-    edges: ISchemaEdge[];
-  };
-  displayMode: 'graph' | 'table';
-  graphPosition: Record<string, { x: number; y: number }>;
-  tablePosition: Record<string, { x: number; y: number }>;
-
-  hasLayouted: boolean;
-  elementOptions: {
-    /** 是否可以点击，包含点和边 */
-    isEditable: boolean;
-    /** 是否可以编辑标签，包括节点和边 */
-    isConnectable: boolean;
-  };
-  theme: {
-    primaryColor: string;
-  };
-};
-
-export const initialStore: IStore = {
+export const defaultStore: IStore = {
   /** APP类型 */
   appMode: 'DATA_MODELING',
   /**不可编辑状态 */
@@ -50,8 +22,9 @@ export const initialStore: IStore = {
   currentId: '',
 
   hasLayouted: false,
+
   elementOptions: {
-    isEditable: true,
+    isEditable: false,
     isConnectable: true,
   },
   theme: {
@@ -59,10 +32,10 @@ export const initialStore: IStore = {
   },
 };
 
-type ContextType = {
-  store: Snapshot<IStore>;
-  updateStore: (fn: (draft: IStore) => void) => void;
-};
+// type ContextType = {
+//   store: Snapshot<IStore>;
+//   updateStore: (fn: (draft: IStore) => void) => void;
+// };
 
 export const StoreMap = {};
 
@@ -87,9 +60,12 @@ export const useMultipleInstance = initialStore => {
   };
 };
 
-export function useContext(): ContextType {
-  const id = 'root-1';
-  const currentStore = getProxyStoreById(id, proxy(Utils.fakeSnapshot(initialStore)));
+export function useContext() {
+  const { graphId } = useGraphContext();
+  const id = graphId ?? 'root-1';
+  const currentStore = getProxyStoreById(id, proxy(Utils.fakeSnapshot(defaultStore)));
+  const onNodesChange = useGraphContext().onNodesChange;
+  const onEdgesChange = useGraphContext().onEdgesChange;
 
   // const { id, currentStore } = useMultipleInstance(proxy(Utils.fakeSnapshot(initialStore)));
   const store = useSnapshot(currentStore);

@@ -2,6 +2,8 @@ import React, { memo } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { List, Popover, Flex } from 'antd';
 import { TableCard } from '@graphscope/studio-components';
+import exportImage from '../../button-controller/export-image';
+import { LazyLoad } from '../middle-component/lazy-load';
 const style = {
   padding: 5,
   background: '#fff',
@@ -77,4 +79,10 @@ const TableNode = (props: NodeProps) => {
   );
 };
 
-export default memo(TableNode);
+const LazyTableNode = (props: NodeProps) => (
+  <LazyLoad type="NODE">
+    <TableNode {...props} />
+  </LazyLoad>
+);
+
+export default memo(LazyTableNode);

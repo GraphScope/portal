@@ -1,4 +1,6 @@
-import type { ISchemaEdge } from '../canvas/typing';
+import { ISchemaEdge } from "../types/edge";
+
+// import type { ISchemaEdge } from '../canvas/typing';
 function isEven(number: number) {
   return number % 2 === 0;
 }

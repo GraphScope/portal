@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import ToggleButton from './toggle-button';
 
 import CypherEditor from '../../components/cypher-editor';
+import { DrawPatternModal } from '../../components/draw-pattern-modal';
 
 interface IHeaderProps {
   connectComponent?: IStudioQueryProps['connectComponent'];
@@ -138,6 +139,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
 
         {connectComponent}
         <Space>
+          <DrawPatternModal></DrawPatternModal>
           <ModeSwitch />
           {displaySidebarPosition === 'right' && <ToggleButton displaySidebarPosition={displaySidebarPosition} />}
         </Space>

@@ -1,10 +1,10 @@
 import React, { memo, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
-import { Tag, Button, theme } from 'antd';
-import { CheckCircleOutlined, CheckOutlined } from '@ant-design/icons';
+import { theme } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
 import { EditableText, useStudioProvier, useSection } from '@graphscope/studio-components';
 const { useToken } = theme;
-import { useContext } from '../../canvas/useContext';
+import { useContext } from '../../useContext';
 
 const R = 50;
 const HALO_LINE_WIDTH = 16;
