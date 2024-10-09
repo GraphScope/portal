@@ -21,11 +21,11 @@ export const createGraph = async (params: { nodes: any[]; edges: any[] }, graph_
 
   await kuzuDriver.createSchema(schema);
 
-  const insertQuery = "CREATE (u:User {name: 'Alice', age: 35})";
-  await kuzuDriver.insertData(insertQuery);
+  // const insertQuery = "CREATE (u:User {name: 'Alice', age: 35})";
+  // await kuzuDriver.insertData(insertQuery);
 
-  const query = 'MATCH (n) RETURN n';
-  const queryResult = await kuzuDriver.queryData(query);
+  // const query = 'MATCH (n) RETURN n';
+  // const queryResult = await kuzuDriver.queryData(query);
 
   return {
     graph_id: '1',
@@ -35,8 +35,19 @@ export const createGraph = async (params: { nodes: any[]; edges: any[] }, graph_
 export const importGraph = async (csvFiles: File[]) => {
   console.log('csvFiles', csvFiles);
   const kuzuDriver = await getDriver();
-  return await kuzuDriver.loadGraph(csvFiles);
+  return await kuzuDriver.switchDataset('DRAFT_GRAPH_FILES');
+  // return await kuzuDriver.loadGraph(csvFiles);
 };
+
+export const switchGraph = async (datasetId: string) => {
+  const kuzuDriver = await getDriver();
+  return await kuzuDriver.switchDataset(datasetId);
+}
+
+export const exportGraph = async () => {
+  const kuzuDriver = await getDriver();
+  return await kuzuDriver.exportData();
+}
 
 export function transform(params) {
   return {

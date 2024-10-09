@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Select, Space, SelectProps, Tag, Flex } from 'antd';
 import { Chart } from '@antv/g2';
 import { useContext } from '@graphscope/studio-graph';
-import { queryCypher } from '../../service';
+import { IQueryServices } from '../../service';
 interface ITableViewProps {
   property: string;
+  queryCypher: IQueryServices['queryCypher'];
 }
 
 const ChartView: React.FunctionComponent<ITableViewProps> = props => {
-  const { property } = props;
+  const { property, queryCypher } = props;
   const ChartContainerRef = useRef(null);
   const { store, updateStore } = useContext();
 
@@ -110,9 +111,12 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
     </div>
   );
 };
-
-const Charts = () => {
+export interface IChart {
+  queryCypher: IQueryServices['queryCypher'];
+}
+const Charts = (props: IChart) => {
   const { store } = useContext();
+  const { queryCypher } = props;
   const { schema } = store;
   const properties = new Set();
   schema.nodes.forEach(node => {
@@ -154,7 +158,7 @@ const Charts = () => {
       {value.map(item => {
         return (
           <div>
-            <ChartView property={item} key={item} />
+            <ChartView property={item} key={item} queryCypher={queryCypher} />
           </div>
         );
       })}

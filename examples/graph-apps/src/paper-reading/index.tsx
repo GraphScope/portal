@@ -23,8 +23,15 @@ import {
 } from '@graphscope/studio-graph';
 
 import { FetchGraph, Searchbar, PaperList, PaperInfo, Statistics } from './components';
-import { queryCypher } from './service';
-interface QueryGraphProps {}
+import {
+  IQueryServices,
+  queryCypher as defaultQueryCypher,
+  queryCypherSchema as defaultQueryCypherSchema,
+} from './service';
+export interface QueryGraphProps {
+  queryCypher?: IQueryServices['queryCypher'];
+  queryCypherSchema?: IQueryServices['queryCypherSchema'];
+}
 
 const ToogleLeftButton = () => {
   const { toggleLeftSide } = useSection();
@@ -45,6 +52,7 @@ const ToogleRightButton = () => {
 
 const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const { queryCypher = defaultQueryCypher, queryCypherSchema = defaultQueryCypherSchema } = props;
 
   return (
     <MultipleInstance>
@@ -65,7 +73,7 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
           leftSide={<PaperList />}
           rightSide={
             <PaperInfo>
-              <Statistics>
+              <Statistics queryCypher={queryCypher}>
                 <StyleSetting />
               </Statistics>
             </PaperInfo>
@@ -92,7 +100,7 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
             style={{ position: 'absolute', top: '20px', right: '80px', left: '80px' }}
             noSpace
           >
-            <Searchbar />
+            <Searchbar queryCypher={queryCypher} />
           </Toolbar>
           <Toolbar direction="horizontal" style={{ position: 'absolute', top: '20px', right: 'unset', left: '20px' }}>
             <ToogleLeftButton />
@@ -103,7 +111,7 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
 
           <Canvas />
           <BasicInteraction />
-          <FetchGraph />
+          <FetchGraph queryCypher={queryCypher} queryCypherSchema={queryCypherSchema} />
           <Brush />
           <ClearStatatus />
           <Loading />

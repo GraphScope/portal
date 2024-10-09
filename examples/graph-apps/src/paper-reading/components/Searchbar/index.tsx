@@ -5,14 +5,17 @@ import { Utils } from '@graphscope/studio-components';
 import Highlighter from 'react-highlight-words';
 import './index.css';
 import { useContext } from '@graphscope/studio-graph';
-import { queryCypher } from '../../service';
+import { IQueryServices } from '../../service';
 
 const { getSearchParams, debounce } = Utils;
-interface ISearchbarProps {}
+interface ISearchbarProps {
+  queryCypher: IQueryServices['queryCypher'];
+}
 
 const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
   const { store, updateStore } = useContext();
   const { emitter } = store;
+  const { queryCypher } = props;
   const [state, setState] = useState({
     isLoading: false,
     words: '',

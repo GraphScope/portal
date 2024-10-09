@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { Flex, Typography, Statistic, Divider } from 'antd';
 import { useContext, getStyleConfig } from '@graphscope/studio-graph';
-import { queryCypher, queryCypherSchema } from '../../service';
+import { IQueryServices } from '../../service';
 import Charts from './Chart';
 interface IUploadProps {
   children?: React.ReactNode;
+  queryCypher: IQueryServices['queryCypher'];
 }
 
 const Statistics: React.FunctionComponent<IUploadProps> = props => {
-  const { children } = props;
+  const { children, queryCypher } = props;
   const { updateStore, store } = useContext();
   const { graphId } = store;
   const { nodes, edges } = store.data;
@@ -53,7 +54,7 @@ const Statistics: React.FunctionComponent<IUploadProps> = props => {
         Select the properties you're interested in for statistical display, and click on the bar chart for quick
         queries.
       </Typography.Text>
-      <Charts />
+      <Charts queryCypher={queryCypher} />
     </Flex>
   );
 };
