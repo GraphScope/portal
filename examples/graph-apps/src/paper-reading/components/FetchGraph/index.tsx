@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { useContext, getStyleConfig } from '@graphscope/studio-graph';
-import { queryCypher, queryCypherSchema } from '../../service';
+import { IQueryServices } from '../../service';
 
-interface IUploadProps {}
-
-const FetchGraph: React.FunctionComponent<IUploadProps> = props => {
+const FetchGraph: React.FunctionComponent<IQueryServices> = props => {
   const { updateStore, store } = useContext();
   const { graphId } = store;
+  const { queryCypher, queryCypherSchema } = props;
 
   const initGraph = async () => {
     updateStore(draft => {

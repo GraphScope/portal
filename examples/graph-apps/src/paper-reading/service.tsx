@@ -1,6 +1,10 @@
 import { Utils } from '@graphscope/studio-components';
 const { getSearchParams } = Utils;
 import { queryGraph } from '@graphscope/studio-driver';
+export interface IQueryServices {
+  queryCypher: (params: { script: string }) => Promise<any>;
+  queryCypherSchema: () => Promise<any>;
+}
 
 interface Params {
   script: string;
