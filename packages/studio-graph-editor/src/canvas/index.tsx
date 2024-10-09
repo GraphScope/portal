@@ -75,8 +75,7 @@ const SchemaGraph: React.FunctionComponent<ISchemaGraphProps> = props => {
 
           // onDoubleClick={onDoubleClick}
         >
-
-          <ArrowMarker selectedColor={theme.primaryColor} color={isDark ? '#d7d7d7' : '#000'} />
+          <ArrowMarker selectedColor={theme.primaryColor} color={!isLight ? '#d7d7d7' : '#000'} />
           {isControlButton && (
             <>
               <Controls
@@ -96,7 +95,7 @@ const SchemaGraph: React.FunctionComponent<ISchemaGraphProps> = props => {
             }}
           />
           {isEmpty && <EmptyCanvas description={description} />}
-          {isMiniMap && <MiniMap style={{ backgroundColor: isDark ? '#161616' : '' }} />}
+          {isMiniMap && <MiniMap style={{ backgroundColor: !isLight ? '#161616' : '' }} />}
           {children && children}
         </ReactFlow>
       </div>

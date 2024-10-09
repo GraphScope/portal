@@ -4,7 +4,7 @@ import { theme } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
 import { EditableText, useStudioProvier, useSection } from '@graphscope/studio-components';
 const { useToken } = theme;
-import { useContext } from '../../useContext';
+import { useContext } from '../../canvas/useContext';
 
 const R = 50;
 const HALO_LINE_WIDTH = 16;

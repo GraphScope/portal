@@ -16,7 +16,6 @@ import Label from './label';
 import { useStudioProvier } from '@graphscope/studio-components';
 import { useGraphContext } from '../..';
 
-
 function GraphEdge(props: EdgeProps) {
   const { id, source, target, style, data } = props;
   const { _extra, label, filelocation, disabled } = data || {};
@@ -27,6 +26,7 @@ function GraphEdge(props: EdgeProps) {
   const { currentId, theme } = store;
 
   const { isLight } = useStudioProvier();
+  const { onEdgeClick } = useGraphContext();
   if (!sourceNode || !targetNode) {
     return null;
   }
