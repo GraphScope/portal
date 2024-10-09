@@ -59,4 +59,12 @@ export default {
   'Export graph json': 'Export graph json',
   'Clustering layout': 'Clustering layout',
   'Vertex Properties': 'Vertex Properties',
+  'Connect Endpoint': 'Connect Endpoint',
+  'Connection URL': 'Connection URL',
+  'Query language': 'Query language',
+  'Query initiation method': 'Query initiation method',
+  Username: 'Username',
+  Password: 'Password',
+  Connect: 'Connect',
+  Close: 'Close',
 };

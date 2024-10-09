@@ -6,15 +6,15 @@ title: ThemeProvider
 import React, { useState } from 'react';
 import { Button, Space, Input } from 'antd';
 import ThemeProvider from './index.tsx';
-import { useThemeContainer } from './useThemeConfigProvider.tsx';
+import { useStudioProvier } from './useThemeConfigProvider.tsx';
 import { components, token } from './const.ts';
 /** 修改主题色 */
 const ToogleButton = () => {
-  const { handleTheme } = useThemeContainer();
+  const { handleThemeOrLocale } = useStudioProvier();
   return (
     <Button
       onClick={() => {
-        handleTheme({
+        handleThemeOrLocale({
           components,
           token,
         });

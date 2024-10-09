@@ -98,7 +98,7 @@ export const startService = async (graph_id: string) => {
     })
     .then(res => {
       if (res.status === 200) {
-        notification('success', res.data);
+        notification('success', JSON.parse(res.data.replace(/'/g, '"')).message);
         return true;
       } else {
         notification('error', res.data);
@@ -116,7 +116,7 @@ export const stopService = async (graph_id: string) => {
     })
     .then(res => {
       if (res.status === 200) {
-        notification('success', res.data);
+        notification('success', JSON.parse(res.data.replace(/'/g, '"')).message);
         return true;
       } else {
         notification('error', res.data);

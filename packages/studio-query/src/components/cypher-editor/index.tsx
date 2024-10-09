@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect } from 'react';
-import { useThemeContainer } from '@graphscope/studio-components';
+import { useStudioProvier } from '@graphscope/studio-components';
 import './index.css';
 import { editor, languages } from 'monaco-editor';
 import 'monaco-editor/esm/vs/basic-languages/cypher/cypher.contribution';
@@ -59,9 +59,7 @@ const Editor = forwardRef((props: IEditor, editorRef: any) => {
   const { value, language = 'cypher', maxRows = 10, minRows = 1, onChangeContent, clear, onInit } = props;
   let codeEditor: editor.IStandaloneCodeEditor;
   const MAGIC_NUMBER = onChangeContent ? 0 : countLines(value);
-  const { algorithm } = useThemeContainer();
-
-  const isDark = algorithm === 'darkAlgorithm';
+  const { isLight } = useStudioProvier();
   useEffect(() => {
     if (editorRef && editorRef.current) {
       if (countLines(value) <= maxRows) {
@@ -72,7 +70,7 @@ const Editor = forwardRef((props: IEditor, editorRef: any) => {
       codeEditor = editor.create(editorRef.current, {
         language: 'gremlin', //LANGUAGE[language],
         value,
-        theme: isDark ? 'vs-dark' : THEMES[language], // 'vs' (default), 'vs-dark', 'hc-black', 'hc-light'
+        theme: !isLight ? 'vs-dark' : THEMES[language], // 'vs' (default), 'vs-dark', 'hc-black', 'hc-light'
         suggestLineHeight: 20,
         automaticLayout: true,
         minimap: { enabled: false },
@@ -103,7 +101,7 @@ const Editor = forwardRef((props: IEditor, editorRef: any) => {
     return () => {
       codeEditor.dispose();
     };
-  }, [editorRef, value, language, isDark]);
+  }, [editorRef, value, language, !isLight]);
   React.useEffect(() => {
     if (clear && editorRef && editorRef.current && editorRef.current.codeEditor) {
       editorRef.current.codeEditor.setValue('');
@@ -116,7 +114,7 @@ const Editor = forwardRef((props: IEditor, editorRef: any) => {
         padding: '5px 0px',
         width: '100%',
         height: (minRows + MAGIC_NUMBER) * 20 + 'px',
-        border: isDark ? '1px solid #434343' : '1px solid rgb(187, 190, 195)',
+        border: !isLight ? '1px solid #434343' : '1px solid rgb(187, 190, 195)',
         borderRadius: '6px',
       }}
     />

@@ -56,4 +56,12 @@ export default {
   'Export graph json': '导出 json',
   'Clustering layout': '集群布局',
   'Vertex Properties': '节点属性',
+  'Connect Endpoint': '连接查询服务',
+  'Connection URL': '连接 URL',
+  'Query language': '查询语言',
+  'Query initiation method': '查询发起方式',
+  Username: '用户名',
+  Password: '密码',
+  Connect: '连接',
+  Close: '关闭',
 };

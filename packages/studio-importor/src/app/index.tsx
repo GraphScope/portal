@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
 import GraphCanvas from './graph-canvas';
 import PropertiesEditor from './properties-editor';
-import ImportSchema from './import-schema';
 
 import { ReactFlowProvider } from 'reactflow';
-import { ThemeProvider, Section } from '@graphscope/studio-components';
+import { Section, StudioProvier } from '@graphscope/studio-components';
 import 'reactflow/dist/style.css';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
@@ -22,7 +21,6 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
     queryGraphSchema,
     queryBoundSchema,
     id,
-    locale = 'zh-CN',
     theme = {
       primaryColor: '#1890ff',
       mode: 'defaultAlgorithm',
@@ -86,7 +84,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   const IS_PURE = appMode === 'PURE';
 
   return (
-    <ThemeProvider locales={locales}>
+    <StudioProvier locales={locales}>
       <Section
         // leftSide={leftSide || <ImportSchema displayType="model" />}
         rightSide={
@@ -115,7 +113,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
           {children}
         </ReactFlowProvider>
       </Section>
-    </ThemeProvider>
+    </StudioProvier>
   );
 };
 

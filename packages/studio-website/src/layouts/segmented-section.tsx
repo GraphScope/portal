@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SegmentedProps, notification } from 'antd';
 
 import { Utils } from '@graphscope/studio-components';
-import { useThemeContainer } from '@graphscope/studio-components';
+import { useStudioProvier } from '@graphscope/studio-components';
 import { listGraphs } from '@/pages/instance/lists/service';
 import { useContext, IGraph } from './useContext';
 import useWidth from './useWidth';
@@ -38,7 +38,7 @@ const SegmentedSection: React.FunctionComponent<ISectionProps> = props => {
   } = props;
   const { store, updateStore } = useContext();
   const { currentnNav, graphs, graphId, draftId, isReady } = store;
-  const { token } = useThemeContainer();
+  const { token } = useStudioProvier();
   const ContainerWidth = useWidth();
   const handleChange = (value: string) => {
     const herf = graphId ? `${value}?${extraRouterKey}=${graphId}` : value;

@@ -7,7 +7,6 @@ import { useRef } from 'react';
 import { IEditorProps } from '../typing';
 import SaveStatement from './save';
 import { v4 as uuidv4 } from 'uuid';
-import { useThemeContainer } from '@graphscope/studio-components';
 import { useIntl } from 'react-intl';
 
 export function capitalizeFirstLetter(str) {
@@ -37,8 +36,6 @@ const Editor: React.FunctionComponent<
     message,
   } = props;
   const editorRef = useRef<any>(null);
-  const { algorithm } = useThemeContainer();
-  const isDark = algorithm === 'darkAlgorithm';
   const intl = useIntl();
 
   const handleQuery = async () => {

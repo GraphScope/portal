@@ -75,7 +75,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
   return (
     <div
       style={{
-        background: '#fff',
+        // background: '#fff',
         borderRadius: '8px',
         height: '500px',
       }}

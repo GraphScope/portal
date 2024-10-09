@@ -2,8 +2,7 @@ import { Button, Tooltip } from 'antd';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { FileImageOutlined } from '@ant-design/icons';
-import { Utils, Icons } from '@graphscope/studio-components';
+import { Utils, Icons, useStudioProvier } from '@graphscope/studio-components';
 import { useContext } from '../useContext';
 import { transOptionsToSchema } from '../utils/modeling';
 import { transformImportOptionsToSchemaMapping } from '../utils/importing';
@@ -13,7 +12,8 @@ interface ILeftButtonProps {}
 const ExportModel: React.FunctionComponent<ILeftButtonProps> = props => {
   const { store } = useContext();
   const { nodes, edges, appMode } = store;
-
+  const { isLight } = useStudioProvier();
+  const color = !isLight ? '#ddd' : '#000';
   const handleExport = (type: string) => {
     let yamlFile;
     if (appMode === 'DATA_MODELING') {
@@ -45,7 +45,7 @@ const ExportModel: React.FunctionComponent<ILeftButtonProps> = props => {
     <Tooltip title={<FormattedMessage id="Save graph model to JSON config" />} placement="right">
       <Button
         type="text"
-        icon={<Icons.FileExport />}
+        icon={<Icons.FileExport style={{ color }} />}
         onClick={() => {
           handleExport('yaml');
         }}

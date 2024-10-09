@@ -4,7 +4,8 @@ import { IntlProvider } from 'react-intl';
 import { ContainerProvider } from './useThemeConfigProvider';
 import type { ThemeProviderType } from './useThemeConfigProvider';
 import { storage } from '../Utils';
-import { useStore } from './useStore';
+import { getThemeConfig } from './getThemeConfig';
+import { useCustomToken } from './useCustomToken';
 
 type IThemeProvider = {
   locales: {
@@ -43,11 +44,11 @@ const Provider: React.FC<IThemeProvider> = props => {
   });
 
   const { components, token, algorithm, locale } = state;
-  const { componentsConfig, tokenConfig, colorConfig } = useStore(algorithm);
-
+  const { componentsConfig, tokenConfig } = getThemeConfig(algorithm);
+  const colorConfig = useCustomToken();
   const isLight = algorithm === 'defaultAlgorithm';
 
-  const handleTheme = (themeConfig: Partial<ThemeProviderType>) => {
+  const handleThemeOrLocale = (themeConfig: Partial<ThemeProviderType>) => {
     const { components, token } = themeConfig;
     Object.keys(themeConfig).forEach(key => {
       storage.set(key, themeConfig[key]);
@@ -59,10 +60,11 @@ const Provider: React.FC<IThemeProvider> = props => {
         components: { ...preState.components, ...components },
         token: { ...preState.token, ...token },
         algorithm: themeConfig.algorithm || preState.algorithm,
-        locale: themeConfig.locale,
+        locale: themeConfig.locale ?? storage.get('locale'),
       };
     });
   };
+
   const messages = locales[locale || 'en-US'];
 
   return (
@@ -70,9 +72,10 @@ const Provider: React.FC<IThemeProvider> = props => {
       value={{
         token: { ...tokenConfig, ...token },
         components: { ...componentsConfig, ...components },
-        handleTheme,
+        handleThemeOrLocale,
         algorithm,
         locale: locale,
+        isLight,
         ...colorConfig,
       }}
     >

@@ -242,7 +242,7 @@ export default {
   /** query */
   Connect: '连接',
   Cancel: '取消',
-  'Connect Endpoint': '连接端点',
+  'Connect Endpoint': '连接查询服务',
   'If you have already started the GraphScope endpoint through other means, you can directly connect to it and start querying data.':
     '如果已经通过其他方式启动了 GraphScope 端点，则可以直接连接到它，并开始查询数据。',
   'Please create the graph model first': '请先创建图模型',
@@ -253,4 +253,7 @@ export default {
   'Connection URL': '连接 URL',
   'Database user': '数据库用户',
   Password: '密码',
+  'No Available Query Endpoint': '没有可用的查询终端节点',
+  'Sorry, the system detected that there is no available query endpoint. Please connect query endpoint':
+    '很抱歉，系统检测到没有可用的查询终端节点。请连接查询终端节点',
 };

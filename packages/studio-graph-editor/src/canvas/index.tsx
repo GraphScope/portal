@@ -1,6 +1,6 @@
 import React, { CSSProperties, useEffect } from 'react';
 import { ReactFlow, Controls, Background, MiniMap } from 'reactflow';
-import { EmptyCanvas, useThemeContainer, Utils } from '@graphscope/studio-components';
+import { EmptyCanvas, useStudioProvier, Utils } from '@graphscope/studio-components';
 import { nodeTypes } from '../elements/node-types';
 import { edgeTypes } from '../elements/edge-types';
 import ConnectionLine from '../elements/connection-line';
@@ -25,10 +25,9 @@ const SchemaGraph: React.FunctionComponent<ISchemaGraphProps> = props => {
   const { store, updateStore } = useContext();
   const { onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } = useInteractive();
   const { nodes, edges, theme } = store;
-  const { algorithm } = useThemeContainer();
+  const { isLight } = useStudioProvier();
   const isEmpty = nodes.length === 0;
-  const isDark = algorithm === 'darkAlgorithm';
-  // const rfBG = isDark ? '#161616' : collapsed.left && collapsed.right ? '#fff' : '#f4f5f5';
+  // const rfBG = !isLight ? '#161616' : collapsed.left && collapsed.right ? '#fff' : '#f4f5f5';
   const rfBG = '#fff';
   const {
     isMiniMap = true,
@@ -76,7 +75,7 @@ const SchemaGraph: React.FunctionComponent<ISchemaGraphProps> = props => {
 
           // onDoubleClick={onDoubleClick}
         >
-          <ArrowMarker selectedColor={theme.primaryColor} color={isDark ? '#d7d7d7' : '#000'} />
+          <ArrowMarker selectedColor={theme.primaryColor} color={!isLight ? '#d7d7d7' : '#000'} />
           {isControlButton && (
             <>
               <Controls
@@ -96,7 +95,7 @@ const SchemaGraph: React.FunctionComponent<ISchemaGraphProps> = props => {
             }}
           />
           {isEmpty && <EmptyCanvas description={description} />}
-          {isMiniMap && <MiniMap style={{ backgroundColor: isDark ? '#161616' : '' }} />}
+          {isMiniMap && <MiniMap style={{ backgroundColor: !isLight ? '#161616' : '' }} />}
           {children && children}
         </ReactFlow>
       </div>

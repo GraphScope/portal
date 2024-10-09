@@ -24,7 +24,7 @@ export interface IGraph {
 
 export const initialStore = {
   /** 语言 */
-  locale: Utils.storage.get('locale') || 'en-US',
+  locale: Utils.storage.get('locale'),
   /** 收起导航 */
   collapse: false,
   /** 当前导航 */
@@ -40,7 +40,7 @@ export const initialStore = {
 };
 
 export type IStore = {
-  locale: string | {};
+  locale: 'zh-CN' | 'en-US';
   collapse: boolean;
   currentnNav: string;
   navStyle: string;

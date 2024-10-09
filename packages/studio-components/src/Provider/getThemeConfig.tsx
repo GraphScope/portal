@@ -10,7 +10,7 @@ export interface IColorStore {
   editorForeground?: string;
 }
 
-export const useStore = (algorithm: ThemeProviderType['algorithm']) => {
+export const getThemeConfig = (algorithm: ThemeProviderType['algorithm']) => {
   const isLight = algorithm === 'defaultAlgorithm';
   /** components 基础配置 */
   const componentsConfig = {
@@ -47,16 +47,5 @@ export const useStore = (algorithm: ThemeProviderType['algorithm']) => {
     colorBgBase: isLight ? '#fff' : 'rgba(12,12,12,1)',
     colorBgLayout: isLight ? '#f5f7f9' : 'rgba(43,43,43,1)',
   };
-  /** 特殊颜色配置 */
-  const colorConfig = {
-    sectionBackground: isLight ? '#fff' : '#0D0D0D',
-    containerBackground: isLight ? '#f5f7f9' : '#020202',
-    instanceBackground: isLight ? '#FCFCFC' : '',
-    jobDetailBorder: isLight ? '#efefef' : '#323232',
-    jobDetailColor: isLight ? '#1F1F1F' : '#808080',
-    pluginBorder: isLight ? '#efefef' : '#323232',
-    editorBackground: isLight ? '#fff' : '#151515',
-    editorForeground: isLight ? '#212121' : '#FFF',
-  };
-  return { componentsConfig, tokenConfig, colorConfig };
+  return { componentsConfig, tokenConfig };
 };

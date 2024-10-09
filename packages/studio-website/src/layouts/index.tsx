@@ -2,14 +2,14 @@ import { Outlet } from 'umi';
 import './index.less';
 import Sidebar from './sidebar';
 import Container from './container';
-
+import { IntlProvider } from 'react-intl';
 import Footer from './footer';
 import locales from '../locales';
 import { useContext } from './useContext';
 import { TOOLS_MENU } from './const';
 import SegmentedSection from './segmented-section';
 import { history } from 'umi';
-import { ThemeProvider } from '@graphscope/studio-components';
+import { StudioProvier } from '@graphscope/studio-components';
 const Content = (props: any) => {
   const { children, navStyle } = props;
   const { store } = useContext();
@@ -30,10 +30,10 @@ const Content = (props: any) => {
 
 export default function Layout() {
   const { store } = useContext();
-  const { locale, navStyle } = store;
+  const { navStyle } = store;
 
   return (
-    <ThemeProvider locales={locales} locale={locale as 'zh-CN' | 'en-US'}>
+    <StudioProvier locales={locales}>
       <Container
         sidebar={<Sidebar />}
         content={
@@ -43,6 +43,6 @@ export default function Layout() {
         }
         footer={<Footer />}
       />
-    </ThemeProvider>
+    </StudioProvier>
   );
 }

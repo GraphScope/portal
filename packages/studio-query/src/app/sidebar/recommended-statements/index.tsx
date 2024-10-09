@@ -6,7 +6,7 @@ import { useContext } from '../../context';
 const { Title } = Typography;
 import Section from '../section';
 import { FormattedMessage } from 'react-intl';
-import { useThemeContainer } from '@graphscope/studio-components';
+import { useStudioProvier } from '@graphscope/studio-components';
 interface IRecommendedStatementsProps {
   schemaData: any;
   schemaId: string;
@@ -40,8 +40,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
   const configMap = getStyleConfig(schemaData, schemaId);
   const { nodes, edges } = schemaData;
   const keys = getPropertyKeys(graphSchema);
-  const { algorithm } = useThemeContainer();
-  const isDark = algorithm === 'darkAlgorithm';
+  const { isLight } = useStudioProvier();
 
   const handleClick = (label: string, type: 'nodes' | 'edges' | 'property') => {
     let script = '';
@@ -67,7 +66,8 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
         </Title>
         {nodes.map(item => {
           const { label } = item;
-          const { color } = configMap.nodeStyle[label];
+          /** 如果属性中没有color 就报错 */
+          const { color } = configMap.nodeStyle[label] ?? { color: '#000' };
           return (
             <Tag
               key={label}
@@ -86,11 +86,11 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
         </Title>
         {edges.map(item => {
           const { label } = item;
-          const { color } = configMap.edgeStyle[label];
+          const { color } = configMap.edgeStyle[label] ?? { color: '#000' };
           return (
             <Tag
               key={label}
-              style={{ borderRadius: '8px', backgroundColor: color, cursor: 'pointer', margin: '4px' }}
+              style={{ borderRadius: '8px', backgroundColor: color, cursor: 'pointer', margin: '4px', color: '#000' }}
               bordered={false}
               onClick={() => {
                 handleClick(label, 'edges');
@@ -109,10 +109,10 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
               key={item}
               style={{
                 borderRadius: '8px',
-                backgroundColor: isDark ? '#fff' : '#000',
+                backgroundColor: !isLight ? '#fff' : '#000',
                 cursor: 'pointer',
                 margin: '4px',
-                color: isDark ? '#000' : '#fff',
+                color: !isLight ? '#000' : '#fff',
               }}
               bordered={false}
               onClick={() => {

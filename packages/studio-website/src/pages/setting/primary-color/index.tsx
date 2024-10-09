@@ -1,18 +1,18 @@
 import React from 'react';
 import { ColorPicker, Flex, Col, theme } from 'antd';
 import SelectColor from './select-color';
-import { useThemeContainer } from '@graphscope/studio-components';
+import { useStudioProvier } from '@graphscope/studio-components';
 import SettingParcel from '@/components/setting-parcel';
 
 const { useToken } = theme;
 const PrimaryColor: React.FunctionComponent = () => {
-  const { handleTheme } = useThemeContainer();
+  const { handleThemeOrLocale } = useStudioProvier();
   const { token } = useToken();
   const { borderRadius, colorPrimary } = token;
 
   // Function to handle primary color change
   const handlePrimaryColor = (color: string) => {
-    handleTheme({ token: { colorPrimary: color, borderRadius } });
+    handleThemeOrLocale({ token: { colorPrimary: color, borderRadius } });
   };
   return (
     <SettingParcel title="Primary color" text="Set the primary color">

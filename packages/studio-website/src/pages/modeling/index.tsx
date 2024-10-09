@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ImportApp, { transSchemaToOptions } from '@graphscope/studio-importor';
 import { useContext } from '../../layouts/useContext';
-import { Toolbar } from '@graphscope/studio-components';
+import { Toolbar, useCustomToken } from '@graphscope/studio-components';
 import { getSchema, createVertexTypeOrEdgeType, deleteVertexTypeOrEdgeType } from './services';
 import Save from './save-modeling';
 import SelectGraph from '@/layouts/select-graph';
@@ -13,7 +13,7 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
   /**查询数据导入 */
   const { store } = useContext();
   const { graphId, draftId } = store;
-
+  const { buttonBackground } = useCustomToken();
   /** 查询图 */
   const queryGraphSchema = async () => {
     if (graphId === draftId) {
@@ -57,7 +57,10 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
       onDeleteLabel={deleteVertexTypeOrEdgeType}
       onCreateLabel={createVertexTypeOrEdgeType}
     >
-      <Toolbar style={{ top: '12px', left: '24px', right: 'unset' }} direction="horizontal">
+      <Toolbar
+        style={{ top: '12px', left: '24px', right: 'unset', background: buttonBackground }}
+        direction="horizontal"
+      >
         <SelectGraph />
         <Save />
       </Toolbar>

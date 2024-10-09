@@ -257,4 +257,7 @@ export default {
   'Connection URL': 'Connection URL',
   'Database user': 'Database user',
   Password: 'Password',
+  'No Available Query Endpoint': 'No Available Query Endpoint',
+  'Sorry, the system detected that there is no available query endpoint. Please connect query endpoint':
+    'Sorry, the system detected that there is no available query endpoint. Please connect query endpoint',
 };
