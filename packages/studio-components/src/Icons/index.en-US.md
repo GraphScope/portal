@@ -16,6 +16,7 @@ export default () => {
         <Icons.PrimaryKey style={{ color: 'red' }} />
         <Icons.Sidebar />
         <Icons.Sidebar revert />
+        <Icons.Lasso />
       </Space>
     </div>
   );
