@@ -20,6 +20,7 @@ export default () => {
         <Icons.FileYaml />
         <Icons.Graph2D />
         <Icons.Graph3D />
+        <Icons.Lasso />
       </Space>
     </div>
   );

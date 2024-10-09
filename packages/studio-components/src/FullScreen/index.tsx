@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { Button } from 'antd';
+import { Button, TooltipProps, Tooltip } from 'antd';
 import { FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons';
 interface IFullScreenProps {
+  title?: TooltipProps['title'];
+  placement?: TooltipProps['placement'];
   containerRef: React.RefObject<HTMLElement | null>;
 }
 
 const FullScreen: React.FunctionComponent<IFullScreenProps> = props => {
-  const { containerRef } = props;
+  const { containerRef, title = 'Fullscreen', placement = 'left' } = props;
   const [isFullScreen, setIsFullScreen] = React.useState(false);
   const icon = isFullScreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />;
   const handleClick = () => {
@@ -22,9 +24,9 @@ const FullScreen: React.FunctionComponent<IFullScreenProps> = props => {
   };
 
   return (
-    <div>
+    <Tooltip title={title} placement={placement}>
       <Button icon={icon} onClick={handleClick} type="text" />
-    </div>
+    </Tooltip>
   );
 };
 

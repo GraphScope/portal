@@ -1,15 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { brush as d3Brush } from 'd3-brush';
 import { select } from 'd3-selection';
 import { useContext } from '../../hooks/useContext';
+import { Button, Tooltip, TooltipProps } from 'antd';
+import { Icons } from '@graphscope/studio-components';
 
 interface IBrushProps {
   onSelect?: (values: any) => void;
+  title?: TooltipProps['title'];
+  placement?: TooltipProps['placement'];
 }
 
 const Brush: React.FunctionComponent<IBrushProps> = props => {
-  const { onSelect } = props;
-  const { store, updateStore } = useContext();
+  const { onSelect, title = 'Select nodes by box selection', placement = 'left' } = props;
+  const { store, updateStore, id } = useContext();
   const { graph } = store;
 
   const brushRef = useRef<SVGSVGElement>(null);
@@ -31,22 +36,21 @@ const Brush: React.FunctionComponent<IBrushProps> = props => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Shift') {
-        console.log('Shift key pressed');
-        setIsBrushActive(preState => {
-          return !preState;
-        });
-      }
       if (event.key === 'Escape' || event.key === 'Enter') {
         setIsBrushActive(false);
       }
     };
-
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
+
+  const handleClick = () => {
+    setIsBrushActive(preState => {
+      return !preState;
+    });
+  };
 
   useEffect(() => {
     const svg = select(brushRef.current);
@@ -91,7 +95,19 @@ const Brush: React.FunctionComponent<IBrushProps> = props => {
     : {
         display: 'none',
       };
-  return <svg ref={brushRef} style={style} />;
+  //@ts-check
+  const trigetDOM = document.getElementById(`GRAPH_${id}`);
+  if (!trigetDOM) {
+    return null;
+  }
+  return (
+    <>
+      <Tooltip placement={placement} title={title}>
+        <Button icon={<Icons.Lasso />} type="text" onClick={handleClick} />
+      </Tooltip>
+      {ReactDOM.createPortal(<svg ref={brushRef} style={style} />, trigetDOM)}
+    </>
+  );
 };
 
 export default Brush;
