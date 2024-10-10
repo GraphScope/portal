@@ -1,5 +1,5 @@
-import { Button, notification, Modal, Form, Result, Tooltip } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { Button, Modal, Result, Tooltip } from 'antd';
+import React, { useState } from 'react';
 import { SaveOutlined } from '@ant-design/icons';
 import { useContext } from '../../layouts/useContext';
 import { useContext as useModeling, validateProperties } from '@graphscope/studio-importor';
@@ -46,11 +46,12 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
       let _status = '',
         _message = '';
       const goot_graph_id = Utils.getSearchParams('id');
+
       const graph_id = await createGraph(
+        //@ts-ignore
+
         {
-          //@ts-ignore
           nodes: schema.nodes,
-          //@ts-ignore
           edges: schema.edges,
           //@ts-ignore
           graphName: draftGraph.name,
@@ -115,13 +116,13 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
     });
   };
 
-  const text = IS_DRAFT_GRAPH || GS_ENGINE_TYPE === 'groot' ? 'Save Modeling' : 'View Schema';
   const title =
     status === 'success' ? (
       <FormattedMessage id="Successfully saved the graph model" />
     ) : (
       <FormattedMessage id="Failed to save the graph model" />
     );
+
   const SuccessAction = [
     <Button onClick={handleGotoGraphs}>
       <FormattedMessage id="Goto Graphs" />
@@ -138,22 +139,20 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   const Action = status === 'success' ? SuccessAction : ErrorAction;
 
   const { passed: validatePassed, message: validateMessage } = validate(nodes, edges);
-  const showButton = isShowSaveButton(nodes);
-  if (showButton) {
-    return (
-      <>
-        <Tooltip title={validatePassed ? '' : validateMessage}>
-          <Button disabled={!validatePassed} type="primary" icon={<SaveOutlined />} onClick={handleSave}>
-            <FormattedMessage id={text} />
-          </Button>
-        </Tooltip>
-        <Modal title={null} open={open} footer={null} closable={false}>
-          <Result status={status as 'error' | 'success'} title={title} subTitle={state.message} extra={Action} />
-        </Modal>
-      </>
-    );
-  }
-  return null;
+  const buttonStatus = getButtonStatus({ IS_DRAFT_GRAPH, nodes, validatePassed });
+
+  return (
+    <>
+      <Tooltip title={validatePassed ? '' : validateMessage}>
+        <Button disabled={buttonStatus.disabled} type="primary" icon={<SaveOutlined />} onClick={handleSave}>
+          <FormattedMessage id={buttonStatus.text} />
+        </Button>
+      </Tooltip>
+      <Modal title={null} open={open} footer={null} closable={false}>
+        <Result status={status as 'error' | 'success'} title={title} subTitle={state.message} extra={Action} />
+      </Modal>
+    </>
+  );
 };
 
 export default SaveModeling;
@@ -194,16 +193,39 @@ export function validate(
     },
   );
 }
-export function isShowSaveButton(nodes: INTERNAL_Snapshot<ISchemaNode[]>) {
+
+export function getButtonStatus(params: {
+  IS_DRAFT_GRAPH: boolean;
+  validatePassed: boolean;
+  nodes: INTERNAL_Snapshot<ISchemaNode[]>;
+}) {
+  const { IS_DRAFT_GRAPH, validatePassed, nodes } = params;
+
   if (GS_ENGINE_TYPE === 'interactive') {
-    return nodes.length !== 0;
+    if (IS_DRAFT_GRAPH && nodes.length !== 0) {
+      return {
+        text: 'Save Modeling',
+        disabled: !validatePassed,
+      };
+    }
+    return {
+      text: 'View Schema',
+      disabled: true,
+    };
   }
 
   if (GS_ENGINE_TYPE === 'groot') {
-    const someSaved = nodes.some(node => {
+    const everySaved = nodes.every(node => {
       return node.data.saved;
     });
-    return !someSaved;
+    return {
+      text: 'Save Modeling',
+      disabled: !validatePassed || everySaved,
+    };
   }
-  return false;
+
+  return {
+    text: 'View Schema',
+    disabled: true,
+  };
 }
