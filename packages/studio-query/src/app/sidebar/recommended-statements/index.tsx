@@ -51,7 +51,11 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
       script = `MATCH (a)-[b:${label}]->(c) RETURN a,b,c LIMIT 25;`;
     }
     if (type === 'property') {
-      script = `MATCH(a) where a.${label} IS NOT NULL return a.${label}`;
+      script = `MATCH(a) where a.${label} IS NOT NULL AND a.${label} <> ""
+      WITH a.${label} as ${label}
+      RETURN ${label} , COUNT(${label}) as ${label}_COUNT
+      ORDER BY ${label}_COUNT DESC
+      `;
     }
     updateStore(draft => {
       draft.globalScript = script;
