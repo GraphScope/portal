@@ -50,7 +50,6 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
       };
     }, {});
   }
-  console.log('captionStatus', captionStatus);
 
   const handleChange = (key, value) => {
     onChange &&
@@ -61,6 +60,7 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
         size,
         caption,
         properties,
+        captionStatus,
         [key]: value,
       });
   };
@@ -178,7 +178,7 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
       </Flex>
       <Flex gap={12} style={{ padding: '6px 0px' }}>
         <Typography.Text style={{ flexShrink: 0 }}>
-          <FormattedMessage id="Hidden Caption" />
+          <FormattedMessage id="Caption Status" />
         </Typography.Text>
         <Space wrap>
           <Radio.Group

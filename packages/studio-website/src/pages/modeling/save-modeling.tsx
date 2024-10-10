@@ -1,4 +1,4 @@
-import { Button, notification, Modal, Form, Result, Tooltip } from 'antd';
+import { Button, Modal, Result, Tooltip } from 'antd';
 import React, { useState } from 'react';
 import { SaveOutlined } from '@ant-design/icons';
 import { useContext } from '../../layouts/useContext';
@@ -35,28 +35,29 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   const { store, updateStore } = useContext();
 
   const { store: modelingStore } = useModeling();
-  const { elementOptions, nodes, edges } = modelingStore;
-  const { draftGraph, draftId } = store;
-
-  const { open, status } = state;
-
-  const { graphId } = store;
-
+  const { nodes, edges } = modelingStore;
+  const { draftGraph, draftId, graphId } = store;
   const IS_DRAFT_GRAPH = graphId === draftId;
+  const { open, status } = state;
 
   const handleSave = async () => {
     const schema = { nodes, edges };
     if (schema) {
       let _status = '',
         _message = '';
-      //@ts-ignore
+      const goot_graph_id = Utils.getSearchParams('id');
 
-      const graph_id = await createGraph(graphId, {
-        nodes: schema.nodes,
-        edges: schema.edges,
+      const graph_id = await createGraph(
         //@ts-ignore
-        graphName: draftGraph.name,
-      })
+
+        {
+          nodes: schema.nodes,
+          edges: schema.edges,
+          //@ts-ignore
+          graphName: draftGraph.name,
+        },
+        goot_graph_id,
+      )
         .then((res: any) => {
           if (res.status === 200 || res === 'Import schema successfully') {
             _status = 'success';
@@ -71,12 +72,11 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
           _status = 'error';
           _message = error.response.data;
         });
-
-      handleSuccess();
-
-      /** groot 接口缺陷，等后期后端完善 */
-      const id = Utils.getSearchParams('graph_id');
-      await localforage.setItem(`GRAPH_SCHEMA_OPTIONS_${graph_id ?? id}`, Utils.fakeSnapshot(schema));
+      /** 修改 URL */
+      Utils.storage.set('DRAFT_GRAPH', {});
+      Utils.setSearchParams({ graph_id: state.id });
+      /** 设置Schema */
+      await localforage.setItem(`GRAPH_SCHEMA_OPTIONS_${graph_id}`, Utils.fakeSnapshot(schema));
       //@ts-ignore
       setState(preState => {
         return {
@@ -85,30 +85,27 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
           message: _message,
           schema: schema,
           open: true,
-          //@ts-ignore
-          id: graph_id ?? id,
+          id: graph_id,
         };
       });
     }
   };
 
-  const handleSuccess = () => {
-    Utils.setSearchParams({
-      graph_id: state.id,
+  const handleGotoGraphs = () => {
+    history.push(`/graphs?graph_id=${state.id}`);
+    updateStore(draft => {
+      draft.draftGraph = {};
+      draft.graphId = state.id;
+      draft.currentnNav = '/graphs';
     });
-    Utils.storage.set('DRAFT_GRAPH', {});
+  };
+  const handleGotoImporting = () => {
+    history.push(`/importing?graph_id=${state.id}`);
     updateStore(draft => {
       draft.draftGraph = {};
       draft.graphId = state.id;
       draft.currentnNav = '/importing';
     });
-  };
-
-  const handleGotoGraphs = () => {
-    history.push(`/graphs?graph_id=${state.id}`);
-  };
-  const handleGotoImporting = () => {
-    history.push(`/importing?graph_id=${state.id}`);
   };
   const handleGoback = () => {
     setState(preState => {
@@ -119,13 +116,13 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
     });
   };
 
-  const text = IS_DRAFT_GRAPH || GS_ENGINE_TYPE === 'groot' ? 'Save Modeling' : 'View Schema';
   const title =
     status === 'success' ? (
       <FormattedMessage id="Successfully saved the graph model" />
     ) : (
       <FormattedMessage id="Failed to save the graph model" />
     );
+
   const SuccessAction = [
     <Button onClick={handleGotoGraphs}>
       <FormattedMessage id="Goto Graphs" />
@@ -142,22 +139,20 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   const Action = status === 'success' ? SuccessAction : ErrorAction;
 
   const { passed: validatePassed, message: validateMessage } = validate(nodes, edges);
-  const showButton = isShowSaveButton(nodes);
-  if (showButton) {
-    return (
-      <>
-        <Tooltip title={validatePassed ? '' : validateMessage}>
-          <Button disabled={!validatePassed} type="primary" icon={<SaveOutlined />} onClick={handleSave}>
-            <FormattedMessage id={text} />
-          </Button>
-        </Tooltip>
-        <Modal title={null} open={open} footer={null} closable={false}>
-          <Result status={status as 'error' | 'success'} title={title} subTitle={state.message} extra={Action} />
-        </Modal>
-      </>
-    );
-  }
-  return null;
+  const buttonStatus = getButtonStatus({ IS_DRAFT_GRAPH, nodes, validatePassed });
+
+  return (
+    <>
+      <Tooltip title={validatePassed ? '' : validateMessage}>
+        <Button disabled={buttonStatus.disabled} type="primary" icon={<SaveOutlined />} onClick={handleSave}>
+          <FormattedMessage id={buttonStatus.text} />
+        </Button>
+      </Tooltip>
+      <Modal title={null} open={open} footer={null} closable={false}>
+        <Result status={status as 'error' | 'success'} title={title} subTitle={state.message} extra={Action} />
+      </Modal>
+    </>
+  );
 };
 
 export default SaveModeling;
@@ -198,16 +193,39 @@ export function validate(
     },
   );
 }
-export function isShowSaveButton(nodes: INTERNAL_Snapshot<ISchemaNode[]>) {
+
+export function getButtonStatus(params: {
+  IS_DRAFT_GRAPH: boolean;
+  validatePassed: boolean;
+  nodes: INTERNAL_Snapshot<ISchemaNode[]>;
+}) {
+  const { IS_DRAFT_GRAPH, validatePassed, nodes } = params;
+
   if (GS_ENGINE_TYPE === 'interactive') {
-    return nodes.length !== 0;
+    if (IS_DRAFT_GRAPH && nodes.length !== 0) {
+      return {
+        text: 'Save Modeling',
+        disabled: !validatePassed,
+      };
+    }
+    return {
+      text: 'View Schema',
+      disabled: true,
+    };
   }
 
   if (GS_ENGINE_TYPE === 'groot') {
-    const someSaved = nodes.some(node => {
+    const everySaved = nodes.every(node => {
       return node.data.saved;
     });
-    return !someSaved;
+    return {
+      text: 'Save Modeling',
+      disabled: !validatePassed || everySaved,
+    };
   }
-  return false;
+
+  return {
+    text: 'View Schema',
+    disabled: true,
+  };
 }

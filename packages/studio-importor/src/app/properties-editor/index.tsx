@@ -114,7 +114,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
     });
     disableScroll();
   };
-  useEffect(() => {
+  const initialize = async () => {
     if (appMode !== 'DATA_IMPORTING') {
       return;
     }
@@ -160,6 +160,14 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
         }
       });
     }
+  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      initialize();
+    }, 200);
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   return (

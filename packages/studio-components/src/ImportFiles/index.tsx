@@ -7,6 +7,7 @@ import type { ParsedFile } from '../Utils/parseCSV';
 import { CaretRightOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import MappingHeader from './mapping-header';
+import localforage from 'localforage';
 export interface IState {
   files: ParsedFile[];
   loading: boolean;
@@ -51,8 +52,10 @@ const ImportFromCSV = forwardRef((props: IImportFromFileProps, ref: LegacyRef<HT
       return {
         ...preState,
         files: [],
+        csvFiles: [],
       };
     });
+    localforage.setItem('DRAFT_GRAPH_FILES', []);
   };
   const isEmpty = files.length === 0;
 
