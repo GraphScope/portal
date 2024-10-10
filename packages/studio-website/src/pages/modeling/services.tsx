@@ -6,7 +6,7 @@ import { Utils, Property } from '@graphscope/studio-components';
 
 const { getSearchParams } = Utils;
 const { GS_ENGINE_TYPE } = window;
-export const createGraph = async (graph_id: string, params: { graphName: string; nodes: any[]; edges: any[] }) => {
+export const createGraph = async (params: { graphName: string; nodes: any[]; edges: any[] }, graph_id?: string) => {
   const { graphName, nodes, edges } = params;
   let graphs;
   const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodes, edges: edges }));
@@ -19,7 +19,7 @@ export const createGraph = async (graph_id: string, params: { graphName: string;
     graphs = await GraphApiFactory(undefined, location.origin).createGraph(data);
   }
   /** groot 创建 */
-  if (GS_ENGINE_TYPE === 'groot') {
+  if (GS_ENGINE_TYPE === 'groot' && graph_id) {
     // const schemagrootJSON = transOptionsToGrootSchema(cloneDeep({ nodes: nodes, edges: edges }));
     graphs = await GraphApiFactory(undefined, location.origin)
       .importSchemaById(graph_id, schemaJSON)

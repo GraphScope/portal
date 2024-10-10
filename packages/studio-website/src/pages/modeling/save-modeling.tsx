@@ -1,5 +1,5 @@
 import { Button, notification, Modal, Form, Result, Tooltip } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SaveOutlined } from '@ant-design/icons';
 import { useContext } from '../../layouts/useContext';
 import { useContext as useModeling, validateProperties } from '@graphscope/studio-importor';
@@ -35,28 +35,28 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   const { store, updateStore } = useContext();
 
   const { store: modelingStore } = useModeling();
-  const { elementOptions, nodes, edges } = modelingStore;
-  const { draftGraph, draftId } = store;
-
-  const { open, status } = state;
-
-  const { graphId } = store;
-
+  const { nodes, edges } = modelingStore;
+  const { draftGraph, draftId, graphId } = store;
   const IS_DRAFT_GRAPH = graphId === draftId;
+  const { open, status } = state;
 
   const handleSave = async () => {
     const schema = { nodes, edges };
     if (schema) {
       let _status = '',
         _message = '';
-      //@ts-ignore
-
-      const graph_id = await createGraph(graphId, {
-        nodes: schema.nodes,
-        edges: schema.edges,
-        //@ts-ignore
-        graphName: draftGraph.name,
-      })
+      const goot_graph_id = Utils.getSearchParams('id');
+      const graph_id = await createGraph(
+        {
+          //@ts-ignore
+          nodes: schema.nodes,
+          //@ts-ignore
+          edges: schema.edges,
+          //@ts-ignore
+          graphName: draftGraph.name,
+        },
+        goot_graph_id,
+      )
         .then((res: any) => {
           if (res.status === 200 || res === 'Import schema successfully') {
             _status = 'success';
@@ -71,12 +71,11 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
           _status = 'error';
           _message = error.response.data;
         });
-
-      handleSuccess();
-
-      /** groot 接口缺陷，等后期后端完善 */
-      const id = Utils.getSearchParams('graph_id');
-      await localforage.setItem(`GRAPH_SCHEMA_OPTIONS_${graph_id ?? id}`, Utils.fakeSnapshot(schema));
+      /** 修改 URL */
+      Utils.storage.set('DRAFT_GRAPH', {});
+      Utils.setSearchParams({ graph_id: state.id });
+      /** 设置Schema */
+      await localforage.setItem(`GRAPH_SCHEMA_OPTIONS_${graph_id}`, Utils.fakeSnapshot(schema));
       //@ts-ignore
       setState(preState => {
         return {
@@ -85,30 +84,27 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
           message: _message,
           schema: schema,
           open: true,
-          //@ts-ignore
-          id: graph_id ?? id,
+          id: graph_id,
         };
       });
     }
   };
 
-  const handleSuccess = () => {
-    Utils.setSearchParams({
-      graph_id: state.id,
+  const handleGotoGraphs = () => {
+    history.push(`/graphs?graph_id=${state.id}`);
+    updateStore(draft => {
+      draft.draftGraph = {};
+      draft.graphId = state.id;
+      draft.currentnNav = '/graphs';
     });
-    Utils.storage.set('DRAFT_GRAPH', {});
+  };
+  const handleGotoImporting = () => {
+    history.push(`/importing?graph_id=${state.id}`);
     updateStore(draft => {
       draft.draftGraph = {};
       draft.graphId = state.id;
       draft.currentnNav = '/importing';
     });
-  };
-
-  const handleGotoGraphs = () => {
-    history.push(`/graphs?graph_id=${state.id}`);
-  };
-  const handleGotoImporting = () => {
-    history.push(`/importing?graph_id=${state.id}`);
   };
   const handleGoback = () => {
     setState(preState => {
