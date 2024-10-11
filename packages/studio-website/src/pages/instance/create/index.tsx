@@ -9,9 +9,11 @@ import { FormattedMessage } from 'react-intl';
 import { Utils } from '@graphscope/studio-components';
 import { SplitSection } from '@graphscope/studio-components';
 
-import { history } from 'umi';
+import { useNavigate } from 'react-router-dom';
+import { useHistory } from '@/hooks';
 const { GS_ENGINE_TYPE } = window;
 const Create: React.FC = () => {
+  const history = useHistory();
   const { store, updateStore } = useContext();
   const { draftId } = store;
   const [form] = Form.useForm();

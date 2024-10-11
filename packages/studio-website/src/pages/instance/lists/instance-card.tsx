@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Popover, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
-import { history } from 'umi';
+import { useHistory } from '@/hooks';
 import dayjs from 'dayjs';
 import { PauseCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { useContext } from '@/layouts/useContext';
@@ -66,6 +66,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     handleChange,
     schema = { edges: 0, vertices: 0 },
   } = props;
+  const history = useHistory();
   const { store, updateStore } = useContext();
   const { locale, draftGraph, draftId } = store;
   const { instanceBackground } = useCustomToken();

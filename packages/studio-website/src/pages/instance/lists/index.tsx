@@ -1,6 +1,6 @@
 import React, { useEffect, useState, memo } from 'react';
 import { Row, Col, Card, Skeleton } from 'antd';
-import { history } from 'umi';
+import { useHistory } from '@/hooks';
 import InstaceCard, { InstaceCardType } from './instance-card';
 import Section from '@/components/section';
 import { useContext } from '@/layouts/useContext';
@@ -10,6 +10,7 @@ import CreateGraph from './create-graph';
 import { listGraphs } from './service';
 const InstanceCard: React.FC = () => {
   const { store } = useContext();
+  const history = useHistory();
   const { draftGraph } = store;
   const { instanceBackground } = useCustomToken();
   const [state, updateState] = useState<{ isReady: boolean; instanceList: InstaceCardType[] }>({

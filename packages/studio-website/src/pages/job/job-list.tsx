@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { Table, Tag, message, Button, Popconfirm, Space } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { history } from 'umi';
+import { useHistory } from '@/hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { FileSearchOutlined } from '@ant-design/icons';
@@ -16,6 +16,7 @@ interface IState {
 }
 
 const JobsList: FC = () => {
+  const history = useHistory();
   const [state, updateState] = useState<IState>({
     jobsList: [],
     typeOptions: [{ value: '', text: 'All' }],

@@ -6,7 +6,7 @@ import { useContext as useModeling, validateProperties } from '@graphscope/studi
 import { createGraph, getSchema } from './services';
 import type { ISchemaNode, ISchemaEdge, ISchemaOptions } from '@graphscope/studio-importor';
 import { Utils } from '@graphscope/studio-components';
-import { history } from 'umi';
+import { useHistory } from '@/hooks';
 import localforage from 'localforage';
 import { FormattedMessage } from 'react-intl';
 import type { INTERNAL_Snapshot } from 'valtio';
@@ -14,6 +14,7 @@ import type { INTERNAL_Snapshot } from 'valtio';
 interface SaveModelingProps {}
 const { GS_ENGINE_TYPE } = window;
 const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
+  const history = useHistory();
   const [state, setState] = useState<{
     isLoading: boolean;
     open: boolean;

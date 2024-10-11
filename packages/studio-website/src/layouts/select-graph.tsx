@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Divider, Select, Space, Button, Modal } from 'antd';
-
 import { IGraph, useContext } from './useContext';
 import { STATUS_MAP } from './const';
-import { history } from 'umi';
 import { Utils } from '@graphscope/studio-components';
 import { ConnectEndpoint } from '@graphscope/studio-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

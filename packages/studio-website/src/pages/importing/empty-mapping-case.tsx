@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Result, Button, Space, Flex, List, Typography, Progress } from 'antd';
 import { useContext } from '@/layouts/useContext';
-import { history } from 'umi';
+import { useNavigate } from 'react-router-dom';
 import { getDatasourceById, getSchema } from './services';
 import { SplitSection, Utils } from '@graphscope/studio-components';
 import { uploadFile, bindDatasourceInBatch } from './services';

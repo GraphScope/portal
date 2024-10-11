@@ -64,6 +64,7 @@ export const SYSTEM_MENU = [
   },
 ];
 
+console.log(' window.GS_ENGINE_TYPE', window.GS_ENGINE_TYPE);
 export const SIDE_MENU: MenuProps['items'] =
   window.GS_ENGINE_TYPE === 'groot'
     ? [

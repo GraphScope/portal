@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Form, Button, Divider } from 'antd';
-import { history } from 'umi';
+import { useNavigate } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { Utils, SplitSection } from '@graphscope/studio-components';
 import Section from '@/components/section';
@@ -9,11 +9,13 @@ import RightSide from './right-side';
 import type { FieldType } from './right-side';
 import SelectCards from '@/components/select-cards';
 import { createProcedure, updateProcedure, listGraphs, getProcedure } from './service';
+import { useHistory } from '@/hooks';
 const { getUrlParams } = Utils;
 const CreatePlugins: React.FC = () => {
   console.log(getUrlParams());
   const { graph_id, procedure_id } = getUrlParams();
   const [form] = Form.useForm();
+  const history = useHistory();
   const [state, updateState] = useState<{
     editCode: string;
     instanceOption: { label: string; value: string }[];

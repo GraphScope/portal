@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Table, Button, Space, Skeleton, Popconfirm, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { history } from 'umi';
+import { useNavigate } from 'react-router-dom';
 import { listProcedures, deleteProcedure } from './service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import CreatePlugins from './create-plugins';
+import { useHistory } from '@/hooks';
 export interface Item {
   key: string;
   name: string;
@@ -14,6 +15,7 @@ export interface Item {
 }
 
 const Plugins: React.FC = () => {
+  const history = useHistory();
   const [state, updateState] = useState<{
     /** 插件列表数据 */
     pluginList: Item[];
