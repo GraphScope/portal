@@ -3,7 +3,7 @@ import React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { Table, Tag, message, Button, Popconfirm, Space } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { useHistory } from '@/hooks';
+import { useHistory } from '../../hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { FileSearchOutlined } from '@ant-design/icons';

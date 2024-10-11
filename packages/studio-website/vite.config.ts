@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-// import nodeExternals from 'vite-plugin-node-externals';
-import path from 'path';
+
 import dotenv from 'dotenv';
 
 const { parsed } = dotenv.configDotenv();
@@ -31,20 +30,9 @@ export default defineConfig({
       external: ['node:os', 'fsevents'], // 要排除的模块
     },
   },
-  plugins: [
-    react(),
-    //  nodeExternals({})
-  ],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-    },
-  },
-  define: {
-    'process.env': {},
-    'process.platform': {},
-  },
-  optimizeDeps: {
-    exclude: ['fsevents'],
-  },
+  plugins: [react()],
+
+  // optimizeDeps: {
+  //   exclude: ['fsevents'],
+  // },
 });

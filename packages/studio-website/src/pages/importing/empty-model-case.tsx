@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Result, Button } from 'antd';
-import { useContext } from '@/layouts/useContext';
-import { useHistory } from '@/hooks';
+import { useContext } from '../../layouts/useContext';
+import { useHistory } from '../../hooks';
 import { FormattedMessage } from 'react-intl';
 interface IEmptyModelCaseProps {}
 

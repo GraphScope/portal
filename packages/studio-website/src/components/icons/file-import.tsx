@@ -1,3 +1,4 @@
+import React from 'react';
 export default ({ style }: { style?: React.CSSProperties }) => {
   return (
     <svg style={style} viewBox="0 0 1066 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20">

@@ -13,11 +13,7 @@
     "module": "esnext",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "isolatedModules": false,
-    "baseUrl": "./",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "isolatedModules": false
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

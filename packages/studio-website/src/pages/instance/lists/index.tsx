@@ -1,9 +1,9 @@
 import React, { useEffect, useState, memo } from 'react';
 import { Row, Col, Card, Skeleton } from 'antd';
-import { useHistory } from '@/hooks';
+import { useHistory } from '../../../hooks';
 import InstaceCard, { InstaceCardType } from './instance-card';
-import Section from '@/components/section';
-import { useContext } from '@/layouts/useContext';
+import Section from '../../../components/section';
+import { useContext } from '../../../layouts/useContext';
 import { useCustomToken } from '@graphscope/studio-components';
 import InteractiveCase from './interactive-case';
 import CreateGraph from './create-graph';

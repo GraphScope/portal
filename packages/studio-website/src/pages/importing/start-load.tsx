@@ -4,7 +4,7 @@ import type { DataloadingJobConfigLoadingConfigImportOptionEnum } from '@graphsc
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useContext as useImporting } from '@graphscope/studio-importor';
 import { submitDataloadingJob } from './services';
-import { useHistory } from '@/hooks';
+import { useHistory } from '../../hooks';
 import dayjs from 'dayjs';
 export type FieldType = {
   type?: string;

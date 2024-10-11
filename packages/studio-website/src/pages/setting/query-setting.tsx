@@ -1,8 +1,8 @@
 import React from 'react';
 import { Typography, Segmented, Divider } from 'antd';
-import { useContext } from '@/layouts/useContext';
+import { useContext } from '../../layouts/useContext';
 import { Utils } from '@graphscope/studio-components';
-import SettingParcel from '@/components/setting-parcel';
+import SettingParcel from '../../components/setting-parcel';
 import { FormattedMessage } from 'react-intl';
 interface ILocaleSwitchProps {
   value: string;

@@ -5,11 +5,11 @@ import { Menu, Flex, Button, theme, Tooltip } from 'antd';
 import { useLocation } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { useContext } from './useContext';
-import Logo from '@/components/logo';
+import Logo from '../components/logo';
 import { Utils } from '@graphscope/studio-components';
 import { SIDE_MENU } from './const';
-import { useHistory } from '@/hooks';
-import { SLOTS } from '@/pages';
+import { useHistory } from '../hooks';
+import { SLOTS } from '../slot';
 const { useToken } = theme;
 
 export const SideWidth = 150;

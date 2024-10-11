@@ -4,7 +4,7 @@ import { useContext } from '../../layouts/useContext';
 import { Toolbar, useCustomToken } from '@graphscope/studio-components';
 import { getSchema, createVertexTypeOrEdgeType, deleteVertexTypeOrEdgeType } from './services';
 import Save from './save-modeling';
-import SelectGraph from '@/layouts/select-graph';
+import SelectGraph from '../../layouts/select-graph';
 
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;

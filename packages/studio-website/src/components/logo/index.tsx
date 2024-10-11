@@ -1,4 +1,5 @@
 import { theme } from 'antd';
+import React from 'react';
 const { useToken } = theme;
 export const LogoImage = ({
   style,

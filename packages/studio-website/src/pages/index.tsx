@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import type { MenuProps } from 'antd';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+
 import Layout from '../layouts';
 
 interface IPagesProps {
@@ -54,16 +54,6 @@ const Pages: React.FunctionComponent<IPagesProps> = props => {
       </Routes>
     </BrowserRouter>
   );
-};
-
-export const SLOTS: {
-  [id: string]: any;
-} = {
-  SIDE_MEU: [],
-};
-
-export const registerSideMenuSlot = (slot: MenuProps['items']) => {
-  SLOTS['SIDE_MEU'] = slot;
 };
 
 export default Pages;

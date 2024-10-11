@@ -1,16 +1,15 @@
 import React, { memo } from 'react';
 
-import Section from '@/components/section';
+import Section from '../../../components/section';
 
-import { useContext } from '@/layouts/useContext';
+import { useContext } from '../../../layouts/useContext';
 import ChooseEnginetype from './choose-enginetype';
 import { Form, Button, Result } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { Utils } from '@graphscope/studio-components';
 import { SplitSection } from '@graphscope/studio-components';
 
-import { useNavigate } from 'react-router-dom';
-import { useHistory } from '@/hooks';
+import { useHistory } from '../../../hooks';
 const { GS_ENGINE_TYPE } = window;
 const Create: React.FC = () => {
   const history = useHistory();

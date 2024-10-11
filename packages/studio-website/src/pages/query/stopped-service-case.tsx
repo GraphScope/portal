@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Result, Button, Space } from 'antd';
-import { useContext } from '@/layouts/useContext';
-import { startService, listGraphs } from '@/pages/instance/lists/service';
+import { useContext } from '../../layouts/useContext';
+import { startService, listGraphs } from '../../pages/instance/lists/service';
 
 interface IEmptyModelCaseProps {}
 

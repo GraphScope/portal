@@ -6,7 +6,7 @@ import { useContext as useModeling, validateProperties } from '@graphscope/studi
 import { createGraph, getSchema } from './services';
 import type { ISchemaNode, ISchemaEdge, ISchemaOptions } from '@graphscope/studio-importor';
 import { Utils } from '@graphscope/studio-components';
-import { useHistory } from '@/hooks';
+import { useHistory } from '../../hooks';
 import localforage from 'localforage';
 import { FormattedMessage } from 'react-intl';
 import type { INTERNAL_Snapshot } from 'valtio';

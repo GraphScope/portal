@@ -1,5 +1,5 @@
 import { JobApiFactory, GraphApiFactory } from '@graphscope/studio-server';
-import { notification } from '@/pages/utils';
+import { notification } from '../../pages/utils';
 import dayjs from 'dayjs';
 export type IJobType = {
   key?: string;

@@ -1,6 +1,6 @@
 import { StoredProcedureApiFactory, GraphApiFactory } from '@graphscope/studio-server';
 import type { CreateStoredProcRequest, UpdateStoredProcRequest } from '@graphscope/studio-server';
-import { notification } from '@/pages/utils';
+import { notification } from '../../pages/utils';
 /** 获取插件列表 */
 export const listProcedures = async () => {
   const message = await GraphApiFactory(undefined, location.origin)

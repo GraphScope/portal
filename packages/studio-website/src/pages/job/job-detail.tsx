@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from '@/hooks';
+import { useHistory } from '../../hooks';
 import { getJobById } from './service';
 import { Utils, useCustomToken } from '@graphscope/studio-components';
-import Section from '@/components/section';
+import Section from '../../components/section';
 const { getSearchParams } = Utils;
 
 const Detail: React.FunctionComponent = () => {

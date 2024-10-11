@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Result, Button, Space, Flex, List, Typography, Progress } from 'antd';
-import { useContext } from '@/layouts/useContext';
-import { useNavigate } from 'react-router-dom';
+import { Modal, Result, Button, Space, Flex, List, Typography } from 'antd';
+import { useContext } from '../../layouts/useContext';
+
 import { getDatasourceById, getSchema } from './services';
 import { SplitSection, Utils } from '@graphscope/studio-components';
-import { uploadFile, bindDatasourceInBatch } from './services';
+import { uploadFile } from './services';
 import localforage from 'localforage';
 import { CheckCircleOutlined } from '@ant-design/icons';
 
@@ -14,7 +14,7 @@ import { FormattedMessage } from 'react-intl';
 interface IAutoLoadCSVCaseProps {}
 
 const AutoLoadCSVCase: React.FunctionComponent<IAutoLoadCSVCaseProps> = props => {
-  const { store, updateStore } = useContext();
+  const { store } = useContext();
   const { updateStore: updateModeling } = useModeling();
   const { graphId, draftId } = store;
   const [state, setState] = useState<{

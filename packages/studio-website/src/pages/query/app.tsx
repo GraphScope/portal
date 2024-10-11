@@ -9,10 +9,10 @@ import {
   deleteStatements,
   createStatements,
 } from './services';
-import { useContext } from '@/layouts/useContext';
+import { useContext } from '../../layouts/useContext';
 import NoEndpointCase from './no-endpoint-case';
 import StoppedServiceCase from './stopped-service-case';
-import SelectGraph from '@/layouts/select-graph';
+import SelectGraph from '../../layouts/select-graph';
 
 import { Utils } from '@graphscope/studio-components';
 import { getSchema } from '../modeling/services';

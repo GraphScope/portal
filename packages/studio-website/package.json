@@ -1,11 +1,14 @@
 {
   "name": "@graphscope/studio-site",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "pomelo-nwu <czynwu@outlook.com>",
   "files": [
     "es",
     "lib"
   ],
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "build": "father build",
     "start": "vite dev",

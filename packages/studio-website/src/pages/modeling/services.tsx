@@ -1,7 +1,7 @@
 import { GraphApiFactory, UtilsApiFactory } from '@graphscope/studio-server';
 import { transOptionsToSchema, ISchemaNode } from '@graphscope/studio-importor';
 import { cloneDeep } from 'lodash';
-import { notification } from '@/pages/utils';
+import { notification } from '../../pages/utils';
 import { Utils, Property } from '@graphscope/studio-components';
 
 const { getSearchParams } = Utils;
