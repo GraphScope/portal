@@ -44,6 +44,17 @@ const Container: React.FunctionComponent<ContainerProps> = props => {
 
           window.GS_ENGINE_TYPE = engineType;
         }
+      })
+      .catch(error => {
+        const engineType = 'interactive';
+        setState(preState => {
+          return {
+            ...preState,
+            engineType,
+            isReady: true,
+          };
+        });
+        window.GS_ENGINE_TYPE = engineType;
       });
   };
   useEffect(() => {
