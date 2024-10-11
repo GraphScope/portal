@@ -1,8 +1,8 @@
 import React from 'react';
 import { Segmented } from 'antd';
-import { useContext } from '@/layouts/useContext';
-import localStorage from '@/components/utils/localStorage';
-import SettingParcel from '@/components/setting-parcel';
+import { useContext } from '../../layouts/useContext';
+import localStorage from '../../components/utils/localStorage';
+import SettingParcel from '../../components/setting-parcel';
 import { FormattedMessage } from 'react-intl';
 
 interface ILocaleSwitchProps {}

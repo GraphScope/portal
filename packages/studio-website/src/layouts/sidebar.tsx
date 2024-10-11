@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { GithubOutlined, ReadOutlined, LinkOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu, Flex, Button, theme, Tooltip } from 'antd';
-import { history, useLocation } from 'umi';
+import { useLocation } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import { useContext } from './useContext';
-import Logo from '@/components/logo';
+import Logo from '../components/logo';
 import { Utils } from '@graphscope/studio-components';
 import { SIDE_MENU } from './const';
+import { useHistory } from '../hooks';
+import { SLOTS } from '../slot';
 const { useToken } = theme;
 
 export const SideWidth = 150;
@@ -21,6 +23,7 @@ const Sidebar: React.FunctionComponent = () => {
   const { token } = useToken();
   const { store, updateStore } = useContext();
   const { collapse } = store;
+  const history = useHistory();
 
   const onClick: MenuProps['onClick'] = e => {
     if (e.key === '/layout') {
@@ -62,7 +65,7 @@ const Sidebar: React.FunctionComponent = () => {
           onClick={onClick}
           // defaultSelectedKeys={[location.pathname]}
           selectedKeys={[defaultPath]}
-          items={SIDE_MENU}
+          items={[...(SIDE_MENU || []), ...SLOTS['SIDE_MEU']]}
           mode="vertical"
           style={{ borderInlineEnd: 'none' }}
         />

@@ -2,7 +2,7 @@ import React from 'react';
 import { ColorPicker, Flex, Col, theme } from 'antd';
 import SelectColor from './select-color';
 import { useStudioProvier } from '@graphscope/studio-components';
-import SettingParcel from '@/components/setting-parcel';
+import SettingParcel from '../../../components/setting-parcel';
 
 const { useToken } = theme;
 const PrimaryColor: React.FunctionComponent = () => {

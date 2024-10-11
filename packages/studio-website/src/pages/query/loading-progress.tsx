@@ -11,7 +11,9 @@ const UploadProgress: React.FunctionComponent<IUploadProgressProps> = ({ file })
   const { progress } = state;
 
   const calcProgress = React.useMemo(() => {
+    //@ts-ignore
     const fileSize = file?.size;
+    //@ts-ignore
     const downlink = (navigator?.connection.downlink / 2) * 1024 * 1024;
     const totalChunks = 50;
     const estimatedTime = Math.round((fileSize / downlink) * 1000);

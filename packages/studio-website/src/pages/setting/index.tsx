@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Divider } from 'antd';
-import Section from '@/components/section';
+import Section from '../../components/section';
 import InteractTheme from './interact-theme';
 import PrimaryColor from './primary-color';
 import RoundedCorner from './rounded-corner';

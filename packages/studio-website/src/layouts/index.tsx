@@ -1,14 +1,16 @@
-import { Outlet } from 'umi';
+import React from 'react';
+import { Outlet } from 'react-router-dom';
 import './index.less';
 import Sidebar from './sidebar';
 import Container from './container';
-import { IntlProvider } from 'react-intl';
+
 import Footer from './footer';
 import locales from '../locales';
 import { useContext } from './useContext';
 import { TOOLS_MENU } from './const';
 import SegmentedSection from './segmented-section';
-import { history } from 'umi';
+
+import type { MenuProps } from 'antd';
 import { StudioProvier } from '@graphscope/studio-components';
 const Content = (props: any) => {
   const { children, navStyle } = props;

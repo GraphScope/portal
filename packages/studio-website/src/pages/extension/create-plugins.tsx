@@ -1,19 +1,21 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Form, Button, Divider } from 'antd';
-import { history } from 'umi';
+import { useNavigate } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { Utils, SplitSection } from '@graphscope/studio-components';
-import Section from '@/components/section';
+import Section from '../../components/section';
 import LeftSide from './left-side';
 import RightSide from './right-side';
 import type { FieldType } from './right-side';
-import SelectCards from '@/components/select-cards';
+import SelectCards from '../../components/select-cards';
 import { createProcedure, updateProcedure, listGraphs, getProcedure } from './service';
+import { useHistory } from '../../hooks/';
 const { getUrlParams } = Utils;
 const CreatePlugins: React.FC = () => {
   console.log(getUrlParams());
   const { graph_id, procedure_id } = getUrlParams();
   const [form] = Form.useForm();
+  const history = useHistory();
   const [state, updateState] = useState<{
     editCode: string;
     instanceOption: { label: string; value: string }[];
@@ -31,6 +33,7 @@ const CreatePlugins: React.FC = () => {
   /** 获取插件某条数据 */
   const getProcedures = async (graph_id: string, procedure_id: string) => {
     const res = await getProcedure(graph_id, procedure_id);
+    //@ts-ignore
     const { query } = res;
     form.setFieldsValue(res);
     updateState(preset => {
@@ -116,6 +119,7 @@ const CreatePlugins: React.FC = () => {
       <SelectCards
         style={{ position: 'absolute', top: '3px', right: '3px', fontSize: '20px' }}
         value={storeType}
+        //@ts-ignore
         items={engines}
         onChange={chooseStoreType}
       />

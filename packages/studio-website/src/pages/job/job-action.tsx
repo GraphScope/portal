@@ -3,6 +3,7 @@ import { Button, Popconfirm, Modal, Checkbox, message, Flex } from 'antd';
 import { deleteJobById, IJobType } from './service';
 
 const Action: React.FunctionComponent<IJobType & { onChange(): void }> = props => {
+  //@ts-ignore
   const { status, job_id, onChange } = props;
   const [state, updateState] = useState({
     isModalOpen: false,
@@ -21,6 +22,7 @@ const Action: React.FunctionComponent<IJobType & { onChange(): void }> = props =
   /** 删除job */
   const deleteJob = async () => {
     const res = await deleteJobById(job_id);
+    //@ts-ignore
     message.success(res);
     onChange();
     updateState(preset => {

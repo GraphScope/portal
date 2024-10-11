@@ -1,11 +1,10 @@
 import * as React from 'react';
-import SelectCards from '@/components/select-cards';
+import SelectCards from '../../components/select-cards';
 import { FormattedMessage } from 'react-intl';
 import { useStudioProvier } from '@graphscope/studio-components';
-import { ICard } from '@/components/select-cards';
-import SettingParcel from '@/components/setting-parcel';
+import SettingParcel from '../../components/setting-parcel';
 
-const engines: ICard[] & { primaryBGgColor: string }[] = [
+const engines: any = [
   {
     id: 'defaultAlgorithm',
     title: 'Light',

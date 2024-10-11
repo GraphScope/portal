@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Result, Button } from 'antd';
-import { useContext } from '@/layouts/useContext';
-import { history } from 'umi';
+import { useContext } from '../../layouts/useContext';
+import { useHistory } from '../../hooks';
 import { FormattedMessage } from 'react-intl';
 interface IEmptyModelCaseProps {}
 
 const EmptyModelCase: React.FunctionComponent<IEmptyModelCaseProps> = props => {
   const { store, updateStore } = useContext();
+  const history = useHistory();
   const { graphId, draftId } = store;
   const [state, setState] = useState({
     open: false,

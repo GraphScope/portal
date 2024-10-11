@@ -11,7 +11,7 @@ export const getDataFields = async (file: File): Promise<{ dataFields: string[];
         // 将 CSV 文件内容按行拆分成数组
         const rows = contents.split('\n');
         let delimiter = '',
-          dataFields = [];
+          dataFields: string[] = [];
         // 获取 header 行，假设 header 行在第一行
         const header1 = rows[0].trim().split(',');
         const header2 = rows[0].trim().split('|');

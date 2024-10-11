@@ -6,7 +6,7 @@ import {
   JobApiFactory,
 } from '@graphscope/studio-server';
 
-import { notification } from '@/pages/utils';
+import { notification } from '../pages/utils';
 
 export const listGraphs = async () => {
   const status = await ServiceApiFactory(undefined, location.origin)

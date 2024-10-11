@@ -3,7 +3,7 @@ import { SegmentedProps, notification } from 'antd';
 
 import { Utils } from '@graphscope/studio-components';
 import { useStudioProvier } from '@graphscope/studio-components';
-import { listGraphs } from '@/pages/instance/lists/service';
+import { listGraphs } from '../pages/instance/lists/service';
 import { useContext, IGraph } from './useContext';
 import useWidth from './useWidth';
 

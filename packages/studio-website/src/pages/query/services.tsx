@@ -5,7 +5,7 @@ import type { IStudioQueryProps, IStatement } from '@graphscope/studio-query';
 import localforage from 'localforage';
 import { GraphApiFactory, ServiceApiFactory, StoredProcedureApiFactory } from '@graphscope/studio-server';
 import { transformSchema } from './utils/schema';
-import { handleError, handleResponse } from '@/components/utils/handleServer';
+import { handleError, handleResponse } from '../../components/utils/handleServer';
 import { Utils } from '@graphscope/studio-components';
 const { storage } = Utils;
 const DB_QUERY_HISTORY = localforage.createInstance({

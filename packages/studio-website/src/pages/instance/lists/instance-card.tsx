@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Flex, Card, Tag, Typography, Space, Button, Divider, Dropdown, Popover, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
-import { history } from 'umi';
+import { useHistory } from '../../../hooks';
 import dayjs from 'dayjs';
 import { PauseCircleOutlined, PlayCircleOutlined } from '@ant-design/icons';
-import { useContext } from '@/layouts/useContext';
+import { useContext } from '../../../layouts/useContext';
 
 import { deleteGraph, startService, stopService } from './service';
 
@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
-import { TOOLS_MENU } from '@/layouts/const';
+import { TOOLS_MENU } from '../../../layouts/const';
 import { Utils, useCustomToken } from '@graphscope/studio-components';
 export type InstaceCardType = {
   /** graph id */
@@ -66,6 +66,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     handleChange,
     schema = { edges: 0, vertices: 0 },
   } = props;
+  const history = useHistory();
   const { store, updateStore } = useContext();
   const { locale, draftGraph, draftId } = store;
   const { instanceBackground } = useCustomToken();

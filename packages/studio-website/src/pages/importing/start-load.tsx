@@ -4,7 +4,7 @@ import type { DataloadingJobConfigLoadingConfigImportOptionEnum } from '@graphsc
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useContext as useImporting } from '@graphscope/studio-importor';
 import { submitDataloadingJob } from './services';
-import { history } from 'umi';
+import { useHistory } from '../../hooks';
 import dayjs from 'dayjs';
 export type FieldType = {
   type?: string;
@@ -78,6 +78,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
   const { nodes, edges } = importingStore;
 
   const [form] = Form.useForm();
+  const history = useHistory();
 
   useEffect(() => {
     const firstNode = nodes[0];

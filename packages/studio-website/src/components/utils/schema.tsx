@@ -1,6 +1,8 @@
-import type { Schema, VertexType } from '@graphscope/studio-server';
-import { String } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
+
+// import type { Schema, VertexType } from '@graphscope/studio-server';
+type Schema = any;
+type VertexType = any;
 
 export interface Properties {
   name: string;
@@ -92,6 +94,7 @@ export function transformSchema(originalSchema: DeepRequired<Schema>): Transform
         const { destination_vertex, source_vertex, relation } = c;
         edges.push({
           label: type_name,
+          //@ts-ignore
           properties: (properties || []).map(({ property_name, property_type }) => ({
             name: property_name,
             type: transformType(property_type),

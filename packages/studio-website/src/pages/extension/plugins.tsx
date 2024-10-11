@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Table, Button, Space, Skeleton, Popconfirm, message } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { history } from 'umi';
+
 import { listProcedures, deleteProcedure } from './service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
-import CreatePlugins from './create-plugins';
+
+import { useHistory } from '../../hooks';
 export interface Item {
   key: string;
   name: string;
@@ -14,6 +15,7 @@ export interface Item {
 }
 
 const Plugins: React.FC = () => {
+  const history = useHistory();
   const [state, updateState] = useState<{
     /** 插件列表数据 */
     pluginList: Item[];
@@ -71,6 +73,7 @@ const Plugins: React.FC = () => {
         key: 'actions',
         width: 60,
         render: (_: any, all: Item) => {
+          //@ts-ignore
           const { bound_graph, id } = all;
           return (
             <Space>
@@ -86,6 +89,7 @@ const Plugins: React.FC = () => {
               <Popconfirm
                 placement="bottomRight"
                 title={<FormattedMessage id="Are you sure to delete this task?" />}
+                //@ts-ignore
                 onConfirm={() => deleteExtension(all)}
                 okText={<FormattedMessage id="Yes" />}
                 cancelText={<FormattedMessage id="No" />}

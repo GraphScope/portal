@@ -1,9 +1,9 @@
 import React from 'react';
-import { useContext } from '@/layouts/useContext';
-import LocaleSwitch from '@/components/locale-switch';
+import { useContext } from '../../layouts/useContext';
+import LocaleSwitch from '../../components/locale-switch';
 import { useStudioProvier } from '@graphscope/studio-components';
-import type { ILocaleSwitchProps } from '@/components/locale-switch';
-import SettingParcel from '@/components/setting-parcel';
+import type { ILocaleSwitchProps } from '../../components/locale-switch';
+import SettingParcel from '../../components/setting-parcel';
 
 const International: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();

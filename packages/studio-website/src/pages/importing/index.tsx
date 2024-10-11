@@ -5,7 +5,7 @@ import { useContext } from '../../layouts/useContext';
 import { Toolbar, Utils } from '@graphscope/studio-components';
 import StartImporting from './start-importing';
 
-import SelectGraph from '@/layouts/select-graph';
+import SelectGraph from '../../layouts/select-graph';
 import EmptyModelCase from './empty-model-case';
 
 import localforage from 'localforage';

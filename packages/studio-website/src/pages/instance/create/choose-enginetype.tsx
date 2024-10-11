@@ -2,7 +2,7 @@ import React, { memo, useEffect } from 'react';
 import { Form, Input, Typography } from 'antd';
 
 import { FormattedMessage, useIntl } from 'react-intl';
-import SelectCards from '@/components/select-cards';
+import SelectCards from '../../../components/select-cards';
 
 export const storeType = window.GS_ENGINE_TYPE === 'groot' ? 'groot_store' : 'mutable_csr';
 export type FieldType = {

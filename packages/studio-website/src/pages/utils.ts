@@ -24,7 +24,8 @@ export const notification = (type: string, data: any) => {
   }
 };
 
-export const useEditorTheme = (isEdit: boolean) => {
+//@ts-ignore
+export const useEditorTheme = (isEdit: boolean): any => {
   const { algorithm } = useStudioProvier();
   const { editorBackground, editorForeground } = useCustomToken();
   const background = isEdit ? '#F5F5F5' : editorBackground;
