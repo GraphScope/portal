@@ -86,6 +86,7 @@ export const listGraphs = async () => {
     .catch(error => {
       notification('error', error);
     });
+  //@ts-ignore
   let info = deployments?.map((item: { name: string; id: string }) => {
     const { name, id } = item;
     return {

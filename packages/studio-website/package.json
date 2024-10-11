@@ -1,10 +1,16 @@
 {
-  "private": true,
   "name": "@graphscope/studio-site",
+  "version": "0.1.0",
   "author": "pomelo-nwu <czynwu@outlook.com>",
+  "files": [
+    "es",
+    "lib"
+  ],
   "scripts": {
+    "build": "father build",
     "start": "vite dev",
-    "build": "vite build"
+    "build:site": "vite build",
+    "prepublishOnly": "npm run build"
   },
   "publishConfig": {
     "access": "public",

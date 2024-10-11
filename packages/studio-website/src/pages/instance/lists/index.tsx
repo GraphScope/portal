@@ -53,6 +53,7 @@ const InstanceCard: React.FC = () => {
           })
           .map((item, i) => (
             <Col key={i} span={12}>
+              {/** @ts-ignore */}
               <InstaceCard {...item} handleChange={() => fetchLists()} />
             </Col>
           ))}

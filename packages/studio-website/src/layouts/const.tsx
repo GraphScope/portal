@@ -65,39 +65,21 @@ export const SYSTEM_MENU = [
 ];
 
 console.log(' window.GS_ENGINE_TYPE', window.GS_ENGINE_TYPE);
-export const SIDE_MENU: MenuProps['items'] =
-  window.GS_ENGINE_TYPE === 'groot'
-    ? [
-        {
-          label: <FormattedMessage id="navbar.graphs" />,
-          key: '/graphs',
-          icon: <FontAwesomeIcon icon={faCoins} />,
-        },
-        {
-          type: 'divider',
-        },
-        ...TOOLS_MENU,
-        {
-          type: 'divider',
-        },
-        ...GROOT_CASE_MENU,
-        ...SYSTEM_MENU,
-      ]
-    : [
-        {
-          label: <FormattedMessage id="navbar.graphs" />,
-          key: '/graphs',
-          icon: <FontAwesomeIcon icon={faCoins} />,
-        },
-        {
-          type: 'divider',
-        },
-        ...TOOLS_MENU,
-        {
-          type: 'divider',
-        },
-        ...SYSTEM_MENU,
-      ];
+export const SIDE_MENU: MenuProps['items'] = [
+  {
+    label: <FormattedMessage id="navbar.graphs" />,
+    key: '/graphs',
+    icon: <FontAwesomeIcon icon={faCoins} />,
+  },
+  {
+    type: 'divider',
+  },
+  ...TOOLS_MENU,
+  {
+    type: 'divider',
+  },
+  ...SYSTEM_MENU,
+];
 
 export const STATUS_MAP = {
   Running: {

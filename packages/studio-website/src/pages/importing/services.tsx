@@ -19,12 +19,13 @@ export const uploadFile = async (file: File) => {
     });
 };
 /** 数据绑定 dataMap(nodes/edges集合)*/
-export const bindDatasourceInBatch = async (graph_id: string, options: any) => {
+
+export const bindDatasourceInBatch = async (graph_id: string, options: any): Promise<any> => {
   const schema = transformImportOptionsToSchemaMapping(options);
   return await DataSourceApiFactory(undefined, location.origin).bindDatasourceInBatch(graph_id, schema);
 };
 /** 数据绑定 dataMap(nodes/edges集合)*/
-export const submitDataloadingJob = async (graph_id: string, graphSchema: any, loadConfig: FieldType) => {
+export const submitDataloadingJob = async (graph_id: string, graphSchema: any, loadConfig: FieldType): Promise<any> => {
   let NODE_LABEL_MAP: any = {};
   const schema = {
     vertices: graphSchema.nodes.map((item: any) => {

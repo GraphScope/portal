@@ -33,6 +33,7 @@ const CreatePlugins: React.FC = () => {
   /** 获取插件某条数据 */
   const getProcedures = async (graph_id: string, procedure_id: string) => {
     const res = await getProcedure(graph_id, procedure_id);
+    //@ts-ignore
     const { query } = res;
     form.setFieldsValue(res);
     updateState(preset => {
@@ -118,6 +119,7 @@ const CreatePlugins: React.FC = () => {
       <SelectCards
         style={{ position: 'absolute', top: '3px', right: '3px', fontSize: '20px' }}
         value={storeType}
+        //@ts-ignore
         items={engines}
         onChange={chooseStoreType}
       />

@@ -1,10 +1,11 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import type { MenuProps } from 'antd';
 import Layout from '../layouts';
 
-import locales from '../locales';
-
-interface IPagesProps {}
+interface IPagesProps {
+  children?: React.ReactNode;
+}
 
 const routes = [
   { path: '/', redirect: '/graphs' },
@@ -23,6 +24,8 @@ const routes = [
 ];
 
 const Pages: React.FunctionComponent<IPagesProps> = props => {
+  const { children } = props;
+
   const routeComponents = routes.map(({ path, redirect, component: Component }, index) => {
     if (redirect) {
       return <Route key={index} path={path} element={<Navigate to={redirect} replace />} />;
@@ -46,10 +49,21 @@ const Pages: React.FunctionComponent<IPagesProps> = props => {
       <Routes>
         <Route path="/" element={<Layout />}>
           {routeComponents}
+          {children}
         </Route>
       </Routes>
     </BrowserRouter>
   );
+};
+
+export const SLOTS: {
+  [id: string]: any;
+} = {
+  SIDE_MEU: [],
+};
+
+export const registerSideMenuSlot = (slot: MenuProps['items']) => {
+  SLOTS['SIDE_MEU'] = slot;
 };
 
 export default Pages;

@@ -73,6 +73,7 @@ const Plugins: React.FC = () => {
         key: 'actions',
         width: 60,
         render: (_: any, all: Item) => {
+          //@ts-ignore
           const { bound_graph, id } = all;
           return (
             <Space>
@@ -88,6 +89,7 @@ const Plugins: React.FC = () => {
               <Popconfirm
                 placement="bottomRight"
                 title={<FormattedMessage id="Are you sure to delete this task?" />}
+                //@ts-ignore
                 onConfirm={() => deleteExtension(all)}
                 okText={<FormattedMessage id="Yes" />}
                 cancelText={<FormattedMessage id="No" />}

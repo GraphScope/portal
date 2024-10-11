@@ -52,7 +52,9 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
         //@ts-ignore
 
         {
+          //@ts-ignore
           nodes: schema.nodes,
+          //@ts-ignore
           edges: schema.edges,
           //@ts-ignore
           graphName: draftGraph.name,

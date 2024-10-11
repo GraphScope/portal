@@ -9,6 +9,7 @@ import Logo from '@/components/logo';
 import { Utils } from '@graphscope/studio-components';
 import { SIDE_MENU } from './const';
 import { useHistory } from '@/hooks';
+import { SLOTS } from '@/pages';
 const { useToken } = theme;
 
 export const SideWidth = 150;
@@ -64,7 +65,7 @@ const Sidebar: React.FunctionComponent = () => {
           onClick={onClick}
           // defaultSelectedKeys={[location.pathname]}
           selectedKeys={[defaultPath]}
-          items={SIDE_MENU}
+          items={[...(SIDE_MENU || []), ...SLOTS['SIDE_MEU']]}
           mode="vertical"
           style={{ borderInlineEnd: 'none' }}
         />
