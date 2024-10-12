@@ -64,4 +64,9 @@ export default {
   Password: '密码',
   Connect: '连接',
   Close: '关闭',
+  'Select nodes by box selection': '通过框选选择节点',
+  'Switch graph view dimensions': '切换图表视图维度',
+  'Zoom to fitview': '缩放适当视图',
+  Fullscreen: '全屏',
+  'Toggle Right Side': '切换右侧',
 };

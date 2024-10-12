@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, Tooltip } from 'antd';
-import { Icons, Utils } from '@graphscope/studio-components';
+import { Icons, useStudioProvier } from '@graphscope/studio-components';
 import useCluster from '../../hooks/useCluster';
 import { FormattedMessage } from 'react-intl';
 export interface IRunClusterProps {
@@ -14,6 +14,8 @@ const RunCluster: React.FunctionComponent<IRunClusterProps> = props => {
   });
 
   const { cluster } = state;
+  const { isLight } = useStudioProvier();
+  const color = !isLight ? '#ddd' : '#000';
   const handleClick = () => {
     setState(preState => {
       return {
@@ -30,7 +32,7 @@ const RunCluster: React.FunctionComponent<IRunClusterProps> = props => {
 
   return (
     <Tooltip title={<FormattedMessage id="Clustering layout" />} placement="left">
-      <Button onClick={handleClick} icon={<Icons.Cluster />} type="text"></Button>
+      <Button onClick={handleClick} icon={<Icons.Cluster style={{ color: color }} />} type="text"></Button>
     </Tooltip>
   );
 };
