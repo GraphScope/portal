@@ -14,14 +14,14 @@ const ZoomFit: React.FunctionComponent<IZoomFitProps> = props => {
   const { store } = useContext();
   const { graph } = store;
   const { isLight } = useStudioProvier();
-  const fill = !isLight ? '#ddd' : '#000';
+  const color = !isLight ? '#ddd' : '#000';
   const handleClick = () => {
     graph?.zoomToFit(1000);
   };
 
   return (
     <Tooltip title={<FormattedMessage id={`${title}`} />} placement={placement}>
-      <Button onClick={handleClick} icon={<Icons.ZoomFit fill={fill} />} type="text"></Button>
+      <Button onClick={handleClick} icon={<Icons.ZoomFit style={{ color }} />} type="text"></Button>
     </Tooltip>
   );
 };

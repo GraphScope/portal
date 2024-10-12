@@ -14,14 +14,14 @@ const LeftButton: React.FunctionComponent<ILeftButtonProps> = props => {
     <FormattedMessage id="Expand or collapse multi-source modeling" />
   );
   /** Button disabled 不能使图标置灰 */
-  const fill = elementOptions.isEditable ? '#ddd' : '#000';
+  const color = elementOptions.isEditable ? '#ddd' : '#000';
 
   return (
     <Tooltip title={tooltipText} placement="right">
       <Button
         type="text"
         disabled={elementOptions.isEditable}
-        icon={<Icons.Sidebar fill={fill} />}
+        icon={<Icons.Sidebar style={{ color }} />}
         // onClick={() => {
         //   updateStore(draft => {
         //     draft.collapsed.left = !draft.collapsed.left;

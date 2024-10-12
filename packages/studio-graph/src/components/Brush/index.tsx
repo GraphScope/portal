@@ -18,7 +18,7 @@ const Brush: React.FunctionComponent<IBrushProps> = props => {
   const { store, updateStore, id } = useContext();
   const { graph } = store;
   const { isLight } = useStudioProvier();
-  const fill = !isLight ? '#ddd' : '#000';
+  const color = !isLight ? '#ddd' : '#000';
   const brushRef = useRef<SVGSVGElement>(null);
   const [isBrushActive, setIsBrushActive] = useState(false);
   const handleSelect = selectedNodes => {
@@ -105,7 +105,7 @@ const Brush: React.FunctionComponent<IBrushProps> = props => {
   return (
     <>
       <Tooltip placement={placement} title={<FormattedMessage id={`${title}`} />}>
-        <Button icon={<Icons.Lasso style={{ color: fill }} />} type="text" onClick={handleClick} />
+        <Button icon={<Icons.Lasso style={{ color }} />} type="text" onClick={handleClick} />
       </Tooltip>
       {ReactDOM.createPortal(<svg ref={brushRef} style={style} />, trigetDOM)}
     </>

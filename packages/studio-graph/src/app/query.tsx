@@ -42,11 +42,11 @@ interface QueryGraphProps {
   onQuery: (params: any) => Promise<any>;
 }
 
-const ToogleButton = ({ fill }) => {
+const ToogleButton = ({ color }) => {
   const { toggleRightSide } = useSection();
   return (
     <Tooltip title={<FormattedMessage id="Toggle Right Side" />} placement="left">
-      <Button icon={<Icons.Sidebar revert fill={fill} />} onClick={() => toggleRightSide()} type="text" />
+      <Button icon={<Icons.Sidebar revert style={{ color }} />} onClick={() => toggleRightSide()} type="text" />
     </Tooltip>
   );
 };
@@ -56,7 +56,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
   console.log('data>>>>', data);
   const { buttonBackground } = useCustomToken();
   const { isLight } = useStudioProvier();
-  const fill = !isLight ? '#ddd' : '#000';
+  const color = !isLight ? '#ddd' : '#000';
   const containerRef = useRef<HTMLDivElement | null>(null);
   const items = [
     {
@@ -115,7 +115,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
           <Toolbar
             style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset', background: buttonBackground }}
           >
-            <ToogleButton fill={fill} />
+            <ToogleButton color={color} />
             <Divider style={{ margin: '0px' }} />
             <FullScreen containerRef={containerRef} />
             <ZoomFit />

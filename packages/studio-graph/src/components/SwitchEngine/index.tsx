@@ -14,13 +14,13 @@ const SwitchEngine: React.FunctionComponent<ISwitchEngineProps> = props => {
   const { render } = store;
   const { title = 'Switch graph view dimensions', placement = 'left' } = props;
   const { isLight } = useStudioProvier();
-  const fill = !isLight ? '#ddd' : '#000';
+  const color = !isLight ? '#ddd' : '#000';
   const handleSwitch = () => {
     updateStore(draft => {
       draft.render = render === '2D' ? '3D' : '2D';
     });
   };
-  const icon = render === '2D' ? <Graph3D fill={fill} /> : <Graph2D fill={fill} />;
+  const icon = render === '2D' ? <Graph3D style={{ color }} /> : <Graph2D style={{ color }} />;
   return (
     <Tooltip title={<FormattedMessage id={`${title}`} />} placement="left">
       <Button onClick={handleSwitch} icon={icon} type="text"></Button>
