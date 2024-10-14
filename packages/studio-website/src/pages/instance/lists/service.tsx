@@ -1,4 +1,5 @@
 import { GraphApiFactory, ServiceApiFactory, JobApiFactory } from '@graphscope/studio-server';
+import type { DataloadingJobConfig } from '@graphscope/studio-server';
 import { notification } from '../../../pages/utils';
 
 export const listGraphs = async () => {
@@ -128,9 +129,9 @@ export const stopService = async (graph_id: string) => {
     });
 };
 /** 获取是否已经导入 */
-export const getDataloadingConfig = async (graph_id: string) => {
+export const getDataloadingConfig = async (graph_id: string, dataloadingJobConfig: DataloadingJobConfig) => {
   return await JobApiFactory(undefined, location.origin)
-    .getDataloadingJobConfig(graph_id!)
+    .getDataloadingJobConfig(graph_id!, dataloadingJobConfig)
     .then(res => {
       if (res.status === 200) {
         return res.data;

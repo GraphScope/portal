@@ -5,17 +5,13 @@ info:
   description: |-
     This is a specification for GraphScope FLEX HTTP service based on the OpenAPI 3.0 specification. You can find out more details about
     specification at [doc](https://swagger.io/specification/v3/).
-
-    Some useful links:
-    - [GraphScope Repository](https://github.com/alibaba/GraphScope)
-    - [The Source API definition for GraphScope Interactive](https://github.com/GraphScope/portal/tree/main/httpservice)
   contact:
     name: GraphScope
     email: graphscope@alibaba-inc.com
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.9.2
+  version: 1.0.0
 
 externalDocs:
   description: Find out More about GraphScope
@@ -507,26 +503,6 @@ components:
         schema:
           $ref: '#/components/schemas/CreateGraphSchemaRequest'
 
-    CreateGraphByPgqlRequest:
-      x-body-name: create_graph_by_pgql_request
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        schema:
-          type: string
-
-    CreateGraphByYamlRequest:
-      x-body-name: create_graph_by_yaml_request
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        schema:
-          type: string
-
     CreateGraphResponse:
       required:
         - graph_id
@@ -655,24 +631,6 @@ components:
             $ref: '#/components/schemas/GetStoredProcResponse'
         schema:
           $ref: '#/components/schemas/GetGraphSchemaResponse'
-
-    GetGraphVersionResponse:
-      required:
-        - creation_time
-        - version_id
-      properties:
-        creation_time:
-          type: string
-        version_id:
-          type: string
-
-    ChangeGraphVersionRequest:
-      x-body-name: change_graph_version_request
-      required:
-        - version_id
-      properties:
-        version_id:
-          type: string
 
     ColumnMapping:
       required:
@@ -1292,52 +1250,6 @@ paths:
         500:
           $ref: '#/components/responses/500'
 
-  /api/v1/graph/pgql:
-    post:
-      description: Create a new graph by providing pgql
-      tags: [Graph]
-      operationId: createGraphByPgql
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateGraphByPgqlRequest'
-      responses:
-        200:
-          description: The graph was created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateGraphResponse'
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'
-
-  /api/v1/graph/yaml:
-    post:
-      description: Create a new graph by providing yaml
-      tags: [Graph]
-      operationId: createGraphByYaml
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateGraphByYamlRequest'
-      responses:
-        200:
-          description: The graph was created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateGraphResponse'
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'
-
   /api/v1/graph/{graph_id}:
     get:
       description: Get graph by ID
@@ -1805,81 +1717,6 @@ paths:
         500:
           $ref: '#/components/responses/500'
 
-  /api/v1/graph/{graph_id}/version:
-    get:
-      description: Get all available versions for a specific graph
-      tags: [Graph]
-      operationId: getGraphAllAvailableVersions
-      parameters:
-        - name: graph_id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: Successfully returned all versions of the graph
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GetGraphVersionResponse'
-        500:
-          $ref: '#/components/responses/500'
-    post:
-      tags: [Graph]
-      description: Read graph by a given version
-      operationId: read_graph_by_a_given_version
-      parameters:
-        - name: graph_id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ChangeGraphVersionRequest'
-        required: true
-      responses:
-        200:
-          description: Successfully unbind the data source
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/APIResponse'
-        500:
-          $ref: '#/components/responses/500'
-
-  /api/v1/graph/{graph_id}/version/{timestamp}:
-    get:
-      description: Get the latest version by providing a timestamp
-      tags: [Graph]
-      operationId: getGraphVersionByTimestamp
-      parameters:
-        - name: graph_id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: timestamp
-          in: path
-          required: true
-          schema:
-            type: string
-            description: The timestamp of the graph to read. Provide as a query parameter.
-      responses:
-        200:
-          description: Successfully returned all versions of the graph
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetGraphVersionResponse'
-        500:
-          $ref: '#/components/responses/500'
-
   /api/v1/graph/{graph_id}/datasource/vertex/{type_name}:
     delete:
       tags: [DataSource]
@@ -2037,52 +1874,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/APIResponse'
-        500:
-          $ref: '#/components/responses/500'
-
-  /api/v1/job/{job_id}/resume:
-    post:
-      tags: [Job]
-      description: Resume an existing job
-      operationId: resumeJob
-      parameters:
-        - name: job_id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: Successfully resumed a job
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/APIResponse'
-        400:
-          $ref: '#/components/responses/400'
-        500:
-          $ref: '#/components/responses/500'
-
-  /api/v1/job/{job_id}/pause:
-    post:
-      tags: [Job]
-      description: Pause an existing job
-      operationId: pauseJob
-      parameters:
-        - name: job_id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: Successfully paused the job
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/APIResponse'
-        400:
-          $ref: '#/components/responses/400'
         500:
           $ref: '#/components/responses/500'
 
@@ -2372,36 +2163,6 @@ paths:
       responses:
         200:
           description: Successfully restarted the service
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/APIResponse'
-        500:
-          $ref: '#/components/responses/500'
-
-  /api/v1/service/pause:
-    post:
-      tags: [Service]
-      description: Pause data loading
-      operationId: pauseDataLoading
-      responses:
-        200:
-          description: Successfully paused data loading
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/APIResponse'
-        500:
-          $ref: '#/components/responses/500'
-
-  /api/v1/service/resume:
-    post:
-      tags: [Service]
-      description: Resume data loading
-      operationId: resumeDataLoading
-      responses:
-        200:
-          description: Successfully resume data loading
           content:
             application/json:
               schema:
@@ -2797,4 +2558,4 @@ paths:
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/1.9.2
+    url: https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/1.0.0
