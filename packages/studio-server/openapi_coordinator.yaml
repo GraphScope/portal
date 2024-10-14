@@ -15,7 +15,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.0
+  version: 1.9.2
 
 externalDocs:
   description: Find out More about GraphScope
@@ -98,6 +98,44 @@ components:
           type: string
           enum:
             - MutableCSR
+            - MutablePersistent
+
+    ResourceUsage:
+      required:
+        - host
+        - timestamp
+        - usage
+      properties:
+        host:
+          type: string
+        timestamp:
+          type: string
+        usage:
+          type: string
+
+    GetResourceUsageResponse:
+      required:
+        - cpu_usage
+        - memory_usage
+      properties:
+        cpu_usage:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceUsage'
+        memory_usage:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceUsage'
+
+    GetStorageUsageResponse:
+      required:
+        - storage_usage
+      properties:
+        storage_usage:
+          type: object
+          additionalProperties:
+            type: number
+            format: double
 
     NodeStatus:
       required:
@@ -118,10 +156,58 @@ components:
           type: number
           format: double
 
+    PodStatus:
+      required:
+        - name
+        - image
+        - labels
+        - node
+        - status
+        - restart_count
+        - cpu_usage
+        - memory_usage
+        - creation_time
+      properties:
+        name:
+          type: string
+        image:
+          type: array
+          items:
+            type: string
+        labels:
+          type: object
+          additionalProperties: true
+        node:
+          type: string
+        status:
+          type: string
+        restart_count:
+          type: integer
+          format: int32
+        cpu_usage:
+          type: integer
+          format: int32
+        memory_usage:
+          type: integer
+          format: int32
+        timestamp:
+          type: string
+        creation_time:
+          type: string
+        component_belong_to:
+          type: string
+
+    GetPodLogResponse:
+      required:
+        - log
+      properties:
+        log:
+          type: object
+          additionalProperties: true
+
     RunningDeploymentStatus:
       required:
         - cluster_type
-        - nodes
       properties:
         cluster_type:
           type: string
@@ -131,8 +217,13 @@ components:
         nodes:
           type: array
           items:
-            oneOf:
-              - $ref: '#/components/schemas/NodeStatus'
+            $ref: '#/components/schemas/NodeStatus'
+        pods:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/PodStatus'
 
     StartServiceRequest:
       x-body-name: start_service_request
@@ -169,9 +260,13 @@ components:
     UploadFileResponse:
       required:
         - file_path
+        - metadata
       properties:
         file_path:
           type: string
+        metadata:
+          type: object
+          additionalProperties: true
 
     LongText:
       required:
@@ -198,10 +293,34 @@ components:
           oneOf:
             - $ref: '#/components/schemas/LongText'
 
+    TimeStampType:
+      required:
+        - timestamp
+      properties:
+        timestamp:
+          type: string
+
+    DateType:
+      required:
+        - date32
+      properties:
+        date32:
+          type: string
+
+    TemporalType:
+      required:
+        - temporal
+      properties:
+        temporal:
+          oneOf:
+            - $ref: '#/components/schemas/TimeStampType'
+            - $ref: '#/components/schemas/DateType'
+
     GSDataType:
       oneOf:
         - $ref: '#/components/schemas/PrimitiveType'
         - $ref: '#/components/schemas/StringType'
+        - $ref: '#/components/schemas/TemporalType'
 
     Parameter:
       required:
@@ -292,7 +411,6 @@ components:
             required:
               - source_vertex
               - destination_vertex
-              - relation
             properties:
               source_vertex:
                 type: string
@@ -326,8 +444,6 @@ components:
       allOf:
         - $ref: '#/components/schemas/BaseEdgeType'
         - type: object
-          required:
-            - properties
           properties:
             properties:
               type: array
@@ -391,6 +507,26 @@ components:
         schema:
           $ref: '#/components/schemas/CreateGraphSchemaRequest'
 
+    CreateGraphByPgqlRequest:
+      x-body-name: create_graph_by_pgql_request
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        schema:
+          type: string
+
+    CreateGraphByYamlRequest:
+      x-body-name: create_graph_by_yaml_request
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        schema:
+          type: string
+
     CreateGraphResponse:
       required:
         - graph_id
@@ -447,7 +583,6 @@ components:
         - $ref: '#/components/schemas/BaseVertexType'
         - type: object
           required:
-            - type_id
             - properties
           properties:
             type_id:
@@ -464,9 +599,6 @@ components:
       allOf:
         - $ref: '#/components/schemas/BaseEdgeType'
         - type: object
-          required:
-            - type_id
-            - properties
           properties:
             type_id:
               type: integer
@@ -524,6 +656,24 @@ components:
         schema:
           $ref: '#/components/schemas/GetGraphSchemaResponse'
 
+    GetGraphVersionResponse:
+      required:
+        - creation_time
+        - version_id
+      properties:
+        creation_time:
+          type: string
+        version_id:
+          type: string
+
+    ChangeGraphVersionRequest:
+      x-body-name: change_graph_version_request
+      required:
+        - version_id
+      properties:
+        version_id:
+          type: string
+
     ColumnMapping:
       required:
         - column
@@ -545,7 +695,6 @@ components:
       required:
         - type_name
         - inputs
-        - column_mappings
       properties:
         type_name:
           type: string
@@ -554,7 +703,7 @@ components:
           items:
             type: string
             example: file:///path/to/file.csv
-        column_mappings:
+        column_mappings: # column_mappings could be empty, which indicates the default mapping in order.
           type: array
           items:
             $ref: '#/components/schemas/ColumnMapping'
@@ -564,8 +713,6 @@ components:
       required:
         - type_triplet
         - inputs
-        - source_vertex_mappings
-        - destination_vertex_mappings
       properties:
         type_triplet:
           required:
@@ -663,6 +810,14 @@ components:
             - once
             - day
             - week
+
+    DataloadingMRJobConfig:
+      x-body-name: dataloading_mr_job_config
+      required:
+        - config
+      properties:
+        config:
+          type: string
 
     JobStatus:
       required:
@@ -872,7 +1027,7 @@ paths:
 
   /api/v1/deployment/status:
     get:
-      description: Deployment status
+      description: Get deployment status of cluster
       tags: [Deployment]
       operationId: getDeploymentStatus
       responses:
@@ -889,6 +1044,131 @@ paths:
                     cpu_usage: 83.0
                     memory_usage: 37.5
                     disk_usage: 97
+                pods:
+                  coordinator:
+                    - name: dztest283-graphscope-store-coordinator-0
+                      image:
+                        - graphscope-store:0.28.0
+                      labels:
+                        app.kubernetes.io/version: 3.4.0
+                      node: i-uf6f9rdd1wh126dg2y1p
+                      status: Running
+                      restart_count: 0
+                      cpu_usage: 2
+                      memory_usage: 597
+                      timestamp: '2024/07/19 16:40:04'
+                      creation_time: '2024/07/03 11:08:57'
+                      component_belong_to: coordinator
+                  store:
+                    - name: dztest283-graphscope-store-store-0
+                      image:
+                        - graphscope-store:0.28.0
+                      labels:
+                        app.kubernetes.io/version: 3.4.0
+                      node: i-uf6f9rdd1wh126dg2y1p
+                      status: Running
+                      restart_count: 0
+                      cpu_usage: 2
+                      memory_usage: 597
+                      timestamp: '2024/07/19 16:40:04'
+                      creation_time: '2024/07/03 11:08:57'
+                      component_belong_to: store
+                    - name: dztest283-graphscope-store-store-1
+                      image:
+                        - graphscope-store:0.28.0
+                      labels:
+                        app.kubernetes.io/version: 3.4.0
+                      node: i-uf6f9rdd1wh126dg2y1p
+                      status: Running
+                      restart_count: 0
+                      cpu_usage: 2
+                      memory_usage: 597
+                      timestamp: '2024/07/19 16:40:04'
+                      creation_time: '2024/07/03 11:08:57'
+                      component_belong_to: store
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/deployment/log:
+    get:
+      description: "[Deprecated] Get kubernetes pod's log"
+      tags: [Deployment]
+      operationId: getDeploymentPodLog
+      parameters:
+        - name: pod_name
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: component
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: from_cache
+          in: query
+          required: true
+          schema:
+            type: boolean
+      responses:
+        200:
+          description: Successfully returned the pod's log
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPodLogResponse'
+              example:
+                container1: "line1\nline2\nline3"
+                container2: "line1\nline2\nline3"
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/deployment/resource/usage:
+    get:
+      description: '[Deprecated] Get resource usage(cpu/memory) of cluster'
+      tags: [Deployment]
+      operationId: getDeploymentResourceUsage
+      responses:
+        200:
+          description: Successfully returned the resource usage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResourceUsageResponse'
+              example:
+                cpu_usage:
+                  - host: dztest283-graphscope-store-store-0
+                    timestamp: '2024/07/19 13:15:12'
+                    usage: 52
+                  - host: dztest283-graphscope-store-store-1
+                    timestamp: '2024/07/19 13:16:12'
+                    usage: 90
+                memory_usage:
+                  - host: dztest283-graphscope-store-store-0
+                    timestamp: '2024/07/19 13:15:12'
+                    usage: 152
+                  - host: dztest283-graphscope-store-store-1
+                    timestamp: '2024/07/19 13:16:12'
+                    usage: 290
+
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/deployment/storage/usage:
+    get:
+      description: '[Deprecated] Get storage usage of Groot'
+      tags: [Deployment]
+      operationId: getStorageUsage
+      responses:
+        200:
+          description: Successfully returned the resource usage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetStorageUsageResponse'
+              example:
+                dztest283-graphscope-store-store-0: 72.2
+                dztest283-graphscope-store-store-1: 91.7
         500:
           $ref: '#/components/responses/500'
 
@@ -1009,6 +1289,52 @@ paths:
                             property_name: weight
                             property_type:
                               primitive_type: DT_DOUBLE
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/pgql:
+    post:
+      description: Create a new graph by providing pgql
+      tags: [Graph]
+      operationId: createGraphByPgql
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGraphByPgqlRequest'
+      responses:
+        200:
+          description: The graph was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateGraphResponse'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/yaml:
+    post:
+      description: Create a new graph by providing yaml
+      tags: [Graph]
+      operationId: createGraphByYaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGraphByYamlRequest'
+      responses:
+        200:
+          description: The graph was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateGraphResponse'
+        400:
+          $ref: '#/components/responses/400'
         500:
           $ref: '#/components/responses/500'
 
@@ -1479,6 +1805,81 @@ paths:
         500:
           $ref: '#/components/responses/500'
 
+  /api/v1/graph/{graph_id}/version:
+    get:
+      description: Get all available versions for a specific graph
+      tags: [Graph]
+      operationId: getGraphAllAvailableVersions
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully returned all versions of the graph
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetGraphVersionResponse'
+        500:
+          $ref: '#/components/responses/500'
+    post:
+      tags: [Graph]
+      description: Read graph by a given version
+      operationId: read_graph_by_a_given_version
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeGraphVersionRequest'
+        required: true
+      responses:
+        200:
+          description: Successfully unbind the data source
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/{graph_id}/version/{timestamp}:
+    get:
+      description: Get the latest version by providing a timestamp
+      tags: [Graph]
+      operationId: getGraphVersionByTimestamp
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: timestamp
+          in: path
+          required: true
+          schema:
+            type: string
+            description: The timestamp of the graph to read. Provide as a query parameter.
+      responses:
+        200:
+          description: Successfully returned all versions of the graph
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetGraphVersionResponse'
+        500:
+          $ref: '#/components/responses/500'
+
   /api/v1/graph/{graph_id}/datasource/vertex/{type_name}:
     delete:
       tags: [DataSource]
@@ -1562,21 +1963,21 @@ paths:
                   start_time: 2024-02-24 00:00:00
                   log: logging...
                   detail:
-                    graph_name: demo
+                    graph_id: GRAPHID
                 - id: JOB-QWERTYUIOPASDFGH-2
                   type: DATA IMPORT
                   status: CANCELLED
                   start_time: 2024-02-24 00:00:00
                   log: logging...
                   detail:
-                    graph_name: demo
+                    graph_id: GRAPHID
                 - id: JOB-QWERTYUIOPASDFGH-3
                   type: DATA IMPORT
                   status: SUCCESS
                   start_time: 2024-02-24 00:00:00
                   end_time: 2024-02-24 12:00:00
                   detail:
-                    graph_name: demo
+                    graph_id: GRAPHID
                 - id: JOB-QWERTYUIOPASDFGH-4
                   type: DATA IMPORT
                   status: FAILED
@@ -1584,12 +1985,12 @@ paths:
                   end_time: 2024-02-24 12:00:00
                   log: logging...
                   detail:
-                    graph_name: demo
+                    graph_id: GRAPHID
                 - id: JOB-QWERTYUIOPASDFGH-5
                   type: DATA IMPORT
                   status: WAITING
                   detail:
-                    graph_name: demo
+                    graph_id: GRAPHID
         500:
           $ref: '#/components/responses/500'
 
@@ -1624,6 +2025,11 @@ paths:
           required: true
           schema:
             type: string
+        - name: delete_scheduler
+          in: query
+          required: false
+          schema:
+            type: boolean
       responses:
         200:
           description: Successfuly cancelled the job
@@ -1631,6 +2037,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/job/{job_id}/resume:
+    post:
+      tags: [Job]
+      description: Resume an existing job
+      operationId: resumeJob
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully resumed a job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/job/{job_id}/pause:
+    post:
+      tags: [Job]
+      description: Pause an existing job
+      operationId: pauseJob
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully paused the job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        400:
+          $ref: '#/components/responses/400'
         500:
           $ref: '#/components/responses/500'
 
@@ -1664,9 +2116,9 @@ paths:
           $ref: '#/components/responses/500'
 
   /api/v1/graph/{graph_id}/dataloading/config:
-    get:
+    post:
       tags: [Job]
-      description: Get the data loading configuration
+      description: Post to get the data loading configuration for MapReduce Task
       operationId: getDataloadingJobConfig
       parameters:
         - name: graph_id
@@ -1674,13 +2126,20 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataloadingJobConfig'
+        required: true
       responses:
         200:
-          description: Successfully returned the dataloading job configuration
+          description: Successfully returned the job configuration for MapReduce Task
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataloadingJobConfig'
+                $ref: '#/components/schemas/DataloadingMRJobConfig'
+              example: "split.size=32\nseparator=\\\\|\ngraph.endpoint=11.11.11.11:55556\nproject=graphscope"
         500:
           $ref: '#/components/responses/500'
 
@@ -1920,6 +2379,36 @@ paths:
         500:
           $ref: '#/components/responses/500'
 
+  /api/v1/service/pause:
+    post:
+      tags: [Service]
+      description: Pause data loading
+      operationId: pauseDataLoading
+      responses:
+        200:
+          description: Successfully paused data loading
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/service/resume:
+    post:
+      tags: [Service]
+      description: Resume data loading
+      operationId: resumeDataLoading
+      responses:
+        200:
+          description: Successfully resume data loading
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
   /api/v1/service:
     get:
       tags: [Service]
@@ -1968,7 +2457,7 @@ paths:
                 status: Running
                 sdk_endpoints:
                   cypher: neo4j://mock.api.cypher:7676
-                  gremin: ws://mock.api.gremlin/gremlin
+                  gremlin: ws://mock.api.gremlin/gremlin
                   hqps: http://mock.api.hqps:10000
                 start_time: '2024-01-01 00:00:00'
         500:
@@ -2297,10 +2786,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UploadFileResponse'
+              example:
+                file_path: /home/graphscope/path/to/file.csv
+                metadata:
+                  datasource: file
+                  file_type: csv
         500:
           $ref: '#/components/responses/500'
 
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/1.0.0
+    url: https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/1.9.2
