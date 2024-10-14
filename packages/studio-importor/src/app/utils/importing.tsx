@@ -130,11 +130,11 @@ export function transMappingSchemaToOptions(
       };
 
       if ('destination_vertex_mappings' in match) {
-        const { source_vertex_mappings, destination_vertex_mappings, properties_mappings } = match;
+        const { source_vertex_mappings = [], destination_vertex_mappings = [], properties_mappings } = match;
         const filelocation = match.inputs[0];
         const realEdgeProperties = [
-          source_vertex_mappings && source_vertex_mappings[0].column,
-          destination_vertex_mappings && destination_vertex_mappings[0].column,
+          source_vertex_mappings[0].column,
+          destination_vertex_mappings[0].column,
           ...properties,
         ];
         return {
@@ -157,14 +157,14 @@ export function transMappingSchemaToOptions(
               };
             }),
             source_vertex_fields: {
-              index: source_vertex_mappings && source_vertex_mappings[0].column.index,
-              token: source_vertex_mappings && source_vertex_mappings[0].column.name,
-              name: source_vertex_mappings && source_vertex_mappings[0].property,
+              index: source_vertex_mappings[0].column.index,
+              token: source_vertex_mappings[0].column.name,
+              name: source_vertex_mappings[0].property,
             },
             target_vertex_fields: {
-              index: destination_vertex_mappings && destination_vertex_mappings[0].column.index,
-              token: destination_vertex_mappings && destination_vertex_mappings[0].column.name,
-              name: destination_vertex_mappings && destination_vertex_mappings[0].property,
+              index: destination_vertex_mappings[0].column.index,
+              token: destination_vertex_mappings[0].column.name,
+              name: destination_vertex_mappings[0].property,
             },
           },
         };
