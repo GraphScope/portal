@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * GraphScope FLEX HTTP SERVICE API
- * This is a specification for GraphScope FLEX HTTP service based on the OpenAPI 3.0 specification. You can find out more details about specification at [doc](https://swagger.io/specification/v3/).  Some useful links: - [GraphScope Repository](https://github.com/alibaba/GraphScope) - [The Source API definition for GraphScope Interactive](https://github.com/GraphScope/portal/tree/main/httpservice)
+ * This is a specification for GraphScope FLEX HTTP service based on the OpenAPI 3.0 specification. You can find out more details about specification at [doc](https://swagger.io/specification/v3/).
  *
  * The version of the OpenAPI document: 1.0.0
  * Contact: graphscope@alibaba-inc.com
@@ -77,7 +77,7 @@ export interface BaseEdgeTypeVertexTypePairRelationsInner {
      * @type {string}
      * @memberof BaseEdgeTypeVertexTypePairRelationsInner
      */
-    'relation': BaseEdgeTypeVertexTypePairRelationsInnerRelationEnum;
+    'relation'?: BaseEdgeTypeVertexTypePairRelationsInnerRelationEnum;
     /**
      * 
      * @type {BaseEdgeTypeVertexTypePairRelationsInnerXCsrParams}
@@ -379,7 +379,7 @@ export interface CreateEdgeType {
      * @type {Array<CreatePropertyMeta>}
      * @memberof CreateEdgeType
      */
-    'properties': Array<CreatePropertyMeta>;
+    'properties'?: Array<CreatePropertyMeta>;
     /**
      * 
      * @type {string}
@@ -709,6 +709,32 @@ export interface DataloadingJobConfigVerticesInner {
 /**
  * 
  * @export
+ * @interface DataloadingMRJobConfig
+ */
+export interface DataloadingMRJobConfig {
+    /**
+     * 
+     * @type {string}
+     * @memberof DataloadingMRJobConfig
+     */
+    'config': string;
+}
+/**
+ * 
+ * @export
+ * @interface DateType
+ */
+export interface DateType {
+    /**
+     * 
+     * @type {string}
+     * @memberof DateType
+     */
+    'date32': string;
+}
+/**
+ * 
+ * @export
  * @interface EdgeMapping
  */
 export interface EdgeMapping {
@@ -729,13 +755,13 @@ export interface EdgeMapping {
      * @type {Array<ColumnMapping>}
      * @memberof EdgeMapping
      */
-    'source_vertex_mappings': Array<ColumnMapping>;
+    'source_vertex_mappings'?: Array<ColumnMapping>;
     /**
      * 
      * @type {Array<ColumnMapping>}
      * @memberof EdgeMapping
      */
-    'destination_vertex_mappings': Array<ColumnMapping>;
+    'destination_vertex_mappings'?: Array<ColumnMapping>;
     /**
      * 
      * @type {Array<ColumnMapping>}
@@ -772,7 +798,7 @@ export interface EdgeMappingTypeTriplet {
  * @type GSDataType
  * @export
  */
-export type GSDataType = PrimitiveType | StringType;
+export type GSDataType = PrimitiveType | StringType | TemporalType;
 
 /**
  * 
@@ -1004,13 +1030,13 @@ export interface GetEdgeType {
      * @type {number}
      * @memberof GetEdgeType
      */
-    'type_id': number;
+    'type_id'?: number;
     /**
      * 
      * @type {Array<GetPropertyMeta>}
      * @memberof GetEdgeType
      */
-    'properties': Array<GetPropertyMeta>;
+    'properties'?: Array<GetPropertyMeta>;
     /**
      * 
      * @type {string}
@@ -1108,6 +1134,19 @@ export interface GetGraphSchemaResponse {
 /**
  * 
  * @export
+ * @interface GetPodLogResponse
+ */
+export interface GetPodLogResponse {
+    /**
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof GetPodLogResponse
+     */
+    'log': { [key: string]: any; };
+}
+/**
+ * 
+ * @export
  * @interface GetPropertyMeta
  */
 export interface GetPropertyMeta {
@@ -1147,6 +1186,38 @@ export interface GetPropertyMeta {
      * @memberof GetPropertyMeta
      */
     'property_id': number;
+}
+/**
+ * 
+ * @export
+ * @interface GetResourceUsageResponse
+ */
+export interface GetResourceUsageResponse {
+    /**
+     * 
+     * @type {Array<ResourceUsage>}
+     * @memberof GetResourceUsageResponse
+     */
+    'cpu_usage': Array<ResourceUsage>;
+    /**
+     * 
+     * @type {Array<ResourceUsage>}
+     * @memberof GetResourceUsageResponse
+     */
+    'memory_usage': Array<ResourceUsage>;
+}
+/**
+ * 
+ * @export
+ * @interface GetStorageUsageResponse
+ */
+export interface GetStorageUsageResponse {
+    /**
+     * 
+     * @type {{ [key: string]: number; }}
+     * @memberof GetStorageUsageResponse
+     */
+    'storage_usage': { [key: string]: number; };
 }
 /**
  * 
@@ -1252,7 +1323,7 @@ export interface GetVertexType {
      * @type {number}
      * @memberof GetVertexType
      */
-    'type_id': number;
+    'type_id'?: number;
     /**
      * 
      * @type {Array<GetPropertyMeta>}
@@ -1411,6 +1482,79 @@ export interface Parameter {
 /**
  * 
  * @export
+ * @interface PodStatus
+ */
+export interface PodStatus {
+    /**
+     * 
+     * @type {string}
+     * @memberof PodStatus
+     */
+    'name': string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PodStatus
+     */
+    'image': Array<string>;
+    /**
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof PodStatus
+     */
+    'labels': { [key: string]: any; };
+    /**
+     * 
+     * @type {string}
+     * @memberof PodStatus
+     */
+    'node': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PodStatus
+     */
+    'status': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PodStatus
+     */
+    'restart_count': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PodStatus
+     */
+    'cpu_usage': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PodStatus
+     */
+    'memory_usage': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PodStatus
+     */
+    'timestamp'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PodStatus
+     */
+    'creation_time': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PodStatus
+     */
+    'component_belong_to'?: string;
+}
+/**
+ * 
+ * @export
  * @interface PrimitiveType
  */
 export interface PrimitiveType {
@@ -1434,6 +1578,31 @@ export const PrimitiveTypePrimitiveTypeEnum = {
 
 export type PrimitiveTypePrimitiveTypeEnum = typeof PrimitiveTypePrimitiveTypeEnum[keyof typeof PrimitiveTypePrimitiveTypeEnum];
 
+/**
+ * 
+ * @export
+ * @interface ResourceUsage
+ */
+export interface ResourceUsage {
+    /**
+     * 
+     * @type {string}
+     * @memberof ResourceUsage
+     */
+    'host': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResourceUsage
+     */
+    'timestamp': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResourceUsage
+     */
+    'usage': string;
+}
 /**
  * 
  * @export
@@ -1503,7 +1672,8 @@ export const RunningDeploymentInfoEngineEnum = {
 
 export type RunningDeploymentInfoEngineEnum = typeof RunningDeploymentInfoEngineEnum[keyof typeof RunningDeploymentInfoEngineEnum];
 export const RunningDeploymentInfoStorageEnum = {
-    MutableCsr: 'MutableCSR'
+    MutableCsr: 'MutableCSR',
+    MutablePersistent: 'MutablePersistent'
 } as const;
 
 export type RunningDeploymentInfoStorageEnum = typeof RunningDeploymentInfoStorageEnum[keyof typeof RunningDeploymentInfoStorageEnum];
@@ -1522,10 +1692,16 @@ export interface RunningDeploymentStatus {
     'cluster_type': RunningDeploymentStatusClusterTypeEnum;
     /**
      * 
-     * @type {Array<RunningDeploymentStatusNodesInner>}
+     * @type {Array<NodeStatus>}
      * @memberof RunningDeploymentStatus
      */
-    'nodes': Array<RunningDeploymentStatusNodesInner>;
+    'nodes'?: Array<NodeStatus>;
+    /**
+     * 
+     * @type {{ [key: string]: Array<PodStatus>; }}
+     * @memberof RunningDeploymentStatus
+     */
+    'pods'?: { [key: string]: Array<PodStatus>; };
 }
 
 export const RunningDeploymentStatusClusterTypeEnum = {
@@ -1534,12 +1710,6 @@ export const RunningDeploymentStatusClusterTypeEnum = {
 } as const;
 
 export type RunningDeploymentStatusClusterTypeEnum = typeof RunningDeploymentStatusClusterTypeEnum[keyof typeof RunningDeploymentStatusClusterTypeEnum];
-
-/**
- * @type RunningDeploymentStatusNodesInner
- * @export
- */
-export type RunningDeploymentStatusNodesInner = NodeStatus;
 
 /**
  * 
@@ -1728,6 +1898,38 @@ export type StringTypeString = LongText;
 /**
  * 
  * @export
+ * @interface TemporalType
+ */
+export interface TemporalType {
+    /**
+     * 
+     * @type {TemporalTypeTemporal}
+     * @memberof TemporalType
+     */
+    'temporal': TemporalTypeTemporal;
+}
+/**
+ * @type TemporalTypeTemporal
+ * @export
+ */
+export type TemporalTypeTemporal = DateType | TimeStampType;
+
+/**
+ * 
+ * @export
+ * @interface TimeStampType
+ */
+export interface TimeStampType {
+    /**
+     * 
+     * @type {string}
+     * @memberof TimeStampType
+     */
+    'timestamp': string;
+}
+/**
+ * 
+ * @export
  * @interface UpdateAlertMessageStatusRequest
  */
 export interface UpdateAlertMessageStatusRequest {
@@ -1778,6 +1980,12 @@ export interface UploadFileResponse {
      * @memberof UploadFileResponse
      */
     'file_path': string;
+    /**
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof UploadFileResponse
+     */
+    'metadata': { [key: string]: any; };
 }
 /**
  * 
@@ -1802,7 +2010,7 @@ export interface VertexMapping {
      * @type {Array<ColumnMapping>}
      * @memberof VertexMapping
      */
-    'column_mappings': Array<ColumnMapping>;
+    'column_mappings'?: Array<ColumnMapping>;
 }
 
 /**
@@ -2935,12 +3143,120 @@ export const DeploymentApiAxiosParamCreator = function (configuration?: Configur
             };
         },
         /**
-         * Deployment status
+         * [Deprecated] Get kubernetes pod\'s log
+         * @param {string} podName 
+         * @param {string} component 
+         * @param {boolean} fromCache 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDeploymentPodLog: async (podName: string, component: string, fromCache: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'podName' is not null or undefined
+            assertParamExists('getDeploymentPodLog', 'podName', podName)
+            // verify required parameter 'component' is not null or undefined
+            assertParamExists('getDeploymentPodLog', 'component', component)
+            // verify required parameter 'fromCache' is not null or undefined
+            assertParamExists('getDeploymentPodLog', 'fromCache', fromCache)
+            const localVarPath = `/api/v1/deployment/log`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (podName !== undefined) {
+                localVarQueryParameter['pod_name'] = podName;
+            }
+
+            if (component !== undefined) {
+                localVarQueryParameter['component'] = component;
+            }
+
+            if (fromCache !== undefined) {
+                localVarQueryParameter['from_cache'] = fromCache;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * [Deprecated] Get resource usage(cpu/memory) of cluster
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDeploymentResourceUsage: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/v1/deployment/resource/usage`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Get deployment status of cluster
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         getDeploymentStatus: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/v1/deployment/status`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * [Deprecated] Get storage usage of Groot
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getStorageUsage: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/v1/deployment/storage/usage`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2985,7 +3301,32 @@ export const DeploymentApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
         },
         /**
-         * Deployment status
+         * [Deprecated] Get kubernetes pod\'s log
+         * @param {string} podName 
+         * @param {string} component 
+         * @param {boolean} fromCache 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getDeploymentPodLog(podName: string, component: string, fromCache: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetPodLogResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getDeploymentPodLog(podName, component, fromCache, options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['DeploymentApi.getDeploymentPodLog']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * [Deprecated] Get resource usage(cpu/memory) of cluster
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getDeploymentResourceUsage(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetResourceUsageResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getDeploymentResourceUsage(options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['DeploymentApi.getDeploymentResourceUsage']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * Get deployment status of cluster
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2993,6 +3334,17 @@ export const DeploymentApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getDeploymentStatus(options);
             const index = configuration?.serverIndex ?? 0;
             const operationBasePath = operationServerMap['DeploymentApi.getDeploymentStatus']?.[index]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
+        },
+        /**
+         * [Deprecated] Get storage usage of Groot
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getStorageUsage(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetStorageUsageResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getStorageUsage(options);
+            const index = configuration?.serverIndex ?? 0;
+            const operationBasePath = operationServerMap['DeploymentApi.getStorageUsage']?.[index]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
         },
     }
@@ -3014,12 +3366,39 @@ export const DeploymentApiFactory = function (configuration?: Configuration, bas
             return localVarFp.getDeploymentInfo(options).then((request) => request(axios, basePath));
         },
         /**
-         * Deployment status
+         * [Deprecated] Get kubernetes pod\'s log
+         * @param {string} podName 
+         * @param {string} component 
+         * @param {boolean} fromCache 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDeploymentPodLog(podName: string, component: string, fromCache: boolean, options?: any): AxiosPromise<GetPodLogResponse> {
+            return localVarFp.getDeploymentPodLog(podName, component, fromCache, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * [Deprecated] Get resource usage(cpu/memory) of cluster
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDeploymentResourceUsage(options?: any): AxiosPromise<GetResourceUsageResponse> {
+            return localVarFp.getDeploymentResourceUsage(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get deployment status of cluster
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         getDeploymentStatus(options?: any): AxiosPromise<RunningDeploymentStatus> {
             return localVarFp.getDeploymentStatus(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * [Deprecated] Get storage usage of Groot
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getStorageUsage(options?: any): AxiosPromise<GetStorageUsageResponse> {
+            return localVarFp.getStorageUsage(options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -3042,13 +3421,46 @@ export class DeploymentApi extends BaseAPI {
     }
 
     /**
-     * Deployment status
+     * [Deprecated] Get kubernetes pod\'s log
+     * @param {string} podName 
+     * @param {string} component 
+     * @param {boolean} fromCache 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DeploymentApi
+     */
+    public getDeploymentPodLog(podName: string, component: string, fromCache: boolean, options?: RawAxiosRequestConfig) {
+        return DeploymentApiFp(this.configuration).getDeploymentPodLog(podName, component, fromCache, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * [Deprecated] Get resource usage(cpu/memory) of cluster
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DeploymentApi
+     */
+    public getDeploymentResourceUsage(options?: RawAxiosRequestConfig) {
+        return DeploymentApiFp(this.configuration).getDeploymentResourceUsage(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get deployment status of cluster
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DeploymentApi
      */
     public getDeploymentStatus(options?: RawAxiosRequestConfig) {
         return DeploymentApiFp(this.configuration).getDeploymentStatus(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * [Deprecated] Get storage usage of Groot
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DeploymentApi
+     */
+    public getStorageUsage(options?: RawAxiosRequestConfig) {
+        return DeploymentApiFp(this.configuration).getStorageUsage(options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -3806,10 +4218,11 @@ export const JobApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * Delete job by ID
          * @param {string} jobId 
+         * @param {boolean} [deleteScheduler] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteJobById: async (jobId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deleteJobById: async (jobId: string, deleteScheduler?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'jobId' is not null or undefined
             assertParamExists('deleteJobById', 'jobId', jobId)
             const localVarPath = `/api/v1/job/{job_id}`
@@ -3825,6 +4238,10 @@ export const JobApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            if (deleteScheduler !== undefined) {
+                localVarQueryParameter['delete_scheduler'] = deleteScheduler;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -3837,14 +4254,17 @@ export const JobApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * Get the data loading configuration
+         * Post to get the data loading configuration for MapReduce Task
          * @param {string} graphId 
+         * @param {DataloadingJobConfig} dataloadingJobConfig 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getDataloadingJobConfig: async (graphId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getDataloadingJobConfig: async (graphId: string, dataloadingJobConfig: DataloadingJobConfig, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'graphId' is not null or undefined
             assertParamExists('getDataloadingJobConfig', 'graphId', graphId)
+            // verify required parameter 'dataloadingJobConfig' is not null or undefined
+            assertParamExists('getDataloadingJobConfig', 'dataloadingJobConfig', dataloadingJobConfig)
             const localVarPath = `/api/v1/graph/{graph_id}/dataloading/config`
                 .replace(`{${"graph_id"}}`, encodeURIComponent(String(graphId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -3854,15 +4274,18 @@ export const JobApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(dataloadingJobConfig, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -3983,23 +4406,25 @@ export const JobApiFp = function(configuration?: Configuration) {
         /**
          * Delete job by ID
          * @param {string} jobId 
+         * @param {boolean} [deleteScheduler] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteJobById(jobId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteJobById(jobId, options);
+        async deleteJobById(jobId: string, deleteScheduler?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteJobById(jobId, deleteScheduler, options);
             const index = configuration?.serverIndex ?? 0;
             const operationBasePath = operationServerMap['JobApi.deleteJobById']?.[index]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
         },
         /**
-         * Get the data loading configuration
+         * Post to get the data loading configuration for MapReduce Task
          * @param {string} graphId 
+         * @param {DataloadingJobConfig} dataloadingJobConfig 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getDataloadingJobConfig(graphId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DataloadingJobConfig>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getDataloadingJobConfig(graphId, options);
+        async getDataloadingJobConfig(graphId: string, dataloadingJobConfig: DataloadingJobConfig, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DataloadingMRJobConfig>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getDataloadingJobConfig(graphId, dataloadingJobConfig, options);
             const index = configuration?.serverIndex ?? 0;
             const operationBasePath = operationServerMap['JobApi.getDataloadingJobConfig']?.[index]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, operationBasePath || basePath);
@@ -4053,20 +4478,22 @@ export const JobApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * Delete job by ID
          * @param {string} jobId 
+         * @param {boolean} [deleteScheduler] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteJobById(jobId: string, options?: any): AxiosPromise<string> {
-            return localVarFp.deleteJobById(jobId, options).then((request) => request(axios, basePath));
+        deleteJobById(jobId: string, deleteScheduler?: boolean, options?: any): AxiosPromise<string> {
+            return localVarFp.deleteJobById(jobId, deleteScheduler, options).then((request) => request(axios, basePath));
         },
         /**
-         * Get the data loading configuration
+         * Post to get the data loading configuration for MapReduce Task
          * @param {string} graphId 
+         * @param {DataloadingJobConfig} dataloadingJobConfig 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getDataloadingJobConfig(graphId: string, options?: any): AxiosPromise<DataloadingJobConfig> {
-            return localVarFp.getDataloadingJobConfig(graphId, options).then((request) => request(axios, basePath));
+        getDataloadingJobConfig(graphId: string, dataloadingJobConfig: DataloadingJobConfig, options?: any): AxiosPromise<DataloadingMRJobConfig> {
+            return localVarFp.getDataloadingJobConfig(graphId, dataloadingJobConfig, options).then((request) => request(axios, basePath));
         },
         /**
          * Get job status by ID
@@ -4108,23 +4535,25 @@ export class JobApi extends BaseAPI {
     /**
      * Delete job by ID
      * @param {string} jobId 
+     * @param {boolean} [deleteScheduler] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof JobApi
      */
-    public deleteJobById(jobId: string, options?: RawAxiosRequestConfig) {
-        return JobApiFp(this.configuration).deleteJobById(jobId, options).then((request) => request(this.axios, this.basePath));
+    public deleteJobById(jobId: string, deleteScheduler?: boolean, options?: RawAxiosRequestConfig) {
+        return JobApiFp(this.configuration).deleteJobById(jobId, deleteScheduler, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Get the data loading configuration
+     * Post to get the data loading configuration for MapReduce Task
      * @param {string} graphId 
+     * @param {DataloadingJobConfig} dataloadingJobConfig 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof JobApi
      */
-    public getDataloadingJobConfig(graphId: string, options?: RawAxiosRequestConfig) {
-        return JobApiFp(this.configuration).getDataloadingJobConfig(graphId, options).then((request) => request(this.axios, this.basePath));
+    public getDataloadingJobConfig(graphId: string, dataloadingJobConfig: DataloadingJobConfig, options?: RawAxiosRequestConfig) {
+        return JobApiFp(this.configuration).getDataloadingJobConfig(graphId, dataloadingJobConfig, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -130,7 +130,7 @@ export function transMappingSchemaToOptions(
       };
 
       if ('destination_vertex_mappings' in match) {
-        const { source_vertex_mappings, destination_vertex_mappings, properties_mappings } = match;
+        const { source_vertex_mappings = [], destination_vertex_mappings = [], properties_mappings } = match;
         const filelocation = match.inputs[0];
         const realEdgeProperties = [
           source_vertex_mappings[0].column,
