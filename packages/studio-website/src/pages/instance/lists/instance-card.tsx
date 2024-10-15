@@ -18,6 +18,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import { TOOLS_MENU } from '../../../layouts/const';
 import { Utils, useCustomToken } from '@graphscope/studio-components';
+import { useNavigate } from 'react-router-dom';
 export type InstaceCardType = {
   /** graph id */
   id: string;
@@ -175,14 +176,10 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     </>
   );
   const handleHistory = (path: string) => {
-    //@ts-ignore
-    const url = new URL(window.location);
-    const { searchParams } = url;
-    searchParams.set('engineType', 'interactive');
-    searchParams.set('graph_id', id);
-    url.pathname = path;
-    window.history.pushState({}, '', url);
-    history.push(`${path}?${searchParams.toString()}`);
+    history.push(path);
+    Utils.setSearchParams({
+      graph_id: id,
+    });
     updateStore(draft => {
       draft.graphId = id;
       draft.currentnNav = path;

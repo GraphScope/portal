@@ -13,6 +13,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { MenuProps } from 'antd';
 
+export const SETTING_MENU = [
+  {
+    label: <FormattedMessage id="navbar.setting" />,
+    key: '/setting',
+    icon: <SettingFilled />,
+  },
+];
 export const TOOLS_MENU = [
   {
     label: <FormattedMessage id="Modeling" />,
@@ -33,19 +40,7 @@ export const TOOLS_MENU = [
     icon: <FontAwesomeIcon icon={faMagnifyingGlass} />,
   },
 ];
-export const GROOT_CASE_MENU = [
-  {
-    label: <FormattedMessage id="navbar.alert" />,
-    key: '/alert',
-    icon: <FontAwesomeIcon icon={faBell} />,
-  },
-  {
-    label: <FormattedMessage id="navbar.deployment" />,
-    key: '/deployment',
-    value: '/deployment',
-    icon: <FontAwesomeIcon icon={faListCheck} />,
-  },
-];
+
 export const SYSTEM_MENU = [
   {
     label: <FormattedMessage id="navbar.jobs" />,
@@ -57,14 +52,8 @@ export const SYSTEM_MENU = [
     key: '/extension',
     icon: <FontAwesomeIcon icon={faPuzzlePiece} />,
   },
-  {
-    label: <FormattedMessage id="navbar.setting" />,
-    key: '/setting',
-    icon: <SettingFilled />,
-  },
 ];
 
-console.log(' window.GS_ENGINE_TYPE', window.GS_ENGINE_TYPE);
 export const SIDE_MENU: MenuProps['items'] = [
   {
     label: <FormattedMessage id="navbar.graphs" />,

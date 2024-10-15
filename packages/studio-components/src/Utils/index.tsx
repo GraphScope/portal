@@ -37,21 +37,27 @@ export const debounce = <T extends (...args: any[]) => void>(
   };
 };
 
-export const getSearchParams = (key: string) => {
+export const getSearchParams = (key?: string) => {
   // hash router
   if (window.location.hash.includes('?')) {
     const params = new URLSearchParams(window.location.hash.split('?')[1]);
-    return params.get(key);
+    if (key) {
+      return params.get(key);
+    }
+    return Object.fromEntries(params.entries());
   }
 
   // browser router
   //@ts-ignore
   const url = new URL(window.location);
   const { searchParams } = url;
-  return searchParams.get(key);
+  if (key) {
+    return searchParams.get(key);
+  }
+  return Object.fromEntries(searchParams.entries());
 };
-export const setSearchParams = (params: Record<string, string>) => {
-  const isHashMode = window.location.hash.startsWith('#/');
+export const setSearchParams = (params: Record<string, string>, HashMode?: boolean) => {
+  const isHashMode = window.location.hash.startsWith('#/') || HashMode;
 
   if (isHashMode) {
     // 处理 hash router
