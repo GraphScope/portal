@@ -27,7 +27,15 @@ const Legend: React.FunctionComponent<ILegendProps> = props => {
       content={<LengendContent {...props} />}
     >
       <Tag
-        style={{ borderRadius: '8px', backgroundColor: color, cursor: 'pointer', minWidth: '60px', minHeight: '22px' }}
+        style={{
+          textAlign: 'center',
+          borderRadius: '8px',
+          backgroundColor: color,
+          cursor: 'pointer',
+          minWidth: '60px',
+          minHeight: '22px',
+          color: '#000',
+        }}
         bordered={false}
       >
         {text}

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Button, TooltipProps, Tooltip } from 'antd';
+import { FormattedMessage } from 'react-intl';
 import { FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons';
 interface IFullScreenProps {
   title?: TooltipProps['title'];
@@ -24,7 +25,7 @@ const FullScreen: React.FunctionComponent<IFullScreenProps> = props => {
   };
 
   return (
-    <Tooltip title={title} placement={placement}>
+    <Tooltip title={<FormattedMessage id={`${title}`} />} placement={placement}>
       <Button icon={icon} onClick={handleClick} type="text" />
     </Tooltip>
   );

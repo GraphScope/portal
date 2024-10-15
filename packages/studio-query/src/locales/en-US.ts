@@ -67,4 +67,9 @@ export default {
   Password: 'Password',
   Connect: 'Connect',
   Close: 'Close',
+  'Select nodes by box selection': 'Select nodes by box selection',
+  'Switch graph view dimensions': 'Switch graph view dimensions',
+  'Zoom to fitview': 'Zoom to fitview',
+  Fullscreen: 'Fullscreen',
+  'Toggle Right Side': 'Toggle Right Side',
 };

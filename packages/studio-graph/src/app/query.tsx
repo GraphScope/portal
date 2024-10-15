@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { Button, Tooltip } from 'antd';
+import { FormattedMessage } from 'react-intl';
 import {
   MultipleInstance,
   Section,
@@ -7,6 +8,8 @@ import {
   useSection,
   Icons,
   FullScreen,
+  useCustomToken,
+  useStudioProvier,
 } from '@graphscope/studio-components';
 import {
   Toolbar,
@@ -39,11 +42,11 @@ interface QueryGraphProps {
   onQuery: (params: any) => Promise<any>;
 }
 
-const ToogleButton = () => {
+const ToogleButton = ({ color }) => {
   const { toggleRightSide } = useSection();
   return (
-    <Tooltip title="Toggle Right Side" placement="left">
-      <Button icon={<Icons.Sidebar revert />} onClick={() => toggleRightSide()} type="text" />
+    <Tooltip title={<FormattedMessage id="Toggle Right Side" />} placement="left">
+      <Button icon={<Icons.Sidebar revert style={{ color }} />} onClick={() => toggleRightSide()} type="text" />
     </Tooltip>
   );
 };
@@ -51,6 +54,9 @@ const ToogleButton = () => {
 const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
   const { data, schema, graphId, onQuery } = props;
   console.log('data>>>>', data);
+  const { buttonBackground } = useCustomToken();
+  const { isLight } = useStudioProvier();
+  const color = !isLight ? '#ddd' : '#000';
   const containerRef = useRef<HTMLDivElement | null>(null);
   const items = [
     {
@@ -106,8 +112,10 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
             <DeleteLeafNodes />
             <DeleteNode />
           </ContextMenu>
-          <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
-            <ToogleButton />
+          <Toolbar
+            style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset', background: buttonBackground }}
+          >
+            <ToogleButton color={color} />
             <Divider style={{ margin: '0px' }} />
             <FullScreen containerRef={containerRef} />
             <ZoomFit />
