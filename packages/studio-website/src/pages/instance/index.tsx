@@ -4,6 +4,7 @@ import { Button, Flex, Typography } from 'antd';
 import Section from '../../components/section';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
+import CreateInstance from './create';
 const Instance: React.FunctionComponent = () => {
   return (
     <Section
@@ -15,9 +16,7 @@ const Instance: React.FunctionComponent = () => {
       style={{ padding: '0px 20px' }}
     >
       <Flex align="end" justify="flex-start" style={{ padding: '16px 0px' }}>
-        <Button type="primary" icon={<PlusOutlined />}>
-          Create graph instance
-        </Button>
+        <CreateInstance />
       </Flex>
       <InstanceLists />
     </Section>
