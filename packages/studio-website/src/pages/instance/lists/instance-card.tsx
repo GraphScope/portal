@@ -211,7 +211,6 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     <Card
       styles={{ header: { fontSize: '30px' } }}
       title={name}
-      style={{ background: instanceBackground }}
       extra={
         <Space>
           {btnIcon && (

@@ -38,45 +38,36 @@ const InstanceCard: React.FC = () => {
   };
 
   return (
-    <Section
-      breadcrumb={[
-        {
-          title: 'Graphs',
-        },
-      ]}
-      desc="Listing all graphs on the cluster"
-    >
-      <Row gutter={[12, 12]}>
-        {[draftGraph, ...instanceList]
-          .filter(c => {
-            return Object.keys(c).length > 0;
-          })
-          .map((item, i) => (
-            <Col key={i} span={12}>
-              {/** @ts-ignore */}
-              <InstaceCard {...item} handleChange={() => fetchLists()} />
-            </Col>
-          ))}
-        {!isReady && (
-          <Col span={12}>
-            <Card
-              styles={{ header: { fontSize: '30px' } }}
-              title={<Skeleton.Button style={{ marginTop: '-10px', width: '120px' }} active />}
-              style={{ background: instanceBackground }}
-            >
-              <div style={{ display: 'flex', height: '164px', justifyContent: 'center', alignContent: 'center' }}>
-                <Skeleton active />
-              </div>
-            </Card>
+    <Row gutter={[12, 12]}>
+      {[draftGraph, ...instanceList]
+        .filter(c => {
+          return Object.keys(c).length > 0;
+        })
+        .map((item, i) => (
+          <Col key={i} span={24}>
+            {/** @ts-ignore */}
+            <InstaceCard {...item} handleChange={() => fetchLists()} />
           </Col>
-        )}
-        <Col span={12}>
-          <InteractiveCase>
-            <CreateGraph onCreate={handleCreate} />
-          </InteractiveCase>
+        ))}
+      {!isReady && (
+        <Col span={24}>
+          <Card
+            styles={{ header: { fontSize: '30px' } }}
+            title={<Skeleton.Button style={{ marginTop: '-10px', width: '120px' }} active />}
+            style={{ background: instanceBackground }}
+          >
+            <div style={{ display: 'flex', height: '164px', justifyContent: 'center', alignContent: 'center' }}>
+              <Skeleton active />
+            </div>
+          </Card>
         </Col>
-      </Row>
-    </Section>
+      )}
+      {/* <Col span={12}>
+        <InteractiveCase>
+          <CreateGraph onCreate={handleCreate} />
+        </InteractiveCase>
+      </Col> */}
+    </Row>
   );
 };
 

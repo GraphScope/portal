@@ -16,6 +16,7 @@ import SelectGraph from '../../layouts/select-graph';
 
 import { Utils } from '@graphscope/studio-components';
 import { getSchema } from '../modeling/services';
+import Section from '../../components/section';
 const getPrefixParams = () => {
   const { GS_ENGINE_TYPE } = window;
   const language =
@@ -98,7 +99,14 @@ const QueryModule = () => {
   };
 
   return (
-    <>
+    <Section
+      breadcrumb={[
+        {
+          title: 'Querying',
+        },
+      ]}
+      style={{ padding: '0px' }}
+    >
       <StudioQuery
         autoRun={autoRun}
         welcome={welcome}
@@ -127,13 +135,13 @@ const QueryModule = () => {
         connectComponent={<SelectGraph />}
         displaySidebarPosition={displaySidebarPosition}
         displaySidebarType={displaySidebarType}
-        sidebarStyle={{ width: '320px', padding: '0px' }}
+        sidebarStyle={{ width: '240px', padding: '0px' }}
         sidebarCollapsed={collapsed}
         previewGraphSchema={previewGraphSchema}
       ></StudioQuery>
       <StoppedServiceCase />
       <NoEndpointCase />
-    </>
+    </Section>
   );
 };
 

@@ -5,7 +5,7 @@ import { Toolbar, useCustomToken } from '@graphscope/studio-components';
 import { getSchema, createVertexTypeOrEdgeType, deleteVertexTypeOrEdgeType } from './services';
 import Save from './save-modeling';
 import SelectGraph from '../../layouts/select-graph';
-
+import Section from '../../components/section';
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 
@@ -36,35 +36,44 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
   };
 
   return (
-    <ImportApp
-      isSaveFiles={true}
-      key={graphId}
-      /** 创建图模型 */
-      appMode="DATA_MODELING"
-      defaultCollapsed={{
-        leftSide: true,
-        rightSide: true,
-      }}
-      //@ts-ignore
-      queryGraphSchema={queryGraphSchema}
-      /** 属性下拉选项值 */
-      queryPrimitiveTypes={() => {
-        return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {
-          return { label: item, value: item };
-        });
-      }}
-      GS_ENGINE_TYPE={GS_ENGINE_TYPE}
-      onDeleteLabel={deleteVertexTypeOrEdgeType}
-      onCreateLabel={createVertexTypeOrEdgeType}
+    <Section
+      breadcrumb={[
+        {
+          title: 'Modeling',
+        },
+      ]}
+      style={{ padding: '0px' }}
     >
-      <Toolbar
-        style={{ top: '12px', left: '24px', right: 'unset', background: buttonBackground }}
-        direction="horizontal"
+      <ImportApp
+        isSaveFiles={true}
+        key={graphId}
+        /** 创建图模型 */
+        appMode="DATA_MODELING"
+        defaultCollapsed={{
+          leftSide: true,
+          rightSide: true,
+        }}
+        //@ts-ignore
+        queryGraphSchema={queryGraphSchema}
+        /** 属性下拉选项值 */
+        queryPrimitiveTypes={() => {
+          return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {
+            return { label: item, value: item };
+          });
+        }}
+        GS_ENGINE_TYPE={GS_ENGINE_TYPE}
+        onDeleteLabel={deleteVertexTypeOrEdgeType}
+        onCreateLabel={createVertexTypeOrEdgeType}
       >
-        <SelectGraph />
-        <Save />
-      </Toolbar>
-    </ImportApp>
+        <Toolbar
+          style={{ top: '12px', left: '24px', right: 'unset', background: buttonBackground }}
+          direction="horizontal"
+        >
+          <SelectGraph />
+          <Save />
+        </Toolbar>
+      </ImportApp>
+    </Section>
   );
 };
 
