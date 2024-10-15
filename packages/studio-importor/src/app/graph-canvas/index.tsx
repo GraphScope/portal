@@ -55,6 +55,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           nodesDraggable={true} // 禁用节点拖拽
           proOptions={{ hideAttribution: true }} // 隐藏 reactflow 标识
           onDoubleClick={onDoubleClick}
+          minZoom={0.01}
         >
           <ArrowMarker selectedColor={theme.primaryColor} color={!isLight ? '#d7d7d7' : '#000'} />
           {/* {!IS_PURE && (
@@ -67,12 +68,14 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
               }}
             />
           )} */}
-          <Background
-            style={{
-              // background: '#f4f5f5',
-              background: rfBG,
-            }}
-          />
+          {!IS_PURE && (
+            <Background
+              style={{
+                // background: '#f4f5f5',
+                background: rfBG,
+              }}
+            />
+          )}
           {isEmpty && <EmptyCanvas description={description} />}
           {!IS_PURE && <MiniMap style={{ backgroundColor: !isLight ? '#161616' : '' }} />}
         </ReactFlow>
