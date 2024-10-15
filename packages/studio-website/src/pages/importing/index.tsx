@@ -9,6 +9,7 @@ import SelectGraph from '../../layouts/select-graph';
 import EmptyModelCase from './empty-model-case';
 import Section from '../../components/section';
 import localforage from 'localforage';
+import { FormattedMessage } from 'react-intl';
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
@@ -54,7 +55,7 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
     <Section
       breadcrumb={[
         {
-          title: 'Importing',
+          title: <FormattedMessage id="Importing" />,
         },
       ]}
       style={{ padding: '0px' }}

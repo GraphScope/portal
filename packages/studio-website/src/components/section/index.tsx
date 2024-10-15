@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Divider, Typography, Tabs, Space, Breadcrumb } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import type { TabsProps } from 'antd';
-import { CreatePortal } from '@graphscope/studio-components';
+import { CreatePortal, SegmentedTabs } from '@graphscope/studio-components';
 interface IFormattedMessage {
   id: string;
   values?: { [key: string]: string };
@@ -10,14 +10,14 @@ interface IFormattedMessage {
 interface ISectionProps {
   title?: string;
   desc?: string | IFormattedMessage;
-  breadcrumb?: { title: string | IFormattedMessage }[];
+  breadcrumb?: { title: React.ReactNode }[];
   children?: React.ReactNode;
   items?: TabsProps['items'];
   style?: React.CSSProperties;
 }
 
 const Section: React.FunctionComponent<ISectionProps> = props => {
-  const { title, desc, breadcrumb, children, items, style } = props;
+  const { breadcrumb = [], children, items, style } = props;
 
   return (
     <div
@@ -35,12 +35,10 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
 
       {items && (
         <div style={{ padding: '24px' }}>
-          <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+          {/** @ts-ignore */}
+          <SegmentedTabs items={items} />
         </div>
       )}
-      {/* <Typography.Text type="secondary" style={{ margin: '20px', display: 'block' }}>
-        {desc}
-      </Typography.Text> */}
       <div
         style={{
           padding: '24px 24px 24px 24px',

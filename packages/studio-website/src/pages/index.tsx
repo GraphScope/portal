@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { Routes, Route, Navigate, HashRouter } from 'react-router-dom';
 import { StudioProvier, Layout } from '@graphscope/studio-components';
-import { SIDE_MENU } from './const';
+import { SIDE_MENU, SETTING_MENU } from './const';
 
 import locales from '../locales';
 interface IPagesProps {
@@ -49,7 +49,7 @@ const Pages: React.FunctionComponent<IPagesProps> = props => {
     <StudioProvier locales={locales}>
       <HashRouter>
         <Routes>
-          <Route path="/" element={<Layout sideMenu={[SIDE_MENU]} />}>
+          <Route path="/" element={<Layout sideMenu={[SIDE_MENU, SETTING_MENU]} />}>
             {routeComponents}
             {children}
           </Route>

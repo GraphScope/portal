@@ -7,13 +7,14 @@ import RoundedCorner from './rounded-corner';
 import International from './International';
 import NavStyle from './nav-style';
 import QuerySetting from './query-setting';
+import { FormattedMessage } from 'react-intl';
 const Setting: React.FunctionComponent = () => {
   return (
     <div>
       <Section
         breadcrumb={[
           {
-            title: 'Appearance Setting',
+            title: <FormattedMessage id="Appearance Setting" />,
           },
         ]}
         desc="Change how Untitled UI looks and feels in your browser"

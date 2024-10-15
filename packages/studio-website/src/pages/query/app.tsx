@@ -17,6 +17,7 @@ import SelectGraph from '../../layouts/select-graph';
 import { Utils } from '@graphscope/studio-components';
 import { getSchema } from '../modeling/services';
 import Section from '../../components/section';
+import { FormattedMessage } from 'react-intl';
 const getPrefixParams = () => {
   const { GS_ENGINE_TYPE } = window;
   const language =
@@ -102,7 +103,7 @@ const QueryModule = () => {
     <Section
       breadcrumb={[
         {
-          title: 'Querying',
+          title: <FormattedMessage id="Querying" />,
         },
       ]}
       style={{ padding: '0px' }}

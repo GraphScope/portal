@@ -31,7 +31,7 @@ const Extension: React.FunctionComponent = () => {
       <Section
         breadcrumb={[
           {
-            title: 'Extensions',
+            title: <FormattedMessage id="Extensions" />,
           },
         ]}
         desc="GraphScope provides an extension plugin mechanism, allowing you to flexibly create various types of plugins such as graph learning, store procedures, and graph analysis according to business needs."

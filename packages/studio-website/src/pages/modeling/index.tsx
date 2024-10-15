@@ -6,6 +6,7 @@ import { getSchema, createVertexTypeOrEdgeType, deleteVertexTypeOrEdgeType } fro
 import Save from './save-modeling';
 import SelectGraph from '../../layouts/select-graph';
 import Section from '../../components/section';
+import { FormattedMessage } from 'react-intl';
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 
@@ -39,7 +40,7 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
     <Section
       breadcrumb={[
         {
-          title: 'Modeling',
+          title: <FormattedMessage id="Modeling" />,
         },
       ]}
       style={{ padding: '0px' }}
