@@ -1,6 +1,5 @@
-import { theme } from 'antd';
 import React from 'react';
-const { useToken } = theme;
+
 export const LogoImage = ({
   style,
   colors = ['#2281f2', '#1fb2fd', '#37edd7'],
@@ -114,36 +113,20 @@ export const LogoText = ({ style, color = '#333' }: { style: React.CSSProperties
   );
 };
 
-const Logo = (props: { style: any; onlyIcon?: boolean; colors?: string[]; textColor?: string }) => {
-  const { style, onlyIcon, textColor } = props;
-  const { token } = useToken();
+const Logo = (props: { style?: any; onlyIcon?: boolean }) => {
+  const { style = {}, onlyIcon } = props;
 
-  const colors = props.colors || [token.colorPrimary, '#1fb2fd', '#37edd7']; //'#2281f2'
-
-  const textStyle = onlyIcon
-    ? {
-        width: 0,
-        transition: 'all 0.3s ease',
-      }
-    : {
-        transition: 'all 0.3s ease',
-      };
   return (
-    <div style={style}>
-      <div
-        style={{
-          height: '50px',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: onlyIcon ? '0px' : '6px',
-        }}
-      >
-        <LogoImage style={{ height: '50px', width: '60px', marginTop: '-5px' }} colors={colors} />
-        <LogoText style={textStyle} color={textColor || token.colorText} />
-      </div>
+    <div
+      style={{
+        overflow: 'hidden',
+        // padding: '0px 14px',
+        // width: onlyIcon ? `56px` : `150px`,
+        ...style,
+      }}
+    >
+      <LogoImage style={{ width: '28px', marginTop: '-4px', marginRight: '6px' }} />
+      <LogoText style={{ width: '120px', height: '54px' }} />
     </div>
   );
 };
