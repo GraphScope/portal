@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-
+import { StudioProvier } from '@graphscope/studio-components';
 import Layout from '../layouts';
-
+import locales from '../locales';
 interface IPagesProps {
   children?: React.ReactNode;
 }
@@ -45,14 +45,16 @@ const Pages: React.FunctionComponent<IPagesProps> = props => {
   });
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          {routeComponents}
-          {children}
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <StudioProvier locales={locales}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            {routeComponents}
+            {children}
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </StudioProvier>
   );
 };
 

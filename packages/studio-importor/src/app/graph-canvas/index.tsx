@@ -9,8 +9,8 @@ import { PlayCircleOutlined } from '@ant-design/icons';
 
 import useInteractive from './useInteractive';
 import { FormattedMessage } from 'react-intl';
+// import CustomControls from './CustomControls';
 
-import CustomControls from './CustomControls';
 interface IGraphEditorProps {}
 
 const fakeSnapshot = obj => {
@@ -52,12 +52,12 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           onConnectStart={onConnectStart}
           onConnectEnd={onConnectEnd}
           zoomOnDoubleClick={false}
-          nodesDraggable={isLocked} // 禁用节点拖拽
+          nodesDraggable={true} // 禁用节点拖拽
           proOptions={{ hideAttribution: true }} // 隐藏 reactflow 标识
-          // onDoubleClick={onDoubleClick}
+          onDoubleClick={onDoubleClick}
         >
           <ArrowMarker selectedColor={theme.primaryColor} color={!isLight ? '#d7d7d7' : '#000'} />
-          {!IS_PURE && (
+          {/* {!IS_PURE && (
             <CustomControls
               isLocked={isLocked}
               handleLocked={val => {
@@ -66,7 +66,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
                 });
               }}
             />
-          )}
+          )} */}
           <Background
             style={{
               // background: '#f4f5f5',
