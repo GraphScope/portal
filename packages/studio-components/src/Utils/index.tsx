@@ -38,19 +38,46 @@ export const debounce = <T extends (...args: any[]) => void>(
 };
 
 export const getSearchParams = (key: string) => {
+  // hash router
+  if (window.location.hash.includes('?')) {
+    const params = new URLSearchParams(window.location.hash.split('?')[1]);
+    return params.get(key);
+  }
+
+  // browser router
   //@ts-ignore
   const url = new URL(window.location);
   const { searchParams } = url;
   return searchParams.get(key);
 };
 export const setSearchParams = (params: Record<string, string>) => {
-  //@ts-ignore
-  const url = new URL(window.location);
-  const { searchParams } = url;
-  Object.keys(params).forEach(key => {
-    searchParams.set(key, params[key]);
-  });
-  window.history.pushState({}, '', url);
+  const isHashMode = window.location.hash.startsWith('#/');
+
+  if (isHashMode) {
+    // 处理 hash router
+    let hash = window.location.hash.substring(1);
+    const [path, search] = hash.split('?');
+    const searchParams = new URLSearchParams(search);
+
+    // 更新 searchParams
+    Object.keys(params).forEach(key => {
+      searchParams.set(key, params[key]);
+    });
+
+    window.location.hash = '#' + path + '?' + searchParams.toString();
+  } else {
+    // 处理 browser router
+    //@ts-ignore
+    const url = new URL(window.location);
+    const { searchParams } = url;
+
+    Object.keys(params).forEach(key => {
+      searchParams.set(key, params[key]);
+    });
+
+    // 更新浏览器的 URL，只改变 search 部分
+    window.history.pushState({}, '', url);
+  }
 };
 
 export const searchParamOf = (key: string) => {
