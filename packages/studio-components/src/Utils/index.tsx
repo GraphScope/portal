@@ -40,10 +40,8 @@ export const getAllSearchParams = () => {
   // hash router
   if (window.location.hash.includes('?')) {
     const params = new URLSearchParams(window.location.hash.split('?')[1]);
-
     return Object.fromEntries(params.entries());
   }
-
   // browser router
   //@ts-ignore
   const url = new URL(window.location);

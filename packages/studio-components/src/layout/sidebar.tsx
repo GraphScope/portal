@@ -7,7 +7,7 @@ import { useSection } from '../Section/useSection';
 
 import Header from './header';
 import CollapsedButton from './collapsed';
-import { getSearchParams, setSearchParams } from '../Utils';
+import { getAllSearchParams, setSearchParams } from '../Utils';
 
 interface ISidebar {
   sideStyle: {
@@ -39,7 +39,7 @@ const Sidebar: React.FunctionComponent<ISidebar> = props => {
   const activeKey = getActivekey();
 
   const onClick: MenuProps['onClick'] = e => {
-    const params = getSearchParams();
+    const params = getAllSearchParams();
     navigate(e.key);
     if (params && typeof params === 'object') {
       setSearchParams(params);
