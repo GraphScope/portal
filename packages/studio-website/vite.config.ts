@@ -10,6 +10,7 @@ const { PROXY_URL, BACKEND_URL, SLOT_URL = '' } = parsed || {};
 export default defineConfig({
   root: './',
   server: {
+    host: '0.0.0.0',
     port: 8000,
     open: '/',
     proxy: {

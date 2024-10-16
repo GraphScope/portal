@@ -36,14 +36,11 @@ export const debounce = <T extends (...args: any[]) => void>(
     }, wait);
   };
 };
-
-export const getSearchParams = (key?: string) => {
+export const getAllSearchParams = () => {
   // hash router
   if (window.location.hash.includes('?')) {
     const params = new URLSearchParams(window.location.hash.split('?')[1]);
-    if (key) {
-      return params.get(key);
-    }
+
     return Object.fromEntries(params.entries());
   }
 
@@ -51,10 +48,26 @@ export const getSearchParams = (key?: string) => {
   //@ts-ignore
   const url = new URL(window.location);
   const { searchParams } = url;
-  if (key) {
-    return searchParams.get(key);
-  }
+
   return Object.fromEntries(searchParams.entries());
+};
+
+export const getSearchParams = (key: string) => {
+  // hash router
+  if (window.location.hash.includes('?')) {
+    const params = new URLSearchParams(window.location.hash.split('?')[1]);
+    if (key) {
+      return params.get(key) || '';
+    }
+  }
+  // browser router
+  //@ts-ignore
+  const url = new URL(window.location);
+  const { searchParams } = url;
+  if (key) {
+    return searchParams.get(key) || '';
+  }
+  return '';
 };
 export const setSearchParams = (params: Record<string, string>, HashMode?: boolean) => {
   const isHashMode = window.location.hash.startsWith('#/') || HashMode;
