@@ -74,4 +74,5 @@ export default {
   'Data Fields': 'Data Fields',
   'Add Property': 'Add Property',
   Properties: 'Properties',
+  'Uploading...': 'Uploading...',
 };

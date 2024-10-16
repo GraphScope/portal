@@ -74,4 +74,5 @@ export default {
   'Data Fields': '数据',
   'Add Property': '添加属性',
   Properties: '属性',
+  'Uploading...': '上传中...',
 };
