@@ -11,15 +11,23 @@ export const getSearchParams = (location: Location) => {
   };
 };
 
-export const notification = (type: string, data: any) => {
+export const notification = (type: string, data: any, defaultData?: string) => {
   if (type === 'success') {
-    notifications.success({ message: `${data}` });
+    try {
+      notifications.success({ message: `${data}` });
+    } catch (error) {
+      notifications.success({ message: `${defaultData}` });
+    }
   }
   if (type === 'error') {
     const { response, message } = data;
     if (response) {
       const msg = response.data;
-      notifications.error({ message, description: `${msg}` });
+      try {
+        notifications.error({ message, description: `${msg}` });
+      } catch (error) {
+        notifications.error({ message, description: `${defaultData}` });
+      }
     }
   }
 };

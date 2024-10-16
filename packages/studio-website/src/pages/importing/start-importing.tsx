@@ -84,7 +84,9 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
                 status="404"
                 subTitle={
                   <>
-                    <Text type={status === 'success' ? 'secondary' : 'danger'}>{message}</Text>
+                    <Text type={status === 'success' ? 'secondary' : 'danger'}>
+                      <FormattedMessage id={`${message}`} />
+                    </Text>
                   </>
                 }
               />

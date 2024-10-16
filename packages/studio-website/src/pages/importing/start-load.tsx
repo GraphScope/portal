@@ -164,7 +164,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
         labelCol={{ span: 5 }}
         form={form}
       >
-        <Form.Item<FieldType> label="Type" name="type">
+        <Form.Item<FieldType> label={<FormattedMessage id="Type" />} name="type">
           <Select
             allowClear
             options={[
@@ -173,7 +173,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
-        <Form.Item<FieldType> label="Delimiter" name="delimiter">
+        <Form.Item<FieldType> label={<FormattedMessage id="Delimiter" />} name="delimiter">
           <Select
             allowClear
             options={[
@@ -186,7 +186,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
-        <Form.Item<FieldType> label="Header Row" name="header_row">
+        <Form.Item<FieldType> label={<FormattedMessage id="Header Row" />} name="header_row">
           <Select
             allowClear
             options={[
@@ -195,7 +195,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
-        <Form.Item<FieldType> label="Import Option" name="import_option">
+        <Form.Item<FieldType> label={<FormattedMessage id="Import Option" />} name="import_option">
           <Select
             allowClear
             options={[
@@ -204,7 +204,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
-        <Form.Item<FieldType> label="Quoting" name="quoting">
+        <Form.Item<FieldType> label={<FormattedMessage id="Quoting" />} name="quoting">
           <Select
             allowClear
             options={[
@@ -213,7 +213,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
-        <Form.Item<FieldType> label="Quote char" name="quote_char">
+        <Form.Item<FieldType> label={<FormattedMessage id="Quote char" />} name="quote_char">
           <Select
             allowClear
             options={[

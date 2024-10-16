@@ -74,4 +74,11 @@ export default {
   'Data Fields': 'Data Fields',
   'Add Property': 'Add Property',
   Properties: 'Properties',
+  'Uploading...': 'Uploading...',
+  Delimiter: 'Delimiter',
+  Type: 'Type',
+  'Header Row': 'Header Row',
+  'Import Option': 'Import Option',
+  Quoting: 'Quoting',
+  'Quote char': 'Quote char',
 };

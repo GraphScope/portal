@@ -80,7 +80,7 @@ export const deleteGraph = async (graph_id: string) => {
     .deleteGraphById(graph_id)
     .then(res => {
       if (res.status === 200) {
-        notification('success', res.data);
+        notification('success', JSON.parse(res.data.replace(/'/g, '"')).message, 'Successfully delete graph');
         return true;
       } else {
         notification('error', res.data);
@@ -99,7 +99,7 @@ export const startService = async (graph_id: string) => {
     })
     .then(res => {
       if (res.status === 200) {
-        notification('success', JSON.parse(res.data.replace(/'/g, '"')).message);
+        notification('success', JSON.parse(res.data.replace(/'/g, '"')).message, 'Successfully start service');
         return true;
       } else {
         notification('error', res.data);
@@ -117,7 +117,7 @@ export const stopService = async (graph_id: string) => {
     })
     .then(res => {
       if (res.status === 200) {
-        notification('success', JSON.parse(res.data.replace(/'/g, '"')).message);
+        notification('success', JSON.parse(res.data.replace(/'/g, '"')).message, 'Successfully stop service');
         return true;
       } else {
         notification('error', res.data);

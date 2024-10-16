@@ -74,4 +74,11 @@ export default {
   'Data Fields': '数据',
   'Add Property': '添加属性',
   Properties: '属性',
+  'Uploading...': '上传中...',
+  Delimiter: '定界符',
+  Type: '类型',
+  'Header Row': '标题行',
+  'Import Option': '导入选项',
+  Quoting: '引用',
+  'Quote char': '分隔符',
 };
