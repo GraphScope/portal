@@ -12,6 +12,7 @@ interface IConnectModelProps {}
 const SelectGraph: React.FunctionComponent<IConnectModelProps> = props => {
   const { store, updateStore } = useContext();
   const { graphs, graphId, currentnNav, draftGraph } = store;
+
   const options = ([draftGraph, ...graphs] as IGraph[])
     .filter(item => {
       return Object.keys(item).length > 0;

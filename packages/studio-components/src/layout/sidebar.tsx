@@ -7,7 +7,7 @@ import { useSection } from '../Section/useSection';
 
 import Header from './header';
 import CollapsedButton from './collapsed';
-import { getAllSearchParams, setSearchParams } from '../Utils';
+import { getAllSearchParams, setSearchParams, getCurrentNav } from '../Utils';
 
 interface ISidebar {
   sideStyle: {
@@ -17,17 +17,6 @@ interface ISidebar {
   sideMenu: any[];
 }
 
-export const getActivekey = () => {
-  const hashMode = window.location.hash.startsWith('#/');
-  if (hashMode) {
-    const [pathname] = window.location.hash.slice(1).split('?');
-    return '/' + pathname.split('/')[1];
-  } else {
-    const { pathname } = window.location;
-    return '/' + pathname.split('/')[1];
-  }
-};
-
 const Sidebar: React.FunctionComponent<ISidebar> = props => {
   const { sideStyle, sideMenu } = props;
   const { width, collapsedWidth } = sideStyle;
@@ -36,7 +25,7 @@ const Sidebar: React.FunctionComponent<ISidebar> = props => {
   const [hovering, setHovering] = useState(false);
   const [SIDE_MENU, SETTING_MENU] = sideMenu;
 
-  const activeKey = getActivekey();
+  const activeKey = getCurrentNav();
 
   const onClick: MenuProps['onClick'] = e => {
     const params = getAllSearchParams();
@@ -52,7 +41,6 @@ const Sidebar: React.FunctionComponent<ISidebar> = props => {
   const onMouseLeave = () => {
     setHovering(false);
   };
-  console.log(hovering, activeKey);
 
   return (
     <Flex vertical style={{ height: '100%' }} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>

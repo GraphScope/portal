@@ -28,7 +28,7 @@ export const initialStore = {
   /** 收起导航 */
   collapse: false,
   /** 当前导航 */
-  currentnNav: '/' + location.pathname.split('/')[1],
+  currentnNav: Utils.getCurrentNav(),
   navStyle: (Utils.storage.get('GS_STUDIO_navStyle') as string) || 'inline',
   graphs: [],
   graphId: Utils.searchParamOf('graph_id'),
