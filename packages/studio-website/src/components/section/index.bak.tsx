@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Divider, Typography, Tabs, Space } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import type { TabsProps } from 'antd';
-import { Utils } from '../index';
+import { Utils, useStudioProvier, useCustomToken } from '@graphscope/studio-components';
 interface IFormattedMessage {
   id: string;
   values?: { [key: string]: string };
@@ -18,7 +18,7 @@ interface ISectionProps {
 const { useEffect } = React;
 const Section: React.FunctionComponent<ISectionProps> = props => {
   const { title, desc, breadcrumb, children, items, style } = props;
-
+  const { sectionBackground } = useCustomToken();
   useEffect(() => {
     if (items) {
       const nav = Utils.getSearchParams('nav') || '';
@@ -46,6 +46,7 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
+        background: sectionBackground,
         borderRadius: '12px',
       }}
     >

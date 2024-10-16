@@ -7,8 +7,9 @@ import StartImporting from './start-importing';
 
 import SelectGraph from '../../layouts/select-graph';
 import EmptyModelCase from './empty-model-case';
-
+import Section from '../../components/section';
 import localforage from 'localforage';
+import { FormattedMessage } from 'react-intl';
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
@@ -51,28 +52,37 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
   };
 
   return (
-    <ImportApp
-      key={graphId}
-      appMode="DATA_IMPORTING"
-      queryBoundSchema={queryBoundSchema}
-      /** 属性下拉选项值 */
-      queryPrimitiveTypes={queryPrimitiveTypes}
-      /** 绑定数据中上传文件 */
-      handleUploadFile={uploadFile}
-      /** 数据绑定 */
-      GS_ENGINE_TYPE={GS_ENGINE_TYPE}
-      defaultCollapsed={{
-        leftSide: true,
-        rightSide: false,
-      }}
-      batchUploadFiles={batchUploadFiles}
+    <Section
+      breadcrumb={[
+        {
+          title: <FormattedMessage id="Importing" />,
+        },
+      ]}
+      style={{ padding: '0px' }}
     >
-      <Toolbar style={{ top: '12px', left: '24px', right: 'unset' }} direction="horizontal">
-        <SelectGraph />
-        <StartImporting />
-      </Toolbar>
-      <EmptyModelCase />
-    </ImportApp>
+      <ImportApp
+        key={graphId}
+        appMode="DATA_IMPORTING"
+        queryBoundSchema={queryBoundSchema}
+        /** 属性下拉选项值 */
+        queryPrimitiveTypes={queryPrimitiveTypes}
+        /** 绑定数据中上传文件 */
+        handleUploadFile={uploadFile}
+        /** 数据绑定 */
+        GS_ENGINE_TYPE={GS_ENGINE_TYPE}
+        defaultCollapsed={{
+          leftSide: true,
+          rightSide: false,
+        }}
+        batchUploadFiles={batchUploadFiles}
+      >
+        <Toolbar style={{ top: '12px', left: '24px', right: 'unset' }} direction="horizontal">
+          <SelectGraph />
+          <StartImporting />
+        </Toolbar>
+        <EmptyModelCase />
+      </ImportApp>
+    </Section>
   );
 };
 

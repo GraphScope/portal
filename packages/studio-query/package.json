@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/studio-query",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A data querying module in GraphStudio, supporting Cypher and Gremlin statements",
   "main": "lib/index.js",
   "module": "es/index.js",

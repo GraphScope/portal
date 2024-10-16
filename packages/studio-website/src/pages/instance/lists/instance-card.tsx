@@ -10,6 +10,7 @@ import { deleteGraph, startService, stopService } from './service';
 
 const { Text, Paragraph } = Typography;
 import { MoreOutlined } from '@ant-design/icons';
+import GraphView from '../graph-view';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle, faTrashCan } from '@fortawesome/free-regular-svg-icons';
@@ -17,6 +18,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import { TOOLS_MENU } from '../../../layouts/const';
 import { Utils, useCustomToken } from '@graphscope/studio-components';
+import { useNavigate } from 'react-router-dom';
 export type InstaceCardType = {
   /** graph id */
   id: string;
@@ -37,10 +39,11 @@ export type InstaceCardType = {
   routes: React.ReactNode;
   /** 操作 */
   actions: React.ReactNode;
-  schema: {
+  schemaCount: {
     edges: number;
     vertices: number;
   };
+  schema: any;
   /** server 实例链接 */
   server?: string;
   hqps?: string;
@@ -64,8 +67,10 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     name,
     hqps,
     handleChange,
-    schema = { edges: 0, vertices: 0 },
+    schemaCount = { edges: 0, vertices: 0 },
+    schema = { edge_types: [], vertex_types: [] },
   } = props;
+
   const history = useHistory();
   const { store, updateStore } = useContext();
   const { locale, draftGraph, draftId } = store;
@@ -163,22 +168,18 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
       <FormattedMessage
         id="{vertices} types of vertices {br} {edges} types of edges"
         values={{
-          vertices: schema.vertices,
-          edges: schema.edges,
+          vertices: schemaCount.vertices,
+          edges: schemaCount.edges,
           br: <br />,
         }}
       />
     </>
   );
   const handleHistory = (path: string) => {
-    //@ts-ignore
-    const url = new URL(window.location);
-    const { searchParams } = url;
-    searchParams.set('engineType', 'interactive');
-    searchParams.set('graph_id', id);
-    url.pathname = path;
-    window.history.pushState({}, '', url);
-    history.push(`${path}?${searchParams.toString()}`);
+    history.push(path);
+    Utils.setSearchParams({
+      graph_id: id,
+    });
     updateStore(draft => {
       draft.graphId = id;
       draft.currentnNav = path;
@@ -211,7 +212,6 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
     <Card
       styles={{ header: { fontSize: '30px' } }}
       title={name}
-      style={{ background: instanceBackground }}
       extra={
         <Space>
           {btnIcon && (
@@ -235,42 +235,45 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
       }
     >
       <Flex justify="space-between">
-        <Flex align="flex-start" vertical gap="middle">
-          <Tag style={{ fontSize: '16px', lineHeight: '140%' }} color={STATUS_COLOR_MAP[status]}>
-            <FormattedMessage id={status} />
-          </Tag>
-          <Space direction="vertical" size={0}>
-            <Text type="secondary">
-              <FormattedMessage id="Uptime" />: {uptimeString}
-            </Text>
-            <Text type="secondary">
-              <FormattedMessage id="Last data import" />: {importtime}
-            </Text>
-            <Text type="secondary">
-              <FormattedMessage id="Served from" />: {createtime}
-            </Text>
-            <Text type="secondary">
-              <FormattedMessage id="Created on" />: {createtime}
-            </Text>
-          </Space>
-          <Space split={<Divider type="vertical" />} size={0}>
-            <Typography.Text type="secondary" style={{ cursor: 'pointer' }} disabled={!Endpoints}>
-              <Popover title={<FormattedMessage id="Endpoints" />} content={Endpoints}>
-                <FormattedMessage id="Endpoints" /> <QuestionCircleOutlined style={{ marginLeft: '4px' }} />
-              </Popover>
-            </Typography.Text>
+        <Flex>
+          <GraphView data={schema}></GraphView>
+          <Flex align="flex-start" vertical gap="middle">
+            <Tag style={{ fontSize: '16px', lineHeight: '140%' }} color={STATUS_COLOR_MAP[status]}>
+              <FormattedMessage id={status} />
+            </Tag>
+            <Space direction="vertical" size={0}>
+              <Text type="secondary">
+                <FormattedMessage id="Uptime" />: {uptimeString}
+              </Text>
+              <Text type="secondary">
+                <FormattedMessage id="Last data import" />: {importtime}
+              </Text>
+              <Text type="secondary">
+                <FormattedMessage id="Served from" />: {createtime}
+              </Text>
+              <Text type="secondary">
+                <FormattedMessage id="Created on" />: {createtime}
+              </Text>
+            </Space>
+            <Space split={<Divider type="vertical" />} size={0}>
+              <Typography.Text type="secondary" style={{ cursor: 'pointer' }} disabled={!Endpoints}>
+                <Popover title={<FormattedMessage id="Endpoints" />} content={Endpoints}>
+                  <FormattedMessage id="Endpoints" /> <QuestionCircleOutlined style={{ marginLeft: '4px' }} />
+                </Popover>
+              </Typography.Text>
 
-            <Typography.Text type="secondary" style={{ cursor: 'pointer' }}>
-              <Popover title={<FormattedMessage id="Graph schema" />} content={Statistics}>
-                <span>
-                  <FormattedMessage id="Statistics" />
-                </span>
-              </Popover>
-            </Typography.Text>
-          </Space>
+              <Typography.Text type="secondary" style={{ cursor: 'pointer' }}>
+                <Popover title={<FormattedMessage id="Graph schema" />} content={Statistics}>
+                  <span>
+                    <FormattedMessage id="Statistics" />
+                  </span>
+                </Popover>
+              </Typography.Text>
+            </Space>
+          </Flex>
         </Flex>
 
-        <Flex gap="middle" align="flex-end" vertical justify="end">
+        <Flex gap="middle" align="center" vertical justify="center">
           {TOOLS_MENU.map(item => {
             return (
               <Button

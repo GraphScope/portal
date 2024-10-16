@@ -9,8 +9,8 @@ import { PlayCircleOutlined } from '@ant-design/icons';
 
 import useInteractive from './useInteractive';
 import { FormattedMessage } from 'react-intl';
+// import CustomControls from './CustomControls';
 
-import CustomControls from './CustomControls';
 interface IGraphEditorProps {}
 
 const fakeSnapshot = obj => {
@@ -52,12 +52,13 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           onConnectStart={onConnectStart}
           onConnectEnd={onConnectEnd}
           zoomOnDoubleClick={false}
-          nodesDraggable={isLocked} // 禁用节点拖拽
+          nodesDraggable={true} // 禁用节点拖拽
           proOptions={{ hideAttribution: true }} // 隐藏 reactflow 标识
-          // onDoubleClick={onDoubleClick}
+          onDoubleClick={onDoubleClick}
+          minZoom={0.01}
         >
           <ArrowMarker selectedColor={theme.primaryColor} color={!isLight ? '#d7d7d7' : '#000'} />
-          {!IS_PURE && (
+          {/* {!IS_PURE && (
             <CustomControls
               isLocked={isLocked}
               handleLocked={val => {
@@ -66,13 +67,15 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
                 });
               }}
             />
+          )} */}
+          {!IS_PURE && (
+            <Background
+              style={{
+                // background: '#f4f5f5',
+                background: rfBG,
+              }}
+            />
           )}
-          <Background
-            style={{
-              // background: '#f4f5f5',
-              background: rfBG,
-            }}
-          />
           {isEmpty && <EmptyCanvas description={description} />}
           {!IS_PURE && <MiniMap style={{ backgroundColor: !isLight ? '#161616' : '' }} />}
         </ReactFlow>

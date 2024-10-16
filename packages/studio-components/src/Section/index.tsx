@@ -43,7 +43,7 @@ const getStyles = (props, collapsed: { leftSide: boolean; rightSide: boolean }, 
   return {
     leftSideStyle: {
       overflow: 'hidden',
-      transition: 'all 0.2s ease',
+      transition: 'all 0.3s ease',
       boxSizing: 'border-box',
       flexShrink: 0,
       ...leftSideStyle,
@@ -55,7 +55,7 @@ const getStyles = (props, collapsed: { leftSide: boolean; rightSide: boolean }, 
     rightSideStyle: {
       position: 'relative',
       overflow: 'hidden',
-      transition: 'all 0.2s ease',
+      transition: 'all 0.3s ease',
       opacity: collapsed.rightSide ? 0 : 1,
       flexShrink: 0,
       ...rightSideStyle,

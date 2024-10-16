@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/studio-site",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "pomelo-nwu <czynwu@outlook.com>",
   "files": [
     "es",
@@ -61,6 +61,7 @@
     "react-intl": "^6.6.1",
     "typescript": "^5.3.3",
     "vite": "^5.0.12",
-    "vite-plugin-node-externals": "^0.0.1"
+    "vite-plugin-node-externals": "^0.0.1",
+    "vite-plugin-singlefile": "^2.0.2"
   }
 }

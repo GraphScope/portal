@@ -20,7 +20,7 @@ export const getThemeConfig = (algorithm: ThemeProviderType['algorithm']) => {
       iconMarginInlineEnd: 14,
       itemMarginInline: 4,
       iconSize: 14,
-      collapsedWidth: 50,
+      collapsedWidth: 56,
       horizontalLineHeight: 32,
       itemHeight: 32,
     },

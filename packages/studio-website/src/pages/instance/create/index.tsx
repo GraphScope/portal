@@ -1,23 +1,25 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 
 import Section from '../../../components/section';
 
 import { useContext } from '../../../layouts/useContext';
 import ChooseEnginetype from './choose-enginetype';
-import { Form, Button, Result } from 'antd';
+import { Form, Button, Result, Modal, Typography } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { Utils } from '@graphscope/studio-components';
 import { SplitSection } from '@graphscope/studio-components';
 
 import { useHistory } from '../../../hooks';
+import { PlusOutlined } from '@ant-design/icons';
 const { GS_ENGINE_TYPE } = window;
 const Create: React.FC = () => {
   const history = useHistory();
   const { store, updateStore } = useContext();
+  const [open, setOpen] = useState(false);
+
   const { draftId } = store;
   const [form] = Form.useForm();
   const handleCreate = async () => {
-    console.log('form', form.getFieldsValue());
     const { graphName, storeType } = form.getFieldsValue();
     form.validateFields().then(() => {
       const draftGraph = {
@@ -42,28 +44,35 @@ const Create: React.FC = () => {
     });
   };
 
+  const handleClick = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
-    <Section
-      breadcrumb={[
-        {
-          title: 'navbar.graphs',
-        },
-        {
-          title: 'Creating instance',
-        },
-      ]}
-      desc="Choose the appropriate GraphScope computing engine and start creating graph instances"
-    >
-      <SplitSection
-        leftSide={<ChooseEnginetype form={form} />}
-        rightSide={<Result status="404" subTitle={<FormattedMessage id="Introduction video to GraphScope" />} />}
-        splitText=""
-      />
-
-      <Button type="primary" onClick={handleCreate} style={{ minWidth: '100px' }}>
-        <FormattedMessage id="Create Graph" />
+    <>
+      <Button type="primary" icon={<PlusOutlined />} onClick={handleClick}>
+        Create instance
       </Button>
-    </Section>
+      <Modal
+        width={600}
+        title="Creating instance"
+        open={open}
+        onClose={handleClose}
+        onCancel={handleClose}
+        footer={[
+          <Button key="back" onClick={handleClose}>
+            Cancel
+          </Button>,
+          <Button type="primary" onClick={handleCreate} style={{ minWidth: '100px' }}>
+            <FormattedMessage id="Create Graph" />
+          </Button>,
+        ]}
+      >
+        <ChooseEnginetype form={form} />
+      </Modal>
+    </>
   );
 };
 

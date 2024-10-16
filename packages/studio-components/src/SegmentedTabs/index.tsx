@@ -31,7 +31,7 @@ const styles: Record<string, React.CSSProperties> = {
 
 const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
   const { items, queryKey = 'tab', rootStyle = {}, tabStyle = {}, defaultActive, block, value, onChange } = props;
-
+  //@ts-ignore
   const [state, setState] = React.useState<{ active: string }>(() => {
     const defaultKey = getSearchParams(queryKey);
     const active = defaultKey || defaultActive || items[0]?.key || '';

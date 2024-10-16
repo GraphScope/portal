@@ -63,10 +63,11 @@ export const listGraphs = async () => {
       server: sdk_endpoints?.cypher ?? '',
       status,
       hqps: sdk_endpoints?.hqps ?? '',
-      schema: {
+      schemaCount: {
         vertices: (vertices && vertices.length) || (vertex_types && vertex_types.length),
         edges: (edges && edges.length) || (edge_types && edge_types.length),
       },
+      schema,
       store_type,
       stored_procedures,
     };

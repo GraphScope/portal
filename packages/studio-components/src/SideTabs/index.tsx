@@ -84,7 +84,7 @@ const SideTabs: React.FunctionComponent<SidebarProps> = props => {
   const { token } = useToken();
   const collapse = false;
   const collapsedWidth = 50;
-
+  //@ts-ignore
   const [state, setState] = React.useState<{ active: string }>(() => {
     const defaultKey = getSearchParams(queryKey);
     const active = defaultKey || defaultActive || items[0]?.key || '';
