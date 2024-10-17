@@ -17,7 +17,7 @@ export function transSchemaToOptions(
   const { vertex_types, edge_types } = originalSchema || { vertex_types: [], edge_types: [] };
   const idMappingforNode: Record<string, string> = {};
   const nodes: ISchemaNode[] = vertex_types.map(item => {
-    const { primary_keys, properties = [], type_name } = item;
+    const { primary_keys = [], properties = [], type_name } = item;
     const id = uuidv4();
     idMappingforNode[type_name] = id;
     const extra = extraData(item);

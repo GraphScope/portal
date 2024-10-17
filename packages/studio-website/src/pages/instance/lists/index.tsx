@@ -20,6 +20,7 @@ const InstanceCard: React.FC = () => {
   const { instanceList, isReady } = state;
   const fetchLists = async () => {
     const res = await listGraphs();
+
     //@ts-ignore
     updateState(preState => {
       return {
@@ -32,10 +33,6 @@ const InstanceCard: React.FC = () => {
   useEffect(() => {
     fetchLists();
   }, []);
-
-  const handleCreate = () => {
-    history.push('/graphs/create');
-  };
 
   return (
     <Row gutter={[12, 12]}>
@@ -62,11 +59,6 @@ const InstanceCard: React.FC = () => {
           </Card>
         </Col>
       )}
-      {/* <Col span={12}>
-        <InteractiveCase>
-          <CreateGraph onCreate={handleCreate} />
-        </InteractiveCase>
-      </Col> */}
     </Row>
   );
 };
