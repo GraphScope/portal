@@ -15,20 +15,17 @@ import type { IStudioQueryProps } from './context';
 import { v4 as uuidv4 } from 'uuid';
 import { formatCypherStatement } from './utils';
 import { Utils, Section, StudioProvier } from '@graphscope/studio-components';
-const { getSearchParams, setSearchParams } = Utils;
-
-import Container from './container';
+const { getSearchParams } = Utils;
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark, faClockFour, faServer, faRobot, faLightbulb } from '@fortawesome/free-solid-svg-icons';
 import locales from '../locales';
 
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const {
-    queryInfo,
     queryGraphData,
     handleCancelQuery,
     queryGraphSchema,
-    onBack,
+
     displaySidebarPosition = 'left',
     displaySidebarType = 'Sidebar',
     enableAbsolutePosition,
@@ -37,20 +34,15 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     deleteStatements,
     createStatements,
     enableImmediateQuery,
-    enableCollapseSidebar,
-    logo,
-    theme,
     connectComponent,
     sidebarCollapsed,
     sidebarStyle,
 
     welcome,
-
-    previewGraphSchema,
   } = props;
   const { store, updateStore } = useContext();
-  const { graphId, isReady, collapse, activeNavbar, statements, schemaData, language, defaultCollapsed } = store;
-  const enable = !!enableAbsolutePosition && statements.length > 0;
+  const { graphId, isReady, schemaData } = store;
+
   const navbarOptions = [
     {
       key: 'recommended',
@@ -121,14 +113,13 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         draft.mode = displayMode as 'flow' | 'tabs';
         draft.language = language as 'gremlin' | 'cypher';
         draft.welcome = welcome;
-        draft.previewGraphSchema = previewGraphSchema ?? { nodes: [], edges: [] };
       });
     })();
-  }, [previewGraphSchema]);
+  }, []);
 
   const handleQuery = (value: IStatement) => {
     /** 查询的时候，就可以存储历史记录了 */
-    const { script, id: statementId, language } = value;
+    const { script, language } = value;
     const queryId = uuidv4();
     const timestamp = new Date().getTime();
     const params = {

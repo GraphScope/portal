@@ -55,8 +55,6 @@ export type IStore<T> = T & {
   };
   /** 默认的折叠状态 */
   defaultCollapsed: boolean;
-
-  previewGraphSchema: GraphProps;
 };
 
 const initialStore: IStore<{}> = {
@@ -88,8 +86,6 @@ const initialStore: IStore<{}> = {
   enableImmediateQuery: false,
   language: 'gremlin',
   defaultCollapsed: true,
-
-  previewGraphSchema: { nodes: [], edges: [] },
 };
 
 type ContextType<T> = {

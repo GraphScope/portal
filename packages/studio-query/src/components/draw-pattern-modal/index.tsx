@@ -1,4 +1,4 @@
-import { HighlightOutlined } from '@ant-design/icons';
+import { SignatureOutlined } from '@ant-design/icons';
 import { DrawPattern, DrawPatternValue, GraphProps } from '@graphscope/studio-draw-pattern';
 import { Button, Modal, Tooltip } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -13,7 +13,7 @@ export interface DrawPatternModalProps {
 export const DrawPatternModal: React.FC<DrawPatternModalProps> = ({ previewSchema, onClick }) => {
   const [visible, setVisiable] = useState<boolean>(false);
   const { updateStore, store } = useContext();
-  const { previewGraphSchema } = store;
+  const { schemaData, language } = store;
 
   const handleClick = useCallback((value: DrawPatternValue) => {
     setVisiable(false);
@@ -27,11 +27,13 @@ export const DrawPatternModal: React.FC<DrawPatternModalProps> = ({ previewSchem
   const MyDrawPattern = useCallback(() => {
     // @ts-ignore
     if (visible)
-      return (
-        <DrawPattern onClick={handleClick} previewGraph={JSON.parse(JSON.stringify(previewGraphSchema))}></DrawPattern>
-      );
+      return <DrawPattern onClick={handleClick} previewGraph={JSON.parse(JSON.stringify(schemaData))}></DrawPattern>;
     else return <></>;
   }, [visible]);
+
+  if (language !== 'cypher') {
+    return null;
+  }
 
   return (
     <>
@@ -41,7 +43,7 @@ export const DrawPatternModal: React.FC<DrawPatternModalProps> = ({ previewSchem
             setVisiable(true);
           }}
           type="text"
-          icon={<HighlightOutlined />}
+          icon={<SignatureOutlined />}
         ></Button>
       </Tooltip>
       <Modal
@@ -50,8 +52,7 @@ export const DrawPatternModal: React.FC<DrawPatternModalProps> = ({ previewSchem
         open={visible}
         onOk={() => setVisiable(false)}
         onCancel={() => setVisiable(false)}
-        width={window.innerWidth * 0.8}
-        height={window.innerHeight * 0.9}
+        width={'90%'}
         footer={null}
       >
         <div style={{ height: `${window.innerHeight * 0.8}px` }}>
