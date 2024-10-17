@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useContext, IGraph } from './useContext';
 
-import { Layout, LogoText, Utils } from '@graphscope/studio-components';
+import { Layout, Utils } from '@graphscope/studio-components';
 import { DeploymentApiFactory } from '@graphscope/studio-server';
 import { SIDE_MENU, SETTING_MENU } from './const';
-import { Flex, Typography, Spin, notification } from 'antd';
+import { Flex, Spin, notification } from 'antd';
 import { listGraphs } from '../pages/instance/lists/service';
-
+import { SLOTS } from '../slots';
 import './index.css';
 export default function StudioLayout() {
   const { store, updateStore } = useContext();
@@ -104,14 +104,15 @@ export default function StudioLayout() {
   }, []);
 
   const { isReady } = state;
+  const _SIDE = [...(SIDE_MENU || []), ...(SLOTS.SIDE_MEU || [])];
   if (isReady) {
-    return <Layout sideMenu={[SIDE_MENU, SETTING_MENU]} />;
+    return <Layout sideMenu={[_SIDE, SETTING_MENU]} />;
   }
 
   return (
     <Flex justify="center" align="center" vertical style={{ height: '100vh' }}>
       <Spin size="large" />
-      <LogoText style={{ marginTop: '24px' }} animate={true} />
+      {/* <LogoText style={{ marginTop: '24px' }} animate={true} /> */}
     </Flex>
   );
 }
