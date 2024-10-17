@@ -34,7 +34,7 @@ export const initialStore = {
   graphId: Utils.searchParamOf('graph_id'),
   draftGraph: Utils.storage.get('DRAFT_GRAPH') || {},
   draftId: 'DRAFT_GRAPH',
-  displaySidebarType: Utils.storage.get<'Sidebar' | 'Segmented'>('displaySidebarType') || 'Sidebar',
+  displaySidebarType: Utils.storage.get<'Sidebar' | 'Segmented'>('displaySidebarType') || 'Segmented',
   displaySidebarPosition: Utils.storage.get<'left' | 'right'>('displaySidebarPosition') || 'left',
   isReady: false,
 };

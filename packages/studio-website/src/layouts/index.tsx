@@ -60,6 +60,14 @@ export default function StudioLayout() {
       }
     });
   };
+  const setQueryConfig = () => {
+    const { GS_ENGINE_TYPE } = window;
+
+    if (GS_ENGINE_TYPE === 'groot') {
+      Utils.storage.set('query_language', 'gremlin');
+      Utils.storage.set('query_initiation', 'Server');
+    }
+  };
   useEffect(() => {
     (async () => {
       const engineType = (await depolymentInfo()) as 'interactive' | 'groot';
@@ -71,6 +79,8 @@ export default function StudioLayout() {
         };
       });
       window.GS_ENGINE_TYPE = engineType;
+
+      setQueryConfig();
       /**接着校验可用的graphId */
       const checkedRes = await checkGraphId();
       if (checkedRes) {
