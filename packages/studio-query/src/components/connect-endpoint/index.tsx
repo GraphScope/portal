@@ -6,14 +6,14 @@ const { storage } = Utils;
 const { Title, Text } = Typography;
 
 export type FieldType = {
-  query_language: string;
-  query_endpoint: string;
-  query_initiation: 'Browser' | 'Server';
+  query_language?: string;
+  query_endpoint?: string;
+  query_initiation?: 'Browser' | 'Server';
   query_username?: string;
   query_password?: string;
 };
 
-export interface IConnectEndpointProps {
+export interface IConnectEndpointProps extends FieldType {
   onConnect: (values: FieldType) => void;
   onClose?: () => void;
 }
@@ -22,16 +22,15 @@ const ConnectEndpoint: React.FunctionComponent<IConnectEndpointProps> = props =>
   const { onConnect, onClose } = props;
   React.useEffect(() => {
     form.setFieldsValue({
-      query_language: storage.get('query_language'),
-      query_endpoint: storage.get('query_endpoint'),
-      query_initiation: storage.get('query_initiation'),
-      query_username: storage.get('query_username'),
-      query_password: storage.get('query_password'),
+      query_language: props.query_language || storage.get('query_language'),
+      query_endpoint: props.query_endpoint || storage.get('query_endpoint'),
+      query_initiation: props.query_initiation || storage.get('query_initiation'),
+      query_username: props.query_username || storage.get('query_username'),
+      query_password: props.query_password || storage.get('query_password'),
     });
   }, []);
   const handleConnect = () => {
     const values = form.getFieldsValue(true);
-    console.log('form.getFieldsValue()', values);
     Object.keys(values).forEach(key => {
       storage.set(key, values[key]);
     });

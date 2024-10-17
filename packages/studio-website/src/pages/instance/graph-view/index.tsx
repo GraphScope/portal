@@ -33,6 +33,7 @@ const Init = ({ data }) => {
 };
 const EmbedSchemaView: React.FunctionComponent<IModelingProps> = props => {
   const { data } = props;
+
   return (
     <MultipleInstance>
       <ImportorApp

@@ -1,38 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import { queryEndpoint } from './services';
+import { queryInfo } from './services';
 import { Utils } from '@graphscope/studio-components';
 import { Button, Modal, Result } from 'antd';
 import { SplitSection } from '@graphscope/studio-components';
 import { FormattedMessage } from 'react-intl';
 import { ConnectEndpoint } from '@graphscope/studio-query';
 const { storage } = Utils;
+import { useContext } from '../../layouts/useContext';
 
 interface INoEndpointCaseProps {}
 
 const NoEndpointCase: React.FunctionComponent<INoEndpointCaseProps> = props => {
+  const { store } = useContext();
+  const { graphId } = store;
   const [state, setState] = useState({
     open: false,
   });
+
   const getEndpoint = async () => {
-    const { cypher_endpoint, gremlin_endpoint } = await queryEndpoint();
-    const { GS_ENGINE_TYPE } = window;
-
     const language =
-      storage.get<'cypher' | 'gremlin'>('query_language') || (GS_ENGINE_TYPE === 'interactive' ? 'cypher' : 'gremlin');
-    const endpoint =
-      storage.get<string>('query_endpoint') || (GS_ENGINE_TYPE === 'interactive' ? cypher_endpoint : gremlin_endpoint);
-    const initiation =
-      storage.get<'Server' | 'Browser'>('query_initiation') ||
-      (GS_ENGINE_TYPE === 'interactive' ? 'Browser' : 'Server');
+      Utils.storage.get<'cypher' | 'gremlin'>('query_language') ||
+      (window.GS_ENGINE_TYPE === 'interactive' ? 'cypher' : 'gremlin');
 
-    storage.set('query_endpoint', endpoint);
-    storage.set('query_language', language);
-    storage.set('query_initiation', initiation);
-    console.log('endpoint....', endpoint);
-    if (!endpoint) {
-      setState({
-        open: true,
-      });
+    const _endpoint = Utils.storage.get('query_endpoint');
+    if (!_endpoint) {
+      const { sdk_endpoints } = await queryInfo(graphId || '');
+      const endpoint = sdk_endpoints[language];
+      if (endpoint) {
+        Utils.storage.set('query_endpoint', endpoint);
+      } else {
+        setState({
+          open: true,
+        });
+      }
     }
   };
   useEffect(() => {

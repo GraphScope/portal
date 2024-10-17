@@ -6,12 +6,13 @@ import { Utils } from '@graphscope/studio-components';
 import { ConnectEndpoint } from '@graphscope/studio-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins } from '@fortawesome/free-solid-svg-icons';
-
+import Versions from '../pages/query/versions';
 interface IConnectModelProps {}
 
 const SelectGraph: React.FunctionComponent<IConnectModelProps> = props => {
   const { store, updateStore } = useContext();
   const { graphs, graphId, currentnNav, draftGraph } = store;
+
   const options = ([draftGraph, ...graphs] as IGraph[])
     .filter(item => {
       return Object.keys(item).length > 0;
@@ -52,27 +53,30 @@ const SelectGraph: React.FunctionComponent<IConnectModelProps> = props => {
 
   return (
     <div>
-      <Select
-        variant="borderless"
-        style={{ flex: 1, minWidth: '120px' }}
-        placeholder="Choose graph instance"
-        value={graphId}
-        onChange={handleChange}
-        dropdownRender={menu => (
-          <>
-            {menu}
-            {currentnNav === '/querying' && (
-              <>
-                <Divider style={{ margin: '4px 0px' }} />
-                <Button type="default" onClick={handleConnect} style={{ width: '100%' }}>
-                  Endpoint
-                </Button>
-              </>
-            )}
-          </>
-        )}
-        options={options}
-      />
+      <Space>
+        <Select
+          variant="borderless"
+          style={{ flex: 1, minWidth: '120px' }}
+          placeholder="Choose graph instance"
+          value={graphId}
+          onChange={handleChange}
+          dropdownRender={menu => (
+            <>
+              {menu}
+              {currentnNav === '/querying' && (
+                <>
+                  <Divider style={{ margin: '4px 0px' }} />
+                  <Button type="default" onClick={handleConnect} style={{ width: '100%' }}>
+                    Endpoint
+                  </Button>
+                </>
+              )}
+            </>
+          )}
+          options={options}
+        />
+        {window.GS_ENGINE_TYPE === 'gart' && <Versions />}
+      </Space>
 
       <Modal
         centered

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Statement } from '../..';
 import type { IStatement } from '../..';
 import { CypherDriver, GremlinDriver } from '@graphscope/studio-driver';
-import ConnectEndpoint, { IConnectEndpointProps } from './connect-endpoint';
+import ConnectEndpoint, { IConnectEndpointProps } from '../../components/connect-endpoint';
 import { StudioProvier } from '@graphscope/studio-components';
 
 import locales from '../../locales';
@@ -71,8 +71,8 @@ const QueryStatement = (props: IQueryStatementProps) => {
     setState(preState => {
       return {
         ...preState,
-        endpoint: params.endpoint,
-        language: params.language as 'cypher' | 'gremlin',
+        endpoint: params.query_endpoint || '',
+        language: params.query_language as 'cypher' | 'gremlin',
       };
     });
   };

@@ -97,6 +97,17 @@ export const setSearchParams = (params: Record<string, string>, HashMode?: boole
   }
 };
 
+export const getCurrentNav = () => {
+  const hashMode = window.location.hash.startsWith('#/');
+  if (hashMode) {
+    const [pathname] = window.location.hash.slice(1).split('?');
+    return '/' + pathname.split('/')[1];
+  } else {
+    const { pathname } = window.location;
+    return '/' + pathname.split('/')[1];
+  }
+};
+
 export const searchParamOf = (key: string) => {
   const searchParams = new URLSearchParams(location.search);
   return searchParams.get(key);

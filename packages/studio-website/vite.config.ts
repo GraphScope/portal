@@ -5,21 +5,17 @@ import dotenv from 'dotenv';
 
 const { parsed } = dotenv.configDotenv();
 
-const { PROXY_URL, BACKEND_URL, SLOT_URL = '' } = parsed || {};
+const { COORDINATOR_URL } = parsed || {};
 
 export default defineConfig({
   root: './',
   server: {
     host: '0.0.0.0',
-    port: 8000,
+    // port: 8000,
     open: '/',
     proxy: {
       '/api/': {
-        target: PROXY_URL,
-        changeOrigin: true,
-      },
-      '/graph/': {
-        target: BACKEND_URL,
+        target: COORDINATOR_URL,
         changeOrigin: true,
       },
     },
@@ -32,8 +28,4 @@ export default defineConfig({
     },
   },
   plugins: [react()],
-
-  // optimizeDeps: {
-  //   exclude: ['fsevents'],
-  // },
 });

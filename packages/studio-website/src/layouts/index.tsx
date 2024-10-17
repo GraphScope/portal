@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useContext, IGraph } from './useContext';
 
-import { Layout, LogoText, Utils } from '@graphscope/studio-components';
+import { Layout, Utils } from '@graphscope/studio-components';
 import { DeploymentApiFactory } from '@graphscope/studio-server';
 import { SIDE_MENU, SETTING_MENU } from './const';
-import { Flex, Typography, Spin, notification } from 'antd';
+import { Flex, Spin, notification } from 'antd';
 import { listGraphs } from '../pages/instance/lists/service';
-
+import { SLOTS } from '../slots';
 import './index.css';
 export default function StudioLayout() {
   const { store, updateStore } = useContext();
@@ -25,6 +25,7 @@ export default function StudioLayout() {
           const interactive = engine === 'Hiactor' && storage === 'MutableCSR' && frontend === 'Cypher/Gremlin';
           const engineType = interactive ? 'interactive' : 'groot';
           return engineType;
+          // return 'gart';
         }
         return 'interactive';
       })
@@ -60,6 +61,17 @@ export default function StudioLayout() {
       }
     });
   };
+  const setQueryConfig = () => {
+    const { GS_ENGINE_TYPE } = window;
+    const query_language = Utils.storage.get('query_language');
+    const query_initiation = Utils.storage.get('query_initiation');
+    if (!query_language) {
+      Utils.storage.set('query_language', GS_ENGINE_TYPE === 'interactive' ? 'cypher' : 'gremlin');
+    }
+    if (!query_initiation) {
+      Utils.storage.set('query_initiation', GS_ENGINE_TYPE === 'groot' ? 'Server' : 'Browser');
+    }
+  };
   useEffect(() => {
     (async () => {
       const engineType = (await depolymentInfo()) as 'interactive' | 'groot';
@@ -71,6 +83,8 @@ export default function StudioLayout() {
         };
       });
       window.GS_ENGINE_TYPE = engineType;
+
+      setQueryConfig();
       /**接着校验可用的graphId */
       const checkedRes = await checkGraphId();
       if (checkedRes) {
@@ -90,14 +104,15 @@ export default function StudioLayout() {
   }, []);
 
   const { isReady } = state;
+  const _SIDE = [...(SIDE_MENU || []), ...(SLOTS.SIDE_MEU || [])];
   if (isReady) {
-    return <Layout sideMenu={[SIDE_MENU, SETTING_MENU]} />;
+    return <Layout sideMenu={[_SIDE, SETTING_MENU]} />;
   }
 
   return (
     <Flex justify="center" align="center" vertical style={{ height: '100vh' }}>
       <Spin size="large" />
-      <LogoText style={{ marginTop: '24px' }} animate={true} />
+      {/* <LogoText style={{ marginTop: '24px' }} animate={true} /> */}
     </Flex>
   );
 }

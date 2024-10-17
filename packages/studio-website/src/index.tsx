@@ -1,3 +1,3 @@
 import GraphScopePortal from './pages';
-export { registerSideMenuSlot } from './slot';
+export { registerSideMenuSlot, SLOTS } from './slots';
 export default GraphScopePortal;
