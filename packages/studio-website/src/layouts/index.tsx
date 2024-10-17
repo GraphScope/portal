@@ -25,6 +25,7 @@ export default function StudioLayout() {
           const interactive = engine === 'Hiactor' && storage === 'MutableCSR' && frontend === 'Cypher/Gremlin';
           const engineType = interactive ? 'interactive' : 'groot';
           return engineType;
+          // return 'gart';
         }
         return 'interactive';
       })
@@ -62,10 +63,13 @@ export default function StudioLayout() {
   };
   const setQueryConfig = () => {
     const { GS_ENGINE_TYPE } = window;
-
-    if (GS_ENGINE_TYPE === 'groot') {
-      Utils.storage.set('query_language', 'gremlin');
-      Utils.storage.set('query_initiation', 'Server');
+    const query_language = Utils.storage.get('query_language');
+    const query_initiation = Utils.storage.get('query_initiation');
+    if (!query_language) {
+      Utils.storage.set('query_language', GS_ENGINE_TYPE === 'interactive' ? 'cypher' : 'gremlin');
+    }
+    if (!query_initiation) {
+      Utils.storage.set('query_initiation', GS_ENGINE_TYPE === 'groot' ? 'Server' : 'Browser');
     }
   };
   useEffect(() => {
