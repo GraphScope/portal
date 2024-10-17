@@ -73,7 +73,7 @@ export const submitDataloadingJob = async (graph_id: string, graphSchema: any, l
 
 export const getSchema = async (graph_id: string) => {
   let schema;
-  if (window.GS_ENGINE_TYPE === 'interactive') {
+  if (window.GS_ENGINE_TYPE === 'interactive' || window.GS_ENGINE_TYPE === 'gart') {
     schema = await GraphApiFactory(undefined, location.origin)
       .getGraphById(graph_id)
       .then(res => {
@@ -121,7 +121,7 @@ export const queryPrimitiveTypes = () => {
       return { label: item, value: item };
     });
   }
-  if (GS_ENGINE_TYPE === 'interactive') {
+  if (GS_ENGINE_TYPE === 'interactive' || GS_ENGINE_TYPE === 'gart') {
     return ['DT_SIGNED_INT32', 'DT_SIGNED_INT64', 'DT_DOUBLE', 'DT_STRING'].map(item => {
       return { label: item, value: item };
     });

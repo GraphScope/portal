@@ -1,14 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import StudioQuery from '@graphscope/studio-query';
 import { transformGraphNodes, transformEdges, transSchemaToOptions } from '@graphscope/studio-importor';
-import {
-  queryGraphData,
-  queryGraphSchema,
-  queryInfo,
-  queryStatements,
-  deleteStatements,
-  createStatements,
-} from './services';
+import { queryGraphData, queryGraphSchema, queryStatements, deleteStatements, createStatements } from './services';
 import { useContext } from '../../layouts/useContext';
 import NoEndpointCase from './no-endpoint-case';
 import StoppedServiceCase from './stopped-service-case';
@@ -119,8 +112,6 @@ const QueryModule = () => {
         /** 查询类型 */
         globalScript={globalScript}
         language={language as 'cypher' | 'gremlin'}
-        //@ts-ignore
-        queryInfo={queryInfo}
         /** 语句服务  */
         queryStatements={queryStatements}
         createStatements={createStatements}

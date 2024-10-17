@@ -52,7 +52,7 @@ export const uploadFile = async (file: File) => {
 
 export const getSchema = async (graph_id: string) => {
   let schema;
-  if (window.GS_ENGINE_TYPE === 'interactive') {
+  if (window.GS_ENGINE_TYPE === 'interactive' || window.GS_ENGINE_TYPE === 'gart') {
     schema = await GraphApiFactory(undefined, location.origin)
       .getGraphById(graph_id)
       .then(res => {
