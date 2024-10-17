@@ -20,17 +20,16 @@ npm run build
 
 ```
 
-## Add .env file for local dev
-
-```bash
-echo "COORDINATOR_URL= http://127.0.0.1:8080" >> .env
-```
-
-- cordinator url is the address of graphscope engine
-
 ### run portal website
 
 ```bash
+# goto website dir
 cd packages/studio-website
+
+# Add .env file for local dev
+# cordinator url is the address of graphscope engine
+echo "COORDINATOR_URL= http://127.0.0.1:8080" >> .env
+
+# run website
 npm run start
 ```
