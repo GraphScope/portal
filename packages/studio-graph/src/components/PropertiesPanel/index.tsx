@@ -6,32 +6,27 @@ import { useContext } from '../../hooks/useContext';
 import Legend from '../StyleSetting/legend';
 import { Utils } from '@graphscope/studio-components';
 import { BgColorsOutlined } from '@ant-design/icons';
-export interface IPropertiesPanelProps {}
+export interface IPropertiesPanelProps {
+  children: React.ReactNode;
+}
 
 const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props => {
   const { store, updateStore } = useContext();
-  const { emitter, nodeStyle, dataMap } = store;
-  const [data, setData] = React.useState<{
-    id: string;
-    properties: Record<string, any>;
-    label: string;
-  } | null>(null);
+  const { nodeStyle, dataMap, nodeStatus, data } = store;
+  const { children } = props;
 
-  React.useEffect(() => {
-    emitter?.on('node:click', (node: any) => {
-      if (node) {
-        setData(node);
-      }
-    });
+  const selectNode = data.nodes.find(item => {
+    const match = nodeStatus[item.id];
+    if (match && match.selected) {
+      return match;
+    }
+  });
 
-    return () => {
-      emitter?.off('node:click');
-    };
-  }, [emitter, dataMap]);
-  if (!data) {
-    return null;
+  if (!selectNode) {
+    return <div>{children}</div>;
   }
-  const { properties = {}, label, id } = data;
+
+  const { label, properties = {}, id } = selectNode;
 
   const onChange = val => {
     const { properties, ...params } = val;
@@ -65,36 +60,23 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
   });
 
   return (
-    <div>
-      <Flex justify="space-between" style={{ margin: '12px 0px' }}>
+    <Flex vertical gap={12}>
+      <Flex justify="space-between">
         <Title level={5} style={{ margin: '0px' }}>
           <FormattedMessage id="Vertex Properties" />
         </Title>
-        <Legend
-          // style
-          {...style}
-          label={label}
-          type="node"
-          properties={properties}
-          onChange={onChange}
-        />
+        <Legend {...style} label={label} type="node" properties={properties} onChange={onChange} />
       </Flex>
       <Table
-        style={{ height: '100%' }}
+        style={{ height: '100%', width: '100%' }}
         showHeader={false}
         columns={columns}
         dataSource={dataSource}
         scroll={{ y: 410 }}
         pagination={false}
       />
-    </div>
+    </Flex>
   );
-};
-
-PropertiesPanel.displayName = 'PropertiesPanel';
-
-PropertiesPanel.defaultProps = {
-  title: 'GraphScope',
 };
 
 export default PropertiesPanel;

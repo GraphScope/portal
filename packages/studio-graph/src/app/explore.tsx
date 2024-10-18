@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Button } from 'antd';
-import { MultipleInstance, Section, useSection, Icons, FullScreen } from '@graphscope/studio-components';
+import { MultipleInstance, Section, useSection, Icons, FullScreen, SegmentedTabs } from '@graphscope/studio-components';
 import {
   Toolbar,
   SwitchEngine,
@@ -11,7 +11,6 @@ import {
   LoadCSV,
   ZoomFit,
   ClearStatatus,
-  SegmentedTabs,
   SliderFilter,
   RunCluster,
   LayoutSetting,
@@ -44,12 +43,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       value: 'CSV',
       children: <LoadCSV />,
     },
-    {
-      key: 'Info',
-      label: 'Info',
-      value: 'Info',
-      children: <PropertiesPanel />,
-    },
+
     {
       key: 'Style',
       label: 'Style',
@@ -86,7 +80,11 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       <MultipleInstance>
         <Section
           splitBorder
-          rightSide={<SegmentedTabs items={items} block nodeClickTab="Info" canvasClickTab="Style" />}
+          rightSide={
+            <PropertiesPanel>
+              <SegmentedTabs items={items} block />
+            </PropertiesPanel>
+          }
           autoResize={false}
           leftSideStyle={{
             width: '350px',

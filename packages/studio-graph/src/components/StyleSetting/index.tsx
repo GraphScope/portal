@@ -7,11 +7,14 @@ import { useContext } from '../../hooks/useContext';
 import { Utils } from '@graphscope/studio-components';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
-interface IOverviewProps {}
+interface IOverviewProps {
+  showHeader?: boolean;
+}
 
 const StyleSetting: React.FunctionComponent<IOverviewProps> = props => {
   const { updateStore, store } = useContext();
   const { schema, nodeStyle, edgeStyle, graphId } = store;
+  const { showHeader } = props;
 
   const onChange = value => {
     console.log('value', value);
@@ -68,9 +71,11 @@ const StyleSetting: React.FunctionComponent<IOverviewProps> = props => {
 
   return (
     <Flex vertical gap={12}>
-      <Title level={3} style={{ margin: '0px' }}>
-        <FormattedMessage id="Style Setting" />
-      </Title>
+      {showHeader && (
+        <Title level={3} style={{ margin: '0px' }}>
+          <FormattedMessage id="Style Setting" />
+        </Title>
+      )}
       <Text type="secondary">
         You can click on each label to set the color, size, and display text for vertices and edges.
       </Text>
