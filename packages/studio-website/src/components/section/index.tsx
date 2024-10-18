@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Divider, Typography, Tabs, Space, Breadcrumb } from 'antd';
-import { FormattedMessage } from 'react-intl';
+import { Breadcrumb, theme } from 'antd';
+
 import type { TabsProps } from 'antd';
 import { CreatePortal, SegmentedTabs } from '@graphscope/studio-components';
 interface IFormattedMessage {
@@ -18,13 +18,14 @@ interface ISectionProps {
 
 const Section: React.FunctionComponent<ISectionProps> = props => {
   const { breadcrumb = [], children, items, style } = props;
+  const { token } = theme.useToken();
 
   return (
     <div
       style={{
         boxSizing: 'border-box',
         height: 'calc(100% - 50px)',
-        // background: '#fafafa',
+        background: token.colorBgContainer, // '#fafafa',
         position: 'relative',
         overflowY: 'scroll',
       }}
