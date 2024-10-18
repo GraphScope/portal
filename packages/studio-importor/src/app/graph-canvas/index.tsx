@@ -76,7 +76,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
               }}
             />
           )}
-          {isEmpty && <EmptyCanvas description={description} />}
+          {isEmpty && <EmptyCanvas description={description} isLight={!isLight} />}
           {!IS_PURE && <MiniMap style={{ backgroundColor: !isLight ? '#161616' : '' }} />}
         </ReactFlow>
       </div>

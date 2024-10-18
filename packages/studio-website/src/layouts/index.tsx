@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useContext, IGraph } from './useContext';
 
-import { Layout, Utils } from '@graphscope/studio-components';
+import { Layout, LogoText, Utils, useCustomToken } from '@graphscope/studio-components';
 import { DeploymentApiFactory } from '@graphscope/studio-server';
 import { SIDE_MENU, SETTING_MENU } from './const';
 import { Flex, Spin, notification } from 'antd';
@@ -105,8 +105,9 @@ export default function StudioLayout() {
 
   const { isReady } = state;
   const _SIDE = [...(SIDE_MENU || []), ...(SLOTS.SIDE_MEU || [])];
+  const { layoutBackground } = useCustomToken();
   if (isReady) {
-    return <Layout sideMenu={[_SIDE, SETTING_MENU]} />;
+    return <Layout sideMenu={[_SIDE, SETTING_MENU]} style={{ background: layoutBackground }} />;
   }
 
   return (

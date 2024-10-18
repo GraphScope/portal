@@ -7,7 +7,7 @@ const LeftButton: React.FunctionComponent<ILeftButtonProps> = props => {
   const { toggleRightSide } = useSection();
   const { isLight } = useStudioProvier();
   /** 夜间与白天模式 */
-  const color = !isLight ? '#ddd' : '#000';
+  const color = !isLight ? '#fff' : '#000';
 
   return (
     <Button

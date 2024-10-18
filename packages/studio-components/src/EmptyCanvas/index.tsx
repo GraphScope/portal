@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { Typography } from 'antd';
-import { FormattedMessage } from 'react-intl';
-import { PlayCircleOutlined } from '@ant-design/icons';
 import Image from './image';
 import { isDarkTheme } from '../Utils';
 interface IEmptyProps {
   description?: string | React.ReactNode;
+  isLight?: boolean;
 }
 
 const Empty: React.FunctionComponent<IEmptyProps> = props => {
-  const isDark = isDarkTheme();
-  const { description } = props;
+  const { description, isLight } = props;
+  const isDark = isLight || isDarkTheme();
 
   return (
     <div

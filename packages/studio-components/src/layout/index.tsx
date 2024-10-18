@@ -13,13 +13,15 @@ interface ILayoutProps {
   };
   github?: string;
   sideMenu: any[];
+  style?: React.CSSProperties;
 }
 
 const Layout: React.FunctionComponent<ILayoutProps> = props => {
-  const { sideStyle = {}, github = 'https://github.com/GraphScope/portal', sideMenu } = props;
+  const { sideStyle = {}, github = 'https://github.com/GraphScope/portal', sideMenu, style } = props;
   const { width = 220, collapsedWidth = 56 } = sideStyle;
   return (
     <Section
+      style={style}
       leftSide={
         <>
           <Sidebar sideStyle={{ width, collapsedWidth }} sideMenu={sideMenu} />
