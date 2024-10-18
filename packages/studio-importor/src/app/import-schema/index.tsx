@@ -8,7 +8,7 @@ import { SegmentedTabs, Icons, useStudioProvier } from '@graphscope/studio-compo
 import type { SegmentedTabsProps } from '@graphscope/studio-components';
 
 import { FormattedMessage } from 'react-intl';
-
+import { useContext } from '../useContext';
 interface IImportSchemaProps {
   style?: React.CSSProperties;
   displayType?: 'model' | 'panel';
@@ -33,8 +33,17 @@ const ImportSchema: React.FunctionComponent<IImportSchemaProps> = props => {
     visible: false,
   });
   const { visible } = state;
+  const { store } = useContext();
+  const { elementOptions } = store;
   const { isLight } = useStudioProvier();
-  const color = !isLight ? '#fff' : '#000';
+  /** svg pathFill */
+  let pathFill = () => {
+    if (!isLight) {
+      return elementOptions.isEditable ? '#585858' : '#fff';
+    } else {
+      return elementOptions.isEditable ? '#ddd' : '#000';
+    }
+  };
   const handleClick = () => {
     updateState({
       ...state,
@@ -51,7 +60,13 @@ const ImportSchema: React.FunctionComponent<IImportSchemaProps> = props => {
     return (
       <Space>
         <Tooltip title={<FormattedMessage id="Shortcut: parse files into a graph model" />} placement="left">
-          <Button type="text" onClick={handleClick} style={style} icon={<Icons.FileYaml style={{ color }} />}></Button>
+          <Button
+            type="text"
+            disabled={elementOptions.isEditable}
+            onClick={handleClick}
+            style={style}
+            icon={<Icons.FileYaml style={{ color: pathFill() }} />}
+          ></Button>
         </Tooltip>
 
         <Modal

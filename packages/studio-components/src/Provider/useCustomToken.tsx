@@ -24,7 +24,7 @@ export const useCustomToken = () => {
     codeMirrorBorder: isLight ? '#efefef' : '#323232',
     editorBackground: isLight ? '#fff' : '#151515',
     editorForeground: isLight ? '#212121' : '#FFF',
-    buttonBackground: isLight ? '#fff' : '#1d1d1d',
+    buttonBackground: isLight ? '#fff' : '#141414',
   };
   return colorConfig;
 };

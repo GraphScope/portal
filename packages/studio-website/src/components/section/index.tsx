@@ -24,7 +24,7 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
       style={{
         boxSizing: 'border-box',
         height: 'calc(100% - 50px)',
-        background: '#fafafa',
+        // background: '#fafafa',
         position: 'relative',
         overflowY: 'scroll',
       }}
