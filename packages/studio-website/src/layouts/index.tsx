@@ -105,9 +105,9 @@ export default function StudioLayout() {
 
   const { isReady } = state;
   const _SIDE = [...(SIDE_MENU || []), ...(SLOTS.SIDE_MEU || [])];
-  const { buttonBackground } = useCustomToken();
+  const { layoutBackground } = useCustomToken();
   if (isReady) {
-    return <Layout sideMenu={[_SIDE, SETTING_MENU]} style={{ background: buttonBackground }} />;
+    return <Layout sideMenu={[_SIDE, SETTING_MENU]} style={{ background: layoutBackground }} />;
   }
 
   return (
