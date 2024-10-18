@@ -53,17 +53,17 @@ const Create: React.FC = () => {
   return (
     <>
       <Button type="primary" icon={<PlusOutlined />} onClick={handleClick}>
-        Create instance
+        <FormattedMessage id="Create instance" />
       </Button>
       <Modal
         width={600}
-        title="Creating instance"
+        title={<FormattedMessage id="Create instance" />}
         open={open}
         onClose={handleClose}
         onCancel={handleClose}
         footer={[
           <Button key="back" onClick={handleClose}>
-            Cancel
+            <FormattedMessage id="Cancel" />
           </Button>,
           <Button type="primary" onClick={handleCreate} style={{ minWidth: '100px' }}>
             <FormattedMessage id="Create Graph" />

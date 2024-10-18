@@ -256,4 +256,7 @@ export default {
   'No Available Query Endpoint': '没有可用的查询终端节点',
   'Sorry, the system detected that there is no available query endpoint. Please connect query endpoint':
     '很抱歉，系统检测到没有可用的查询终端节点。请连接查询终端节点',
+  'Please click the button above to 「Create instance」': '请先点击上面的按钮「创建实例」',
+  'No graph available': '无可用图实例',
+  'Create instance': '创建图实例',
 };
