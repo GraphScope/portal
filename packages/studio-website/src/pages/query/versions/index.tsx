@@ -1,7 +1,8 @@
-import { Select, Space } from 'antd';
+import { Select, Space, Typography } from 'antd';
 import * as React from 'react';
 import { queryVersion, startVersion } from './service';
 import { Utils } from '@graphscope/studio-components';
+
 interface IVersionsProps {}
 
 const Versions: React.FunctionComponent<IVersionsProps> = props => {
@@ -33,12 +34,18 @@ const Versions: React.FunctionComponent<IVersionsProps> = props => {
     })();
   }, []);
   const handleChange = async (value: string) => {
+    setState(preState => {
+      return {
+        ...preState,
+        version: value,
+      };
+    });
     await startVersion(Utils.getSearchParams('graph_id'), value);
   };
 
   return (
     <Space>
-      version:
+      <Typography.Text type="secondary">version:</Typography.Text>
       <Select
         variant="borderless"
         style={{ flex: 1, minWidth: '50px' }}
