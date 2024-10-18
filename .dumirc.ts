@@ -2,8 +2,9 @@ import { defineConfig } from 'dumi';
 import { join } from 'path';
 import { defineThemeConfig } from 'dumi-theme-antd/dist/defineThemeConfig';
 const themeConfig = defineThemeConfig({
-  name: 'GraphScope Portal',
-  title: 'GraphScope Portal Components',
+  name: 'GraphScope',
+  title: 'GraphScope Portal',
+  logo: 'https://img.alicdn.com/imgextra/i4/O1CN01uhy1Yu1lO7HkUaW3K_!!6000000004808-2-tps-256-257.png',
   lastUpdated: true,
   nav: {
     'zh-CN': [
@@ -155,10 +156,8 @@ const themeConfig = defineThemeConfig({
   ],
 });
 export default defineConfig({
-  title: 'GraphScope', // 网站header标题
-  favicons: [
-    'https://camo.githubusercontent.com/45f3e5a1aa6a8d1229aede5062e8ec28a88658cc4a23ad4bbbbdf112036d6276/68747470733a2f2f677261706873636f70652e696f2f6173736574732f696d616765732f677261706873636f70652d6c6f676f2e737667',
-  ], // 网站 favicon
+  title: 'GraphScope',
+  favicons: ['https://img.alicdn.com/imgextra/i3/O1CN01DaSVLB1lD7ZIbDOi2_!!6000000004784-2-tps-256-257.png'], // 网站 favicon
   metas: [
     // 自定义 meta 标签
     { name: 'keywords', content: 'GraphScope' },

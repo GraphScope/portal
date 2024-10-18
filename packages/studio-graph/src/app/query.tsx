@@ -20,7 +20,6 @@ import {
   Prepare,
   ZoomFit,
   ClearStatatus,
-  SegmentedTabs,
   RunCluster,
   ContextMenu,
   NeighborQuery,
@@ -53,30 +52,11 @@ const ToogleButton = ({ color }) => {
 
 const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
   const { data, schema, graphId, onQuery } = props;
-  console.log('data>>>>', data);
+
   const { buttonBackground } = useCustomToken();
   const { isLight } = useStudioProvier();
   const color = !isLight ? '#ddd' : '#000';
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const items = [
-    {
-      key: 'Info',
-      label: 'Info',
-      value: 'Info',
-      children: <PropertiesPanel />,
-      autoFoucs: true,
-    },
-    {
-      key: 'Style',
-      label: 'Style',
-      value: 'Style',
-      children: <StyleSetting />,
-    },
-  ];
-
-  const onSelectNodes = values => {
-    console.log(values);
-  };
 
   return (
     <div
@@ -90,10 +70,15 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       <MultipleInstance>
         <Section
           splitBorder
-          rightSide={<SegmentedTabs items={items} block nodeClickTab="Info" canvasClickTab="Style" />}
+          rightSide={
+            <PropertiesPanel>
+              <StyleSetting />
+            </PropertiesPanel>
+          }
           autoResize={false}
-          leftSideStyle={{
-            width: '350px',
+          rightSideStyle={{
+            width: '300px',
+            padding: '12px 0px 12px 18px',
           }}
           defaultCollapsed={{
             leftSide: true,
@@ -119,7 +104,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
             <Divider style={{ margin: '0px' }} />
             <FullScreen containerRef={containerRef} />
             <ZoomFit />
-            <Brush onSelect={onSelectNodes} />
+            <Brush />
             <Divider style={{ margin: '0px' }} />
             <SwitchEngine />
             <RunCluster />

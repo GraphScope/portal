@@ -1,12 +1,10 @@
 import React, { useEffect, useState, memo } from 'react';
-import { Row, Col, Card, Skeleton } from 'antd';
+import { Row, Col, Card, Skeleton, Result, Button } from 'antd';
 import { useHistory } from '../../../hooks';
 import InstaceCard, { InstaceCardType } from './instance-card';
-import Section from '../../../components/section';
 import { useContext } from '../../../layouts/useContext';
 import { useCustomToken } from '@graphscope/studio-components';
-import InteractiveCase from './interactive-case';
-import CreateGraph from './create-graph';
+import { FormattedMessage } from 'react-intl';
 import { listGraphs } from './service';
 const InstanceCard: React.FC = () => {
   const { store } = useContext();
@@ -33,6 +31,16 @@ const InstanceCard: React.FC = () => {
   useEffect(() => {
     fetchLists();
   }, []);
+  const isEmpty = instanceList.length === 0;
+  if (isEmpty) {
+    return (
+      <Result
+        status="404"
+        title={<FormattedMessage id="No graph available" />}
+        subTitle={<FormattedMessage id="Please click the button above to 「Create instance」" />}
+      />
+    );
+  }
 
   return (
     <Row gutter={[12, 12]}>

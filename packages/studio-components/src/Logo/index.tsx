@@ -136,6 +136,7 @@ export const LogoText = ({
 
 const Logo = (props: { style?: any; onlyIcon?: boolean }) => {
   const { style = {}, onlyIcon } = props;
+  const { color = '#333' } = style;
 
   return (
     <div
@@ -147,7 +148,7 @@ const Logo = (props: { style?: any; onlyIcon?: boolean }) => {
       }}
     >
       <LogoImage style={{ width: '28px', marginTop: '-4px', marginRight: '6px' }} />
-      <LogoText style={{ width: '120px', height: '54px' }} />
+      <LogoText style={{ width: '120px', height: '54px' }} color={color} />
     </div>
   );
 };

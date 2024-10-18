@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Divider, Typography, Tabs, Space, Breadcrumb } from 'antd';
-import { FormattedMessage } from 'react-intl';
+import { Breadcrumb, theme } from 'antd';
+
 import type { TabsProps } from 'antd';
-import { CreatePortal, SegmentedTabs } from '@graphscope/studio-components';
+import { CreatePortal, SegmentedTabs, useStudioProvier } from '@graphscope/studio-components';
 interface IFormattedMessage {
   id: string;
   values?: { [key: string]: string };
@@ -18,13 +18,15 @@ interface ISectionProps {
 
 const Section: React.FunctionComponent<ISectionProps> = props => {
   const { breadcrumb = [], children, items, style } = props;
+  const { token } = theme.useToken();
+  const { isLight } = useStudioProvier();
 
   return (
     <div
       style={{
         boxSizing: 'border-box',
         height: 'calc(100% - 50px)',
-        // background: '#fafafa',
+        background: isLight ? '#fafafa' : '#242424',
         position: 'relative',
         overflowY: 'scroll',
       }}

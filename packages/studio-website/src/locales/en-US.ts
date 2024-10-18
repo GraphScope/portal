@@ -260,4 +260,8 @@ export default {
   'No Available Query Endpoint': 'No Available Query Endpoint',
   'Sorry, the system detected that there is no available query endpoint. Please connect query endpoint':
     'Sorry, the system detected that there is no available query endpoint. Please connect query endpoint',
+
+  'Please click the button above to 「Create instance」': 'Please click the button above to 「Create instance」',
+  'No graph available': 'No graph available',
+  'Create instance': 'Create instance',
 };

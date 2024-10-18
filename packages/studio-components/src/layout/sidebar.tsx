@@ -8,6 +8,7 @@ import { useSection } from '../Section/useSection';
 import Header from './header';
 import CollapsedButton from './collapsed';
 import { getAllSearchParams, setSearchParams, getCurrentNav } from '../Utils';
+import { useStudioProvier } from '../Provider/useThemeConfigProvider';
 
 interface ISidebar {
   sideStyle: {
@@ -24,6 +25,7 @@ const Sidebar: React.FunctionComponent<ISidebar> = props => {
   const { collapsed } = useSection();
   const [hovering, setHovering] = useState(false);
   const [SIDE_MENU, SETTING_MENU] = sideMenu;
+  const { isLight } = useStudioProvier();
 
   const activeKey = getCurrentNav();
 
@@ -51,7 +53,7 @@ const Sidebar: React.FunctionComponent<ISidebar> = props => {
           padding: '0px 14px',
         }}
       >
-        <Logo />
+        <Logo style={{ color: isLight ? '#333' : '#fff' }} />
       </Header>
       <div
         style={{

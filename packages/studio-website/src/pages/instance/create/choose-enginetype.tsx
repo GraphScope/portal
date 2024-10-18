@@ -46,6 +46,21 @@ const gs_all_engines = [
       </>
     ),
   },
+  {
+    id: 'gart_store',
+    type: 'gart',
+    title: 'Gart Engine',
+    value: 'gart',
+    desc: (
+      <>
+        <FormattedMessage id="graphs.engine.interactive.desc" />
+        <br />
+        <Typography.Link href="https://graphscope.io/docs/interactive_engine/graphscope_interactive" target="_blank">
+          <FormattedMessage id="More details" />
+        </Typography.Link>
+      </>
+    ),
+  },
 ];
 
 const engines = gs_all_engines.filter(item => {
