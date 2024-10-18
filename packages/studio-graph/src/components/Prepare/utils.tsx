@@ -61,6 +61,10 @@ export function getDataMap(data) {
     dataMap[id] = edge;
     const sourceNode = dataMap[source];
     const targetNode = dataMap[target];
+    if (!sourceNode || !targetNode) {
+      console.log('edge source or target node not found', source, target);
+      return;
+    }
     sourceNode.neighbors.push(target);
     targetNode.neighbors.push(source);
     sourceNode.links.push(id);

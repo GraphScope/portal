@@ -33,6 +33,11 @@ export function getDataMap(data) {
       dataMap.set(id, edge);
     }
 
+    if (!sourceNode || !targetNode) {
+      console.log('edge source or target node not found', source, target);
+      return;
+    }
+
     // 更新出边和出邻居
     sourceNode.outEdges.push(id);
     sourceNode.outNeighbors.push(target);

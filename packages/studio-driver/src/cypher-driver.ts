@@ -235,8 +235,25 @@ export function processResult(result) {
     }
   });
 
-  console.log({ nodes: deduplicateNodes(nodes), edges, table });
-  return { nodes: deduplicateNodes(nodes), edges, table, raw: result };
+  return { ...transformData(nodes, edges), table, raw: result };
+}
+
+export function transformData(_nodes, _edges) {
+  const nodesMap = new Map();
+  _nodes.forEach(item => {
+    nodesMap.set(item.id, item);
+  });
+  const edges = _edges.filter(item => {
+    const { source, target } = item;
+    const sourceNode = nodesMap.get(source);
+    const targetNode = nodesMap.get(target);
+    return sourceNode && targetNode;
+  });
+
+  return {
+    nodes: [...nodesMap.values()],
+    edges,
+  };
 }
 
 export function deduplicateNodes(nodes) {
