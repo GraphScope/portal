@@ -22,10 +22,14 @@ export default function StudioLayout() {
         const { data } = res;
         if (data) {
           const { engine, storage, frontend } = data;
-          const interactive = engine === 'Hiactor' && storage === 'MutableCSR' && frontend === 'Cypher/Gremlin';
-          const engineType = interactive ? 'interactive' : 'groot';
-          return engineType;
-          // return 'gart';
+          //@ts-ignore
+          if (engine === 'gart') {
+            return 'gart';
+          }
+          if (engine === 'Hiactor' && storage === 'MutableCSR' && frontend === 'Cypher/Gremlin') {
+            return 'interactive';
+          }
+          return 'groot';
         }
         return 'interactive';
       })
