@@ -1,18 +1,51 @@
+import {
+  red,
+  volcano,
+  gold,
+  yellow,
+  lime,
+  green,
+  cyan,
+  blue,
+  geekblue,
+  purple,
+  magenta,
+  grey,
+  orange,
+  presetPalettes,
+} from '@ant-design/colors';
+
+console.log('presetPalettes', presetPalettes);
 export const colors: string[] = [
-  '#569480',
-  '#F79767',
-  '#1978fe',
-  '#C990C0',
-  '#57C7E3',
-  '#D9C8AE',
-  '#FFE081',
-  '#8DCC93',
-  '#ECB5C9',
-  '#FFC454',
-  '#DA7194',
-  '#848484',
+  blue[4],
+  orange[4],
+
+  purple[4],
+  lime[4],
+
+  magenta[4],
+  cyan[4],
+
+  gold[8],
+  red[6],
+
   '#000',
   '#f0f0f0',
+
+  // '#569480',
+  // '#F79767',
+  // '#1978fe',
+  // '#C990C0',
+  // '#57C7E3',
+  // '#D9C8AE',
+  // '#FFE081',
+  // '#8DCC93',
+  // '#ECB5C9',
+  // '#FFC454',
+  // '#DA7194',
+  // '#848484',
+  // '#000',
+  // '#f0f0f0',
 ];
 
 //  这里是 size 只是一个比率，因为还需要和内部的 BASIC_NODE_R 相乘

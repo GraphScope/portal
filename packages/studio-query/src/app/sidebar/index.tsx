@@ -1,10 +1,8 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { memo } from 'react';
-import { Utils, SegmentedTabs, SegmentedTabsProps, SideTabs } from '@graphscope/studio-components';
-import { RollbackOutlined, PicLeftOutlined, SlidersOutlined } from '@ant-design/icons';
-import { Space, Button, theme, Flex, Typography, Tooltip, Divider, Tag } from 'antd';
+import { SegmentedTabs, SegmentedTabsProps, SideTabs } from '@graphscope/studio-components';
+
 import { IStudioQueryProps } from '../context';
-const { useToken } = theme;
 
 interface SidebarProps {
   title?: string;

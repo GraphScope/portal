@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import StudioQuery from '@graphscope/studio-query';
-
+import { theme } from 'antd';
 import { queryGraphData, queryGraphSchema, queryStatements, deleteStatements, createStatements } from './services';
 import { useContext } from '../../layouts/useContext';
 import NoEndpointCase from './no-endpoint-case';
@@ -60,6 +60,7 @@ export interface IQueryModuleState {
 }
 const QueryModule = () => {
   const { store } = useContext();
+  const { token } = theme.useToken();
   const { graphId, displaySidebarPosition, displaySidebarType } = store;
   const { language, globalScript, welcome, autoRun, collapsed } = getPrefixParams();
 
@@ -98,7 +99,7 @@ const QueryModule = () => {
         connectComponent={<SelectGraph />}
         displaySidebarPosition={displaySidebarPosition}
         displaySidebarType={displaySidebarType}
-        sidebarStyle={{ width: '240px', padding: '0px' }}
+        sidebarStyle={{ width: '240px', padding: '0px', background: token.colorBgBase }}
         sidebarCollapsed={collapsed}
       ></StudioQuery>
       <StoppedServiceCase />
