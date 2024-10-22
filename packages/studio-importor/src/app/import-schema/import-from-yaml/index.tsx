@@ -9,7 +9,7 @@ import { transMappingSchemaToOptions } from '../../utils/importing';
 import { useContext } from '../../useContext';
 import { transformEdges, transformGraphNodes } from '../../elements';
 
-import { Utils } from '@graphscope/studio-components';
+import { Utils, Icons } from '@graphscope/studio-components';
 const { Dragger } = Upload;
 
 export type IProps = {
@@ -32,7 +32,7 @@ const hackContent = jsonContent => {
 };
 
 const ImportFromYAML = (props: IProps) => {
-  const { style = {}, icon = <InboxOutlined />, disabled } = props;
+  const { style = {}, icon = <Icons.File text="YAML" />, disabled } = props;
   const { updateStore, store } = useContext();
   const { appMode, nodes, edges } = store;
   const customRequest: UploadProps['customRequest'] = async options => {
@@ -45,8 +45,9 @@ const ImportFromYAML = (props: IProps) => {
       if (type === 'application/x-yaml') {
         jsonContent = hackContent(yaml.load(content));
       }
+
       if (type === 'application/json') {
-        jsonContent = JSON.parse(content);
+        jsonContent = hackContent(JSON.parse(content));
       }
       let schema;
       if (appMode === 'DATA_MODELING') {
@@ -84,7 +85,7 @@ const ImportFromYAML = (props: IProps) => {
         <Flex justify="center" align="center" vertical gap={24}>
           {icon}
           <Typography.Text type="secondary">
-            <FormattedMessage id="For the definition and description of the schema model, please refer to the" />
+            <FormattedMessage id="For the definition and description of the schema model, please refer to the " />
             <a href="https://graphscope.io/docs/flex/interactive/data_model" target="_blank">
               <FormattedMessage id="document" />
             </a>

@@ -3,13 +3,13 @@ import { Divider } from 'antd';
 import { Toolbar, useCustomToken } from '@graphscope/studio-components';
 import 'reactflow/dist/style.css';
 import RightButton from './right-button';
-import LeftButton from './left-button';
 import ClearCanvas from './clear-canvas';
 import AddNode from './add-node';
 import ExportImage from './export-image';
 import { useContext } from '../useContext';
-import ImportSchema from '../import-schema';
-import ExportModel from './export-model';
+
+import ParseCSV from './parse-csv';
+import ImportAndExportConfig from './import-and-export-config';
 interface IButtonControllerProps {}
 
 const ButtonController: React.FunctionComponent<IButtonControllerProps> = props => {
@@ -25,12 +25,13 @@ const ButtonController: React.FunctionComponent<IButtonControllerProps> = props 
         >
           <RightButton />
           <Divider style={{ margin: '0px' }} />
-          <ImportSchema displayType="model" />
+          <ParseCSV />
+          <Divider style={{ margin: '0px' }} />
+          <ImportAndExportConfig />
           <Divider style={{ margin: '0px' }} />
           <AddNode />
           <ClearCanvas />
           <ExportImage />
-          <ExportModel />
         </Toolbar>
       </>
     );
@@ -40,9 +41,11 @@ const ButtonController: React.FunctionComponent<IButtonControllerProps> = props 
       <>
         <Toolbar
           style={{ top: '12px', right: '24px', left: 'unset', background: buttonBackground }}
-          direction="horizontal"
+          direction="vertical"
         >
           <RightButton />
+          <Divider style={{ margin: '0px' }} />
+          <ImportAndExportConfig />
         </Toolbar>
       </>
     );
