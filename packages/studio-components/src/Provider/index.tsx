@@ -55,6 +55,8 @@ const Provider: React.FC<IThemeProvider> = props => {
     });
 
     setState(preState => {
+      // 特殊化处理,切token数据需初始化数据做基础
+      storage.set('token', { ...preState.token, ...token });
       return {
         ...preState,
         components: { ...preState.components, ...components },

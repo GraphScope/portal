@@ -8,11 +8,11 @@ const { useToken } = theme;
 const PrimaryColor: React.FunctionComponent = () => {
   const { handleThemeOrLocale } = useStudioProvier();
   const { token } = useToken();
-  const { borderRadius, colorPrimary } = token;
+  const { colorPrimary } = token;
 
   // Function to handle primary color change
   const handlePrimaryColor = (color: string) => {
-    handleThemeOrLocale({ token: { colorPrimary: color, borderRadius } });
+    handleThemeOrLocale({ token: { colorPrimary: color } });
   };
   return (
     <SettingParcel title="Primary color" text="Set the primary color">

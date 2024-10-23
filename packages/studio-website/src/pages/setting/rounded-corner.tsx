@@ -10,7 +10,7 @@ const RoundedCorner: React.FunctionComponent = () => {
 
   const handleBorderRadiusChange: (newBorderRadius: number | null) => void = newBorderRadius => {
     //@ts-ignore
-    handleThemeOrLocale({ token: { ...token, borderRadius: newBorderRadius } });
+    handleThemeOrLocale({ token: { borderRadius: newBorderRadius } });
   };
 
   return (
