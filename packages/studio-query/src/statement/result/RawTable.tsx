@@ -67,7 +67,27 @@ const RawTable: React.FC<IRawTableProps> = ({ data }) => {
     marginLeft: '12px',
     width: `${100 / firstRowKeys.length}%`,
   };
-
+  const recursion = data => {
+    return (
+      <>
+        {Object.entries(data).map(([key, value]) => {
+          console.log('value74', Object.prototype.toString.call(value) === '[object Object]');
+          return (
+            <p style={{ paddingLeft: '16px' }} key={key}>
+              <span style={{ color: '#F9822F' }}>"{key}" : </span>
+              <span style={{ color: '#393534', paddingLeft: '12px', textIndent: '-16px' }}>
+                {Object.prototype.toString.call(value) === '[object Object]' ? (
+                  <>&#123; {recursion(value)} &#125;</>
+                ) : (
+                  JSON.stringify(value, null, 2)
+                )}
+              </span>
+            </p>
+          );
+        })}
+      </>
+    );
+  };
   return (
     <Table
       columns={columns}
@@ -81,12 +101,7 @@ const RawTable: React.FC<IRawTableProps> = ({ data }) => {
                 item.key && (
                   <div style={containerStyles} key={item.key}>
                     &#123;
-                    {Object.entries(item.data).map(([key, value]) => (
-                      <p style={{ paddingLeft: '12px' }} key={key}>
-                        <span style={{ color: '#F9822F' }}>"{key}" : </span>
-                        <span style={{ color: '#393534' }}>{JSON.stringify(value, null, 2)}</span>
-                      </p>
-                    ))}
+                    {recursion(item.data)}
                     &#125;
                   </div>
                 ),
