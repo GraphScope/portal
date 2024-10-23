@@ -35,7 +35,8 @@ const styles = {
 };
 const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps> = props => {
   const { schemaData, schemaId } = props;
-  const { updateStore } = useContext();
+  const { updateStore, store } = useContext();
+  const { language } = store;
   const graphSchema = transGraphSchema(schemaData);
   const configMap = getStyleConfig(schemaData, schemaId);
   const { nodes, edges } = schemaData;
@@ -44,18 +45,32 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
 
   const handleClick = (label: string, type: 'nodes' | 'edges' | 'property') => {
     let script = '';
-    if (type === 'nodes') {
-      script = `MATCH (n:${label}) RETURN n LIMIT 25`;
-    }
-    if (type === 'edges') {
-      script = `MATCH (a)-[b:${label}]->(c) RETURN a,b,c LIMIT 25;`;
-    }
-    if (type === 'property') {
-      script = `MATCH(a) where a.${label} IS NOT NULL AND a.${label} <> ""
+
+    if (language === 'cypher') {
+      if (type === 'nodes') {
+        script = `MATCH (n:${label}) RETURN n LIMIT 25`;
+      }
+      if (type === 'edges') {
+        script = `MATCH (a)-[b:${label}]->(c) RETURN a,b,c LIMIT 25;`;
+      }
+      if (type === 'property') {
+        script = `MATCH(a) where a.${label} IS NOT NULL AND a.${label} <> ""
       WITH a.${label} as ${label}
       RETURN ${label} , COUNT(${label}) as ${label}_COUNT
       ORDER BY ${label}_COUNT DESC
       `;
+      }
+    }
+    if (language === 'gremlin') {
+      if (type === 'nodes') {
+        script = `g.V().hasLabel('${label}').limit(25)`;
+      }
+      if (type === 'edges') {
+        script = `g.V().hasLabel('${label}').outE('${label}').limit(25).inV().toList()`;
+      }
+      if (type === 'property') {
+        script = `g.V().has('${label}').groupCount().by('${label}').order(local).by(values, decr).limit(25)`;
+      }
     }
     updateStore(draft => {
       draft.globalScript = script;
