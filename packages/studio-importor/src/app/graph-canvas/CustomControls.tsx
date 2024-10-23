@@ -13,9 +13,9 @@ const CustomControls: React.FunctionComponent<ICustomControlsProps> = props => {
   const { zoomIn, zoomOut, fitView } = useReactFlow();
   const { isLight } = useStudioProvier();
   // svg path fill
-  const fill = !isLight ? '#FFF' : '#000';
+  const color = !isLight ? '#FFF' : '#000';
   // lock or unlock
-  const Icon = isLocked ? <Icons.Lock fill={fill} /> : <Icons.Unlock fill={fill} />;
+  const Icon = isLocked ? <Icons.Lock style={{ color }} /> : <Icons.Unlock style={{ color }} />;
   const background = !isLight ? '#1d1d1d' : '#fff';
   return (
     <>

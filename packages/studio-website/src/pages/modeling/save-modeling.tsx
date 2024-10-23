@@ -217,6 +217,19 @@ export function getButtonStatus(params: {
     };
   }
 
+  if (GS_ENGINE_TYPE === 'gart') {
+    if (IS_DRAFT_GRAPH && nodes.length !== 0) {
+      return {
+        text: 'Save Modeling',
+        disabled: !validatePassed,
+      };
+    }
+    return {
+      text: 'View Schema',
+      disabled: true,
+    };
+  }
+
   if (GS_ENGINE_TYPE === 'groot') {
     const everySaved = nodes.every(node => {
       return node.data.saved;
