@@ -9,7 +9,7 @@ export type IStore = {
   appMode: 'DATA_MODELING' | 'DATA_IMPORTING' | 'PURE';
   /**不可编辑状态 */
   disabled: boolean;
-
+  isReady: boolean;
   currentType: 'nodes' | 'edges';
   currentId: string;
   nodes: ISchemaNode[];
@@ -52,6 +52,7 @@ export const initialStore: IStore = {
     nodes: [],
     edges: [],
   },
+  isReady: false,
   displayMode: 'graph',
   graphPosition: {},
   tablePosition: {},

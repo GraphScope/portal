@@ -72,7 +72,7 @@ const Sidebar: React.FunctionComponent<ISidebar> = props => {
           defaultSelectedKeys={[activeKey]}
           selectedKeys={[activeKey]}
           items={SIDE_MENU}
-          mode="vertical"
+          mode="inline"
           style={{
             boxSizing: 'border-box',
             borderInlineEnd: 'none',
@@ -87,7 +87,7 @@ const Sidebar: React.FunctionComponent<ISidebar> = props => {
             defaultSelectedKeys={[activeKey]}
             selectedKeys={[activeKey]}
             items={SETTING_MENU}
-            mode="vertical"
+            mode="inline"
             style={{
               borderInlineEnd: 'none',
             }}

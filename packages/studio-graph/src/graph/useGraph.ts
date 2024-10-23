@@ -21,6 +21,7 @@ import {
   forceCollide as d3ForceCollide,
 } from 'd3-force-3d';
 
+let timer: any = null;
 export default function useGraph<P extends GraphProps>(props: P) {
   const {
     onInit,
@@ -158,15 +159,15 @@ export default function useGraph<P extends GraphProps>(props: P) {
   useEffect(() => {
     if (graphRef.current) {
       graphRef.current.graphData(Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges }));
-      let timeIndex = 0;
-      const timer = setInterval(() => {
-        timeIndex++;
-        if (timeIndex >= 4) {
-          clearInterval(timer);
-        }
-        graphRef.current?.zoomToFit(400, 10 * timeIndex);
-      }, 400);
+
+      timer = setTimeout(() => {
+        console.log('Math.max(400 / (data.nodes.length + 1), 20)', Math.max(400 / (data.nodes.length + 1), 20));
+        graphRef.current?.zoomToFit(400, Math.max(400 / (data.nodes.length + 1), 20));
+      }, 1200);
     }
+    return () => {
+      clearTimeout(timer);
+    };
   }, [data]);
   useEffect(() => {
     if (graphRef.current) {

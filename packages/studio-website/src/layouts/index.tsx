@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useContext, IGraph } from './useContext';
 
-import { Layout, LogoText, Utils, useCustomToken } from '@graphscope/studio-components';
+import { Layout, LogoText, Utils, useCustomToken, GlobalSpin } from '@graphscope/studio-components';
 import { DeploymentApiFactory } from '@graphscope/studio-server';
 import { SIDE_MENU, SETTING_MENU } from './const';
 import { Flex, Spin, notification } from 'antd';
@@ -114,10 +114,5 @@ export default function StudioLayout() {
     return <Layout sideMenu={[_SIDE, SETTING_MENU]} style={{ background: layoutBackground }} />;
   }
 
-  return (
-    <Flex justify="center" align="center" vertical style={{ height: '100vh' }}>
-      <Spin size="large" />
-      {/* <LogoText style={{ marginTop: '24px' }} animate={true} /> */}
-    </Flex>
-  );
+  return <GlobalSpin />;
 }

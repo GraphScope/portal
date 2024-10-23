@@ -22,11 +22,11 @@ const ConnectEndpoint: React.FunctionComponent<IConnectEndpointProps> = props =>
   const { onConnect, onClose } = props;
   React.useEffect(() => {
     form.setFieldsValue({
-      query_language: props.query_language || storage.get('query_language'),
-      query_endpoint: props.query_endpoint || storage.get('query_endpoint'),
-      query_initiation: props.query_initiation || storage.get('query_initiation'),
-      query_username: props.query_username || storage.get('query_username'),
-      query_password: props.query_password || storage.get('query_password'),
+      query_language: props.query_language || storage.get('query_language') || 'cypher',
+      query_endpoint: props.query_endpoint || storage.get('query_endpoint') || 'neo4j://127.0.0.1:7687',
+      query_initiation: props.query_initiation || storage.get('query_initiation') || 'Browser',
+      query_username: props.query_username || storage.get('query_username') || 'admin',
+      query_password: props.query_password || storage.get('query_password') || 'password',
     });
   }, []);
   const handleConnect = () => {

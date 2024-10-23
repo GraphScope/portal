@@ -1,7 +1,8 @@
 import React, { Suspense } from 'react';
 import { Routes, Route, Navigate, HashRouter } from 'react-router-dom';
-import { StudioProvier } from '@graphscope/studio-components';
+import { StudioProvier, GlobalSpin } from '@graphscope/studio-components';
 import Layout from '../layouts';
+import { Spin, Flex } from 'antd';
 
 import locales from '../locales';
 interface IPagesProps {
@@ -36,7 +37,7 @@ const Pages: React.FunctionComponent<IPagesProps> = props => {
         key={index}
         path={path}
         element={
-          <Suspense fallback={<></>}>
+          <Suspense fallback={<GlobalSpin />}>
             {/** @ts-ignore */}
             <Component />
           </Suspense>

@@ -19,6 +19,7 @@ export { default as Slot } from './Slot';
 export { default as TypingText } from './TypingText';
 export { default as CreatePortal } from './CreatePortal';
 export { default as Layout } from './layout';
+export { default as GlobalSpin } from './GlobalSpin';
 /** all */
 export * as Utils from './Utils';
 export * as Icons from './Icons';
