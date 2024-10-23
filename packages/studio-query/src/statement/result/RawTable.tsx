@@ -75,7 +75,7 @@ const RawTable: React.FC<IRawTableProps> = ({ data }) => {
           return (
             <p style={{ paddingLeft: '16px' }} key={key}>
               <span style={{ color: '#F9822F' }}>"{key}" : </span>
-              <span style={{ color: '#393534', paddingLeft: '12px', textIndent: '-16px' }}>
+              <span style={{ color: '#393534', paddingLeft: '12px', textIndent: '-8px' }}>
                 {Object.prototype.toString.call(value) === '[object Object]' ? (
                   <>&#123; {recursion(value)} &#125;</>
                 ) : (
