@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
 import GraphCanvas from './graph-canvas';
 import PropertiesEditor from './properties-editor';
-
+import { Spin } from 'antd';
 import { ReactFlowProvider } from 'reactflow';
-import { Section, StudioProvier } from '@graphscope/studio-components';
+import { Section, StudioProvier, GlobalSpin } from '@graphscope/studio-components';
 import 'reactflow/dist/style.css';
 import { transformGraphNodes, transformEdges } from './elements/index';
 import { IdContext } from './useContext';
@@ -49,6 +49,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
     rightSide,
   } = props;
   const { store, updateStore } = useContext();
+  const { isReady } = store;
 
   useEffect(() => {
     (async () => {
@@ -67,6 +68,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
       const isEmpty = nodes.length === 0;
 
       updateStore(draft => {
+        draft.isReady = true;
         draft.nodes = nodes;
         draft.edges = edges;
         draft.appMode = appMode;
@@ -82,6 +84,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
     })();
   }, []);
   const IS_PURE = appMode === 'PURE';
+  console.log('isReady', isReady);
 
   return (
     <StudioProvier locales={locales}>
@@ -106,12 +109,16 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         style={{ height: 'calc(100vh - 50px)', ...style }}
         splitBorder
       >
-        <ReactFlowProvider>
-          {!IS_PURE && <ButtonController />}
+        {isReady ? (
+          <ReactFlowProvider>
+            {!IS_PURE && <ButtonController />}
 
-          <GraphCanvas />
-          {children}
-        </ReactFlowProvider>
+            <GraphCanvas />
+            {children}
+          </ReactFlowProvider>
+        ) : (
+          <GlobalSpin />
+        )}
       </Section>
     </StudioProvier>
   );

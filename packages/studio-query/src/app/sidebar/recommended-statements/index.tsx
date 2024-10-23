@@ -66,10 +66,10 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
         script = `g.V().hasLabel('${label}').limit(25)`;
       }
       if (type === 'edges') {
-        script = `g.V().hasLabel('${label}').outE('${label}').limit(25).inV().toList()`;
+        script = `g.V().outE('${label}').limit(25)`;
       }
       if (type === 'property') {
-        script = `g.V().has('${label}').groupCount().by('${label}').order(local).by(values, decr).limit(25)`;
+        script = `g.V().has('${label}').groupCount().by('${label}').order().by(select(values), desc)`;
       }
     }
     updateStore(draft => {
