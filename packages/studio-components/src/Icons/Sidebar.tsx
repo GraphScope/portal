@@ -2,15 +2,15 @@ import React from 'react';
 export default ({ style, revert }: { style?: React.CSSProperties; revert?: boolean }) => {
   // 根据revert属性判断是否需要镜像
   const transformStyle = revert ? { ...style, transform: 'scaleX(-1)' } : style;
-  const { color } = style || { color: '#000' };
+  const { color, fontSize = '14px' } = style || { color: '#000' };
   return (
     <svg
       viewBox="0 0 1024 1024"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       p-id="1426"
-      width="14"
-      height="14"
+      width={fontSize}
+      height={fontSize}
       style={transformStyle}
     >
       <path

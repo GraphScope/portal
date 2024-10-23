@@ -42,7 +42,7 @@ const ClearCanvas: React.FunctionComponent<IAddNodeProps> = props => {
         onClick={handleClear}
         style={style}
         type="text"
-        icon={<Icons.Trash fill={pathFill()} />}
+        icon={<Icons.Trash style={{ color: pathFill() }} />}
       ></Button>
     </Tooltip>
   );

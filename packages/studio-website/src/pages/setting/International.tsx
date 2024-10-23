@@ -7,7 +7,7 @@ import SettingParcel from '../../components/setting-parcel';
 
 const International: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
-  const { locale = 'zh-CN' } = store;
+  const { locale = 'en-US' } = store;
   const { handleThemeOrLocale } = useStudioProvier();
 
   const handleLocales = (value: ILocaleSwitchProps['value']) => {
