@@ -12,4 +12,6 @@ export { default as Cluster } from './Cluster';
 export { default as Lock } from './Lock';
 export { default as Unlock } from './Unlock';
 export { default as Lasso } from './Lasso';
+export { default as Arrow } from './Arrow';
+export { default as Punctuation } from './Punctuation';
 export { default as File } from './File';
