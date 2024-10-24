@@ -1,7 +1,7 @@
 import React from 'react';
 import { proxy, useSnapshot } from 'valtio';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
-import { Utils, useMultipleInstance } from '@graphscope/studio-components';
+import { useContext as useZustandContext } from '@graphscope/use-zustand';
 import type { StyleConfig, Emitter, Graph, GraphData } from './typing';
 import { StatusConfig } from '../components/Prepare/typing';
 
@@ -63,21 +63,6 @@ export const initialStore: IStore = {
   isLoading: false,
 };
 
-type ContextType = {
-  id: string;
-  store: Snapshot<IStore>;
-  updateStore: (fn: (draft: IStore) => void) => void;
-};
-
-export function useContext(): ContextType {
-  const { id, currentStore } = useMultipleInstance(proxy(Utils.fakeSnapshot(initialStore)));
-  const store = useSnapshot(currentStore);
-
-  return {
-    id,
-    store,
-    updateStore: (fn: (draft) => void) => {
-      return fn(currentStore);
-    },
-  };
+export function useContext() {
+  return useZustandContext<IStore>();
 }
