@@ -1,4 +1,4 @@
-import { useContext } from './useContext';
+import { useContext } from '@graphscope/use-zustand';
 
 // Function to calculate bounding box of nodes
 export const calculateBoundingBox = (nodes, ids) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Slider, Button } from 'antd';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '@graphscope/use-zustand';
 import type { GraphData } from '../../hooks/typing';
 interface ISliderFilterProps {}
 

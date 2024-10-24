@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Section, useSection, Icons } from '@graphscope/studio-components';
 import { Button } from 'antd';
 import { SegmentedTabs } from '@graphscope/studio-components';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '@graphscope/use-zustand';
 import type { RuntimeAtom } from '../../spec/';
 export interface IBasicContainerProps {
   items: RuntimeAtom[][];

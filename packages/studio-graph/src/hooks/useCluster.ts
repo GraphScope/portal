@@ -1,4 +1,4 @@
-import { useContext } from './useContext';
+import { useContext } from '@graphscope/use-zustand';
 import { getGroups, get } from './getGroups';
 import { ForceGraphInstance } from './typing';
 import {

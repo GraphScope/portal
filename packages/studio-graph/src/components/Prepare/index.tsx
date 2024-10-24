@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '@graphscope/use-zustand';
 import { getStyleConfig, getDataMap } from './utils';
 import { Utils } from '@graphscope/studio-components';
 interface IPrepareProps {

@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { Utils } from '@graphscope/studio-components';
 import Graph from '../../graph';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '@graphscope/use-zustand';
 import { NodeData, EdgeData } from '../../hooks/typing';
 
 export const colors: string[] = [

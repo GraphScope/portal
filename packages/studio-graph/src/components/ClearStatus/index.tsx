@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '@graphscope/use-zustand';
 
 interface IClearStatatusProps {}
 

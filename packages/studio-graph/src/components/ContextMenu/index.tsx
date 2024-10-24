@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '@graphscope/use-zustand';
 import { Flex, theme } from 'antd';
 
 export interface IContextMenuProps {

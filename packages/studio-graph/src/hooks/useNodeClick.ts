@@ -1,4 +1,4 @@
-import { useContext } from './useContext';
+import { useContext } from '@graphscope/use-zustand';
 import { useEffect } from 'react';
 import { getDataMap } from './utils';
 const useNodeClick = () => {

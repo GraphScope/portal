@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { Button } from 'antd';
 import { ImportFiles, Utils } from '@graphscope/studio-components';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '@graphscope/use-zustand';
 
 import { getStyleConfig, getDataMap } from '../Prepare/utils';
 

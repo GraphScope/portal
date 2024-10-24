@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Typography, Button } from 'antd';
 import { ShareAltOutlined, DeleteColumnOutlined } from '@ant-design/icons';
-import { useContext } from '../../../hooks/useContext';
+import { useContext } from '@graphscope/use-zustand';
 import { getDataMap } from '../../Prepare/utils';
 interface IDeleteLeafNodesProps {}
 

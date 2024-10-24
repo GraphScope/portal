@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Spin } from 'antd';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '@graphscope/use-zustand';
 
 interface ILoadingProps {}
 

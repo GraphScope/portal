@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Typography, Flex, Table } from 'antd';
 import { FormattedMessage } from 'react-intl';
 const { Title } = Typography;
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '@graphscope/use-zustand';
 import Legend from '../StyleSetting/legend';
 import { Utils } from '@graphscope/studio-components';
 import { BgColorsOutlined } from '@ant-design/icons';
