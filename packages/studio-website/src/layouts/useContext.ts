@@ -1,8 +1,5 @@
-import { proxy, useSnapshot } from 'valtio';
-import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 import { Utils } from '@graphscope/studio-components';
-const { GS_ENGINE_TYPE } = window;
-const { storage } = Utils;
+import { useContext as useZustandContext } from '@graphscope/use-zustand';
 
 export interface IGraph {
   id: string;
@@ -22,6 +19,21 @@ export interface IGraph {
 }
 /** groot 状态中无需默认创建 */
 
+export type IStore = {
+  locale: 'zh-CN' | 'en-US';
+  collapse: boolean;
+  currentnNav: string;
+  navStyle: string;
+  graphs: IGraph[];
+  graphId: string | null;
+  draftGraph: IGraph | {};
+  draftId: string;
+  /** 查询侧边栏展示的位置 */
+  displaySidebarPosition?: 'left' | 'right';
+  /** 查询侧边栏展示的类型 */
+  displaySidebarType?: 'Sidebar' | 'Segmented';
+  isReady: boolean;
+};
 export const initialStore = {
   /** 语言 */
   locale: Utils.storage.get('locale'),
@@ -39,34 +51,4 @@ export const initialStore = {
   isReady: false,
 };
 
-export type IStore = {
-  locale: 'zh-CN' | 'en-US';
-  collapse: boolean;
-  currentnNav: string;
-  navStyle: string;
-  graphs: IGraph[];
-  graphId: string | null;
-  draftGraph: IGraph | {};
-  draftId: string;
-  /** 查询侧边栏展示的位置 */
-  displaySidebarPosition?: 'left' | 'right';
-  /** 查询侧边栏展示的类型 */
-  displaySidebarType?: 'Sidebar' | 'Segmented';
-  isReady: boolean;
-};
-
-type ContextType = {
-  store: Snapshot<IStore>;
-  updateStore: (fn: (draft: IStore) => void) => void;
-};
-
-export function useContext(): ContextType {
-  const proxyStore = proxy(initialStore) as IStore;
-  const store = useSnapshot(proxyStore);
-  return {
-    store,
-    updateStore: (fn: (draft: IStore) => void) => {
-      return fn(proxyStore);
-    },
-  };
-}
+export const useContext = (id?: string) => useZustandContext<IStore>(id);

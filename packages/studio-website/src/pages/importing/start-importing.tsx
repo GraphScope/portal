@@ -9,10 +9,11 @@ import StartLoad from './start-load';
 const { Text } = Typography;
 interface StartImportingProps {
   onClick?: () => void;
+  id: string;
 }
 const { useState } = React;
 const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
-  const { store } = useContext();
+  const { store } = useContext(props.id);
   const { store: importingStore } = useImporting();
   const { appMode, nodes, edges } = importingStore;
   const { graphId } = store;

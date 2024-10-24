@@ -36,8 +36,7 @@
     "react-intl": "^6.6.1",
     "reactflow": "latest",
     "sql-ddl-to-json-schema": "latest",
-    "uuidv4": "^6.2.13",
-    "valtio": "^1.13.2"
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@types/d3-force": "latest",
