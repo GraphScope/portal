@@ -7,8 +7,8 @@ const deepclone = obj => {
   return JSON.parse(JSON.stringify(obj));
 };
 
-import type { NodeChange, EdgeChange } from 'reactflow';
-import { useContext } from '../useContext';
+import type { NodeChange, EdgeChange, NodePositionChange } from 'reactflow';
+import { useContext } from '@graphscope/use-zustand';
 import { transformEdges } from '../elements';
 
 import { getBBox, createEdgeLabel, createNodeLabel } from '../utils';
@@ -19,6 +19,7 @@ const useInteractive: any = () => {
   const { displayMode, nodes, edges, hasLayouted, elementOptions } = store;
   const connectingNodeId = useRef(null);
   const timerRef = useRef<any>(null);
+  const tempRef = useRef<any>(null);
 
   const onConnectStart = useCallback((_, { nodeId }) => {
     connectingNodeId.current = nodeId;
@@ -53,17 +54,20 @@ const useInteractive: any = () => {
         };
 
         updateStore(draft => {
-          draft.nodes.push(newNode);
-          draft.edges.push({
-            id: edgeId,
-            //@ts-ignore
-            source: connectingNodeId.current,
-            target: nodeId,
-            type: 'graph-edge',
-            data: {
-              label: createEdgeLabel(),
+          draft.nodes = [...draft.nodes, newNode];
+          draft.edges = [
+            ...draft.edges,
+            {
+              id: edgeId,
+              //@ts-ignore
+              source: connectingNodeId.current,
+              target: nodeId,
+              type: 'graph-edge',
+              data: {
+                label: createEdgeLabel(),
+              },
             },
-          });
+          ];
         });
       } else {
         const { nodeid } = event.target.dataset;
@@ -95,11 +99,29 @@ const useInteractive: any = () => {
 
   const onNodesChange = (changes: NodeChange[]) => {
     const { type } = changes[0];
+    console.log('TYPE', type);
 
-    if (elementOptions.isConnectable || type === 'position') {
+    // updateStore(draft => {
+    //   draft.nodesChanges = changes as NodeChange[];
+    // });
+
+    if (elementOptions.isConnectable && type !== 'position') {
       updateStore(draft => {
         draft.nodes = applyNodeChanges(changes, deepclone(draft.nodes));
       });
+    }
+    if (type === 'position') {
+      if (changes[0].dragging) {
+        tempRef.current = changes;
+        updateStore(draft => {
+          draft.nodePositionChange = changes as NodePositionChange[];
+        });
+      } else {
+        // 需要在拖拽结束后，更新一次位置到 nodes
+        updateStore(draft => {
+          draft.nodes = applyNodeChanges(tempRef.current, draft.nodes);
+        });
+      }
     }
   };
   const onEdgesChange = (changes: EdgeChange[]) => {
