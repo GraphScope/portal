@@ -86,7 +86,6 @@ const RawTable: React.FC<IRawTableProps> = ({ data }) => {
               <span style={{ color: '#F9822F', paddingLeft: size }}>"{key}" : </span>
               <span
                 style={{
-                  color: '#383333',
                   paddingLeft: '6px',
                   textIndent,
                 }}
