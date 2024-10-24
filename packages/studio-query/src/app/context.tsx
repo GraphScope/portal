@@ -1,6 +1,5 @@
 import { GraphProps } from '@graphscope/studio-draw-pattern';
-import { proxy, useSnapshot } from 'valtio';
-import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
+import { useContext as useZustandContext } from '@graphscope/use-zustand';
 
 export interface IStatement {
   /** 语句ID */
@@ -57,7 +56,7 @@ export type IStore<T> = T & {
   defaultCollapsed: boolean;
 };
 
-const initialStore: IStore<{}> = {
+export const initialStore: IStore<{}> = {
   /** isReady */
   isReady: false,
   graphId: '',
@@ -88,21 +87,7 @@ const initialStore: IStore<{}> = {
   defaultCollapsed: true,
 };
 
-type ContextType<T> = {
-  store: Snapshot<IStore<T>>;
-  updateStore: (fn: (draft: IStore<T>) => void) => void;
-};
-
-export function useContext<T>(): ContextType<T> {
-  const proxyStore = proxy(initialStore) as IStore<T>;
-  const store = useSnapshot(proxyStore);
-  return {
-    store,
-    updateStore: (fn: (draft: IStore<T>) => void) => {
-      return fn(proxyStore);
-    },
-  };
-}
+export const useContext = () => useZustandContext<IStore<{}>>();
 
 export interface Info {
   graph_name: string;
