@@ -1,18 +1,17 @@
-import * as React from "react";
-import { useStore, useContext } from "../useContext";
+import * as React from 'react';
+import { useContext } from './useContext';
 interface IAProps {
   children: React.ReactNode;
 }
-const A: React.FunctionComponent<IAProps> = (props) => {
+const A: React.FunctionComponent<IAProps> = props => {
   const { children } = props;
   const { store, updateStore } = useContext();
   const { name } = store;
 
-  console.log("render.....A", name);
   const handleClick = () => {
-    console.log("A handleClick");
-    updateStore((draft) => {
-      draft.name = "pomelo.lcw";
+    console.log('A handleClick');
+    updateStore(draft => {
+      draft.name = 'pomelo.lcw';
     });
   };
 
@@ -20,7 +19,7 @@ const A: React.FunctionComponent<IAProps> = (props) => {
     <div
       style={{
         padding: 50,
-        border: "1px solid red",
+        border: '1px solid red',
       }}
     >
       <button onClick={handleClick}> click A </button>

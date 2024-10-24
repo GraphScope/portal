@@ -12,7 +12,7 @@ const { GS_ENGINE_TYPE } = window;
 
 const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
   /**查询数据导入 */
-  const { store } = useContext();
+  const { store, id } = useContext();
   const { graphId, draftId } = store;
   const { buttonBackground } = useCustomToken();
   /** 查询图 */
@@ -70,7 +70,7 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
           style={{ top: '12px', left: '24px', right: 'unset', background: buttonBackground }}
           direction="horizontal"
         >
-          <SelectGraph />
+          <SelectGraph id={id} />
           <Save />
         </Toolbar>
       </ImportApp>

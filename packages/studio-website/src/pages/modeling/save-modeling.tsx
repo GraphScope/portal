@@ -9,7 +9,6 @@ import { Utils } from '@graphscope/studio-components';
 import { useHistory } from '../../hooks';
 import localforage from 'localforage';
 import { FormattedMessage } from 'react-intl';
-import type { INTERNAL_Snapshot } from 'valtio';
 
 interface SaveModelingProps {}
 const { GS_ENGINE_TYPE } = window;
@@ -160,14 +159,8 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
 
 export default SaveModeling;
 
-export function validate(
-  nodes: INTERNAL_Snapshot<ISchemaNode[]>,
-  edges: INTERNAL_Snapshot<ISchemaEdge[]>,
-): { passed: boolean; message: string } {
-  const verifyElements = (
-    elements: INTERNAL_Snapshot<ISchemaNode[]> | INTERNAL_Snapshot<ISchemaEdge[]>,
-    elementType: 'nodes' | 'edges',
-  ) => {
+export function validate(nodes: ISchemaNode[], edges: ISchemaEdge[]): { passed: boolean; message: string } {
+  const verifyElements = (elements: ISchemaNode[] | ISchemaEdge[], elementType: 'nodes' | 'edges') => {
     return elements.map((item: any) => {
       const { label, properties = [] } = item.data;
       const verifyMessage = validateProperties({
@@ -197,11 +190,7 @@ export function validate(
   );
 }
 
-export function getButtonStatus(params: {
-  IS_DRAFT_GRAPH: boolean;
-  validatePassed: boolean;
-  nodes: INTERNAL_Snapshot<ISchemaNode[]>;
-}) {
+export function getButtonStatus(params: { IS_DRAFT_GRAPH: boolean; validatePassed: boolean; nodes: ISchemaNode[] }) {
   const { IS_DRAFT_GRAPH, validatePassed, nodes } = params;
 
   if (GS_ENGINE_TYPE === 'interactive') {

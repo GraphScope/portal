@@ -59,7 +59,7 @@ export interface IQueryModuleState {
   isReady: boolean;
 }
 const QueryModule = () => {
-  const { store } = useContext();
+  const { store, id } = useContext();
   const { token } = theme.useToken();
   const { graphId, displaySidebarPosition, displaySidebarType } = store;
   const { language, globalScript, welcome, autoRun, collapsed } = getPrefixParams();
@@ -96,7 +96,7 @@ const QueryModule = () => {
         queryGraphSchema={queryGraphSchema}
         /** 是否立即查询 */
         enableImmediateQuery={true}
-        connectComponent={<SelectGraph />}
+        connectComponent={<SelectGraph id={id} />}
         displaySidebarPosition={displaySidebarPosition}
         displaySidebarType={displaySidebarType}
         sidebarStyle={{ width: '240px', padding: '0px', background: token.colorBgBase }}

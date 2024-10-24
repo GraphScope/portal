@@ -26,6 +26,7 @@
     "@fortawesome/free-regular-svg-icons": "latest",
     "@fortawesome/free-solid-svg-icons": "latest",
     "@fortawesome/react-fontawesome": "latest",
+    "@graphscope/use-zustand": "workspace:*",
     "@graphscope/studio-components": "workspace:*",
     "@graphscope/studio-driver": "workspace:*",
     "@graphscope/studio-explore": "workspace:*",
@@ -43,8 +44,7 @@
     "react-intl": "^6.6.8",
     "react-json-view": "^1.21.3",
     "react-router-dom": "^6.26.1",
-    "uuid": "^9.0.1",
-    "valtio": "^1.13.2"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",

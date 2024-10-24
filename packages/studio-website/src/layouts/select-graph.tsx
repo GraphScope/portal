@@ -7,10 +7,12 @@ import { ConnectEndpoint } from '@graphscope/studio-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins } from '@fortawesome/free-solid-svg-icons';
 import Versions from '../pages/query/versions';
-interface IConnectModelProps {}
+interface IConnectModelProps {
+  id: string;
+}
 
 const SelectGraph: React.FunctionComponent<IConnectModelProps> = props => {
-  const { store, updateStore } = useContext();
+  const { store, updateStore } = useContext(props.id);
   const { graphs, graphId, currentnNav, draftGraph } = store;
 
   const options = ([draftGraph, ...graphs] as IGraph[])
