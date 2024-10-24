@@ -7,7 +7,7 @@ import { SegmentedTabs, Icons, useStudioProvier } from '@graphscope/studio-compo
 import type { SegmentedTabsProps } from '@graphscope/studio-components';
 
 import { FormattedMessage } from 'react-intl';
-import { useContext } from '../useContext';
+import { useContext } from '@graphscope/use-zustand';
 interface IImportSchemaProps {
   style?: React.CSSProperties;
 }

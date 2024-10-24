@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Typography, Input, Flex } from 'antd';
 import { MappingFields } from '@graphscope/studio-components';
-import { useContext } from '../../useContext';
+import { useContext } from '@graphscope/use-zustand';
 import useModel from './useModel';
 import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
 import { FormattedMessage } from 'react-intl';

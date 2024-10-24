@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Tooltip } from 'antd';
 import { Icons } from '@graphscope/studio-components';
-import { useContext } from '../../../useContext';
+import { useContext } from '@graphscope/use-zustand';
 import { INTERNAL_Snapshot } from 'valtio';
 import type { ImportorProps, ISchemaNode, ISchemaEdge } from '../../../typing';
 
