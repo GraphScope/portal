@@ -72,5 +72,5 @@ export const useContext = () => {
 
   const updateStore = _useStore(store => store.updateStore);
 
-  return { store: proxy, updateStore };
+  return { store: proxy, updateStore, id };
 };

@@ -55,7 +55,7 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
   const { onQuery } = props;
   const { store, updateStore } = useContext();
   const { nodeStatus, schema, dataMap, emitter, graph } = store;
-  console.log(nodeStatus);
+
   const handleClick = async () => {
     updateStore(draft => {
       draft.isLoading = true;
@@ -84,6 +84,10 @@ const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
         draft.isLoading = false;
         draft.nodeStatus = nodeStatus;
         draft.edgeStatus = edgeStatus;
+      });
+    } else {
+      updateStore(draft => {
+        draft.isLoading = false;
       });
     }
   };

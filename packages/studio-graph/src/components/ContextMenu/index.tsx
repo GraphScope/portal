@@ -35,14 +35,12 @@ const ContextMenu: React.FunctionComponent<IContextMenuProps> = props => {
           };
         });
         updateStore(draft => {
-          const prev = draft.nodeStatus[node.id];
-          if (prev) {
-            prev.selected = true;
-          } else {
-            draft.nodeStatus[node.id] = {
+          draft.nodeStatus = {
+            ...draft.nodeStatus,
+            [node.id]: {
               selected: true,
-            };
-          }
+            },
+          };
         });
       });
 
