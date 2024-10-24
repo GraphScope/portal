@@ -118,7 +118,7 @@ const RawTable: React.FC<IRawTableProps> = ({ data }) => {
                   <JSONPretty
                     style={{
                       width: `${100 / firstRowKeys.length}%`,
-                      maxWidth: '800px',
+                      maxWidth: '500px',
                       whiteSpace: 'pre-wrap',
                       wordWrap: 'break-word',
                       padding: '0px 10px',
