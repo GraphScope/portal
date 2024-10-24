@@ -31,7 +31,7 @@ export const initialStore = {
   currentnNav: Utils.getCurrentNav(),
   navStyle: (Utils.storage.get('GS_STUDIO_navStyle') as string) || 'inline',
   graphs: [],
-  graphId: Utils.searchParamOf('graph_id'),
+  graphId: Utils.getSearchParams('graph_id'),
   draftGraph: Utils.storage.get('DRAFT_GRAPH') || {},
   draftId: 'DRAFT_GRAPH',
   displaySidebarType: Utils.storage.get<'Sidebar' | 'Segmented'>('displaySidebarType') || 'Segmented',

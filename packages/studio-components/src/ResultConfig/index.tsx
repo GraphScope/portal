@@ -64,7 +64,7 @@ export default (props: { subTitle: React.ReactNode; rightSVG: React.ReactNode })
           <path
             stroke="#DB836E"
             stroke-width="1.063"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
             d="M99.206 73.644l-.9 1.62-.3 4.38h-2.24"
           ></path>
@@ -72,35 +72,35 @@ export default (props: { subTitle: React.ReactNode; rightSVG: React.ReactNode })
             d="M99.926 73.284s1.8-.72 2.52.54"
             stroke="#5C2552"
             stroke-width="1.117"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
             d="M81.367 73.084s.48-1.12 1.12-.72c.64.4 1.28 1.44.56 2s.16 1.68.16 1.68"
             stroke="#DB836E"
             stroke-width="1.117"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
             d="M92.326 71.724s1.84 1.12 4.16.96"
             stroke="#5C2552"
             stroke-width="1.117"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
             d="M92.726 80.604s2.24 1.2 4.4 1.2M93.686 83.164s.96.4 1.52.32M83.687 80.044s1.786 6.547 9.262 7.954"
             stroke="#DB836E"
             stroke-width="1.063"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
             d="M95.548 91.663s-1.068 2.821-8.298 2.105c-7.23-.717-10.29-5.044-10.29-5.044"
             stroke="#E4EBF7"
             stroke-width="1.136"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
@@ -119,7 +119,7 @@ export default (props: { subTitle: React.ReactNode; rightSVG: React.ReactNode })
             d="M108.463 105.191s1.747 2.724-2.331 30.535c2.376 2.216 1.053 6.012-.233 7.51"
             stroke="#E4EBF7"
             stroke-width="1.085"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
@@ -162,21 +162,21 @@ export default (props: { subTitle: React.ReactNode; rightSVG: React.ReactNode })
             d="M64.57 218.881c1.197.099 4.195-2.097 7.225-5.127M96.024 222.534s2.881-1.152 6.34-4.034"
             stroke="#648BD8"
             stroke-width="1.085"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
             d="M96.973 219.373s2.882-1.153 6.34-4.034"
             stroke="#648BD8"
             stroke-width="1.032"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
             d="M63.172 222.144s2.724-.614 6.759-3.496M74.903 146.166c-.281 3.226.31 8.856-4.506 9.478M93.182 144.344s.115 14.557-1.344 15.65c-2.305 1.73-3.107 2.02-3.107 2.02M89.197 144.923s.269 13.144-1.01 25.088M83.525 170.71s6.81-1.051 9.116-1.051M46.026 270.045l-.892 4.538M46.937 263.289l-.815 4.157M62.725 202.503c-.33 1.618-.102 1.904-.449 3.438 0 0-2.756 1.903-2.29 3.923.466 2.02-.31 3.424-4.505 17.252-1.762 5.807-4.233 18.922-6.165 28.278-.03.144-.521 2.646-1.14 5.8M64.158 194.136c-.295 1.658-.6 3.31-.917 4.938M71.33 146.787l-1.244 10.877s-1.14.155-.519 2.33c.117 1.399-2.778 16.39-5.382 31.615M44.242 273.727H58.07"
             stroke="#648BD8"
             stroke-width="1.085"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
@@ -195,14 +195,14 @@ export default (props: { subTitle: React.ReactNode; rightSVG: React.ReactNode })
             d="M90.102 273.522h12.819M91.216 269.761c.006 3.519-.072 5.55 0 6.292M90.923 263.474c-.009 1.599-.016 2.558-.016 4.505M90.44 170.404l.932 46.38s.7 1.631-.233 2.796c-.932 1.166 2.564.7.932 2.33-1.63 1.633.933 1.166 0 3.497-.618 1.546-1.031 21.921-1.138 36.513"
             stroke="#648BD8"
             stroke-width="1.085"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
             d="M73.736 98.665l2.214 4.312s2.098.816 1.865 2.68l.816 2.214M64.297 116.611c.233-.932 2.176-7.147 12.585-10.488M77.598 90.042s7.691 6.137 16.547 2.72"
             stroke="#E4EBF7"
             stroke-width="1.085"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
@@ -213,14 +213,14 @@ export default (props: { subTitle: React.ReactNode; rightSVG: React.ReactNode })
             d="M99.8 82.429c-.465.077-.35.272-.97 1.243-.622.971-4.817 2.932-6.39 3.224-2.589.48-2.278-1.56-4.254-2.855-1.69-1.107-3.562-.638-1.398 1.398.99.932.932 1.107 1.398 3.205.335 1.506-.64 3.67.7 5.593"
             stroke="#DB836E"
             stroke-width=".774"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
             d="M79.543 108.673c-2.1 2.926-4.266 6.175-5.557 8.762"
             stroke="#E59788"
             stroke-width=".774"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
@@ -231,28 +231,28 @@ export default (props: { subTitle: React.ReactNode; rightSVG: React.ReactNode })
             d="M73.425 122.826s.66 1.127 3.167 1.418c2.315.27 2.563.583 2.563.583s-2.545 2.894-9.07 2.272M72.416 129.274s3.826.097 4.933-.718M74.98 130.75s1.961.136 3.36-.505M77.232 131.916s1.748.019 2.914-.505M73.328 122.321s-.595-1.032 1.262-.427c1.671.544 2.833.055 5.128.155 1.389.061 3.067-.297 3.982.15 1.606.784 3.632 2.181 3.632 2.181s10.526 1.204 19.033-1.127M78.864 108.104s-8.39 2.758-13.168 12.12"
             stroke="#E59788"
             stroke-width=".774"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
             d="M109.278 112.533s3.38-3.613 7.575-4.662"
             stroke="#E4EBF7"
             stroke-width="1.085"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
             d="M107.375 123.006s9.697-2.745 11.445-.88"
             stroke="#E59788"
             stroke-width=".774"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
             d="M194.605 83.656l3.971-3.886M187.166 90.933l3.736-3.655M191.752 84.207l-4.462-4.56M198.453 91.057l-4.133-4.225M129.256 163.074l3.718-3.718M122.291 170.039l3.498-3.498M126.561 163.626l-4.27-4.27M132.975 170.039l-3.955-3.955"
             stroke="#BFCDDD"
             stroke-width="2"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
           ></path>
           <path
@@ -284,7 +284,7 @@ export default (props: { subTitle: React.ReactNode; rightSVG: React.ReactNode })
             d="M173.455 130.832h49.301M164.984 130.832h6.089M155.952 130.832h6.75M173.837 160.613h49.3M165.365 160.613h6.089M155.57 160.613h6.751"
             stroke="#7C90A5"
             stroke-width="1.124"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
             mask="url(#d)"
           ></path>
@@ -302,7 +302,7 @@ export default (props: { subTitle: React.ReactNode; rightSVG: React.ReactNode })
             d="M177.259 207.217v11.52M201.05 207.217v11.52"
             stroke="#A3B4C6"
             stroke-width="1.124"
-            stroke-linecap="round"
+            strokeLinecap="round"
             stroke-linejoin="round"
             mask="url(#d)"
           ></path>

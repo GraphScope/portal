@@ -1,4 +1,4 @@
-import { useContext } from '../../useContext';
+import { useContext } from '@graphscope/use-zustand';
 import { useStudioProvier } from '@graphscope/studio-components';
 export const usePathStyle = (id: string) => {
   const { store } = useContext();

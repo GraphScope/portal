@@ -58,7 +58,7 @@ export default {
   'Save graph model to svg image': '将图模型保存到 svg 图像',
   'Save graph model to JSON config': '将图模型保存到 JSON 配置',
   'Parse files into a graph model': '将文件解析为图模型',
-  'For the definition and description of the schema model, please refer to the': '关于模式模型的定义和描述，请参阅',
+  'For the definition and description of the schema model, please refer to the ': '关于模式模型的定义和描述，请参阅 ',
   document: '文档',
   Vertex: '节点',
   Edges: '边',

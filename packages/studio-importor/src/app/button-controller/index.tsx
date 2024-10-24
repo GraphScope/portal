@@ -6,7 +6,7 @@ import RightButton from './right-button';
 import ClearCanvas from './clear-canvas';
 import AddNode from './add-node';
 import ExportImage from './export-image';
-import { useContext } from '../useContext';
+import { useContext } from '@graphscope/use-zustand';
 
 import ParseCSV from './parse-csv';
 import ImportAndExportConfig from './import-and-export-config';

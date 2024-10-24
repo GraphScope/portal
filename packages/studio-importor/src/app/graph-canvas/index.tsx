@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ReactFlow, Controls, Background, MiniMap } from 'reactflow';
+import { ReactFlow, Controls, Background, MiniMap, applyNodeChanges } from 'reactflow';
 import { EmptyCanvas, useStudioProvier } from '@graphscope/studio-components';
 import { nodeTypes } from '../elements/node-types';
 import { edgeTypes } from '../elements/edge-types';
@@ -19,11 +19,12 @@ const fakeSnapshot = obj => {
 
 const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   const { store, onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } = useInteractive();
-  const { nodes, edges, theme, collapsed, appMode } = store;
+  const { nodes, edges, theme, collapsed, appMode, nodePositionChange } = store;
+
   const [state, updateState] = useState({
     isLocked: false,
   });
-  const { isLocked } = state;
+
   const { isLight } = useStudioProvier();
   const isEmpty = nodes.length === 0;
   const rfBG = !isLight ? '#161616' : collapsed.left && collapsed.right ? '#fff' : '#f4f5f5';
@@ -36,14 +37,14 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
     />
   );
   const IS_PURE = appMode === 'PURE';
+  const _nodes = nodePositionChange.length === 0 ? nodes : applyNodeChanges(nodePositionChange, nodes);
 
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <div style={{ height: '100%', width: '100%', position: 'absolute' }}>
         <ReactFlow
-          nodes={fakeSnapshot(nodes)}
-          //@ts-ignore
-          edges={fakeSnapshot(edges)}
+          nodes={_nodes}
+          edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           nodeTypes={nodeTypes}
@@ -58,16 +59,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           minZoom={0.01}
         >
           <ArrowMarker selectedColor={theme.primaryColor} color={!isLight ? '#d7d7d7' : '#000'} />
-          {/* {!IS_PURE && (
-            <CustomControls
-              isLocked={isLocked}
-              handleLocked={val => {
-                updateState(preset => {
-                  return { ...preset, isLocked: val };
-                });
-              }}
-            />
-          )} */}
+
           {!IS_PURE && (
             <Background
               style={{

@@ -1,6 +1,6 @@
 import ImportApp from './app';
 
-export { useContext } from './app/useContext';
+export { useContext } from '@graphscope/use-zustand';
 export { validateProperties } from './app/properties-editor/properties-schema/validate-info';
 export type { ISchemaEdge, ISchemaNode, ISchemaOptions } from './app/typing';
 export type { Property } from '@graphscope/studio-components';
@@ -12,4 +12,4 @@ export { transMappingSchemaToOptions, transformImportOptionsToSchemaMapping } fr
 
 export { default as sdk } from './sdk';
 
-export * from "./app/elements"
+export * from './app/elements';

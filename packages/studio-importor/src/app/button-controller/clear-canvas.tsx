@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 interface IAddNodeProps {
   style?: React.CSSProperties;
 }
-import { useContext } from '../useContext';
+import { useContext } from '@graphscope/use-zustand';
 const ClearCanvas: React.FunctionComponent<IAddNodeProps> = props => {
   const { style } = props;
   const { updateStore, store } = useContext();
