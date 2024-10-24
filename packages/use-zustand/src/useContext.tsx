@@ -21,7 +21,6 @@ export const useStore = globaState =>
             return true; // 表示赋值成功
           },
           get: (obj, prop) => {
-            console.log(get(), prop);
             return get()[prop];
           },
         });

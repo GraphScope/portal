@@ -99,11 +99,6 @@ const useInteractive: any = () => {
 
   const onNodesChange = (changes: NodeChange[]) => {
     const { type } = changes[0];
-    console.log('TYPE', type);
-
-    // updateStore(draft => {
-    //   draft.nodesChanges = changes as NodeChange[];
-    // });
 
     if (elementOptions.isConnectable && type !== 'position') {
       updateStore(draft => {
