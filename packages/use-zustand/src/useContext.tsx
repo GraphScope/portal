@@ -1,24 +1,28 @@
-import React from "react";
-import { create } from "zustand";
+import React from 'react';
+import { create } from 'zustand';
 
 export const IdContext = React.createContext<{ id: string }>({
-  id: "",
+  id: '',
 });
 
 export const GLOBAL_INITIAL_STORE_MAP = new Map();
 export const GLOBAL_USE_STORE_MAP = new Map();
 
-export const useStore = (globaState) =>
-  create<IStore>((set) => {
+export const useStore = globaState =>
+  create<IStore>((set, get) => {
     return {
       ...globaState,
-      updateStore: (fn) => {
+      updateStore: fn => {
         const target = {};
         const temp = {}; // 用于存储临时属性
         const proxy = new Proxy(target, {
           set: (obj, prop, value) => {
             temp[prop] = value; // 将属性暂存到临时对象
             return true; // 表示赋值成功
+          },
+          get: (obj, prop) => {
+            console.log(get(), prop);
+            return get()[prop];
           },
         });
 
@@ -59,15 +63,15 @@ export const useContext = () => {
     {
       get: (obj, prop) => {
         if (prop in obj) {
-          return _useStore((store) => store[prop]);
+          return _useStore(store => store[prop]);
         } else {
           console.error(`prop ${prop.toString()} not exist`);
         }
       },
-    }
+    },
   );
 
-  const updateStore = _useStore((store) => store.updateStore);
+  const updateStore = _useStore(store => store.updateStore);
 
   return { store: proxy, updateStore };
 };
