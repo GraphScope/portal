@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import { IdContext, initStore } from "./useContext";
-export { useContext } from "./useContext";
+import { IdContext, initStore } from "./useContextImmer";
+export { useContext } from "./useContextImmer";
 const StoreProvider = (props) => {
   const { children, store, id } = props;
   const SDK_ID = useMemo(() => {
