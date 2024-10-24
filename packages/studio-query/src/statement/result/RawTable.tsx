@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, Flex } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
+import { UpOutlined, DownOutlined } from '@ant-design/icons';
 import { Icons } from '@graphscope/studio-components';
 
 interface IRawTableProps {
@@ -71,7 +72,6 @@ const RawTable: React.FC<IRawTableProps> = ({ data }) => {
     return (
       <>
         {Object.entries(data).map(([key, value]) => {
-          console.log('value74', Object.prototype.toString.call(value) === '[object Object]');
           return (
             <p style={{ paddingLeft: '16px' }} key={key}>
               <span style={{ color: '#F9822F' }}>"{key}" : </span>
@@ -93,7 +93,7 @@ const RawTable: React.FC<IRawTableProps> = ({ data }) => {
       columns={columns}
       dataSource={dataSource}
       expandable={{
-        expandIconColumnIndex: columns.length - 1,
+        expandIconColumnIndex: columns.length,
         expandedRowRender: record => (
           <Flex>
             {Object.values(record).map(
@@ -108,6 +108,13 @@ const RawTable: React.FC<IRawTableProps> = ({ data }) => {
             )}
           </Flex>
         ),
+        expandIcon: ({ expanded, onExpand, record }) =>
+          expanded ? (
+            <UpOutlined style={{ color: '#F97108' }} onClick={e => onExpand(record, e)} />
+          ) : (
+            <DownOutlined onClick={e => onExpand(record, e)} />
+          ),
+        expandRowByClick: true,
       }}
     />
   );
