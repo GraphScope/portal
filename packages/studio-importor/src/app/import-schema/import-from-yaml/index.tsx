@@ -6,7 +6,7 @@ import yaml from 'js-yaml';
 import { FormattedMessage } from 'react-intl';
 import { transSchemaToOptions, appendData } from '../../utils/modeling';
 import { transMappingSchemaToOptions } from '../../utils/importing';
-import { useContext } from '../../useContext';
+import { useContext } from '@graphscope/use-zustand';
 import { transformEdges, transformGraphNodes } from '../../elements';
 
 import { Utils, Icons } from '@graphscope/studio-components';

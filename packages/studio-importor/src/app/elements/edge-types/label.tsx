@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { EdgeLabelRenderer } from 'reactflow';
 import { EditableText, useStudioProvier, useSection } from '@graphscope/studio-components';
-import { useContext } from '../../useContext';
+import { useContext } from '@graphscope/use-zustand';
 import { CheckOutlined } from '@ant-design/icons';
 import { theme } from 'antd';
 const { useToken } = theme;

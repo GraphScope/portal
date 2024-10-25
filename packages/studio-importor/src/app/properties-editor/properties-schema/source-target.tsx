@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import { Typography, Input, Flex } from 'antd';
 import { MappingFields } from '@graphscope/studio-components';
-import { useContext } from '../../useContext';
+import { useContext } from '@graphscope/use-zustand';
 import useModel from './useModel';
-import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
+
 import { FormattedMessage } from 'react-intl';
 
 import type { ISchemaEdge, ImportorProps, IEdgeData, ISchemaNode } from '../../typing';
@@ -14,7 +14,7 @@ type ISourceTargetProps = {
   target_vertex_fields: IEdgeData['target_vertex_fields'];
 } & Pick<ISchemaEdge, 'source' | 'target' | 'id'>;
 
-const getLabelById = (nodes: Snapshot<ISchemaNode[]>, source: string, target: string) => {
+const getLabelById = (nodes: ISchemaNode[], source: string, target: string) => {
   let source_label, target_label;
   let source_primary_key, target_primary_key;
   nodes.forEach(item => {

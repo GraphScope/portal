@@ -5,19 +5,19 @@ import GPTStatements from './sidebar/gpt-statements';
 import RecommendedStatements from './sidebar/recommended-statements';
 import StoreProcedure from './sidebar/store-procedure';
 import HistoryStatements from './sidebar/history-statements';
-import { useContext, localStorageVars } from './context';
+import { useContext, localStorageVars, initialStore } from './context';
 
-import type { IStatement } from './context';
+import type { IStatement, IStudioQueryProps } from './context';
 import Sidebar from './sidebar';
 import { FormattedMessage } from 'react-intl';
 
-import type { IStudioQueryProps } from './context';
 import { v4 as uuidv4 } from 'uuid';
 import { formatCypherStatement } from './utils';
 import { Utils, Section, StudioProvier } from '@graphscope/studio-components';
 const { getSearchParams } = Utils;
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark, faClockFour, faServer, faRobot, faLightbulb } from '@fortawesome/free-solid-svg-icons';
+import StoreProvider from '@graphscope/use-zustand';
 import locales from '../locales';
 
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
@@ -173,4 +173,10 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   return null;
 };
 
-export default StudioQuery;
+export default (props: IStudioQueryProps) => {
+  return (
+    <StoreProvider store={initialStore}>
+      <StudioQuery {...props} />
+    </StoreProvider>
+  );
+};

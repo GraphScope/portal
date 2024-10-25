@@ -13,7 +13,7 @@ import { FormattedMessage } from 'react-intl';
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
-  const { store } = useContext();
+  const { store, id } = useContext();
   const { graphId, draftId } = store;
 
   const queryBoundSchema = async (): Promise<ISchemaOptions> => {
@@ -60,6 +60,7 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
       ]}
       style={{ padding: '0px' }}
     >
+      <EmptyModelCase />
       <ImportApp
         key={graphId}
         appMode="DATA_IMPORTING"
@@ -77,10 +78,9 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
         batchUploadFiles={batchUploadFiles}
       >
         <Toolbar style={{ top: '12px', left: '24px', right: 'unset' }} direction="horizontal">
-          <SelectGraph />
-          <StartImporting />
+          <SelectGraph id={id} />
+          <StartImporting id={id} />
         </Toolbar>
-        <EmptyModelCase />
       </ImportApp>
     </Section>
   );

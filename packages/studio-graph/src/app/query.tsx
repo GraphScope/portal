@@ -33,8 +33,12 @@ import {
 } from '../components';
 
 import { Divider } from 'antd';
+import StoreProvider from '@graphscope/use-zustand';
+import { initialStore } from '../hooks/useContext';
 
 interface QueryGraphProps {
+  // instance id
+  id?: string;
   data: any;
   schema: any;
   graphId: string;
@@ -51,7 +55,7 @@ const ToogleButton = ({ color }) => {
 };
 
 const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
-  const { data, schema, graphId, onQuery } = props;
+  const { data, schema, graphId, onQuery, id } = props;
 
   const { buttonBackground } = useCustomToken();
   const { isLight } = useStudioProvier();
@@ -67,7 +71,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       }}
       ref={containerRef}
     >
-      <MultipleInstance>
+      <StoreProvider id={id} store={initialStore}>
         <Section
           splitBorder
           rightSide={
@@ -111,7 +115,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
             <Export />
           </Toolbar>
         </Section>
-      </MultipleInstance>
+      </StoreProvider>
     </div>
   );
 };

@@ -23,15 +23,15 @@ const File: React.FunctionComponent<IGraph3DProps> = props => {
           id="svg_8"
           fill="none"
         />
-        <polyline stroke-linecap="round" id="svg_9" points="144,490.5 144,490.5 144,490.5 " fill="none" />
+        <polyline strokeLinecap="round" id="svg_9" points="144,490.5 144,490.5 144,490.5 " fill="none" />
         <text
-          font-weight="normal"
+          fontWeight="normal"
           transform="matrix(8.50535 0 0 11.5064 -1021.03 -5827.15)"
           stroke="null"
-          text-anchor="start"
-          font-family="Noto Sans JP"
-          font-size="24"
-          stroke-width="0"
+          textAnchor="start"
+          fontFamily="Noto Sans JP"
+          fontSize="24"
+          strokeWidth="0"
           y="566.5"
           x="133"
           fill="#F9F9FA"

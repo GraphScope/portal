@@ -9,7 +9,7 @@ import {
   getSmoothPath,
   calculateDegree,
 } from './utils';
-import { useContext } from '../../useContext';
+import { useContext } from '@graphscope/use-zustand';
 import LoopEdge from './loop-edge';
 import Label from './label';
 import { useStudioProvier } from '@graphscope/studio-components';
