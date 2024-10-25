@@ -1,6 +1,6 @@
 import { Button, Tooltip } from 'antd';
 import * as React from 'react';
-import { useContext } from '../useContext';
+import { useContext } from '@graphscope/use-zustand';
 import { Icons, useSection } from '@graphscope/studio-components';
 import { FormattedMessage } from 'react-intl';
 interface ILeftButtonProps {}

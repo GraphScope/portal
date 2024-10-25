@@ -2,7 +2,8 @@ import React, { Suspense } from 'react';
 import { Routes, Route, Navigate, HashRouter } from 'react-router-dom';
 import { StudioProvier, GlobalSpin } from '@graphscope/studio-components';
 import Layout from '../layouts';
-import { Spin, Flex } from 'antd';
+import StoreProvider from '@graphscope/use-zustand';
+import { initialStore } from '../layouts/useContext';
 
 import locales from '../locales';
 interface IPagesProps {
@@ -47,16 +48,18 @@ const Pages: React.FunctionComponent<IPagesProps> = props => {
   });
 
   return (
-    <StudioProvier locales={locales}>
-      <HashRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            {routeComponents}
-            {children}
-          </Route>
-        </Routes>
-      </HashRouter>
-    </StudioProvier>
+    <StoreProvider store={initialStore}>
+      <StudioProvier locales={locales}>
+        <HashRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              {routeComponents}
+              {children}
+            </Route>
+          </Routes>
+        </HashRouter>
+      </StudioProvier>
+    </StoreProvider>
   );
 };
 
