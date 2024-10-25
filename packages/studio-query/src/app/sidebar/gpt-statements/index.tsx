@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Message } from './utils/message';
-import { proxy, useSnapshot } from 'valtio';
+
 import { getWelcomeMessage, prompt as defaultPrompt, defaultWelcome } from './utils/prompt';
 import { Input, Button, Flex, Typography, Space, Skeleton, theme } from 'antd';
 import { useController } from './useController';

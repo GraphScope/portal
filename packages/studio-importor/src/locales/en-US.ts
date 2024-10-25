@@ -59,8 +59,8 @@ export default {
   'Save graph model to svg image': 'Save graph model to svg image',
   'Save graph model to JSON config': 'Save graph model to JSON config',
   'Parse files into a graph model': 'Parse files into a graph model',
-  'For the definition and description of the schema model, please refer to the':
-    'For the definition and description of the schema model, please refer to the',
+  'For the definition and description of the schema model, please refer to the ':
+    'For the definition and description of the schema model, please refer to the ',
   document: 'document',
   Vertex: 'Vertex',
   Edges: 'Edges',

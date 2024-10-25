@@ -3,7 +3,6 @@ import { DrawPattern, DrawPatternValue, GraphProps } from '@graphscope/studio-dr
 import { Button, Modal, Tooltip } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useContext } from '../../app/context';
-import { snapshot } from 'valtio';
 
 export interface DrawPatternModalProps {
   previewSchema?: GraphProps;

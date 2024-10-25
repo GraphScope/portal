@@ -40,7 +40,6 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
       label: `[${label}]->(${target})`,
     };
   });
-  console.log(itemChildren);
 
   const extraItems =
     relatedEdges.length > 1
@@ -54,7 +53,7 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
   const items = [
     {
       key: 'NeighborQuery',
-      // icon: <ShareAltOutlined />,
+
       label: 'NeighborQuery',
       children: [...extraItems, ...itemChildren],
     },
@@ -71,7 +70,6 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
     WHERE  elementId(a) IN [${selectIds}] 
     RETURN a,b,c
     `;
-    console.log('script', script);
 
     const res = await onQuery({
       script,
@@ -88,6 +86,10 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
         draft.dataMap = getDataMap(newData);
         draft.nodeStatus = nodeStatus;
         draft.edgeStatus = edgeStatus;
+        draft.isLoading = false;
+      });
+    } else {
+      updateStore(draft => {
         draft.isLoading = false;
       });
     }
