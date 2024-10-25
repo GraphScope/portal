@@ -25,6 +25,7 @@
     "@ant-design/colors": "^7.1.0",
     "@antv/g6": "latest",
     "@graphscope/studio-components": "workspace:*",
+    "@graphscope/use-zustand": "workspace:*",
     "@tweenjs/tween.js": "^25.0.0",
     "@types/d3-selection": "^3.0.10",
     "d3-brush": "^3.0.0",
