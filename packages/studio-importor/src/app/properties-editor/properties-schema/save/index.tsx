@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { Button, Tooltip } from 'antd';
-import { INTERNAL_Snapshot } from 'valtio';
-import { useContext } from '../../../useContext';
+
+import { useContext } from '@graphscope/use-zustand';
 import type { ImportorProps, ISchemaEdge, ISchemaNode } from '../../../typing';
 import { SaveOutlined } from '@ant-design/icons';
 import { validateProperties } from '../validate-info';
 interface ISaveButtonProps {
   nodesMap?: Record<string, ISchemaNode>;
   type: 'nodes' | 'edges';
-  schema: INTERNAL_Snapshot<ISchemaNode | ISchemaEdge>;
+  schema: ISchemaNode | ISchemaEdge;
   onCreateLabel: ImportorProps['onCreateLabel'];
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useContext } from '../../useContext';
+import { useContext } from '@graphscope/use-zustand';
 import { Property } from '@graphscope/studio-components';
 interface IuseModel {
   type: string;
@@ -13,17 +13,30 @@ export default function useModel({ type, id }: IuseModel) {
     updateStore(draft => {
       draft.displayMode = 'table';
       if (type === 'edges') {
-        draft.edges.forEach(item => {
+        // draft.edges.forEach(item => {
+        //   if (item.id === id) {
+        //     item.data.label = label;
+        //   }
+        // });
+        draft.edges = draft.edges.map(item => {
           if (item.id === id) {
             item.data.label = label;
           }
+          return item;
         });
       }
       if (type === 'nodes') {
-        draft.nodes.forEach(item => {
+        // draft.nodes.forEach(item => {
+        //   if (item.id === id) {
+        //     item.data.label = label;
+        //   }
+        // });
+
+        draft.nodes = draft.nodes.map(item => {
           if (item.id === id) {
             item.data.label = label;
           }
+          return item;
         });
       }
     });
@@ -32,17 +45,19 @@ export default function useModel({ type, id }: IuseModel) {
   const handleProperty = e => {
     updateStore(draft => {
       if (type === 'edges') {
-        draft.edges.map(item => {
+        draft.edges = draft.edges.map(item => {
           if (item.id === id) {
             item.data.properties = e;
           }
+          return item;
         });
       }
       if (type === 'nodes') {
-        draft.nodes.map(item => {
+        draft.nodes = draft.nodes.map(item => {
           if (item.id === id) {
             item.data.properties = e;
           }
+          return item;
         });
       }
     });
@@ -54,7 +69,7 @@ export default function useModel({ type, id }: IuseModel) {
     vertext_primary_key,
   ) => {
     updateStore(draft => {
-      draft.edges.forEach(item => {
+      draft.edges = draft.edges.forEach(item => {
         if (item.id === id) {
           const { index, token } = val;
           item.data[data_field] = {
@@ -64,6 +79,7 @@ export default function useModel({ type, id }: IuseModel) {
             token: token,
           };
         }
+        return item;
       });
     });
   };

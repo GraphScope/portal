@@ -1,7 +1,9 @@
 import React, { Suspense } from 'react';
 import { Routes, Route, Navigate, HashRouter } from 'react-router-dom';
-import { StudioProvier } from '@graphscope/studio-components';
+import { StudioProvier, GlobalSpin } from '@graphscope/studio-components';
 import Layout from '../layouts';
+import StoreProvider from '@graphscope/use-zustand';
+import { initialStore } from '../layouts/useContext';
 
 import locales from '../locales';
 interface IPagesProps {
@@ -36,7 +38,7 @@ const Pages: React.FunctionComponent<IPagesProps> = props => {
         key={index}
         path={path}
         element={
-          <Suspense fallback={<></>}>
+          <Suspense fallback={<GlobalSpin />}>
             {/** @ts-ignore */}
             <Component />
           </Suspense>
@@ -46,16 +48,18 @@ const Pages: React.FunctionComponent<IPagesProps> = props => {
   });
 
   return (
-    <StudioProvier locales={locales}>
-      <HashRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            {routeComponents}
-            {children}
-          </Route>
-        </Routes>
-      </HashRouter>
-    </StudioProvier>
+    <StoreProvider store={initialStore}>
+      <StudioProvier locales={locales}>
+        <HashRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              {routeComponents}
+              {children}
+            </Route>
+          </Routes>
+        </HashRouter>
+      </StudioProvier>
+    </StoreProvider>
   );
 };
 

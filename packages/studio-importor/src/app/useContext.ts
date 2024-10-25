@@ -1,15 +1,12 @@
-import { proxy, useSnapshot } from 'valtio';
-import type { INTERNAL_Snapshot as Snapshot } from 'valtio';
-import type { Node, Edge } from 'reactflow';
-import React from 'react';
-import { fakeSnapshot } from './utils';
+import type { NodeChange, NodePositionChange } from 'reactflow';
+
 import { ISchemaNode, ISchemaEdge } from './typing';
 export type IStore = {
   /** APP类型 */
   appMode: 'DATA_MODELING' | 'DATA_IMPORTING' | 'PURE';
   /**不可编辑状态 */
   disabled: boolean;
-
+  isReady: boolean;
   currentType: 'nodes' | 'edges';
   currentId: string;
   nodes: ISchemaNode[];
@@ -18,6 +15,7 @@ export type IStore = {
     nodes: ISchemaNode[];
     edges: ISchemaEdge[];
   };
+  nodePositionChange: NodePositionChange[];
 
   displayMode: 'graph' | 'table';
   graphPosition: Record<string, { x: number; y: number }>;
@@ -52,6 +50,8 @@ export const initialStore: IStore = {
     nodes: [],
     edges: [],
   },
+  nodePositionChange: [],
+  isReady: false,
   displayMode: 'graph',
   graphPosition: {},
   tablePosition: {},
@@ -71,38 +71,3 @@ export const initialStore: IStore = {
   },
   csvFiles: [],
 };
-export const StoreMap = new Map();
-//@ts-ignore
-window.StoreMap = StoreMap;
-type ContextType = {
-  store: Snapshot<IStore>;
-  updateStore: (fn: (draft: IStore) => void) => void;
-};
-
-export const IdContext = React.createContext<{ id: string }>({
-  id: '',
-});
-
-export const getProxyStoreById = (ContextId: string) => {
-  if (ContextId) {
-    const prevStore = StoreMap.get(ContextId);
-    if (!prevStore) {
-      /** 考虑SDK多实例的场景 */
-      StoreMap.set(ContextId, proxy(fakeSnapshot(initialStore)));
-    }
-  }
-
-  return StoreMap.get(ContextId);
-};
-
-export function useContext(): ContextType {
-  const { id } = React.useContext(IdContext);
-  const proxyStore = getProxyStoreById(id);
-  const store = useSnapshot(proxyStore);
-  return {
-    store,
-    updateStore: (fn: (draft) => void) => {
-      return fn(proxyStore);
-    },
-  };
-}

@@ -32,7 +32,7 @@ const InstanceCard: React.FC = () => {
     fetchLists();
   }, []);
   const isEmpty = instanceList.length === 0;
-  if (isEmpty) {
+  if (isEmpty && isReady) {
     return (
       <Result
         status="404"
