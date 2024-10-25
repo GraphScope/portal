@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, Tooltip } from 'antd';
 import { Icons } from '@graphscope/studio-components';
 import { useContext } from '@graphscope/use-zustand';
-import { INTERNAL_Snapshot } from 'valtio';
+
 import type { ImportorProps, ISchemaNode, ISchemaEdge } from '../../../typing';
 
 import { FormattedMessage } from 'react-intl';
@@ -10,7 +10,7 @@ interface IDeleteButtonProps {
   onDeleteLabel: ImportorProps['onDeleteLabel'];
   nodesMap?: Record<string, ISchemaNode>;
   type: 'nodes' | 'edges';
-  schema: INTERNAL_Snapshot<ISchemaNode | ISchemaEdge>;
+  schema: ISchemaNode | ISchemaEdge;
 }
 
 const DeleteButton: React.FunctionComponent<IDeleteButtonProps> = props => {
