@@ -3,8 +3,8 @@ import { Table, Space, Typography, Flex, Button, Tooltip, Segmented, Popover } f
 import { FileExcelOutlined, BarChartOutlined, TableOutlined } from '@ant-design/icons';
 import ChartView from './chart';
 import { useIntl } from 'react-intl';
-import { Utils } from '@graphscope/studio-components';
-import RawTable from './RawTable';
+import { v4 as uuidv4 } from 'uuid';
+import { Utils, RawTable } from '@graphscope/studio-components';
 
 interface ITableViewProps {
   data: any;
@@ -111,7 +111,6 @@ const GraphTable = ({ nodes, edges }) => {
 
 const TableView: React.FunctionComponent<ITableViewProps> = props => {
   const { table = [], nodes = [], edges = [], raw } = props.data;
-
   const nodeCount = nodes.length;
   const edgeCount = edges.length;
   const totalCount = table.length;
@@ -161,6 +160,23 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
     });
     Utils.createDownload(JSON.stringify({ nodes: _nodes, edges: _edges }, null, 2), 'result.json');
   };
+  const dataSource = raw.records.map(item => {
+    const { keys, _fields } = item;
+    return keys.reduce((acc, key, index) => {
+      const field = _fields[index];
+      acc[key] = {
+        key: uuidv4(),
+        elementId: field.elementId,
+        data: field,
+        labels: field.labels ? field.labels[0] : undefined,
+        type: field.type,
+        startNodeElementId: field.startNodeElementId,
+        endNodeElementId: field.endNodeElementId,
+      };
+      acc['key'] = uuidv4();
+      return acc;
+    }, {});
+  });
 
   return (
     <div style={{ overflowX: 'scroll' }}>
@@ -178,14 +194,12 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
             ]}
           />
           <Tooltip title="download">
-            <Button icon={<FileExcelOutlined />} type="text" onClick={handleDownload}>
-              {' '}
-            </Button>
+            <Button icon={<FileExcelOutlined />} type="text" onClick={handleDownload}></Button>
           </Tooltip>
         </Space>
       </Flex>
-      {mode === 'table' && <RawTable data={raw} />}
       {/* {mode === 'table' && nodes.length !== 0 && <GraphTable nodes={nodes} edges={edges} />} */}
+      {mode === 'table' && <RawTable dataSource={dataSource} columnsName={raw.records[0].keys} />}
       {mode === 'table' && table.length !== 0 && <RowTable data={table} />}
       {mode === 'chart' && table.length !== 0 && <ChartView table={table} />}
     </div>

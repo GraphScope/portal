@@ -22,6 +22,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@graphscope/studio-components": "workspace:*",
     "localforage": "^1.10.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -30,7 +31,7 @@
     "react-router-dom": "^6.26.1",
     "sql-ddl-to-json-schema": "latest",
     "typewriter-effect": "^2.21.0",
-    "uuid": "latest",
+    "uuid": "^10.0.0",
     "uuidv4": "latest"
   },
   "publishConfig": {
