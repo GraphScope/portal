@@ -1,11 +1,12 @@
 import * as React from 'react';
 
 interface IPunctuationProps {
-  style?: { color?: string };
+  style?: React.CSSProperties;
 }
-const Punctuation: React.FunctionComponent<IPunctuationProps> = props => {
-  const { style } = props;
-  const { color = '#B668B0', fontSize = '16px' } = style as { color: string; fontSize: string };
+
+const Punctuation: React.FC<IPunctuationProps> = ({ style = {} }) => {
+  const { color = '#B668B0', fontSize = '16px' } = style;
+
   return (
     <svg
       style={{ verticalAlign: 'middle' }}

@@ -3,9 +3,9 @@ import { Table, Space, Typography, Flex, Button, Tooltip, Segmented, Popover } f
 import { FileExcelOutlined, BarChartOutlined, TableOutlined } from '@ant-design/icons';
 import ChartView from './chart';
 import { useIntl } from 'react-intl';
-import { v4 as uuidv4 } from 'uuid';
-import { Utils, RawTable } from '@graphscope/studio-components';
-
+import { Utils } from '@graphscope/studio-components';
+import InteranctiveTable from './RawTable/interanctive-table';
+import GrootTable from './RawTable/groot-table';
 interface ITableViewProps {
   data: any;
 }
@@ -160,23 +160,6 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
     });
     Utils.createDownload(JSON.stringify({ nodes: _nodes, edges: _edges }, null, 2), 'result.json');
   };
-  const dataSource = raw.records.map(item => {
-    const { keys, _fields } = item;
-    return keys.reduce((acc, key, index) => {
-      const field = _fields[index];
-      acc[key] = {
-        key: uuidv4(),
-        elementId: field.elementId,
-        data: field,
-        labels: field.labels ? field.labels[0] : undefined,
-        type: field.type,
-        startNodeElementId: field.startNodeElementId,
-        endNodeElementId: field.endNodeElementId,
-      };
-      acc['key'] = uuidv4();
-      return acc;
-    }, {});
-  });
 
   return (
     <div style={{ overflowX: 'scroll' }}>
@@ -199,7 +182,8 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
         </Space>
       </Flex>
       {/* {mode === 'table' && nodes.length !== 0 && <GraphTable nodes={nodes} edges={edges} />} */}
-      {mode === 'table' && <RawTable dataSource={dataSource} columnsName={raw.records[0].keys} />}
+      {mode === 'table' && raw.records.length !== 0 && <InteranctiveTable data={raw.records} />}
+      {/* {mode === 'table' && raw.records.length !== 0 && <GrootTable grootData={[]} />} */}
       {mode === 'table' && table.length !== 0 && <RowTable data={table} />}
       {mode === 'chart' && table.length !== 0 && <ChartView table={table} />}
     </div>

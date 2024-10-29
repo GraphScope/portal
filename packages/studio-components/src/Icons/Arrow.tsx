@@ -3,9 +3,10 @@ import * as React from 'react';
 interface IArrowProps {
   style?: React.CSSProperties;
 }
-const Arrow: React.FunctionComponent<IArrowProps> = props => {
-  const { style } = props;
-  const { color = '#F97108', fontSize = '16px' } = style as { color: string; fontSize: string };
+
+const Arrow: React.FC<IArrowProps> = ({ style = {} }) => {
+  const { color = '#F97108', fontSize = '16px' } = style;
+
   return (
     <svg
       style={{ verticalAlign: 'middle' }}
