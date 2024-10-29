@@ -4,6 +4,8 @@ import { FileExcelOutlined, BarChartOutlined, TableOutlined } from '@ant-design/
 import ChartView from './chart';
 import { useIntl } from 'react-intl';
 import { Utils } from '@graphscope/studio-components';
+import InteranctiveTable from './RawTable/interanctive-table';
+import GrootTable from './RawTable/groot-table';
 interface ITableViewProps {
   data: any;
 }
@@ -106,7 +108,7 @@ const GraphTable = ({ nodes, edges }) => {
 };
 
 const TableView: React.FunctionComponent<ITableViewProps> = props => {
-  const { table = [], nodes = [], edges = [] } = props.data;
+  const { table = [], nodes = [], edges = [], raw } = props.data;
   const nodeCount = nodes.length;
   const edgeCount = edges.length;
   const totalCount = table.length;
@@ -179,7 +181,9 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
           </Tooltip>
         </Space>
       </Flex>
-      {mode === 'table' && nodes.length !== 0 && <GraphTable nodes={nodes} edges={edges} />}
+      {/* {mode === 'table' && nodes.length !== 0 && <GraphTable nodes={nodes} edges={edges} />} */}
+      {mode === 'table' && raw.records.length !== 0 && <InteranctiveTable data={raw.records} />}
+      {/* {mode === 'table' && raw.records.length !== 0 && <GrootTable grootData={[]} />} */}
       {mode === 'table' && table.length !== 0 && <RowTable data={table} />}
       {mode === 'chart' && table.length !== 0 && <ChartView table={table} />}
     </div>
