@@ -1,10 +1,6 @@
 import React from 'react';
 
-export const JsonShow = (
-  data: { [key: string]: string | (string[] & { [key: string]: string }) },
-  size = '12px',
-  textIndent = '-8px',
-) => (
+export const JsonShow = (data, size = '12px', textIndent = '-8px') => (
   <>
     {Object.entries(data).map(([key, value]) => (
       <div

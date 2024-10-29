@@ -14,7 +14,7 @@ export interface GrootDataType {
   label: string;
   inV?: VertexOrEdge;
   outV?: VertexOrEdge;
-  properties: PropertiesType;
+  properties?: PropertiesType;
 }
 
 // Interanctive 数据类型
