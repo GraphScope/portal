@@ -7,7 +7,7 @@ export const JsonShow = (data, size = '12px', textIndent = '-8px') => (
         style={{
           paddingLeft: '16px',
           overflowWrap: 'break-word',
-          wordBreak: 'break-all',
+          wordBreak: 'normal',
           whiteSpace: 'pre-wrap',
         }}
         key={key}
