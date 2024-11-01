@@ -10,7 +10,9 @@ import { useHistory } from '../../hooks';
 import localforage from 'localforage';
 import { FormattedMessage } from 'react-intl';
 
-interface SaveModelingProps {}
+interface SaveModelingProps {
+  id: string;
+}
 const { GS_ENGINE_TYPE } = window;
 const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   const history = useHistory();
@@ -32,7 +34,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
     },
     id: 'DRAFT_GRAPH',
   });
-  const { store, updateStore } = useContext();
+  const { store, updateStore } = useContext(props.id);
 
   const { store: modelingStore } = useModeling();
   const { nodes, edges } = modelingStore;

@@ -1,4 +1,5 @@
-import { useContext as useZustandContext } from '@graphscope/use-zustand';
+import React from 'react';
+import StoreProvider, { useContext as useZustandContext } from '@graphscope/use-zustand';
 import type { StyleConfig, Emitter, Graph, GraphData } from './typing';
 import { StatusConfig } from '../components/Prepare/typing';
 
@@ -82,3 +83,12 @@ export const initialStore: IStore = {
 };
 
 export const useContext = () => useZustandContext<IStore>();
+
+export const GraphProvider = props => {
+  const { children, id } = props;
+  return (
+    <StoreProvider id={id} store={initialStore}>
+      {children}
+    </StoreProvider>
+  );
+};

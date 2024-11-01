@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-import { Button } from 'antd';
+import { Button, Divider } from 'antd';
 
 import { MultipleInstance, Section, useSection, Icons, FullScreen, SegmentedTabs } from '@graphscope/studio-components';
 import {
@@ -13,9 +13,16 @@ import {
   RunCluster,
   LoadCSV,
   StyleSetting,
+  GraphProvider,
+  Brush,
+  Export,
+  BasicInteraction,
+  Loading,
 } from '@graphscope/studio-graph';
 
-interface QueryGraphProps {}
+interface QueryGraphProps {
+  id: string;
+}
 
 const ToogleLeftButton = () => {
   const { toggleLeftSide } = useSection();
@@ -36,6 +43,7 @@ const ToogleRightButton = () => {
 
 const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const { id = 'online-paper-tools' } = props;
   const items = [
     {
       key: 'CSV',
@@ -52,7 +60,7 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
   ];
 
   return (
-    <MultipleInstance>
+    <GraphProvider id={id}>
       <div
         style={{
           background: '#fff',
@@ -68,7 +76,11 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
         <Section
           splitBorder
           rightSide={null}
-          leftSide={<SegmentedTabs items={items} block />}
+          leftSide={
+            <PropertiesPanel>
+              <SegmentedTabs items={items} block />
+            </PropertiesPanel>
+          }
           autoResize={false}
           rightSideStyle={{
             width: '350px',
@@ -86,18 +98,22 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
           </Toolbar>
 
           <Canvas />
-
+          <BasicInteraction />
           <ClearStatatus />
+          <Loading />
 
           <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
-            <SwitchEngine />
-            <ZoomFit />
-            <RunCluster />
             <FullScreen containerRef={containerRef} />
+            <ZoomFit />
+            <Brush />
+            <Divider style={{ margin: '0px' }} />
+            <SwitchEngine />
+            <RunCluster />
+            <Export />
           </Toolbar>
         </Section>
       </div>
-    </MultipleInstance>
+    </GraphProvider>
   );
 };
 

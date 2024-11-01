@@ -23,7 +23,7 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
   });
 
   if (!selectNode) {
-    return <div>{children}</div>;
+    return <div style={{ height: '100%' }}>{children}</div>;
   }
 
   const { label, properties = {}, id } = selectNode;

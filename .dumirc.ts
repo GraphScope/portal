@@ -170,6 +170,7 @@ export default defineConfig({
     '@graphscope/studio-components': join(__dirname, 'packages', 'studio-components'),
     '@graphscope/studio-importor': join(__dirname, 'packages', 'studio-importor'),
     '@graphscope/studio-query': join(__dirname, 'packages', 'studio-query'),
+    '@graphscope/use-zustand': join(__dirname, 'packages', 'use-zustand'),
   },
   externals: {
     'node:os': 'commonjs2 node:os',
