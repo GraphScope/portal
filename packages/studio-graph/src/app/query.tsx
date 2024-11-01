@@ -33,8 +33,8 @@ import {
 } from '../components';
 
 import { Divider } from 'antd';
-import StoreProvider from '@graphscope/use-zustand';
-import { initialStore } from '../hooks/useContext';
+
+import { initialStore, GraphProvider } from '../hooks/useContext';
 
 interface QueryGraphProps {
   // instance id
@@ -71,7 +71,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       }}
       ref={containerRef}
     >
-      <StoreProvider id={id} store={initialStore}>
+      <GraphProvider id={id}>
         <Section
           splitBorder
           rightSide={
@@ -115,7 +115,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
             <Export />
           </Toolbar>
         </Section>
-      </StoreProvider>
+      </GraphProvider>
     </div>
   );
 };
