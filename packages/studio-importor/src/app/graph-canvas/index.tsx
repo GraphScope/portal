@@ -18,7 +18,8 @@ const fakeSnapshot = obj => {
 };
 
 const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
-  const { store, onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } = useInteractive();
+  const { store, onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd, onReactFlowInit } =
+    useInteractive();
   const { nodes, edges, theme, collapsed, appMode, nodePositionChange } = store;
 
   const [state, updateState] = useState({
@@ -57,6 +58,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           proOptions={{ hideAttribution: true }} // 隐藏 reactflow 标识
           onDoubleClick={onDoubleClick}
           minZoom={0.01}
+          onInit={onReactFlowInit}
         >
           <ArrowMarker selectedColor={theme.primaryColor} color={!isLight ? '#d7d7d7' : '#000'} />
 

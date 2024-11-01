@@ -35,7 +35,7 @@ const Layout: React.FunctionComponent<ILayoutProps> = props => {
         minWidth: `${collapsedWidth}px`,
       }}
       defaultCollapsed={{
-        leftSide: true,
+        leftSide: false,
       }}
     >
       <Header style={{ padding: '0px 12px', justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>

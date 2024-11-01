@@ -120,10 +120,10 @@ function StoreProvider<T = {}>(props: IStoreProviderProps<T>) {
   const SDK_ID = useMemo(() => {
     if (!id) {
       const defaultId = `${Math.random().toString(36).substr(2)}`;
-      console.info(
-        `%c ⚠️: The id prop is missing in the component. A default SDK_ID: ${defaultId} is generated for managing multiple instances.`,
-        'color:green',
-      );
+      // console.info(
+      //   `%c ⚠️: The id prop is missing in the component. A default SDK_ID: ${defaultId} is generated for managing multiple instances.`,
+      //   'color:green',
+      // );
       return defaultId;
     }
 
@@ -131,8 +131,6 @@ function StoreProvider<T = {}>(props: IStoreProviderProps<T>) {
   }, []);
 
   initStore<T>(SDK_ID, store);
-
-  console.log('StoreProvider', SDK_ID, store);
 
   return <IdContext.Provider value={{ id: SDK_ID }}>{children}</IdContext.Provider>;
 }
