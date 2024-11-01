@@ -71,7 +71,7 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
           direction="horizontal"
         >
           <SelectGraph id={id} />
-          <Save />
+          <Save id={id} />
         </Toolbar>
       </ImportApp>
     </Section>

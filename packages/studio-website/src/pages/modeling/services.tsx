@@ -5,9 +5,10 @@ import { notification } from '../../pages/utils';
 import { Utils, Property } from '@graphscope/studio-components';
 
 const { getSearchParams } = Utils;
-const { GS_ENGINE_TYPE } = window;
+
 export const createGraph = async (params: { graphName: string; nodes: any[]; edges: any[] }, graph_id?: string) => {
   const { graphName, nodes, edges } = params;
+  const { GS_ENGINE_TYPE } = window;
   let graphs;
   const schemaJSON = transOptionsToSchema(cloneDeep({ nodes: nodes, edges: edges }));
   if (GS_ENGINE_TYPE === 'interactive' || GS_ENGINE_TYPE === 'gart') {
@@ -92,7 +93,7 @@ export const deleteVertexTypeOrEdgeType = async (
   sourceVertexType?: string,
   destinationVertexType?: string,
 ) => {
-  if (window.GS_ENGINE_TYPE === 'interactive' || GS_ENGINE_TYPE === 'gart') {
+  if (window.GS_ENGINE_TYPE === 'interactive' || window.GS_ENGINE_TYPE === 'gart') {
     // interactive 图引擎，一旦创建模型，就无法删除，永远返回true
     return false;
   }
@@ -160,12 +161,12 @@ export const createVertexTypeOrEdgeType = async (
   return response;
 };
 export const queryPrimitiveTypes = () => {
-  if (GS_ENGINE_TYPE === 'groot') {
+  if (window.GS_ENGINE_TYPE === 'groot') {
     return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {
       return { label: item, value: item };
     });
   }
-  if (GS_ENGINE_TYPE === 'interactive' || GS_ENGINE_TYPE === 'gart') {
+  if (window.GS_ENGINE_TYPE === 'interactive' || window.GS_ENGINE_TYPE === 'gart') {
     return ['DT_SIGNED_INT32', 'DT_SIGNED_INT64', 'DT_DOUBLE', 'DT_STRING'].map(item => {
       return { label: item, value: item };
     });
