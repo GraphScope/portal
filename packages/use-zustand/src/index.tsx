@@ -1,48 +1,35 @@
+import { produce, type WritableDraft } from 'immer';
 import React, { useContext as useReactContext, useMemo } from 'react';
-import { create } from 'zustand';
+import { create, StoreApi, UseBoundStore } from 'zustand';
 
 export const IdContext = React.createContext<{ id: string }>({
   id: '',
 });
 
-export const GLOBAL_INITIAL_STORE_MAP = new Map<string, any>();
-export const GLOBAL_USE_STORE_MAP = new Map<string, any>();
-//@ts-ignore
+export const GLOBAL_INITIAL_STORE_MAP = new Map<string, unknown>();
+export const GLOBAL_USE_STORE_MAP = new Map<string, UseBoundStore<StoreApi<IStore<unknown>>>>();
+
 window.GLOBAL_USE_STORE_MAP = GLOBAL_USE_STORE_MAP;
-//@ts-ignore
 window.GLOBAL_INITIAL_STORE_MAP = GLOBAL_INITIAL_STORE_MAP;
 
 export interface IStore<T = {}> {
-  updateStore: (fn: (state: Partial<T>) => void) => void;
+  updateStore: (fn: (state: WritableDraft<Partial<T>>) => void) => void;
 }
 
-export function useStore<T = {}>(globaState: T) {
+export function useStore<T = {}>(globalState: T) {
   return create<IStore<T>>(function (set, get) {
     return {
-      ...globaState,
-      updateStore: function (fn: (state: Partial<T>) => void) {
-        const target: Partial<T> = {};
-        const temp: Partial<T> = {};
-
-        const proxy = new Proxy(target, {
-          set: function (obj, prop: string | symbol, value: any) {
-            if (typeof prop === 'string') {
-              temp[prop as keyof T] = value; // 将属性暂存到临时对象
+      ...globalState,
+      updateStore: function (fn: (state: WritableDraft<Partial<T>>) => void) {
+        set(
+          produce(get(), (draft: WritableDraft<Partial<T>>) => {
+            try {
+              fn(draft);
+            } catch (error) {
+              console.error('Error updating store:', error);
             }
-            return true;
-          },
-          get: function (obj, prop: string | symbol) {
-            return get()[prop];
-          },
-        });
-
-        fn(proxy);
-
-        // 执行批量处理，将临时对象的属性应用到目标对象
-        for (const [key, value] of Object.entries(temp)) {
-          target[key as keyof T] = value as any;
-        }
-        set(target);
+          }),
+        );
       },
     };
   });

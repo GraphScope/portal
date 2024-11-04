@@ -24,15 +24,16 @@
     "demo": "vite dev"
   },
   "dependencies": {
+    "immer": "^10.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "zustand": "^5.0.0"
   },
   "devDependencies": {
-    "father": "^4.4.1",
-    "vite": "^5.4.10",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.3"
+    "@vitejs/plugin-react": "^4.3.3",
+    "father": "^4.4.1",
+    "vite": "^5.4.10"
   }
 }
