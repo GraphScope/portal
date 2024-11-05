@@ -184,9 +184,9 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
         </Space>
       </Flex>
       {/* {mode === 'table' && nodes.length !== 0 && <GraphTable nodes={nodes} edges={edges} />} */}
-      {mode === 'table' && raw.records.length !== 0 && isElementId && <InteranctiveTable data={raw.records} />}
+      {mode === 'table' && raw.records.length !== 0 && <InteranctiveTable data={raw.records} />}
       {/* {mode === 'table' && raw.records.length !== 0 && <GrootTable grootData={[]} />} */}
-      {mode === 'table' && table.length !== 0 && <RowTable data={table} />}
+      {/* {mode === 'table' && table.length !== 0 && <RowTable data={table} />} */}
       {mode === 'chart' && table.length !== 0 && <ChartView table={table} />}
     </div>
   );

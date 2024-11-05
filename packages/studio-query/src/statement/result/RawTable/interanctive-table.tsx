@@ -16,11 +16,12 @@ const InteranctiveTable: React.FC<IInteranctiveTableProps> = ({ data }) => {
     const { keys, _fields } = item;
     return keys.reduce((acc, key, index) => {
       const field = _fields[index];
+      const keyNum = keys[index];
       acc[key] = {
         key: uuidv4(),
-        elementId: field.elementId,
+        elementId: field.elementId || null,
         data: field,
-        labels: field.labels ? field.labels[0] : undefined,
+        labels: field.labels ? field.labels[0] : keyNum,
         type: field.type,
         startNodeElementId: field.startNodeElementId,
         endNodeElementId: field.endNodeElementId,
@@ -39,12 +40,12 @@ const InteranctiveTable: React.FC<IInteranctiveTableProps> = ({ data }) => {
       <span>
         &#123;
         <Icons.Arrow style={{ color: '#F97108' }} />
-        {type} &#125; ID {elementId}
+        {type} &#125; {elementId && `ID ${elementId}`}
       </span>
     ) : (
       <span>
         &#123;
-        <Icons.Punctuation style={{ color: '#B668B0' }} /> :{labels} &#125; ID {elementId}
+        <Icons.Punctuation style={{ color: '#B668B0' }} /> :{labels} &#125; {elementId && `ID ${elementId}`}
       </span>
     );
   };
