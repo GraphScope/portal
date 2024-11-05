@@ -12,6 +12,13 @@ import { nodeCanvasObject } from './custom-node';
 // import { linkCanvasObject } from './custom-edge';
 import { BASIC_NODE_R, SELECTED_EDGE_COLOR } from './const';
 
+function calculateRenderTime(N: number) {
+  let groups = Math.floor((N - 1) / 500); // 超过基础1个点后，每500个点为一组
+  let extraTime = groups * 0.5; // 每组增加0.5秒
+  let renderTime = 1.2 + extraTime; // 加上基础的0.5秒
+  return Math.min(renderTime, 15) * 1000; // 确保渲染时间不超过15秒
+}
+
 import {
   // forceSimulation as d3ForceSimulation,
   // forceLink as d3ForceLink,
@@ -158,10 +165,15 @@ export default function useGraph<P extends GraphProps>(props: P) {
   }, [render]);
   useEffect(() => {
     if (graphRef.current) {
-      graphRef.current.graphData(Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges }));
+      const new_data = Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges });
+      const renderTime = calculateRenderTime(new_data.nodes.length);
 
+      graphRef.current.cooldownTime(renderTime);
+      graphRef.current.onEngineStop(() => {
+        console.log('engine stop');
+      });
+      graphRef.current.graphData(new_data);
       timer = setTimeout(() => {
-        console.log('Math.max(400 / (data.nodes.length + 1), 20)', Math.max(400 / (data.nodes.length + 1), 20));
         graphRef.current?.zoomToFit(400, Math.max(400 / (data.nodes.length + 1), 20));
       }, 1200);
     }
