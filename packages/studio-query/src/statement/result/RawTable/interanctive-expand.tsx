@@ -17,14 +17,7 @@ const InteranctiveExpand: React.FC<IExpandTableProps> = ({ expandData, width }) 
           item.key && (
             <div style={{ marginLeft: '12px', width: `${width}%` }} key={item.key}>
               &#123;
-              {typeof item.data === 'string' ? (
-                <>
-                  <br /> <span style={{ marginLeft: '12px' }}>{item.data}</span>
-                  <br />
-                </>
-              ) : (
-                JsonShow(item.data)
-              )}
+              {JsonShow(item.data)}
               &#125;
             </div>
           ),

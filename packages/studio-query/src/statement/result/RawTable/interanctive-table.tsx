@@ -21,7 +21,7 @@ const InteranctiveTable: React.FC<IInteranctiveTableProps> = ({ data }) => {
         key: uuidv4(),
         elementId: field.elementId || null,
         data: field,
-        labels: field.labels ? field.labels[0] : keyNum,
+        labels: field.labels ? field.labels[0] : undefined,
         type: field.type,
         startNodeElementId: field.startNodeElementId,
         endNodeElementId: field.endNodeElementId,
@@ -40,12 +40,12 @@ const InteranctiveTable: React.FC<IInteranctiveTableProps> = ({ data }) => {
       <span>
         &#123;
         <Icons.Arrow style={{ color: '#F97108' }} />
-        {type} &#125; {elementId && `ID ${elementId}`}
+        {type} &#125; ID {elementId}
       </span>
     ) : (
       <span>
         &#123;
-        <Icons.Punctuation style={{ color: '#B668B0' }} /> :{labels} &#125; {elementId && `ID ${elementId}`}
+        <Icons.Punctuation style={{ color: '#B668B0' }} /> :{labels} &#125; ID {elementId}
       </span>
     );
   };
@@ -76,7 +76,7 @@ const InteranctiveTable: React.FC<IInteranctiveTableProps> = ({ data }) => {
         expandedRowRender: record => <InteranctiveExpand expandData={record} width={width} />,
         expandIcon: ({ expanded, onExpand, record }) =>
           expanded ? (
-            <UpOutlined style={{ color: '#F97108' }} onClick={e => onExpand(record, e)} />
+            <UpOutlined style={{ color: '#F97108' }} onClick={e => record.expand && onExpand(record, e)} />
           ) : (
             <DownOutlined onClick={e => onExpand(record, e)} />
           ),

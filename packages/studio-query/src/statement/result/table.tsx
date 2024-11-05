@@ -13,13 +13,25 @@ interface ITableViewProps {
 const RowTable = ({ data }) => {
   /** table */
   const FirstRow = data[0];
-  const columns = Object.keys(FirstRow).map(key => {
-    return {
-      title: key,
-      dataIndex: key,
-      key: key,
-    };
-  });
+  const columnsNum = Object.keys(FirstRow);
+  const columns = [
+    {
+      title: '#',
+      dataIndex: 'index',
+      key: 'index',
+      width: '30px',
+      render: (text, record, index) => index + 1,
+    },
+    ...columnsNum.map(key => {
+      return {
+        title: key,
+        dataIndex: key,
+        width: `${100 / columnsNum.length}%`,
+        key: key,
+      };
+    }),
+  ];
+
   const dataSource = data.map(item => {
     return {
       ...item,
@@ -27,7 +39,7 @@ const RowTable = ({ data }) => {
     };
   });
 
-  return <Table columns={columns} dataSource={dataSource} />;
+  return <Table size="small" columns={columns} dataSource={dataSource} />;
 };
 
 const GraphTable = ({ nodes, edges }) => {
@@ -184,9 +196,9 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
         </Space>
       </Flex>
       {/* {mode === 'table' && nodes.length !== 0 && <GraphTable nodes={nodes} edges={edges} />} */}
-      {mode === 'table' && raw.records.length !== 0 && <InteranctiveTable data={raw.records} />}
+      {mode === 'table' && raw.records.length !== 0 && isElementId && <InteranctiveTable data={raw.records} />}
       {/* {mode === 'table' && raw.records.length !== 0 && <GrootTable grootData={[]} />} */}
-      {/* {mode === 'table' && table.length !== 0 && <RowTable data={table} />} */}
+      {mode === 'table' && table.length !== 0 && <RowTable data={table} />}
       {mode === 'chart' && table.length !== 0 && <ChartView table={table} />}
     </div>
   );
