@@ -39,13 +39,12 @@ const InteranctiveTable: React.FC<IInteranctiveTableProps> = ({ data }) => {
     return startNodeElementId && endNodeElementId ? (
       <span>
         &#123;
-        <Icons.Arrow style={{ color: '#F97108' }} />
-        {type} &#125; ID {elementId}
+        <Icons.Arrow style={{ color: '#F97108' }} /> : {type} &#125; ID {elementId}
       </span>
     ) : (
       <span>
         &#123;
-        <Icons.Punctuation style={{ color: '#B668B0' }} /> :{labels} &#125; ID {elementId}
+        <Icons.Punctuation style={{ color: '#B668B0' }} /> : {labels} &#125; ID {elementId}
       </span>
     );
   };
@@ -76,7 +75,7 @@ const InteranctiveTable: React.FC<IInteranctiveTableProps> = ({ data }) => {
         expandedRowRender: record => <InteranctiveExpand expandData={record} width={width} />,
         expandIcon: ({ expanded, onExpand, record }) =>
           expanded ? (
-            <UpOutlined style={{ color: '#F97108' }} onClick={e => record.expand && onExpand(record, e)} />
+            <UpOutlined style={{ color: '#F97108' }} onClick={e => onExpand(record, e)} />
           ) : (
             <DownOutlined onClick={e => onExpand(record, e)} />
           ),
