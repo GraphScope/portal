@@ -8,8 +8,6 @@ interface IExpandTableProps {
 }
 
 const InteranctiveExpand: React.FC<IExpandTableProps> = ({ expandData, width }) => {
-  console.log(11, expandData);
-
   return (
     <Flex>
       {Object.values(expandData).map(
