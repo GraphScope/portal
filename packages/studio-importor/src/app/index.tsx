@@ -49,7 +49,6 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   } = props;
   const { store, updateStore } = useContext();
   const { isReady, displayMode } = store;
-  console.log(store, updateStore);
 
   useEffect(() => {
     (async () => {
@@ -84,7 +83,6 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
     })();
   }, []);
   const IS_PURE = appMode === 'PURE';
-  console.log('isReady', isReady);
 
   return (
     <StudioProvier locales={locales}>

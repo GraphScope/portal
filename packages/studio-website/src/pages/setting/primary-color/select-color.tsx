@@ -14,6 +14,7 @@ export const colors: string[] = [
   '#F4811F',
   '#0CB96C',
   '#F4801D',
+  '#000',
 ];
 
 const styles = {

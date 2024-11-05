@@ -168,6 +168,14 @@ const useInteractive: any = () => {
     }
   }, []);
 
+  const onReactFlowInit = reactFlowInstance => {
+    if (reactFlowInstance) {
+      const allNodes = reactFlowInstance.toObject().nodes;
+      const bbox = getBBox(allNodes);
+      fitBounds(bbox, { duration: 600 });
+    }
+  };
+
   return {
     store,
     updateStore,
@@ -176,6 +184,7 @@ const useInteractive: any = () => {
     onNodesChange,
     onConnectStart,
     onConnectEnd,
+    onReactFlowInit,
   };
 };
 

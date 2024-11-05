@@ -18,6 +18,8 @@ import {
   Export,
   BasicInteraction,
   Loading,
+  CurvatureLinks,
+  ClearCanvas,
 } from '@graphscope/studio-graph';
 
 interface QueryGraphProps {
@@ -106,10 +108,13 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
             <FullScreen containerRef={containerRef} />
             <ZoomFit />
             <Brush />
+
             <Divider style={{ margin: '0px' }} />
+            <CurvatureLinks />
             <SwitchEngine />
             <RunCluster />
             <Export />
+            <ClearCanvas />
           </Toolbar>
         </Section>
       </div>
