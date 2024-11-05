@@ -9,7 +9,7 @@ import { Utils } from '@graphscope/studio-components';
 import mitt from 'mitt';
 import { handleStyle } from './handleStyle';
 import { nodeCanvasObject } from './custom-node';
-// import { linkCanvasObject } from './custom-edge';
+import { linkCanvasObject } from './custom-edge';
 import { BASIC_NODE_R, SELECTED_EDGE_COLOR } from './const';
 
 function calculateRenderTime(N: number) {
@@ -46,6 +46,7 @@ export default function useGraph<P extends GraphProps>(props: P) {
   const graphRef: React.MutableRefObject<Graph | null> = useRef(null);
   const emitterRef: React.MutableRefObject<Emitter | null> = useRef(null);
   const containerRef: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
+  const engineStopped: React.MutableRefObject<boolean> = useRef(false);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -53,6 +54,7 @@ export default function useGraph<P extends GraphProps>(props: P) {
     const width = containerRef.current.offsetWidth;
     const height = containerRef.current.offsetHeight;
     let graph: ForceGraphInstance | ForceGraph3DInstance | null = null;
+    engineStopped.current = false;
 
     if (render === '2D') {
       graph = ForceGraph()(containerRef.current);
@@ -68,10 +70,7 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .nodeCanvasObject((node, ctx, globalScale) => {
           nodeCanvasObject(node, ctx, globalScale)(nodeStyle, nodeStatus);
         })
-        // .nodePointerAreaPaint((node, color, ctx, globalScale) => {
-        //   console.log(node, color, ctx, globalScale);
-        //   nodeCanvasObject(node, ctx, globalScale)(nodeStyle, nodeStatus);
-        // })
+
         /** edge */
         .linkLabel(edge => handleStyle(edge, edgeStyle, 'edge').caption)
         .linkWidth(edge => handleStyle(edge, edgeStyle, 'edge').width)
@@ -79,10 +78,10 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .linkDirectionalArrowLength(3)
         .linkDirectionalArrowRelPos(0.9)
         // custom edge
-        // .linkCanvasObjectMode(() => 'after')
-        // .linkCanvasObject((link, ctx, globalScale) => {
-        //   linkCanvasObject(link, ctx, globalScale)(edgeStyle, edgeStatus);
-        // })
+        .linkCanvasObjectMode(() => 'after')
+        .linkCanvasObject((link, ctx, globalScale) => {
+          linkCanvasObject(link, ctx, globalScale)(edgeStyle, edgeStatus, data.edges.length > 100);
+        })
 
         /** force */
         .d3Force(
@@ -106,7 +105,9 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .onBackgroundClick(evt => {
           emitterRef.current?.emit('canvas:click', evt);
         })
-        .cooldownTime(15000);
+        .onLinkClick(edge => {
+          emitterRef.current?.emit('edge:click', edge);
+        });
     }
     if (render === '3D') {
       graph = ForceGraph3D()(containerRef.current!)
@@ -126,7 +127,7 @@ export default function useGraph<P extends GraphProps>(props: P) {
         .linkDirectionalArrowRelPos(0.9)
 
         .graphData(Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges }))
-        .cooldownTime(15000)
+
         .onNodeClick(node => {
           emitterRef.current?.emit('node:click', node);
         })
@@ -135,6 +136,9 @@ export default function useGraph<P extends GraphProps>(props: P) {
         })
         .onBackgroundClick(evt => {
           emitterRef.current?.emit('canvas:click', evt);
+        })
+        .onLinkClick(edge => {
+          emitterRef.current?.emit('edge:click', edge);
         });
     }
 
@@ -167,10 +171,11 @@ export default function useGraph<P extends GraphProps>(props: P) {
     if (graphRef.current) {
       const new_data = Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges });
       const renderTime = calculateRenderTime(new_data.nodes.length);
-
+      engineStopped.current = false;
       graphRef.current.cooldownTime(renderTime);
       graphRef.current.onEngineStop(() => {
-        console.log('engine stop');
+        engineStopped.current = true;
+        console.log('engine stop', engineStopped.current);
       });
       graphRef.current.graphData(new_data);
       timer = setTimeout(() => {
@@ -181,6 +186,7 @@ export default function useGraph<P extends GraphProps>(props: P) {
       clearTimeout(timer);
     };
   }, [data]);
+
   useEffect(() => {
     if (graphRef.current) {
       const graph = graphRef.current;
@@ -200,9 +206,13 @@ export default function useGraph<P extends GraphProps>(props: P) {
 
   useEffect(() => {
     if (graphRef.current) {
+      const edgeCount = graphRef.current.graphData().links.length;
       const graph = graphRef.current;
       (graph as ForceGraphInstance)
 
+        .linkCanvasObject((link, ctx, globalScale) => {
+          linkCanvasObject(link, ctx, globalScale)(edgeStyle, edgeStatus, edgeCount > 100);
+        })
         .linkColor((edge: any) => {
           const { color } = handleStyle(edge, edgeStyle, 'edge');
           const match = edgeStatus[edge.id];
@@ -211,9 +221,14 @@ export default function useGraph<P extends GraphProps>(props: P) {
           }
           return color;
         })
-        .linkLabel(
-          (edge: any) => edge && edge.properties && edge.properties[handleStyle(edge, edgeStyle, 'edge').caption],
-        )
+        .linkLabel((edge: any) => {
+          const key = handleStyle(edge, edgeStyle, 'edge').caption;
+          const value = edge && edge.properties && edge.properties[key];
+          if (key && value) {
+            return `${key}: ${value}`;
+          }
+          return '';
+        })
         .linkWidth((edge: any) => {
           const { size } = handleStyle(edge, edgeStyle, 'edge');
           const match = edgeStatus[edge.id];
