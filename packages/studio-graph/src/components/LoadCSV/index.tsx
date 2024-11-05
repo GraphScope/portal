@@ -98,7 +98,7 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
               label,
               source: sourceLabel,
               target: targetLabel,
-              properties: Utils.extractProperties(edge.data).reduce((acc, curr) => {
+              properties: Utils.extractProperties(edge).reduce((acc, curr) => {
                 return {
                   ...acc,
                   [curr.name]: curr.type,

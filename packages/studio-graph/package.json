@@ -33,7 +33,7 @@
     "d3-force-3d": "^3.0.5",
     "d3-hierarchy": "^3.1.2",
     "d3-selection": "^3.0.0",
-    "force-graph": "^1.43.5",
+    "force-graph": "^1.46.0",
     "mitt": "^3.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
