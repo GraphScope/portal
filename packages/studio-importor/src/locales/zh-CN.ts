@@ -70,7 +70,7 @@ export default {
   'Delete label': '删除标题',
   Label: '标题',
   Source: '起始点',
-  Target: '终止点',
+  Target: '目标点',
   'Data Fields': '数据',
   'Add Property': '添加属性',
   Properties: '属性',

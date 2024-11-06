@@ -81,4 +81,6 @@ export default {
   'Import Option': 'Import Option',
   Quoting: 'Quoting',
   'Quote char': 'Quote char',
+  Source: 'Source',
+  Target: 'Target',
 };

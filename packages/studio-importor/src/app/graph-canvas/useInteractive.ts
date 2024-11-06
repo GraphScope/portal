@@ -19,7 +19,7 @@ const useInteractive: any = () => {
   const { displayMode, nodes, edges, hasLayouted, elementOptions } = store;
   const connectingNodeId = useRef(null);
   const timerRef = useRef<any>(null);
-  const tempRef = useRef<any>(null);
+  const tempRef = useRef<any>([]);
 
   const onConnectStart = useCallback((_, { nodeId }) => {
     connectingNodeId.current = nodeId;
