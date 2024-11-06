@@ -18,8 +18,8 @@ const FixedMode: React.FunctionComponent<IDagreModeProps> = props => {
         });
       } else {
         graph.onNodeDragEnd(node => {
-          node.fx = null;
-          node.fy = null;
+          node.fx = undefined;
+          node.fy = undefined;
         });
       }
     }
