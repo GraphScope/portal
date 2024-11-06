@@ -38,13 +38,12 @@ const InteranctiveTable: React.FC<IInteranctiveTableProps> = ({ data }) => {
     return startNodeElementId && endNodeElementId ? (
       <span>
         &#123;
-        <Icons.Arrow style={{ color: '#F97108' }} />
-        {type} &#125; ID {elementId}
+        <Icons.Arrow style={{ color: '#F97108' }} /> : {type} &#125; ID {elementId}
       </span>
     ) : (
       <span>
         &#123;
-        <Icons.Punctuation style={{ color: '#B668B0' }} /> :{labels} &#125; ID {elementId}
+        <Icons.Punctuation style={{ color: '#B668B0' }} /> : {labels} &#125; ID {elementId}
       </span>
     );
   };
