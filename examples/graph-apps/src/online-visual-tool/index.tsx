@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 
 import { Button, Divider } from 'antd';
 
-import { MultipleInstance, Section, useSection, Icons, FullScreen, SegmentedTabs } from '@graphscope/studio-components';
+import { Section, useSection, Icons, FullScreen, SegmentedTabs } from '@graphscope/studio-components';
 import {
   Toolbar,
   SwitchEngine,
@@ -21,6 +21,7 @@ import {
   CurvatureLinks,
   ClearCanvas,
   DagreMode,
+  FixedMode,
 } from '@graphscope/studio-graph';
 
 interface QueryGraphProps {
@@ -109,12 +110,13 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
             <FullScreen containerRef={containerRef} />
             <ZoomFit />
             <Brush />
-
+            <FixedMode />
             <Divider style={{ margin: '0px' }} />
             <CurvatureLinks />
             <DagreMode />
             <SwitchEngine />
             <RunCluster />
+            <Divider style={{ margin: '0px' }} />
             <Export />
             <ClearCanvas />
           </Toolbar>

@@ -30,6 +30,7 @@ import {
   DeleteLeafNodes,
   Export,
   BasicInteraction,
+  FixedMode,
 } from '../components';
 
 import { Divider } from 'antd';
@@ -109,6 +110,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
             <FullScreen containerRef={containerRef} />
             <ZoomFit />
             <Brush />
+            <FixedMode />
             <Divider style={{ margin: '0px' }} />
             <SwitchEngine />
             <RunCluster />

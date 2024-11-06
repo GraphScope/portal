@@ -43,6 +43,32 @@ const getSelectElement = (data, { nodeStatus, edgeStatus }) => {
     selectElement: null,
   };
 };
+const getDataByProperties = properties => {
+  const dataSource = Object.entries(properties).map(item => {
+    const [key, value] = item;
+    return {
+      name: key,
+      dse: value,
+    };
+  });
+
+  const FirstRow = dataSource[0];
+  let columns: any[] = [];
+  if (FirstRow) {
+    columns = Object.keys(FirstRow).map(key => {
+      return {
+        title: key,
+        dataIndex: key,
+        key: key,
+      };
+    });
+  }
+
+  return {
+    dataSource,
+    columns,
+  };
+};
 
 const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props => {
   const { store, updateStore } = useContext();
@@ -55,6 +81,7 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
   }
 
   const { label, properties = {}, id } = selectElement;
+  const { dataSource, columns } = getDataByProperties(properties);
 
   const onChange = val => {
     const { properties, ...params } = val;
@@ -72,22 +99,6 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
   };
 
   const style = nodeStyle[id] || nodeStyle[label];
-  const dataSource = Object.entries(properties).map(item => {
-    const [key, value] = item;
-    return {
-      name: key,
-      dse: value,
-    };
-  });
-
-  const FirstRow = dataSource[0];
-  const columns = Object.keys(FirstRow).map(key => {
-    return {
-      title: key,
-      dataIndex: key,
-      key: key,
-    };
-  });
 
   const title = type === 'node' ? 'Vertex Properties' : 'Edge Properties';
 
