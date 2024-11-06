@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { useReactFlow, applyEdgeChanges, applyNodeChanges } from 'reactflow';
+import { useReactFlow, applyEdgeChanges, applyNodeChanges, getNodesBounds } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';
 import { createStaticForceLayout } from '../elements/forceLayout';
 import { fakeSnapshot } from '../utils/index';
@@ -131,6 +131,7 @@ const useInteractive: any = () => {
   const onDoubleClick = () => {
     //@ts-ignore
     const bbox = getBBox(nodes);
+
     fitBounds(bbox, { duration: 600 });
   };
 
@@ -171,7 +172,7 @@ const useInteractive: any = () => {
   const onReactFlowInit = reactFlowInstance => {
     if (reactFlowInstance) {
       const allNodes = reactFlowInstance.toObject().nodes;
-      const bbox = getBBox(allNodes);
+      const bbox = getNodesBounds(allNodes);
       fitBounds(bbox, { duration: 600 });
     }
   };
