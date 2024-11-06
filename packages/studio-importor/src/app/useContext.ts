@@ -70,4 +70,5 @@ export const initialStore: IStore = {
     isConnectable: true,
   },
   csvFiles: [],
+  isSaveFiles: true,
 };
