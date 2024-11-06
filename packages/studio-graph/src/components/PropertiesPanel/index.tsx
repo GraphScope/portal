@@ -44,25 +44,26 @@ const getSelectElement = (data, { nodeStatus, edgeStatus }) => {
   };
 };
 const getDataByProperties = properties => {
+  const columns: any[] = [
+    {
+      title: 'name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'value',
+      dataIndex: 'value',
+      key: 'value',
+    },
+  ];
   const dataSource = Object.entries(properties).map(item => {
     const [key, value] = item;
     return {
+      key,
       name: key,
-      dse: value,
+      value: value,
     };
   });
-
-  const FirstRow = dataSource[0];
-  let columns: any[] = [];
-  if (FirstRow) {
-    columns = Object.keys(FirstRow).map(key => {
-      return {
-        title: key,
-        dataIndex: key,
-        key: key,
-      };
-    });
-  }
 
   return {
     dataSource,
