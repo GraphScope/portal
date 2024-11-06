@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Outlet, Navigate, useNavigate } from 'rea
 import { Flex, Card, Typography, Divider, Tag } from 'antd';
 import { ConfigProvider, Skeleton, Space, Button } from 'antd';
 import { GithubOutlined, ReadOutlined } from '@ant-design/icons';
+import { StudioProvier } from '@graphscope/studio-components';
 // import locales from '../locales';
 import { IntlProvider } from 'react-intl';
 import PaperReading from './paper-reading';
@@ -136,25 +137,13 @@ const GraphApps: React.FunctionComponent<IPagesProps> = props => {
   });
 
   return (
-    <ConfigProvider
-      // direction="rtl"
-      theme={{
-        components: {
-          Menu: {
-            itemSelectedBg: '#ececec',
-            itemSelectedColor: '#191919',
-            collapsedWidth: 50,
-            collapsedIconSize: 14,
-          },
-        },
-      }}
-    >
+    <StudioProvier locales={{ 'zh-CN': {}, 'en-US': {} }}>
       <IntlProvider messages={messages} locale={locale}>
         <BrowserRouter>
           <Routes>{routeComponents}</Routes>
         </BrowserRouter>
       </IntlProvider>
-    </ConfigProvider>
+    </StudioProvier>
   );
 };
 
