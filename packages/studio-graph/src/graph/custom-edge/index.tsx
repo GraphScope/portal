@@ -6,18 +6,22 @@ import { HOVERING_NODE_COLOR, BASIC_NODE_R, SELECTED_NODE_COLOR, NODE_TEXT_COLOR
 
 export const linkCanvasObject =
   (link: LinkObject, ctx: CanvasRenderingContext2D, globalScale: number) =>
-  (edgeStyle: StyleConfig, nodeStatus: any) => {
+  (edgeStyle: StyleConfig, nodeStatus: any, disabled: boolean) => {
+    if (disabled || globalScale < 3) {
+      return;
+    }
+
     const style = handleStyle(link, edgeStyle, 'edge');
     const { color, size, caption, captionStatus, icon } = style;
     //@ts-ignore
     const label = link.properties && link.properties[caption];
+
     if (captionStatus === 'hidden' || !caption || !label) {
       return;
     }
-    const status = handleStatus(link, nodeStatus);
-    const labelWidth = label.length * 12;
 
-    const MAX_FONT_SIZE = 4;
+    const MAX_FONT_SIZE = 2;
+    const labelWidth = label.length * (MAX_FONT_SIZE / 2);
     const LABEL_NODE_MARGIN = 10; // graph.nodeRelSize() * 1.5;
     const start = link.source;
     const end = link.target;
@@ -47,13 +51,14 @@ export const linkCanvasObject =
     ctx.save();
     // estimate fontSize to fit in link length
     ctx.font = '1px Sans-Serif';
-    const fontSize = Math.min(MAX_FONT_SIZE, maxTextLength / labelWidth);
+    const fontSize = MAX_FONT_SIZE; //Math.min(MAX_FONT_SIZE, maxTextLength / labelWidth);
     ctx.font = `${fontSize}px Sans-Serif`;
 
     const bckgDimensions: [number, number] = [
       labelWidth + fontSize * 0.2, // some padding
       fontSize + fontSize * 0.2,
     ];
+
     // draw text label background rect
     ctx.translate(textPos.x, textPos.y);
     ctx.rotate(textAngle);
@@ -65,4 +70,5 @@ export const linkCanvasObject =
     ctx.fillStyle = 'darkgrey';
     ctx.fillText(label, 0, 0);
     ctx.restore();
+    return;
   };

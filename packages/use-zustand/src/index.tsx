@@ -1,6 +1,8 @@
-import { produce, type WritableDraft } from 'immer';
+import { produce, type WritableDraft, setAutoFreeze } from 'immer';
 import React, { useContext as useReactContext, useMemo } from 'react';
 import { create, StoreApi, UseBoundStore } from 'zustand';
+
+setAutoFreeze(false);
 
 export const IdContext = React.createContext<{ id: string }>({
   id: '',
@@ -123,3 +125,32 @@ function StoreProvider<T = {}>(props: IStoreProviderProps<T>) {
 }
 
 export default StoreProvider;
+
+// export function useStoreProxy<T = {}>(globalState: T) {
+//   return create<IStore<T>>(function (set, get) {
+//     return {
+//       ...globalState,
+//       updateStore: function (fn: (state: Partial<T>) => void) {
+//         const target: Partial<T> = {};
+//         const temp: Partial<T> = {};
+//         const proxy = new Proxy(target, {
+//           set: function (obj, prop: string | symbol, value: any) {
+//             if (typeof prop === 'string') {
+//               temp[prop as keyof T] = value; // 将属性暂存到临时对象
+//             }
+//             return true;
+//           },
+//           get: function (obj, prop: string | symbol) {
+//             return get()[prop];
+//           },
+//         });
+//         fn(proxy);
+//         // 执行批量处理，将临时对象的属性应用到目标对象
+//         for (const [key, value] of Object.entries(temp)) {
+//           target[key as keyof T] = value as any;
+//         }
+//         set(target);
+//       },
+//     };
+//   });
+// }

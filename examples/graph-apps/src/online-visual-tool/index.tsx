@@ -20,6 +20,7 @@ import {
   Loading,
   CurvatureLinks,
   ClearCanvas,
+  DagreMode,
 } from '@graphscope/studio-graph';
 
 interface QueryGraphProps {
@@ -111,6 +112,7 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
 
             <Divider style={{ margin: '0px' }} />
             <CurvatureLinks />
+            <DagreMode />
             <SwitchEngine />
             <RunCluster />
             <Export />

@@ -8,25 +8,53 @@ import { Utils } from '@graphscope/studio-components';
 import { BgColorsOutlined } from '@ant-design/icons';
 export interface IPropertiesPanelProps {
   children: React.ReactNode;
+  style?: React.CSSProperties;
 }
 
-const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props => {
-  const { store, updateStore } = useContext();
-  const { nodeStyle, dataMap, nodeStatus, data } = store;
-  const { children } = props;
-
+const getSelectElement = (data, { nodeStatus, edgeStatus }) => {
+  let type = 'node';
   const selectNode = data.nodes.find(item => {
     const match = nodeStatus[item.id];
     if (match && match.selected) {
       return match;
     }
   });
+  if (selectNode) {
+    return {
+      type,
+      selectElement: selectNode,
+    };
+  }
+  const selectEdge = data.edges.find(item => {
+    const match = edgeStatus[item.id];
+    if (match && match.selected) {
+      return match;
+    }
+  });
+  if (selectEdge) {
+    type = 'edge';
+    return {
+      type,
+      selectElement: selectEdge,
+    };
+  }
+  return {
+    type,
+    selectElement: null,
+  };
+};
 
-  if (!selectNode) {
+const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props => {
+  const { store, updateStore } = useContext();
+  const { nodeStyle, nodeStatus, data, edgeStatus } = store;
+  const { children } = props;
+  const { selectElement, type } = getSelectElement(data, { nodeStatus, edgeStatus });
+
+  if (!selectElement) {
     return <div style={{ height: '100%' }}>{children}</div>;
   }
 
-  const { label, properties = {}, id } = selectNode;
+  const { label, properties = {}, id } = selectElement;
 
   const onChange = val => {
     const { properties, ...params } = val;
@@ -42,6 +70,7 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
       });
     });
   };
+
   const style = nodeStyle[id] || nodeStyle[label];
   const dataSource = Object.entries(properties).map(item => {
     const [key, value] = item;
@@ -50,6 +79,7 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
       dse: value,
     };
   });
+
   const FirstRow = dataSource[0];
   const columns = Object.keys(FirstRow).map(key => {
     return {
@@ -59,13 +89,22 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
     };
   });
 
+  const title = type === 'node' ? 'Vertex Properties' : 'Edge Properties';
+
   return (
-    <Flex vertical gap={12}>
+    <Flex
+      vertical
+      gap={12}
+      style={{
+        padding: '12px 0px',
+        ...(props.style || {}),
+      }}
+    >
       <Flex justify="space-between">
         <Title level={5} style={{ margin: '0px' }}>
-          <FormattedMessage id="Vertex Properties" />
+          <FormattedMessage id={title} />
         </Title>
-        <Legend {...style} label={label} type="node" properties={properties} onChange={onChange} />
+        <Legend {...style} label={label} type={type as 'node' | 'edge'} properties={properties} onChange={onChange} />
       </Flex>
       <Table
         style={{ height: '100%', width: '100%' }}
