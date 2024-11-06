@@ -23,3 +23,4 @@ export { default as Export } from './Export';
 export { default as BasicInteraction } from './BasicInteraction';
 export { default as ClearCanvas } from './ClearCanvas';
 export { default as CurvatureLinks } from './CurvatureLinks';
+export { default as DagreMode } from './DagreMode';
