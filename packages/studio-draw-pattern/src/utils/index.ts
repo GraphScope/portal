@@ -22,16 +22,19 @@ export function getSequentialLetter(): () => string {
 export const updateNodePositions = (nodes: ISchemaNode[]): ISchemaNode[] => {
   const updatedNodes: ISchemaNode[] = []; // 初始化一个新的数组
 
-  nodes.forEach(node => {
-    let { x, y } = node.position;
+  nodes.forEach((node, index) => {
+    let { x, y } = node.position ?? { x: Math.random() * 200, y: Math.random() * 200 };
 
     const spacing = 200; // 节点之间的最小间隔
+
+    console.log(node.id);
 
     while (
       updatedNodes.some(
         n => n.id !== node.id && Math.abs(n.position.x - x) < spacing && Math.abs(n.position.y - y) < spacing,
       )
     ) {
+      console.log('collision');
       x += spacing; // 向右移动
       // 如果向右移动之后仍然有重叠，尝试向下移动
       if (
@@ -44,7 +47,7 @@ export const updateNodePositions = (nodes: ISchemaNode[]): ISchemaNode[] => {
       }
     }
 
-    updatedNodes.push({ ...node, position: { x, y } }); // 将更新后的节点添加到数组
+    updatedNodes.push({ ...node, position: { x, y }, width: 100, height: 100 }); // 将更新后的节点添加到数组
   });
 
   return updatedNodes;

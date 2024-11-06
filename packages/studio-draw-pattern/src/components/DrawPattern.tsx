@@ -65,12 +65,11 @@ export const DrawPattern: React.FC<DrawPatternProps> = props => {
             <QuickStart />
           </div>
         }
-        children={
-          <div id="canvas-wrapper" style={{ height: '100%', width: '100%', backgroundColor: '#E6F4FF' }}>
-            <Canvas />
-          </div>
-        }
-      />
+      >
+        <div id="canvas-wrapper" style={{ height: '100%', width: '100%', backgroundColor: '#E6F4FF' }}>
+          <Canvas />
+        </div>
+      </Section>
     </DrawPatternContext.Provider>
   );
 };

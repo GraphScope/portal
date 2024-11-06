@@ -1,7 +1,7 @@
 import { SignatureOutlined } from '@ant-design/icons';
 import { DrawPattern, DrawPatternValue, GraphProps } from '@graphscope/studio-draw-pattern';
 import { Button, Modal, Tooltip } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useContext } from '../../app/context';
 
 export interface DrawPatternModalProps {
@@ -10,12 +10,12 @@ export interface DrawPatternModalProps {
 }
 
 export const DrawPatternModal: React.FC<DrawPatternModalProps> = ({ previewSchema, onClick }) => {
-  const [visible, setVisiable] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(false);
   const { updateStore, store } = useContext();
   const { schemaData, language } = store;
 
   const handleClick = useCallback((value: DrawPatternValue) => {
-    setVisiable(false);
+    setVisible(false);
     const script = [value.MATCHs, value.WHEREs, value.RETURNs].join('\n');
     updateStore(draft => {
       draft.globalScript = script;
@@ -39,7 +39,7 @@ export const DrawPatternModal: React.FC<DrawPatternModalProps> = ({ previewSchem
       <Tooltip title={'快速绘制语句'} placement="right">
         <Button
           onClick={() => {
-            setVisiable(true);
+            setVisible(true);
           }}
           type="text"
           icon={<SignatureOutlined />}
@@ -49,8 +49,8 @@ export const DrawPatternModal: React.FC<DrawPatternModalProps> = ({ previewSchem
         title=""
         centered
         open={visible}
-        onOk={() => setVisiable(false)}
-        onCancel={() => setVisiable(false)}
+        onOk={() => setVisible(false)}
+        onCancel={() => setVisible(false)}
         width={'90%'}
         footer={null}
       >
