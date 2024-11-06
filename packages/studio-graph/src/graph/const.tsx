@@ -1,21 +1,5 @@
-import {
-  red,
-  volcano,
-  gold,
-  yellow,
-  lime,
-  green,
-  cyan,
-  blue,
-  geekblue,
-  purple,
-  magenta,
-  grey,
-  orange,
-  presetPalettes,
-} from '@ant-design/colors';
+import { red, volcano, gold, yellow, lime, green, cyan, blue, purple, magenta, orange } from '@ant-design/colors';
 
-console.log('presetPalettes', presetPalettes);
 export const colors: string[] = [
   blue[4],
   orange[4],

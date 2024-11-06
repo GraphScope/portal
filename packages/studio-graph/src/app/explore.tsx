@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Button } from 'antd';
-import { MultipleInstance, Section, useSection, Icons, FullScreen, SegmentedTabs } from '@graphscope/studio-components';
+import { Section, useSection, Icons, FullScreen, SegmentedTabs } from '@graphscope/studio-components';
 import {
   Toolbar,
   SwitchEngine,
@@ -77,36 +77,34 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       }}
       ref={containerRef}
     >
-      <MultipleInstance>
-        <Section
-          splitBorder
-          rightSide={
-            <PropertiesPanel>
-              <SegmentedTabs items={items} block />
-            </PropertiesPanel>
-          }
-          autoResize={false}
-          leftSideStyle={{
-            width: '350px',
-          }}
-          defaultCollapsed={{
-            leftSide: true,
-            rightSide: false,
-          }}
-        >
-          <Prepare data={data} schema={schema} graphId={graphId} />
-          <Canvas />
-          <ClearStatatus />
-          <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
-            <ToogleButton />
-            <Divider style={{ margin: '0px' }} />
-            <SwitchEngine />
-            <ZoomFit />
-            <RunCluster />
-            <FullScreen containerRef={containerRef} />
-          </Toolbar>
-        </Section>
-      </MultipleInstance>
+      <Section
+        splitBorder
+        rightSide={
+          <PropertiesPanel>
+            <SegmentedTabs items={items} block />
+          </PropertiesPanel>
+        }
+        autoResize={false}
+        leftSideStyle={{
+          width: '350px',
+        }}
+        defaultCollapsed={{
+          leftSide: true,
+          rightSide: false,
+        }}
+      >
+        <Prepare data={data} schema={schema} graphId={graphId} />
+        <Canvas />
+        <ClearStatatus />
+        <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
+          <ToogleButton />
+          <Divider style={{ margin: '0px' }} />
+          <SwitchEngine />
+          <ZoomFit />
+          <RunCluster />
+          <FullScreen containerRef={containerRef} />
+        </Toolbar>
+      </Section>
     </div>
   );
 };

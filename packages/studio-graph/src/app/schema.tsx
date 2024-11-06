@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
-import { Button } from 'antd';
-import { MultipleInstance, useSection, Icons } from '@graphscope/studio-components';
+
 import { Canvas, Prepare } from '../components';
 
 interface QueryGraphProps {
@@ -21,10 +20,8 @@ const SchemaGraph: React.FunctionComponent<QueryGraphProps> = props => {
       }}
       ref={containerRef}
     >
-      <MultipleInstance>
-        <Prepare data={data} schema={schema} graphId={graphId} />
-        <Canvas />
-      </MultipleInstance>
+      <Prepare data={data} schema={schema} graphId={graphId} />
+      <Canvas />
     </div>
   );
 };
