@@ -69,13 +69,11 @@ export const Graph: React.FunctionComponent<IGraphProps> = React.forwardRef((pro
 
   return (
     <IntlProvider messages={messages} locale={locale}>
-      {/* <MultipleInstance> */}
       <GraphContext.Provider value={{ ...props }}>
         <ReactFlowProvider>
           <Canvas className={props.className}>{props.children}</Canvas>
         </ReactFlowProvider>
       </GraphContext.Provider>
-      {/* </MultipleInstance> */}
     </IntlProvider>
   );
 });

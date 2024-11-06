@@ -2,9 +2,7 @@ import React, { useRef } from 'react';
 import { Button, Tooltip } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import {
-  MultipleInstance,
   Section,
-  //  SegmentedTabs,
   useSection,
   Icons,
   FullScreen,

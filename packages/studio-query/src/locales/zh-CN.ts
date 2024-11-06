@@ -69,4 +69,5 @@ export default {
   'Zoom to fitview': '缩放适当视图',
   Fullscreen: '全屏',
   'Toggle Right Side': '切换右侧',
+  'Caption Status': '是否展示标签',
 };

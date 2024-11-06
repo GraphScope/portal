@@ -85,6 +85,7 @@ export const initialStore: IStore<{}> = {
   enableImmediateQuery: false,
   language: 'gremlin',
   defaultCollapsed: true,
+  welcome: undefined,
 };
 
 export const useContext = () => useZustandContext<IStore<{}>>();

@@ -1,8 +1,6 @@
 import * as React from 'react';
 
 import ImportorApp, { useContext, transSchemaToOptions } from '@graphscope/studio-importor';
-import { Button } from 'antd';
-import { Toolbar, Utils, MultipleInstance } from '@graphscope/studio-components';
 import { transformDataToSchema } from './transform';
 interface IModelingProps {
   data: any;
@@ -35,32 +33,30 @@ const EmbedSchemaView: React.FunctionComponent<IModelingProps> = props => {
   const { data } = props;
 
   return (
-    <MultipleInstance>
-      <ImportorApp
-        style={{
-          height: '170px',
-          width: '300px',
-        }}
-        appMode="PURE"
-        defaultCollapsed={{
-          leftSide: true,
-          rightSide: true,
-        }}
-        leftSide={<LeftSide />}
-        rightSide={<RightSide />}
-        rightSideStyle={{
-          width: '0px',
-          padding: '0px 12px',
-        }}
-        queryPrimitiveTypes={() => {
-          return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {
-            return { label: item, value: item };
-          });
-        }}
-      >
-        <Init data={data} />
-      </ImportorApp>
-    </MultipleInstance>
+    <ImportorApp
+      style={{
+        height: '170px',
+        width: '300px',
+      }}
+      appMode="PURE"
+      defaultCollapsed={{
+        leftSide: true,
+        rightSide: true,
+      }}
+      leftSide={<LeftSide />}
+      rightSide={<RightSide />}
+      rightSideStyle={{
+        width: '0px',
+        padding: '0px 12px',
+      }}
+      queryPrimitiveTypes={() => {
+        return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {
+          return { label: item, value: item };
+        });
+      }}
+    >
+      <Init data={data} />
+    </ImportorApp>
   );
 };
 

@@ -72,4 +72,5 @@ export default {
   'Zoom to fitview': 'Zoom to fitview',
   Fullscreen: 'Fullscreen',
   'Toggle Right Side': 'Toggle Right Side',
+  'Caption Status': 'Caption Status',
 };
