@@ -38,23 +38,26 @@ export const Preview = () => {
     return newNodes;
   }, [previewGraph]);
 
+  console.log('更新后的节点', JSON.parse(JSON.stringify(updatePositionNode)));
+
   return (
     <div
       style={{
         borderRadius: '8px',
         border: '1px solid #E3E3E3',
-        height: '30%',
+        height: '50%',
         padding: '0.8rem',
         backgroundColor: '#F9F9F9',
         display: 'flex',
         flexDirection: 'column',
         gap: '0.6rem',
-        flexBasis: '30%',
+        flexBasis: '50%',
         marginTop: '1rem',
+        overflow: 'hidden',
       }}
     >
       <span style={{ fontSize: '1rem' }}>Model Preview</span>
-      <div style={{ flexGrow: '1', backgroundColor: 'white' }}>
+      <div style={{ backgroundColor: 'white', height: '100%', flexGrow: '1' }}>
         <Graph
           isControlButton={false}
           isMiniMap={false}

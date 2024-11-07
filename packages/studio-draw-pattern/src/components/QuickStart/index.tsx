@@ -134,7 +134,7 @@ export const QuickStart = () => {
       }}
     >
       <Preview />
-      <div id="items-wrapper" style={{ display: 'flex', flexDirection: 'column', height: '70%', gap: '0.3rem' }}>
+      <div id="items-wrapper" style={{ display: 'flex', flexDirection: 'column', height: '50%', gap: '0.3rem' }}>
         <span style={{ fontSize: '1rem' }}>
           <RocketOutlined />
           快速开始
