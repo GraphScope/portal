@@ -1,0 +1,9 @@
+{
+  "manual": "User Manual",
+
+  "visualization": "Graph Visualization",
+  "-- Themes": {
+    "type": "separator",
+    "title": "Developer Tools"
+  }
+}

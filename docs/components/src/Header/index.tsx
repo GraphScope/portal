@@ -11,7 +11,7 @@ const Logo = ({ style = {} }) => {
     >
       <svg width="365px" height="113px" viewBox="0 0 365 113" version="1.1" xmlns="http://www.w3.org/2000/svg">
         <g id="页面-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-          <g id="Medium" transform="translate(-294, -348)" fill-rule="nonzero">
+          <g id="Medium" transform="translate(-294, -348)" fillRule="nonzero">
             <g id="graphscope-logo-(1)" transform="translate(294.9157, 348)">
               <g id="编组" transform="translate(98.0843, 39.485)" fill="#333333">
                 <path
