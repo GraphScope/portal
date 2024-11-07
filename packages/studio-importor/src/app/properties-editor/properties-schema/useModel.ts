@@ -69,7 +69,7 @@ export default function useModel({ type, id }: IuseModel) {
     vertext_primary_key,
   ) => {
     updateStore(draft => {
-      draft.edges = draft.edges.forEach(item => {
+      draft.edges = draft.edges.map(item => {
         if (item.id === id) {
           const { index, token } = val;
           item.data[data_field] = {
