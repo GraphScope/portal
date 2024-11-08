@@ -12,6 +12,9 @@
   },
   "dependencies": {
     "@graphscope/docs-components": "workspace:*",
+    "@graphscope/studio-components": "workspace:*",
+    "@graphscope/studio-graph": "workspace:*",
+    "@graphscope/graph-apps": "workspace:*",
     "next": "15.0.2",
     "next-seo": "^6.6.0",
     "nextra": "^2.13.2",

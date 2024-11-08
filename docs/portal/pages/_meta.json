@@ -1,7 +1,7 @@
 {
   "index": {
     "type": "page",
-    "title": "GraphScope GIE",
+    "title": "GraphScope Portal",
     "display": "hidden",
     "theme": {
       "layout": "raw"
@@ -11,5 +11,12 @@
   "docs": {
     "title": "Documentation",
     "type": "page"
+  },
+  "tools": {
+    "type": "page",
+    "title": "🔧 Tools",
+    "theme": {
+      "layout": "raw"
+    }
   }
 }
