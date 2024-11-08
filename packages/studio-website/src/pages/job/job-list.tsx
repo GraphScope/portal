@@ -1,12 +1,13 @@
-import type { FC } from 'react';
 import React from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import { Table, Tag, message, Button, Popconfirm, Space } from 'antd';
+import { Table, Tag, message, Button, Popconfirm, Space, Tooltip, Flex, ConfigProvider } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from '../../hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
-import { FileSearchOutlined } from '@ant-design/icons';
+import { FileSearchOutlined, UpOutlined, DownOutlined } from '@ant-design/icons';
+import { Icons } from '@graphscope/studio-components';
+import TableParcel from '../../components/table-parcel';
 // import Action from './action';
 import { listJobs, IJobType, deleteJobById } from './service';
 import dayjs from 'dayjs';
@@ -14,18 +15,21 @@ import useStore from './useStore';
 interface IState {
   jobsList: IJobType[];
   typeOptions: { value: string; text: string }[];
+  isLoading: boolean;
 }
 
-const JobsList: FC = () => {
+const JobsList: React.FC = () => {
   const history = useHistory();
   const [state, updateState] = useState<IState>({
     jobsList: [],
     typeOptions: [{ value: '', text: 'All' }],
+    isLoading: false,
   });
-  const { jobsList, typeOptions } = state;
+  const { jobsList, typeOptions, isLoading } = state;
   const { STATUSOPTIONS, JOB_TYPE_ICONS, getStatusColor, capitalizeFirstLetter } = useStore();
   /** 获取jobs列表数据 */
   const getJobList = useCallback(async () => {
+    updateState(preset => ({ ...preset, isLoading: true }) as typeof state);
     const res = await listJobs();
     /** 接口获取类型值 */
     let uniqueJobTypes = typeOptions.concat(
@@ -40,7 +44,9 @@ const JobsList: FC = () => {
     uniqueJobTypes = uniqueJobTypes.filter(
       (item, index) => uniqueJobTypes.findIndex(i => i.value === item.value) === index,
     );
-    updateState(preset => ({ ...preset, jobsList: res, typeOptions: uniqueJobTypes }) as typeof state);
+    updateState(
+      preset => ({ ...preset, jobsList: res, typeOptions: uniqueJobTypes, isLoading: false }) as typeof state,
+    );
   }, []);
 
   useEffect(() => {
@@ -67,6 +73,7 @@ const JobsList: FC = () => {
       key: 'type',
       filters: typeOptions,
       filterMultiple: false,
+      filterIcon: filtered => <Icons.Filter />,
       onFilter: (value: string, record: IJobType) => record.type.startsWith(value),
     },
     {
@@ -75,6 +82,7 @@ const JobsList: FC = () => {
       key: 'status',
       filters: STATUSOPTIONS,
       filterMultiple: false,
+      filterIcon: filtered => <Icons.Filter />,
       onFilter: (value: string, record: IJobType) => record.status.startsWith(value),
       render: (status: string) => (
         //@ts-ignore
@@ -87,12 +95,22 @@ const JobsList: FC = () => {
       title: <FormattedMessage id="Start time" />,
       key: 'start_time',
       dataIndex: 'start_time',
+      sortIcon: ({ sortOrder }) => (
+        <Flex vertical>
+          <UpOutlined style={{ fontSize: 8 }} /> <DownOutlined style={{ fontSize: 8 }} />
+        </Flex>
+      ),
       sorter: (a: IJobType, b: IJobType) => dayjs(a.start_time).valueOf() - dayjs(b.start_time).valueOf(),
     },
     {
       title: <FormattedMessage id="End time" />,
       key: 'end_time',
       dataIndex: 'end_time',
+      sortIcon: ({ sortOrder }) => (
+        <Flex vertical>
+          <UpOutlined style={{ fontSize: 8 }} /> <DownOutlined style={{ fontSize: 8 }} />
+        </Flex>
+      ),
       sorter: (a: IJobType, b: IJobType) => dayjs(a.end_time).valueOf() - dayjs(b.end_time).valueOf(),
     },
     {
@@ -125,29 +143,35 @@ const JobsList: FC = () => {
             cancelText={<FormattedMessage id="No" />}
             icon
           >
-            <Button
-              type="text"
-              size="small"
-              danger
-              ghost
-              icon={<FontAwesomeIcon icon={faTrashCan} />}
-              disabled={!['RUNNING', 'WAITING'].includes(record.status)}
-            />
+            <Tooltip placement="top" title={<FormattedMessage id="Delete" />}>
+              <Button
+                type="text"
+                size="small"
+                danger
+                ghost
+                icon={<FontAwesomeIcon icon={faTrashCan} />}
+                disabled={!['RUNNING', 'WAITING'].includes(record.status)}
+              />
+            </Tooltip>
           </Popconfirm>
-          <FileSearchOutlined onClick={() => history.push(`/job/detail?jobId=${record.id}`)} />
+          <Tooltip placement="top" title={<FormattedMessage id="Details" />}>
+            <FileSearchOutlined onClick={() => history.push(`/job/detail?jobId=${record.id}`)} />
+          </Tooltip>
         </Space>
       ),
     },
   ];
 
   return (
-    <Table
-      style={{ marginTop: '-8px' }}
-      dataSource={jobsList}
-      //@ts-ignore
-      columns={columns}
-      size="middle"
-    />
+    <TableParcel>
+      <Table
+        dataSource={jobsList}
+        //@ts-ignore
+        columns={columns}
+        size="middle"
+        loading={isLoading}
+      />
+    </TableParcel>
   );
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Form, Input, Select, Typography, Divider } from 'antd';
+import { Form, Input, Select, Typography, Divider, Card } from 'antd';
 export type FieldType = {
   name: string;
   type: string;
@@ -22,7 +22,7 @@ const { Title } = Typography;
 const RightSide: React.FC<IRightSide> = props => {
   const { form, isEdit, options } = props;
   return (
-    <>
+    <Card style={{ width: '50%' }}>
       <Title level={3} style={{ margin: 0 }}>
         <FormattedMessage id="Plugin info" />
       </Title>
@@ -58,7 +58,7 @@ const RightSide: React.FC<IRightSide> = props => {
           <Input />
         </Form.Item>
       </Form>
-    </>
+    </Card>
   );
 };
 

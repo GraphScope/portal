@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Form, Button, Divider } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Form, Button, Flex, Divider } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { Utils, SplitSection } from '@graphscope/studio-components';
+import { Utils, SplitSection, useStudioProvier } from '@graphscope/studio-components';
 import Section from '../../components/section';
 import LeftSide from './left-side';
 import RightSide from './right-side';
@@ -12,7 +11,7 @@ import { createProcedure, updateProcedure, listGraphs, getProcedure } from './se
 import { useHistory } from '../../hooks/';
 const { getUrlParams } = Utils;
 const CreatePlugins: React.FC = () => {
-  console.log(getUrlParams());
+  const { isLight } = useStudioProvier();
   const { graph_id, procedure_id } = getUrlParams();
   const [form] = Form.useForm();
   const history = useHistory();
@@ -116,33 +115,55 @@ const CreatePlugins: React.FC = () => {
       ]}
       desc="Expand its functionality or offer solutions that are finely tuned to specific needs."
     >
-      <SelectCards
-        style={{ position: 'absolute', top: '3px', right: '3px', fontSize: '20px' }}
-        value={storeType}
-        //@ts-ignore
-        items={engines}
-        onChange={chooseStoreType}
-      />
-      <Divider />
-      <SplitSection
-        splitText=""
-        span={12}
-        splitSpan={1}
-        leftSide={
-          <LeftSide
-            editCode={editCode}
-            isEdit={isEdit}
-            onCodeMirrorChange={onCodeMirrorChange}
-            onChange={handleCodeMirror}
+      <Flex
+        style={{
+          backgroundColor: isLight ? '#fff' : '#242424',
+          // border: `1px solid ${isLight ? '#f0f0f0' : '#313131'}`,
+          borderRadius: '6px',
+          padding: '12px',
+        }}
+        vertical
+        gap={12}
+      >
+        <Flex vertical gap={12}>
+          <SelectCards
+            style={{ position: 'absolute', top: '3px', right: '3px', fontSize: '20px' }}
+            value={storeType}
+            //@ts-ignore
+            items={engines}
+            onChange={chooseStoreType}
           />
-        }
-        rightSide={<RightSide form={form} isEdit={isEdit} options={instanceOption} />}
-      />
-      <div style={{ display: 'flex', justifyContent: 'end' }}>
-        <Button type="primary" onClick={handleSubmit} loading={isLoading} style={{ width: '128px' }}>
-          {graph_id ? <FormattedMessage id="Edit Plugin" /> : <FormattedMessage id="Create Plugin" />}
-        </Button>
-      </div>
+          {/* <Divider style={{ margin: 0 }} /> */}
+          <Flex gap={12}>
+            <LeftSide
+              editCode={editCode}
+              isEdit={isEdit}
+              onCodeMirrorChange={onCodeMirrorChange}
+              onChange={handleCodeMirror}
+            />
+            <RightSide form={form} isEdit={isEdit} options={instanceOption} />
+          </Flex>
+          {/* <SplitSection
+            splitText=""
+            span={12}
+            splitSpan={1}
+            leftSide={
+              <LeftSide
+                editCode={editCode}
+                isEdit={isEdit}
+                onCodeMirrorChange={onCodeMirrorChange}
+                onChange={handleCodeMirror}
+              />
+            }
+            rightSide={<RightSide form={form} isEdit={isEdit} options={instanceOption} />}
+          /> */}
+        </Flex>
+        <Flex justify="end">
+          <Button type="primary" onClick={handleSubmit} loading={isLoading} style={{ width: '128px' }}>
+            {graph_id ? <FormattedMessage id="Edit Plugin" /> : <FormattedMessage id="Create Plugin" />}
+          </Button>
+        </Flex>
+      </Flex>
     </Section>
   );
 };
