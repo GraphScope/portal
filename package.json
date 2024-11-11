@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": "^18",
+    "node": "^18.19.1",
     "pnpm": "^9"
   },
   "scripts": {
@@ -10,7 +10,8 @@
     "build": "turbo run build --no-cache",
     "build:portal": "cd packages/studio-website && npm run build:site",
     "build:examples": "pnpm i && rm -rf package-lock.json && npm run build && cd examples/graph-apps && npm run build:site",
-    "build:docs": "npm run prev && npm run build &&  dumi build",
+    "build:docs": "pnpm i && rm -rf package-lock.json && npm run build && cd docs/portal && npm run build",
+    "build:docs-dumi-components": "npm run prev && npm run build &&  dumi build",
     "docs": "dumi dev",
     "version": "changeset version",
     "publish": "npm run prev && npm run build && pnpm publish -r --force",

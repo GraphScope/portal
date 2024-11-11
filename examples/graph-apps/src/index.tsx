@@ -8,6 +8,7 @@ import { StudioProvier } from '@graphscope/studio-components';
 // import locales from '../locales';
 import { IntlProvider } from 'react-intl';
 import PaperReading from './paper-reading';
+import OnlineVisualizer from './online-visual-tool';
 
 interface IPagesProps {}
 
@@ -112,10 +113,22 @@ const Home = () => {
     </Flex>
   );
 };
+
 const routes = [
   { path: '/', component: Home },
   { path: '/paper-reading', component: React.lazy(() => import('./paper-reading')) },
-  { path: '/online-visual-tool', component: React.lazy(() => import('./online-visual-tool')) },
+  {
+    path: '/online-visual-tool',
+    component: React.lazy(() =>
+      import('./online-visual-tool/index').then(Module => {
+        return {
+          default: () => {
+            return <Module.default id="online" style={{ top: '0px' }} />;
+          },
+        };
+      }),
+    ),
+  },
 ];
 
 const GraphApps: React.FunctionComponent<IPagesProps> = props => {
@@ -147,7 +160,4 @@ const GraphApps: React.FunctionComponent<IPagesProps> = props => {
   );
 };
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-root.render(<GraphApps />);
-
-export { PaperReading, GraphApps };
+export { PaperReading, GraphApps, OnlineVisualizer };
