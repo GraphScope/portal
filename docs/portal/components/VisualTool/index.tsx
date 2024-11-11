@@ -4,7 +4,12 @@ import { GlobalSpin } from '@graphscope/studio-components';
 const Apps = dynamic(
   () =>
     import('@graphscope/graph-apps').then(module => {
-      return module.OnlineVisualizer;
+      return {
+        /** 这种写法和 react lazy 就统一了 */
+        default: () => {
+          return <module.OnlineVisualizer id="tools-online" style={{ top: '64px' }} />;
+        },
+      };
     }),
   {
     loading: () => <GlobalSpin />,

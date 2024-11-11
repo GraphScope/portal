@@ -1,6 +1,9 @@
 import React from 'react';
 import { Divider, Typography, Flex } from 'antd';
-const Logo = ({ style = {} }) => {
+
+const Logo = ({ style }) => {
+  const { color = '#333' } = style || {};
+
   return (
     <div
       style={{
@@ -13,7 +16,7 @@ const Logo = ({ style = {} }) => {
         <g id="页面-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
           <g id="Medium" transform="translate(-294, -348)" fillRule="nonzero">
             <g id="graphscope-logo-(1)" transform="translate(294.9157, 348)">
-              <g id="编组" transform="translate(98.0843, 39.485)" fill="#333333">
+              <g id="编组" transform="translate(98.0843, 39.485)" fill={color}>
                 <path
                   d="M33.016,17.353 C33.016,17.802 33,18.694 32.968,20.028 C32.936,21.362 32.872,22.237 32.776,22.654 C31.972,26.768 30.197,29.805 27.45,31.764 C24.702,33.726 21.192,34.705 16.918,34.705 C13.672,34.705 10.78,34.103 8.242,32.898 C5.703,31.693 3.694,29.797 2.217,27.21 C0.738,24.624 -4.88498131e-15,21.337 -4.88498131e-15,17.353 C-4.88498131e-15,13.369 0.739,10.083 2.217,7.495 C3.694,4.909 5.703,3.013 8.242,1.807 C10.78,0.602 13.672,0 16.918,0 C19.103,0 21.215,0.434 23.257,1.302 C25.297,2.17 27.089,3.407 28.632,5.013 C30.174,6.62 31.283,8.484 31.958,10.604 L25.258,10.604 C24.615,9.191 23.53,7.985 22.004,6.989 C20.478,5.993 18.782,5.495 16.919,5.495 C14.926,5.495 13.142,5.937 11.569,6.821 C9.994,7.704 8.749,9.03 7.833,10.798 C6.917,12.566 6.46,14.75 6.46,17.353 C6.46,19.955 6.918,22.149 7.833,23.931 C8.749,25.715 9.994,27.04 11.569,27.908 C13.143,28.776 14.926,29.21 16.919,29.21 C19.168,29.21 21.137,28.655 22.824,27.548 C24.511,26.439 25.676,24.809 26.319,22.655 L16.92,22.655 L16.92,17.354 L33.016,17.354 L33.016,17.353 Z"
                   id="路径"
@@ -99,10 +102,10 @@ const Logo = ({ style = {} }) => {
     </div>
   );
 };
-function Header({ title }) {
+function Header({ title, style = {} }) {
   return (
     <Flex align="center" justify="center" gap={6}>
-      <Logo style={{ width: '120px' }} />
+      <Logo style={{ width: '120px', ...style }} />
       <Divider type="vertical" style={{ height: '20px', borderInlineStart: '1px solid #ddd', marginTop: '4px' }} />
       <Typography.Title level={5} style={{ margin: '0px' }}>
         {title}

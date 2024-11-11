@@ -3,7 +3,7 @@ import { DocsThemeConfig } from 'nextra-theme-docs';
 import { Header } from '@graphscope/docs-components';
 
 const config: DocsThemeConfig = {
-  logo: <Header title="Portal" />,
+  logo: <Header title="Portal" style={{}} />,
   project: {
     link: 'https://github.com/GraphScope/portal',
   },
