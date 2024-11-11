@@ -1,0 +1,64 @@
+{
+  "name": "graphy-wesite",
+  "version": "0.1.1",
+  "description": "",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GraphScope/portal.git"
+  },
+  "files": [
+    "es",
+    "lib",
+    "dist"
+  ],
+  "scripts": {
+    "start": "vite dev",
+    "build": "vite build"
+  },
+  "pnpm": {
+    "overrides": {
+      "react": "18.2.0",
+      "react-dom": "18.2.0",
+      "valtio": "1.13.2"
+    }
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.2.6",
+    "@antv/g2": "^5.2.7",
+    "@graphscope/graph-apps": "latest",
+    "@graphscope/studio-components": "latest",
+    "@graphscope/studio-driver": "latest",
+    "@graphscope/studio-graph": "latest",
+    "@graphscope/studio-importor": "latest",
+    "@graphscope/studio-query": "latest",
+    "@kuzu/kuzu-wasm": "^1.0.4",
+    "antd": "^5.21.0",
+    "d3-force": "latest",
+    "html-to-image": "^1.11.11",
+    "js-yaml": "^4.1.0",
+    "jspdf": "^2.5.2",
+    "localforage": "^1.10.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-highlight-words": "^0.20.0",
+    "react-intl": "^6.6.8",
+    "react-router-dom": "^6.26.1",
+    "typewriter-effect": "^2.21.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "jszip": "^3.10.1",
+    "vite": "^5.4.9",
+    "vite-plugin-top-level-await": "^1.4.4",
+    "vite-plugin-wasm": "^3.3.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "author": "",
+  "license": "ISC"
+}
