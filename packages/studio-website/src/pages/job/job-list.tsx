@@ -74,6 +74,7 @@ const JobsList: React.FC = () => {
       filters: typeOptions,
       filterMultiple: false,
       filterIcon: filtered => <Icons.Filter />,
+      filterSearch: true,
       onFilter: (value: string, record: IJobType) => record.type.startsWith(value),
     },
     {
@@ -83,6 +84,7 @@ const JobsList: React.FC = () => {
       filters: STATUSOPTIONS,
       filterMultiple: false,
       filterIcon: filtered => <Icons.Filter />,
+      filterSearch: true,
       onFilter: (value: string, record: IJobType) => record.status.startsWith(value),
       render: (status: string) => (
         //@ts-ignore

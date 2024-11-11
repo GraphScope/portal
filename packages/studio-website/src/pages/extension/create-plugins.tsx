@@ -34,7 +34,7 @@ const CreatePlugins: React.FC = () => {
     const res = await getProcedure(graph_id, procedure_id);
     //@ts-ignore
     const { query } = res;
-    form.setFieldsValue(res);
+    form.setFieldsValue({ ...res, bound_graph: !!res['bound_graph'] ? res['bound_graph'] : graph_id });
     updateState(preset => {
       return { ...preset, editCode: query, isEdit: true };
     });
