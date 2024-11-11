@@ -23,7 +23,21 @@ const nextConfig = {
   },
 };
 
+const { webpack: nextraWebpack, ...othersConfig } = withNextra();
+
+const webpack = (config, options) => {
+  /** 先走一遍 nextra 的 webpack 配置 */
+  const _config = nextraWebpack(config, options);
+  /** 再做自定义 webpack 配置 */
+  _config.externals.push({
+    'node:os': 'os',
+    fsevents: 'fsevents',
+  });
+  return _config;
+};
+
 module.exports = {
-  ...withNextra(),
+  ...othersConfig,
   ...nextConfig,
+  webpack,
 };
