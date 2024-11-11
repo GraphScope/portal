@@ -17,6 +17,10 @@ const nextConfig = {
   // assetPrefix,
   // basePath: assetPrefix,
   output: 'export',
+  experimental: {
+    esmExternals: 'loose',
+    optimizePackageImports: ['node:os'],
+  },
 };
 
 module.exports = {

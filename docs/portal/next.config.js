@@ -19,7 +19,7 @@ const nextConfig = {
   output: 'export',
   experimental: {
     esmExternals: 'loose',
-    // optimizePackageImports: ['@antv/g2'],
+    optimizePackageImports: ['node:os'],
   },
 };
 

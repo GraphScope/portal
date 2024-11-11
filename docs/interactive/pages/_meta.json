@@ -7,9 +7,22 @@
       "layout": "raw"
     }
   },
-
   "docs": {
     "title": "Documentation",
     "type": "page"
+  },
+  "solution": {
+    "title": "Solution",
+    "type": "menu",
+    "items": {
+      "knowledge": {
+        "title": "Knowledge Graph",
+        "type": "page"
+      },
+      "risk_detection": {
+        "title": "Risk Detection",
+        "type": "page"
+      }
+    }
   }
 }
