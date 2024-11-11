@@ -3,6 +3,7 @@ import { Utils } from '@graphscope/studio-components';
 import Graph from '../../graph';
 import { useContext } from '../../hooks/useContext';
 import { NodeData, EdgeData } from '../../hooks/typing';
+import { theme } from 'antd';
 
 export const colors: string[] = [
   '#569480',
@@ -63,6 +64,7 @@ export const transform = (data): { nodes: NodeData[]; edges: EdgeData[] } => {
 const Canvas: React.FunctionComponent<ICanvasProps> = props => {
   const { id, store, updateStore } = useContext();
   const { data, render, nodeStyle, edgeStyle, nodeStatus, edgeStatus } = store;
+  const { token } = theme.useToken();
   const onInit = (graph, emitter, { width, height }) => {
     updateStore(draft => {
       draft.graph = graph;
@@ -80,7 +82,7 @@ const Canvas: React.FunctionComponent<ICanvasProps> = props => {
         edgeStyle={edgeStyle}
         nodeStatus={nodeStatus}
         edgeStatus={edgeStatus}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '100%', background: token.colorBgBase }}
         //@ts-ignore
         data={data}
         render={render}

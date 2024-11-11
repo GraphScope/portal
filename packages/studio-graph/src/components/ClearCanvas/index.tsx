@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Tooltip, Button } from 'antd';
-import { FileTextOutlined, ClearOutlined } from '@ant-design/icons';
+import { ClearOutlined } from '@ant-design/icons';
 import { useContext } from '../../hooks/useContext';
-import { Utils } from '@graphscope/studio-components';
+
 interface IReportProps {}
 
 const ClearCanvas: React.FunctionComponent<IReportProps> = props => {

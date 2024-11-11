@@ -1,9 +1,31 @@
+export function safeParse(input) {
+  try {
+    // 尝试直接解析
+    return JSON.parse(input);
+  } catch (error) {
+    // 如果直接解析失败，检查是否可以通过添加双引号来修复
+    if (typeof input === 'string' && !input.startsWith('"') && !input.endsWith('"')) {
+      try {
+        // 尝试添加双引号并重新解析
+        return JSON.parse(`"${input}"`);
+      } catch (innerError) {
+        // 如果仍然无法解析，则返回原始输入或者抛出错误
+        console.error('Failed to parse the input:', innerError);
+        return input;
+      }
+    } else {
+      // 如果输入已经是有效的 JSON 字符串或其他类型的数据，直接返回
+      return input;
+    }
+  }
+}
+
 export const storage = {
   get<T>(key: string): T | undefined {
     try {
       const values = localStorage.getItem(key);
       if (values) {
-        return JSON.parse(values);
+        return safeParse(values);
       }
     } catch (error) {
       console.error('Error while retrieving data from localStorage:', error);

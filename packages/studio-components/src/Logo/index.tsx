@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { theme } from 'antd';
 export const LogoImage = ({
   style,
   colors = ['#2281f2', '#1fb2fd', '#37edd7'],
@@ -137,6 +137,7 @@ export const LogoText = ({
 const Logo = (props: { style?: any; onlyIcon?: boolean }) => {
   const { style = {}, onlyIcon } = props;
   const { color = '#333' } = style;
+  const { token } = theme.useToken();
 
   return (
     <div
@@ -148,7 +149,7 @@ const Logo = (props: { style?: any; onlyIcon?: boolean }) => {
       }}
     >
       <LogoImage style={{ width: '28px', marginTop: '-4px', marginRight: '6px' }} />
-      <LogoText style={{ width: '120px', height: '54px' }} color={color} />
+      <LogoText style={{ width: '120px', height: '54px' }} color={token.colorTextLightSolid} />
     </div>
   );
 };

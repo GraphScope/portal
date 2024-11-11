@@ -1,4 +1,4 @@
-import { Segmented } from 'antd';
+import { Segmented, theme } from 'antd';
 import * as React from 'react';
 import { ReactNode } from 'react';
 import { getSearchParams, setSearchParams } from '../Utils';
@@ -68,9 +68,16 @@ const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
     });
   };
   const val = value || active;
+  const { token } = theme.useToken();
 
   return (
-    <div style={{ ...styles.tabs, ...rootStyle }}>
+    <div
+      style={{
+        background: token.colorBgContainer,
+        ...styles.tabs,
+        ...rootStyle,
+      }}
+    >
       <Segmented
         options={options}
         value={val}

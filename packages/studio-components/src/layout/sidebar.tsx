@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { MenuProps } from 'antd';
-import { Menu, Flex } from 'antd';
+import { Menu, Flex, theme } from 'antd';
 import Logo from '../Logo';
 import { useSection } from '../Section/useSection';
 
@@ -44,6 +44,8 @@ const Sidebar: React.FunctionComponent<ISidebar> = props => {
     setHovering(false);
   };
 
+  const { token } = theme.useToken();
+
   return (
     <Flex vertical style={{ height: '100%' }} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <Header
@@ -53,7 +55,7 @@ const Sidebar: React.FunctionComponent<ISidebar> = props => {
           padding: '0px 14px',
         }}
       >
-        <Logo style={{ color: isLight ? '#333' : '#fff' }} />
+        <Logo style={{ color: token.colorText }} />
       </Header>
       <div
         style={{
