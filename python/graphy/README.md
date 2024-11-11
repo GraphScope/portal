@@ -9,17 +9,9 @@
 ### Python Dependencies
 
 ```bash
-cd python/grag
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-```
-
-### Node.js Dependencies
-
-```bash
-cd client/graphy
-pnpm install
 ```
 
 ## Run Backend Server
@@ -27,22 +19,14 @@ pnpm install
 We have not built and installed the python package yet. So, it is important to add the path to the python package to the `PYTHONPATH` before running the server.
 
 ```bash
-cd python/grag # from root directory
-export PYTHONPATH=$PYTHONPATH:python/grag/
+export PYTHONPATH=$PYTHONPATH:$(pwd)
 python apps/demo_app.py
 ```
 
 The server will be running on `http://localhost:9999` by default.
 
 ## Run Frontend Server
-
-```bash
-cd client/graphy # from root directory
-npm run start
-```
-
-On your browser, visit http://localhost:8000/dataset/
-![home page](./client/graphy/docs/image/home.png)
+Please refer to the [frontend README](../../examples/graphy/README.md) for instructions on how to run the frontend server.
 
 ## Instruction of Backend APIs
 
@@ -233,8 +217,6 @@ curl -X DELETE http://0.0.0.0:9999/api/dataset/graphy/interactive/b4280bb9-3603-
 The project can be test by running the following command:
 
 ```bash
-# suppose you are in the root directory
-cd python/grag
 python apps/demo_app.py  # run the backend app server
 pytest --benchmark-skip -s # on other terminal
 ```
@@ -242,7 +224,5 @@ pytest --benchmark-skip -s # on other terminal
 A benchmark tool is provided to test the workflow extraction. You can run the script from the command line as follows:
 
 ```bash
-# suppose you are in the root directory
-cd python/grag
 pytest --benchmark-only -s
 ```
