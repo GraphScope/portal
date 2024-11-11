@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": "^18",
+    "node": "^18.19.1",
     "pnpm": "^9"
   },
   "scripts": {
