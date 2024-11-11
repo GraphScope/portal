@@ -5,10 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
     "type-check": "tsc",
-    "deploy": "gh-pages -d out -t true",
-    "prepare": "husky install"
+    "deploy": "gh-pages -d out -t true"
   },
   "dependencies": {
     "@graphscope/docs-components": "workspace:*",
