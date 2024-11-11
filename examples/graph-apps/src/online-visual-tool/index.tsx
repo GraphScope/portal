@@ -1,8 +1,15 @@
 import React, { useRef } from 'react';
-
 import { Button, Divider } from 'antd';
 
-import { Section, useSection, Icons, FullScreen, SegmentedTabs } from '@graphscope/studio-components';
+import {
+  Section,
+  useSection,
+  Icons,
+  FullScreen,
+  SegmentedTabs,
+  StudioProvier,
+  Utils,
+} from '@graphscope/studio-components';
 import {
   Toolbar,
   SwitchEngine,
@@ -22,10 +29,12 @@ import {
   ClearCanvas,
   DagreMode,
   FixedMode,
+  locales,
 } from '@graphscope/studio-graph';
 
 interface QueryGraphProps {
   id: string;
+  style?: React.CSSProperties;
 }
 
 const ToogleLeftButton = () => {
@@ -45,9 +54,9 @@ const ToogleRightButton = () => {
   );
 };
 
-const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
+const OnlineVisualizer: React.FunctionComponent<QueryGraphProps> = props => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const { id = 'online-paper-tools' } = props;
+  const { id = 'online-paper-tools', style = {} } = props;
   const items = [
     {
       key: 'CSV',
@@ -62,68 +71,74 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
       children: <StyleSetting />,
     },
   ];
+  let algorithm = 'defaultAlgorithm';
+  if (Utils.storage.get('theme') === 'dark' || Utils.storage.get('algorithm') === 'darkAlgorithm') {
+    algorithm = 'darkAlgorithm';
+  }
 
   return (
-    <GraphProvider id={id}>
-      <div
-        style={{
-          background: '#fff',
-          borderRadius: '8px',
-          position: 'absolute',
-          top: '0px',
-          left: '0px',
-          right: '0px',
-          bottom: '0px',
-        }}
-        ref={containerRef}
-      >
-        <Section
-          splitBorder
-          rightSide={null}
-          leftSide={
-            <PropertiesPanel>
-              <SegmentedTabs items={items} block />
-            </PropertiesPanel>
-          }
-          autoResize={false}
-          rightSideStyle={{
-            width: '350px',
+    <StudioProvier locales={locales} algorithm={algorithm as 'darkAlgorithm' | 'defaultAlgorithm'}>
+      <GraphProvider id={id}>
+        <div
+          style={{
+            borderRadius: '8px',
+            position: 'absolute',
+            top: '0px',
+            left: '0px',
+            right: '0px',
+            bottom: '0px',
+            ...style,
           }}
-          leftSideStyle={{
-            width: '380px',
-          }}
-          defaultCollapsed={{
-            leftSide: false,
-            rightSide: true,
-          }}
+          ref={containerRef}
         >
-          <Toolbar direction="horizontal" style={{ position: 'absolute', top: '20px', right: 'unset', left: '20px' }}>
-            <ToogleLeftButton />
-          </Toolbar>
+          <Section
+            splitBorder
+            rightSide={null}
+            leftSide={
+              <PropertiesPanel>
+                <SegmentedTabs items={items} block />
+              </PropertiesPanel>
+            }
+            autoResize={false}
+            rightSideStyle={{
+              width: '350px',
+            }}
+            leftSideStyle={{
+              width: '380px',
+            }}
+            defaultCollapsed={{
+              leftSide: false,
+              rightSide: true,
+            }}
+          >
+            <Toolbar direction="horizontal" style={{ position: 'absolute', top: '20px', right: 'unset', left: '20px' }}>
+              <ToogleLeftButton />
+            </Toolbar>
 
-          <Canvas />
-          <BasicInteraction />
-          <ClearStatatus />
-          <Loading />
+            <Canvas />
+            <BasicInteraction />
+            <ClearStatatus />
+            <Loading />
 
-          <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
-            <FullScreen containerRef={containerRef} />
-            <ZoomFit />
-            <Brush />
-            <FixedMode />
-            <Divider style={{ margin: '0px' }} />
-            <CurvatureLinks />
-            <DagreMode />
-            <SwitchEngine />
-            <RunCluster />
-            <Divider style={{ margin: '0px' }} />
-            <Export />
-            <ClearCanvas />
-          </Toolbar>
-        </Section>
-      </div>
-    </GraphProvider>
+            <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
+              <FullScreen containerRef={containerRef} />
+              <ZoomFit />
+              <Brush />
+              <FixedMode />
+              <Divider style={{ margin: '0px' }} />
+              <CurvatureLinks />
+              <DagreMode />
+              <SwitchEngine />
+              <RunCluster />
+              <Divider style={{ margin: '0px' }} />
+              <Export />
+              <ClearCanvas />
+            </Toolbar>
+          </Section>
+        </div>
+      </GraphProvider>
+    </StudioProvier>
   );
 };
 
-export default PaperReading;
+export default OnlineVisualizer;
