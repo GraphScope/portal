@@ -46,14 +46,6 @@ const DatasetSteps: React.FunctionComponent<IDataset> = props => {
     const data = await runExtract(id);
     refreshList && refreshList();
   };
-  const handleDownload = async () => {
-    const data = await runExtract(id);
-    console.log('data', data);
-  };
-  const handleDelete = () => {
-    deleteDataset(id);
-    refreshList && refreshList();
-  };
 
   return (
     <Flex justify="space-between" align="center" style={styles.card} gap={100}>
@@ -104,31 +96,6 @@ const DatasetSteps: React.FunctionComponent<IDataset> = props => {
           },
         ]}
       />
-
-      <Space>
-        <Tooltip title="Import into GraphScope for graph analysis">
-          <Button
-            icon={<GlobalOutlined />}
-            onClick={async () => {
-              // const rest = await runInteractive(id);
-              const rest = await useKuzuGraph(id);
-              console.log(rest, id);
-              window.open(`#/paper-reading?graph_id=${id}`, '_blank');
-            }}
-          ></Button>
-        </Tooltip>
-        <Tooltip title="Download extracted graph dataset">
-          <Button
-            icon={<FileZipOutlined />}
-            onClick={() => {
-              downloadDataset(id);
-            }}
-          ></Button>
-        </Tooltip>
-        <Tooltip title="Delete dataset">
-          <Button onClick={handleDelete} icon={<DeleteOutlined />}></Button>
-        </Tooltip>
-      </Space>
     </Flex>
   );
 };

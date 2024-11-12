@@ -29,6 +29,7 @@ export const queryStatistics = async () => {
 };
 export const reload = async () => {
   const graph_id = (Utils.getSearchParams('graph_id') || '0') as string;
+  debugger;
   const driver = await getDriver();
   await driver.switchDataset(graph_id);
   window.KUZU_DRIVER = driver;
