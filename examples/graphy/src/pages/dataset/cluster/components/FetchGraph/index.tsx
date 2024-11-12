@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, Flex, Table, TableProps, Typography, Progress } from 'antd';
 import { useContext, getDataMap, getStyleConfig } from '@graphscope/studio-graph';
 import { Utils } from '@graphscope/studio-components';
-import { getExtractResultByEntity } from '../../pages/dataset/service';
+import { getExtractResultByEntity } from '../../../service';
 interface IUploadProps {}
 
 const FetchGraph: React.FunctionComponent<IUploadProps> = props => {

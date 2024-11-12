@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Select, Button, Typography, Space, notification } from 'antd';
 import { useCluster, useContext } from '@graphscope/studio-graph';
-import { runCluster } from '../../pages/dataset/service';
+import { runCluster } from '../../../service';
 import { Utils } from '@graphscope/studio-components';
 interface IClusterProps {}
 

@@ -3,8 +3,9 @@ import GraphCanvas from './graph-canvas';
 import PropertiesEditor from './properties-editor';
 import { Spin } from 'antd';
 import { ReactFlowProvider } from 'reactflow';
-import { Section, StudioProvier, GlobalSpin } from '@graphscope/studio-components';
-import 'reactflow/dist/style.css';
+import { Section, StudioProvier, GlobalSpin, useDynamicStyle } from '@graphscope/studio-components';
+// import 'reactflow/dist/style.css';
+import cssStyles from './style';
 import { transformGraphNodes, transformEdges } from './elements/index';
 
 import ButtonController from './button-controller';
@@ -49,6 +50,8 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   } = props;
   const { store, updateStore } = useContext();
   const { isReady, displayMode } = store;
+
+  useDynamicStyle(cssStyles, 'graphscope-importor');
 
   useEffect(() => {
     (async () => {

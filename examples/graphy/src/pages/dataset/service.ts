@@ -466,6 +466,7 @@ export const getDriver = async () => {
 export const useKuzuGraph = async (dataset_id: string) => {
   const driver = await getDriver();
   const exist = await driver.existDataset(dataset_id);
+
   if (!exist) {
     await createKuzuGraph(dataset_id);
   }

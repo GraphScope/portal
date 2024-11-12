@@ -33,3 +33,5 @@ export { useCustomToken } from './Provider/useCustomToken';
 export type { SegmentedTabsProps } from './SegmentedTabs';
 export type { Property } from './PropertiesList/typing';
 export type { ParsedFile } from './Utils/parseCSV';
+
+export { useDynamicStyle } from './hooks/useDynamicStyle';

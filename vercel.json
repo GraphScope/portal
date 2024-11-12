@@ -1,6 +1,15 @@
 {
-  "buildCommand": "npm run ci",
+  "buildCommand": "npm run build:docs",
   "framework": null,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
+        { "key": "Cross-Origin-Embedder-Policy", "value": "require-corp" }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",

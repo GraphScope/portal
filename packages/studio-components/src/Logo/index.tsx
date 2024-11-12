@@ -135,21 +135,19 @@ export const LogoText = ({
 };
 
 const Logo = (props: { style?: any; onlyIcon?: boolean }) => {
-  const { style = {}, onlyIcon } = props;
-  const { color = '#333' } = style;
+  const { style = {} } = props;
+
   const { token } = theme.useToken();
 
   return (
     <div
       style={{
         overflow: 'hidden',
-        // padding: '0px 14px',
-        // width: onlyIcon ? `56px` : `150px`,
         ...style,
       }}
     >
       <LogoImage style={{ width: '28px', marginTop: '-4px', marginRight: '6px' }} />
-      <LogoText style={{ width: '120px', height: '54px' }} color={token.colorTextLightSolid} />
+      <LogoText style={{ width: '120px', height: '54px' }} color={token.colorTextHeading} />
     </div>
   );
 };

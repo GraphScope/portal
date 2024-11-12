@@ -1,6 +1,2 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './pages';
-
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-root.render(<App />);
+import GraphyApp from './pages';
+export default GraphyApp;

@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet, HashRouter } from 'react-router-dom';
 import { Layout } from '@graphscope/studio-components';
 import { SIDE_MENU } from './const';
 import { ConfigProvider } from 'antd';
@@ -34,6 +34,7 @@ interface IPagesProps {}
 
 const routes = [
   { path: '/', redirect: '/dataset' },
+  { path: '/tools/graphy/', redirect: '#/dataset' },
   {
     path: '/dataset',
     index: true,
@@ -68,7 +69,7 @@ const Apps = () => {
   return (
     <>
       <Outlet />
-      {isReady && <PaperReading queryCypher={queryCypher} queryCypherSchema={queryCypherSchema} />}
+      {isReady && <PaperReading />}
     </>
   );
 };
@@ -107,14 +108,14 @@ const Pages: React.FunctionComponent<IPagesProps> = props => {
       }}
     >
       <IntlProvider messages={messages} locale={locale}>
-        <BrowserRouter>
+        <HashRouter>
           <Routes>
             <Route path="/" element={<Layout sideMenu={[SIDE_MENU]} />}>
               {routeComponents}
             </Route>
             <Route path={'/paper-reading'} element={<Apps />} />
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
       </IntlProvider>
     </ConfigProvider>
   );

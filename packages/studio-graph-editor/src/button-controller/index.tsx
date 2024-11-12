@@ -1,6 +1,5 @@
 import React from 'react';
 import { Toolbar } from '@graphscope/studio-components';
-import 'reactflow/dist/style.css';
 import ClearCanvas from './clear-canvas';
 import AddNode from './add-node';
 

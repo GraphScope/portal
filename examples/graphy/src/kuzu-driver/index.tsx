@@ -1,6 +1,7 @@
-import { default as Kuzu } from '@kuzu/kuzu-wasm';
+import Kuzu from '@kuzu/kuzu-wasm';
 import { Utils } from '@graphscope/studio-components';
 import localforage from 'localforage';
+console.log('Kuzu', Kuzu);
 
 interface IKuzuResult {
   Database: (params: any) => Promise<any>;
@@ -66,7 +67,9 @@ export class KuzuDriver {
 
   async initialize(): Promise<void> {
     const result: IKuzuResult = await this.kuzu();
+
     //@ts-ignore
+
     this.db = await result.Database(this.dbname, 0, 10, false, false, 4194304 * 16 * 4);
     this.conn = await result.Connection(this.db);
     this.FS = result.FS;

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, Flex, List, Typography } from 'antd';
 // import { query } from '../FetchGraph/service';
 import { useContext, useCluster } from '@graphscope/studio-graph';
-import { updateClusterSummarize, runSummarize } from '../../pages/dataset/service';
+import { updateClusterSummarize, runSummarize } from '../../../service';
 import { Utils } from '@graphscope/studio-components';
 interface ISummarizeProps {
   onClick?: () => void;
