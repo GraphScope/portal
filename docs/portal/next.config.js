@@ -53,6 +53,7 @@ const webpack = (config, options) => {
   _config.externals.push({
     'node:os': 'os',
     fsevents: 'fsevents',
+    // 'monaco-editor': 'monaco',
   });
 
   return _config;

@@ -22,5 +22,14 @@
       "layout": "full",
       "header": false
     }
+  },
+  "portal": {
+    "type": "page",
+    "title": "Portal",
+    "theme": {
+      "footer": false,
+      "layout": "full",
+      "header": false
+    }
   }
 }

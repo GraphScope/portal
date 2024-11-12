@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build:site": "next build",
+    "build:site": "cd ../../packages/studio-website && npm run build:site:single && cd ../../docs/portal && next build",
     "type-check": "tsc",
     "deploy": "gh-pages -d out -t true"
   },

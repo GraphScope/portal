@@ -2,9 +2,9 @@
   "name": "@graphscope/studio-graph-editor",
   "version": "0.1.1",
   "description": "",
-  "main": "./src/index.tsx",
-  "module": "./src/index.tsx",
-  "types": "./dist/index.d.ts",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/GraphScope/portal.git"
@@ -19,8 +19,10 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "start": "vite dev",
-    "build": "vite build && tsc"
+    "start": "father dev",
+    "build": "father build",
+    "start:site": "vite dev",
+    "build:site": "vite build && tsc"
   },
   "peerDependencies": {
     "react": "18.2.0",

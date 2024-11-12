@@ -12,7 +12,9 @@
   "scripts": {
     "build": "father build",
     "start": "vite dev",
-    "build:site": "vite build",
+    "copyHtml": "cp -f dist/index.html ../../docs/portal/public/portal.html",
+    "build:site:single": "vite build --mode=single && npm run copyHtml",
+    "build:site": "vite build && npm run copyHtml",
     "prepublishOnly": "npm run build"
   },
   "publishConfig": {
@@ -26,7 +28,6 @@
     "@fortawesome/free-regular-svg-icons": "latest",
     "@fortawesome/free-solid-svg-icons": "latest",
     "@fortawesome/react-fontawesome": "latest",
-    "@graphscope/use-zustand": "workspace:*",
     "@graphscope/studio-components": "workspace:*",
     "@graphscope/studio-driver": "workspace:*",
     "@graphscope/studio-explore": "workspace:*",
@@ -34,6 +35,7 @@
     "@graphscope/studio-importor": "workspace:*",
     "@graphscope/studio-query": "workspace:*",
     "@graphscope/studio-server": "workspace:*",
+    "@graphscope/use-zustand": "workspace:*",
     "@uiw/react-codemirror": "^4.21.21",
     "antd": "^5.17.0",
     "js-yaml": "^4.1.0",
