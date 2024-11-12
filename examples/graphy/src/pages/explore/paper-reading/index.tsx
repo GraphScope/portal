@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 
 import { Button } from 'antd';
 
-import { MultipleInstance, Section, useSection, Icons, FullScreen } from '@graphscope/studio-components';
+import { Section, useSection, Icons, FullScreen, StudioProvier } from '@graphscope/studio-components';
 import {
   Toolbar,
   SwitchEngine,
@@ -20,6 +20,7 @@ import {
   ClearCanvas,
   StyleSetting,
   Brush,
+  GraphProvider,
 } from '@graphscope/studio-graph';
 
 import { FetchGraph, Searchbar, PaperList, PaperInfo, Statistics } from './components';
@@ -55,7 +56,7 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
   console.log('PaperReading props', props);
   return (
     <IntlProvider messages={messages} locale={locale}>
-      <MultipleInstance>
+      <GraphProvider>
         <div
           style={{
             background: '#fff',
@@ -131,7 +132,7 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
             </Toolbar>
           </Section>
         </div>
-      </MultipleInstance>
+      </GraphProvider>
     </IntlProvider>
   );
 };

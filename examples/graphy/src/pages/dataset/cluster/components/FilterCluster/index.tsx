@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Select, Space, Button, Flex, Tooltip } from 'antd';
 import { useContext, useCluster } from '@graphscope/studio-graph';
-// import { query } from '../FetchGraph/service';
+
 import { Utils } from '@graphscope/studio-components';
 import { LikeOutlined } from '@ant-design/icons';
 interface IFilterClusterProps {}

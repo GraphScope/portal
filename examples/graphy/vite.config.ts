@@ -32,6 +32,10 @@ export default defineConfig({
     },
   },
 
+  optimizeDeps: {
+    exclude: ['@kuzu/kuzu-wasm'],
+  },
+
   plugins: [react(), wasm(), topLevelAwait()],
   resolve: {
     alias: {
