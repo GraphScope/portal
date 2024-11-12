@@ -1,7 +1,7 @@
 import React from 'react';
 import { Divider } from 'antd';
 import { Toolbar, useCustomToken } from '@graphscope/studio-components';
-import 'reactflow/dist/style.css';
+
 import RightButton from './right-button';
 import ClearCanvas from './clear-canvas';
 import AddNode from './add-node';

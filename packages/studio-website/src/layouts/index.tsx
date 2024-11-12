@@ -4,10 +4,10 @@ import { useContext, IGraph } from './useContext';
 import { Layout, LogoText, Utils, useCustomToken, GlobalSpin } from '@graphscope/studio-components';
 import { DeploymentApiFactory } from '@graphscope/studio-server';
 import { SIDE_MENU, SETTING_MENU } from './const';
-import { Flex, Spin, notification } from 'antd';
+import { notification } from 'antd';
 import { listGraphs } from '../pages/instance/lists/service';
 import { SLOTS } from '../slots';
-import './index.css';
+
 export default function StudioLayout() {
   const { store, updateStore } = useContext();
   const { graphId, draftId } = store;

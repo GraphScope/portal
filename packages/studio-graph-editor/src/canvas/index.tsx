@@ -11,7 +11,7 @@ import ButtonController from '../button-controller';
 import useInteractive from './useInteractive';
 import { FormattedMessage } from 'react-intl';
 import { useGraphContext } from '..';
-import 'reactflow/dist/style.css';
+// import 'reactflow/dist/style.css';
 import { useContext } from './useContext';
 
 interface ISchemaGraphProps {

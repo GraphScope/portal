@@ -3,7 +3,7 @@ import { Flex, Input, Skeleton, List, Divider, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Utils } from '@graphscope/studio-components';
 import Highlighter from 'react-highlight-words';
-import './index.css';
+// import './index.css';
 import { useContext } from '@graphscope/studio-graph';
 import { SERVICES } from '../registerServices';
 const { getSearchParams, debounce } = Utils;

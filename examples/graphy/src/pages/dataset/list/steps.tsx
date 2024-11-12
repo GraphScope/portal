@@ -113,7 +113,7 @@ const DatasetSteps: React.FunctionComponent<IDataset> = props => {
               // const rest = await runInteractive(id);
               const rest = await useKuzuGraph(id);
               console.log(rest, id);
-              window.open(`/paper-reading?graph_id=${id}`, '_blank');
+              window.open(`#/paper-reading?graph_id=${id}`, '_blank');
             }}
           ></Button>
         </Tooltip>
