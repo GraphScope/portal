@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run ci",
+  "buildCommand": "npm run build:docs",
   "framework": null,
   "headers": [
     {
