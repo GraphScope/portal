@@ -19,7 +19,7 @@ from db import JsonFileStore
 from nodes import BaseChainNode
 from nodes.paper_reading_nodes import NameDesc
 from apps.text_generator import ReportGenerator
-from models import set_llm_model, DefaultEmbedding
+from models import set_llm_model, DefaultEmbedding, DEFAULT_LLM_MODEL_CONFIG
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from flask import Flask, request, jsonify, send_file
@@ -187,15 +187,6 @@ class STATUS(Enum):
         return NotImplemented
 
 
-default_llm_config = {
-    "llm_model": "qwen-plus",
-    "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-    "api_key": os.environ["DASHSCOPE_API_KEY"],  ### DO NOT commit,
-    "temperature": 0,
-    "streaming": True,
-}
-
-
 class DemoApp:
     def __init__(
         self,
@@ -210,7 +201,7 @@ class DemoApp:
         # a default embedding model, TODO may be configured
         self.embedding_model = DefaultEmbedding()
         # a default llm model, TODO may be configured
-        self.llm = set_llm_model(default_llm_config)
+        self.llm = set_llm_model(DEFAULT_LLM_MODEL_CONFIG)
         # Each dataset has a persist store
         self.persist_stores = {}
         self.cache = {}

@@ -3,8 +3,6 @@
 ### Prerequisites
 
 - Python 3.10
-- install node.js : https://nodejs.org/en
-- install node package manager : https://pnpm.io/installation#using-npm or after `npm` installed, `npm install -g pnpm`
 
 ### Python Dependencies
 
@@ -32,6 +30,7 @@ Please refer to the [frontend README](../../examples/graphy/README.md) for instr
 
 ### Dataset
 
+#### Create dataset
 Create dataset from a single paper, or a zip package of multiple papers. All papers must be in PDF format. We have provided a sample `graphrag.pdf` file in the `input` directory for going through
 the demo. The `dataset_id` for this paper is: `8547eb64-a106-5d09-8950-8a47fb9292dc`.
 
@@ -39,19 +38,21 @@ the demo. The `dataset_id` for this paper is: `8547eb64-a106-5d09-8950-8a47fb929
 curl -X POST "http://localhost:9999/api/dataset" -F "file=@inputs/samples/graphrag.pdf"
 ```
 
+#### Get dataset's metadata
+
 Get dataset's metadata by `dataset_id`, including the id, llm_config, and its workflow for extracting the paper, if configured.
 
 ```bash
 curl -X GET http://0.0.0.0:9999/api/dataset?dataset_id=8547eb64-a106-5d09-8950-8a47fb9292dc
 ```
 
-Get all datasets
+#### Get all datasets
 
 ```bash
 curl -X GET http://0.0.0.0:9999/api/dataset
 ```
 
-Delete dataset by `dataset_id`
+#### Delete dataset
 
 ```bash
 curl -X DELETE http://0.0.0.0:9999/api/dataset/8547eb64-a106-5d09-8950-8a47fb9292dc
@@ -59,21 +60,45 @@ curl -X DELETE http://0.0.0.0:9999/api/dataset/8547eb64-a106-5d09-8950-8a47fb929
 
 ### LLM Config
 
-Create LLM Config for the dataset.
+#### Create LLM Config
+
+The LLM model can be configured individually for each dataset (by `dataset_id`), allowing flexibility to use different models based on specific dataset needs. For instance, if cost is a concern, a smaller or locally deployed model can be used for datasets with a large number of papers to optimize expenses.
 
 ```bash
 curl -X POST http://0.0.0.0:9999/api/llm/config -H "Content-Type: application/json" -d '{
   "dataset_id": "8547eb64-a106-5d09-8950-8a47fb9292dc",
   "llm_model": "qwen-plus",
-    "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-    "api_key": "xxx",
+  "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+  "api_key": "xxx",
+  "model_kwargs": {
+    "streaming":true
+  }
+}'
+```
+
+We currently offer two options for configuring an LLM model:
+
+- **Option 1: Using OpenAI-Compatible APIs**
+This option supports OpenAI and other providers offering compatible APIs. To configure, provide the llm_model, base_url, api_key, and any additional model arguments. The example below demonstrates using OpenAI-compatible APIs through Alibaba’s Dashscope with the qwen-plus model.
+- **Option 2: Using Locally Deployed Models with Ollama**
+This option supports locally deployed LLM models through Ollama. Set llm_model to `ollama/<ollama_model_name>` to specify a model. For instance, the following settings configure the locally deployed Llama3.1 model (defaulting to 8b) from Ollama:
+
+```bash
+curl -X POST http://0.0.0.0:9999/api/llm/config -H "Content-Type: application/json" -d '{
+    "dataset_id": "8547eb64-a106-5d09-8950-8a47fb9292dc",
+    "llm_model": "ollama/llama3.1",
+    "base_url": "http://localhost:11434",
     "model_kwargs": {
-      "streaming":true
+        "streaming": true
     }
 }'
 ```
 
-Get the LLM Config
+
+Note: If no LLM model is specified for a dataset, a default model configuration will be applied. To customize this default, open `models/__init__.py` and modify the `DEFAULT_LLM_MODEL_CONFIG` variable.
+
+
+#### Get the LLM Config
 
 ```bash
 curl -X GET http://0.0.0.0:9999/api/llm/config?dataset_id=8547eb64-a106-5d09-8950-8a47fb9292dc
@@ -81,6 +106,7 @@ curl -X GET http://0.0.0.0:9999/api/llm/config?dataset_id=8547eb64-a106-5d09-895
 
 ### Workflow Config
 
+#### Create the workflow
 Create the workflow for extracting contents for all papers in the dataset. The workflow is a acyclic directed graph (RAG). The node of the workflow mainly defines what contents to extract from the paper and the output format. The edge indicates dependencies between nodes.
 
 ```bash
@@ -154,7 +180,7 @@ curl -X POST http://0.0.0.0:9999/api/dataset/workflow/config -H "Content-Type: a
 }'
 ```
 
-Get the Workflow
+#### Get the Workflow
 
 ```bash
 curl -X GET http://0.0.0.0:9999/api/dataset/workflow/config?dataset_id=8547eb64-a106-5d09-8950-8a47fb9292dc
@@ -188,7 +214,8 @@ curl -X GET "http://0.0.0.0:9999/api/dataset/extract?dataset_id=8547eb64-a106-5d
 
 ### Graphy Your Data
 
-After extracting and summarizing the contents, one can visualize and analyze the extracted contents in a graph. For simplicity, we now only export the graph data in a zip file. But later we will provide a web-based graph visualization tool.
+After content extraction, the results can be visualized and analyzed within a graph interface. Users can export the graph data as a zip file, which can then be automatically imported and displayed in the [web-based graph visualization tool](../../examples/graphy/README.md).
+
 
 ```bash
 curl -X POST http://0.0.0.0:9999/api/dataset/graphy -H "Content-Type: application/json" -d '{
@@ -196,7 +223,7 @@ curl -X POST http://0.0.0.0:9999/api/dataset/graphy -H "Content-Type: applicatio
 }' --output graph.zip
 ```
 
-You can directly import the graphied data into [GraphScope Interactive](https://graphscope.io/docs/latest/flex/interactive/getting_started). Start Interactive service and then export the required ports as [instructed](https://graphscope.io/docs/latest/flex/interactive/getting_started). Then the following POST/GET/DELETE apis can be called.
+Additional option is to import the graphied data into [GraphScope Interactive](https://graphscope.io/docs/latest/flex/interactive/getting_started). Start Interactive service and then export the required ports as [instructed](https://graphscope.io/docs/latest/flex/interactive/getting_started). Then the following `POST/GET/DELETE` APIs can be called.
 
 ```bash
 curl -X POST http://0.0.0.0:9999/api/dataset/graphy/interactive -H "Content-Type: application/json" -d '{
@@ -212,9 +239,9 @@ curl -X GET 'http://0.0.0.0:9999/api/dataset/graphy/interactive?dataset_id=b4280
 curl -X DELETE http://0.0.0.0:9999/api/dataset/graphy/interactive/b4280bb9-3603-5b1d-bed8-6b2080092e31
 ```
 
-## Test and Benchmark Workflow Extraction
+## Tests and Benchmark
 
-The project can be test by running the following command:
+The project can be tested by running the following command:
 
 ```bash
 python apps/demo_app.py  # run the backend app server
