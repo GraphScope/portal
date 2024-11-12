@@ -1,9 +1,9 @@
-# GraphyourData
+# Graphy'ourData
 Graphy is an end-to-end platform designed for extracting, visualizing, and analyzing large volumes of unstructured data. Without structured organization, valuable insights in such data often remain hidden. Graphy empowers users to extract predefined structures from unstructured data, organizing it into a graph format for enhanced visualization, analysis, and exploration.
 
 ![graphy](inputs/figs/graphy.png "The pipeline of Graphy")
 
-This repository offers the first prototype of the Graphy platform, focusing on academic papers, which are typically publicly accessible. In this scenario, the primary unstructured data consists of PDF documents of research papers. Given a paper or a zip file of multiple papers, the platform enables users to define workflows for extracting structured information from the papers using LLMs. Additionally, it provides features to fetch reference PDFs from sources like [Arxiv](./utils/arxiv_fetcher.py) and [Google Scholar](./utils/scholar_fetcher.py), allowing for the construction of a rich, interconnected database of academic papers.
+This repository offers the first prototype of the Graphy platform, as shown in the above figure, focusing on academic papers, which are typically publicly accessible. In this scenario, the primary unstructured data consists of PDF documents of research papers. Given a paper or a zip file of multiple papers, the platform enables users to define workflows for extracting structured information from the papers using LLMs. Additionally, it provides features to fetch reference PDFs from sources like [Arxiv](./utils/arxiv_fetcher.py) and [Google Scholar](./utils/scholar_fetcher.py), allowing for the construction of a rich, interconnected database of academic papers.
 
 With this structured database in place, various analyses can be conducted. Our frontend server demonstrates data visualizations, exploration tools, and analytics that support numerous downstream tasks, including tracking research trends, drafting related work sections, and generating prompts for slide creation—all with just a few clicks.
 
