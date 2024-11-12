@@ -1,11 +1,14 @@
 from typing import Iterable, Dict, Any, Optional, List
 from memory.llm_memory import VectorDBHierarchy
+from utils.timer import Timer
+from extractor.pdf_content_index import PDFContentIndex
 
 from langchain_core.documents import Document
 from langchain_community.document_loaders import Blob
 from langchain_community.document_loaders.pdf import BasePDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import urllib.parse
+from .pdf_extractor import CitationInfo
 
 from extractor.pdf_extractor import PDFExtractor, SegmentedLineInfo
 
@@ -25,127 +28,6 @@ def make_rect(*args: Any) -> Optional[fitz.Rect]:
     except ValueError:
         logger.error(f"{args}")
     return rect
-
-
-class CitationInfo:
-    """
-    A class to represent citation information within a PDF.
-
-    Attributes:
-        from_rect (List[fitz.Rect]): The rectangles representing the locations of the citations in the source document (one page).
-        from_content (List[str]): The text contents within the from_rect rectangles.
-        to_point (fitz.Point): The point representing the destination of the citation.
-        to_content (str): The text content at the destination point.
-    """
-
-    def __init__(
-        self,
-        from_rect: list[fitz.Rect],
-        from_content: list[str],
-        to_page_num: int,
-        to_point: fitz.Point,
-        to_content: str,
-        is_figure: bool,
-        is_table: bool,
-    ):
-        self.from_rect = from_rect
-        self.from_content = from_content
-        self.to_page_num = to_page_num
-        self.to_point = to_point
-        self.to_content = to_content
-        self.is_figure = is_figure
-        self.is_table = is_table
-
-    def __str__(self) -> str:
-        """
-        Returns a string representation of the citation information.
-
-        Returns:
-            str: A string representation of the citation information.
-        """
-        return json.dumps(self.to_dict(), indent=2)
-
-    def add_from_rect(self, new_rect):
-        self.from_rect.append(new_rect)
-
-    def add_from_content(self, new_content):
-        self.from_content.append(new_content)
-
-    def to_dict(self) -> Dict[str, Any]:
-        """
-        Converts the CitationInfo object to a dictionary.
-
-        Returns:
-            dict: The dictionary representation of the CitationInfo object.
-        """
-        return {
-            # "from_rect": [
-            #    self.from_rect.x0,
-            #    self.from_rect.y0,
-            #    self.from_rect.x1,
-            #    self.from_rect.y1,
-            # ],
-            "from_rect": [
-                [rect.x0, rect.y0, rect.x1, rect.y1] for rect in self.from_rect
-            ],
-            "from_content": self.from_content,
-            "to_page_num": self.to_page_num,
-            "to_point": [self.to_point.x, self.to_point.y],
-            "to_content": self.to_content,
-            "is_figure": self.is_figure,
-            "is_table": self.is_table,
-        }
-
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "CitationInfo":
-        """
-        Parses a dictionary to create a CitationInfo object.
-
-        Args:
-            data (dict): The dictionary representation of a CitationInfo object.
-
-        Returns:
-            CitationInfo: The parsed CitationInfo object.
-        """
-        from_rect = [fitz.Rect(r) for r in data["from_rect"]]
-        from_content = data["from_content"]
-        to_page_num = int(data["to_page_num"])
-        to_point = fitz.Point(data["to_point"])
-        to_content = data["to_content"]
-        is_figure = bool(data["is_figure"])
-        is_table = bool(data["is_table"])
-        return cls(
-            from_rect,
-            from_content,
-            to_page_num,
-            to_point,
-            to_content,
-            is_figure,
-            is_table,
-        )
-
-    def to_str(self) -> str:
-        """
-        Converts the CitationInfo object to a JSON string.
-
-        Returns:
-            str: The JSON string representation of the CitationInfo object.
-        """
-        return json.dumps(self.to_dict())
-
-    @classmethod
-    def from_str(cls, data: str) -> "CitationInfo":
-        """
-        Parses a JSON string to create a CitationInfo object.
-
-        Args:
-            data (str): The JSON string representation of a CitationInfo object.
-
-        Returns:
-            CitationInfo: The parsed CitationInfo object.
-        """
-        data_dict = json.loads(data)
-        return cls.from_dict(data_dict)
 
 
 class PaperExtractor(PDFExtractor):
@@ -188,25 +70,73 @@ class PaperExtractor(PDFExtractor):
         self._define_re_templates()
 
         self.linked_contents = set()
+        self.initialize_page_text = False
+
+    def _initialize_once(self):
+        if not self.initialize_page_text:
+            for page_num, page in enumerate(self.doc):
+                if page_num != 0:
+                    self.pages[page_num] = page
+                    self.page_texts[page_num] = page.get_text("dict")
+            self.initialize_page_text = True
+
+            self.column_number = {}
+            for page_num, page in enumerate(self.doc):
+                self.column_number[page_num] = self._get_number_of_columns(
+                    at_page=page_num
+                )
+            self.language = self._get_language_of_pdf()
+
+            logger.info(f"COLUMN_NUMBER: {self.column_number}")
+            logger.info(f"LANGUAGE: {self.language}")
+
+            self.pdf_content_index = PDFContentIndex()
+            self.timer.start("build rtree index")
+            self.max_page_height = self._get_maximal_page_height()
+            self._build_pdf_index()
+            self.timer.stop("build rtree index")
 
     def _define_re_templates(self):
-        self.figure_template_str = ["Figure \d+:", "Fig. \d+:"]
+        self.figure_template_str = [r"Figure \d+:", r"Fig. \d+:"]
         self.figure_templates = []
         for template in self.figure_template_str:
             self.figure_templates.append(re.compile(template, re.IGNORECASE))
 
-        self.image_caption_checker = "^Figure \d+:"
+        self.image_caption_checker = r"^Figure \d+:"
         self.image_caption_checker_template = re.compile(
             self.image_caption_checker, re.IGNORECASE
         )
 
-        self.table_caption_checker = "^Table \d+:"
+        self.table_caption_checker = r"^Table \d+:"
         self.table_caption_checker_template = re.compile(
             self.table_caption_checker, re.IGNORECASE
         )
 
+    def _load_pdf(self):
+        if self.web_path:
+            self.blob = Blob.from_data(open(self.file_path, "rb").read(), path=self.web_path)  # type: ignore[attr-defined]
+        else:
+            self.blob = Blob.from_path(self.file_path)
+
+        if self.blob.data is None:  # type: ignore[attr-defined]
+            self.doc = fitz.open(self.file_path)
+        else:
+            self.doc = fitz.open(stream=self.file_path, filetype="pdf")
+
+    def _read_pages(self):
+        self.pages = dict()
+        self.page_texts = dict()
+
+        for page_num, page in enumerate(self.doc):
+            if page_num == 0:
+                self.pages[page_num] = page
+                self.page_texts[page_num] = page.get_text("dict")
+
+        if len(self.pages) == 0:
+            raise ValueError(f"Loaded PDF has 0 pages")
+
     def compute_links(self):
-        self._initialize()
+        self._initialize_once()
         self.linked_contents = set()
         for page_num, page in enumerate(self.doc):
             self._extract_link(page, page_num)
@@ -1072,6 +1002,9 @@ class PaperExtractor(PDFExtractor):
         return standard_format, section_height_dict, content_list
 
     def _get_section_title_info(self):
+        if not self.initialize_page_text:
+            self._initialize_once()
+
         standard_format, section_height_dict, content_list = (
             self._get_section_standard()
         )
@@ -1081,7 +1014,7 @@ class PaperExtractor(PDFExtractor):
 
         if len(section_height_dict) == 0:
             logger.info("Section Title Not Found !")
-            return [{"sec_name": "all text", "section_id": "0"}], []
+            return [{"sec_name": "all text", "section_id": "0"}]
 
         section_order = [{"sec_name": "title and authors", "section_id": "paper_meta"}]
 
@@ -1188,9 +1121,9 @@ class PaperExtractor(PDFExtractor):
         # logger.debug(f"SECTION TITLE INFO: {section_title_info}")
         logger.debug(f"SECTION ORDER: {section_order}")
 
-        return section_order, []
+        return section_order
 
-    def _split_sections(self, section_order, line_texts=[]):
+    def _split_sections(self, section_order):
         cur_section_index = 0
         next_section_index = cur_section_index + 1
 
@@ -1377,6 +1310,586 @@ class PaperExtractor(PDFExtractor):
     #    """Extract text and images from each page and store images on disk lazily."""
     #    print(self.get_meta_data())
     #    return list(self.extract_text(get_rich_info=True))
+
+    def _get_line_with_point(self, page, page_num, point):
+        offset = (-3, -3, 3, 3)
+        page_text = self.page_texts[page_num]
+        # page_text = page.get_text("dict")
+        for block in page_text["blocks"]:
+            if block["type"] == 1:
+                continue
+            rb = fitz.Rect(block["bbox"]) + offset
+            if not rb.contains(point):
+                continue
+            for line in block["lines"]:
+                r = fitz.Rect(line["bbox"]) + offset
+                if r.contains(fitz.Point(point)):
+                    return line
+
+    # link_info: dest_text => CitationInfo
+    # image_rects: image_file_name => (image_page, image_rect)
+    # past_lines: record the already processed texts
+    def _connect_link_to_text_and_image_and_table(
+        self,
+        page,
+        page_num,
+        text,
+        textpage,
+        link_info,
+        image_info,
+        table_info,
+        past_lines,
+    ):
+        # split the part of text into lines
+        lines = text.replace("-\n", "\n").split("\n")
+
+        # search for each line of text and get the corrsponding rectangle
+        related_links = set()
+        related_image_captions = set()
+        related_table_captions = set()
+        related_images = set()
+        related_tables = set()
+
+        for line in lines:
+            if not self.single_number_template.match(line.strip()):
+                text_rects = page.search_for(line, textpage=textpage)
+                order_n = past_lines.count(line)
+
+                if text_rects and len(text_rects) > order_n:
+                    text_rect = text_rects[order_n]
+                    text_point = fitz.Point(
+                        (text_rect.x0 + text_rect.x1) / 2,
+                        (text_rect.y0 + text_rect.y1) / 2,
+                    )
+
+                    text_line = self._get_line_with_point(page, page_num, text_point)
+                    text_rect = fitz.Rect(text_line["bbox"])
+
+                    # for text_rect in text_rects:
+                    for link_text in link_info:
+                        if (
+                            not link_info[link_text].is_figure
+                            and not link_info[link_text].is_table
+                            and link_text not in related_links
+                        ):
+                            for link_rect in link_info[link_text].from_rect:
+                                if text_rect.intersects(link_rect):
+                                    related_links.add(link_text)
+                                    break
+                        elif link_info[link_text].is_figure:
+                            for link_rect in link_info[link_text].from_rect:
+                                if text_rect.intersects(link_rect):
+                                    related_image_captions.add(
+                                        (
+                                            link_info[link_text].to_page_num,
+                                            link_info[link_text].to_point,
+                                        )
+                                    )
+                                    break
+                        elif link_info[link_text].is_table:
+                            for link_rect in link_info[link_text].from_rect:
+                                if text_rect.intersects(link_rect):
+                                    related_table_captions.add(
+                                        (
+                                            link_info[link_text].to_page_num,
+                                            link_info[link_text].to_point,
+                                        )
+                                    )
+            past_lines += line
+
+        for caption_page_num, point in related_image_captions:
+            img_maxy = -1
+            nearest_imgs = set()
+            closest_img = None
+            closest_dist = -1
+
+            if caption_page_num in image_info:
+                for img_path in image_info[caption_page_num]:
+                    img_rect = image_info[caption_page_num][img_path]
+                    if self.image_caption_under_item and img_rect.y1 < point.y:
+                        if img_maxy == -1 or img_rect.y1 > img_maxy:
+                            nearest_imgs = set([img_path])
+                            img_maxy = img_rect.y1
+                        elif img_rect.y1 == img_maxy:
+                            nearest_imgs.add(img_path)
+                    elif not self.image_caption_under_item and img_rect.y1 > point.y:
+                        if img_maxy == -1 or img_rect.y1 < img_maxy:
+                            nearest_imgs = set([img_path])
+                            img_maxy = img_rect.y1
+                        elif img_rect.y1 == img_maxy:
+                            nearest_imgs.add(img_path)
+                    if self.image_caption_under_item:
+                        if (
+                            closest_dist == -1
+                            or abs(img_rect.y1 - point.y) < closest_dist
+                        ):
+                            closest_img = img_path
+                            closest_dist = abs(img_rect.y1 - point.y)
+                    else:
+                        if (
+                            closest_dist == -1
+                            or abs(img_rect.y0 - point.y) < closest_dist
+                        ):
+                            closest_img = img_path
+                            closest_dist = abs(img_rect.y0 - point.y)
+
+                if len(nearest_imgs) > 0:
+                    related_images = related_images.union(nearest_imgs)
+                elif closest_dist != -1:
+                    related_images.add(closest_img)
+
+        for caption_page_num, point in related_table_captions:
+            table_maxy = -1
+            nearest_tables = set()
+            closest_table = None
+            closest_dist = -1
+
+            if caption_page_num in table_info:
+                for table_path in table_info[caption_page_num]:
+                    table_rect = table_info[caption_page_num][table_path]
+                    if self.table_caption_under_item and table_rect.y1 < point.y:
+                        if table_maxy == -1 or table_rect.y1 > table_maxy:
+                            nearest_tables = set([table_path])
+                            table_maxy = table_rect.y1
+                        elif table_rect.y1 == table_maxy:
+                            nearest_tables.add(table_path)
+                    elif not self.table_caption_under_item and table_rect.y1 > point.y:
+                        if table_maxy == -1 or table_rect.y1 < table_maxy:
+                            nearest_tables = set([table_path])
+                            table_maxy = table_rect.y1
+                        elif table_rect.y1 == table_maxy:
+                            nearest_tables.add(table_path)
+                    if self.table_caption_under_item:
+                        if (
+                            closest_dist == -1
+                            or abs(table_rect.y1 - point.y) < closest_dist
+                        ):
+                            closest_table = table_path
+                            closest_dist = abs(table_rect.y1 - point.y)
+                    else:
+                        if (
+                            closest_dist == -1
+                            or abs(table_rect.y0 - point.y) < closest_dist
+                        ):
+                            closest_table = table_path
+                            closest_dist = abs(table_rect.y0 - point.y)
+
+                if len(nearest_tables) > 0:
+                    related_tables = related_tables.union(nearest_tables)
+                elif closest_dist != -1:
+                    related_tables.add(closest_table)
+
+        return (related_links, related_images, related_tables, past_lines)
+
+    def _connect_all(
+        self,
+        text,
+        segmented_info,
+        related_links_all,
+        related_images_all,
+        related_tables_all,
+        section_order_index,
+        first_line_index,
+        start_line_index,
+        end_line_index,
+    ):
+        related_links = set()
+        related_images = set()
+        related_tables = set()
+
+        lines = text.replace("-\n", "\n").split("\n")
+        line_index_record = start_line_index
+        for cur_line_index in range(start_line_index, end_line_index):
+            line_index_record = cur_line_index
+            valid = True
+            for i in range(len(lines)):
+                cur_line = segmented_info[section_order_index][cur_line_index + i]
+                if lines[i] not in cur_line.get_text():
+                    valid = False
+                    break
+            if not valid:
+                continue
+            else:
+                for j in range(len(lines)):
+                    related_links = related_links.union(
+                        related_links_all[j + cur_line_index - first_line_index]
+                    )
+                    related_images = related_images.union(
+                        related_images_all[j + cur_line_index - first_line_index]
+                    )
+                    related_tables = related_tables.union(
+                        related_tables_all[j + cur_line_index - first_line_index]
+                    )
+                break
+
+        # print(cur_line_index, first_line_index, len(lines), related_links_all)
+        # print("======== TEXT ============")
+        # print(text)
+        # print("******** LINK ***********")
+        # print(related_links)
+        # print("******** IMAGE ***********")
+        # print(related_images)
+        # print("******** TABLE ***********")
+        # print(related_tables)
+        # print("LINE INDEX RECORD")
+        # print(line_index_record)
+        return related_links, related_images, related_tables, line_index_record
+
+    def _connect_links(
+        self,
+        text,
+        segmented_info,
+        related_links_all,
+        section_order_index,
+        first_line_index,
+        start_line_index,
+        end_line_index,
+    ):
+        related_links = set()
+
+        lines = text.replace("-\n", "\n").split("\n")
+        line_index_record = start_line_index
+        for cur_line_index in range(start_line_index, end_line_index):
+            line_index_record = cur_line_index
+            valid = True
+            for i in range(len(lines)):
+                cur_line = segmented_info[section_order_index][cur_line_index + i]
+                if lines[i] not in cur_line.get_text():
+                    valid = False
+                    break
+            if not valid:
+                continue
+            else:
+                for j in range(len(lines)):
+                    related_links = related_links.union(
+                        related_links_all[j + cur_line_index - first_line_index]
+                    )
+                break
+
+        return related_links, line_index_record
+
+    def _connect_link_to_line(
+        self,
+        segmented_info,
+        link_info,
+        image_info,
+        table_info,
+        section_order_index,
+        start_line_index,
+        end_line_index,
+    ):
+        related_links_all = []
+        related_images_all = []
+        related_tables_all = []
+
+        for cur_line_index in range(start_line_index, end_line_index):
+            related_links = set()
+            related_images = set()
+            related_tables = set()
+            related_image_captions = set()
+            related_table_captions = set()
+
+            cur_line = segmented_info[section_order_index][cur_line_index]
+            text_rect = fitz.Rect(
+                cur_line.left, cur_line.top, cur_line.right, cur_line.bottom
+            )
+            text_rect = self._shrink_rect(text_rect, (0, 1, 0, -1))
+
+            for link_text in link_info:
+                if (
+                    not link_info[link_text].is_figure
+                    and not link_info[link_text].is_table
+                    and link_text not in related_links
+                ):
+                    for link_rect in link_info[link_text].from_rect:
+                        if text_rect.intersects(link_rect):
+                            related_links.add(link_text)
+                            break
+                elif link_info[link_text].is_figure:
+                    for link_rect in link_info[link_text].from_rect:
+                        if text_rect.intersects(link_rect):
+                            related_image_captions.add(
+                                (
+                                    link_info[link_text].to_page_num,
+                                    link_info[link_text].to_point,
+                                )
+                            )
+                            break
+                elif link_info[link_text].is_table:
+                    for link_rect in link_info[link_text].from_rect:
+                        if text_rect.intersects(link_rect):
+                            related_table_captions.add(
+                                (
+                                    link_info[link_text].to_page_num,
+                                    link_info[link_text].to_point,
+                                )
+                            )
+                            break
+
+            for caption_page_num, point in related_image_captions:
+                img_maxy = -1
+                nearest_imgs = set()
+                closest_img = None
+                closest_dist = -1
+
+                if caption_page_num in image_info:
+                    for img_path in image_info[caption_page_num]:
+                        img_rect = image_info[caption_page_num][img_path]
+                        if self.image_caption_under_item and img_rect.y1 < point.y:
+                            if img_maxy == -1 or img_rect.y1 > img_maxy:
+                                nearest_imgs = set([img_path])
+                                img_maxy = img_rect.y1
+                            elif img_rect.y1 == img_maxy:
+                                nearest_imgs.add(img_path)
+                        elif (
+                            not self.image_caption_under_item and img_rect.y1 > point.y
+                        ):
+                            if img_maxy == -1 or img_rect.y1 < img_maxy:
+                                nearest_imgs = set([img_path])
+                                img_maxy = img_rect.y1
+                            elif img_rect.y1 == img_maxy:
+                                nearest_imgs.add(img_path)
+                        if self.image_caption_under_item:
+                            if (
+                                closest_dist == -1
+                                or abs(img_rect.y1 - point.y) < closest_dist
+                            ):
+                                closest_img = img_path
+                                closest_dist = abs(img_rect.y1 - point.y)
+                        else:
+                            if (
+                                closest_dist == -1
+                                or abs(img_rect.y0 - point.y) < closest_dist
+                            ):
+                                closest_img = img_path
+                                closest_dist = abs(img_rect.y0 - point.y)
+
+                    if len(nearest_imgs) > 0:
+                        related_images = related_images.union(nearest_imgs)
+                    elif closest_dist != -1:
+                        related_images.add(closest_img)
+
+            for caption_page_num, point in related_table_captions:
+                table_maxy = -1
+                nearest_tables = set()
+                closest_table = None
+                closest_dist = -1
+
+                if caption_page_num in table_info:
+                    for table_path in table_info[caption_page_num]:
+                        table_rect = table_info[caption_page_num][table_path]
+                        if self.table_caption_under_item and table_rect.y1 < point.y:
+                            if table_maxy == -1 or table_rect.y1 > table_maxy:
+                                nearest_tables = set([table_path])
+                                table_maxy = table_rect.y1
+                            elif table_rect.y1 == table_maxy:
+                                nearest_tables.add(table_path)
+                        elif (
+                            not self.table_caption_under_item
+                            and table_rect.y1 > point.y
+                        ):
+                            if table_maxy == -1 or table_rect.y1 < table_maxy:
+                                nearest_tables = set([table_path])
+                                table_maxy = table_rect.y1
+                            elif table_rect.y1 == table_maxy:
+                                nearest_tables.add(table_path)
+                        if self.table_caption_under_item:
+                            if (
+                                closest_dist == -1
+                                or abs(table_rect.y1 - point.y) < closest_dist
+                            ):
+                                closest_table = table_path
+                                closest_dist = abs(table_rect.y1 - point.y)
+                        else:
+                            if (
+                                closest_dist == -1
+                                or abs(table_rect.y0 - point.y) < closest_dist
+                            ):
+                                closest_table = table_path
+                                closest_dist = abs(table_rect.y0 - point.y)
+
+                    if len(nearest_tables) > 0:
+                        related_tables = related_tables.union(nearest_tables)
+                    elif closest_dist != -1:
+                        related_tables.add(closest_table)
+
+            # print("======== TEXT ============")
+            # print(cur_line.get_text())
+            # print("******** LINK ***********")
+            # print(related_links)
+            # print("******** IMAGE ***********")
+            # print(related_images)
+            # print("******** TABLE ***********")
+            # print(related_tables)
+            related_links_all.append(related_links)
+            related_images_all.append(related_images)
+            related_tables_all.append(related_tables)
+
+        return related_links_all, related_images_all, related_tables_all
+
+    def _process_page(
+        self,
+        page,
+        page_num,
+        section_order,
+        segmented_info,
+        get_rich_info,
+        image_info,
+        table_info,
+        index_list,
+    ):
+        # self.timer.start("deal with page " + str(page_num))
+        # logger.info("start page " + str(page_num))
+        textpage = page.get_textpage()
+        # self.timer.start("extract link in page " + str(page_num))
+        link_info = self._extract_link(page, page_num)
+
+        # print("******* LINK INFO *********")
+        # print(link_info)
+        # self.timer.stop("extract link in page " + str(page_num))
+        section_order_index = index_list[0]
+        cur_line_index = index_list[1]
+
+        first_line_index = -1
+        # if page_num == 3:
+        # print("************ LINK INFO *************")
+        # for key, value in link_info.items():
+        #    if "2" in value.from_content[0]:
+        #        print(key, value)
+        past_lines = ""
+        self.timer.start("extract link in page " + str(page_num))
+        while section_order_index < len(section_order):
+            if section_order_index not in segmented_info:
+                break
+            content_in_current_page = ""
+            while cur_line_index < len(segmented_info[section_order_index]):
+                cur_line = segmented_info[section_order_index][cur_line_index]
+                if cur_line.get_page_num() == page_num:
+                    if first_line_index == -1:
+                        first_line_index = cur_line_index
+                    content_in_current_page += cur_line.get_text()
+                    cur_line_index += 1
+                else:
+                    break
+
+            part_texts = self.text_splitter.split_text(content_in_current_page)
+            related_links_line, related_images_line, related_tables_line = (
+                self._connect_link_to_line(
+                    segmented_info,
+                    link_info,
+                    image_info,
+                    table_info,
+                    section_order_index,
+                    first_line_index,
+                    cur_line_index,
+                )
+            )
+
+            start_line_index = first_line_index
+
+            for part_index, part_content in enumerate(part_texts):
+                # related_links = []
+                # related_images = []
+                # related_tables = []
+                if link_info is None:
+                    document = self._formulate_memory_block(
+                        page_num,
+                        section_order_index,
+                        part_content,
+                        part_index,
+                        section_order,
+                    )
+                elif get_rich_info and link_info is not None:
+                    related_links, related_images, related_tables, start_line_index = (
+                        self._connect_all(
+                            part_content,
+                            segmented_info,
+                            related_links_line,
+                            related_images_line,
+                            related_tables_line,
+                            section_order_index,
+                            first_line_index,
+                            start_line_index,
+                            cur_line_index,
+                        )
+                    )
+
+                    document = self._formulate_memory_block(
+                        page_num,
+                        section_order_index,
+                        part_content,
+                        part_index,
+                        section_order,
+                        related_links,
+                        related_images,
+                        related_tables,
+                    )
+                else:
+                    related_links, start_line_index = self._connect_links(
+                        part_content,
+                        segmented_info,
+                        related_links_line,
+                        section_order_index,
+                        first_line_index,
+                        start_line_index,
+                        cur_line_index,
+                    )
+
+                    document = self._formulate_memory_block(
+                        page_num,
+                        section_order_index,
+                        part_content,
+                        part_index,
+                        section_order,
+                        related_links,
+                    )
+
+                # print("================= DOCUMENT ===================")
+                # print(document)
+                yield document
+
+            if cur_line_index == len(segmented_info[section_order_index]):
+                section_order_index += 1
+                cur_line_index = 0
+            else:
+                break
+
+        self.timer.stop("extract link in page " + str(page_num))
+
+        # print("finish page " + str(page_num))
+        # self.timer.stop("deal with page " + str(page_num))
+
+        index_list[0] = section_order_index
+        index_list[1] = cur_line_index
+
+    def link_and_build(self, section_order, segmented_info, get_rich_info, get_tables):
+        image_info = dict()
+        table_info = dict()
+
+        if get_rich_info:
+            self.timer.start("extract images and table")
+            for page_num, page in enumerate(self.doc):
+                page_text = self.page_texts[page_num]
+                image_info = self._extract_images(page, page_num, page_text, image_info)
+                if get_tables:
+                    table_info = self._extract_tables(
+                        page, page_num, table_info, image_info
+                    )
+            self.timer.stop("extract images and table")
+
+        index_list = [0, 0]
+        for page_num, page in enumerate(self.doc):
+            for document in self._process_page(
+                page,
+                page_num,
+                section_order,
+                segmented_info,
+                get_rich_info,
+                image_info,
+                table_info,
+                index_list,
+            ):
+                yield document
 
     def extract_all(self) -> Iterable[Document]:
         print(self.get_meta_data())
