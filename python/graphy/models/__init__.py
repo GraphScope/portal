@@ -25,6 +25,16 @@ __all__ = [
     "SentenceTransformerEmbedding",
 ]
 
+DEFAULT_LLM_MODEL_CONFIG = {
+    "llm_model": "qwen-plus",
+    "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    "api_key": os.environ["DASHSCOPE_API_KEY"],  ### DO NOT commit,
+    "model_kwargs": {
+        "temperature": 0,
+        "streaming": True,
+    },
+}
+
 
 class LLM:
     def __init__(self, model, model_name, context_size):
