@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import { GlobalSpin } from '@graphscope/studio-components';
 
-const Apps = dynamic(
+const Visualizer = dynamic(
   () =>
     import('@graphscope/graph-apps').then(module => {
       return {
@@ -17,4 +17,4 @@ const Apps = dynamic(
   },
 );
 
-export default Apps;
+export default Visualizer;
