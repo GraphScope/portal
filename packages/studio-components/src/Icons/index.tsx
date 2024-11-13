@@ -15,3 +15,4 @@ export { default as Lasso } from './Lasso';
 export { default as File } from './File';
 export { default as Arrow } from './Arrow';
 export { default as Punctuation } from './Punctuation';
+export { default as Filter } from './Filter';

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card } from 'antd';
 import CodeMirror from '@uiw/react-codemirror';
 import { useCustomToken } from '@graphscope/studio-components';
 import { useEditorTheme } from '../../pages/utils';
@@ -14,7 +15,7 @@ const LeftSide: React.FC<ILeftSide> = props => {
   const { editCode, isEdit, onCodeMirrorChange, onChange } = props;
   const { codeMirrorBorder } = useCustomToken();
   return (
-    <>
+    <div style={{ width: '50%' }}>
       <UploadFiles disabled={isEdit} editCode={editCode} handleChange={onCodeMirrorChange} />
       <div
         style={{
@@ -31,7 +32,7 @@ const LeftSide: React.FC<ILeftSide> = props => {
           readOnly={isEdit}
         />
       </div>
-    </>
+    </div>
   );
 };
 

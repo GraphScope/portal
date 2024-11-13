@@ -11,10 +11,17 @@ export const listProcedures = async () => {
       }
       return [];
     });
-  const info = message.reduce((pre, cur) => {
-    //@ts-ignore
-    return pre.concat(cur.stored_procedures);
-  }, []);
+  // const info = message.reduce((pre, cur) => {
+  //   //@ts-ignore
+  //   return pre.concat(cur.stored_procedures);
+  // }, []);
+  const info = message.flatMap(item =>
+    (item?.stored_procedures || []).map(V => ({
+      ...V,
+      bound_graph: !!V['bound_graph'] ? V['bound_graph'] : item.id,
+    })),
+  );
+
   return info;
 };
 /** 创建插件 */

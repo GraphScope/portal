@@ -1,14 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Table, Button, Space, Skeleton, Popconfirm, message } from 'antd';
+import { Table, Button, Space, Skeleton, Popconfirm, message, ConfigProvider } from 'antd';
 import { FormattedMessage } from 'react-intl';
 
 import { listProcedures, deleteProcedure } from './service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+import TableParcel from '../../components/table-parcel';
 
 import { useHistory } from '../../hooks';
 export interface Item {
   key: string;
+  id: string;
   name: string;
   type: string;
   bound_graph: string;
@@ -22,20 +24,29 @@ const Plugins: React.FC = () => {
     /** 控制骨架屏 */
     isReady: boolean;
     open: boolean;
+    isLoading: boolean;
   }>({
     pluginList: [],
     isReady: true,
     open: false,
+    isLoading: false,
   });
-  const { isReady, pluginList } = state;
+  const { isReady, pluginList, isLoading } = state;
   /** 获取插件列表数据 */
   const getPlugins = useCallback(async () => {
+    updateState(preset => {
+      return {
+        ...preset,
+        isLoading: true,
+      };
+    });
     const res = await listProcedures();
     //@ts-ignore
     updateState(preset => {
       return {
         ...preset,
         pluginList: res || [],
+        isLoading: false,
       };
     });
   }, []);
@@ -73,7 +84,6 @@ const Plugins: React.FC = () => {
         key: 'actions',
         width: 60,
         render: (_: any, all: Item) => {
-          //@ts-ignore
           const { bound_graph, id } = all;
           return (
             <Space>
@@ -109,7 +119,7 @@ const Plugins: React.FC = () => {
   return (
     <>
       <Button
-        style={{ position: 'absolute', top: '-55px', right: '0px' }}
+        style={{ position: 'absolute', top: '36px', right: '24px' }}
         type="primary"
         onClick={() => {
           history.push('/extension/create');
@@ -120,12 +130,15 @@ const Plugins: React.FC = () => {
       {!isReady ? (
         <Skeleton />
       ) : (
-        <Table
-          dataSource={pluginList}
-          //@ts-ignores
-          columns={columns}
-          size="middle"
-        />
+        <TableParcel>
+          <Table
+            dataSource={pluginList}
+            //@ts-ignores
+            columns={columns}
+            size="middle"
+            loading={isLoading}
+          />
+        </TableParcel>
       )}
     </>
   );
