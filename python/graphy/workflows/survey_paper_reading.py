@@ -136,59 +136,70 @@ class SurveyPaperReading(AbstractWorkflow):
 
                 if not node["extract_from"]:
                     where = None
-                elif type(node["extract_from"]) is str:
-                    where_conditions = node["extract_from"].split("|")
-                    condition_dict = {}
-                    if len(where_conditions) == 1:
-                        condition_dict = {
-                            "sec_name": {
-                                "$in": {
-                                    "conditions": {
-                                        "type": VectorDBHierarchy.FirstLayer.value
-                                    },
-                                    "return": "documents",
-                                    "subquery": where_conditions[0],
-                                    "result_num": 1,
-                                }
+                else:
+                    condition_dict["$or"] = []
+                    index_constraints = node["extract_from"].get("index", [])
+                    keyword_constraints = node["extract_from"].get("keyword", [])
+
+                    index_constraints_num = len(index_constraints)
+                    keyword_constraints_num = len(keyword_constraints)
+
+                    if index_constraints_num > 0:
+                        if keyword_constraints_num == 0:
+                            where = {
+                                "conditions": {
+                                    "section": {
+                                        "$in": ["paper_meta", "abstract"]
+                                        + index_constraints
+                                    }
+                                },
+                                "return": "all",
+                                "result_num": -1,
+                                "subquery": "{slot}",
                             }
-                        }
+                        else:
+                            condition_dict["$or"] = []
                     else:
-                        condition_dict["$or"] = []
-                        for condition in where_conditions:
+                        if keyword_constraints_num == 0:
+                            where = None
+                        else:
+                            condition_dict["$or"] = []
+
+                    if "$or" in condition_dict:
+                        if index_constraints_num > 0:
                             condition_dict["$or"].append(
                                 {
-                                    "sec_name": {
-                                        "$in": {
-                                            "conditions": {
-                                                "type": VectorDBHierarchy.FirstLayer.value
-                                            },
-                                            "return": "documents",
-                                            "subquery": condition,
-                                            "result_num": 1,
-                                        }
+                                    "section": {
+                                        "$in": ["paper_meta", "abstract"]
+                                        + index_constraints
                                     }
                                 }
                             )
+                        if keyword_constraints_num > 0:
+                            for keyword_constraint in keyword_constraints:
+                                condition_dict["$or"].append(
+                                    {
+                                        "sec_name": {
+                                            "$in": {
+                                                "conditions": {
+                                                    "type": VectorDBHierarchy.FirstLayer.value
+                                                },
+                                                "return": "documents",
+                                                "subquery": keyword_constraint,
+                                                "result_num": 1,
+                                            }
+                                        }
+                                    }
+                                )
 
-                    where = {
-                        "conditions": condition_dict,
-                        "return": "all",
-                        "result_num": -1,
-                        "subquery": "{slot}",
-                    }
-                elif type(node["extract_from"]) is list:
-                    where = {
-                        "conditions": {
-                            "section": {
-                                "$in": ["paper_meta", "abstract"] + node["extract_from"]
-                            }
-                        },
-                        "return": "all",
-                        "result_num": -1,
-                        "subquery": "{slot}",
-                    }
-                else:
-                    pass
+                        if len(condition_dict["$or"]) == 1:
+                            condition_dict = condition_dict["$or"][0]
+                        where = {
+                            "conditions": condition_dict,
+                            "return": "all",
+                            "result_num": -1,
+                            "subquery": "{slot}",
+                        }
 
                 nodes_dict[node["name"]] = ExtractNode(
                     node["name"],
