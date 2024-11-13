@@ -176,13 +176,16 @@ export const updateEmbedSchema = async (id, params) => {
   const workflow_json = {
     nodes: nodes.map(item => {
       const { id, data } = item;
-      const { label, query = '', output_schema = '' } = data;
+      const { label, query = '', output_schema = '', extract_from_indexs = '', extract_from_words = '' } = data;
       return {
         id,
         name: label,
         query,
         output_schema: output_schema,
-        extract_from: [],
+        extract_from: {
+          exact: extract_from_indexs.split(','),
+          match: extract_from_words.split(','),
+        },
       };
     }),
 
