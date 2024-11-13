@@ -48,7 +48,13 @@ const UploadFiles: React.FC<IUploadFile> = ({ disabled, editCode, handleChange }
   };
   return (
     <div style={{ height: '150px', marginBottom: '12px' }}>
-      <Dragger disabled={disabled} showUploadList={false} multiple={true} onDrop={onDrop} customRequest={customRequest}>
+      <Dragger
+        disabled={disabled}
+        accept={'.yaml,.cypher'}
+        showUploadList={false}
+        onDrop={onDrop}
+        customRequest={customRequest}
+      >
         <p className="ant-upload-text">
           <FormattedMessage id="Click or drag file to this area to upload" />
         </p>
