@@ -22,12 +22,14 @@ export default defineConfig({
   },
   build: {
     outDir: './dist',
-    // rollupOptions: {
-    //   external: ['@kuzu/kuzu-wasm'], // 将 @kuzu/kuzu-wasm 标记为外部依赖
-    // },
-    // rollupOptions: {
-    //   external: ['react', 'react-dom', '@kuzu/kuzu-wasm'], // 将 react 和 react-dom 设为外部依赖
-    // },
+    rollupOptions: {
+      // external: ['@kuzu/kuzu-wasm'], // 将 @kuzu/kuzu-wasm 标记为外部依赖
+      // output: {
+      //   globals: {
+      //     '@kuzu/kuzu-wasm': 'KUZU_WASM',
+      //   },
+      // },
+    },
   },
 
   optimizeDeps: {

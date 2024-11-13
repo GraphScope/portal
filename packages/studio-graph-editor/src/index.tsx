@@ -2,7 +2,7 @@ import * as React from 'react';
 import { MultipleInstance, Utils } from '@graphscope/studio-components';
 import Canvas from './canvas';
 import { ReactFlowProvider } from 'reactflow';
-import 'reactflow/dist/style.css';
+// import 'reactflow/dist/style.css';
 import { IntlProvider } from 'react-intl';
 import locales from './locales';
 import { ISchemaNode } from './types/node';

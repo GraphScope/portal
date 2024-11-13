@@ -1,6 +1,7 @@
-import { default as Kuzu } from '@kuzu/kuzu-wasm';
+import Kuzu from '@kuzu/kuzu-wasm';
 import { Utils } from '@graphscope/studio-components';
 import localforage from 'localforage';
+console.log('Kuzu', Kuzu);
 
 interface IKuzuResult {
   Database: (params: any) => Promise<any>;
@@ -66,7 +67,9 @@ export class KuzuDriver {
 
   async initialize(): Promise<void> {
     const result: IKuzuResult = await this.kuzu();
+
     //@ts-ignore
+
     this.db = await result.Database(this.dbname, 0, 10, false, false, 4194304 * 16 * 4);
     this.conn = await result.Connection(this.db);
     this.FS = result.FS;
@@ -76,6 +79,7 @@ export class KuzuDriver {
 
     // this.FS?.mkdir('export');
   }
+
 
   async installUDF(): Promise<void> {
     var res = await this.conn?.execute('CREATE MACRO elementid(x) AS CAST(ID(x),"STRING")');
@@ -96,10 +100,34 @@ export class KuzuDriver {
     }
   }
 
+  async removeTables() {
+    const query = `CALL SHOW_TABLES() RETURN name, type;`;
+    const res = await this.conn?.execute(query);
+    const table_info = res.toString().split('\n');
+
+    const vertex_tables: any[] = [];
+    
+    for (let i = 1; i < table_info.length; i++) {
+      if (table_info[i][1] == 'REL') {
+        const res = await this.conn?.execute(`DROP TABLE ${table_info[i][0]}`);
+      }
+      else {
+        vertex_tables.push(table_info[i][0]);
+      }
+    }
+
+    for (let i = 0; i < vertex_tables.length; i++) {
+      const res = await this.conn?.execute(`DROP TABLE ${vertex_tables[i]}`);
+    }
+  }
+
   async switchDataset(datasetId: string) {
-    console.log('switch to ', datasetId);
+    console.log('switch to ', datasetId, this.curDataset);
     if (this.curDataset !== '') {
-      await this.exportData();
+      await this.exportData(true);
+    }
+    else {
+      await this.removeTables();
     }
 
     const exist = await this.existDataset(datasetId);
@@ -134,6 +162,7 @@ export class KuzuDriver {
 
     const node_scripts = nodes.map(node => {
       const { label, properties } = node;
+
       let property_scripts = properties.map(property => {
         const { name, type, primaryKey } = property;
         return `${name} ${this.typeConvert(type)}`;
@@ -152,6 +181,7 @@ export class KuzuDriver {
     });
     const edge_scripts = edges.map(edge => {
       const { label, source, target, properties } = edge;
+      
       const property_scripts = properties.map(property => {
         const { name, type } = property;
         return `${name} ${this.typeConvert(type)}`;
@@ -240,6 +270,39 @@ export class KuzuDriver {
     return true;
   }
 
+  pathJoin(...segments) {
+    return segments
+        .filter(segment => segment)
+        .join('/')              
+        .replace(/\/+/g, '/');  
+  }
+
+  async rmdirs(dir: string) {
+    let entries = await this.FS.readdir(dir);
+    console.log(entries);
+
+    let results = await Promise.all(entries.map(async entry => {
+      if (entry !== '.' && entry !== '..') {
+        let fullPath = this.pathJoin(dir, entry);
+        console.log(`remove ${fullPath}`)
+
+        const { mode, timestamp } = await this.FS.lookupPath(fullPath).node;
+        if (this.FS.isFile(mode)) {
+          await this.FS.unlink(fullPath);
+        }
+        else if (this.FS.isDir(mode)) {
+          await this.rmdirs(fullPath);
+        }
+      }
+    }));
+
+    try {
+      await this.FS.rmdir(dir);
+    } catch {
+      console.log(`Error when remove ${dir}`);
+    }
+  };
+
   async queryData(query: string): Promise<any> {
     console.time('Query cost');
     const queryResult = await this.conn?.execute(query);
@@ -311,7 +374,7 @@ export class KuzuDriver {
     return this.schema;
   }
 
-  async exportData(): Promise<any> {
+  async exportData(remove: boolean = false): Promise<any> {
     if (this.curDataset === '') return false;
 
     var datasetId = this.curDataset;
@@ -320,14 +383,15 @@ export class KuzuDriver {
     const exportPath = 'export/';
 
     try {
-      this.FS.rmdir(exportPath);
+      await this.rmdirs(exportPath);
     } catch (error) {
       console.log(`Directory ${exportPath} not exists`);
     }
 
-    const query = `EXPORT DATABASE '${exportPath}' (format="csv", HEADER=true, DELIM="|", ESCAPE='"', QUOTE='"');`;
+    const query = `EXPORT DATABASE '${exportPath}' (HEADER=true, DELIM="|", ESCAPE='\"', QUOTE='\"');`;
     var res = await this.conn?.execute(query);
 
+    const vertex_tables: any[] = [];
     const dirFiles = this.FS.readdir(exportPath);
     for (const dir of dirFiles) {
       if (dir === '.' || dir === '..') {
@@ -338,6 +402,10 @@ export class KuzuDriver {
       const content = this.FS.readFile(filePath);
       const file = new FileData(dir, content);
       files.push(file);
+    }
+
+    if (remove) {
+      this.removeTables();
     }
 
     const dataset = new GraphData(files, this.schema);
@@ -355,11 +423,41 @@ export class KuzuDriver {
     // console.log(result);
   }
 
+  async recoverFromFiles(importPath: string): Promise<any> {
+    const decoder = new TextDecoder('utf-8');
+    const encoder = new TextEncoder();
+
+    const schema_file_path = importPath + 'schema.cypher';
+    const schema_str = this.FS.readFile(schema_file_path);
+    const schema_states = decoder.decode(schema_str).split('\n');
+    console.log(`schema: ${schema_states}`);
+    for (let i = 0; i < schema_states.length; i += 1) {
+      const query = `${schema_states[i]}`;
+      console.log('query: ', query);
+      var res = await this.conn?.execute(query);
+      console.log(res.toString());
+    }
+
+    const copy_file_path = importPath + 'copy.cypher';
+    const copy_str = this.FS.readFile(copy_file_path);
+    const copy_stats = decoder.decode(copy_str);
+    console.log(`copy: ${copy_stats}`);
+    const result = copy_stats.replace(/"([^"]+\.csv)"/g, `"${importPath}\$1"`).split('\n');
+    console.log(result);
+
+    for (let i = 0; i < result.length; i += 1) {
+      const query = `${result[i]}`;
+      console.log('query: ', query);
+      var res = await this.conn?.execute(query);
+      console.log(res.toString());
+    }
+  }
+
   async recoverData(datasetId: string): Promise<any> {
     console.log('start recover');
     const importPath = 'import/';
     try {
-      this.FS.rmdir(importPath);
+      this.rmdirs(importPath);
     } catch (error) {
       console.log(`Directory ${importPath} not exists`);
     }
@@ -380,12 +478,19 @@ export class KuzuDriver {
       // c += 1;
     }
 
-    const query = `IMPORT DATABASE '${importPath}';`;
-    console.log('query: ', query);
-    var res = await this.conn?.execute(query);
-
-    console.log(res.toString());
+    await this.recoverFromFiles(importPath);
     return true;
+
+    // var tres = await this.conn?.execute(`CALL SHOW_TABLES() RETURN name`);
+    // console.log(tres.toString());
+
+    // const query = `IMPORT DATABASE '${importPath}';`;
+    // console.log('query: ', query);
+    // var res = await this.conn?.execute(query);
+
+    // console.log(res);
+    // console.log(res.toString());
+    // return true;
   }
 
   async getCount() {

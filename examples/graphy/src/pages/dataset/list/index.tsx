@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { GraphList, GraphSchema } from '../../components';
 import { queryDataset } from '../service';
 import ListItem from './item';
+import Action from './action';
 const { useToken } = theme;
 import type { IDataset } from '../typing';
 
@@ -34,7 +35,6 @@ const List: React.FunctionComponent<IListProps> = props => {
   const { lists } = state;
   const queryData = async () => {
     const data = await queryDataset();
-
     setState(preState => {
       return {
         ...preState,
@@ -54,18 +54,23 @@ const List: React.FunctionComponent<IListProps> = props => {
         },
       ]}
     >
-      <Flex justify="flex-end" align="center">
-        <Button
-          onClick={() => {
-            navigation('/dataset/create');
-          }}
-        >
-          Create Dataset
-        </Button>
+      {!isEmpty && (
+        <Flex justify="flex-start" align="center">
+          <Button
+            type="primary"
+            onClick={() => {
+              navigation('/dataset/create');
+            }}
+          >
+            Create Dataset
+          </Button>
+        </Flex>
+      )}
+      <Flex vertical gap={24} style={{ marginTop: '24px' }}>
+        {lists.map(item => {
+          return <ListItem key={item.id} {...item} refreshList={queryData} />;
+        })}
       </Flex>
-      {lists.map(item => {
-        return <ListItem key={item.id} {...item} refreshList={queryData} />;
-      })}
       {isEmpty && (
         <Result
           status="404"

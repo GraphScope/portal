@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Typography, Card, Divider, Skeleton } from 'antd';
 import { TypingText, Utils } from '@graphscope/studio-components';
-import { runSummarize } from '../../pages/dataset/service';
+import { runSummarize } from '../../../service';
 interface IContentProps {
   id: string | null;
   combo: any;

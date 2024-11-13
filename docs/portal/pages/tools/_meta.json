@@ -13,5 +13,23 @@
       "footer": false,
       "layout": "full"
     }
+  },
+  "graphy": {
+    "type": "page",
+    "title": "Graphy",
+    "theme": {
+      "footer": false,
+      "layout": "full",
+      "header": false
+    }
+  },
+  "portal": {
+    "type": "page",
+    "title": "Portal",
+    "theme": {
+      "footer": false,
+      "layout": "full",
+      "header": false
+    }
   }
 }

@@ -1,6 +1,7 @@
 import * as React from 'react';
+import ClusterGraph from './graph';
 
-import { Container, ClusterGraph } from '../../components';
+import { Container } from '../../components';
 
 interface ICreateProps {}
 

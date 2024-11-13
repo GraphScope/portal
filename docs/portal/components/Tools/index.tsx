@@ -12,7 +12,7 @@ const tools = [
     features: ['Supports importing CSV/JSON data for instant graph visual analysis'],
     module: '@graphscope/studio-graph',
     link: '/tools/visualizer',
-    img: '/query/recommand.png',
+    img: '/tools/visualizer.png',
   },
   {
     name: 'Graphy',
@@ -23,7 +23,7 @@ const tools = [
     note: 'Follow the GitHub documentation to start the Graphy server',
     module: '@graphscope/graphy',
     link: '/tools/graphy',
-    img: '/query/recommand.png',
+    img: '/tools/graphy.png',
   },
   {
     name: 'Draw-pattern',
@@ -77,7 +77,7 @@ const Tools: React.FunctionComponent<IToolsProps> = props => {
         {tools.map((tool, index) => (
           <Col span={8} key={index}>
             {/** @ts-ignore */}
-            <Link href={tool.link}>
+            <Link href={tool.link} target="_blank">
               <Card style={{ padding: '1px' }} hoverable cover={<img alt={tool.name} src={tool.img} />}>
                 <Meta title={tool.description} description={tool.features[0]} />
               </Card>

@@ -1,6 +1,5 @@
 import React, { forwardRef, useEffect } from 'react';
-import { useStudioProvier } from '@graphscope/studio-components';
-import './index.css';
+import { useStudioProvier, useDynamicStyle } from '@graphscope/studio-components';
 import { editor, languages } from 'monaco-editor';
 import 'monaco-editor/esm/vs/basic-languages/cypher/cypher.contribution';
 import { registerGremlinLanguage } from '../basic-languages-gremlin/index';
@@ -55,7 +54,29 @@ interface IEditor extends CypherEditorProps {
   onCreated?: (val: editor.IStandaloneCodeEditor) => void;
   onChange?: (val: string) => void;
 }
+const cypherEditorStyle = `
+.monaco-editor .view-overlays .current-line {
+  background-color: transparent !important;
+}
+
+.monaco-editor .monaco-scrollable-element::-webkit-scrollbar {
+  display: none;
+}
+
+.decorationsOverviewRuler {
+  display: none !important;
+}
+
+.monaco-editor .view-overlays .current-line-exact {
+  border: none !important;
+}
+
+.monaco-editor .scroll-decoration {
+  box-shadow: none;
+}
+`;
 const Editor = forwardRef((props: IEditor, editorRef: any) => {
+  useDynamicStyle(cypherEditorStyle, 'cypher-editor-style');
   const { value, language = 'cypher', maxRows = 10, minRows = 1, onChangeContent, clear, onInit } = props;
   let codeEditor: editor.IStandaloneCodeEditor;
   const MAGIC_NUMBER = onChangeContent ? 0 : countLines(value);

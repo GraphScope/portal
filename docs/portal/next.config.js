@@ -21,6 +21,27 @@ const nextConfig = {
     esmExternals: 'loose',
     optimizePackageImports: ['node:os'],
   },
+  async headers() {
+    return [
+      {
+        source: '/(.*)', // 匹配所有路径
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+          {
+            key: 'Cross-Origin-Embedder-Policy',
+            value: 'require-corp',
+          },
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 const { webpack: nextraWebpack, ...othersConfig } = withNextra();
@@ -32,7 +53,9 @@ const webpack = (config, options) => {
   _config.externals.push({
     'node:os': 'os',
     fsevents: 'fsevents',
+    // 'monaco-editor': 'monaco',
   });
+
   return _config;
 };
 
