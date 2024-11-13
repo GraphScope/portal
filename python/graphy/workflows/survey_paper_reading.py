@@ -137,20 +137,25 @@ class SurveyPaperReading(AbstractWorkflow):
                 if not node["extract_from"]:
                     where = None
                 else:
-                    condition_dict["$or"] = []
-                    index_constraints = node["extract_from"].get("index", [])
-                    keyword_constraints = node["extract_from"].get("keyword", [])
+                    condition_dict = {}
+                    # remove '' in []
+                    exact_constraints = [
+                        s for s in node["extract_from"].get("exact", []) if s
+                    ]
+                    match_constraints = [
+                        s for s in node["extract_from"].get("match", []) if s
+                    ]
 
-                    index_constraints_num = len(index_constraints)
-                    keyword_constraints_num = len(keyword_constraints)
+                    exact_constraints_num = len(exact_constraints)
+                    match_constraints_num = len(match_constraints)
 
-                    if index_constraints_num > 0:
-                        if keyword_constraints_num == 0:
+                    if exact_constraints_num > 0:
+                        if match_constraints_num == 0:
                             where = {
                                 "conditions": {
                                     "section": {
                                         "$in": ["paper_meta", "abstract"]
-                                        + index_constraints
+                                        + exact_constraints
                                     }
                                 },
                                 "return": "all",
@@ -160,23 +165,23 @@ class SurveyPaperReading(AbstractWorkflow):
                         else:
                             condition_dict["$or"] = []
                     else:
-                        if keyword_constraints_num == 0:
+                        if match_constraints_num == 0:
                             where = None
                         else:
                             condition_dict["$or"] = []
 
                     if "$or" in condition_dict:
-                        if index_constraints_num > 0:
+                        if exact_constraints_num > 0:
                             condition_dict["$or"].append(
                                 {
                                     "section": {
                                         "$in": ["paper_meta", "abstract"]
-                                        + index_constraints
+                                        + exact_constraints
                                     }
                                 }
                             )
-                        if keyword_constraints_num > 0:
-                            for keyword_constraint in keyword_constraints:
+                        if match_constraints_num > 0:
+                            for match_constraint in match_constraints:
                                 condition_dict["$or"].append(
                                     {
                                         "sec_name": {
@@ -185,7 +190,7 @@ class SurveyPaperReading(AbstractWorkflow):
                                                     "type": VectorDBHierarchy.FirstLayer.value
                                                 },
                                                 "return": "documents",
-                                                "subquery": keyword_constraint,
+                                                "subquery": match_constraint,
                                                 "result_num": 1,
                                             }
                                         }
