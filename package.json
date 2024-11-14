@@ -11,6 +11,7 @@
     "build:portal": "cd packages/studio-website && npm run build:site",
     "build:examples": "pnpm i && rm -rf package-lock.json && npm run build && cd examples/graph-apps && npm run build:site",
     "build:docs": "pnpm i && rm -rf package-lock.json && npm run build && cd docs/portal && npm run build:site",
+    "build:docs-interactive": "pnpm i && rm -rf package-lock.json && npm run build && cd docs/interactive && npm run build:site",
     "build:docs-dumi-components": "npm run prev && npm run build &&  dumi build",
     "docs": "dumi dev",
     "version": "changeset version",
