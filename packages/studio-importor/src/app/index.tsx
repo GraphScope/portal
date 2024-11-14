@@ -1,10 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
 import GraphCanvas from './graph-canvas';
 import PropertiesEditor from './properties-editor';
-import { Spin } from 'antd';
 import { ReactFlowProvider } from 'reactflow';
 import { Section, StudioProvier, GlobalSpin, useDynamicStyle } from '@graphscope/studio-components';
-// import 'reactflow/dist/style.css';
 import cssStyles from './style';
 import { transformGraphNodes, transformEdges } from './elements/index';
 
@@ -112,7 +110,6 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         {isReady ? (
           <ReactFlowProvider>
             {!IS_PURE && <ButtonController />}
-
             <GraphCanvas />
             {children}
           </ReactFlowProvider>

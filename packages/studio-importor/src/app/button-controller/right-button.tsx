@@ -1,18 +1,15 @@
 import { Button } from 'antd';
 import * as React from 'react';
-import { Icons, useSection, useStudioProvier } from '@graphscope/studio-components';
-interface ILeftButtonProps {}
+import { Icons, useSection } from '@graphscope/studio-components';
+interface IRightButtonProps {}
 
-const LeftButton: React.FunctionComponent<ILeftButtonProps> = props => {
+const RightButton: React.FunctionComponent<IRightButtonProps> = props => {
   const { toggleRightSide } = useSection();
-  const { isLight } = useStudioProvier();
-  /** 夜间与白天模式 */
-  const color = !isLight ? '#fff' : '#000';
 
   return (
     <Button
       type="text"
-      icon={<Icons.Sidebar revert style={{ color }} />}
+      icon={<Icons.Sidebar revert />}
       onClick={() => {
         toggleRightSide();
       }}
@@ -20,4 +17,4 @@ const LeftButton: React.FunctionComponent<ILeftButtonProps> = props => {
   );
 };
 
-export default LeftButton;
+export default RightButton;
