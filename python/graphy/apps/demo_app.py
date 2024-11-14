@@ -221,10 +221,11 @@ class DemoApp:
         persist_store.use("")
         return persist_store
 
-    def init_metadata(self, dataset_id):
+    def init_metadata(self, dataset_id, dataset_name):
         metadata = {}
         persist_store = self.get_persist_store(dataset_id)
         metadata["id"] = dataset_id
+        metadata["name"] = dataset_name
         metadata["config"] = {}
         metadata["entity"] = []
         metadata["status"] = STATUS.INITIALIZED.value
@@ -537,6 +538,7 @@ class DemoApp:
 
             # Create a unique identifier for the dataset
             dataset_id = hash_id(file.filename)
+            dataset_name = file.filename.split(".")[0]
 
             # Create directory to store the dataset files
             upload_path = os.path.join(self.app.config["UPLOAD_FOLDER"], dataset_id)
@@ -562,10 +564,14 @@ class DemoApp:
                     400,
                 )
 
-            self.init_metadata(dataset_id)
+            self.init_metadata(dataset_id, dataset_name)
             self.cache.setdefault(dataset_id, {})
             # Return the unique identifier
-            return jsonify(create_json_response({"dataset_id": dataset_id}))
+            return jsonify(
+                create_json_response(
+                    {"dataset_id": dataset_id, "dataset_name": dataset_name}
+                )
+            )
 
         def allowed_file(filename):
             # Helper function to check allowed file types
