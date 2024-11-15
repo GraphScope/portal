@@ -63,7 +63,7 @@
     "babel-loader": "^8.2.5",
     "css-loader": "^6.8.1",
     "dumi": "^2.2.16",
-    "dumi-theme-antd": "latest",
+    "dumi-theme-antd": "0.4.2",
     "father": "^4.4.1",
     "file-loader": "^6.2.0",
     "fs-extra": "^10.1.0",
