@@ -4,6 +4,6 @@
     "type": "separator",
     "title": "Others"
   },
-  "webui": "Integration With WebUI",
+  "portal": "Integration With Portal",
   "coordinator": "Coordinator API"
 }
