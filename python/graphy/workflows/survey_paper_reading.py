@@ -112,108 +112,14 @@ class SurveyPaperReading(AbstractWorkflow):
                     }
                 )
             else:
-                items = {}
-                for item in node["output_schema"]["item"]:
-                    if item["type"] == "string":
-                        items[item["name"]] = (
-                            str,
-                            Field(description=item["description"]),
-                        )
-                    elif item["type"] == "int":
-                        items[item["name"]] = (
-                            int,
-                            Field(description=item["description"]),
-                        )
-                    else:
-                        pass
-                        # ERROR
-                ItemClass = create_model(node["name"] + "ItemClass", **items)
-                if node["output_schema"]["type"] == "array":
-                    item_type = {
-                        "data": (
-                            List[ItemClass],
-                            Field(description=node["output_schema"]["description"]),
-                        ),
-                    }
-                elif node["output_schema"]["type"] == "single":
-                    item_type = {
-                        "data": (
-                            ItemClass,
-                            Field(description=node["output_schema"]["description"]),
-                        ),
-                    }
-                else:
-                    pass
-                    # ERROR
-                NodeClass = create_model(node["name"] + "NodeClass", **item_type)
-
-                if not node["extract_from"]:
-                    where = None
-                elif type(node["extract_from"]) is str:
-                    where_conditions = node["extract_from"].split("|")
-                    condition_dict = {}
-                    if len(where_conditions) == 1:
-                        condition_dict = {
-                            "sec_name": {
-                                "$in": {
-                                    "conditions": {
-                                        "type": VectorDBHierarchy.FirstLayer.value
-                                    },
-                                    "return": "documents",
-                                    "subquery": where_conditions[0],
-                                    "result_num": 1,
-                                }
-                            }
-                        }
-                    else:
-                        condition_dict["$or"] = []
-                        for condition in where_conditions:
-                            condition_dict["$or"].append(
-                                {
-                                    "sec_name": {
-                                        "$in": {
-                                            "conditions": {
-                                                "type": VectorDBHierarchy.FirstLayer.value
-                                            },
-                                            "return": "documents",
-                                            "subquery": condition,
-                                            "result_num": 1,
-                                        }
-                                    }
-                                }
-                            )
-
-                    where = {
-                        "conditions": condition_dict,
-                        "return": "all",
-                        "result_num": -1,
-                        "subquery": "{slot}",
-                    }
-                elif type(node["extract_from"]) is list:
-                    where = {
-                        "conditions": {
-                            "section": {
-                                "$in": ["paper_meta", "abstract"] + node["extract_from"]
-                            }
-                        },
-                        "return": "all",
-                        "result_num": -1,
-                        "subquery": "{slot}",
-                    }
-                else:
-                    pass
-
-                nodes_dict[node["name"]] = ExtractNode(
-                    node["name"],
+                extract_node = ExtractNode.from_dict(
+                    node,
                     self.llm_model,
                     self.parser_model,
-                    NodeClass,
-                    node["query"],
                     self.max_token_size,
                     self.enable_streaming,
-                    None,
-                    where,
                 )
+                nodes_dict[node["name"]] = extract_node
                 output_dict["nodes"].append(
                     {
                         "node_name": "ExtractNode",
@@ -221,12 +127,12 @@ class SurveyPaperReading(AbstractWorkflow):
                             node["name"],
                             "[llm_model]",
                             "[parser_model]",
-                            NodeClass,
+                            extract_node.json_format,
                             node["query"],
                             "[max_token_size]",
                             "[enable_streaming]",
                             None,
-                            where,
+                            extract_node.where,
                         ),
                     }
                 )
