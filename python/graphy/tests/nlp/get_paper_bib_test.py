@@ -12,7 +12,7 @@ from chromadb.utils import embedding_functions
 
 from memory.llm_memory import PaperReadingMemoryManager
 from extractor.paper_extractor import PaperExtractor
-from nodes import PDFExtractNode
+from graph import PDFExtractNode
 
 
 @pytest.mark.skipif(True, reason="slow")

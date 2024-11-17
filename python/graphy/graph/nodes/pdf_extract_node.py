@@ -1,7 +1,7 @@
-from nodes import BaseNode
+from .base_node import BaseNode, DataGenerator
 from utils import Paper, ArxivFetcher, ScholarFetcher
 from extractor import PDFExtractor
-from config import WF_IMAGE_DIR
+from config import WF_IMAGE_DIR, WF_STATE_EXTRACTOR_KEY, WF_STATE_MEMORY_KEY
 from memory import BaseRuntimeMemoryManager
 
 from langchain_core.embeddings import Embeddings
@@ -20,16 +20,12 @@ class PDFExtractNode(BaseNode):
     def __init__(
         self,
         embeddings: Embeddings,
-        memory_manager: BaseRuntimeMemoryManager,
-        pdf_extractor: PDFExtractor,
         name: str,
         arxiv_fetch_paper: bool = True,
         scholar_fetch_paper: bool = True,
     ):
         super().__init__(name)
         self.embeddings = embeddings
-        self.memory_manager = memory_manager
-        self.pdf_extractor = pdf_extractor
         self.arxiv_fetch_paper = arxiv_fetch_paper
         self.scholar_fetch_paper = scholar_fetch_paper
 
@@ -42,14 +38,28 @@ class PDFExtractNode(BaseNode):
         else:
             self.scholar_fetcher = None
 
+    def get_memory(self) -> str:
+        return ""
+
+    def get_query(self) -> str:
+        return ""
+
     @profiler.profile(name="PDFExtractNodeExecution")
-    def execute(self, state: Dict[str, Any]) -> Generator[Dict[str, Any], None, None]:
-        vectordb = self.memory_manager.retrieved_memory
-        paper_metadata = self.pdf_extractor.get_meta_data()
+    def execute(
+        self, state: Dict[str, Any], _input: DataGenerator = None
+    ) -> DataGenerator:
+        memory_manager = state.get(WF_STATE_MEMORY_KEY, None)
+        if not memory_manager:
+            raise ValueError("Memory manager is not provided in the state.")
+        pdf_extractor = state.get(WF_STATE_EXTRACTOR_KEY, None)
+        if not pdf_extractor:
+            raise ValueError("PDF extractor is not provided in the state.")
+        vectordb = memory_manager.retrieved_memory
+        paper_metadata = pdf_extractor.get_meta_data()
         if vectordb.is_db_valid() and vectordb.is_db_empty():
-            docs = self.pdf_extractor.extract_all()
+            docs = pdf_extractor.extract_all()
             vectordb.init_memory_parallel(docs, ["page_index", "section", "part_index"])
-            self.pdf_extractor.cleanup()
+            pdf_extractor.cleanup()
 
         paper = Paper.from_pdf_metadata(paper_metadata)
         paper_dict = paper.to_dict()

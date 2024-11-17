@@ -1,6 +1,6 @@
 from extractor.paper_extractor import PaperExtractor
 from utils import ArxivFetcher, ScholarFetcher
-from nodes import PDFExtractNode
+from graph import PDFExtractNode
 from memory.llm_memory import PaperReadingMemoryManager
 
 from langchain_community.chat_models import ChatOllama

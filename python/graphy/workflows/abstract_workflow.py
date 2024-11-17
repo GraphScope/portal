@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from nodes.base_node import BaseNode, NodeType
+from graph import BaseNode, NodeType
 from config import WF_STATE_CACHE_KEY
 from db import PersistentStore
 
@@ -83,6 +83,8 @@ class AbstractWorkflow:
 
     Attributes:
         llm_model: The large language model for executing prompts.
+        parser_model: The model for parsing outputs into structured (JSON) format.
+        embeddings_model: The model for converting text to embeddings for vector db.
         memory_manager (HierarchicalMemoryManager): The memory manager for storing and retrieving information.
         state (Dict[str, Any]): The state of the workflow, including executed nodes and their contexts.
         nodes (Dict[str, BaseNode]): A dictionary of nodes in the workflow, keyed by their names.
@@ -93,6 +95,7 @@ class AbstractWorkflow:
 
     def __init__(
         self,
+        id: str,
         llm_model: BaseLLM,
         parser_model: BaseLLM,
         embddings_model: Embeddings,
@@ -100,7 +103,7 @@ class AbstractWorkflow:
         max_token_size: int = 8192,
         enable_streaming: bool = False,
     ):
-        self.id = ""
+        self.id = id
         self.llm_model = llm_model
         self.parser_model = parser_model
         self.embeddings_model = embddings_model
@@ -108,7 +111,7 @@ class AbstractWorkflow:
         self.node_caches = {}
         self.adjacency_list = {}
         self.progress = {"total": ProgressInfo()}
-        self.state = {WF_STATE_CACHE_KEY: self.node_caches}
+        self.state = {id: {WF_STATE_CACHE_KEY: self.node_caches}}
         self.persist_store = persist_store
         self.current_node = None
         self.max_token_size = max_token_size
@@ -124,7 +127,7 @@ class AbstractWorkflow:
             return self.progress["total"]
 
     def get_cached_results(self, node_name):
-        node_caches: dict = self.state.get(WF_STATE_CACHE_KEY, {})
+        node_caches: dict = self.state.get(self.id, {}).get(WF_STATE_CACHE_KEY, {})
         cached_results = node_caches.get(node_name, None)
         if cached_results:
             return cached_results.get_response()

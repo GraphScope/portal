@@ -1,5 +1,5 @@
 """
-  __init__.py for the nodes package
+  __init__.py for the graph package
 """
 
 from .base_node import (
@@ -8,16 +8,16 @@ from .base_node import (
     NodeType,
     NodeCache,
 )
-from .chain_node import BaseChainNode, MemoryChainNode, AdvancedRAGNode
+from .chain_node import BaseChainNode, MemoryChainNode
 from .pdf_extract_node import PDFExtractNode
 from .paper_reading_nodes import ExtractNode
+
 
 __all__ = [
     "BaseNode",
     "ExpansionNode",
     "BaseChainNode",
     "MemoryChainNode",
-    "AdvancedRAGNode",
     "NodeType",
     "NodeCache",
     "PDFExtractNode",

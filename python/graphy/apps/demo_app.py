@@ -16,8 +16,8 @@ from utils.cryptography import encrypt_key, decrypt_key
 from utils.text_clustering import KMeansClustering, OnlineClustering
 from utils.profiler import profiler
 from db import JsonFileStore
-from nodes import BaseChainNode
-from nodes.paper_reading_nodes import NameDesc
+from graph import BaseChainNode
+from graph.nodes.paper_reading_nodes import NameDesc
 from apps.text_generator import ReportGenerator
 from models import set_llm_model, DefaultEmbedding, DEFAULT_LLM_MODEL_CONFIG
 

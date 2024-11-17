@@ -1,5 +1,6 @@
 from typing import Dict, Any, List, Generator
 from enum import Enum, auto
+from graph.types import DataGenerator, DataType
 
 import json
 import logging
@@ -14,6 +15,7 @@ class NodeType(Enum):
 
     BASE = auto()
     EXPANSION = auto()
+    INSPECTOR = auto()
 
 
 class BaseNode:
@@ -22,26 +24,18 @@ class BaseNode:
 
     Attributes:
         name (str): The name of the node.
-        node_type (NodeType): The type of the node (e.g., "base", "placeholder", "expansion").
+        node_type (NodeType): The type of the node (e.g., "base", "expansion", "inspector").
     """
 
     def __init__(self, name: str, node_type: NodeType = NodeType.BASE):
         self.name = name
         self.node_type = node_type
-        self.memory = ""
-        self.query = ""
 
     def set_name(self, new_name):
         self.name = new_name
 
     def get_node_key(self) -> str:
         return self.name
-
-    def get_memory(self) -> str:
-        return self.memory
-
-    def get_query(self) -> str:
-        return self.query
 
     def pre_execute(self, state: Dict[str, Any] = None):
         """define pre-execution logic"""
@@ -51,7 +45,9 @@ class BaseNode:
         """define post-execution logic"""
         logger.info(f"Complete executing node: {self.get_node_key()}")
 
-    def execute(self, state: Dict[str, Any]) -> Generator[Dict[str, Any], None, None]:
+    def execute(
+        self, state: Dict[str, Any], input: DataGenerator = None
+    ) -> DataGenerator:
         """
         Executes the node's logic.
 
@@ -64,7 +60,7 @@ class BaseNode:
 
         yield {}
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return f"Node: {self.name}, Type: {self.node_type}"
 
 

@@ -1,5 +1,6 @@
-from nodes import BaseChainNode
+from .chain_node import BaseChainNode, DataGenerator
 from prompts import TEMPLATE_ACADEMIC_RESPONSE
+from config import WF_STATE_MEMORY_KEY
 
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.language_models.llms import BaseLLM
@@ -33,7 +34,6 @@ class ExtractNode(BaseChainNode):
         parser_llm: BaseLLM,
         output_format: BaseModel,
         input_query: str,
-        memory_manager=None,
         max_token_size: int = 8192,
         enable_streaming: bool = False,
         block_config=None,
@@ -45,7 +45,6 @@ class ExtractNode(BaseChainNode):
             llm,
             parser_llm,
             output_format,
-            memory_manager=memory_manager,
             query_template=input_query,
             max_token_size=max_token_size,
             enable_streaming=enable_streaming,
@@ -68,16 +67,21 @@ class ExtractNode(BaseChainNode):
         )
         self.query_template = self.query_dependency + self.query_template
 
-    def execute(self, state: Dict[str, Any]) -> Generator[Dict[str, Any], None, None]:
+    def execute(
+        self, state: Dict[str, Any], _input: DataGenerator = None
+    ) -> DataGenerator:
         self.make_query(state)
+        memory_manager = state.get(WF_STATE_MEMORY_KEY, None)
 
-        if self.memory_manager:
-            self.memory_manager.clear_memory()
-            self.memory_manager.update_config(self.block_config)
-            self.memory_manager.retrieve_memory_blocks(
+        if memory_manager:
+            memory_manager.clear_memory()
+            memory_manager.update_config(self.block_config)
+            memory_manager.retrieve_memory_blocks(
                 self.query, self.where, self.max_token_size
             )
+        else:
+            logger.warning("Memory manager is not provided in the state.")
 
         # Format query for paper reading
         self.query = TEMPLATE_ACADEMIC_RESPONSE.format(user_query=self.query)
-        yield from super().execute(state)
+        yield from super().execute(state, _input)
