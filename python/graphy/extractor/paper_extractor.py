@@ -1379,7 +1379,6 @@ class PaperExtractor(PDFExtractor):
     #    return list(self.extract_text(get_rich_info=True))
 
     def extract_all(self) -> Iterable[Document]:
-        print(self.get_meta_data())
         return list(self.extract_text(get_rich_info=True, get_tables=False))
 
     def cleanup(self):
