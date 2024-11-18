@@ -34,7 +34,7 @@ import {
 import { Divider } from 'antd';
 
 import { initialStore, GraphProvider } from '../hooks/useContext';
-
+import { CypherServices } from '../index';
 interface QueryGraphProps {
   // instance id
   id?: string;
@@ -60,6 +60,11 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
   const { isLight } = useStudioProvier();
   const color = !isLight ? '#ddd' : '#000';
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const language = 'cypher';
+  let services: any = [];
+  if (language === 'cypher') {
+    services = CypherServices['services'];
+  }
 
   return (
     <div
@@ -70,7 +75,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       }}
       ref={containerRef}
     >
-      <GraphProvider id={id}>
+      <GraphProvider id={id} services={services}>
         <Section
           splitBorder
           rightSide={
@@ -95,7 +100,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
 
           <Loading />
           <ContextMenu>
-            <NeighborQuery onQuery={onQuery} />
+            <NeighborQuery />
             <CommonNeighbor onQuery={onQuery} />
             <DeleteLeafNodes />
             <DeleteNode />

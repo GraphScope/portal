@@ -3,6 +3,9 @@ import StoreProvider, { useContext as useZustandContext } from '@graphscope/use-
 import type { StyleConfig, Emitter, Graph, GraphData } from './typing';
 import { StatusConfig } from '../components/Prepare/typing';
 
+export type IGetServices = <T extends { id: string; query: (...args: any[]) => Promise<any> }>(
+  id: T['id'],
+) => T['query'];
 export type IStore = {
   /**
    * data of graph
@@ -51,6 +54,7 @@ export type IStore = {
   graphId: string;
   schema: any;
   isLoading: boolean;
+  getService: IGetServices;
 };
 
 export const initialStore: IStore = {
@@ -80,14 +84,27 @@ export const initialStore: IStore = {
     edges: [],
   },
   isLoading: false,
+  //@ts-ignore
+  getService: () => {
+    return () => {};
+  },
 };
 
 export const useContext = () => useZustandContext<IStore>();
 
 export const GraphProvider = props => {
-  const { children, id } = props;
+  const { children, id, services } = props;
+  const getService: IGetServices = (serviceId: string) => {
+    const service = services[serviceId];
+    if (!service) {
+      console.error(`service not found: ${serviceId}`);
+      //@ts-ignore
+      return () => {};
+    }
+    return service;
+  };
   return (
-    <StoreProvider id={id} store={initialStore}>
+    <StoreProvider id={id} store={{ ...initialStore, getService }}>
       {children}
     </StoreProvider>
   );

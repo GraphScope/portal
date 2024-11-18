@@ -5,3 +5,6 @@ export { getStyleConfig, getDataMap } from './components/Prepare/utils';
 export * from './components';
 export { useContext, GraphProvider } from './hooks/useContext';
 export { default as useCluster } from './hooks/useCluster';
+
+export { default as CypherServices } from './services/cypher';
+export type { IServiceQueries, IQueryTypes } from './services/cypher';
