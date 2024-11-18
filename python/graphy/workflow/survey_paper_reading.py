@@ -1,8 +1,9 @@
 from typing import Dict, Any, Generator
-from workflows import AbstractWorkflow
-from workflows.abstract_workflow import process_id
+from workflow import AbstractWorkflow
 from extractor import PaperExtractor
-from graph import BaseNode, NodeCache, NodeType, PDFExtractNode, ExtractNode
+from graph.nodes.base_node import BaseNode, NodeCache, NodeType
+from graph.nodes.pdf_extract_node import PDFExtractNode
+from graph.nodes.paper_reading_nodes import ExtractNode, process_id
 from typing import Any, Dict, List
 from types import new_class
 from langchain_core.pydantic_v1 import Field, create_model

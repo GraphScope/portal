@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from graph import BaseNode, NodeType
+from graph.nodes.base_node import BaseNode, NodeType
+from graph.nodes.paper_reading_nodes import ProgressInfo, process_id
 from config import WF_STATE_CACHE_KEY
 from db import PersistentStore
 
@@ -14,67 +15,6 @@ import logging
 
 
 logger = logging.getLogger(__name__)
-
-
-def process_id(base_name: str) -> str:
-    # Replace invalid characters with underscores
-    id_name = re.sub(r"[^a-zA-Z0-9_-]", "_", base_name)
-
-    # Ensure it does not contain two consecutive periods
-    id_name = re.sub(r"\.\.+", ".", id_name)
-
-    # Ensure it starts with an alphanumeric character
-    id_name = re.sub(r"^[^a-zA-Z0-9]+", "", id_name)
-
-    # Trim to 63 characters
-    if len(id_name) > 63:
-        id_name = id_name[:63]
-
-    # Ensure it ends with an alphanumeric character
-    id_name = re.sub(r"[^a-zA-Z0-9]+$", "", id_name)
-
-    # Ensure it has at least 3 characters
-    if len(id_name) < 3:
-        id_name = f"{hash(base_name)}_{id_name}"
-
-    return id_name
-
-
-class ProgressInfo:
-    def __init__(self, number=0, completed=0):
-        self.number = number
-        self.completed = completed
-
-    def add(self, others: ProgressInfo):
-        self.number += others.number
-        self.completed += others.completed
-
-    def increase(self):
-        self.number += 1
-
-    def decrease(self):
-        self.number -= 1
-
-    def complete(self):
-        if self.completed < self.number:
-            self.completed += 1
-        else:
-            logging.error(
-                f"Completed: {self.completed} cannot exceed Number: {self.number}"
-            )
-
-    def get_percentage(self) -> float:
-        if self.number == 0:
-            return 0.0
-        else:
-            return 100 * self.completed / float(self.number)
-
-    def backpedal(self):
-        if self.completed > 0:
-            self.completed -= 1
-
-    def __str__(self):
-        return f"Number: {self.number}, Completed: {self.completed}"
 
 
 class AbstractWorkflow:

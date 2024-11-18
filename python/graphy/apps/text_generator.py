@@ -2,7 +2,7 @@ import sys
 import os
 
 from langchain_openai import ChatOpenAI
-from graph import BaseChainNode
+from graph.nodes.chain_node import BaseChainNode
 from graph.nodes.paper_reading_nodes import NameDesc
 from typing import List
 import json

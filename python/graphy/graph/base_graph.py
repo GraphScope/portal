@@ -24,6 +24,10 @@ class BaseGraph:
         self.nodes[node.name] = node
         self.adjacency_list[node.name] = []
 
+    def get_node(self, node_name: str) -> BaseNode:
+        """Returns a node from the graph."""
+        return self.nodes.get(node_name)
+
     def remove_node_by_name(self, node_name: str):
         """Removes a node and its associated edges from the graph."""
         if node_name not in self.nodes:
@@ -60,6 +64,18 @@ class BaseGraph:
     def get_adjacent_edges(self, node_name: str) -> List[BaseEdge]:
         """Returns a list of edges adjacent to a given node."""
         return [self.edges[edge] for edge in self.adjacency_list.get(node_name, [])]
+
+    def get_adjacent_nodes(self, node_name: str) -> List[str]:
+        """Returns a list of edges adjacent to a given node."""
+        return [
+            self.edges[edge].target for edge in self.adjacency_list.get(node_name, [])
+        ]
+
+    def nodes_count(self) -> int:
+        return len(self.nodes)
+
+    def edges_count(self) -> int:
+        return len(self.edges)
 
     def __repr__(self):
         return f"Nodes: {self.nodes.keys()}, Edges: {self.adjacency_list}"

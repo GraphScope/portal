@@ -1,5 +1,5 @@
-from workflows import AbstractWorkflow, SurveyPaperReading
-from workflows.abstract_workflow import ProgressInfo
+from workflow import AbstractWorkflow, SurveyPaperReading
+from graph.nodes.paper_reading_nodes import ProgressInfo
 from config import (
     WF_UPLOADS_DIR,
     WF_OUTPUT_DIR,
@@ -16,7 +16,7 @@ from utils.cryptography import encrypt_key, decrypt_key
 from utils.text_clustering import KMeansClustering, OnlineClustering
 from utils.profiler import profiler
 from db import JsonFileStore
-from graph import BaseChainNode
+from graph.nodes.chain_node import BaseChainNode
 from graph.nodes.paper_reading_nodes import NameDesc
 from apps.text_generator import ReportGenerator
 from models import set_llm_model, DefaultEmbedding, DEFAULT_LLM_MODEL_CONFIG

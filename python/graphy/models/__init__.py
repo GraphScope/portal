@@ -37,10 +37,11 @@ DEFAULT_LLM_MODEL_CONFIG = {
 
 
 class LLM:
-    def __init__(self, model, model_name, context_size):
+    def __init__(self, model, model_name, context_size, enable_streaming=False):
         self.model = model
         self.model_name = model_name
         self.context_size = context_size
+        self.enable_streaming = enable_streaming
 
 
 def set_llm_model(config_data: dict):

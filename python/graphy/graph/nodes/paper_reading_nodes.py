@@ -1,17 +1,26 @@
-from .base_node import BaseNode, NodeType, NodeCache
-from .chain_node import BaseChainNode, DataGenerator
+from .base_node import BaseNode, NodeType, NodeCache, DataGenerator, DataType
+from .chain_node import BaseChainNode
 from .pdf_extract_node import PDFExtractNode
-from graph.base_graph import BaseGraph
-from graph.base_edge import BaseEdge
-from memory.llm_memory import VectorDBHierarchy
+from memory.llm_memory import VectorDBHierarchy, PaperReadingMemoryManager
+from models import LLM
 from prompts import TEMPLATE_ACADEMIC_RESPONSE
-from config import WF_STATE_MEMORY_KEY
+from config import (
+    WF_STATE_MEMORY_KEY,
+    WF_STATE_EXTRACTOR_KEY,
+    WF_STATE_CACHE_KEY,
+    WF_IMAGE_DIR,
+)
+from extractor import PaperExtractor
+from db import PersistentStore
+from utils.profiler import profiler
 
 from langchain_core.pydantic_v1 import BaseModel, Field, create_model
 from langchain_core.language_models.llms import BaseLLM
 from langchain_core.embeddings import Embeddings
 
-from typing import Any, Dict, List, Generator
+from typing import Any, Dict, List
+import os
+import re
 import logging
 
 logger = logging.getLogger(__name__)
@@ -32,14 +41,76 @@ class NameDescListFormat(BaseModel):
     )
 
 
+def process_id(base_name: str) -> str:
+    # Replace invalid characters with underscores
+    id_name = re.sub(r"[^a-zA-Z0-9_-]", "_", base_name)
+
+    # Ensure it does not contain two consecutive periods
+    id_name = re.sub(r"\.\.+", ".", id_name)
+
+    # Ensure it starts with an alphanumeric character
+    id_name = re.sub(r"^[^a-zA-Z0-9]+", "", id_name)
+
+    # Trim to 63 characters
+    if len(id_name) > 63:
+        id_name = id_name[:63]
+
+    # Ensure it ends with an alphanumeric character
+    id_name = re.sub(r"[^a-zA-Z0-9]+$", "", id_name)
+
+    # Ensure it has at least 3 characters
+    if len(id_name) < 3:
+        id_name = f"{hash(base_name)}_{id_name}"
+
+    return id_name
+
+
+class ProgressInfo:
+    def __init__(self, number=0, completed=0):
+        self.number = number
+        self.completed = completed
+
+    def add(self, others: "ProgressInfo"):
+        self.number += others.number
+        self.completed += others.completed
+
+    def increase(self):
+        self.number += 1
+
+    def decrease(self):
+        self.number -= 1
+
+    def complete(self):
+        if self.completed < self.number:
+            self.completed += 1
+        else:
+            logging.error(
+                f"Completed: {self.completed} cannot exceed Number: {self.number}"
+            )
+
+    def get_percentage(self) -> float:
+        if self.number == 0:
+            return 0.0
+        else:
+            return 100 * self.completed / float(self.number)
+
+    def backpedal(self):
+        if self.completed > 0:
+            self.completed -= 1
+
+    def __str__(self):
+        return f"Number: {self.number}, Completed: {self.completed}"
+
+
 def create_inspector_graph(
     graph_dict: Dict[str, Any],
-    llm_model: BaseLLM,
-    parser_model: BaseLLM,
+    llm_model: LLM,
+    parser_model: LLM,
     embeddings_model: Embeddings,
-    max_token_size: int = 8192,
-    enable_streaming: bool = False,
-) -> BaseGraph:
+) -> "BaseGraph":
+    from graph.base_edge import BaseEdge
+    from graph.base_graph import BaseGraph
+
     nodes_dict = {}
     nodes = []
     edges = []
@@ -54,10 +125,10 @@ def create_inspector_graph(
         else:
             extract_node = ExtractNode.from_dict(
                 node,
-                llm_model,
-                parser_model,
-                max_token_size,
-                enable_streaming,
+                llm_model.model,
+                parser_model.model,
+                llm_model.context_size,
+                llm_model.enable_streaming,
             )
             nodes_dict[node["name"]] = extract_node
 
@@ -263,6 +334,145 @@ class ExtractNode(BaseChainNode):
 
 
 class PaperInspector(BaseNode):
-    def __init__(self, name: str, graph: BaseGraph):
+    def __init__(
+        self,
+        name: str,
+        llm_model: LLM,
+        embeddings_model: Embeddings,
+        graph,
+        persist_store: PersistentStore,
+    ):
         super().__init__(name, NodeType.INSPECTOR)
         self.graph = graph
+        self.llm_model = llm_model
+        self.embeddings_model = embeddings_model
+        self.persist_store = persist_store
+        self.progress = {"total": ProgressInfo(self.graph.nodes_count(), 0)}
+        for node in self.graph.get_node_names():
+            self.progress[node] = ProgressInfo(1, 0)
+
+    def run_through(
+        self,
+        input_data: DataType,
+        state,
+        continue_on_error: bool = True,
+        is_persist: bool = True,
+        skipped_nodes: List[str] = [],
+    ) -> DataGenerator:
+        """
+        Runs through the workflow and executes all nodes.
+
+        Args:
+            continue_on_error (bool): Whether to continue execution on error.
+            is_persist (bool): Whether to dump the output as a persistent state
+            skipped_nodes (List[str]): The list of nodes to skip.
+
+        Yields:
+            DataGenerator: Outputs generated by the workflow nodes.
+        """
+
+        logger.info(f"Executing {self.name} for input data: {input_data}")
+
+        paper_file_path = input_data.get("paper_file_path", None)
+        if not paper_file_path:
+            logger.error("No 'paper_file_path' provided in input data.")
+            yield {}
+            return
+
+        # Initialize the paper extractor and other components
+        pdf_extractor = PaperExtractor(paper_file_path)
+        base_name = pdf_extractor.get_meta_data().get("title", "").lower()
+        if not base_name:  # If no title, fallback to filename
+            base_name = os.path.basename(paper_file_path).split(".")[0]
+        data_id = process_id(base_name)
+        pdf_extractor.set_img_path(f"{WF_IMAGE_DIR}/{data_id}")
+        state[data_id] = {
+            WF_STATE_CACHE_KEY: {},
+            WF_STATE_EXTRACTOR_KEY: pdf_extractor,
+            WF_STATE_MEMORY_KEY: PaperReadingMemoryManager(
+                self.llm_model.model,
+                self.embeddings_model,
+                data_id,
+                self.llm_model.context_size,
+            ),
+        }
+
+        current_node_name = "Paper"
+        next_nodes = [current_node_name]
+
+        while next_nodes:
+            current_node_name = next_nodes.pop()  # Run in DFS order
+            if current_node_name in skipped_nodes:
+                self.progress[current_node_name].complete()
+                self.progress["total"].complete()
+                continue
+
+            curr_node = self.graph.get_node(current_node_name)
+            if not curr_node:
+                logger.error(f"Node '{current_node_name}' not found in the graph.")
+                yield {}
+                continue
+
+            last_output = None
+            try:
+                # Execute the current node
+                output_generator = curr_node.execute(state[data_id])
+                for output in output_generator:
+                    last_output = output
+                    yield last_output  # Yield each output from the node execution
+            except Exception as e:
+                logger.error(f"Error executing node '{current_node_name}': {e}")
+                if continue_on_error:
+                    yield {}  # Yield empty result in case of error if continue_on_error is True
+                else:
+                    print("raise error")
+                    raise ValueError(f"Error executing node '{current_node_name}': {e}")
+            finally:
+                # Complete progress tracking
+                self.progress[current_node_name].complete()
+                self.progress["total"].complete()
+
+                # Persist the output and queries if applicable
+                if last_output and is_persist and self.persist_store:
+                    self.persist_store.save_state(
+                        data_id, curr_node.get_node_key(), last_output
+                    )
+                    if curr_node.get_query():
+                        input_query = f"**************QUERY***************:\n{curr_node.get_query()}\n**************MEMORY**************:\n{curr_node.get_memory()}"
+                        self.persist_store.save_query(
+                            data_id, curr_node.get_node_key(), input_query
+                        )
+
+                # Cache the output
+                if last_output:
+                    node_caches: dict = state[data_id].get(WF_STATE_CACHE_KEY, {})
+                    node_key = curr_node.get_node_key()
+                    node_cache: NodeCache = node_caches.setdefault(
+                        node_key, NodeCache(node_key)
+                    )
+                    if node_cache:
+                        node_cache.add_chat_cache("", last_output)
+
+            # Add adjacent nodes to the processing queue
+            for next_node_name in reversed(
+                self.graph.get_adjacent_nodes(current_node_name)
+            ):
+                next_nodes.append(next_node_name)
+
+    @profiler.profile
+    def execute(
+        self, state: Dict[str, Any], input: DataGenerator = None
+    ) -> DataGenerator:
+        """
+        Executes the node's logic.
+
+        Args:
+            state (Dict[str, Any]): The input state for the node.
+            input (DataGenerator): The input data generator.
+
+        Returns:
+            DataGenerator: The output data generator from the node.
+        """
+
+        for input_data in input:
+            yield self.run_through(input_data, state)
