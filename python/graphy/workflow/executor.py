@@ -77,7 +77,7 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
         state = self.workflow.state
 
         # Add all initial inputs to the task queue with the first node
-        first_node = self.workflow.graph.get_node_names()[0]
+        first_node = self.workflow.graph.get_first_node_name()
         for input_data in initial_inputs:
             self.task_queue.put((input_data, first_node))
 

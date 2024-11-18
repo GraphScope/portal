@@ -49,7 +49,6 @@ class ScholarFetcher:
             logger.error(f"Error searching google scholar: {e}")
             paper_info = None
 
-        print(paper_info)
         # logger.debug(paper_info)
         if paper_info is None:
             return None, None
@@ -58,7 +57,3 @@ class ScholarFetcher:
         paper_bib = paper_info.get("bib", None)
 
         return fetch_result, paper_bib
-
-
-if __name__ == "__main__":
-    pass

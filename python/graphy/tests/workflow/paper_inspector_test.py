@@ -6,13 +6,24 @@ import pytest
 from unittest.mock import MagicMock, create_autospec
 from graph import BaseGraph, BaseEdge
 from graph.nodes import PaperInspector, BaseNode
-from graph.nodes.paper_reading_nodes import ProgressInfo, ExtractNode
+from graph.nodes.paper_reading_nodes import (
+    ProgressInfo,
+    ExtractNode,
+    create_inspector_graph,
+)
 from graph.types import DataGenerator
-from models import LLM
-from db import PersistentStore
-from config import WF_STATE_CACHE_KEY, WF_STATE_MEMORY_KEY, WF_STATE_EXTRACTOR_KEY
+from models import LLM, set_llm_model, DEFAULT_LLM_MODEL_CONFIG, DefaultEmbedding
+from db import PersistentStore, JsonFileStore
+from config import (
+    WF_STATE_CACHE_KEY,
+    WF_STATE_MEMORY_KEY,
+    WF_STATE_EXTRACTOR_KEY,
+    WF_OUTPUT_DIR,
+)
 
 from langchain_core.embeddings import Embeddings
+
+import os
 
 
 @pytest.fixture
@@ -87,3 +98,89 @@ def test_execute(mock_paper_inspector):
 
     assert len(outputs) == 1
     assert outputs[0] == {"result": "node_output"}
+
+
+@pytest.mark.skip(reason="The LLM model must be set to run this.")
+def test_inspector_execute():
+    llm_model = set_llm_model(DEFAULT_LLM_MODEL_CONFIG)
+    embeddings_model = DefaultEmbedding()
+
+    workflow = {
+        "nodes": [
+            {"name": "Paper"},
+            {
+                "name": "Contribution",
+                "query": "**Question**:\nList all contributions of the paper...",
+                "extract_from": ["1"],
+                "output_schema": {
+                    "type": "array",
+                    "description": "A list of contributions.",
+                    "item": [
+                        {
+                            "name": "original",
+                            "type": "string",
+                            "description": "The original contribution sentences.",
+                        },
+                        {
+                            "name": "summary",
+                            "type": "string",
+                            "description": "The summary of the contribution.",
+                        },
+                    ],
+                },
+            },
+            {
+                "name": "Challenge",
+                "query": "**Question**:\nPlease summarize some challenges in this paper...",
+                "extract_from": [],
+                "output_schema": {
+                    "type": "array",
+                    "description": "A list of challenges...",
+                    "item": [
+                        {
+                            "name": "name",
+                            "type": "string",
+                            "description": "The summarized name of the challenge.",
+                        },
+                        {
+                            "name": "description",
+                            "type": "string",
+                            "description": "The description of the challenge.",
+                        },
+                        {
+                            "name": "solution",
+                            "type": "string",
+                            "description": "The solution of the challenge.",
+                        },
+                    ],
+                },
+            },
+        ],
+        "edges": [
+            {"source": "Paper", "target": "Contribution"},
+            {"source": "Contribution", "target": "Challenge"},
+        ],
+    }
+
+    graph = create_inspector_graph(
+        workflow, llm_model, llm_model, embeddings_model.chroma_embedding_model()
+    )
+
+    persist_store = JsonFileStore(WF_OUTPUT_DIR)
+
+    inspector = PaperInspector(
+        "PaperInspector",
+        llm_model,
+        embeddings_model.chroma_embedding_model(),
+        graph,
+        persist_store,
+    )
+
+    state = {}
+    inputs = [
+        {"paper_file_path": "inputs/samples/graphrag.pdf"},
+        {"paper_file_path": "inputs/samples/huge-sigmod21.pdf"},
+    ]
+
+    for output in inspector.execute(state, iter(inputs)):
+        print(output)

@@ -33,11 +33,11 @@ class BaseNode:
 
     def pre_execute(self, state: Dict[str, Any] = None):
         """define pre-execution logic"""
-        logger.info(f"Executing node: {self.get_node_key()}")
+        logger.info(f"Executing node: {self.name}")
 
     def post_execute(self, output: Dict[str, Any] = None):
         """define post-execution logic"""
-        logger.info(f"Complete executing node: {self.get_node_key()}")
+        logger.info(f"Complete executing node: {self.name}")
 
     def execute(
         self, state: Dict[str, Any], input: DataGenerator = None

@@ -239,8 +239,6 @@ if __name__ == "__main__":
             # Append file names to the list
             filenames.append(file)
 
-    print(filenames)
-
     for file_name in filenames:
         download_foler = os.path.join(f"{WF_DOWNLOADS_DIR}", file_name.split(".")[0])
         fetcher = ArxivFetcher(download_folder=download_foler)
