@@ -18,6 +18,7 @@ const routes = [
   { path: '/modeling', component: React.lazy(() => import('./modeling')) },
   { path: '/importing', component: React.lazy(() => import('./importing')) },
   { path: '/querying', component: React.lazy(() => import('./query')) },
+  { path: '/explore', component: React.lazy(() => import('./explore')) },
 
   { path: '/setting', component: React.lazy(() => import('./setting')) },
   { path: '/job', component: React.lazy(() => import('./job')) },

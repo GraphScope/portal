@@ -264,4 +264,5 @@ export default {
   'Please click the button above to 「Create instance」': 'Please click the button above to 「Create instance」',
   'No graph available': 'No graph available',
   'Create instance': 'Create instance',
+  Explore: 'Explore',
 };
