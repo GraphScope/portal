@@ -1,8 +1,8 @@
 """
-  __init__.py for the graphs package
+  __init__.py for the workflow package
 """
 
-from .abstract_workflow import AbstractWorkflow
+from .base_workflow import BaseWorkflow
 from .survey_paper_reading import SurveyPaperReading
 
-__all__ = ["AbstractWorkflow", "SurveyPaperReading"]
+__all__ = ["BaseWorkflow", "SurveyPaperReading"]

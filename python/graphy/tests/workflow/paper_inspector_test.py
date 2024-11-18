@@ -4,7 +4,7 @@ torchtext.disable_torchtext_deprecation_warning()
 
 import pytest
 from unittest.mock import MagicMock, create_autospec
-from graph import BaseGraph
+from graph import BaseGraph, BaseEdge
 from graph.nodes import PaperInspector, BaseNode
 from graph.nodes.paper_reading_nodes import ProgressInfo, ExtractNode
 from graph.types import DataGenerator
@@ -22,9 +22,16 @@ def mock_graph():
     mock_node.name = "Paper"
     mock_node.get_query.return_value = ""
     mock_node.get_memory.return_value = ""
-    mock_node.get_node_key.return_value = "Paper"
     mock_node.execute.return_value = iter([{"result": "node_output"}])
+
+    mock_node2 = create_autospec(ExtractNode, instance=True)
+    mock_node2.name = "Extract"
+    mock_node2.get_query.return_value = ""
+    mock_node2.get_memory.return_value = ""
+    mock_node2.execute.return_value = iter([{"result": "node_output2"}])
     graph.add_node(mock_node)
+    graph.add_node(mock_node2)
+    graph.add_edge(BaseEdge(source="Paper", target="Extract"))
     return graph
 
 
@@ -56,29 +63,6 @@ def test_initialization(mock_paper_inspector, mock_graph):
     assert mock_paper_inspector.persist_store is not None
 
 
-def test_run_through(mock_paper_inspector):
-    """
-    Test the run_through method for processing a simple workflow.
-    """
-    input_data = {"paper_file_path": "inputs/samples/graphrag.pdf"}
-    state = {}
-    output = list(mock_paper_inspector.run_through(input_data, state))
-
-    # Ensure the expected results are returned
-    assert len(output) == 1
-    assert output[0] == {"result": "node_output"}
-
-    # Verify state and progress updates
-    data_id = list(state.keys())[0]
-    assert WF_STATE_CACHE_KEY in state[data_id]
-    assert WF_STATE_EXTRACTOR_KEY in state[data_id]
-    assert WF_STATE_MEMORY_KEY in state[data_id]
-    assert mock_paper_inspector.progress["Paper"].completed == 1
-    assert mock_paper_inspector.progress["total"].completed == 1
-    cached_response = state[data_id][WF_STATE_CACHE_KEY]["Paper"].get_response()
-    assert cached_response == {"result": "node_output"}
-
-
 def test_execute(mock_paper_inspector):
     """
     Test the execute method for processing input generator.
@@ -89,27 +73,17 @@ def test_execute(mock_paper_inspector):
 
     output_gen = mock_paper_inspector.execute(state, input_gen)
     # Fully consume the generator
-    outputs = [list(inner_gen) for inner_gen in output_gen]
+    outputs = list(output_gen)
+
+    data_id = list(state.keys())[0]
+    assert WF_STATE_CACHE_KEY in state[data_id]
+    assert WF_STATE_EXTRACTOR_KEY in state[data_id]
+    assert WF_STATE_MEMORY_KEY in state[data_id]
+    assert mock_paper_inspector.progress["Paper"].completed == 1
+    assert mock_paper_inspector.progress["Extract"].completed == 1
+    assert mock_paper_inspector.progress["total"].completed == 2
+    cached_response = state[data_id][WF_STATE_CACHE_KEY]["Paper"].get_response()
+    assert cached_response == {"result": "node_output"}
 
     assert len(outputs) == 1
-    assert len(outputs[0]) == 1  # `run_through` yields single outputs
-    assert outputs[0][0] == {"result": "node_output"}
-
-
-def test_run_through_with_error(mock_paper_inspector):
-    """
-    Test the run_through method for error handling.
-    """
-    mock_paper_inspector.graph.get_node("Paper").execute.side_effect = Exception(
-        "Test error"
-    )
-
-    input_data = {"paper_file_path": "inputs/samples/graphrag.pdf"}
-    state = {}
-
-    # Test with continue_on_error=False
-    with pytest.raises(ValueError, match="Error executing node 'Paper': Test error"):
-        output_gen = mock_paper_inspector.run_through(
-            input_data, state, continue_on_error=False
-        )
-        [list(inner_gen) for inner_gen in output_gen]
+    assert outputs[0] == {"result": "node_output"}

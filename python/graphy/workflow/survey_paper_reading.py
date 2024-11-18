@@ -1,19 +1,13 @@
-from typing import Dict, Any, Generator
-from workflow import AbstractWorkflow
-from extractor import PaperExtractor
-from graph.nodes.base_node import BaseNode, NodeCache, NodeType
-from graph.nodes.pdf_extract_node import PDFExtractNode
-from graph.nodes.paper_reading_nodes import ExtractNode, process_id
-from typing import Any, Dict, List
-from types import new_class
-from langchain_core.pydantic_v1 import Field, create_model
-from memory import PaperReadingMemoryManager
-from memory.llm_memory import VectorDBHierarchy
+from workflow import BaseWorkflow
+from models import LLM
 from db import PersistentStore
+from graph import BaseGraph
+from graph.nodes.paper_reading_nodes import (
+    PaperInspector,
+    create_inspector_graph,
+    ProgressInfo,
+)
 from config import (
-    WF_STATE_CACHE_KEY,
-    WF_STATE_MEMORY_KEY,
-    WF_STATE_EXTRACTOR_KEY,
     WF_DATA_DIR,
     WF_OUTPUT_DIR,
     WF_DOWNLOADS_DIR,
@@ -26,52 +20,31 @@ from config import (
 )
 
 import time
+import os
 from langchain_core.embeddings import Embeddings
 from langchain_core.language_models import BaseLLM
 
-import os
-import re
-import json
-import logging
-import copy
 
-logger = logging.getLogger(__name__)
-
-
-class SurveyPaperReading(AbstractWorkflow):
+class SurveyPaperReading(BaseWorkflow):
     def __init__(
         self,
-        llm_model: BaseLLM,
-        parser_model: BaseLLM,
+        id: str,
+        llm_model: LLM,
+        parser_model: LLM,
         embeddings_model: Embeddings,
-        paper_file_path: str,
         workflow,
         persist_store: PersistentStore = None,
-        max_token_size: int = 8192,
-        enable_streaming: bool = False,
     ):
-        self.nodes_num = 0
-
-        pdf_extractor = PaperExtractor(paper_file_path)
-        base_name = pdf_extractor.get_meta_data().get("title", "").lower()
-        if not base_name:  # if not title, use the file name
-            base_name = os.path.basename(paper_file_path).split(".")[0]
-
+        self.progress = {"total": ProgressInfo()}
+        graph = self._create_graph(workflow)
         super().__init__(
-            process_id(base_name),
+            id,
             llm_model,
             parser_model,
             embeddings_model,
+            graph,
             persist_store,
-            max_token_size,
-            enable_streaming,
         )
-        pdf_extractor.set_img_path(f"{WF_IMAGE_DIR}/{self.id}")
-        self.state[self.id][WF_STATE_MEMORY_KEY] = PaperReadingMemoryManager(
-            self.llm_model, embeddings_model, self.id, self.max_token_size
-        )
-        self.state[self.id][WF_STATE_EXTRACTOR_KEY] = pdf_extractor
-
         for folder in [
             WF_DATA_DIR,
             WF_OUTPUT_DIR,
@@ -86,170 +59,24 @@ class SurveyPaperReading(AbstractWorkflow):
             if not os.path.exists(folder):
                 os.makedirs(folder, exist_ok=True)
 
-        logger.info(
-            f"Starting processing paper: filename={paper_file_path}, id={self.id}"
-        )
-
     def _create_graph(self, workflow):
-        nodes_dict = {}
-        nodes = []
-        edges = []
-        start_node = "Paper"
-        output_dict = {"nodes": [], "edges": []}
-
-        for node in workflow["nodes"]:
-            if node["name"] == start_node:  # node_0 = pdf_extract
-                nodes_dict[node["name"]] = PDFExtractNode(
-                    self.embeddings_model,
-                    start_node,
-                )
-                output_dict["nodes"].append(
-                    {
-                        "node_name": "PDFExtractNode",
-                        "input": (
-                            "[embeddings_model]",
-                            start_node,
-                        ),
-                    }
-                )
-            else:
-                extract_node = ExtractNode.from_dict(
-                    node,
-                    self.llm_model,
-                    self.parser_model,
-                    self.max_token_size,
-                    self.enable_streaming,
-                )
-                nodes_dict[node["name"]] = extract_node
-                output_dict["nodes"].append(
-                    {
-                        "node_name": "ExtractNode",
-                        "input": (
-                            node["name"],
-                            "[llm_model]",
-                            "[parser_model]",
-                            extract_node.json_format,
-                            node["query"],
-                            "[max_token_size]",
-                            "[enable_streaming]",
-                            None,
-                            extract_node.where,
-                        ),
-                    }
-                )
-
-        for key, value in nodes_dict.items():
-            nodes.append(value)
-        self.nodes_num = len(nodes)
-        for edge in workflow["edges"]:
-            edges.append((nodes_dict[edge["source"]], nodes_dict[edge["target"]]))
-            if edge["source"] != start_node:
-                nodes_dict[edge["target"]].add_dependent_node(edge["source"])
-
-        # Add all nodes
-        for node in nodes:
-            self.add_node(node)
-
-        # Add all edges
-        for from_node, to_node in edges:
-            self.add_edge(from_node.name, to_node.name)
-            output_dict["edges"].append((from_node.name, to_node.name))
-
-        self.current_node = nodes_dict[start_node].name
-        output_dict["start_node"] = self.current_node
-        logger.info(json.dumps(self.to_dict(), indent=4))
-
-        return output_dict
-
-    def _load_graph(self, workflow_graph: dict):
-        # [{'node_name': str, 'input': (args)}]
-        nodes = workflow_graph.get("nodes", [])
-        # [(name, name), (name, name), ...]
-        edges = workflow_graph.get("edges", [])
-        start_node_name = workflow_graph.get("start_node", "")
-        start_node = "Paper"
-
-        for node in nodes:
-            parsed_input = tuple(
-                (
-                    getattr(self, item[1:-1])
-                    if isinstance(item, str)
-                    and item.startswith("[")
-                    and item.endswith("]")
-                    else item
-                )
-                for item in node["input"]
+        graph = BaseGraph()
+        # the paper reading has just one single node of PaperInspector
+        has_navigator = workflow.get("has_navigator", False)
+        if not has_navigator:
+            inspector_node = PaperInspector(
+                "PaperInspector",
+                self.llm_model,
+                self.embeddings_model,
+                create_inspector_graph(
+                    workflow, self.llm_model, self.parser_model, self.embeddings_model
+                ),
+                self.persist_store,
             )
-            cls_name = node["node_name"]
-            if cls_name == "PDFExtractNode":
-                self.add_node(PDFExtractNode(*parsed_input))
-            elif cls_name == "ExtractNode":
-                self.add_node(ExtractNode(*parsed_input))
-
-        self.nodes_num = len(nodes)
-
-        # Add all edges
-        for edge in edges:
-            self.add_edge(edge[0], edge[1])
-
-        self.current_node = start_node_name
-        logger.info(json.dumps(self.to_dict(), indent=4))
-
-    def execute_node(
-        self, node_name: str, **kwargs
-    ) -> Generator[Dict[str, Any], None, None]:
-        """
-        Execute a node in the workflow, utilizing persistent results if available.
-
-        Args:
-            node_name (str): The name of the node to execute.
-
-        Yields:
-            dict: The output of the node execution or persistent results.
-        """
-        logger.info(f"Starting executing Node: {node_name}")
-        start_time = time.time()
-        node = self.get_node(node_name)
-        # Fetch persistent results if they exist
-        persist_results = self.get_persistent_state(node.get_node_key())
-        last_output = None
-        state = self.state.get(self.id, {})
-
-        if persist_results:
-            logger.info(f"Found persistent results for Node: {node_name}.")
-            last_output = persist_results
-            yield persist_results
+            graph.add_node(inspector_node)
+            self.progress["PaperInspector"] = ProgressInfo(0, 0)
         else:
-            # Check if precursor nodes need to be executed first
-            precursor_nodes = self.get_precursor_nodes(node_name)
-            if precursor_nodes:
-                for precursor_node in precursor_nodes:
-                    n = self.get_node(precursor_node)
-            if node:
-                node.pre_execute(state)
-                try:
-                    for output in node.execute(state):
-                        last_output = output
-                        yield output
-                except StopIteration:
-                    logger.debug(
-                        f"No more streaming results for node: {node.get_node_key()}"
-                    )
+            # TODO: add navigator node
+            pass
 
-        if last_output:
-            node.post_execute(last_output)
-            node_caches: dict = state.get(WF_STATE_CACHE_KEY, {})
-            node_key = node.get_node_key()
-            node_cache: NodeCache = node_caches.setdefault(
-                node_key, NodeCache(node_key)
-            )
-            if node_cache:
-                node_cache.add_chat_cache("", last_output)
-
-            # set the current node to the executed node
-            self.set_current_node(node_name)
-
-        end_time = time.time()
-        logger.info(
-            f"Completed executing node: {node_name} in {end_time - start_time} seconds"
-        )
+        return graph

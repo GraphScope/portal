@@ -31,12 +31,6 @@ class BaseNode:
         self.name = name
         self.node_type = node_type
 
-    def set_name(self, new_name):
-        self.name = new_name
-
-    def get_node_key(self) -> str:
-        return self.name
-
     def pre_execute(self, state: Dict[str, Any] = None):
         """define pre-execution logic"""
         logger.info(f"Executing node: {self.get_node_key()}")

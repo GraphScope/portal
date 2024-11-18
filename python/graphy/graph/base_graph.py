@@ -9,18 +9,35 @@ class BaseGraph:
     """
 
     def __init__(self):
+        self.node_names = []
         self.nodes: Dict[str, BaseNode] = {}
         self.edges: Dict[str, BaseEdge] = {}
         self.adjacency_list: Dict[str, List[str]] = {}
 
     def get_node_names(self) -> List[str]:
         """Returns a list of all node names in the graph."""
-        return list(self.nodes.keys())
+        return self.node_names
+
+    def get_first_node_name(self) -> None | str:
+        """Returns the name of the first node in the graph."""
+        if not self.node_names:
+            return None
+        else:
+            return self.node_names[0]
+
+    def get_first_node(self) -> None | BaseNode:
+        """Returns the first node in the graph."""
+        first_node_name = self.get_first_node_name()
+        if first_node_name:
+            return self.get_node(first_node_name)
+        else:
+            return None
 
     def add_node(self, node: BaseNode):
         """Adds a node to the graph."""
         if node.name in self.nodes:
             raise ValueError(f"Node {node.name} already exists.")
+        self.node_names.append(node.name)
         self.nodes[node.name] = node
         self.adjacency_list[node.name] = []
 
@@ -37,6 +54,7 @@ class BaseGraph:
             self.edges.pop(edge_name, None)
         del self.adjacency_list[node_name]
         del self.nodes[node_name]
+        self.node_names.remove(node_name)
 
         # Remove any edges pointing to this node
         for source, edges in self.adjacency_list.items():
@@ -65,14 +83,15 @@ class BaseGraph:
         """Returns a list of edges adjacent to a given node."""
         return [self.edges[edge] for edge in self.adjacency_list.get(node_name, [])]
 
-    def get_adjacent_nodes(self, node_name: str) -> List[str]:
+    def get_adjacent_nodes(self, node_name: str) -> List[BaseNode]:
         """Returns a list of edges adjacent to a given node."""
         return [
-            self.edges[edge].target for edge in self.adjacency_list.get(node_name, [])
+            self.get_node(self.edges[edge].target)
+            for edge in self.adjacency_list.get(node_name, [])
         ]
 
     def nodes_count(self) -> int:
-        return len(self.nodes)
+        return len(self.node_names)
 
     def edges_count(self) -> int:
         return len(self.edges)
