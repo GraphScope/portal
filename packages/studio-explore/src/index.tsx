@@ -1,9 +1,3 @@
-import * as React from 'react';
-
-interface IExploreProps {}
-
-const Explore: React.FunctionComponent<IExploreProps> = props => {
-  return <div>Explore</div>;
-};
+import Explore from './app';
 
 export default Explore;
