@@ -1,7 +1,7 @@
 from enum import Enum, auto
 from typing import Dict, List, Any
 
-from .types import DataGenerator
+from graph.types import DataGenerator
 
 
 class EdgeType(Enum):

@@ -15,6 +15,7 @@ from config import (
     WF_UPLOADS_DIR,
     WF_VECTDB_DIR,
     WF_WEBDATA_DIR,
+    WF_PDF_DOWNLOAD_DIR,
 )
 
 from langchain_core.embeddings import Embeddings
@@ -43,6 +44,7 @@ class SurveyPaperReading(BaseWorkflow):
             WF_UPLOADS_DIR,
             WF_VECTDB_DIR,
             WF_WEBDATA_DIR,
+            WF_PDF_DOWNLOAD_DIR,
         ]:
             if not os.path.exists(folder):
                 os.makedirs(folder, exist_ok=True)

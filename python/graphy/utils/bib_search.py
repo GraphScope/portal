@@ -835,19 +835,19 @@ class BibSearchArxiv(BibSearch):
         file_name = re.sub(r"[^a-zA-Z0-9]", "_", best_match.title.strip())
 
         logger.debug(f"download to {download_path}")
-        download_file_name = f"arxiv_{file_name}.pdf"
+        download_file_name = f"arxiv_{file_name}.pdf".lower()
         logger.debug(f"download to file named {file_name} ({download_file_name})")
 
         try:
             best_match.download_pdf(
                 dirpath=download_path,
-                filename=f"arxiv_{file_name}.pdf",
+                filename=download_file_name,
             )
         except Exception as e:
             logger.error(f"{e}")
             return [(False, "")]
 
-        return [(True, os.path.join(download_path, f"arxiv_{file_name}.pdf"))]
+        return [(True, os.path.join(download_path, download_file_name))]
 
     def download_by_wget(self, best_match, download_folder):
         file_name = re.sub(r"[^a-zA-Z0-9]", "_", best_match.title.strip())
