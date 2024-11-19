@@ -6,7 +6,7 @@ import { getSchemaData } from './web-worker';
 import { Button } from 'antd';
 import localforage from 'localforage';
 import { FormattedMessage } from 'react-intl';
-import { useKuzuGraph, createKuzuWasmGraph } from '@graphscope/studio-driver';
+// import { useKuzuGraph, createKuzuWasmGraph } from '@graphscope/studio-driver';
 
 interface IImportFromCSVProps {}
 
@@ -159,10 +159,10 @@ const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
         },
       ],
     };
-    createKuzuWasmGraph(datasetId, {
-      schema: _schema,
-      files: csvFiles,
-    });
+    // createKuzuWasmGraph(datasetId, {
+    //   schema: _schema,
+    //   files: csvFiles,
+    // });
     updateState(preState => {
       return {
         ...preState,
