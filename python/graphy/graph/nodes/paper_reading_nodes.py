@@ -426,8 +426,8 @@ class PaperInspector(BaseNode):
                     if current_node.get_query():
                         input_query = f"**************QUERY***************: \n {current_node.get_query()} \
                             **************MEMORY**************: \n {current_node.get_memory()}"
-                        self.persist_store.save_query(
-                            data_id, current_node.name, input_query
+                        self.persist_store.save_data(
+                            data_id, f"query_{current_node.name}", input_query
                         )
                     if current_node.name == first_node.name and parent_id:
                         edges = self.persist_store.get_state(data_id, "_Edges")
