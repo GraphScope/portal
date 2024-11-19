@@ -9,6 +9,7 @@ from graph.nodes.paper_reading_nodes import (
 )
 from utils.profiler import profiler
 from config import (
+    WF_STATE_CACHE_KEY,
     WF_OUTPUT_DIR,
     WF_DOWNLOADS_DIR,
     WF_IMAGE_DIR,
@@ -22,7 +23,6 @@ from langchain_core.embeddings import Embeddings
 import time
 import os
 import logging
-
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +55,7 @@ class SurveyPaperReading(BaseWorkflow):
             graph,
             persist_store,
         )
+        self.state["processed_data"] = set(persist_store.get_total_data())
 
     def _create_graph(
         self, workflow_dict, llm_model, parser_model, embeddings_model, persist_store

@@ -47,8 +47,7 @@ class JsonFileStore(PersistentStore):
         with self.lock:
             current_folder = self.use(name)
             # Create a safe file name
-            file_name = re.sub(r"[^a-zA-Z0-9]", "_", node_key.strip())
-            file_path = os.path.join(current_folder, f"{file_name}.json")
+            file_path = os.path.join(current_folder, f"{node_key}.json")
             current_folder = self.use(name)
             # Save the state to a JSON file
             with open(file_path, "w+") as json_file:
@@ -58,8 +57,7 @@ class JsonFileStore(PersistentStore):
         with self.lock:
             current_folder = self.use(name)
             # Create a safe file name
-            file_name = re.sub(r"[^a-zA-Z0-9]", "_", node_key.strip())
-            file_path = os.path.join(current_folder, f"{file_name}.json")
+            file_path = os.path.join(current_folder, f"{node_key}.json")
 
             if not os.path.exists(file_path):
                 return None
@@ -76,8 +74,7 @@ class JsonFileStore(PersistentStore):
         with self.lock:
             current_folder = self.use(name)
             # Create a safe file name
-            file_name = re.sub(r"[^a-zA-Z0-9]", "_", node_key.strip())
-            file_name = "query_" + file_name
+            file_name = "query_" + node_key
             file_path = os.path.join(current_folder, f"{file_name}.txt")
 
             # Save the state to a JSON file
