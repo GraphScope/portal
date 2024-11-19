@@ -75,9 +75,3 @@ class Timer:
             return -1
 
         self.record_times[name].reset()
-
-    def print(self):
-        return
-        print("The time costs are as follows: ")
-        for k, v in self.record_times.items():
-            print(k + ": " + str(v.get_interval()))

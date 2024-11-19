@@ -315,7 +315,6 @@ class RetrievedMemory:
         chunk_num_est = math.floor(max_token_num / self.chunk_size)
         output = self.search(query, where, chunk_num_est)
 
-        # print(where)
         # print("========= GET MEMORY OUTPUT =========")
         # print(output)
 
@@ -475,8 +474,6 @@ class PaperReadingMemoryManager(BaseRuntimeMemoryManager):
             max_token_num (int): The maximum number of tokens to be retrieved.
             distance_thresh (float): The threshold for the distance of the retrieved memory.
         """
-        print(where_document)
-
         documents, metadatas, distances = self.retrieved_memory.get_memory_info(
             query, where_document, max_token_num, distance_thresh
         )

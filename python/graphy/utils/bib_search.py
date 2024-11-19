@@ -6,6 +6,7 @@ import logging
 import difflib
 import shutil
 import uuid
+import traceback
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -122,8 +123,8 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
-        print("======== WEB DATA ==========")
-        print(cur_web_data_dir)
+        logger.debug("======== WEB DATA ==========")
+        logger.debug(cur_web_data_dir)
 
         os.makedirs(cur_web_data_dir, exist_ok=True)
 
@@ -146,7 +147,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             with BibSearchGoogleScholar.file_lock:
                 self.driver_version = self.get_driver_version()
                 if not self.driver_version:
-                    print("===== GET FROM INSTALL ======")
+                    logger.debug("===== GET FROM INSTALL ======")
                     need_download = True
                     driver_manager = ChromeDriverManager(
                         cache_manager=DriverCacheManager(valid_range=1),
@@ -158,13 +159,13 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                     self.driver_version = driver_version
                     chrome_driver = driver_manager.install()
         if not need_download:
-            print("===== GET FROM CACHE ======")
+            logger.debug("===== GET FROM CACHE ======")
             chrome_driver = ChromeDriverManager(
                 driver_version=self.driver_version,
                 cache_manager=DriverCacheManager(valid_range=1),
             ).install()
 
-        print(chrome_driver)
+        logger.debug(chrome_driver)
         service = Service(chrome_driver)
 
         logger.info("FINISH INSTALLING chrome driver")
@@ -189,13 +190,13 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         try:
             shutil.rmtree(webdata)
         except OSError as e:
-            print(f"Error: {e}")
+            traceback.print_exc()
 
     def _get_citations(self, link):
         try:
             citation_driver, cur_web_data_dir = self._init_driver(link)
         except Exception as e:
-            print(f"{e}")
+            traceback.print_exc()
 
         gathered_citations = {}
 
@@ -208,7 +209,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                     link=en_link,
                 )
             except Exception as e:
-                print(f"{e}")
+                traceback.print_exc()
 
             time.sleep(0.1)
 
@@ -450,7 +451,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 succ, file_path = self.download(driver, title, result, download_path)
 
                 if not succ:
-                    print(f"Found {title}, but download failed.")
+                    logger.warning(f"Found {title}, but download failed.")
                 outputs.append((succ, file_path))
 
             if len(outputs) >= num_per_page:
@@ -524,18 +525,17 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 cite_directory = cite_directory.replace("{id}", paper_id)
 
                 try:
-                    print("start to find element")
+                    logger.debug("start to find element")
                     element = WebDriverWait(driver, 10).until(
                         EC.presence_of_element_located(
                             (By.CSS_SELECTOR, ".gs_or_cit.gs_or_btn.gs_nph")
                         )
                     )
 
-                    print(f"find element: {element}")
+                    logger.debug(f"find element: {element}")
                     element.click()
                 except Exception as e:
-                    print("click error")
-                    print(f"{e}")
+                    traceback.print_exc()
 
                 for i in range(100):
                     try:
@@ -556,7 +556,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
         # bib = None
         try:
-            print(f"inside: {cite_directory}")
+            logger.debug(f"inside: {cite_directory}")
             gathered_citations = self._get_citations(cite_directory)
             bib_info = self._search_by_object(gathered_citations)
             paper_id = self._get_paper_id(bib_info)
@@ -661,8 +661,8 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         file_name = re.sub(r"[^a-zA-Z0-9]", "_", title.strip())
         file_path = os.path.join(download_path, f"scholar_{file_name}.pdf")
 
-        print("************ DOWNLOADING **************")
-        print(file_path)
+        logger.debug("************ DOWNLOADING **************")
+        logger.debug(file_path)
 
         try:
             pdf_link: str = result.css_first(".gs_or_ggsm a").attrs["href"]
@@ -678,14 +678,16 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 logger.info(f"Downloaded: {file_name}")
                 return True, file_path
             else:
-                print(f"Failed to download. Status code: {response.status_code}")
+                logger.warning(
+                    f"Failed to download. Status code: {response.status_code}"
+                )
                 with open("fail_log.log", "a") as f:
                     f.write(file_path + "\n")
                     f.write(pdf_link + "\n")
                     f.write("STATUS CODE: " + str(response.status_code) + "\n")
                     f.write("\n")
         except Exception as e:
-            logger.info(f"Download failed: {e}")
+            logger.error(f"Download failed: {e}")
             with open("fail_log.log", "a") as f:
                 f.write(file_path + "\n")
                 f.write(pdf_link + "\n")
@@ -717,7 +719,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         output_list = []
 
         found_paper = False
-        print("======= NEW QUERIES ==============", new_queries)
+        logger.debug("======= NEW QUERIES ==============", new_queries)
         for query in new_queries:
             # parse all pages
             if pagination:
@@ -832,9 +834,9 @@ class BibSearchArxiv(BibSearch):
     def download_by_object(self, best_match, download_path):
         file_name = re.sub(r"[^a-zA-Z0-9]", "_", best_match.title.strip())
 
-        print(f"download to {download_path}")
+        logger.debug(f"download to {download_path}")
         download_file_name = f"arxiv_{file_name}.pdf"
-        print(f"download to file named {file_name} ({download_file_name})")
+        logger.debug(f"download to file named {file_name} ({download_file_name})")
 
         try:
             best_match.download_pdf(

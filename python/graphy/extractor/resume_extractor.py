@@ -694,7 +694,6 @@ class ResumeExtractor(PDFExtractor):
             return meta
 
     def extract_all(self) -> Iterable[Document]:
-        print(self.get_meta_data())
         return list(self.extract_text(get_rich_info=False, get_tables=False))
 
     def cleanup(self):

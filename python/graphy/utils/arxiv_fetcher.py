@@ -9,6 +9,7 @@ import os
 import logging
 import time
 import unicodedata
+import traceback
 
 from .bib_search import BibSearchArxiv, BibSearchGoogleScholar
 from requests.exceptions import ProxyError, ConnectionError, RequestException
@@ -124,18 +125,12 @@ class ArxivFetcher:
                                 best_match = paper
                             if similarity > 0.9:
                                 break
-                    except ProxyError as e:
-                        print(f"ProxyError: {e}")
-                    except ConnectionError as e:
-                        print(f"ConnectionError: {e}")
-                    except RequestException as e:
-                        print(f"RequestException: {e}")
                     except Exception as e:
-                        print(f"Exception: {e}")
+                        traceback.print_exc()
 
                 if highest_similarity > 0.9 or found_result:
                     break
-                print(f"Not Found: {query}")
+                logger.warn(f"Not Found: {query}")
 
             if highest_similarity > 0.9:
                 break
@@ -169,7 +164,7 @@ class ArxivFetcher:
 
             return download_list
         else:
-            print(f"Failed to fetch paper with arxiv: {name}")
+            logger.warn(f"Failed to fetch paper with arxiv: {name}")
             return []
 
     def fetch_paper(self, name: str, max_results):

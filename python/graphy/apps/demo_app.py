@@ -1444,7 +1444,7 @@ class DemoApp:
                 )
 
             except Exception as e:
-                print(str(e))
+                traceback.print_exc()
                 return create_error_response(str(e)), 500
 
         @self.app.route("/api/llm/report/generate", methods=["POST"])

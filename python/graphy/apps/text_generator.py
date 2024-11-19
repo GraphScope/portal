@@ -9,6 +9,7 @@ import json
 import logging
 import copy
 import re
+import traceback
 
 from config import (
     WF_UPLOADS_DIR,
@@ -158,7 +159,7 @@ class ReportGenerator(TextGenerator):
                         category_id
                     ]
         except Exception as e:
-            print(f"Error: {e}")
+            traceback.print_exc()
             category_info = {}
             new_categorized_papers = {}
             paper_info = {}
@@ -203,9 +204,8 @@ class ReportGenerator(TextGenerator):
                 + "\n"
             )
 
-            print("========= to add paper slot =========")
-            print(paper_id_list)
-            print(self.paper_info)
+            logger.debug("========= to add paper slot =========")
+            logger.debug(self.paper_info)
             paper_slot = ""
             for paper_id in paper_id_list:
                 paper_slot += (
@@ -290,8 +290,6 @@ class ReportGenerator(TextGenerator):
         }
 
     def refine_subsection(self):
-        # print("Before all keys processed.")
-        # print(self.categorized_papers)
         new_categorized_papers = {}
         paper_appear_times = {}
         for paper_id in self.paper_info:
@@ -336,8 +334,6 @@ class ReportGenerator(TextGenerator):
             del self.categorized_papers[min_key]
 
         self.categorized_papers = new_categorized_papers
-        # print("All keys processed.")
-        # print(self.categorized_papers)
 
     def append_bib_text(self, text):
         bib_text = ""
@@ -352,7 +348,6 @@ class ReportGenerator(TextGenerator):
             else:
                 cited_papers.add(match.strip())
 
-        # print(f"CITED PAPERS ARE {cited_papers}")
         logger.debug(f"CITED PAPERS ARE {cited_papers}")
 
         for pid, details in self.paper_info.items():
@@ -596,11 +591,11 @@ if __name__ == "__main__":
 
     text_generator = ReportGenerator(llm_model_dashscope)
 
-    print("========== GENERATE REPORT ===========")
-    print(generate_report(input_data, text_generator))
-    print("========== PREPARE REPORT ===========")
-    print(prepare_report(input_data, text_generator))
-    print("========== OVER ===========")
+    logger.debug("========== GENERATE REPORT ===========")
+    logger.debug(generate_report(input_data, text_generator))
+    logger.debug("========== PREPARE REPORT ===========")
+    logger.debug(prepare_report(input_data, text_generator))
+    logger.debug("========== OVER ===========")
 
     required_fields = ["data", "groupby"]
     info = input_data["data"]
@@ -618,12 +613,6 @@ if __name__ == "__main__":
 
     with open("prompt_output_" + input_data["groupby"] + ".log", "w") as f:
         f.write(json.dumps(output_dict, indent=4, sort_keys=True))
-
-    # result_generator = text_generator.execute_baseline_streaming()
-
-    # for result in result_generator:
-    #     print("===== STREAMING OUTPUT =====")
-    #     print(result)
 
     result = text_generator.execute()
     result_baseline = text_generator.execute_baseline()
