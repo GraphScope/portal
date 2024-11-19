@@ -364,7 +364,6 @@ class PaperInspector(BaseNode):
         state,
         parent_id=None,
         continue_on_error: bool = True,
-        is_persist: bool = True,
         skipped_nodes: List[str] = [],
     ):
         """
@@ -381,6 +380,7 @@ class PaperInspector(BaseNode):
 
         first_node = self.graph.get_first_node()
         next_nodes = [first_node]
+        is_persist = True
 
         while next_nodes:
             current_node = next_nodes.pop()  # Run in DFS order
@@ -393,10 +393,19 @@ class PaperInspector(BaseNode):
             last_output = None
             try:
                 current_node.pre_execute(state)
-                # Execute the current node
-                output_generator = current_node.execute(state)
-                for output in output_generator:
-                    last_output = output
+                persist_results = self.persist_store.get_state(
+                    data_id, current_node.name
+                )
+                if persist_results:
+                    logger.info(f"Found persisted data for node '{current_node.name}'")
+                    last_output = persist_results
+                    is_persist = False
+                else:
+                    # Execute the current node
+                    output_generator = current_node.execute(state)
+                    for output in output_generator:
+                        last_output = output
+                    is_persist = True
             except Exception as e:
                 logger.error(f"Error executing node '{current_node.name}': {e}")
                 if continue_on_error:
@@ -428,7 +437,7 @@ class PaperInspector(BaseNode):
                                 edges.append(f"{parent_id}|{curr_id}")
                             else:
                                 edges = [f"{parent_id}|{curr_id}"]
-                        self.persist_store.save_state(data_id, "_Edges", edges)
+                            self.persist_store.save_state(data_id, "_Edges", edges)
 
                 # Cache the output
                 if last_output:
@@ -478,7 +487,7 @@ class PaperInspector(BaseNode):
                 data_id = process_id(base_name)
                 pdf_extractor.set_img_path(f"{WF_IMAGE_DIR}/{data_id}")
                 first_node_name = self.graph.get_first_node_name()
-                if data_id in state["processed_data"]:
+                if self.persist_store.get_state(data_id, "_DONE"):
                     # This means that the data has already processed
                     logger.info(f"Input with ID '{data_id}' already processed.")
                     yield self.persist_store.get_state(data_id, first_node_name)
@@ -505,6 +514,12 @@ class PaperInspector(BaseNode):
 
             self.progress["total"].add(ProgressInfo(self.graph.nodes_count(), 0))
             self.run_through(data_id, state[data_id], parent_id)
+            # Mark the data as DONE
+            if (
+                len(self.persist_store.get_total_states(data_id))
+                == self.graph.nodes_count()
+            ):
+                self.persist_store.save_state(data_id, "_DONE", {"done": True})
 
             yield state[data_id][WF_STATE_CACHE_KEY][first_node_name].get_response()
 

@@ -55,7 +55,6 @@ class SurveyPaperReading(BaseWorkflow):
             graph,
             persist_store,
         )
-        self.state["processed_data"] = set(persist_store.get_total_data())
 
     def _create_graph(
         self, workflow_dict, llm_model, parser_model, embeddings_model, persist_store

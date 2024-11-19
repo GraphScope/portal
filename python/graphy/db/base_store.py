@@ -108,7 +108,7 @@ class JsonFileStore(PersistentStore):
                 json_items = [
                     os.path.splitext(item)[0]  # Get the file name without extension
                     for item in items
-                    if item.endswith(".json") and not item.startswith(".")
+                    if item.endswith(".json") and not item.startswith("_")
                 ]
                 return json_items
             except Exception as e:
