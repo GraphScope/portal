@@ -8,6 +8,7 @@ from config import (
     WF_STATE_MEMORY_KEY,
     WF_STATE_EXTRACTOR_KEY,
     WF_STATE_CACHE_KEY,
+    WF_STATE_PROGRESS_KEY,
     WF_IMAGE_DIR,
 )
 from extractor import PaperExtractor
@@ -353,14 +354,9 @@ class PaperInspector(BaseNode):
         self.embeddings_model = embeddings_model
         self.persist_store = persist_store
         self.progress = {"total": ProgressInfo(0, 0)}
-        for node in self.graph.get_node_names():
-            self.progress[node] = ProgressInfo(0, 0)
 
-    def get_progress(self, name: str = "") -> ProgressInfo:
-        if name:
-            return self.progress.get(name, ProgressInfo(0, 0))
-        else:
-            return self.progress["total"]
+    def get_progress(self) -> ProgressInfo:
+        return self.progress["total"]
 
     def run_through(
         self,
@@ -389,7 +385,8 @@ class PaperInspector(BaseNode):
         while next_nodes:
             current_node = next_nodes.pop()  # Run in DFS order
             if current_node.name in skipped_nodes:
-                self.progress[current_node.name].complete()
+                state["progress"][current_node.name].complete()
+                state["progress"]["total"].complete()
                 self.progress["total"].complete()
                 continue
 
@@ -408,7 +405,8 @@ class PaperInspector(BaseNode):
                     raise ValueError(f"Error executing node '{current_node.name}': {e}")
             finally:
                 # Complete progress tracking
-                self.progress[current_node.name].complete()
+                state["progress"][current_node.name].complete()
+                state["progress"]["total"].complete()
                 self.progress["total"].complete()
 
                 # Persist the output and queries if applicable
@@ -463,7 +461,6 @@ class PaperInspector(BaseNode):
         """
 
         for input_data in input:
-
             paper_file_path = input_data.get("paper_file_path", None)
             parent_id = input_data.get("parent_id", None)
             logger.info(f"Executing {self.name} for paper: {paper_file_path}")
@@ -480,6 +477,17 @@ class PaperInspector(BaseNode):
                     base_name = os.path.basename(paper_file_path).split(".")[0]
                 data_id = process_id(base_name)
                 pdf_extractor.set_img_path(f"{WF_IMAGE_DIR}/{data_id}")
+                first_node_name = self.graph.get_first_node_name()
+                if data_id in state["processed_data"]:
+                    # This means that the data has already processed
+                    logger.info(f"Input with ID '{data_id}' already processed.")
+                    yield self.persist_store.get_state(data_id, first_node_name)
+                    continue
+                progress = {}
+                progress["total"] = ProgressInfo(self.graph.nodes_count(), 0)
+                for node in self.graph.get_node_names():
+                    progress[node] = ProgressInfo(1, 0)
+
                 state[data_id] = {
                     WF_STATE_CACHE_KEY: {},
                     WF_STATE_EXTRACTOR_KEY: pdf_extractor,
@@ -489,25 +497,16 @@ class PaperInspector(BaseNode):
                         data_id,
                         self.llm_model.context_size,
                     ),
+                    WF_STATE_PROGRESS_KEY: progress,
                 }
             except Exception as e:
                 logger.error(f"Error initializing PaperExtractor: {e}")
                 continue
 
             self.progress["total"].add(ProgressInfo(self.graph.nodes_count(), 0))
-            for node in self.graph.get_node_names():
-                self.progress[node].add(ProgressInfo(1, 0))
-
             self.run_through(data_id, state[data_id], parent_id)
-            first_node_name = self.graph.get_first_node_name()
 
-            # Debugging
-            response = state[data_id][WF_STATE_CACHE_KEY][
-                first_node_name
-            ].get_response()
-
-            # Ensure the correct response is yielded
-            yield response
+            yield state[data_id][WF_STATE_CACHE_KEY][first_node_name].get_response()
 
     def __repr__(self):
         return f"Node: {self.name}, Type: {self.node_type}, Graph: {self.graph}"

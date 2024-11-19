@@ -158,11 +158,7 @@ def test_get_workflow_config(setup_dataset):
     assert len(data["data"]["workflow_json"]["edges"]) == 2
 
 
-@pytest.mark.skipif(
-    not os.environ.get("DASHSCOPE_API_KEY", "")
-    and not os.environ.get("OPEN_API_KEY", ""),
-    reason="requires LLM connection",
-)
+@pytest.mark.skip(reason="requires LLM connection")
 def test_extract(setup_dataset):
     response = requests.post(
         f"{BASE_URL}/api/dataset/extract",
@@ -172,11 +168,7 @@ def test_extract(setup_dataset):
     assert response.status_code == 200
 
 
-@pytest.mark.skipif(
-    not os.environ.get("DASHSCOPE_API_KEY", "")
-    and not os.environ.get("OPEN_API_KEY", ""),
-    reason="requires LLM connection",
-)
+@pytest.mark.skip(reason="requires LLM connection")
 def test_get_extracted_data(setup_dataset):
     response = requests.get(
         f"{BASE_URL}/api/dataset/extract", params={"dataset_id": DATASET_ID}

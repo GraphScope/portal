@@ -17,6 +17,7 @@ work_dir = tempfile.gettempdir()
 WF_STATE_CACHE_KEY = "caches"
 WF_STATE_MEMORY_KEY = "memory_manager"
 WF_STATE_EXTRACTOR_KEY = "pdf_extractor"
+WF_STATE_PROGRESS_KEY = "progress"
 WF_DATA_DIR = os.path.join(work_dir, "graphyourdata")
 WF_OUTPUT_DIR = os.path.join(WF_DATA_DIR, "output")
 WF_VECTDB_DIR = os.path.join(WF_DATA_DIR, "vectdb")
