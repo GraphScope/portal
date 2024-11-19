@@ -36,7 +36,7 @@
     "@graphscope/studio-graph": "workspace:*",
     "@graphscope/studio-importor": "workspace:*",
     "@graphscope/studio-query": "workspace:*",
-    "@kuzu/kuzu-wasm": "0.6.2-dev",
+    "@kuzu/kuzu-wasm": "0.7.0",
     "antd": "^5.21.0",
     "d3-force": "latest",
     "html-to-image": "^1.11.11",
