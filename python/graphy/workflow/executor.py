@@ -1,11 +1,13 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any
+from typing import Dict, Any, Union
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from queue import Queue
 from typing import Dict, Any, List, Generator
 
-from graph.types import DataType
+from graph.types import DataType, DataGenerator
+from graph.nodes import BaseNode
+from graph.edges import BaseEdge
 
 import asyncio
 import logging
@@ -59,6 +61,24 @@ class WorkflowExecutor(ABC):
         pass
 
 
+class Task:
+    """
+    Represents a unit of work in the workflow execution.
+
+    Attributes:
+        data (DataGenerator): The input data for the task.
+        executor (Union[BaseNode, BaseEdge, str]): The executor responsible for processing the task.
+            Can be a node name (str), a BaseNode, or a BaseEdge.
+    """
+
+    def __init__(self, data: DataGenerator, executor: Union[BaseNode, BaseEdge]):
+        self.data = data  # Input data for the task
+        self.executor = executor  # Executor (node/edge) for this task
+
+    def __repr__(self):
+        return f"Task(executor={self.executor}, data={list(self.data)[:5]}...)"  # Limit repr for large data
+
+
 class ThreadPoolWorkflowExecutor(WorkflowExecutor):
     """
     WorkflowExecutor implementation using ThreadPoolExecutor with asynchronous execution.
@@ -82,11 +102,11 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
         state = self.workflow.state
 
         # Add all initial inputs to the task queue with the first node
-        first_node = self.workflow.graph.get_first_node_name()
+        first_node = self.workflow.graph.get_first_node()
         if not first_node:
             raise ValueError("No nodes found in the workflow graph.")
         for input_data in initial_inputs:
-            await self.task_queue.put((iter([input_data]), first_node))
+            await self.task_queue.put(Task(iter([input_data]), first_node))
 
         # Start processing tasks asynchronously
         tasks = [
@@ -109,39 +129,40 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
             state (Dict[str, Any]): The current workflow state.
         """
         while not self.task_queue.empty():
-            input_gen, target = await self.task_queue.get()
-            print(f"======= GET TASK {target} ========")
+            task = await self.task_queue.get()
+            logger.debug(f"======= GET TASK {task.executor} ========")
 
-            if isinstance(target, str):  # Node
-                logger.info(f"Executing node: {target}")
-                node = self.workflow.graph.get_node(target)
-                assert node, f"Node {target} not found in the graph."
+            if isinstance(task.executor, BaseNode):  # Node
+                node = task.executor
+                logger.info(f"Executing node: {node}")
+                if not node:
+                    raise ValueError(f"Node not found in the graph.")
 
                 # Execute the node in the thread pool
-                results = await asyncio.to_thread(
-                    self._execute_node_task, node, input_gen, state
+                downstream_tasks = await asyncio.to_thread(
+                    self._execute_node_task, node, task.input, state
                 )
 
                 # Add downstream tasks to the queue
-                for result in results:
-                    logger.info(f"ADD EDGE TASK {result}")
-                    await self.task_queue.put(result)
+                for down_task in downstream_tasks:
+                    logger.debug(f"ADD EDGE TASK {down_task}")
+                    await self.task_queue.put(down_task)
 
-            else:  # Edge
-                edge = target
+            elif isinstance(task.executor, BaseEdge):  # Edge
+                edge = task.executor
                 logger.info(f"Executing edge: {edge.name}")
 
                 # Execute the edge in the thread pool
-                results = await asyncio.to_thread(
-                    self._execute_edge_task, edge, input_gen, state
+                downstream_tasks = await asyncio.to_thread(
+                    self._execute_edge_task, edge, task.input, state
                 )
 
                 # Add downstream tasks to the queue
-                for result in results:
-                    await self.task_queue.put(result)
+                for down_task in downstream_tasks:
+                    await self.task_queue.put(down_task)
 
             # Mark the task as done
-            print(f"======= FINISH TASK {target} ========")
+            logger.debug(f"======= FINISH TASK {task.executor} ========")
             self.task_queue.task_done()
 
     def _execute_node_task(self, node, input_gen, state):
@@ -156,14 +177,14 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
         Returns:
             List[Tuple[DataGenerator, BaseEdge]]: Downstream tasks for adjacent edges.
         """
-        print(f"================== EXECUTE Node {node} =================")
+        logger.debug(f"================== EXECUTE Node {node} =================")
         results = node.execute(state, input_gen)
         downstream_tasks = []
 
         for result in results:
             # Create tasks for all adjacent edges
             for edge in self.workflow.graph.get_adjacent_edges(node.name):
-                downstream_tasks.append((iter([result]), edge))
+                downstream_tasks.append(Task(iter([result]), edge))
 
         return downstream_tasks
 
@@ -179,16 +200,18 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
         Returns:
             List[Tuple[DataGenerator, BaseNode]]: Downstream tasks for target nodes.
         """
-        print(f"================== EXECUTE Edge {edge} =================")
+        logger.debug(f"================== EXECUTE Edge {edge} =================")
 
         results = edge.execute(state, input_gen)
         downstream_tasks = []
 
         for result in results:
             # Create tasks for the target node
-            print(
+            logger.debug(
                 f"#################### ADD TASK {(iter([result]), edge.target)} ###################"
             )
-            downstream_tasks.append((iter([result]), edge.target))
+            downstream_tasks.append(
+                Task(iter([result]), self.workflow.graph.get_node(edge.target))
+            )
 
         return downstream_tasks
