@@ -133,7 +133,7 @@ class BaseChainNode(BaseNode):
             if output:
                 yield output
             else:
-                logger.warn(f"Received `None` while processing node: {self.name}")
+                logger.warning(f"Received `None` while processing node: {self.name}")
 
 
 class MemoryChainNode(BaseChainNode):
@@ -166,6 +166,7 @@ class MemoryChainNode(BaseChainNode):
         self.where = where
         self.block_config = block_config
 
+    @profiler.profile(name="MemoryChainNodeExecution")
     def execute(
         self, state: Dict[str, Any], _input: DataGenerator = None
     ) -> DataGenerator:

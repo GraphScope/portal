@@ -41,7 +41,6 @@ import shutil
 import logging
 import copy
 
-logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 DEFAULT_DATASET_ID = "0"

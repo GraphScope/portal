@@ -7,22 +7,24 @@ from graph.nodes.paper_reading_nodes import (
     create_inspector_graph,
     ProgressInfo,
 )
+from utils.profiler import profiler
 from config import (
-    WF_DATA_DIR,
     WF_OUTPUT_DIR,
     WF_DOWNLOADS_DIR,
     WF_IMAGE_DIR,
     WF_UPLOADS_DIR,
     WF_VECTDB_DIR,
-    WF_BRW_CACHE_DIR,
-    WF_GRW_CACHE_DIR,
     WF_WEBDATA_DIR,
 )
 
+from langchain_core.embeddings import Embeddings
+
 import time
 import os
-from langchain_core.embeddings import Embeddings
-from langchain_core.language_models import BaseLLM
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class SurveyPaperReading(BaseWorkflow):
@@ -32,7 +34,7 @@ class SurveyPaperReading(BaseWorkflow):
         llm_model: LLM,
         parser_model: LLM,
         embeddings_model: Embeddings,
-        workflow,
+        workflow_dict,
     ):
         for folder in [
             WF_OUTPUT_DIR,
@@ -44,19 +46,19 @@ class SurveyPaperReading(BaseWorkflow):
         ]:
             if not os.path.exists(folder):
                 os.makedirs(folder, exist_ok=True)
-        self.progress = {"total": ProgressInfo()}
-        persist_store = JsonFileStore(os.path.join(WF_OUTPUT_DIR, self.id))
-        graph = self._create_graph(workflow)
+        persist_store = JsonFileStore(os.path.join(WF_OUTPUT_DIR, id))
+        graph = self._create_graph(
+            workflow_dict, llm_model, parser_model, embeddings_model, persist_store
+        )
         super().__init__(
             id,
-            llm_model,
-            parser_model,
-            embeddings_model,
             graph,
             persist_store,
         )
 
-    def _create_graph(self, workflow):
+    def _create_graph(
+        self, workflow_dict, llm_model, parser_model, embeddings_model, persist_store
+    ):
         """
         Create a graph for the SurveyPaperReading workflow.
 
@@ -69,34 +71,33 @@ class SurveyPaperReading(BaseWorkflow):
         graph = BaseGraph()
 
         # Parse Inspector Nodes
-        inspectors = workflow.get("inspectors", [])
+        inspectors = workflow_dict.get("inspectors", [])
         if inspectors:
             for inspector in inspectors:
                 inspector_name = inspector["name"]
                 inspector_graph_json = inspector["graph"]
                 inspector_graph = create_inspector_graph(
                     inspector_graph_json,
-                    self.llm_model,
-                    self.parser_model,
-                    self.embeddings_model,
+                    llm_model,
+                    parser_model,
+                    embeddings_model,
                 )
 
                 inspector_node = PaperInspector(
-                    name=inspector_name,
-                    llm_model=self.llm_model,
-                    embeddings_model=self.embeddings_model,
-                    graph=inspector_graph,
-                    persist_store=self.persist_store,
+                    inspector_name,
+                    llm_model,
+                    embeddings_model,
+                    inspector_graph,
+                    persist_store,
                 )
                 graph.add_node(inspector_node)
 
             # Parse Navigator Edges
-            navigators = workflow.get("navigators", [])
+            navigators = workflow_dict.get("navigators", [])
             for navigator in navigators:
                 name = navigator.get("name", "")
                 source = navigator["source"]
                 target = navigator["target"]
-                # relation = navigator.get("relation", "MANY_TO_MANY")  # Default relation
 
                 edge = BaseEdge(source=source, target=target, name=name)
                 graph.add_edge(edge)
@@ -104,19 +105,21 @@ class SurveyPaperReading(BaseWorkflow):
         # Handle single InspectorNode special case
         else:
             inspector_graph = create_inspector_graph(
-                workflow,
-                self.llm_model,
-                self.parser_model,
-                self.embeddings_model,
+                workflow_dict,
+                llm_model,
+                parser_model,
+                embeddings_model,
             )
 
             inspector_node = PaperInspector(
-                name="PaperInspector",
-                llm_model=self.llm_model,
-                embeddings_model=self.embeddings_model,
-                graph=inspector_graph,
-                persist_store=self.persist_store,
+                "PaperInspector",
+                llm_model,
+                embeddings_model,
+                inspector_graph,
+                persist_store,
             )
             graph.add_node(inspector_node)
+
+        logger.info(f"Created graph: {graph}")
 
         return graph

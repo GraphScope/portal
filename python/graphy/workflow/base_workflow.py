@@ -36,45 +36,18 @@ class BaseWorkflow:
     def __init__(
         self,
         id: str,
-        llm_model: LLM,
-        parser_model: LLM,
-        embddings_model: Embeddings,
         graph: BaseGraph,
         persist_store: PersistentStore = None,
     ):
         self.id = id
-        self.llm_model = llm_model
-        self.parser_model = parser_model
-        self.embeddings_model = embddings_model
         self.persist_store = persist_store
         self.graph = graph
         self.state = {}
-        self.progress = {"total": ProgressInfo()}
 
     def get_id(self):
         return self.id
 
-    def get_progress(self, node_name: str = None) -> ProgressInfo:
-        if node_name:
-            return self.progress.get(node_name, ProgressInfo())
-        else:
-            return self.progress["total"]
-
-    def get_persistent_state(self, node_key: str):
-        """
-        Retrieve the persistent state of a node from the `PersistentStore`.
-
-        Args:
-            node_key (str): The key of the node for fetching persistent state
-
-        Returns:
-            dict or None: The persistent state of the node if the file exists, otherwise None.
-        """
-        if self.persist_store:
-            return self.persist_store.get_state(self.get_id(), node_key)
-        else:
-            return None
-
+    @profiler.profile(name="WorkflowNodeExecution")
     def execute_node(
         self, node_name: str, input: DataGenerator = None
     ) -> DataGenerator:
@@ -92,6 +65,7 @@ class BaseWorkflow:
         else:
             yield node.execute(self.state, input)
 
+    @profiler.profile(name="WorkflowEdgeExecution")
     def execute_edge(
         self, edge_name: str, input: DataGenerator = None
     ) -> DataGenerator:

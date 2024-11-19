@@ -97,4 +97,4 @@ class BaseGraph:
         return len(self.edges)
 
     def __repr__(self):
-        return f"Nodes: {self.nodes.keys()}, Edges: {self.adjacency_list}"
+        return f"Nodes: {self.nodes}, Edges: {self.edges}, Adjacency List: {self.adjacency_list}"
