@@ -1,6 +1,6 @@
 from typing import Dict, Any, List, Generator
 from enum import Enum, auto
-from graph.types import DataGenerator, DataType
+from ..types import DataGenerator, DataType
 
 import json
 import logging

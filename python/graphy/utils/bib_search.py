@@ -448,11 +448,16 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 outputs.append(this_bib)
 
             elif action == "download":
-                succ, file_path = self.download(driver, title, result, download_path)
+                succ, file_path, exist = self.download(
+                    driver, title, result, download_path
+                )
 
-                if not succ:
+                if not succ and not exist:
                     logger.warning(f"Found {title}, but download failed.")
-                outputs.append((succ, file_path))
+                elif not succ and exist:
+                    logger.warning(f"Found {title}, but already downloaded.")
+
+                outputs.append((succ, file_path, exist))
 
             if len(outputs) >= num_per_page:
                 break
@@ -661,6 +666,10 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         file_name = re.sub(r"[^a-zA-Z0-9]", "_", title.strip())
         file_path = os.path.join(download_path, f"scholar_{file_name}.pdf")
 
+        if os.path.exists(file_path):
+            logger.debug(f"The file '{file_path}' already exists.")
+            return False, file_path, True
+
         logger.debug("************ DOWNLOADING **************")
         logger.debug(file_path)
 
@@ -676,7 +685,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 with open(file_path, "wb") as f:
                     f.write(response.content)
                 logger.info(f"Downloaded: {file_name}")
-                return True, file_path
+                return True, file_path, False
             else:
                 logger.warning(
                     f"Failed to download. Status code: {response.status_code}"
@@ -694,7 +703,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 f.write(str(e) + "\n")
                 f.write("\n")
 
-        return False, file_path
+        return False, file_path, False
 
     def download_by_name(
         self, query: str, download_path, pagination: bool = False, mode: str = "vague"
@@ -792,9 +801,10 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                     found_paper = True
                     output_list.extend(succ_list)
 
-                sleep_time = random.uniform(2, 3)
-                logger.info(f"sleep time: {sleep_time}")
-                time.sleep(sleep_time)
+                if not found_paper:
+                    sleep_time = random.uniform(2, 3)
+                    logger.info(f"sleep time: {sleep_time}")
+                    time.sleep(sleep_time)
             if found_paper:
                 break
 
@@ -834,9 +844,13 @@ class BibSearchArxiv(BibSearch):
     def download_by_object(self, best_match, download_path):
         file_name = re.sub(r"[^a-zA-Z0-9]", "_", best_match.title.strip())
 
-        logger.debug(f"download to {download_path}")
         download_file_name = f"arxiv_{file_name}.pdf".lower()
-        logger.debug(f"download to file named {file_name} ({download_file_name})")
+        download_file_path = os.path.join(download_path, download_file_name)
+        logger.debug(f"download to {download_file_path}")
+
+        if os.path.exists(download_file_path):
+            logger.debug(f"The file '{download_file_path}' already exists.")
+            return [(False, "", True)]
 
         try:
             best_match.download_pdf(
@@ -845,9 +859,9 @@ class BibSearchArxiv(BibSearch):
             )
         except Exception as e:
             logger.error(f"{e}")
-            return [(False, "")]
+            return [(False, "", False)]
 
-        return [(True, os.path.join(download_path, download_file_name))]
+        return [(True, download_file_path, False)]
 
     def download_by_wget(self, best_match, download_folder):
         file_name = re.sub(r"[^a-zA-Z0-9]", "_", best_match.title.strip())

@@ -1,7 +1,8 @@
 from workflow import BaseWorkflow
 from models import LLM
 from db import PersistentStore, JsonFileStore
-from graph import BaseGraph, BaseEdge
+from graph import BaseGraph
+from graph.edges.paper_navigate_edge import PaperNavigateEdge
 from graph.nodes.paper_reading_nodes import (
     PaperInspector,
     create_inspector_graph,
@@ -102,7 +103,7 @@ class SurveyPaperReading(BaseWorkflow):
                 source = navigator["source"]
                 target = navigator["target"]
 
-                edge = BaseEdge(source=source, target=target, name=name)
+                edge = PaperNavigateEdge(source=source, target=target, name=name)
                 graph.add_edge(edge)
 
         # Handle single InspectorNode special case

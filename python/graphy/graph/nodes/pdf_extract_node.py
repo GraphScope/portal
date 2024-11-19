@@ -56,10 +56,10 @@ class PDFExtractNode(BaseNode):
             raise ValueError("PDF extractor is not provided in the state.")
         vectordb = memory_manager.retrieved_memory
         paper_metadata = pdf_extractor.get_meta_data()
-        paper_references = set()
+        paper_references = []
         if vectordb.is_db_valid() and vectordb.is_db_empty():
             docs = pdf_extractor.extract_all()
-            paper_references = pdf_extractor.linked_contents
+            paper_references = list(pdf_extractor.linked_contents)
             vectordb.init_memory_parallel(docs, ["page_index", "section", "part_index"])
             pdf_extractor.cleanup()
 

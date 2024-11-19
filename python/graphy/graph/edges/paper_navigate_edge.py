@@ -1,4 +1,4 @@
-from base_edge import BaseEdge, EdgeType, DataGenerator
+from .base_edge import BaseEdge, EdgeType, DataGenerator
 from utils import ArxivFetcher, ScholarFetcher
 from config import WF_PDF_DOWNLOAD_DIR
 
@@ -17,43 +17,31 @@ class PaperNavigateEdge(BaseEdge):
     def __init__(self, source, target, name=None):
         super().__init__(source, target, name)
 
+        print("******* REACH INIT ********")
         self.paper_download_dir = WF_PDF_DOWNLOAD_DIR
-        self.add_fetched_paper_lock = threading.Lock()
 
-    def arxiv_download_worker(self, state, arxiv_tasks):
-        scholar_tasks = set()
-        fetched_arxiv_paper = []
-
+    def arxiv_download_worker(self, arxiv_tasks):
         arxiv_fetcher = ArxivFetcher(download_folder=self.paper_download_dir)
         for link in arxiv_tasks:
             if link is None or len(link) < 5:
                 continue
-
             download_list = arxiv_fetcher.download_paper(link, 1)
-
             if len(download_list) == 0:
                 logger.info(f"PASS {link} to SCHOLAR FOR FURTHER SEARCH")
-                scholar_tasks.add(link)
+                yield link, None
             else:
                 for download_info in download_list:
-                    succ, path = download_info
+                    succ, path, exist = download_info
                     if succ and path is not None:
-                        if path not in fetched_arxiv_paper:
-                            with self.add_fetched_paper_lock:
-                                if path not in state["fetched_paper"]:
-                                    fetched_arxiv_paper.append(path)
-                                    state["fetched_paper"].add(path)
-                                    logger.info(f"SUCCESSFULLY GET PAPER {path}")
+                        logger.info(f"SUCCESSFULLY GET PAPER {path}")
+                        yield None, path
                     else:
-                        logger.info(f"PASS {link} to SCHOLAR FOR FURTHER SEARCH")
-                        scholar_tasks.add(link)
+                        if not exist:
+                            logger.info(f"PASS {link} to SCHOLAR FOR FURTHER SEARCH")
+                            yield link, None
                     break
 
-        return scholar_tasks, fetched_arxiv_paper
-
-    def scholar_download_worker(self, state, scholar_tasks):
-        fetched_scholar_paper = []
-
+    def scholar_download_worker(self, scholar_tasks):
         for link in scholar_tasks:
             if link is None or len(link) < 5:
                 continue
@@ -73,48 +61,47 @@ class PaperNavigateEdge(BaseEdge):
             download_list = scholar_fetcher.download_paper(link, mode="exact")
 
             for download_info in download_list:
-                succ, path = download_info
+                succ, path, exist = download_info
                 if succ and path is not None:
-                    if path not in fetched_scholar_paper:
-                        with self.add_fetched_paper_lock:
-                            if path not in state["fetched_paper"]:
-                                fetched_scholar_paper.append(path)
-                                state["fetched_paper"].add(path)
-                                logger.info(f"SUCCESSFULLY GET PAPER {path}")
-
-        return fetched_scholar_paper
+                    logger.info(f"SUCCESSFULLY GET PAPER {path}")
+                    yield path
 
     @profiler.profile(name="PaperNavigateEdge")
     def execute(
         self, state: Dict[str, Any], input: DataGenerator = None
     ) -> DataGenerator:
-        with self.add_fetched_paper_lock:
-            if "fetched_paper" not in state:
-                state["fetched_paper"] = set()
-
         scholar_dict = {}
+
+        ref_count = 0
 
         for paper in input:
             arxiv_tasks = set()
             parent_id = paper.get("data", {}).get("id", "")
-            arxiv_tasks = paper.get("data", {}).get("reference", set())
+            arxiv_tasks = set(paper.get("data", {}).get("reference", []))
 
             if len(parent_id) == 0 or len(arxiv_tasks) == 0:
                 continue
 
-            scholar_tasks, fetched_arxiv_paper = self.arxiv_download_worker(
-                state, arxiv_tasks
-            )
+            for scholar_task, paper_path in self.arxiv_download_worker(arxiv_tasks):
+                if scholar_task is not None:
+                    scholar_dict.setdefault(parent_id, []).append(scholar_task)
 
-            yield [(parent_id, x) for x in fetched_arxiv_paper]
+                if paper_path is not None:
+                    print(
+                        f" ============= OUTPUT {(parent_id, paper_path)} RESULT =============="
+                    )
 
-            scholar_dict[parent_id] = scholar_tasks
+                    ref_count += 1
+                    yield {"paper_file_path": paper_path, "parent": parent_id}
 
-            logger.info("=================== OBTAINED ARXIVS =================")
-            logger.info([(parent_id, x) for x in fetched_arxiv_paper])
+                    if ref_count >= 1:
+                        break
 
         # for parent_id, tasks in scholar_dict.items():
         #     if len(tasks) == 0:
         #         continue
-        #     fetched_scholar_paper = self.scholar_download_worker(tasks)
-        #     yield [(parent_id, x) for x in fetched_scholar_paper]
+        #     for paper_path in self.scholar_download_worker(tasks):
+        #         print(
+        #             f" ============= OUTPUT {(parent_id, paper_path)} RESULT =============="
+        #         )
+        #         yield {"paper_file_path": paper_path, "parent": parent_id}

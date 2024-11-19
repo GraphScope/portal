@@ -140,7 +140,7 @@ class PaperExpansion:
                 self.scholar_link_queue.put((hop, link))
             else:
                 for download_info in download_list:
-                    succ, path = download_info
+                    succ, path, exist = download_info
                     if succ and path is not None:
                         logger.info(f"SUCCESSFULLY GET PAPER {path}")
                         nonexist = self.paper_queue.put((hop, path))
@@ -202,7 +202,7 @@ class PaperExpansion:
             download_list = scholar_fetcher.download_paper(link, mode="exact")
 
             for download_info in download_list:
-                succ, path = download_info
+                succ, path, exist = download_info
                 if succ and path is not None:
                     logger.info(f"SUCCESSFULLY GET PAPER {path}")
                     nonexist = self.paper_queue.put((hop, path))
