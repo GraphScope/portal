@@ -68,7 +68,7 @@ class Task:
     Attributes:
         data (DataGenerator): The input data for the task.
         executor (Union[BaseNode, BaseEdge, str]): The executor responsible for processing the task.
-            Can be a node name (str), a BaseNode, or a BaseEdge.
+            Can be a BaseNode, or a BaseEdge.
     """
 
     def __init__(self, data: DataGenerator, executor: Union[BaseNode, BaseEdge]):
@@ -160,6 +160,8 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
                 # Add downstream tasks to the queue
                 for down_task in downstream_tasks:
                     await self.task_queue.put(down_task)
+            else:
+                raise ValueError(f"Invalid executor type: {task.executor}")
 
             # Mark the task as done
             logger.debug(f"======= FINISH TASK {task.executor} ========")
