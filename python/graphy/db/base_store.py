@@ -20,10 +20,6 @@ class PersistentStore(ABC):
         pass
 
     @abstractmethod
-    def save_query(self, name: str, node_key: str, query: str):
-        pass
-
-    @abstractmethod
     def get_total_data(self) -> List[str]:
         pass
 
@@ -70,16 +66,14 @@ class JsonFileStore(PersistentStore):
                 logger.error(f"Error reading file {file_path}: {e}")
                 return None
 
-    def save_query(self, name: str, node_key: str, query: str):
+    def save_data(self, name: str, node_key: str, content: str, extension: str = "txt"):
         with self.lock:
             current_folder = self.use(name)
-            # Create a safe file name
-            file_name = "query_" + node_key
-            file_path = os.path.join(current_folder, f"{file_name}.txt")
+            file_path = os.path.join(current_folder, f"{node_key}.{extension}")
 
             # Save the state to a JSON file
             with open(file_path, "w+") as f:
-                f.write(query)
+                f.write(content)
 
     def get_total_data(self) -> List[str]:
         """
@@ -108,7 +102,7 @@ class JsonFileStore(PersistentStore):
                 json_items = [
                     os.path.splitext(item)[0]  # Get the file name without extension
                     for item in items
-                    if item.endswith(".json") and not item.startswith(".")
+                    if item.endswith(".json") and not item.startswith("_")
                 ]
                 return json_items
             except Exception as e:

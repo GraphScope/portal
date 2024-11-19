@@ -354,9 +354,14 @@ class PaperInspector(BaseNode):
         self.embeddings_model = embeddings_model
         self.persist_store = persist_store
         self.progress = {"total": ProgressInfo(0, 0)}
+        for node in self.graph.get_node_names():
+            self.progress[node] = ProgressInfo(0, 0)
 
-    def get_progress(self) -> ProgressInfo:
-        return self.progress["total"]
+    def get_progress(self, node_name: str = "") -> ProgressInfo:
+        if not node_name:
+            return self.progress["total"]
+        else:
+            return self.progress.get(node_name, ProgressInfo(0, 0))
 
     def run_through(
         self,
@@ -364,7 +369,6 @@ class PaperInspector(BaseNode):
         state,
         parent_id=None,
         continue_on_error: bool = True,
-        is_persist: bool = True,
         skipped_nodes: List[str] = [],
     ):
         """
@@ -381,22 +385,32 @@ class PaperInspector(BaseNode):
 
         first_node = self.graph.get_first_node()
         next_nodes = [first_node]
+        is_persist = True
 
         while next_nodes:
             current_node = next_nodes.pop()  # Run in DFS order
             if current_node.name in skipped_nodes:
-                state["progress"][current_node.name].complete()
-                state["progress"]["total"].complete()
+                # update global progress
+                self.progress[current_node.name].complete()
                 self.progress["total"].complete()
                 continue
 
             last_output = None
             try:
                 current_node.pre_execute(state)
-                # Execute the current node
-                output_generator = current_node.execute(state)
-                for output in output_generator:
-                    last_output = output
+                persist_results = self.persist_store.get_state(
+                    data_id, current_node.name
+                )
+                if persist_results:
+                    logger.info(f"Found persisted data for node '{current_node.name}'")
+                    last_output = persist_results
+                    is_persist = False
+                else:
+                    # Execute the current node
+                    output_generator = current_node.execute(state)
+                    for output in output_generator:
+                        last_output = output
+                    is_persist = True
             except Exception as e:
                 logger.error(f"Error executing node '{current_node.name}': {e}")
                 if continue_on_error:
@@ -404,9 +418,8 @@ class PaperInspector(BaseNode):
                 else:
                     raise ValueError(f"Error executing node '{current_node.name}': {e}")
             finally:
-                # Complete progress tracking
-                state["progress"][current_node.name].complete()
-                state["progress"]["total"].complete()
+                # update global progress
+                self.progress[current_node.name].complete()
                 self.progress["total"].complete()
 
                 # Persist the output and queries if applicable
@@ -417,8 +430,8 @@ class PaperInspector(BaseNode):
                     if current_node.get_query():
                         input_query = f"**************QUERY***************: \n {current_node.get_query()} \
                             **************MEMORY**************: \n {current_node.get_memory()}"
-                        self.persist_store.save_query(
-                            data_id, current_node.name, input_query
+                        self.persist_store.save_data(
+                            data_id, f"query_{current_node.name}", input_query
                         )
                     if current_node.name == first_node.name and parent_id:
                         edges = self.persist_store.get_state(data_id, "_Edges")
@@ -428,7 +441,7 @@ class PaperInspector(BaseNode):
                                 edges.append(f"{parent_id}|{curr_id}")
                             else:
                                 edges = [f"{parent_id}|{curr_id}"]
-                        self.persist_store.save_state(data_id, "_Edges", edges)
+                            self.persist_store.save_state(data_id, "_Edges", edges)
 
                 # Cache the output
                 if last_output:
@@ -478,35 +491,51 @@ class PaperInspector(BaseNode):
                 data_id = process_id(base_name)
                 pdf_extractor.set_img_path(f"{WF_IMAGE_DIR}/{data_id}")
                 first_node_name = self.graph.get_first_node_name()
-                if data_id in state["processed_data"]:
+                if self.persist_store.get_state(data_id, "_DONE"):
                     # This means that the data has already processed
                     logger.info(f"Input with ID '{data_id}' already processed.")
-                    yield self.persist_store.get_state(data_id, first_node_name)
-                    continue
-                progress = {}
-                progress["total"] = ProgressInfo(self.graph.nodes_count(), 0)
-                for node in self.graph.get_node_names():
-                    progress[node] = ProgressInfo(1, 0)
+                    self.progress["total"].add(
+                        ProgressInfo(self.graph.nodes_count(), self.graph.nodes_count())
+                    )
+                    for node in self.graph.get_node_names():
+                        self.progress[node].add(ProgressInfo(1, 1))
 
-                state[data_id] = {
-                    WF_STATE_CACHE_KEY: {},
-                    WF_STATE_EXTRACTOR_KEY: pdf_extractor,
-                    WF_STATE_MEMORY_KEY: PaperReadingMemoryManager(
-                        self.llm_model.model,
-                        self.embeddings_model,
-                        data_id,
-                        self.llm_model.context_size,
-                    ),
-                    WF_STATE_PROGRESS_KEY: progress,
-                }
+                    yield self.persist_store.get_state(data_id, first_node_name)
+
+                else:
+                    # global progress for all data
+                    self.progress["total"].add(
+                        ProgressInfo(self.graph.nodes_count(), 0)
+                    )
+                    for node in self.graph.get_node_names():
+                        self.progress[node].add(ProgressInfo(1, 0))
+
+                    state[data_id] = {
+                        WF_STATE_CACHE_KEY: {},
+                        WF_STATE_EXTRACTOR_KEY: pdf_extractor,
+                        WF_STATE_MEMORY_KEY: PaperReadingMemoryManager(
+                            self.llm_model.model,
+                            self.embeddings_model,
+                            data_id,
+                            self.llm_model.context_size,
+                        ),
+                    }
+
+                    self.run_through(data_id, state[data_id], parent_id)
+                    # Mark the data as DONE
+                    if (
+                        len(self.persist_store.get_total_states(data_id))
+                        == self.graph.nodes_count()
+                    ):
+                        self.persist_store.save_state(data_id, "_DONE", {"done": True})
+
+                    yield state[data_id][WF_STATE_CACHE_KEY][
+                        first_node_name
+                    ].get_response()
+
             except Exception as e:
                 logger.error(f"Error initializing PaperExtractor: {e}")
                 continue
-
-            self.progress["total"].add(ProgressInfo(self.graph.nodes_count(), 0))
-            self.run_through(data_id, state[data_id], parent_id)
-
-            yield state[data_id][WF_STATE_CACHE_KEY][first_node_name].get_response()
 
     def __repr__(self):
         return f"Node: {self.name}, Type: {self.node_type}, Graph: {self.graph}"

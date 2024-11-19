@@ -965,6 +965,5 @@ class PDFExtractor(BasePDFLoader):
 
         self.timer.stop("extract link")
         self.timer.stop("extract text")
-        self.timer.print()
 
         # print("############# FINISH EXTRACT ###############")
