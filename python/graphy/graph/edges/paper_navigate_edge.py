@@ -17,7 +17,6 @@ class PaperNavigateEdge(BaseEdge):
     def __init__(self, source, target, name=None):
         super().__init__(source, target, name)
 
-        print("******* REACH INIT ********")
         self.paper_download_dir = WF_PDF_DOWNLOAD_DIR
 
     def arxiv_download_worker(self, arxiv_tasks):
@@ -75,7 +74,6 @@ class PaperNavigateEdge(BaseEdge):
         ref_count = 0
 
         for paper in input:
-            arxiv_tasks = set()
             parent_id = paper.get("data", {}).get("id", "")
             arxiv_tasks = set(paper.get("data", {}).get("reference", []))
 
@@ -92,10 +90,10 @@ class PaperNavigateEdge(BaseEdge):
                     )
 
                     ref_count += 1
-                    yield {"paper_file_path": paper_path, "parent": parent_id}
+                    yield {"paper_file_path": paper_path, "parent_id": parent_id}
 
-                    if ref_count >= 1:
-                        break
+                    # if ref_count >= 1:
+                    #     break
 
         # for parent_id, tasks in scholar_dict.items():
         #     if len(tasks) == 0:
@@ -104,4 +102,4 @@ class PaperNavigateEdge(BaseEdge):
         #         print(
         #             f" ============= OUTPUT {(parent_id, paper_path)} RESULT =============="
         #         )
-        #         yield {"paper_file_path": paper_path, "parent": parent_id}
+        #         yield {"paper_file_path": paper_path, "parent_id": parent_id}

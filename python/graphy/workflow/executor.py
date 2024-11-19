@@ -110,6 +110,7 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
         """
         while not self.task_queue.empty():
             input_gen, target = await self.task_queue.get()
+            print(f"======= GET TASK {target} ========")
 
             if isinstance(target, str):  # Node
                 logger.info(f"Executing node: {target}")
@@ -123,8 +124,8 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
 
                 # Add downstream tasks to the queue
                 for result in results:
-                    for edge in self.workflow.graph.get_adjacent_edges(node.name):
-                        await self.task_queue.put((iter([result]), edge))
+                    logger.info(f"ADD EDGE TASK {result}")
+                    await self.task_queue.put(result)
 
             else:  # Edge
                 edge = target
@@ -137,10 +138,10 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
 
                 # Add downstream tasks to the queue
                 for result in results:
-                    target_node = self.workflow.graph.get_node(edge.target)
-                    await self.task_queue.put((iter([result]), target_node))
+                    await self.task_queue.put(result)
 
             # Mark the task as done
+            print(f"======= FINISH TASK {target} ========")
             self.task_queue.task_done()
 
     def _execute_node_task(self, node, input_gen, state):
@@ -155,6 +156,7 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
         Returns:
             List[Tuple[DataGenerator, BaseEdge]]: Downstream tasks for adjacent edges.
         """
+        print(f"================== EXECUTE Node {node} =================")
         results = node.execute(state, input_gen)
         downstream_tasks = []
 
@@ -177,11 +179,16 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
         Returns:
             List[Tuple[DataGenerator, BaseNode]]: Downstream tasks for target nodes.
         """
+        print(f"================== EXECUTE Edge {edge} =================")
+
         results = edge.execute(state, input_gen)
         downstream_tasks = []
 
         for result in results:
             # Create tasks for the target node
+            print(
+                f"#################### ADD TASK {(iter([result]), edge.target)} ###################"
+            )
             downstream_tasks.append((iter([result]), edge.target))
 
         return downstream_tasks
