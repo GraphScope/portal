@@ -1,4 +1,8 @@
-from workflow import AbstractWorkflow, SurveyPaperReading
+import torchtext
+
+torchtext.disable_torchtext_deprecation_warning()
+
+from workflow import SurveyPaperReading, ThreadPoolWorkflowExecutor
 from graph.nodes.paper_reading_nodes import ProgressInfo
 from config import (
     WF_UPLOADS_DIR,
@@ -7,10 +11,7 @@ from config import (
 )
 from utils.data_extractor import (
     GraphBuilder,
-    compute_similarity_edges,
     hash_id,
-    SUMMARIZED_SUFFIX,
-    CLUSTERED_SUFFIX,
 )
 from utils.cryptography import encrypt_key, decrypt_key
 from utils.text_clustering import KMeansClustering, OnlineClustering
@@ -21,7 +22,7 @@ from graph.nodes.paper_reading_nodes import NameDesc
 from apps.text_generator import ReportGenerator
 from models import set_llm_model, DefaultEmbedding, DEFAULT_LLM_MODEL_CONFIG
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from threading import Thread
 from flask import Flask, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 from typing import Dict
@@ -36,7 +37,7 @@ import traceback
 import json
 import zipfile
 import uuid
-import threading
+import asyncio
 import shutil
 import logging
 import copy
@@ -54,82 +55,6 @@ def list_files_in_folder(folder_path):
                 if filename.endswith(".pdf"):
                     files.append(os.path.join(root, filename))
     return files
-
-
-def prepare_process(
-    folder_path: str,
-    llm_model,
-    embeddings_model,
-    workflow,
-    persist_store: JsonFileStore,
-    max_token_size,
-):
-    all_files = list_files_in_folder(folder_path)
-    wf_dict = {}
-    cached_wf = {}
-    for index, paper in enumerate(all_files):
-        try:
-            wf_dict[paper] = SurveyPaperReading(
-                llm_model,
-                llm_model,
-                embeddings_model,
-                paper,
-                workflow,
-                persist_store=persist_store,
-                max_token_size=max_token_size,
-                enable_streaming=True,
-            )
-
-            if index == 0 or len(cached_wf) == 0:
-                cached_wf = wf_dict[paper]._create_graph(workflow)
-            else:
-                wf_dict[paper]._load_graph(cached_wf)
-        except Exception as e:
-            logger.error(f"Error processing paper {paper}: {e}")
-            continue
-    return wf_dict
-
-
-def process_paper(
-    paper: str,
-    wf,
-    persist_store: JsonFileStore,
-    enable_profiler: bool = False,
-):
-    try:
-        if enable_profiler:
-            profiler.start()
-        persist_store.use(wf.get_id())
-        skipped_nodes = ["KeywordsExtract", "TunedChallenges"]
-        logger.info(f"Running workflow for paper {paper}")
-        wf.run_through(True, skipped_nodes=skipped_nodes)
-        if enable_profiler:
-            profiler.report()
-    except Exception as e:
-        logger.error(f"Error processing paper {paper}: {e}")
-
-
-def run_process(
-    wf_dict: dict,
-    persist_store: JsonFileStore,
-    max_workers: int = 16,  # default to 16 workers
-    enable_profiler: bool = False,  # default to disable profiler
-):
-    max_workers = min(max_workers, len(wf_dict))
-
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = {
-            executor.submit(
-                process_paper, paper, wf_dict[paper], persist_store, enable_profiler
-            ): paper
-            for paper in wf_dict.keys()
-        }
-        for future in as_completed(futures):
-            paper = futures[future]
-            try:
-                future.result()
-            except Exception as e:
-                logger.error(f"Error processing paper {paper} in thread: {e}")
 
 
 def create_json_response(result):
@@ -319,15 +244,9 @@ class DemoApp:
             return ["Challenge", "Solution", "Task"]
         node_names = []
         if dataset_id in self.cache:
-            workflows = self.cache[dataset_id].get("wf_dict", {})
-            if workflows:
-                for wf in workflows.values():
-                    node_names = [
-                        node_name
-                        for node_name in wf.get_node_names()
-                        if node_name != "Paper"
-                    ]
-                    break
+            workflow = self.cache[dataset_id].get("workflow", None)
+            if workflow:
+                node_names = workflow.graph.get_node_names()
         return node_names
 
     def set_llm_model(self, dataset_id, llm_config, initialize=True):
@@ -344,30 +263,21 @@ class DemoApp:
                 self.set_cache(dataset_id, "llm_model", llm)
 
     def set_workflow(self, dataset_id, workflow_dict):
-        dataset_path = os.path.join(self.app.config["UPLOAD_FOLDER"], dataset_id)
         persist_store = self.get_persist_store(dataset_id)
         cache = self.cache.get(dataset_id, {})
-        max_token_size = 6000
-        llm_model = None
-        if cache:
-            llm = cache.get("llm_model", None)
-            if llm:
-                llm_model = llm.model
-                # save some space for other context info
-                max_token_size = llm.context_size - 1024
-                logger.debug(
-                    f"The model {llm.model_name} is used for the workflow, which has maximum output token limit of {max_token_size}"
-                )
-
-        if not llm_model and self.llm:
-            llm_model = self.llm.model
-            # save some space for other context info
-            max_token_size = self.llm.context_size - 1024
+        llm = cache.get("llm_model", None)
+        if llm:
             logger.debug(
-                f"Default model {self.llm.model_name} is used for the workflow, which has maximum output token limit of {max_token_size}"
+                f"The model {llm.model_name} is used for the workflow, which has maximum output token limit of {llm.context_size}"
             )
 
-        if not llm_model:
+        if not llm and self.llm:
+            llm = self.llm
+            logger.debug(
+                f"Default model {self.llm.model_name} is used for the workflow, which has maximum output token limit of {llm.context_size}"
+            )
+
+        if not llm:
             raise ValueError("LLM model not configured")
 
         embedding_model = self.embedding_model.chroma_embedding_model()
@@ -376,21 +286,19 @@ class DemoApp:
             embedding_model = embedding_functions.DefaultEmbeddingFunction()
 
         # Initialize the workflow
-        wf_dict = prepare_process(
-            dataset_path,
-            llm_model,
-            embedding_model,
-            workflow_dict,
-            persist_store,
-            max_token_size,
+        workflow = SurveyPaperReading(
+            dataset_id, llm, llm, embedding_model, workflow_dict, persist_store
         )
-        self.set_cache(dataset_id, "wf_dict", wf_dict)
+        self.set_cache(dataset_id, "workflow", workflow)
 
     def get_progress(self, dataset_id, node_names=[]):
-        def get_paper_data(node, progress, get_paper_data=False):
+        def get_paper_data(node, progress, workflow, get_paper_data=False):
             output_data = {}
             output_data["node_name"] = node
             output_data["papers"] = []
+            progress[node] = workflow.get_progress(node)
+
+            """
             for wf in self.cache[dataset_id]["wf_dict"].values():
                 progress[node].add(wf.get_progress(node))
                 progress["total"].add(wf.get_progress())
@@ -412,6 +320,7 @@ class DemoApp:
                                 result["id"] = hash_id(f"{paper_data['id']}_{i}")
                                 paper_data["data"].append(result)
                     output_data["papers"].append(paper_data)
+            """
 
             return output_data
 
@@ -463,8 +372,10 @@ class DemoApp:
         progress["total"] = ProgressInfo()
         output = []
         if dataset_id in self.cache:
+            workflow = self.cache[dataset_id].get("workflow", None)
             if not node_names:
-                node_names = self.get_workflow_node_names(dataset_id)
+                inspector_node = workflow.graph.get_first_node()
+                node_names = inspector_node.graph.get_node_names()
             for node in node_names:
                 progress[node] = ProgressInfo()
 
@@ -473,9 +384,12 @@ class DemoApp:
                     output_data = get_default_paper_data(node, len(node_names) == 1)
                     output_data["progress"] = 100.0
                 else:
-                    output_data = get_paper_data(node, progress, len(node_names) == 1)
+                    output_data = get_paper_data(
+                        node, progress, workflow, len(node_names) == 1
+                    )
                     output_data["progress"] = progress[node].get_percentage()
                 output.append(output_data)
+            progress["total"] = workflow.get_progress("")
 
         return output, progress["total"].get_percentage()
 
@@ -609,7 +523,7 @@ class DemoApp:
                             )
                             status = STATUS.WAITING_WORKFLOW_CONFIG.value
                         if "schema" in metadata:
-                            if "wf_dict" not in cache:
+                            if "workflow" not in cache:
                                 self.set_workflow(dataset_id, metadata["schema"])
                             status = STATUS.WAITING_EXTRACT.value
                         if "status" not in metadata or metadata["status"] < status:
@@ -748,8 +662,8 @@ class DemoApp:
                 dataset_id = request.args.get("dataset_id")
                 workflow = self.get_meta_schema(dataset_id)
 
-                if workflow and "wf_dict" not in self.cache.get(dataset_id, {}):
-                    self.set_workflow(self, dataset_id, workflow)
+                if workflow and "workflow" not in self.cache.get(dataset_id, {}):
+                    self.set_workflow(dataset_id, workflow)
 
                 return jsonify(
                     create_json_response(
@@ -761,6 +675,7 @@ class DemoApp:
                 )
 
             except Exception as e:
+                traceback.print_exc()
                 return create_error_response(str(e)), 500
 
         @self.app.route("/api/dataset/extract", methods=["POST"])
@@ -796,25 +711,24 @@ class DemoApp:
                         200,
                     )
 
-                wf_dict = self.cache.get(dataset_id).get("wf_dict")
+                workflow = self.cache.get(dataset_id).get("workflow")
                 # Load the dataset
                 dataset_path = os.path.join(
                     self.app.config["UPLOAD_FOLDER"], dataset_id
                 )
+                pdf_files = [
+                    {"paper_file_path": os.path.join(dataset_path, file)}
+                    for file in os.listdir(dataset_path)
+                    if file.lower().endswith(".pdf")
+                ]
+                executor = ThreadPoolWorkflowExecutor(workflow, thread_num)
 
-                try:
-                    # Initialize the workflow
-                    thread = threading.Thread(
-                        target=run_process,
-                        args=(
-                            wf_dict,
-                            JsonFileStore(dataset_path),
-                            thread_num,
-                        ),
-                    )
-                    thread.start()
-                except Exception as e:
-                    return create_error_response(str(e)), 500
+                def run_executor():
+                    asyncio.run(executor.execute(pdf_files))
+
+                # Run in a separate thread
+                thread = Thread(target=run_executor)
+                thread.start()
 
                 # Update the metadata
                 self.set_status(dataset_id, STATUS.EXTRACTING)
@@ -837,7 +751,6 @@ class DemoApp:
                     if field not in request.args:
                         return create_error_response(f"Missing {field} in request"), 400
                 dataset_id = request.args.get("dataset_id")
-                paper_names = request.args.getlist("paper_names")
                 workflow_node_names = request.args.getlist("workflow_node_names")
 
                 # Get the results with the specified paper IDs and workflow node IDs, if provided

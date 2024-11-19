@@ -7,6 +7,7 @@ from graph.nodes.paper_reading_nodes import (
     create_inspector_graph,
     ProgressInfo,
 )
+from graph.nodes.base_node import NodeType
 from utils.profiler import profiler
 from config import (
     WF_STATE_CACHE_KEY,
@@ -35,6 +36,7 @@ class SurveyPaperReading(BaseWorkflow):
         parser_model: LLM,
         embeddings_model: Embeddings,
         workflow_dict,
+        persist_store=None,
     ):
         for folder in [
             WF_OUTPUT_DIR,
@@ -46,7 +48,8 @@ class SurveyPaperReading(BaseWorkflow):
         ]:
             if not os.path.exists(folder):
                 os.makedirs(folder, exist_ok=True)
-        persist_store = JsonFileStore(os.path.join(WF_OUTPUT_DIR, id))
+        if not persist_store:
+            persist_store = JsonFileStore(os.path.join(WF_OUTPUT_DIR, id))
         graph = self._create_graph(
             workflow_dict, llm_model, parser_model, embeddings_model, persist_store
         )
@@ -123,3 +126,20 @@ class SurveyPaperReading(BaseWorkflow):
         logger.info(f"Created graph: {graph}")
 
         return graph
+
+    def get_progress(self, node_key: str) -> ProgressInfo:
+        """
+        Get the progress of an inspector node.
+
+        Args:
+            node_key (str): The key of the inspector node.
+
+        Returns:
+            ProgressInfo: The progress of the node.
+        """
+        inspector_node = self.graph.get_first_node()
+        if inspector_node.node_type != NodeType.INSPECTOR:
+            logger.warning("No inspector node found in the graph.")
+            return ProgressInfo(0, 0)
+        else:
+            return inspector_node.get_progress(node_key)
