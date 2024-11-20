@@ -71,6 +71,10 @@ class BaseGraph:
         self.edges[edge.name] = edge
         self.adjacency_list[edge.source].append(edge.name)
 
+    def get_edge(self, edge_name: str) -> BaseEdge:
+        """Returns an edge from the graph."""
+        return self.edges.get(edge_name)
+
     def remove_edge_by_name(self, edge_name: str):
         """Removes an edge from the graph."""
         if edge_name not in self.edges:
