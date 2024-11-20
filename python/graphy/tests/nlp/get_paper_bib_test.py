@@ -43,7 +43,7 @@ class TestGetBib:
                 llm_model,
                 embeddings_model,
                 None,
-                persist_directoy=None,
+                vectordb=None,
             ),
             pdf_extractor=pdf_extractor,
             name="extract",

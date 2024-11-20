@@ -2,6 +2,17 @@ from typing import Dict, Any, List, Tuple
 from enum import Enum, auto
 from langchain.llms import BaseLLM
 from langchain_core.embeddings import Embeddings
+from pympler import asizeof
+import sys
+import time
+
+import gc
+import os
+
+import chromadb
+import psutil
+from chromadb.types import SegmentScope
+from chromadb.segment import VectorReader
 
 import heapq
 import logging
@@ -21,6 +32,10 @@ from config import WF_VECTDB_DIR
 import chromadb
 import math
 import threading
+import multiprocessing as mp
+
+from chromadb import Documents, EmbeddingFunction, Embeddings
+from chromadb.utils import embedding_functions
 
 
 class VectorDBHierarchy(Enum):
@@ -46,7 +61,7 @@ class RetrievedMemory:
         max_result_num: int = 10,
         chunk_size=500,
         chunk_overlap=0,
-        persist_directory: str = WF_VECTDB_DIR,
+        vectordb=None,
     ):
         self.collection_name = collection_name
         self.embeddings = embeddings
@@ -54,14 +69,12 @@ class RetrievedMemory:
         self.max_result_num = max_result_num
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
-        self.persist_directory = persist_directory
+        self.persist_directory = vectordb
 
         self.llm = llm
 
-        if persist_directory:
-            self.persistent_client = chromadb.PersistentClient(
-                path=self.persist_directory
-            )
+        if vectordb:
+            self.persistent_client = vectordb
             self.collection = self.persistent_client.get_or_create_collection(
                 name=self.collection_name,
                 # embedding_function=self.embeddings,
@@ -336,6 +349,50 @@ class RetrievedMemory:
         return documents, metadatas, distances
         # return self.formulate_memory_block(documents, metadatas)
 
+    def close(self):
+        def bytes_to_gb(bytes_value):
+            return bytes_value / (1024**3)
+
+        def get_process_info():
+            pid = os.getpid()
+            p = psutil.Process(pid)
+            with p.oneshot():
+                mem_info = p.memory_info()
+                # disk_io = p.io_counters()
+            return {
+                "memory_usage": bytes_to_gb(mem_info.rss),
+            }
+
+        logger.debug(f"========== BEFORE UNLOAD {get_process_info()} =========")
+        print(
+            f"info: {self.persistent_client} {self.collection_name} {self.collection} {self.collection.id}"
+        )
+
+        """
+        Unloads binary hnsw index from memory and removes both segments (binary and metadata) from the segment cache.
+        """
+
+        if self.persistent_client and self.collection:
+            segment = self.persistent_client._server._manager.get_segment(
+                self.collection.id, VectorReader
+            )
+            segment.close_persistent_index()
+
+            collection_id = self.collection.id
+            segment_manager = self.persistent_client._server._manager
+
+            for scope in [SegmentScope.VECTOR, SegmentScope.METADATA]:
+                if scope in segment_manager.segment_cache:
+                    cache = segment_manager.segment_cache[scope].cache
+                    if collection_id in cache:
+                        segment_manager.callback_cache_evict(cache[collection_id])
+
+            self.persistent_client.delete_collection(name=self.collection_name)
+            self.persistent_client.reset()
+            gc.collect()
+
+        logger.debug(f"========== AFTER UNLOAD {get_process_info()} =========")
+
 
 class BaseRuntimeMemoryManager:
     """
@@ -440,16 +497,12 @@ class PaperReadingMemoryManager(BaseRuntimeMemoryManager):
         embeddings: Embeddings,
         collection_name: str,
         max_token_limit: int = 8192,
-        persist_directoy: str = WF_VECTDB_DIR,
+        vectordb=None,
     ):
         super().__init__(llm, embeddings, max_token_limit)
 
         self.retrieved_memory = RetrievedMemory(
-            collection_name,
-            llm,
-            embeddings,
-            self.block_manager,
-            persist_directory=persist_directoy,
+            collection_name, llm, embeddings, self.block_manager, vectordb=vectordb
         )
 
         self.collection_name = collection_name
@@ -544,3 +597,13 @@ class PaperReadingMemoryManager(BaseRuntimeMemoryManager):
                 curr_buffer_length -= mb.get_cited_token_num()
             else:
                 curr_buffer_length -= mb.get_token_num()
+
+    def close(self):
+        logger.debug(
+            f"=============== START TO UNLOAD COLLECTION OF {self.collection_name} ==============="
+        )
+        self.retrieved_memory.close()
+
+        logger.debug(
+            f"=============== FINISH TO UNLOAD COLLECTION OF {self.collection_name} ==============="
+        )

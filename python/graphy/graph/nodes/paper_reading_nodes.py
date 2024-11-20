@@ -346,6 +346,7 @@ class PaperInspector(BaseNode):
         name: str,
         llm_model: LLM,
         embeddings_model: Embeddings,
+        vectordb,
         graph,
         persist_store: PersistentStore,
     ):
@@ -353,6 +354,7 @@ class PaperInspector(BaseNode):
         self.graph = graph
         self.llm_model = llm_model
         self.embeddings_model = embeddings_model
+        self.vectordb = vectordb
         self.persist_store = persist_store
         self.progress = {"total": ProgressInfo(0, 0)}
         for node in self.graph.get_node_names():
@@ -519,7 +521,7 @@ class PaperInspector(BaseNode):
                             self.embeddings_model,
                             data_id,
                             self.llm_model.context_size,
-                            os.path.join(WF_VECTDB_DIR, data_id),
+                            self.vectordb,
                         ),
                     }
 
@@ -532,8 +534,8 @@ class PaperInspector(BaseNode):
                         self.persist_store.save_state(data_id, "_DONE", {"done": True})
                         # clean state
                         state[data_id][WF_STATE_CACHE_KEY].clear()
-                        state[data_id][WF_STATE_EXTRACTOR_KEY].clear_memory()
-                        state[data_id][WF_STATE_MEMORY_KEY].clear()
+                        state[data_id][WF_STATE_MEMORY_KEY].clear_memory()
+                        state[data_id][WF_STATE_MEMORY_KEY].close()
                         state.pop(data_id)
 
                     yield self.persist_store.get_state(data_id, first_node_name)

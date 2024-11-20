@@ -12,6 +12,7 @@ import logging
 from utils.profiler import profiler
 import copy
 import os
+from memory_profiler import profile
 
 logger = logging.getLogger(__name__)
 
@@ -60,7 +61,11 @@ class PDFExtractNode(BaseNode):
         if vectordb.is_db_valid() and vectordb.is_db_empty():
             docs = pdf_extractor.extract_all()
             paper_references = list(pdf_extractor.linked_contents)
+            logger.info("========= START TO INIT MEMORY ======")
             vectordb.init_memory_parallel(docs, ["page_index", "section", "part_index"])
+            logger.info(
+                f"========= FINISH TO INIT MEMORY {pdf_extractor.file_path} ======"
+            )
             pdf_extractor.clear()
 
         paper = Paper.from_pdf_metadata(paper_metadata)

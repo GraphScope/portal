@@ -1,6 +1,6 @@
 aiofiles>=23.2
 arxiv>=2.1
-chromadb>=0.5
+chromadb==0.5.15
 cryptography>=43.0
 pymupdf>=1.24
 fake-useragent>=1.5.1

@@ -276,7 +276,7 @@ class PaperExpansion:
                         self.llm_model,
                         self.embedding_model,
                         str(uuid.uuid5(uuid.NAMESPACE_DNS, paper_name)),
-                        persist_directoy=None,
+                        vectordb=None,
                     ),
                     pdf_extractor=pdf_extractor,
                     name="extract",

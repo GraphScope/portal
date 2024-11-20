@@ -37,6 +37,7 @@ class SurveyPaperReading(BaseWorkflow):
         llm_model: LLM,
         parser_model: LLM,
         embeddings_model: Embeddings,
+        vectordb,
         workflow_dict,
         persist_store=None,
     ):
@@ -54,7 +55,12 @@ class SurveyPaperReading(BaseWorkflow):
         if not persist_store:
             persist_store = JsonFileStore(os.path.join(WF_OUTPUT_DIR, id))
         graph = self._create_graph(
-            workflow_dict, llm_model, parser_model, embeddings_model, persist_store
+            workflow_dict,
+            llm_model,
+            parser_model,
+            embeddings_model,
+            vectordb,
+            persist_store,
         )
         super().__init__(
             id,
@@ -63,7 +69,13 @@ class SurveyPaperReading(BaseWorkflow):
         )
 
     def _create_graph(
-        self, workflow_dict, llm_model, parser_model, embeddings_model, persist_store
+        self,
+        workflow_dict,
+        llm_model,
+        parser_model,
+        embeddings_model,
+        vectordb,
+        persist_store,
     ):
         """
         Create a graph for the SurveyPaperReading workflow.
@@ -93,6 +105,7 @@ class SurveyPaperReading(BaseWorkflow):
                     inspector_name,
                     llm_model,
                     embeddings_model,
+                    vectordb,
                     inspector_graph,
                     persist_store,
                 )
