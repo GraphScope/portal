@@ -12,7 +12,6 @@ import logging
 from utils.profiler import profiler
 import copy
 import os
-from memory_profiler import profile
 
 logger = logging.getLogger(__name__)
 
