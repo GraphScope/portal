@@ -70,6 +70,7 @@ class RetrievedMemory:
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
         self.persist_directory = vectordb
+        self.embedding_function = embedding_functions.DefaultEmbeddingFunction()
 
         self.llm = llm
 
@@ -90,7 +91,7 @@ class RetrievedMemory:
         #     # embedding_function=self.embeddings,
         # )
 
-        self.init_thread_num = 1
+        self.init_thread_num = 10
 
     def is_db_valid(self):
         return self.persistent_client is not None
@@ -238,11 +239,14 @@ class RetrievedMemory:
     def init_memory(self, docs: List[dict], ids_format: list):
         documents = []
         metadatas = []
+        embeddings = []
         ids = []
 
         for doc in docs:
             content = doc["page_content"]
             metadata = doc["metadata"]
+            embed = self.embedding_function([content])[0]
+            # print(embed)
             # print(metadata)
             if metadata["type"] == VectorDBHierarchy.FirstLayer.value:
                 doc_id = f"{self.collection_name}_{content}"
@@ -252,11 +256,13 @@ class RetrievedMemory:
                 # doc_id = doc_id + "_" + str(id_item) + str(metadata[id_item])
 
             documents.append(content)
+            embeddings.append(embed)
             metadatas.append(metadata)
             ids.append(doc_id)
 
         self.collection.add(
             documents=documents,
+            embeddings=embeddings,
             metadatas=metadatas,
             ids=ids,
         )
