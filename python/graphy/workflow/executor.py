@@ -6,7 +6,7 @@ from queue import Queue
 from typing import Dict, Any, List, Generator
 
 from graph.types import DataType, DataGenerator
-from graph.nodes import BaseNode
+from graph.nodes import BaseNode, NodeType
 from graph.edges import BaseEdge
 
 import asyncio
@@ -66,13 +66,13 @@ class Task:
     Represents a unit of work in the workflow execution.
 
     Attributes:
-        data (DataGenerator): The input data for the task.
+        input (DataGenerator): The input data for the task.
         executor (Union[BaseNode, BaseEdge, str]): The executor responsible for processing the task.
             Can be a BaseNode, or a BaseEdge.
     """
 
-    def __init__(self, data: DataGenerator, executor: Union[BaseNode, BaseEdge]):
-        self.data = data  # Input data for the task
+    def __init__(self, input: DataGenerator, executor: Union[BaseNode, BaseEdge]):
+        self.input = input  # Input data for the task
         self.executor = executor  # Executor (node/edge) for this task
 
     def __repr__(self):
@@ -84,10 +84,17 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
     WorkflowExecutor implementation using ThreadPoolExecutor with asynchronous execution.
     """
 
-    def __init__(self, workflow, max_workers: int = 4):
+    def __init__(
+        self,
+        workflow,
+        max_workers: int = 4,
+        queue_size: int = 100,
+        max_inspectors: int = 100,
+    ):
         super().__init__(workflow)
-        self.task_queue = asyncio.Queue()
+        self.task_queue = asyncio.Queue(queue_size)
         self.executor = ThreadPoolExecutor(max_workers=max_workers)
+        self.max_inspectors = max_inspectors
 
     async def execute(self, initial_inputs: List[DataType]):
         """
@@ -122,6 +129,7 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
         self.executor.shutdown(wait=True)
 
     async def _process_task(self, state: Dict[str, Any]):
+        processed_inspectors = 0
         """
         Process a single task from the task queue.
 

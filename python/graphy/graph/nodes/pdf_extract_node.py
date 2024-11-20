@@ -61,7 +61,7 @@ class PDFExtractNode(BaseNode):
             docs = pdf_extractor.extract_all()
             paper_references = list(pdf_extractor.linked_contents)
             vectordb.init_memory_parallel(docs, ["page_index", "section", "part_index"])
-            pdf_extractor.cleanup()
+            pdf_extractor.clear()
 
         paper = Paper.from_pdf_metadata(paper_metadata)
         paper_dict = paper.to_dict()
