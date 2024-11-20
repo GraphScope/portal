@@ -506,7 +506,7 @@ class PaperInspector(BaseNode):
                     paper_data = self.persist_store.get_state(data_id, first_node_name)
                     edges = self.persist_store.get_state(data_id, "_Edges")
                     curr_id = paper_data.get("data", {}).get("id", "")
-                    if curr_id:
+                    if curr_id and parent_id:
                         if edges:
                             edges.append(f"{parent_id}|{curr_id}")
                         else:
