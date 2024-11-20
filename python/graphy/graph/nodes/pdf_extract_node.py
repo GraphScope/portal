@@ -67,6 +67,10 @@ class PDFExtractNode(BaseNode):
                 f"========= FINISH TO INIT MEMORY {pdf_extractor.file_path} ======"
             )
             pdf_extractor.clear()
+        else:
+            pdf_extractor.compute_links()
+            paper_references = list(pdf_extractor.linked_contents)
+            pdf_extractor.clear()
 
         paper = Paper.from_pdf_metadata(paper_metadata)
         paper_dict = paper.to_dict()
