@@ -90,7 +90,7 @@ class RetrievedMemory:
         #     # embedding_function=self.embeddings,
         # )
 
-        self.init_thread_num = 10
+        self.init_thread_num = 1
 
     def is_db_valid(self):
         return self.persistent_client is not None
@@ -388,7 +388,6 @@ class RetrievedMemory:
                         segment_manager.callback_cache_evict(cache[collection_id])
 
             self.persistent_client.delete_collection(name=self.collection_name)
-            self.persistent_client.reset()
             gc.collect()
 
         logger.debug(f"========== AFTER UNLOAD {get_process_info()} =========")

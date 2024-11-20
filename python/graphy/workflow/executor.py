@@ -53,7 +53,7 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
     """
 
     def __init__(self, workflow, max_workers: int = 4, max_inspectors: int = 100):
-        super().__init__(workflow, max_inspectors)
+        self.workflow = workflow
         self.task_queue = Queue()
         self.executor = ThreadPoolExecutor(max_workers=max_workers)
         self.lock = threading.Lock()
