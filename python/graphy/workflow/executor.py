@@ -131,7 +131,7 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
                         self.processed_inspectors += 1
                         if self.processed_inspectors >= self.max_inspectors:
                             logger.info(
-                                f"Reached max inspectors limit '{self.max_inspectors}', stopping execution)"
+                                f"Reached max inspectors limit '{self.max_inspectors}', stopping execution"
                             )
                             return []
                 for edge in self.workflow.graph.get_adjacent_edges(executor.name):
