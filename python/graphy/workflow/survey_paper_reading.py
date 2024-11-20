@@ -1,5 +1,5 @@
 from workflow import BaseWorkflow
-from models import LLM
+from models import LLM, DEFAULT_LLM_MODEL_CONFIG, DefaultEmbedding, set_llm_model
 from db import PersistentStore, JsonFileStore
 from graph import BaseGraph
 from graph.edges.paper_navigate_edge import PaperNavigateEdge
@@ -22,6 +22,7 @@ from config import (
 )
 
 from langchain_core.embeddings import Embeddings
+from typing import Type
 
 import time
 import os
@@ -38,7 +39,7 @@ class SurveyPaperReading(BaseWorkflow):
         parser_model: LLM,
         embeddings_model: Embeddings,
         vectordb,
-        workflow_dict,
+        graph_json: dict,
         persist_store=None,
     ):
         for folder in [
@@ -55,7 +56,7 @@ class SurveyPaperReading(BaseWorkflow):
         if not persist_store:
             persist_store = JsonFileStore(os.path.join(WF_OUTPUT_DIR, id))
         graph = self._create_graph(
-            workflow_dict,
+            graph_json,
             llm_model,
             parser_model,
             embeddings_model,
@@ -68,9 +69,110 @@ class SurveyPaperReading(BaseWorkflow):
             persist_store,
         )
 
+    @classmethod
+    def from_json(
+        cls: Type["SurveyPaperReading"], workflow_json: dict
+    ) -> "SurveyPaperReading":
+        """
+        Create a SurveyPaperReading workflow from a JSON configuration.
+
+        Args:
+            workflow_json (dict): The JSON representation of the workflow.
+
+        Raises:
+            ValueError: If no graph field is found in the workflow_json
+
+        Returns:
+            SurveyPaperReading: An instance of the workflow.
+
+        Example `workflow_json`:
+            {
+                "id": "example_workflow",
+                "llm_config": {
+                    "model_name": "gpt-4",
+                    "base_url": "https://api.openai.com/v1",
+                    "api_key": "your_api_key_here",
+                },
+                "graph": {
+                    "inspectors": [
+                        {
+                            "name": "PaperInspector",
+                            "graph": {
+                                "nodes": [
+                                    {
+                                        "name": "Paper",
+                                        "node_type": "BASE",
+                                    },
+                                    {
+                                        "name": "Background",
+                                        "node_type": "INSPECTOR",
+                                        "query": "**Question**: What problem does this paper address?",
+                                        "extract_from": ["1"],
+                                        "output_schema": {
+                                            "type": "single",
+                                            "description": "Description of the problem addressed in the paper.",
+                                            "item": [
+                                                {"name": "problem", "type": "string", "description": "The problem addressed."},
+                                                {"name": "importance", "type": "string", "description": "Why the problem matters."},
+                                            ],
+                                        },
+                                    },
+                                    {
+                                        "name": "Solution",
+                                        "node_type": "INSPECTOR",
+                                        "query": "**Question**: What solutions are proposed in this paper?",
+                                        "extract_from": [],
+                                        "output_schema": {
+                                            "type": "array",
+                                            "description": "Proposed solutions in the paper.",
+                                            "item": [
+                                                {"name": "name", "type": "string", "description": "Name of the solution."},
+                                                {"name": "details", "type": "string", "description": "Detailed description."},
+                                            ],
+                                        },
+                                    },
+                                ],
+                                "edges": [
+                                    {"source": "Paper", "target": "Background", },
+                                    {"source": "Background", "target": "Solution"},
+                                ],
+                            }
+                        }
+                    ],
+                      "navigators": [
+                        {
+                        "name": "Reference",
+                        "source": "PaperInspector",
+                        "target": "PaperInspector"
+                        }
+                    ]
+                },
+            }
+        """
+        id = workflow_json.get("id", f"survey_paper_reading_{int(time.time())}")
+        llm_config = workflow_json.get("llm_model", DEFAULT_LLM_MODEL_CONFIG)
+        parser_config = workflow_json.get("parser_model", {})
+        embeddings_model = DefaultEmbedding()
+        llm_model = set_llm_model(llm_config)
+        parser_model = llm_model
+        if parser_config:
+            parser_model = set_llm_model(parser_config)
+        graph_json = workflow_json.get("graph", {})
+
+        if not graph_json:
+            raise ValueError("No graph found in the workflow JSON.")
+
+        return cls(
+            id,
+            llm_model,
+            parser_model,
+            embeddings_model.chroma_embedding_model(),
+            graph_json,
+        )
+
     def _create_graph(
         self,
-        workflow_dict,
+        graph_json,
         llm_model,
         parser_model,
         embeddings_model,
@@ -89,7 +191,7 @@ class SurveyPaperReading(BaseWorkflow):
         graph = BaseGraph()
 
         # Parse Inspector Nodes
-        inspectors = workflow_dict.get("inspectors", [])
+        inspectors = graph_json.get("inspectors", [])
         if inspectors:
             for inspector in inspectors:
                 inspector_name = inspector["name"]
@@ -112,7 +214,7 @@ class SurveyPaperReading(BaseWorkflow):
                 graph.add_node(inspector_node)
 
             # Parse Navigator Edges
-            navigators = workflow_dict.get("navigators", [])
+            navigators = graph_json.get("navigators", [])
             for navigator in navigators:
                 name = navigator.get("name", "")
                 source = navigator["source"]
@@ -124,7 +226,7 @@ class SurveyPaperReading(BaseWorkflow):
         # Handle single InspectorNode special case
         else:
             inspector_graph = create_inspector_graph(
-                workflow_dict,
+                graph_json,
                 llm_model,
                 parser_model,
                 embeddings_model,

@@ -37,7 +37,6 @@ import traceback
 import json
 import zipfile
 import uuid
-import asyncio
 import shutil
 import logging
 import copy
@@ -724,7 +723,7 @@ class DemoApp:
                 executor = ThreadPoolWorkflowExecutor(workflow, thread_num)
 
                 def run_executor():
-                    asyncio.run(executor.execute(pdf_files))
+                    executor.execute(pdf_files)
 
                 # Run in a separate thread
                 thread = Thread(target=run_executor)

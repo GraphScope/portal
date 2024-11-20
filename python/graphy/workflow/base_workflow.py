@@ -1,4 +1,5 @@
 from __future__ import annotations
+from abc import ABC, abstractmethod
 
 from graph.nodes.base_node import BaseNode, NodeType
 from graph.nodes.paper_reading_nodes import ProgressInfo, process_id
@@ -19,7 +20,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class BaseWorkflow:
+class BaseWorkflow(ABC):
     """
     Base Class representing the workflow.
 
@@ -43,6 +44,14 @@ class BaseWorkflow:
         self.persist_store = persist_store
         self.graph = graph
         self.state = {}
+
+    @classmethod
+    @abstractmethod
+    def from_json(cls, workflow_json: dict):
+        """
+        Abstract class method to create a workflow from JSON.
+        """
+        pass
 
     def get_id(self):
         return self.id
