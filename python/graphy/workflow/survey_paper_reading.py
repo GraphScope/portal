@@ -27,6 +27,7 @@ from typing import Type
 import time
 import os
 import logging
+import chromadb
 
 logger = logging.getLogger(__name__)
 
@@ -158,6 +159,7 @@ class SurveyPaperReading(BaseWorkflow):
         if parser_config:
             parser_model = set_llm_model(parser_config)
         graph_json = workflow_json.get("graph", {})
+        vectordb = chromadb.PersistentClient(path=WF_VECTDB_DIR)
 
         if not graph_json:
             raise ValueError("No graph found in the workflow JSON.")
@@ -167,6 +169,7 @@ class SurveyPaperReading(BaseWorkflow):
             llm_model,
             parser_model,
             embeddings_model.chroma_embedding_model(),
+            vectordb,
             graph_json,
         )
 
