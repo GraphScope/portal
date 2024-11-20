@@ -16,12 +16,6 @@ class WorkflowExecutor(ABC):
     Abstract base class for Workflow Executors.
     """
 
-    def __init__(self, workflow, max_inspectors: int = 100):
-        self.workflow = workflow
-        self.max_inspectors = max_inspectors
-        self.processed_inspectors = 0
-        self.state = workflow.state
-
     @abstractmethod
     def execute(self, initial_inputs: List[DataType]):
         """
@@ -64,6 +58,9 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
         self.executor = ThreadPoolExecutor(max_workers=max_workers)
         self.lock = threading.Lock()
         self.active_futures = set()
+        self.state = workflow.state
+        self.max_inspectors = max_inspectors
+        self.processed_inspectors = 0
 
     def execute(self, initial_inputs: List[DataType]):
         """
