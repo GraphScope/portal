@@ -528,10 +528,13 @@ class PaperInspector(BaseNode):
                         == self.graph.nodes_count()
                     ):
                         self.persist_store.save_state(data_id, "_DONE", {"done": True})
+                        # clean state
+                        state[data_id][WF_STATE_CACHE_KEY].clear()
+                        state[data_id][WF_STATE_EXTRACTOR_KEY].clear_memory()
+                        state[data_id][WF_STATE_MEMORY_KEY].clear()
+                        state.pop(data_id)
 
-                    yield state[data_id][WF_STATE_CACHE_KEY][
-                        first_node_name
-                    ].get_response()
+                    yield self.persist_store.get_state(data_id, first_node_name)
 
             except Exception as e:
                 logger.error(f"Error initializing PaperExtractor: {e}")

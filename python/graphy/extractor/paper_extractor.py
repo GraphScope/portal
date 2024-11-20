@@ -1381,5 +1381,5 @@ class PaperExtractor(PDFExtractor):
     def extract_all(self) -> Iterable[Document]:
         return list(self.extract_text(get_rich_info=True, get_tables=False))
 
-    def cleanup(self):
+    def clear(self):
         self.doc.close()
