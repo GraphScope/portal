@@ -10,6 +10,7 @@ from config import (
     WF_STATE_CACHE_KEY,
     WF_STATE_PROGRESS_KEY,
     WF_IMAGE_DIR,
+    WF_VECTDB_DIR,
 )
 from extractor import PaperExtractor
 from db import PersistentStore
@@ -112,7 +113,7 @@ def create_inspector_graph(
     parser_model: LLM,
     embeddings_model: Embeddings,
 ) -> "BaseGraph":
-    from graph.base_edge import BaseEdge
+    from graph.edges.base_edge import BaseEdge
     from graph.base_graph import BaseGraph
 
     nodes_dict = {}
@@ -518,6 +519,7 @@ class PaperInspector(BaseNode):
                             self.embeddings_model,
                             data_id,
                             self.llm_model.context_size,
+                            os.path.join(WF_VECTDB_DIR, data_id),
                         ),
                     }
 

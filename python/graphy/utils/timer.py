@@ -75,3 +75,6 @@ class Timer:
             return -1
 
         self.record_times[name].reset()
+
+    def print(self):
+        return

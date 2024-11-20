@@ -149,14 +149,14 @@ class ArxivFetcher:
 
         highest_similarity, best_match = self.find_paper_from_arxiv(name, max_results)
 
-        time.sleep(0.3)
+        time.sleep(0.1)
 
         if highest_similarity > 0.9:
             logger.info(
                 f"Best match found: {best_match.title} with similarity {highest_similarity}"
             )
 
-            time.sleep(0.5)
+            time.sleep(0.1)
             download_list = self.bib_search_arxiv.download_by_object(
                 best_match, self.download_folder
             )

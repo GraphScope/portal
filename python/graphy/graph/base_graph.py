@@ -1,5 +1,5 @@
 from typing import List, Dict
-from .base_edge import BaseEdge
+from .edges import BaseEdge
 from .nodes import BaseNode
 
 

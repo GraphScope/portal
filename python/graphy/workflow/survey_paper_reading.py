@@ -1,7 +1,8 @@
 from workflow import BaseWorkflow
 from models import LLM
 from db import PersistentStore, JsonFileStore
-from graph import BaseGraph, BaseEdge
+from graph import BaseGraph
+from graph.edges.paper_navigate_edge import PaperNavigateEdge
 from graph.nodes.paper_reading_nodes import (
     PaperInspector,
     create_inspector_graph,
@@ -17,6 +18,7 @@ from config import (
     WF_UPLOADS_DIR,
     WF_VECTDB_DIR,
     WF_WEBDATA_DIR,
+    WF_PDF_DOWNLOAD_DIR,
 )
 
 from langchain_core.embeddings import Embeddings
@@ -45,6 +47,7 @@ class SurveyPaperReading(BaseWorkflow):
             WF_UPLOADS_DIR,
             WF_VECTDB_DIR,
             WF_WEBDATA_DIR,
+            WF_PDF_DOWNLOAD_DIR,
         ]:
             if not os.path.exists(folder):
                 os.makedirs(folder, exist_ok=True)
@@ -102,7 +105,7 @@ class SurveyPaperReading(BaseWorkflow):
                 source = navigator["source"]
                 target = navigator["target"]
 
-                edge = BaseEdge(source=source, target=target, name=name)
+                edge = PaperNavigateEdge(source=source, target=target, name=name)
                 graph.add_edge(edge)
 
         # Handle single InspectorNode special case
