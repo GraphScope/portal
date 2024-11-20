@@ -4,6 +4,7 @@ import { useContext } from '../../../hooks/useContext';
 import { getDataMap } from '../../Prepare/utils';
 import { handleExpand, applyStatus } from './utils';
 import type { NodeData } from '../../../graph/types';
+import type { GraphSchema } from '../../../hooks/typing';
 
 interface INeighborQueryProps {}
 
@@ -18,7 +19,7 @@ export interface INeighborQueryData {
 }
 export interface INeighborQueryItems {
   id: 'queryNeighborItems';
-  query: (params: { selectNode?: NodeData; schema: { nodes: []; edges: [] } }) => Promise<any>;
+  query: (params: { schema: GraphSchema }) => Promise<Record<string, { label: string; value: string }[]>>;
 }
 
 const getScript = (ids, dataMap) => {};
@@ -26,32 +27,27 @@ const getScript = (ids, dataMap) => {};
 const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
   const { store, updateStore } = useContext();
   const { nodeStatus, schema, dataMap, emitter, graph, data, getService } = store;
+
   const MenuRef = useRef<HTMLDivElement>(null);
   const [state, setState] = useState({
-    items: [],
+    itemMap: {},
     isLoading: false,
   });
-  const { items } = state;
+  const { itemMap } = state;
+  const getMenuItems = async () => {
+    const itemResult = await getService<INeighborQueryItems>('queryNeighborItems')({
+      schema,
+    });
+    setState(preState => {
+      return {
+        ...preState,
+        itemMap: itemResult,
+      };
+    });
+  };
   useEffect(() => {
-    (async () => {
-      const a = getService<INeighborQueryData>('queryNeighborData');
-
-      const selectIds = Object.keys(nodeStatus).filter(key => {
-        return nodeStatus[key].selected;
-      });
-      const selectNode = data.nodes.find(item => item.id === selectIds[0]);
-      const itemResult = await getService<INeighborQueryItems>('queryNeighborItems')({
-        selectNode,
-        schema,
-      });
-      setState(preState => {
-        return {
-          ...preState,
-          items: itemResult,
-        };
-      });
-    })();
-  }, []);
+    getMenuItems();
+  }, [schema]);
 
   const selectIds = Object.keys(nodeStatus).filter(key => {
     return nodeStatus[key].selected;
@@ -113,7 +109,7 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
           {
             key: 'NeighborQuery',
             label: 'NeighborQuery',
-            children: items,
+            children: itemMap[selectNode.label],
           },
         ]}
       />

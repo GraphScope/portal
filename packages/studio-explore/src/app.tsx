@@ -77,7 +77,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             <Loading />
             <Toolbar
               direction="horizontal"
-              style={{ position: 'absolute', top: '20px', right: '80px', left: '80px' }}
+              style={{ position: 'absolute', top: '20px', left: '20px', width: 500 }}
               noSpace
             >
               <Searchbar />

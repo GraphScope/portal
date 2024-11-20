@@ -1,6 +1,6 @@
 import React from 'react';
 import StoreProvider, { useContext as useZustandContext } from '@graphscope/use-zustand';
-import type { StyleConfig, Emitter, Graph, GraphData } from './typing';
+import type { StyleConfig, Emitter, Graph, GraphData, GraphSchema } from './typing';
 import { StatusConfig } from '../components/Prepare/typing';
 
 export type IGetServices = <T extends { id: string; query: (...args: any[]) => Promise<any> }>(
@@ -52,7 +52,7 @@ export type IStore = {
   nodeStatus: Record<string, StatusConfig>;
   edgeStatus: Record<string, StatusConfig>;
   graphId: string;
-  schema: any;
+  schema: GraphSchema;
   isLoading: boolean;
   getService: IGetServices;
 };

@@ -84,22 +84,18 @@ const StyleSetting: React.FunctionComponent<IOverviewProps> = props => {
         <FormattedMessage id="Vertex Labels" />
       </Title>
       <Space wrap size={[0, 6]}>
-        {NODE_STYLES.map(item => {
-          const { label, properties, style } = item;
-          return (
-            <Legend key={label} label={label} properties={properties} {...style} type="node" onChange={onChange} />
-          );
+        {NODE_STYLES.map((item, index) => {
+          const { properties, style, ...others } = item;
+          return <Legend key={index} properties={properties} {...others} {...style} type="node" onChange={onChange} />;
         })}
       </Space>
       <Title level={5} style={{ margin: '0px' }}>
         <FormattedMessage id="Edge Labels" />
       </Title>
       <Space wrap size={[0, 6]}>
-        {EDGE_STYLES.map(item => {
-          const { label, properties, style } = item;
-          return (
-            <Legend key={label} label={label} properties={properties} {...style} type="edge" onChange={onChange} />
-          );
+        {EDGE_STYLES.map((item, index) => {
+          const { properties, style, ...others } = item;
+          return <Legend key={index} properties={properties} {...others} {...style} type="edge" onChange={onChange} />;
         })}
       </Space>
     </Flex>

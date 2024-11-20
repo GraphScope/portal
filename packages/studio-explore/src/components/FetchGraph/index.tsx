@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useContext, getStyleConfig } from '@graphscope/studio-graph';
-
+import type { GraphSchema } from '@graphscope/studio-graph';
 export interface IQueryGraphData {
   id: 'queryGraphData';
   query: () => Promise<{ nodes: []; edges: [] }>;
 }
 export interface IQueryGraphSchema {
   id: 'queryGraphSchema';
-  query: () => Promise<{ nodes: []; edges: [] }>;
+  query: () => Promise<GraphSchema>;
 }
 const FetchGraph = props => {
   const { updateStore, store } = useContext();
@@ -21,21 +21,21 @@ const FetchGraph = props => {
     const data = await getService<IQueryGraphData>('queryGraphData')();
     const schema = await getService<IQueryGraphSchema>('queryGraphSchema')();
     const style = getStyleConfig(schema, graphId);
-    const nodeStyles = Object.keys(style.nodeStyle).reduce((acc, curr) => {
-      return {
-        ...acc,
-        [curr]: {
-          ...style.nodeStyle[curr],
-          caption: 'title',
-        },
-      };
-    }, {});
-    console.log('data', data, schema);
+
+    // const nodeStyles = Object.keys(style.nodeStyle).reduce((acc, curr) => {
+    //   return {
+    //     ...acc,
+    //     [curr]: {
+    //       ...style.nodeStyle[curr],
+    //       caption: 'title',
+    //     },
+    //   };
+    // }, {});
     updateStore(draft => {
       draft.data = data;
       draft.source = data;
       draft.schema = schema;
-      draft.nodeStyle = nodeStyles;
+      draft.nodeStyle = style.nodeStyle;
       draft.edgeStyle = style.edgeStyle;
       draft.isLoading = false;
     });
