@@ -47,9 +47,9 @@ class BaseWorkflow(ABC):
 
     @classmethod
     @abstractmethod
-    def from_json(cls, workflow_json: dict):
+    def from_dict(cls, workflow_json: dict):
         """
-        Abstract class method to create a workflow from JSON.
+        Abstract class method to create a workflow from dict.
         """
         pass
 

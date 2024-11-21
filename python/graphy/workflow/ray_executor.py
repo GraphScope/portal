@@ -1,12 +1,15 @@
-import ray
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Type
+
 from graph.types import DataType
 from graph.nodes import BaseNode, NodeType
 from graph.edges import BaseEdge
 from workflow import BaseWorkflow, SurveyPaperReading
-from workflow.executor import WorkflowExecutor
+from workflow.executor import WorkflowExecutor, Task
+
+import ray
 import logging
 import time
+import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -24,9 +27,9 @@ class WorkflowWorker:
         Args:
             workflow_json (Dict[str, Any]): JSON containing the workflow configuration.
         """
-        self.workflow = SurveyPaperReading.from_json(workflow_json)
+        self.workflow = SurveyPaperReading.from_dict(workflow_json)
 
-    def execute_task(self, task: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def execute_task(self, task: Task) -> List[Dict[str, Any]]:
         """
         Execute a single task (either a node or edge).
 
@@ -42,18 +45,44 @@ class WorkflowWorker:
         if executor_type == "node":
             logger.info(f"Executing node: {executor}")
             node = self.workflow.graph.get_node(executor)
+            try:
+                results = list(node.execute(self.workflow.state, iter([input_data])))
+                message = "Execution successful"
+                status_code = 200  # HTTP-style status code for success
+            except Exception as e:
+                logger.error(f"Error executing node {executor}: {e}")
+                full_traceback = traceback.format_exc()
+                results = []
+                message = f"Execution failed: {str(e)}\nTraceback:\n{full_traceback}"
+                status_code = 500  # HTTP-style status code for error
+
             return {
-                "results": list(node.execute(self.workflow.state, iter([input_data]))),
+                "results": results,
                 "executor": executor,
                 "executor_type": executor_type,
+                "message": message,
+                "status_code": status_code,
             }
         else:
             logger.info(f"Executing edge: {executor}")
             edge = self.workflow.graph.get_edge(executor)
+            try:
+                results = list(edge.execute(self.workflow.state, iter([input_data])))
+                message = "Execution successful"
+                status_code = 200  # HTTP-style status code for success
+            except Exception as e:
+                logger.error(f"Error executing edge {executor}: {e}")
+                full_traceback = traceback.format_exc()
+                results = []
+                message = f"Execution failed: {str(e)}\nTraceback:\n{full_traceback}"
+                status_code = 500  # HTTP-style status code for error
+
             return {
-                "results": list(edge.execute(self.workflow.state, iter([input_data]))),
+                "results": results,
                 "executor": executor,
                 "executor_type": executor_type,
+                "message": message,
+                "status_code": status_code,
             }
 
 
@@ -65,6 +94,7 @@ class RayWorkflowExecutor(WorkflowExecutor):
     def __init__(
         self,
         workflow_json: Dict[str, Any],
+        workflow_class: Type[BaseWorkflow],
         max_workers: int = 4,
         max_inspectors: int = 100,
     ):
@@ -76,7 +106,7 @@ class RayWorkflowExecutor(WorkflowExecutor):
             max_workers (int): Maximum number of parallel workers.
         """
         self.workflow_json = workflow_json
-        self.workflow = SurveyPaperReading.from_json(workflow_json)
+        self.workflow = workflow_class.from_dict(workflow_json)
         self.max_workers = max_workers
         self.max_inspectors = max_inspectors
         self.processed_inspectors = 0
@@ -143,6 +173,12 @@ class RayWorkflowExecutor(WorkflowExecutor):
                         executor = task_result["executor"]
                         executor_type = task_result["executor_type"]
                         results = task_result["results"]
+                        message = task_result["message"]
+                        status_code = task_result["status_code"]
+
+                        if status_code != 200:
+                            logger.error(f"Task failed with error: {message}")
+                            continue
 
                         if executor_type == "node":
                             executor_node = self.workflow.graph.get_node(executor)
