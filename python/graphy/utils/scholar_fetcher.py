@@ -26,6 +26,9 @@ class ScholarFetcher:
 
         self.result_former = ResultFormer()
 
+    def set_web_data_folder(self, folder_path: str):
+        self.bib_search_google.web_data_folder = folder_path
+
     def download_paper(self, name: str, mode="vague"):
         logger.info(
             f"******************** Scholar Searching for paper: {name} *******************"

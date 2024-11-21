@@ -17,7 +17,6 @@ from config import (
     WF_UPLOADS_DIR,
     WF_VECTDB_DIR,
     WF_WEBDATA_DIR,
-    WF_PDF_DOWNLOAD_DIR,
 )
 
 from langchain_core.embeddings import Embeddings
@@ -49,12 +48,12 @@ class SurveyPaperReading(BaseWorkflow):
             WF_UPLOADS_DIR,
             WF_VECTDB_DIR,
             WF_WEBDATA_DIR,
-            WF_PDF_DOWNLOAD_DIR,
         ]:
             if not os.path.exists(folder):
                 os.makedirs(folder, exist_ok=True)
         if not persist_store:
             persist_store = JsonFileStore(os.path.join(WF_OUTPUT_DIR, id))
+
         graph = self._create_graph(
             graph_json,
             llm_model,
@@ -62,7 +61,9 @@ class SurveyPaperReading(BaseWorkflow):
             embeddings_model,
             vectordb,
             persist_store,
+            id,
         )
+
         super().__init__(
             id,
             graph,
@@ -158,6 +159,7 @@ class SurveyPaperReading(BaseWorkflow):
         if parser_config:
             parser_model = set_llm_model(parser_config)
         graph_json = workflow_json.get("graph", {})
+
         vectordb = chromadb.PersistentClient(path=WF_VECTDB_DIR)
 
         if not graph_json:
@@ -180,6 +182,7 @@ class SurveyPaperReading(BaseWorkflow):
         embeddings_model,
         vectordb,
         persist_store,
+        id,
     ):
         """
         Create a graph for the SurveyPaperReading workflow.
@@ -216,8 +219,14 @@ class SurveyPaperReading(BaseWorkflow):
                 name = navigator.get("name", "")
                 source = navigator["source"]
                 target = navigator["target"]
+                paper_download_dir = os.path.join(WF_OUTPUT_DIR, id, "navigator")
 
-                edge = PaperNavigateEdge(source=source, target=target, name=name)
+                edge = PaperNavigateEdge(
+                    source=source,
+                    target=target,
+                    name=name,
+                    paper_download_dir=paper_download_dir,
+                )
                 graph.add_edge(edge)
 
         # Handle single InspectorNode special case

@@ -12,7 +12,6 @@ import os
 # Get the path of the system's temporary directory
 work_dir = tempfile.gettempdir()
 
-
 # Some global parameters
 WF_STATE_CACHE_KEY = "caches"
 WF_STATE_MEMORY_KEY = "memory_manager"
@@ -25,4 +24,3 @@ WF_UPLOADS_DIR = os.path.join(WF_DATA_DIR, "uploads")
 WF_DOWNLOADS_DIR = os.path.join(WF_DATA_DIR, "downloads")
 WF_IMAGE_DIR = os.path.join(WF_DATA_DIR, "img_store")
 WF_WEBDATA_DIR = os.path.join(WF_DATA_DIR, "webdata")
-WF_PDF_DOWNLOAD_DIR = os.path.join(WF_DATA_DIR, "navigator")

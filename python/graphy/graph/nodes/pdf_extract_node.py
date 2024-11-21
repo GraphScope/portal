@@ -1,7 +1,12 @@
 from .base_node import BaseNode, DataGenerator
 from utils import Paper, ArxivFetcher, ScholarFetcher
 from extractor import PDFExtractor
-from config import WF_IMAGE_DIR, WF_STATE_EXTRACTOR_KEY, WF_STATE_MEMORY_KEY
+from config import (
+    WF_IMAGE_DIR,
+    WF_STATE_EXTRACTOR_KEY,
+    WF_STATE_MEMORY_KEY,
+    WF_WEBDATA_DIR,
+)
 from memory import BaseRuntimeMemoryManager
 
 from langchain_core.embeddings import Embeddings
@@ -10,6 +15,7 @@ from langchain_chroma import Chroma
 from typing import Any, Dict, Generator
 import logging
 from utils.profiler import profiler
+import time
 import copy
 import os
 
@@ -79,6 +85,12 @@ class PDFExtractNode(BaseNode):
             result, bib_text = self.arxiv_fetcher.fetch_paper(paper.title, 5)
             if result is None and bib_text is None:
                 if self.scholar_fetch_paper:
+                    self.scholar_fetcher.set_web_data_folder(
+                        os.path.join(
+                            WF_WEBDATA_DIR,
+                            paper_dict.get("id", f"webdata_{int(time.time())}"),
+                        ),
+                    )
                     result, bib_text = self.scholar_fetcher.fetch_paper(
                         paper.title, mode="exact"
                     )
