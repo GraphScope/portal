@@ -4,7 +4,7 @@
     "pnpm": "^9"
   },
   "scripts": {
-    "prev": "pnpm i && rm -rf package-lock.json",
+    "prev": "pnpm i --force && rm -rf package-lock.json",
     "start": "turbo run start",
     "build": "turbo run build --no-cache",
     "build:portal": "npm run prev && npm run build && cd packages/studio-website && npm run build:site",
@@ -59,8 +59,8 @@
     "@types/react-dom": "18.2.0",
     "babel-loader": "^8.2.5",
     "css-loader": "^6.8.1",
-    "dumi": "^2.2.16",
-    "dumi-theme-antd": "latest",
+    "dumi": "2.2.16",
+    "dumi-theme-antd": "^0.4.2",
     "father": "^4.4.1",
     "file-loader": "^6.2.0",
     "fs-extra": "^10.1.0",
