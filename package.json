@@ -13,7 +13,7 @@
     "docs": "dumi dev",
     "version": "changeset version",
     "publish": "npm run prev && npm run build && pnpm publish -r --force",
-    "check:publish": "npm run prev && npm run build && pnpm publish -r --dry-run"
+    "check:publish": "pnpm store prune && rm -rf pnpm-lock.yaml && npm run prev && npm run build && pnpm publish -r --dry-run"
   },
   "husky": {
     "hooks": {
