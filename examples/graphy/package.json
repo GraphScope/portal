@@ -23,7 +23,6 @@
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
     "@antv/g2": "^5.2.7",
-    "@graphscope/graph-apps": "workspace:*",
     "@graphscope/studio-components": "workspace:*",
     "@graphscope/studio-driver": "workspace:*",
     "@graphscope/studio-graph": "workspace:*",
