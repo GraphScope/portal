@@ -44,12 +44,17 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
 
     def __init__(
         self,
-        workflow_json: Dict[str, Any],
+        workflow: Any,
         workflow_class: Type[BaseWorkflow],
         max_workers: int = 4,
         max_inspectors: int = 100,
     ):
-        self.workflow = workflow_class.from_dict(workflow_json)
+        if isinstance(workflow, dict):
+            self.workflow = workflow_class.from_dict(workflow)
+        elif isinstance(workflow, BaseWorkflow):
+            self.workflow = workflow
+        else:
+            raise ValueError("Invalid workflow type.")
         self.task_queue = Queue()
         self.executor = ThreadPoolExecutor(max_workers=max_workers)
         self.lock = threading.Lock()
@@ -115,9 +120,8 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
         executor = task["executor"]
 
         if isinstance(executor, BaseNode):  # Node task
-            logger.info(f"Executing node: {executor}")
+            logger.info(f"Executing node: {executor.name}")
             results = executor.execute(self.state, task["input"])
-
             for result in results:
                 if executor.node_type == NodeType.INSPECTOR:
                     with self.lock:
@@ -131,11 +135,14 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
                     downstream_tasks.append({"input": iter([result]), "executor": edge})
 
         elif isinstance(executor, BaseEdge):  # Edge task
+
             logger.info(f"Executing edge: {executor.name}")
             results = executor.execute(self.state, task["input"])
-
             for result in results:
                 target_node = self.workflow.graph.get_node(executor.target)
+                with self.lock:
+                    if self.processed_inspectors >= self.max_inspectors:
+                        return []
                 downstream_tasks.append(
                     {"input": iter([result]), "executor": target_node}
                 )

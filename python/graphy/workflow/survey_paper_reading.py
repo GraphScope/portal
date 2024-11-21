@@ -5,7 +5,6 @@ from graph import BaseGraph
 from graph.edges.paper_navigate_edge import PaperNavigateEdge
 from graph.nodes.paper_reading_nodes import (
     PaperInspector,
-    create_inspector_graph,
     ProgressInfo,
 )
 from graph.nodes.base_node import NodeType

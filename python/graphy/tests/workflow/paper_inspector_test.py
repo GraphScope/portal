@@ -4,12 +4,12 @@ torchtext.disable_torchtext_deprecation_warning()
 
 import pytest
 from unittest.mock import MagicMock, create_autospec
-from graph import BaseGraph, BaseEdge
+from graph import BaseGraph
+from graph.edges import BaseEdge
 from graph.nodes import PaperInspector, BaseNode
 from graph.nodes.paper_reading_nodes import (
     ProgressInfo,
     ExtractNode,
-    create_inspector_graph,
 )
 from graph.types import DataGenerator
 from models import LLM, set_llm_model, DEFAULT_LLM_MODEL_CONFIG, DefaultEmbedding
@@ -19,11 +19,13 @@ from config import (
     WF_STATE_MEMORY_KEY,
     WF_STATE_EXTRACTOR_KEY,
     WF_OUTPUT_DIR,
+    WF_VECTDB_DIR,
 )
 
 from langchain_core.embeddings import Embeddings
 
 import os
+import chromadb
 
 
 @pytest.fixture
@@ -54,12 +56,14 @@ def mock_paper_inspector(mock_graph):
     mock_llm.enable_streaming = True
 
     mock_embeddings = MagicMock(spec=Embeddings)
+    mock_vectordb = MagicMock(spec=chromadb.PersistentClient)
     mock_persist_store = MagicMock(spec=PersistentStore)
     return PaperInspector(
         name="TestInspector",
         llm_model=mock_llm,
         embeddings_model=mock_embeddings,
         graph=mock_graph,
+        vectordb=mock_vectordb,
         persist_store=mock_persist_store,
     )
 
@@ -105,7 +109,7 @@ def test_inspector_execute():
     llm_model = set_llm_model(DEFAULT_LLM_MODEL_CONFIG)
     embeddings_model = DefaultEmbedding()
 
-    workflow = {
+    workflow_dict = {
         "nodes": [
             {"name": "Paper"},
             {
@@ -162,25 +166,32 @@ def test_inspector_execute():
         ],
     }
 
-    graph = create_inspector_graph(
-        workflow, llm_model, llm_model, embeddings_model.chroma_embedding_model()
-    )
+    output_path = os.path.join(WF_OUTPUT_DIR, "_graphy_test")
+    persist_store = JsonFileStore(output_path)
 
-    persist_store = JsonFileStore(WF_OUTPUT_DIR)
-
-    inspector = PaperInspector(
+    inspector = PaperInspector.from_dict(
         "PaperInspector",
+        workflow_dict,
+        llm_model,
         llm_model,
         embeddings_model.chroma_embedding_model(),
-        graph,
+        chromadb.PersistentClient(path=WF_VECTDB_DIR),
         persist_store,
     )
 
     state = {}
     inputs = [
         {"paper_file_path": "inputs/samples/graphrag.pdf"},
-        {"paper_file_path": "inputs/samples/huge-sigmod21.pdf"},
     ]
 
     for output in inspector.execute(state, iter(inputs)):
         print(output)
+
+    data_id = "from_local_to_global__a_graph_rag_approach_toquery-focused_summ"
+    print(persist_store.get_state(data_id, "Paper"))
+
+    assert persist_store.get_state(data_id, "Paper")
+    assert persist_store.get_state(data_id, "Contribution")
+    assert persist_store.get_state(data_id, "Challenge")
+
+    # os.remove(output_path)

@@ -1,5 +1,6 @@
 import pytest
-from graph import BaseGraph, BaseEdge
+from graph import BaseGraph
+from graph.edges import BaseEdge
 from graph.nodes import BaseNode
 
 
