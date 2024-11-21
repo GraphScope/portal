@@ -83,14 +83,14 @@ const List: React.FunctionComponent<IListProps> = props => {
     //     return <div>2</div>;
     //   },
     // },
-    {
-      title: 'Clustered',
-      key: 'summarized',
-      render: (record: IEntity) => {
-        const { summarized } = record;
-        return <Switch checked={summarized} size="small" disabled />;
-      },
-    },
+    // {
+    //   title: 'Clustered',
+    //   key: 'summarized',
+    //   render: (record: IEntity) => {
+    //     const { summarized } = record;
+    //     return <Switch checked={summarized} size="small" disabled />;
+    //   },
+    // },
     {
       title: 'Operator',
       render: (record: IEntity) => {
@@ -103,7 +103,7 @@ const List: React.FunctionComponent<IListProps> = props => {
               handleCluster(record);
             }}
           >
-            cluster
+            view
           </Typography.Link>
         );
       },

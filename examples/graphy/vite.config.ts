@@ -39,9 +39,9 @@ export default defineConfig({
   plugins: [react(), wasm(), topLevelAwait()],
   resolve: {
     alias: {
-      react: path.resolve(__dirname, 'node_modules/react'),
-      'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
-      '@graphscope/studio-components': path.resolve(__dirname, 'node_modules/@graphscope/studio-components'),
+      // react: path.resolve(__dirname, 'node_modules/react'),
+      // 'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
+      // '@graphscope/studio-components': path.resolve(__dirname, 'node_modules/@graphscope/studio-components'),
     },
   },
 });

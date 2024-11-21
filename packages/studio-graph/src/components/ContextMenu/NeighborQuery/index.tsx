@@ -1,21 +1,53 @@
-import React, { useRef } from 'react';
-import { Typography, Button, Menu } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { Menu } from 'antd';
 import { useContext } from '../../../hooks/useContext';
-import { Utils } from '@graphscope/studio-components';
 import { getDataMap } from '../../Prepare/utils';
 import { handleExpand, applyStatus } from './utils';
-import type { ForceGraphInstance } from 'force-graph';
-interface INeighborQueryProps {
-  onQuery: (params: any) => Promise<any>;
+import type { NodeData } from '../../../graph/types';
+import type { GraphSchema } from '../../../hooks/typing';
+
+interface INeighborQueryProps {}
+
+export interface INeighborQueryData {
+  id: 'queryNeighborData';
+  query: (params: {
+    /** 每个menu item 点击的回调值 */
+    key: string;
+    /** 当前选择的一批节点id */
+    selectIds: string[];
+  }) => Promise<any>;
+}
+export interface INeighborQueryItems {
+  id: 'queryNeighborItems';
+  query: (params: { schema: GraphSchema }) => Promise<Record<string, { label: string; value: string }[]>>;
 }
 
 const getScript = (ids, dataMap) => {};
 
 const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
-  const { onQuery } = props;
   const { store, updateStore } = useContext();
-  const { nodeStatus, schema, dataMap, emitter, graph, data } = store;
+  const { nodeStatus, schema, dataMap, emitter, graph, data, getService } = store;
+
   const MenuRef = useRef<HTMLDivElement>(null);
+  const [state, setState] = useState({
+    itemMap: {},
+    isLoading: false,
+  });
+  const { itemMap } = state;
+  const getMenuItems = async () => {
+    const itemResult = await getService<INeighborQueryItems>('queryNeighborItems')({
+      schema,
+    });
+    setState(preState => {
+      return {
+        ...preState,
+        itemMap: itemResult,
+      };
+    });
+  };
+  useEffect(() => {
+    getMenuItems();
+  }, [schema]);
 
   const selectIds = Object.keys(nodeStatus).filter(key => {
     return nodeStatus[key].selected;
@@ -24,40 +56,6 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
   if (!selectNode) {
     return null;
   }
-  const relatedEdges = schema.edges.filter(item => {
-    return item.source === selectNode.label;
-  });
-  const itemChildren = relatedEdges.map(item => {
-    const { source, target, label } = item;
-    if (source === target) {
-      return {
-        key: `(a:${source})-[b:${label}]-(c:${target})`,
-        label: `[${label}]-(${target})`,
-      };
-    }
-    return {
-      key: `(a:${source})-[b:${label}]->(c:${target})`,
-      label: `[${label}]->(${target})`,
-    };
-  });
-
-  const extraItems =
-    relatedEdges.length > 1
-      ? [
-          {
-            key: `(a)-[b]-(c)`,
-            label: `All Neighbors`,
-          },
-        ]
-      : [];
-  const items = [
-    {
-      key: 'NeighborQuery',
-
-      label: 'NeighborQuery',
-      children: [...extraItems, ...itemChildren],
-    },
-  ];
 
   const onClick = async ({ key }) => {
     emitter?.emit('canvas:click');
@@ -65,15 +63,11 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
       draft.isLoading = true;
     });
 
-    const script = `
-    MATCH ${key}
-    WHERE  elementId(a) IN [${selectIds}] 
-    RETURN a,b,c
-    `;
+    const query = await getService<INeighborQueryData>('queryNeighborData');
 
-    const res = await onQuery({
-      script,
-      language: 'cypher',
+    const res = await query({
+      selectIds,
+      key,
     });
 
     if (res.nodes.length > 0 && graph) {
@@ -94,9 +88,11 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
       });
     }
   };
-  if (itemChildren.length === 0) {
-    return null;
-  }
+
+  // if (items.length === 0) {
+  //   return null;
+  // }
+
   return (
     <div ref={MenuRef}>
       <Menu
@@ -109,7 +105,13 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
         onClick={onClick}
         style={{ margin: '0px', padding: '0px', width: '103%' }}
         mode="vertical"
-        items={items}
+        items={[
+          {
+            key: 'NeighborQuery',
+            label: 'NeighborQuery',
+            children: itemMap[selectNode.label],
+          },
+        ]}
       />
     </div>
   );

@@ -5,6 +5,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useContext as useImporting } from '@graphscope/studio-importor';
 import { submitDataloadingJob } from './services';
 import { useHistory } from '../../hooks';
+import GrootCase from '../../components/groot-case';
 import dayjs from 'dayjs';
 export type FieldType = {
   type?: string;
@@ -56,10 +57,7 @@ const REPEATOPTIONS = [
     label: 'Every week on the same time',
   },
 ];
-const { GS_ENGINE_TYPE } = window;
-const styles: Record<string, string> = {
-  visibility: GS_ENGINE_TYPE === 'groot' ? 'visible' : 'hidden',
-};
+
 const StartLoad: React.FC<ILeftSide> = props => {
   const { graphId, onColse } = props;
   const [state, updateState] = useState<{
@@ -72,7 +70,6 @@ const StartLoad: React.FC<ILeftSide> = props => {
     result: undefined,
     jobId: '',
   });
-  const [api, contextHolder] = notification.useNotification();
 
   const { store: importingStore } = useImporting();
   const { nodes, edges } = importingStore;
@@ -90,7 +87,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
       header_row: true,
       quoting: false,
       repeat: 'once',
-      schedule: dayjs(),
+      schedule: null,
     });
   }, []);
 
@@ -121,7 +118,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
       })
       .catch(error => {
         _status = 'error';
-        _message = GS_ENGINE_TYPE === 'interactive' ? error.response.data : error.response.data.detail;
+        _message = window.GS_ENGINE_TYPE === 'interactive' ? error.response.data : error.response.data.detail;
       });
 
     const gotoBtn = (
@@ -142,7 +139,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
 
   const handleClick = () => {
     const data = form.getFieldsValue();
-    const grootValue = GS_ENGINE_TYPE === 'groot' && {
+    const grootValue = window.GS_ENGINE_TYPE === 'groot' && {
       repeat: 'once',
       schedule: data.schedule && dayjs(data.schedule).format('YYYY-MM-DD HH:mm:ss'),
     };
@@ -222,14 +219,14 @@ const StartLoad: React.FC<ILeftSide> = props => {
             ]}
           />
         </Form.Item>
-        <div style={styles}>
-          <Form.Item label={<FormattedMessage id="Date" />} name="schedule">
+        <GrootCase>
+          <Form.Item label={<FormattedMessage id="Schedule" />} name="schedule">
             <DatePicker placeholder=" " showTime style={{ width: '100%' }} />
           </Form.Item>
           <Form.Item label={<FormattedMessage id="Repeat" />} name="repeat">
             <Select options={REPEATOPTIONS} />
           </Form.Item>
-        </div>
+        </GrootCase>
         <Flex justify="end" gap={12}>
           <Button style={{ width: '128px' }} type="primary" onClick={handleClick}>
             <FormattedMessage id="Load data" />

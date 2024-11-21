@@ -34,8 +34,10 @@ const Content = props => {
     name: defaultName,
     query: defaultQuery,
     output_schema: defaultOutputSchema,
+    extract_from_indexs: data.extract_from.exact || '',
+    extract_from_words: data.extract_from.match || '',
   });
-  const { name, query, output_schema } = state;
+  const { name, query, output_schema, extract_from_indexs, extract_from_words } = state;
   useEffect(() => {
     setState({
       ...state,
@@ -54,6 +56,14 @@ const Content = props => {
   const handleOutput = e => {
     const { value } = e.target;
     onChange && onChange(id, 'output_schema', value);
+  };
+  const handleExtractIndexs = e => {
+    const { value } = e.target;
+    onChange && onChange(id, 'extract_from_indexs', value);
+  };
+  const handleExtractWords = e => {
+    const { value } = e.target;
+    onChange && onChange(id, 'extract_from_words', value);
   };
   return (
     <Flex vertical gap={12}>
@@ -80,6 +90,37 @@ const Content = props => {
         }}
         onBlur={handlePrompt}
       ></Input.TextArea>
+      <Typography.Text>Extract</Typography.Text>
+      <Typography.Text type="secondary" style={{ fontSize: '12px' }}>
+        Extract from page indexs
+      </Typography.Text>
+      <Input.TextArea
+        placeholder="such as 1,2,3"
+        rows={1}
+        value={extract_from_indexs}
+        onChange={e => {
+          setState({
+            ...state,
+            extract_from_indexs: e.target.value,
+          });
+        }}
+        onBlur={handleExtractIndexs}
+      ></Input.TextArea>
+      <Typography.Text type="secondary" style={{ fontSize: '12px' }}>
+        Extract from match wordings
+      </Typography.Text>
+      <Input.TextArea
+        placeholder="such as background,keyword"
+        rows={1}
+        value={extract_from_words}
+        onChange={e => {
+          setState({
+            ...state,
+            extract_from_words: e.target.value,
+          });
+        }}
+        onBlur={handleExtractWords}
+      ></Input.TextArea>
       <Typography.Text>Output</Typography.Text>
       <Input.TextArea
         rows={8}
@@ -100,7 +141,7 @@ const RightSide: React.FunctionComponent<IRightSideProps> = props => {
   const { nodes, edges, currentId } = store;
 
   const onChange = (id, key, value) => {
-    console.log(id, value);
+    console.log(id, key, value);
     updateStore(draft => {
       draft.nodes = draft.nodes.map(node => {
         if (node.id === id) {
@@ -110,6 +151,7 @@ const RightSide: React.FunctionComponent<IRightSideProps> = props => {
       });
     });
   };
+  console.log(nodes);
   const items: CollapseProps['items'] = nodes.map(item => {
     return {
       key: item.id,

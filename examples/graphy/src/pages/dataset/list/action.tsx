@@ -39,7 +39,9 @@ const Action: React.FunctionComponent<IDataset> = props => {
           onClick={() => {
             downloadDataset(id);
           }}
-        ></Button>
+        >
+          Download
+        </Button>
       </Tooltip>
       <Tooltip title="Delete dataset">
         <Button onClick={handleDelete} icon={<DeleteOutlined />}></Button>

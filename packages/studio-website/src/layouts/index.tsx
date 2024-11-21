@@ -111,7 +111,16 @@ export default function StudioLayout() {
   const _SIDE = [...(SIDE_MENU || []), ...(SLOTS.SIDE_MEU || [])];
   const { layoutBackground } = useCustomToken();
   if (isReady) {
-    return <Layout sideMenu={[_SIDE, SETTING_MENU]} style={{ background: layoutBackground }} />;
+    return (
+      <Layout
+        sideMenu={[_SIDE, SETTING_MENU]}
+        style={{ background: layoutBackground }}
+        collapsedConfig={{
+          '/querying': true,
+          '/explore': true,
+        }}
+      />
+    );
   }
 
   return <GlobalSpin />;

@@ -10,4 +10,6 @@ export default {
   'Edge Properties': 'Edge Properties',
   'Vertex Properties': 'Vertex Properties',
   'File type': 'File type',
+  'Vertex Labels': 'Vertex Labels',
+  'Edge Labels': 'Edge Labels',
 };

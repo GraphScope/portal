@@ -258,22 +258,6 @@ curl -X POST http://0.0.0.0:9999/api/dataset/graphy -H "Content-Type: applicatio
 }' --output graph.zip
 ```
 
-Additional option is to import the graphied data into [GraphScope Interactive](https://graphscope.io/docs/latest/flex/interactive/getting_started). Start Interactive service and then export the required ports as [instructed](https://graphscope.io/docs/latest/flex/interactive/getting_started). Then the following `POST/GET/DELETE` APIs can be called.
-
-```bash
-curl -X POST http://0.0.0.0:9999/api/dataset/graphy/interactive -H "Content-Type: application/json" -d '{
-    "dataset_id": "8547eb64-a106-5d09-8950-8a47fb9292dc"
-}'
-```
-
-```bash
-curl -X GET 'http://0.0.0.0:9999/api/dataset/graphy/interactive?dataset_id=b4280bb9-3603-5b1d-bed8-6b2080092e31'
-```
-
-```bash
-curl -X DELETE http://0.0.0.0:9999/api/dataset/graphy/interactive/b4280bb9-3603-5b1d-bed8-6b2080092e31
-```
-
 # Tests and Benchmark
 
 The project can be tested by running the following command:

@@ -124,8 +124,6 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
   const nodeCount = nodes.length;
   const edgeCount = edges.length;
   const totalCount = table.length;
-  /** 只有节点和边有elementId 且至少有一条数据；属性没有labels ,id等 */
-  const isElementId = raw.records[0]._fields[0].elementId;
   const intl = useIntl();
   let description: any;
   if (nodeCount === 0 && edgeCount === 0 && totalCount !== 0) {
@@ -172,7 +170,14 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
     });
     Utils.createDownload(JSON.stringify({ nodes: _nodes, edges: _edges }, null, 2), 'result.json');
   };
-
+  /** table 表格 */
+  let Content: React.ReactNode;
+  if (mode === 'table' && table.length !== 0) {
+    Content = <RowTable data={table} />;
+  }
+  if (mode === 'table' && table.length === 0 && raw.records.length !== 0) {
+    Content = <InteranctiveTable data={raw.records} />;
+  }
   return (
     <div style={{ overflowX: 'scroll' }}>
       <Flex justify="space-between" style={{ padding: '0px 10px 10px 10px' }} align="center">
@@ -196,9 +201,8 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
         </Space>
       </Flex>
       {/* {mode === 'table' && nodes.length !== 0 && <GraphTable nodes={nodes} edges={edges} />} */}
-      {mode === 'table' && raw.records.length !== 0 && isElementId && <InteranctiveTable data={raw.records} />}
       {/* {mode === 'table' && raw.records.length !== 0 && <GrootTable grootData={[]} />} */}
-      {mode === 'table' && table.length !== 0 && <RowTable data={table} />}
+      {Content}
       {mode === 'chart' && table.length !== 0 && <ChartView table={table} />}
     </div>
   );
