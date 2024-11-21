@@ -20,13 +20,6 @@
     "start:site": "vite dev",
     "build:site": "vite build"
   },
-  "pnpm": {
-    "overrides": {
-      "react": "18.2.0",
-      "react-dom": "18.2.0",
-      "valtio": "1.13.2"
-    }
-  },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
     "@antv/g2": "^5.2.7",
