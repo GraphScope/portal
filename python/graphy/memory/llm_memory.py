@@ -244,7 +244,10 @@ class RetrievedMemory:
         for doc in docs:
             content = doc["page_content"]
             metadata = doc["metadata"]
-            embed = self.embedding_function([content])[0]
+            try:
+                embed = self.embedding_function([content])[0]
+            except:
+                logger.debug(f"Embed error: the content is {content}.")
             # print(embed)
             # print(metadata)
 
@@ -265,12 +268,13 @@ class RetrievedMemory:
             metadatas.append(metadata)
             ids.append(doc_id)
 
-        self.collection.add(
-            documents=documents,
-            embeddings=embeddings,
-            metadatas=metadatas,
-            ids=ids,
-        )
+        if len(ids) > 0:
+            self.collection.add(
+                documents=documents,
+                embeddings=embeddings,
+                metadatas=metadatas,
+                ids=ids,
+            )
 
     # query is a list of strings
     def search(self, query: str, where, results_num=-1) -> list:
