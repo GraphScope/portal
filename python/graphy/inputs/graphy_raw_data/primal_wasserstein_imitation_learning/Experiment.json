@@ -1,0 +1,24 @@
+{
+    "data": [
+        {
+            "name": "Continuous Control Tasks in MuJoCo",
+            "settings": "Datasets: MuJoCo environments, including tasks such as Walker2d, Hopper, HalfCheetah, and Ant. Evaluation Metrics: Wasserstein Distance, Performance Metrics (average return and success rate). Baselines: Behavior Cloning (BC), Generative Adversarial Imitation Learning (GAIL), Deep Deterministic Policy Gradient (DDPG).",
+            "results": "Wasserstein Distance: PWIL showed a significantly lower Wasserstein distance compared to BC and GAIL. Performance Metrics: PWIL achieved higher average returns and success rates on all MuJoCo tasks compared to BC and DDPG. It also outperformed GAIL in most tasks, particularly in complex environments like Ant."
+        },
+        {
+            "name": "Comparison with Other Imitation Learning Methods",
+            "settings": "Datasets: Same MuJoCo environments as in Experiment 1. Evaluation Metrics: Wasserstein Distance, Average Return. Baselines: DAgger, Adversarial Inverse Reinforcement Learning (AIRL).",
+            "results": "Wasserstein Distance: PWIL consistently outperformed DAgger and AIRL. Average Return: PWIL achieved higher average returns compared to DAgger and AIRL, especially in tasks requiring long-term planning and complex dynamics."
+        },
+        {
+            "name": "Special Case: Limited Expert Data",
+            "settings": "Datasets: MuJoCo environments with limited expert demonstrations. Evaluation Metrics: Average return and success rate.",
+            "results": "PWIL maintained high performance even with limited expert data, outperforming BC and GAIL."
+        },
+        {
+            "name": "Special Case: Noisy Expert Demonstrations",
+            "settings": "Datasets: MuJoCo environments with noisy expert demonstrations. Evaluation Metrics: Average return and success rate.",
+            "results": "PWIL was less affected by noisy demonstrations compared to BC and GAIL, maintaining stable performance."
+        }
+    ]
+}

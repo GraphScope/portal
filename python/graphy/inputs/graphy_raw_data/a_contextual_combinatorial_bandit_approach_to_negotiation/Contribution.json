@@ -1,0 +1,20 @@
+{
+    "data": [
+        {
+            "original": "First, we provide a comprehensive formulation for diverse types of negotiation problems in 3.1.",
+            "summary": "Comprehensive formulation for various negotiation problems."
+        },
+        {
+            "original": "Second, we propose a contextual algorithm for full bandit feedback, named Negotiation UCB (NegUCB), to learn negotiation strategies and adeptly address the exploitation-exploration dilemma and the challenge of large action spaces. Moreover, NegUCB incorporates hidden states to tackle the issue of partial observations and handles diverse acceptance functions through kernel regression.",
+            "summary": "Proposal of NegUCB, a contextual algorithm for full bandit feedback, addressing key negotiation challenges."
+        },
+        {
+            "original": "Under mild assumptions, NegUCB's regret upper bound is guaranteed to be sub-linear with respect to the number of negotiation steps and independent of the bid cardinality, distinguishing itself from existing works on either semi-bandit or full bandit feedback.",
+            "summary": "Theoretical guarantee of sub-linear regret for NegUCB, independent of bid cardinality."
+        },
+        {
+            "original": "Experiments conducted on three negotiation tasks highlight the advantages and effectiveness of our method.",
+            "summary": "Empirical validation of NegUCB's effectiveness through experiments on diverse negotiation tasks."
+        }
+    ]
+}

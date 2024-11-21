@@ -1,0 +1,20 @@
+{
+    "data": [
+        {
+            "name": "Addressing Local Pixel Bias",
+            "description": "Normalizing flows tend to learn latent representations based on local pixel correlations rather than the semantic content of images. This bias can lead to high likelihoods for OOD data that share similar local structures but differ in semantic meaning. The solution involves modifying coupling layers to incorporate mechanisms that emphasize semantic structure, integrating pre-trained CNNs or other feature extractors, and adding regularization terms to the loss function that penalize reliance on local pixel correlations."
+        },
+        {
+            "name": "Mitigating Likelihood Inflation",
+            "description": "Normalizing flows can increase the likelihood for all structured images, both in-distribution and OOD, leading to poor OOD detection. The solution includes implementing likelihood regularization, incorporating OOD-specific loss terms, introducing likelihood clipping, adding OOD regularization to the loss function, and using adversarial training techniques to improve OOD detection."
+        },
+        {
+            "name": "Enhancing Non-Specific Transformations",
+            "description": "Normalizing flows learn generic image-to-latent space transformations that are not specific to the target dataset, leading to poor OOD detection. The solution involves designing dataset-specific coupling layers, using data augmentation techniques to ensure robustness, developing custom coupling layers that incorporate domain-specific knowledge, and adding regularization terms to the loss function that encourage learning transformations specific to the target dataset."
+        },
+        {
+            "name": "Balancing Fidelity vs. Detection Trade-off",
+            "description": "Properties that enable normalizing flows to generate high-fidelity images can negatively impact OOD detection. The solution includes using multi-objective optimization techniques to balance the trade-off between generating high-fidelity images and maintaining strong OOD detection, combining normalizing flows with other models such as anomaly detection algorithms, defining a multi-objective loss function, integrating an anomaly detection module, and using ensemble methods to combine multiple models optimized for different aspects of the task."
+        }
+    ]
+}
