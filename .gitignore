@@ -68,7 +68,6 @@ default.etcd
 
 **/unprocessed-code.ts.txt
 
-pnpm-lock.yaml
 package-lock.json
 
 # Byte-compiled / optimized / DLL files

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, Space, Button } from 'antd';
-import { BarChartOutlined } from '@ant-design/icons';
+import { BarChartOutlined, OpenAIOutlined } from '@ant-design/icons';
 import { Chart } from '@antv/g2';
 
 interface ITableViewProps {
@@ -56,6 +56,7 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
       extra={
         <Space>
           <Button type="text" icon={<BarChartOutlined />} />
+          <Button type="text" icon={<OpenAIOutlined />} />
         </Space>
       }
       styles={{

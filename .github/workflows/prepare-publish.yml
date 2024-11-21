@@ -4,7 +4,7 @@ on:
     branches:
       - '**' # 匹配所有分支
   pull_request_target:
-    types: [opened, synchronize, reopened, labeled, unlabeled]
+    types: [opened]
 
 jobs:
   publish:
@@ -23,10 +23,10 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 9
-          run_install: true
+          run_install: false
 
       - name: Publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN} & pnpm run check:publish
+        run: pnpm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN} && pnpm run check:publish

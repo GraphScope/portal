@@ -23,6 +23,8 @@ import {
   GraphProvider,
   locales,
   ClearCanvas,
+  CurvatureLinks,
+  DagreMode,
 } from '@graphscope/studio-graph';
 
 import ToogleButton from './components/ToggleButton';
@@ -118,6 +120,8 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
               <ZoomFit />
               <Brush />
               <FixedMode />
+              <CurvatureLinks />
+              <DagreMode />
               <Divider style={{ margin: '0px' }} />
               <SwitchEngine />
               <RunCluster />
