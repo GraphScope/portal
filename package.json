@@ -5,11 +5,10 @@
   },
   "scripts": {
     "prev": "pnpm i && rm -rf package-lock.json",
-    "ci": "npm run prev && npm run build && npm run build:portal",
     "start": "turbo run start",
     "build": "turbo run build --no-cache",
-    "build:portal": "cd packages/studio-website && npm run build:site",
-    "build:docs:interactive": "pnpm i && rm -rf package-lock.json && npm run build && cd docs/interactive && npm run build:site",
+    "build:portal": "npm run prev && npm run build && cd packages/studio-website && npm run build:site",
+    "build:docs:interactive": "npm run prev  && npm run build && cd docs/interactive && npm run build:site",
     "build:docs:portal": "npm run prev && npm run build &&  dumi build",
     "docs": "dumi dev",
     "version": "changeset version",
