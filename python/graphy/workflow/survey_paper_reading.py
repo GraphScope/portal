@@ -158,7 +158,11 @@ class SurveyPaperReading(BaseWorkflow):
         if parser_config:
             parser_model = set_llm_model(parser_config)
         graph_json = workflow_json.get("graph", {})
-        vectordb = chromadb.PersistentClient(path=WF_VECTDB_DIR)
+        settings = chromadb.Settings(
+            chroma_segment_cache_policy="LRU",
+            chroma_memory_limit_bytes=5000000000,  # ~10GB
+        )
+        vectordb = chromadb.PersistentClient(path=WF_VECTDB_DIR, settings=settings)
 
         if not graph_json:
             raise ValueError("No graph found in the workflow JSON.")
