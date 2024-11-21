@@ -6,6 +6,7 @@ import Legend from './legend';
 import { useContext } from '../../hooks/useContext';
 import { Utils } from '@graphscope/studio-components';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import AdvancedSetting from './Advanced';
 
 interface IOverviewProps {
   showHeader?: boolean;
@@ -98,6 +99,7 @@ const StyleSetting: React.FunctionComponent<IOverviewProps> = props => {
           return <Legend key={index} properties={properties} {...others} {...style} type="edge" onChange={onChange} />;
         })}
       </Space>
+      <AdvancedSetting />
     </Flex>
   );
 };
