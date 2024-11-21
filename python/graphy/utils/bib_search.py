@@ -668,7 +668,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
         if os.path.exists(file_path):
             logger.debug(f"The file '{file_path}' already exists.")
-            return False, file_path, True
+            return True, file_path, True
 
         logger.debug("************ DOWNLOADING **************")
         logger.debug(file_path)
@@ -711,30 +711,68 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         driver, cur_web_data_dir = self._init_driver(query=query)
         # driver = self._init_driver()
 
-        page_num = 0
-        if mode == "exact":
-            new_queries = sorted(
-                [
-                    s
-                    for s in re.split(r"[.\\/]", query.strip())
-                    if len(s) >= 20 and s.count(",") <= 5
-                ],
-                key=len,
-                reverse=True,
-            )
-        else:
-            new_queries = [query]
+        try:
+            page_num = 0
+            if mode == "exact":
+                new_queries = sorted(
+                    [
+                        s
+                        for s in re.split(r"[.\\/]", query.strip())
+                        if len(s) >= 20 and s.count(",") <= 5
+                    ],
+                    key=len,
+                    reverse=True,
+                )
+            else:
+                new_queries = [query]
 
-        output_list = []
+            output_list = []
 
-        found_paper = False
-        logger.debug("======= NEW QUERIES ==============", new_queries)
-        for query in new_queries:
-            # parse all pages
-            if pagination:
-                while page_num <= 10:
-                    # parse all pages (the first two pages)
+            found_paper = False
+            # logger.debug("======= NEW QUERIES ==============", new_queries)
+            for query in new_queries:
+                # parse all pages
+                if pagination:
+                    while page_num <= 10:
+                        # parse all pages (the first two pages)
+                        pruned_query = re.sub(r"[^a-zA-Z0-9, ]", "_", query.strip())
+                        driver = self.safe_request(
+                            driver=driver,
+                            link=f"https://scholar.google.com/scholar?q={pruned_query}&hl=en&gl=us&start={page_num}",
+                        )
+
+                        WebDriverWait(driver, 2).until(
+                            EC.presence_of_element_located(
+                                (By.CSS_SELECTOR, "div.gs_r.gs_or.gs_scl")
+                            )
+                        )
+
+                        parser = LexborHTMLParser(driver.page_source)
+
+                        succ_list = self.parse(
+                            driver, query, parser, mode, "download", download_path
+                        )
+
+                        if len(succ_list) > 0:
+                            found_paper = True
+                            output_list.extend(succ_list)
+
+                        # pagination
+                        if parser.css_first(
+                            ".gs_ico_nav_next"
+                        ):  # checks for the "Next" page button
+                            page_num += 10  # paginate to the next page
+                            time.sleep(
+                                random.uniform(0.2, 1)
+                            )  # sleep between paginations
+                        else:
+                            break
+                else:
+                    # parse first page only
+                    logger.info("### START TO DOWNLOAD #####")
                     pruned_query = re.sub(r"[^a-zA-Z0-9, ]", "_", query.strip())
+                    logger.info(pruned_query)
+
                     driver = self.safe_request(
                         driver=driver,
                         link=f"https://scholar.google.com/scholar?q={pruned_query}&hl=en&gl=us&start={page_num}",
@@ -748,6 +786,16 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
                     parser = LexborHTMLParser(driver.page_source)
 
+                    if len(parser.css(".gs_r.gs_or.gs_scl")) == 0:
+                        if "not a robot" in driver.page_source:
+                            logger.info(
+                                f"============== DETECTED AS A ROBOT {query} ============="
+                            )
+                        # with open("fail_log.log", "a") as f:
+                        #     f.write(query + "\n")
+                        #     f.write("no label\n")
+                        #     f.write(driver.page_source)
+
                     succ_list = self.parse(
                         driver, query, parser, mode, "download", download_path
                     )
@@ -756,59 +804,16 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                         found_paper = True
                         output_list.extend(succ_list)
 
-                    # pagination
-                    if parser.css_first(
-                        ".gs_ico_nav_next"
-                    ):  # checks for the "Next" page button
-                        page_num += 10  # paginate to the next page
-                        time.sleep(random.uniform(0.2, 1))  # sleep between paginations
-                    else:
-                        break
-            else:
-                # parse first page only
-                logger.info("### START TO DOWNLOAD #####")
-                pruned_query = re.sub(r"[^a-zA-Z0-9, ]", "_", query.strip())
-                logger.info(pruned_query)
-
-                driver = self.safe_request(
-                    driver=driver,
-                    link=f"https://scholar.google.com/scholar?q={pruned_query}&hl=en&gl=us&start={page_num}",
-                )
-
-                WebDriverWait(driver, 2).until(
-                    EC.presence_of_element_located(
-                        (By.CSS_SELECTOR, "div.gs_r.gs_or.gs_scl")
-                    )
-                )
-
-                parser = LexborHTMLParser(driver.page_source)
-
-                if len(parser.css(".gs_r.gs_or.gs_scl")) == 0:
-                    if "not a robot" in driver.page_source:
-                        logger.info(
-                            f"============== DETECTED AS A ROBOT {query} ============="
-                        )
-                    # with open("fail_log.log", "a") as f:
-                    #     f.write(query + "\n")
-                    #     f.write("no label\n")
-                    #     f.write(driver.page_source)
-
-                succ_list = self.parse(
-                    driver, query, parser, mode, "download", download_path
-                )
-
-                if len(succ_list) > 0:
-                    found_paper = True
-                    output_list.extend(succ_list)
-
-                if not found_paper:
-                    sleep_time = random.uniform(2, 3)
-                    logger.info(f"sleep time: {sleep_time}")
-                    time.sleep(sleep_time)
-            if found_paper:
-                break
-
-        self._quit_driver(driver=driver, webdata=cur_web_data_dir)
+                    if not found_paper:
+                        sleep_time = random.uniform(2, 3)
+                        logger.info(f"sleep time: {sleep_time}")
+                        time.sleep(sleep_time)
+                if found_paper:
+                    break
+        except Exception as e:
+            raise
+        finally:
+            self._quit_driver(driver=driver, webdata=cur_web_data_dir)
 
         return output_list
 
