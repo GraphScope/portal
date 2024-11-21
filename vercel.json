@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build:docs",
+  "buildCommand": "npm run build:portal",
   "framework": null,
   "headers": [
     {
@@ -10,11 +10,5 @@
       ]
     }
   ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "http://127.0.0.1:8080/api/$1"
-    },
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }

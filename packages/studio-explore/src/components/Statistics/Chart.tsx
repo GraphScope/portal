@@ -1,19 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Select, Space, SelectProps, Tag, Flex } from 'antd';
 import { Chart } from '@antv/g2';
-import { useContext } from '@graphscope/studio-graph';
-import { IQueryServices } from '../../service';
+import { useContext, IQueryStatement } from '@graphscope/studio-graph';
+
 interface ITableViewProps {
   property: string;
-  queryCypher: IQueryServices['queryCypher'];
 }
 
 const ChartView: React.FunctionComponent<ITableViewProps> = props => {
-  const { property, queryCypher } = props;
+  const { property } = props;
   const ChartContainerRef = useRef(null);
   const { store, updateStore } = useContext();
-
-  const { nodes } = store.data;
+  const { getService } = store;
   const [state, setState] = useState({
     data: [],
     isReady: false,
@@ -21,17 +19,17 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
   const { data, isReady } = state;
 
   const queryData = async () => {
+    const queryCypher = getService<IQueryStatement>('queryStatement');
     try {
-      const data = await queryCypher({
-        script: `
+      const data = await queryCypher(
+        `
           MATCH(a) where a.${property} IS NOT NULL AND a.year <> ""
           WITH a.${property} AS ${property}
           return ${property},COUNT(${property}) as counts 
           ORDER BY ${property === 'year' ? 'year' : 'counts'} DESC
           `,
-      });
-
-      return data.table;
+      );
+      return data.raw;
     } catch (error) {
       console.log('error', error);
       return [];
@@ -42,7 +40,6 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
     const x = property;
     const y = 'counts';
     let chart;
-    console.log('data', data);
 
     if (ChartContainerRef.current) {
       chart = new Chart({
@@ -80,14 +77,14 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
   useEffect(() => {
     let chart;
     const handleClick = async e => {
-      console.log(e.data);
-      const data = await queryCypher({
-        script: `
+      const queryCypher = getService<IQueryStatement>('queryStatement');
+      const data = await queryCypher(
+        `
         MATCH(a) 
         WHERE a.${property}='${e.data.data[property]}'
         return a
         `,
-      });
+      );
       updateStore(draft => {
         draft.data = data;
         draft.source = data;
@@ -111,12 +108,12 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
     </div>
   );
 };
-export interface IChart {
-  queryCypher: IQueryServices['queryCypher'];
-}
-const Charts = (props: IChart) => {
+
+const Charts = props => {
   const { store } = useContext();
-  const { queryCypher } = props;
+  const { getService } = store;
+  const queryCypher = getService<IQueryStatement>('queryStatement');
+
   const { schema } = store;
   const properties = new Set();
   schema.nodes.forEach(node => {
@@ -147,20 +144,9 @@ const Charts = (props: IChart) => {
 
   return (
     <Flex vertical gap={0}>
-      <Select
-        mode="tags"
-        onChange={handleChange}
-        defaultValue={['year']}
-        //   value={property}
-        style={{ width: '100%' }}
-        options={options}
-      />
+      <Select mode="tags" onChange={handleChange} defaultValue={['year']} style={{ width: '100%' }} options={options} />
       {value.map(item => {
-        return (
-          <div>
-            <ChartView property={item} key={item} queryCypher={queryCypher} />
-          </div>
-        );
+        return <ChartView property={item} key={item} />;
       })}
     </Flex>
   );
