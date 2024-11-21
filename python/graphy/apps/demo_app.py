@@ -723,9 +723,10 @@ class DemoApp:
 
                 workflow = self.cache.get(dataset_id).get("workflow")
                 # Load the dataset
-                dataset_path = os.path.join(
-                    self.app.config["UPLOAD_FOLDER"], dataset_id
-                )
+                base_path = self.app.config["UPLOAD_FOLDER"]
+                dataset_path = os.path.normpath(os.path.join(base_path, dataset_id))
+                if not dataset_path.startswith(base_path):
+                    return create_error_response("Invalid dataset_id"), 400
                 pdf_files = [
                     {"paper_file_path": os.path.join(dataset_path, file)}
                     for file in os.listdir(dataset_path)
