@@ -74,6 +74,8 @@ class PaperNavigateEdge(BaseEdge):
         ref_count = 0
 
         for paper in input:
+            if not paper:
+                continue
             parent_id = paper.get("data", {}).get("id", "")
             arxiv_tasks = set(paper.get("data", {}).get("reference", []))
 

@@ -503,7 +503,17 @@ class PaperInspector(BaseNode):
                     for node in self.graph.get_node_names():
                         self.progress[node].add(ProgressInfo(1, 1))
 
-                    yield self.persist_store.get_state(data_id, first_node_name)
+                    paper_data = self.persist_store.get_state(data_id, first_node_name)
+                    edges = self.persist_store.get_state(data_id, "_Edges")
+                    curr_id = paper_data.get("data", {}).get("id", "")
+                    if curr_id and parent_id:
+                        if edges:
+                            edges.append(f"{parent_id}|{curr_id}")
+                        else:
+                            edges = [f"{parent_id}|{curr_id}"]
+                        self.persist_store.save_state(data_id, "_Edges", edges)
+
+                    yield paper_data
 
                 else:
                     # global progress for all data
