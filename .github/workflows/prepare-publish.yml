@@ -4,7 +4,7 @@ on:
     branches:
       - '**' # 匹配所有分支
   pull_request_target:
-    types: [opened, synchronize, reopened, labeled, unlabeled]
+    types: [opened]
 
 jobs:
   publish:
