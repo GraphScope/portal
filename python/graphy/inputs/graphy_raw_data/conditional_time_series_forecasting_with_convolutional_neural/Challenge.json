@@ -1,0 +1,34 @@
+{
+    "data": [
+        {
+            "name": "Complexity of Time Series Forecasting",
+            "description": "Time series forecasting, especially for financial data, is inherently complex due to the non-linear dependencies and the need for capturing long-term historical patterns. Traditional methods like ARIMA and LSTM often require extensive historical data and can be computationally intensive.",
+            "solution": "The paper introduces a simplified and optimized CNN structure inspired by the WaveNet model. This structure uses ReLU activation functions and parametrized skip connections, making it more efficient and easier to implement compared to traditional recurrent networks like LSTMs."
+        },
+        {
+            "name": "Limited Historical Data",
+            "description": "Financial time series data can often be limited in length, which poses a significant challenge for models that rely on long historical sequences to make accurate predictions.",
+            "solution": "The proposed model utilizes multiple financial time series as input, conditioning the forecast on both the target series' history and the histories of other related series. This approach helps in extracting temporal relationships and improving forecast accuracy even with limited historical data."
+        },
+        {
+            "name": "Model Efficiency and Training Time",
+            "description": "Deep learning models, particularly those with complex architectures like LSTMs, can be time-consuming to train and may require significant computational resources. This can be a barrier to practical implementation, especially in real-time applications.",
+            "solution": "The paper replaces the gated activation function from the original WaveNet model with a rectified linear unit (ReLU). This simplification reduces the complexity of the model, leading to faster training times and lower computational costs."
+        },
+        {
+            "name": "Applying CNNs to Time Series Forecasting",
+            "description": "Convolutional Neural Networks (CNNs) have traditionally been used for image and classification tasks. Applying them to time series forecasting, especially for financial data, is a novel and challenging task, as it requires adapting the architecture to handle sequential data effectively.",
+            "solution": "The authors demonstrate that CNNs can be successfully applied to forecasting financial time series of limited length. They conduct extensive experiments comparing the performance of their CNN model with LSTMs and autoregressive models, showing that the CNN model is a viable and efficient alternative."
+        },
+        {
+            "name": "Handling Multivariate Time Series",
+            "description": "Financial time series data often involves multiple correlated series, such as stock prices, interest rates, and exchange rates. Capturing the interdependencies between these series is crucial for accurate forecasting but can be challenging.",
+            "solution": "The proposed model processes multiple time series in parallel using multiple convolutional filters. This allows the model to exploit the correlation structure between the multivariate time series, improving the overall forecasting performance."
+        },
+        {
+            "name": "Comparative Performance Analysis",
+            "description": "Establishing the superiority of a new model over existing state-of-the-art methods requires rigorous performance evaluation and comparison. This involves setting up appropriate benchmarks and conducting comprehensive empirical studies.",
+            "solution": "The paper provides a comprehensive performance comparison of the proposed CNN model with LSTM and autoregressive models. The experiments are conducted on both artificial and real-world financial time series data, including the S&P500, VIX, CBOE interest rate, and multiple exchange rates. The results show that the CNN model outperforms the other models in terms of time efficiency and forecasting accuracy."
+        }
+    ]
+}

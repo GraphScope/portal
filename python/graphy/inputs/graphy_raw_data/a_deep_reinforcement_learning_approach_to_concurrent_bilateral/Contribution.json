@@ -1,0 +1,16 @@
+{
+    "data": [
+        {
+            "original": "we propose a novel agent model for one to many concurrent bilateral negotiations in open, dynamic and unknown e market settings.",
+            "summary": "Novel agent model for concurrent negotiations."
+        },
+        {
+            "original": "we extend the existing simulation environment Alrayes et al., 2016 to generate data and perform experiments that support agent learning for negotiation.",
+            "summary": "Extension of simulation environment for data generation and experiments."
+        },
+        {
+            "original": "we run an extensive experiments showing that our approach outperforms the existing strategies and produces adaptable agents that can transfer to a range of e market settings.",
+            "summary": "Extensive experiments demonstrating superior performance and adaptability."
+        }
+    ]
+}

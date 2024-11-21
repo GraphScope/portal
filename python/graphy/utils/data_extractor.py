@@ -38,7 +38,11 @@ def hash_id(input_string: str) -> str:
 
 def load_json(file_path: str) -> dict:
     with open(file_path, "r") as file:
-        return json.load(file)["data"]
+        json_data = json.load(file)
+        if "data" in json_data:
+            return json_data["data"]
+        else:
+            return json_data
 
 
 def list_to_str(lst: list) -> str:
@@ -63,160 +67,119 @@ def write_json(file_path: str, data):
         json.dump(data, file, indent=4)
 
 
-def compute_similarity_edges(items_dict: dict, similarity_thresh=0.7) -> list:
-    def sigmoid(x, k=15):
-        return 1 / (1 + np.exp(-k * (x - similarity_thresh)))
+def list_json_files(folder_path: str):
+    """
+    List all JSON files in the given folder.
 
-    edges = []
-    item_list = list(items_dict.values())
-    embeddings = np.array([item["embedding"] for item in item_list])
-    normalized_embeddings = normalize(embeddings, axis=1)
-    similarities = util.cos_sim(normalized_embeddings, normalized_embeddings).numpy()
+    Args:
+        folder_path (str): Path to the folder containing JSON files.
 
-    for i in range(len(item_list)):
-        for j in range(i + 1, len(item_list)):
-            if similarities[i, j] > similarity_thresh:
-                edges.append(
-                    {
-                        "source": item_list[i]["id"],
-                        "target": item_list[j]["id"],
-                        "weight": sigmoid(similarities[i, j]),
-                    }
-                )
-    return edges
+    """
+    inputs = []
+    try:
+        for file_name in os.listdir(folder_path):
+            if file_name.endswith(".json") and not file_name.startswith("_"):
+                inputs.append(file_name)
+    except FileNotFoundError:
+        print(f"Error: Folder '{folder_path}' does not exist.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    return inputs
 
 
 class GraphBuilder:
     def __init__(
         self,
         data_path,
-        embedding_model: TextEmbedding,
-        clustering_method: Clustering = KMeansClustering(),
     ):
-        self.papers_dict = {}
-        self.data_dict = {}
+        self.facts_dict = {}
+        self.dimensions_dict = {}
         self.edges_dict = {}
         self.data_path = data_path
         self.folders = os.listdir(self.data_path)
-        self.model = embedding_model
-        self.clustering = clustering_method
 
     def get_data(self, node_name):
-        return self.data_dict.get(node_name, {})
+        return self.dimensions_dict.get(node_name, {})
 
-    def extract_paper_data(self):
+    def extract_fact_data(self, dimension_node_names=[]):
         for folder in self.folders:
-            paper_file_name = os.path.join(self.data_path, folder, "Paper.json")
-            if os.path.exists(paper_file_name):
-                paper_data = load_json(paper_file_name)
-                paper_data["id"] = hash_id(folder)
-                if paper_data["id"] not in self.papers_dict:
-                    self.papers_dict[paper_data["id"]] = (folder, paper_data)
-
-    def extract_data(
-        self, node_name: str, prop_list: List[str] = None, edge_name: str = None
-    ):
-        if node_name not in self.data_dict:
-            data_dict = self.data_dict.setdefault(node_name, {})
-        else:
-            data_dict = self.data_dict[node_name]
-        if not edge_name:
-            edge_name = f"Paper_Has_{node_name}"
-        if edge_name not in self.edges_dict:
-            edges = self.edges_dict.setdefault(edge_name, [])
-        else:
-            edges = self.edges_dict[edge_name]
-
-        for paper_id, (folder, _) in self.papers_dict.items():
-            data_file_name = os.path.join(self.data_path, folder, f"{node_name}.json")
-            if os.path.exists(data_file_name):
-                data_items = load_json(os.path.join(data_file_name))
-            else:
-                logging.warning(f"File not found: {data_file_name}")
-                continue
-
-            if not isinstance(data_items, list):
-                data_items = [data_items]
-
-            for idx, item in enumerate(data_items):
-                data_id = hash_id(f"{paper_id}_{idx}")
-
-                if data_id not in data_dict:
-                    data_dict[data_id] = {"id": data_id}
-                    if prop_list:
-                        combined_text_parts = []
-                        for prop in prop_list:
-                            value = item.get(prop, "")
-                            combined_text_parts.append(value)
-                            data_dict[data_id][prop] = value
-                        combined_text = "_".join(combined_text_parts)
-                        # extract the cluster key from the given properties, concatenate them and save it as the cluster key, used for embedding
-                        data_dict[data_id]["cluster_key"] = combined_text
-                    else:
-                        data_dict[data_id].update(item)
-                    edges.append(
-                        {
-                            "source": paper_id,
-                            "target": data_id,
-                        }
-                    )
-
-    def embed_data(self, node_name: str):
-        data_dict = self.get_data(node_name)
-        text_to_embed = [item["cluster_key"] for item in data_dict.values()]
-        embeddings = self.model.embed(text_to_embed)
-        for idx, item in enumerate(data_dict.values()):
-            item["embedding"] = embeddings[idx]
-            del item["cluster_key"]
-
-    def cluster_data(self, node_name: str):
-        data_dict = self.get_data(node_name)
-        embeddings = np.array([item["embedding"] for item in data_dict.values()])
-        clusters = self.clustering.cluster(embeddings)
-        for idx, item in enumerate(data_dict.values()):
-            item["cluster_id"] = node_name + "_" + str(clusters[idx])
-
-    def extract_clustered_data(self, node_name: str, edge_name: str = None):
-        if not edge_name:
-            edge_name = f"Paper_Has_{node_name}"
-        if edge_name not in self.edges_dict:
-            edges = self.edges_dict.setdefault(edge_name, [])
-        else:
-            edges = self.edges_dict[edge_name]
-
-        try:
-            filename = os.path.join(
-                self.data_path, f"{node_name}_{SUMMARIZED_SUFFIX}.json"
+            done_file = paper_file_name = os.path.join(
+                self.data_path, folder, "_DONE.json"
             )
-            data_items = {}
-            with open(filename, "r") as f:
-                data_items = json.load(open(filename, "r"))
+            paper_file_name = os.path.join(self.data_path, folder, "Paper.json")
+            edge_file_name = os.path.join(self.data_path, folder, "_Edges.json")
+            if os.path.exists(done_file):
+                if os.path.exists(paper_file_name):
+                    paper_data = load_json(paper_file_name)
+                    paper_data["node_type"] = "Fact"
+                    if "id" not in paper_data:
+                        # a default id is given
+                        paper_data["id"] = hash_id(folder)
+                    if "reference" in paper_data:
+                        del paper_data["reference"]
+                    paper_id = paper_data["id"]
+                    if paper_id not in self.facts_dict:
+                        self.facts_dict[paper_id] = paper_data
 
-            if data_items:
-                data_to_cluster = {}
-                self.data_dict[node_name] = {}
-                data_dict = self.data_dict[node_name]
-
-                for item in data_items:
-                    data_dict[item["cluster_id"]] = item["summary"]
-                    for node_id in item["nodes"]:
-                        data_to_cluster[node_id] = item["cluster_id"]
-
-                new_edges = set()
-                for edge in edges:
-                    if edge["source"] in data_to_cluster:
-                        new_edges.add((data_to_cluster[edge["source"]], edge["target"]))
-                    elif edge["target"] in data_to_cluster:
-                        new_edges.add((edge["source"], data_to_cluster[edge["target"]]))
+                    if not dimension_node_names:
+                        json_files = list_json_files(
+                            os.path.join(self.data_path, folder)
+                        )
+                        for json_file in json_files:
+                            node_name = os.path.splitext(json_file)[0]
+                            if node_name != "Paper":
+                                self._extract_dimension_data(
+                                    paper_id, folder, node_name
+                                )
                     else:
-                        continue
+                        for node_name in dimension_node_names:
+                            self._extract_dimension_data(paper_id, folder, node_name)
+                if os.path.exists(edge_file_name):
+                    edge_data = load_json(edge_file_name)
+                    for edge_name, edge_pairs in edge_data.items():
+                        formatted_edges = [
+                            {"source": source, "target": target}
+                            for pair in edge_pairs
+                            for source, target in [pair.split("|")]
+                        ]
+                    self.edges_dict.setdefault(edge_name, []).extend(formatted_edges)
 
-                self.edges_dict[edge_name] = [
-                    {"source": edge[0], "target": edge[1]} for edge in new_edges
-                ]
+    def _extract_dimension_data(
+        self, paper_id: str, folder: str, node_name: str, edge_name: str = None
+    ):
+        if node_name not in self.dimensions_dict:
+            dimensions_dict = self.dimensions_dict.setdefault(node_name, {})
+        else:
+            dimensions_dict = self.dimensions_dict[node_name]
+        if not edge_name:
+            edge_name = f"Paper_Has_{node_name}"
+        if edge_name not in self.edges_dict:
+            edges = self.edges_dict.setdefault(edge_name, [])
+        else:
+            edges = self.edges_dict[edge_name]
 
-        except Exception as e:
-            return
+        data_file_name = os.path.join(self.data_path, folder, f"{node_name}.json")
+        if os.path.exists(data_file_name):
+            data_items = load_json(os.path.join(data_file_name))
+        else:
+            logging.warning(f"File not found: {data_file_name}")
+
+        if not isinstance(data_items, list):
+            data_items = [data_items]
+
+        for idx, item in enumerate(data_items):
+            data_id = hash_id(f"{paper_id}_{idx}")
+
+            if data_id not in dimensions_dict:
+                dimensions_dict[data_id] = {"id": data_id, "node_type": "Dimension"}
+                dimensions_dict[data_id].update(item)
+                edges.append(
+                    {
+                        "source": paper_id,
+                        "target": data_id,
+                    }
+                )
 
     def build_graph(self):
         graph_path = os.path.join(self.data_path, "graph")
@@ -224,11 +187,11 @@ class GraphBuilder:
         gs_schemas = {"vertex_types": [], "edge_types": []}
         write_csv(
             os.path.join(graph_path, "Paper.csv"),
-            [paper[1] for paper in self.papers_dict.values()],
+            list(self.facts_dict.values()),
         )
 
         paper_schema = {}
-        for _, paper in self.papers_dict.values():
+        for paper in self.facts_dict.values():
             paper_schema = {
                 "type_name": "Paper",
                 "properties": [],
@@ -247,7 +210,7 @@ class GraphBuilder:
             gs_schemas["vertex_types"].append(paper_schema)
 
         node_schema = {}
-        for node, data in self.data_dict.items():
+        for node, data in self.dimensions_dict.items():
             write_csv(
                 os.path.join(graph_path, f"{node}.csv"),
                 list(data.values()),
@@ -279,13 +242,21 @@ class GraphBuilder:
                     "target",
                 ],
             )
+            if "_" in edge:
+                target_name = "Paper"
+            else:
+                # Ensure edge has enough parts when split
+                parts = edge.split("_")
+                if len(parts) >= 3:
+                    target_name = parts[2]
+                else:
+                    target_name = "None"
             edge_schema = {
                 "type_name": edge,
                 "vertex_type_pair_relations": [
                     {
                         "source_vertex": "Paper",
-                        # TODO only when people does not specify edge's name
-                        "destination_vertex": edge.split("_")[2],
+                        "destination_vertex": target_name,
                         "relation": "MANY_TO_MANY",
                     }
                 ],

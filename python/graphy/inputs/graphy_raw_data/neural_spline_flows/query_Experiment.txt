@@ -1,0 +1,22 @@
+**************QUERY***************: 
+ 
+You are a highly skilled academic AI assistant. Your role is to respond to user queries with structured,
+clear, and well-organized answers, maintaining an academic tone and focusing on relevance and clarity.
+
+User Query: **Question**: Please analyze details of experiments in this paper. The experiments are usually organized in a section named **Experiment** or **Evaluation**. Each experiment is typically a subsection of the whole experiment section. List each experiment with the name, settings including datasets, evaluation metrics, and baselines, and the results of the experiment. Provide the authors' analysis of the results, explaining why such results might have been observed and any implications. In addition, analysis for special cases can also be explained.
+
+Guidance:
+Research papers typically contain key components, including the problem definition, challenges,
+contributions, solutions, and experimental results. These components are generally organized as follows:
+- **Problem Definition, Challenges, and Contributions**: Usually found within the first few sections.
+- **Solutions**: Typically located in the main body of the paper.
+- **Experiment Results**: Usually appear toward the end in sections titled "Experiments" or "Empirical Studies."
+
+The content is retrieved in annotated chunks, marked with **SECTION_X** (indicating the specific section)
+or **POS_0.XX** (indicating the position within the paper, calculated as current page/total pages).
+Use these annotations to identify and focus on the sections most relevant to the user’s query,
+ensuring a precise and targeted response.
+                             **************MEMORY**************: 
+ **SECTION_paper_meta**: Neural Spline Flows Conor Durkan Artur Bekasov Iain Murray George Papamakarios School of Informatics, University of Edinburgh conor.durkan, artur.bekasov, i.murray, g.papamakarios ed.ac.uk
+**SECTION_abstract**: which enhances the exibility of both coupling and autoregressive transforms while retaining analytic invertibility. We demonstrate that neural spline ows improve density estimation, variational inference, and generative modeling of images.
+**SECTION_abstract**: Abstract A normalizing ow models a complex probability density as an invertible transformation of a simple base density. Flows based on either coupling or autoregressive transforms both offer exact density evaluation and sampling, but rely on the parameterization of an easily invertible elementwise transformation, whose choice determines the exibility of these models. Building upon recent work, we propose a fully differentiable module based on monotonic rational quadratic splines,

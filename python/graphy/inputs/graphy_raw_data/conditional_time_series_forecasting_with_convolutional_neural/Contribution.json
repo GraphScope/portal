@@ -1,0 +1,28 @@
+{
+    "data": [
+        {
+            "original": "First of all, we present a CNN inspired by the WaveNet model, with a structure that is simplified and optimized for time series forecasting, i.e., using a ReLU activation and a novel and more optimal way of conditioning with parametrized skip connections.",
+            "summary": "Simplified and optimized CNN structure for time series forecasting."
+        },
+        {
+            "original": "Second, knowing the strong performance of CNNs on classification problems, our work is to the best of our knowledge the first to show that they can be applied successfully to forecasting financial time series of limited length.",
+            "summary": "First application of CNNs to forecasting short financial time series."
+        },
+        {
+            "original": "By conducting an extensive analysis of the WaveNet model and comparing the performance to that of an LSTM, the current state of the art in forecasting, and an autoregressive model popular in econometrics our paper shows that the WaveNet model is a time efficient and easy to implement alternative to recurrent type networks.",
+            "summary": "Comprehensive performance comparison with LSTM and autoregressive models."
+        },
+        {
+            "original": "Furthermore, the gated activation function from the original WaveNet model is replaced by a rectified linear unit (ReLU), simplifying the model and reducing the training time.",
+            "summary": "Replaced gated activation with ReLU for simplicity and efficiency."
+        },
+        {
+            "original": "Effectively, we use multiple financial time series as input in a neural network, thus conditioning the forecast of a time series on both its own history as well as that of multiple other time series.",
+            "summary": "Utilizes multiple time series for conditioning forecasts."
+        },
+        {
+            "original": "Lastly, we show using examples on artificial time series as well as the S&P500, VIX, CBOE interest rate, and five exchange rates that the efficient way of conditioning in the WaveNet model enables one to extract temporal relationships in between time series improving the forecast, while at the same time limiting the requirement for a long historical price series.",
+            "summary": "Demonstrates improved forecasting with limited historical data through efficient conditioning."
+        }
+    ]
+}

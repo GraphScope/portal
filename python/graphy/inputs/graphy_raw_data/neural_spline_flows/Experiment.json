@@ -1,0 +1,29 @@
+{
+    "data": [
+        {
+            "name": "Density Estimation on Toy Distributions",
+            "settings": "Dataset: Synthetic toy distributions (e.g., two moons, concentric circles, and checkerboard patterns). Evaluation Metrics: Log-likelihood. Baselines: RealNVP (Dinh et al., 2017), MAF (Papamakarios et al., 2017), Planar Flows (Rezende & Mohamed, 2015)",
+            "results": "Log-likelihood: Neural Spline Flows achieved higher log-likelihood scores compared to the baselines on all synthetic datasets. Visualizations: The authors provided visualizations showing that Neural Spline Flows more accurately captured the complex structures of the toy distributions."
+        },
+        {
+            "name": "Variational Inference",
+            "settings": "Dataset: Bayesian logistic regression on UCI datasets (e.g., Australian, German, and Heart). Evaluation Metrics: Test log-likelihood and predictive accuracy. Baselines: Mean-field approximation, Full-rank Gaussian, RealNVP, MAF",
+            "results": "Test Log-likelihood: Neural Spline Flows achieved higher test log-likelihoods compared to mean-field and full-rank Gaussian approximations, and were competitive with RealNVP and MAF. Predictive Accuracy: Neural Spline Flows showed slight improvements in predictive accuracy over the baselines."
+        },
+        {
+            "name": "Generative Modeling of Images",
+            "settings": "Dataset: CIFAR-10 and ImageNet 32x32. Evaluation Metrics: Bits per dimension (bpd). Baselines: RealNVP, Glow (Kingma & Dhariwal, 2018), MAF",
+            "results": "Bits per Dimension (bpd): Neural Spline Flows achieved lower bpd values compared to RealNVP and MAF, and were competitive with Glow. Sample Quality: Visual inspection of generated samples showed that Neural Spline Flows produced high-quality images with diverse and realistic features."
+        },
+        {
+            "name": "Sensitivity to Hyperparameters",
+            "settings": "Experiment: Ablation studies to evaluate the sensitivity of Neural Spline Flows to hyperparameters such as the number of bins in the splines and the depth of the flow.",
+            "results": "Performance was robust to variations in the number of bins, with optimal performance observed at a moderate number of bins."
+        },
+        {
+            "name": "Computational Efficiency",
+            "settings": "Experiment: Comparison of the computational efficiency of Neural Spline Flows with other models.",
+            "results": "Neural Spline Flows required comparable training time to RealNVP and MAF, while achieving better performance."
+        }
+    ]
+}
