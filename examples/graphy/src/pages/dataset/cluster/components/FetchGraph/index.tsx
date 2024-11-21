@@ -32,6 +32,7 @@ const FetchGraph: React.FunctionComponent<IUploadProps> = props => {
         draft.data = res;
         draft.source = res;
         draft.dataMap = getDataMap(res);
+        //@ts-ignore
         draft.schema = schema;
         draft.nodeStyle = style.nodeStyle;
         draft.edgeStyle = style.edgeStyle;

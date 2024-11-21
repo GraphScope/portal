@@ -7,7 +7,7 @@ import { GithubOutlined, ReadOutlined } from '@ant-design/icons';
 import { StudioProvier } from '@graphscope/studio-components';
 // import locales from '../locales';
 import { IntlProvider } from 'react-intl';
-import PaperReading from './paper-reading';
+
 import OnlineVisualizer from './online-visual-tool';
 
 interface IPagesProps {}
@@ -116,7 +116,6 @@ const Home = () => {
 
 const routes = [
   { path: '/', component: Home },
-  { path: '/paper-reading', component: React.lazy(() => import('./paper-reading')) },
   {
     path: '/online-visual-tool',
     component: React.lazy(() =>
@@ -160,4 +159,4 @@ const GraphApps: React.FunctionComponent<IPagesProps> = props => {
   );
 };
 
-export { PaperReading, GraphApps, OnlineVisualizer };
+export { GraphApps, OnlineVisualizer };
