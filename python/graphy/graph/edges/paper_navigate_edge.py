@@ -32,50 +32,31 @@ class PaperNavigateEdge(BaseEdge):
         self.paper_download_dir = paper_download_dir
         os.makedirs(self.paper_download_dir, exist_ok=True)
 
-        self.arxiv_link_queue = Queue()
-        self.scholar_link_queue = Queue()
-        self.output_queue = Queue()
         self.arxiv_download_concurrency = arxiv_download_concurrency
         self.scholar_download_concurrency = scholar_download_concurrency
         self.max_paper_num = max_paper_num
         self.max_hop = max_hop
 
-        self.hop_num_limits = {}
-        self.hop_num = {}
-        self.lock = threading.Lock()
-
         self.search_scholar = False
 
-        self.paper_count_lock = threading.Lock()
         self.paper_num = 0
 
-        self.remove_paper_task_lock = threading.Lock()
-
-        self.count_lock = threading.Lock()
-        self.counts = {
-            "arxiv_request": 0,
-            "arxiv_download": 0,
-            "scholar_request": 0,
-            "scholar_download": 0,
-            "scholar": [],
-        }
-
-    def arxiv_download_worker(self):
-        while not self.arxiv_link_queue.empty():
-            info = self.arxiv_link_queue.get()
+    def arxiv_download_worker(self, arxiv_link_queue, scholar_link_queue, output_queue):
+        while not arxiv_link_queue.empty():
+            info = arxiv_link_queue.get()
 
             if info is None:
-                self.arxiv_link_queue.task_done()
+                arxiv_link_queue.task_done()
                 continue
             hop, link, parent_id = info
 
             if link is None or len(link) < 5:
-                self.arxiv_link_queue.task_done()
+                arxiv_link_queue.task_done()
                 continue
 
             if self.max_paper_num != -1:
                 if self.paper_num >= self.max_paper_num:
-                    self.arxiv_link_queue.task_done()
+                    arxiv_link_queue.task_done()
                     continue
 
             logger.info(
@@ -88,7 +69,7 @@ class PaperNavigateEdge(BaseEdge):
             if len(download_list) == 0:
                 logger.info(f"PASS {link} to SCHOLAR FOR FURTHER SEARCH")
                 if self.search_scholar:
-                    self.scholar_link_queue.put((hop, link, parent_id))
+                    scholar_link_queue.put((hop, link, parent_id))
             else:
                 for download_info in download_list:
                     succ, path, exist = download_info
@@ -98,10 +79,10 @@ class PaperNavigateEdge(BaseEdge):
                     else:
                         logger.info(f"PASS {link} to SCHOLAR FOR FURTHER SEARCH")
                         if self.search_scholar:
-                            self.scholar_link_queue.put((hop, link, parent_id))
+                            scholar_link_queue.put((hop, link, parent_id))
                     break
 
-            self.arxiv_link_queue.task_done()
+            arxiv_link_queue.task_done()
 
             logger.info(
                 f"--------------  FINISH ARXIV WORKER: {link}  ------------------"
@@ -109,25 +90,25 @@ class PaperNavigateEdge(BaseEdge):
 
         logger.info("QUIT ARXIV")
         logger.info(
-            f"{self.output_queue.qsize()} {self.scholar_link_queue.qsize()} {self.arxiv_link_queue.qsize()}"
+            f"{output_queue.qsize()} {scholar_link_queue.qsize()} {arxiv_link_queue.qsize()}"
         )
 
-    def scholar_download_worker(self):
+    def scholar_download_worker(self, arxiv_link_queue, scholar_link_queue):
         while True:
-            info = self.scholar_link_queue.get()
+            info = scholar_link_queue.get()
 
             if info is None:
-                self.scholar_link_queue.task_done()
+                scholar_link_queue.task_done()
                 break
             hop, link, parent_id = info
 
             if link is None or len(link) < 5:
-                self.scholar_link_queue.task_done()
+                scholar_link_queue.task_done()
                 continue
 
             if self.max_paper_num != -1:
                 if self.paper_num >= self.max_paper_num:
-                    self.scholar_link_queue.task_done()
+                    scholar_link_queue.task_done()
                     continue
 
             logger.info(
@@ -159,7 +140,7 @@ class PaperNavigateEdge(BaseEdge):
                     logger.info(f"SUCCESSFULLY GET PAPER {path}")
                     yield path, parent_id
 
-            self.scholar_link_queue.task_done()
+            scholar_link_queue.task_done()
 
             logger.info(
                 f"--------------  FINISH SCHOLAR WORKER: {link}  ------------------"
@@ -167,14 +148,20 @@ class PaperNavigateEdge(BaseEdge):
 
         logger.info("QUIT SCHOLAR")
 
-    def run_worker(self, worker_func):
-        for result in worker_func():
-            self.output_queue.put(result)
+    def run_worker(
+        self, worker_func, arxiv_link_queue, scholar_link_queue, output_queue
+    ):
+        for result in worker_func(arxiv_link_queue, scholar_link_queue, output_queue):
+            output_queue.put(result)
 
     @profiler.profile(name="PaperNavigateEdge")
     def execute(
         self, state: Dict[str, Any], input: DataGenerator = None
     ) -> DataGenerator:
+        arxiv_link_queue = Queue()
+        scholar_link_queue = Queue()
+        output_queue = Queue()
+
         logger.debug("================= START NAVIGATE ==============")
         for paper in input:
             if not paper:
@@ -186,7 +173,7 @@ class PaperNavigateEdge(BaseEdge):
                 continue
 
             for arxiv_task in arxiv_tasks:
-                self.arxiv_link_queue.put((1, arxiv_task, parent_id))
+                arxiv_link_queue.put((1, arxiv_task, parent_id))
 
         with concurrent.futures.ThreadPoolExecutor(
             max_workers=self.arxiv_download_concurrency
@@ -197,7 +184,11 @@ class PaperNavigateEdge(BaseEdge):
             for _ in range(self.arxiv_download_concurrency):
                 futures.append(
                     arxiv_download_executor.submit(
-                        self.run_worker, self.arxiv_download_worker
+                        self.run_worker,
+                        self.arxiv_download_worker,
+                        arxiv_link_queue,
+                        scholar_link_queue,
+                        output_queue,
                     )
                 )
 
@@ -205,17 +196,21 @@ class PaperNavigateEdge(BaseEdge):
                 for _ in range(self.scholar_download_concurrency):
                     futures.append(
                         scholar_download_executor.submit(
-                            self.run_worker, self.scholar_download_worker
+                            self.run_worker,
+                            self.scholar_download_worker,
+                            arxiv_link_queue,
+                            scholar_link_queue,
+                            output_queue,
                         )
                     )
 
             while (
-                not self.arxiv_link_queue.empty()
-                or not self.scholar_link_queue.empty()
-                or not self.output_queue.empty()
+                arxiv_link_queue.unfinished_tasks != 0
+                or scholar_link_queue.unfinished_tasks != 0
+                or output_queue.unfinished_tasks != 0
             ):
                 try:
-                    paper_path, parent_id = self.output_queue.get(
+                    paper_path, parent_id = output_queue.get(
                         timeout=0.1
                     )  # Attempt to get a result from the queue
                     yield {
@@ -223,16 +218,21 @@ class PaperNavigateEdge(BaseEdge):
                         "parent_id": parent_id,
                         "edge_name": self.name,
                     }
-                    self.output_queue.task_done()
+                    output_queue.task_done()
                 except queue.Empty:
                     continue
 
-            self.arxiv_link_queue.join()
-            self.scholar_link_queue.join()
-            self.output_queue.join()
+            logger.debug("========== OUT WHILE ======")
+
+            arxiv_link_queue.join()
+            logger.debug("========== join 1 ======")
+            scholar_link_queue.join()
+            logger.debug("========== join 2 ======")
+            output_queue.join()
+            logger.debug("========== join 3 ======")
 
             if self.search_scholar:
                 for _ in range(self.scholar_download_concurrency):
-                    self.scholar_link_queue.put(None)
+                    scholar_link_queue.put(None)
 
         logger.debug("================= FINISH NAVIGATE ==============")
