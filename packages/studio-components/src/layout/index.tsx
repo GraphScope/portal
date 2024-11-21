@@ -5,6 +5,7 @@ import Header from './header';
 import Sidebar from './sidebar';
 import { Button, Space } from 'antd';
 import { ReadOutlined, GithubOutlined } from '@ant-design/icons';
+import { getCurrentNav } from '../Utils';
 
 interface ILayoutProps {
   sideStyle?: {
@@ -14,11 +15,22 @@ interface ILayoutProps {
   github?: string;
   sideMenu: any[];
   style?: React.CSSProperties;
+  collapsedConfig?: Record<string, boolean>;
 }
 
 const Layout: React.FunctionComponent<ILayoutProps> = props => {
-  const { sideStyle = {}, github = 'https://github.com/GraphScope/portal', sideMenu, style } = props;
+  const {
+    sideStyle = {},
+    github = 'https://github.com/GraphScope/portal',
+    sideMenu,
+    style,
+    collapsedConfig = {},
+  } = props;
   const { width = 220, collapsedWidth = 56 } = sideStyle;
+  const activeKey = getCurrentNav();
+
+  const leftSideCollapsed = collapsedConfig[activeKey] || false;
+
   return (
     <Section
       style={style}
@@ -35,7 +47,7 @@ const Layout: React.FunctionComponent<ILayoutProps> = props => {
         minWidth: `${collapsedWidth}px`,
       }}
       defaultCollapsed={{
-        leftSide: false,
+        leftSide: leftSideCollapsed,
       }}
     >
       <Header style={{ padding: '0px 12px', justifyContent: 'space-between', display: 'flex', alignItems: 'center' }}>

@@ -259,4 +259,5 @@ export default {
   'Please click the button above to 「Create instance」': '请先点击上面的按钮「创建实例」',
   'No graph available': '无可用图实例',
   'Create instance': '创建图实例',
+  Explore: '图探索',
 };

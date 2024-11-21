@@ -10,7 +10,9 @@ import {
   faPuzzlePiece,
   faBell,
   faCoins,
+  faMagnifyingGlassChart,
 } from '@fortawesome/free-solid-svg-icons';
+
 import { MenuProps } from 'antd';
 
 export const SETTING_MENU = [
@@ -38,6 +40,12 @@ export const TOOLS_MENU = [
     key: '/querying',
     value: '/querying',
     icon: <FontAwesomeIcon icon={faMagnifyingGlass} />,
+  },
+  {
+    label: <FormattedMessage id="Explore" />,
+    key: '/explore',
+    value: '/explore',
+    icon: <FontAwesomeIcon icon={faMagnifyingGlassChart} />,
   },
 ];
 

@@ -16,22 +16,35 @@
   ],
   "scripts": {
     "start": "father dev",
-    "build": "father build"
+    "build": "father build",
+    "start:site": "vite dev",
+    "build:site": "vite build"
   },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "localforage": "latest",
-    "d3-force": "latest",
-    "@graphscope/studio-importor": "workspace:*",
+    "@antv/g2": "^5.2.7",
     "@graphscope/studio-components": "workspace:*",
+    "@graphscope/studio-driver": "workspace:*",
     "@graphscope/studio-graph": "workspace:*",
+    "@graphscope/studio-importor": "workspace:*",
+    "@graphscope/studio-query": "workspace:*",
+    "@kuzu/kuzu-wasm": "0.6.2-dev",
+    "d3-force": "latest",
+    "localforage": "latest",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-highlight-words": "^0.20.0",
+    "react-intl": "^6.6.8"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.4.9",
+    "vite-plugin-top-level-await": "^1.4.4",
+    "vite-plugin-wasm": "^3.3.0"
+  },
   "author": "",
   "license": "ISC"
 }
