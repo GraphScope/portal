@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Section, FullScreen, useCustomToken, StudioProvier } from '@graphscope/studio-components';
+import { Section, FullScreen, useCustomToken, StudioProvier, SegmentedTabs } from '@graphscope/studio-components';
 import {
   Toolbar,
   SwitchEngine,
@@ -23,17 +23,16 @@ import {
   GraphProvider,
   locales,
   ClearCanvas,
+  CurvatureLinks,
+  DagreMode,
 } from '@graphscope/studio-graph';
 
 import ToogleButton from './components/ToggleButton';
-import { Connection, FetchGraph, Searchbar } from './components';
+import { Connection, FetchGraph, Searchbar, Statistics, ClusterAnalysis } from './components';
 
 import { Divider } from 'antd';
 import builtinServices from './services';
 
-interface IServices {
-  queryCypher: (params: { script: string }) => Promise<any>;
-}
 interface ExploreProps {
   id?: string;
   services?: any;
@@ -56,17 +55,38 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             splitBorder
             rightSide={
               <PropertiesPanel>
-                <StyleSetting />
+                <SegmentedTabs
+                  block
+                  items={[
+                    {
+                      key: 'StyleSetting',
+                      label: 'StyleSetting',
+                      children: <StyleSetting />,
+                    },
+                    {
+                      key: 'Statistics',
+                      label: 'Statistics',
+                      children: <Statistics />,
+                    },
+                    {
+                      key: 'ClusterAnalysis',
+                      label: 'ClusterAnalysis',
+                      children: <ClusterAnalysis />,
+                    },
+                  ]}
+                ></SegmentedTabs>
               </PropertiesPanel>
             }
             autoResize={false}
             rightSideStyle={{
-              width: '300px',
-              padding: '12px 0px 12px 18px',
+              width: '360px',
+              padding: '12px 12px 12px 18px',
+              boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
+              overflowY: 'scroll',
             }}
             defaultCollapsed={{
               leftSide: true,
-              rightSide: true,
+              rightSide: false,
             }}
           >
             {/* <Prepare data={data} schema={schema} graphId={graphId} /> */}
@@ -77,7 +97,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             <Loading />
             <Toolbar
               direction="horizontal"
-              style={{ position: 'absolute', top: '20px', right: '80px', left: '80px' }}
+              style={{ position: 'absolute', top: '20px', left: '20px', width: 500 }}
               noSpace
             >
               <Searchbar />
@@ -100,6 +120,8 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
               <ZoomFit />
               <Brush />
               <FixedMode />
+              <CurvatureLinks />
+              <DagreMode />
               <Divider style={{ margin: '0px' }} />
               <SwitchEngine />
               <RunCluster />

@@ -5,6 +5,7 @@ import { theme, Flex, Input, Modal, Button } from 'antd';
 import { DatabaseOutlined } from '@ant-design/icons';
 import LoadKuzuWasm from './import-from-csv';
 import { ConnectEndpoint } from '@graphscope/studio-query';
+import { LoadCSV } from '@graphscope/studio-graph';
 interface IInitProps {}
 
 const Init: React.FunctionComponent<IInitProps> = props => {
@@ -25,7 +26,7 @@ const Init: React.FunctionComponent<IInitProps> = props => {
     <>
       <Button onClick={handleToggle} icon={<DatabaseOutlined />} type="text"></Button>
       <Modal open={visible} onClose={handleClose} onCancel={handleClose} width={'80%'} footer={null}>
-        <SplitSection leftSide={<ConnectEndpoint onConnect={handleConnect} />} rightSide={<LoadKuzuWasm />} />
+        <SplitSection leftSide={<ConnectEndpoint onConnect={handleConnect} />} rightSide={<LoadCSV />} />
       </Modal>
     </>
   );

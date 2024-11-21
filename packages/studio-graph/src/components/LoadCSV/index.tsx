@@ -59,12 +59,7 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
           if (!nodeSchemas.has(label)) {
             const nodeSchema = {
               label,
-              properties: Utils.extractProperties(node).reduce((acc, curr) => {
-                return {
-                  ...acc,
-                  [curr.name]: curr.type,
-                };
-              }, {}),
+              properties: Utils.extractProperties(node),
             };
             nodeSchemas.set(label, nodeSchema);
           }
@@ -98,12 +93,7 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
               label,
               source: sourceLabel,
               target: targetLabel,
-              properties: Utils.extractProperties(edge).reduce((acc, curr) => {
-                return {
-                  ...acc,
-                  [curr.name]: curr.type,
-                };
-              }, {}),
+              properties: Utils.extractProperties(edge),
             };
             edgeSchemas.set(label, edgeSchema);
           }
@@ -143,7 +133,7 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
     <ImportFiles
       upload={{
         accept: '.json,.csv',
-        title: 'xxx',
+        title: 'Upload your local csv files',
         description: 'xxx',
       }}
       type="json"

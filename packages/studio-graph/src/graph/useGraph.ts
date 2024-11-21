@@ -208,44 +208,81 @@ export default function useGraph<P extends GraphProps>(props: P) {
     if (graphRef.current) {
       const edgeCount = graphRef.current.graphData().links.length;
       const graph = graphRef.current;
-      (graph as ForceGraphInstance)
-
-        .linkCanvasObject((link, ctx, globalScale) => {
-          linkCanvasObject(link, ctx, globalScale)(edgeStyle, edgeStatus, edgeCount > 100);
-        })
-        .linkColor((edge: any) => {
-          const { color } = handleStyle(edge, edgeStyle, 'edge');
-          const match = edgeStatus[edge.id];
-          if (match && match.selected) {
-            return SELECTED_EDGE_COLOR;
-          }
-          return color;
-        })
-        .linkLabel((edge: any) => {
-          const key = handleStyle(edge, edgeStyle, 'edge').caption;
-          const value = edge && edge.properties && edge.properties[key];
-          if (key && value) {
-            return `${key}: ${value}`;
-          }
-          return '';
-        })
-        .linkWidth((edge: any) => {
-          const { size } = handleStyle(edge, edgeStyle, 'edge');
-          const match = edgeStatus[edge.id];
-          if (match && match.selected) {
-            return size + 1;
-          }
-          return size;
-        })
-        .linkDirectionalParticles(1)
-        .linkDirectionalParticleWidth((edge: any) => {
-          const match = edgeStatus[edge.id];
-          if (match && match.selected) {
+      if (render === '2D') {
+        (graph as ForceGraphInstance)
+          .linkCanvasObject((link, ctx, globalScale) => {
+            linkCanvasObject(link, ctx, globalScale)(edgeStyle, edgeStatus, edgeCount > 100);
+          })
+          .linkColor((edge: any) => {
+            const { color } = handleStyle(edge, edgeStyle, 'edge');
+            const match = edgeStatus[edge.id];
+            if (match && match.selected) {
+              return SELECTED_EDGE_COLOR;
+            }
+            return color;
+          })
+          .linkLabel((edge: any) => {
+            const key = handleStyle(edge, edgeStyle, 'edge').caption;
+            const value = edge && edge.properties && edge.properties[key];
+            if (key && value) {
+              return `${key}: ${value}`;
+            }
+            return '';
+          })
+          .linkWidth((edge: any) => {
             const { size } = handleStyle(edge, edgeStyle, 'edge');
-            return size + 1;
-          }
-          return 0;
-        });
+            const match = edgeStatus[edge.id];
+            if (match && match.selected) {
+              return size + 1;
+            }
+            return size;
+          })
+          .linkDirectionalParticles(1)
+          .linkDirectionalParticleWidth((edge: any) => {
+            const match = edgeStatus[edge.id];
+            if (match && match.selected) {
+              const { size } = handleStyle(edge, edgeStyle, 'edge');
+              return size + 1;
+            }
+            return 0;
+          });
+      }
+      if (render === '3D') {
+        (graph as ForceGraph3DInstance)
+          .linkColor((edge: any) => {
+            const { color } = handleStyle(edge, edgeStyle, 'edge');
+            const match = edgeStatus[edge.id];
+            if (match && match.selected) {
+              return SELECTED_EDGE_COLOR;
+            }
+            return color;
+          })
+          .linkLabel((edge: any) => {
+            const key = handleStyle(edge, edgeStyle, 'edge').caption;
+            const value = edge && edge.properties && edge.properties[key];
+            if (key && value) {
+              return `${key}: ${value}`;
+            }
+            return '';
+          })
+          .linkWidth((edge: any) => {
+            const { size } = handleStyle(edge, edgeStyle, 'edge');
+            const match = edgeStatus[edge.id];
+            if (match && match.selected) {
+              return size + 1;
+            }
+            return size;
+          })
+          .linkDirectionalParticles(1)
+          .linkDirectionalParticleWidth((edge: any) => {
+            const match = edgeStatus[edge.id];
+            if (match && match.selected) {
+              const { size } = handleStyle(edge, edgeStyle, 'edge');
+              return size + 1;
+            }
+            return 0;
+          });
+      }
     }
   }, [edgeStyle, edgeStatus]);
 

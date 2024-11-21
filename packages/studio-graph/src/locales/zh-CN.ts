@@ -10,4 +10,6 @@ export default {
   'Edge Properties': '边属性信息',
   'Vertex Properties': '点属性信息',
   'File type': '文件类型',
+  'Vertex Labels': '点类型',
+  'Edge Labels': '边类型',
 };

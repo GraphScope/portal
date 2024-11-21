@@ -181,7 +181,7 @@ export default defineConfig({
   ],
   jsMinifier: 'terser',
   resolve: {
-    // docDirs: ['docs'],
+    docDirs: ['packages/studio-components'],
 
     atomDirs: [
       {
