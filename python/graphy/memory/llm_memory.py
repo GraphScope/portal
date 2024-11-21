@@ -77,8 +77,7 @@ class RetrievedMemory:
         if vectordb:
             self.persistent_client = vectordb
             self.collection = self.persistent_client.get_or_create_collection(
-                name=self.collection_name,
-                # embedding_function=self.embeddings,
+                name=self.collection_name, embedding_function=self.embedding_function
             )
         else:
             self.persistent_client = None
@@ -248,12 +247,18 @@ class RetrievedMemory:
             embed = self.embedding_function([content])[0]
             # print(embed)
             # print(metadata)
-            if metadata["type"] == VectorDBHierarchy.FirstLayer.value:
-                doc_id = f"{self.collection_name}_{content}"
-            elif metadata["type"] == VectorDBHierarchy.SecondLayer.value:
-                doc_id = self.collection_name + "_" + metadata["id"]
-                # for id_item in ids_format:
-                # doc_id = doc_id + "_" + str(id_item) + str(metadata[id_item])
+
+            if "type" in metadata:
+                if metadata["type"] == VectorDBHierarchy.FirstLayer.value:
+                    doc_id = f"{self.collection_name}_{content}"
+                elif metadata["type"] == VectorDBHierarchy.SecondLayer.value:
+                    doc_id = self.collection_name + "_" + metadata["id"]
+                    # for id_item in ids_format:
+                    # doc_id = doc_id + "_" + str(id_item) + str(metadata[id_item])
+                else:
+                    continue
+            else:
+                continue
 
             documents.append(content)
             embeddings.append(embed)
