@@ -8,6 +8,7 @@ from workflow import ThreadPoolWorkflowExecutor, SurveyPaperReading
 from models import set_llm_model, DefaultEmbedding, DEFAULT_LLM_MODEL_CONFIG
 from workflow.ray_executor import RayWorkflowExecutor
 
+import argparse
 import json
 import logging
 import sys
@@ -39,8 +40,42 @@ def list_pdf_inputs(folder_path: str):
     return inputs
 
 
+def parse_arguments():
+    """
+    Parse command-line arguments.
+
+    Returns:
+        argparse.Namespace: Parsed command-line arguments.
+    """
+    parser = argparse.ArgumentParser(
+        description="Run workflow with specified configurations."
+    )
+    parser.add_argument(
+        "input_folder",
+        type=str,
+        help="Path to the input folder containing workflow files.",
+    )
+    parser.add_argument(
+        "--max-workers",
+        type=int,
+        default=4,
+        help="Maximum number of parallel workers (default: 4).",
+    )
+    parser.add_argument(
+        "--max-inspectors",
+        type=int,
+        default=100,
+        help="Maximum number of inspectors allowed (default: 100).",
+    )
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    input_folder = sys.argv[1]
+    args = parse_arguments()
+    input_folder = args.input_folder
+    max_workers = args.max_workers
+    max_inspectors = args.max_inspectors
+
     ray.init()
     graph_json = ""
     with open("config/workflow_navigator.json") as f:
@@ -52,9 +87,8 @@ if __name__ == "__main__":
             "llm_model": DEFAULT_LLM_MODEL_CONFIG,
             "graph": graph_json,
         }
-        paper_survey_workflow = SurveyPaperReading.from_json(workflow_json)
         executor = RayWorkflowExecutor(
-            workflow_json, max_workers=8, max_inspectors=10000
+            workflow_json, SurveyPaperReading, max_workers, max_inspectors
         )
         inputs = list_pdf_inputs(input_folder)
         executor.execute(inputs)

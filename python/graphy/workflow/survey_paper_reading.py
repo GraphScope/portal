@@ -71,7 +71,7 @@ class SurveyPaperReading(BaseWorkflow):
         )
 
     @classmethod
-    def from_json(
+    def from_dict(
         cls: Type["SurveyPaperReading"], workflow_json: dict
     ) -> "SurveyPaperReading":
         """
@@ -199,19 +199,14 @@ class SurveyPaperReading(BaseWorkflow):
             for inspector in inspectors:
                 inspector_name = inspector["name"]
                 inspector_graph_json = inspector["graph"]
-                inspector_graph = create_inspector_graph(
+
+                inspector_node = PaperInspector.from_dict(
+                    inspector_name,
                     inspector_graph_json,
                     llm_model,
                     parser_model,
                     embeddings_model,
-                )
-
-                inspector_node = PaperInspector(
-                    inspector_name,
-                    llm_model,
-                    embeddings_model,
                     vectordb,
-                    inspector_graph,
                     persist_store,
                 )
                 graph.add_node(inspector_node)
@@ -228,18 +223,13 @@ class SurveyPaperReading(BaseWorkflow):
 
         # Handle single InspectorNode special case
         else:
-            inspector_graph = create_inspector_graph(
+            inspector_node = PaperInspector.from_dict(
+                "PaperInspector",
                 graph_json,
                 llm_model,
                 parser_model,
                 embeddings_model,
-            )
-
-            inspector_node = PaperInspector(
-                "PaperInspector",
-                llm_model,
-                embeddings_model,
-                inspector_graph,
+                vectordb,
                 persist_store,
             )
             graph.add_node(inspector_node)

@@ -1,10 +1,13 @@
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor, Future
 from queue import Queue, Empty
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Type, TypeAlias
+
 from graph.types import DataType, DataGenerator
 from graph.nodes import BaseNode, NodeType
 from graph.edges import BaseEdge
+from workflow import BaseWorkflow
+
 import threading
 import logging
 
@@ -30,21 +33,8 @@ class WorkflowExecutor(ABC):
         pass
 
 
-class Task:
-    """
-    Represents a unit of work in the workflow execution.
-
-    Attributes:
-        input (DataGenerator): The input data for the task.
-        executor (Union[BaseNode, BaseEdge]): The executor responsible for processing the task.
-    """
-
-    def __init__(self, input: DataGenerator, executor: Any):
-        self.input = input  # Input data for the task
-        self.executor = executor  # Executor (node/edge) for this task
-
-    def __repr__(self):
-        return f"Task(executor={self.executor})"
+# A task is a dictionary containing the input data and the executor (node or edge)
+Task: TypeAlias = Dict[str, Any]
 
 
 class ThreadPoolWorkflowExecutor(WorkflowExecutor):
@@ -52,13 +42,19 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
     WorkflowExecutor implementation using ThreadPoolExecutor with parallel execution.
     """
 
-    def __init__(self, workflow, max_workers: int = 4, max_inspectors: int = 100):
-        self.workflow = workflow
+    def __init__(
+        self,
+        workflow_json: Dict[str, Any],
+        workflow_class: Type[BaseWorkflow],
+        max_workers: int = 4,
+        max_inspectors: int = 100,
+    ):
+        self.workflow = workflow_class.from_dict(workflow_json)
         self.task_queue = Queue()
         self.executor = ThreadPoolExecutor(max_workers=max_workers)
         self.lock = threading.Lock()
         self.active_futures = set()
-        self.state = workflow.state
+        self.state = self.workflow.state
         self.max_inspectors = max_inspectors
         self.processed_inspectors = 0
 
@@ -75,7 +71,7 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
             raise ValueError("No nodes found in the workflow graph.")
 
         for input_data in initial_inputs:
-            self.task_queue.put(Task(iter([input_data]), first_node))
+            self.task_queue.put({"input": iter([input_data]), "executor": first_node})
 
         try:
             while not self.task_queue.empty() or self.active_futures:
@@ -116,11 +112,11 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
             List[Task]: Downstream tasks to enqueue.
         """
         downstream_tasks = []
-        executor = task.executor
+        executor = task["executor"]
 
         if isinstance(executor, BaseNode):  # Node task
             logger.info(f"Executing node: {executor}")
-            results = executor.execute(self.state, task.input)
+            results = executor.execute(self.state, task["input"])
 
             for result in results:
                 if executor.node_type == NodeType.INSPECTOR:
@@ -132,15 +128,17 @@ class ThreadPoolWorkflowExecutor(WorkflowExecutor):
                             )
                             return []
                 for edge in self.workflow.graph.get_adjacent_edges(executor.name):
-                    downstream_tasks.append(Task(iter([result]), edge))
+                    downstream_tasks.append({"input": iter([result]), "executor": edge})
 
         elif isinstance(executor, BaseEdge):  # Edge task
             logger.info(f"Executing edge: {executor.name}")
-            results = executor.execute(self.state, task.input)
+            results = executor.execute(self.state, task["input"])
 
             for result in results:
                 target_node = self.workflow.graph.get_node(executor.target)
-                downstream_tasks.append(Task(iter([result]), target_node))
+                downstream_tasks.append(
+                    {"input": iter([result]), "executor": target_node}
+                )
 
         else:
             raise ValueError(f"Invalid executor type: {executor}")

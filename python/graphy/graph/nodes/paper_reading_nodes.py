@@ -107,55 +107,6 @@ class ProgressInfo:
         return f"ProgressInfo [ Number: {self.number}, Completed: {self.completed} ]"
 
 
-def create_inspector_graph(
-    graph_dict: Dict[str, Any],
-    llm_model: LLM,
-    parser_model: LLM,
-    embeddings_model: Embeddings,
-) -> "BaseGraph":
-    from graph.edges.base_edge import BaseEdge
-    from graph.base_graph import BaseGraph
-
-    nodes_dict = {}
-    nodes = []
-    edges = []
-    start_node = "Paper"
-
-    for node in graph_dict["nodes"]:
-        if node["name"] == start_node:  # node_0 = pdf_extract
-            nodes_dict[node["name"]] = PDFExtractNode(
-                embeddings_model,
-                start_node,
-            )
-        else:
-            extract_node = ExtractNode.from_dict(
-                node,
-                llm_model.model,
-                parser_model.model,
-                llm_model.context_size,
-                llm_model.enable_streaming,
-            )
-            nodes_dict[node["name"]] = extract_node
-
-    for _, value in nodes_dict.items():
-        nodes.append(value)
-    for edge in graph_dict["edges"]:
-        edges.append(BaseEdge(edge["source"], edge["target"]))
-        if edge["source"] != start_node:
-            nodes_dict[edge["target"]].add_dependent_node(edge["source"])
-
-    graph = BaseGraph()
-    # Add all nodes
-    for node in nodes:
-        graph.add_node(node)
-
-    # Add all edges
-    for edge in edges:
-        graph.add_edge(edge)
-
-    return graph
-
-
 class ExtractNode(BaseChainNode):
     def __init__(
         self,
@@ -344,10 +295,10 @@ class PaperInspector(BaseNode):
     def __init__(
         self,
         name: str,
+        graph,
         llm_model: LLM,
         embeddings_model: Embeddings,
         vectordb,
-        graph,
         persist_store: PersistentStore,
     ):
         super().__init__(name, NodeType.INSPECTOR)
@@ -359,6 +310,59 @@ class PaperInspector(BaseNode):
         self.progress = {"total": ProgressInfo(0, 0)}
         for node in self.graph.get_node_names():
             self.progress[node] = ProgressInfo(0, 0)
+
+    @classmethod
+    def from_dict(
+        cls,
+        name: str,
+        graph_dict: Dict[str, Any],
+        llm_model: BaseLLM,
+        parser_model: BaseLLM,
+        embeddings_model: Embeddings,
+        vectordb,
+        persist_store: PersistentStore,
+    ) -> "PaperInspector":
+        from graph.edges.base_edge import BaseEdge
+        from graph.base_graph import BaseGraph
+
+        nodes_dict = {}
+        nodes = []
+        edges = []
+        start_node = "Paper"
+
+        for node in graph_dict["nodes"]:
+            if node["name"] == start_node:  # node_0 = pdf_extract
+                nodes_dict[node["name"]] = PDFExtractNode(
+                    embeddings_model,
+                    start_node,
+                )
+            else:
+                extract_node = ExtractNode.from_dict(
+                    node,
+                    llm_model.model,
+                    parser_model.model,
+                    llm_model.context_size,
+                    llm_model.enable_streaming,
+                )
+                nodes_dict[node["name"]] = extract_node
+
+        for _, value in nodes_dict.items():
+            nodes.append(value)
+        for edge in graph_dict["edges"]:
+            edges.append(BaseEdge(edge["source"], edge["target"]))
+            if edge["source"] != start_node:
+                nodes_dict[edge["target"]].add_dependent_node(edge["source"])
+
+        graph = BaseGraph()
+        # Add all nodes
+        for node in nodes:
+            graph.add_node(node)
+
+        # Add all edges
+        for edge in edges:
+            graph.add_edge(edge)
+
+        return cls(name, graph, llm_model, embeddings_model, vectordb, persist_store)
 
     def get_progress(self, node_name: str = "") -> ProgressInfo:
         if not node_name:
@@ -484,7 +488,6 @@ class PaperInspector(BaseNode):
             if not paper_file_path:
                 logger.error("No 'paper_file_path' provided in input data.")
                 continue
-
             try:
                 # Initialize the paper extractor and other components
                 pdf_extractor = PaperExtractor(paper_file_path)
