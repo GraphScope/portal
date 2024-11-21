@@ -56,12 +56,14 @@ def parse_arguments():
         help="Path to the input folder containing workflow files.",
     )
     parser.add_argument(
+        "-w",
         "--max-workers",
         type=int,
         default=4,
         help="Maximum number of parallel workers (default: 4).",
     )
     parser.add_argument(
+        "-i",
         "--max-inspectors",
         type=int,
         default=100,

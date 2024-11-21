@@ -168,7 +168,7 @@ def test_extract(setup_dataset):
     assert response.status_code == 200
 
 
-@pytest.mark.skip(reason="requires LLM connection")
+# @pytest.mark.skip(reason="requires LLM connection")
 def test_get_extracted_data(setup_dataset):
     response = requests.get(
         f"{BASE_URL}/api/dataset/extract", params={"dataset_id": DATASET_ID}

@@ -4,11 +4,7 @@ torchtext.disable_torchtext_deprecation_warning()
 
 from workflow import SurveyPaperReading, ThreadPoolWorkflowExecutor
 from graph.nodes.paper_reading_nodes import ProgressInfo
-from config import (
-    WF_UPLOADS_DIR,
-    WF_OUTPUT_DIR,
-    WF_DATA_DIR,
-)
+from config import WF_UPLOADS_DIR, WF_OUTPUT_DIR, WF_DATA_DIR, WF_VECTDB_DIR
 from utils.data_extractor import (
     GraphBuilder,
     hash_id,
@@ -40,6 +36,7 @@ import uuid
 import shutil
 import logging
 import copy
+import chromadb
 
 logger = logging.getLogger(__name__)
 
@@ -284,9 +281,17 @@ class DemoApp:
             # A safe guarantee to use the default model
             embedding_model = embedding_functions.DefaultEmbeddingFunction()
 
+        vectordb = chromadb.PersistentClient(path=WF_VECTDB_DIR)
+
         # Initialize the workflow
         workflow = SurveyPaperReading(
-            dataset_id, llm, llm, embedding_model, workflow_dict, persist_store
+            dataset_id,
+            llm,
+            llm,
+            embedding_model,
+            vectordb,
+            workflow_dict,
+            persist_store,
         )
         self.set_cache(dataset_id, "workflow", workflow)
 
@@ -720,7 +725,7 @@ class DemoApp:
                     for file in os.listdir(dataset_path)
                     if file.lower().endswith(".pdf")
                 ]
-                executor = ThreadPoolWorkflowExecutor(workflow, thread_num)
+                executor = ThreadPoolWorkflowExecutor(workflow, None, thread_num)
 
                 def run_executor():
                     executor.execute(pdf_files)
@@ -795,11 +800,8 @@ class DemoApp:
                     )
 
                 node_names = self.get_workflow_node_names(dataset_id)
-                graph_builder = GraphBuilder(data_path, self.embedding_model)
-                graph_builder.extract_paper_data()
-                for node_name in node_names:
-                    graph_builder.extract_data(node_name)
-                    graph_builder.extract_clustered_data(node_name)
+                graph_builder = GraphBuilder(data_path)
+                graph_builder.extract_fact_data(node_names)
 
                 graph_builder.build_graph()
                 graph_path = os.path.join(data_path, "graph")
@@ -876,7 +878,7 @@ class DemoApp:
 
                 dataset_id = payload["dataset_id"]
                 data_path = os.path.join(self.app.config["OUTPUT_FOLDER"], dataset_id)
-                graph_builder = GraphBuilder(data_path, self.embedding_model)
+                graph_builder = GraphBuilder(data_path)
 
                 if dataset_id == DEFAULT_DATASET_ID:
                     graph_id = "1"
@@ -898,10 +900,8 @@ class DemoApp:
                         if not os.path.exists(
                             os.path.join(data_path, "graph", "schema.json")
                         ):
-                            graph_builder.extract_paper_data()
-                            for node_name in node_names:
-                                graph_builder.extract_data(node_name)
-                                graph_builder.extract_clustered_data(node_name)
+                            graph_builder = GraphBuilder(data_path)
+                            graph_builder.extract_fact_data(node_names)
 
                             schema = graph_builder.build_graph()
                         else:
