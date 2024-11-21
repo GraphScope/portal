@@ -370,11 +370,21 @@ class PaperInspector(BaseNode):
         else:
             return self.progress.get(node_name, ProgressInfo(0, 0))
 
+    def persist_edge_states(self, data_id, source_id, target_id, edge_name):
+        if source_id and target_id:
+            edges = self.persist_store.get_state(data_id, "_Edges")
+            if edges:
+                edges.setdefault(edge_name, []).append(f"{source_id}|{target_id}")
+            else:
+                edges = {edge_name: [f"{source_id}|{target_id}"]}
+            self.persist_store.save_state(data_id, "_Edges", edges)
+
     def run_through(
         self,
         data_id,
         state,
         parent_id=None,
+        edge_name="Navigator",
         continue_on_error: bool = True,
         skipped_nodes: List[str] = [],
     ):
@@ -441,14 +451,8 @@ class PaperInspector(BaseNode):
                             data_id, f"query_{current_node.name}", input_query
                         )
                     if current_node.name == first_node.name and parent_id:
-                        edges = self.persist_store.get_state(data_id, "_Edges")
                         curr_id = last_output.get("data", {}).get("id", "")
-                        if curr_id:
-                            if edges:
-                                edges.append(f"{parent_id}|{curr_id}")
-                            else:
-                                edges = [f"{parent_id}|{curr_id}"]
-                            self.persist_store.save_state(data_id, "_Edges", edges)
+                        self.persist_edge_states(data_id, parent_id, curr_id, edge_name)
 
                 # Cache the output
                 if last_output:
@@ -483,6 +487,7 @@ class PaperInspector(BaseNode):
         for input_data in input:
             paper_file_path = input_data.get("paper_file_path", None)
             parent_id = input_data.get("parent_id", None)
+            edge_name = input_data.get("edge_name", "Navigator")
             logger.info(f"Executing {self.name} for paper: {paper_file_path}")
 
             if not paper_file_path:
@@ -507,14 +512,8 @@ class PaperInspector(BaseNode):
                         self.progress[node].add(ProgressInfo(1, 1))
 
                     paper_data = self.persist_store.get_state(data_id, first_node_name)
-                    edges = self.persist_store.get_state(data_id, "_Edges")
                     curr_id = paper_data.get("data", {}).get("id", "")
-                    if curr_id and parent_id:
-                        if edges:
-                            edges.append(f"{parent_id}|{curr_id}")
-                        else:
-                            edges = [f"{parent_id}|{curr_id}"]
-                        self.persist_store.save_state(data_id, "_Edges", edges)
+                    self.persist_edge_states(data_id, parent_id, curr_id, edge_name)
 
                     yield paper_data
 
@@ -538,7 +537,7 @@ class PaperInspector(BaseNode):
                         ),
                     }
 
-                    self.run_through(data_id, state[data_id], parent_id)
+                    self.run_through(data_id, state[data_id], parent_id, edge_name)
                     # Mark the data as DONE
                     if (
                         len(self.persist_store.get_total_states(data_id))

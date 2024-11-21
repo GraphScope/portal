@@ -83,14 +83,18 @@ class PaperNavigateEdge(BaseEdge):
                 continue
 
             for scholar_task, paper_path in self.arxiv_download_worker(arxiv_tasks):
-                if scholar_task is not None:
+                if scholar_task:
                     scholar_dict.setdefault(parent_id, []).append(scholar_task)
 
-                if paper_path is not None:
+                if paper_path:
                     logger.debug(
                         f" ============= OUTPUT {(parent_id, paper_path)} RESULT =============="
                     )
 
                     ref_count += 1
 
-                    yield {"paper_file_path": paper_path, "parent_id": parent_id}
+                    yield {
+                        "paper_file_path": paper_path,
+                        "parent_id": parent_id,
+                        "edge_name": self.name,
+                    }
