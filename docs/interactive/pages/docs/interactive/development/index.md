@@ -7,7 +7,7 @@ Interactive is packaged as a Docker image and can be easily deployed with `docke
 ```bash
 pip3 install gsctl
 # Deploy the interactive service in local mode
-gsctl instance deploy --type interactive 
+gsctl instance deploy --type interactive
 ```
 
 ### Customizing Ports
@@ -15,7 +15,7 @@ gsctl instance deploy --type interactive
 By default, Interactive launches various services on these ports: Coordinator Service on `8080`, Interactive Meta Service on `7777`, Interactive Cypher service on `7687`, and Stored Procedure Service on `10000`. These ports can be customized.
 
 ```bash
-gsctl instance deploy --type interactive --coordinator-port 8081 --admin-port 7778 \ 
+gsctl instance deploy --type interactive --coordinator-port 8081 --admin-port 7778 \
                 --cypher-port 7688 --storedproc-port 10001
 ```
 

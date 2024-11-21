@@ -104,7 +104,7 @@ const Logo = ({ style }) => {
 };
 function Header({ title, style = {} }) {
   return (
-    <Flex align="center" justify="center" gap={6}>
+    <Flex align="center" justify="center" gap={6} style={{ width: '250px' }}>
       <Logo style={{ width: '120px', ...style }} />
       <Divider type="vertical" style={{ height: '20px', borderInlineStart: '1px solid #ddd', marginTop: '4px' }} />
       <Typography.Title level={5} style={{ margin: '0px' }}>
