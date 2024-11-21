@@ -850,7 +850,7 @@ class BibSearchArxiv(BibSearch):
 
         if os.path.exists(download_file_path):
             logger.debug(f"The file '{download_file_path}' already exists.")
-            return [(False, "", True)]
+            return [(True, download_file_path, True)]
 
         try:
             best_match.download_pdf(

@@ -35,9 +35,8 @@ class PaperNavigateEdge(BaseEdge):
                         logger.info(f"SUCCESSFULLY GET PAPER {path}")
                         yield None, path
                     else:
-                        if not exist:
-                            logger.info(f"PASS {link} to SCHOLAR FOR FURTHER SEARCH")
-                            yield link, None
+                        logger.info(f"PASS {link} to SCHOLAR FOR FURTHER SEARCH")
+                        yield link, None
                     break
 
     def scholar_download_worker(self, scholar_tasks):
