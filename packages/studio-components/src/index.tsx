@@ -1,3 +1,5 @@
+import Illustration from './Illustration';
+
 export { default as EditableText } from './EditableText';
 export { default as EmptyCanvas } from './EmptyCanvas';
 export { default as SegmentedTabs } from './SegmentedTabs';
@@ -35,3 +37,4 @@ export type { Property } from './PropertiesList/typing';
 export type { ParsedFile } from './Utils/parseCSV';
 
 export { useDynamicStyle } from './hooks/useDynamicStyle';
+export { default as Illustration } from './Illustration';
