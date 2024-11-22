@@ -29,7 +29,7 @@ jobs:
           run_install: false
 
       - name: Build assets
-        run: pnpm run build:portal:docs
+        run: pnpm run build:docs:portal
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
