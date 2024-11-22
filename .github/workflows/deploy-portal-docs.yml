@@ -1,0 +1,35 @@
+name: Build and Deploy Portal Docs Website
+
+on:
+  push:
+    branches:
+      - *
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # 选择你项目所需的 Node.js 版本
+          cache: 'pnpm' # 启用 pnpm 缓存
+
+      - name: Install pnpm
+        run: corepack enable && corepack prepare pnpm@latest --activate
+
+      - name: Build assets
+        run: pnpm run build:portal:docs
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist # 替换为你的构建输出目录
