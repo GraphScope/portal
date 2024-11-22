@@ -52,8 +52,6 @@ class RetrievedMemory:
     Abstract Class representing the memory in vectordb.
     """
 
-    DEFAULT_EMBEDDING_MODEL = embedding_functions.DefaultEmbeddingFunction()
-
     def __init__(
         self,
         collection_name: str,
@@ -72,6 +70,7 @@ class RetrievedMemory:
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
         self.persist_directory = vectordb
+        self.embedding_function = embeddings
         # self.embedding_function = embedding_functions.DefaultEmbeddingFunction()
         # self.embed_lock = threading.Lock()
 
@@ -80,8 +79,7 @@ class RetrievedMemory:
         if vectordb:
             self.persistent_client = vectordb
             self.collection = self.persistent_client.get_or_create_collection(
-                name=self.collection_name,
-                embedding_function=RetrievedMemory.DEFAULT_EMBEDDING_MODEL,
+                name=self.collection_name, embedding_function=self.embedding_function
             )
         else:
             self.persistent_client = None
@@ -249,7 +247,7 @@ class RetrievedMemory:
             content = doc["page_content"]
             metadata = doc["metadata"]
             try:
-                embed = RetrievedMemory.DEFAULT_EMBEDDING_MODEL([content])[0]
+                embed = self.embedding_function([content])[0]
             except Exception as e:
                 logger.error(f"Embed error: the content is {[content]}.")
                 # logger.error(f"that is the ef: {embedding_function}")

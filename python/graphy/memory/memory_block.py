@@ -6,6 +6,7 @@ from langchain_core.embeddings import Embeddings
 import re
 import logging
 import tiktoken
+import gc
 
 
 logger = logging.getLogger(__name__)
@@ -225,3 +226,8 @@ class MemoryBlockManager:
 
     def remove_block(self, block_id: str):
         return self.blocks.pop(block_id)
+
+    def clear(self):
+        self.blocks.clear()
+
+        gc.collect()
