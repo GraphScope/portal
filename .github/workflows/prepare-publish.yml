@@ -23,8 +23,18 @@ jobs:
           version: 9
           run_install: false
 
+      - name: Cache pnpm modules
+            uses: actions/cache@v3
+            with:
+              path: |
+                .pnpm-store
+                node_modules
+              key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+              restore-keys: |
+                ${{ runner.os }}-pnpm-          
+
       - name: Install dependencies
-        run: pnpm install --force
+        run: pnpm install
 
       - name: Publish
         env:
