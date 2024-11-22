@@ -47,12 +47,34 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-# Run Backend Server
-
+## Setting Python Environment
 We have not built and installed the python package yet. So, it is important to add the path to the python package to the `PYTHONPATH` before running the server.
 
 ```bash
 export PYTHONPATH=$PYTHONPATH:$(pwd)
+```
+
+# Run Offline Paper Scrapper
+The provided utility allows you to scrape research papers from arXiv. Using a set of seed papers as input, the scraper can iteratively fetch papers from the references of these seed papers. The process continues until a specified number of papers (`max_inspectors`) has been downloaded and processed.
+
+**Usage**:
+```bash
+python paper_scrapper.py --max-workers 4 --max-inspectors 500 --workflow <path_to_workflow> <path_to_seed_papers>
+```
+
+- `--max-workers` (optional): Specifies the maximum number of parallel workers (default: 4).
+- `--max-inspectors` (optional): Defines the maximum number of papers to fetch (default: 100).
+- `--workflow` (optional): Path to a workflow configuration file. If not provided, the default configuration file config/workflow.json will be used.
+- `<path_to_seed_papers>`: Provide the path containing seed papers. Each paper is a PDF document.
+
+> If no `workflow` provided, a default workflow configuration in `config/workflow.json` will be used.
+Ensure that the workflow configuration contains your custom LLM model settings by modifying the "llm_model" field.
+
+# Run Backend Server
+A backend demo application is included in this project, accessible as a standalone server.
+
+**Usage**:
+```bash
 python apps/demo_app.py
 ```
 
