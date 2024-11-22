@@ -553,7 +553,12 @@ class PaperInspector(BaseNode):
                     yield self.persist_store.get_state(data_id, first_node_name)
 
             except Exception as e:
-                logger.error(f"Error initializing PaperExtractor: {e}")
+                logger.error(f"Error processing the paper: {e}")
+                # clean state
+                state[data_id][WF_STATE_CACHE_KEY].clear()
+                state[data_id][WF_STATE_MEMORY_KEY].clear_memory()
+                state[data_id][WF_STATE_MEMORY_KEY].close()
+                state.pop(data_id)
                 continue
 
     def __repr__(self):
