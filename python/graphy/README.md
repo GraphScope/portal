@@ -286,11 +286,5 @@ The project can be tested by running the following command:
 
 ```bash
 python apps/demo_app.py  # run the backend app server
-pytest --benchmark-skip -s # on other terminal
-```
-
-A benchmark tool is provided to test the workflow extraction. You can run the script from the command line as follows:
-
-```bash
-pytest --benchmark-only -s
+pytest -s # on other terminal
 ```
