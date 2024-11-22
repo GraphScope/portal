@@ -13,7 +13,7 @@
     "docs": "dumi dev",
     "version": "changeset version",
     "publish": "npm run prev && npm run build && pnpm publish -r --force",
-    "check:publish": "pnpm store prune && rm -rf pnpm-lock.yaml && npm run prev && npm run build && pnpm publish -r --dry-run"
+    "check:publish": "npm run prev && npm run build && pnpm publish -r --dry-run"
   },
   "husky": {
     "hooks": {
@@ -60,7 +60,7 @@
     "babel-loader": "^8.2.5",
     "css-loader": "^6.8.1",
     "dumi": "^2.2.17",
-    "dumi-theme-antd": "latest",
+    "dumi-theme-antd": "^0.4.2",
     "father": "^4.4.1",
     "file-loader": "^6.2.0",
     "fs-extra": "^10.1.0",
