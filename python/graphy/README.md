@@ -1,11 +1,35 @@
 # Graphy'ourData
-Graphy is an end-to-end platform designed for extracting, visualizing, and analyzing large volumes of unstructured data. Without structured organization, valuable insights in such data often remain hidden. Graphy empowers users to extract predefined structures from unstructured data, organizing it into a graph format for enhanced visualization, analysis, and exploration.
+Have you heard the buzz about the incredible power of large language models (LLMs) and their advanced applications, like Retrieval-Augmented Generation (RAG) or AI Agents? It’s exciting, right? But here’s the real challenge:
 
-![graphy](inputs/figs/graphy.png "The pipeline of Graphy")
+> How can you truly empower your existing data with these cutting-edge techniques—especially when your data is mostly unstructured?
 
-This repository offers the first prototype of the Graphy platform, as shown in the above figure, focusing on academic papers, which are typically publicly accessible. In this scenario, the primary unstructured data consists of PDF documents of research papers. Given a paper or a zip file of multiple papers, the platform enables users to define workflows for extracting structured information from the papers using LLMs. Additionally, it provides features to fetch reference PDFs from sources like [Arxiv](./utils/arxiv_fetcher.py) and [Google Scholar](./utils/scholar_fetcher.py), allowing for the construction of a rich, interconnected database of academic papers.
+Preprocessing unstructured data is often a tedious and time-consuming task. And let’s not forget, building a practical, LLM-based system that can fully leverage the potential of your data? That can be an even bigger hurdle.
+
+**Graphy** is an intuitive end-to-end platform that transforms unstructured data into actionable insights. Unstructured data often hides valuable information, making it difficult to access and utilize. Graphy bridges this gap by leveraging LLMs to effortlessly extract meaningful structures from unstructured data, transforming it into an organized graph format. This enables intuitive visualization, seamless exploration, and powerful LLM-based analysis, unlocking the full potential of your data.
+
+![graphy](inputs/figs/workflow.png "The pipeline of Graphy")
+
+This repository introduces the initial prototype of the Graphy platform, as illustrated above, with a focus on academic papers, which are often publicly accessible. In this prototype, the primary unstructured data consists of research paper PDFs. Graphy’s workflow is built upon two key abstractions:
+- **Inspector**: The Inspector abstraction defines the structured information to be extracted from papers. It utilizes an inner Directed Acyclic Graph (DAG), where each subnode represents specific instructions for LLMs to extract targeted information from the paper. This DAG mirrors the commonly referenced ["Tree of Thought"](https://arxiv.org/abs/2305.10601)  pipeline in the LLM literature.
+- **Navigator**: The Navigator abstraction determines how related papers can be fetched and processed via the Inspector. Currently, two navigators are available:
+    - [Arxiv Fetcher](./utils/arxiv_fetcher.py) for retrieving PDFs from ArXiv.
+	- [Google Scholar Fetcher](./utils/scholar_fetcher.py) for fetching PDFs via Google Scholar.
+
+These navigators enable the creation of a rich, interconnected database of academic papers.
+
+## Workflow to Graph Mapping
+As illustrated in the figure above, the workflow maps naturally to a structured graph model. In this graph:
+	- Primary nodes (or "Fact" nodes) represent papers, containing key extracted information.
+	- Connected nodes (or "Dimension" nodes) represent specific pieces of information extracted from the papers by the Inspector.
+	- The Navigator links papers to related papers, forming an interconnected web of academic resources.
 
 With this structured database in place, various analyses can be conducted. Our [frontend server](../../examples/graphy/README.md) demonstrates data visualizations, exploration tools, and analytics that support numerous downstream tasks, including tracking research trends, drafting related work sections, and generating prompts for slide creation—all with just a few clicks.
+
+## Potential Extensions
+
+- **Customized Inspector**: The Inspector can be tailored to extract any type of information from paper documents. It can also be extended to handle other types of unstructured data, such as legal documents, medical records, or financial reports.
+- **Customized Navigator**: The Navigator can be expanded to fetch data from additional sources, such as PubMed, IEEE, or Springer. Furthermore, navigators could be developed to connect papers to supplementary sources like GitHub repositories, enabling even richer datasets and analyses.
+
 
 
 
@@ -23,12 +47,34 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-# Run Backend Server
-
+## Setting Python Environment
 We have not built and installed the python package yet. So, it is important to add the path to the python package to the `PYTHONPATH` before running the server.
 
 ```bash
 export PYTHONPATH=$PYTHONPATH:$(pwd)
+```
+
+# Run Offline Paper Scrapper
+The provided utility allows you to scrape research papers from arXiv. Using a set of seed papers as input, the scraper can iteratively fetch papers from the references of these seed papers. The process continues until a specified number of papers (`max_inspectors`) has been downloaded and processed.
+
+**Usage**:
+```bash
+python paper_scrapper.py --max-workers 4 --max-inspectors 500 --workflow <path_to_workflow> <path_to_seed_papers>
+```
+
+- `--max-workers` (optional): Specifies the maximum number of parallel workers (default: 4).
+- `--max-inspectors` (optional): Defines the maximum number of papers to fetch (default: 100).
+- `--workflow` (optional): Path to a workflow configuration file. If not provided, the default configuration file config/workflow.json will be used.
+- `<path_to_seed_papers>`: Provide the path containing seed papers. Each paper is a PDF document.
+
+> If no `workflow` provided, a default workflow configuration in `config/workflow.json` will be used.
+Ensure that the workflow configuration contains your custom LLM model settings by modifying the "llm_model" field.
+
+# Run Backend Server
+A backend demo application is included in this project, accessible as a standalone server.
+
+**Usage**:
+```bash
 python apps/demo_app.py
 ```
 

@@ -197,17 +197,12 @@ def test_prepare_prompt():
 
     response = requests.post(f"{BASE_URL}/api/llm/report/prepare", json=payload)
     output = json.loads(response.content)
-    print(output)
     assert response.status_code == 200
     assert len(output["data"]["prompts"]) == 2
     assert len(output["data"]["prompts"][1]) > 0
 
 
-@pytest.mark.skipif(
-    not os.environ.get("DASHSCOPE_API_KEY", "")
-    and not os.environ.get("OPEN_API_KEY", ""),
-    reason="requires LLM connection",
-)
+@pytest.mark.skip(reason="requires LLM connection")
 def test_generate_prompt():
     payload = {
         "data": GRAPH_JSON,
@@ -221,15 +216,10 @@ def test_generate_prompt():
 
     response = requests.post(f"{BASE_URL}/api/llm/report/generate", json=payload)
     output = json.loads(response.content)
-    print(output)
     assert response.status_code == 200
 
 
-@pytest.mark.skipif(
-    not os.environ.get("DASHSCOPE_API_KEY", "")
-    and not os.environ.get("OPEN_API_KEY", ""),
-    reason="requires LLM connection",
-)
+@pytest.mark.skip(reason="requires LLM connection")
 def test_generate_prompt_baseline():
     payload = {
         "data": GRAPH_JSON,
@@ -243,7 +233,6 @@ def test_generate_prompt_baseline():
 
     response = requests.post(f"{BASE_URL}/api/llm/report/generate", json=payload)
     output = json.loads(response.content)
-    print(output)
     assert response.status_code == 200
 
 
@@ -308,5 +297,4 @@ def test_cluster():
 
     response = requests.post(f"{BASE_URL}/api/llm/report/clustering", json=payload)
     output = json.loads(response.content)
-    print(output)
     assert response.status_code == 200

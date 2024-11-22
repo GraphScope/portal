@@ -1,0 +1,24 @@
+{
+    "data": [
+        {
+            "original": "In this work, we investigate applications of a normalizing flow-based model for the aforementioned distributions. In particular, we use a pair of flows coupled through the optimality point of the Donsker Varadhan representation of the Kullback-Leibler (KL) divergence, for distribution matching based imitation learning.",
+            "summary": "Propose a novel method using coupled normalizing flows for distribution matching in imitation learning."
+        },
+        {
+            "original": "Our algorithm, Coupled Flow Imitation Learning (CFIL), achieves state-of-the-art performance on standard benchmark tasks with a single expert trajectory and extends naturally to a variety of other settings, including the subsampled and state-only regimes.",
+            "summary": "Demonstrate superior performance of CFIL on benchmarks and its adaptability to different learning scenarios."
+        },
+        {
+            "original": "We show this in part by analyzing their respective BC graphs: a simple tool we present for gauging how well a proposed estimator captures the true distribution.",
+            "summary": "Introduce BC graphs as a tool to evaluate the effectiveness of distribution estimators."
+        },
+        {
+            "original": "While most IL works neglect analysis of their learned reward function, we think this can be a potential guiding tool for future IL researchers.",
+            "summary": "Highlight the importance of analyzing learned reward functions and suggest it as a valuable tool for future research."
+        },
+        {
+            "original": "This work also aims to inspire more research incorporating explicit modeling of the state-action distribution.",
+            "summary": "Encourage further research into explicit modeling of state-action distributions in imitation learning."
+        }
+    ]
+}

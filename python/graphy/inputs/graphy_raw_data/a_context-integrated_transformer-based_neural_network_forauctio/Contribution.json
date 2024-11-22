@@ -1,0 +1,24 @@
+{
+    "data": [
+        {
+            "original": "We propose CITransNet, a context integrated transformer based neural network for optimal auction design, which maintains permutation equivariance over bids and contexts while being able to find asymmetric solutions.",
+            "summary": "Propose CITransNet, a permutation-equivariant neural network for optimal auction design."
+        },
+        {
+            "original": "We show by extensive experiments that CITransNet can recover the known optimal solutions in single item settings, outperform strong baselines in multi-item auctions, and generalize well to cases other than those in training.",
+            "summary": "Demonstrate CITransNet's effectiveness in recovering optimal solutions and outperforming baselines in various auction settings."
+        },
+        {
+            "original": "To overcome the aforementioned limitations of the previous works, we propose CITransNet: a Context Integrated Transformer based neural Network architecture as the parameterized mechanism to be optimized.",
+            "summary": "Address limitations of previous works by introducing CITransNet as a parameterized mechanism."
+        },
+        {
+            "original": "We formulate the contextual auction design as a learning problem and extend the learning framework to incorporate public contextual information of bidders and items into the auction learning framework.",
+            "summary": "Formulate contextual auction design as a learning problem and incorporate public contextual information."
+        },
+        {
+            "original": "Furthermore, we present a sample complexity result to bound the generalization error of the learned mechanism.",
+            "summary": "Provide a sample complexity result to bound the generalization error of the learned mechanism."
+        }
+    ]
+}

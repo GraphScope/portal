@@ -26,6 +26,9 @@ class ScholarFetcher:
 
         self.result_former = ResultFormer()
 
+    def set_web_data_folder(self, folder_path: str):
+        self.bib_search_google.web_data_folder = folder_path
+
     def download_paper(self, name: str, mode="vague"):
         logger.info(
             f"******************** Scholar Searching for paper: {name} *******************"
@@ -49,7 +52,6 @@ class ScholarFetcher:
             logger.error(f"Error searching google scholar: {e}")
             paper_info = None
 
-        print(paper_info)
         # logger.debug(paper_info)
         if paper_info is None:
             return None, None
@@ -58,7 +60,3 @@ class ScholarFetcher:
         paper_bib = paper_info.get("bib", None)
 
         return fetch_result, paper_bib
-
-
-if __name__ == "__main__":
-    pass

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List, Set
 
 import os
 import json
@@ -19,7 +20,11 @@ class PersistentStore(ABC):
         pass
 
     @abstractmethod
-    def save_query(self, name: str, node_key: str, query: str):
+    def get_total_data(self) -> List[str]:
+        pass
+
+    @abstractmethod
+    def get_total_states(self, name: str) -> List[str]:
         pass
 
 
@@ -38,8 +43,7 @@ class JsonFileStore(PersistentStore):
         with self.lock:
             current_folder = self.use(name)
             # Create a safe file name
-            file_name = re.sub(r"[^a-zA-Z0-9]", "_", node_key.strip())
-            file_path = os.path.join(current_folder, f"{file_name}.json")
+            file_path = os.path.join(current_folder, f"{node_key}.json")
             current_folder = self.use(name)
             # Save the state to a JSON file
             with open(file_path, "w+") as json_file:
@@ -49,8 +53,7 @@ class JsonFileStore(PersistentStore):
         with self.lock:
             current_folder = self.use(name)
             # Create a safe file name
-            file_name = re.sub(r"[^a-zA-Z0-9]", "_", node_key.strip())
-            file_path = os.path.join(current_folder, f"{file_name}.json")
+            file_path = os.path.join(current_folder, f"{node_key}.json")
 
             if not os.path.exists(file_path):
                 return None
@@ -63,40 +66,44 @@ class JsonFileStore(PersistentStore):
                 logger.error(f"Error reading file {file_path}: {e}")
                 return None
 
-    def save_query(self, name: str, node_key: str, query: str):
+    def save_data(self, name: str, node_key: str, content: str, extension: str = "txt"):
         with self.lock:
             current_folder = self.use(name)
-            # Create a safe file name
-            file_name = re.sub(r"[^a-zA-Z0-9]", "_", node_key.strip())
-            file_name = "query_" + file_name
-            file_path = os.path.join(current_folder, f"{file_name}.txt")
+            file_path = os.path.join(current_folder, f"{node_key}.{extension}")
 
             # Save the state to a JSON file
             with open(file_path, "w+") as f:
-                f.write(query)
+                f.write(content)
 
-    def save_text(self, name: str, node_key: str, content: str):
-        with self.lock:
-            current_folder = self.use(name)
-            # Create a safe file name
-            file_name = re.sub(r"[^a-zA-Z0-9]", "_", node_key.strip())
-            file_path = os.path.join(current_folder, f"{file_name}")
-            # Save the state to a JSON file
-            with open(file_path, "w+") as fw:
-                fw.write(content)
+    def get_total_data(self) -> List[str]:
+        """
+        Retrieves the list of non-hidden files and directories in the output folder.
+        Ensures thread-safe access using a lock.
 
-    def get_text(self, name: str, node_key: str) -> str:
+        Returns:
+            List[str]: A list of visible file and directory names in the output folder.
+        """
         with self.lock:
-            current_folder = self.use(name)
-            # Create a safe file name
-            file_name = re.sub(r"[^a-zA-Z0-9]", "_", node_key.strip())
-            file_path = os.path.join(current_folder, f"{file_name}")
-            if not os.path.exists(file_path):
-                return None
             try:
-                with open(file_path, "r") as f:
-                    data = "".join(f.readlines())
-                    return data
-            except (IOError, json.JSONDecodeError) as e:
-                logger.error(f"Error reading file {file_path}: {e}")
-                return None
+                # List all files and directories in the output folder
+                items = os.listdir(self.output_folder)
+                # Filter out items starting with a dot (e.g., hidden files/folders)
+                visible_items = [item for item in items if not item.startswith(".")]
+                return visible_items
+            except Exception as e:
+                return []
+
+    def get_total_states(self, name: str) -> List[str]:
+        with self.lock:
+            current_folder = self.use(name)
+            try:
+                # List all files in the current folder and filter for .json files
+                items = os.listdir(current_folder)
+                json_items = [
+                    os.path.splitext(item)[0]  # Get the file name without extension
+                    for item in items
+                    if item.endswith(".json") and not item.startswith("_")
+                ]
+                return json_items
+            except Exception as e:
+                return []

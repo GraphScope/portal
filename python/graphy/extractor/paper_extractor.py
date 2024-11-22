@@ -484,19 +484,28 @@ class PaperExtractor(PDFExtractor):
             raise ValueError("Image path not set")
 
         img_index = 0
+        inf_rect = fitz.Rect(1, 1, -1, -1)
 
         for img_index, img in enumerate(page.get_images(full=True)):
             xref = img[0]
             base_image = self.doc.extract_image(xref)
             image_filename = f"page{page_num}_img{img_index}.png"
             image_path = os.path.join(self.img_path, image_filename)
+
+            try:
+                image_bbox = page.get_image_bbox(img)
+                if image_bbox == inf_rect:
+                    continue
+            except:
+                continue
+
             with open(image_path, "wb") as f:
                 f.write(base_image["image"])
             # image_paths.append(image_path)
 
             if page_num not in image_info:
                 image_info[page_num] = dict()
-            image_info[page_num][image_path] = fitz.Rect(page.get_image_bbox(img))
+            image_info[page_num][image_path] = fitz.Rect(image_bbox)
 
         self._extract_inline_images(page, page_num, page_text, image_info)
         # image_paths.extend(inline_image_paths)
@@ -1379,8 +1388,7 @@ class PaperExtractor(PDFExtractor):
     #    return list(self.extract_text(get_rich_info=True))
 
     def extract_all(self) -> Iterable[Document]:
-        print(self.get_meta_data())
         return list(self.extract_text(get_rich_info=True, get_tables=False))
 
-    def cleanup(self):
+    def clear(self):
         self.doc.close()

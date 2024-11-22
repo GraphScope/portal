@@ -806,11 +806,6 @@ class PDFExtractor(BasePDFLoader):
         cur_line_index = index_list[1]
 
         first_line_index = -1
-        # if page_num == 3:
-        # print("************ LINK INFO *************")
-        # for key, value in link_info.items():
-        #    if "2" in value.from_content[0]:
-        #        print(key, value)
         past_lines = ""
         self.timer.start("extract link in page " + str(page_num))
         while section_order_index < len(section_order):
@@ -970,6 +965,5 @@ class PDFExtractor(BasePDFLoader):
 
         self.timer.stop("extract link")
         self.timer.stop("extract text")
-        self.timer.print()
 
         # print("############# FINISH EXTRACT ###############")

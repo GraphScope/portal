@@ -9,6 +9,7 @@ import os
 import logging
 import time
 import unicodedata
+import traceback
 
 from .bib_search import BibSearchArxiv, BibSearchGoogleScholar
 from requests.exceptions import ProxyError, ConnectionError, RequestException
@@ -124,18 +125,12 @@ class ArxivFetcher:
                                 best_match = paper
                             if similarity > 0.9:
                                 break
-                    except ProxyError as e:
-                        print(f"ProxyError: {e}")
-                    except ConnectionError as e:
-                        print(f"ConnectionError: {e}")
-                    except RequestException as e:
-                        print(f"RequestException: {e}")
                     except Exception as e:
-                        print(f"Exception: {e}")
+                        traceback.print_exc()
 
                 if highest_similarity > 0.9 or found_result:
                     break
-                print(f"Not Found: {query}")
+                logger.warn(f"Not Found: {query}")
 
             if highest_similarity > 0.9:
                 break
@@ -154,14 +149,14 @@ class ArxivFetcher:
 
         highest_similarity, best_match = self.find_paper_from_arxiv(name, max_results)
 
-        time.sleep(0.3)
+        time.sleep(0.1)
 
         if highest_similarity > 0.9:
             logger.info(
                 f"Best match found: {best_match.title} with similarity {highest_similarity}"
             )
 
-            time.sleep(0.5)
+            time.sleep(0.1)
             download_list = self.bib_search_arxiv.download_by_object(
                 best_match, self.download_folder
             )
@@ -169,7 +164,7 @@ class ArxivFetcher:
 
             return download_list
         else:
-            print(f"Failed to fetch paper with arxiv: {name}")
+            logger.warn(f"Failed to fetch paper with arxiv: {name}")
             return []
 
     def fetch_paper(self, name: str, max_results):
@@ -238,8 +233,6 @@ if __name__ == "__main__":
         for file in files:
             # Append file names to the list
             filenames.append(file)
-
-    print(filenames)
 
     for file_name in filenames:
         download_foler = os.path.join(f"{WF_DOWNLOADS_DIR}", file_name.split(".")[0])

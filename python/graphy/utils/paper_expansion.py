@@ -1,6 +1,6 @@
 from extractor.paper_extractor import PaperExtractor
 from utils import ArxivFetcher, ScholarFetcher
-from nodes import PDFExtractNode
+from graph.nodes.pdf_extract_node import PDFExtractNode
 from memory.llm_memory import PaperReadingMemoryManager
 
 from langchain_community.chat_models import ChatOllama
@@ -140,7 +140,7 @@ class PaperExpansion:
                 self.scholar_link_queue.put((hop, link))
             else:
                 for download_info in download_list:
-                    succ, path = download_info
+                    succ, path, exist = download_info
                     if succ and path is not None:
                         logger.info(f"SUCCESSFULLY GET PAPER {path}")
                         nonexist = self.paper_queue.put((hop, path))
@@ -158,7 +158,7 @@ class PaperExpansion:
                 f"--------------  FINISH ARXIV WORKER: {link}  ------------------"
             )
 
-        print("QUIT ARXIV")
+        logger.info("QUIT ARXIV")
 
     def scholar_download_worker(self):
         while True:
@@ -202,12 +202,12 @@ class PaperExpansion:
             download_list = scholar_fetcher.download_paper(link, mode="exact")
 
             for download_info in download_list:
-                succ, path = download_info
+                succ, path, exist = download_info
                 if succ and path is not None:
                     logger.info(f"SUCCESSFULLY GET PAPER {path}")
                     nonexist = self.paper_queue.put((hop, path))
 
-                    print(f"RESULT OF DOWNLOAD: {link} is {succ}")
+                    logger.debug(f"RESULT OF DOWNLOAD: {link} is {succ}")
 
                     if not nonexist:
                         os.remove(path)
@@ -218,7 +218,7 @@ class PaperExpansion:
                 f"--------------  FINISH SCHOLAR WORKER: {link}  ------------------"
             )
 
-        print("QUIT SCHOLAR")
+        logger.info("QUIT SCHOLAR")
 
     def extractor_worker(self):
         while True:
@@ -240,7 +240,7 @@ class PaperExpansion:
 
             cont = True
             if not os.path.exists(paper_path):
-                print(f"File {paper_path} does not exist.")
+                logger.warning(f"File {paper_path} does not exist.")
                 cont = False
 
             if cont:
@@ -248,7 +248,7 @@ class PaperExpansion:
                     with open(paper_path, "r") as file:
                         pass
                 except (OSError, IOError) as e:
-                    print(f"Error opening file {paper_path}: {e}")
+                    logger.error(f"Error opening file {paper_path}: {e}")
                     cont = False
             if not cont:
                 os.remove(paper_path)
@@ -276,7 +276,7 @@ class PaperExpansion:
                         self.llm_model,
                         self.embedding_model,
                         str(uuid.uuid5(uuid.NAMESPACE_DNS, paper_name)),
-                        persist_directoy=None,
+                        vectordb=None,
                     ),
                     pdf_extractor=pdf_extractor,
                     name="extract",
@@ -328,7 +328,7 @@ class PaperExpansion:
 
             self.paper_queue.task_done()
 
-        print("QUIT EXTRACTOR")
+        logger.info("QUIT EXTRACTOR")
 
     def execute(self, paper_dir):
         self.paper_pool_dir = paper_dir
@@ -339,8 +339,8 @@ class PaperExpansion:
         for entry in os.listdir(paper_dir):
             full_path = os.path.join(paper_dir, entry)
             if os.path.isfile(full_path) and not entry.startswith("."):
-                print(entry, os.path.isdir(full_path))
-                print(f"put {full_path}")
+                logger.debug(entry, os.path.isdir(full_path))
+                logger.debug(f"put {full_path}")
                 self.paper_queue.put((0, full_path))
 
         # self.scholar_link_queue.put(
