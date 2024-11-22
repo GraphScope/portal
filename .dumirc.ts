@@ -1,7 +1,12 @@
 import { defineConfig } from 'dumi';
 import { join } from 'path';
 import { defineThemeConfig } from 'dumi-theme-antd/dist/defineThemeConfig';
+
+const isProduction = process.env.NODE_ENV === 'production';
+const basePath = isProduction ? '/portal' : '';
+
 const themeConfig = defineThemeConfig({
+  base: basePath,
   name: 'GraphScope',
   title: 'GraphScope Portal',
   logo: 'https://img.alicdn.com/imgextra/i4/O1CN01uhy1Yu1lO7HkUaW3K_!!6000000004808-2-tps-256-257.png',

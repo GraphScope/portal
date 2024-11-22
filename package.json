@@ -7,13 +7,13 @@
     "prev": "pnpm i --force && rm -rf package-lock.json",
     "start": "turbo run start",
     "build": "turbo run build --no-cache",
-    "build:portal": "npm run prev && npm run build && cd packages/studio-website && npm run build:site",
-    "build:docs:interactive": "npm run prev  && npm run build && cd docs/interactive && npm run build:site",
-    "build:docs:portal": "npm run prev && npm run build && dumi build",
+    "build:portal": "npm run build && cd packages/studio-website && npm run build:site",
+    "build:docs:interactive": "npm run build && cd docs/interactive && npm run build:site",
+    "build:docs:portal": "npm run build && dumi build",
     "docs": "dumi dev",
     "version": "changeset version",
-    "publish": "npm run prev && npm run build && pnpm publish -r --force",
-    "check:publish": "npm run prev && npm run build && pnpm publish -r --dry-run"
+    "publish": "npm run build && pnpm publish -r --force",
+    "check:publish": "npm run build && pnpm publish -r --dry-run"
   },
   "husky": {
     "hooks": {
