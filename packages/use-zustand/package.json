@@ -20,7 +20,7 @@
   ],
   "scripts": {
     "start": "father dev",
-    "build": "father build ",
+    "build": "father build",
     "demo": "vite dev"
   },
   "dependencies": {

@@ -12,10 +12,8 @@
   "scripts": {
     "build": "father build",
     "start": "vite dev",
-    "copyHtml": "cp -f dist/index.html ../../docs/portal/public/portal.html",
-    "build:site:single": "vite build --mode=single && npm run copyHtml",
-    "build:site": "vite build && npm run copyHtml",
-    "prepublishOnly": "npm run build"
+    "build:site:single": "vite build --mode=single",
+    "build:site": "vite build"
   },
   "publishConfig": {
     "access": "public",
