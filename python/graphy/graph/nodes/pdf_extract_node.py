@@ -57,12 +57,14 @@ class PDFExtractNode(BaseNode):
         memory_manager = state.get(WF_STATE_MEMORY_KEY, None)
         if not memory_manager:
             raise ValueError("Memory manager is not provided in the state.")
+        data_id = memory_manager.collection_name
         pdf_extractor = state.get(WF_STATE_EXTRACTOR_KEY, None)
         if not pdf_extractor:
             raise ValueError("PDF extractor is not provided in the state.")
         vectordb = memory_manager.retrieved_memory
         paper_metadata = pdf_extractor.get_meta_data()
         paper_references = []
+
         if vectordb.is_db_valid() and vectordb.is_db_empty():
             docs = pdf_extractor.extract_all()
             paper_references = list(pdf_extractor.linked_contents)
@@ -80,6 +82,7 @@ class PDFExtractNode(BaseNode):
         paper = Paper.from_pdf_metadata(paper_metadata)
         paper_dict = paper.to_dict()
         paper_dict["reference"] = paper_references
+        paper_dict["data_id"] = data_id
 
         if self.arxiv_fetch_paper:
             result, bib_text = self.arxiv_fetcher.fetch_paper(paper.title, 5)

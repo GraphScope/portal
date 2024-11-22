@@ -225,6 +225,7 @@ class SurveyPaperReading(BaseWorkflow):
                     source=source,
                     target=target,
                     name=name,
+                    persist_store=persist_store,
                     paper_download_dir=paper_download_dir,
                 )
                 graph.add_edge(edge)
