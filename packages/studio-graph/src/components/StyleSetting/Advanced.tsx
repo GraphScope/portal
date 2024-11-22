@@ -1,15 +1,10 @@
-import type { CSSProperties } from 'react';
 import React, { useState } from 'react';
 import { CaretRightOutlined } from '@ant-design/icons';
-import type { CollapseProps } from 'antd';
 import { Collapse, theme, Flex, Typography, Select, Space } from 'antd';
 import { useContext } from '../../hooks/useContext';
-
 interface IAdvancedSettingProps {}
 
 import { scaleLinear, scaleLog, scalePow } from 'd3-scale';
-//@ts-ignore
-window.scaleLog = scaleLog;
 
 function createScale(type = 'log', domain, range, exponent = 1) {
   switch (type) {
@@ -162,35 +157,19 @@ const SizeScaler = () => {
   );
 };
 
-const getItems: (panelStyle: CSSProperties) => CollapseProps['items'] = panelStyle => [
-  {
-    key: 'advanced',
-    label: 'Advanced Setting',
-    children: (
-      <p>
-        <SizeScaler />
-      </p>
-    ),
-    style: panelStyle,
-  },
-];
 const AdvancedSetting: React.FunctionComponent<IAdvancedSettingProps> = props => {
-  const { token } = theme.useToken();
-
-  const panelStyle: React.CSSProperties = {
-    marginBottom: 24,
-    background: token.colorFillAlter,
-    borderRadius: token.borderRadiusLG,
-    border: 'none',
-  };
-
   return (
     <Collapse
-      bordered={false}
+      expandIconPosition="end"
       defaultActiveKey={['advanced']}
       expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-      style={{ background: token.colorBgContainer }}
-      items={getItems(panelStyle)}
+      items={[
+        {
+          key: 'advanced',
+          label: 'Advanced Setting',
+          children: <SizeScaler />,
+        },
+      ]}
     />
   );
 };
