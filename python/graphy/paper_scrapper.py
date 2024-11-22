@@ -56,6 +56,13 @@ def parse_arguments():
         help="Path to the input folder containing workflow files.",
     )
     parser.add_argument(
+        "-f",
+        "--workflow",
+        type=str,
+        default="config/workflow.json",
+        help="Path to the workflow configuration file (default: config/workflow.json).",
+    )
+    parser.add_argument(
         "-w",
         "--max-workers",
         type=int,
@@ -77,18 +84,12 @@ if __name__ == "__main__":
     input_folder = args.input_folder
     max_workers = args.max_workers
     max_inspectors = args.max_inspectors
-
-    ray.init()
-    graph_json = ""
-    with open("config/workflow_navigator.json") as f:
-        graph_json = json.load(f)
-
-    if graph_json:
-        workflow_json = {
-            "id": "test_ray",
-            "llm_model": DEFAULT_LLM_MODEL_CONFIG,
-            "graph": graph_json,
-        }
+    with open(args.workflow, "r") as f:
+        workflow_json = json.load(f)
+    if workflow_json:
+        ray.init()
+        if "llm_model" not in workflow_json:
+            workflow_json["llm_model"] = DEFAULT_LLM_MODEL_CONFIG
         executor = RayWorkflowExecutor(
             workflow_json, SurveyPaperReading, max_workers, max_inspectors
         )
