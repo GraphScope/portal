@@ -3,10 +3,9 @@ import { join } from 'path';
 import { defineThemeConfig } from 'dumi-theme-antd/dist/defineThemeConfig';
 
 const isProduction = process.env.NODE_ENV === 'production';
-const basePath = isProduction ? '/portal' : '';
+const basePath = isProduction ? '/portal/' : '/';
 
 const themeConfig = defineThemeConfig({
-  base: basePath,
   name: 'GraphScope',
   title: 'GraphScope Portal',
   logo: 'https://img.alicdn.com/imgextra/i4/O1CN01uhy1Yu1lO7HkUaW3K_!!6000000004808-2-tps-256-257.png',
@@ -161,6 +160,8 @@ const themeConfig = defineThemeConfig({
   ],
 });
 export default defineConfig({
+  base: basePath,
+  publicPath: basePath,
   title: 'GraphScope',
   favicons: ['https://img.alicdn.com/imgextra/i3/O1CN01DaSVLB1lD7ZIbDOi2_!!6000000004784-2-tps-256-257.png'], // 网站 favicon
   metas: [
