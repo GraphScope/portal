@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Timeline, Collapse, Divider, Flex } from 'antd';
+import { Timeline, Collapse, Divider, Flex, theme } from 'antd';
 
 import { CaretRightOutlined } from '@ant-design/icons';
 import ClusterByField from './ClusterByField';
@@ -9,16 +9,23 @@ import { useDynamicStyle } from '@graphscope/studio-components';
 interface IClusterAnalysisProps {}
 
 const ClusterAnalysis: React.FunctionComponent<IClusterAnalysisProps> = props => {
+  const { token } = theme.useToken();
   useDynamicStyle(
-    `.explore-cluster-analysis .ant-collapse-header {padding:0px !important;}
-    .explore-cluster-analysis .ant-collapse-content-box {padding:12px 0px !important;}
-    `,
+    `
+    .explore-cluster-analysis .ant-collapse{
+      // background:${token.colorBgBase}
+    }
+    .explore-cluster-analysis .ant-collapse-header {
+        // padding: 10px 12px !important;
+        // border-left: 4px solid ${token.colorPrimary};
+        // border-radius: 4px 4px 4px 4px !important;
+        // background:${token.colorBgBase}
+    }`,
     'explore-cluster-analysis',
   );
   return (
-    <Flex vertical gap={12}>
+    <Flex vertical gap={12} className="explore-cluster-analysis">
       <Collapse
-        style={{ marginTop: '0px' }}
         expandIconPosition="end"
         // ghost
         // bordered={false}
