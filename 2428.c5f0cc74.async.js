@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[2428],{22428:function(e,t,n){n.r(t);n(50959);var a=n(11527);t.default=function(e){return(0,a.jsx)("div",{style:{height:"100vh",textAlign:"center",background:"#fafafa"},children:"GraphScope Portal"})}}}]);
