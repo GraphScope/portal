@@ -15,6 +15,31 @@ import concurrent.futures
 logger = logging.getLogger(__name__)
 
 
+class ResourceAllocator:
+    def __init__(self, initial_amount):
+        # Shared resource initialized to a given amount
+        self.available = initial_amount
+        # Condition variable to coordinate thread access
+        self.condition = threading.Condition()
+
+    def request(self, amount):
+        with self.condition:
+            # Wait until the requested amount is available
+            while self.available < amount:
+                self.condition.wait()
+            # Deduct the requested amount
+            self.available -= amount
+            print(f"Allocated {amount}, remaining: {self.available}")
+
+    def release(self, amount):
+        with self.condition:
+            # Increase the available resource
+            self.available += amount
+            print(f"Released {amount}, remaining: {self.available}")
+            # Notify waiting threads that resources might be available
+            self.condition.notify_all()
+
+
 class PaperNavigateEdge(BaseEdge):
     def __init__(
         self,
@@ -23,12 +48,13 @@ class PaperNavigateEdge(BaseEdge):
         paper_download_dir,
         persist_store=None,
         name=None,
-        arxiv_download_concurrency=8,
+        arxiv_download_concurrency=4,
         scholar_download_concurrency=2,
         max_paper_num=-1,
         max_hop=1,
     ):
         super().__init__(source, target, name)
+        print("initialize of paper navigaete edge")
 
         self.paper_download_dir = paper_download_dir
         os.makedirs(self.paper_download_dir, exist_ok=True)
@@ -42,6 +68,7 @@ class PaperNavigateEdge(BaseEdge):
 
         self.paper_num = 0
         self.persist_store = persist_store
+        self.thread_allocator = ResourceAllocator(initial_amount=24)
 
     def arxiv_download_worker(self, arxiv_link_queue, scholar_link_queue, output_queue):
         while not arxiv_link_queue.empty():
@@ -194,13 +221,16 @@ class PaperNavigateEdge(BaseEdge):
             for arxiv_task in arxiv_tasks:
                 arxiv_link_queue.put((1, arxiv_task, parent_id, data_id))
 
+        self.thread_allocator.request(amount=self.arxiv_download_concurrency)
+
         if not arxiv_link_queue.empty():
             records = {}
             with concurrent.futures.ThreadPoolExecutor(
                 max_workers=self.arxiv_download_concurrency
-            ) as arxiv_download_executor, concurrent.futures.ThreadPoolExecutor(
-                max_workers=self.scholar_download_concurrency
-            ) as scholar_download_executor:
+            ) as arxiv_download_executor:
+                # , concurrent.futures.ThreadPoolExecutor(
+                #     max_workers=self.scholar_download_concurrency
+                # ) as scholar_download_executor:
                 futures = []
                 for _ in range(self.arxiv_download_concurrency):
                     futures.append(
@@ -213,17 +243,17 @@ class PaperNavigateEdge(BaseEdge):
                         )
                     )
 
-                if self.search_scholar:
-                    for _ in range(self.scholar_download_concurrency):
-                        futures.append(
-                            scholar_download_executor.submit(
-                                self.run_worker,
-                                self.scholar_download_worker,
-                                arxiv_link_queue,
-                                scholar_link_queue,
-                                output_queue,
-                            )
-                        )
+                # if self.search_scholar:
+                #     for _ in range(self.scholar_download_concurrency):
+                #         futures.append(
+                #             scholar_download_executor.submit(
+                #                 self.run_worker,
+                #                 self.scholar_download_worker,
+                #                 arxiv_link_queue,
+                #                 scholar_link_queue,
+                #                 output_queue,
+                #             )
+                #         )
 
                 while (
                     arxiv_link_queue.unfinished_tasks != 0
@@ -253,6 +283,8 @@ class PaperNavigateEdge(BaseEdge):
                 if self.search_scholar:
                     for _ in range(self.scholar_download_concurrency):
                         scholar_link_queue.put(None)
+
+            self.thread_allocator.release(amount=self.arxiv_download_concurrency)
 
             for parent_data_id in records:
                 if len(records[parent_data_id]) > 0:

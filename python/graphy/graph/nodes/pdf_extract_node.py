@@ -28,7 +28,7 @@ class PDFExtractNode(BaseNode):
         embeddings: Embeddings,
         name: str,
         arxiv_fetch_paper: bool = True,
-        scholar_fetch_paper: bool = True,
+        scholar_fetch_paper: bool = False,
     ):
         super().__init__(name)
         self.embeddings = embeddings

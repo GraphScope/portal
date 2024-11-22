@@ -247,7 +247,7 @@ class RetrievedMemory:
             try:
                 embed = self.embedding_function([content])[0]
             except:
-                logger.debug(f"Embed error: the content is {content}.")
+                logger.error(f"Embed error: the content is {content}.")
             # print(embed)
             # print(metadata)
 
@@ -402,9 +402,10 @@ class RetrievedMemory:
                     if collection_id in cache:
                         segment_manager.callback_cache_evict(cache[collection_id])
 
-            # self.persistent_client.delete_collection(name=self.collection_name)
+            self.persistent_client.delete_collection(name=self.collection_name)
             gc.collect()
 
+        print(f"========== AFTER UNLOAD {get_process_info()} =========")
         logger.debug(f"========== AFTER UNLOAD {get_process_info()} =========")
 
 
