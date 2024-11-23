@@ -70,6 +70,9 @@ python paper_scrapper.py --max-workers 4 --max-inspectors 500 --workflow <path_t
 > If no `workflow` provided, a default workflow configuration in `config/workflow.json` will be used.
 Ensure that the workflow configuration contains your custom LLM model settings by modifying the "llm_model" field.
 
+The scraped data will be saved in the directory specified by [WF_OUTPUT_DIR](config/__init__.py), under a subdirectory named after your workflow ID (`<your_workflow_id>`).
+- If the default workflow configuration is used, the workflow ID is `test_paper_scrapper`.
+
 # Run Backend Server
 A backend demo application is included in this project, accessible as a standalone server.
 
