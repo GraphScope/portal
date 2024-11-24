@@ -2,7 +2,6 @@
 
 from sklearn.preprocessing import normalize
 from gs_interactive.client.driver import Driver
-from gs_interactive.client.session import Session
 from gs_interactive.models import *
 
 from db import JsonFileStore
@@ -85,6 +84,7 @@ class GraphBuilder:
         self.facts_dict = {}
         self.dimensions_dict = {}
         self.edges_dict = {}
+        self.data_path = data_path
         self.persist_store = JsonFileStore(data_path)
 
     def get_data(self, node_name):
@@ -92,41 +92,38 @@ class GraphBuilder:
 
     def extract_fact_data(self, dimension_node_names=[]):
         for folder in self.persist_store.get_total_data():
-            if self.persist_store.get_state(folder, "_DONE"):
-                paper_data = self.persist_store.get_state(folder, "Paper")
-                edge_data = self.persist_store.get_state(folder, "_Edges")
-                if paper_data:
-                    paper_data["node_type"] = "Fact"
-                    if "id" not in paper_data:
-                        # a default id is given
-                        paper_data["id"] = hash_id(folder)
-                    if "reference" in paper_data:
-                        del paper_data["reference"]
-                    paper_id = paper_data["id"]
-                    if paper_id not in self.facts_dict:
-                        self.facts_dict[paper_id] = paper_data
+            paper_data = self.persist_store.get_state(folder, "Paper")
+            edge_data = self.persist_store.get_state(folder, "_Edges")
+            if paper_data:
+                paper_data["node_type"] = "Fact"
+                if "id" not in paper_data:
+                    # a default id is given
+                    paper_data["id"] = hash_id(folder)
+                if "reference" in paper_data:
+                    del paper_data["reference"]
+                paper_id = paper_data["id"]
+                if paper_id not in self.facts_dict:
+                    self.facts_dict[paper_id] = paper_data
 
-                    if not dimension_node_names:
-                        json_files = list_json_files(
-                            os.path.join(self.data_path, folder)
-                        )
-                        for json_file in json_files:
-                            node_name = os.path.splitext(json_file)[0]
-                            if node_name != "Paper":
-                                self._extract_dimension_data(
-                                    paper_id, folder, node_name
-                                )
-                    else:
-                        for node_name in dimension_node_names:
-                            self._extract_dimension_data(paper_id, folder, node_name)
-                if edge_data:
-                    for edge_name, edge_pairs in edge_data.items():
-                        formatted_edges = [
-                            {"source": source, "target": target}
-                            for pair in edge_pairs
-                            for source, target in [pair.split("|")]
-                        ]
-                    self.edges_dict.setdefault(edge_name, []).extend(formatted_edges)
+                if not dimension_node_names:
+                    dimension_node_names = self.persist_store.get_total_states(folder)
+                    try:
+                        dimension_node_names.remove("Paper")
+                    except ValueError:
+                        pass  # Do nothing if "Paper" is not in the list
+                else:
+                    print(f"dimension_nodes: {dimension_node_names}")
+                    for node_name in dimension_node_names:
+                        print(node_name)
+                        self._extract_dimension_data(paper_id, folder, node_name)
+            if edge_data:
+                for edge_name, edge_pairs in edge_data.items():
+                    formatted_edges = [
+                        {"source": source, "target": target}
+                        for pair in edge_pairs
+                        for source, target in [pair.split("|")]
+                    ]
+                self.edges_dict.setdefault(edge_name, []).extend(formatted_edges)
 
     def _extract_dimension_data(
         self, paper_id: str, folder: str, node_name: str, edge_name: str = None
