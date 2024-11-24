@@ -1,27 +1,16 @@
 # utils.py
 
 from sklearn.preprocessing import normalize
-from typing import Dict, List, Tuple
-from rapidfuzz import process, fuzz
-import numpy as np
-from sentence_transformers import util, SentenceTransformer
-from transformers import AutoModel, AutoTokenizer
-from config import WF_OUTPUT_DIR
 from gs_interactive.client.driver import Driver
 from gs_interactive.client.session import Session
 from gs_interactive.models import *
-from utils.text_clustering import (
-    Clustering,
-    KMeansClustering,
-)
-from models.embedding_model import TextEmbedding
+
+from db import JsonFileStore
 
 import uuid
 import json
 import csv
 import os
-import re
-import numpy as np
 import time
 import logging
 
@@ -96,22 +85,17 @@ class GraphBuilder:
         self.facts_dict = {}
         self.dimensions_dict = {}
         self.edges_dict = {}
-        self.data_path = data_path
-        self.folders = os.listdir(self.data_path)
+        self.persist_store = JsonFileStore(data_path)
 
     def get_data(self, node_name):
         return self.dimensions_dict.get(node_name, {})
 
     def extract_fact_data(self, dimension_node_names=[]):
-        for folder in self.folders:
-            done_file = paper_file_name = os.path.join(
-                self.data_path, folder, "_DONE.json"
-            )
-            paper_file_name = os.path.join(self.data_path, folder, "Paper.json")
-            edge_file_name = os.path.join(self.data_path, folder, "_Edges.json")
-            if os.path.exists(done_file):
-                if os.path.exists(paper_file_name):
-                    paper_data = load_json(paper_file_name)
+        for folder in self.persist_store.get_total_data():
+            if self.persist_store.get_state(folder, "_DONE"):
+                paper_data = self.persist_store.get_state(folder, "Paper")
+                edge_data = self.persist_store.get_state(folder, "_Edges")
+                if paper_data:
                     paper_data["node_type"] = "Fact"
                     if "id" not in paper_data:
                         # a default id is given
@@ -135,8 +119,7 @@ class GraphBuilder:
                     else:
                         for node_name in dimension_node_names:
                             self._extract_dimension_data(paper_id, folder, node_name)
-                if os.path.exists(edge_file_name):
-                    edge_data = load_json(edge_file_name)
+                if edge_data:
                     for edge_name, edge_pairs in edge_data.items():
                         formatted_edges = [
                             {"source": source, "target": target}
@@ -159,27 +142,24 @@ class GraphBuilder:
         else:
             edges = self.edges_dict[edge_name]
 
-        data_file_name = os.path.join(self.data_path, folder, f"{node_name}.json")
-        if os.path.exists(data_file_name):
-            data_items = load_json(os.path.join(data_file_name))
-        else:
-            logging.warning(f"File not found: {data_file_name}")
+        data_items = self.persist_store.get_state(folder, node_name)
 
-        if not isinstance(data_items, list):
-            data_items = [data_items]
+        if data_items:
+            if not isinstance(data_items, list):
+                data_items = [data_items]
 
-        for idx, item in enumerate(data_items):
-            data_id = hash_id(f"{paper_id}_{idx}")
+            for idx, item in enumerate(data_items):
+                data_id = hash_id(f"{paper_id}_{idx}")
 
-            if data_id not in dimensions_dict:
-                dimensions_dict[data_id] = {"id": data_id, "node_type": "Dimension"}
-                dimensions_dict[data_id].update(item)
-                edges.append(
-                    {
-                        "source": paper_id,
-                        "target": data_id,
-                    }
-                )
+                if data_id not in dimensions_dict:
+                    dimensions_dict[data_id] = {"id": data_id, "node_type": "Dimension"}
+                    dimensions_dict[data_id].update(item)
+                    edges.append(
+                        {
+                            "source": paper_id,
+                            "target": data_id,
+                        }
+                    )
 
     def build_graph(self):
         graph_path = os.path.join(self.data_path, "graph")

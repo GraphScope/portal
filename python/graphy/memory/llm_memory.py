@@ -1,24 +1,3 @@
-from typing import Dict, Any, List, Tuple
-from enum import Enum, auto
-from langchain.llms import BaseLLM
-from langchain_core.embeddings import Embeddings
-from pympler import asizeof
-import sys
-import time
-
-import gc
-import os
-
-import chromadb
-import psutil
-from chromadb.types import SegmentScope
-from chromadb.segment import VectorReader
-
-import heapq
-import logging
-
-logger = logging.getLogger(__name__)
-
 from memory.memory_block import (
     TextMemoryBlock,
     MemoryBlockManager,
@@ -27,15 +6,22 @@ from memory.memory_block import (
     MemoryBlock,
 )
 from memory.search_unit import SearchUnitExecutor
-from config import WF_VECTDB_DIR
 
-import chromadb
-import math
-import threading
-import multiprocessing as mp
+from typing import List, Tuple
+from enum import Enum, auto
+from langchain.llms import BaseLLM
+from langchain_core.embeddings import Embeddings
+from chromadb import Embeddings
+from chromadb.types import SegmentScope
+from chromadb.segment import VectorReader
 
-from chromadb import Documents, EmbeddingFunction, Embeddings
-from chromadb.utils import embedding_functions
+import psutil
+import gc
+import os
+import heapq
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class VectorDBHierarchy(Enum):

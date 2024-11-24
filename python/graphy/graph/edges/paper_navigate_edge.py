@@ -29,13 +29,13 @@ class ResourceAllocator:
                 self.condition.wait()
             # Deduct the requested amount
             self.available -= amount
-            print(f"Allocated {amount}, remaining: {self.available}")
+            logger.info(f"Allocated {amount}, remaining: {self.available}")
 
     def release(self, amount):
         with self.condition:
             # Increase the available resource
             self.available += amount
-            print(f"Released {amount}, remaining: {self.available}")
+            logger.info(f"Released {amount}, remaining: {self.available}")
             # Notify waiting threads that resources might be available
             self.condition.notify_all()
 
@@ -54,7 +54,7 @@ class PaperNavigateEdge(BaseEdge):
         max_hop=1,
     ):
         super().__init__(source, target, name)
-        print("initialize of paper navigaete edge")
+        logger.info("initialize of paper navigaete edge")
 
         self.paper_download_dir = paper_download_dir
         os.makedirs(self.paper_download_dir, exist_ok=True)
