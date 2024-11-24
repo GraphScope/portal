@@ -373,10 +373,15 @@ class PaperInspector(BaseNode):
     def persist_edge_states(self, data_id, source_id, target_id, edge_name):
         if source_id and target_id:
             edges = self.persist_store.get_state(data_id, "_Edges")
-            if edges:
-                edges.setdefault(edge_name, []).append(f"{source_id}|{target_id}")
+            if not edges:
+                edges = {}
+            # edges.setdefault(edge_name, set()).add(f"{source_id}|{target_id}")
+            if edge_name in edges:
+                edges_set = set(edges[edge_name])
+                edges_set.add(f"{source_id}|{target_id}")
+                edges[edge_name] = list(edges_set)
             else:
-                edges = {edge_name: [f"{source_id}|{target_id}"]}
+                edges[edge_name] = [f"{source_id}|{target_id}"]
             self.persist_store.save_state(data_id, "_Edges", edges)
 
     def run_through(
