@@ -92,6 +92,7 @@ class GraphBuilder:
 
     def extract_fact_data(self, dimension_node_names=[]):
         for folder in self.persist_store.get_total_data():
+            print("Process folder: ", folder)
             paper_data = self.persist_store.get_state(folder, "Paper")
             edge_data = self.persist_store.get_state(folder, "_Edges")
             if paper_data:
@@ -112,9 +113,7 @@ class GraphBuilder:
                     except ValueError:
                         pass  # Do nothing if "Paper" is not in the list
                 else:
-                    print(f"dimension_nodes: {dimension_node_names}")
                     for node_name in dimension_node_names:
-                        print(node_name)
                         self._extract_dimension_data(paper_id, folder, node_name)
             if edge_data:
                 for edge_name, edge_pairs in edge_data.items():
