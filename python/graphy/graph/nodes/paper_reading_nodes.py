@@ -23,6 +23,7 @@ from langchain_core.embeddings import Embeddings
 from typing import Any, Dict, List
 import os
 import re
+import traceback
 import logging
 
 logger = logging.getLogger(__name__)
@@ -434,7 +435,10 @@ class PaperInspector(BaseNode):
                         last_output = output
                     is_persist = True
             except Exception as e:
-                logger.error(f"Error executing node '{current_node.name}': {e}")
+                full_traceback = traceback.format_exc()
+                logger.error(
+                    f"Error executing node '{current_node.name}': {e}\nTraceback:\n{full_traceback}"
+                )
                 if continue_on_error:
                     continue
                 else:
