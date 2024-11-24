@@ -80,12 +80,16 @@ class GraphBuilder:
     def __init__(
         self,
         data_path,
+        persist_store=None,
     ):
         self.facts_dict = {}
         self.dimensions_dict = {}
         self.edges_dict = {}
         self.data_path = data_path
-        self.persist_store = JsonFileStore(data_path)
+        if not persist_store:
+            self.persist_store = JsonFileStore(data_path)
+        else:
+            self.persist_store = persist_store
 
     def get_data(self, node_name):
         return self.dimensions_dict.get(node_name, {})

@@ -138,7 +138,6 @@ class DemoApp:
             dataset_id,
             JsonFileStore(os.path.join(self.app.config["OUTPUT_FOLDER"], dataset_id)),
         )
-        persist_store.use("")
         return persist_store
 
     def init_metadata(self, dataset_id, dataset_name):
@@ -807,7 +806,9 @@ class DemoApp:
                     )
 
                 node_names = self.get_workflow_node_names(dataset_id)
-                graph_builder = GraphBuilder(data_path)
+                graph_builder = GraphBuilder(
+                    data_path, self.get_persist_store(dataset_id)
+                )
                 graph_builder.extract_fact_data(node_names)
 
                 graph_builder.build_graph()
