@@ -509,8 +509,12 @@ class PaperInspector(BaseNode):
                     base_name = os.path.basename(paper_file_path).split(".")[0]
                 data_id = process_id(base_name)
                 pdf_extractor.set_img_path(f"{WF_IMAGE_DIR}/{data_id}")
+
                 first_node_name = self.graph.get_first_node_name()
-                if self.persist_store.get_state(data_id, "_DONE"):
+
+                all_nodes = self.graph.get_node_names()
+                persist_states = self.persist_store.get_states(data_id, all_nodes)
+                if len(all_nodes) == len(persist_states):
                     # This means that the data has already processed
                     logger.info(f"Input with ID '{data_id}' already processed.")
                     self.progress["total"].add(

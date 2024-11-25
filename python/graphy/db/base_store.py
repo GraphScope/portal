@@ -20,6 +20,10 @@ class PersistentStore(ABC):
         pass
 
     @abstractmethod
+    def get_states(self, name: str, node_keys: List[str]) -> List[dict]:
+        pass
+
+    @abstractmethod
     def get_total_data(self) -> List[str]:
         pass
 
@@ -80,6 +84,24 @@ class JsonFileStore(PersistentStore):
             except (IOError, json.JSONDecodeError) as e:
                 logger.error(f"Error reading file {file_path}: {e}")
                 return None
+
+    def get_states(self, name: str, node_keys: List[str]) -> List[dict]:
+        with self.lock:
+            current_folder = self.use(name)
+            results = []
+            for node_key in node_keys:
+                # Create a safe file name
+                file_path = os.path.join(current_folder, f"{node_key}.json")
+                if not os.path.exists(file_path):
+                    continue
+                try:
+                    with open(file_path, "r") as f:
+                        json_data = json.load(f)
+                        results.append(json_data)
+                except (IOError, json.JSONDecodeError) as e:
+                    logger.error(f"Error reading file {file_path}: {e}")
+                    continue
+            return results
 
     def save_data(self, name: str, node_key: str, content: str, extension: str = "txt"):
         with self.lock:
