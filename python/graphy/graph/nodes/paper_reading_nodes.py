@@ -437,6 +437,7 @@ class PaperInspector(BaseNode):
                     # Execute the current node
                     output_generator = current_node.execute(state)
                     for output in output_generator:
+                        logger.debug(f"'{current_node.name}' produces: {output}")
                         last_output = output
                     is_persist = True
             except Exception as e:
@@ -451,12 +452,14 @@ class PaperInspector(BaseNode):
             finally:
                 # Cache the output
                 if last_output:
-                    logger.debug(f"The result of {current_node.name}: {last_output}")
-                    node_caches: dict = state.get(WF_STATE_CACHE_KEY, {})
-                    node_cache: NodeCache = node_caches.setdefault(
-                        current_node.name, NodeCache(current_node.name)
+                    logger.debug(
+                        f"The final result of '{current_node.name}': {last_output}"
                     )
-                    if node_cache:
+                    node_caches: dict = state.get(WF_STATE_CACHE_KEY, {})
+                    if node_caches:
+                        node_cache: NodeCache = node_caches.setdefault(
+                            current_node.name, NodeCache(current_node.name)
+                        )
                         node_cache.add_chat_cache("", last_output)
                     # update global progress
                     self.progress[current_node.name].complete()
