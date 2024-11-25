@@ -54,7 +54,7 @@ export const getSupportFeature = (): Features => {
 };
 
 export const listGraphs = async () => {
-  const status = await ServiceApiFactory(undefined, location.origin)
+  const status = await ServiceApiFactory(undefined, window.COORDINATOR_URL)
     .listServiceStatus()
     .then(res => {
       if (res.status === 200) {
@@ -68,7 +68,7 @@ export const listGraphs = async () => {
 
   let graphs;
 
-  graphs = await GraphApiFactory(undefined, location.origin)
+  graphs = await GraphApiFactory(undefined, window.COORDINATOR_URL)
     .listGraphs()
     .then(res => {
       if (res.status === 200) {

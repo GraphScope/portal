@@ -16,7 +16,7 @@ export default function StudioLayout() {
     engineType: 'interactive',
   });
   const depolymentInfo = async () => {
-    return await DeploymentApiFactory(undefined, location.origin)
+    return await DeploymentApiFactory(undefined, window.COORDINATOR_URL)
       .getDeploymentInfo()
       .then(res => {
         const { data } = res;
@@ -78,6 +78,8 @@ export default function StudioLayout() {
   };
   useEffect(() => {
     (async () => {
+      const coordinator = queryCoordinator();
+      debugger;
       const engineType = (await depolymentInfo()) as 'interactive' | 'groot';
       setState(preState => {
         return {
@@ -124,4 +126,14 @@ export default function StudioLayout() {
   }
 
   return <GlobalSpin />;
+}
+
+function queryCoordinator() {
+  const coordinatorURL = Utils.getSearchParams('coordinator');
+  if (coordinatorURL) {
+    Utils.storage.set('coordinator', coordinatorURL);
+  }
+  const coordinator = Utils.storage.get<string>('coordinator') || location.origin;
+  window.COORDINATOR_URL = coordinator;
+  return coordinator;
 }

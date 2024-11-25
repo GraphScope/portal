@@ -7,7 +7,7 @@ import type { FieldType } from './start-load';
 
 /** upload file */
 export const uploadFile = async (file: File) => {
-  return UtilsApiFactory(undefined, location.origin)
+  return UtilsApiFactory(undefined, window.COORDINATOR_URL)
     .uploadFile(file)
     .then(res => {
       if (res.status === 200) {
@@ -22,7 +22,7 @@ export const uploadFile = async (file: File) => {
 
 export const bindDatasourceInBatch = async (graph_id: string, options: any): Promise<any> => {
   const schema = transformImportOptionsToSchemaMapping(options);
-  return await DataSourceApiFactory(undefined, location.origin).bindDatasourceInBatch(graph_id, schema);
+  return await DataSourceApiFactory(undefined, window.COORDINATOR_URL).bindDatasourceInBatch(graph_id, schema);
 };
 /** 数据绑定 dataMap(nodes/edges集合)*/
 export const submitDataloadingJob = async (graph_id: string, graphSchema: any, loadConfig: FieldType): Promise<any> => {
@@ -53,7 +53,7 @@ export const submitDataloadingJob = async (graph_id: string, graphSchema: any, l
     : {
         quoting: loadConfig.quoting,
       };
-  return JobApiFactory(undefined, location.origin).submitDataloadingJob(graph_id, {
+  return JobApiFactory(undefined, window.COORDINATOR_URL).submitDataloadingJob(graph_id, {
     ...schema,
     loading_config: {
       import_option: loadConfig.import_option,
@@ -74,7 +74,7 @@ export const submitDataloadingJob = async (graph_id: string, graphSchema: any, l
 export const getSchema = async (graph_id: string) => {
   let schema;
   if (window.GS_ENGINE_TYPE === 'interactive' || window.GS_ENGINE_TYPE === 'gart') {
-    schema = await GraphApiFactory(undefined, location.origin)
+    schema = await GraphApiFactory(undefined, window.COORDINATOR_URL)
       .getGraphById(graph_id)
       .then(res => {
         if (res.status === 200) {
@@ -87,7 +87,7 @@ export const getSchema = async (graph_id: string) => {
       });
   }
   if (window.GS_ENGINE_TYPE === 'groot') {
-    schema = await GraphApiFactory(undefined, location.origin)
+    schema = await GraphApiFactory(undefined, window.COORDINATOR_URL)
       .getSchemaById(graph_id)
       .then(res => {
         if (res.status === 200) {
@@ -104,7 +104,7 @@ export const getSchema = async (graph_id: string) => {
 
 /** getDatasourceById 获取数据源信息 */
 export const getDatasourceById = async (graph_id: string) => {
-  const schemaMapping = await DataSourceApiFactory(undefined, location.origin)
+  const schemaMapping = await DataSourceApiFactory(undefined, window.COORDINATOR_URL)
     .getDatasourceById(graph_id!)
     .then(res => res.data)
     .catch(error => {
