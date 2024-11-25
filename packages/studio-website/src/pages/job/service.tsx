@@ -14,7 +14,7 @@ export type IJobType = {
   };
 };
 export const listJobs = async () => {
-  const message = await JobApiFactory(undefined, location.origin)
+  const message = await JobApiFactory(undefined, window.COORDINATOR_URL)
     .listJobs()
     .then(res => {
       if (res.status === 200) {
@@ -26,7 +26,7 @@ export const listJobs = async () => {
       notification('error', error);
       return [];
     });
-  const graphs = await GraphApiFactory(undefined, location.origin)
+  const graphs = await GraphApiFactory(undefined, window.COORDINATOR_URL)
     .listGraphs()
     .then(res => {
       if (res.status === 200) {
@@ -60,7 +60,7 @@ export const listJobs = async () => {
   return info;
 };
 export const deleteJobById = async (jobId: string) => {
-  return await JobApiFactory(undefined, location.origin)
+  return await JobApiFactory(undefined, window.COORDINATOR_URL)
     .deleteJobById(jobId)
     .then(res => {
       if (res.status === 200) {
@@ -73,7 +73,7 @@ export const deleteJobById = async (jobId: string) => {
     });
 };
 export const getJobById = async (jobId: string) => {
-  return await JobApiFactory(undefined, location.origin)
+  return await JobApiFactory(undefined, window.COORDINATOR_URL)
     .getJobById(jobId)
     .then(res => {
       if (res.status === 200) {

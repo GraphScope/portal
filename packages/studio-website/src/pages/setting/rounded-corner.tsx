@@ -18,12 +18,13 @@ const RoundedCorner: React.FunctionComponent = () => {
       style={{ margin: '0px' }}
       title="Rounded corners"
       text="Corner radians"
-      leftModule={<InputNumber min={1} addonAfter="px" value={borderRadius} onChange={handleBorderRadiusChange} />}
-      rightModule={
-        <Slider
+      leftModule={
+        <InputNumber
           min={1}
+          addonAfter="px"
+          value={borderRadius}
           onChange={handleBorderRadiusChange}
-          value={typeof borderRadius === 'number' ? borderRadius : 0}
+          style={{ width: '100%' }}
         />
       }
     />
