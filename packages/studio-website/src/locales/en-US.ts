@@ -265,4 +265,6 @@ export default {
   'No graph available': 'No graph available',
   'Create instance': 'Create instance',
   Explore: 'Explore',
+  Settings: 'Settings',
+  'System Setting': 'System Setting',
 };

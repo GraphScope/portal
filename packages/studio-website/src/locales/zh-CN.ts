@@ -260,4 +260,6 @@ export default {
   'No graph available': '无可用图实例',
   'Create instance': '创建图实例',
   Explore: '图探索',
+  Settings: '设置',
+  'System Setting': '系统设置',
 };

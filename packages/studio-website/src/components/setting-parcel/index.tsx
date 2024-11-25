@@ -14,21 +14,17 @@ type ISettingParcelProps = {
 const SettingParcel: React.FunctionComponent<ISettingParcelProps> = props => {
   const { title, text, style = { margin: '0px  24px 0px 0px' }, leftModule, rightModule, children } = props;
   return (
-    <Row>
-      <Col span={8}>
-        <Flex vertical>
-          <Title level={3} style={style}>
-            <FormattedMessage id={title} />
-          </Title>
-          <Text>
-            <FormattedMessage id={text} />
-          </Text>
-        </Flex>
-      </Col>
-      {leftModule && <Col span={4}>{leftModule}</Col>}
-      {rightModule && <Col span={8}>{rightModule}</Col>}
-      {children && <Col>{children}</Col>}
-    </Row>
+    <Flex vertical gap={12}>
+      <Title level={5} style={style}>
+        <FormattedMessage id={title} />
+      </Title>
+      <Text type="secondary">
+        <FormattedMessage id={text} />
+      </Text>
+      {leftModule && leftModule}
+      {rightModule && rightModule}
+      {children && children}
+    </Flex>
   );
 };
 
