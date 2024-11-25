@@ -33,7 +33,7 @@ class PersistentStore(ABC):
 
 
 class JsonFileStore(PersistentStore):
-    def __init__(self, output_folder: str, lock=None):
+    def __init__(self, output_folder: str):
         self.output_folder = output_folder
         self.current_name = ""
         self.current_folder = ""
@@ -50,6 +50,8 @@ class JsonFileStore(PersistentStore):
             str: The path to the current folder.
         """
         if name == self.current_name:
+            if not self.current_folder:
+                self.current_folder = os.path.join(self.output_folder, name)
             return self.current_folder
 
         self.current_name = name

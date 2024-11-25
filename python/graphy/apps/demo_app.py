@@ -463,7 +463,6 @@ class DemoApp:
             dataset_path = os.path.join(self.app.config["OUTPUT_FOLDER"], dataset_id)
             os.makedirs(dataset_path, exist_ok=True)
 
-            self.get_persist_store(dataset_id)
             # Save the file
             if file and file.filename.endswith(".pdf"):
                 # If it's a single PDF file
@@ -553,7 +552,7 @@ class DemoApp:
                         self.app.config["OUTPUT_FOLDER"], folder, "metadata.json"
                     )
                     if os.path.exists(metadata_file):
-                        metadatas.append(get_single_dataset(dataset_id=folder))
+                        metadatas.append(get_single_dataset(folder))
 
                 return jsonify(create_json_response(metadatas))
 
