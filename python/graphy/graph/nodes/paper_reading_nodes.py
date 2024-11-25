@@ -444,23 +444,9 @@ class PaperInspector(BaseNode):
                 else:
                     raise ValueError(f"Error executing node '{current_node.name}': {e}")
             finally:
-                # Persist the output and queries if applicable
-                if last_output and is_persist and self.persist_store:
-                    self.persist_store.save_state(
-                        data_id, current_node.name, last_output
-                    )
-                    if current_node.get_query():
-                        input_query = f"**************QUERY***************: \n {current_node.get_query()} \
-                            **************MEMORY**************: \n {current_node.get_memory()}"
-                        self.persist_store.save_data(
-                            data_id, f"query_{current_node.name}", input_query
-                        )
-                    if current_node.name == first_node.name and parent_id:
-                        curr_id = last_output.get("data", {}).get("id", "")
-                        self.persist_edge_states(data_id, parent_id, curr_id, edge_name)
-
                 # Cache the output
                 if last_output:
+                    logger.debug(f"The result of {current_node.name}: {last_output}")
                     node_caches: dict = state.get(WF_STATE_CACHE_KEY, {})
                     node_cache: NodeCache = node_caches.setdefault(
                         current_node.name, NodeCache(current_node.name)
@@ -470,6 +456,23 @@ class PaperInspector(BaseNode):
                     # update global progress
                     self.progress[current_node.name].complete()
                     self.progress["total"].complete()
+
+                    # Persist the output and queries if applicable
+                    if is_persist and self.persist_store:
+                        self.persist_store.save_state(
+                            data_id, current_node.name, last_output
+                        )
+                        if current_node.get_query():
+                            input_query = f"**************QUERY***************: \n {current_node.get_query()} \
+                                **************MEMORY**************: \n {current_node.get_memory()}"
+                            self.persist_store.save_data(
+                                data_id, f"query_{current_node.name}", input_query
+                            )
+                        if current_node.name == first_node.name and parent_id:
+                            curr_id = last_output.get("data", {}).get("id", "")
+                            self.persist_edge_states(
+                                data_id, parent_id, curr_id, edge_name
+                            )
 
                 current_node.post_execute(last_output)
 

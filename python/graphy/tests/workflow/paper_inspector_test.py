@@ -23,9 +23,11 @@ from config import (
 )
 
 from langchain_core.embeddings import Embeddings
+from tempfile import TemporaryDirectory
 
 import os
 import chromadb
+import shutil
 
 
 @pytest.fixture
@@ -166,7 +168,9 @@ def test_inspector_execute():
         ],
     }
 
-    output_path = os.path.join(WF_OUTPUT_DIR, "_graphy_test")
+    temp_dir = TemporaryDirectory()
+    output_path = os.path.join(temp_dir.name, "graphyourdata", "paper_inspector_test")
+    vectdb_path = os.path.join(temp_dir.name, "graphyourdata", "vectdb")
     persist_store = JsonFileStore(output_path)
 
     inspector = PaperInspector.from_dict(
@@ -175,7 +179,7 @@ def test_inspector_execute():
         llm_model,
         llm_model,
         embeddings_model.chroma_embedding_model(),
-        chromadb.PersistentClient(path=WF_VECTDB_DIR),
+        chromadb.PersistentClient(path=vectdb_path),
         persist_store,
     )
 
@@ -188,10 +192,9 @@ def test_inspector_execute():
         print(output)
 
     data_id = "from_local_to_global__a_graph_rag_approach_toquery-focused_summ"
-    print(persist_store.get_state(data_id, "Paper"))
 
     assert persist_store.get_state(data_id, "Paper")
     assert persist_store.get_state(data_id, "Contribution")
     assert persist_store.get_state(data_id, "Challenge")
 
-    # os.remove(output_path)
+    temp_dir.cleanup()
