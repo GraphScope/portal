@@ -153,9 +153,8 @@ class GraphBuilder:
                         dimension_node_names.remove("Paper")
                     except ValueError:
                         pass  # Do nothing if "Paper" is not in the list
-                else:
-                    for node_name in dimension_node_names:
-                        self._extract_dimension_data(paper_id, folder, node_name)
+                for node_name in dimension_node_names:
+                    self._extract_dimension_data(paper_id, folder, node_name)
             if edge_data:
                 for edge_name, edge_pairs in edge_data.items():
                     formatted_edges = [

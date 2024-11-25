@@ -106,7 +106,9 @@ class JsonFileStore(PersistentStore):
                 visible_items = [
                     item
                     for item in items
-                    if not item.startswith((".", "_")) and item != "navigator"
+                    if not item.startswith((".", "_"))
+                    and item != "navigator"
+                    and os.path.isdir(os.path.join(self.output_folder, item))
                 ]
                 return visible_items
             except Exception as e:

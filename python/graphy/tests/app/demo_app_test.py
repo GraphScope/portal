@@ -162,13 +162,13 @@ def test_get_workflow_config(setup_dataset):
 def test_extract(setup_dataset):
     response = requests.post(
         f"{BASE_URL}/api/dataset/extract",
-        json={"dataset_id": "8547eb64-a106-5d09-8950-8a47fb9292dc", "thread_num": 1},
+        json={"dataset_id": DATASET_ID, "thread_num": 1},
     )
     print(response.json())
     assert response.status_code == 200
 
 
-# @pytest.mark.skip(reason="requires LLM connection")
+@pytest.mark.skip(reason="requires LLM connection")
 def test_get_extracted_data(setup_dataset):
     response = requests.get(
         f"{BASE_URL}/api/dataset/extract", params={"dataset_id": DATASET_ID}
@@ -181,6 +181,24 @@ def test_get_extracted_data(setup_dataset):
         params={"dataset_id": DATASET_ID, "workflow_node_names": "Challenge"},
     )
     print(response.json())
+    assert response.status_code == 200
+
+
+@pytest.mark.skip(reason="requires LLM connection")
+def test_graphy_data(setup_dataset):
+    response = requests.post(
+        f"{BASE_URL}/api/dataset/graphy", json={"dataset_id": DATASET_ID}
+    )
+    print(response)
+    assert response.status_code == 200
+
+
+@pytest.mark.skip(reason="requires LLM connection")
+def test_get_graphy_data(setup_dataset):
+    response = requests.get(
+        f"{BASE_URL}/api/dataset/graphy", params={"dataset_id": DATASET_ID}
+    )
+    print(response)
     assert response.status_code == 200
 
 

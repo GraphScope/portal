@@ -805,11 +805,11 @@ class DemoApp:
                         download_name=zip_filename,
                     )
 
-                node_names = self.get_workflow_node_names(dataset_id)
+                # node_names = self.get_workflow_node_names(dataset_id)
                 graph_builder = GraphBuilder(
                     data_path, self.get_persist_store(dataset_id)
                 )
-                graph_builder.extract_fact_data(node_names)
+                graph_builder.extract_fact_data()
 
                 graph_builder.build_graph()
                 graph_path = os.path.join(data_path, "_graph")
