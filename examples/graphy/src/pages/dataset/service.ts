@@ -1,9 +1,9 @@
-const baseURL = 'http://localhost:9999/api';
 import { Utils } from '@graphscope/studio-components';
 import { KuzuDriver } from '../../kuzu-driver';
 import JSZip from 'jszip';
-const url = new URL(baseURL);
-// url.search = new URLSearchParams(params).toString();
+
+const baseURL = Utils.storage.get('graphy_endpoint') || 'http://localhost:9999/api';
+
 export const queryDataset = async () => {
   return fetch(baseURL + '/dataset', {
     method: 'GET',

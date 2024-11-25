@@ -34,6 +34,7 @@
     "@graphscope/studio-query": "workspace:*",
     "@graphscope/studio-server": "workspace:*",
     "@graphscope/use-zustand": "workspace:*",
+    "@graphscope/graphy-website": "workspace:*",
     "@uiw/react-codemirror": "^4.21.21",
     "antd": "^5.17.0",
     "js-yaml": "^4.1.0",
