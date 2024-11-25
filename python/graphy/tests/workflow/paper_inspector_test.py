@@ -196,5 +196,11 @@ def test_inspector_execute():
     assert persist_store.get_state(data_id, "Paper")
     assert persist_store.get_state(data_id, "Contribution")
     assert persist_store.get_state(data_id, "Challenge")
+    assert persist_store.get_state(data_id, "_DONE")
+
+    assert inspector.progress["Paper"] == ProgressInfo(completed=1, number=1)
+    assert inspector.progress["Contribution"] == ProgressInfo(completed=1, number=1)
+    assert inspector.progress["Challenge"] == ProgressInfo(completed=1, number=1)
+    assert inspector.progress["total"] == ProgressInfo(completed=3, number=3)
 
     temp_dir.cleanup()

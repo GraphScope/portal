@@ -107,6 +107,11 @@ class ProgressInfo:
     def __repr__(self) -> str:
         return f"ProgressInfo [ Number: {self.number}, Completed: {self.completed} ]"
 
+    def __eq__(self, other):
+        if isinstance(other, ProgressInfo):
+            return self.completed == other.completed and self.number == other.number
+        return False
+
 
 class ExtractNode(BaseChainNode):
     def __init__(

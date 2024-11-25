@@ -130,7 +130,7 @@ class ArxivFetcher:
 
                 if highest_similarity > 0.9 or found_result:
                     break
-                logger.warn(f"Not Found: {query}")
+                logger.warning(f"Not Found: {query}")
 
             if highest_similarity > 0.9:
                 break
@@ -164,7 +164,7 @@ class ArxivFetcher:
 
             return download_list
         else:
-            logger.warn(f"Failed to fetch paper with arxiv: {name}")
+            logger.warning(f"Failed to fetch paper with arxiv: {name}")
             return []
 
     def fetch_paper(self, name: str, max_results):
