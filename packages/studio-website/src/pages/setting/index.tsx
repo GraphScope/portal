@@ -9,6 +9,7 @@ import International from './International';
 import QuerySetting from './query-setting';
 import { FormattedMessage } from 'react-intl';
 import Coordinator from './coordinator';
+import GraphyPlugin from './plugins/graphy';
 
 const Setting: React.FunctionComponent = () => {
   return (
@@ -47,19 +48,30 @@ const Setting: React.FunctionComponent = () => {
           </Flex>
         </Col>
         <Col span={12} xs={24} md={12} lg={12}>
-          <Card
-            title={
-              <Typography.Title level={4}>
-                <FormattedMessage id="Appearance Setting" />
-              </Typography.Title>
-            }
-          >
-            <InteractTheme />
-            <Divider />
-            <PrimaryColor />
-            <Divider />
-            <RoundedCorner />
-          </Card>
+          <Flex gap={12} vertical>
+            <Card
+              title={
+                <Typography.Title level={4}>
+                  <FormattedMessage id="Appearance Setting" />
+                </Typography.Title>
+              }
+            >
+              <InteractTheme />
+              <Divider />
+              <PrimaryColor />
+              <Divider />
+              <RoundedCorner />
+            </Card>
+            <Card
+              title={
+                <Typography.Title level={4}>
+                  <FormattedMessage id="Experimental Tools" />
+                </Typography.Title>
+              }
+            >
+              <GraphyPlugin />
+            </Card>
+          </Flex>
         </Col>
       </Row>
     </Section>

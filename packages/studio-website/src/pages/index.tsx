@@ -4,6 +4,7 @@ import { StudioProvier, GlobalSpin } from '@graphscope/studio-components';
 import Layout from '../layouts';
 import StoreProvider from '@graphscope/use-zustand';
 import { initialStore } from '../layouts/useContext';
+import { getSlots } from '../slots';
 
 import locales from '../locales';
 interface IPagesProps {
@@ -27,26 +28,28 @@ const routes = [
   { path: '/extension/:name', component: React.lazy(() => import('./extension/create-plugins')) },
 ];
 
+export const ROUTES = routes.map(({ path, redirect, component: Component }, index) => {
+  if (redirect) {
+    return <Route key={index} path={path} element={<Navigate to={redirect} replace />} />;
+  }
+  return (
+    <Route
+      key={index}
+      path={path}
+      element={
+        <Suspense fallback={<GlobalSpin />}>
+          {/** @ts-ignore */}
+          <Component />
+        </Suspense>
+      }
+    />
+  );
+});
+
 const Pages: React.FunctionComponent<IPagesProps> = props => {
   const { children } = props;
-
-  const routeComponents = routes.map(({ path, redirect, component: Component }, index) => {
-    if (redirect) {
-      return <Route key={index} path={path} element={<Navigate to={redirect} replace />} />;
-    }
-    return (
-      <Route
-        key={index}
-        path={path}
-        element={
-          <Suspense fallback={<GlobalSpin />}>
-            {/** @ts-ignore */}
-            <Component />
-          </Suspense>
-        }
-      />
-    );
-  });
+  const routes = getSlots('ROUTES');
+  console.log('routes', routes);
 
   return (
     <StoreProvider store={initialStore}>
@@ -54,7 +57,7 @@ const Pages: React.FunctionComponent<IPagesProps> = props => {
         <HashRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
-              {routeComponents}
+              {routes}
               {children}
             </Route>
           </Routes>

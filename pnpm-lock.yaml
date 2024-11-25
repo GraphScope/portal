@@ -693,6 +693,9 @@ importers:
       '@fortawesome/react-fontawesome':
         specifier: latest
         version: 0.2.2(@fortawesome/fontawesome-svg-core@6.7.1)(react@18.2.0)
+      '@graphscope/graphy-website':
+        specifier: workspace:*
+        version: link:../../examples/graphy
       '@graphscope/studio-components':
         specifier: workspace:*
         version: link:../studio-components
