@@ -221,75 +221,79 @@ class PaperNavigateEdge(BaseEdge):
             for arxiv_task in arxiv_tasks:
                 arxiv_link_queue.put((1, arxiv_task, parent_id, data_id))
 
-        self.thread_allocator.request(amount=self.arxiv_download_concurrency)
-
         if not arxiv_link_queue.empty():
-            records = {}
-            with concurrent.futures.ThreadPoolExecutor(
-                max_workers=self.arxiv_download_concurrency
-            ) as arxiv_download_executor:
-                # , concurrent.futures.ThreadPoolExecutor(
-                #     max_workers=self.scholar_download_concurrency
-                # ) as scholar_download_executor:
-                futures = []
-                for _ in range(self.arxiv_download_concurrency):
-                    futures.append(
-                        arxiv_download_executor.submit(
-                            self.run_worker,
-                            self.arxiv_download_worker,
-                            arxiv_link_queue,
-                            scholar_link_queue,
-                            output_queue,
+            self.thread_allocator.request(amount=self.arxiv_download_concurrency)
+            try:
+                records = {}
+                with concurrent.futures.ThreadPoolExecutor(
+                    max_workers=self.arxiv_download_concurrency
+                ) as arxiv_download_executor:
+                    # , concurrent.futures.ThreadPoolExecutor(
+                    #     max_workers=self.scholar_download_concurrency
+                    # ) as scholar_download_executor:
+                    futures = []
+                    for _ in range(self.arxiv_download_concurrency):
+                        futures.append(
+                            arxiv_download_executor.submit(
+                                self.run_worker,
+                                self.arxiv_download_worker,
+                                arxiv_link_queue,
+                                scholar_link_queue,
+                                output_queue,
+                            )
                         )
-                    )
 
-                # if self.search_scholar:
-                #     for _ in range(self.scholar_download_concurrency):
-                #         futures.append(
-                #             scholar_download_executor.submit(
-                #                 self.run_worker,
-                #                 self.scholar_download_worker,
-                #                 arxiv_link_queue,
-                #                 scholar_link_queue,
-                #                 output_queue,
-                #             )
-                #         )
+                    # if self.search_scholar:
+                    #     for _ in range(self.scholar_download_concurrency):
+                    #         futures.append(
+                    #             scholar_download_executor.submit(
+                    #                 self.run_worker,
+                    #                 self.scholar_download_worker,
+                    #                 arxiv_link_queue,
+                    #                 scholar_link_queue,
+                    #                 output_queue,
+                    #             )
+                    #         )
 
-                while (
-                    arxiv_link_queue.unfinished_tasks != 0
-                    or scholar_link_queue.unfinished_tasks != 0
-                    or output_queue.unfinished_tasks != 0
-                ):
-                    try:
-                        paper_path, parent_id, parent_data_id = output_queue.get(
-                            timeout=0.1
-                        )  # Attempt to get a result from the queue
-                        output_json = {
-                            "paper_file_path": paper_path,
-                            "parent_id": parent_id,
-                            "edge_name": self.name,
-                        }
-                        yield output_json
+                    while (
+                        arxiv_link_queue.unfinished_tasks != 0
+                        or scholar_link_queue.unfinished_tasks != 0
+                        or output_queue.unfinished_tasks != 0
+                    ):
+                        try:
+                            paper_path, parent_id, parent_data_id = output_queue.get(
+                                timeout=0.1
+                            )  # Attempt to get a result from the queue
+                            output_json = {
+                                "paper_file_path": paper_path,
+                                "parent_id": parent_id,
+                                "edge_name": self.name,
+                            }
+                            yield output_json
 
-                        records.setdefault(parent_data_id, []).append(output_json)
-                        output_queue.task_done()
-                    except queue.Empty:
-                        continue
+                            records.setdefault(parent_data_id, []).append(output_json)
+                            output_queue.task_done()
+                        except queue.Empty:
+                            continue
 
-                arxiv_link_queue.join()
-                scholar_link_queue.join()
-                output_queue.join()
+                    arxiv_link_queue.join()
+                    scholar_link_queue.join()
+                    output_queue.join()
 
-                if self.search_scholar:
-                    for _ in range(self.scholar_download_concurrency):
-                        scholar_link_queue.put(None)
+                    if self.search_scholar:
+                        for _ in range(self.scholar_download_concurrency):
+                            scholar_link_queue.put(None)
 
-            self.thread_allocator.release(amount=self.arxiv_download_concurrency)
-
-            for parent_data_id in records:
-                if len(records[parent_data_id]) > 0:
-                    self.persist_store.save_state(
-                        parent_data_id, "REF_DONE", {"data": records[parent_data_id]}
-                    )
+                for parent_data_id in records:
+                    if len(records[parent_data_id]) > 0:
+                        self.persist_store.save_state(
+                            parent_data_id,
+                            "REF_DONE",
+                            {"data": records[parent_data_id]},
+                        )
+            except Exception as e:
+                logger.error(f"Get Arxiv Paper Error: {e}")
+            finally:
+                self.thread_allocator.release(amount=self.arxiv_download_concurrency)
 
         logger.debug("================= FINISH NAVIGATE ==============")
