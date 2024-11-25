@@ -200,7 +200,10 @@ class GraphBuilder:
                     )
 
     def build_graph(self, output_path):
-        graph_path = os.path.join(output_path, "_graph")
+        if output_path:
+            graph_path = os.path.join(output_path, "_graph")
+        else:
+            graph_path = os.path.join(self.data_path, "_graph")
         os.makedirs(graph_path, exist_ok=True)
         gs_schemas = {"vertex_types": [], "edge_types": []}
         write_csv(
