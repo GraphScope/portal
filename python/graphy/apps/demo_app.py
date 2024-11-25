@@ -812,7 +812,7 @@ class DemoApp:
                 graph_builder.extract_fact_data(node_names)
 
                 graph_builder.build_graph()
-                graph_path = os.path.join(data_path, "graph")
+                graph_path = os.path.join(data_path, "_graph")
 
                 # Ensure graph_path exists
                 if not os.path.exists(graph_path):

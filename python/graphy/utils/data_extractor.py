@@ -199,7 +199,7 @@ class GraphBuilder:
                         }
                     )
 
-    def build_graph(self, output_path):
+    def build_graph(self, output_path=None):
         if output_path:
             graph_path = os.path.join(output_path, "_graph")
         else:
@@ -402,7 +402,7 @@ class GraphBuilder:
             else:
                 graph_id = resp.get_value().graph_id
 
-            graph_path = os.path.join(self.data_path, "graph")
+            graph_path = os.path.join(self.data_path, "_graph")
             import_config = build_import_config_from_schema(schema, graph_path)
 
             bulk_load_request = SchemaMapping.from_dict(import_config)
