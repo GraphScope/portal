@@ -45,9 +45,15 @@ def write_csv(file_path: str, data: list, headers: list = None):
             writer = csv.DictWriter(file, fieldnames=headers, delimiter="|")
             writer.writeheader()
             for row in data:
-                # Exclude the 'embedding' field from being written to the CSV
-                row = {key: value for key, value in row.items() if key != "embedding"}
-                writer.writerow(row)
+                try:
+                    # Exclude the 'embedding' field from being written to the CSV
+                    row = {
+                        key: value for key, value in row.items() if key != "embedding"
+                    }
+                    writer.writerow(row)
+                except Exception as e:
+                    print(f"Error: {e}")
+                    continue
 
 
 def write_json(file_path: str, data):
@@ -76,6 +82,36 @@ def list_json_files(folder_path: str):
     return inputs
 
 
+def sanitize_data(data: dict) -> dict:
+    """
+    Sanitize a dictionary by removing \n and \t characters from string values.
+
+    Args:
+        data (dict): The dictionary to sanitize.
+
+    Returns:
+        dict: The sanitized dictionary.
+    """
+    sanitized_data = {}
+    for key, value in data.items():
+        if isinstance(value, str):
+            # Clean string values
+            sanitized_data[key] = value.replace("\n", " ").replace("\t", " ").strip()
+        elif isinstance(value, dict):
+            # Recursively sanitize nested dictionaries
+            sanitized_data[key] = sanitize_data(value)
+        elif isinstance(value, list):
+            # Recursively sanitize items in lists
+            sanitized_data[key] = [
+                sanitize_data(item) if isinstance(item, dict) else item
+                for item in value
+            ]
+        else:
+            # Keep other types as is
+            sanitized_data[key] = value
+    return sanitized_data
+
+
 class GraphBuilder:
     def __init__(
         self,
@@ -100,6 +136,7 @@ class GraphBuilder:
             paper_data = self.persist_store.get_state(folder, "Paper")
             edge_data = self.persist_store.get_state(folder, "_Edges")
             if paper_data:
+                paper_data = paper_data.get("data", {})
                 paper_data["node_type"] = "Fact"
                 if "id" not in paper_data:
                     # a default id is given
@@ -108,7 +145,7 @@ class GraphBuilder:
                     del paper_data["reference"]
                 paper_id = paper_data["id"]
                 if paper_id not in self.facts_dict:
-                    self.facts_dict[paper_id] = paper_data
+                    self.facts_dict[paper_id] = sanitize_data(paper_data)
 
                 if not dimension_node_names:
                     dimension_node_names = self.persist_store.get_total_states(folder)
@@ -145,15 +182,16 @@ class GraphBuilder:
         data_items = self.persist_store.get_state(folder, node_name)
 
         if data_items:
+            data_items = data_items.get("data", {})
             if not isinstance(data_items, list):
                 data_items = [data_items]
 
             for idx, item in enumerate(data_items):
-                data_id = hash_id(f"{paper_id}_{idx}")
+                data_id = hash_id(f"{paper_id}_{node_name}_{idx}")
 
                 if data_id not in dimensions_dict:
                     dimensions_dict[data_id] = {"id": data_id, "node_type": "Dimension"}
-                    dimensions_dict[data_id].update(item)
+                    dimensions_dict[data_id].update(sanitize_data(item))
                     edges.append(
                         {
                             "source": paper_id,
@@ -161,8 +199,8 @@ class GraphBuilder:
                         }
                     )
 
-    def build_graph(self):
-        graph_path = os.path.join(self.data_path, "graph")
+    def build_graph(self, output_path):
+        graph_path = os.path.join(output_path, "_graph")
         os.makedirs(graph_path, exist_ok=True)
         gs_schemas = {"vertex_types": [], "edge_types": []}
         write_csv(
@@ -222,7 +260,7 @@ class GraphBuilder:
                     "target",
                 ],
             )
-            if "_" in edge:
+            if "_" not in edge:
                 target_name = "Paper"
             else:
                 # Ensure edge has enough parts when split
