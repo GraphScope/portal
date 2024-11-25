@@ -78,8 +78,7 @@ export default function StudioLayout() {
   };
   useEffect(() => {
     (async () => {
-      const coordinator = queryCoordinator();
-      debugger;
+      setCoordinator();
       const engineType = (await depolymentInfo()) as 'interactive' | 'groot';
       setState(preState => {
         return {
@@ -128,7 +127,7 @@ export default function StudioLayout() {
   return <GlobalSpin />;
 }
 
-function queryCoordinator() {
+function setCoordinator() {
   const coordinatorURL = Utils.getSearchParams('coordinator');
   if (coordinatorURL) {
     Utils.storage.set('coordinator', coordinatorURL);
