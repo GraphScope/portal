@@ -444,10 +444,6 @@ class PaperInspector(BaseNode):
                 else:
                     raise ValueError(f"Error executing node '{current_node.name}': {e}")
             finally:
-                # update global progress
-                self.progress[current_node.name].complete()
-                self.progress["total"].complete()
-
                 # Persist the output and queries if applicable
                 if last_output and is_persist and self.persist_store:
                     self.persist_store.save_state(
@@ -471,6 +467,9 @@ class PaperInspector(BaseNode):
                     )
                     if node_cache:
                         node_cache.add_chat_cache("", last_output)
+                    # update global progress
+                    self.progress[current_node.name].complete()
+                    self.progress["total"].complete()
 
                 current_node.post_execute(last_output)
 
@@ -547,11 +546,12 @@ class PaperInspector(BaseNode):
                     }
 
                     self.run_through(data_id, state[data_id], parent_id, edge_name)
+                    is_done = (
+                        self.progress["total"].completed
+                        == self.progress["total"].number
+                    )
                     # Mark the data as DONE
-                    if (
-                        len(self.persist_store.get_total_states(data_id))
-                        == self.graph.nodes_count()
-                    ):
+                    if is_done:
                         self.persist_store.save_state(data_id, "_DONE", {"done": True})
                         # clean state
                         state[data_id][WF_STATE_CACHE_KEY].clear()
