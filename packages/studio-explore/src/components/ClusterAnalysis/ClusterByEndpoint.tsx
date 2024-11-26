@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Select, Button, Flex, Typography, Tooltip, Space, Input, InputRef } from 'antd';
-import { useCluster, useContext } from '@graphscope/studio-graph';
+import { useCombos, useContext } from '@graphscope/studio-graph';
 import { ClearOutlined, PlayCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { Utils } from '@graphscope/studio-components';
 const { storage } = Utils;
@@ -10,8 +10,7 @@ const ClusterByEndpoint: React.FunctionComponent<IClusterByAlgorithmProps> = pro
   const { store } = useContext();
   const { data } = store;
   const inputRef = React.useRef<InputRef>(null);
-  const { enableCluster, disableCluster } = useCluster();
-  console.log('data', data);
+
   const [state, setState] = React.useState({
     clusterKey: 'label',
   });

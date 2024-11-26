@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Select, Button, Flex } from 'antd';
-import { useCluster, useContext } from '@graphscope/studio-graph';
+import { useCombos, useContext } from '@graphscope/studio-graph';
 import { ClearOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { Utils } from '@graphscope/studio-components';
 import ChartView from '../ChartView';
@@ -9,8 +9,8 @@ interface IClusterByFieldProps {}
 const ClusterByField: React.FunctionComponent<IClusterByFieldProps> = props => {
   const { store } = useContext();
   const { data } = store;
-  const { enableCluster, disableCluster } = useCluster();
-  console.log('data', data);
+  const { runCombos, clearCombos } = useCombos();
+
   const [state, setState] = React.useState({
     clusterKey: 'label',
     clustered: false,
@@ -26,11 +26,11 @@ const ClusterByField: React.FunctionComponent<IClusterByFieldProps> = props => {
     });
   };
   const handleCluster = () => {
-    enableCluster(state.clusterKey);
+    runCombos(state.clusterKey);
     const groupedData = Utils.groupBy(data.nodes, node => {
       return Utils.getObjByPath(node, state.clusterKey);
     });
-    console.log('groupedData', groupedData);
+
     setState(preState => {
       return {
         ...preState,
@@ -51,7 +51,7 @@ const ClusterByField: React.FunctionComponent<IClusterByFieldProps> = props => {
     });
   };
   const handleClearCluster = () => {
-    disableCluster();
+    clearCombos();
     setState(preState => {
       return {
         ...preState,
