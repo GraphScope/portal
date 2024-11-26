@@ -54,6 +54,9 @@ class SurveyPaperReading(BaseWorkflow):
         if not persist_store:
             persist_store = JsonFileStore(os.path.join(WF_OUTPUT_DIR, id))
 
+        if "graph" in graph_json:
+            graph_json = graph_json["graph"]
+
         graph = self._create_graph(
             graph_json,
             llm_model,

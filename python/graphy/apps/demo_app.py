@@ -67,6 +67,19 @@ def create_error_response(msg: str):
     return json_data
 
 
+def fix_workflow(workflow_json):
+    fixed_workflow_json = {}
+    if "graph" not in workflow_json:
+        fixed_workflow_json["graph"] = workflow_json
+    else:
+        fixed_workflow_json = workflow_json
+    if "id" not in fixed_workflow_json:
+        fixed_workflow_json["id"] = "test_workflow"
+    if "llm_model" not in fixed_workflow_json:
+        fixed_workflow_json["llm_model"] = DEFAULT_LLM_MODEL_CONFIG
+    return fixed_workflow_json
+
+
 class STATUS(Enum):
     INITIALIZED = "initialized"
     WAITING_WORKFLOW_CONFIG = "waiting_workflow_config"
@@ -282,6 +295,7 @@ class DemoApp:
             embedding_model = embedding_functions.DefaultEmbeddingFunction()
 
         vectordb = chromadb.PersistentClient(path=WF_VECTDB_DIR)
+        workflow_dict = fix_workflow(workflow_dict)
 
         # Initialize the workflow
         workflow = SurveyPaperReading(
@@ -657,6 +671,7 @@ class DemoApp:
                 )
 
             except Exception as e:
+                traceback.print_exc()
                 return create_error_response(str(e)), 500
 
         @self.app.route("/api/dataset/workflow/config", methods=["GET"])
