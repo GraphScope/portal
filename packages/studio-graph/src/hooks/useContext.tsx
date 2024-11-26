@@ -29,9 +29,11 @@ export type IStore = {
     }
   >;
   /**
-   * cluster groups
+   * cluster combos
    */
-  groups: any[];
+  combos: any[];
+  enableCombo?: boolean;
+  combosByKey: string;
   /**
    * width of graph
    */
@@ -66,7 +68,9 @@ export const initialStore: IStore = {
     nodes: [],
     edges: [],
   },
-  groups: [],
+  combos: [],
+  enableCombo: undefined,
+  combosByKey: '',
   width: 200,
   height: 500,
   dataMap: {},

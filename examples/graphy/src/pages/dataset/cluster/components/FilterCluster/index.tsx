@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Select, Space, Button, Flex, Tooltip } from 'antd';
-import { useContext, useCluster } from '@graphscope/studio-graph';
+import { Select, Button, Flex, Tooltip } from 'antd';
+import { useContext } from '@graphscope/studio-graph';
 
 import { Utils } from '@graphscope/studio-components';
 import { LikeOutlined } from '@ant-design/icons';
@@ -39,7 +39,6 @@ const FilterCluster: React.FunctionComponent<IFilterClusterProps> = props => {
   });
   const { options, value } = state;
 
-  const { enableCluster } = useCluster();
   React.useEffect(() => {
     const entityId = Utils.getSearchParams('entityId') || '';
     const groups = Utils.groupBy(source.nodes, node => {

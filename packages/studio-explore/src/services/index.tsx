@@ -47,8 +47,8 @@ const services: IServiceQueries<ExploreQueryTypes | IQueryTypes> = {
   },
   queryGraphData: async () => {
     try {
-      // const data = await queryStatement('Match (a)-[b]-(c) return a,b,c limit 100');
-      // return data;
+      const data = await queryStatement('Match (a)-[b]-(c) return a,b,c limit 100');
+      return data;
       return {
         nodes: [],
         edges: [],

@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { Button, Tooltip } from 'antd';
 import { Icons, useStudioProvier } from '@graphscope/studio-components';
-import useCluster from '../../hooks/useCluster';
+import { useCombos } from '../../index';
 import { FormattedMessage } from 'react-intl';
 export interface IRunClusterProps {
   clusterKey?: string;
 }
 
 const RunCluster: React.FunctionComponent<IRunClusterProps> = props => {
-  const { enableCluster, disableCluster } = useCluster();
+  const { runCombos, clearCombos } = useCombos();
   const [state, setState] = React.useState({
     cluster: false,
   });
@@ -24,9 +24,9 @@ const RunCluster: React.FunctionComponent<IRunClusterProps> = props => {
       };
     });
     if (cluster) {
-      disableCluster();
+      clearCombos();
     } else {
-      enableCluster('label');
+      runCombos('label');
     }
   };
 

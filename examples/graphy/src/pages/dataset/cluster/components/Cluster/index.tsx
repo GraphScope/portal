@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Select, Button } from 'antd';
-import { useCluster, useContext } from '@graphscope/studio-graph';
+import { useCombos, useContext } from '@graphscope/studio-graph';
 interface IClusterProps {}
 
 const Cluster: React.FunctionComponent<IClusterProps> = props => {
   const { store } = useContext();
   const { data } = store;
-  const { enableCluster, disableCluster } = useCluster();
+  const { runCombos, clearCombos } = useCombos();
   const [state, setState] = React.useState({
     clusterKey: 'properties.cluster_id',
   });
@@ -19,10 +19,10 @@ const Cluster: React.FunctionComponent<IClusterProps> = props => {
     });
   };
   const handleCluster = () => {
-    enableCluster(state.clusterKey);
+    runCombos(state.clusterKey);
   };
   const handleClose = () => {
-    disableCluster();
+    clearCombos();
   };
   const firstNode = data.nodes[0] || {};
 
