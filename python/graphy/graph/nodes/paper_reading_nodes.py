@@ -1,4 +1,4 @@
-from .base_node import BaseNode, NodeType, NodeCache, DataGenerator, DataType
+from .base_node import BaseNode, NodeType, NodeCache, DataGenerator
 from .chain_node import BaseChainNode
 from .pdf_extract_node import PDFExtractNode
 from memory.llm_memory import VectorDBHierarchy, PaperReadingMemoryManager
@@ -8,9 +8,7 @@ from config import (
     WF_STATE_MEMORY_KEY,
     WF_STATE_EXTRACTOR_KEY,
     WF_STATE_CACHE_KEY,
-    WF_STATE_PROGRESS_KEY,
     WF_IMAGE_DIR,
-    WF_VECTDB_DIR,
 )
 from extractor import PaperExtractor
 from db import PersistentStore
@@ -19,8 +17,10 @@ from utils.profiler import profiler
 from langchain_core.pydantic_v1 import BaseModel, Field, create_model
 from langchain_core.language_models.llms import BaseLLM
 from langchain_core.embeddings import Embeddings
-
+from langchain_core.exceptions import OutputParserException
 from typing import Any, Dict, List
+
+import json
 import os
 import re
 import traceback
@@ -66,6 +66,36 @@ def process_id(base_name: str) -> str:
         id_name = f"{hash(base_name)}_{id_name}"
 
     return id_name
+
+
+def try_fix_json(raw_json: str):
+    """
+    Try fix raw JSON string by removing invalid characters (e.g., backticks)
+    and parses it into a Python dictionary.
+
+    A very typical error is when the JSON is wrapped in backticks, as:
+    ```json { ... }
+    ```
+
+    Args:
+        raw_json (str): The raw JSON string.
+
+    Returns:
+        dict: The parsed JSON object.
+
+    Raises:
+        OutputParserException: If the JSON is invalid or cannot be parsed.
+    """
+    try:
+        # Remove prefix if it exists
+        if raw_json.startswith("Invalid json output:"):
+            raw_json = raw_json[len("Invalid json output:") :].strip()
+        # Remove backticks and surrounding markdown
+        cleaned_json = raw_json.strip().strip("```json").strip("```")
+        # Parse the cleaned JSON string
+        return json.loads(cleaned_json)
+    except json.JSONDecodeError as e:
+        raise OutputParserException(f"Failed to parse JSON: {e}", llm_output=raw_json)
 
 
 class ProgressInfo:
@@ -440,14 +470,41 @@ class PaperInspector(BaseNode):
                         logger.debug(f"'{current_node.name}' produces: {output}")
                         last_output = output
                     is_persist = True
+            except OutputParserException as e:
+                logger.warning(
+                    f"OutputParserException while executing node '{current_node.name}': {e}\nAttempting to fix JSON..."
+                )
+                try:
+                    fixed_json = try_fix_json(e.llm_output)
+                    if fixed_json:
+                        logger.info(
+                            f"Successfully fixed JSON for node '{current_node.name}'"
+                        )
+                        last_output = fixed_json
+                        is_persist = True
+                    else:
+                        logger.error(
+                            f"Failed to fix JSON for node '{current_node.name}'"
+                        )
+                        if not continue_on_error:
+                            raise ValueError(
+                                f"Error executing node '{current_node.name}': {e}"
+                            )
+                except Exception as fix_error:
+                    logger.error(
+                        f"Exception while fixing JSON for node '{current_node.name}': {fix_error}"
+                    )
+                    if not continue_on_error:
+                        raise ValueError(
+                            f"Error executing node '{current_node.name}': {fix_error}"
+                        )
+
             except Exception as e:
                 full_traceback = traceback.format_exc()
                 logger.error(
                     f"Error executing node '{current_node.name}': {e}\nTraceback:\n{full_traceback}"
                 )
-                if continue_on_error:
-                    continue
-                else:
+                if not continue_on_error:
                     raise ValueError(f"Error executing node '{current_node.name}': {e}")
             finally:
                 # Cache the output
