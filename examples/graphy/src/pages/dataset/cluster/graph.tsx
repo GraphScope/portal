@@ -18,7 +18,7 @@ import {
   locales,
 } from '@graphscope/studio-graph';
 
-import { Workflow, ClusterInfo, FetchGraph } from './components';
+import { Workflow, FetchGraph } from './components';
 
 import { Divider } from 'antd';
 
@@ -110,7 +110,7 @@ const ClusterGraph: React.FunctionComponent<QueryGraphProps> = props => {
           >
             <Canvas />
             <ClearStatatus />
-            <ClusterInfo />
+
             <BasicInteraction />
             <Loading />
             <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
