@@ -8,7 +8,7 @@ Flask>=3.0
 flask-cors>=5.0
 frontend>=0.0.3
 gs_interactive==0.3
-langchain==0.2.1
+langchain==0.3.8
 langchain-chroma==0.1.1
 langchain-community==0.2.1
 langchain-core==0.2.3
