@@ -23,11 +23,7 @@ const Solution = () => {
     });
   };
   return (
-    <div
-      style={{
-        color: '#fff',
-      }}
-    >
+    <Flex vertical gap={50}>
       <InteractiveEngine />
       <InfoDisplay />
       <div
@@ -131,7 +127,7 @@ const Solution = () => {
           </div>
         </Flex>
       </div>
-    </div>
+    </Flex>
   );
 };
 
