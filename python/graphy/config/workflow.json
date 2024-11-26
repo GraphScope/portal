@@ -132,7 +132,7 @@
             {
               "name": "Baseline",
               "query": "**Question**: Please list the baselines compared with the method proposed in this paper. For each baseline, list its name and the name of the paper that first proposes this baseline. In detail, the paper that first proposes this baseline should be cited during the initial mentions of the baseline, and the name of the paper can be extracted from the references.",
-              "extract_from": {"match": ["experiment"]},
+              "extract_from": {"match": ["experiment", "evaluation"]},
               "output_schema": {
                 "type": "array",
                 "description": "A list of baselines in this paper.",
@@ -189,7 +189,7 @@
               "target": "Experiment"
             },
             {
-              "source": "Experiment",
+              "source": "Paper",
               "target": "Baseline"
             },
             {

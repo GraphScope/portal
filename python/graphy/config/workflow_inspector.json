@@ -1,5 +1,5 @@
 {
-  "id": "test",
+  "id": "test_paper_inspector",
   "graph": {
     "inspectors": [
       {
@@ -106,7 +106,7 @@
             {
               "name": "Experiment",
               "query": "**Question**: Please analyze details of experiments in this paper. The experiments are usually organized in a section named **Experiment** or **Evaluation**. Each experiment is typically a subsection of the whole experiment section. List each experiment with the name, settings including datasets, evaluation metrics, and baselines, and the results of the experiment. Provide the authors' analysis of the results, explaining why such results might have been observed and any implications. In addition, analysis for special cases can also be explained.",
-              "extract_from": {"match": ["experiment"]},
+              "extract_from": {"match": ["experiment", "evaluation"]},
               "output_schema": {
                 "type": "array",
                 "description": "A list of experiments in this paper.",
@@ -132,7 +132,7 @@
             {
               "name": "Baseline",
               "query": "**Question**: Please list the baselines compared with the method proposed in this paper. For each baseline, list its name and the name of the paper that first proposes this baseline. In detail, the paper that first proposes this baseline should be cited during the initial mentions of the baseline, and the name of the paper can be extracted from the references.",
-              "extract_from": {"match": ["experiment"]},
+              "extract_from": {"match": ["experiment", "evaluation"]},
               "output_schema": {
                 "type": "array",
                 "description": "A list of baselines in this paper.",
@@ -189,7 +189,7 @@
               "target": "Experiment"
             },
             {
-              "source": "Experiment",
+              "source": "Paper",
               "target": "Baseline"
             },
             {
@@ -201,7 +201,6 @@
       }
     ],
     "navigators": [
-      
     ]
   }
 }
