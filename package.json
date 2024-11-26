@@ -12,8 +12,8 @@
     "build:docs:portal": "npm run build && dumi build",
     "docs": "dumi dev",
     "version": "changeset version",
-    "publish": "npm run build && pnpm publish -r --force",
-    "check:publish": "npm run build && pnpm publish -r --dry-run"
+    "publish": "npm run build && pnpm changeset publish -r --force",
+    "check:publish": "npm run build && pnpm changeset publish -r --dry-run"
   },
   "husky": {
     "hooks": {
