@@ -70,30 +70,31 @@ def process_id(base_name: str) -> str:
 
 def try_fix_json(raw_json: str):
     """
-    Try fix raw JSON string by removing invalid characters (e.g., backticks)
-    and parses it into a Python dictionary.
-
-    A very typical error is when the JSON is wrapped in backticks, as:
-    ```json { ... }
-    ```
+    Attempts to clean and parse malformed JSON strings by extracting the content
+    between the first '{' and the last '}'.
 
     Args:
-        raw_json (str): The raw JSON string.
+        raw_json (str): The malformed JSON string.
 
     Returns:
-        dict: The parsed JSON object.
-
-    Raises:
-        OutputParserException: If the JSON is invalid or cannot be parsed.
+        dict: A fixed and parsed JSON object, or None if fixing fails.
     """
     try:
-        # Remove prefix if it exists
-        if raw_json.startswith("Invalid json output:"):
-            raw_json = raw_json[len("Invalid json output:") :].strip()
-        # Remove backticks and surrounding markdown
-        cleaned_json = raw_json.strip().strip("```json").strip("```")
-        # Parse the cleaned JSON string
-        return json.loads(cleaned_json)
+        # Identify the first '{' and the last '}'
+        start_index = raw_json.find("{")
+        end_index = raw_json.rfind("}")
+
+        # Ensure valid indices are found
+        if start_index == -1 or end_index == -1 or start_index >= end_index:
+            raise OutputParserException(
+                f"Failed to parse JSON: {e}", llm_output=raw_json
+            )
+
+        # Extract and clean the JSON substring
+        json_content = raw_json[start_index : end_index + 1]
+
+        # Attempt to parse the extracted JSON
+        return json.loads(json_content)
     except json.JSONDecodeError as e:
         raise OutputParserException(f"Failed to parse JSON: {e}", llm_output=raw_json)
 
