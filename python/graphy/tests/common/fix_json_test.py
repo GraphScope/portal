@@ -40,3 +40,43 @@ def test_fix_json():
    """
 
     assert json.loads(json_corrected) == try_fix_json(json_to_fix)
+
+
+def test_fix_json2():
+    json_to_fix = """```begin {
+      "graph": {
+        "nodes": [
+          {
+            "name": "Paper\Delta",
+            "node_type": "BASE"
+          }
+        ],
+        "edges": [
+          {
+            "source": "Paper",
+            "target": "Paper"
+          }
+        ]
+      }
+  } end```
+  """
+
+    json_corrected = """{
+      "graph": {
+        "nodes": [
+          {
+            "name": "Paper\\\\Delta",
+            "node_type": "BASE"
+          }
+        ],
+        "edges": [
+          {
+            "source": "Paper",
+            "target": "Paper"
+          }
+        ]
+      }
+  }
+   """
+
+    assert json.loads(json_corrected) == try_fix_json(json_to_fix)

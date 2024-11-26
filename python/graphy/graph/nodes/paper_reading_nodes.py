@@ -91,7 +91,8 @@ def try_fix_json(raw_json: str):
             )
 
         # Extract and clean the JSON substring
-        json_content = raw_json[start_index : end_index + 1].replace("\\", "\\\\")
+        json_content = raw_json[start_index : end_index + 1]
+        json_content = re.sub(r'(?<!\\)\\(?![bfnrtv"\\/])', r"\\\\", json_content)
 
         # Attempt to parse the extracted JSON
         return json.loads(json_content)
