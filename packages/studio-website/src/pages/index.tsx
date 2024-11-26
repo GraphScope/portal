@@ -4,9 +4,10 @@ import { StudioProvier, GlobalSpin } from '@graphscope/studio-components';
 import Layout from '../layouts';
 import StoreProvider from '@graphscope/use-zustand';
 import { initialStore } from '../layouts/useContext';
-import { getSlots } from '../slots';
-
+import { getSlots, installSlot } from '../slots';
+import { SIDE_MENU } from '../layouts/const';
 import locales from '../locales';
+
 interface IPagesProps {
   children?: React.ReactNode;
 }
@@ -45,11 +46,13 @@ export const ROUTES = routes.map(({ path, redirect, component: Component }, inde
     />
   );
 });
+/** 注册默认的 */
+installSlot('SIDE_MEU', 'studio', SIDE_MENU);
+installSlot('ROUTES', 'studio', ROUTES);
 
 const Pages: React.FunctionComponent<IPagesProps> = props => {
   const { children } = props;
   const routes = getSlots('ROUTES');
-  console.log('routes', routes);
 
   return (
     <StoreProvider store={initialStore}>
