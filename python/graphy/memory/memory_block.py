@@ -216,7 +216,7 @@ class MemoryBlockManager:
     def add_block(self, block: MemoryBlock):
         block_id = block.get_block_id()
         if block_id in self.blocks:
-            logger.warn(f"Block with id {block_id} already exists in the manager.")
+            logger.warning(f"Block with id {block_id} already exists in the manager.")
         else:
             self.blocks[block_id] = block
         return block_id

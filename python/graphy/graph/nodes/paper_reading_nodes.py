@@ -23,6 +23,7 @@ from langchain_core.embeddings import Embeddings
 from typing import Any, Dict, List
 import os
 import re
+import traceback
 import logging
 
 logger = logging.getLogger(__name__)
@@ -105,6 +106,11 @@ class ProgressInfo:
 
     def __repr__(self) -> str:
         return f"ProgressInfo [ Number: {self.number}, Completed: {self.completed} ]"
+
+    def __eq__(self, other):
+        if isinstance(other, ProgressInfo):
+            return self.completed == other.completed and self.number == other.number
+        return False
 
 
 class ExtractNode(BaseChainNode):
@@ -373,10 +379,15 @@ class PaperInspector(BaseNode):
     def persist_edge_states(self, data_id, source_id, target_id, edge_name):
         if source_id and target_id:
             edges = self.persist_store.get_state(data_id, "_Edges")
-            if edges:
-                edges.setdefault(edge_name, []).append(f"{source_id}|{target_id}")
+            if not edges:
+                edges = {}
+            # edges.setdefault(edge_name, set()).add(f"{source_id}|{target_id}")
+            if edge_name in edges:
+                edges_set = set(edges[edge_name])
+                edges_set.add(f"{source_id}|{target_id}")
+                edges[edge_name] = list(edges_set)
             else:
-                edges = {edge_name: [f"{source_id}|{target_id}"]}
+                edges[edge_name] = [f"{source_id}|{target_id}"]
             self.persist_store.save_state(data_id, "_Edges", edges)
 
     def run_through(
@@ -426,42 +437,50 @@ class PaperInspector(BaseNode):
                     # Execute the current node
                     output_generator = current_node.execute(state)
                     for output in output_generator:
+                        logger.debug(f"'{current_node.name}' produces: {output}")
                         last_output = output
                     is_persist = True
             except Exception as e:
-                logger.error(f"Error executing node '{current_node.name}': {e}")
+                full_traceback = traceback.format_exc()
+                logger.error(
+                    f"Error executing node '{current_node.name}': {e}\nTraceback:\n{full_traceback}"
+                )
                 if continue_on_error:
                     continue
                 else:
                     raise ValueError(f"Error executing node '{current_node.name}': {e}")
             finally:
-                # update global progress
-                self.progress[current_node.name].complete()
-                self.progress["total"].complete()
-
-                # Persist the output and queries if applicable
-                if last_output and is_persist and self.persist_store:
-                    self.persist_store.save_state(
-                        data_id, current_node.name, last_output
-                    )
-                    if current_node.get_query():
-                        input_query = f"**************QUERY***************: \n {current_node.get_query()} \
-                            **************MEMORY**************: \n {current_node.get_memory()}"
-                        self.persist_store.save_data(
-                            data_id, f"query_{current_node.name}", input_query
-                        )
-                    if current_node.name == first_node.name and parent_id:
-                        curr_id = last_output.get("data", {}).get("id", "")
-                        self.persist_edge_states(data_id, parent_id, curr_id, edge_name)
-
                 # Cache the output
                 if last_output:
-                    node_caches: dict = state.get(WF_STATE_CACHE_KEY, {})
-                    node_cache: NodeCache = node_caches.setdefault(
-                        current_node.name, NodeCache(current_node.name)
+                    logger.debug(
+                        f"The final result of '{current_node.name}': {last_output}"
                     )
-                    if node_cache:
+                    node_caches: dict = state.get(WF_STATE_CACHE_KEY, {})
+                    if node_caches:
+                        node_cache: NodeCache = node_caches.setdefault(
+                            current_node.name, NodeCache(current_node.name)
+                        )
                         node_cache.add_chat_cache("", last_output)
+                    # update global progress
+                    self.progress[current_node.name].complete()
+                    self.progress["total"].complete()
+
+                    # Persist the output and queries if applicable
+                    if is_persist and self.persist_store:
+                        self.persist_store.save_state(
+                            data_id, current_node.name, last_output
+                        )
+                        if current_node.get_query():
+                            input_query = f"**************QUERY***************: \n {current_node.get_query()} \
+                                **************MEMORY**************: \n {current_node.get_memory()}"
+                            self.persist_store.save_data(
+                                data_id, f"query_{current_node.name}", input_query
+                            )
+                        if current_node.name == first_node.name and parent_id:
+                            curr_id = last_output.get("data", {}).get("id", "")
+                            self.persist_edge_states(
+                                data_id, parent_id, curr_id, edge_name
+                            )
 
                 current_node.post_execute(last_output)
 
@@ -501,8 +520,12 @@ class PaperInspector(BaseNode):
                     base_name = os.path.basename(paper_file_path).split(".")[0]
                 data_id = process_id(base_name)
                 pdf_extractor.set_img_path(f"{WF_IMAGE_DIR}/{data_id}")
+
                 first_node_name = self.graph.get_first_node_name()
-                if self.persist_store.get_state(data_id, "_DONE"):
+
+                all_nodes = self.graph.get_node_names()
+                persist_states = self.persist_store.get_states(data_id, all_nodes)
+                if len(all_nodes) == len(persist_states):
                     # This means that the data has already processed
                     logger.info(f"Input with ID '{data_id}' already processed.")
                     self.progress["total"].add(
@@ -538,11 +561,12 @@ class PaperInspector(BaseNode):
                     }
 
                     self.run_through(data_id, state[data_id], parent_id, edge_name)
+                    is_done = (
+                        self.progress["total"].completed
+                        == self.progress["total"].number
+                    )
                     # Mark the data as DONE
-                    if (
-                        len(self.persist_store.get_total_states(data_id))
-                        == self.graph.nodes_count()
-                    ):
+                    if is_done:
                         self.persist_store.save_state(data_id, "_DONE", {"done": True})
                         # clean state
                         state[data_id][WF_STATE_CACHE_KEY].clear()

@@ -138,7 +138,6 @@ class DemoApp:
             dataset_id,
             JsonFileStore(os.path.join(self.app.config["OUTPUT_FOLDER"], dataset_id)),
         )
-        persist_store.use("")
         return persist_store
 
     def init_metadata(self, dataset_id, dataset_name):
@@ -464,7 +463,6 @@ class DemoApp:
             dataset_path = os.path.join(self.app.config["OUTPUT_FOLDER"], dataset_id)
             os.makedirs(dataset_path, exist_ok=True)
 
-            self.get_persist_store(dataset_id)
             # Save the file
             if file and file.filename.endswith(".pdf"):
                 # If it's a single PDF file
@@ -554,7 +552,7 @@ class DemoApp:
                         self.app.config["OUTPUT_FOLDER"], folder, "metadata.json"
                     )
                     if os.path.exists(metadata_file):
-                        metadatas.append(get_single_dataset(dataset_id=folder))
+                        metadatas.append(get_single_dataset(folder))
 
                 return jsonify(create_json_response(metadatas))
 
@@ -806,12 +804,14 @@ class DemoApp:
                         download_name=zip_filename,
                     )
 
-                node_names = self.get_workflow_node_names(dataset_id)
-                graph_builder = GraphBuilder(data_path)
-                graph_builder.extract_fact_data(node_names)
+                # node_names = self.get_workflow_node_names(dataset_id)
+                graph_builder = GraphBuilder(
+                    data_path, self.get_persist_store(dataset_id)
+                )
+                graph_builder.extract_fact_data()
 
                 graph_builder.build_graph()
-                graph_path = os.path.join(data_path, "graph")
+                graph_path = os.path.join(data_path, "_graph")
 
                 # Ensure graph_path exists
                 if not os.path.exists(graph_path):
