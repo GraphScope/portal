@@ -1168,7 +1168,7 @@ class PaperExtractor(PDFExtractor):
                 cur_page_num = int(item["page_num"])
 
                 if cur_page_num >= last_page_num and int(cur_sec) <= last_sec:
-                    logger.warn(f"SECTION NUMBER CONFLICTS")
+                    logger.warning(f"SECTION NUMBER CONFLICTS")
                     continue
 
                 section_order.append({"sec_name": "", "section_id": cur_sec})

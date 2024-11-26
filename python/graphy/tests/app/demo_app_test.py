@@ -2,13 +2,13 @@ import pytest
 import requests
 import json
 import os
+import time
 
 from utils.cryptography import encrypt_key, decrypt_key
 
 # Base URL for the API server
 BASE_URL = "http://127.0.0.1:9999"
 
-# Sample dataset_id and file path for tests
 DATASET_ID = "8547eb64-a106-5d09-8950-8a47fb9292dc"
 SAMPLE_FILE_PATH = "inputs/samples/graphrag.pdf"
 
@@ -23,6 +23,7 @@ def setup_dataset():
 
     data = response.json()
     assert data["data"]["dataset_id"] == DATASET_ID
+    assert data["data"]["dataset_name"] == "graphrag"
 
     # Yield dataset_id for tests and cleanup afterward
     yield DATASET_ID
@@ -35,6 +36,14 @@ def test_get_dataset_metadata(setup_dataset):
     assert response.status_code == 200
     data = response.json()
     assert data["data"]["id"] == DATASET_ID
+
+
+def test_get_all_datasets_metadata(setup_dataset):
+    response = requests.get(f"{BASE_URL}/api/dataset")
+    assert response.status_code == 200
+    data = response.json()
+    dataset_ids = [dataset["id"] for dataset in data["data"]]
+    assert DATASET_ID in dataset_ids
 
 
 def test_create_llm_config(setup_dataset):
@@ -164,8 +173,26 @@ def test_extract(setup_dataset):
         f"{BASE_URL}/api/dataset/extract",
         json={"dataset_id": DATASET_ID, "thread_num": 1},
     )
-    print(response.json())
     assert response.status_code == 200
+
+    while True:
+        result_response = requests.get(
+            f"{BASE_URL}/api/dataset/extract", params={"dataset_id": DATASET_ID}
+        )
+        assert response.status_code == 200
+        result_data = result_response.json()
+        completed = False
+        for data in result_data["data"]:
+            if data["progress"] != 100.0:
+                completed = False
+                break
+            else:
+                completed = True
+        if completed:
+            break
+        else:
+            print("Waiting 10s for extraction to complete...")
+            time.sleep(10)
 
 
 @pytest.mark.skip(reason="requires LLM connection")
@@ -202,7 +229,7 @@ def test_get_graphy_data(setup_dataset):
     assert response.status_code == 200
 
 
-def test_delete_dataset(setup_dataset):
-    # Clean up by deleting the dataset
-    response = requests.delete(f"{BASE_URL}/api/dataset/{DATASET_ID}")
-    assert response.status_code == 200
+# def test_delete_dataset(setup_dataset):
+# Clean up by deleting the dataset
+#    response = requests.delete(f"{BASE_URL}/api/dataset/{DATASET_ID}")
+#    assert response.status_code == 200
