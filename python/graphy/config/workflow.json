@@ -12,7 +12,7 @@
             {
               "name": "Background",
               "query": "**Question**: Please describe the problem studied in this paper, why the problem is worth studying, and what are the issues of existing solutions to this problem.",
-              "extract_from": ["1"],
+              "extract_from": {"exact": ["1"], "match": ["introduction"]},
               "output_schema": {
                 "type": "single",
                 "description": "The background of this paper",
@@ -38,7 +38,7 @@
             {
               "name": "Contribution",
               "query": "**Question**: List all contributions of the paper. These contributions are always organized and listed with a head sentence like **our contributions are as follows**. For each contribution, output the **original representation** and use a few words to summarize it.",
-              "extract_from": ["1"],
+              "extract_from": {"exact": ["1"], "match": ["introduction"]},
               "output_schema": {
                 "type": "array",
                 "description": "A list of contributions.",
@@ -59,7 +59,7 @@
             {
               "name": "Challenge",
               "query": "**Question**: Please summarize some challenges in this paper. Each challenge has a summarized NAME, detailed DESCRIPTION, and SOLUTION.",
-              "extract_from": [],
+              "extract_from": {"exact": ["1"], "match": ["introduction"]},
               "output_schema": {
                 "type": "array",
                 "description": "A list of challenges for the problems and their solutions in the paper.",
@@ -85,7 +85,7 @@
             {
               "name": "Solution",
               "query": "**Question**: Please present details of solutions that are proposed to solve the challenges in this paper. The solution can include system design, components of systems and algorithm details. Include as many details as possible for each solution. ",
-              "extract_from": [],
+              "extract_from": {},
               "output_schema": {
                 "type": "array",
                 "description": "A list of solutions for the problem in this paper.",
@@ -106,7 +106,7 @@
             {
               "name": "Experiment",
               "query": "**Question**: Please analyze details of experiments in this paper. The experiments are usually organized in a section named **Experiment** or **Evaluation**. Each experiment is typically a subsection of the whole experiment section. List each experiment with the name, settings including datasets, evaluation metrics, and baselines, and the results of the experiment. Provide the authors' analysis of the results, explaining why such results might have been observed and any implications. In addition, analysis for special cases can also be explained.",
-              "extract_from": [],
+              "extract_from": {"match": ["experiment", "evaluation"]},
               "output_schema": {
                 "type": "array",
                 "description": "A list of experiments in this paper.",
@@ -125,6 +125,43 @@
                     "name": "results",
                     "type": "string",
                     "description": "The results and their analysis of the experiment."
+                  }
+                ]
+              }
+            },
+            {
+              "name": "Baseline",
+              "query": "**Question**: Please list the baselines compared with the method proposed in this paper. For each baseline, list its name and the name of the paper that first proposes this baseline. In detail, the paper that first proposes this baseline should be cited during the initial mentions of the baseline, and the name of the paper can be extracted from the references.",
+              "extract_from": {"match": ["experiment"]},
+              "output_schema": {
+                "type": "array",
+                "description": "A list of baselines in this paper.",
+                "item": [
+                  {
+                    "name": "name",
+                    "type": "string",
+                    "description": "The name of the baseline."
+                  },
+                  {
+                    "name": "paper_name",
+                    "type": "string",
+                    "description": "The name of the paper that first proposes this baseline."
+                  }
+                ]
+              }
+            },
+            {
+              "name": "Github",
+              "query": "**Question**: Please list the github links provided in this paper. Those links always start with 'https://github.com/'. If there is no github link in this paper, return an empty list.",
+              "extract_from": {},
+              "output_schema": {
+                "type": "array",
+                "description": "A list of github links in this paper.",
+                "item": [
+                  {
+                    "name": "github",
+                    "type": "string",
+                    "description": "The github link in this paper."
                   }
                 ]
               }
@@ -150,6 +187,14 @@
             {
               "source": "Paper",
               "target": "Experiment"
+            },
+            {
+              "source": "Experiment",
+              "target": "Baseline"
+            },
+            {
+              "source": "Paper",
+              "target": "Github"
             }
           ]
         }

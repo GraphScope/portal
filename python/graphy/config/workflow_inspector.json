@@ -189,7 +189,7 @@
               "target": "Experiment"
             },
             {
-              "source": "Paper",
+              "source": "Experiment",
               "target": "Baseline"
             },
             {
