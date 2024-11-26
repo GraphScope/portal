@@ -91,7 +91,7 @@ def try_fix_json(raw_json: str):
             )
 
         # Extract and clean the JSON substring
-        json_content = raw_json[start_index : end_index + 1]
+        json_content = raw_json[start_index : end_index + 1].replace("\\", "\\\\")
 
         # Attempt to parse the extracted JSON
         return json.loads(json_content)
