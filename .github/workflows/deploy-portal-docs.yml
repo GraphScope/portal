@@ -3,7 +3,7 @@ name: Build and Deploy Portal Docs Website
 on:
   push:
     branches:
-      - '**'
+      - main
 
 permissions:
   contents: write
