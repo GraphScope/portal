@@ -193,56 +193,75 @@ class ExtractNode(BaseChainNode):
 
         NodeClass = create_model(node_dict["name"] + "NodeClass", **item_type)
 
-        # Build `where` conditions
-        extract_from = node_dict.get("extract_from")
-        where = None
-        if isinstance(extract_from, str):
-            where_conditions = extract_from.split("|")
-            condition_dict = (
-                {
-                    "sec_name": {
-                        "$in": {
-                            "conditions": {"type": VectorDBHierarchy.FirstLayer.value},
-                            "return": "documents",
-                            "subquery": where_conditions[0],
-                            "result_num": 1,
-                        }
+        if "extract_from" not in node_dict or not node_dict["extract_from"]:
+            where = None
+        else:
+            condition_dict = {}
+            # remove '' in []
+            exact_constraints = [
+                s for s in node_dict["extract_from"].get("exact", []) if s
+            ]
+            match_constraints = [
+                s for s in node_dict["extract_from"].get("match", []) if s
+            ]
+
+            exact_constraints_num = len(exact_constraints)
+            match_constraints_num = len(match_constraints)
+
+            if exact_constraints_num > 0:
+                if match_constraints_num == 0:
+                    where = {
+                        "conditions": {
+                            "section": {
+                                "$in": ["paper_meta", "abstract"] + exact_constraints
+                            }
+                        },
+                        "return": "all",
+                        "result_num": -1,
+                        "subquery": "{slot}",
                     }
-                }
-                if len(where_conditions) == 1
-                else {
-                    "$or": [
+                else:
+                    condition_dict["$or"] = []
+            else:
+                if match_constraints_num == 0:
+                    where = None
+                else:
+                    condition_dict["$or"] = []
+
+            if "$or" in condition_dict:
+                if exact_constraints_num > 0:
+                    condition_dict["$or"].append(
                         {
-                            "sec_name": {
-                                "$in": {
-                                    "conditions": {
-                                        "type": VectorDBHierarchy.FirstLayer.value
-                                    },
-                                    "return": "documents",
-                                    "subquery": condition,
-                                    "result_num": 1,
-                                }
+                            "section": {
+                                "$in": ["paper_meta", "abstract"] + exact_constraints
                             }
                         }
-                        for condition in where_conditions
-                    ]
+                    )
+                if match_constraints_num > 0:
+                    for match_constraint in match_constraints:
+                        condition_dict["$or"].append(
+                            {
+                                "sec_name": {
+                                    "$in": {
+                                        "conditions": {
+                                            "type": VectorDBHierarchy.FirstLayer.value
+                                        },
+                                        "return": "documents",
+                                        "subquery": match_constraint,
+                                        "result_num": 1,
+                                    }
+                                }
+                            }
+                        )
+
+                if len(condition_dict["$or"]) == 1:
+                    condition_dict = condition_dict["$or"][0]
+                where = {
+                    "conditions": condition_dict,
+                    "return": "all",
+                    "result_num": -1,
+                    "subquery": "{slot}",
                 }
-            )
-            where = {
-                "conditions": condition_dict,
-                "return": "all",
-                "result_num": -1,
-                "subquery": "{slot}",
-            }
-        elif isinstance(extract_from, list):
-            where = {
-                "conditions": {
-                    "section": {"$in": ["paper_meta", "abstract"] + extract_from}
-                },
-                "return": "all",
-                "result_num": -1,
-                "subquery": "{slot}",
-            }
 
         # Create and return the ExtractNode instance
         return cls(
