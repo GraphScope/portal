@@ -17,7 +17,10 @@
     "items": {
       "knowledge": {
         "title": "Knowledge Graph",
-        "type": "page"
+        "type": "page",
+        "theme": {
+          "layout": "raw"
+        }
       },
       "risk_detection": {
         "title": "Risk Detection",
