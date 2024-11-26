@@ -31,9 +31,9 @@ class CypherDriver {
   constructor(uri: string, username?: string, password?: string) {
     try {
       if (username && password) {
-        this.driver = neo4j.driver(uri, neo4j.auth.basic(username, password));
+        this.driver = neo4j.driver(uri, neo4j.auth.basic(username, password), { encrypted: false });
       } else {
-        this.driver = neo4j.driver(uri);
+        this.driver = neo4j.driver(uri, undefined, { encrypted: false });
       }
     } catch (error) {
       console.log(error);
