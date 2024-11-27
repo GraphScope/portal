@@ -75,8 +75,8 @@ def fix_workflow(workflow_json):
         fixed_workflow_json = workflow_json
     if "id" not in fixed_workflow_json:
         fixed_workflow_json["id"] = "test_workflow"
-    if "llm_model" not in fixed_workflow_json:
-        fixed_workflow_json["llm_model"] = DEFAULT_LLM_MODEL_CONFIG
+    if "llm_config" not in fixed_workflow_json:
+        fixed_workflow_json["llm_config"] = DEFAULT_LLM_MODEL_CONFIG
     return fixed_workflow_json
 
 

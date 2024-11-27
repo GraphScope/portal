@@ -154,8 +154,8 @@ class SurveyPaperReading(BaseWorkflow):
             }
         """
         id = workflow_json.get("id", f"survey_paper_reading_{int(time.time())}")
-        llm_config = workflow_json.get("llm_model", DEFAULT_LLM_MODEL_CONFIG)
-        parser_config = workflow_json.get("parser_model", {})
+        llm_config = workflow_json.get("llm_config", DEFAULT_LLM_MODEL_CONFIG)
+        parser_config = workflow_json.get("parser_config", {})
         embeddings_model = DefaultEmbedding()
         llm_model = set_llm_model(llm_config)
         parser_model = llm_model

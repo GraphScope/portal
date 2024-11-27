@@ -64,11 +64,128 @@ python paper_scrapper.py --max-workers 4 --max-inspectors 500 --workflow <path_t
 
 - `--max-workers` (optional): Specifies the maximum number of parallel workers (default: 4).
 - `--max-inspectors` (optional): Defines the maximum number of papers to fetch (default: 100).
-- `--workflow` (optional): Path to a workflow configuration file. If not provided, the default configuration file config/workflow.json will be used.
+- `--workflow` (optional): Path to a workflow configuration file. If not provided, the default configuration file `config/workflow.json` will be used.
 - `<path_to_seed_papers>`: Provide the path containing seed papers. Each paper is a PDF document.
 
 > If no `workflow` provided, a default workflow configuration in `config/workflow.json` will be used.
-Ensure that the workflow configuration contains your custom LLM model settings by modifying the "llm_model" field.
+
+# Workflow Configuration
+Refer to an [example](config/workflow.json) for a workflow with Paper Inspector and Reference Navigator. Below are instructions on the following key fields in a workflow: `id`, `llm_config`, and `graph`.
+
+## The `id` field
+The `id` field uniquely identifies the workflow. This can be any descriptive string or a generated ID.
+
+**Example**:
+```json
+"id": "test_paper_inspector"
+```
+
+## The `llm_config` field
+The `llm_config` field configures the large language model (LLM) used in the workflow
+  - `llm_model`: Specifies the LLM (e.g., qwen-plus).
+  - `base_url`: The API endpoint for the LLM service.
+  - `api_key`: The API key for authentication (if required).
+  - `model_kwargs`: Additional parameters for fine-tuning the model behavior, such as temperature and streaming output.
+
+We currently offer two options for configuring an LLM model:
+- **Option 1: Using OpenAI-Compatible APIs**
+This option supports OpenAI and other providers offering compatible APIs. To configure, provide the llm_model, base_url, api_key, and any additional model arguments. The example below demonstrates using OpenAI-compatible APIs through Alibaba’s Dashscope with the qwen-plus model.
+
+    **Example**:
+    ```json
+    "llm_config": {
+        "llm_model": "qwen-plus",
+        "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "api_key": "xx",
+        "model_kwargs": {
+            "temperature": 0,
+            "streaming": true
+        }
+    }
+    ```
+
+- **Option 2: Using Locally Deployed Models with Ollama**
+This option supports locally deployed LLM models through [Ollama](https://ollama.com/). Set llm_model to `ollama/<ollama_model_name>` to specify a model. For instance, the following settings configure the locally deployed Llama3.1 model (defaulting to 8b) from Ollama:
+
+    **Example**:
+    ```json
+    "llm_config": {
+        "llm_model": "ollama/llama3.1",
+        "base_url": "http://localhost:11434",
+        "model_kwargs": {
+            "streaming": true
+        }
+    }
+    ```
+
+
+Note: If no LLM model is specified for a dataset, a default model configuration will be applied. To customize this default, open `models/__init__.py` and modify the `DEFAULT_LLM_MODEL_CONFIG` variable.
+
+
+
+## The `graph` field
+The graph field defines the structure of the workflow, comprising inspectors and navigators.
+
+### Inspectors
+
+- Inspectors define workflows for extracting structured information from unstructured data.
+- Each inspector can contain a graph (an inner workflow) with:
+    - nodes: Represent individual extraction tasks.
+	- edges: Define dependencies between nodes.
+
+We further explain the `extract_from` field for a node within an Inspector, which specifies where to extract the given information in a paper:
+- `exact`: Explicitly defined page numbers or sections.
+- `match`: Keywords to search for relevant sections.
+- If `extract_from` is omitted, the entire document will be searched.
+
+**Example of a Node within paper Inspector**:
+```json
+{
+  "name": "Background",
+  // the prompt for extracting paper background
+  "query": "**Question**: Please describe the problem studied in this paper...",
+  // exact means in section 1
+  // match means any section name matched "introduction"
+  "extract_from": {"exact": ["1"], "match": ["introduction"]},
+  // the output schema
+  "output_schema": {
+    "type": "single",
+    "description": "The background of this paper",
+    "item": [
+      {
+        "name": "problem_definition",
+        "type": "string",
+        "description": "The problem studied in this paper."
+      },
+      {
+        "name": "problem_value",
+        "type": "string",
+        "description": "Why the problem is worth studying."
+      },
+      {
+        "name": "existing_solutions",
+        "type": "string",
+        "description": "What are the existing solutions and their problems."
+      }
+    ]
+  }
+}
+```
+
+### Navigators
+Currently, the only thing to configure in a navigator is the connected Inspector nodes.
+The `navigators` can be left empty, as in [workflow_inspector](config/workflow_inspector.json),
+which will only process Paper Inspector without Reference Navigator.
+
+**Example**:
+```json
+{
+    "name": "Reference",
+    "source": "PaperInspector",
+    "target": "PaperInspector"
+}
+```
+
 
 # Run Backend Server
 A backend demo application is included in this project, accessible as a standalone server.
@@ -78,10 +195,7 @@ A backend demo application is included in this project, accessible as a standalo
 python apps/demo_app.py
 ```
 
-The server will be running on `http://localhost:9999` by default.
-
-# Run Frontend Server
-Please refer to the [frontend README](../../examples/graphy/README.md) for instructions on how to run the frontend server.
+The server will be running on `http://localhost:9999` by default. A GUI [frontend](../../examples/graphy/README.md) is provided to demonstrate the graphy process.
 
 # Instruction of Backend APIs
 
@@ -132,28 +246,6 @@ curl -X POST http://0.0.0.0:9999/api/llm/config -H "Content-Type: application/js
   }
 }'
 ```
-
-We currently offer two options for configuring an LLM model:
-
-- **Option 1: Using OpenAI-Compatible APIs**
-This option supports OpenAI and other providers offering compatible APIs. To configure, provide the llm_model, base_url, api_key, and any additional model arguments. The example below demonstrates using OpenAI-compatible APIs through Alibaba’s Dashscope with the qwen-plus model.
-- **Option 2: Using Locally Deployed Models with Ollama**
-This option supports locally deployed LLM models through Ollama. Set llm_model to `ollama/<ollama_model_name>` to specify a model. For instance, the following settings configure the locally deployed Llama3.1 model (defaulting to 8b) from Ollama:
-
-```bash
-curl -X POST http://0.0.0.0:9999/api/llm/config -H "Content-Type: application/json" -d '{
-    "dataset_id": "8547eb64-a106-5d09-8950-8a47fb9292dc",
-    "llm_model": "ollama/llama3.1",
-    "base_url": "http://localhost:11434",
-    "model_kwargs": {
-        "streaming": true
-    }
-}'
-```
-
-
-Note: If no LLM model is specified for a dataset, a default model configuration will be applied. To customize this default, open `models/__init__.py` and modify the `DEFAULT_LLM_MODEL_CONFIG` variable.
-
 
 ### Get the LLM Config
 
@@ -286,11 +378,5 @@ The project can be tested by running the following command:
 
 ```bash
 python apps/demo_app.py  # run the backend app server
-pytest --benchmark-skip -s # on other terminal
-```
-
-A benchmark tool is provided to test the workflow extraction. You can run the script from the command line as follows:
-
-```bash
-pytest --benchmark-only -s
+pytest -s # on other terminal
 ```
