@@ -126,6 +126,11 @@ class BaseChainNode(BaseNode):
         if memory_manager:
             memory_string = memory_manager.get_memory_str()
             logger.debug(f"Memory blocks: {memory_manager.get_memory_blocks()}")
+            if not memory_string:
+                logger.warning(
+                    f"Memory string is empty while processing node: {self.name}"
+                )
+                return
 
         output_generator = self.run(memory_string, self.query)
         self.memory = memory_string
