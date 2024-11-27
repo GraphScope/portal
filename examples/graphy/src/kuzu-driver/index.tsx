@@ -1,6 +1,7 @@
 import Kuzu from '@kuzu/kuzu-wasm';
 import { Utils } from '@graphscope/studio-components';
 import localforage from 'localforage';
+import { ignore } from 'antd/es/theme/useToken';
 console.log('Kuzu', Kuzu);
 
 interface IKuzuResult {
@@ -49,8 +50,10 @@ export class KuzuDriver {
   FS: any;
   dbname: string;
   schema: { nodes: any[]; edges: any[] };
-  indexdb: any;
   curDataset: string;
+  kuzuEngine: IKuzuResult | null;
+  indexdb: any;
+  mountedPath: Set<any>;
 
   constructor() {
     this.kuzu = Kuzu;
@@ -58,25 +61,26 @@ export class KuzuDriver {
     this.conn = null;
     this.FS = null;
     this.schema = { nodes: [], edges: [] };
-    this.dbname = 'test';
+    this.dbname = '';
     this.curDataset = '';
+    this.kuzuEngine = null;
     this.indexdb = localforage.createInstance({
       name: this.dbname,
     });
+    this.mountedPath = new Set();
   }
 
   async initialize(): Promise<void> {
-    const result: IKuzuResult = await this.kuzu();
+    console.log("initialize again");
+    this.kuzuEngine = await this.kuzu();
 
     //@ts-ignore
 
-    this.db = await result.Database(this.dbname, 0, 10, false, false, 4194304 * 16 * 4);
-    this.conn = await result.Connection(this.db);
-    this.FS = result.FS;
+    // this.db = await result.Database(this.dbname, 0, 10, false, false, 4194304 * 16 * 4);
+    // this.conn = await result.Connection(this.db);
+    this.FS = this.kuzuEngine.FS;
     this.FS?.mkdir('data');
-
-    await this.installUDF();
-
+    
     // this.FS?.mkdir('export');
   }
 
@@ -86,57 +90,87 @@ export class KuzuDriver {
     console.log(res.toString());
   }
 
+  async use(datasetId: string) {
+    if (this.curDataset !== '') {
+      await this.closeDataset();
+    }
+
+    await this.setDatasetId(datasetId);
+    try {
+      await this.FS?.mkdir(`${this.curDataset}`);
+    } catch (err) {
+      console.log(`Directory ${this.curDataset} exists`);
+    }
+
+    const targetPath = this.pathJoin('/', this.curDataset);
+    if (!this.mountedPath.has(targetPath)) {
+      console.log(`MOUNT ${this.curDataset} ...`);
+      try {
+        await this.FS?.mount(this.FS.filesystems.IDBFS, {autoPersist: true}, targetPath);
+        this.mountedPath.add(targetPath);
+      } catch (err) {
+        console.error(`Error mounting:`, err);
+      }
+    }
+
+    if (await this.existDataset(datasetId)) {
+      console.log(`Loading from indexdb ${datasetId}`);
+      await this.loadFromIndexDB();
+    }
+    
+    await this.openDataset();
+    await this.installUDF();
+    
+    return this.curDataset;
+  }
+
   async setDatasetId(datasetId: string) {
     this.curDataset = datasetId;
   }
 
   async existDataset(datasetId: string) {
+    const datasetPath = this.pathJoin('/', datasetId);
+    if (indexedDB.databases) {
+      try {
+        const databases = await indexedDB.databases();
+        return databases.some(db => db.name === datasetPath);
+      } catch (error) {
+        console.error('Error accessing databases:', error);
+        return false;
+      }
+    } else {
+      console.warn('indexedDB.databases() is not supported in this browser.');
+      return false;
+    }
+  }
+
+  // async existDataset(datasetId: string) {
+  //   const key = this.pathJoin('/', datasetId);
+  //   console.log("exist?");
+  //   console.log(key);
+  //   console.log(await localforage.getItem(key));
+  //   return await localforage.getItem(key)
+  //     .then(function(value) {
+  //         return value !== null;
+  //     })
+  //     .catch(function(err) {
+  //         console.error('An error occurred:', err);
+  //         return false;
+  //     });
+  // }
+
+  async datasetLoaded(datasetId: string) {
     try {
-      const value = await this.indexdb.getItem(datasetId);
-      return value !== null; // 如果存在，返回 true；否则返回 false
+      const { mode, timestamp } = await this.FS.lookupPath('/' + datasetId).node;
+      if (this.FS.isDir(mode)) {
+        return true;
+      }
     } catch (err) {
-      console.error(`Error retrieving key "${datasetId}":`, err);
+      console.error(`Error retrieving "${datasetId}":`, err);
       return false; // 在发生错误时返回 false
     }
-  }
 
-  async removeTables() {
-    const query = `CALL SHOW_TABLES() RETURN name, type;`;
-    const res = await this.conn?.execute(query);
-    const table_info = res.toString().split('\n');
-
-    const vertex_tables: any[] = [];
-    
-    for (let i = 1; i < table_info.length; i++) {
-      if (table_info[i][1] == 'REL') {
-        const res = await this.conn?.execute(`DROP TABLE ${table_info[i][0]}`);
-      }
-      else {
-        vertex_tables.push(table_info[i][0]);
-      }
-    }
-
-    for (let i = 0; i < vertex_tables.length; i++) {
-      const res = await this.conn?.execute(`DROP TABLE ${vertex_tables[i]}`);
-    }
-  }
-
-  async switchDataset(datasetId: string) {
-    console.log('switch to ', datasetId, this.curDataset);
-    if (this.curDataset !== '') {
-      await this.exportData(true);
-    }
-    else {
-      await this.removeTables();
-    }
-
-    const exist = await this.existDataset(datasetId);
-    if (exist) {
-      await this.recoverData(datasetId);
-    }
-
-    this.curDataset = datasetId;
-    return this.curDataset;
+    return false;
   }
 
   typeConvert(input_type: string) {
@@ -274,7 +308,7 @@ export class KuzuDriver {
     return segments
         .filter(segment => segment)
         .join('/')              
-        .replace(/\/+/g, '/');  
+        .replace(/\/+/g, '/'); 
   }
 
   async rmdirs(dir: string) {
@@ -374,141 +408,64 @@ export class KuzuDriver {
     return this.schema;
   }
 
-  async exportData(remove: boolean = false): Promise<any> {
-    if (this.curDataset === '') return false;
-
-    var datasetId = this.curDataset;
-
-    let files: FileData[] = [];
-    const exportPath = 'export/';
-
-    try {
-      await this.rmdirs(exportPath);
-    } catch (error) {
-      console.log(`Directory ${exportPath} not exists`);
-    }
-
-    const query = `EXPORT DATABASE '${exportPath}' (HEADER=true, DELIM="|", ESCAPE='\"', QUOTE='\"');`;
-    var res = await this.conn?.execute(query);
-
-    const vertex_tables: any[] = [];
-    const dirFiles = this.FS.readdir(exportPath);
-    for (const dir of dirFiles) {
-      if (dir === '.' || dir === '..') {
-        continue;
-      }
-
-      const filePath = exportPath + dir;
-      const content = this.FS.readFile(filePath);
-      const file = new FileData(dir, content);
-      files.push(file);
-    }
-
-    if (remove) {
-      this.removeTables();
-    }
-
-    const dataset = new GraphData(files, this.schema);
-
-    await this.indexdb
-      .setItem(`${datasetId}`, dataset)
-      .then(() => {
-        console.log(`Value has been updated successfully.`);
-      })
-      .catch(error => {
-        console.error('Error updating value:', error);
-      });
-
-    // var result = await this.indexdb.getItem('DRAFT_GRAPH_FILES')
-    // console.log(result);
-  }
-
-  async recoverFromFiles(importPath: string): Promise<any> {
-    const decoder = new TextDecoder('utf-8');
-    const encoder = new TextEncoder();
-
-    const schema_file_path = importPath + 'schema.cypher';
-    const schema_str = this.FS.readFile(schema_file_path);
-    const schema_states = decoder.decode(schema_str).split('\n');
-    console.log(`schema: ${schema_states}`);
-    for (let i = 0; i < schema_states.length; i += 1) {
-      const query = `${schema_states[i]}`;
-      console.log('query: ', query);
-      var res = await this.conn?.execute(query);
-      console.log(res.toString());
-    }
-
-    const copy_file_path = importPath + 'copy.cypher';
-    const copy_str = this.FS.readFile(copy_file_path);
-    const copy_stats = decoder.decode(copy_str);
-    console.log(`copy: ${copy_stats}`);
-    const result = copy_stats.replace(/"([^"]+\.csv)"/g, `"${importPath}\$1"`).split('\n');
-    console.log(result);
-
-    for (let i = 0; i < result.length; i += 1) {
-      const query = `${result[i]}`;
-      console.log('query: ', query);
-      var res = await this.conn?.execute(query);
-      console.log(res.toString());
-    }
-  }
-
-  async recoverData(datasetId: string): Promise<any> {
-    console.log('start recover');
-    const importPath = 'import/';
-    try {
-      this.rmdirs(importPath);
-    } catch (error) {
-      console.log(`Directory ${importPath} not exists`);
-    }
-
-    this.FS.mkdir(importPath);
-    var dataset = await this.indexdb.getItem(`${datasetId}`);
-    const files = dataset.files;
-
-    this.schema = dataset.schema;
-
-    // var c = 1;
-    for (const file of files) {
-      var fileData = file.content;
-      var fileName = file.name;
-      var filePath = importPath + fileName;
-      await this.FS.writeFile(filePath, fileData);
-      // console.log(c);
-      // c += 1;
-    }
-
-    await this.recoverFromFiles(importPath);
-    return true;
-
-    // var tres = await this.conn?.execute(`CALL SHOW_TABLES() RETURN name`);
-    // console.log(tres.toString());
-
-    // const query = `IMPORT DATABASE '${importPath}';`;
-    // console.log('query: ', query);
-    // var res = await this.conn?.execute(query);
-
-    // console.log(res);
-    // console.log(res.toString());
-    // return true;
-  }
 
   async getCount() {
     if (this.curDataset === '') {
       return [0, 0];
     }
 
-    var res = await this.conn?.execute(
-      'MATCH (n) WITH COUNT(n) AS vertex_count MATCH ()-[r]->() RETURN vertex_count, COUNT(r) AS edge_count;',
+    var vertex_res = await this.conn?.execute(
+      'MATCH (n) RETURN COUNT(n) AS vertex_count;',
     );
-    const counts = res.toString().split('\n')[1];
-    const countArray = counts.split('|').map(num => parseInt(num, 10));
+
+    var edge_res = await this.conn?.execute(
+      'MATCH ()-[r]->() RETURN COUNT(r) AS edge_count;',
+    );
+    
+    const vertex_count = parseInt(vertex_res.toString().split('\n')[1], 10);
+    const edge_count = parseInt(edge_res.toString().split('\n')[1], 10);
+    const countArray = [vertex_count, edge_count];
 
     console.log(countArray);
     return countArray;
   }
 
-  async close(): Promise<void> {
+  async loadFromIndexDB(): Promise<void> {
+    const syncfsPromise = () => {
+      return new Promise<void>((resolve, reject) => {
+        this.FS.syncfs(true, function(err) {
+          if (err) {
+            console.error('Error loading from indexdb: ', err);
+            reject(err);
+          } else {
+            console.log('Load from indexdb successfully');
+            resolve();
+          }
+        });
+      });
+    };
+  
+    await syncfsPromise();
+    console.log("finish load from indexdb");
+  }
+
+  async openDataset(): Promise<void> {
+    console.log(this.FS.readdir('/'));
+    console.log(this.FS.readdir('7e47ed99-2ad6-500d-b408-b95765e099ff'));
+    console.log(`Open dataset ${this.curDataset}`);
+    //@ts-ignore
+    this.db = await this.kuzuEngine.Database(this.curDataset, 0, 10, false, false, 4194304 * 16 * 4);
+    //@ts-ignore
+    this.conn = await this.kuzuEngine.Connection(this.db);
+
+    const res = await this.conn?.execute('MATCH (n) RETURN count(n);');
+    console.log(res.toString());
+  }
+
+  async closeDataset(): Promise<void> {
+    console.log(`Close dataset ${this.curDataset}`);
+    // this.writeBack();
+
     if (this.conn) {
       await this.conn.close();
       console.log('Connection closed.');
@@ -517,5 +474,24 @@ export class KuzuDriver {
       await this.db.close();
       console.log('Database closed.');
     }
+  }
+
+  async writeBack(): Promise<void> {
+    console.log("start to write back");
+
+    await this.FS.syncfs(false, function(err){
+      if (err) {
+        console.error('Error saving to indexdb: ', err);
+      }
+      else {
+        console.log('Save to indexdb successfully');
+      }
+    });
+    console.log("finish to write back");
+  }
+
+  async close(): Promise<void> {
+    //await this.writeBack();
+    await this.closeDataset();
   }
 }
