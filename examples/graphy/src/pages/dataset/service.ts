@@ -484,6 +484,6 @@ export const createKuzuGraph = async (dataset_id: string) => {
   await driver.createSchema(schema);
   await driver.loadGraph(files);
   console.log("finish load graph");
-  // await driver.writeBack();
+  await driver.writeBack();
   console.log('schema', files, schema);
 };
