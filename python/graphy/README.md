@@ -89,9 +89,22 @@ The `llm_config` field configures the large language model (LLM) used in the wor
 
 We currently offer two options for configuring an LLM model:
 - **Option 1: Using OpenAI-Compatible APIs**
-This option supports OpenAI and other providers offering compatible APIs. To configure, provide the llm_model, base_url, api_key, and any additional model arguments. The example below demonstrates using OpenAI-compatible APIs through Alibaba’s Dashscope with the qwen-plus model.
+This option supports OpenAI and other providers offering compatible APIs. To configure, provide the llm_model, base_url, api_key, and any additional model arguments. The example below demonstrates using [OpenAI](https://platform.openai.com/) and Alibaba’s [DashScope](https://help.aliyun.com/zh/dashscope/developer-reference/compatibility-of-openai-with-dashscope).
 
-    **Example**:
+    **Example of OpenAI**:
+    ```json
+    "llm_config": {
+        "llm_model": "gpt4o",
+        "base_url": "https://api.openai.com/v1",
+        "api_key": "xx",
+        "model_kwargs": {
+            "temperature": 0,
+            "streaming": true
+        }
+    }
+    ```
+
+    **Example of DashScope**:
     ```json
     "llm_config": {
         "llm_model": "qwen-plus",

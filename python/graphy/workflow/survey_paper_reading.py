@@ -251,7 +251,7 @@ class SurveyPaperReading(BaseWorkflow):
 
         return graph
 
-    def get_progress(self, node_key: str) -> ProgressInfo:
+    def get_progress(self, node_key: str) -> dict:
         """
         Get the progress of an inspector node.
 
@@ -259,11 +259,13 @@ class SurveyPaperReading(BaseWorkflow):
             node_key (str): The key of the inspector node.
 
         Returns:
-            ProgressInfo: The progress of the node.
+            A dict of ProgressInfo: The progress of all nodes within the node.
         """
-        inspector_node = self.graph.get_first_node()
-        if inspector_node.node_type != NodeType.INSPECTOR:
-            logger.warning("No inspector node found in the graph.")
-            return ProgressInfo(0, 0)
+        node = self.graph.get_node(node_key)
+        if node.node_type == NodeType.INSPECTOR:
+            results = {}
+            for inner_node in node.graph.get_node_names():
+                results[inner_node] = node.get_progress(inner_node)
+            return results
         else:
-            return inspector_node.get_progress(node_key)
+            return {node_key: node.get_progress()}

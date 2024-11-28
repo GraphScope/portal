@@ -175,9 +175,6 @@ class DemoApp:
         metadata = persist_store.get_state("", "metadata")
         llm_config = metadata.get("config", {})
         # must initialize the llm model if it is not configured yet
-        if llm_config:
-            if "api_key" in llm_config:
-                llm_config["api_key"] = decrypt_key(llm_config["api_key"])
         return llm_config
 
     def set_meta_interactive_info(self, dataset_id, graph_id):
@@ -209,21 +206,12 @@ class DemoApp:
 
     def set_metadata(self, dataset_id, value):
         persist_store = self.get_persist_store(dataset_id)
-        llm_config = value.get("config", {})
-        if llm_config:
-            if "api_key" in llm_config:
-                llm_config["api_key"] = encrypt_key(llm_config["api_key"])
         persist_store.save_state("", "metadata", value)
 
     def get_metadata(self, dataset_id):
         persist_store = self.get_persist_store(dataset_id)
         metadata = persist_store.get_state("", "metadata")
-        llm_config = metadata.get("config", {})
         # must initialize the llm model if it is not configured yet
-        if llm_config:
-            if "api_key" in llm_config:
-                llm_config["api_key"] = decrypt_key(llm_config["api_key"])
-
         return metadata
 
     def set_cache(self, dataset_id, key, value):
@@ -256,6 +244,8 @@ class DemoApp:
         if "llm_config" not in workflow_dict:
             llm_config = self.get_meta_config(dataset_id)
             if llm_config:
+                if "api_key" in llm_config:
+                    llm_config["api_key"] = decrypt_key(llm_config["api_key"])
                 workflow_dict["llm_config"] = llm_config
             else:
                 workflow_dict["llm_config"] = DEFAULT_LLM_MODEL_CONFIG
@@ -265,13 +255,11 @@ class DemoApp:
         self.set_cache(dataset_id, "workflow", workflow)
 
     def get_progress(self, dataset_id, node_names=[]):
+        """
         def get_paper_data(node, progress, workflow, get_paper_data=False):
             output_data = {}
             output_data["node_name"] = node
-            output_data["papers"] = []
             progress[node] = workflow.get_progress(node)
-
-            """
             for wf in self.cache[dataset_id]["wf_dict"].values():
                 progress[node].add(wf.get_progress(node))
                 progress["total"].add(wf.get_progress())
@@ -293,9 +281,9 @@ class DemoApp:
                                 result["id"] = hash_id(f"{paper_data['id']}_{i}")
                                 paper_data["data"].append(result)
                     output_data["papers"].append(paper_data)
-            """
 
             return output_data
+        """
 
         def get_default_paper_data(node, get_paper_data=False):
             output_data = {}
@@ -342,29 +330,37 @@ class DemoApp:
             return output_data
 
         progress = {}
-        progress["total"] = ProgressInfo()
+        total_progress = ProgressInfo()
         output = []
         if dataset_id in self.cache:
             workflow = self.cache[dataset_id].get("workflow", None)
             if not node_names:
-                inspector_node = workflow.graph.get_first_node()
-                node_names = inspector_node.graph.get_node_names()
+                node_names = workflow.graph.get_node_names()
             for node in node_names:
-                progress[node] = ProgressInfo()
-
-            for node in node_names:
+                progress[node] = {}
+                output_data = {}
                 if dataset_id == DEFAULT_DATASET_ID:
                     output_data = get_default_paper_data(node, len(node_names) == 1)
                     output_data["progress"] = 100.0
                 else:
-                    output_data = get_paper_data(
-                        node, progress, workflow, len(node_names) == 1
-                    )
-                    output_data["progress"] = progress[node].get_percentage()
+                    output_data["node_name"] = node
+                    output_data["progress"] = []
+                    progress[node] = workflow.get_progress(node)
+                    for key, val in progress[node].items():
+                        output_data["progress"].append(
+                            {
+                                "node_name": key,
+                                "progress": val.get_percentage(),
+                            }
+                        )
+                        total_progress.add(val)
+                    # output_data["progress"] = progress[node].get_percentage()
                 output.append(output_data)
-            progress["total"] = workflow.get_progress("")
 
-        return output, progress["total"].get_percentage()
+        if len(output) == 1:
+            output = output[0]["progress"]
+
+        return output, total_progress.get_percentage()
 
     def check_status(self, dataset_id, status):
         metadata = self.get_metadata(dataset_id)
@@ -735,6 +731,7 @@ class DemoApp:
                 )
                 self.add_meta_entities(dataset_id, workflow_node_names)
                 if total_progress == 100.0:
+                    logger.info("The extraction workflow is completed")
                     self.set_status(dataset_id, STATUS.WAITING_CLUSTER)
 
                 # Return the results as a JSON response
