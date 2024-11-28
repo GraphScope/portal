@@ -31,7 +31,7 @@
     "@graphscope/studio-graph": "workspace:*",
     "@graphscope/studio-importor": "workspace:*",
     "@graphscope/studio-query": "workspace:*",
-    "@kuzu/kuzu-wasm": "0.6.2-dev",
+    "@graphscope/graphy-website": "workspace:*",
     "d3-force": "latest",
     "localforage": "latest",
     "react": "18.2.0",
