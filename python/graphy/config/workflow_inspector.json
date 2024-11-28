@@ -1,5 +1,5 @@
 {
-  "id": "test_paper_scrapper",
+  "id": "test_paper_inspector",
   "graph": {
     "inspectors": [
       {
@@ -201,11 +201,6 @@
       }
     ],
     "navigators": [
-      {
-        "name": "Reference",
-        "source": "PaperInspector",
-        "target": "PaperInspector"
-      }
     ]
   }
 }

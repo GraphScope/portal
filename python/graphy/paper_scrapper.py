@@ -79,6 +79,19 @@ def parse_arguments():
     return parser.parse_args()
 
 
+def fix_workflow(workflow_json):
+    fixed_workflow_json = {}
+    if "graph" not in workflow_json:
+        fixed_workflow_json["graph"] = workflow_json
+    else:
+        fixed_workflow_json = workflow_json
+    if "id" not in fixed_workflow_json:
+        fixed_workflow_json["id"] = "test_workflow"
+    if "llm_config" not in fixed_workflow_json:
+        fixed_workflow_json["llm_config"] = DEFAULT_LLM_MODEL_CONFIG
+    return fixed_workflow_json
+
+
 if __name__ == "__main__":
     args = parse_arguments()
     input_folder = args.input_folder
@@ -88,10 +101,9 @@ if __name__ == "__main__":
         workflow_json = json.load(f)
     if workflow_json:
         ray.init()
-        if "llm_model" not in workflow_json:
-            workflow_json["llm_model"] = DEFAULT_LLM_MODEL_CONFIG
+        fixed_workflow_json = fix_workflow(workflow_json)
         executor = RayWorkflowExecutor(
-            workflow_json, SurveyPaperReading, max_workers, max_inspectors
+            fixed_workflow_json, SurveyPaperReading, max_workers, max_inspectors
         )
         inputs = list_pdf_inputs(input_folder)
         executor.execute(inputs)

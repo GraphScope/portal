@@ -165,7 +165,6 @@ class DemoApp:
         persist_store = self.get_persist_store(dataset_id)
         metadata = persist_store.get_state("", "metadata")
         if config:
-            self.set_llm_model(dataset_id, config)
             if "api_key" in config:
                 config["api_key"] = encrypt_key(config["api_key"])
         metadata["config"] = config
@@ -176,8 +175,6 @@ class DemoApp:
         metadata = persist_store.get_state("", "metadata")
         llm_config = metadata.get("config", {})
         # must initialize the llm model if it is not configured yet
-        if llm_config:
-            self.set_llm_model(dataset_id, llm_config, initialize=False)
         return llm_config
 
     def set_meta_interactive_info(self, dataset_id, graph_id):
@@ -209,21 +206,12 @@ class DemoApp:
 
     def set_metadata(self, dataset_id, value):
         persist_store = self.get_persist_store(dataset_id)
-        llm_config = value.get("config", {})
-        if llm_config:
-            self.set_llm_model(dataset_id, llm_config)
-            if "api_key" in llm_config:
-                llm_config["api_key"] = encrypt_key(llm_config["api_key"])
         persist_store.save_state("", "metadata", value)
 
     def get_metadata(self, dataset_id):
         persist_store = self.get_persist_store(dataset_id)
         metadata = persist_store.get_state("", "metadata")
-        llm_config = metadata.get("config", {})
         # must initialize the llm model if it is not configured yet
-        if llm_config:
-            self.set_llm_model(dataset_id, llm_config, initialize=False)
-
         return metadata
 
     def set_cache(self, dataset_id, key, value):
@@ -245,64 +233,33 @@ class DemoApp:
                 node_names = workflow.graph.get_node_names()
         return node_names
 
-    def set_llm_model(self, dataset_id, llm_config, initialize=True):
-        if initialize:
-            llm = set_llm_model(llm_config)
-            self.set_cache(dataset_id, "llm_model", llm)
-        else:
-            cache = self.cache.get(dataset_id, {})
-            if cache and not "llm_model" in cache:
-                llm_config = copy.deepcopy(llm_config)
-                if "api_key" in llm_config:
-                    llm_config["api_key"] = decrypt_key(llm_config["api_key"])
-                llm = set_llm_model(llm_config)
-                self.set_cache(dataset_id, "llm_model", llm)
-
     def set_workflow(self, dataset_id, workflow_dict):
         persist_store = self.get_persist_store(dataset_id)
-        cache = self.cache.get(dataset_id, {})
-        llm = cache.get("llm_model", None)
-        if llm:
-            logger.debug(
-                f"The model {llm.model_name} is used for the workflow, which has maximum output token limit of {llm.context_size}"
-            )
-
-        if not llm and self.llm:
-            llm = self.llm
-            logger.debug(
-                f"Default model {self.llm.model_name} is used for the workflow, which has maximum output token limit of {llm.context_size}"
-            )
-
-        if not llm:
-            raise ValueError("LLM model not configured")
-
-        embedding_model = self.embedding_model.chroma_embedding_model()
-        if not embedding_model:
-            # A safe guarantee to use the default model
-            embedding_model = embedding_functions.DefaultEmbeddingFunction()
-
-        vectordb = chromadb.PersistentClient(path=WF_VECTDB_DIR)
+        new_workflow_dict = {}
+        if "graph" not in workflow_dict:
+            new_workflow_dict["graph"] = workflow_dict
+            workflow_dict = new_workflow_dict
+        if "id" not in workflow_dict:
+            workflow_dict["id"] = dataset_id
+        if "llm_config" not in workflow_dict:
+            llm_config = self.get_meta_config(dataset_id)
+            if llm_config:
+                if "api_key" in llm_config:
+                    llm_config["api_key"] = decrypt_key(llm_config["api_key"])
+                workflow_dict["llm_config"] = llm_config
+            else:
+                workflow_dict["llm_config"] = DEFAULT_LLM_MODEL_CONFIG
 
         # Initialize the workflow
-        workflow = SurveyPaperReading(
-            dataset_id,
-            llm,
-            llm,
-            embedding_model,
-            vectordb,
-            workflow_dict,
-            persist_store,
-        )
+        workflow = SurveyPaperReading.from_dict(workflow_dict, persist_store)
         self.set_cache(dataset_id, "workflow", workflow)
 
     def get_progress(self, dataset_id, node_names=[]):
+        """
         def get_paper_data(node, progress, workflow, get_paper_data=False):
             output_data = {}
             output_data["node_name"] = node
-            output_data["papers"] = []
             progress[node] = workflow.get_progress(node)
-
-            """
             for wf in self.cache[dataset_id]["wf_dict"].values():
                 progress[node].add(wf.get_progress(node))
                 progress["total"].add(wf.get_progress())
@@ -324,9 +281,9 @@ class DemoApp:
                                 result["id"] = hash_id(f"{paper_data['id']}_{i}")
                                 paper_data["data"].append(result)
                     output_data["papers"].append(paper_data)
-            """
 
             return output_data
+        """
 
         def get_default_paper_data(node, get_paper_data=False):
             output_data = {}
@@ -373,29 +330,38 @@ class DemoApp:
             return output_data
 
         progress = {}
-        progress["total"] = ProgressInfo()
+        total_progress = ProgressInfo()
         output = []
         if dataset_id in self.cache:
             workflow = self.cache[dataset_id].get("workflow", None)
-            if not node_names:
-                inspector_node = workflow.graph.get_first_node()
-                node_names = inspector_node.graph.get_node_names()
-            for node in node_names:
-                progress[node] = ProgressInfo()
+            if workflow:
+                if not node_names:
+                    node_names = workflow.graph.get_node_names()
+                for node in node_names:
+                    progress[node] = {}
+                    output_data = {}
+                    if dataset_id == DEFAULT_DATASET_ID:
+                        output_data = get_default_paper_data(node, len(node_names) == 1)
+                        output_data["progress"] = 100.0
+                    else:
+                        output_data["node_name"] = node
+                        output_data["progress"] = []
+                        progress[node] = workflow.get_progress(node)
+                        for key, val in progress[node].items():
+                            output_data["progress"].append(
+                                {
+                                    "node_name": key,
+                                    "progress": val.get_percentage(),
+                                }
+                            )
+                            total_progress.add(val)
+                        # output_data["progress"] = progress[node].get_percentage()
+                    output.append(output_data)
 
-            for node in node_names:
-                if dataset_id == DEFAULT_DATASET_ID:
-                    output_data = get_default_paper_data(node, len(node_names) == 1)
-                    output_data["progress"] = 100.0
-                else:
-                    output_data = get_paper_data(
-                        node, progress, workflow, len(node_names) == 1
-                    )
-                    output_data["progress"] = progress[node].get_percentage()
-                output.append(output_data)
-            progress["total"] = workflow.get_progress("")
+        if len(output) == 1:
+            output = output[0]["progress"]
 
-        return output, progress["total"].get_percentage()
+        return output, total_progress.get_percentage()
 
     def check_status(self, dataset_id, status):
         metadata = self.get_metadata(dataset_id)
@@ -526,9 +492,6 @@ class DemoApp:
                     if dataset_id != DEFAULT_DATASET_ID:  # do not do for default data
                         status = STATUS.INITIALIZED
                         if "config" in metadata:
-                            self.set_llm_model(
-                                dataset_id, metadata["config"], initialize=False
-                            )
                             status = STATUS.WAITING_WORKFLOW_CONFIG.value
                         if "schema" in metadata:
                             if "workflow" not in cache:
@@ -657,6 +620,7 @@ class DemoApp:
                 )
 
             except Exception as e:
+                traceback.print_exc()
                 return create_error_response(str(e)), 500
 
         @self.app.route("/api/dataset/workflow/config", methods=["GET"])
@@ -768,6 +732,7 @@ class DemoApp:
                 )
                 self.add_meta_entities(dataset_id, workflow_node_names)
                 if total_progress == 100.0:
+                    logger.info("The extraction workflow is completed")
                     self.set_status(dataset_id, STATUS.WAITING_CLUSTER)
 
                 # Return the results as a JSON response

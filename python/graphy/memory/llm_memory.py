@@ -335,6 +335,9 @@ class RetrievedMemory:
         chunk_num_est = math.floor(max_token_num / self.chunk_size)
         output = self.search(query, where, chunk_num_est)
 
+        if output is None:
+            raise ValueError("Can not fetch memory")
+
         # print("========= GET MEMORY OUTPUT =========")
         # print(output)
 
@@ -534,15 +537,16 @@ class PaperReadingMemoryManager(BaseRuntimeMemoryManager):
             max_token_num (int): The maximum number of tokens to be retrieved.
             distance_thresh (float): The threshold for the distance of the retrieved memory.
         """
-        documents, metadatas, distances = self.retrieved_memory.get_memory_info(
-            query, where_document, max_token_num, distance_thresh
-        )
-
         try:
+            documents, metadatas, distances = self.retrieved_memory.get_memory_info(
+                query, where_document, max_token_num, distance_thresh
+            )
+
             blocks = self.formulate_memory_block(documents, metadatas)
         except Exception as e:
             blocks = []
-            logger.debug(f"Error when adding memory blocks: {e}")
+            distances = []
+            logger.error(f"Error when adding memory blocks: {e}")
 
         for block, distance in zip(blocks, distances):
             self.add_memory_block(block, distance)

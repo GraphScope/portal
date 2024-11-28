@@ -44,8 +44,8 @@ class SearchUnit:
         pass
 
     def execute(self, query, where_condition, where_document, result_num, collection):
-        # print("###### EXECUTE #########")
-        # print(query, where_condition, result_num)
+        # logger.error("###### EXECUTE #########")
+        # logger.error(f"{query}, {where_condition}, {result_num}")
         # print(where_document)
         if result_num == -1:
             return collection.query(
@@ -114,6 +114,9 @@ class SearchRecursiveUnit(SearchUnit):
         in_list = []
         # print("======= RECUR OUT =========")
         # print(output)
+
+        if "ids" not in output or len(output["ids"][0]) == 0:
+            return False, None
 
         if self.return_attr == "documents":
             documents = output["documents"][0]
@@ -272,3 +275,5 @@ class SearchUnitExecutor:
             succ, result = self.root_search_unit._formulate(query, self.collection)
             if succ:
                 return result["OUTPUT"]
+
+        return None

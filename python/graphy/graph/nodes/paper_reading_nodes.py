@@ -1,4 +1,4 @@
-from .base_node import BaseNode, NodeType, NodeCache, DataGenerator, DataType
+from .base_node import BaseNode, NodeType, NodeCache, DataGenerator
 from .chain_node import BaseChainNode
 from .pdf_extract_node import PDFExtractNode
 from memory.llm_memory import VectorDBHierarchy, PaperReadingMemoryManager
@@ -8,9 +8,7 @@ from config import (
     WF_STATE_MEMORY_KEY,
     WF_STATE_EXTRACTOR_KEY,
     WF_STATE_CACHE_KEY,
-    WF_STATE_PROGRESS_KEY,
     WF_IMAGE_DIR,
-    WF_VECTDB_DIR,
 )
 from extractor import PaperExtractor
 from db import PersistentStore
@@ -19,8 +17,10 @@ from utils.profiler import profiler
 from langchain_core.pydantic_v1 import BaseModel, Field, create_model
 from langchain_core.language_models.llms import BaseLLM
 from langchain_core.embeddings import Embeddings
-
+from langchain_core.exceptions import OutputParserException
 from typing import Any, Dict, List
+
+import json
 import os
 import re
 import traceback
@@ -66,6 +66,38 @@ def process_id(base_name: str) -> str:
         id_name = f"{hash(base_name)}_{id_name}"
 
     return id_name
+
+
+def try_fix_json(raw_json: str):
+    """
+    Attempts to clean and parse malformed JSON strings by extracting the content
+    between the first '{' and the last '}'.
+
+    Args:
+        raw_json (str): The malformed JSON string.
+
+    Returns:
+        dict: A fixed and parsed JSON object, or None if fixing fails.
+    """
+    try:
+        # Identify the first '{' and the last '}'
+        start_index = raw_json.find("{")
+        end_index = raw_json.rfind("}")
+
+        # Ensure valid indices are found
+        if start_index == -1 or end_index == -1 or start_index >= end_index:
+            raise OutputParserException(
+                f"Failed to parse JSON: {e}", llm_output=raw_json
+            )
+
+        # Extract and clean the JSON substring
+        json_content = raw_json[start_index : end_index + 1]
+        json_content = re.sub(r'(?<!\\)\\(?![bfnrtv"\\/])', r"\\\\", json_content)
+
+        # Attempt to parse the extracted JSON
+        return json.loads(json_content)
+    except json.JSONDecodeError as e:
+        raise OutputParserException(f"Failed to parse JSON: {e}", llm_output=raw_json)
 
 
 class ProgressInfo:
@@ -198,56 +230,77 @@ class ExtractNode(BaseChainNode):
 
         NodeClass = create_model(node_dict["name"] + "NodeClass", **item_type)
 
-        # Build `where` conditions
-        extract_from = node_dict.get("extract_from")
-        where = None
-        if isinstance(extract_from, str):
-            where_conditions = extract_from.split("|")
-            condition_dict = (
-                {
-                    "sec_name": {
-                        "$in": {
-                            "conditions": {"type": VectorDBHierarchy.FirstLayer.value},
-                            "return": "documents",
-                            "subquery": where_conditions[0],
-                            "result_num": 1,
-                        }
+        if "extract_from" not in node_dict or not node_dict["extract_from"]:
+            where = None
+        else:
+            if isinstance(node_dict["extract_from"], list):
+                node_dict["extract_from"] = {"exact": node_dict["extract_from"]}
+            condition_dict = {}
+            # remove '' in []
+            exact_constraints = [
+                s for s in node_dict["extract_from"].get("exact", []) if s
+            ]
+            match_constraints = [
+                s for s in node_dict["extract_from"].get("match", []) if s
+            ]
+
+            exact_constraints_num = len(exact_constraints)
+            match_constraints_num = len(match_constraints)
+
+            if exact_constraints_num > 0:
+                if match_constraints_num == 0:
+                    where = {
+                        "conditions": {
+                            "section": {
+                                "$in": ["paper_meta", "abstract"] + exact_constraints
+                            }
+                        },
+                        "return": "all",
+                        "result_num": -1,
+                        "subquery": "{slot}",
                     }
-                }
-                if len(where_conditions) == 1
-                else {
-                    "$or": [
+                else:
+                    condition_dict["$or"] = []
+            else:
+                if match_constraints_num == 0:
+                    where = None
+                else:
+                    condition_dict["$or"] = []
+
+            if "$or" in condition_dict:
+                if exact_constraints_num > 0:
+                    condition_dict["$or"].append(
                         {
-                            "sec_name": {
-                                "$in": {
-                                    "conditions": {
-                                        "type": VectorDBHierarchy.FirstLayer.value
-                                    },
-                                    "return": "documents",
-                                    "subquery": condition,
-                                    "result_num": 1,
-                                }
+                            "section": {
+                                "$in": ["paper_meta", "abstract"] + exact_constraints
                             }
                         }
-                        for condition in where_conditions
-                    ]
+                    )
+                if match_constraints_num > 0:
+                    for match_constraint in match_constraints:
+                        condition_dict["$or"].append(
+                            {
+                                "sec_name": {
+                                    "$in": {
+                                        "conditions": {
+                                            "type": VectorDBHierarchy.FirstLayer.value
+                                        },
+                                        "return": "documents",
+                                        "subquery": match_constraint,
+                                        "result_num": 1,
+                                    }
+                                }
+                            }
+                        )
+
+                if len(condition_dict["$or"]) == 1:
+                    condition_dict = condition_dict["$or"][0]
+                where = {
+                    "conditions": condition_dict,
+                    "return": "all",
+                    "result_num": -1,
+                    "subquery": "{slot}",
                 }
-            )
-            where = {
-                "conditions": condition_dict,
-                "return": "all",
-                "result_num": -1,
-                "subquery": "{slot}",
-            }
-        elif isinstance(extract_from, list):
-            where = {
-                "conditions": {
-                    "section": {"$in": ["paper_meta", "abstract"] + extract_from}
-                },
-                "return": "all",
-                "result_num": -1,
-                "subquery": "{slot}",
-            }
 
         # Create and return the ExtractNode instance
         return cls(
@@ -440,14 +493,41 @@ class PaperInspector(BaseNode):
                         logger.debug(f"'{current_node.name}' produces: {output}")
                         last_output = output
                     is_persist = True
+            except OutputParserException as e:
+                logger.warning(
+                    f"OutputParserException while executing node '{current_node.name}': {e}\nAttempting to fix JSON..."
+                )
+                try:
+                    fixed_json = try_fix_json(e.llm_output)
+                    if fixed_json:
+                        logger.info(
+                            f"Successfully fixed JSON for node '{current_node.name}'"
+                        )
+                        last_output = fixed_json
+                        is_persist = True
+                    else:
+                        logger.error(
+                            f"Failed to fix JSON for node '{current_node.name}'"
+                        )
+                        if not continue_on_error:
+                            raise ValueError(
+                                f"Error executing node '{current_node.name}': {e}"
+                            )
+                except Exception as fix_error:
+                    logger.error(
+                        f"Exception while fixing JSON for node '{current_node.name}': {fix_error}"
+                    )
+                    if not continue_on_error:
+                        raise ValueError(
+                            f"Error executing node '{current_node.name}': {fix_error}"
+                        )
+
             except Exception as e:
                 full_traceback = traceback.format_exc()
                 logger.error(
                     f"Error executing node '{current_node.name}': {e}\nTraceback:\n{full_traceback}"
                 )
-                if continue_on_error:
-                    continue
-                else:
+                if not continue_on_error:
                     raise ValueError(f"Error executing node '{current_node.name}': {e}")
             finally:
                 # Cache the output
