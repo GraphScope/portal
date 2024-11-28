@@ -147,20 +147,18 @@ The graph field defines the structure of the workflow, comprising inspectors and
 	- edges: Define dependencies between nodes.
 
 We further explain the `extract_from` field for a node within an Inspector, which specifies where to extract the given information in a paper:
-- `exact`: Explicitly defined page numbers or sections.
-- `match`: Keywords to search for relevant sections.
-- If `extract_from` is omitted, the entire document will be searched.
+- `exact`: Explicitly defined page numbers or sections. Such as `{"exact": ["1"]}` means searching in Section 1.
+- `match`: Keywords to search for relevant sections. Such as `"match": ["introduction"]` means searching for sections
+  semantically like "Introduction".
+- `exact` and `match` fields can both present in `extract_from`.
+- If `extract_from` is omitted or empty, the entire document will be searched.
 
 **Example of a Node within paper Inspector**:
 ```json
 {
   "name": "Background",
-  // the prompt for extracting paper background
   "query": "**Question**: Please describe the problem studied in this paper...",
-  // exact means in section 1
-  // match means any section name matched "introduction"
   "extract_from": {"exact": ["1"], "match": ["introduction"]},
-  // the output schema
   "output_schema": {
     "type": "single",
     "description": "The background of this paper",
