@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Section, FullScreen, useCustomToken, StudioProvier, SegmentedTabs } from '@graphscope/studio-components';
 import {
   Toolbar,
@@ -25,13 +25,14 @@ import {
   ClearCanvas,
   CurvatureLinks,
   DagreMode,
+  Placeholder,
 } from '@graphscope/studio-graph';
 
 import ToogleButton from './components/ToggleButton';
 import { Connection, FetchGraph, Searchbar, Statistics, ClusterAnalysis } from './components';
 
 import { Divider } from 'antd';
-import builtinServices from './services';
+import { getDefaultServices } from './services';
 
 interface ExploreProps {
   id?: string;
@@ -39,7 +40,8 @@ interface ExploreProps {
 }
 
 const Explore: React.FunctionComponent<ExploreProps> = props => {
-  const { id, services = builtinServices } = props;
+  const { id } = props;
+  const [services, setServices] = useState(props.services || getDefaultServices());
 
   const onQuery = async () => {};
 
@@ -94,6 +96,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             <BasicInteraction />
             <ClearStatatus />
             <FetchGraph />
+            <Placeholder />
             <Loading />
             <Toolbar
               direction="horizontal"
