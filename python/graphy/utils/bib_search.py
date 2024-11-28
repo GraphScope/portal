@@ -788,7 +788,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
                     if len(parser.css(".gs_r.gs_or.gs_scl")) == 0:
                         if "not a robot" in driver.page_source:
-                            logger.info(
+                            logger.error(
                                 f"============== DETECTED AS A ROBOT {query} ============="
                             )
                         # with open("fail_log.log", "a") as f:

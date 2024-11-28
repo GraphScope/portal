@@ -2,7 +2,11 @@ from workflow import BaseWorkflow
 from models import LLM, DEFAULT_LLM_MODEL_CONFIG, DefaultEmbedding, set_llm_model
 from db import PersistentStore, JsonFileStore
 from graph import BaseGraph
-from graph.edges.paper_navigate_edge import PaperNavigateEdge
+from graph.edges.paper_navigate_edge import (
+    PaperNavigateArxivEdge,
+    PaperNavigateScholarEdge,
+    ReferenceExtractStateMode,
+)
 from graph.nodes.paper_reading_nodes import (
     PaperInspector,
     ProgressInfo,
@@ -223,15 +227,40 @@ class SurveyPaperReading(BaseWorkflow):
                 name = navigator.get("name", "")
                 source = navigator["source"]
                 target = navigator["target"]
+                method = navigator.get("method", "arxiv").lower()
                 paper_download_dir = os.path.join(WF_OUTPUT_DIR, id, "navigator")
+                finish_signal = navigator.get("finish_signal", "REF_DONE")
+                max_thread_num = navigator.get("max_thread_num", 24)
+                ref_mode = navigator.get("ref_mode", "skip").lower()
+                if ref_mode == "skip":
+                    ref_mode = ReferenceExtractStateMode.SkipIfExists
+                elif ref_mode == "append":
+                    ref_mode = ReferenceExtractStateMode.AppendIfExists
+                else:
+                    ref_mode = ReferenceExtractStateMode.SkipIfExists
 
-                edge = PaperNavigateEdge(
-                    source=source,
-                    target=target,
-                    name=name,
-                    persist_store=persist_store,
-                    paper_download_dir=paper_download_dir,
-                )
+                if method == "scholar":
+                    edge = PaperNavigateScholarEdge(
+                        source=source,
+                        target=target,
+                        name=name,
+                        persist_store=persist_store,
+                        paper_download_dir=paper_download_dir,
+                        finish_signal=finish_signal,
+                        max_thread_num=max_thread_num,
+                        ref_mode=ref_mode,
+                    )
+                else:
+                    edge = PaperNavigateArxivEdge(
+                        source=source,
+                        target=target,
+                        name=name,
+                        persist_store=persist_store,
+                        paper_download_dir=paper_download_dir,
+                        finish_signal=finish_signal,
+                        max_thread_num=max_thread_num,
+                        ref_mode=ref_mode,
+                    )
                 graph.add_edge(edge)
 
         # Handle single InspectorNode special case
