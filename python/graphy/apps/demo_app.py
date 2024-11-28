@@ -334,28 +334,29 @@ class DemoApp:
         output = []
         if dataset_id in self.cache:
             workflow = self.cache[dataset_id].get("workflow", None)
-            if not node_names:
-                node_names = workflow.graph.get_node_names()
-            for node in node_names:
-                progress[node] = {}
-                output_data = {}
-                if dataset_id == DEFAULT_DATASET_ID:
-                    output_data = get_default_paper_data(node, len(node_names) == 1)
-                    output_data["progress"] = 100.0
-                else:
-                    output_data["node_name"] = node
-                    output_data["progress"] = []
-                    progress[node] = workflow.get_progress(node)
-                    for key, val in progress[node].items():
-                        output_data["progress"].append(
-                            {
-                                "node_name": key,
-                                "progress": val.get_percentage(),
-                            }
-                        )
-                        total_progress.add(val)
-                    # output_data["progress"] = progress[node].get_percentage()
-                output.append(output_data)
+            if workflow:
+                if not node_names:
+                    node_names = workflow.graph.get_node_names()
+                for node in node_names:
+                    progress[node] = {}
+                    output_data = {}
+                    if dataset_id == DEFAULT_DATASET_ID:
+                        output_data = get_default_paper_data(node, len(node_names) == 1)
+                        output_data["progress"] = 100.0
+                    else:
+                        output_data["node_name"] = node
+                        output_data["progress"] = []
+                        progress[node] = workflow.get_progress(node)
+                        for key, val in progress[node].items():
+                            output_data["progress"].append(
+                                {
+                                    "node_name": key,
+                                    "progress": val.get_percentage(),
+                                }
+                            )
+                            total_progress.add(val)
+                        # output_data["progress"] = progress[node].get_percentage()
+                    output.append(output_data)
 
         if len(output) == 1:
             output = output[0]["progress"]
