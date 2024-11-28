@@ -10,7 +10,6 @@ from .embedding_model import (
     TextEmbedding,
     DefaultEmbedding,
     TfidfEmbedding,
-    GloveEmbedding,
     SentenceTransformerEmbedding,
 )
 
@@ -21,7 +20,6 @@ __all__ = [
     "TextEmbedding",
     "DefaultEmbedding",
     "TfidfEmbedding",
-    "GloveEmbedding",
     "SentenceTransformerEmbedding",
 ]
 

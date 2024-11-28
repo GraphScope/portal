@@ -1,7 +1,3 @@
-import torchtext
-
-torchtext.disable_torchtext_deprecation_warning()
-
 import json
 import os
 import numpy as np

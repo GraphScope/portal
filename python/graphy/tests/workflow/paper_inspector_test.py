@@ -1,7 +1,3 @@
-import torchtext
-
-torchtext.disable_torchtext_deprecation_warning()
-
 import pytest
 from unittest.mock import MagicMock, create_autospec
 from graph import BaseGraph
