@@ -67,19 +67,6 @@ def create_error_response(msg: str):
     return json_data
 
 
-def fix_workflow(workflow_json):
-    fixed_workflow_json = {}
-    if "graph" not in workflow_json:
-        fixed_workflow_json["graph"] = workflow_json
-    else:
-        fixed_workflow_json = workflow_json
-    if "id" not in fixed_workflow_json:
-        fixed_workflow_json["id"] = "test_workflow"
-    if "llm_config" not in fixed_workflow_json:
-        fixed_workflow_json["llm_config"] = DEFAULT_LLM_MODEL_CONFIG
-    return fixed_workflow_json
-
-
 class STATUS(Enum):
     INITIALIZED = "initialized"
     WAITING_WORKFLOW_CONFIG = "waiting_workflow_config"
@@ -178,7 +165,6 @@ class DemoApp:
         persist_store = self.get_persist_store(dataset_id)
         metadata = persist_store.get_state("", "metadata")
         if config:
-            self.set_llm_model(dataset_id, config)
             if "api_key" in config:
                 config["api_key"] = encrypt_key(config["api_key"])
         metadata["config"] = config
@@ -190,7 +176,8 @@ class DemoApp:
         llm_config = metadata.get("config", {})
         # must initialize the llm model if it is not configured yet
         if llm_config:
-            self.set_llm_model(dataset_id, llm_config, initialize=False)
+            if "api_key" in llm_config:
+                llm_config["api_key"] = decrypt_key(llm_config["api_key"])
         return llm_config
 
     def set_meta_interactive_info(self, dataset_id, graph_id):
@@ -224,7 +211,6 @@ class DemoApp:
         persist_store = self.get_persist_store(dataset_id)
         llm_config = value.get("config", {})
         if llm_config:
-            self.set_llm_model(dataset_id, llm_config)
             if "api_key" in llm_config:
                 llm_config["api_key"] = encrypt_key(llm_config["api_key"])
         persist_store.save_state("", "metadata", value)
@@ -235,7 +221,8 @@ class DemoApp:
         llm_config = metadata.get("config", {})
         # must initialize the llm model if it is not configured yet
         if llm_config:
-            self.set_llm_model(dataset_id, llm_config, initialize=False)
+            if "api_key" in llm_config:
+                llm_config["api_key"] = decrypt_key(llm_config["api_key"])
 
         return metadata
 
@@ -258,55 +245,23 @@ class DemoApp:
                 node_names = workflow.graph.get_node_names()
         return node_names
 
-    def set_llm_model(self, dataset_id, llm_config, initialize=True):
-        if initialize:
-            llm = set_llm_model(llm_config)
-            self.set_cache(dataset_id, "llm_model", llm)
-        else:
-            cache = self.cache.get(dataset_id, {})
-            if cache and not "llm_model" in cache:
-                llm_config = copy.deepcopy(llm_config)
-                if "api_key" in llm_config:
-                    llm_config["api_key"] = decrypt_key(llm_config["api_key"])
-                llm = set_llm_model(llm_config)
-                self.set_cache(dataset_id, "llm_model", llm)
-
     def set_workflow(self, dataset_id, workflow_dict):
         persist_store = self.get_persist_store(dataset_id)
-        cache = self.cache.get(dataset_id, {})
-        llm = cache.get("llm_model", None)
-        if llm:
-            logger.debug(
-                f"The model {llm.model_name} is used for the workflow, which has maximum output token limit of {llm.context_size}"
-            )
-
-        if not llm and self.llm:
-            llm = self.llm
-            logger.debug(
-                f"Default model {self.llm.model_name} is used for the workflow, which has maximum output token limit of {llm.context_size}"
-            )
-
-        if not llm:
-            raise ValueError("LLM model not configured")
-
-        embedding_model = self.embedding_model.chroma_embedding_model()
-        if not embedding_model:
-            # A safe guarantee to use the default model
-            embedding_model = embedding_functions.DefaultEmbeddingFunction()
-
-        vectordb = chromadb.PersistentClient(path=WF_VECTDB_DIR)
-        workflow_dict = fix_workflow(workflow_dict)
+        new_workflow_dict = {}
+        if "graph" not in workflow_dict:
+            new_workflow_dict["graph"] = workflow_dict
+            workflow_dict = new_workflow_dict
+        if "id" not in workflow_dict:
+            workflow_dict["id"] = dataset_id
+        if "llm_config" not in workflow_dict:
+            llm_config = self.get_meta_config(dataset_id)
+            if llm_config:
+                workflow_dict["llm_config"] = llm_config
+            else:
+                workflow_dict["llm_config"] = DEFAULT_LLM_MODEL_CONFIG
 
         # Initialize the workflow
-        workflow = SurveyPaperReading(
-            dataset_id,
-            llm,
-            llm,
-            embedding_model,
-            vectordb,
-            workflow_dict,
-            persist_store,
-        )
+        workflow = SurveyPaperReading.from_dict(workflow_dict, persist_store)
         self.set_cache(dataset_id, "workflow", workflow)
 
     def get_progress(self, dataset_id, node_names=[]):
@@ -540,9 +495,6 @@ class DemoApp:
                     if dataset_id != DEFAULT_DATASET_ID:  # do not do for default data
                         status = STATUS.INITIALIZED
                         if "config" in metadata:
-                            self.set_llm_model(
-                                dataset_id, metadata["config"], initialize=False
-                            )
                             status = STATUS.WAITING_WORKFLOW_CONFIG.value
                         if "schema" in metadata:
                             if "workflow" not in cache:

@@ -233,6 +233,8 @@ class ExtractNode(BaseChainNode):
         if "extract_from" not in node_dict or not node_dict["extract_from"]:
             where = None
         else:
+            if isinstance(node_dict["extract_from"], list):
+                node_dict["extract_from"] = {"exact": node_dict["extract_from"]}
             condition_dict = {}
             # remove '' in []
             exact_constraints = [

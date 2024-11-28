@@ -75,7 +75,7 @@ class SurveyPaperReading(BaseWorkflow):
 
     @classmethod
     def from_dict(
-        cls: Type["SurveyPaperReading"], workflow_json: dict
+        cls: Type["SurveyPaperReading"], workflow_json: dict, persist_store=None
     ) -> "SurveyPaperReading":
         """
         Create a SurveyPaperReading workflow from a JSON configuration.
@@ -175,6 +175,7 @@ class SurveyPaperReading(BaseWorkflow):
             embeddings_model.chroma_embedding_model(),
             vectordb,
             graph_json,
+            persist_store,
         )
 
     def _create_graph(
