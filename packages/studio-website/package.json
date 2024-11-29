@@ -36,7 +36,7 @@
     "@graphscope/use-zustand": "workspace:*",
     "@graphscope/graphy-website": "workspace:*",
     "@uiw/react-codemirror": "^4.21.21",
-    "antd": "^5.17.0",
+    "antd": "^5.22.2",
     "js-yaml": "^4.1.0",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",

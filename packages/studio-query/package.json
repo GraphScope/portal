@@ -38,7 +38,7 @@
     "@fortawesome/free-solid-svg-icons": "latest",
     "@fortawesome/react-fontawesome": "latest",
     "@fortawesome/fontawesome-svg-core": "latest",
-    "@antv/g2": "5.1.13",
+    "@antv/g2": "^5.2.8",
     "uuid": "^9.0.1",
     "dayjs": "^1.11.10",
     "@graphscope/_test_gremlin_": "^0.1.2",
