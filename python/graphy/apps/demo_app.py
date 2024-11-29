@@ -773,7 +773,7 @@ class DemoApp:
                 graph_builder = GraphBuilder(
                     data_path, self.get_persist_store(dataset_id)
                 )
-                graph_builder.extract_fact_data()
+                graph_builder.extract_data()
 
                 graph_builder.build_graph()
                 graph_path = os.path.join(data_path, "_graph")

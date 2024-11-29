@@ -10,14 +10,11 @@ import uuid
 import json
 import csv
 import os
+import re
 import time
 import logging
 
-
-CLUSTERED_SUFFIX = "clustered"
-SUMMARIZED_SUFFIX = "summarized"
-
-os.environ["HF_HUB_OFFLINE"] = "1"
+DEFAULT_DELIMITER = "|"
 
 
 def hash_id(input_string: str) -> str:
@@ -42,7 +39,9 @@ def write_csv(file_path: str, data: list, headers: list = None):
         headers = list(data[0].keys())
     if len(data) > 0:
         with open(file_path, "w", newline="") as file:
-            writer = csv.DictWriter(file, fieldnames=headers, delimiter="|")
+            writer = csv.DictWriter(
+                file, fieldnames=headers, delimiter=DEFAULT_DELIMITER
+            )
             writer.writeheader()
             for row in data:
                 try:
@@ -96,7 +95,9 @@ def sanitize_data(data: dict) -> dict:
     for key, value in data.items():
         if isinstance(value, str):
             # Clean string values
-            sanitized_data[key] = value.replace("\n", " ").replace("\t", " ").strip()
+            sanitized_data[key] = re.sub(
+                r"[\n\t" + re.escape(DEFAULT_DELIMITER) + r"]", " ", value
+            ).strip()
         elif isinstance(value, dict):
             # Recursively sanitize nested dictionaries
             sanitized_data[key] = sanitize_data(value)
@@ -130,7 +131,7 @@ class GraphBuilder:
     def get_data(self, node_name):
         return self.dimensions_dict.get(node_name, {})
 
-    def extract_fact_data(self, dimension_node_names=[]):
+    def extract_data(self, dimension_node_names=[]):
         for folder in self.persist_store.get_total_data():
             print("Process folder: ", folder)
             paper_data = self.persist_store.get_state(folder, "Paper")
@@ -151,6 +152,7 @@ class GraphBuilder:
                     dimension_node_names = self.persist_store.get_total_states(folder)
                     try:
                         dimension_node_names.remove("Paper")
+                        dimension_node_names.remove("REF_DONE")
                     except ValueError:
                         pass  # Do nothing if "Paper" is not in the list
                 for node_name in dimension_node_names:

@@ -64,10 +64,18 @@ python paper_scrapper.py --max-workers 4 --max-inspectors 500 --workflow <path_t
 
 - `--max-workers` (optional): Specifies the maximum number of parallel workers (default: 4).
 - `--max-inspectors` (optional): Defines the maximum number of papers to fetch (default: 100).
-- `--workflow` (optional): Path to a workflow configuration file. If not provided, the default configuration file `config/workflow.json` will be used.
+- `--workflow` (optional): Path to a workflow configuration file. If not provided, the default configuration file [`config/workflow.json`](config/workflow.json) will be used.
 - `<path_to_seed_papers>`: Provide the path containing seed papers. Each paper is a PDF document.
 
-> If no `workflow` provided, a default workflow configuration in `config/workflow.json` will be used.
+After the process is complete, the extracted data will be stored in the directory of `WF_OUTPUT_DIR`
+defined in [`config/__init__.py`](config/__init__.py). The following script can be used to graphy the extracted data.
+
+**Usage**:
+```bash
+python graph_builder.py -i <WF_OUTPUT_DIR> -o <you_output_dir>
+```
+
+A `_graph` folder can be found in `<you_output_dir>` containing the graph data in CSV files.
 
 # Workflow Configuration
 Refer to an [example](config/workflow.json) for a workflow with Paper Inspector and Reference Navigator. Below are instructions on the following key fields in a workflow: `id`, `llm_config`, and `graph`.
@@ -132,8 +140,7 @@ This option supports locally deployed LLM models through [Ollama](https://ollama
     ```
 
 
-Note: If no LLM model is specified for a dataset, a default model configuration will be applied. To customize this default, open `models/__init__.py` and modify the `DEFAULT_LLM_MODEL_CONFIG` variable.
-
+> Note: If no LLM model is specified for a dataset, a default model configuration will be applied. To customize this default, open [`models/__init__.py`](models/__init__.py) and modify the `DEFAULT_LLM_MODEL_CONFIG` variable.
 
 
 ## The `graph` field
