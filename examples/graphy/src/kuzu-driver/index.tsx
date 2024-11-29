@@ -1,9 +1,16 @@
 import Kuzu from '@kuzu/kuzu-wasm';
 import { Utils } from '@graphscope/studio-components';
 import localforage from 'localforage';
-import { ignore } from 'antd/es/theme/useToken';
-console.log('Kuzu', Kuzu);
 
+interface SchemaItem {
+  source?: string;
+  target?: string;
+  label: string;
+  properties: {
+    name: string;
+    type: string;
+  };
+}
 interface IKuzuResult {
   Database: (params: any) => Promise<any>;
   Connection: (db: any) => Promise<any>;
@@ -64,14 +71,11 @@ export class KuzuDriver {
     this.dbname = '';
     this.curDataset = '';
     this.kuzuEngine = null;
-    this.indexdb = localforage.createInstance({
-      name: this.dbname,
-    });
     this.mountedPath = new Set();
   }
 
   async initialize(): Promise<void> {
-    console.log("initialize again");
+    console.log('initialize again');
     this.kuzuEngine = await this.kuzu();
 
     //@ts-ignore
@@ -80,10 +84,9 @@ export class KuzuDriver {
     // this.conn = await result.Connection(this.db);
     this.FS = this.kuzuEngine.FS;
     this.FS?.mkdir('data');
-    
+
     // this.FS?.mkdir('export');
   }
-
 
   async installUDF(): Promise<void> {
     var res = await this.conn?.execute('CREATE MACRO elementid(x) AS CAST(ID(x),"STRING")');
@@ -106,7 +109,7 @@ export class KuzuDriver {
     if (!this.mountedPath.has(targetPath)) {
       console.log(`MOUNT ${this.curDataset} ...`);
       try {
-        await this.FS?.mount(this.FS.filesystems.IDBFS, {autoPersist: true}, targetPath);
+        await this.FS?.mount(this.FS.filesystems.IDBFS, { autoPersist: true }, targetPath);
         this.mountedPath.add(targetPath);
       } catch (err) {
         console.error(`Error mounting:`, err);
@@ -117,10 +120,10 @@ export class KuzuDriver {
       console.log(`Loading from indexdb ${datasetId}`);
       await this.loadFromIndexDB();
     }
-    
+
     await this.openDataset();
     await this.installUDF();
-    
+
     return this.curDataset;
   }
 
@@ -215,7 +218,7 @@ export class KuzuDriver {
     });
     const edge_scripts = edges.map(edge => {
       const { label, source, target, properties } = edge;
-      
+
       const property_scripts = properties.map(property => {
         const { name, type } = property;
         return `${name} ${this.typeConvert(type)}`;
@@ -306,36 +309,37 @@ export class KuzuDriver {
 
   pathJoin(...segments) {
     return segments
-        .filter(segment => segment)
-        .join('/')              
-        .replace(/\/+/g, '/'); 
+      .filter(segment => segment)
+      .join('/')
+      .replace(/\/+/g, '/');
   }
 
   async rmdirs(dir: string) {
     let entries = await this.FS.readdir(dir);
     console.log(entries);
 
-    let results = await Promise.all(entries.map(async entry => {
-      if (entry !== '.' && entry !== '..') {
-        let fullPath = this.pathJoin(dir, entry);
-        console.log(`remove ${fullPath}`)
+    let results = await Promise.all(
+      entries.map(async entry => {
+        if (entry !== '.' && entry !== '..') {
+          let fullPath = this.pathJoin(dir, entry);
+          console.log(`remove ${fullPath}`);
 
-        const { mode, timestamp } = await this.FS.lookupPath(fullPath).node;
-        if (this.FS.isFile(mode)) {
-          await this.FS.unlink(fullPath);
+          const { mode, timestamp } = await this.FS.lookupPath(fullPath).node;
+          if (this.FS.isFile(mode)) {
+            await this.FS.unlink(fullPath);
+          } else if (this.FS.isDir(mode)) {
+            await this.rmdirs(fullPath);
+          }
         }
-        else if (this.FS.isDir(mode)) {
-          await this.rmdirs(fullPath);
-        }
-      }
-    }));
+      }),
+    );
 
     try {
       await this.FS.rmdir(dir);
     } catch {
       console.log(`Error when remove ${dir}`);
     }
-  };
+  }
 
   async queryData(query: string): Promise<any> {
     console.time('Query cost');
@@ -405,23 +409,67 @@ export class KuzuDriver {
   }
 
   async querySchema(): Promise<any> {
-    return this.schema;
-  }
+    const tables_raw = await this.conn?.execute(`call show_tables() return *`);
+    const tables = JSON.parse(tables_raw.table.toString());
+    const nodes: {
+      label: string;
+      properties: {
+        name: string;
+        type: string;
+      }[];
+    }[] = [];
+    const edges: {
+      source: string;
+      target: string;
+      label: string;
+      properties: {
+        name: string;
+        type: string;
+      }[];
+    }[] = [];
+    for (let i = 0; i < tables.length; i++) {
+      const { name, type } = tables[i];
+      const properties_raw = await this.conn?.execute(`call TABLE_INFO('${name}') return *`);
+      const properties = JSON.parse(properties_raw.table.toString());
+      if (type === 'NODE') {
+        nodes.push({
+          label: name,
+          properties: properties.map(c => ({
+            name: c.name,
+            type: c.type,
+          })),
+        });
+      }
+      if (type === 'REL') {
+        const relationship_raw = await this.conn?.execute(`call SHOW_CONNECTION('${name}') return *`);
+        const relationship = JSON.parse(relationship_raw.table.toString())[0];
 
+        edges.push({
+          source: relationship['source table name'],
+          target: relationship['destination table name'],
+          label: name,
+          properties: properties.map(c => ({
+            name: c.name,
+            type: c.type,
+          })),
+        });
+      }
+    }
+
+    return {
+      nodes,
+      edges,
+    };
+  }
 
   async getCount() {
     if (this.curDataset === '') {
       return [0, 0];
     }
 
-    var vertex_res = await this.conn?.execute(
-      'MATCH (n) RETURN COUNT(n) AS vertex_count;',
-    );
+    var vertex_res = await this.conn?.execute('MATCH (n) RETURN COUNT(n) AS vertex_count;');
+    var edge_res = await this.conn?.execute('MATCH ()-[r]->() RETURN COUNT(r) AS edge_count;');
 
-    var edge_res = await this.conn?.execute(
-      'MATCH ()-[r]->() RETURN COUNT(r) AS edge_count;',
-    );
-    
     const vertex_count = parseInt(vertex_res.toString().split('\n')[1], 10);
     const edge_count = parseInt(edge_res.toString().split('\n')[1], 10);
     const countArray = [vertex_count, edge_count];
@@ -433,7 +481,7 @@ export class KuzuDriver {
   async loadFromIndexDB(): Promise<void> {
     const syncfsPromise = () => {
       return new Promise<void>((resolve, reject) => {
-        this.FS.syncfs(true, function(err) {
+        this.FS.syncfs(true, function (err) {
           if (err) {
             console.error('Error loading from indexdb: ', err);
             reject(err);
@@ -444,15 +492,15 @@ export class KuzuDriver {
         });
       });
     };
-  
+
     await syncfsPromise();
-    console.log("finish load from indexdb");
+    console.log('finish load from indexdb');
   }
 
   async openDataset(): Promise<void> {
     console.log(this.FS.readdir('/'));
-    console.log(this.FS.readdir('7e47ed99-2ad6-500d-b408-b95765e099ff'));
     console.log(`Open dataset ${this.curDataset}`);
+
     //@ts-ignore
     this.db = await this.kuzuEngine.Database(this.curDataset, 0, 10, false, false, 4194304 * 16 * 4);
     //@ts-ignore
@@ -464,7 +512,6 @@ export class KuzuDriver {
 
   async closeDataset(): Promise<void> {
     console.log(`Close dataset ${this.curDataset}`);
-    // this.writeBack();
 
     if (this.conn) {
       await this.conn.close();
@@ -476,18 +523,25 @@ export class KuzuDriver {
     }
   }
 
-  async writeBack(): Promise<void> {
-    console.log("start to write back");
-
-    await this.FS.syncfs(false, function(err){
-      if (err) {
-        console.error('Error saving to indexdb: ', err);
-      }
-      else {
-        console.log('Save to indexdb successfully');
-      }
+  async writeBack(): Promise<{ success: boolean; message: string }> {
+    console.log('start to write back');
+    return new Promise(resolve => {
+      this.FS.syncfs(false, function (err) {
+        if (err) {
+          console.error('Error saving to indexdb: ', err);
+          resolve({
+            success: false,
+            message: err,
+          });
+        } else {
+          console.log('Save to indexdb successfully');
+          resolve({
+            success: true,
+            message: 'Save to indexdb successfully',
+          });
+        }
+      });
     });
-    console.log("finish to write back");
   }
 
   async close(): Promise<void> {
