@@ -6,16 +6,21 @@ import type { IState } from './job-list';
 import CircleAnimation from './circle-animation';
 
 const { RangePicker } = DatePicker;
-interface IJobHeaderProps extends Partial<IState> {
-  onChange: (val, type) => void;
-}
 const { Text } = Typography;
+
+interface IJobHeaderProps extends Partial<IState> {
+  onChange: (val: any, type: string) => void;
+}
+
 const JobHeader: React.FC<IJobHeaderProps> = ({ typeOptions, searchOptions, onChange }) => {
-  const [state, updateState] = useState({
-    statusValue: [],
-  });
-  const { statusValue } = state;
+  const [statusValue, setStatusValue] = useState<string[]>([]);
   const { STATUSOPTIONS } = useStore();
+
+  const handleStatusChange = (evt: string[]) => {
+    onChange(evt, 'status');
+    setStatusValue(evt);
+  };
+
   return (
     <Flex gap={12}>
       <Select
@@ -24,7 +29,7 @@ const JobHeader: React.FC<IJobHeaderProps> = ({ typeOptions, searchOptions, onCh
         suffixIcon={<DownOutlined />}
         mode="tags"
         maxTagCount={1}
-        style={{ flex: 2 }}
+        style={{ flex: 4 }}
         onChange={evt => onChange(evt, 'search')}
         tokenSeparators={[',']}
         options={searchOptions}
@@ -42,16 +47,11 @@ const JobHeader: React.FC<IJobHeaderProps> = ({ typeOptions, searchOptions, onCh
         style={{ flex: 2 }}
         mode="tags"
         value={statusValue}
-        maxTagCount={2}
-        onChange={evt => {
-          onChange(evt, 'status');
-          updateState(preset => {
-            return {
-              ...preset,
-              statusValue: evt,
-            };
-          });
-        }}
+        labelRender={props =>
+          `${String(props.value).charAt(0).toUpperCase()}${String(props.value).slice(1).toLowerCase()}`
+        }
+        maxTagCount={1}
+        onChange={handleStatusChange}
         options={STATUSOPTIONS}
       />
     </Flex>

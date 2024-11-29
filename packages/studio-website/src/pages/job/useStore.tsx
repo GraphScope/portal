@@ -1,5 +1,6 @@
 import React from 'react';
 import dayjs from 'dayjs';
+import { Flex, Typography } from 'antd';
 import type { IJobType } from './service';
 import {
   CheckCircleOutlined,
@@ -10,23 +11,83 @@ import {
 } from '@ant-design/icons';
 interface JobOption {
   value: string;
-  label: string;
+  label: React.ReactNode;
 }
 type TaskStatus = 'RUNNING' | 'CANCELLED' | 'SUCCESS' | 'FAILED' | 'WAITING';
 const statusColorMap: Record<TaskStatus, string> = {
-  RUNNING: 'blue',
-  CANCELLED: 'grey',
-  SUCCESS: 'green',
-  FAILED: 'red',
-  WAITING: 'orange',
+  RUNNING: '#1677ff',
+  CANCELLED: '#000000e0',
+  SUCCESS: '#52c41a',
+  FAILED: '#ff4d4f',
+  WAITING: '#faad14',
+};
+const statusColor: Record<TaskStatus, string> = {
+  RUNNING: 'processing',
+  CANCELLED: 'default',
+  SUCCESS: 'success',
+  FAILED: 'error',
+  WAITING: 'warning',
+};
+const getStatusColor = (status: string): string => {
+  return statusColorMap[status];
 };
 /** 定义状态选项 */
 export const STATUSOPTIONS: JobOption[] = [
-  { value: 'RUNNING', label: 'Running' },
-  { value: 'CANCELLED', label: 'Cancelled' },
-  { value: 'FAILED', label: 'Failed' },
-  { value: 'SUCCESS', label: 'Succeed' },
-  { value: 'WAITING', label: 'Waiting' },
+  {
+    value: 'RUNNING',
+    label: (
+      <Flex align="center" gap={3}>
+        <Typography.Text
+          style={{ width: '12px', height: '12px', backgroundColor: getStatusColor('RUNNING'), borderRadius: '50%' }}
+        ></Typography.Text>
+        <Typography.Text>Running</Typography.Text>
+      </Flex>
+    ),
+  },
+  {
+    value: 'CANCELLED',
+    label: (
+      <Flex align="center" gap={3}>
+        <Typography.Text
+          style={{ width: '12px', height: '12px', backgroundColor: getStatusColor('CANCELLED'), borderRadius: '50%' }}
+        ></Typography.Text>
+        <Typography.Text>Cancelled</Typography.Text>
+      </Flex>
+    ),
+  },
+  {
+    value: 'FAILED',
+    label: (
+      <Flex align="center" gap={3}>
+        <Typography.Text
+          style={{ width: '12px', height: '12px', backgroundColor: getStatusColor('FAILED'), borderRadius: '50%' }}
+        ></Typography.Text>
+        <Typography.Text>Failed</Typography.Text>
+      </Flex>
+    ),
+  },
+  {
+    value: 'SUCCESS',
+    label: (
+      <Flex align="center" gap={3}>
+        <Typography.Text
+          style={{ width: '12px', height: '12px', backgroundColor: getStatusColor('SUCCESS'), borderRadius: '50%' }}
+        ></Typography.Text>
+        <Typography.Text>Succeed</Typography.Text>
+      </Flex>
+    ),
+  },
+  {
+    value: 'WAITING',
+    label: (
+      <Flex align="center" gap={3}>
+        <Typography.Text
+          style={{ width: '12px', height: '12px', backgroundColor: getStatusColor('WAITING'), borderRadius: '50%' }}
+        ></Typography.Text>
+        <Typography.Text>Waiting</Typography.Text>
+      </Flex>
+    ),
+  },
 ];
 
 export default function useStore() {
@@ -37,9 +98,6 @@ export default function useStore() {
     SUCCESS: <CheckCircleOutlined />,
     FAILED: <CloseCircleOutlined />,
     WAITING: <ExclamationCircleOutlined />,
-  };
-  const getStatusColor = (status: string): string => {
-    return statusColorMap[status];
   };
 
   const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -52,6 +110,7 @@ export default function useStore() {
     timeAgo,
     formatDateTime,
     handleChange,
+    statusColor,
   };
 }
 
@@ -82,20 +141,27 @@ const timeAgo = date => {
   return `${years} year ago`;
 };
 
-const formatDateTime = date => {
+const formatDateTime = (date, locale = 'en') => {
   const now = dayjs();
+  dayjs.locale(locale); // 设置语言环境
+
   if (date.isSame(now, 'day')) {
     return date.format('Today at h:mm A');
   } else if (date.isSame(now.subtract(1, 'day'), 'day')) {
     return `Yesterday at ${date.format('h:mm A')}`;
+  } else if (date.isSame(now.add(1, 'day'), 'day')) {
+    return `Tomorrow at ${date.format('h:mm A')}`;
+  } else if (date.isBefore(now, 'year')) {
+    return date.format('MMM D, YYYY [at] h:mm A'); // 过去年份的日期
   } else {
-    return date.format('MMM D [at] h:mm A');
+    return date.format('MMM D [at] h:mm A'); // 其他日期
   }
 };
+
 const map = new Map();
 const handleChange = (selectedItems: string[], filterType: string, rawJobsList) => {
   // Update or remove the filter criteria in the map
-  if (selectedItems.length > 0) {
+  if (selectedItems && selectedItems.length > 0) {
     map.set(filterType, selectedItems);
   } else {
     map.delete(filterType);
