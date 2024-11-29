@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import { Flex, Input, List, Divider, Spin, Space, Tag } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { Flex, Input, List, Divider, Spin, Space, Tag, Button } from 'antd';
+import { SearchOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { Utils, useDynamicStyle } from '@graphscope/studio-components';
 import Highlighter from 'react-highlight-words';
 import { useContext } from '@graphscope/studio-graph';
@@ -131,6 +131,22 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
       };
     });
   };
+  const handleQuery = async () => {
+    updateStore(draft => {
+      draft.isLoading = true;
+    });
+
+    const data = await getService<IQuerySearch>('querySearch')({
+      config: breadcrumb,
+      value: '',
+    });
+
+    updateStore(draft => {
+      draft.source = data;
+      draft.data = data;
+      draft.isLoading = false;
+    });
+  };
   const prefix = (
     <Space size="small">
       {breadcrumb.map(item => {
@@ -160,9 +176,10 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
         placeholder="Search for graph data..."
         style={{ width: '100%' }}
         onChange={debounce(onChange, 500)}
+        onPressEnter={handleQuery}
         onClick={onClick}
         prefix={prefix}
-        suffix={<SearchOutlined />}
+        suffix={<Button onClick={handleQuery} icon={<PlayCircleOutlined />} type="text" />}
       />
 
       {state.onEnter && (

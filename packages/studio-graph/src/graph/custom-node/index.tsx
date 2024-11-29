@@ -46,36 +46,48 @@ export const nodeCanvasObject =
       //@TODO
     }
 
+    // if (captionStatus === 'display' && textLabel) {
+    //   const fontSize = Math.min(0.5 * globalScale, 14 / globalScale);
+    //   if (globalScale > 3 && globalScale < 15) {
+    //     ctx.font = `${fontSize}px Sans-Serif`;
+    //     const textWidth = ctx.measureText(textLabel).width;
+    //     const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+    //     ctx.fillStyle = NODE_TEXT_COLOR;
+    //     //@ts-ignore
+    //     ctx.fillRect(node.x - bckgDimensions[0] / 2, 1.2 * R + node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+    //     ctx.textAlign = 'center';
+    //     ctx.textBaseline = 'middle';
+    //     ctx.fillStyle = color;
+    //     ctx.fillText(textLabel, node.x, node.y + 1.2 * R);
+    //     // @ts-ignore
+    //     node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
+    //   }
+    //   if (globalScale >= 15) {
+    //     const fontSize = 16 / globalScale;
+    //     ctx.font = `${fontSize}px Sans-Serif`;
+    //     ctx.fillStyle = NODE_TEXT_COLOR;
+    //     ctx.textAlign = 'center';
+    //     ctx.textBaseline = 'middle';
+    //     ctx.fillStyle = '#fff';
+    //     drawText(ctx, {
+    //       text: textLabel,
+    //       x: node.x,
+    //       y: node.y + fontSize / 2,
+    //       maxWidth: R * 2 * 0.8, //预留 20% pandding
+    //       lineHeight: fontSize * 1.2,
+    //     });
+    //   }
+    // }
+
     if (captionStatus === 'display' && textLabel) {
-      const fontSize = Math.min(0.5 * globalScale, 14 / globalScale);
-      if (globalScale > 3 && globalScale < 15) {
+      if (globalScale > 1.2 && globalScale < 15) {
+        const fontSize = 14 / globalScale;
+        // console.log(fontSize, globalScale);
         ctx.font = `${fontSize}px Sans-Serif`;
-        const textWidth = ctx.measureText(textLabel).width;
-        const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
-        ctx.fillStyle = NODE_TEXT_COLOR;
-        //@ts-ignore
-        ctx.fillRect(node.x - bckgDimensions[0] / 2, 1.2 * R + node.y - bckgDimensions[1] / 2, ...bckgDimensions);
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = color;
-        ctx.fillText(textLabel, node.x, node.y + 1.2 * R);
-        // @ts-ignore
-        node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
-      }
-      if (globalScale >= 15) {
-        const fontSize = 16 / globalScale;
-        ctx.font = `${fontSize}px Sans-Serif`;
-        ctx.fillStyle = NODE_TEXT_COLOR;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = '#fff';
-        drawText(ctx, {
-          text: textLabel,
-          x: node.x,
-          y: node.y + fontSize / 2,
-          maxWidth: R * 2 * 0.8, //预留 20% pandding
-          lineHeight: fontSize * 1.2,
-        });
+        ctx.fillText(textLabel, node.x, node.y + R * 1.5);
       }
     }
     ctx.restore();

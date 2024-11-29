@@ -123,21 +123,44 @@ const services: IServiceQueries<ExploreQueryTypes | IQueryTypes> = {
     const { value: property } = config.find(item => item.type === 'property') || { value: null };
 
     if (type === 'Vertex') {
+      if (label && !property) {
+        return queryStatement(`match (n:${label}) return n`);
+      }
       if (label && property) {
-        return queryStatement(`match (n:${label}) where n.${property} CONTAINS "${value}" return n`);
+        if (value) {
+          return queryStatement(`match (n:${label}) where n.${property} CONTAINS "${value}" return n`);
+        } else {
+          return queryStatement(`match  (n:${label}) where n.${property} IS NOT NULL return n`);
+        }
       }
       if (!label && property) {
-        return queryStatement(`match (n) where n.${property} CONTAINS "${value}" return n`);
+        if (value) {
+          return queryStatement(`match (n) where n.${property} CONTAINS "${value}" return n`);
+        } else {
+          return queryStatement(`match  (n) where n.${property} IS NOT NULL return n`);
+        }
       }
     }
     if (type === 'Edge') {
+      if (label && !property) {
+        return queryStatement(`match (a)-[r:${label}]->(b) return a,r,b`);
+      }
       if (label && property) {
-        return queryStatement(`match (a)-[r:${label}]->(b) where r.${property} CONTAINS "${value}" return a,r,b`);
+        if (value) {
+          return queryStatement(`match (a)-[r:${label}]->(b) where r.${property} CONTAINS "${value}" return a,r,b`);
+        } else {
+          return queryStatement(`match (a)-[r:${label}]->(b) where r.${property} IS NOT NULL return a,r,b`);
+        }
       }
       if (!label && property) {
-        return queryStatement(`match (a)-[r]->(b) where r.${property} CONTAINS "${value}" return a,r,b`);
+        if (value) {
+          return queryStatement(`match (a)-[r]->(b) where r.${property} CONTAINS "${value}" return a,r,b`);
+        } else {
+          return queryStatement(`match (a)-[r]->(b) where r.${property} IS NOT NULL return a,r,b`);
+        }
       }
     }
+
     return {
       nodes: [],
       edges: [],

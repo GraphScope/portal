@@ -118,7 +118,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             <Toolbar
               style={{ position: 'absolute', top: '20px', left: '20px', right: 'unset', background: buttonBackground }}
             >
-              {/* <Connection /> */}
+              <Connection />
               <Divider style={{ margin: '0px' }} />
               <ToogleLeftButton />
               <Divider style={{ margin: '0px' }} />
