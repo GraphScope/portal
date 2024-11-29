@@ -16,8 +16,14 @@ export const nodeCanvasObject =
     const { color, size, caption, captionStatus, icon, captionMode } = style;
 
     const { selected, hovering } = status;
+
+    const texts = caption.map(c => {
+      //@ts-ignore
+      return node.properties && node.properties[c];
+    });
+
     //@ts-ignore
-    const textLabel = node.properties && node.properties[caption];
+    // console.log('caption', caption, textLabel, node.properties);
 
     const R = Math.sqrt(Math.max(0, size)) * BASIC_NODE_R + 1;
 
@@ -79,15 +85,17 @@ export const nodeCanvasObject =
     //   }
     // }
 
-    if (captionStatus === 'display' && textLabel) {
-      if (globalScale > 1.2 && globalScale < 15) {
+    if (captionStatus === 'display' && texts.length > 0) {
+      if (globalScale > 1) {
         const fontSize = 14 / globalScale;
-        // console.log(fontSize, globalScale);
         ctx.font = `${fontSize}px Sans-Serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = color;
-        ctx.fillText(textLabel, node.x, node.y + R * 1.5);
+        const lineHeight = fontSize * 1.2;
+        texts.forEach((line, index) => {
+          ctx.fillText(line, node.x || 0, (node.y || 0) + R + (0.5 + index) * lineHeight);
+        });
       }
     }
     ctx.restore();

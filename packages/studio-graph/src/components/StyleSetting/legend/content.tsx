@@ -15,7 +15,7 @@ export interface ILegnedOption {
   /** 大小 */
   size: number;
   /** 文本映射字段 */
-  caption: string;
+  caption: string[];
   /** 是否隐藏文字 */
   captionStatus?: 'hidden' | 'display';
   /** 标识是节点还是边 */
@@ -153,7 +153,7 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
         </Typography.Text>
         <Space wrap>
           {Object.keys(_properties)?.map(item => {
-            const isActive = caption == item;
+            const isActive = caption.includes(item);
             return (
               <span
                 key={item}
@@ -168,7 +168,11 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
                   background: token.colorBgBlur,
                   border: isActive ? activeStyle : '1px solid #ddd',
                 }}
-                onClick={() => handleChange('caption', item)}
+                onClick={() => {
+                  const newCaption = caption.includes(item) ? caption.filter(i => i !== item) : [...caption, item];
+                  console.log('newCaption', newCaption);
+                  handleChange('caption', newCaption);
+                }}
               >
                 {item}
               </span>

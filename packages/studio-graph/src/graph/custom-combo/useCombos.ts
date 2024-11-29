@@ -21,6 +21,7 @@ const useCombos = () => {
       draft.combos = groups;
       draft.enableCombo = true;
       draft.combosByKey = clusterKey;
+      draft.reheatSimulation = true;
     });
   };
 
@@ -28,6 +29,7 @@ const useCombos = () => {
     updateStore(draft => {
       draft.combos = [];
       draft.enableCombo = false;
+      draft.reheatSimulation = false;
     });
   };
 

@@ -57,6 +57,7 @@ export type IStore = {
   schema: GraphSchema;
   isLoading: boolean;
   getService: IGetServices;
+  reheatSimulation: boolean;
 };
 
 export const initialStore: IStore = {
@@ -92,6 +93,7 @@ export const initialStore: IStore = {
   getService: () => {
     return () => {};
   },
+  reheatSimulation: false,
 };
 
 export const useContext = () => useZustandContext<IStore>();
