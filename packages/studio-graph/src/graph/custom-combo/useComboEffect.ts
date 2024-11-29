@@ -35,10 +35,6 @@ const useComboEffect = () => {
     }
 
     if (enableCombo) {
-      if ((graph as ForceGraphInstance).zoom) {
-        (graph as ForceGraphInstance).zoom(1);
-      }
-
       const combosMap = new Map();
       combos.forEach(group => {
         combosMap.set(group.id, group);
