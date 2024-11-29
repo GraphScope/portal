@@ -1,7 +1,3 @@
-import torchtext
-
-torchtext.disable_torchtext_deprecation_warning()
-
 from workflow import SurveyPaperReading, ThreadPoolWorkflowExecutor
 from graph.nodes.paper_reading_nodes import ProgressInfo
 from config import WF_UPLOADS_DIR, WF_OUTPUT_DIR, WF_DATA_DIR, WF_VECTDB_DIR
@@ -773,7 +769,7 @@ class DemoApp:
                 graph_builder = GraphBuilder(
                     data_path, self.get_persist_store(dataset_id)
                 )
-                graph_builder.extract_fact_data()
+                graph_builder.extract_data()
 
                 graph_builder.build_graph()
                 graph_path = os.path.join(data_path, "_graph")

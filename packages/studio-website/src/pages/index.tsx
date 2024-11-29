@@ -4,8 +4,10 @@ import { StudioProvier, GlobalSpin } from '@graphscope/studio-components';
 import Layout from '../layouts';
 import StoreProvider from '@graphscope/use-zustand';
 import { initialStore } from '../layouts/useContext';
-
+import { getSlots, installSlot } from '../slots';
+import { SIDE_MENU } from '../layouts/const';
 import locales from '../locales';
+
 interface IPagesProps {
   children?: React.ReactNode;
 }
@@ -27,26 +29,30 @@ const routes = [
   { path: '/extension/:name', component: React.lazy(() => import('./extension/create-plugins')) },
 ];
 
+export const ROUTES = routes.map(({ path, redirect, component: Component }, index) => {
+  if (redirect) {
+    return <Route key={index} path={path} element={<Navigate to={redirect} replace />} />;
+  }
+  return (
+    <Route
+      key={index}
+      path={path}
+      element={
+        <Suspense fallback={<GlobalSpin />}>
+          {/** @ts-ignore */}
+          <Component />
+        </Suspense>
+      }
+    />
+  );
+});
+/** 注册默认的 */
+installSlot('SIDE_MEU', 'studio', SIDE_MENU);
+installSlot('ROUTES', 'studio', ROUTES);
+
 const Pages: React.FunctionComponent<IPagesProps> = props => {
   const { children } = props;
-
-  const routeComponents = routes.map(({ path, redirect, component: Component }, index) => {
-    if (redirect) {
-      return <Route key={index} path={path} element={<Navigate to={redirect} replace />} />;
-    }
-    return (
-      <Route
-        key={index}
-        path={path}
-        element={
-          <Suspense fallback={<GlobalSpin />}>
-            {/** @ts-ignore */}
-            <Component />
-          </Suspense>
-        }
-      />
-    );
-  });
+  const routes = getSlots('ROUTES');
 
   return (
     <StoreProvider store={initialStore}>
@@ -54,7 +60,7 @@ const Pages: React.FunctionComponent<IPagesProps> = props => {
         <HashRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
-              {routeComponents}
+              {routes}
               {children}
             </Route>
           </Routes>

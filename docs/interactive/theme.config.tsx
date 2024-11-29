@@ -1,6 +1,6 @@
 import React from 'react';
 import { DocsThemeConfig } from 'nextra-theme-docs';
-import { Header } from '@graphscope/docs-components';
+import Header from './components/Header';
 
 const config: DocsThemeConfig = {
   logo: <Header title="Interactive" />,

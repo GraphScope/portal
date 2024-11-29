@@ -1,5 +1,11 @@
 # @graphscope/studio-driver
 
+## 0.1.7
+
+### Patch Changes
+
+- update site
+
 ## 0.1.6
 
 ### Patch Changes

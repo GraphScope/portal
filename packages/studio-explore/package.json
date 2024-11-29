@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/studio-explore",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -25,13 +25,13 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@antv/g2": "^5.2.7",
+    "@antv/g2": "^5.2.8",
     "@graphscope/studio-components": "workspace:*",
     "@graphscope/studio-driver": "workspace:*",
     "@graphscope/studio-graph": "workspace:*",
     "@graphscope/studio-importor": "workspace:*",
     "@graphscope/studio-query": "workspace:*",
-    "@kuzu/kuzu-wasm": "0.6.2-dev",
+    "@graphscope/graphy-website": "workspace:*",
     "d3-force": "latest",
     "localforage": "latest",
     "react": "18.2.0",

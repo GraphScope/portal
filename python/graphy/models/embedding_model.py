@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from typing import List
 from chromadb.utils import embedding_functions
 from sentence_transformers import SentenceTransformer
-from torchtext.vocab import GloVe
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 import numpy as np
@@ -55,36 +54,6 @@ class TfidfEmbedding(TextEmbedding):
 
     def get_name(self):
         return "TF-IDF"
-
-
-class GloveEmbedding(TextEmbedding):
-    def __init__(self):
-        # TODO: the parameters can be configurable if necessary
-        self.embeddings = GloVe(name="6B", dim=100)
-        self.max_length = 100
-        self.embedding_dim = 100
-
-    def embed(self, text_data: List[str]):
-        def sentence_embedding(sentence):
-            words = sentence.split()
-            num_words = min(len(words), self.max_length)
-            embedding_sentence = np.zeros((self.max_length, self.embedding_dim))
-            for i in range(num_words):
-                word = words[i]
-                if word in self.embeddings.stoi:
-                    embedding_sentence[i] = self.embeddings.vectors[
-                        self.embeddings.stoi[word]
-                    ]
-            return embedding_sentence.flatten()
-
-        return np.vstack([sentence_embedding(data) for data in text_data])
-
-    def chroma_embedding_model(self):
-        # TODO
-        return None
-
-    def get_name(self):
-        return "GloVe"
 
 
 class SentenceTransformerEmbedding(TextEmbedding):

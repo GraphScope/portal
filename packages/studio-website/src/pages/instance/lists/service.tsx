@@ -3,7 +3,7 @@ import type { DataloadingJobConfig } from '@graphscope/studio-server';
 import { notification } from '../../../pages/utils';
 
 export const listGraphs = async () => {
-  const _status = await ServiceApiFactory(undefined, location.origin)
+  const _status = await ServiceApiFactory(undefined, window.COORDINATOR_URL)
     .listServiceStatus()
     .then(res => {
       if (res.status === 200) {
@@ -18,7 +18,7 @@ export const listGraphs = async () => {
   // const { GS_ENGINE_TYPE } = window;
   let graphs;
   // if (GS_ENGINE_TYPE === 'interactive') {
-  graphs = await GraphApiFactory(undefined, location.origin)
+  graphs = await GraphApiFactory(undefined, window.COORDINATOR_URL)
     .listGraphs()
     .then(res => {
       if (res.status === 200) {
@@ -31,7 +31,7 @@ export const listGraphs = async () => {
   // }
 
   // if (GS_ENGINE_TYPE === 'groot') {
-  //   graphs = await LegacyApiFactory(undefined, location.origin)
+  //   graphs = await LegacyApiFactory(undefined,window.COORDINATOR_URL)
   //     .listGrootGraph()
   //     .then(res => {
   //       if (res.status === 200) {
@@ -77,7 +77,7 @@ export const listGraphs = async () => {
 };
 
 export const deleteGraph = async (graph_id: string) => {
-  return await GraphApiFactory(undefined, location.origin)
+  return await GraphApiFactory(undefined, window.COORDINATOR_URL)
     .deleteGraphById(graph_id)
     .then(res => {
       if (res.status === 200) {
@@ -94,7 +94,7 @@ export const deleteGraph = async (graph_id: string) => {
 };
 
 export const startService = async (graph_id: string) => {
-  return await ServiceApiFactory(undefined, location.origin)
+  return await ServiceApiFactory(undefined, window.COORDINATOR_URL)
     .startService({
       graph_id,
     })
@@ -112,7 +112,7 @@ export const startService = async (graph_id: string) => {
     });
 };
 export const stopService = async (graph_id: string) => {
-  return await ServiceApiFactory(undefined, location.origin)
+  return await ServiceApiFactory(undefined, window.COORDINATOR_URL)
     .stopService({
       graph_id,
     })
@@ -131,7 +131,7 @@ export const stopService = async (graph_id: string) => {
 };
 /** 获取是否已经导入 */
 export const getDataloadingConfig = async (graph_id: string, dataloadingJobConfig: DataloadingJobConfig) => {
-  return await JobApiFactory(undefined, location.origin)
+  return await JobApiFactory(undefined, window.COORDINATOR_URL)
     .getDataloadingJobConfig(graph_id!, dataloadingJobConfig)
     .then(res => {
       if (res.status === 200) {

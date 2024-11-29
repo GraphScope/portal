@@ -2,7 +2,7 @@
 // import { Utils } from "@graphscope/studio-components";
 // worker中不支持ts语法，通过 tsc @graphscope/studio-components/src/Utils/schema.ts 文件生成 generatorSchemaByGraphData 拷贝到这里
 
-export const getSchemaData = files => {
+export const parseSchemaByFiles = files => {
   var defaultlabelKey = 'label';
   /**
    * 通过 graphData 生成 Schema

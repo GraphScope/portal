@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useContext } from '@graphscope/use-zustand';
 import { Utils, ImportFiles, ParsedFile } from '@graphscope/studio-components';
-import { getSchemaData } from './web-worker';
+import { parseSchemaByFiles } from './web-worker';
 import { transform } from './transform';
 import { Button } from 'antd';
 import localforage from 'localforage';
@@ -27,7 +27,7 @@ const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
         loading: true,
       };
     });
-    const { result: schemaData, duration } = await Utils.asyncFunctionWithWorker(getSchemaData)(files);
+    const { result: schemaData, duration } = await Utils.asyncFunctionWithWorker(parseSchemaByFiles)(files);
     const { nodes, edges } = transform(schemaData);
 
     if (isSaveFiles) {

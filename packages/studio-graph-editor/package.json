@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/studio-graph-editor",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@graphscope/studio-components": "workspace:*",
-    "antd": "^5.17.0",
+    "antd": "^5.22.2",
     "d3-force": "latest",
     "dagre": "latest",
     "html-to-image": "^1.11.11",

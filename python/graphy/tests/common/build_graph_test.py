@@ -12,7 +12,7 @@ def test_graphy_data():
     output_path = os.path.join(temp_dir.name, "graphyourdata", "build_graph_test")
     graph_builder = GraphBuilder(input_data)
 
-    graph_builder.extract_fact_data()
+    graph_builder.extract_data()
 
     assert len(graph_builder.facts_dict) == 12
     assert len(graph_builder.dimensions_dict.keys()) == 5

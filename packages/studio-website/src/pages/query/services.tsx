@@ -41,7 +41,7 @@ export const queryEndpoint = async (): Promise<{
 };
 
 export const queryInfo = async (id: string) => {
-  const result = await ServiceApiFactory(undefined, location.origin)
+  const result = await ServiceApiFactory(undefined, window.COORDINATOR_URL)
     .getServiceStatusById(id)
     .then(res => handleResponse(res))
     .catch(error => handleError(error));
@@ -49,7 +49,7 @@ export const queryInfo = async (id: string) => {
   return result;
 };
 export const queryGraphSchema = async (graph_id: string): Promise<CypherSchemaData> => {
-  const schema = await GraphApiFactory(undefined, location.origin)
+  const schema = await GraphApiFactory(undefined, window.COORDINATOR_URL)
     .getSchemaById(graph_id)
     .then(res => handleResponse(res))
     .catch(error => handleError(error));
@@ -86,7 +86,7 @@ export const queryStatements: IStudioQueryProps['queryStatements'] = async type 
     if (!graph_id) {
       return [];
     }
-    return await StoredProcedureApiFactory(undefined, location.origin)
+    return await StoredProcedureApiFactory(undefined, window.COORDINATOR_URL)
       .listStoredProcedures(graph_id)
       .then(res => {
         if (res.status === 200) {

@@ -9,6 +9,7 @@ export type GraphSchema = {
     properties: {
       type: string;
       name: string;
+      primaryKey?: boolean;
     }[];
   }[];
   edges: {
@@ -17,6 +18,7 @@ export type GraphSchema = {
     properties: {
       type: string;
       name: string;
+      primaryKey?: boolean;
     }[];
     source: string;
     target: string;
