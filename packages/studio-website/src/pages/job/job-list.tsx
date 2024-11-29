@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import type { FC } from 'react';
-import { List, Typography, Tag, message, Button, Popconfirm, Space, Popover, Divider, Flex } from 'antd';
+import { List, Typography, Tag, message, Button, Popconfirm, Space, Popover, Divider } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from '../../hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -95,24 +95,24 @@ const JobsList: FC = () => {
         >
           <List.Item.Meta
             title={
-              <Flex align="center" gap={6}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <Title level={5}>{id}</Title>
                 <Tag icon={JOB_TYPE_ICONS[status]} color={getStatusColor(status)}>
                   {capitalizeFirstLetter(status.toLowerCase())}
                 </Tag>
-              </Flex>
+              </div>
             }
             description={
-              <Flex align="center">
+              <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Text type="secondary">GraphName: {graph_name}</Text>
                 <Divider type="vertical" />
                 <Text type="secondary">JobType: {type}</Text>
                 <Divider type="vertical" />
                 <Text type="secondary">{end_time}</Text>
-              </Flex>
+              </div>
             }
           />
-          <Flex gap={12}>
+          <div style={{ display: 'flex', gap: 12 }}>
             <Text type="secondary">{formatDateTime(dayjs(start_time))}</Text>
             <Popover
               placement="bottom"
@@ -145,7 +145,7 @@ const JobsList: FC = () => {
             >
               <EllipsisOutlined style={{ cursor: 'pointer' }} />
             </Popover>
-          </Flex>
+          </div>
         </List.Item>
       )}
     />
