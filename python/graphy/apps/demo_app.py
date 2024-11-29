@@ -1,7 +1,3 @@
-import torchtext
-
-torchtext.disable_torchtext_deprecation_warning()
-
 from workflow import SurveyPaperReading, ThreadPoolWorkflowExecutor
 from graph.nodes.paper_reading_nodes import ProgressInfo
 from config import WF_UPLOADS_DIR, WF_OUTPUT_DIR, WF_DATA_DIR, WF_VECTDB_DIR
