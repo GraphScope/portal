@@ -25,6 +25,14 @@ const {
   gremlin_endpoint,
 } = params;
 
+// 设置全局响应头
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*'); // 允许跨域访问
+  res.header('Cross-Origin-Embedder-Policy', 'require-corp');
+  res.header('Cross-Origin-Opener-Policy', 'same-origin');
+  next();
+});
+
 // static
 app.use(express.static(WORKSPACE + '/dist'));
 

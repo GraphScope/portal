@@ -39,7 +39,7 @@
     "@ant-design/icons": "^5.2.6",
     "@graphscope/studio-components": "workspace:*",
     "@graphscope/studio-graph-editor": "workspace:*",
-    "antd": "^5.17.0",
+    "antd": "^5.22.2",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

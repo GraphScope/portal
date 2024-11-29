@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react';
 import { viteSingleFile } from 'vite-plugin-singlefile';
 import dotenv from 'dotenv';
 import wasm from 'vite-plugin-wasm';
-import topLevelAwait from 'vite-plugin-top-level-await';
 
 // 获取传递的参数
 const args = process.argv.slice(2);
@@ -20,7 +19,7 @@ const isSingle = mode === 'single' && process.env.NODE_ENV === 'production';
 
 console.log('params', params, args);
 
-const plugins = isSingle ? [react(), viteSingleFile(), wasm(), topLevelAwait()] : [react(), wasm(), topLevelAwait()];
+const plugins = isSingle ? [react(), viteSingleFile(), wasm()] : [react(), wasm()];
 
 const { parsed } = dotenv.configDotenv();
 
@@ -51,6 +50,7 @@ export default defineConfig({
     },
   },
   build: {
+    // minify: false,
     outDir: './dist',
     rollupOptions: {
       external: ['node:os', 'fsevents'], // 要排除的模块

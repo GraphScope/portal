@@ -31,13 +31,17 @@
       "react": "18.2.0",
       "react-dom": "18.2.0",
       "@types/react": "18.2.0",
-      "@types/react-dom": "18.2.0"
+      "@types/react-dom": "18.2.0",
+      "@ant-design/colors": "^7.1.0",
+      "antd": "^5.22.2",
+      "@antv/g2": "^5.2.8"
     }
   },
   "dependencies": {
+    "@ant-design/colors": "^7.1.0",
+    "antd": "^5.22.2",
     "@ant-design/icons": "^5.2.6",
     "@uiw/codemirror-themes": "^4.21.24",
-    "antd": "^5.17.0",
     "buffer": "^6.0.3",
     "buffer-browserify": "^0.2.5",
     "copy-to-clipboard": "^3.3.3",
