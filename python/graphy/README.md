@@ -55,7 +55,7 @@ export PYTHONPATH=$PYTHONPATH:$(pwd)
 ```
 
 # Run Offline Paper Scrapper
-The provided utility allows you to scrape research papers from arXiv. Using a set of seed papers as input, the scraper can iteratively fetch papers from the references of these seed papers. The process continues until a specified number of papers (`max_inspectors`) has been downloaded and processed.
+The provided utility allows you to scrape research papers from arXiv. Using a set of seed papers as input, the scraper can iteratively fetch papers from the references of these seed papers. The process continues until a specified number of papers (`max_inspectors`) has been downloaded and processed. The paper scraper supports interruption and can be safely terminated at any time. When relaunched, it will resume from where it stopped, ensuring continuity without reprocessing already completed tasks.
 
 **Usage**:
 ```bash
@@ -204,6 +204,9 @@ which will only process Paper Inspector without Reference Navigator.
 }
 ```
 
+
+The scraped data will be saved in the directory specified by [WF_OUTPUT_DIR](config/__init__.py), under a subdirectory named after your workflow ID (`<your_workflow_id>`).
+- If the default workflow configuration is used, the workflow ID is `test_paper_scrapper`.
 
 # Run Backend Server
 A backend demo application is included in this project, accessible as a standalone server.

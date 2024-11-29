@@ -6,7 +6,7 @@ import { DeploymentApiFactory } from '@graphscope/studio-server';
 import { SIDE_MENU, SETTING_MENU } from './const';
 import { notification } from 'antd';
 import { listGraphs } from '../pages/instance/lists/service';
-import { SLOTS } from '../slots';
+import { SLOTS, getSlots } from '../slots';
 
 export default function StudioLayout() {
   const { store, updateStore } = useContext();
@@ -16,7 +16,7 @@ export default function StudioLayout() {
     engineType: 'interactive',
   });
   const depolymentInfo = async () => {
-    return await DeploymentApiFactory(undefined, location.origin)
+    return await DeploymentApiFactory(undefined, window.COORDINATOR_URL)
       .getDeploymentInfo()
       .then(res => {
         const { data } = res;
@@ -78,6 +78,7 @@ export default function StudioLayout() {
   };
   useEffect(() => {
     (async () => {
+      setCoordinator();
       const engineType = (await depolymentInfo()) as 'interactive' | 'groot';
       setState(preState => {
         return {
@@ -108,7 +109,9 @@ export default function StudioLayout() {
   }, []);
 
   const { isReady } = state;
-  const _SIDE = [...(SIDE_MENU || []), ...(SLOTS.SIDE_MEU || [])];
+
+  const _SIDE = getSlots('SIDE_MEU');
+
   const { layoutBackground } = useCustomToken();
   if (isReady) {
     return (
@@ -124,4 +127,14 @@ export default function StudioLayout() {
   }
 
   return <GlobalSpin />;
+}
+
+function setCoordinator() {
+  const coordinatorURL = Utils.getSearchParams('coordinator');
+  if (coordinatorURL) {
+    Utils.storage.set('coordinator', coordinatorURL);
+  }
+  const coordinator = Utils.storage.get<string>('coordinator') || location.origin;
+  window.COORDINATOR_URL = coordinator;
+  return coordinator;
 }

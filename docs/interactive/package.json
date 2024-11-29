@@ -9,7 +9,6 @@
     "deploy": "gh-pages -d out -t true"
   },
   "dependencies": {
-    "@graphscope/docs-components": "workspace:*",
     "next": "15.0.2",
     "next-seo": "^6.6.0",
     "nextra": "^2.13.2",

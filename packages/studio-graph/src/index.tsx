@@ -4,7 +4,7 @@ export { default as ExploreGraph } from './app/explore';
 export { getStyleConfig, getDataMap } from './components/Prepare/utils';
 export * from './components';
 export { useContext, GraphProvider } from './hooks/useContext';
-export { default as useCluster } from './hooks/useCluster';
+export { default as useCombos } from './graph/custom-combo/useCombos';
 
 export { default as CypherServices, queryStatement } from './services/cypher';
 

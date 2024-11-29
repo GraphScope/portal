@@ -25,3 +25,4 @@ export { default as ClearCanvas } from './ClearCanvas';
 export { default as CurvatureLinks } from './CurvatureLinks';
 export { default as DagreMode } from './DagreMode';
 export { default as FixedMode } from './FixedMode';
+export { default as Placeholder } from './Placeholder';

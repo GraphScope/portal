@@ -11,6 +11,7 @@ import { handleStyle } from './handleStyle';
 import { nodeCanvasObject } from './custom-node';
 import { linkCanvasObject } from './custom-edge';
 import { BASIC_NODE_R, SELECTED_EDGE_COLOR } from './const';
+import useComboEffect from './custom-combo/useComboEffect';
 
 function calculateRenderTime(N: number) {
   let groups = Math.floor((N - 1) / 500); // 超过基础1个点后，每500个点为一组
@@ -286,6 +287,7 @@ export default function useGraph<P extends GraphProps>(props: P) {
     }
   }, [edgeStyle, edgeStatus]);
 
+  useComboEffect();
   return {
     graph: graphRef.current,
     emitter: emitterRef.current,

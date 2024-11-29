@@ -1,9 +1,9 @@
-const baseURL = 'http://localhost:9999/api';
 import { Utils } from '@graphscope/studio-components';
 import { KuzuDriver } from '../../kuzu-driver';
 import JSZip from 'jszip';
-const url = new URL(baseURL);
-// url.search = new URLSearchParams(params).toString();
+
+const baseURL = Utils.storage.get('graphy_endpoint') || 'http://localhost:9999/api';
+
 export const queryDataset = async () => {
   return fetch(baseURL + '/dataset', {
     method: 'GET',
@@ -479,9 +479,11 @@ export const createKuzuGraph = async (dataset_id: string) => {
   const driver = await getDriver();
   //@ts-ignore
   const { files, schema } = await getFiles(dataset_id);
+  console.log(`DATASETID: ${dataset_id}`);
+  await driver.use(dataset_id);
   await driver.createSchema(schema);
   await driver.loadGraph(files);
-  await driver.setDatasetId(dataset_id);
-  await driver.exportData();
+  console.log("finish load graph");
+  await driver.writeBack();
   console.log('schema', files, schema);
 };

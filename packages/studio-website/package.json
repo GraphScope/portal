@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/studio-site",
-  "version": "0.1.6",
+  "version": "0.1.8-beta.1",
   "author": "pomelo-nwu <czynwu@outlook.com>",
   "files": [
     "es",
@@ -12,10 +12,8 @@
   "scripts": {
     "build": "father build",
     "start": "vite dev",
-    "copyHtml": "cp -f dist/index.html ../../docs/portal/public/portal.html",
-    "build:site:single": "vite build --mode=single && npm run copyHtml",
-    "build:site": "vite build && npm run copyHtml",
-    "prepublishOnly": "npm run build"
+    "build:site:single": "vite build --mode=single",
+    "build:site": "vite build"
   },
   "publishConfig": {
     "access": "public",
@@ -36,8 +34,9 @@
     "@graphscope/studio-query": "workspace:*",
     "@graphscope/studio-server": "workspace:*",
     "@graphscope/use-zustand": "workspace:*",
+    "@graphscope/graphy-website": "workspace:*",
     "@uiw/react-codemirror": "^4.21.21",
-    "antd": "^5.17.0",
+    "antd": "^5.22.2",
     "js-yaml": "^4.1.0",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
@@ -64,6 +63,8 @@
     "typescript": "^5.3.3",
     "vite": "^5.0.12",
     "vite-plugin-node-externals": "^0.0.1",
-    "vite-plugin-singlefile": "^2.0.2"
+    "vite-plugin-singlefile": "^2.0.2",
+    "vite-plugin-top-level-await": "^1.4.4",
+    "vite-plugin-wasm": "^3.3.0"
   }
 }

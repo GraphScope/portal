@@ -17,12 +17,12 @@ export const createGraph = async (params: { graphName: string; nodes: any[]; edg
       description: '',
       schema: schemaJSON,
     };
-    graphs = await GraphApiFactory(undefined, location.origin).createGraph(data);
+    graphs = await GraphApiFactory(undefined, window.COORDINATOR_URL).createGraph(data);
   }
   /** groot 创建 */
   if (GS_ENGINE_TYPE === 'groot' && graph_id) {
     // const schemagrootJSON = transOptionsToGrootSchema(cloneDeep({ nodes: nodes, edges: edges }));
-    graphs = await GraphApiFactory(undefined, location.origin)
+    graphs = await GraphApiFactory(undefined, window.COORDINATOR_URL)
       .importSchemaById(graph_id, schemaJSON)
       .then(res => {
         if (res.status === 200) {
@@ -39,7 +39,7 @@ export const createGraph = async (params: { graphName: string; nodes: any[]; edg
 };
 /** upload file */
 export const uploadFile = async (file: File) => {
-  return UtilsApiFactory(undefined, location.origin)
+  return UtilsApiFactory(undefined, window.COORDINATOR_URL)
     .uploadFile(file)
     .then(res => {
       if (res.status === 200) {
@@ -54,7 +54,7 @@ export const uploadFile = async (file: File) => {
 export const getSchema = async (graph_id: string) => {
   let schema;
   if (window.GS_ENGINE_TYPE === 'interactive' || window.GS_ENGINE_TYPE === 'gart') {
-    schema = await GraphApiFactory(undefined, location.origin)
+    schema = await GraphApiFactory(undefined, window.COORDINATOR_URL)
       .getGraphById(graph_id)
       .then(res => {
         if (res.status === 200) {
@@ -68,7 +68,7 @@ export const getSchema = async (graph_id: string) => {
       });
   }
   if (window.GS_ENGINE_TYPE === 'groot') {
-    schema = await GraphApiFactory(undefined, location.origin)
+    schema = await GraphApiFactory(undefined, window.COORDINATOR_URL)
       .getSchemaById(graph_id)
       .then(res => {
         if (res.status === 200) {
@@ -101,7 +101,7 @@ export const deleteVertexTypeOrEdgeType = async (
   const graph_id = getSearchParams('graph_id') || '';
   if (type === 'nodes') {
     try {
-      const res = await GraphApiFactory(undefined, location.origin).deleteVertexTypeByName(graph_id, label);
+      const res = await GraphApiFactory(undefined, window.COORDINATOR_URL).deleteVertexTypeByName(graph_id, label);
       response = true;
       notification('success', res.data);
     } catch (error) {
@@ -110,7 +110,7 @@ export const deleteVertexTypeOrEdgeType = async (
   }
   if (type === 'edges' && sourceVertexType && destinationVertexType) {
     try {
-      const res = await GraphApiFactory(undefined, location.origin).deleteEdgeTypeByName(
+      const res = await GraphApiFactory(undefined, window.COORDINATOR_URL).deleteEdgeTypeByName(
         graph_id,
         label,
         sourceVertexType,
@@ -139,7 +139,7 @@ export const createVertexTypeOrEdgeType = async (
     //@ts-ignore
     const { vertex_types } = transOptionsToSchema({ nodes: [params], edges: [] });
     try {
-      const res = await GraphApiFactory(undefined, location.origin).createVertexType(graph_id, vertex_types[0]);
+      const res = await GraphApiFactory(undefined, window.COORDINATOR_URL).createVertexType(graph_id, vertex_types[0]);
       notification('success', res.data);
       response = true;
     } catch (error) {
@@ -151,7 +151,7 @@ export const createVertexTypeOrEdgeType = async (
     const { edge_types } = transOptionsToSchema({ nodes: nodes, edges: [params] });
     console.log('edge_types', edge_types, params);
     try {
-      const res = await GraphApiFactory(undefined, location.origin).createEdgeType(graph_id, edge_types[0]);
+      const res = await GraphApiFactory(undefined, window.COORDINATOR_URL).createEdgeType(graph_id, edge_types[0]);
       notification('success', res.data);
       response = true;
     } catch (error) {

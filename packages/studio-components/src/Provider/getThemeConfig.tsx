@@ -44,7 +44,7 @@ export const getThemeConfig = (algorithm: ThemeProviderType['algorithm']) => {
   /** token 基础配置 */
   const tokenConfig = {
     colorBorder: isLight ? '#F0F0F0' : '#303030',
-    colorBgBase: isLight ? '#fff' : 'rgba(12,12,12,1)',
+    colorBgBase: isLight ? '#fff' : '#1d1d1d',
     colorBgLayout: isLight ? '#f5f7f9' : 'rgba(43,43,43,1)',
   };
   return { componentsConfig, tokenConfig };
