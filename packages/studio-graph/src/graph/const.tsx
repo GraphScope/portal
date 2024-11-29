@@ -1,4 +1,4 @@
-import { red, volcano, gold, yellow, lime, green, cyan, blue, purple, magenta, orange } from '@ant-design/colors';
+import { red, gold, lime, cyan, blue, purple, magenta, orange } from '@ant-design/colors';
 
 export const colors: string[] = [
   blue[4],

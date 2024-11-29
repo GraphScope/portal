@@ -10,7 +10,8 @@ import tempfile
 import os
 
 # Get the path of the system's temporary directory
-work_dir = tempfile.gettempdir()
+# work_dir =  tempfile.gettempdir()
+work_dir = '/Users/pomelo/Desktop/github/portal/python/graphy'
 
 # Some global parameters
 WF_STATE_CACHE_KEY = "caches"

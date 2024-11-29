@@ -51,6 +51,7 @@ export default defineConfig({
     },
   },
   build: {
+    minify: false, // 禁用所有压缩
     outDir: './dist',
     rollupOptions: {
       external: ['node:os', 'fsevents'], // 要排除的模块
