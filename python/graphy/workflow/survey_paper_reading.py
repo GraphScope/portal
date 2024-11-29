@@ -229,6 +229,7 @@ class SurveyPaperReading(BaseWorkflow):
                 target = navigator["target"]
                 method = navigator.get("method", "arxiv").lower()
                 paper_download_dir = os.path.join(WF_OUTPUT_DIR, id, "navigator")
+                meta_folder_dir = "meta_folder"
                 finish_signal = navigator.get("finish_signal", "REF_DONE")
                 max_thread_num = navigator.get("max_thread_num", 24)
                 ref_mode = navigator.get("ref_mode", "skip").lower()
@@ -249,6 +250,7 @@ class SurveyPaperReading(BaseWorkflow):
                         finish_signal=finish_signal,
                         max_thread_num=max_thread_num,
                         ref_mode=ref_mode,
+                        meta_folder_dir=meta_folder_dir,
                     )
                 else:
                     edge = PaperNavigateArxivEdge(
@@ -260,6 +262,7 @@ class SurveyPaperReading(BaseWorkflow):
                         finish_signal=finish_signal,
                         max_thread_num=max_thread_num,
                         ref_mode=ref_mode,
+                        meta_folder_dir=meta_folder_dir,
                     )
                 graph.add_edge(edge)
 

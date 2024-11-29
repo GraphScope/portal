@@ -18,11 +18,17 @@ logger = logging.getLogger(__name__)
 class ScholarFetcher:
     def __init__(
         self,
+        persist_store=None,
         download_folder: str = WF_DOWNLOADS_DIR,
         web_data_folder: str = WF_WEBDATA_DIR,
+        meta_folder: str = "",
     ):
         self.download_folder = download_folder
-        self.bib_search_google = BibSearchGoogleScholar(web_data_folder)
+        self.bib_search_google = BibSearchGoogleScholar(
+            persist_store=persist_store,
+            web_data_folder=web_data_folder,
+            meta_folder=meta_folder,
+        )
 
         self.result_former = ResultFormer()
 

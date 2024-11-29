@@ -62,6 +62,7 @@ class PaperNavigateEdge(BaseEdge):
         finish_signal="REF_DONE",
         max_thread_num=24,
         ref_mode=ReferenceExtractStateMode.SkipIfExists,
+        meta_folder_dir="",
     ):
         super().__init__(source, target, name)
         logger.info("initialize of paper navigaete edge")
@@ -76,6 +77,7 @@ class PaperNavigateEdge(BaseEdge):
         self.finish_signal = finish_signal
         self.max_thread_num = max_thread_num
         self.ref_mode = ref_mode
+        self.meta_folder_dir = meta_folder_dir
 
         self.thread_allocator = ResourceAllocator(self.max_thread_num)
 
@@ -103,20 +105,18 @@ class PaperNavigateEdge(BaseEdge):
             if not data_id:
                 continue
 
-            if (
-                self.persist_store.get_state(data_id, self.finish_signal)
-                and self.ref_mode == ReferenceExtractStateMode.SkipIfExists
-            ):
+            reference_hist = self.persist_store.get_state(data_id, self.finish_signal)
+
+            if reference_hist:
                 # This means that the data has already processed
                 logger.info(f"Reference of ID '{data_id}' already obtained.")
 
-                reference_paths = self.persist_store.get_state(
-                    data_id, self.finish_signal
-                )
-                references = reference_paths.get("data", [])
+                references = reference_hist.get("data", [])
                 for reference_info in references:
                     yield reference_info
-                continue
+
+                if self.ref_mode == ReferenceExtractStateMode.SkipIfExists:
+                    continue
 
             parent_id = paper.get("data", {}).get("id", "")
             tasks = set(paper.get("data", {}).get("reference", []))
@@ -124,13 +124,19 @@ class PaperNavigateEdge(BaseEdge):
             if len(parent_id) == 0 or len(tasks) == 0:
                 continue
 
+            succeed_tasks = []
+            if reference_hist:
+                succeed_tasks = reference_hist.get("task", [])
+
             for task in tasks:
-                link_queue.put((task, parent_id, data_id))
+                if task not in succeed_tasks:
+                    link_queue.put((task, parent_id, data_id))
 
         if not link_queue.empty():
             self.thread_allocator.request(amount=self.download_concurrency)
             try:
                 records = {}
+                succ_records = {}
                 with concurrent.futures.ThreadPoolExecutor(
                     max_workers=self.download_concurrency
                 ) as download_executor:
@@ -150,8 +156,8 @@ class PaperNavigateEdge(BaseEdge):
                         or output_queue.unfinished_tasks != 0
                     ):
                         try:
-                            paper_path, parent_id, parent_data_id = output_queue.get(
-                                timeout=0.1
+                            paper_path, parent_id, parent_data_id, task = (
+                                output_queue.get(timeout=0.1)
                             )  # Attempt to get a result from the queue
                             output_json = {
                                 "paper_file_path": paper_path,
@@ -161,6 +167,7 @@ class PaperNavigateEdge(BaseEdge):
                             yield output_json
 
                             records.setdefault(parent_data_id, []).append(output_json)
+                            succ_records.setdefault(parent_data_id, []).append(task)
                             output_queue.task_done()
                         except queue.Empty:
                             continue
@@ -169,20 +176,26 @@ class PaperNavigateEdge(BaseEdge):
                     output_queue.join()
 
                 for parent_data_id in records:
-                    cur_result = {"data": []}
+                    cur_result = {"data": [], "task": []}
+
                     if self.ref_mode == ReferenceExtractStateMode.AppendIfExists:
-                        original_ref = self.persist_store.get_state(
+                        original_info = self.persist_store.get_state(
                             parent_data_id, self.finish_signal
                         )
-                        if original_ref:
-                            if "data" in original_ref and original_ref["data"]:
-                                cur_result = original_ref
+                        if original_info:
+                            if "data" in original_info and original_info["data"]:
+                                cur_result["data"] = original_info["data"]
+                            if "task" in original_info and original_info["task"]:
+                                cur_result["task"] = original_info["task"]
 
                     cur_result["data"].extend(records[parent_data_id])
-                    if len(records[parent_data_id]) > 0:
+                    cur_result["task"].extend(succ_records[parent_data_id])
+
+                    if cur_result:
                         self.persist_store.save_state(
                             parent_data_id, self.finish_signal, cur_result
                         )
+
             except Exception as e:
                 logger.error(f"Get Paper Error: {e}")
             finally:
@@ -204,6 +217,7 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
         finish_signal="_ARXIV_REF_DONE",
         max_thread_num=24,
         ref_mode=ReferenceExtractStateMode.SkipIfExists,
+        meta_folder_dir="",
     ):
         super().__init__(
             source,
@@ -215,6 +229,7 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
             finish_signal,
             max_thread_num,
             ref_mode,
+            meta_folder_dir,
         )
         logger.info("initialize of arxiv paper navigate edge")
 
@@ -235,7 +250,11 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
                 f"--------------  ARXIV DOWNLOAD WORKER: {link}  ------------------"
             )
 
-            arxiv_fetcher = ArxivFetcher(download_folder=self.paper_download_dir)
+            arxiv_fetcher = ArxivFetcher(
+                persist_store=self.persist_store,
+                download_folder=self.paper_download_dir,
+                meta_folder=self.meta_folder_dir,
+            )
             download_list = arxiv_fetcher.download_paper(link, 1)
 
             if len(download_list) == 0:
@@ -245,7 +264,7 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
                     succ, path, exist = download_info
                     if succ and path is not None:
                         logger.info(f"SUCCESSFULLY GET PAPER {path}")
-                        yield path, parent_id, parent_data_id
+                        yield path, parent_id, parent_data_id, link
                     else:
                         logger.info(f"PASS {link} to SCHOLAR FOR FURTHER SEARCH")
                     break
@@ -272,6 +291,7 @@ class PaperNavigateScholarEdge(PaperNavigateEdge):
         finish_signal="_SCHOLAR_REF_DONE",
         max_thread_num=8,
         ref_mode=ReferenceExtractStateMode.SkipIfExists,
+        meta_folder_dir="",
     ):
         super().__init__(
             source,
@@ -283,11 +303,12 @@ class PaperNavigateScholarEdge(PaperNavigateEdge):
             finish_signal,
             max_thread_num,
             ref_mode,
+            meta_folder_dir,
         )
         logger.info("initialize of arxiv paper navigate edge")
 
     def download_worker(self, scholar_link_queue):
-        while True:
+        while not scholar_link_queue.empty():
             info = scholar_link_queue.get()
 
             if info is None:
@@ -299,7 +320,7 @@ class PaperNavigateScholarEdge(PaperNavigateEdge):
                 scholar_link_queue.task_done()
                 continue
 
-            logger.info(
+            logger.error(
                 f"--------------  SCHOLAR DOWNLOAD WORKER: {link}  ------------------"
             )
 
@@ -318,20 +339,27 @@ class PaperNavigateScholarEdge(PaperNavigateEdge):
             # )
 
             scholar_fetcher = ScholarFetcher(
-                download_folder=self.paper_download_dir, web_data_folder=web_data_dir
+                persist_store=self.persist_store,
+                download_folder=self.paper_download_dir,
+                web_data_folder=web_data_dir,
+                meta_folder=self.meta_folder_dir,
+            )
+            logger.error(
+                f"--------------  start to download: {link}  ------------------"
             )
             download_list = scholar_fetcher.download_paper(link, mode="exact")
+            logger.error(f"--------------  finish download: {link}  ------------------")
 
             for download_info in download_list:
                 succ, path, exist = download_info
                 if succ and path is not None:
                     logger.info(f"SUCCESSFULLY GET PAPER {path}")
-                    yield path, parent_id, parent_data_id
+                    yield path, parent_id, parent_data_id, link
 
             scholar_link_queue.task_done()
 
-            logger.info(
+            logger.error(
                 f"--------------  FINISH SCHOLAR WORKER: {link}  ------------------"
             )
 
-        logger.info("QUIT SCHOLAR")
+        logger.error("QUIT SCHOLAR")

@@ -60,7 +60,9 @@ class ArxivFetcher:
     def __init__(
         self,
         timeout: int = 20,
+        persist_store=None,
         download_folder: str = WF_DOWNLOADS_DIR,
+        meta_folder: str = "",
     ):
         """
         Initialize the ArxivFetcher.
@@ -71,7 +73,9 @@ class ArxivFetcher:
         self.client = arxiv.Client(delay_seconds=0.2, page_size=3, num_retries=1)
         self.timeout = timeout
         self.download_folder = download_folder
-        self.bib_search_arxiv = BibSearchArxiv()
+        self.bib_search_arxiv = BibSearchArxiv(
+            persist_store=persist_store, meta_folder=meta_folder
+        )
 
         self.result_former = ResultFormer()
 
