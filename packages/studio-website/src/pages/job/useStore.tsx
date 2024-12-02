@@ -146,7 +146,7 @@ const formatDateTime = (date, locale = 'en') => {
   dayjs.locale(locale); // 设置语言环境
 
   if (date.isSame(now, 'day')) {
-    return date.format('Today at h:mm A');
+    return `Today at ${date.format('h:mm A')}`; // 使用 AM/PM
   } else if (date.isSame(now.subtract(1, 'day'), 'day')) {
     return `Yesterday at ${date.format('h:mm A')}`;
   } else if (date.isSame(now.add(1, 'day'), 'day')) {
