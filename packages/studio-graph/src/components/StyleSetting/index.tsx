@@ -71,16 +71,13 @@ const StyleSetting: React.FunctionComponent<IOverviewProps> = props => {
   });
 
   return (
-    <Flex vertical gap={12}>
-      {showHeader && (
-        <Title level={3} style={{ margin: '0px' }}>
-          <FormattedMessage id="Style Setting" />
-        </Title>
-      )}
+    <Flex vertical gap={16}>
+      {/* <Title level={4} style={{ margin: '0px' }}>
+        <FormattedMessage id="Style Setting" />
+      </Title> */}
       <Text type="secondary">
         You can click on each label to set the color, size, and display text for vertices and edges.
       </Text>
-
       <Title level={5} style={{ margin: '0px' }}>
         <FormattedMessage id="Vertex Labels" />
       </Title>
