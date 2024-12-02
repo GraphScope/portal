@@ -20,6 +20,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Initialize and execute the graph builder
-    graph_builder = GraphBuilder(args.input_data)
+    graph_builder = GraphBuilder(args.input)
     graph_builder.extract_data()
-    graph_builder.build_graph(output_path=args.output_path)
+    graph_builder.build_graph(output_path=args.output)
