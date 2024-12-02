@@ -95,9 +95,11 @@ def sanitize_data(data: dict) -> dict:
     for key, value in data.items():
         if isinstance(value, str):
             # Clean string values
-            sanitized_data[key] = re.sub(
-                r"[\n\t" + re.escape(DEFAULT_DELIMITER) + r"]", " ", value
+            clean_value = re.sub(
+                r"[\n\r\t" + re.escape(DEFAULT_DELIMITER) + r"]", " ", value
             ).strip()
+            clean_value = clean_value.replace("\x0c", "\\f")
+            sanitized_data[key] = clean_value
         elif isinstance(value, dict):
             # Recursively sanitize nested dictionaries
             sanitized_data[key] = sanitize_data(value)
