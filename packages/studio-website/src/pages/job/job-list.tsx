@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import type { FC } from 'react';
-import { List, Typography, Tag, message, Button, Popconfirm, Divider, Space, Popover, theme } from 'antd';
-import { EllipsisOutlined } from '@ant-design/icons';
+import { List, Typography, Tag, message, Button, Popconfirm, Space, Popover, Divider, Flex, Tooltip } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from '../../hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import { FileSearchOutlined, EllipsisOutlined } from '@ant-design/icons';
 import { listJobs, IJobType, deleteJobById } from './service';
 import JobHeader from './job-header';
 import dayjs from 'dayjs';
@@ -22,9 +22,7 @@ export interface IState {
 }
 
 const JobsList: FC = () => {
-  const { token } = theme.useToken();
   const history = useHistory();
-
   const [state, setState] = useState<IState>({
     jobsList: [],
     rawJobsList: [],
@@ -43,15 +41,13 @@ const JobsList: FC = () => {
       const typeOptions = uniqueTypes.map(type => ({ value: type, label: type }));
       const searchOptions = res.map(item => ({ value: item.id, label: item.id }));
 
-      setState(prevState => {
-        return {
-          ...prevState,
-          jobsList: res,
-          rawJobsList: res,
-          typeOptions,
-          searchOptions,
-        };
-      });
+      setState(prevState => ({
+        ...prevState,
+        jobsList: res,
+        rawJobsList: res,
+        typeOptions,
+        searchOptions,
+      }));
     } catch (error) {
       message.error('Failed to load jobs');
     }
@@ -76,27 +72,27 @@ const JobsList: FC = () => {
 
   return (
     <List
-      style={{ padding: '12px 24px', backgroundColor: token.colorBgBase, borderRadius: 6 }}
+      style={{ padding: '12px 24px', backgroundColor: '#fff', borderRadius: 6 }}
       itemLayout="horizontal"
       header={
         <JobHeader
           {...state}
           onChange={(selectedItems, filterType) => {
-            const updatedJobsList = handleChange(selectedItems, filterType, rawJobsList);
-            setState(prevState => ({ ...prevState, jobsList: updatedJobsList }));
+            setState(prevState => ({
+              ...prevState,
+              jobsList: handleChange(selectedItems, filterType, rawJobsList),
+            }));
           }}
         />
       }
       dataSource={jobsList}
       pagination={{ position: 'bottom', align: 'end' }}
       renderItem={({ id, status, graph_name, type, start_time, end_time }) => {
-        const isJobSelected = state.jobId === id;
-
         return (
           <List.Item
             style={{
               padding: '6px 12px',
-              backgroundColor: isJobSelected ? token.colorBgLayout : token.colorBgBase,
+              backgroundColor: state.jobId === id ? '#fafafa' : '#fff',
               cursor: 'pointer',
             }}
             onMouseEnter={() => setState(prevState => ({ ...prevState, jobId: id }))}
@@ -105,50 +101,47 @@ const JobsList: FC = () => {
           >
             <List.Item.Meta
               title={
-                <Space align="center">
+                <Flex align="center" gap={6}>
                   <Title level={5}>{id}</Title>
+
                   <Tag icon={JOB_TYPE_ICONS[status]} color={statusColor[status]}>
                     {capitalizeFirstLetter(status.toLowerCase())}
                   </Tag>
-                </Space>
+                </Flex>
               }
               description={
-                <Space align="center" split={<Divider type="vertical" />}>
+                <Flex align="center">
                   <Text type="secondary">GraphName: {graph_name}</Text>
+                  <Divider type="vertical" />
                   <Text type="secondary">JobType: {type}</Text>
+                  <Divider type="vertical" />
                   <Text type="secondary">{end_time}</Text>
-                </Space>
+                </Flex>
               }
             />
 
-            <Space>
+            <Flex gap={12}>
               <Text type="secondary">{formatDateTime(dayjs(start_time))}</Text>
-              <Popover
-                placement="bottom"
-                content={
-                  <Popconfirm
-                    placement="bottomRight"
-                    title={<FormattedMessage id="Are you sure to delete this task?" />}
-                    onConfirm={() => handleDeleteJob(id)}
-                    okText={<FormattedMessage id="Yes" />}
-                    cancelText={<FormattedMessage id="No" />}
-                  >
-                    <Button
-                      type="text"
-                      size="small"
-                      danger
-                      ghost
-                      icon={<FontAwesomeIcon icon={faTrashCan} />}
-                      disabled={!['RUNNING', 'WAITING'].includes(status)}
-                    >
-                      <FormattedMessage id="Delete" />
-                    </Button>
-                  </Popconfirm>
-                }
+              <Popconfirm
+                placement="bottomRight"
+                title={<FormattedMessage id="Are you sure to delete this task?" />}
+                onConfirm={() => handleDeleteJob(id)}
+                okText={<FormattedMessage id="Yes" />}
+                cancelText={<FormattedMessage id="No" />}
               >
-                <EllipsisOutlined />
-              </Popover>
-            </Space>
+                <Tooltip placement="top" title={<FormattedMessage id="Delete" />}>
+                  <Button
+                    style={{ cursor: 'pointer' }}
+                    type="text"
+                    size="small"
+                    danger
+                    ghost
+                    icon={<FontAwesomeIcon icon={faTrashCan} />}
+                    disabled={!['RUNNING', 'WAITING'].includes(status)}
+                  />
+                </Tooltip>
+              </Popconfirm>
+            </Flex>
           </List.Item>
         );
       }}
