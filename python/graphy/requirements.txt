@@ -23,7 +23,7 @@ numpy==1.26.4
 Pillow>=10.3.0
 psutil==6.1.0
 pytest>=8.3.0
-pytest_benchmark>=5.1.0
+pytest-benchmark>=5.1.0
 ray>=2.39.0
 rapidfuzz>=3.9.7
 requests>=2.31.0
