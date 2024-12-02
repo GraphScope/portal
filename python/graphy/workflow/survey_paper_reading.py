@@ -5,6 +5,8 @@ from graph import BaseGraph
 from graph.edges.paper_navigate_edge import (
     PaperNavigateArxivEdge,
     PaperNavigateScholarEdge,
+    PaperNavigateEdge,
+    from_edge_conf,
 )
 from graph.nodes.paper_reading_nodes import (
     PaperInspector,
@@ -222,13 +224,8 @@ class SurveyPaperReading(BaseWorkflow):
 
             # Parse Navigator Edges
             navigators = graph_json.get("navigators", [])
-            for navigator in navigators:
-                method = navigator.get("method", "arxiv")
-                if method == "arxiv":
-                    edge = PaperNavigateArxivEdge.from_dict(navigator, persist_store)
-                else:
-                    edge = PaperNavigateScholarEdge.from_dict(navigator, persist_store)
-                graph.add_edge(edge)
+            for edge_conf in navigators:
+                graph.add_edge(from_edge_conf(edge_conf, persist_store))
 
         # Handle single InspectorNode special case
         else:

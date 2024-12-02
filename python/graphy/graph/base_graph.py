@@ -1,5 +1,5 @@
 from typing import List, Dict
-from .edges import BaseEdge
+from .edges import AbstractEdge
 from .nodes import BaseNode
 
 
@@ -11,7 +11,7 @@ class BaseGraph:
     def __init__(self):
         self.node_names = []
         self.nodes: Dict[str, BaseNode] = {}
-        self.edges: Dict[str, BaseEdge] = {}
+        self.edges: Dict[str, AbstractEdge] = {}
         self.adjacency_list: Dict[str, List[str]] = {}
 
     def get_node_names(self) -> List[str]:
@@ -62,7 +62,7 @@ class BaseGraph:
                 e for e in edges if self.edges[e].target != node_name
             ]
 
-    def add_edge(self, edge: BaseEdge):
+    def add_edge(self, edge: AbstractEdge):
         """Adds an edge to the graph."""
         if edge.name in self.edges:
             raise ValueError(f"Edge {edge.name} already exists.")
@@ -71,7 +71,7 @@ class BaseGraph:
         self.edges[edge.name] = edge
         self.adjacency_list[edge.source].append(edge.name)
 
-    def get_edge(self, edge_name: str) -> BaseEdge:
+    def get_edge(self, edge_name: str) -> AbstractEdge:
         """Returns an edge from the graph."""
         return self.edges.get(edge_name)
 
@@ -83,7 +83,7 @@ class BaseGraph:
         self.adjacency_list[edge.source].remove(edge_name)
         del self.edges[edge_name]
 
-    def get_adjacent_edges(self, node_name: str) -> List[BaseEdge]:
+    def get_adjacent_edges(self, node_name: str) -> List[AbstractEdge]:
         """Returns a list of edges adjacent to a given node."""
         return [self.edges[edge] for edge in self.adjacency_list.get(node_name, [])]
 

@@ -4,7 +4,7 @@ from config import WF_OUTPUT_DIR
 from db import JsonFileStore
 
 from enum import Enum, auto
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Type
 from utils.profiler import profiler
 import logging
 import threading
@@ -62,7 +62,7 @@ class PaperNavigateEdge(AbstractEdge):
         name=None,
         download_concurrency=1,
         finish_signal="REF_DONE",
-        max_thread_num=24,
+        max_thread_num=12,
         ref_mode=ReferenceExtractStateMode.SkipIfExists,
         meta_folder_dir="",
     ):
@@ -81,15 +81,15 @@ class PaperNavigateEdge(AbstractEdge):
         self.thread_allocator = ResourceAllocator(self.max_thread_num)
 
     def download_worker(self, link_queue):
-        logger.error("Error: Download Worker Undefined.")
-        pass
+        """Default worker, must be overridden by subclasses."""
+        raise NotImplementedError("Subclasses must implement 'download_worker'.")
 
     def run_worker(self, worker_func, link_queue, output_queue):
         for result in worker_func(link_queue):
             output_queue.put(result)
 
     @classmethod
-    def from_dict(cls, edge_conf: Dict[str, Any], persist_store=None):
+    def from_dict(cls: Type["PaperNavigateEdge"], edge_conf, persist_store=None):
         name = edge_conf.get("name", "")
         source = edge_conf.get("source", "")
         target = edge_conf.get("target", "")
@@ -241,6 +241,37 @@ class PaperNavigateEdge(AbstractEdge):
         logger.debug("================= FINISH NAVIGATE ==============")
 
 
+def from_edge_conf(edge_conf, persist_store=None):
+    edge = PaperNavigateEdge.from_dict(edge_conf, persist_store)
+    method = edge_conf.get("method", "arxiv")
+    if method == "arxiv":
+        return PaperNavigateArxivEdge(
+            edge.source,
+            edge.target,
+            edge.paper_download_dir,
+            edge.persist_store,
+            edge.name,
+            edge.download_concurrency,
+            edge.finish_signal,
+            edge.max_thread_num,
+            edge.ref_mode,
+            edge.meta_folder_dir,
+        )
+    else:
+        return PaperNavigateScholarEdge(
+            edge.source,
+            edge.target,
+            edge.paper_download_dir,
+            edge.persist_store,
+            edge.name,
+            edge.download_concurrency,
+            edge.finish_signal,
+            edge.max_thread_num,
+            edge.ref_mode,
+            edge.meta_folder_dir,
+        )
+
+
 @profiler.profile(name="PaperNavigateArxivEdge")
 class PaperNavigateArxivEdge(PaperNavigateEdge):
     def __init__(
@@ -252,7 +283,7 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
         name=None,
         arxiv_download_concurrency=4,
         finish_signal="_ARXIV_REF_DONE",
-        max_thread_num=24,
+        max_thread_num=12,
         ref_mode=ReferenceExtractStateMode.SkipIfExists,
         meta_folder_dir="",
     ):
@@ -269,14 +300,6 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
             meta_folder_dir,
         )
         logger.info("initialize of arxiv paper navigate edge")
-
-    @classmethod
-    def from_dict(cls, edge_conf, persist_store=None):
-        method = edge_conf.get("method", "arxiv").lower()
-        if method != "arxiv":
-            raise ValueError("Method must be 'arxiv' for `PaperNavigateArxivEdge`.")
-        logger.info("initialize of arxiv paper navigate edge")
-        return super().from_dict(edge_conf, persist_store)
 
     def download_worker(self, link_queue):
         while not link_queue.empty():
@@ -350,15 +373,7 @@ class PaperNavigateScholarEdge(PaperNavigateEdge):
             ref_mode,
             meta_folder_dir,
         )
-        logger.info("initialize of arxiv paper navigate edge")
-
-    @classmethod
-    def from_dict(cls, edge_conf, persist_store=None):
-        method = edge_conf.get("method", "scholar").lower()
-        if method != "scholar":
-            raise ValueError("Method must be 'scholar' for `PaperNavigateScholarEdge`.")
-        logger.info("initialize of scholar paper navigate edge")
-        return super().from_dict(edge_conf, persist_store)
+        logger.info("initialize of google scholar paper navigate edge")
 
     def download_worker(self, scholar_link_queue):
         while not scholar_link_queue.empty():
