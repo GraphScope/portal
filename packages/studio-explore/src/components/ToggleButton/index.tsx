@@ -3,7 +3,15 @@ import { Tooltip, Button } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { useSection, Icons } from '@graphscope/studio-components';
 
-const ToogleButton = () => {
+export const ToogleLeftButton = () => {
+  const { toggleLeftSide } = useSection();
+  return (
+    <Tooltip title={<FormattedMessage id="Toggle Left Side" />} placement="right">
+      <Button icon={<Icons.Sidebar />} onClick={() => toggleLeftSide()} type="text" />
+    </Tooltip>
+  );
+};
+export const ToogleRightButton = () => {
   const { toggleRightSide } = useSection();
   return (
     <Tooltip title={<FormattedMessage id="Toggle Right Side" />} placement="left">
@@ -11,5 +19,3 @@ const ToogleButton = () => {
     </Tooltip>
   );
 };
-
-export default ToogleButton;

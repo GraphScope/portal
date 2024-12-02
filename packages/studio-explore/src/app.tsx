@@ -28,8 +28,8 @@ import {
   Placeholder,
 } from '@graphscope/studio-graph';
 
-import ToogleButton from './components/ToggleButton';
-import { Connection, FetchGraph, Searchbar, Statistics, ClusterAnalysis } from './components';
+import { ToogleLeftButton, ToogleRightButton } from './components/ToggleButton';
+import { Connection, FetchGraph, Searchbar, Statistics, ClusterAnalysis, Next } from './components';
 
 import { Divider } from 'antd';
 import { getDefaultServices } from './services';
@@ -57,27 +57,30 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             splitBorder
             rightSide={
               <PropertiesPanel>
-                <SegmentedTabs
-                  block
-                  items={[
-                    {
-                      key: 'StyleSetting',
-                      label: 'StyleSetting',
-                      children: <StyleSetting />,
-                    },
-                    {
-                      key: 'Statistics',
-                      label: 'Statistics',
-                      children: <Statistics />,
-                    },
-                    {
-                      key: 'ClusterAnalysis',
-                      label: 'ClusterAnalysis',
-                      children: <ClusterAnalysis />,
-                    },
-                  ]}
-                ></SegmentedTabs>
+                <Next />
               </PropertiesPanel>
+            }
+            leftSide={
+              <SegmentedTabs
+                block
+                items={[
+                  {
+                    key: 'StyleSetting',
+                    label: 'StyleSetting',
+                    children: <StyleSetting />,
+                  },
+                  {
+                    key: 'Statistics',
+                    label: 'Statistics',
+                    children: <Statistics />,
+                  },
+                  {
+                    key: 'ClusterAnalysis',
+                    label: 'ClusterAnalysis',
+                    children: <ClusterAnalysis />,
+                  },
+                ]}
+              ></SegmentedTabs>
             }
             autoResize={false}
             rightSideStyle={{
@@ -87,7 +90,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
               overflowY: 'scroll',
             }}
             defaultCollapsed={{
-              leftSide: true,
+              leftSide: false,
               rightSide: false,
             }}
           >
@@ -98,13 +101,6 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             <FetchGraph />
             <Placeholder />
             <Loading />
-            <Toolbar
-              direction="horizontal"
-              style={{ position: 'absolute', top: '20px', left: '20px', width: 500 }}
-              noSpace
-            >
-              <Searchbar />
-            </Toolbar>
 
             <ContextMenu>
               <NeighborQuery />
@@ -113,11 +109,18 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
               <DeleteNode />
             </ContextMenu>
             <Toolbar
-              style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset', background: buttonBackground }}
+              direction="horizontal"
+              style={{ position: 'absolute', top: '20px', left: '80px', width: 500 }}
+              noSpace
+            >
+              <Searchbar />
+            </Toolbar>
+            <Toolbar
+              style={{ position: 'absolute', top: '20px', left: '20px', right: 'unset', background: buttonBackground }}
             >
               <Connection />
               <Divider style={{ margin: '0px' }} />
-              <ToogleButton />
+              <ToogleLeftButton />
               <Divider style={{ margin: '0px' }} />
               <FullScreen containerRef={containerRef} />
               <ZoomFit />

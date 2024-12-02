@@ -25,7 +25,9 @@ const useComboEvent = () => {
         const offset = getOffset(container);
         const x = ev.pageX - offset.left;
         const y = ev.pageY - offset.top;
+
         const position = graph?.screen2GraphCoords(x, y, 0);
+
         if (position) {
           const combo = combos.find(item => {
             const rect = getComboTextRect(item);
@@ -83,6 +85,7 @@ const useComboEvent = () => {
         if (combo) {
           //禁用默认的 pan 交互
           (graph as ForceGraphInstance).enablePanInteraction(false);
+          container.classList.add('grabbable');
           startX = e.clientX;
           startY = e.clientY;
           isDragging = true;
@@ -100,19 +103,21 @@ const useComboEvent = () => {
       }
     }
     function pointerup(e: any) {
-      if (isDragging) {
+      if (isDragging && container) {
+        isDragging = false;
+        container.classList.remove('grabbable');
         const clickDuration = Date.now() - clickStartTime; // 计算按下持续时间
         // 如果按下时间非常短，认为是点击事件,100ms 作为点击和拖拽的阈值
-        if (clickDuration < 100) {
+        if (clickDuration < 200) {
           onClickCombo(e);
         } else {
-          isDragging = false;
           const dx = e.clientX - startX;
           const dy = e.clientY - startY;
           updatePosition(dx, dy);
           updateCombo(dx, dy);
           updateStore(draft => {
             draft.combos = _groups;
+            draft.reheatSimulation = false;
           });
         }
       }
@@ -120,7 +125,8 @@ const useComboEvent = () => {
       (graph as ForceGraphInstance).enablePanInteraction(true);
     }
     function pointerout() {
-      isDragging = false;
+      // isDragging = false;
+      // clickStartTime = 0;
     }
     if (container) {
       // 监听 pointerdown 事件来开始拖拽

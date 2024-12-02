@@ -22,21 +22,42 @@ export function getStyleConfig(schema: ISchema, graphId: string) {
 
   schema.nodes.forEach((item, index) => {
     const { label } = item;
+    let caption: string[] = [];
+    item.properties.forEach(p => {
+      const { name } = p;
+      if (name === 'name') {
+        caption = ['name'];
+      }
+      if (name === 'title') {
+        caption = ['title'];
+      }
+    });
     defaultStyle.nodeStyle[label] = {
       label: item.label,
       size: DEFAULT_NODE_SIZE,
       color: colors[index],
-      caption: Object.keys(item.properties || {})[0] || 'id',
+      caption,
       captionStatus: 'display',
     };
   });
   schema.edges.forEach((item, index) => {
     const { label } = item;
+    let caption: string[] = [];
+    item.properties.forEach(p => {
+      const { name } = p;
+      if (name === 'name') {
+        caption = ['name'];
+      }
+      if (name === 'title') {
+        caption = ['title'];
+      }
+    });
+
     defaultStyle.edgeStyle[label] = {
       label: item.label,
       size: DEFAULT_EDGE_WIDTH,
       color: DEFAULT_EDGE_COLOR,
-      caption: Object.keys(item.properties || {})[0] || 'id',
+      caption,
       captionStatus: 'display',
     };
   });
