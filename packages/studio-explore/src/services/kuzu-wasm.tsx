@@ -4,7 +4,7 @@ import type { IQueryTypes, IServiceQueries } from '@graphscope/studio-graph';
 import type { IQueryGraphData, IQueryGraphSchema } from '../components/FetchGraph';
 import type { IQuerySearch } from '../components/Searchbar';
 import type { IQuerySavedStatements } from '../components/Searchbar/CascaderSearch';
-import type { IQueryStatistics } from '../components/Statistics';
+import type { IQueryStatistics } from '../components/Statistics/TotalCounts';
 import { transNeo4jSchema } from './utils';
 import localforage from 'localforage';
 import { KuzuDriver } from '@graphscope/graphy-website';
