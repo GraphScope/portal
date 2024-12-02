@@ -202,12 +202,14 @@
     ],
     "navigators": [
       {
-        "method": "arxiv",
         "name": "Reference",
         "source": "PaperInspector",
         "target": "PaperInspector",
-        "max_thread_num": 24,
-        "ref_mode": "skip"
+        "method": "arxiv",
+        "args": {
+          "max_thread_num": 12,
+          "ref_mode": "skip"
+        }
       }
     ]
   }

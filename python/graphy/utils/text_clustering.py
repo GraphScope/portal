@@ -17,7 +17,6 @@ from config import WF_OUTPUT_DIR
 from models import (
     TextEmbedding,
     TfidfEmbedding,
-    GloveEmbedding,
     SentenceTransformerEmbedding,
 )
 
@@ -193,7 +192,6 @@ def main(clustering_node, clustering_keys, embedding_method, n_clusters):
 
     embedding_methods = {
         "tfidf": TfidfEmbedding,
-        "glove": GloveEmbedding,
         "sentence_transformer": SentenceTransformerEmbedding,
     }
 
@@ -232,8 +230,8 @@ if __name__ == "__main__":
         "--embedding",
         type=str,
         required=True,
-        choices=["tfidf", "sentence_transformer", "glove"],
-        help="Select embedding method: 'tfidf', 'sentence_transformer', or 'glove'.",
+        choices=["tfidf", "sentence_transformer"],
+        help="Select embedding method: 'tfidf', 'sentence_transformer'.",
     )
     parser.add_argument(
         "--n_clusters",

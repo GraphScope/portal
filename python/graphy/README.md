@@ -12,8 +12,8 @@ Preprocessing unstructured data is often a tedious and time-consuming task. And 
 This repository introduces the initial prototype of the Graphy platform, as illustrated above, with a focus on academic papers, which are often publicly accessible. In this prototype, the primary unstructured data consists of research paper PDFs. Graphy’s workflow is built upon two key abstractions:
 - **Inspector**: The Inspector abstraction defines the structured information to be extracted from papers. It utilizes an inner Directed Acyclic Graph (DAG), where each subnode represents specific instructions for LLMs to extract targeted information from the paper. This DAG mirrors the commonly referenced ["Tree of Thought"](https://arxiv.org/abs/2305.10601)  pipeline in the LLM literature.
 - **Navigator**: The Navigator abstraction determines how related papers can be fetched and processed via the Inspector. Currently, two navigators are available:
-    - [Arxiv Fetcher](./utils/arxiv_fetcher.py) for retrieving PDFs from ArXiv.
-	- [Google Scholar Fetcher](./utils/scholar_fetcher.py) for fetching PDFs via Google Scholar.
+    - [PaperNavigateArxivEdge](./graph/edges/paper_navigate_edge.py) for retrieving PDFs from ArXiv.
+	- [PaperNavigateScholarEdge](./graph/edges/paper_navigate_edge.py) for fetching PDFs via Google Scholar.
 
 These navigators enable the creation of a rich, interconnected database of academic papers.
 
@@ -191,9 +191,8 @@ We further explain the `extract_from` field for a node within an Inspector, whic
 ```
 
 ### Navigators
-Currently, the only thing to configure in a navigator is the connected Inspector nodes.
-The `navigators` can be left empty, as in [workflow_inspector](config/workflow_inspector.json),
-which will only process Paper Inspector without Reference Navigator.
+Currently, the only thing to configure in a navigator is the connected Inspector nodes. The following
+most simple navigator configuration uses `PaperNavigateArxivEdge` by default.
 
 **Example**:
 ```json
@@ -204,6 +203,21 @@ which will only process Paper Inspector without Reference Navigator.
 }
 ```
 
+To configure using `PaperNavigateScholarEdge`, a 'method' field of value 'scholar' should be added.
+Please use `PaperNavigateScholarEdge` with caution that it may violate Google Scholar's terms of service,
+and can be blocked if used excessively.
+
+```json
+{
+    "name": "Reference",
+    "source": "PaperInspector",
+    "target": "PaperInspector",
+    "method": "scholar"
+}
+```
+
+> The `navigators` can be left empty, as in [workflow_inspector](config/workflow_inspector.json),
+which will only process Paper Inspector without Reference Navigator.
 
 The scraped data will be saved in the directory specified by [WF_OUTPUT_DIR](config/__init__.py), under a subdirectory named after your workflow ID (`<your_workflow_id>`).
 - If the default workflow configuration is used, the workflow ID is `test_paper_scrapper`.
