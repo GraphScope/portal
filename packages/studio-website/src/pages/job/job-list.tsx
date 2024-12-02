@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import type { FC } from 'react';
-import { List, Typography, Tag, message, Button, Popconfirm, Space, Popover, Divider, Flex } from 'antd';
+import { List, Typography, Tag, message, Button, Popconfirm, Space, Popover, Divider, Flex, Tooltip } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from '../../hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -115,41 +115,39 @@ const JobsList: FC = () => {
                 </Flex>
               }
             />
+
             <Flex gap={12}>
               <Text type="secondary">{formatDateTime(dayjs(start_time))}</Text>
-              <Popover
-                placement="bottom"
-                content={
-                  <Space>
-                    <Popconfirm
-                      placement="bottomRight"
-                      title={<FormattedMessage id="Are you sure to delete this task?" />}
-                      onConfirm={() => handleDeleteJob(id)}
-                      okText={<FormattedMessage id="Yes" />}
-                      cancelText={<FormattedMessage id="No" />}
-                    >
-                      <Button
-                        style={{ cursor: 'pointer' }}
-                        type="text"
-                        size="small"
-                        danger
-                        ghost
-                        icon={<FontAwesomeIcon icon={faTrashCan} />}
-                        disabled={!['RUNNING', 'WAITING'].includes(status)}
-                      />
-                    </Popconfirm>
+              <Space>
+                <Popconfirm
+                  placement="bottomRight"
+                  title={<FormattedMessage id="Are you sure to delete this task?" />}
+                  onConfirm={() => handleDeleteJob(id)}
+                  okText={<FormattedMessage id="Yes" />}
+                  cancelText={<FormattedMessage id="No" />}
+                >
+                  <Tooltip placement="top" title={<FormattedMessage id="Delete" />}>
                     <Button
                       style={{ cursor: 'pointer' }}
                       type="text"
                       size="small"
-                      icon={<FileSearchOutlined />}
-                      onClick={() => history.push(`/job/detail?jobId=${id}`)}
+                      danger
+                      ghost
+                      icon={<FontAwesomeIcon icon={faTrashCan} />}
+                      disabled={!['RUNNING', 'WAITING'].includes(status)}
                     />
-                  </Space>
-                }
-              >
-                <EllipsisOutlined style={{ cursor: 'pointer' }} />
-              </Popover>
+                  </Tooltip>
+                </Popconfirm>
+                <Tooltip placement="top" title={<FormattedMessage id="Details" />}>
+                  <Button
+                    style={{ cursor: 'pointer' }}
+                    type="text"
+                    size="small"
+                    icon={<FileSearchOutlined />}
+                    onClick={() => history.push(`/job/detail?jobId=${id}`)}
+                  />
+                </Tooltip>
+              </Space>
             </Flex>
           </List.Item>
         );
