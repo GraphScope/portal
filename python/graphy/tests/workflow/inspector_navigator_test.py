@@ -1,7 +1,3 @@
-import torchtext
-
-torchtext.disable_torchtext_deprecation_warning()
-
 import pytest
 from models import DEFAULT_LLM_MODEL_CONFIG
 from workflow import ThreadPoolWorkflowExecutor
