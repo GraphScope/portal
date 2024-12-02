@@ -4,7 +4,8 @@ import type { IQueryTypes, IServiceQueries } from '@graphscope/studio-graph';
 import type { IQueryGraphData, IQueryGraphSchema } from '../components/FetchGraph';
 import type { IQuerySearch } from '../components/Searchbar';
 import type { IQuerySavedStatements } from '../components/Searchbar/CascaderSearch';
-import type { IQueryStatistics } from '../components/Statistics';
+import type { IQueryStatistics } from '../components/Statistics/TotalCounts';
+import type { IQueryPropertyStatics } from '../components/Statistics/Properties/ChartView';
 import { transNeo4jSchema } from './utils';
 import localforage from 'localforage';
 export type ExploreQueryTypes =
@@ -12,7 +13,8 @@ export type ExploreQueryTypes =
   | IQueryGraphSchema
   | IQuerySearch
   | IQuerySavedStatements
-  | IQueryStatistics;
+  | IQueryStatistics
+  | IQueryPropertyStatics;
 const { storage } = Utils;
 
 const DB_QUERY_SAVED = localforage.createInstance({
@@ -147,6 +149,15 @@ const services: IServiceQueries<ExploreQueryTypes | IQueryTypes> = {
         total_edge_count: 0,
       };
     }
+  },
+  queryPropertyStatics: async (property: string) => {
+    const data = await queryStatement(`
+          MATCH(a) where a.${property} IS NOT NULL
+          WITH a.${property} AS ${property}
+          return ${property},COUNT(${property}) as counts
+        `);
+
+    return data.table;
   },
 };
 

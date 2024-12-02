@@ -1,5 +1,12 @@
 import React, { useRef, useState } from 'react';
-import { Section, FullScreen, useCustomToken, StudioProvier, SegmentedTabs } from '@graphscope/studio-components';
+import {
+  Section,
+  FullScreen,
+  useCustomToken,
+  StudioProvier,
+  SegmentedTabs,
+  Icons,
+} from '@graphscope/studio-components';
 import {
   Toolbar,
   SwitchEngine,
@@ -30,8 +37,8 @@ import {
 
 import { ToogleLeftButton, ToogleRightButton } from './components/ToggleButton';
 import { Connection, FetchGraph, Searchbar, Statistics, ClusterAnalysis, Next } from './components';
-
-import { Divider } from 'antd';
+import { BgColorsOutlined, BarChartOutlined } from '@ant-design/icons';
+import { Divider, Flex, theme } from 'antd';
 import { getDefaultServices } from './services';
 
 interface ExploreProps {
@@ -48,6 +55,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
   const { buttonBackground } = useCustomToken();
 
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const { token } = theme.useToken();
 
   return (
     <div ref={containerRef} style={{ position: 'absolute', top: '0px', left: '0px', bottom: '0px', right: '0px' }}>
@@ -62,27 +70,50 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             }
             leftSide={
               <SegmentedTabs
+                tableHeight={60}
                 block
                 items={[
                   {
                     key: 'StyleSetting',
-                    label: 'StyleSetting',
+                    label: (
+                      <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
+                        <BgColorsOutlined style={{ fontSize: 17 }} />
+                        StyleSetting
+                      </Flex>
+                    ),
                     children: <StyleSetting />,
                   },
                   {
                     key: 'Statistics',
-                    label: 'Statistics',
+                    label: (
+                      <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
+                        <BarChartOutlined style={{ fontSize: 17 }} />
+                        Statistics
+                      </Flex>
+                    ),
                     children: <Statistics />,
                   },
                   {
                     key: 'ClusterAnalysis',
-                    label: 'ClusterAnalysis',
+                    label: (
+                      <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
+                        <Icons.Cluster />
+                        ClusterAnalysis
+                      </Flex>
+                    ),
                     children: <ClusterAnalysis />,
                   },
                 ]}
               ></SegmentedTabs>
             }
             autoResize={false}
+            leftSideStyle={{
+              width: '380px',
+              padding: '0px 12px',
+              boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
+              overflow: 'scroll',
+              background: token.colorBgContainer,
+            }}
             rightSideStyle={{
               width: '360px',
               padding: '12px 12px 12px 18px',
