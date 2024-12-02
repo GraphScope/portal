@@ -15,6 +15,20 @@ class EdgeType(Enum):
 
 
 class AbstractEdge(ABC):
+    def __init__(
+        self,
+        source: str,
+        target: str,
+        name: str = None,
+        edge_type: EdgeType = EdgeType.BASE,
+    ):
+        if not name:
+            self.name = f"{source}-{target}"
+        else:
+            self.name = name
+        self.source = source
+        self.target = target
+        self.edge_type = edge_type
 
     @classmethod
     @abstractmethod
@@ -42,6 +56,9 @@ class AbstractEdge(ABC):
         """
         pass
 
+    def __repr__(self) -> str:
+        return f"Edge: {self.name}, Source: {self.source}, Target: {self.target}, Type: {self.edge_type}"
+
 
 class BaseEdge(AbstractEdge):
     def __init__(
@@ -51,13 +68,7 @@ class BaseEdge(AbstractEdge):
         name: str = None,
         edge_type: EdgeType = EdgeType.BASE,
     ):
-        if not name:
-            self.name = f"{source}-{target}"
-        else:
-            self.name = name
-        self.source = source
-        self.target = target
-        self.edge_type = edge_type
+        super().__init__(source, target, name, edge_type)
 
     @classmethod
     def from_dict(cls, edge_conf: Dict[str, Any], persist_store=None):
@@ -72,6 +83,3 @@ class BaseEdge(AbstractEdge):
         self, state: Dict[str, Any], input: DataGenerator = None
     ) -> DataGenerator:
         pass
-
-    def __repr__(self) -> str:
-        return f"Edge: {self.name}, Source: {self.source}, Target: {self.target}, Type: {self.edge_type}"

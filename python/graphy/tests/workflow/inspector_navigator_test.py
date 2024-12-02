@@ -117,7 +117,7 @@ def test_execution_with_limit(threadpool_executor_with_limit):
     assert threadpool_executor_with_limit.processed_inspectors == 2
 
 
-@pytest.mark.skip(reason="The LLM model must be set to run this.")
+# @pytest.mark.skip(reason="The LLM model must be set to run this.")
 def test_workflow_execute():
     graph_json = {
         "inspectors": [

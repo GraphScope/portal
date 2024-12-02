@@ -1,4 +1,4 @@
-from .base_edge import BaseEdge, EdgeType, DataGenerator
+from .base_edge import AbstractEdge, EdgeType, DataGenerator
 from utils import ArxivFetcher, ScholarFetcher
 from config import WF_OUTPUT_DIR
 from db import JsonFileStore
@@ -52,7 +52,7 @@ class ResourceAllocator:
             self.condition.notify_all()
 
 
-class PaperNavigateEdge(BaseEdge):
+class PaperNavigateEdge(AbstractEdge):
     def __init__(
         self,
         source,
@@ -96,35 +96,35 @@ class PaperNavigateEdge(BaseEdge):
         args = edge_conf.get("args", {})
         if not persist_store:
             persist_store = JsonFileStore(WF_OUTPUT_DIR)
-        if source and target:
-            paper_download_dir = os.path.join(
-                persist_store.output_folder,
-                "_NAVIGATOR",
-                name,
-            )
-            meta_folder_dir = "meta_folder"
-            finish_signal = args.get("finish_signal", "REF_DONE")
-            max_thread_num = args.get("max_thread_num", 12)
-            ref_mode = args.get("ref_mode", "skip").lower()
-            if ref_mode == "skip":
-                ref_mode = ReferenceExtractStateMode.SkipIfExists
-            elif ref_mode == "append":
-                ref_mode = ReferenceExtractStateMode.AppendIfExists
-            else:
-                ref_mode = ReferenceExtractStateMode.SkipIfExists
-            return cls(
-                source=source,
-                target=target,
-                name=name,
-                persist_store=persist_store,
-                paper_download_dir=paper_download_dir,
-                finish_signal=finish_signal,
-                max_thread_num=max_thread_num,
-                ref_mode=ref_mode,
-                meta_folder_dir=meta_folder_dir,
-            )
+        if not source or not target:
+            raise ValueError("Both 'source' and 'target' must be defined in an edge.")
+
+        paper_download_dir = os.path.join(
+            persist_store.output_folder,
+            "_NAVIGATOR",
+            name,
+        )
+        meta_folder_dir = "meta_folder"
+        finish_signal = args.get("finish_signal", "REF_DONE")
+        max_thread_num = args.get("max_thread_num", 12)
+        ref_mode = args.get("ref_mode", "skip").lower()
+        if ref_mode == "skip":
+            ref_mode = ReferenceExtractStateMode.SkipIfExists
+        elif ref_mode == "append":
+            ref_mode = ReferenceExtractStateMode.AppendIfExists
         else:
-            raise ValueError("`Source` and `target` of an edge must be defined.")
+            ref_mode = ReferenceExtractStateMode.SkipIfExists
+        return cls(
+            source=source,
+            target=target,
+            name=name,
+            persist_store=persist_store,
+            paper_download_dir=paper_download_dir,
+            finish_signal=finish_signal,
+            max_thread_num=max_thread_num,
+            ref_mode=ref_mode,
+            meta_folder_dir=meta_folder_dir,
+        )
 
     @profiler.profile(name="PaperNavigateEdge")
     def execute(
@@ -276,7 +276,7 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
         if method != "arxiv":
             raise ValueError("Method must be 'arxiv' for `PaperNavigateArxivEdge`.")
         logger.info("initialize of arxiv paper navigate edge")
-        super().from_dict(edge_conf, persist_store)
+        return super().from_dict(edge_conf, persist_store)
 
     def download_worker(self, link_queue):
         while not link_queue.empty():
@@ -358,7 +358,7 @@ class PaperNavigateScholarEdge(PaperNavigateEdge):
         if method != "scholar":
             raise ValueError("Method must be 'scholar' for `PaperNavigateScholarEdge`.")
         logger.info("initialize of scholar paper navigate edge")
-        super().from_dict(edge_conf, persist_store)
+        return super().from_dict(edge_conf, persist_store)
 
     def download_worker(self, scholar_link_queue):
         while not scholar_link_queue.empty():
@@ -383,13 +383,7 @@ class PaperNavigateScholarEdge(PaperNavigateEdge):
                 self.paper_download_dir,
                 "tmp",
                 "webdata",
-                # f"{str(uuid.uuid5(uuid.NAMESPACE_DNS, link))}",
             )
-
-            # web_data_dir = os.path.join(
-            #     self.paper_pool_dir,
-            #     "webdata",
-            # )
 
             scholar_fetcher = ScholarFetcher(
                 persist_store=self.persist_store,
