@@ -88,18 +88,22 @@ const JobsList: FC = () => {
       dataSource={jobsList}
       pagination={{ position: 'bottom', align: 'end' }}
       renderItem={({ id, status, graph_name, type, start_time, end_time }) => {
-        console.log(formatDateTime(dayjs(start_time)), '-------', dayjs(start_time));
-
         return (
           <List.Item
-            style={{ padding: '6px 12px', backgroundColor: state.jobId === id ? '#fafafa' : '#fff', cursor: 'pointer' }}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: state.jobId === id ? '#fafafa' : '#fff',
+              cursor: 'pointer',
+            }}
             onMouseEnter={() => setState(prevState => ({ ...prevState, jobId: id }))}
             onMouseLeave={() => setState(prevState => ({ ...prevState, jobId: '' }))}
+            onClick={() => history.push(`/job/detail?jobId=${id}`)}
           >
             <List.Item.Meta
               title={
                 <Flex align="center" gap={6}>
                   <Title level={5}>{id}</Title>
+
                   <Tag icon={JOB_TYPE_ICONS[status]} color={statusColor[status]}>
                     {capitalizeFirstLetter(status.toLowerCase())}
                   </Tag>
@@ -118,36 +122,25 @@ const JobsList: FC = () => {
 
             <Flex gap={12}>
               <Text type="secondary">{formatDateTime(dayjs(start_time))}</Text>
-              <Space>
-                <Popconfirm
-                  placement="bottomRight"
-                  title={<FormattedMessage id="Are you sure to delete this task?" />}
-                  onConfirm={() => handleDeleteJob(id)}
-                  okText={<FormattedMessage id="Yes" />}
-                  cancelText={<FormattedMessage id="No" />}
-                >
-                  <Tooltip placement="top" title={<FormattedMessage id="Delete" />}>
-                    <Button
-                      style={{ cursor: 'pointer' }}
-                      type="text"
-                      size="small"
-                      danger
-                      ghost
-                      icon={<FontAwesomeIcon icon={faTrashCan} />}
-                      disabled={!['RUNNING', 'WAITING'].includes(status)}
-                    />
-                  </Tooltip>
-                </Popconfirm>
-                <Tooltip placement="top" title={<FormattedMessage id="Details" />}>
+              <Popconfirm
+                placement="bottomRight"
+                title={<FormattedMessage id="Are you sure to delete this task?" />}
+                onConfirm={() => handleDeleteJob(id)}
+                okText={<FormattedMessage id="Yes" />}
+                cancelText={<FormattedMessage id="No" />}
+              >
+                <Tooltip placement="top" title={<FormattedMessage id="Delete" />}>
                   <Button
                     style={{ cursor: 'pointer' }}
                     type="text"
                     size="small"
-                    icon={<FileSearchOutlined />}
-                    onClick={() => history.push(`/job/detail?jobId=${id}`)}
+                    danger
+                    ghost
+                    icon={<FontAwesomeIcon icon={faTrashCan} />}
+                    disabled={!['RUNNING', 'WAITING'].includes(status)}
                   />
                 </Tooltip>
-              </Space>
+              </Popconfirm>
             </Flex>
           </List.Item>
         );
