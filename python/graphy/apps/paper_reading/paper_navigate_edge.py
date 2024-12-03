@@ -1,15 +1,14 @@
-from .base_edge import AbstractEdge, EdgeType, DataGenerator
+from graph.edges.base_edge import AbstractEdge, EdgeType
+from graph.types import DataGenerator
 from utils import ArxivFetcher, ScholarFetcher
 from config import WF_OUTPUT_DIR
 from db import JsonFileStore
 
 from enum import Enum, auto
-from typing import Dict, List, Any, Type
+from typing import Dict, Any, Type
 from utils.profiler import profiler
 import logging
 import threading
-import shutil
-import copy
 import os
 from queue import Queue
 import queue
@@ -58,8 +57,8 @@ class PaperNavigateEdge(AbstractEdge):
         source,
         target,
         paper_download_dir,
-        persist_store=None,
         name=None,
+        persist_store=None,
         download_concurrency=1,
         finish_signal="REF_DONE",
         max_thread_num=12,
@@ -72,7 +71,6 @@ class PaperNavigateEdge(AbstractEdge):
 
         self.download_concurrency = download_concurrency
         self.persist_store = persist_store
-
         self.finish_signal = finish_signal
         self.max_thread_num = max_thread_num
         self.ref_mode = ref_mode
@@ -93,6 +91,7 @@ class PaperNavigateEdge(AbstractEdge):
         name = edge_conf.get("name", "")
         source = edge_conf.get("source", "")
         target = edge_conf.get("target", "")
+        method = edge_conf.get("method", "arxiv")
         args = edge_conf.get("args", {})
         if not persist_store:
             persist_store = JsonFileStore(WF_OUTPUT_DIR)
@@ -114,17 +113,31 @@ class PaperNavigateEdge(AbstractEdge):
             ref_mode = ReferenceExtractStateMode.AppendIfExists
         else:
             ref_mode = ReferenceExtractStateMode.SkipIfExists
-        return cls(
-            source=source,
-            target=target,
-            name=name,
-            persist_store=persist_store,
-            paper_download_dir=paper_download_dir,
-            finish_signal=finish_signal,
-            max_thread_num=max_thread_num,
-            ref_mode=ref_mode,
-            meta_folder_dir=meta_folder_dir,
-        )
+
+        if method == "scholar":
+            return PaperNavigateScholarEdge(
+                source,
+                target,
+                name,
+                persist_store,
+                paper_download_dir,
+                finish_signal,
+                max_thread_num,
+                ref_mode,
+                meta_folder_dir,
+            )
+        else:
+            return PaperNavigateArxivEdge(
+                source,
+                target,
+                name,
+                persist_store,
+                paper_download_dir,
+                finish_signal,
+                max_thread_num,
+                ref_mode,
+                meta_folder_dir,
+            )
 
     @profiler.profile(name="PaperNavigateEdge")
     def execute(
@@ -241,37 +254,6 @@ class PaperNavigateEdge(AbstractEdge):
         logger.debug("================= FINISH NAVIGATE ==============")
 
 
-def from_edge_conf(edge_conf, persist_store=None):
-    edge = PaperNavigateEdge.from_dict(edge_conf, persist_store)
-    method = edge_conf.get("method", "arxiv")
-    if method == "arxiv":
-        return PaperNavigateArxivEdge(
-            edge.source,
-            edge.target,
-            edge.paper_download_dir,
-            edge.persist_store,
-            edge.name,
-            edge.download_concurrency,
-            edge.finish_signal,
-            edge.max_thread_num,
-            edge.ref_mode,
-            edge.meta_folder_dir,
-        )
-    else:
-        return PaperNavigateScholarEdge(
-            edge.source,
-            edge.target,
-            edge.paper_download_dir,
-            edge.persist_store,
-            edge.name,
-            edge.download_concurrency,
-            edge.finish_signal,
-            edge.max_thread_num,
-            edge.ref_mode,
-            edge.meta_folder_dir,
-        )
-
-
 @profiler.profile(name="PaperNavigateArxivEdge")
 class PaperNavigateArxivEdge(PaperNavigateEdge):
     def __init__(
@@ -279,27 +261,27 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
         source,
         target,
         paper_download_dir,
-        persist_store=None,
         name=None,
+        persist_store=None,
         arxiv_download_concurrency=4,
         finish_signal="_ARXIV_REF_DONE",
         max_thread_num=12,
         ref_mode=ReferenceExtractStateMode.SkipIfExists,
         meta_folder_dir="",
     ):
+        logger.info("initialize of `PaperNavigateArxivEdge`")
         super().__init__(
             source,
             target,
             paper_download_dir,
-            persist_store,
             name,
+            persist_store,
             arxiv_download_concurrency,
             finish_signal,
             max_thread_num,
             ref_mode,
             meta_folder_dir,
         )
-        logger.info("initialize of arxiv paper navigate edge")
 
     def download_worker(self, link_queue):
         while not link_queue.empty():
@@ -353,14 +335,15 @@ class PaperNavigateScholarEdge(PaperNavigateEdge):
         source,
         target,
         paper_download_dir,
-        persist_store=None,
         name=None,
+        persist_store=None,
         scholar_download_concurrency=4,
         finish_signal="_SCHOLAR_REF_DONE",
         max_thread_num=8,
         ref_mode=ReferenceExtractStateMode.SkipIfExists,
         meta_folder_dir="",
     ):
+        logger.info("initialize of `PaperNavigateScholarEdge`")
         super().__init__(
             source,
             target,
@@ -373,7 +356,6 @@ class PaperNavigateScholarEdge(PaperNavigateEdge):
             ref_mode,
             meta_folder_dir,
         )
-        logger.info("initialize of google scholar paper navigate edge")
 
     def download_worker(self, scholar_link_queue):
         while not scholar_link_queue.empty():
