@@ -114,17 +114,44 @@ class PaperNavigateEdge(AbstractEdge):
             ref_mode = ReferenceExtractStateMode.AppendIfExists
         else:
             ref_mode = ReferenceExtractStateMode.SkipIfExists
-        return cls(
-            source=source,
-            target=target,
-            name=name,
-            persist_store=persist_store,
-            paper_download_dir=paper_download_dir,
-            finish_signal=finish_signal,
-            max_thread_num=max_thread_num,
-            ref_mode=ref_mode,
-            meta_folder_dir=meta_folder_dir,
-        )
+
+        method = edge_conf.get("method", "arxiv")
+        if method == "arxiv":
+            return PaperNavigateArxivEdge(
+                source=source,
+                target=target,
+                name=name,
+                persist_store=persist_store,
+                paper_download_dir=paper_download_dir,
+                finish_signal=finish_signal,
+                max_thread_num=max_thread_num,
+                ref_mode=ref_mode,
+                meta_folder_dir=meta_folder_dir,
+            )
+        elif method == "scholar":
+            return PaperNavigateScholarEdge(
+                source=source,
+                target=target,
+                name=name,
+                persist_store=persist_store,
+                paper_download_dir=paper_download_dir,
+                finish_signal=finish_signal,
+                max_thread_num=max_thread_num,
+                ref_mode=ref_mode,
+                meta_folder_dir=meta_folder_dir,
+            )
+        else:
+            return cls(
+                source=source,
+                target=target,
+                name=name,
+                persist_store=persist_store,
+                paper_download_dir=paper_download_dir,
+                finish_signal=finish_signal,
+                max_thread_num=max_thread_num,
+                ref_mode=ref_mode,
+                meta_folder_dir=meta_folder_dir,
+            )
 
     @profiler.profile(name="PaperNavigateEdge")
     def execute(
@@ -241,37 +268,6 @@ class PaperNavigateEdge(AbstractEdge):
         logger.debug("================= FINISH NAVIGATE ==============")
 
 
-def from_edge_conf(edge_conf, persist_store=None):
-    edge = PaperNavigateEdge.from_dict(edge_conf, persist_store)
-    method = edge_conf.get("method", "arxiv")
-    if method == "arxiv":
-        return PaperNavigateArxivEdge(
-            edge.source,
-            edge.target,
-            edge.paper_download_dir,
-            edge.persist_store,
-            edge.name,
-            edge.download_concurrency,
-            edge.finish_signal,
-            edge.max_thread_num,
-            edge.ref_mode,
-            edge.meta_folder_dir,
-        )
-    else:
-        return PaperNavigateScholarEdge(
-            edge.source,
-            edge.target,
-            edge.paper_download_dir,
-            edge.persist_store,
-            edge.name,
-            edge.download_concurrency,
-            edge.finish_signal,
-            edge.max_thread_num,
-            edge.ref_mode,
-            edge.meta_folder_dir,
-        )
-
-
 @profiler.profile(name="PaperNavigateArxivEdge")
 class PaperNavigateArxivEdge(PaperNavigateEdge):
     def __init__(
@@ -300,6 +296,44 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
             meta_folder_dir,
         )
         logger.info("initialize of arxiv paper navigate edge")
+
+    @classmethod
+    def from_dict(cls, edge_conf, persist_store=None):
+        name = edge_conf.get("name", "")
+        source = edge_conf.get("source", "")
+        target = edge_conf.get("target", "")
+        args = edge_conf.get("args", {})
+        if not persist_store:
+            persist_store = JsonFileStore(WF_OUTPUT_DIR)
+        if not source or not target:
+            raise ValueError("Both 'source' and 'target' must be defined in an edge.")
+
+        paper_download_dir = os.path.join(
+            persist_store.output_folder,
+            "_NAVIGATOR",
+            name,
+        )
+        meta_folder_dir = "meta_folder"
+        finish_signal = args.get("finish_signal", "REF_DONE")
+        max_thread_num = args.get("max_thread_num", 12)
+        ref_mode = args.get("ref_mode", "skip").lower()
+        if ref_mode == "skip":
+            ref_mode = ReferenceExtractStateMode.SkipIfExists
+        elif ref_mode == "append":
+            ref_mode = ReferenceExtractStateMode.AppendIfExists
+        else:
+            ref_mode = ReferenceExtractStateMode.SkipIfExists
+        return cls(
+            source=source,
+            target=target,
+            name=name,
+            persist_store=persist_store,
+            paper_download_dir=paper_download_dir,
+            finish_signal=finish_signal,
+            max_thread_num=max_thread_num,
+            ref_mode=ref_mode,
+            meta_folder_dir=meta_folder_dir,
+        )
 
     def download_worker(self, link_queue):
         while not link_queue.empty():
@@ -374,6 +408,44 @@ class PaperNavigateScholarEdge(PaperNavigateEdge):
             meta_folder_dir,
         )
         logger.info("initialize of google scholar paper navigate edge")
+
+    @classmethod
+    def from_dict(cls, edge_conf, persist_store=None):
+        name = edge_conf.get("name", "")
+        source = edge_conf.get("source", "")
+        target = edge_conf.get("target", "")
+        args = edge_conf.get("args", {})
+        if not persist_store:
+            persist_store = JsonFileStore(WF_OUTPUT_DIR)
+        if not source or not target:
+            raise ValueError("Both 'source' and 'target' must be defined in an edge.")
+
+        paper_download_dir = os.path.join(
+            persist_store.output_folder,
+            "_NAVIGATOR",
+            name,
+        )
+        meta_folder_dir = "meta_folder"
+        finish_signal = args.get("finish_signal", "REF_DONE")
+        max_thread_num = args.get("max_thread_num", 12)
+        ref_mode = args.get("ref_mode", "skip").lower()
+        if ref_mode == "skip":
+            ref_mode = ReferenceExtractStateMode.SkipIfExists
+        elif ref_mode == "append":
+            ref_mode = ReferenceExtractStateMode.AppendIfExists
+        else:
+            ref_mode = ReferenceExtractStateMode.SkipIfExists
+        return cls(
+            source=source,
+            target=target,
+            name=name,
+            persist_store=persist_store,
+            paper_download_dir=paper_download_dir,
+            finish_signal=finish_signal,
+            max_thread_num=max_thread_num,
+            ref_mode=ref_mode,
+            meta_folder_dir=meta_folder_dir,
+        )
 
     def download_worker(self, scholar_link_queue):
         while not scholar_link_queue.empty():

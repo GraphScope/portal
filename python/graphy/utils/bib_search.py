@@ -17,6 +17,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.core.driver_cache import DriverCacheManager
 from selectolax.lexbor import LexborHTMLParser
+from selenium.common.exceptions import TimeoutException
 from fake_useragent import UserAgent
 from typing import List, Dict, Callable
 import time, random, re
@@ -70,7 +71,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
         self.web_data_folder = web_data_folder
 
-        self.request_interval = 8
+        self.request_interval = 5
 
     def safe_request(self, driver, link):
         with BibSearchGoogleScholar.google_scholar_request_lock:
@@ -79,7 +80,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             interval = time.time() - BibSearchGoogleScholar.last_request_google_scholar
             if interval < self.request_interval:
                 time_to_wait = (
-                    random.uniform(self.request_interval, self.request_interval + 3)
+                    random.uniform(self.request_interval, self.request_interval + 5)
                     - interval
                 )
 
@@ -550,13 +551,15 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 try:
                     logger.debug("start to find element")
                     element = WebDriverWait(driver, 10).until(
-                        EC.presence_of_element_located(
+                        EC.element_to_be_clickable(
                             (By.CSS_SELECTOR, ".gs_or_cit.gs_or_btn.gs_nph")
                         )
                     )
 
                     logger.error(f"find element: {element}")
                     element.click()
+                except TimeoutException:
+                    print("Cannot click in 10 seconds")
                 except Exception as e:
                     traceback.print_exc()
 

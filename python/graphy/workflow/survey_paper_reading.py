@@ -6,7 +6,6 @@ from graph.edges.paper_navigate_edge import (
     PaperNavigateArxivEdge,
     PaperNavigateScholarEdge,
     PaperNavigateEdge,
-    from_edge_conf,
 )
 from graph.nodes.paper_reading_nodes import (
     PaperInspector,
@@ -225,7 +224,7 @@ class SurveyPaperReading(BaseWorkflow):
             # Parse Navigator Edges
             navigators = graph_json.get("navigators", [])
             for edge_conf in navigators:
-                graph.add_edge(from_edge_conf(edge_conf, persist_store))
+                graph.add_edge(PaperNavigateEdge.from_dict(edge_conf, persist_store))
 
         # Handle single InspectorNode special case
         else:
