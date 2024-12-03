@@ -33,8 +33,9 @@ import {
 
 import { Divider } from 'antd';
 
-import { initialStore, GraphProvider } from '../hooks/useContext';
+import { GraphProvider } from '../hooks/useContext';
 import { CypherServices } from '../index';
+import { BgColorsOutlined } from '@ant-design/icons';
 interface QueryGraphProps {
   // instance id
   id?: string;
@@ -44,21 +45,17 @@ interface QueryGraphProps {
   onQuery: (params: any) => Promise<any>;
 }
 
-const ToogleButton = ({ color }) => {
-  const { toggleRightSide } = useSection();
+const ToogleButton = () => {
+  const { toggleLeftSide } = useSection();
   return (
-    <Tooltip title={<FormattedMessage id="Toggle Right Side" />} placement="left">
-      <Button icon={<Icons.Sidebar revert style={{ color }} />} onClick={() => toggleRightSide()} type="text" />
+    <Tooltip title={<FormattedMessage id="Style settings" />} placement="left">
+      <Button icon={<BgColorsOutlined />} onClick={() => toggleLeftSide()} type="text" />
     </Tooltip>
   );
 };
 
 const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
   const { data, schema, graphId, onQuery, id } = props;
-
-  const { buttonBackground } = useCustomToken();
-  const { isLight } = useStudioProvier();
-  const color = !isLight ? '#ddd' : '#000';
   const containerRef = useRef<HTMLDivElement | null>(null);
   const language = 'cypher';
   let services: any = [];
@@ -69,7 +66,6 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
   return (
     <div
       style={{
-        // background: '#fff',
         borderRadius: '8px',
         height: '500px',
       }}
@@ -78,11 +74,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
       <GraphProvider id={id} services={services}>
         <Section
           splitBorder
-          rightSide={
-            <PropertiesPanel>
-              <StyleSetting />
-            </PropertiesPanel>
-          }
+          leftSide={<StyleSetting />}
           autoResize={false}
           rightSideStyle={{
             width: '300px',
@@ -90,13 +82,14 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
           }}
           defaultCollapsed={{
             leftSide: true,
-            rightSide: false,
+            rightSide: true,
           }}
         >
           <Prepare data={data} schema={schema} graphId={graphId} />
           <Canvas />
           <BasicInteraction />
           <ClearStatatus />
+          <PropertiesPanel />
 
           <Loading />
           <ContextMenu>
@@ -105,10 +98,8 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
             <DeleteLeafNodes />
             <DeleteNode />
           </ContextMenu>
-          <Toolbar
-            style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset', background: buttonBackground }}
-          >
-            <ToogleButton color={color} />
+          <Toolbar style={{ position: 'absolute', top: '20px', left: '20px', right: 'unset' }}>
+            <ToogleButton />
             <Divider style={{ margin: '0px' }} />
             <FullScreen containerRef={containerRef} />
             <ZoomFit />
