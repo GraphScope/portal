@@ -9,10 +9,11 @@ interface IAdvancedSettingProps {
   children: React.ReactNode;
   defaultCollapse?: boolean;
   tooltip?: React.ReactNode;
+  style?: React.CSSProperties;
 }
 
 const CollapseCard: React.FunctionComponent<IAdvancedSettingProps> = props => {
-  const { bordered, children, title, defaultCollapse, tooltip } = props;
+  const { bordered, children, title, defaultCollapse, tooltip, style = {} } = props;
   const id = 'Studio-Collapse-Card';
   const defaultActiveKey = defaultCollapse ? [] : [id];
   useDynamicStyle(
@@ -23,6 +24,7 @@ const CollapseCard: React.FunctionComponent<IAdvancedSettingProps> = props => {
   );
   return (
     <Collapse
+      style={style}
       className={id}
       bordered={bordered}
       ghost
