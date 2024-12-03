@@ -1,4 +1,4 @@
-import type { GraphData } from '../../index';
+import type { GraphData, NodeData } from '../../index';
 export const getSelectData = (data: GraphData, { nodeStatus, edgeStatus }) => {
   let type: 'node' | 'edge' = 'node';
 
@@ -35,30 +35,36 @@ export const getSelectData = (data: GraphData, { nodeStatus, edgeStatus }) => {
   };
 };
 
-const getDataByProperties = properties => {
-  const columns: any[] = [
-    {
-      title: 'name',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'value',
-      dataIndex: 'value',
-      key: 'value',
-    },
-  ];
-  const dataSource = Object.entries(properties).map(item => {
-    const [key, value] = item;
+export const getTable = (data: NodeData[]) => {
+  const columns = new Map();
+  columns.set('id', {
+    title: 'id',
+    dataIndex: 'id',
+    key: 'id',
+  });
+  columns.set('label', {
+    title: 'label',
+    dataIndex: 'label',
+    key: 'label',
+  });
+  const dataSource = data.map(item => {
+    const { id, properties = {}, label } = item;
+    Object.keys(properties).forEach(key => {
+      columns.set(key, {
+        title: key,
+        dataIndex: key,
+        key,
+      });
+    });
     return {
-      key,
-      name: key,
-      value: value,
+      id,
+      label,
+      ...properties,
     };
   });
 
   return {
     dataSource,
-    columns,
+    columns: Array.from(columns.values()),
   };
 };

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Button, Tooltip } from 'antd';
+import { Button, Tooltip, theme } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import {
   Section,
@@ -62,12 +62,14 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
   if (language === 'cypher') {
     services = CypherServices['services'];
   }
+  const { token } = theme.useToken();
 
   return (
     <div
       style={{
         borderRadius: '8px',
         height: '500px',
+        background: token.colorBgContainer,
       }}
       ref={containerRef}
     >

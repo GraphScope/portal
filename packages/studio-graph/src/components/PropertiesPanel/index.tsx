@@ -5,9 +5,7 @@ import PropertiesTable from './PropertiesTable';
 import PropertyInfo from './PropertyInfo';
 import { getSelectData } from './utils';
 
-export interface IPropertiesPanelProps {
-  style?: React.CSSProperties;
-}
+export interface IPropertiesPanelProps {}
 
 const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props => {
   const { store } = useContext();
@@ -36,7 +34,7 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
   if (selectData.length === 1) {
     return <PropertyInfo data={selectData[0]} style={rootStyle} type={type} />;
   }
-  return <PropertiesTable data={selectData} style={{ ...rootStyle, width: '600px' }} />;
+  return <PropertiesTable data={selectData} />;
 };
 
 export default PropertiesPanel;

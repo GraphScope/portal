@@ -1,54 +1,35 @@
 import * as React from 'react';
-import { Table, Flex, Typography } from 'antd';
+import { Table, Flex, Typography, theme } from 'antd';
 import { GraphData, NodeData } from '../../index';
 import { Button } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
-
+import { getTable } from './utils';
 interface IPropertiesTableProps {
   data: GraphData['edges'] | GraphData['nodes'];
-  style: React.CSSProperties;
 }
 
-const getTable = (data: NodeData[]) => {
-  const columns = new Map();
-  columns.set('id', {
-    title: 'id',
-    dataIndex: 'id',
-    key: 'id',
-  });
-  columns.set('label', {
-    title: 'label',
-    dataIndex: 'label',
-    key: 'label',
-  });
-  const dataSource = data.map(item => {
-    const { id, properties = {}, label } = item;
-    Object.keys(properties).forEach(key => {
-      columns.set(key, {
-        title: key,
-        dataIndex: key,
-        key,
-      });
-    });
-    return {
-      id,
-      label,
-      ...properties,
-    };
-  });
-
-  return {
-    dataSource,
-    columns: Array.from(columns.values()),
-  };
-};
-
 const PropertiesTable: React.FunctionComponent<IPropertiesTableProps> = props => {
-  const { data, style } = props;
+  const { data } = props;
   const { dataSource, columns } = getTable(data);
+  const { token } = theme.useToken();
+
+  const rootStyle: React.CSSProperties = {
+    display: 'flex',
+    position: 'absolute',
+    bottom: '12px',
+    left: '12px',
+    right: '12px',
+    maxHeight: '50%',
+    boxShadow: token.boxShadow,
+    zIndex: 1999,
+    background: token.colorBgContainer,
+    borderRadius: token.borderRadius,
+    overflowY: 'scroll',
+    padding: token.padding,
+  };
 
   return (
-    <Flex style={{ overflowY: 'scroll', ...style }} vertical gap={12}>
+    <Flex style={{ overflowY: 'scroll', ...rootStyle }} vertical gap={12}>
       <Flex justify="space-between">
         <Typography.Title level={5}>Inspect Infos</Typography.Title>
         <Button icon={<DownloadOutlined />} type="text"></Button>
