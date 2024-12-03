@@ -10,7 +10,6 @@ from .base_node import (
 )
 from .chain_node import BaseChainNode, MemoryChainNode
 from .pdf_extract_node import PDFExtractNode
-from .paper_reading_nodes import ExtractNode, PaperInspector
 
 
 __all__ = [
