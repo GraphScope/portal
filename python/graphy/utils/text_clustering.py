@@ -17,7 +17,6 @@ from config import WF_OUTPUT_DIR
 from models import (
     TextEmbedding,
     TfidfEmbedding,
-    GloveEmbedding,
     SentenceTransformerEmbedding,
 )
 
@@ -61,7 +60,7 @@ class OnlineClustering:
         output_field: str = "embedding",
     ):
         text_to_embed = [item[input_field] for item in data]
-        embeddings = self.embedding_model.embed(text_to_embed)
+        embeddings = self.embedding_model(text_to_embed)
         for idx, item in enumerate(data):
             item[output_field] = embeddings[idx]
             del item[input_field]
@@ -177,7 +176,7 @@ class ClusteringPipeline:
         text_extractor.extract_data(self.clustering_node, self.clustering_keys)
         data_dict = text_extractor.get_data(self.clustering_node)
         data = [item["cluster_key"] for item in data_dict.values()]
-        embeddings = self.embedding_method.embed(data)
+        embeddings = self.embedding_method(data)
         y_pred = self.clustering_method.cluster(embeddings)
         print("Cluster labels:", y_pred)
 

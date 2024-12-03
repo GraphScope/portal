@@ -9,6 +9,7 @@ import glob
 
 from langchain_community.chat_models import ChatOllama
 from chromadb.utils import embedding_functions
+from models import MyEmbedding
 
 from memory.llm_memory import PaperReadingMemoryManager
 from extractor.paper_extractor import PaperExtractor
@@ -32,7 +33,7 @@ class TestGetBib:
             stop=["<|eot_id|>"],
         )
 
-        embeddings_model = embedding_functions.DefaultEmbeddingFunction()
+        embeddings_model = MyEmbedding()
 
         pdf_extractor = PaperExtractor(paper_path)
         pdf_extractor.set_img_path("img_store")

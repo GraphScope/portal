@@ -6,7 +6,7 @@ import pytest
 import json
 
 from utils.text_clustering import OnlineClustering
-from models import DefaultEmbedding
+from models import MyEmbedding
 
 
 def test_cluster():
@@ -61,7 +61,7 @@ def test_cluster():
         },
     ]
 
-    cluster = OnlineClustering(DefaultEmbedding(), 2)
+    cluster = OnlineClustering(MyEmbedding(), 2)
 
     for item in data:
         properties = item["properties"]

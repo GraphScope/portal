@@ -8,7 +8,7 @@ from graph.nodes.paper_reading_nodes import (
     ExtractNode,
 )
 from graph.types import DataGenerator
-from models import LLM, set_llm_model, DEFAULT_LLM_MODEL_CONFIG, DefaultEmbedding
+from models import LLM, set_llm_model, DEFAULT_LLM_MODEL_CONFIG, MyEmbedding
 from db import PersistentStore, JsonFileStore
 from config import (
     WF_STATE_CACHE_KEY,
@@ -105,7 +105,7 @@ def test_initialization(mock_paper_inspector, mock_graph):
 @pytest.mark.skip(reason="The LLM model must be set to run this.")
 def test_inspector_execute():
     llm_model = set_llm_model(DEFAULT_LLM_MODEL_CONFIG)
-    embeddings_model = DefaultEmbedding()
+    embeddings_model = MyEmbedding()
 
     workflow_dict = {
         "nodes": [
@@ -174,7 +174,7 @@ def test_inspector_execute():
         workflow_dict,
         llm_model,
         llm_model,
-        embeddings_model.chroma_embedding_model(),
+        embeddings_model,
         chromadb.PersistentClient(path=vectdb_path),
         persist_store,
     )

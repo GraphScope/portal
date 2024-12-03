@@ -5,6 +5,7 @@ from memory.llm_memory import PaperReadingMemoryManager
 
 from langchain_community.chat_models import ChatOllama
 from chromadb.utils import embedding_functions
+from models import MyEmbedding
 
 import concurrent.futures
 import time
@@ -429,7 +430,7 @@ if __name__ == "__main__":
         stop=["<|eot_id|>"],
     )
 
-    embeddings_model = embedding_functions.DefaultEmbeddingFunction()
+    embeddings_model = MyEmbedding()
 
     paper_expansion = PaperExpansion(
         llm_model=llm_model,

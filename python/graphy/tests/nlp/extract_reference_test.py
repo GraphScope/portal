@@ -9,6 +9,7 @@ import glob
 
 from langchain_community.chat_models import ChatOllama
 from chromadb.utils import embedding_functions
+from models import MyEmbedding
 
 from utils.paper_expansion import PaperExpansion
 
@@ -43,7 +44,7 @@ class TestExtractReference:
             stop=["<|eot_id|>"],
         )
 
-        embeddings_model = embedding_functions.DefaultEmbeddingFunction()
+        embeddings_model = MyEmbedding()
 
         paper_expansion = PaperExpansion(
             llm_model=llm_model,
