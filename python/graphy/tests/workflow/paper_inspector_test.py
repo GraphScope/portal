@@ -2,28 +2,20 @@ import pytest
 from unittest.mock import MagicMock, create_autospec
 from graph import BaseGraph
 from graph.edges import BaseEdge
-from graph.nodes import PaperInspector, BaseNode
-from graph.nodes.paper_reading_nodes import (
+from apps.paper_reading.paper_reading_nodes import PaperInspector
+from apps.paper_reading.paper_reading_nodes import (
     ProgressInfo,
     ExtractNode,
 )
 from graph.types import DataGenerator
 from models import LLM, set_llm_model, DEFAULT_LLM_MODEL_CONFIG, DefaultEmbedding
 from db import PersistentStore, JsonFileStore
-from config import (
-    WF_STATE_CACHE_KEY,
-    WF_STATE_MEMORY_KEY,
-    WF_STATE_EXTRACTOR_KEY,
-    WF_OUTPUT_DIR,
-    WF_VECTDB_DIR,
-)
 
 from langchain_core.embeddings import Embeddings
 from tempfile import TemporaryDirectory
 
 import os
 import chromadb
-import shutil
 
 
 @pytest.fixture

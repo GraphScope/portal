@@ -1,16 +1,12 @@
+from .paper_navigate_edge import PaperNavigateEdge
+from .paper_reading_nodes import PaperInspector
+
 from workflow import BaseWorkflow
 from models import LLM, DEFAULT_LLM_MODEL_CONFIG, DefaultEmbedding, set_llm_model
 from db import PersistentStore, JsonFileStore
 from graph import BaseGraph
-from graph.edges.paper_navigate_edge import PaperNavigateEdge
-from graph.nodes.paper_reading_nodes import (
-    PaperInspector,
-    ProgressInfo,
-)
 from graph.nodes.base_node import NodeType
-from utils.profiler import profiler
 from config import (
-    WF_STATE_CACHE_KEY,
     WF_OUTPUT_DIR,
     WF_DOWNLOADS_DIR,
     WF_IMAGE_DIR,
@@ -53,19 +49,17 @@ class SurveyPaperReading(BaseWorkflow):
                 os.makedirs(folder, exist_ok=True)
         if not persist_store:
             persist_store = JsonFileStore(os.path.join(WF_OUTPUT_DIR, id))
-
         if "graph" in graph_json:
             graph_json = graph_json["graph"]
 
-        graph = self._create_graph(
-            graph_json,
-            llm_model,
-            parser_model,
-            embeddings_model,
-            vectordb,
-            persist_store,
-            id,
-        )
+        self.id = id
+        self.llm_model = llm_model
+        self.parser_model = parser_model
+        self.embeddings_model = embeddings_model
+        self.vectordb = vectordb
+        self.persist_store = persist_store
+
+        graph = self._create_graph(graph_json)
 
         super().__init__(
             id,
@@ -145,9 +139,9 @@ class SurveyPaperReading(BaseWorkflow):
                     ],
                       "navigators": [
                         {
-                        "name": "Reference",
-                        "source": "PaperInspector",
-                        "target": "PaperInspector"
+                            "name": "Reference",
+                            "source": "PaperInspector",
+                            "target": "PaperInspector"
                         }
                     ]
                 },
@@ -162,7 +156,6 @@ class SurveyPaperReading(BaseWorkflow):
         if parser_config:
             parser_model = set_llm_model(parser_config)
         graph_json = workflow_json.get("graph", {})
-
         vectordb = chromadb.PersistentClient(path=WF_VECTDB_DIR)
 
         if not graph_json:
@@ -178,16 +171,7 @@ class SurveyPaperReading(BaseWorkflow):
             persist_store,
         )
 
-    def _create_graph(
-        self,
-        graph_json,
-        llm_model,
-        parser_model,
-        embeddings_model,
-        vectordb,
-        persist_store,
-        id,
-    ):
+    def _create_graph(self, graph_json):
         """
         Create a graph for the SurveyPaperReading workflow.
 
@@ -209,45 +193,35 @@ class SurveyPaperReading(BaseWorkflow):
                 inspector_node = PaperInspector.from_dict(
                     inspector_name,
                     inspector_graph_json,
-                    llm_model,
-                    parser_model,
-                    embeddings_model,
-                    vectordb,
-                    persist_store,
+                    self.llm_model,
+                    self.parser_model,
+                    self.embeddings_model,
+                    self.vectordb,
+                    self.persist_store,
                 )
                 graph.add_node(inspector_node)
 
             # Parse Navigator Edges
             navigators = graph_json.get("navigators", [])
-            for navigator in navigators:
-                name = navigator.get("name", "")
-                source = navigator["source"]
-                target = navigator["target"]
-                paper_download_dir = os.path.join(WF_OUTPUT_DIR, id, "navigator")
-
-                edge = PaperNavigateEdge(
-                    source=source,
-                    target=target,
-                    name=name,
-                    persist_store=persist_store,
-                    paper_download_dir=paper_download_dir,
+            for edge_conf in navigators:
+                graph.add_edge(
+                    PaperNavigateEdge.from_dict(edge_conf, self.persist_store)
                 )
-                graph.add_edge(edge)
 
         # Handle single InspectorNode special case
         else:
             inspector_node = PaperInspector.from_dict(
                 "PaperInspector",
                 graph_json,
-                llm_model,
-                parser_model,
-                embeddings_model,
-                vectordb,
-                persist_store,
+                self.llm_model,
+                self.parser_model,
+                self.embeddings_model,
+                self.vectordb,
+                self.persist_store,
             )
             graph.add_node(inspector_node)
 
-        logger.info(f"Created graph: {graph}")
+        logger.info(f"Workflow[{id}]'s graph created: {graph}")
 
         return graph
 

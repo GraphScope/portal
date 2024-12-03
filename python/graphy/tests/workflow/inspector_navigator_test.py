@@ -1,13 +1,13 @@
 import pytest
-from models import DEFAULT_LLM_MODEL_CONFIG
-from workflow import ThreadPoolWorkflowExecutor
 
-from unittest.mock import MagicMock, create_autospec
+from apps.paper_reading import SurveyPaperReading
+from models import DEFAULT_LLM_MODEL_CONFIG
 from graph.types import DataType
 from graph.nodes import BaseNode, NodeType
 from graph.edges import BaseEdge
 from workflow.executor import ThreadPoolWorkflowExecutor
-from workflow import SurveyPaperReading
+
+from unittest.mock import MagicMock, create_autospec
 from queue import Queue
 
 
@@ -117,7 +117,7 @@ def test_execution_with_limit(threadpool_executor_with_limit):
     assert threadpool_executor_with_limit.processed_inspectors == 2
 
 
-@pytest.mark.skip(reason="The LLM model must be set to run this.")
+# @pytest.mark.skip(reason="The LLM model must be set to run this.")
 def test_workflow_execute():
     graph_json = {
         "inspectors": [

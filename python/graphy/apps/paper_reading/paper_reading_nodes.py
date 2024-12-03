@@ -1,6 +1,6 @@
-from .base_node import BaseNode, NodeType, NodeCache, DataGenerator
-from .chain_node import BaseChainNode
-from .pdf_extract_node import PDFExtractNode
+from graph.nodes.base_node import BaseNode, NodeType, NodeCache, DataGenerator
+from graph.nodes.chain_node import BaseChainNode
+from graph.nodes.pdf_extract_node import PDFExtractNode
 from memory.llm_memory import VectorDBHierarchy, PaperReadingMemoryManager
 from models import LLM
 from prompts import TEMPLATE_ACADEMIC_RESPONSE

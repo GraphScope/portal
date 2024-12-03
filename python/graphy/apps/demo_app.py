@@ -1,5 +1,6 @@
-from workflow import SurveyPaperReading, ThreadPoolWorkflowExecutor
-from graph.nodes.paper_reading_nodes import ProgressInfo
+from apps.paper_reading import SurveyPaperReading
+from apps.paper_reading.paper_reading_nodes import ProgressInfo, NameDesc
+from workflow import ThreadPoolWorkflowExecutor
 from config import WF_UPLOADS_DIR, WF_OUTPUT_DIR, WF_DATA_DIR, WF_VECTDB_DIR
 from utils.data_extractor import (
     GraphBuilder,
@@ -10,7 +11,6 @@ from utils.text_clustering import KMeansClustering, OnlineClustering
 from utils.profiler import profiler
 from db import JsonFileStore
 from graph.nodes.chain_node import BaseChainNode
-from graph.nodes.paper_reading_nodes import NameDesc
 from apps.text_generator import ReportGenerator
 from models import set_llm_model, DefaultEmbedding, DEFAULT_LLM_MODEL_CONFIG
 
@@ -769,7 +769,7 @@ class DemoApp:
                 graph_builder = GraphBuilder(
                     data_path, self.get_persist_store(dataset_id)
                 )
-                graph_builder.extract_fact_data()
+                graph_builder.extract_data()
 
                 graph_builder.build_graph()
                 graph_path = os.path.join(data_path, "_graph")

@@ -1,16 +1,13 @@
 import ray
 
-from workflow import ThreadPoolWorkflowExecutor, SurveyPaperReading
-from models import set_llm_model, DefaultEmbedding, DEFAULT_LLM_MODEL_CONFIG
+from apps.paper_reading import SurveyPaperReading
+from workflow import ThreadPoolWorkflowExecutor
+from models import set_llm_model, DEFAULT_LLM_MODEL_CONFIG
 from workflow.ray_executor import RayWorkflowExecutor
 
 import argparse
 import json
-import logging
-import sys
 import os
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 def list_pdf_inputs(folder_path: str):

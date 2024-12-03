@@ -1,9 +1,10 @@
 import sys
 import os
 
+from apps.paper_reading.paper_reading_nodes import NameDesc
 from langchain_openai import ChatOpenAI
 from graph.nodes.chain_node import BaseChainNode
-from graph.nodes.paper_reading_nodes import NameDesc
+
 from typing import List
 import json
 import logging

@@ -100,11 +100,11 @@ def test_save_data(setup_test_environment):
 
 def test_get_total_data_with_hidden_files(setup_test_environment):
     temp_dir, store = setup_test_environment
-    os.makedirs(os.path.join(temp_dir, "navigator"), exist_ok=True)
+    os.makedirs(os.path.join(temp_dir, "_NAVIGATOR"), exist_ok=True)
     os.makedirs(os.path.join(temp_dir, "_hidden_folder"), exist_ok=True)
     os.makedirs(os.path.join(temp_dir, ".hidden_file"), exist_ok=True)
     total_data = store.get_total_data()
-    assert "navigator" not in total_data
+    assert "_NAVIGATOR" not in total_data
     assert "_hidden_folder" not in total_data
     assert ".hidden_file" not in total_data
 

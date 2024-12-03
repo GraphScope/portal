@@ -204,7 +204,12 @@
       {
         "name": "Reference",
         "source": "PaperInspector",
-        "target": "PaperInspector"
+        "target": "PaperInspector",
+        "method": "arxiv",
+        "args": {
+          "max_thread_num": 12,
+          "ref_mode": "skip"
+        }
       }
     ]
   }

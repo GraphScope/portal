@@ -1,22 +1,17 @@
 from .base_node import BaseNode, DataGenerator
 from utils import Paper, ArxivFetcher, ScholarFetcher
-from extractor import PDFExtractor
 from config import (
-    WF_IMAGE_DIR,
     WF_STATE_EXTRACTOR_KEY,
     WF_STATE_MEMORY_KEY,
     WF_WEBDATA_DIR,
 )
-from memory import BaseRuntimeMemoryManager
 
 from langchain_core.embeddings import Embeddings
-from langchain_chroma import Chroma
 
-from typing import Any, Dict, Generator
+from typing import Any, Dict
 import logging
 from utils.profiler import profiler
 import time
-import copy
 import os
 
 logger = logging.getLogger(__name__)

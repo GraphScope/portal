@@ -1,5 +1,6 @@
 import json
-from graph.nodes.paper_reading_nodes import try_fix_json
+
+from apps.paper_reading.paper_reading_nodes import try_fix_json
 
 
 def test_fix_json():

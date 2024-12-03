@@ -2,6 +2,6 @@
   __init__.py for the graph package
 """
 
-from .base_edge import BaseEdge, EdgeType
+from .base_edge import AbstractEdge, BaseEdge, EdgeType
 
-__all__ = ["BaseEdge", "EdgeType"]
+__all__ = ["AbstractEdge", "BaseEdge", "EdgeType"]

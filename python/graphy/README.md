@@ -12,8 +12,8 @@ Preprocessing unstructured data is often a tedious and time-consuming task. And 
 This repository introduces the initial prototype of the Graphy platform, as illustrated above, with a focus on academic papers, which are often publicly accessible. In this prototype, the primary unstructured data consists of research paper PDFs. Graphy’s workflow is built upon two key abstractions:
 - **Inspector**: The Inspector abstraction defines the structured information to be extracted from papers. It utilizes an inner Directed Acyclic Graph (DAG), where each subnode represents specific instructions for LLMs to extract targeted information from the paper. This DAG mirrors the commonly referenced ["Tree of Thought"](https://arxiv.org/abs/2305.10601)  pipeline in the LLM literature.
 - **Navigator**: The Navigator abstraction determines how related papers can be fetched and processed via the Inspector. Currently, two navigators are available:
-    - [Arxiv Fetcher](./utils/arxiv_fetcher.py) for retrieving PDFs from ArXiv.
-	- [Google Scholar Fetcher](./utils/scholar_fetcher.py) for fetching PDFs via Google Scholar.
+    - [PaperNavigateArxivEdge](./apps/paper_reading/paper_navigate_edge.py) for fetching PDFs from [ArXiv](https://arxiv.org/).
+	- [PaperNavigateScholarEdge](./apps/paper_reading/paper_navigate_edge.py) for fetching PDFs from [Google Scholar](http://scholar.google.com/).
 
 These navigators enable the creation of a rich, interconnected database of academic papers.
 
@@ -64,10 +64,18 @@ python paper_scrapper.py --max-workers 4 --max-inspectors 500 --workflow <path_t
 
 - `--max-workers` (optional): Specifies the maximum number of parallel workers (default: 4).
 - `--max-inspectors` (optional): Defines the maximum number of papers to fetch (default: 100).
-- `--workflow` (optional): Path to a workflow configuration file. If not provided, the default configuration file `config/workflow.json` will be used.
+- `--workflow` (optional): Path to a workflow configuration file. If not provided, the default configuration file [`config/workflow.json`](config/workflow.json) will be used.
 - `<path_to_seed_papers>`: Provide the path containing seed papers. Each paper is a PDF document.
 
-> If no `workflow` provided, a default workflow configuration in `config/workflow.json` will be used.
+After the process is complete, the extracted data will be stored in the directory of `WF_OUTPUT_DIR`
+defined in [`config/__init__.py`](config/__init__.py). The following script can be used to graphy the extracted data.
+
+**Usage**:
+```bash
+python graph_builder.py -i <WF_OUTPUT_DIR> -o <you_output_dir>
+```
+
+A `_graph` folder can be found in `<you_output_dir>` containing the graph data in CSV files.
 
 # Workflow Configuration
 Refer to an [example](config/workflow.json) for a workflow with Paper Inspector and Reference Navigator. Below are instructions on the following key fields in a workflow: `id`, `llm_config`, and `graph`.
@@ -132,8 +140,7 @@ This option supports locally deployed LLM models through [Ollama](https://ollama
     ```
 
 
-Note: If no LLM model is specified for a dataset, a default model configuration will be applied. To customize this default, open `models/__init__.py` and modify the `DEFAULT_LLM_MODEL_CONFIG` variable.
-
+> Note: If no LLM model is specified for a dataset, a default model configuration will be applied. To customize this default, open [`models/__init__.py`](models/__init__.py) and modify the `DEFAULT_LLM_MODEL_CONFIG` variable.
 
 
 ## The `graph` field
@@ -184,9 +191,8 @@ We further explain the `extract_from` field for a node within an Inspector, whic
 ```
 
 ### Navigators
-Currently, the only thing to configure in a navigator is the connected Inspector nodes.
-The `navigators` can be left empty, as in [workflow_inspector](config/workflow_inspector.json),
-which will only process Paper Inspector without Reference Navigator.
+Currently, the only thing to configure in a navigator is the connected Inspector nodes. The following
+most simple navigator configuration uses `PaperNavigateArxivEdge` by default.
 
 **Example**:
 ```json
@@ -197,6 +203,21 @@ which will only process Paper Inspector without Reference Navigator.
 }
 ```
 
+To configure using `PaperNavigateScholarEdge`, a 'method' field of value 'scholar' should be added.
+Please use `PaperNavigateScholarEdge` with caution that it may violate Google Scholar's terms of service,
+and can be blocked if used excessively.
+
+```json
+{
+    "name": "Reference",
+    "source": "PaperInspector",
+    "target": "PaperInspector",
+    "method": "scholar"
+}
+```
+
+> The `navigators` can be left empty, as in [workflow_inspector](config/workflow_inspector.json),
+which will only process Paper Inspector without Reference Navigator.
 
 The scraped data will be saved in the directory specified by [WF_OUTPUT_DIR](config/__init__.py), under a subdirectory named after your workflow ID (`<your_workflow_id>`).
 - If the default workflow configuration is used, the workflow ID is `test_paper_scrapper`.

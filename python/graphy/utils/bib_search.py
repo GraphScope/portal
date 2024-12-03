@@ -30,8 +30,10 @@ logger = logging.getLogger(__name__)
 
 
 class BibSearch:
-    def __init__(self) -> None:
+    def __init__(self, persist_store, meta_folder) -> None:
         self.core = None
+        self.meta_folder = meta_folder
+        self.persist_store = persist_store
 
     def search_by_name(self, query) -> List[str]:
         logger.error("Interface not implemented")
@@ -59,8 +61,8 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
     last_request_google_scholar = 0
     google_scholar_request_lock = threading.Lock()
 
-    def __init__(self, web_data_folder="") -> None:
-        BibSearch.__init__(self)
+    def __init__(self, persist_store=None, web_data_folder="", meta_folder="") -> None:
+        BibSearch.__init__(self, persist_store=persist_store, meta_folder=meta_folder)
         CustomGoogleScholarOrganic.__init__(self)
 
         self.driver_version = self.get_driver_version()
@@ -448,7 +450,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 outputs.append(this_bib)
 
             elif action == "download":
-                succ, file_path, exist = self.download(
+                succ, file_path, file_name, exist = self.download(
                     driver, title, result, download_path
                 )
 
@@ -458,6 +460,22 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                     logger.warning(f"Found {title}, but already downloaded.")
 
                 outputs.append((succ, file_path, exist))
+
+                if self.meta_folder and self.persist_store and not exist:
+                    if not self.persist_store.get_state(self.meta_folder, file_name):
+                        try:
+                            directory = parser.css_first("#gs_citd")
+                            cite_directory = (
+                                "https://scholar.google.com" + directory.attrs["data-u"]
+                            )
+                            cite_directory = cite_directory.replace("{p}", "0")
+                        except:
+                            logger.warning(f"Download Meta Failed")
+
+                        this_bib = self.get_bib(driver, title, result, cite_directory)
+                        self.persist_store.save_state(
+                            self.meta_folder, file_name, this_bib
+                        )
 
             if len(outputs) >= num_per_page:
                 break
@@ -537,7 +555,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                         )
                     )
 
-                    logger.debug(f"find element: {element}")
+                    logger.error(f"find element: {element}")
                     element.click()
                 except Exception as e:
                     traceback.print_exc()
@@ -664,14 +682,15 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
     def download(self, driver, title, result, download_path):
         file_name = re.sub(r"[^a-zA-Z0-9]", "_", title.strip())
-        file_path = os.path.join(download_path, f"scholar_{file_name}.pdf")
+        scholar_name = f"scholar_{file_name}"
+        file_path = os.path.join(download_path, f"{scholar_name}.pdf")
 
         if os.path.exists(file_path):
             logger.debug(f"The file '{file_path}' already exists.")
-            return True, file_path, True
+            return True, file_path, scholar_name, True
 
-        logger.debug("************ DOWNLOADING **************")
-        logger.debug(file_path)
+        logger.error("************ DOWNLOADING **************")
+        logger.error(file_path)
 
         try:
             pdf_link: str = result.css_first(".gs_or_ggsm a").attrs["href"]
@@ -685,7 +704,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 with open(file_path, "wb") as f:
                     f.write(response.content)
                 logger.info(f"Downloaded: {file_name}")
-                return True, file_path, False
+                return True, file_path, scholar_name, False
             else:
                 logger.warning(
                     f"Failed to download. Status code: {response.status_code}"
@@ -703,7 +722,22 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 f.write(str(e) + "\n")
                 f.write("\n")
 
-        return False, file_path, False
+        return False, file_path, scholar_name, False
+
+    def finish_load_condition(self):
+        def condition_met(driver):
+            try:
+                element_present = EC.presence_of_element_located(
+                    (By.CSS_SELECTOR, "div.gs_r.gs_or.gs_scl")
+                )(driver)
+            except Exception:
+                element_present = False
+
+            text_present = "not a robot" in driver.page_source
+
+            return element_present or text_present
+
+        return condition_met
 
     def download_by_name(
         self, query: str, download_path, pagination: bool = False, mode: str = "vague"
@@ -769,26 +803,22 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                             break
                 else:
                     # parse first page only
-                    logger.info("### START TO DOWNLOAD #####")
+                    # logger.error("### START TO DOWNLOAD #####")
                     pruned_query = re.sub(r"[^a-zA-Z0-9, ]", "_", query.strip())
-                    logger.info(pruned_query)
+                    # logger.error(pruned_query)
 
                     driver = self.safe_request(
                         driver=driver,
                         link=f"https://scholar.google.com/scholar?q={pruned_query}&hl=en&gl=us&start={page_num}",
                     )
 
-                    WebDriverWait(driver, 2).until(
-                        EC.presence_of_element_located(
-                            (By.CSS_SELECTOR, "div.gs_r.gs_or.gs_scl")
-                        )
-                    )
+                    WebDriverWait(driver, 10).until(self.finish_load_condition())
 
                     parser = LexborHTMLParser(driver.page_source)
 
                     if len(parser.css(".gs_r.gs_or.gs_scl")) == 0:
                         if "not a robot" in driver.page_source:
-                            logger.info(
+                            logger.error(
                                 f"============== DETECTED AS A ROBOT {query} ============="
                             )
                         # with open("fail_log.log", "a") as f:
@@ -819,8 +849,23 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
 
 class BibSearchArxiv(BibSearch):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, persist_store=None, meta_folder="") -> None:
+        super().__init__(persist_store=persist_store, meta_folder=meta_folder)
+
+    def format_json_object(self, paper_info):
+        return {
+            "title": paper_info.title,
+            "id": paper_info.entry_id.strip().split("/")[-1],
+            "author": " and ".join([str(author) for author in paper_info.authors]),
+            "eprint": paper_info.entry_id,
+            "doi": paper_info.doi,
+            "primary_class": paper_info.categories[0],
+            "abstract": paper_info.summary,
+            "year": paper_info.published.year,
+            "month": paper_info.published.month,
+            "url": [str(link) for link in paper_info.links if link.title == "pdf"][0],
+            "bib": self.search_by_object(paper_info),
+        }
 
     def search_by_object(self, paper_info) -> List[str]:
         """BibTex string of the reference."""
@@ -849,13 +894,25 @@ class BibSearchArxiv(BibSearch):
     def download_by_object(self, best_match, download_path):
         file_name = re.sub(r"[^a-zA-Z0-9]", "_", best_match.title.strip())
 
+        arxiv_file_name = f"arxiv_{file_name}".lower()
         download_file_name = f"arxiv_{file_name}.pdf".lower()
         download_file_path = os.path.join(download_path, download_file_name)
         logger.debug(f"download to {download_file_path}")
 
         if os.path.exists(download_file_path):
-            logger.debug(f"The file '{download_file_path}' already exists.")
+            logger.error(f"The file '{download_file_path}' already exists.")
             return [(True, download_file_path, True)]
+
+        try:
+            if self.meta_folder and self.persist_store:
+                if not self.persist_store.get_state(self.meta_folder, arxiv_file_name):
+                    self.persist_store.save_state(
+                        self.meta_folder,
+                        arxiv_file_name,
+                        self.format_json_object(best_match),
+                    )
+        except Exception as e:
+            logger.error(f"Download Meta Error: {e}")
 
         try:
             best_match.download_pdf(
