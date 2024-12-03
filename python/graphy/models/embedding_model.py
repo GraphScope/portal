@@ -7,6 +7,20 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 import os
 
+from chromadb import Documents, EmbeddingFunction, Embeddings
+
+
+class MyEmbedding(EmbeddingFunction):
+    def __init__(self):
+        self.embed_model = embedding_functions.DefaultEmbeddingFunction()
+
+    def __call__(self, text_data: List[str]) -> Embeddings:
+        return self.embed_model.embed_with_retries(text_data)
+
+    @staticmethod
+    def get_name():
+        return "ONNXMiniLM_L6_V2"
+
 
 class TextEmbedding(ABC):
     @abstractmethod
@@ -25,19 +39,19 @@ class TextEmbedding(ABC):
         pass
 
 
-class DefaultEmbedding(TextEmbedding):
-    def __init__(self):
-        self.embed_model = embedding_functions.DefaultEmbeddingFunction()
+# class DefaultEmbedding(TextEmbedding):
+#     def __init__(self):
+#         self.embed_model = embedding_functions.DefaultEmbeddingFunction()
 
-    def embed(self, text_data: List[str]):
-        return self.embed_model.embed_with_retries(text_data)
+#     def embed(self, text_data: List[str]):
+#         return self.embed_model.embed_with_retries(text_data)
 
-    def chroma_embedding_model(self):
-        # TODO
-        return self.embed_model
+#     def chroma_embedding_model(self):
+#         # TODO
+#         return self.embed_model
 
-    def get_name(self):
-        return "ONNXMiniLM_L6_V2"
+#     def get_name(self):
+#         return "ONNXMiniLM_L6_V2"
 
 
 class TfidfEmbedding(TextEmbedding):

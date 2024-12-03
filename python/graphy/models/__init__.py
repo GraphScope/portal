@@ -8,7 +8,7 @@ from langchain_openai import ChatOpenAI
 from .model_context_size import models_tokens
 from .embedding_model import (
     TextEmbedding,
-    DefaultEmbedding,
+    MyEmbedding,
     TfidfEmbedding,
     SentenceTransformerEmbedding,
 )
@@ -18,7 +18,7 @@ import os
 __all__ = [
     "LLM",
     "TextEmbedding",
-    "DefaultEmbedding",
+    "MyEmbedding",
     "TfidfEmbedding",
     "SentenceTransformerEmbedding",
 ]

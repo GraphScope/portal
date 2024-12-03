@@ -1,5 +1,5 @@
 from workflow import BaseWorkflow
-from models import LLM, DEFAULT_LLM_MODEL_CONFIG, DefaultEmbedding, set_llm_model
+from models import LLM, DEFAULT_LLM_MODEL_CONFIG, MyEmbedding, set_llm_model
 from db import PersistentStore, JsonFileStore
 from graph import BaseGraph
 from graph.edges.paper_navigate_edge import PaperNavigateEdge
@@ -156,7 +156,7 @@ class SurveyPaperReading(BaseWorkflow):
         id = workflow_json.get("id", f"survey_paper_reading_{int(time.time())}")
         llm_config = workflow_json.get("llm_config", DEFAULT_LLM_MODEL_CONFIG)
         parser_config = workflow_json.get("parser_config", {})
-        embeddings_model = DefaultEmbedding()
+        embeddings_model = MyEmbedding()
         llm_model = set_llm_model(llm_config)
         parser_model = llm_model
         if parser_config:
@@ -172,7 +172,7 @@ class SurveyPaperReading(BaseWorkflow):
             id,
             llm_model,
             parser_model,
-            embeddings_model.chroma_embedding_model(),
+            embeddings_model,
             vectordb,
             graph_json,
             persist_store,

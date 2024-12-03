@@ -1,7 +1,7 @@
 import ray
 
 from workflow import ThreadPoolWorkflowExecutor, SurveyPaperReading
-from models import set_llm_model, DefaultEmbedding, DEFAULT_LLM_MODEL_CONFIG
+from models import set_llm_model, DEFAULT_LLM_MODEL_CONFIG
 from workflow.ray_executor import RayWorkflowExecutor
 
 import argparse

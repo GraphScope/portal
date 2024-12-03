@@ -12,7 +12,7 @@ from db import JsonFileStore
 from graph.nodes.chain_node import BaseChainNode
 from graph.nodes.paper_reading_nodes import NameDesc
 from apps.text_generator import ReportGenerator
-from models import set_llm_model, DefaultEmbedding, DEFAULT_LLM_MODEL_CONFIG
+from models import set_llm_model, MyEmbedding, DEFAULT_LLM_MODEL_CONFIG
 
 from threading import Thread
 from flask import Flask, request, jsonify, send_file
@@ -115,7 +115,7 @@ class DemoApp:
         # allow cross-domain access
         CORS(self.app)
         # a default embedding model, TODO may be configured
-        self.embedding_model = DefaultEmbedding()
+        self.embedding_model = MyEmbedding()
         # a default llm model, TODO may be configured
         self.llm = set_llm_model(DEFAULT_LLM_MODEL_CONFIG)
         # Each dataset has a persist store
@@ -934,7 +934,7 @@ class DemoApp:
                     data_path = os.path.join(
                         self.app.config["OUTPUT_FOLDER"], dataset_id
                     )
-                    graph_builder = GraphBuilder(data_path, self.embedding_model)
+                    graph_builder = GraphBuilder(data_path)
                     graph_builder.delete_interactive_service(graph_id)
                     return (
                         create_json_response(
