@@ -9,18 +9,7 @@ interface IGraphViewProps {
 }
 export function transGraphSchema(schema) {
   return {
-    nodes: schema.nodes.map(item => {
-      const { properties, ...others } = item;
-      return {
-        ...others,
-        properties: properties.reduce((acc, curr) => {
-          return {
-            ...acc,
-            [curr.name]: curr.type,
-          };
-        }, {}),
-      };
-    }),
+    nodes: schema.nodes,
     edges: schema.edges.map(item => {
       const { properties, constraints, ...others } = item;
       const [source, target] = constraints[0];
@@ -28,12 +17,7 @@ export function transGraphSchema(schema) {
         ...others,
         source,
         target,
-        properties: properties.reduce((acc, curr) => {
-          return {
-            ...acc,
-            [curr.name]: curr.type,
-          };
-        }, {}),
+        properties,
       };
     }),
   };
@@ -41,6 +25,7 @@ export function transGraphSchema(schema) {
 
 const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
   const { data, schemaData, graphId, onQuery } = props;
+
   const graphSchema = transGraphSchema(schemaData);
 
   return (
