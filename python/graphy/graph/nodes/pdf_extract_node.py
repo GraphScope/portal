@@ -56,46 +56,59 @@ class PDFExtractNode(BaseNode):
         pdf_extractor = state.get(WF_STATE_EXTRACTOR_KEY, None)
         if not pdf_extractor:
             raise ValueError("PDF extractor is not provided in the state.")
+
         vectordb = memory_manager.retrieved_memory
         paper_metadata = pdf_extractor.get_meta_data()
-        paper_references = []
+        meta_paper_references = paper_metadata.get("reference", [])
+        meta_paper_cited_by = paper_metadata.get("cited_by", [])
+        pdf_paper_references = []
 
-        if vectordb.is_db_valid() and vectordb.is_db_empty():
-            docs = pdf_extractor.extract_all()
-            paper_references = list(pdf_extractor.linked_contents)
-            logger.info("========= START TO INIT MEMORY ======")
-            vectordb.init_memory_parallel(docs, ["page_index", "section", "part_index"])
-            logger.info(
-                f"========= FINISH TO INIT MEMORY {pdf_extractor.file_path} ======"
-            )
-            pdf_extractor.clear()
+        if not pdf_extractor.fake_extractor:
+            if vectordb.is_db_valid() and vectordb.is_db_empty():
+                docs = pdf_extractor.extract_all()
+                pdf_paper_references = list(pdf_extractor.linked_contents)
+                logger.info("========= START TO INIT MEMORY ======")
+                vectordb.init_memory_parallel(
+                    docs, ["page_index", "section", "part_index"]
+                )
+                logger.info(
+                    f"========= FINISH TO INIT MEMORY {pdf_extractor.file_path} ======"
+                )
+            else:
+                pdf_extractor.compute_links()
+                pdf_paper_references = list(pdf_extractor.linked_contents)
+
+            paper = Paper.from_pdf_metadata(paper_metadata)
+            paper_dict = paper.to_dict()
         else:
-            pdf_extractor.compute_links()
-            paper_references = list(pdf_extractor.linked_contents)
-            pdf_extractor.clear()
+            paper_dict = paper_metadata
 
-        paper = Paper.from_pdf_metadata(paper_metadata)
-        paper_dict = paper.to_dict()
-        paper_dict["reference"] = paper_references
+        paper_dict["reference"] = meta_paper_references
+        paper_dict["reference"].extend(pdf_paper_references)
+        paper_dict["cited_by"] = meta_paper_cited_by
         paper_dict["data_id"] = data_id
 
+        pdf_extractor.clear()
+
         if self.arxiv_fetch_paper:
-            result, bib_text = self.arxiv_fetcher.fetch_paper(paper.title, 5)
-            if result is None and bib_text is None:
-                if self.scholar_fetch_paper:
-                    self.scholar_fetcher.set_web_data_folder(
-                        os.path.join(
-                            WF_WEBDATA_DIR,
-                            paper_dict.get("id", f"webdata_{int(time.time())}"),
-                        ),
-                    )
-                    result, bib_text = self.scholar_fetcher.fetch_paper(
-                        paper.title, mode="exact"
-                    )
-            if result:
-                paper_dict.update(result)
-            if bib_text is not None:
-                paper_dict["bib"] = bib_text.replace("\n", "\\n")
+            paper_title = paper_dict.get("title", "")
+            if len(paper_title) > 0:
+                result, bib_text = self.arxiv_fetcher.fetch_paper(paper_title, 5)
+                if result is None and bib_text is None:
+                    if self.scholar_fetch_paper:
+                        self.scholar_fetcher.set_web_data_folder(
+                            os.path.join(
+                                WF_WEBDATA_DIR,
+                                paper_dict.get("id", f"webdata_{int(time.time())}"),
+                            ),
+                        )
+                        result, bib_text = self.scholar_fetcher.fetch_paper(
+                            paper.title, mode="exact"
+                        )
+                if result:
+                    paper_dict.update(result)
+                if bib_text is not None:
+                    paper_dict["bib"] = bib_text.replace("\n", "\\n")
         logger.debug("=========== PAPER INFO ===============")
         logger.debug(paper_dict)
 

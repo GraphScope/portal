@@ -111,7 +111,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
     def _enrich_webdata_dir(self, query: str):
         if query != "":
-            folder_name = str(uuid.uuid5(uuid.NAMESPACE_DNS, query))
+            folder_name = str(uuid.uuid5(uuid.NAMESPACE_DNS, query + str(time.time())))
         else:
             folder_name = str(uuid.uuid5(uuid.NAMESPACE_DNS, time.time()))
         cur_web_data_dir = os.path.join(self.web_data_folder, folder_name)
@@ -404,6 +404,79 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
         return [("," + os.linesep).join(lines) + os.linesep + "}"]
 
+    def _get_cited_by_paper_names(self, driver, link, max_results=50):
+        cited_by = []
+        page_num = 0
+
+        link_params = {}
+        link_header = link.split("?")[0]
+        link_body = link.split("?")[1]
+        link_param_list = link_body.split("&")
+
+        for link_param in link_param_list:
+            if "cites=" in link_param:
+                link_params["cites"] = link_param
+            elif "as_sdt=" in link_param:
+                link_params["as_sdt"] = link_param
+            elif "sciodt=" in link_param:
+                link_params["sciodt"] = link_param
+            elif "hl" in link_param:
+                link_params["hl"] = link_param
+
+        while page_num <= max_results:
+            # parse all pages
+
+            if page_num == 0:
+                refined_link = f"{link}"
+            else:
+                refined_link = f"{link_header}?start={str(page_num)}&{link_params['hl']}&{link_params['as_sdt']}&{link_params['sciodt']}&{link_params['cites']}&scipsc="
+
+            driver = self.safe_request(
+                driver=driver,
+                link=refined_link,
+            )
+            logger.error(f"this link: {refined_link}")
+
+            get_content = True
+            try:
+                WebDriverWait(driver, 10).until(self.finish_load_condition())
+            except TimeoutException as e:
+                logger.error(f"Cannot Get Cited by Timeout Error: {e}")
+                # logger.error(f"the result is {driver.page_source}")
+                get_content = False
+            except Exception as e:
+                logger.error(f"Cannot Get Cited by Error: {e}")
+                get_content = False
+
+            if (
+                "not a robot" in driver.page_source
+                or "may be sending automated queries" in driver.page_source
+            ):
+                logger.error("Detected as a spider")
+            parser = LexborHTMLParser(driver.page_source)
+
+            if get_content:
+                for result in parser.css(".gs_r.gs_or.gs_scl"):
+                    try:
+                        title: str = result.css_first(".gs_rt a").text()
+                        cited_by.append(title)
+                    except:
+                        title = None
+
+            if len(cited_by) > max_results:
+                break
+
+            # pagination
+            if parser.css_first(
+                ".gs_ico_nav_next"
+            ):  # checks for the "Next" page button
+                page_num += 10  # paginate to the next page
+                time.sleep(random.uniform(0.2, 1))  # sleep between paginations
+            else:
+                break
+
+        return cited_by[:max_results]
+
     def parse(
         self,
         driver,
@@ -460,23 +533,51 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 elif not succ and exist:
                     logger.warning(f"Found {title}, but already downloaded.")
 
-                outputs.append((succ, file_path, exist))
-
-                if self.meta_folder and self.persist_store and not exist:
-                    if not self.persist_store.get_state(self.meta_folder, file_name):
-                        try:
+                meta_file_path = None
+                this_bib = None
+                try:
+                    if self.meta_folder and self.persist_store:
+                        meta_file_path = os.path.join(
+                            self.persist_store.output_folder,
+                            self.meta_folder,
+                            file_name + ".json",
+                        )
+                        if not self.persist_store.get_state(
+                            self.meta_folder, file_name
+                        ):
                             directory = parser.css_first("#gs_citd")
                             cite_directory = (
                                 "https://scholar.google.com" + directory.attrs["data-u"]
                             )
                             cite_directory = cite_directory.replace("{p}", "0")
-                        except:
-                            logger.warning(f"Download Meta Failed")
 
-                        this_bib = self.get_bib(driver, title, result, cite_directory)
+                            this_bib = self.get_bib(
+                                driver, title, result, cite_directory
+                            )
+
+                            logger.error(f"already get bib: {this_bib}")
+                            if (
+                                "cited_by_link" in this_bib
+                                and this_bib["cited_by_link"] is not None
+                                and len(this_bib["cited_by_link"]) > 0
+                            ):
+                                this_bib["cited_by"] = self._get_cited_by_paper_names(
+                                    driver, this_bib["cited_by_link"]
+                                )
+                            logger.error(f"finish use this bib")
+                except Exception as e:
+                    if this_bib is None:
+                        meta_file_path = None
+                    logger.warning(f"Download Meta Failed: {e}")
+                finally:
+                    if meta_file_path is not None and this_bib is not None:
                         self.persist_store.save_state(
                             self.meta_folder, file_name, this_bib
                         )
+                if meta_file_path:
+                    outputs.append((True, file_path, meta_file_path, exist))
+                else:
+                    outputs.append((succ, file_path, meta_file_path, exist))
 
             if len(outputs) >= num_per_page:
                 break
@@ -543,42 +644,42 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             pdf_file = None
 
         bib = None
-        try:
-            if cite_directory is not None and paper_id is not None:
-                bib = ""
-                cite_directory = cite_directory.replace("{id}", paper_id)
+        # try:
+        #     if cite_directory is not None and paper_id is not None:
+        #         bib = ""
+        #         cite_directory = cite_directory.replace("{id}", paper_id)
 
-                try:
-                    logger.debug("start to find element")
-                    element = WebDriverWait(driver, 10).until(
-                        EC.element_to_be_clickable(
-                            (By.CSS_SELECTOR, ".gs_or_cit.gs_or_btn.gs_nph")
-                        )
-                    )
+        #         try:
+        #             logger.debug("start to find element")
+        #             element = WebDriverWait(driver, 10).until(
+        #                 EC.element_to_be_clickable(
+        #                     (By.CSS_SELECTOR, ".gs_or_cit.gs_or_btn.gs_nph")
+        #                 )
+        #             )
 
-                    logger.error(f"find element: {element}")
-                    element.click()
-                except TimeoutException:
-                    print("Cannot click in 10 seconds")
-                except Exception as e:
-                    traceback.print_exc()
+        #             logger.error(f"find element: {element}")
+        #             element.click()
+        #         except TimeoutException:
+        #             print("Cannot click in 10 seconds")
+        #         except Exception as e:
+        #             traceback.print_exc()
 
-                for i in range(100):
-                    try:
-                        driver.find_element(By.XPATH, f"//a[text()='BibTeX']").click()
-                        break
-                    except:
-                        time.sleep(0.1)
+        #         for i in range(100):
+        #             try:
+        #                 driver.find_element(By.XPATH, f"//a[text()='BibTeX']").click()
+        #                 break
+        #             except:
+        #                 time.sleep(0.1)
 
-                for i in range(100):
-                    try:
-                        for element in driver.find_elements(By.TAG_NAME, "pre"):
-                            bib += element.text
-                        break
-                    except:
-                        time.sleep(0.1)
-        except:
-            bib = None
+        #         for i in range(100):
+        #             try:
+        #                 for element in driver.find_elements(By.TAG_NAME, "pre"):
+        #                     bib += element.text
+        #                 break
+        #             except:
+        #                 time.sleep(0.1)
+        # except:
+        #     bib = None
 
         # bib = None
         try:
@@ -586,9 +687,9 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             gathered_citations = self._get_citations(cite_directory)
             bib_info = self._search_by_object(gathered_citations)
             paper_id = self._get_paper_id(bib_info)
-        except:
-            logger.debug(
-                "Some key citations are missing. Maybe because of chinese literatures."
+        except Exception as e:
+            logger.error(
+                f"Some key citations are missing. Maybe because of chinese literatures: {e}"
             )
             gathered_citations = None
             bib_info = None
@@ -736,7 +837,10 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             except Exception:
                 element_present = False
 
-            text_present = "not a robot" in driver.page_source
+            text_present = (
+                "not a robot" in driver.page_source
+                or "may be sending automated queries" in driver.page_source
+            )
 
             return element_present or text_present
 
@@ -902,12 +1006,14 @@ class BibSearchArxiv(BibSearch):
         download_file_path = os.path.join(download_path, download_file_name)
         logger.debug(f"download to {download_file_path}")
 
-        if os.path.exists(download_file_path):
-            logger.error(f"The file '{download_file_path}' already exists.")
-            return [(True, download_file_path, True)]
-
+        meta_file_path = None
         try:
             if self.meta_folder and self.persist_store:
+                meta_file_path = os.path.join(
+                    self.persist_store.output_folder,
+                    self.meta_folder,
+                    arxiv_file_name + ".json",
+                )
                 if not self.persist_store.get_state(self.meta_folder, arxiv_file_name):
                     self.persist_store.save_state(
                         self.meta_folder,
@@ -915,7 +1021,12 @@ class BibSearchArxiv(BibSearch):
                         self.format_json_object(best_match),
                     )
         except Exception as e:
+            meta_file_path = None
             logger.error(f"Download Meta Error: {e}")
+
+        if os.path.exists(download_file_path):
+            logger.error(f"The file '{download_file_path}' already exists.")
+            return [(True, download_file_path, meta_file_path, True)]
 
         try:
             best_match.download_pdf(
@@ -924,9 +1035,139 @@ class BibSearchArxiv(BibSearch):
             )
         except Exception as e:
             logger.error(f"{e}")
-            return [(False, "", False)]
+            if meta_file_path:
+                return [(True, None, meta_file_path, False)]
+            else:
+                return [(False, None, None, False)]
 
-        return [(True, download_file_path, False)]
+        return [(True, download_file_path, meta_file_path, False)]
+
+    def download_by_wget(self, best_match, download_folder):
+        file_name = re.sub(r"[^a-zA-Z0-9]", "_", best_match.title.strip())
+        pdf_file = os.path.join(download_folder, f"arxiv_{file_name}.pdf")
+        pdf_link = best_match.pdf_url
+        print(f"wget -O {pdf_file} {pdf_link}")
+        os.system(f"wget -O {pdf_file} {pdf_link}")
+
+        return [(True, pdf_file)]
+
+
+class BibSearchPubMed(BibSearch):
+    def __init__(self, persist_store=None, meta_folder="") -> None:
+        super().__init__(persist_store=persist_store, meta_folder=meta_folder)
+
+    def format_json_object(self, paper_id, paper_info):
+        return {
+            "title": paper_info["title"],
+            "id": str(paper_id),
+            "author": " and ".join(
+                [
+                    author.get("fore_name", "") + " " + author.get("last_name", "")
+                    for author in paper_info.get("authors", [])
+                ]
+            ),
+            "journal": paper_info.get("journal", {}).get("title", ""),
+            "publish_year": paper_info.get("journal", {})
+            .get("publish_time", {})
+            .get("year", ""),
+            "publish_month": paper_info.get("journal", {})
+            .get("publish_time", {})
+            .get("month", ""),
+            "vol": paper_info.get("journal", {}).get("vol", ""),
+            "issue": paper_info.get("journal", {}).get("issue", ""),
+            "page": rf'{paper_info.get("start_page", "")}--{paper_info.get("end_page", "")}',
+            "abstract": paper_info.get("abstract", ""),
+            "reference": [
+                {
+                    "citation": ref.get("citation", ""),
+                    "pubmed_id": ref.get("ids", {}).get("pubmed", None),
+                }
+                for ref in paper_info.get("reference", [])
+            ],
+            "bib": self.search_by_object(paper_id, paper_info),
+        }
+
+    def search_by_object(self, paper_id, paper_info) -> List[str]:
+        """BibTex string of the reference."""
+
+        lines = ["@article{" + str(paper_id)]
+        for k, v in [
+            (
+                "Author",
+                " and ".join(
+                    [
+                        author.get("fore_name", "") + " " + author.get("last_name", "")
+                        for author in paper_info.get("authors", [])
+                    ]
+                ),
+            ),
+            ("Title", paper_info["title"]),
+            ("Abstract", paper_info.get("abstract", "")),
+            (
+                "Year",
+                paper_info.get("journal", {}).get("publish_time", {}).get("year", ""),
+            ),
+            (
+                "Month",
+                paper_info.get("journal", {}).get("publish_time", {}).get("month", ""),
+            ),
+            ("Journal", paper_info.get("journal", {}).get("title", "")),
+            ("Volume", paper_info.get("journal", {}).get("vol", "")),
+            ("Issue", paper_info.get("journal", {}).get("issue", "")),
+            (
+                "Pages",
+                rf'{paper_info.get("start_page", "")}--{paper_info.get("end_page", "")}',
+            ),
+        ]:
+            if v is not None:
+                if v != "--":
+                    lines.append("%-13s = {%s}" % (k, v))
+
+        return ("," + os.linesep).join(lines) + os.linesep + "}"
+
+    def download_by_object(self, best_match, best_info, download_path):
+        file_name = re.sub(r"[^a-zA-Z0-9]", "_", best_info["title"].strip())
+
+        pubmed_file_name = f"pubmed_{file_name}".lower()
+        download_file_name = f"pubmed_{file_name}.pdf".lower()
+        download_file_path = os.path.join(download_path, download_file_name)
+        logger.debug(f"download to {download_file_path}")
+
+        meta_file_path = None
+        try:
+            if self.meta_folder and self.persist_store:
+                meta_file_path = os.path.join(
+                    self.persist_store.output_folder,
+                    self.meta_folder,
+                    pubmed_file_name + ".json",
+                )
+                if not self.persist_store.get_state(self.meta_folder, pubmed_file_name):
+                    self.persist_store.save_state(
+                        self.meta_folder,
+                        pubmed_file_name,
+                        self.format_json_object(best_match, best_info),
+                    )
+        except Exception as e:
+            meta_file_path = None
+            logger.error(f"Download Meta Error: {e}")
+
+        if os.path.exists(download_file_path):
+            logger.error(f"The file '{download_file_path}' already exists.")
+            return [(True, download_file_path, meta_file_path, True)]
+
+        try:
+            best_match.download_pdf(
+                dirpath=download_path,
+                filename=download_file_name,
+            )
+        except Exception as e:
+            logger.error(f"Download PDF Error: {e}")
+            if meta_file_path:
+                return [(True, None, meta_file_path, False)]
+            else:
+                return [(False, None, None, False)]
+
+        return [(True, download_file_path, meta_file_path, False)]
 
     def download_by_wget(self, best_match, download_folder):
         file_name = re.sub(r"[^a-zA-Z0-9]", "_", best_match.title.strip())
