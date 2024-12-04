@@ -1,0 +1,30 @@
+{
+  "id": "test_paper_navigator",
+  "graph": {
+    "inspectors": [
+      {
+        "name": "PaperInspector",
+        "graph": {
+          "nodes": [
+            {
+              "name": "Paper"
+            }
+          ],
+          "edges": []
+        }
+      }
+    ],
+    "navigators": [
+      {
+        "name": "Reference",
+        "source": "PaperInspector",
+        "target": "PaperInspector",
+        "method": "arxiv",
+        "args": {
+          "max_thread_num": 12,
+          "ref_mode": "skip"
+        }
+      }
+    ]
+  }
+}

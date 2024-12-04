@@ -389,28 +389,31 @@ class PaperInspector(BaseNode):
         edges = []
         start_node = "Paper"
 
-        for node in graph_dict["nodes"]:
-            if node["name"] == start_node:  # node_0 = pdf_extract
-                nodes_dict[node["name"]] = PDFExtractNode(
-                    embeddings_model,
-                    start_node,
-                )
-            else:
-                extract_node = ExtractNode.from_dict(
-                    node,
-                    llm_model.model,
-                    parser_model.model,
-                    llm_model.context_size,
-                    llm_model.enable_streaming,
-                )
-                nodes_dict[node["name"]] = extract_node
+        if "nodes" in graph_dict:
+            for node in graph_dict["nodes"]:
+                if node["name"] == start_node:
+                    nodes_dict[node["name"]] = PDFExtractNode(
+                        embeddings_model,
+                        start_node,
+                    )
+                else:
+                    extract_node = ExtractNode.from_dict(
+                        node,
+                        llm_model.model,
+                        parser_model.model,
+                        llm_model.context_size,
+                        llm_model.enable_streaming,
+                    )
+                    nodes_dict[node["name"]] = extract_node
 
-        for _, value in nodes_dict.items():
-            nodes.append(value)
-        for edge in graph_dict["edges"]:
-            edges.append(BaseEdge(edge["source"], edge["target"]))
-            if edge["source"] != start_node:
-                nodes_dict[edge["target"]].add_dependent_node(edge["source"])
+            for _, value in nodes_dict.items():
+                nodes.append(value)
+
+        if "edges" in graph_dict:
+            for edge in graph_dict["edges"]:
+                edges.append(BaseEdge(edge["source"], edge["target"]))
+                if edge["source"] != start_node:
+                    nodes_dict[edge["target"]].add_dependent_node(edge["source"])
 
         graph = BaseGraph()
         # Add all nodes

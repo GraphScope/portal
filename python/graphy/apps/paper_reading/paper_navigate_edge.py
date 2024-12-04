@@ -2,7 +2,7 @@ from graph.edges.base_edge import AbstractEdge, EdgeType
 from graph.types import DataGenerator
 from utils import ArxivFetcher, ScholarFetcher
 from config import WF_OUTPUT_DIR
-from db import JsonFileStore
+from db import PersistentStore, JsonFileStore
 
 from enum import Enum, auto
 from typing import Dict, Any, Type
@@ -54,11 +54,11 @@ class ResourceAllocator:
 class PaperNavigateEdge(AbstractEdge):
     def __init__(
         self,
-        source,
-        target,
-        paper_download_dir,
-        name=None,
-        persist_store=None,
+        source: str,
+        target: str,
+        paper_download_dir: str,
+        name: str = None,
+        persist_store: PersistentStore = None,
         download_concurrency=1,
         finish_signal="REF_DONE",
         max_thread_num=12,
@@ -116,27 +116,27 @@ class PaperNavigateEdge(AbstractEdge):
 
         if method == "scholar":
             return PaperNavigateScholarEdge(
-                source,
-                target,
-                name,
-                persist_store,
-                paper_download_dir,
-                finish_signal,
-                max_thread_num,
-                ref_mode,
-                meta_folder_dir,
+                source=source,
+                target=target,
+                paper_download_dir=paper_download_dir,
+                name=name,
+                persist_store=persist_store,
+                finish_signal=finish_signal,
+                max_thread_num=max_thread_num,
+                ref_mode=ref_mode,
+                meta_folder_dir=meta_folder_dir,
             )
         else:
             return PaperNavigateArxivEdge(
-                source,
-                target,
-                name,
-                persist_store,
-                paper_download_dir,
-                finish_signal,
-                max_thread_num,
-                ref_mode,
-                meta_folder_dir,
+                source=source,
+                target=target,
+                paper_download_dir=paper_download_dir,
+                name=name,
+                persist_store=persist_store,
+                finish_signal=finish_signal,
+                max_thread_num=max_thread_num,
+                ref_mode=ref_mode,
+                meta_folder_dir=meta_folder_dir,
             )
 
     @profiler.profile(name="PaperNavigateEdge")
@@ -258,11 +258,11 @@ class PaperNavigateEdge(AbstractEdge):
 class PaperNavigateArxivEdge(PaperNavigateEdge):
     def __init__(
         self,
-        source,
-        target,
-        paper_download_dir,
-        name=None,
-        persist_store=None,
+        source: str,
+        target: str,
+        paper_download_dir: str,
+        name: str = None,
+        persist_store: PersistentStore = None,
         arxiv_download_concurrency=4,
         finish_signal="_ARXIV_REF_DONE",
         max_thread_num=12,
@@ -332,11 +332,11 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
 class PaperNavigateScholarEdge(PaperNavigateEdge):
     def __init__(
         self,
-        source,
-        target,
-        paper_download_dir,
-        name=None,
-        persist_store=None,
+        source: str,
+        target: str,
+        paper_download_dir: str,
+        name: str = None,
+        persist_store: PersistentStore = None,
         scholar_download_concurrency=4,
         finish_signal="_SCHOLAR_REF_DONE",
         max_thread_num=8,
