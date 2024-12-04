@@ -63,11 +63,6 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
         <StudioProvier locales={locales}>
           <Section
             splitBorder
-            rightSide={
-              <PropertiesPanel>
-                <Next />
-              </PropertiesPanel>
-            }
             leftSide={
               <SegmentedTabs
                 tableHeight={60}
@@ -114,15 +109,15 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
               overflow: 'scroll',
               background: token.colorBgContainer,
             }}
-            rightSideStyle={{
-              width: '360px',
-              padding: '12px 12px 12px 18px',
-              boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
-              overflowY: 'scroll',
-            }}
+            // rightSideStyle={{
+            //   width: '360px',
+            //   padding: '12px 12px 12px 18px',
+            //   boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
+            //   overflowY: 'scroll',
+            // }}
             defaultCollapsed={{
               leftSide: false,
-              rightSide: false,
+              rightSide: true,
             }}
           >
             {/* <Prepare data={data} schema={schema} graphId={graphId} /> */}
@@ -132,6 +127,8 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             <FetchGraph />
             <Placeholder />
             <Loading />
+            <Next />
+            <PropertiesPanel />
 
             <ContextMenu>
               <NeighborQuery />
