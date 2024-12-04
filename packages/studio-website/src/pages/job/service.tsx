@@ -6,6 +6,7 @@ export type IJobType = {
   id: string;
   type: string;
   status: string;
+  graph_name: string;
   start_time: string;
   end_time: string;
   log: string;

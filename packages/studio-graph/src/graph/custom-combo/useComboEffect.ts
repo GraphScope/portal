@@ -17,7 +17,7 @@ import { renderCombo } from './render';
 
 const useComboEffect = () => {
   const { store } = useContext();
-  const { graph, render, nodeStyle, combos, enableCombo, combosByKey } = store;
+  const { graph, render, nodeStyle, combos, enableCombo, combosByKey, reheatSimulation } = store;
   const linkForceRef = useRef<any>(null);
 
   useEffect(() => {
@@ -35,17 +35,11 @@ const useComboEffect = () => {
     }
 
     if (enableCombo) {
-      console.log(combos);
-      if ((graph as ForceGraphInstance).zoom) {
-        (graph as ForceGraphInstance).zoom(1);
-      }
-
       const combosMap = new Map();
       combos.forEach(group => {
         combosMap.set(group.id, group);
       });
       if (linkForceRef.current === null) {
-        console.log(linkForceRef.current);
         linkForceRef.current = graph.d3Force('link');
       }
 
@@ -67,7 +61,9 @@ const useComboEffect = () => {
       /** render combos */
       renderCombo(graph as ForceGraphInstance, combos);
       /** 立即启动力导 */
-      graph && graph.d3ReheatSimulation();
+      if (reheatSimulation && graph) {
+        graph.d3ReheatSimulation();
+      }
     } else {
       /** 关闭聚类 */
       graph.d3Force('charge', d3ForceManyBody());
@@ -81,7 +77,7 @@ const useComboEffect = () => {
         (graph as ForceGraphInstance).onRenderFramePost(() => {});
       }
     }
-  }, [combos, render, graph, enableCombo, combosByKey]);
+  }, [combos, render, graph, enableCombo, combosByKey, reheatSimulation]);
 };
 
 export default useComboEffect;

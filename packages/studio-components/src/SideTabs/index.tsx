@@ -17,7 +17,7 @@ interface Option {
   children: React.ReactNode;
 }
 interface SidebarProps {
-  items: { key: string; children: ReactNode; label?: string; icon?: ReactNode }[];
+  items: { key: string; children: ReactNode; label?: React.ReactNode; icon?: ReactNode }[];
   queryKey?: string;
   style?: React.CSSProperties;
   defaultActive?: string;

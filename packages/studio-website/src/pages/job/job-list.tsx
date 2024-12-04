@@ -1,152 +1,157 @@
+import React, { useCallback, useEffect, useState } from 'react';
 import type { FC } from 'react';
-import React from 'react';
-import { useCallback, useEffect, useState } from 'react';
-import { Table, Tag, message, Button, Popconfirm, Space } from 'antd';
+import { List, Typography, Tag, message, Button, Popconfirm, Divider, Space, Popover, theme } from 'antd';
+import { EllipsisOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from '../../hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
-import { FileSearchOutlined } from '@ant-design/icons';
-// import Action from './action';
 import { listJobs, IJobType, deleteJobById } from './service';
+import JobHeader from './job-header';
 import dayjs from 'dayjs';
 import useStore from './useStore';
-interface IState {
+
+const { Title, Text } = Typography;
+
+export interface IState {
   jobsList: IJobType[];
-  typeOptions: { value: string; text: string }[];
+  rawJobsList: IJobType[];
+  typeOptions: { value: string; label: string }[];
+  searchOptions: { value: string; label: string }[];
+  jobId: string;
 }
 
 const JobsList: FC = () => {
+  const { token } = theme.useToken();
   const history = useHistory();
-  const [state, updateState] = useState<IState>({
+
+  const [state, setState] = useState<IState>({
     jobsList: [],
-    typeOptions: [{ value: '', text: 'All' }],
+    rawJobsList: [],
+    typeOptions: [],
+    searchOptions: [],
+    jobId: '',
   });
-  const { jobsList, typeOptions } = state;
-  const { STATUSOPTIONS, JOB_TYPE_ICONS, getStatusColor, capitalizeFirstLetter } = useStore();
-  /** 获取jobs列表数据 */
+
+  const { jobsList, rawJobsList } = state;
+  const { JOB_TYPE_ICONS, statusColor, capitalizeFirstLetter, formatDateTime, handleChange } = useStore();
+
   const getJobList = useCallback(async () => {
-    const res = await listJobs();
-    /** 接口获取类型值 */
-    let uniqueJobTypes = typeOptions.concat(
-      res.map(item => {
+    try {
+      const res = await listJobs();
+      const uniqueTypes = Array.from(new Set(res.map(item => item.type)));
+      const typeOptions = uniqueTypes.map(type => ({ value: type, label: type }));
+      const searchOptions = res.map(item => ({ value: item.id, label: item.id }));
+
+      setState(prevState => {
         return {
-          value: item.type,
-          text: item.type,
+          ...prevState,
+          jobsList: res,
+          rawJobsList: res,
+          typeOptions,
+          searchOptions,
         };
-      }),
-    );
-    /** 过滤相同属性 */
-    uniqueJobTypes = uniqueJobTypes.filter(
-      (item, index) => uniqueJobTypes.findIndex(i => i.value === item.value) === index,
-    );
-    updateState(preset => ({ ...preset, jobsList: res, typeOptions: uniqueJobTypes }) as typeof state);
+      });
+    } catch (error) {
+      message.error('Failed to load jobs');
+    }
   }, []);
 
   useEffect(() => {
     getJobList();
-  }, []);
+  }, [getJobList]);
 
-  /** 删除job */
-  const handleDeleteJob = useCallback(async (job_id: string) => {
-    const res = await deleteJobById(job_id);
-    //@ts-ignore
-    message.success(res);
-    getJobList();
-  }, []);
-
-  const columns = [
-    {
-      title: <FormattedMessage id="Job ID" />,
-      dataIndex: 'id',
-      key: 'id',
+  const handleDeleteJob = useCallback(
+    async (jobId: string) => {
+      try {
+        await deleteJobById(jobId);
+        message.success('Job deleted successfully');
+        getJobList();
+      } catch {
+        message.error('Failed to delete job');
+      }
     },
-    {
-      title: <FormattedMessage id="Type" />,
-      dataIndex: 'type',
-      key: 'type',
-      filters: typeOptions,
-      filterMultiple: false,
-      onFilter: (value: string, record: IJobType) => record.type.startsWith(value),
-    },
-    {
-      title: <FormattedMessage id="Status" />,
-      dataIndex: 'status',
-      key: 'status',
-      filters: STATUSOPTIONS,
-      filterMultiple: false,
-      onFilter: (value: string, record: IJobType) => record.status.startsWith(value),
-      render: (status: string) => (
-        //@ts-ignore
-        <Tag icon={JOB_TYPE_ICONS[status]} color={getStatusColor(status)}>
-          {capitalizeFirstLetter(status.toLowerCase())}
-        </Tag>
-      ),
-    },
-    {
-      title: <FormattedMessage id="Start time" />,
-      key: 'start_time',
-      dataIndex: 'start_time',
-      sorter: (a: IJobType, b: IJobType) => dayjs(a.start_time).valueOf() - dayjs(b.start_time).valueOf(),
-    },
-    {
-      title: <FormattedMessage id="End time" />,
-      key: 'end_time',
-      dataIndex: 'end_time',
-      sorter: (a: IJobType, b: IJobType) => dayjs(a.end_time).valueOf() - dayjs(b.end_time).valueOf(),
-    },
-    {
-      title: <FormattedMessage id="Graph id" />,
-      dataIndex: 'detail',
-      key: 'detail',
-      render: (record: { graph_id: String } | { [s: string]: unknown }) => <>{record?.graph_id}</>,
-    },
-    {
-      title: <FormattedMessage id="Graph name" />,
-      key: 'graph_name',
-      dataIndex: 'graph_name',
-    },
-    {
-      title: <FormattedMessage id="Process id" />,
-      dataIndex: 'detail',
-      key: 'detail',
-      render: (record: { process_id: string } | { [s: string]: unknown }) => <>{record?.process_id}</>,
-    },
-    {
-      title: <FormattedMessage id="Action" />,
-      key: 'actions',
-      render: (record: IJobType) => (
-        <Space>
-          <Popconfirm
-            placement="bottomRight"
-            title={<FormattedMessage id="Are you sure to delete this task?" />}
-            onConfirm={() => handleDeleteJob(record.id)}
-            okText={<FormattedMessage id="Yes" />}
-            cancelText={<FormattedMessage id="No" />}
-            icon
-          >
-            <Button
-              type="text"
-              size="small"
-              danger
-              ghost
-              icon={<FontAwesomeIcon icon={faTrashCan} />}
-              disabled={!['RUNNING', 'WAITING'].includes(record.status)}
-            />
-          </Popconfirm>
-          <FileSearchOutlined onClick={() => history.push(`/job/detail?jobId=${record.id}`)} />
-        </Space>
-      ),
-    },
-  ];
+    [getJobList],
+  );
 
   return (
-    <Table
-      style={{ marginTop: '-8px' }}
+    <List
+      style={{ padding: '12px 24px', backgroundColor: token.colorBgBase, borderRadius: 6 }}
+      itemLayout="horizontal"
+      header={
+        <JobHeader
+          {...state}
+          onChange={(selectedItems, filterType) => {
+            const updatedJobsList = handleChange(selectedItems, filterType, rawJobsList);
+            setState(prevState => ({ ...prevState, jobsList: updatedJobsList }));
+          }}
+        />
+      }
       dataSource={jobsList}
-      //@ts-ignore
-      columns={columns}
-      size="middle"
+      pagination={{ position: 'bottom', align: 'end' }}
+      renderItem={({ id, status, graph_name, type, start_time, end_time }) => {
+        const isJobSelected = state.jobId === id;
+
+        return (
+          <List.Item
+            style={{
+              padding: '6px 12px',
+              backgroundColor: isJobSelected ? token.colorBgLayout : token.colorBgBase,
+              cursor: 'pointer',
+            }}
+            onMouseEnter={() => setState(prevState => ({ ...prevState, jobId: id }))}
+            onMouseLeave={() => setState(prevState => ({ ...prevState, jobId: '' }))}
+            onClick={() => history.push(`/job/detail?jobId=${id}`)}
+          >
+            <List.Item.Meta
+              title={
+                <Space align="center">
+                  <Title level={5}>{id}</Title>
+                  <Tag icon={JOB_TYPE_ICONS[status]} color={statusColor[status]}>
+                    {capitalizeFirstLetter(status.toLowerCase())}
+                  </Tag>
+                </Space>
+              }
+              description={
+                <Space align="center" split={<Divider type="vertical" />}>
+                  <Text type="secondary">GraphName: {graph_name}</Text>
+                  <Text type="secondary">JobType: {type}</Text>
+                  <Text type="secondary">{end_time}</Text>
+                </Space>
+              }
+            />
+
+            <Space>
+              <Text type="secondary">{formatDateTime(dayjs(start_time))}</Text>
+              <Popover
+                placement="bottom"
+                content={
+                  <Popconfirm
+                    placement="bottomRight"
+                    title={<FormattedMessage id="Are you sure to delete this task?" />}
+                    onConfirm={() => handleDeleteJob(id)}
+                    okText={<FormattedMessage id="Yes" />}
+                    cancelText={<FormattedMessage id="No" />}
+                  >
+                    <Button
+                      type="text"
+                      size="small"
+                      danger
+                      ghost
+                      icon={<FontAwesomeIcon icon={faTrashCan} />}
+                      disabled={!['RUNNING', 'WAITING'].includes(status)}
+                    >
+                      <FormattedMessage id="Delete" />
+                    </Button>
+                  </Popconfirm>
+                }
+              >
+                <EllipsisOutlined />
+              </Popover>
+            </Space>
+          </List.Item>
+        );
+      }}
     />
   );
 };

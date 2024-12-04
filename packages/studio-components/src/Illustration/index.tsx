@@ -11,6 +11,7 @@ import Welcome from './Welcome';
 import Programming from './Programming';
 import Experiment from './Experiment';
 import Settings from './Settings';
+import Charts from './Charts';
 export default {
   Job,
   Explore,
@@ -25,4 +26,5 @@ export default {
   Programming,
   Experiment,
   Settings,
+  Charts,
 };

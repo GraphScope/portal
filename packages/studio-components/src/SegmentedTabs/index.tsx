@@ -4,33 +4,29 @@ import { ReactNode } from 'react';
 import { getSearchParams, setSearchParams } from '../Utils';
 
 export interface SegmentedTabsProps {
-  items: { key: string; children: ReactNode; label?: string; icon?: ReactNode }[];
+  items: { key: string; children: ReactNode; label?: React.ReactNode; icon?: ReactNode }[];
   queryKey?: string;
   rootStyle?: React.CSSProperties;
   tabStyle?: React.CSSProperties;
+  tableHeight?: number;
   defaultActive?: string;
   block?: boolean;
   value?: string;
   onChange?: (value: string) => void;
 }
-const styles: Record<string, React.CSSProperties> = {
-  tabs: {
-    height: '100%',
-    padding: '12px 0px',
-    boxSizing: 'border-box',
-  },
-  appear: {
-    display: 'block',
-    height: 'calc(100% - 40px)',
-  },
-  hidden: {
-    display: 'none',
-    height: 'calc(100% - 40px)',
-  },
-};
 
 const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
-  const { items, queryKey = 'tab', rootStyle = {}, tabStyle = {}, defaultActive, block, value, onChange } = props;
+  const {
+    items,
+    tableHeight = 40,
+    queryKey = 'tab',
+    rootStyle = {},
+    tabStyle = {},
+    defaultActive,
+    block,
+    value,
+    onChange,
+  } = props;
   //@ts-ignore
   const [state, setState] = React.useState<{ active: string }>(() => {
     const defaultKey = getSearchParams(queryKey);
@@ -39,6 +35,24 @@ const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
       active,
     };
   });
+
+  const styles: Record<string, React.CSSProperties> = {
+    tabs: {
+      height: '100%',
+      padding: '12px 0px',
+      boxSizing: 'border-box',
+    },
+    appear: {
+      display: 'block',
+      padding: '0px 6px',
+      height: `calc(100% - ${tableHeight}px)`,
+    },
+    hidden: {
+      display: 'none',
+      padding: '0px 6px',
+      height: `calc(100% - ${tableHeight}px)`,
+    },
+  };
 
   const { active } = state;
 

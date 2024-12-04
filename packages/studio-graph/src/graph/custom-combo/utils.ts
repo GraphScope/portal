@@ -27,7 +27,8 @@ export function getComboTextRect(combo) {
   const fontSize = 10;
   const textX = gx; // 文本的 x 坐标（与圆心 x 坐标对齐）
   const textY = gy - gr - 8; // 文本的 y 坐标（在圆的上方）
-  const w = fontSize * String(text).length * 0.6;
+  const w = Math.max(fontSize * String(text).length * 0.6, 50);
+
   const h = fontSize;
   return { x: textX - w / 2, y: textY - h / 2, w, h };
 }

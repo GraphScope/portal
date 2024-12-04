@@ -60,7 +60,7 @@ class PaperNavigateEdge(AbstractEdge):
         name: str = None,
         persist_store: PersistentStore = None,
         download_concurrency=1,
-        finish_signal="REF_DONE",
+        finish_signal="_REF_DONE",
         max_thread_num=12,
         ref_mode=ReferenceExtractStateMode.SkipIfExists,
         meta_folder_dir="",
