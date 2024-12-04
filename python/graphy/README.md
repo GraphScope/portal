@@ -12,8 +12,8 @@ Preprocessing unstructured data is often a tedious and time-consuming task. And 
 This repository introduces the initial prototype of the Graphy platform, as illustrated above, with a focus on academic papers, which are often publicly accessible. In this prototype, the primary unstructured data consists of research paper PDFs. Graphy’s workflow is built upon two key abstractions:
 - **Inspector**: The Inspector abstraction defines the structured information to be extracted from papers. It utilizes an inner Directed Acyclic Graph (DAG), where each subnode represents specific instructions for LLMs to extract targeted information from the paper. This DAG mirrors the commonly referenced ["Tree of Thought"](https://arxiv.org/abs/2305.10601)  pipeline in the LLM literature.
 - **Navigator**: The Navigator abstraction determines how related papers can be fetched and processed via the Inspector. Currently, two navigators are available:
-    - [PaperNavigateArxivEdge](./graph/edges/paper_navigate_edge.py) for retrieving PDFs from ArXiv.
-	- [PaperNavigateScholarEdge](./graph/edges/paper_navigate_edge.py) for fetching PDFs via Google Scholar.
+    - [PaperNavigateArxivEdge](./apps/paper_reading/paper_navigate_edge.py) for fetching PDFs from [ArXiv](https://arxiv.org/).
+	- [PaperNavigateScholarEdge](./apps/paper_reading/paper_navigate_edge.py) for fetching PDFs from [Google Scholar](http://scholar.google.com/).
 
 These navigators enable the creation of a rich, interconnected database of academic papers.
 

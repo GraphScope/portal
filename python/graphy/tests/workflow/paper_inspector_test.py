@@ -10,20 +10,12 @@ from apps.paper_reading.paper_reading_nodes import (
 from graph.types import DataGenerator
 from models import LLM, set_llm_model, DEFAULT_LLM_MODEL_CONFIG, DefaultEmbedding
 from db import PersistentStore, JsonFileStore
-from config import (
-    WF_STATE_CACHE_KEY,
-    WF_STATE_MEMORY_KEY,
-    WF_STATE_EXTRACTOR_KEY,
-    WF_OUTPUT_DIR,
-    WF_VECTDB_DIR,
-)
 
 from langchain_core.embeddings import Embeddings
 from tempfile import TemporaryDirectory
 
 import os
 import chromadb
-import shutil
 
 
 @pytest.fixture
