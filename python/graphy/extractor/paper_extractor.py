@@ -158,8 +158,28 @@ class PaperExtractor(PDFExtractor):
         zoom=1.0,
         chunk_size=500,
         chunk_overlap=0,
+        meta_path: str = None,
         # chunk_overlap=50,
     ):
+        self.fake_extractor = False
+        self.linked_contents = set()
+        self.input_meta_data = {}
+
+        try:
+            if meta_path:
+                with open(meta_path, "r") as file:
+                    self.input_meta_data = json.load(file)
+        except Exception as e:
+            logger.error(f"Load Meta Data File Error: {e} {meta_path}")
+            self.input_meta_data = {}
+
+        logger.error(f"input meta data: {self.input_meta_data}")
+
+        if file_path is None:
+            if len(self.input_meta_data) > 0:
+                self.fake_extractor = True
+            return
+
         try:
             super().__init__(
                 file_path, gt_file_path, block_id_str, chunk_size, chunk_overlap
@@ -186,8 +206,6 @@ class PaperExtractor(PDFExtractor):
         self.section_signal_unheaded = ["abstract", "acknowledgements"]
 
         self._define_re_templates()
-
-        self.linked_contents = set()
 
     def _define_re_templates(self):
         self.figure_template_str = ["Figure \d+:", "Fig. \d+:"]
@@ -251,6 +269,9 @@ class PaperExtractor(PDFExtractor):
         return max_font_size_content[1]
 
     def get_meta_data(self):
+        if self.fake_extractor:
+            return self.input_meta_data
+
         meta = self.doc.metadata
 
         try:
@@ -279,6 +300,9 @@ class PaperExtractor(PDFExtractor):
             #    meta["title"] = largest_sentence
             # else:
             #    meta["title"] = record_title
+
+        if len(self.input_meta_data) > 0:
+            meta.update(self.input_meta_data)
 
         return meta
 
@@ -1391,4 +1415,5 @@ class PaperExtractor(PDFExtractor):
         return list(self.extract_text(get_rich_info=True, get_tables=False))
 
     def clear(self):
-        self.doc.close()
+        if not self.fake_extractor:
+            self.doc.close()

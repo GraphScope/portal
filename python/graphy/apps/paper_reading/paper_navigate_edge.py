@@ -1,6 +1,6 @@
 from graph.edges.base_edge import AbstractEdge, EdgeType
 from graph.types import DataGenerator
-from utils import ArxivFetcher, ScholarFetcher
+from utils import ArxivFetcher, ScholarFetcher, PubMedFetcher
 from config import WF_OUTPUT_DIR
 from db import PersistentStore, JsonFileStore
 
@@ -64,6 +64,7 @@ class PaperNavigateEdge(AbstractEdge):
         max_thread_num=12,
         ref_mode=ReferenceExtractStateMode.SkipIfExists,
         meta_folder_dir="",
+        key_name="reference",
     ):
         super().__init__(source, target, name, EdgeType.NAVIGATOR)
         self.paper_download_dir = paper_download_dir
@@ -75,6 +76,7 @@ class PaperNavigateEdge(AbstractEdge):
         self.max_thread_num = max_thread_num
         self.ref_mode = ref_mode
         self.meta_folder_dir = meta_folder_dir
+        self.key_name = key_name
 
         self.thread_allocator = ResourceAllocator(self.max_thread_num)
 
@@ -103,7 +105,7 @@ class PaperNavigateEdge(AbstractEdge):
             "_NAVIGATOR",
             name,
         )
-        meta_folder_dir = "meta_folder"
+        meta_folder_dir = os.path.join("_META_FOLDER", name)
         finish_signal = args.get("finish_signal", "_REF_DONE")
         max_thread_num = args.get("max_thread_num", 12)
         ref_mode = args.get("ref_mode", "skip").lower()
@@ -113,6 +115,7 @@ class PaperNavigateEdge(AbstractEdge):
             ref_mode = ReferenceExtractStateMode.AppendIfExists
         else:
             ref_mode = ReferenceExtractStateMode.SkipIfExists
+        key_name = args.get("key_name", "reference").lower()
 
         if method == "scholar":
             return PaperNavigateScholarEdge(
@@ -120,11 +123,27 @@ class PaperNavigateEdge(AbstractEdge):
                 target=target,
                 paper_download_dir=paper_download_dir,
                 name=name,
+                scholar_download_concurrency=4,
                 persist_store=persist_store,
                 finish_signal=finish_signal,
                 max_thread_num=max_thread_num,
                 ref_mode=ref_mode,
                 meta_folder_dir=meta_folder_dir,
+                key_name=key_name,
+            )
+        elif method == "pubmed":
+            return PaperNavigatePubMedEdge(
+                source=source,
+                target=target,
+                paper_download_dir=paper_download_dir,
+                name=name,
+                persist_store=persist_store,
+                pubmed_download_concurrency=3,
+                finish_signal=finish_signal,
+                max_thread_num=max_thread_num,
+                ref_mode=ref_mode,
+                meta_folder_dir=meta_folder_dir,
+                key_name=key_name,
             )
         else:
             return PaperNavigateArxivEdge(
@@ -133,10 +152,12 @@ class PaperNavigateEdge(AbstractEdge):
                 paper_download_dir=paper_download_dir,
                 name=name,
                 persist_store=persist_store,
+                arxiv_download_concurrency=4,
                 finish_signal=finish_signal,
                 max_thread_num=max_thread_num,
                 ref_mode=ref_mode,
                 meta_folder_dir=meta_folder_dir,
+                key_name=key_name,
             )
 
     @profiler.profile(name="PaperNavigateEdge")
@@ -146,7 +167,8 @@ class PaperNavigateEdge(AbstractEdge):
         link_queue = Queue()
         output_queue = Queue()
 
-        logger.debug("================= START NAVIGATE ==============")
+        logger.info("================= START NAVIGATE ==============")
+        paper_data_id_list = []
         for paper in input:
             if not paper:
                 continue
@@ -159,7 +181,7 @@ class PaperNavigateEdge(AbstractEdge):
 
             if reference_hist:
                 # This means that the data has already processed
-                logger.info(f"Reference of ID '{data_id}' already obtained.")
+                logger.info(f"{self.name} of ID '{data_id}' already obtained.")
 
                 references = reference_hist.get("data", [])
                 for reference_info in references:
@@ -169,10 +191,12 @@ class PaperNavigateEdge(AbstractEdge):
                     continue
 
             parent_id = paper.get("data", {}).get("id", "")
-            tasks = set(paper.get("data", {}).get("reference", []))
+            tasks = paper.get("data", {}).get(self.key_name, [])
 
             if len(parent_id) == 0 or len(tasks) == 0:
                 continue
+
+            paper_data_id_list.append(data_id)
 
             succeed_tasks = []
             if reference_hist:
@@ -182,11 +206,11 @@ class PaperNavigateEdge(AbstractEdge):
                 if task not in succeed_tasks:
                     link_queue.put((task, parent_id, data_id))
 
+        records = {}
+        succ_records = {}
         if not link_queue.empty():
             self.thread_allocator.request(amount=self.download_concurrency)
             try:
-                records = {}
-                succ_records = {}
                 with concurrent.futures.ThreadPoolExecutor(
                     max_workers=self.download_concurrency
                 ) as download_executor:
@@ -206,14 +230,16 @@ class PaperNavigateEdge(AbstractEdge):
                         or output_queue.unfinished_tasks != 0
                     ):
                         try:
-                            paper_path, parent_id, parent_data_id, task = (
+                            paper_path, meta_path, parent_id, parent_data_id, task = (
                                 output_queue.get(timeout=0.1)
                             )  # Attempt to get a result from the queue
                             output_json = {
                                 "paper_file_path": paper_path,
+                                "paper_meta_path": meta_path,
                                 "parent_id": parent_id,
                                 "edge_name": self.name,
                             }
+
                             yield output_json
 
                             records.setdefault(parent_data_id, []).append(output_json)
@@ -224,34 +250,33 @@ class PaperNavigateEdge(AbstractEdge):
 
                     link_queue.join()
                     output_queue.join()
-
-                for parent_data_id in records:
-                    cur_result = {"data": [], "task": []}
-
-                    if self.ref_mode == ReferenceExtractStateMode.AppendIfExists:
-                        original_info = self.persist_store.get_state(
-                            parent_data_id, self.finish_signal
-                        )
-                        if original_info:
-                            if "data" in original_info and original_info["data"]:
-                                cur_result["data"] = original_info["data"]
-                            if "task" in original_info and original_info["task"]:
-                                cur_result["task"] = original_info["task"]
-
-                    cur_result["data"].extend(records[parent_data_id])
-                    cur_result["task"].extend(succ_records[parent_data_id])
-
-                    if cur_result:
-                        self.persist_store.save_state(
-                            parent_data_id, self.finish_signal, cur_result
-                        )
-
             except Exception as e:
                 logger.error(f"Get Paper Error: {e}")
             finally:
                 self.thread_allocator.release(amount=self.download_concurrency)
 
-        logger.debug("================= FINISH NAVIGATE ==============")
+        for parent_data_id in paper_data_id_list:
+            cur_result = {"data": [], "task": []}
+            if self.ref_mode == ReferenceExtractStateMode.AppendIfExists:
+                original_info = self.persist_store.get_state(
+                    parent_data_id, self.finish_signal
+                )
+                if original_info:
+                    if "data" in original_info and original_info["data"]:
+                        cur_result["data"] = original_info["data"]
+                    if "task" in original_info and original_info["task"]:
+                        cur_result["task"] = original_info["task"]
+
+            if parent_data_id in records:
+                cur_result["data"].extend(records[parent_data_id])
+                cur_result["task"].extend(succ_records[parent_data_id])
+
+            if cur_result:
+                self.persist_store.save_state(
+                    parent_data_id, self.finish_signal, cur_result
+                )
+
+        logger.info("================= FINISH NAVIGATE ==============")
 
 
 @profiler.profile(name="PaperNavigateArxivEdge")
@@ -268,19 +293,61 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
         max_thread_num=12,
         ref_mode=ReferenceExtractStateMode.SkipIfExists,
         meta_folder_dir="",
+        key_name="reference",
     ):
         logger.info("initialize of `PaperNavigateArxivEdge`")
         super().__init__(
-            source,
-            target,
-            paper_download_dir,
+            source=source,
+            target=target,
+            name=name,
+            persist_store=persist_store,
+            download_concurrency=arxiv_download_concurrency,
+            paper_download_dir=paper_download_dir,
+            finish_signal=finish_signal,
+            max_thread_num=max_thread_num,
+            ref_mode=ref_mode,
+            meta_folder_dir=meta_folder_dir,
+            key_name=key_name,
+        )
+
+    @classmethod
+    def from_dict(cls, edge_conf, persist_store=None):
+        name = edge_conf.get("name", "")
+        source = edge_conf.get("source", "")
+        target = edge_conf.get("target", "")
+        args = edge_conf.get("args", {})
+        if not persist_store:
+            persist_store = JsonFileStore(WF_OUTPUT_DIR)
+        if not source or not target:
+            raise ValueError("Both 'source' and 'target' must be defined in an edge.")
+
+        paper_download_dir = os.path.join(
+            persist_store.output_folder,
+            "_NAVIGATOR",
             name,
-            persist_store,
-            arxiv_download_concurrency,
-            finish_signal,
-            max_thread_num,
-            ref_mode,
-            meta_folder_dir,
+        )
+        meta_folder_dir = os.path.join("_META_FOLDER", name)
+        finish_signal = args.get("finish_signal", "REF_DONE")
+        max_thread_num = args.get("max_thread_num", 12)
+        ref_mode = args.get("ref_mode", "skip").lower()
+        if ref_mode == "skip":
+            ref_mode = ReferenceExtractStateMode.SkipIfExists
+        elif ref_mode == "append":
+            ref_mode = ReferenceExtractStateMode.AppendIfExists
+        else:
+            ref_mode = ReferenceExtractStateMode.SkipIfExists
+        key_name = args.get("key_name", "reference").lower()
+        return cls(
+            source=source,
+            target=target,
+            name=name,
+            persist_store=persist_store,
+            paper_download_dir=paper_download_dir,
+            finish_signal=finish_signal,
+            max_thread_num=max_thread_num,
+            ref_mode=ref_mode,
+            meta_folder_dir=meta_folder_dir,
+            key_name=key_name,
         )
 
     def download_worker(self, link_queue):
@@ -291,6 +358,13 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
                 link_queue.task_done()
                 continue
             link, parent_id, parent_data_id = info
+
+            if link is None:
+                link_queue.task_done()
+                continue
+
+            if type(link) is dict:
+                link = link.get("citation", None)
 
             if link is None or len(link) < 5:
                 link_queue.task_done()
@@ -311,10 +385,10 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
                 logger.info(f"PASS {link} to SCHOLAR FOR FURTHER SEARCH")
             else:
                 for download_info in download_list:
-                    succ, path, exist = download_info
-                    if succ and path is not None:
+                    succ, path, meta_path, exist = download_info
+                    if succ:
                         logger.info(f"SUCCESSFULLY GET PAPER {path}")
-                        yield path, parent_id, parent_data_id, link
+                        yield path, meta_path, parent_id, parent_data_id, link
                     else:
                         logger.info(f"PASS {link} to SCHOLAR FOR FURTHER SEARCH")
                     break
@@ -342,19 +416,61 @@ class PaperNavigateScholarEdge(PaperNavigateEdge):
         max_thread_num=8,
         ref_mode=ReferenceExtractStateMode.SkipIfExists,
         meta_folder_dir="",
+        key_name="reference",
     ):
         logger.info("initialize of `PaperNavigateScholarEdge`")
         super().__init__(
-            source,
-            target,
-            paper_download_dir,
-            persist_store,
+            source=source,
+            target=target,
+            name=name,
+            persist_store=persist_store,
+            download_concurrency=scholar_download_concurrency,
+            paper_download_dir=paper_download_dir,
+            finish_signal=finish_signal,
+            max_thread_num=max_thread_num,
+            ref_mode=ref_mode,
+            meta_folder_dir=meta_folder_dir,
+            key_name=key_name,
+        )
+
+    @classmethod
+    def from_dict(cls, edge_conf, persist_store=None):
+        name = edge_conf.get("name", "")
+        source = edge_conf.get("source", "")
+        target = edge_conf.get("target", "")
+        args = edge_conf.get("args", {})
+        if not persist_store:
+            persist_store = JsonFileStore(WF_OUTPUT_DIR)
+        if not source or not target:
+            raise ValueError("Both 'source' and 'target' must be defined in an edge.")
+
+        paper_download_dir = os.path.join(
+            persist_store.output_folder,
+            "_NAVIGATOR",
             name,
-            scholar_download_concurrency,
-            finish_signal,
-            max_thread_num,
-            ref_mode,
-            meta_folder_dir,
+        )
+        meta_folder_dir = os.path.join("_META_FOLDER", name)
+        finish_signal = args.get("finish_signal", "REF_DONE")
+        max_thread_num = args.get("max_thread_num", 12)
+        ref_mode = args.get("ref_mode", "skip").lower()
+        if ref_mode == "skip":
+            ref_mode = ReferenceExtractStateMode.SkipIfExists
+        elif ref_mode == "append":
+            ref_mode = ReferenceExtractStateMode.AppendIfExists
+        else:
+            ref_mode = ReferenceExtractStateMode.SkipIfExists
+        key_name = args.get("key_name", "reference").lower()
+        return cls(
+            source=source,
+            target=target,
+            name=name,
+            persist_store=persist_store,
+            paper_download_dir=paper_download_dir,
+            finish_signal=finish_signal,
+            max_thread_num=max_thread_num,
+            ref_mode=ref_mode,
+            meta_folder_dir=meta_folder_dir,
+            key_name=key_name,
         )
 
     def download_worker(self, scholar_link_queue):
@@ -366,11 +482,18 @@ class PaperNavigateScholarEdge(PaperNavigateEdge):
                 break
             link, parent_id, parent_data_id = info
 
+            if link is None:
+                scholar_link_queue.task_done()
+                continue
+
+            if type(link) is dict:
+                link = link.get("citation", None)
+
             if link is None or len(link) < 5:
                 scholar_link_queue.task_done()
                 continue
 
-            logger.error(
+            logger.info(
                 f"--------------  SCHOLAR DOWNLOAD WORKER: {link}  ------------------"
             )
 
@@ -388,22 +511,155 @@ class PaperNavigateScholarEdge(PaperNavigateEdge):
                 web_data_folder=web_data_dir,
                 meta_folder=self.meta_folder_dir,
             )
-            logger.error(
+            logger.info(
                 f"--------------  start to download: {link}  ------------------"
             )
             download_list = scholar_fetcher.download_paper(link, mode="exact")
-            logger.error(f"--------------  finish download: {link}  ------------------")
+            logger.info(f"--------------  finish download: {link}  ------------------")
 
             for download_info in download_list:
-                succ, path, exist = download_info
-                if succ and path is not None:
+                succ, path, meta_path, exist = download_info
+                if succ:
                     logger.info(f"SUCCESSFULLY GET PAPER {path}")
-                    yield path, parent_id, parent_data_id, link
+                    yield path, meta_path, parent_id, parent_data_id, link
 
             scholar_link_queue.task_done()
 
-            logger.error(
+            logger.info(
                 f"--------------  FINISH SCHOLAR WORKER: {link}  ------------------"
             )
 
-        logger.error("QUIT SCHOLAR")
+        logger.info("QUIT SCHOLAR")
+
+
+@profiler.profile(name="PaperNavigatePubMedEdge")
+class PaperNavigatePubMedEdge(PaperNavigateEdge):
+    def __init__(
+        self,
+        source,
+        target,
+        paper_download_dir,
+        name=None,
+        persist_store=None,
+        pubmed_download_concurrency=4,
+        finish_signal="_PUBMED_REF_DONE",
+        max_thread_num=12,
+        ref_mode=ReferenceExtractStateMode.SkipIfExists,
+        meta_folder_dir="",
+        key_name="reference",
+    ):
+        logger.info("initialize of `PaperNavigatePubMedEdge`")
+        super().__init__(
+            source=source,
+            target=target,
+            name=name,
+            persist_store=persist_store,
+            download_concurrency=pubmed_download_concurrency,
+            paper_download_dir=paper_download_dir,
+            finish_signal=finish_signal,
+            max_thread_num=max_thread_num,
+            ref_mode=ref_mode,
+            meta_folder_dir=meta_folder_dir,
+            key_name=key_name,
+        )
+
+    @classmethod
+    def from_dict(cls, edge_conf, persist_store=None):
+        name = edge_conf.get("name", "")
+        source = edge_conf.get("source", "")
+        target = edge_conf.get("target", "")
+        args = edge_conf.get("args", {})
+        if not persist_store:
+            persist_store = JsonFileStore(WF_OUTPUT_DIR)
+        if not source or not target:
+            raise ValueError("Both 'source' and 'target' must be defined in an edge.")
+
+        paper_download_dir = os.path.join(
+            persist_store.output_folder,
+            "_NAVIGATOR",
+            name,
+        )
+        meta_folder_dir = os.path.join("_META_FOLDER", name)
+        finish_signal = args.get("finish_signal", "REF_DONE")
+        max_thread_num = args.get("max_thread_num", 12)
+        ref_mode = args.get("ref_mode", "skip").lower()
+        if ref_mode == "skip":
+            ref_mode = ReferenceExtractStateMode.SkipIfExists
+        elif ref_mode == "append":
+            ref_mode = ReferenceExtractStateMode.AppendIfExists
+        else:
+            ref_mode = ReferenceExtractStateMode.SkipIfExists
+        key_name = args.get("key_name", "reference").lower()
+        return cls(
+            source=source,
+            target=target,
+            name=name,
+            persist_store=persist_store,
+            paper_download_dir=paper_download_dir,
+            finish_signal=finish_signal,
+            max_thread_num=max_thread_num,
+            ref_mode=ref_mode,
+            meta_folder_dir=meta_folder_dir,
+            key_name=key_name,
+        )
+
+    def download_worker(self, link_queue):
+        while not link_queue.empty():
+            info = link_queue.get()
+
+            if info is None:
+                link_queue.task_done()
+                continue
+            link, parent_id, parent_data_id = info
+
+            if link is None:
+                link_queue.task_done()
+                continue
+
+            use_id = False
+
+            if type(link) is dict:
+                if "pubmed_id" in link:
+                    use_id = True
+                    link = link.get("pubmed_id")
+                else:
+                    link = link.get("citation", None)
+
+            if link is None or len(link) < 5:
+                link_queue.task_done()
+                continue
+
+            logger.info(
+                f"--------------  PubMed DOWNLOAD WORKER: {link}  ------------------"
+            )
+
+            pubmed_fetcher = PubMedFetcher(
+                persist_store=self.persist_store,
+                download_folder=self.paper_download_dir,
+                meta_folder=self.meta_folder_dir,
+            )
+
+            if use_id:
+                download_list = pubmed_fetcher.download_paper("", 5, link)
+            else:
+                download_list = pubmed_fetcher.download_paper(link, 5, None)
+
+            if len(download_list) == 0:
+                logger.info(f"PASS {link} FOR FURTHER SEARCH")
+            else:
+                for download_info in download_list:
+                    succ, path, meta_path, exist = download_info
+                    if succ:
+                        logger.info(f"SUCCESSFULLY GET PAPER {path}")
+                        yield path, meta_path, parent_id, parent_data_id, link
+                    else:
+                        logger.info(f"PASS {link} FOR FURTHER SEARCH")
+                    break
+
+            link_queue.task_done()
+
+            logger.info(
+                f"--------------  FINISH PubMed WORKER: {link}  ------------------"
+            )
+
+        logger.info("QUIT PubMed")

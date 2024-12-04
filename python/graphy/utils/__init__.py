@@ -4,9 +4,10 @@
 
 from .arxiv_fetcher import ArxivFetcher, ResultFormer
 from .scholar_fetcher import ScholarFetcher
+from .pubmed_fetcher import PubMedFetcher
 from .paper_struct import Paper
 from .timer import Timer
-from .bib_search import BibSearchGoogleScholar, BibSearchArxiv
+from .bib_search import BibSearchGoogleScholar, BibSearchArxiv, BibSearchPubMed
 
 from .json_parser import (
     JsonParserType,
@@ -19,6 +20,7 @@ __all__ = [
     "ArxivFetcher",
     "ResultFormer",
     "ScholarFetcher",
+    "PubMedFetcher",
     "JsonParserType",
     "JsonFormatter",
     "JsonOutputParserLLamaCpp",
@@ -27,4 +29,5 @@ __all__ = [
     "Timer",
     "BibSearchGoogleScholar",
     "BibSearchArxiv",
+    "BibSearchPubMed",
 ]

@@ -567,6 +567,10 @@ class PaperInspector(BaseNode):
 
                 current_node.post_execute(last_output)
 
+            # skipped_nodes = ['*'] means to skip all the nodes
+            if len(skipped_nodes) == 1 and skipped_nodes[0] == "*":
+                continue
+
             # Add adjacent nodes to the processing queue
             for next_node in reversed(self.graph.get_adjacent_nodes(current_node.name)):
                 next_nodes.append(next_node)
@@ -587,20 +591,33 @@ class PaperInspector(BaseNode):
         """
 
         for input_data in input:
+            logger.error(f"input data: {input_data}")
             paper_file_path = input_data.get("paper_file_path", None)
+            paper_meta_path = input_data.get("paper_meta_path", None)
             parent_id = input_data.get("parent_id", None)
             edge_name = input_data.get("edge_name", "Navigator")
-            logger.info(f"Executing {self.name} for paper: {paper_file_path}")
+            logger.warning(
+                f"Executing {self.name} for paper: {paper_file_path} with meta: {paper_meta_path}"
+            )
 
             if not paper_file_path:
                 logger.error("No 'paper_file_path' provided in input data.")
-                continue
+                if not paper_meta_path:
+                    continue
             try:
                 # Initialize the paper extractor and other components
-                pdf_extractor = PaperExtractor(paper_file_path)
+                pdf_extractor = PaperExtractor(
+                    paper_file_path, meta_path=paper_meta_path
+                )
+                if not paper_file_path and not pdf_extractor.fake_extractor:
+                    continue
+
                 base_name = pdf_extractor.get_meta_data().get("title", "").lower()
                 if not base_name:  # If no title, fallback to filename
-                    base_name = os.path.basename(paper_file_path).split(".")[0]
+                    if paper_file_path:
+                        base_name = os.path.basename(paper_file_path).split(".")[0]
+                    else:
+                        base_name = os.path.basename(paper_meta_path).split(".")[0]
                 data_id = process_id(base_name)
                 pdf_extractor.set_img_path(f"{WF_IMAGE_DIR}/{data_id}")
 
@@ -643,7 +660,16 @@ class PaperInspector(BaseNode):
                         ),
                     }
 
-                    self.run_through(data_id, state[data_id], parent_id, edge_name)
+                    if not paper_file_path:
+                        self.run_through(
+                            data_id,
+                            state[data_id],
+                            parent_id,
+                            edge_name,
+                            skipped_nodes=["*"],
+                        )
+                    else:
+                        self.run_through(data_id, state[data_id], parent_id, edge_name)
                     is_done = (
                         self.progress["total"].completed
                         == self.progress["total"].number

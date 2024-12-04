@@ -11,9 +11,10 @@ Preprocessing unstructured data is often a tedious and time-consuming task. And 
 
 This repository introduces the initial prototype of the Graphy platform, as illustrated above, with a focus on academic papers, which are often publicly accessible. In this prototype, the primary unstructured data consists of research paper PDFs. Graphy’s workflow is built upon two key abstractions:
 - **Inspector**: The Inspector abstraction defines the structured information to be extracted from papers. It utilizes an inner Directed Acyclic Graph (DAG), where each subnode represents specific instructions for LLMs to extract targeted information from the paper. This DAG mirrors the commonly referenced ["Tree of Thought"](https://arxiv.org/abs/2305.10601)  pipeline in the LLM literature.
-- **Navigator**: The Navigator abstraction determines how related papers can be fetched and processed via the Inspector. Currently, two navigators are available:
-    - [PaperNavigateArxivEdge](./apps/paper_reading/paper_navigate_edge.py) for fetching PDFs from [ArXiv](https://arxiv.org/).
-	- [PaperNavigateScholarEdge](./apps/paper_reading/paper_navigate_edge.py) for fetching PDFs from [Google Scholar](http://scholar.google.com/).
+- **Navigator**: The Navigator abstraction determines how related papers can be fetched and processed via the Inspector. Currently, three navigators are available for fetching references of papers:
+    - [PaperNavigateArxivEdge](./apps/paper_reading/paper_navigate_edge.py) for fetching PDFs from [ArXiv](https://arxiv.org/). Arxiv is rich in academic papers, particularly in the fields of artificial intelligence, machine learning, and computer vision.
+	- [PaperNavigateScholarEdge](./apps/paper_reading/paper_navigate_edge.py) for fetching PDFs from [Google Scholar](http://scholar.google.com/). Google Scholar is a comprehensive academic search engine that indexes a wide range of academic papers, including those from journals, conferences, and preprint repositories.
+	- [PaperNavigatePubMedEdge](./apps/paper_reading/paper_navigate_edge.py) for fetching paper information from [PubMed](https://pubmed.ncbi.nlm.nih.gov/). PubMed is a free search engine that indexes biomedical literature, including research articles, reviews, and clinical studies. Note that it may not be able to download paper PDFs directly from PubMed.
 
 These navigators enable the creation of a rich, interconnected database of academic papers.
 
@@ -203,7 +204,7 @@ most simple navigator configuration uses `PaperNavigateArxivEdge` by default.
 }
 ```
 
-To configure using `PaperNavigateScholarEdge`, a 'method' field of value 'scholar' should be added.
+To configure using `PaperNavigateScholarEdge` and `PaperNavigatePubMedEdge`, a 'method' field of value 'scholar' and 'pubmed' should be added, respectively.
 Please use `PaperNavigateScholarEdge` with caution that it may violate Google Scholar's terms of service,
 and can be blocked if used excessively.
 
@@ -212,7 +213,7 @@ and can be blocked if used excessively.
     "name": "Reference",
     "source": "PaperInspector",
     "target": "PaperInspector",
-    "method": "scholar"
+    "method": "scholar" // or "pubmed"
 }
 ```
 
