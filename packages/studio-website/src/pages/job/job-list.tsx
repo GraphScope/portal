@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { useHistory } from '../../hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
-import { FileSearchOutlined, EllipsisOutlined } from '@ant-design/icons';
+import { useStudioProvier } from '@graphscope/studio-components';
 import { listJobs, IJobType, deleteJobById } from './service';
 import JobHeader from './job-header';
 import dayjs from 'dayjs';
@@ -22,6 +22,7 @@ export interface IState {
 }
 
 const JobsList: FC = () => {
+  const { locale } = useStudioProvier();
   const history = useHistory();
   const [state, setState] = useState<IState>({
     jobsList: [],
@@ -121,7 +122,7 @@ const JobsList: FC = () => {
             />
 
             <Flex gap={12}>
-              <Text type="secondary">{formatDateTime(dayjs(start_time))}</Text>
+              <Text type="secondary">{formatDateTime(dayjs(start_time), locale)}</Text>
               <Popconfirm
                 placement="bottomRight"
                 title={<FormattedMessage id="Are you sure to delete this task?" />}

@@ -141,20 +141,50 @@ const timeAgo = date => {
   return `${years} year ago`;
 };
 
-const formatDateTime = (date, locale = 'en') => {
+const formatDateTime = (date, locale = 'en-US') => {
   const now = dayjs();
-  dayjs.locale(locale); // 设置语言环境
+  const dateObj = dayjs(date); // 确保输入被转换为dayjs对象
 
-  if (date.isSame(now, 'day')) {
-    return `Today at ${date.format('h:mm A')}`; // 使用 AM/PM
-  } else if (date.isSame(now.subtract(1, 'day'), 'day')) {
-    return `Yesterday at ${date.format('h:mm A')}`;
-  } else if (date.isSame(now.add(1, 'day'), 'day')) {
-    return `Tomorrow at ${date.format('h:mm A')}`;
-  } else if (date.isBefore(now, 'year')) {
-    return date.format('MMM D, YYYY [at] h:mm A'); // 过去年份的日期
+  // 设置本地化的信息
+  const locales = {
+    'en-US': {
+      today: 'Today',
+      yesterday: 'Yesterday',
+      tomorrow: 'Tomorrow',
+      formats: {
+        sameYear: 'MMM D [at] h:mm A',
+        differentYear: 'MMM D, YYYY [at] h:mm A',
+      },
+      amPm: ['AM', 'PM'],
+    },
+    'zh-CN': {
+      today: '今天',
+      yesterday: '昨天',
+      tomorrow: '明天',
+      formats: {
+        sameYear: 'M月D日 HH:mm',
+        differentYear: 'YYYY年M月D日 HH:mm',
+      },
+      amPm: ['上午', '下午'],
+    },
+  };
+
+  const localeInfo = locales[locale] || locales['en'];
+
+  // 根据时间选择上午或下午
+  const hour = dateObj.hour();
+  const partOfDay = hour < 12 ? localeInfo.amPm[0] : localeInfo.amPm[1];
+
+  if (dateObj.isSame(now, 'day')) {
+    return `${localeInfo.today} ${partOfDay} ${dateObj.format('HH:mm')}`;
+  } else if (dateObj.isSame(now.subtract(1, 'day'), 'day')) {
+    return `${localeInfo.yesterday} ${partOfDay} ${dateObj.format('HH:mm')}`;
+  } else if (dateObj.isSame(now.add(1, 'day'), 'day')) {
+    return `${localeInfo.tomorrow} ${partOfDay} ${dateObj.format('HH:mm')}`;
+  } else if (dateObj.isBefore(now, 'year')) {
+    return dateObj.format(localeInfo.formats.differentYear).replace('HH:mm', `${partOfDay} HH:mm`);
   } else {
-    return date.format('MMM D [at] h:mm A'); // 其他日期
+    return dateObj.format(localeInfo.formats.sameYear).replace('HH:mm', `${partOfDay} HH:mm`);
   }
 };
 
