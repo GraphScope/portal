@@ -104,7 +104,7 @@ class PaperNavigateEdge(AbstractEdge):
             name,
         )
         meta_folder_dir = "meta_folder"
-        finish_signal = args.get("finish_signal", "REF_DONE")
+        finish_signal = args.get("finish_signal", "_REF_DONE")
         max_thread_num = args.get("max_thread_num", 12)
         ref_mode = args.get("ref_mode", "skip").lower()
         if ref_mode == "skip":
