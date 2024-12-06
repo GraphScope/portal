@@ -12,11 +12,13 @@ const themeConfig = defineThemeConfig({
   lastUpdated: true,
   nav: {
     'zh-CN': [
-      { title: '组件', link: '/components' },
+      { title: '图组件', link: '/graphs' },
+      { title: '通用组件', link: '/components' },
       { title: '建模', link: '/modelings' },
       { title: '查询', link: '/queries' },
     ],
     'en-US': [
+      { title: 'graph', link: '/graphs' },
       { title: 'components', link: '/components' },
       { title: 'modeling', link: '/modelings' },
       { title: 'query', link: '/queries' },
@@ -177,6 +179,7 @@ export default defineConfig({
     '@graphscope/studio-importor': join(__dirname, 'packages', 'studio-importor'),
     '@graphscope/studio-query': join(__dirname, 'packages', 'studio-query'),
     '@graphscope/use-zustand': join(__dirname, 'packages', 'use-zustand'),
+    '@graphscope/studio-graph': join(__dirname, 'packages', 'studio-graph'),
   },
   externals: {
     'node:os': 'commonjs2 node:os',
@@ -208,6 +211,10 @@ export default defineConfig({
       {
         type: 'query',
         dir: 'packages/studio-query/src/app',
+      },
+      {
+        type: 'graph',
+        dir: 'packages/studio-graph/docs',
       },
     ],
   },
