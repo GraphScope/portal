@@ -13,7 +13,7 @@ export const nodeCanvasObject =
 
     const style = handleStyle(node, nodeStyle);
     const status = handleStatus(node, nodeStatus);
-    const { color, size, caption, captionStatus, icon, captionMode } = style;
+    const { color, size, caption, captionStatus, icon } = style;
 
     const { selected, hovering } = status;
 

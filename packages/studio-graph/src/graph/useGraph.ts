@@ -179,13 +179,13 @@ export default function useGraph<P extends GraphProps>(props: P) {
         console.log('engine stop', engineStopped.current);
       });
       graphRef.current.graphData(new_data);
-      timer = setTimeout(() => {
-        graphRef.current?.zoomToFit(400, Math.max(400 / (data.nodes.length + 1), 20));
-      }, 1200);
+      // timer = setTimeout(() => {
+      //   graphRef.current?.zoomToFit(400, Math.max(400 / (data.nodes.length + 1), 20));
+      // }, 1200);
     }
-    return () => {
-      clearTimeout(timer);
-    };
+    // return () => {
+    //   clearTimeout(timer);
+    // };
   }, [data]);
 
   useEffect(() => {

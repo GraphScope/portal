@@ -5,13 +5,16 @@ import { useContext } from '../../hooks/useContext';
 
 import { getStyleConfig, getDataMap } from '../Prepare/utils';
 
-export interface IImportFromCSVProps {}
+export interface IImportFromCSVProps {
+  onCallback?: () => void;
+}
 
 const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
+  const { onCallback } = props;
   const { updateStore, store } = useContext();
   const { graphId } = store;
 
-  const onSubmit = params => {
+  const handleSumbit = params => {
     const { files } = params;
     const nodes: any[] = [];
     const edges: any[] = [];
@@ -127,6 +130,7 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
         }),
       );
     });
+    onCallback && onCallback();
   };
 
   return (
@@ -141,7 +145,7 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
       {params => {
         return (
           <>
-            <Button type="primary" onClick={() => onSubmit(params)} loading={params.loading}>
+            <Button type="primary" onClick={() => handleSumbit(params)} loading={params.loading}>
               Visualization
             </Button>
           </>
