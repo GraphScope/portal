@@ -6,6 +6,7 @@ import type { IQuerySearch } from '../components/Searchbar';
 import type { IQuerySavedStatements } from '../components/Searchbar/CascaderSearch';
 import type { IQueryStatistics } from '../components/Statistics/TotalCounts';
 import type { IQueryPropertyStatics } from '../components/Statistics/Properties/ChartView';
+import type { IQueryNeighborStatics } from '../components/Next/Neighbors';
 import { transNeo4jSchema } from './utils';
 import localforage from 'localforage';
 export type ExploreQueryTypes =
@@ -14,7 +15,8 @@ export type ExploreQueryTypes =
   | IQuerySearch
   | IQuerySavedStatements
   | IQueryStatistics
-  | IQueryPropertyStatics;
+  | IQueryPropertyStatics
+  | IQueryNeighborStatics;
 const { storage } = Utils;
 
 const DB_QUERY_SAVED = localforage.createInstance({
@@ -52,7 +54,7 @@ const services: IServiceQueries<ExploreQueryTypes | IQueryTypes> = {
   },
   queryGraphData: async () => {
     try {
-      const data = await queryStatement('Match (a)-[b]-(c) return a,b,c limit 100');
+      const data = await queryStatement('Match a return a limit 100');
       return data;
       return {
         nodes: [],
@@ -157,6 +159,15 @@ const services: IServiceQueries<ExploreQueryTypes | IQueryTypes> = {
           return ${property},COUNT(${property}) as counts
         `);
 
+    return data.table;
+  },
+  queryNeighborStatics: async (property: string, selectIds: string[]) => {
+    const data = await queryStatement(`
+          MATCH(a)-[b]-(c) 
+          where a.${property} IS NOT NULL
+          AND elementId(a) IN [${selectIds}]
+          return c.${property},COUNT(c.${property}) as counts
+        `);
     return data.table;
   },
 };

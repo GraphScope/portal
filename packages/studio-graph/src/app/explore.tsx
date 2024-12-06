@@ -79,23 +79,20 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
     >
       <Section
         splitBorder
-        rightSide={
-          <PropertiesPanel>
-            <SegmentedTabs items={items} block />
-          </PropertiesPanel>
-        }
+        rightSide={<SegmentedTabs items={items} block />}
         autoResize={false}
         leftSideStyle={{
           width: '350px',
         }}
         defaultCollapsed={{
           leftSide: true,
-          rightSide: false,
+          rightSide: true,
         }}
       >
         <Prepare data={data} schema={schema} graphId={graphId} />
         <Canvas />
         <ClearStatatus />
+        <PropertiesPanel />
         <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
           <ToogleButton />
           <Divider style={{ margin: '0px' }} />
