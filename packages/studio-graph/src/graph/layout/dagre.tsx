@@ -8,12 +8,14 @@ export const dagreLayout = (data, options) => {
     ranker = 'longest-path',
     linkSource = 'source',
     linkTarget = 'target',
+    nodeWidth = 40,
+    nodeHeight = 40,
   } = options;
   const g = new dagre.graphlib.Graph();
   g.setGraph({
     // rankDir: 'LR',
     // ranker: 'network-simplex' // 'tight-tree', 'longest-path'
-    // acyclicer: 'greedy'
+    acyclicer: 'greedy',
     nodesep: 5,
     edgesep: 1,
     ranksep: 20,
@@ -25,15 +27,14 @@ export const dagreLayout = (data, options) => {
     g.setNode(
       node[nodeId],
       Object.assign({}, node, {
-        width: 100,
-        height: 40,
+        width: nodeWidth,
+        height: nodeHeight,
       }),
     ),
   );
   edges.forEach(link => g.setEdge(link[linkSource], link[linkTarget], Object.assign({}, link)));
 
   dagre.layout(g);
-  console.log(g, g.edges());
 
   return {
     nodes: g.nodes().map(n => {

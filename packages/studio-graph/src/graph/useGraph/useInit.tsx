@@ -5,7 +5,7 @@ import ForceGraph from 'force-graph';
 import ForceGraph3D from '3d-force-graph';
 import type { ForceGraphInstance } from 'force-graph';
 import type { ForceGraph3DInstance } from '3d-force-graph';
-
+import { Utils } from '@graphscope/studio-components';
 import mitt from 'mitt';
 
 import { useContext } from '../../hooks/useContext';
@@ -67,6 +67,19 @@ export const useInit = () => {
         });
     }
 
+    /** 监听容器 DOM 尺寸变化 */
+    const handleResize = Utils.debounce(() => {
+      if (!containerRef.current) return;
+      const width = containerRef.current.offsetWidth;
+      const height = containerRef.current.offsetHeight;
+      if (graph) {
+        graph.width(width).height(height);
+      }
+    }, 200);
+
+    const observer = new ResizeObserver(handleResize);
+    observer.observe(containerRef.current);
+
     updateStore(draft => {
       //@ts-ignore
       draft.graph = graph;
@@ -78,6 +91,9 @@ export const useInit = () => {
     return () => {
       if (graph) {
         graph._destructor();
+      }
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
       }
     };
   }, [render]);

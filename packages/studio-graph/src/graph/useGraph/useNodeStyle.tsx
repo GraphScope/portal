@@ -26,6 +26,7 @@ export const useNodeStyle = () => {
       if (render === '3D') {
         (graph as ForceGraph3DInstance)
           .nodeLabel(node => handleStyle(node, nodeStyle).caption)
+          .nodeRelSize(BASIC_NODE_R)
           .nodeColor(node => handleStyle(node, nodeStyle).color)
           .nodeLabel((node: any) => node && node.properties && node.properties[handleStyle(node, nodeStyle).caption]);
       }

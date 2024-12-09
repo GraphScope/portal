@@ -62,6 +62,7 @@ export type IStore = {
     type: string;
     options: Record<string, any>;
   };
+  focusNodes: string[];
 };
 
 export const initialStore: IStore = {
@@ -102,6 +103,7 @@ export const initialStore: IStore = {
     return () => {};
   },
   reheatSimulation: false,
+  focusNodes: [],
 };
 
 export const useContext = () => useZustandContext<IStore>();

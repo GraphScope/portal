@@ -42,6 +42,12 @@ export const useEdgeStyle = () => {
             }
             return '';
           })
+          // .onZoom(() => {
+          //   if (render === '2D') {
+          //     console.log('onZoom', (graph as ForceGraphInstance).zoom());
+          //     graph.linkWidth(0.3 * (graph as ForceGraphInstance).zoom());
+          //   }
+          // })
           .linkWidth((edge: any) => {
             const { size } = handleStyle(edge, edgeStyle, 'edge');
             const match = edgeStatus[edge.id];

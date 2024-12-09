@@ -81,6 +81,7 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
         draft.nodeStatus = nodeStatus;
         draft.edgeStatus = edgeStatus;
         draft.isLoading = false;
+        draft.focusNodes = res.nodes.map(item => item.id);
       });
     } else {
       updateStore(draft => {

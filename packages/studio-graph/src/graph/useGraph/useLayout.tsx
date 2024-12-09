@@ -48,7 +48,16 @@ export const useLayout = () => {
     if (type === 'dagre') {
       // not force layout
       graph.cooldownTicks(0); //cancel force engine iterations
-      const layoutData = dagreLayout(data, options);
+      const size = graph.nodeRelSize() * 4;
+      const layoutData = dagreLayout(data, {
+        ...options,
+        nodeWidth: size,
+        nodeHeight: size,
+        height: graph.height(),
+        width: graph.width(),
+        bbox: graph.getGraphBbox(),
+      });
+
       graph.graphData(Utils.fakeSnapshot({ nodes: layoutData.nodes, links: layoutData.links }));
     }
   }, [render, data, graph, layout, nodeStyle]);

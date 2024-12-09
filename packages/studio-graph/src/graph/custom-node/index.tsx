@@ -86,8 +86,8 @@ export const nodeCanvasObject =
     // }
 
     if (captionStatus === 'display' && texts.length > 0) {
-      if (globalScale > 1) {
-        const fontSize = 14 / globalScale;
+      if (globalScale > 2) {
+        const fontSize = 2; //14 / globalScale;
         ctx.font = `${fontSize}px Sans-Serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
