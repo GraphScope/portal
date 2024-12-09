@@ -33,6 +33,7 @@ import {
   CurvatureLinks,
   DagreMode,
   Placeholder,
+  LayoutSwitch,
 } from '@graphscope/studio-graph';
 
 import { ToogleLeftButton, ToogleRightButton } from './components/ToggleButton';
@@ -156,6 +157,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
               <FixedMode />
               <CurvatureLinks />
               <DagreMode />
+              <LayoutSwitch />
               <Divider style={{ margin: '0px' }} />
               <SwitchEngine />
               <RunCluster />
