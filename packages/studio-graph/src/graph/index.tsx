@@ -1,23 +1,19 @@
-import React, { CSSProperties, PropsWithChildren, forwardRef, memo, useImperativeHandle } from 'react';
+import React, { CSSProperties } from 'react';
 
-import useGraph from './useGraph';
-import type { GraphProps } from './types';
+import { useNodeStyle, useEdgeStyle, useData, useInit, useLayout, useComboLayout } from './useGraph/index';
 
-type GraphRef = any | null;
+const Canvas = props => {
+  const { containerRef, id } = useInit();
+  // useData();
+  useEdgeStyle();
+  useNodeStyle();
+  useLayout();
+  useComboLayout();
+  const containerStyle: CSSProperties = {
+    position: 'relative',
+    height: '100%',
+  };
+  return <div id={`GRAPH_${id}`} ref={containerRef} style={containerStyle}></div>;
+};
 
-const Graph = memo(
-  forwardRef<GraphRef, PropsWithChildren<GraphProps>>((props, ref) => {
-    const { id, style, children, ...restProps } = props;
-    const { graph, containerRef, isReady } = useGraph<GraphProps>(restProps);
-    useImperativeHandle(ref, () => graph!, [isReady]);
-    const containerStyle: CSSProperties = {
-      height: 'inherit',
-      position: 'relative',
-      ...style,
-    };
-
-    return <div id={`GRAPH_${id}`} ref={containerRef} style={containerStyle}></div>;
-  }),
-);
-
-export default Graph;
+export default Canvas;

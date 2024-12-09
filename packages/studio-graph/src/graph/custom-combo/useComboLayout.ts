@@ -15,26 +15,31 @@ import { forceCluster, forceRadial } from './combo-force';
 import { useEffect, useRef } from 'react';
 import { renderCombo } from './render';
 
-const useComboEffect = () => {
+const useComboLayout = () => {
   const { store } = useContext();
-  const { graph, render, nodeStyle, combos, enableCombo, combosByKey, reheatSimulation } = store;
+  const { graph, render, nodeStyle, combos, layout } = store;
   const linkForceRef = useRef<any>(null);
 
   useEffect(() => {
-    if (enableCombo === undefined) {
-      // 还未启动聚类
-      return;
-    }
     if (render === '3D') {
       console.warn('3D not support combo');
       return;
     }
     if (!graph) {
-      console.warn('graph is null');
+      return;
+    }
+    const { type, options } = layout;
+
+    if (type !== 'force-combo') {
+      return;
+    }
+    const { enable, reheatSimulation, groupBy } = options;
+    if (enable === undefined) {
+      // 还未启动聚类
       return;
     }
 
-    if (enableCombo) {
+    if (enable) {
       const combosMap = new Map();
       combos.forEach(group => {
         combosMap.set(group.id, group);
@@ -47,8 +52,8 @@ const useComboEffect = () => {
       graph.d3Force('center', null);
       graph.d3Force('link', null);
 
-      graph.d3Force('cluster', forceCluster(combosMap, combosByKey));
-      graph.d3Force('radial', forceRadial(combosMap, combosByKey));
+      graph.d3Force('cluster', forceCluster(combosMap, groupBy));
+      graph.d3Force('radial', forceRadial(combosMap, groupBy));
 
       graph.d3Force(
         'collide',
@@ -77,7 +82,7 @@ const useComboEffect = () => {
         (graph as ForceGraphInstance).onRenderFramePost(() => {});
       }
     }
-  }, [combos, render, graph, enableCombo, combosByKey, reheatSimulation]);
+  }, [layout, combos, render, graph]);
 };
 
-export default useComboEffect;
+export default useComboLayout;

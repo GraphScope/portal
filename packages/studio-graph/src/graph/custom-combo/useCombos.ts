@@ -20,17 +20,28 @@ const useCombos = () => {
 
     updateStore(draft => {
       draft.combos = groups;
-      draft.enableCombo = true;
-      draft.combosByKey = clusterKey;
-      draft.reheatSimulation = true;
+      draft.layout = {
+        type: 'force-combo',
+        options: {
+          enable: true,
+          groupBy: clusterKey,
+          reheatSimulation: true,
+        },
+      };
     });
   };
 
   const clearCombos = () => {
     updateStore(draft => {
       draft.combos = [];
-      draft.enableCombo = false;
-      draft.reheatSimulation = false;
+      draft.layout = {
+        type: 'force-combo',
+        options: {
+          enable: false,
+          groupBy: '',
+          reheatSimulation: false,
+        },
+      };
     });
   };
 

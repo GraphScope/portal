@@ -47,7 +47,7 @@ export type IStore = {
    */
   render: '2D' | '3D';
   isReady: boolean;
-  graph: Graph;
+  graph?: Graph;
   emitter: null | Emitter;
   nodeStyle: Record<string, StyleConfig>;
   edgeStyle: Record<string, StyleConfig>;
@@ -58,12 +58,20 @@ export type IStore = {
   isLoading: boolean;
   getService: IGetServices;
   reheatSimulation: boolean;
+  layout: {
+    type: string;
+    options: Record<string, any>;
+  };
 };
 
 export const initialStore: IStore = {
   data: {
     nodes: [],
     edges: [],
+  },
+  layout: {
+    type: 'force',
+    options: {},
   },
   source: {
     nodes: [],
@@ -76,7 +84,7 @@ export const initialStore: IStore = {
   height: 500,
   dataMap: {},
   render: '2D',
-  graph: null,
+  graph: undefined,
   isReady: false,
   emitter: null,
   nodeStyle: {},
