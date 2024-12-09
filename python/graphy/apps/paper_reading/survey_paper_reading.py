@@ -165,7 +165,7 @@ class SurveyPaperReading(BaseWorkflow):
             id,
             llm_model,
             parser_model,
-            embeddings_model.chroma_embedding_model(),
+            embeddings_model,
             vectordb,
             graph_json,
             persist_store,

@@ -166,7 +166,7 @@ def test_inspector_execute():
         workflow_dict,
         llm_model,
         llm_model,
-        embeddings_model.chroma_embedding_model(),
+        embeddings_model,
         chromadb.PersistentClient(path=vectdb_path),
         persist_store,
     )
