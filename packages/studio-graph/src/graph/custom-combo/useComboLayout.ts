@@ -1,5 +1,5 @@
 import { useContext } from '../../hooks/useContext';
-import { getGroups, get } from './utils';
+
 import { ForceGraphInstance } from 'force-graph';
 import {
   forceSimulation as d3ForceSimulation,
@@ -7,18 +7,18 @@ import {
   forceManyBody as d3ForceManyBody,
   forceCenter as d3ForceCenter,
   forceRadial as d3ForceRadial,
+  forceCollide as d3ForceCollide,
 } from 'd3-force-3d';
 import * as d3Force from 'd3-force';
 import { handleStyle } from '../handleStyle';
 
 import { forceCluster, forceRadial } from './combo-force';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { renderCombo } from './render';
 
 const useComboLayout = () => {
   const { store } = useContext();
   const { graph, render, nodeStyle, combos, layout } = store;
-  const linkForceRef = useRef<any>(null);
 
   useEffect(() => {
     if (render === '3D') {
@@ -44,9 +44,6 @@ const useComboLayout = () => {
       combos.forEach(group => {
         combosMap.set(group.id, group);
       });
-      if (linkForceRef.current === null) {
-        linkForceRef.current = graph.d3Force('link');
-      }
 
       graph.d3Force('charge', null);
       graph.d3Force('center', null);
@@ -68,18 +65,6 @@ const useComboLayout = () => {
       /** 立即启动力导 */
       if (reheatSimulation && graph) {
         graph.d3ReheatSimulation();
-      }
-    } else {
-      /** 关闭聚类 */
-      graph.d3Force('charge', d3ForceManyBody());
-      graph.d3Force('center', d3ForceCenter());
-      graph.d3Force('link', linkForceRef.current);
-
-      graph.d3Force('cluster', null);
-      graph.d3Force('radial', null);
-
-      if ((graph as ForceGraphInstance).onRenderFramePost) {
-        (graph as ForceGraphInstance).onRenderFramePost(() => {});
       }
     }
   }, [layout, combos, render, graph]);

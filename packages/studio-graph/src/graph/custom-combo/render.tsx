@@ -21,9 +21,9 @@ export function renderCombo(graph: ForceGraphInstance, combos: ICombo[]) {
       const textX = x; // 文本的 x 坐标（与圆心 x 坐标对齐）
       const textY = y - r - 8; // 文本的 y 坐标（在圆的上方）
 
-      const w = Math.max(fontSize * String(text).length * 0.6, 50);
-      const h = fontSize;
-      ctx.strokeRect(textX - w / 2, textY - h / 2, w, h);
+      // const w = Math.max(fontSize * String(text).length * 0.6, 50);
+      // const h = fontSize;
+      // ctx.strokeRect(textX - w / 2, textY - h / 2, w, h);
 
       ctx.font = `${fontSize}px Arial`;
       ctx.fillStyle = color;

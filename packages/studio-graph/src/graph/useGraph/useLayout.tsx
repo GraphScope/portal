@@ -7,7 +7,14 @@ import { handleStyle } from '../handleStyle';
 import { dagreLayout } from '../layout/dagre';
 import { calculateRenderTime } from './useData';
 
-import { forceCenter as d3ForceCenter, forceCollide as d3ForceCollide } from 'd3-force-3d';
+import {
+  forceSimulation as d3ForceSimulation,
+  forceLink as d3ForceLink,
+  forceManyBody as d3ForceManyBody,
+  forceCenter as d3ForceCenter,
+  forceRadial as d3ForceRadial,
+  forceCollide as d3ForceCollide,
+} from 'd3-force-3d';
 
 export const useLayout = () => {
   const { store } = useContext();
@@ -24,17 +31,28 @@ export const useLayout = () => {
       graph.cooldownTime(renderTime);
       graph.cooldownTicks(Infinity);
       graph.graphData(Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges }));
+
+      /** 关闭聚类力导 */
+      graph.d3Force('cluster', null);
+      graph.d3Force('radial', null);
+      /** 关闭聚类绘图 */
+      if ((graph as ForceGraphInstance).onRenderFramePost) {
+        (graph as ForceGraphInstance).onRenderFramePost(() => {});
+      }
+
       if (type === 'force') {
         if (render === '2D') {
           (graph as ForceGraphInstance)
+            .d3Force('center', d3ForceCenter().strength(1))
+            .d3Force('charge', d3ForceManyBody())
+            .d3Force('link', d3ForceLink())
             .d3Force(
               'collide',
               d3ForceCollide().radius(node => {
                 return handleStyle(node, nodeStyle).size + 5;
               }),
             )
-            .d3Force('center', d3ForceCenter().strength(1));
-          graph.d3ReheatSimulation();
+            .d3ReheatSimulation();
         }
       }
       if (type === 'force-dagre') {

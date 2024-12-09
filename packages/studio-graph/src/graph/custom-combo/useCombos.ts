@@ -35,12 +35,8 @@ const useCombos = () => {
     updateStore(draft => {
       draft.combos = [];
       draft.layout = {
-        type: 'force-combo',
-        options: {
-          enable: false,
-          groupBy: '',
-          reheatSimulation: false,
-        },
+        type: 'force',
+        options: {},
       };
     });
   };
