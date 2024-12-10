@@ -4,7 +4,7 @@ import { useNodeStyle, useEdgeStyle, useData, useInit, useLayout, useComboLayout
 
 const Canvas = props => {
   const { containerRef, id } = useInit();
-  // useData();
+  useData();
   useEdgeStyle();
   useNodeStyle();
   useLayout();

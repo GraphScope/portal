@@ -18,20 +18,20 @@ import {
 
 export const useLayout = () => {
   const { store } = useContext();
-  const { layout, graph, nodeStyle, data, render } = store;
+  const { layout, graph, nodeStyle, render } = store;
   useEffect(() => {
     if (!graph) {
       return;
     }
     const { type, options } = layout;
+    const { nodes, links } = graph.graphData();
+    console.log('layout effect ...');
 
     if (type === 'force' || type === 'force-dagre') {
       graph.dagMode(null);
-      const renderTime = calculateRenderTime(data.nodes.length);
+      const renderTime = calculateRenderTime(nodes.length);
       graph.cooldownTime(renderTime);
       graph.cooldownTicks(Infinity);
-      graph.graphData(Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges }));
-
       /** 关闭聚类力导 */
       graph.d3Force('cluster', null);
       graph.d3Force('radial', null);
@@ -61,22 +61,24 @@ export const useLayout = () => {
     }
     if (type === 'preset') {
       graph.cooldownTicks(0); //cancel force engine iterations
-      graph.graphData(Utils.fakeSnapshot({ nodes: data.nodes, links: data.edges }));
+      // graph.graphData(Utils.fakeSnapshot({ nodes, links }));
     }
     if (type === 'dagre') {
       // not force layout
       graph.cooldownTicks(0); //cancel force engine iterations
       const size = graph.nodeRelSize() * 4;
-      const layoutData = dagreLayout(data, {
-        ...options,
-        nodeWidth: size,
-        nodeHeight: size,
-        height: graph.height(),
-        width: graph.width(),
-        bbox: graph.getGraphBbox(),
-      });
-
-      graph.graphData(Utils.fakeSnapshot({ nodes: layoutData.nodes, links: layoutData.links }));
+      const layoutData = dagreLayout(
+        { nodes, edges: links },
+        {
+          ...options,
+          nodeWidth: size,
+          nodeHeight: size,
+          height: graph.height(),
+          width: graph.width(),
+          bbox: graph.getGraphBbox(),
+        },
+      );
+      graph.graphData({ nodes: layoutData.nodes, links: layoutData.links });
     }
-  }, [render, data, graph, layout, nodeStyle]);
+  }, [render, graph, layout, nodeStyle]);
 };
