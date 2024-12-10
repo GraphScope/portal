@@ -117,7 +117,13 @@ const useComboEvent = () => {
           updateCombo(dx, dy);
           updateStore(draft => {
             draft.combos = _groups;
-            draft.reheatSimulation = false;
+            draft.layout = {
+              type: 'force-combo',
+              options: {
+                ...draft.layout.options,
+                reheatSimulation: false,
+              },
+            };
           });
         }
       }

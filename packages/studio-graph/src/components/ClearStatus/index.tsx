@@ -11,6 +11,7 @@ const ClearStatatus: React.FunctionComponent<IClearStatatusProps> = props => {
       updateStore(draft => {
         draft.nodeStatus = {};
         draft.edgeStatus = {};
+        draft.focusNodes = [];
       });
     };
     emitter?.on('canvas:click', handleClear);

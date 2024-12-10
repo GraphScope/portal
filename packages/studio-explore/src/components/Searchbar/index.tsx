@@ -8,6 +8,7 @@ import { useContext } from '@graphscope/studio-graph';
 import CascaderSearch from './CascaderSearch';
 import cssStyle from './css';
 import { getIconByType } from './utils';
+
 const { debounce } = Utils;
 interface ISearchbarProps {}
 
@@ -111,6 +112,10 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
       draft.data.nodes = Utils.uniqueElementsBy([...draft.data.nodes, node], (a, b) => {
         return a.id === b.id;
       });
+      if (node) {
+        //@ts-ignore
+        draft.focusNodes = [node.id];
+      }
     });
   };
 
@@ -145,6 +150,7 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
       draft.source = data;
       draft.data = data;
       draft.isLoading = false;
+      draft.focusNodes = data.nodes.map(item => item.id);
     });
   };
   const prefix = (

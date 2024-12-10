@@ -26,3 +26,5 @@ export { default as CurvatureLinks } from './CurvatureLinks';
 export { default as DagreMode } from './DagreMode';
 export { default as FixedMode } from './FixedMode';
 export { default as Placeholder } from './Placeholder';
+export { default as LayoutSwitch } from './LayoutSwitch';
+export { default as ZoomStatus } from './ZoomStatus';

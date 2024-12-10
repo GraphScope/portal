@@ -108,7 +108,6 @@ const CustomGraphFetch = () => {
           color: 'red',
           size: 10,
           caption: ['name', 'age'],
-          captionStatus: 'display',
         },
       };
     });
@@ -129,12 +128,12 @@ export default () => {
 
 目前在 `store.nodeStyle` 和 `store.edgeStyle` 中，只有4个参数可以配置，分别是：
 
-| key           | desc                   | default |
-| ------------- | ---------------------- | ------- |
-| color         | 节点/边的颜色          | #ddd    |
-| size          | 节点大小 或者 边的粗细 | 2       |
-| caption       | 节点/边的标签          | []      |
-| captionStatus | 节点/边的标签显示状态  | 'none'  |
+| key     | desc                   | default |
+| ------- | ---------------------- | ------- |
+| color   | 节点/边的颜色          | #ddd    |
+| size    | 节点大小 或者 边的粗细 | 2       |
+| caption | 节点/边的标签          | []      |
+| icon    | 节点图标               | ''      |
 
 需要注意的是 `caption` 是数组，可以配置多个展示标签，考虑文本的映射可以根据Schema批量设置和高级映射配置，因此`caption`是一组图数据中`properties`的数值映射字段，而非静态数值
 

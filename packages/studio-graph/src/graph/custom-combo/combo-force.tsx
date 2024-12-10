@@ -5,7 +5,7 @@ import { get } from './utils';
  * @param strength strength 是一个可调参数，默认值为 0.1
  * @returns
  */
-export function forceRadial(groupMap, clusterKey, strength = 0.1) {
+export function forceRadial(groupMap, clusterKey, strength = 0.05) {
   let nodes;
 
   function force(alpha) {

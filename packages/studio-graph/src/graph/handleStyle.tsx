@@ -4,13 +4,13 @@ const defaultEdgeStyle = {
   color: DEFAULT_EDGE_COLOR,
   size: DEFAULT_EDGE_WIDTH,
   caption: [],
-  captionStatus: false,
+  icon: '',
 };
 const defaultNodeStyle = {
   color: DEFAULT_NODE_COLOR,
   size: DEFAULT_NODE_SIZE,
   caption: [],
-  captionStatus: false,
+  icon: '',
 };
 
 export const handleStyle = (item, runtimeStyle, type?: 'node' | 'edge') => {

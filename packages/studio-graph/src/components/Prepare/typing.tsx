@@ -21,7 +21,7 @@ export interface StyleConfig {
   /** 文本映射字段 */
   caption: string[];
   /** 是否显示文字 */
-  captionStatus?: 'display' | 'hidden';
+  icon: string;
 }
 export interface StatusConfig {
   /** 是否选中 */

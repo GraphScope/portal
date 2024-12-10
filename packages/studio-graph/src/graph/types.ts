@@ -9,10 +9,11 @@ export type EventType =
   | 'canvas:click'
   | 'edge:click'
   | 'combo:click';
+
 export type Emitter = EEmitter<Record<EventType, unknown>>;
-export type Graph = ForceGraphInstance | ForceGraph3DInstance | null;
+export type Graph = ForceGraphInstance | ForceGraph3DInstance;
 export interface GraphContextProps {
-  graph: Graph | null;
+  graph: Graph;
   /**
    * Whether the graph is ready.
    */
@@ -44,27 +45,7 @@ export interface GraphData {
   nodes: NodeData[];
   edges: EdgeData[];
 }
-export interface GraphProps extends Pick<React.HTMLAttributes<HTMLDivElement>, 'id' | 'className' | 'style'> {
-  render: '2D' | '3D';
-  data: GraphData;
-  nodeStyle: any;
-  edgeStyle: any;
-  nodeStatus: any;
-  edgeStatus: any;
-  /**
-   * The options for the  graph instance.
-   */
-  options?: any;
-  /**
-   * Callback for when the graph is initialized, after new Graph().
-   */
-  onInit?: (graph: Graph, emitter: Emitter, params: any) => void;
-  /**
-   * Callback for when the graph is ready, after graph.render().
-   */
-  onReady?: (graph: any) => void;
-  /**
-   * Callback for when the graph is destroyed, after graph.destroy().
-   */
-  onDestroy?: () => void;
+export interface Layout {
+  type: string;
+  options: Record<string, any>;
 }
