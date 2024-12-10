@@ -4,6 +4,7 @@ import { handleStyle } from '../handleStyle';
 import { handleStatus } from '../handleStatus';
 import { HOVERING_NODE_COLOR, BASIC_NODE_R, SELECTED_NODE_COLOR, NODE_TEXT_COLOR } from '../const';
 import { drawText } from './draw';
+import { icons } from '../../icons';
 export const nodeCanvasObject =
   (node: NodeObject, ctx: CanvasRenderingContext2D, globalScale: number) =>
   (nodeStyle: StyleConfig, nodeStatus: any) => {
@@ -13,7 +14,7 @@ export const nodeCanvasObject =
 
     const style = handleStyle(node, nodeStyle);
     const status = handleStatus(node, nodeStatus);
-    const { color, size, caption, captionStatus, icon } = style;
+    const { color, size, caption, icon } = style;
 
     const { selected, hovering } = status;
 
@@ -48,8 +49,15 @@ export const nodeCanvasObject =
 
     // icon shape
 
-    if (icon) {
+    if (icon && icon !== '' && globalScale > 3) {
       //@TODO
+      const unicodeIcon = icons[icon] || '';
+      // 绘制图标
+      ctx.font = `${R}px iconfont`;
+      ctx.textAlign = 'center'; // 水平居中对齐
+      ctx.textBaseline = 'middle'; // 垂直居中对齐
+      ctx.fillStyle = '#fff'; // 图标颜色
+      ctx.fillText(unicodeIcon, node.x, node.y);
     }
 
     // if (captionStatus === 'display' && textLabel) {
@@ -85,7 +93,7 @@ export const nodeCanvasObject =
     //   }
     // }
 
-    if (captionStatus === 'display' && texts.length > 0) {
+    if (texts.length > 0) {
       if (globalScale > 2) {
         const fontSize = 2; //14 / globalScale;
         ctx.font = `${fontSize}px Sans-Serif`;

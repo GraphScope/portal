@@ -34,6 +34,8 @@ import {
   DagreMode,
   Placeholder,
   LayoutSwitch,
+  ZoomStatus,
+  registerIcons,
 } from '@graphscope/studio-graph';
 
 import { ToogleLeftButton, ToogleRightButton } from './components/ToggleButton';
@@ -46,7 +48,8 @@ interface ExploreProps {
   id?: string;
   services?: any;
 }
-
+/** register graph icons */
+registerIcons();
 const Explore: React.FunctionComponent<ExploreProps> = props => {
   const { id } = props;
   const [services, setServices] = useState(props.services || getDefaultServices());
@@ -130,6 +133,8 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             <Loading />
             <Next />
             <PropertiesPanel />
+
+            <ZoomStatus />
 
             <ContextMenu>
               <NeighborQuery />

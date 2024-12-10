@@ -11,3 +11,4 @@ export { default as CypherServices, queryStatement } from './services/cypher';
 export type { IServiceQueries, IQueryTypes, IQueryStatement } from './services/cypher';
 export type { INeighborQueryData, INeighborQueryItems } from './components/ContextMenu/NeighborQuery';
 export * from './hooks/typing';
+export { registerIcons } from './icons';

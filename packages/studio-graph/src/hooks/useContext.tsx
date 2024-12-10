@@ -32,8 +32,6 @@ export type IStore = {
    * cluster combos
    */
   combos: any[];
-  enableCombo?: boolean;
-  combosByKey: string;
   /**
    * width of graph
    */
