@@ -13,6 +13,8 @@ const ClearCanvas: React.FunctionComponent<IReportProps> = props => {
     updateStore(draft => {
       draft.data = { nodes: [], edges: [] };
       draft.source = { nodes: [], edges: [] };
+      draft.combos = [];
+      draft.enableCombo = false;
     });
     if (graph) {
       graph.zoomToFit();

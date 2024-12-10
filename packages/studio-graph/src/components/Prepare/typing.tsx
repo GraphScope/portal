@@ -19,7 +19,7 @@ export interface StyleConfig {
   /** 大小 */
   size: number;
   /** 文本映射字段 */
-  caption: string;
+  caption: string[];
   /** 是否显示文字 */
   captionStatus?: 'display' | 'hidden';
 }

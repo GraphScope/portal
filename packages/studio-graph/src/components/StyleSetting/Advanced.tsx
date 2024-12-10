@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { CaretRightOutlined } from '@ant-design/icons';
-import { Collapse, theme, Flex, Typography, Select, Space } from 'antd';
+import { CaretRightOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { Collapse, theme, Flex, Typography, Select, Space, Tooltip } from 'antd';
 import { useContext } from '../../hooks/useContext';
+import { CollapseCard } from '@graphscope/studio-components';
 interface IAdvancedSettingProps {}
 
 import { scaleLinear, scaleLog, scalePow } from 'd3-scale';
@@ -129,48 +130,42 @@ const SizeScaler = () => {
   };
 
   return (
-    <Flex vertical gap={8}>
-      <Typography.Text type="secondary">
+    <Flex vertical gap={12}>
+      {/* <Typography.Text type="secondary">
         The size of nodes or width of edges is linearly scaled based on the range of values in the selected property
         field.
-      </Typography.Text>
-      <Flex justify="space-between" align="center" gap={12}>
-        <Typography.Text type="secondary">Choose Scaler:</Typography.Text>
-        <Select
-          defaultValue="linear"
-          style={{ flex: 1 }}
-          options={[
-            { label: 'Linear', value: 'linear' },
-            { label: 'Log', value: 'log' },
-            { label: 'Pow', value: 'pow' },
-          ]}
-          onChange={value => {
-            setScaleType(value);
-          }}
-        />
-      </Flex>
-      <Flex justify="space-between" align="center" gap={12}>
-        <Typography.Text type="secondary">Choose Property:</Typography.Text>
-        <Select defaultValue="" style={{ flex: 1 }} options={nodes_options} onChange={handleChange} />
-      </Flex>
+      </Typography.Text> */}
+
+      <Typography.Text>Choose Scaler:</Typography.Text>
+      <Select
+        defaultValue="linear"
+        style={{ flex: 1 }}
+        options={[
+          { label: 'Linear', value: 'linear' },
+          { label: 'Log', value: 'log' },
+          { label: 'Pow', value: 'pow' },
+        ]}
+        onChange={value => {
+          setScaleType(value);
+        }}
+      />
+
+      <Typography.Text>Choose Property:</Typography.Text>
+      <Select defaultValue="" style={{ flex: 1 }} options={nodes_options} onChange={handleChange} />
     </Flex>
   );
 };
 
 const AdvancedSetting: React.FunctionComponent<IAdvancedSettingProps> = props => {
   return (
-    <Collapse
-      expandIconPosition="end"
-      defaultActiveKey={['advanced']}
-      expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-      items={[
-        {
-          key: 'advanced',
-          label: 'Advanced Setting',
-          children: <SizeScaler />,
-        },
-      ]}
-    />
+    <CollapseCard
+      title="Advanced Setting"
+      tooltip="The size of nodes or width of edges is linearly scaled based on the range of values in the selected property
+            field."
+      defaultCollapse
+    >
+      <SizeScaler />
+    </CollapseCard>
   );
 };
 
