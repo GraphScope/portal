@@ -1,5 +1,11 @@
 # @graphscope/studio-server
 
+## 1.0.7
+
+### Patch Changes
+
+- update studio
+
 ## 1.0.6
 
 ### Patch Changes
