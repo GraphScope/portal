@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Flex, Divider } from 'antd';
 import Properties from './Properties';
 import TotalCounts from './TotalCounts';
-
+// import Labels from './Lables';
 interface IUploadProps {
   children?: React.ReactNode;
 }

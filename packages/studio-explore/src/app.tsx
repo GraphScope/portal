@@ -34,6 +34,7 @@ import {
   DagreMode,
   Placeholder,
   LayoutSwitch,
+  ZoomStatus,
 } from '@graphscope/studio-graph';
 
 import { ToogleLeftButton, ToogleRightButton } from './components/ToggleButton';
@@ -130,6 +131,8 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             <Loading />
             <Next />
             <PropertiesPanel />
+
+            <ZoomStatus />
 
             <ContextMenu>
               <NeighborQuery />
