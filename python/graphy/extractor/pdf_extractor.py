@@ -553,18 +553,25 @@ class PDFExtractor(BasePDFLoader):
         related_tables = set()
 
         lines = text.replace("-\n", "\n").split("\n")
+        record_start_line = start_line_index
         line_index_record = start_line_index
+        succeed = False
         for cur_line_index in range(start_line_index, end_line_index):
             line_index_record = cur_line_index
+            if end_line_index - cur_line_index < len(lines):
+                break
             valid = True
+
             for i in range(len(lines)):
                 cur_line = segmented_info[section_order_index][cur_line_index + i]
+
                 if lines[i] not in cur_line.get_text():
                     valid = False
                     break
             if not valid:
                 continue
             else:
+                succeed = True
                 for j in range(len(lines)):
                     related_links = related_links.union(
                         related_links_all[j + cur_line_index - first_line_index]
@@ -588,7 +595,10 @@ class PDFExtractor(BasePDFLoader):
         # print(related_tables)
         # print("LINE INDEX RECORD")
         # print(line_index_record)
-        return related_links, related_images, related_tables, line_index_record
+        if succeed:
+            return related_links, related_images, related_tables, line_index_record
+        else:
+            return related_links, related_images, related_tables, record_start_line
 
     def _connect_links(
         self,
@@ -823,6 +833,7 @@ class PDFExtractor(BasePDFLoader):
                     break
 
             part_texts = self.text_splitter.split_text(content_in_current_page)
+
             related_links_line, related_images_line, related_tables_line = (
                 self._connect_link_to_line(
                     segmented_info,
@@ -901,6 +912,7 @@ class PDFExtractor(BasePDFLoader):
             if cur_line_index == len(segmented_info[section_order_index]):
                 section_order_index += 1
                 cur_line_index = 0
+                first_line_index = -1
             else:
                 break
 
