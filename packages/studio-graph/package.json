@@ -15,6 +15,7 @@
     "dist"
   ],
   "scripts": {
+    "demo": "vite dev",
     "start": "father dev",
     "build": "father build"
   },
@@ -24,8 +25,8 @@
     "3d-force-graph": "^1.73.3",
     "@ant-design/colors": "^7.1.0",
     "@antv/g6": "latest",
-    "@graphscope/studio-driver": "workspace:*",
     "@graphscope/studio-components": "workspace:*",
+    "@graphscope/studio-driver": "workspace:*",
     "@graphscope/use-zustand": "workspace:*",
     "@tweenjs/tween.js": "^25.0.0",
     "@types/d3-selection": "^3.0.10",
@@ -35,6 +36,7 @@
     "d3-hierarchy": "^3.1.2",
     "d3-scale": "^4.0.2",
     "d3-selection": "^3.0.0",
+    "dagre": "^0.8.5",
     "force-graph": "^1.46.0",
     "mitt": "^3.0.1",
     "react": "18.2.0",
@@ -49,6 +51,8 @@
   "devDependencies": {
     "@types/d3-brush": "^3.0.6",
     "@types/d3-force": "^3.0.10",
-    "@types/d3-hierarchy": "^3.1.7"
+    "@types/d3-hierarchy": "^3.1.7",
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.3"
   }
 }

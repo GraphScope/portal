@@ -1,6 +1,6 @@
 //see: https://www.iconfont.cn/
 
-const builtinIconFontId = 'font_4633296_9exxn3p3tzj';
+const builtinIconFontId = 'font_4775957_de91ktmrghn';
 import { loadFontJson, loadUnicodeFont } from './loader';
 
 export let icons: Record<string, string> = {};

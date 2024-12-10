@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Flex, Typography, Space, Tag, theme, Radio } from 'antd';
+import { Flex, Typography, Space, Tag, theme, Radio, Button, Select } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { sizes, widths, colors } from '../../../graph/const';
+import { icons } from '../../../icons/index';
 const { useToken } = theme;
 export interface ILegnedOption {
   /** 属性 */
@@ -16,10 +17,9 @@ export interface ILegnedOption {
   size: number;
   /** 文本映射字段 */
   caption: string[];
-  /** 是否隐藏文字 */
-  captionStatus?: 'hidden' | 'display';
   /** 标识是节点还是边 */
   type: 'node' | 'edge';
+  icon: string;
 }
 
 export type ILengendContentProps = ILegnedOption & {
@@ -38,7 +38,7 @@ const styles = {
 };
 
 const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
-  const { color, size, caption, properties, label, onChange, type, captionStatus } = props;
+  const { color, size, caption, properties, label, onChange, type, icon } = props;
   const { token } = useToken();
   let _properties = properties;
 
@@ -60,11 +60,28 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
         size,
         caption,
         properties,
-        captionStatus,
+        icon,
         [key]: value,
       });
   };
   const activeStyle = `2px solid ${token.colorPrimary}`;
+  const iconOptions = Object.keys(icons).map(item => ({
+    label: (
+      <Space size={12}>
+        <span
+          style={{
+            fontFamily: 'iconfont',
+            fontSize: '16px',
+          }}
+        >
+          {icons[item]}
+        </span>
+        {item}
+      </Space>
+    ),
+    value: item,
+    icon: icons[item],
+  }));
   return (
     <div style={{ maxWidth: '220px', overflow: 'hidden', padding: '12px' }}>
       <Flex gap={12} style={{ padding: '6px 0px' }}>
@@ -180,21 +197,19 @@ const LengendContent: React.FunctionComponent<ILengendContentProps> = props => {
           })}
         </Space>
       </Flex>
-      <Flex gap={12} style={{ padding: '6px 0px' }}>
+      <Flex gap={12} style={{ padding: '6px 0px' }} justify="space-between">
         <Typography.Text style={{ flexShrink: 0 }}>
-          <FormattedMessage id="Caption Status" />
+          <FormattedMessage id="Icon" />
         </Typography.Text>
-        <Space wrap>
-          <Radio.Group
-            value={captionStatus}
-            onChange={e => {
-              handleChange('captionStatus', e.target.value);
-            }}
-          >
-            <Radio value="hidden">hidden</Radio>
-            <Radio value="display">display</Radio>
-          </Radio.Group>
-        </Space>
+        <Select
+          defaultValue={icon}
+          size="small"
+          style={{ width: '80%' }}
+          onChange={value => {
+            handleChange('icon', value);
+          }}
+          options={iconOptions}
+        />
       </Flex>
     </div>
   );

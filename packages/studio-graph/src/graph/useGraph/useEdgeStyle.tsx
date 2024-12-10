@@ -44,8 +44,7 @@ export const useEdgeStyle = () => {
           })
           // .onZoom(() => {
           //   if (render === '2D') {
-          //     console.log('onZoom', (graph as ForceGraphInstance).zoom());
-          //     graph.linkWidth(0.3 * (graph as ForceGraphInstance).zoom());
+          //     graph.linkWidth(0.1 * (graph as ForceGraphInstance).zoom());
           //   }
           // })
           .linkWidth((edge: any) => {
