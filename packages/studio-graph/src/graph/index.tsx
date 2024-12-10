@@ -2,8 +2,6 @@ import React, { CSSProperties } from 'react';
 
 import { useNodeStyle, useEdgeStyle, useData, useInit, useLayout, useComboLayout } from './useGraph/index';
 
-import { registerIcons } from '../icons';
-registerIcons();
 const Canvas = props => {
   const { containerRef, id } = useInit();
   // useData();

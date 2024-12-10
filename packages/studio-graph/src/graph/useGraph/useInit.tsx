@@ -73,6 +73,7 @@ export const useInit = () => {
       const width = containerRef.current.offsetWidth;
       const height = containerRef.current.offsetHeight;
       if (graph) {
+        //@ts-ignore
         graph.width(width).height(height);
       }
     }, 200);

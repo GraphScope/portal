@@ -4,8 +4,8 @@ const builtinIconFontId = 'font_4775957_de91ktmrghn';
 import { loadFontJson, loadUnicodeFont } from './loader';
 
 export let icons: Record<string, string> = {};
-export const registerIcons = async () => {
-  const { glyphs } = await loadFontJson(builtinIconFontId);
+export const registerIcons = async (id: string = builtinIconFontId) => {
+  const { glyphs } = await loadFontJson(id);
   await loadUnicodeFont(builtinIconFontId);
   icons = glyphs.reduce((acc, curr) => {
     return {
@@ -13,4 +13,5 @@ export const registerIcons = async () => {
       [curr.name]: String.fromCodePoint(curr.unicode_decimal),
     };
   }, {});
+  return icons;
 };

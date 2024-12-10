@@ -36,6 +36,7 @@ import { Divider } from 'antd';
 import { GraphProvider } from '../hooks/useContext';
 import { CypherServices } from '../index';
 import { BgColorsOutlined } from '@ant-design/icons';
+import { registerIcons } from '../icons';
 interface QueryGraphProps {
   // instance id
   id?: string;
@@ -54,6 +55,7 @@ const ToogleButton = () => {
   );
 };
 
+registerIcons();
 const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
   const { data, schema, graphId, onQuery, id } = props;
   const containerRef = useRef<HTMLDivElement | null>(null);
