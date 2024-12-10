@@ -1,10 +1,9 @@
 import { useContext } from '../../hooks/useContext';
 import { useEffect } from 'react';
 import { handleStyle } from '../handleStyle';
-import { BASIC_NODE_R, SELECTED_EDGE_COLOR } from '../const';
+import { SELECTED_EDGE_COLOR } from '../const';
 
 import { linkCanvasObject } from '../custom-edge';
-import { nodeCanvasObject } from '../custom-node';
 import type { ForceGraphInstance } from 'force-graph';
 import type { ForceGraph3DInstance } from '3d-force-graph';
 export const useEdgeStyle = () => {

@@ -2,10 +2,20 @@ import { useContext } from '../../hooks/useContext';
 import { useEffect } from 'react';
 import type { ForceGraphInstance } from 'force-graph';
 
-import { Utils } from '@graphscope/studio-components';
 import { handleStyle } from '../handleStyle';
 import { dagreLayout } from '../layout/dagre';
 import { calculateRenderTime } from './useData';
+function processLinks(links) {
+  return links.map(link => {
+    return {
+      id: link.id,
+      label: link.label,
+      source: typeof link.source === 'string' ? link.source : link.source.id,
+      target: typeof link.target === 'string' ? link.target : link.target.id,
+      properties: link.properties,
+    };
+  });
+}
 
 import {
   forceSimulation as d3ForceSimulation,
@@ -61,14 +71,13 @@ export const useLayout = () => {
     }
     if (type === 'preset') {
       graph.cooldownTicks(0); //cancel force engine iterations
-      // graph.graphData(Utils.fakeSnapshot({ nodes, links }));
     }
     if (type === 'dagre') {
-      // not force layout
       graph.cooldownTicks(0); //cancel force engine iterations
       const size = graph.nodeRelSize() * 4;
+
       const layoutData = dagreLayout(
-        { nodes, edges: links },
+        { nodes, edges: processLinks(links) },
         {
           ...options,
           nodeWidth: size,
