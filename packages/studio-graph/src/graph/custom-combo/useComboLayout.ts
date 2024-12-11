@@ -1,4 +1,4 @@
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../useContext';
 
 import { ForceGraphInstance } from 'force-graph';
 import {
@@ -10,7 +10,7 @@ import {
   forceCollide as d3ForceCollide,
 } from 'd3-force-3d';
 import * as d3Force from 'd3-force';
-import { handleStyle } from '../handleStyle';
+import { handleStyle } from '../utils/handleStyle';
 
 import { forceCluster, forceRadial } from './combo-force';
 import { useEffect } from 'react';

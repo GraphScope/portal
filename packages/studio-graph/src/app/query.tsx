@@ -1,14 +1,7 @@
 import React, { useRef } from 'react';
 import { Button, Tooltip, theme } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import {
-  Section,
-  useSection,
-  Icons,
-  FullScreen,
-  useCustomToken,
-  useStudioProvier,
-} from '@graphscope/studio-components';
+import { Section, useSection, FullScreen } from '@graphscope/studio-components';
 import {
   Toolbar,
   SwitchEngine,
@@ -33,10 +26,10 @@ import {
 
 import { Divider } from 'antd';
 
-import { GraphProvider } from '../hooks/useContext';
-import { CypherServices } from '../index';
+import { CypherServices, GraphProvider } from '../index';
 import { BgColorsOutlined } from '@ant-design/icons';
-import { registerIcons } from '../icons';
+import { registerIcons } from '../graph/custom-icons';
+
 interface QueryGraphProps {
   // instance id
   id?: string;

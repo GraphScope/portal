@@ -1,4 +1,5 @@
-export function getDataMap(data) {
+import type { DataMap } from '../types';
+export function getDataMap(data): DataMap {
   const dataMap = new Map(); // 使用 Map 而不是对象
   const nodesMap = new Map(); // 用于快速查找节点
 

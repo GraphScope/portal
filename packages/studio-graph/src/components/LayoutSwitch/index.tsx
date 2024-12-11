@@ -2,7 +2,7 @@ import * as React from 'react';
 import { LayoutOutlined } from '@ant-design/icons';
 import { Button, Flex, Popover, Radio, Typography } from 'antd';
 import { Illustration } from '@graphscope/studio-components';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../../';
 interface ILayoutSwitchProps {}
 const getOption = (value, title) => {
   return {

@@ -1,7 +1,6 @@
 import React from 'react';
 import StoreProvider, { useContext as useZustandContext } from '@graphscope/use-zustand';
-import type { StyleConfig, Emitter, Graph, GraphData, GraphSchema } from './typing';
-import { StatusConfig } from '../components/Prepare/typing';
+import type { StyleConfig, Emitter, Graph, GraphData, GraphSchema, StatusConfig } from './types';
 
 export type IGetServices = <T extends { id: string; query: (...args: any[]) => Promise<any> }>(
   id: T['id'],
@@ -18,7 +17,7 @@ export type IStore = {
   /**
    * dataMap
    */
-  dataMap: Record<
+  dataMap: Map<
     string,
     {
       label: string;
@@ -81,7 +80,7 @@ export const initialStore: IStore = {
   combosByKey: '',
   width: 200,
   height: 500,
-  dataMap: {},
+  dataMap: new Map(),
   render: '2D',
   graph: undefined,
   isReady: false,

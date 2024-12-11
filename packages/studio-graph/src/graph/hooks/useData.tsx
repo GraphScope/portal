@@ -1,4 +1,4 @@
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../useContext';
 import { useEffect } from 'react';
 
 export function calculateRenderTime(N: number) {

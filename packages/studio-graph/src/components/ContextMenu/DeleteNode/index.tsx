@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Typography, Button } from 'antd';
 import { ShareAltOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useContext } from '../../../hooks/useContext';
-import { getDataMap } from '../../Prepare/utils';
+import { useContext, getDataMap } from '../../../';
+
 interface INeighborQueryProps {}
 
 const DeleteNode: React.FunctionComponent<INeighborQueryProps> = props => {

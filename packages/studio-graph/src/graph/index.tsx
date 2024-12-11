@@ -1,6 +1,6 @@
 import React, { CSSProperties } from 'react';
 
-import { useNodeStyle, useEdgeStyle, useData, useInit, useLayout, useComboLayout } from './useGraph/index';
+import { useNodeStyle, useEdgeStyle, useData, useInit, useLayout, useComboLayout } from './hooks';
 
 const Canvas = props => {
   const { containerRef, id } = useInit();

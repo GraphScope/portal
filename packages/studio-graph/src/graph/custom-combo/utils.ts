@@ -1,6 +1,6 @@
 import { pack, hierarchy } from 'd3-hierarchy';
 import { Utils } from '@graphscope/studio-components';
-import { handleStyle } from '../handleStyle';
+import { handleStyle } from '../utils/handleStyle';
 
 interface NodeData {
   children: NodeData[];

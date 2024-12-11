@@ -1,7 +1,5 @@
 import React, { memo } from 'react';
-import { useContext } from '../../hooks/useContext';
-import { getStyleConfig } from './utils';
-import { getDataMap } from '../../hooks/utils';
+import { useContext, getDataMap, getStyleConfig } from '../../index';
 
 interface IPrepareProps {
   data: any;

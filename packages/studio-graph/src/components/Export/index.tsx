@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Tooltip, Button, TooltipProps } from 'antd';
 import { FileTextOutlined } from '@ant-design/icons';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../../';
 import { Utils } from '@graphscope/studio-components';
 import { FormattedMessage } from 'react-intl';
 interface IReportProps {

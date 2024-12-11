@@ -1,11 +1,12 @@
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../useContext';
 import { useEffect } from 'react';
-import { handleStyle } from '../handleStyle';
+import { handleStyle } from '../utils/handleStyle';
 import { SELECTED_EDGE_COLOR } from '../const';
 
 import { linkCanvasObject } from '../custom-edge';
 import type { ForceGraphInstance } from 'force-graph';
 import type { ForceGraph3DInstance } from '3d-force-graph';
+import { EdgeStyle } from '../types';
 export const useEdgeStyle = () => {
   const { store } = useContext();
   const { graph, render, edgeStatus, edgeStyle } = store;
@@ -23,8 +24,16 @@ export const useEdgeStyle = () => {
           })
           // custom edge
           .linkCanvasObjectMode(() => 'after')
-          .linkDirectionalArrowLength(3)
-          .linkDirectionalArrowRelPos(0.9)
+          .linkDirectionalArrowLength(edge => {
+            const { options = {}, size } = handleStyle(edge, edgeStyle, 'edge') as EdgeStyle;
+            const { arrowLength = size * 3 } = options as any;
+            return arrowLength;
+          })
+          .linkDirectionalArrowRelPos(edge => {
+            const { options = {} } = handleStyle(edge, edgeStyle, 'edge') as EdgeStyle;
+            const { arrowPosition = 0.9 } = options as any;
+            return arrowPosition;
+          })
           .linkColor((edge: any) => {
             const { color } = handleStyle(edge, edgeStyle, 'edge');
             const match = edgeStatus[edge.id];

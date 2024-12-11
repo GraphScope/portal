@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Typography, Button, Menu } from 'antd';
-import { useContext } from '../../../hooks/useContext';
-import { Utils } from '@graphscope/studio-components';
-import { getDataMap } from '../../Prepare/utils';
+import { useContext, getDataMap } from '../../../';
+
 import { BranchesOutlined } from '@ant-design/icons';
 import { handleExpand, applyStatus } from '../NeighborQuery/utils';
 

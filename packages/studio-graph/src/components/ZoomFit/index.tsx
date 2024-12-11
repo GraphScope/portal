@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, TooltipProps, Tooltip } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../../';
 import { Icons, useStudioProvier } from '@graphscope/studio-components';
 
 export interface IZoomFitProps {

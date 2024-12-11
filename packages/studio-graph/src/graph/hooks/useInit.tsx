@@ -7,7 +7,7 @@ import type { ForceGraph3DInstance } from '3d-force-graph';
 import { Utils } from '@graphscope/studio-components';
 import mitt from 'mitt';
 
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../useContext';
 
 export const useInit = () => {
   const { store, updateStore, id } = useContext();

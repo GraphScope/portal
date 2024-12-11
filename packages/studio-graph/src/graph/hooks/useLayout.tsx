@@ -1,8 +1,8 @@
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../useContext';
 import { useEffect } from 'react';
 import type { ForceGraphInstance } from 'force-graph';
 
-import { handleStyle } from '../handleStyle';
+import { handleStyle } from '../utils/handleStyle';
 import { dagreLayout } from '../layout/dagre';
 import { calculateRenderTime } from './useData';
 function processLinks(links) {

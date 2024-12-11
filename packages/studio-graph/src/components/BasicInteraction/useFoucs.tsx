@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../../';
 import { ForceGraphInstance } from 'force-graph';
 export const useFoucs = () => {
   const { store } = useContext();

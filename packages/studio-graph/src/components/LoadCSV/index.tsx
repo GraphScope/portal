@@ -1,9 +1,7 @@
 import React, { useRef } from 'react';
 import { Button } from 'antd';
 import { ImportFiles, Utils } from '@graphscope/studio-components';
-import { useContext } from '../../hooks/useContext';
-
-import { getStyleConfig, getDataMap } from '../Prepare/utils';
+import { useContext, getStyleConfig, getDataMap } from '../../';
 
 export interface IImportFromCSVProps {
   onCallback?: () => void;
@@ -123,6 +121,7 @@ const ImportFromJSON: React.FunctionComponent<IImportFromCSVProps> = props => {
       draft.schema = schema;
       draft.nodeStyle = style.nodeStyle;
       draft.edgeStyle = style.edgeStyle;
+      //@ts-ignore
       draft.dataMap = getDataMap(
         Utils.fakeSnapshot({
           nodes,
