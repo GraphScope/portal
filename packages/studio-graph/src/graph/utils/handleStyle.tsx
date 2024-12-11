@@ -1,27 +1,35 @@
 import { DEFAULT_EDGE_COLOR, DEFAULT_NODE_COLOR, DEFAULT_NODE_SIZE, DEFAULT_EDGE_WIDTH } from '../const';
-
-const defaultEdgeStyle = {
+import type { NodeStyle, EdgeStyle } from '../types';
+export const defaultEdgeStyle = {
   color: DEFAULT_EDGE_COLOR,
   size: DEFAULT_EDGE_WIDTH,
   caption: [],
   icon: '',
+  options: {
+    arrowLength: 10,
+    arrowPosition: 0.9,
+  },
 };
-const defaultNodeStyle = {
+export const defaultNodeStyle = {
   color: DEFAULT_NODE_COLOR,
   size: DEFAULT_NODE_SIZE,
   caption: [],
   icon: '',
+  options: {
+    textPosition: 'bottom',
+    iconColor: '#fff',
+    zoomLevel: [3, 15],
+  },
 };
-
-export const handleStyle = (item, runtimeStyle, type?: 'node' | 'edge') => {
+export const getNodeStyle = (node: NodeStyle) => {};
+export function handleStyle<T>(item, runtimeStyle: Record<string, T>, type?: 'node' | 'edge'): T {
   const { id, label, __style } = item;
   let _style = runtimeStyle[id] || runtimeStyle[label] || __style;
-  // console.log(runtimeStyle, id, label);
   if (_style) {
     return _style;
   }
   if (type === 'edge') {
-    return defaultEdgeStyle;
+    return defaultEdgeStyle as T;
   }
-  return defaultNodeStyle;
-};
+  return defaultNodeStyle as T;
+}

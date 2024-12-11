@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { handleStyle } from '../utils/handleStyle';
 import { BASIC_NODE_R, SELECTED_EDGE_COLOR } from '../const';
 
-import { nodeCanvasObject } from '../custom-node';
+import { nodeCanvasObject, nodePointerAreaPaint } from '../custom-node';
 import type { ForceGraphInstance } from 'force-graph';
 import type { ForceGraph3DInstance } from '3d-force-graph';
 export const useNodeStyle = () => {
@@ -18,6 +18,9 @@ export const useNodeStyle = () => {
             //@ts-ignore
             nodeCanvasObject(node, ctx, globalScale)(nodeStyle, nodeStatus);
           })
+          .nodePointerAreaPaint((node, color, ctx, globalScale) => {
+            nodePointerAreaPaint(node, color, ctx, globalScale)(nodeStyle);
+          })
           .nodeRelSize(BASIC_NODE_R)
           .nodeCanvasObjectMode(() => {
             return 'replace';
@@ -25,10 +28,12 @@ export const useNodeStyle = () => {
       }
       if (render === '3D') {
         (graph as ForceGraph3DInstance)
-          .nodeLabel(node => handleStyle(node, nodeStyle).caption)
+          .nodeLabel(node => handleStyle(node, nodeStyle).caption.join(' '))
           .nodeRelSize(BASIC_NODE_R)
           .nodeColor(node => handleStyle(node, nodeStyle).color)
-          .nodeLabel((node: any) => node && node.properties && node.properties[handleStyle(node, nodeStyle).caption]);
+          .nodeLabel(
+            (node: any) => node && node.properties && node.properties[handleStyle(node, nodeStyle).caption.join(' ')],
+          );
       }
     }
   }, [nodeStyle, nodeStatus, graph, render]);
