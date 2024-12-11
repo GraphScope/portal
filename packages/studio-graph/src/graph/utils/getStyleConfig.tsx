@@ -1,4 +1,4 @@
-import type { GraphSchema, StyleConfig } from '../types';
+import type { GraphSchema, NodeStyle, EdgeStyle } from '../types';
 import { Utils } from '@graphscope/studio-components';
 import {
   colors,
@@ -11,7 +11,7 @@ import {
 } from '../const';
 const { storage } = Utils;
 export function getStyleConfig(schema: GraphSchema, graphId: string) {
-  const localStyle = storage.get<{ nodeStyle: StyleConfig; edgeStyle: StyleConfig }>(`GRAPH_${graphId}_STYLE`);
+  const localStyle = storage.get<{ nodeStyle: NodeStyle; edgeStyle: EdgeStyle }>(`GRAPH_${graphId}_STYLE`);
   if (localStyle) {
     return localStyle;
   }

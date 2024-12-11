@@ -50,7 +50,7 @@ export interface Layout {
   options: Record<string, any>;
 }
 
-export interface StyleConfig {
+export interface CommonStyle {
   /** 颜色 */
   color: string;
   /** 大小 */
@@ -61,15 +61,14 @@ export interface StyleConfig {
   icon: string;
 }
 
-export interface NodeStyleOptions {
+export interface NodeOptionStyle {
   iconColor: string;
   iconSize: string;
   textColor: string;
   textPosition: 'top' | 'bottom' | 'left' | 'right' | 'center';
   zoomLevel: number[];
 }
-export interface EdgeStyleOptions {
-  arrow: boolean;
+export interface EdgeOptionStyle {
   arrowLength: number;
   arrowPosition: number;
 }
@@ -80,12 +79,12 @@ export interface StatusConfig {
   hovering?: boolean;
 }
 
-export interface NodeStyle extends StyleConfig {
-  options: NodeStyleOptions;
+export interface NodeStyle extends CommonStyle {
+  options?: NodeOptionStyle;
 }
 
-export interface EdgeStyle extends StyleConfig {
-  options: EdgeStyleOptions;
+export interface EdgeStyle extends CommonStyle {
+  options?: EdgeOptionStyle;
 }
 
 export type { ForceGraphInstance } from 'force-graph';

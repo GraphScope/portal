@@ -1,6 +1,6 @@
 import React from 'react';
 import StoreProvider, { useContext as useZustandContext } from '@graphscope/use-zustand';
-import type { StyleConfig, Emitter, Graph, GraphData, GraphSchema, StatusConfig } from './types';
+import type { NodeStyle, EdgeStyle, Emitter, Graph, GraphData, GraphSchema, StatusConfig } from './types';
 
 export type IGetServices = <T extends { id: string; query: (...args: any[]) => Promise<any> }>(
   id: T['id'],
@@ -46,8 +46,8 @@ export type IStore = {
   isReady: boolean;
   graph?: Graph;
   emitter: null | Emitter;
-  nodeStyle: Record<string, StyleConfig>;
-  edgeStyle: Record<string, StyleConfig>;
+  nodeStyle: Record<string, NodeStyle>;
+  edgeStyle: Record<string, EdgeStyle>;
   nodeStatus: Record<string, StatusConfig>;
   edgeStatus: Record<string, StatusConfig>;
   graphId: string;

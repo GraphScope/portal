@@ -1,41 +1,38 @@
 import { NodeObject } from 'force-graph';
-import { StyleConfig } from '../types';
-import { handleStyle } from '../utils/handleStyle';
+import { NodeStyle, NodeOptionStyle } from '../types';
+import { handleStyle, defaultNodeStyle } from '../utils/handleStyle';
 import { handleStatus } from '../utils/handleStatus';
 import { HOVERING_NODE_COLOR, BASIC_NODE_R, SELECTED_NODE_COLOR, NODE_TEXT_COLOR } from '../const';
 import { drawText } from './draw';
 import { icons } from '../custom-icons';
-export interface NodeStyleOptions {
-  textPosition: 'top' | 'bottom' | 'left' | 'right' | 'center';
-  textColor: string;
-  iconColor: string;
-  iconSize: string;
-  zoomLevel: number[];
-}
-const defaultNodeOptions: NodeStyleOptions = {
-  textPosition: 'bottom',
-  textColor: '#000',
-  iconColor: '#fff',
-  iconSize: '16px',
-  zoomLevel: [3, 15],
-};
 
 export const nodeCanvasObject =
   (node: NodeObject, ctx: CanvasRenderingContext2D, globalScale: number) =>
-  (nodeStyle: StyleConfig, nodeStatus: any) => {
+  (nodeStyle: Record<string, NodeStyle>, nodeStatus: any) => {
     if (node.x === undefined || node.y === undefined) {
       return;
     }
     const style = handleStyle(node, nodeStyle);
     const status = handleStatus(node, nodeStatus);
-    const { color, size, caption, icon, options = {} } = style;
+    const { color, size, caption, icon } = style;
+    const R = Math.sqrt(Math.max(0, size)) * BASIC_NODE_R + 1;
+
+    const options = Object.assign(
+      {},
+      defaultNodeStyle.options,
+      {
+        iconSize: `${R}px`,
+        textColor: color,
+      },
+      style.options,
+    );
+
     const { selected, hovering } = status;
-    const { zoomLevel = defaultNodeOptions.zoomLevel } = options;
+    const { zoomLevel, iconColor, iconSize, textColor, textPosition } = options;
     const texts = caption.map(c => {
       //@ts-ignore
       return node.properties && node.properties[c];
     });
-    const R = Math.sqrt(Math.max(0, size)) * BASIC_NODE_R + 1;
 
     // draw holo shape
     if (selected || hovering) {
@@ -56,8 +53,6 @@ export const nodeCanvasObject =
 
     // draw icon
     if (icon && icon !== '' && globalScale > zoomLevel[0] && globalScale < zoomLevel[1]) {
-      const { iconColor = defaultNodeOptions.iconColor, iconSize = `${R}px` || defaultNodeOptions.iconSize } =
-        options as NodeStyleOptions;
       const unicodeIcon = icons[icon] || '';
       // 绘制图标
       ctx.font = `${iconSize} iconfont`;
@@ -74,8 +69,8 @@ export const nodeCanvasObject =
       R,
       texts,
       node,
-      textColor: options.textColor || color || defaultNodeOptions.textColor,
-      textPosition: options.textPosition || defaultNodeOptions.textPosition,
+      textColor: textColor,
+      textPosition: textPosition,
       zoomLevel: zoomLevel,
     });
 
@@ -89,9 +84,9 @@ function drawLabel(options: {
   node: any;
   R: number;
   texts: string[];
-  textPosition: NodeStyleOptions['textPosition'];
-  textColor: NodeStyleOptions['textColor'];
-  zoomLevel: NodeStyleOptions['zoomLevel'];
+  textPosition: NodeOptionStyle['textPosition'];
+  textColor: NodeOptionStyle['textColor'];
+  zoomLevel: NodeOptionStyle['zoomLevel'];
 }) {
   let { globalScale, ctx, node, R, texts, textColor, textPosition, zoomLevel } = options;
 
@@ -166,3 +161,18 @@ function drawTextBackground(options: {
 
   return bckgDimensions;
 }
+
+export const nodePointerAreaPaint =
+  (node: NodeObject, color: string, ctx: CanvasRenderingContext2D, globalScale: number) =>
+  (nodeStyle: Record<string, NodeStyle>) => {
+    if (node.x === undefined || node.y === undefined) {
+      return;
+    }
+    ctx.fillStyle = color;
+    const { x, y } = node;
+    const { size } = handleStyle(node, nodeStyle);
+    ctx.beginPath();
+    const R = Math.sqrt(Math.max(0, size)) * BASIC_NODE_R + 1;
+    ctx.arc(x, y, R, 0, 2 * Math.PI, false);
+    ctx.fill();
+  };
