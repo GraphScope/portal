@@ -32,7 +32,9 @@ export const dagreLayout = (data, options) => {
       }),
     ),
   );
-  edges.forEach(link => g.setEdge(link[linkSource], link[linkTarget], Object.assign({}, link)));
+  edges.forEach(link => {
+    g.setEdge(link[linkSource], link[linkTarget], Object.assign({}, link));
+  });
 
   dagre.layout(g);
 

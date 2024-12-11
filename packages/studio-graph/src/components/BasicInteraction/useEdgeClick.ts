@@ -1,6 +1,6 @@
-import { useContext } from './useContext';
 import { useEffect } from 'react';
-import { getDataMap } from './utils';
+import { useContext, getDataMap } from '../../';
+
 const useEdgeClick = () => {
   const { store, updateStore } = useContext();
   const { emitter, data, graph } = store;
@@ -8,16 +8,15 @@ const useEdgeClick = () => {
   useEffect(() => {
     if (emitter && graph) {
       const dataMap = getDataMap(data);
-
       emitter.on('edge:click', (edge: any) => {
         const { id } = edge;
-        const { source, target } = dataMap.get(id);
+        const { source, target } = dataMap.get(id) || {};
 
-        if (edge) {
+        if (edge && source && target) {
           updateStore(draft => {
             draft.nodeStatus = {
-              [source]: { hovering: true },
-              [target]: { hovering: true },
+              [source.id]: { hovering: true },
+              [target.id]: { hovering: true },
             };
             draft.edgeStatus = {
               [id]: { selected: true },

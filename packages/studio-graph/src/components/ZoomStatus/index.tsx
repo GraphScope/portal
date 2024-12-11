@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../../';
 import { ForceGraphInstance } from 'force-graph';
 import { Typography, Space } from 'antd';
 interface IZoomStatusProps {}

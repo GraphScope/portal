@@ -1,4 +1,4 @@
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../useContext';
 import { getGroups } from './utils';
 import { Utils } from '@graphscope/studio-components';
 import { ForceGraphInstance } from 'force-graph';

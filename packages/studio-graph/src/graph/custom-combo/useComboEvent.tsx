@@ -1,4 +1,4 @@
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../useContext';
 import { useEffect } from 'react';
 import { ForceGraphInstance } from 'force-graph';
 import { Utils } from '@graphscope/studio-components';

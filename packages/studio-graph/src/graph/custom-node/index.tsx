@@ -1,37 +1,44 @@
 import { NodeObject } from 'force-graph';
-import { StyleConfig } from '../../hooks/typing';
-import { handleStyle } from '../handleStyle';
-import { handleStatus } from '../handleStatus';
+import { StyleConfig } from '../types';
+import { handleStyle } from '../utils/handleStyle';
+import { handleStatus } from '../utils/handleStatus';
 import { HOVERING_NODE_COLOR, BASIC_NODE_R, SELECTED_NODE_COLOR, NODE_TEXT_COLOR } from '../const';
 import { drawText } from './draw';
-import { icons } from '../../icons';
+import { icons } from '../custom-icons';
+export interface NodeStyleOptions {
+  textPosition: 'top' | 'bottom' | 'left' | 'right' | 'center';
+  textColor: string;
+  iconColor: string;
+  iconSize: string;
+  zoomLevel: number[];
+}
+const defaultNodeOptions: NodeStyleOptions = {
+  textPosition: 'bottom',
+  textColor: '#000',
+  iconColor: '#fff',
+  iconSize: '16px',
+  zoomLevel: [3, 15],
+};
+
 export const nodeCanvasObject =
   (node: NodeObject, ctx: CanvasRenderingContext2D, globalScale: number) =>
   (nodeStyle: StyleConfig, nodeStatus: any) => {
     if (node.x === undefined || node.y === undefined) {
       return;
     }
-
     const style = handleStyle(node, nodeStyle);
     const status = handleStatus(node, nodeStatus);
-    const { color, size, caption, icon } = style;
-
+    const { color, size, caption, icon, options = {} } = style;
     const { selected, hovering } = status;
-
+    const { zoomLevel = defaultNodeOptions.zoomLevel } = options;
     const texts = caption.map(c => {
       //@ts-ignore
       return node.properties && node.properties[c];
     });
-
-    //@ts-ignore
-    // console.log('caption', caption, textLabel, node.properties);
-
     const R = Math.sqrt(Math.max(0, size)) * BASIC_NODE_R + 1;
 
-    // halo shape
+    // draw holo shape
     if (selected || hovering) {
-      //add ring just for highlighted nodes
-
       ctx.beginPath();
       ctx.arc(node.x, node.y, R * 1.2, 0, 2 * Math.PI, false);
       ctx.fillStyle = SELECTED_NODE_COLOR;
@@ -41,71 +48,121 @@ export const nodeCanvasObject =
       ctx.fill();
     }
 
-    // circle keyshape
+    // draw keyshape
     ctx.beginPath();
     ctx.arc(node.x, node.y, R, 0, 2 * Math.PI, false);
     ctx.fillStyle = color;
     ctx.fill();
 
-    // icon shape
-
-    if (icon && icon !== '' && globalScale > 3) {
-      //@TODO
+    // draw icon
+    if (icon && icon !== '' && globalScale > zoomLevel[0] && globalScale < zoomLevel[1]) {
+      const { iconColor = defaultNodeOptions.iconColor, iconSize = `${R}px` || defaultNodeOptions.iconSize } =
+        options as NodeStyleOptions;
       const unicodeIcon = icons[icon] || '';
       // 绘制图标
-      ctx.font = `${R}px iconfont`;
+      ctx.font = `${iconSize} iconfont`;
       ctx.textAlign = 'center'; // 水平居中对齐
       ctx.textBaseline = 'middle'; // 垂直居中对齐
-      ctx.fillStyle = '#fff'; // 图标颜色
+      ctx.fillStyle = iconColor; // 图标颜色
       ctx.fillText(unicodeIcon, node.x, node.y);
     }
 
-    // if (captionStatus === 'display' && textLabel) {
-    //   const fontSize = Math.min(0.5 * globalScale, 14 / globalScale);
-    //   if (globalScale > 3 && globalScale < 15) {
-    //     ctx.font = `${fontSize}px Sans-Serif`;
-    //     const textWidth = ctx.measureText(textLabel).width;
-    //     const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
-    //     ctx.fillStyle = NODE_TEXT_COLOR;
-    //     //@ts-ignore
-    //     ctx.fillRect(node.x - bckgDimensions[0] / 2, 1.2 * R + node.y - bckgDimensions[1] / 2, ...bckgDimensions);
-    //     ctx.textAlign = 'center';
-    //     ctx.textBaseline = 'middle';
-    //     ctx.fillStyle = color;
-    //     ctx.fillText(textLabel, node.x, node.y + 1.2 * R);
-    //     // @ts-ignore
-    //     node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
-    //   }
-    //   if (globalScale >= 15) {
-    //     const fontSize = 16 / globalScale;
-    //     ctx.font = `${fontSize}px Sans-Serif`;
-    //     ctx.fillStyle = NODE_TEXT_COLOR;
-    //     ctx.textAlign = 'center';
-    //     ctx.textBaseline = 'middle';
-    //     ctx.fillStyle = '#fff';
-    //     drawText(ctx, {
-    //       text: textLabel,
-    //       x: node.x,
-    //       y: node.y + fontSize / 2,
-    //       maxWidth: R * 2 * 0.8, //预留 20% pandding
-    //       lineHeight: fontSize * 1.2,
-    //     });
-    //   }
-    // }
+    // draw label
+    drawLabel({
+      globalScale,
+      ctx,
+      R,
+      texts,
+      node,
+      textColor: options.textColor || color || defaultNodeOptions.textColor,
+      textPosition: options.textPosition || defaultNodeOptions.textPosition,
+      zoomLevel: zoomLevel,
+    });
 
-    if (texts.length > 0) {
-      if (globalScale > 2) {
-        const fontSize = 2; //14 / globalScale;
-        ctx.font = `${fontSize}px Sans-Serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = color;
-        const lineHeight = fontSize * 1.2;
-        texts.forEach((line, index) => {
-          ctx.fillText(line, node.x || 0, (node.y || 0) + R + (0.5 + index) * lineHeight);
-        });
-      }
-    }
     ctx.restore();
     return;
   };
+
+function drawLabel(options: {
+  globalScale: number;
+  ctx: CanvasRenderingContext2D;
+  node: any;
+  R: number;
+  texts: string[];
+  textPosition: NodeStyleOptions['textPosition'];
+  textColor: NodeStyleOptions['textColor'];
+  zoomLevel: NodeStyleOptions['zoomLevel'];
+}) {
+  let { globalScale, ctx, node, R, texts, textColor, textPosition, zoomLevel } = options;
+
+  if (texts.length === 0 || globalScale < zoomLevel[0]) {
+    return;
+  }
+  if (globalScale >= zoomLevel[1]) {
+    const fontSize = 14 / globalScale;
+    ctx.font = `${fontSize}px Sans-Serif`;
+    ctx.fillStyle = NODE_TEXT_COLOR;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#fff';
+    drawText(ctx, {
+      text: texts.join(' '),
+      x: node.x,
+      y: node.y + fontSize / 2,
+      maxWidth: R * 2 * 0.8, //预留 20% pandding
+      lineHeight: fontSize * 1.2,
+    });
+  }
+  if (globalScale >= zoomLevel[0] && globalScale < zoomLevel[1]) {
+    const fontSize = 2; //14 / globalScale;
+    const lineHeight = fontSize * 1.2;
+    let textX = node.x;
+    let textY = node.y;
+    if (textPosition === 'center') {
+      textX = node.x;
+      textY = node.y;
+      const bckgDimensions = drawTextBackground({ ctx, texts, fontSize, textX, textY });
+      // @ts-ignore
+      node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
+    } else if (textPosition === 'top') {
+      textX = node.x;
+      textY = node.y - R - lineHeight / 2;
+    } else if (textPosition === 'bottom') {
+      textX = node.x;
+      textY = node.y + R + lineHeight / 2;
+    } else if (textPosition === 'left') {
+      textX = node.x - R - lineHeight / 2;
+    } else if (textPosition === 'right') {
+      textX = node.x + R + lineHeight / 2;
+    }
+
+    ctx.font = `${fontSize}px Sans-Serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = textColor;
+    texts.forEach((line, index) => {
+      ctx.fillText(line, textX, textY + index * lineHeight);
+    });
+  }
+}
+function drawTextBackground(options: {
+  ctx: CanvasRenderingContext2D;
+  texts: string[];
+  fontSize: number;
+  textX: number;
+  textY: number;
+}) {
+  const { texts, fontSize, textX, textY, ctx } = options;
+  const lineHeight = fontSize * 1.2;
+  let textWidth = 0;
+  let textHeight = lineHeight * texts.length;
+  texts.forEach((text, index) => {
+    textWidth = Math.max(ctx.measureText(text).width, textWidth);
+  });
+  const bckgDimensions = [textWidth, textHeight].map(n => n + fontSize * 0.2); // some padding
+  ctx.fillStyle = NODE_TEXT_COLOR;
+  //@ts-ignore
+  ctx.fillRect(textX - bckgDimensions[0] / 2, textY - bckgDimensions[1] / 2, ...bckgDimensions);
+
+  return bckgDimensions;
+}

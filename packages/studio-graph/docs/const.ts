@@ -17,7 +17,9 @@ export const data = {
       source: 'id-1',
       target: 'id-2',
       id: 'e1',
-      properties: {},
+      properties: {
+        weight: 0.8,
+      },
     },
   ],
 };

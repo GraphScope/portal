@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Tooltip, Button } from 'antd';
 import { ClearOutlined } from '@ant-design/icons';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../../';
 
 interface IReportProps {}
 

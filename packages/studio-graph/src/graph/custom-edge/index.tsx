@@ -1,7 +1,7 @@
 import { NodeObject, LinkObject } from 'force-graph';
-import { StyleConfig } from '../../hooks/typing';
-import { handleStyle } from '../handleStyle';
-import { handleStatus } from '../handleStatus';
+import { StyleConfig } from '../types';
+import { handleStyle } from '../utils/handleStyle';
+import { handleStatus } from '../utils/handleStatus';
 import { HOVERING_NODE_COLOR, BASIC_NODE_R, SELECTED_NODE_COLOR, NODE_TEXT_COLOR } from '../const';
 
 export const linkCanvasObject =

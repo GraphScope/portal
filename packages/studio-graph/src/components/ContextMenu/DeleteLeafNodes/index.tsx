@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Typography, Button } from 'antd';
-import { ShareAltOutlined, DeleteColumnOutlined } from '@ant-design/icons';
-import { useContext } from '../../../hooks/useContext';
-import { getDataMap } from '../../Prepare/utils';
+import { Button } from 'antd';
+import { DeleteColumnOutlined } from '@ant-design/icons';
+import { useContext, getDataMap } from '../../../';
+
 interface IDeleteLeafNodesProps {}
 
 const DeleteLeafNodes: React.FunctionComponent<IDeleteLeafNodesProps> = props => {

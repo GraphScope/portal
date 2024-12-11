@@ -1,6 +1,6 @@
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../useContext';
 import { useEffect } from 'react';
-import { handleStyle } from '../handleStyle';
+import { handleStyle } from '../utils/handleStyle';
 import { BASIC_NODE_R, SELECTED_EDGE_COLOR } from '../const';
 
 import { nodeCanvasObject } from '../custom-node';

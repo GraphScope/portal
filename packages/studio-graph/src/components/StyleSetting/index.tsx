@@ -3,7 +3,7 @@ import { Typography, Flex, Space } from 'antd';
 const { Title, Text } = Typography;
 import { FormattedMessage } from 'react-intl';
 import Legend from './legend';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../../';
 import { Utils } from '@graphscope/studio-components';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import AdvancedSetting from './Advanced';

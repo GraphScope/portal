@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Menu } from 'antd';
-import { useContext } from '../../../hooks/useContext';
-import { getDataMap } from '../../Prepare/utils';
+import { useContext, getDataMap, type GraphSchema } from '../../../';
 import { handleExpand, applyStatus } from './utils';
-import type { NodeData } from '../../../graph/types';
-import type { GraphSchema } from '../../../hooks/typing';
 
 interface INeighborQueryProps {}
 
@@ -81,7 +78,7 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
         draft.nodeStatus = nodeStatus;
         draft.edgeStatus = edgeStatus;
         draft.isLoading = false;
-        draft.focusNodes = res.nodes.map(item => item.id);
+        // draft.focusNodes = res.nodes.map(item => item.id);
       });
     } else {
       updateStore(draft => {

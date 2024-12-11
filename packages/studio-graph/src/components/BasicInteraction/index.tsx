@@ -1,6 +1,6 @@
 import * as React from 'react';
-import useNodeClick from '../../hooks/useNodeClick';
-import useEdgeClick from '../../hooks/useEdgeClick';
+import useNodeClick from './useNodeClick';
+import useEdgeClick from './useEdgeClick';
 import useComboEvent from '../../graph/custom-combo/useComboEvent';
 import { useFoucs } from './useFoucs';
 interface IBasicInteractionProps {}

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Flex, Typography, Space, Tag, theme, Radio, Button, Select } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { sizes, widths, colors } from '../../../graph/const';
-import { icons } from '../../../icons/index';
+import { icons } from '../../../graph/custom-icons/index';
 const { useToken } = theme;
 export interface ILegnedOption {
   /** 属性 */
