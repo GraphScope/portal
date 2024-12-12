@@ -1,17 +1,15 @@
-import { LinkObject } from 'force-graph';
-import { EdgeStyle } from '../types';
-import { handleStyle } from '../utils/handleStyle';
-import { handleStatus } from '../utils/handleStatus';
+import { EdgeStyle, EdgeData } from '../types';
+import { handleEdgeStyle } from '../utils/handleStyle';
 import { HOVERING_NODE_COLOR, BASIC_NODE_R, SELECTED_NODE_COLOR, NODE_TEXT_COLOR } from '../const';
 
 export const linkCanvasObject =
-  (link: LinkObject, ctx: CanvasRenderingContext2D, globalScale: number) =>
+  (link: EdgeData, ctx: CanvasRenderingContext2D, globalScale: number) =>
   (edgeStyle: Record<string, EdgeStyle>, nodeStatus: any, disabled: boolean) => {
     if (disabled || globalScale < 3) {
       return;
     }
 
-    const style = handleStyle<EdgeStyle>(link, edgeStyle, 'edge');
+    const style = handleEdgeStyle(link, edgeStyle);
     const { color, size, caption, icon } = style;
     //@ts-ignore
     const label = link.properties && link.properties[caption];

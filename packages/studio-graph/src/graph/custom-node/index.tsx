@@ -1,18 +1,17 @@
-import { NodeObject } from 'force-graph';
-import { NodeStyle, NodeOptionStyle } from '../types';
-import { handleStyle, defaultNodeStyle } from '../utils/handleStyle';
+import { NodeStyle, NodeOptionStyle, NodeData } from '../types';
+import { handleNodeStyle, defaultNodeStyle } from '../utils/handleStyle';
 import { handleStatus } from '../utils/handleStatus';
 import { HOVERING_NODE_COLOR, BASIC_NODE_R, SELECTED_NODE_COLOR, NODE_TEXT_COLOR } from '../const';
 import { drawText } from './draw';
 import { icons } from '../custom-icons';
 
 export const nodeCanvasObject =
-  (node: NodeObject, ctx: CanvasRenderingContext2D, globalScale: number) =>
+  (node: NodeData, ctx: CanvasRenderingContext2D, globalScale: number) =>
   (nodeStyle: Record<string, NodeStyle>, nodeStatus: any) => {
     if (node.x === undefined || node.y === undefined) {
       return;
     }
-    const style = handleStyle(node, nodeStyle);
+    const style = handleNodeStyle(node, nodeStyle);
     const status = handleStatus(node, nodeStatus);
     const { color, size, caption, icon } = style;
     const R = Math.sqrt(Math.max(0, size)) * BASIC_NODE_R + 1;
@@ -25,12 +24,11 @@ export const nodeCanvasObject =
         textColor: color,
       },
       style.options,
-    );
+    ) as NodeOptionStyle;
 
     const { selected, hovering } = status;
     const { zoomLevel, iconColor, iconSize, textColor, textPosition } = options;
     const texts = caption.map(c => {
-      //@ts-ignore
       return node.properties && node.properties[c];
     });
 
@@ -163,14 +161,14 @@ function drawTextBackground(options: {
 }
 
 export const nodePointerAreaPaint =
-  (node: NodeObject, color: string, ctx: CanvasRenderingContext2D, globalScale: number) =>
+  (node: NodeData, color: string, ctx: CanvasRenderingContext2D, globalScale: number) =>
   (nodeStyle: Record<string, NodeStyle>) => {
     if (node.x === undefined || node.y === undefined) {
       return;
     }
     ctx.fillStyle = color;
     const { x, y } = node;
-    const { size } = handleStyle(node, nodeStyle);
+    const { size } = handleNodeStyle(node, nodeStyle);
     ctx.beginPath();
     const R = Math.sqrt(Math.max(0, size)) * BASIC_NODE_R + 1;
     ctx.arc(x, y, R, 0, 2 * Math.PI, false);

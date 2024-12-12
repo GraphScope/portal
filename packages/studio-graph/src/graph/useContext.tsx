@@ -1,6 +1,17 @@
 import React from 'react';
 import StoreProvider, { useContext as useZustandContext } from '@graphscope/use-zustand';
-import type { NodeStyle, EdgeStyle, Emitter, Graph, GraphData, GraphSchema, StatusConfig } from './types';
+import type {
+  NodeStyle,
+  EdgeStyle,
+  Emitter,
+  Graph,
+  GraphData,
+  GraphSchema,
+  NodeStatus,
+  EdgeStatus,
+  ComboData,
+  Layout,
+} from './types';
 
 export type IGetServices = <T extends { id: string; query: (...args: any[]) => Promise<any> }>(
   id: T['id'],
@@ -30,7 +41,7 @@ export type IStore = {
   /**
    * cluster combos
    */
-  combos: any[];
+  combos: ComboData[];
   /**
    * width of graph
    */
@@ -48,17 +59,14 @@ export type IStore = {
   emitter: null | Emitter;
   nodeStyle: Record<string, NodeStyle>;
   edgeStyle: Record<string, EdgeStyle>;
-  nodeStatus: Record<string, StatusConfig>;
-  edgeStatus: Record<string, StatusConfig>;
+  nodeStatus: Record<string, NodeStatus>;
+  edgeStatus: Record<string, EdgeStatus>;
   graphId: string;
   schema: GraphSchema;
   isLoading: boolean;
   getService: IGetServices;
   reheatSimulation: boolean;
-  layout: {
-    type: string;
-    options: Record<string, any>;
-  };
+  layout: Layout;
   focusNodes: string[];
 };
 

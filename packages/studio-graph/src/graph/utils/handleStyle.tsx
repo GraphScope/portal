@@ -1,6 +1,7 @@
 import { DEFAULT_EDGE_COLOR, DEFAULT_NODE_COLOR, DEFAULT_NODE_SIZE, DEFAULT_EDGE_WIDTH } from '../const';
-import type { NodeStyle, EdgeStyle } from '../types';
-export const defaultEdgeStyle = {
+import type { NodeStyle, EdgeStyle, NodeData, EdgeData } from '../types';
+
+export const defaultEdgeStyle: EdgeStyle = {
   color: DEFAULT_EDGE_COLOR,
   size: DEFAULT_EDGE_WIDTH,
   caption: [],
@@ -10,7 +11,7 @@ export const defaultEdgeStyle = {
     arrowPosition: 0.9,
   },
 };
-export const defaultNodeStyle = {
+export const defaultNodeStyle: NodeStyle = {
   color: DEFAULT_NODE_COLOR,
   size: DEFAULT_NODE_SIZE,
   caption: [],
@@ -21,15 +22,20 @@ export const defaultNodeStyle = {
     zoomLevel: [3, 15],
   },
 };
-export const getNodeStyle = (node: NodeStyle) => {};
-export function handleStyle<T>(item, runtimeStyle: Record<string, T>, type?: 'node' | 'edge'): T {
+
+export function handleNodeStyle(item: NodeData, runtimeStyle: Record<string, NodeStyle>): NodeStyle {
   const { id, label, __style } = item;
-  let _style = runtimeStyle[id] || runtimeStyle[label] || __style;
+  let _style = runtimeStyle[id] || runtimeStyle[String(label)] || __style;
   if (_style) {
     return _style;
   }
-  if (type === 'edge') {
-    return defaultEdgeStyle as T;
+  return defaultNodeStyle;
+}
+export function handleEdgeStyle(item: EdgeData, runtimeStyle: Record<string, EdgeStyle>): EdgeStyle {
+  const { id, label, __style } = item;
+  let _style = runtimeStyle[id] || runtimeStyle[String(label)] || __style;
+  if (_style) {
+    return _style;
   }
-  return defaultNodeStyle as T;
+  return defaultEdgeStyle;
 }

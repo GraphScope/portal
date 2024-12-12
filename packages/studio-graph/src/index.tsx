@@ -6,7 +6,6 @@ export * from './components';
 export * from './graph/types';
 
 export { useContext, GraphProvider } from './graph/useContext';
-export { default as useCombos } from './graph/custom-combo/useCombos';
 export { getDataMap, getStyleConfig } from './graph/utils';
 export { registerIcons } from './graph/custom-icons';
 
@@ -14,3 +13,4 @@ export { default as CypherServices, queryStatement } from './services/cypher';
 
 export type { IServiceQueries, IQueryTypes, IQueryStatement } from './services/cypher';
 export type { INeighborQueryData, INeighborQueryItems } from './components/ContextMenu/NeighborQuery';
+export { useApis } from './graph/hooks/useApis';
