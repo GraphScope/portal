@@ -13,7 +13,7 @@ title: 样式相关
 
 ```jsx
 import React, { useEffect } from 'react';
-import { Canvas, GraphProvider, Prepare, useContext } from '@graphscope/studio-graph';
+import { Canvas, GraphProvider, Prepare, useContext, ZoomStatus } from '@graphscope/studio-graph';
 import { data, schema } from './const';
 const CustomGraphFetch = () => {
   const { store, updateStore } = useContext();
@@ -35,10 +35,11 @@ const CustomGraphFetch = () => {
 };
 export default () => {
   return (
-    <div style={{ height: '100px' }}>
+    <div style={{ height: '100px', position: 'relative' }}>
       <GraphProvider id="graph-3">
         <CustomGraphFetch />
         <Canvas />
+        <ZoomStatus />
       </GraphProvider>
     </div>
   );

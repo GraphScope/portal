@@ -78,7 +78,7 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
         draft.nodeStatus = nodeStatus;
         draft.edgeStatus = edgeStatus;
         draft.isLoading = false;
-        // draft.focusNodes = res.nodes.map(item => item.id);
+        draft.focusNodes = res.nodes.map(item => item.id);
       });
     } else {
       updateStore(draft => {
@@ -86,10 +86,6 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
       });
     }
   };
-
-  // if (items.length === 0) {
-  //   return null;
-  // }
 
   return (
     <div ref={MenuRef}>
@@ -107,6 +103,7 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
           {
             key: 'NeighborQuery',
             label: 'NeighborQuery',
+            //@ts-ignore
             children: itemMap[selectNode.label],
           },
         ]}

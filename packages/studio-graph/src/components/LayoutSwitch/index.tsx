@@ -23,9 +23,11 @@ const options = [
   getOption('force-combo', 'Force Combo'),
   getOption('force-dagre', 'Force Dagre'),
   getOption('dagre', 'Dagre Layout'),
+  getOption('circle-pack', 'Circle Pack'),
 ];
 const LayoutContent = () => {
   const { store, updateStore } = useContext();
+  const { layout, graph } = store;
   const handleChange = e => {
     updateStore(draft => {
       draft.layout = {
@@ -34,8 +36,7 @@ const LayoutContent = () => {
       };
     });
   };
-
-  return <Radio.Group block options={options} defaultValue="force" optionType="button" onChange={handleChange} />;
+  return <Radio.Group block options={options} defaultValue={layout.type} optionType="button" onChange={handleChange} />;
 };
 const LayoutSwitch: React.FunctionComponent<ILayoutSwitchProps> = props => {
   return (

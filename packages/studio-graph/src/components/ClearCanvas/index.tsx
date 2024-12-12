@@ -19,6 +19,7 @@ const ClearCanvas: React.FunctionComponent<IReportProps> = props => {
         options: {},
       };
     });
+
     if (graph) {
       graph.zoomToFit();
       //@ts-ignore

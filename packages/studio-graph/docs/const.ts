@@ -5,11 +5,14 @@ export const data = {
       properties: {
         name: 'first node',
         age: 18,
+        cluster: 'c0',
       },
     },
     {
       id: 'id-2',
-      properties: {},
+      properties: {
+        cluster: 'c1',
+      },
     },
   ],
   edges: [

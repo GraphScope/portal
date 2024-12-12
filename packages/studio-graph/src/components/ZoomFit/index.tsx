@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, TooltipProps, Tooltip } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { useContext } from '../../';
+import { ForceGraphInstance, useContext } from '../../';
 import { Icons, useStudioProvier } from '@graphscope/studio-components';
 
 export interface IZoomFitProps {
@@ -13,15 +13,23 @@ const ZoomFit: React.FunctionComponent<IZoomFitProps> = props => {
   const { title = 'Zoom to fitview', placement = 'left' } = props;
   const { store } = useContext();
   const { graph } = store;
-  const { isLight } = useStudioProvier();
-  const color = !isLight ? '#ddd' : '#000';
+
   const handleClick = () => {
-    graph?.zoomToFit(1000);
+    if (graph) {
+      const { nodes } = graph.graphData();
+      const isSingleNode = nodes.length === 1;
+      if (isSingleNode) {
+        (graph as ForceGraphInstance).centerAt(0, 0);
+        (graph as ForceGraphInstance).zoom(6, 600);
+      } else {
+        graph.zoomToFit(600);
+      }
+    }
   };
 
   return (
     <Tooltip title={<FormattedMessage id={`${title}`} />} placement={placement}>
-      <Button onClick={handleClick} icon={<Icons.ZoomFit style={{ color }} />} type="text"></Button>
+      <Button onClick={handleClick} icon={<Icons.ZoomFit />} type="text"></Button>
     </Tooltip>
   );
 };

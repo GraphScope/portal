@@ -1,21 +1,20 @@
 import * as React from 'react';
 import { Button, Tooltip } from 'antd';
-import { Icons, useStudioProvier } from '@graphscope/studio-components';
-import { useCombos } from '../../index';
+import { Icons } from '@graphscope/studio-components';
+import { useApis } from '../../index';
 import { FormattedMessage } from 'react-intl';
 export interface IRunClusterProps {
   clusterKey?: string;
 }
 
 const RunCluster: React.FunctionComponent<IRunClusterProps> = props => {
-  const { runCombos, clearCombos } = useCombos();
   const [state, setState] = React.useState({
     cluster: false,
   });
+  const { runCombos, clearCombos } = useApis();
 
   const { cluster } = state;
-  const { isLight } = useStudioProvier();
-  const color = !isLight ? '#ddd' : '#000';
+
   const handleClick = () => {
     setState(preState => {
       return {
@@ -32,7 +31,7 @@ const RunCluster: React.FunctionComponent<IRunClusterProps> = props => {
 
   return (
     <Tooltip title={<FormattedMessage id="Clustering layout" />} placement="left">
-      <Button onClick={handleClick} icon={<Icons.Cluster style={{ color: color }} />} type="text"></Button>
+      <Button onClick={handleClick} icon={<Icons.Cluster />} type="text"></Button>
     </Tooltip>
   );
 };
