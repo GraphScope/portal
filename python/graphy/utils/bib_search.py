@@ -72,7 +72,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
         self.web_data_folder = web_data_folder
 
-        self.request_interval = 10
+        self.request_interval = 20
 
     def _formulate_query(self, query):
         return re.sub(r"[^a-zA-Z0-9, ]", "_", query.strip())
@@ -457,6 +457,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 "not a robot" in driver.page_source
                 or "may be sending automated queries" in driver.page_source
                 or "您的计算机网络中存在异常流量" in driver.page_source
+                or "人机身份验证" in driver.page_source
             ):
                 logger.error("============== DETECTED AS A SPIDER ===============")
             parser = LexborHTMLParser(driver.page_source)
@@ -514,9 +515,9 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 # similarity = difflib.SequenceMatcher(
                 #     None, title.lower(), query.lower()
                 # ).ratio()
-                similarity = StringSimilarity.semantic_similarity(
-                    title.lower(), query.lower()
-                )
+                # similarity = StringSimilarity.semantic_similarity(
+                #     title.lower(), query.lower()
+                # )
                 logger.info(
                     f"Scholar compared with: {query}, Found paper: {title} with similarity {similarity}"
                 )
@@ -873,6 +874,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 "not a robot" in driver.page_source
                 or "may be sending automated queries" in driver.page_source
                 or "您的计算机网络中存在异常流量" in driver.page_source
+                or "人机身份验证" in driver.page_source
             )
 
             return element_present or text_present
@@ -963,6 +965,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                             )
                         except TimeoutException as e:
                             logger.error(f"Cannot Get Cited by Timeout Error: {e}")
+                            logger.error(driver.page_source)
                         except Exception as e:
                             logger.error(f"Cannot Get Cited by Error: {e}")
 
@@ -974,6 +977,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                                 or "may be sending automated queries"
                                 in driver.page_source
                                 or "您的计算机网络中存在异常流量" in driver.page_source
+                                or "人机身份验证" in driver.page_source
                             ):
                                 logger.error(
                                     f"============== DETECTED AS A ROBOT {query} ============="
