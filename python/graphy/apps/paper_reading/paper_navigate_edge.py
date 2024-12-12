@@ -167,7 +167,7 @@ class PaperNavigateEdge(AbstractEdge):
         link_queue = Queue()
         output_queue = Queue()
 
-        logger.info("================= START NAVIGATE ==============")
+        logger.warning(f"================= START NAVIGATE ==============")
         paper_data_id_list = []
         for paper in input:
             if not paper:
@@ -379,7 +379,7 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
                 download_folder=self.paper_download_dir,
                 meta_folder=self.meta_folder_dir,
             )
-            download_list = arxiv_fetcher.download_paper(link, 1)
+            download_list = arxiv_fetcher.download_paper(link, 5)
 
             if len(download_list) == 0:
                 logger.info(f"PASS {link} to SCHOLAR FOR FURTHER SEARCH")
@@ -493,7 +493,7 @@ class PaperNavigateScholarEdge(PaperNavigateEdge):
                 scholar_link_queue.task_done()
                 continue
 
-            logger.info(
+            logger.error(
                 f"--------------  SCHOLAR DOWNLOAD WORKER: {link}  ------------------"
             )
 
@@ -525,7 +525,7 @@ class PaperNavigateScholarEdge(PaperNavigateEdge):
 
             scholar_link_queue.task_done()
 
-            logger.info(
+            logger.error(
                 f"--------------  FINISH SCHOLAR WORKER: {link}  ------------------"
             )
 

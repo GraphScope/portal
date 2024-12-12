@@ -602,6 +602,7 @@ class PaperInspector(BaseNode):
 
             if not paper_file_path:
                 logger.error("No 'paper_file_path' provided in input data.")
+                logger.error(f"create fake extractor {paper_meta_path}")
                 if not paper_meta_path:
                     continue
             try:

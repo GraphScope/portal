@@ -26,6 +26,7 @@ import time
 import threading
 
 from google_scholar_py import CustomGoogleScholarOrganic
+from .string_similarity import StringSimilarity
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +72,10 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
         self.web_data_folder = web_data_folder
 
-        self.request_interval = 5
+        self.request_interval = 10
+
+    def _formulate_query(self, query):
+        return re.sub(r"[^a-zA-Z0-9, ]", "_", query.strip())
 
     def safe_request(self, driver, link):
         with BibSearchGoogleScholar.google_scholar_request_lock:
@@ -80,13 +84,13 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             interval = time.time() - BibSearchGoogleScholar.last_request_google_scholar
             if interval < self.request_interval:
                 time_to_wait = (
-                    random.uniform(self.request_interval, self.request_interval + 5)
+                    random.uniform(self.request_interval, self.request_interval + 6)
                     - interval
                 )
 
                 time.sleep(time_to_wait)
 
-            logger.info(f"Time Issues: {time.time()} - {time_to_wait} {link}")
+            logger.warning(f"Time Issues: {time.time()} - {time_to_wait} {link}")
 
             driver.get(link)
 
@@ -429,7 +433,8 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             if page_num == 0:
                 refined_link = f"{link}"
             else:
-                refined_link = f"{link_header}?start={str(page_num)}&{link_params['hl']}&{link_params['as_sdt']}&{link_params['sciodt']}&{link_params['cites']}&scipsc="
+                refined_link = f"{link_header}?start={str(page_num)}&{link_params['hl']}&{link_params['as_sdt']}&{link_params['sciodt']}&{link_params['cites']}"
+                # refined_link = f"{link_header}?start={str(page_num)}&{link_params['hl']}&{link_params['as_sdt']}&{link_params['sciodt']}&{link_params['cites']}&scipsc="
 
             driver = self.safe_request(
                 driver=driver,
@@ -451,8 +456,9 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             if (
                 "not a robot" in driver.page_source
                 or "may be sending automated queries" in driver.page_source
+                or "您的计算机网络中存在异常流量" in driver.page_source
             ):
-                logger.error("Detected as a spider")
+                logger.error("============== DETECTED AS A SPIDER ===============")
             parser = LexborHTMLParser(driver.page_source)
 
             if get_content:
@@ -496,9 +502,21 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 title = str(time.time())
 
             if mode == "exact":
-                similarity = difflib.SequenceMatcher(
-                    None, title.lower(), query.lower()
-                ).ratio()
+                if self._formulate_query(title).lower() in query.lower():
+                    similarity = 1
+                else:
+                    similarity = StringSimilarity.ratio_similarity(
+                        title.lower(), query.lower()
+                    )
+                    # similarity = StringSimilarity.semantic_similarity(
+                    #     title.lower(), query.lower()
+                    # )
+                # similarity = difflib.SequenceMatcher(
+                #     None, title.lower(), query.lower()
+                # ).ratio()
+                similarity = StringSimilarity.semantic_similarity(
+                    title.lower(), query.lower()
+                )
                 logger.info(
                     f"Scholar compared with: {query}, Found paper: {title} with similarity {similarity}"
                 )
@@ -524,9 +542,11 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 outputs.append(this_bib)
 
             elif action == "download":
+                logger.error("start to download")
                 succ, file_path, file_name, exist = self.download(
                     driver, title, result, download_path
                 )
+                logger.error("finish to download")
 
                 if not succ and not exist:
                     logger.warning(f"Found {title}, but download failed.")
@@ -555,7 +575,6 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                                 driver, title, result, cite_directory
                             )
 
-                            logger.error(f"already get bib: {this_bib}")
                             if (
                                 "cited_by_link" in this_bib
                                 and this_bib["cited_by_link"] is not None
@@ -564,7 +583,6 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                                 this_bib["cited_by"] = self._get_cited_by_paper_names(
                                     driver, this_bib["cited_by_link"]
                                 )
-                            logger.error(f"finish use this bib")
                 except Exception as e:
                     if this_bib is None:
                         meta_file_path = None
@@ -574,10 +592,14 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                         self.persist_store.save_state(
                             self.meta_folder, file_name, this_bib
                         )
-                if meta_file_path:
+                if succ and meta_file_path:
                     outputs.append((True, file_path, meta_file_path, exist))
-                else:
-                    outputs.append((succ, file_path, meta_file_path, exist))
+                elif succ and not meta_file_path:
+                    outputs.append((True, file_path, meta_file_path, exist))
+                elif not succ and meta_file_path:
+                    outputs.append((True, None, meta_file_path, exist))
+                elif not succ and not meta_file_path:
+                    outputs.append((False, None, meta_file_path, exist))
 
             if len(outputs) >= num_per_page:
                 break
@@ -721,7 +743,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
         page_num = 0
         organic_results_data = []
-        pruned_query = re.sub(r"[^a-zA-Z0-9, ]", "_", query.strip())
+        pruned_query = self._formulate_query(query)
         logger.info(f"pruned query {pruned_query}")
 
         # parse all pages
@@ -800,7 +822,8 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             pdf_link: str = result.css_first(".gs_or_ggsm a").attrs["href"]
 
             headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36"
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
+                "referer": "https://scholar.google.com/",
             }
             response = requests.get(pdf_link, headers=headers)
 
@@ -811,18 +834,19 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 return True, file_path, scholar_name, False
             else:
                 logger.warning(
-                    f"Failed to download. Status code: {response.status_code}"
+                    f"Failed to download. Status code: {response.status_code}. Try to fix ..."
                 )
+
                 with open("fail_log.log", "a") as f:
                     f.write(file_path + "\n")
-                    f.write(pdf_link + "\n")
+                    # f.write(pdf_link + "\n")
                     f.write("STATUS CODE: " + str(response.status_code) + "\n")
                     f.write("\n")
         except Exception as e:
             logger.error(f"Download failed: {e}")
             with open("fail_log.log", "a") as f:
                 f.write(file_path + "\n")
-                f.write(pdf_link + "\n")
+                # f.write(pdf_link + "\n")
                 f.write(str(e) + "\n")
                 f.write("\n")
 
@@ -837,9 +861,18 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             except Exception:
                 element_present = False
 
+            if not element_present:
+                try:
+                    element_present = EC.presence_of_element_located(
+                        (By.ID, "gs_res_ccl_mid")
+                    )(driver)
+                except Exception:
+                    element_present = False
+
             text_present = (
                 "not a robot" in driver.page_source
                 or "may be sending automated queries" in driver.page_source
+                or "您的计算机网络中存在异常流量" in driver.page_source
             )
 
             return element_present or text_present
@@ -876,7 +909,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 if pagination:
                     while page_num <= 10:
                         # parse all pages (the first two pages)
-                        pruned_query = re.sub(r"[^a-zA-Z0-9, ]", "_", query.strip())
+                        pruned_query = self._formulate_query(query)
                         driver = self.safe_request(
                             driver=driver,
                             link=f"https://scholar.google.com/scholar?q={pruned_query}&hl=en&gl=us&start={page_num}",
@@ -911,27 +944,53 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 else:
                     # parse first page only
                     # logger.error("### START TO DOWNLOAD #####")
-                    pruned_query = re.sub(r"[^a-zA-Z0-9, ]", "_", query.strip())
+                    pruned_query = self._formulate_query(query)
                     # logger.error(pruned_query)
 
-                    driver = self.safe_request(
-                        driver=driver,
-                        link=f"https://scholar.google.com/scholar?q={pruned_query}&hl=en&gl=us&start={page_num}",
-                    )
+                    retry_times = 0
+                    max_retry_times = 3
 
-                    WebDriverWait(driver, 10).until(self.finish_load_condition())
+                    while retry_times <= max_retry_times:
+                        retry_times += 1
+                        driver = self.safe_request(
+                            driver=driver,
+                            link=f"https://scholar.google.com/scholar?q={pruned_query}&hl=zh-cn&gl=us&as_sdt=0,5&start={page_num}",
+                        )
 
-                    parser = LexborHTMLParser(driver.page_source)
-
-                    if len(parser.css(".gs_r.gs_or.gs_scl")) == 0:
-                        if "not a robot" in driver.page_source:
-                            logger.error(
-                                f"============== DETECTED AS A ROBOT {query} ============="
+                        try:
+                            WebDriverWait(driver, 10).until(
+                                self.finish_load_condition()
                             )
-                        # with open("fail_log.log", "a") as f:
-                        #     f.write(query + "\n")
-                        #     f.write("no label\n")
-                        #     f.write(driver.page_source)
+                        except TimeoutException as e:
+                            logger.error(f"Cannot Get Cited by Timeout Error: {e}")
+                        except Exception as e:
+                            logger.error(f"Cannot Get Cited by Error: {e}")
+
+                        parser = LexborHTMLParser(driver.page_source)
+
+                        if len(parser.css(".gs_r.gs_or.gs_scl")) == 0:
+                            if (
+                                "not a robot" in driver.page_source
+                                or "may be sending automated queries"
+                                in driver.page_source
+                                or "您的计算机网络中存在异常流量" in driver.page_source
+                            ):
+                                logger.error(
+                                    f"============== DETECTED AS A ROBOT {query} ============="
+                                )
+                                logger.error(
+                                    f"https://scholar.google.com/scholar?q={pruned_query}&hl=zh-cn&gl=us&start={page_num}"
+                                )
+                                logger.error(
+                                    f"===== TO RETRY {retry_times}/{max_retry_times}"
+                                )
+                                time.sleep(random.uniform(8, 15))
+                            # with open("fail_log.log", "a") as f:
+                            #     f.write(query + "\n")
+                            #     f.write("no label\n")
+                            #     f.write(driver.page_source)
+                        else:
+                            break
 
                     succ_list = self.parse(
                         driver, query, parser, mode, "download", download_path
