@@ -379,7 +379,7 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
                 download_folder=self.paper_download_dir,
                 meta_folder=self.meta_folder_dir,
             )
-            download_list = arxiv_fetcher.download_paper(link, 1)
+            download_list = arxiv_fetcher.download_paper(link, 5)
 
             if len(download_list) == 0:
                 logger.info(f"PASS {link} to SCHOLAR FOR FURTHER SEARCH")
