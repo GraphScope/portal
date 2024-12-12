@@ -25,7 +25,6 @@ export function getDataMap(data): DataMap {
     if (!id) {
       throw new Error('edge id is required');
     }
-
     const sourceNode = nodesMap.get(source);
     const targetNode = nodesMap.get(target);
 

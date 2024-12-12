@@ -1,6 +1,6 @@
 import { NodeStyle, NodeOptionStyle, NodeData } from '../types';
 import { handleNodeStyle, defaultNodeStyle } from '../utils/handleStyle';
-import { handleStatus } from '../utils/handleStatus';
+import { handleStatus, hexToRgba } from '../utils';
 import { HOVERING_NODE_COLOR, BASIC_NODE_R, SELECTED_NODE_COLOR, NODE_TEXT_COLOR } from '../const';
 import { drawText } from './draw';
 import { icons } from '../custom-icons';
@@ -36,18 +36,28 @@ export const nodeCanvasObject =
     if (selected || hovering) {
       ctx.beginPath();
       ctx.arc(node.x, node.y, R * 1.2, 0, 2 * Math.PI, false);
-      ctx.fillStyle = SELECTED_NODE_COLOR;
-      if (hovering) {
-        ctx.fillStyle = HOVERING_NODE_COLOR;
+      if (selected) {
+        ctx.fillStyle = SELECTED_NODE_COLOR;
+        // ctx.lineWidth = R * 0.2;
+        // ctx.strokeStyle = SELECTED_NODE_COLOR;
+        ctx.fill();
+        // ctx.stroke();
       }
-      ctx.fill();
+
+      if (hovering) {
+        ctx.fillStyle = hexToRgba(color, 0.5);
+        ctx.fill();
+      }
     }
 
     // draw keyshape
     ctx.beginPath();
     ctx.arc(node.x, node.y, R, 0, 2 * Math.PI, false);
-    ctx.fillStyle = color;
+    // ctx.lineWidth = R * 0.05;
+    // ctx.strokeStyle = color;
+    ctx.fillStyle = color; //hexToRgba(color, 0.2);
     ctx.fill();
+    // ctx.stroke();
 
     // draw icon
     if (icon && icon !== '' && globalScale > zoomLevel[0] && globalScale < zoomLevel[1]) {
