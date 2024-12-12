@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class StringSimilarity:
     # Load a pretrained Sentence Transformer model
-    default_model = SentenceTransformer("all-MiniLM-L6-v2")
+    # default_model = SentenceTransformer("all-MiniLM-L6-v2")
 
     @classmethod
     def levenshtein(cls, str1, str2):
@@ -61,10 +61,10 @@ class StringSimilarity:
     def ratio_similarity(cls, str1, str2):
         return SequenceMatcher(None, str1, str2).ratio()
 
-    @classmethod
-    def semantic_similarity(cls, str1, str2, semantic_model=default_model):
-        sents = [str1, str2]
-        embeddings = semantic_model.encode(sents)
-        similarities = semantic_model.similarity(embeddings, embeddings)
-        # logger.warning(f"Similarity of {str1} - {str2}: {similarities[0][1]}")
-        return similarities[0][1]
+    # @classmethod
+    # def semantic_similarity(cls, str1, str2, semantic_model=default_model):
+    #     sents = [str1, str2]
+    #     embeddings = semantic_model.encode(sents)
+    #     similarities = semantic_model.similarity(embeddings, embeddings)
+    #     # logger.warning(f"Similarity of {str1} - {str2}: {similarities[0][1]}")
+    #     return similarities[0][1]
