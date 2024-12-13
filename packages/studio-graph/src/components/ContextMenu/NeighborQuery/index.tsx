@@ -60,9 +60,7 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
       draft.isLoading = true;
     });
 
-    const query = await getService<INeighborQueryData>('queryNeighborData');
-
-    const res = await query({
+    const res = await getService<INeighborQueryData>('queryNeighborData')({
       selectIds,
       key,
     });
