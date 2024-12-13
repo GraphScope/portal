@@ -41,6 +41,7 @@ export const dagreLayout = (data, options) => {
   return {
     nodes: g.nodes().map(n => {
       const node = g.node(n);
+
       if (node) {
         delete node.width;
         delete node.height;

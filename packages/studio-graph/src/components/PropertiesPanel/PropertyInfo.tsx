@@ -22,7 +22,7 @@ const PropertyInfo: React.FunctionComponent<IPropertyInfoProps> = props => {
   const source = data.source && data.source.id;
   //@ts-ignore
   const target = data.target && data.target.id;
-  const elementStyle = nodeStyle[id] || nodeStyle[label];
+  const elementStyle = nodeStyle[id] || nodeStyle[String(label)];
   const title = type === 'node' ? 'Vertex Properties' : 'Edge Properties';
 
   const onChange = val => {
@@ -58,6 +58,7 @@ const PropertyInfo: React.FunctionComponent<IPropertyInfoProps> = props => {
         </Typography.Text>
         <Legend
           {...elementStyle}
+          //@ts-ignore
           label={label}
           type={type as 'node' | 'edge'}
           //@ts-ignore

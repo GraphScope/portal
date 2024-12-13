@@ -18,7 +18,9 @@ const DeleteNode: React.FunctionComponent<INeighborQueryProps> = props => {
       const newData = {
         nodes: draft.data.nodes.filter(node => !selectedIds.includes(node.id)),
         edges: draft.data.edges.filter(
-          edge => !selectedIds.includes(edge.source) && !selectedIds.includes(edge.target),
+          edge =>
+            !selectedIds.includes(typeof edge.source === 'object' ? edge.source.id : edge.source) &&
+            !selectedIds.includes(typeof edge.target === 'object' ? edge.target.id : edge.target),
         ),
       };
       draft.data = newData;

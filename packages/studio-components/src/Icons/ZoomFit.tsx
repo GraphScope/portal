@@ -1,12 +1,13 @@
 import * as React from 'react';
-
+import { theme } from 'antd';
 interface IZoomFitProps {
   style?: React.CSSProperties;
 }
 
 const ZoomFit: React.FunctionComponent<IZoomFitProps> = props => {
-  const { style } = props;
-  const { color, fontSize = '18px' } = style as { color: string; fontSize: string };
+  const { style = {} } = props;
+  const { token } = theme.useToken();
+  const { color = token.colorText, fontSize = '18px' } = style as { color: string; fontSize: string };
   return (
     <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width={fontSize} height={fontSize}>
       <path
