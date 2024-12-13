@@ -17,7 +17,9 @@ export const useFoucs = () => {
             x: (bbox.x[0] + bbox.x[1]) / 2,
             y: (bbox.y[0] + bbox.y[1]) / 2,
           };
-          (graph as ForceGraphInstance).centerAt(center.x, center.y, 400);
+          if ((graph as ForceGraphInstance) && (graph as ForceGraphInstance).centerAt) {
+            (graph as ForceGraphInstance).centerAt(center.x, center.y, 400);
+          }
         }
       }
     }, 200);

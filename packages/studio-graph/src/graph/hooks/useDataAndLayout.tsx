@@ -47,27 +47,30 @@ export const useDataAndLayout = () => {
     }
     const { type = 'force', options } = layout;
     const { nodes, edges: links } = data;
+    console.log('use data and layout ...');
 
     if (type === 'force' || type === 'force-dagre' || type === 'force-combo') {
+      if (render === '3D') {
+        //3D 的力导布局不去自定义
+        graph.graphData({ nodes, links });
+        return;
+      }
       resetForce(graph as ForceGraphInstance);
       const renderTime = calculateRenderTime(data.nodes.length);
       graph.cooldownTime(renderTime);
       if (type === 'force') {
-        if (render === '2D') {
-          (graph as ForceGraphInstance)
-            .d3Force('center', d3ForceCenter().strength(1))
-            .d3Force('charge', d3ForceManyBody())
-            .d3Force('link', d3ForceLink())
-            .d3Force(
-              'collide',
-              d3ForceCollide().radius(node => {
-                return handleNodeStyle(node, nodeStyle).size + 5;
-              }),
-            );
-
-          graph.graphData({ nodes, links });
-          graph.d3ReheatSimulation();
-        }
+        (graph as ForceGraphInstance)
+          .d3Force('center', d3ForceCenter().strength(1))
+          .d3Force('charge', d3ForceManyBody())
+          .d3Force('link', d3ForceLink())
+          .d3Force(
+            'collide',
+            d3ForceCollide().radius(node => {
+              return handleNodeStyle(node, nodeStyle).size + 5;
+            }),
+          );
+        graph.graphData({ nodes, links });
+        graph.d3ReheatSimulation();
       }
       if (type === 'force-dagre') {
         graph.dagMode('lr');
