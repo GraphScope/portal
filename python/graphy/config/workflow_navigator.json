@@ -1,5 +1,5 @@
 {
-  "id": "test_paper_navigator",
+  "id": "test_finance",
   "graph": {
     "inspectors": [
       {
@@ -16,14 +16,52 @@
     ],
     "navigators": [
       {
-        "name": "Reference",
+        "name": "CitedByScholar",
         "source": "PaperInspector",
         "target": "PaperInspector",
-        "method": "arxiv",
+        "method": "scholar",
         "args": {
-          "max_thread_num": 12,
-          "ref_mode": "skip"
+            "max_thread_num": 4,
+            "finish_signal": "_SCHOLAR_CITEDBY_REF_DONE",
+            "ref_mode": "skip",
+            "key_name": "cited_by"
         }
+      },
+      {
+          "name": "CitedByArxiv",
+          "source": "PaperInspector",
+          "target": "PaperInspector",
+          "method": "arxiv",
+          "args": {
+              "max_thread_num": 4,
+              "finish_signal": "_ARXIV_CITEDBY_REF_DONE",
+              "ref_mode": "skip",
+              "key_name": "cited_by"
+          }
+      },
+      {
+          "name": "ReferenceScholar",
+          "source": "PaperInspector",
+          "target": "PaperInspector",
+          "method": "scholar",
+          "args": {
+              "max_thread_num": 4,
+              "finish_signal": "_SCHOLAR_REF_DONE",
+              "ref_mode": "skip",
+              "key_name": "reference"
+          }
+      },
+      {
+          "name": "ReferenceArxiv",
+          "source": "PaperInspector",
+          "target": "PaperInspector",
+          "method": "arxiv",
+          "args": {
+              "max_thread_num": 8,
+              "finish_signal": "_ARXIV_REF_DONE",
+              "ref_mode": "skip",
+              "key_name": "reference"
+          }
       }
     ]
   }

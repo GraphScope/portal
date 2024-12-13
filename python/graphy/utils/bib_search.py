@@ -72,7 +72,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
         self.web_data_folder = web_data_folder
 
-        self.request_interval = 20
+        self.request_interval = 30
 
     def _formulate_query(self, query):
         return re.sub(r"[^a-zA-Z0-9, ]", "_", query.strip())
@@ -641,7 +641,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 [
                     link.attrs["href"]
                     for link in result.css(".gs_ri .gs_fl a")
-                    if "Cited by" in link.text()
+                    if "Cited by" in link.text() or "被引用次数" in link.text()
                 ]
             )
         except:
@@ -654,7 +654,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                     [
                         re.search(r"\d+", link.text()).group()
                         for link in result.css(".gs_ri .gs_fl a")
-                        if "Cited by" in link.text()
+                        if "Cited by" in link.text() or "被引用次数" in link.text()
                     ]
                 )
             )
@@ -989,6 +989,8 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                                     f"===== TO RETRY {retry_times}/{max_retry_times}"
                                 )
                                 time.sleep(random.uniform(8, 15))
+                            else:
+                                break
                             # with open("fail_log.log", "a") as f:
                             #     f.write(query + "\n")
                             #     f.write("no label\n")
@@ -1050,7 +1052,7 @@ class BibSearchArxiv(BibSearch):
             ("DOI", paper_info.doi),
             ("ArchivePrefix", "arXiv"),
             ("PrimaryClass", paper_info.categories[0]),
-            ("Abstract", paper_info.summary),
+            # ("Abstract", paper_info.summary),
             ("Year", paper_info.published.year),
             ("Month", paper_info.published.month),
             ("Url", [str(link) for link in paper_info.links if link.title == "pdf"][0]),
@@ -1120,6 +1122,9 @@ class BibSearchPubMed(BibSearch):
         super().__init__(persist_store=persist_store, meta_folder=meta_folder)
 
     def format_json_object(self, paper_id, paper_info):
+        start_page = paper_info.get("start_page", "")
+        end_page = paper_info.get("end_page", "")
+
         return {
             "title": paper_info["title"],
             "id": str(paper_id),
@@ -1138,7 +1143,11 @@ class BibSearchPubMed(BibSearch):
             .get("month", ""),
             "vol": paper_info.get("journal", {}).get("vol", ""),
             "issue": paper_info.get("journal", {}).get("issue", ""),
-            "page": rf'{paper_info.get("start_page", "")}--{paper_info.get("end_page", "")}',
+            "page": (
+                ""
+                if start_page == "" or end_page == ""
+                else f"{start_page}--{end_page}"
+            ),
             "abstract": paper_info.get("abstract", ""),
             "reference": [
                 {
@@ -1152,6 +1161,9 @@ class BibSearchPubMed(BibSearch):
 
     def search_by_object(self, paper_id, paper_info) -> List[str]:
         """BibTex string of the reference."""
+
+        start_page = paper_info.get("start_page", "")
+        end_page = paper_info.get("end_page", "")
 
         lines = ["@article{" + str(paper_id)]
         for k, v in [
@@ -1179,12 +1191,15 @@ class BibSearchPubMed(BibSearch):
             ("Issue", paper_info.get("journal", {}).get("issue", "")),
             (
                 "Pages",
-                rf'{paper_info.get("start_page", "")}--{paper_info.get("end_page", "")}',
+                (
+                    ""
+                    if start_page == "" or end_page == ""
+                    else f"{start_page}--{end_page}"
+                ),
             ),
         ]:
             if v is not None:
-                if v != "--":
-                    lines.append("%-13s = {%s}" % (k, v))
+                lines.append("%-13s = {%s}" % (k, v))
 
         return ("," + os.linesep).join(lines) + os.linesep + "}"
 

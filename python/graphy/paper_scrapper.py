@@ -52,7 +52,7 @@ def parse_arguments():
         "-f",
         "--workflow",
         type=str,
-        default="config/workflow.json",
+        default="config/workflow_navigator.json",
         help="Path to the workflow configuration file (default: config/workflow.json).",
     )
     parser.add_argument(
