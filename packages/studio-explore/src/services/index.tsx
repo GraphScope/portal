@@ -1,19 +1,15 @@
-import GraphScopeServices from './graphscope';
-import KuzuWasmServices from './kuzu-wasm';
+import CypherServices from './cypher';
+import GremlinServices from './gremlin';
 import { Utils } from '@graphscope/studio-components';
 export default {
-  graphscope: GraphScopeServices,
-  'kuzu-wasm': KuzuWasmServices,
+  gremlin: GremlinServices,
+  cypher: CypherServices,
 };
 
 export const getDefaultServices = () => {
-  const query_endpoint = Utils.storage.get<string>('query_endpoint');
-  if (!query_endpoint) {
-    return GraphScopeServices;
+  const query_language = Utils.storage.get<string>('query_language');
+  if (query_language === 'gremlin') {
+    return GremlinServices;
   }
-  const [engineId, graphId] = query_endpoint.split('://');
-  if (engineId === 'kuzu_wasm') {
-    return KuzuWasmServices;
-  }
-  return GraphScopeServices;
+  return CypherServices;
 };

@@ -77,7 +77,7 @@ const Result: React.FunctionComponent<IResultProps> = props => {
       label: intl.formatMessage({ id: 'Graph' }),
       key: 'graph',
       icon: <DeploymentUnitOutlined />,
-      children: <GraphView data={data} schemaData={schemaData} graphId={graphId} onQuery={onQuery} />,
+      children: <GraphView data={data} schemaData={schemaData} graphId={graphId} />,
       disabled: !isExist('graph'),
     },
     {
