@@ -31,8 +31,8 @@ export const useInit = () => {
         .width(width)
         .height(height)
         /** interaction */
-        .onNodeHover(node => {
-          emitterRef.current?.emit('node:hover', node);
+        .onNodeHover((node, prevNode) => {
+          emitterRef.current?.emit('node:hover', { node, prevNode });
         })
         .onNodeClick(node => {
           emitterRef.current?.emit('node:click', node);
