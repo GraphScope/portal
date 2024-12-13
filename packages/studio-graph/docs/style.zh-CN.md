@@ -3,6 +3,8 @@ order: 4
 title: 样式相关
 ---
 
+# 节点样式
+
 ## 01. 设置颜色/大小/文本
 
 在 `@graphscope/studio-graph`的设计中，样式数据和图数据是分离的。节点的样式数据在 `store.nodeStyle` 中，边的样式数据在 `store.edgeStyle` 中。
@@ -11,7 +13,7 @@ title: 样式相关
 
 ```jsx
 import React, { useEffect } from 'react';
-import { Canvas, GraphProvider, Prepare, useContext } from '@graphscope/studio-graph';
+import { Canvas, GraphProvider, Prepare, useContext, ZoomStatus } from '@graphscope/studio-graph';
 import { data, schema } from './const';
 const CustomGraphFetch = () => {
   const { store, updateStore } = useContext();
@@ -33,10 +35,11 @@ const CustomGraphFetch = () => {
 };
 export default () => {
   return (
-    <div style={{ height: '100px' }}>
+    <div style={{ height: '100px', position: 'relative' }}>
       <GraphProvider id="graph-3">
         <CustomGraphFetch />
         <Canvas />
+        <ZoomStatus />
       </GraphProvider>
     </div>
   );
@@ -99,7 +102,7 @@ export default () => {
 };
 ```
 
-## 官方内置图标库一览
+## 03. 官方内置图标库
 
 ```jsx
 import React, { useState, useEffect } from 'react';
@@ -129,7 +132,7 @@ export default () => {
 };
 ```
 
-## 自定义图标
+## 04. 自定义图标
 
 在实际业务使用场景中，我们需要自定义图标，我们需要先在 [iconfont](https://www.iconfont.cn/) 平台上创建一个自己的图标项目，然后选择`unicode`生成链接。如下图所示，红框选出来的即使 iconfont 的`id`
 ![register icons](./images/icons.png)
@@ -140,6 +143,117 @@ export default () => {
 import { registerIcons } from '@graphscope/studio-graph';
 const iconfontId = 'xxxxxxxxxxx';
 registerIcons(iconfontId);
+```
+
+## 05. 更多样式设置
+
+如果你需要更细节的样式设置，可以在`store.nodeStyle.options`中进行设置
+
+| `store.nodeStyle.options` | 功能描述                                               | 默认值                  |
+| ------------------------- | ------------------------------------------------------ | ----------------------- |
+| textPosition              | 设置文本的位置，枚举值: `top,bottom,left,right,center` | `bottom`                |
+| textColor                 | 设置文本的颜色                                         | `store.nodeStyle.color` |
+| iconColor                 | 设置图标颜色                                           | `#fff`                  |
+| iconSize                  | 设置图标大小                                           | `16px`                  |
+| zoomLevel                 | 缩放级别范围                                           | `[3,15] `               |
+
+注意⚠️： `store.nodeStyle.options.zoomLevel`是一个数组，每一项都是一个缩放比率(zoom ratio)默认值 `[3,15]`代表的是
+当缩放比率分为三部分，分别是 `ratio < 3`，`3 <= ratio <= 15`，`ratio > 15`
+
+- `ratio < 3` 的时候，画布处于极度缩小状态，节点的`caption`和`icon`都将隐藏。这即能提高渲染性能，也能用户看清楚图结构
+- `3 <= ratio <= 15` 的时候，画布处于正常缩放状态，节点的`caption`和`icon`将显示，且节点整体大小会根据缩放比率变化
+- `ratio > 15` 的时候，画布处于极度放大状态，节点的`icon`将隐藏，`caption`将展示在节点内部
+
+用户可以根据自己的业务策略进行修改，如下面 DEMO 所示（`zoomLevel: [3,5]`），可缩放查看节点样式的变化。
+
+```jsx
+import React, { useEffect } from 'react';
+import { Canvas, GraphProvider, Prepare, useContext, registerIcons, ZoomStatus } from '@graphscope/studio-graph';
+import { data, schema } from './const';
+registerIcons();
+const CustomGraphFetch = () => {
+  const { store, updateStore } = useContext();
+  useEffect(() => {
+    updateStore(draft => {
+      draft.data = data;
+      draft.schema = schema;
+      draft.source = data;
+      draft.nodeStyle = {
+        'id-1': {
+          color: 'blue',
+          size: 10,
+          caption: ['name'],
+          icon: 'logo',
+          options: {
+            textPosition: 'top',
+            textColor: '#000',
+            iconColor: '#fff',
+            iconSize: '8px',
+            zoomLevel: [3, 5],
+          },
+        },
+      };
+    });
+  }, []);
+  return null;
+};
+export default () => {
+  return (
+    <div style={{ height: '300px', position: 'relative' }}>
+      <GraphProvider id={String(Math.random())}>
+        <CustomGraphFetch />
+        <Canvas />
+        <ZoomStatus />
+      </GraphProvider>
+    </div>
+  );
+};
+```
+
+# 边样式
+
+| `store.edgeStatus.options` | 功能描述                                 | 默认值   |
+| -------------------------- | ---------------------------------------- | -------- |
+| arrowLength                | 方向箭头的宽度，设置为`0`则不展示        | `size*3` |
+| arrowPosition              | 箭头距离目标节点的位置，是0到1之间的数值 | `0.9`    |
+
+```jsx
+import React, { useEffect } from 'react';
+import { Canvas, GraphProvider, Prepare, useContext, registerIcons, ZoomStatus } from '@graphscope/studio-graph';
+import { data, schema } from './const';
+registerIcons();
+const CustomGraphFetch = () => {
+  const { store, updateStore } = useContext();
+  useEffect(() => {
+    updateStore(draft => {
+      draft.data = data;
+      draft.schema = schema;
+      draft.source = data;
+      draft.edgeStyle = {
+        e1: {
+          size: 2,
+          color: 'red',
+          caption: ['weight'],
+          options: {
+            arrowLength: 0,
+          },
+        },
+      };
+    });
+  }, []);
+  return null;
+};
+export default () => {
+  return (
+    <div style={{ height: '300px', position: 'relative' }}>
+      <GraphProvider id={String(Math.random())}>
+        <CustomGraphFetch />
+        <Canvas />
+        <ZoomStatus />
+      </GraphProvider>
+    </div>
+  );
+};
 ```
 
 ## 和样式相关的组件

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Select, Button, Flex, Typography, Tooltip, Space, Input, InputRef } from 'antd';
-import { useCombos, useContext } from '@graphscope/studio-graph';
+import { useApis, useContext } from '@graphscope/studio-graph';
 import { ClearOutlined, PlayCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { Utils } from '@graphscope/studio-components';
 const { storage } = Utils;

@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Menu } from 'antd';
-import { useContext } from '../../../hooks/useContext';
-import { getDataMap } from '../../Prepare/utils';
+import { useContext, getDataMap, type GraphSchema } from '../../../';
 import { handleExpand, applyStatus } from './utils';
-import type { NodeData } from '../../../graph/types';
-import type { GraphSchema } from '../../../hooks/typing';
 
 interface INeighborQueryProps {}
 
@@ -90,10 +87,6 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
     }
   };
 
-  // if (items.length === 0) {
-  //   return null;
-  // }
-
   return (
     <div ref={MenuRef}>
       <Menu
@@ -110,6 +103,7 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
           {
             key: 'NeighborQuery',
             label: 'NeighborQuery',
+            //@ts-ignore
             children: itemMap[selectNode.label],
           },
         ]}

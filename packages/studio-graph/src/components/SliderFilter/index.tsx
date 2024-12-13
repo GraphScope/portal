@@ -1,7 +1,7 @@
 import React from 'react';
 import { Slider, Button } from 'antd';
-import { useContext } from '../../hooks/useContext';
-import type { GraphData } from '../../hooks/typing';
+import { useContext, type GraphData } from '../../';
+import { getSourceId, getTargetId } from '../../graph/utils';
 interface ISliderFilterProps {}
 
 export interface IFilterCriteria {
@@ -26,8 +26,8 @@ export const filterGraphData = (data: GraphData, filter: IFilterCriteria) => {
         const [min, max] = range;
         const match = properties[prop] >= min && properties[prop] <= max;
         if (match) {
-          validNodes.add(source);
-          validNodes.add(target);
+          validNodes.add(getSourceId(source));
+          validNodes.add(getTargetId(target));
         }
         return match;
       }

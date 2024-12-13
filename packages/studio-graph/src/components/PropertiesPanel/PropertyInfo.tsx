@@ -17,8 +17,12 @@ const PropertyInfo: React.FunctionComponent<IPropertyInfoProps> = props => {
   const { store, updateStore } = useContext();
   const { nodeStyle } = store;
 
-  const { id, label, properties = {}, source, target } = data as EdgeData;
-  const elementStyle = nodeStyle[id] || nodeStyle[label];
+  const { id, label, properties = {} } = data as EdgeData;
+  //@ts-ignore
+  const source = data.source && data.source.id;
+  //@ts-ignore
+  const target = data.target && data.target.id;
+  const elementStyle = nodeStyle[id] || nodeStyle[String(label)];
   const title = type === 'node' ? 'Vertex Properties' : 'Edge Properties';
 
   const onChange = val => {
@@ -54,6 +58,7 @@ const PropertyInfo: React.FunctionComponent<IPropertyInfoProps> = props => {
         </Typography.Text>
         <Legend
           {...elementStyle}
+          //@ts-ignore
           label={label}
           type={type as 'node' | 'edge'}
           //@ts-ignore
@@ -66,7 +71,7 @@ const PropertyInfo: React.FunctionComponent<IPropertyInfoProps> = props => {
           <Typography.Text type="secondary" italic>
             source
           </Typography.Text>
-          <Typography.Text italic>{source}</Typography.Text>
+          <Typography.Text italic>{source.id}</Typography.Text>
         </Flex>
       )}
       {target && (

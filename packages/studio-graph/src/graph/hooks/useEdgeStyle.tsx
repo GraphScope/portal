@@ -1,12 +1,12 @@
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../useContext';
 import { useEffect } from 'react';
-import { handleStyle } from '../handleStyle';
-import { BASIC_NODE_R, SELECTED_EDGE_COLOR } from '../const';
+import { handleEdgeStyle } from '../utils/handleStyle';
+import { SELECTED_EDGE_COLOR } from '../const';
 
 import { linkCanvasObject } from '../custom-edge';
-import { nodeCanvasObject } from '../custom-node';
 import type { ForceGraphInstance } from 'force-graph';
 import type { ForceGraph3DInstance } from '3d-force-graph';
+import { EdgeStyle, EdgeData } from '../types';
 export const useEdgeStyle = () => {
   const { store } = useContext();
   const { graph, render, edgeStatus, edgeStyle } = store;
@@ -24,10 +24,18 @@ export const useEdgeStyle = () => {
           })
           // custom edge
           .linkCanvasObjectMode(() => 'after')
-          .linkDirectionalArrowLength(3)
-          .linkDirectionalArrowRelPos(0.9)
+          .linkDirectionalArrowLength(edge => {
+            const { options = {}, size } = handleEdgeStyle(edge as EdgeData, edgeStyle) as EdgeStyle;
+            const { arrowLength = size * 3 } = options as any;
+            return arrowLength;
+          })
+          .linkDirectionalArrowRelPos(edge => {
+            const { options = {} } = handleEdgeStyle(edge as EdgeData, edgeStyle) as EdgeStyle;
+            const { arrowPosition = 0.9 } = options as any;
+            return arrowPosition;
+          })
           .linkColor((edge: any) => {
-            const { color } = handleStyle(edge, edgeStyle, 'edge');
+            const { color } = handleEdgeStyle(edge, edgeStyle);
             const match = edgeStatus[edge.id];
             if (match && match.selected) {
               return SELECTED_EDGE_COLOR;
@@ -35,12 +43,15 @@ export const useEdgeStyle = () => {
             return color;
           })
           .linkLabel((edge: any) => {
-            const key = handleStyle(edge, edgeStyle, 'edge').caption;
-            const value = edge && edge.properties && edge.properties[key];
-            if (key && value) {
-              return `${key}: ${value}`;
-            }
-            return '';
+            const { caption } = handleEdgeStyle(edge, edgeStyle);
+            return caption
+              .map(key => {
+                const value = edge && edge.properties && edge.properties[key];
+                if (key && value) {
+                  return `${key}: ${value}`;
+                }
+              })
+              .join('');
           })
           // .onZoom(() => {
           //   if (render === '2D') {
@@ -48,7 +59,7 @@ export const useEdgeStyle = () => {
           //   }
           // })
           .linkWidth((edge: any) => {
-            const { size } = handleStyle(edge, edgeStyle, 'edge');
+            const { size } = handleEdgeStyle(edge, edgeStyle);
             const match = edgeStatus[edge.id];
             if (match && match.selected) {
               return size + 1;
@@ -59,7 +70,7 @@ export const useEdgeStyle = () => {
           .linkDirectionalParticleWidth((edge: any) => {
             const match = edgeStatus[edge.id];
             if (match && match.selected) {
-              const { size } = handleStyle(edge, edgeStyle, 'edge');
+              const { size } = handleEdgeStyle(edge, edgeStyle);
               return size + 1;
             }
             return 0;
@@ -68,7 +79,7 @@ export const useEdgeStyle = () => {
       if (render === '3D') {
         (graph as ForceGraph3DInstance)
           .linkColor((edge: any) => {
-            const { color } = handleStyle(edge, edgeStyle, 'edge');
+            const { color } = handleEdgeStyle(edge, edgeStyle);
             const match = edgeStatus[edge.id];
             if (match && match.selected) {
               return SELECTED_EDGE_COLOR;
@@ -76,15 +87,18 @@ export const useEdgeStyle = () => {
             return color;
           })
           .linkLabel((edge: any) => {
-            const key = handleStyle(edge, edgeStyle, 'edge').caption;
-            const value = edge && edge.properties && edge.properties[key];
-            if (key && value) {
-              return `${key}: ${value}`;
-            }
-            return '';
+            const { caption } = handleEdgeStyle(edge, edgeStyle);
+            return caption
+              .map(key => {
+                const value = edge && edge.properties && edge.properties[key];
+                if (key && value) {
+                  return `${key}: ${value}`;
+                }
+              })
+              .join('');
           })
           .linkWidth((edge: any) => {
-            const { size } = handleStyle(edge, edgeStyle, 'edge');
+            const { size } = handleEdgeStyle(edge, edgeStyle);
             const match = edgeStatus[edge.id];
             if (match && match.selected) {
               return size + 1;
@@ -95,7 +109,7 @@ export const useEdgeStyle = () => {
           .linkDirectionalParticleWidth((edge: any) => {
             const match = edgeStatus[edge.id];
             if (match && match.selected) {
-              const { size } = handleStyle(edge, edgeStyle, 'edge');
+              const { size } = handleEdgeStyle(edge, edgeStyle);
               return size + 1;
             }
             return 0;

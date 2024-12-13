@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Select, Button, Flex, Typography, Tooltip, InputNumber } from 'antd';
-import { useCombos, useContext } from '@graphscope/studio-graph';
+import { useApis, useContext } from '@graphscope/studio-graph';
 import { ClearOutlined, PlayCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 interface IClusterByAlgorithmProps {}
 
 const ClusterByAlgorithm: React.FunctionComponent<IClusterByAlgorithmProps> = props => {
   const { store } = useContext();
   const { data } = store;
-  const { runCombos, clearCombos } = useCombos();
+  const { runCombos, clearCombos } = useApis();
 
   const [state, setState] = React.useState({
     clusterKey: 'label',

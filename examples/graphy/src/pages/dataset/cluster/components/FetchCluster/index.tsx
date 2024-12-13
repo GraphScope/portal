@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Select, Button, Typography, Space, notification } from 'antd';
-import { useCombos, useContext } from '@graphscope/studio-graph';
+import { useApis, useContext } from '@graphscope/studio-graph';
 import { runCluster } from '../../../service';
 import { Utils } from '@graphscope/studio-components';
 interface IClusterProps {}
@@ -8,7 +8,7 @@ interface IClusterProps {}
 const FetchCluster: React.FunctionComponent<IClusterProps> = props => {
   const { store, updateStore } = useContext();
   const { data } = store;
-  const { runCombos, clearCombos } = useCombos();
+  const { runCombos, clearCombos } = useApis();
   const [state, setState] = React.useState({
     clusterKey: 'properties.cluster_id',
     layout: false,

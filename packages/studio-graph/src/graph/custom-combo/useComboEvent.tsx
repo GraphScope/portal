@@ -1,11 +1,10 @@
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../useContext';
 import { useEffect } from 'react';
 import { ForceGraphInstance } from 'force-graph';
 import { Utils } from '@graphscope/studio-components';
-import type { ICombo } from './typing';
 import { isPointInRectangle, getComboTextRect, getOffset } from './utils';
 import { renderCombo } from './render';
-
+import { type ComboData } from '../types';
 /**
  * 支持拖拽和点击事件
  */
@@ -15,7 +14,7 @@ const useComboEvent = () => {
 
   useEffect(() => {
     const container = document.querySelector('.force-graph-container canvas');
-    let combo: ICombo = {} as ICombo;
+    let combo: ComboData | boolean = false;
     let isDragging = false;
     let startX: number, startY: number;
     let clickStartTime: number;
@@ -53,7 +52,7 @@ const useComboEvent = () => {
       if (graph) {
         const { nodes } = graph.graphData();
         nodes.forEach(node => {
-          const match = combo.children.indexOf(node.id as string) !== -1;
+          const match = typeof combo === 'object' && combo.children.indexOf(node.id as string) !== -1;
           if (match) {
             node.x = node.x + dx;
             node.y = node.y + dy;
@@ -61,11 +60,11 @@ const useComboEvent = () => {
         });
       }
     }
-    let _groups = Utils.fakeSnapshot(combos) as ICombo[];
+    let _groups = Utils.fakeSnapshot(combos) as ComboData[];
 
     function updateCombo(dx, dy) {
       const g = _groups.map(group => {
-        if (group.id === combo.id) {
+        if (typeof combo === 'object' && group.id === combo.id) {
           return {
             ...group,
             x: group.x + dx,
@@ -75,34 +74,39 @@ const useComboEvent = () => {
         return group;
       });
       _groups = g;
+
       renderCombo(graph as ForceGraphInstance, g);
     }
 
     function pointerdown(e) {
       clickStartTime = Date.now(); // 记录按下时间
+      (graph as ForceGraphInstance).autoPauseRedraw && (graph as ForceGraphInstance).autoPauseRedraw(false);
       if (container) {
         combo = getTargetCombo(e);
         if (combo) {
           //禁用默认的 pan 交互
           (graph as ForceGraphInstance).enablePanInteraction(false);
           container.classList.add('grabbable');
-          startX = e.clientX;
-          startY = e.clientY;
+          const { x, y } = graph?.screen2GraphCoords(e.clientX, e.clientY, 0) || { x: 0, y: 0 };
+          startX = x;
+          startY = y;
           isDragging = true;
         }
       }
     }
     function pointermove(e: any) {
       if (isDragging && container) {
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-        startX = e.clientX;
-        startY = e.clientY;
+        const { x, y } = graph?.screen2GraphCoords(e.clientX, e.clientY, 0) || { x: 0, y: 0 };
+        const dx = x - startX;
+        const dy = y - startY;
+        startX = x;
+        startY = y;
         updatePosition(dx, dy);
         updateCombo(dx, dy);
       }
     }
     function pointerup(e: any) {
+      (graph as ForceGraphInstance).autoPauseRedraw && (graph as ForceGraphInstance).autoPauseRedraw(true);
       if (isDragging && container) {
         isDragging = false;
         container.classList.remove('grabbable');
@@ -111,19 +115,14 @@ const useComboEvent = () => {
         if (clickDuration < 200) {
           onClickCombo(e);
         } else {
-          const dx = e.clientX - startX;
-          const dy = e.clientY - startY;
+          const { x, y } = graph?.screen2GraphCoords(e.clientX, e.clientY, 0) || { x: 0, y: 0 };
+          const dx = x - startX;
+          const dy = y - startY;
           updatePosition(dx, dy);
           updateCombo(dx, dy);
+
           updateStore(draft => {
             draft.combos = _groups;
-            draft.layout = {
-              type: 'force-combo',
-              options: {
-                ...draft.layout.options,
-                reheatSimulation: false,
-              },
-            };
           });
         }
       }

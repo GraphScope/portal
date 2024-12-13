@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CaretRightOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { Collapse, theme, Flex, Typography, Select, Space, Tooltip } from 'antd';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../../';
 import { CollapseCard } from '@graphscope/studio-components';
 interface IAdvancedSettingProps {}
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Slider, Button, Typography } from 'antd';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../../';
 import * as d3 from 'd3-force-3d';
 import { Utils } from '@graphscope/studio-components';
 

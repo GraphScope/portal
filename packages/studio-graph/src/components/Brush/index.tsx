@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { brush as d3Brush } from 'd3-brush';
 import { select } from 'd3-selection';
 import { FormattedMessage } from 'react-intl';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../../';
 import { Button, Tooltip, TooltipProps } from 'antd';
 import { Icons, useStudioProvier } from '@graphscope/studio-components';
 
