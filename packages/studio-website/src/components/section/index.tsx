@@ -39,9 +39,9 @@ const Section: React.FunctionComponent<ISectionProps> = props => {
         style={{
           padding: '12px 12px',
           borderRadius: token.borderRadius,
+          gap: 12,
           ...style,
         }}
-        gap={12}
       >
         {children}
       </Flex>

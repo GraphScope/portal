@@ -71,7 +71,7 @@ const QueryModule = () => {
           title: <FormattedMessage id="Querying" />,
         },
       ]}
-      style={{ padding: '0px' }}
+      style={{ padding: '0px', gap: 0 }}
     >
       <StudioQuery
         autoRun={autoRun}
