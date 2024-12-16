@@ -113,7 +113,10 @@ const Content: React.FunctionComponent<IContentProps> = props => {
         )}
       </div>
 
-      <div id="statements-layout" style={{ overflowY: 'scroll', flex: '1', position: 'relative' }}>
+      <div
+        id="statements-layout"
+        style={{ overflowY: 'scroll', flex: '1', position: 'relative', background: token.colorBgLayout }}
+      >
         {isEmpty && <Empty />}
         <Welcome />
         {statements.map(item => {
