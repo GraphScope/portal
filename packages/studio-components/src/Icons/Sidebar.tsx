@@ -1,8 +1,10 @@
 import React from 'react';
+import { theme } from 'antd';
 export default ({ style, revert }: { style?: React.CSSProperties; revert?: boolean }) => {
+  const { token } = theme.useToken();
   // 根据revert属性判断是否需要镜像
   const transformStyle = revert ? { ...style, transform: 'scaleX(-1)' } : style;
-  const { color, fontSize = '14px' } = style || { color: '#000' };
+  const { color = token.colorText, fontSize = '14px' } = style || {};
   return (
     <svg
       viewBox="0 0 1024 1024"

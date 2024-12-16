@@ -8,7 +8,7 @@ import {
   SwitchEngine,
   Canvas,
   ZoomFit,
-  ClearStatatus,
+  ClearStatus,
   RunCluster,
   BasicInteraction,
   ContextMenu,
@@ -114,7 +114,7 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
             <BasicInteraction />
             <FetchGraph />
 
-            <ClearStatatus />
+            <ClearStatus />
             <Loading />
             <ContextMenu>
               <NeighborQuery />

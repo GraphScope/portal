@@ -1,14 +1,16 @@
 import React from 'react';
+import { theme } from 'antd';
 
-export default ({ isDark }: { isDark: boolean }) => {
-  const stroke = isDark ? '#272727' : '#E6E9EE';
+export default () => {
+  const { token } = theme.useToken();
+  const stroke = token.colorBgBase;
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 915 866" fill="none">
       <path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M552.085 623.067C491.189 655.842 482.589 745.72 418.484 770.756C352.941 796.353 259.359 798.915 226.164 750.352C189.108 696.141 291.287 607.551 265.559 547.035C237.793 481.726 101.961 496.952 88.3682 426.238C76.2288 363.085 150.831 297.41 208.118 248.21C263.376 200.753 332.496 162.372 402.856 156.147C468.399 150.348 511.091 201.87 571.612 216.049C633.101 230.454 738.7 185.557 759.412 239.679C782.973 301.247 654.143 363.856 654.328 432.195C654.506 498.496 794.484 523.038 760.348 586.766C727.485 648.115 617.062 588.097 552.085 623.067Z"
-        fill={isDark ? '#272727' : '#EEF1F6'}
+        fill={token.colorText}
       />
       <circle cx="595.876" cy="255.218" r="12.5406" transform="rotate(30 595.876 255.218)" fill={stroke} />
       <circle cx="724.312" cy="289.146" r="12.5406" transform="rotate(30 724.312 289.146)" fill={stroke} />

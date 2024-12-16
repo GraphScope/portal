@@ -32,6 +32,7 @@ const Brush: React.FunctionComponent<IBrushProps> = props => {
     }, {});
     updateStore(draft => {
       draft.nodeStatus = nodeStatus;
+      draft.selectNodes = selectedNodes;
     });
     onSelect && onSelect(selectedNodes);
   };

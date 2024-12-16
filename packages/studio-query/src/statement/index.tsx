@@ -126,7 +126,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
         padding: '8px 16px',
         borderRadius: '8px',
         ...borderStyle,
-        background: token.colorBgBase,
+        background: token.colorBgContainer,
       }}
     >
       <Editor

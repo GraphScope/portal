@@ -262,4 +262,5 @@ export default {
   Explore: '图探索',
   Settings: '设置',
   'System Setting': '系统设置',
+  'Data Load Configuration': '数据载入配置',
 };

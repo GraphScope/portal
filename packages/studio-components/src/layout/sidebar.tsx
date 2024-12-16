@@ -16,24 +16,27 @@ interface ISidebar {
     collapsedWidth: number;
   };
   sideMenu: any[];
+  onMenuClick?: (currentNav: string) => void;
 }
 
 const Sidebar: React.FunctionComponent<ISidebar> = props => {
-  const { sideStyle, sideMenu } = props;
+  const { sideStyle, sideMenu, onMenuClick } = props;
   const { width, collapsedWidth } = sideStyle;
   const navigate = useNavigate();
   const { collapsed } = useSection();
   const [hovering, setHovering] = useState(false);
   const [SIDE_MENU, SETTING_MENU] = sideMenu;
-  const { isLight } = useStudioProvier();
 
   const activeKey = getCurrentNav();
 
   const onClick: MenuProps['onClick'] = e => {
-    const params = getAllSearchParams();
     navigate(e.key);
-    if (params && typeof params === 'object') {
-      setSearchParams(params);
+    // const params = getAllSearchParams();
+    // if (params && typeof params === 'object') {
+    //   setSearchParams(params);
+    // }
+    if (onMenuClick) {
+      onMenuClick(e.key);
     }
   };
 

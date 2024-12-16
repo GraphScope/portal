@@ -1,6 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import type { FC } from 'react';
-import { List, Typography, Tag, message, Button, Popconfirm, Divider, Space, Popover, theme } from 'antd';
+import {
+  List,
+  Typography,
+  Tag,
+  message,
+  Button,
+  Popconfirm,
+  Divider,
+  Space,
+  Popover,
+  theme,
+  Skeleton,
+  Card,
+} from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from '../../hooks';
@@ -19,6 +32,7 @@ export interface IState {
   typeOptions: { value: string; label: string }[];
   searchOptions: { value: string; label: string }[];
   jobId: string;
+  loading: boolean;
 }
 
 const JobsList: FC = () => {
@@ -31,6 +45,7 @@ const JobsList: FC = () => {
     typeOptions: [],
     searchOptions: [],
     jobId: '',
+    loading: false,
   });
 
   const { jobsList, rawJobsList } = state;
@@ -38,6 +53,7 @@ const JobsList: FC = () => {
 
   const getJobList = useCallback(async () => {
     try {
+      setState(prevState => ({ ...prevState, loading: true }));
       const res = await listJobs();
       const uniqueTypes = Array.from(new Set(res.map(item => item.type)));
       const typeOptions = uniqueTypes.map(type => ({ value: type, label: type }));
@@ -50,6 +66,7 @@ const JobsList: FC = () => {
           rawJobsList: res,
           typeOptions,
           searchOptions,
+          loading: false,
         };
       });
     } catch (error) {
@@ -73,10 +90,17 @@ const JobsList: FC = () => {
     },
     [getJobList],
   );
+  if (state.loading) {
+    return (
+      <Card>
+        <Skeleton active />
+      </Card>
+    );
+  }
 
   return (
     <List
-      style={{ padding: '12px 24px', backgroundColor: token.colorBgBase, borderRadius: 6 }}
+      style={{ padding: '0px 12px 24px 12px', backgroundColor: token.colorBgBase, borderRadius: 6 }}
       itemLayout="horizontal"
       header={
         <JobHeader
@@ -95,7 +119,7 @@ const JobsList: FC = () => {
         return (
           <List.Item
             style={{
-              padding: '6px 12px',
+              padding: '12px 12px',
               backgroundColor: isJobSelected ? token.colorBgLayout : token.colorBgBase,
               cursor: 'pointer',
             }}

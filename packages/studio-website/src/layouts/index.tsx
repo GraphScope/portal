@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useContext, IGraph } from './useContext';
 
-import { Layout, LogoText, Utils, useCustomToken, GlobalSpin } from '@graphscope/studio-components';
+import { Layout, Utils, useCustomToken, GlobalSpin } from '@graphscope/studio-components';
 import { DeploymentApiFactory } from '@graphscope/studio-server';
 import { SIDE_MENU, SETTING_MENU } from './const';
-import { notification } from 'antd';
+
 import { listGraphs } from '../pages/instance/lists/service';
-import { SLOTS, getSlots } from '../slots';
+import { getSlots } from '../slots';
 
 export default function StudioLayout() {
   const { store, updateStore } = useContext();
@@ -42,27 +42,17 @@ export default function StudioLayout() {
     return listGraphs().then(res => {
       let matchGraph: any;
       if (res) {
-        if (graphId) {
-          matchGraph = res.find(item => item.id === graphId);
-          if (!matchGraph) {
-            if (graphId !== draftId) {
-              notification.error({
-                message: 'Graph Instance Not Found',
-                description: `Graph Instance ${graphId} Not Found`,
-                duration: 3,
-              });
-            }
-          }
-        } else {
+        matchGraph = res.find(item => item.id === graphId);
+        if (!matchGraph) {
           matchGraph = res.find(item => {
             return item.status === 'Running';
           });
         }
-        return {
-          graphs: res,
-          graphId: (matchGraph && matchGraph.id) || graphId,
-        };
       }
+      return {
+        graphs: res,
+        graphId: (matchGraph && matchGraph.id) || '',
+      };
     });
   };
   const setQueryConfig = () => {
@@ -112,12 +102,24 @@ export default function StudioLayout() {
 
   const _SIDE = getSlots('SIDE_MEU');
 
-  const { layoutBackground } = useCustomToken();
+  const handleMenuClick = key => {
+    if (key === '/querying' || key === '/importing' || key === '/modeling') {
+      updateStore(draft => {
+        draft.currentnNav = key;
+      });
+      const graph_id = Utils.getSearchParams('graph_id') || graphId || '';
+      Utils.setSearchParams({ graph_id });
+    } else {
+      updateStore(draft => {
+        draft.currentnNav = key;
+      });
+    }
+  };
   if (isReady) {
     return (
       <Layout
+        onMenuClick={handleMenuClick}
         sideMenu={[_SIDE, SETTING_MENU]}
-        style={{ background: layoutBackground }}
         collapsedConfig={{
           '/querying': true,
           '/explore': true,

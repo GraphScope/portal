@@ -3,21 +3,39 @@ import { useHistory } from '../../hooks';
 import { getJobById } from './service';
 import { Utils, useCustomToken } from '@graphscope/studio-components';
 import Section from '../../components/section';
+import { theme, Flex, Button } from 'antd';
+import { JobStatus } from '@graphscope/studio-server';
+import { LinkOutlined } from '@ant-design/icons';
 const { getSearchParams } = Utils;
 
 const Detail: React.FunctionComponent = () => {
   const history = useHistory();
   const jobId = getSearchParams('jobId') || '';
-  const [detailData, setDetailData] = useState<string>('');
-  const { jobDetailBorder, jobDetailColor } = useCustomToken();
+  const [state, setState] = useState<{
+    content: string;
+    reference: string;
+  }>({
+    content: '',
+    reference: '',
+  });
+
+  const { token } = theme.useToken();
   /** 获取详情job */
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
-        const response = await getJobById(jobId);
-        //@ts-ignore
-        const { log } = response;
-        setDetailData(log);
+        const response = (await getJobById(jobId)) as JobStatus;
+        const { log, detail } = response;
+        setState(preState => {
+          return {
+            ...preState,
+            reference: detail && detail.build_stage_logview,
+            content: log || '',
+          };
+        });
+        if (detail && detail.build_stage_logview) {
+          window.open(detail.build_stage_logview);
+        }
       } catch (error) {
         history.push('/job');
       }
@@ -29,12 +47,16 @@ const Detail: React.FunctionComponent = () => {
   }, [jobId]);
   /** code style */
   const containerStyles = {
-    margin: '-12px -10px',
-    border: `${jobDetailBorder} 1px solid`,
+    border: `${token.colorBorder} 1px solid`,
     borderRadius: '6px',
     padding: '12px',
-    color: jobDetailColor,
+    color: token.colorText,
   };
+  const { reference, content } = state;
+  const handleClick = () => {
+    window.open(reference);
+  };
+
   return (
     <Section
       breadcrumb={[
@@ -47,9 +69,16 @@ const Detail: React.FunctionComponent = () => {
       ]}
       desc={{ id: 'The jobid of the running state of the graph model is {jobId} verbose logs.', values: { jobId } }}
     >
-      <pre style={containerStyles}>
-        <code style={{ whiteSpace: 'pre-wrap' }}>{detailData}</code>
-      </pre>
+      <Flex vertical gap={12} justify="start">
+        {reference && (
+          <Button icon={<LinkOutlined />} onClick={handleClick} style={{ width: '200px' }} type="text">
+            See more information
+          </Button>
+        )}
+        <pre style={containerStyles}>
+          <code style={{ whiteSpace: 'pre-wrap' }}>{content}</code>
+        </pre>
+      </Flex>
     </Section>
   );
 };

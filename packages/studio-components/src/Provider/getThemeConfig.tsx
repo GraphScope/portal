@@ -38,7 +38,7 @@ export const getThemeConfig = (algorithm: ThemeProviderType['algorithm']) => {
     Result: {
       iconFontSize: 62,
       titleFontSize: 20,
-      colorError: '#00000073',
+      colorError: isLight ? '#00000073' : '#ddd',
     },
   };
   /** token 基础配置 */

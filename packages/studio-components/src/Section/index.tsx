@@ -104,7 +104,10 @@ const Section = forwardRef((props: ISectionProps, ref: LegacyRef<HTMLDivElement>
 
   return (
     <SectionProvider value={{ collapsed, toggleRightSide, toggleLeftSide }}>
-      <div style={{ width: '100%', height: '100%', display: 'flex', ...style }} ref={ref}>
+      <div
+        style={{ width: '100%', height: '100%', display: 'flex', background: token.colorBgBase, ...style }}
+        ref={ref}
+      >
         <div style={{ height: '100%', display: 'flex', width: '100%', overflow: 'hidden' }}>
           {leftSide && <div style={leftSideStyle}>{_leftSide}</div>}
           {children && <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>{children}</div>}

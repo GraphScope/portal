@@ -1,18 +1,19 @@
 import * as React from 'react';
-import { Typography } from 'antd';
+import { Typography, theme, Flex } from 'antd';
 import Image from './image';
-import { isDarkTheme } from '../Utils';
+
 interface IEmptyProps {
   description?: string | React.ReactNode;
-  isLight?: boolean;
 }
 
 const Empty: React.FunctionComponent<IEmptyProps> = props => {
-  const { description, isLight } = props;
-  const isDark = isLight || isDarkTheme();
+  const { description } = props;
 
   return (
-    <div
+    <Flex
+      vertical
+      align="center"
+      justify="center"
       style={{
         fontSize: '14px',
         height: '100%',
@@ -22,7 +23,7 @@ const Empty: React.FunctionComponent<IEmptyProps> = props => {
         alignItems: 'center',
       }}
     >
-      <Image isDark={isDark} />
+      <Image />
       <Typography.Text
         type="secondary"
         style={{
@@ -31,7 +32,7 @@ const Empty: React.FunctionComponent<IEmptyProps> = props => {
       >
         {description}
       </Typography.Text>
-    </div>
+    </Flex>
   );
 };
 

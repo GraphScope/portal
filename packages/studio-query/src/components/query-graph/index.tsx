@@ -10,7 +10,7 @@ import {
   StyleSetting,
   Prepare,
   ZoomFit,
-  ClearStatatus,
+  ClearStatus,
   RunCluster,
   ContextMenu,
   NeighborQuery,
@@ -24,6 +24,7 @@ import {
   FixedMode,
   GraphProvider,
   registerIcons,
+  ZoomStatus,
 } from '@graphscope/studio-graph';
 
 import { Divider } from 'antd';
@@ -87,8 +88,9 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
         >
           <Prepare data={data} schema={schema} graphId={graphId} />
           <Canvas />
+          <ZoomStatus />
           <BasicInteraction />
-          <ClearStatatus />
+          <ClearStatus />
           <PropertiesPanel />
           <Loading />
           <ContextMenu>

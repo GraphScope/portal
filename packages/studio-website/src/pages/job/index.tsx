@@ -12,8 +12,9 @@ const Job: React.FunctionComponent = () => {
           },
         ]}
         desc="Managing long-running tasks, such as data importing, analytic jobs, and complex queries."
-        children={<JobsList />}
-      ></Section>
+      >
+        <JobsList />
+      </Section>
     </>
   );
 };

@@ -12,8 +12,6 @@ export interface IExplorePageState {
   isReady: boolean;
 }
 const ExplorePage = () => {
-  const { store, id } = useContext();
-  const { token } = theme.useToken();
   return (
     <Section
       breadcrumb={[

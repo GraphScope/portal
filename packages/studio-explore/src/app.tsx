@@ -1,12 +1,5 @@
 import React, { useRef, useState } from 'react';
-import {
-  Section,
-  FullScreen,
-  useCustomToken,
-  StudioProvier,
-  SegmentedTabs,
-  Icons,
-} from '@graphscope/studio-components';
+import { Section, FullScreen, StudioProvier, SegmentedTabs, Icons } from '@graphscope/studio-components';
 import {
   Toolbar,
   SwitchEngine,
@@ -15,7 +8,7 @@ import {
   StyleSetting,
   //   Prepare,
   ZoomFit,
-  ClearStatatus,
+  ClearStatus,
   RunCluster,
   ContextMenu,
   NeighborQuery,
@@ -36,6 +29,7 @@ import {
   LayoutSwitch,
   ZoomStatus,
   registerIcons,
+  HoverMenu,
 } from '@graphscope/studio-graph';
 
 import { ToogleLeftButton, ToogleRightButton } from './components/ToggleButton';
@@ -56,10 +50,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
 
   const onQuery = async () => {};
 
-  const { buttonBackground } = useCustomToken();
-
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const { token } = theme.useToken();
 
   return (
     <div ref={containerRef} style={{ position: 'absolute', top: '0px', left: '0px', bottom: '0px', right: '0px' }}>
@@ -108,10 +99,9 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             autoResize={false}
             leftSideStyle={{
               width: '380px',
-              padding: '0px 12px',
+              // padding: '0px 12px',
               boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
               overflow: 'scroll',
-              background: token.colorBgContainer,
             }}
             // rightSideStyle={{
             //   width: '360px',
@@ -127,7 +117,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             {/* <Prepare data={data} schema={schema} graphId={graphId} /> */}
             <Canvas />
             <BasicInteraction />
-            <ClearStatatus />
+            <ClearStatus />
             <FetchGraph />
             <Placeholder />
             <Loading />
@@ -135,6 +125,12 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             <PropertiesPanel />
 
             <ZoomStatus />
+            {/* <HoverMenu>
+              <NeighborQuery />
+              <CommonNeighbor onQuery={onQuery} />
+              <DeleteLeafNodes />
+              <DeleteNode />
+            </HoverMenu> */}
 
             <ContextMenu>
               <NeighborQuery />
@@ -149,9 +145,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             >
               <Searchbar />
             </Toolbar>
-            <Toolbar
-              style={{ position: 'absolute', top: '20px', left: '20px', right: 'unset', background: buttonBackground }}
-            >
+            <Toolbar style={{ position: 'absolute', top: '20px', left: '20px', right: 'unset' }}>
               <Connection />
               <Divider style={{ margin: '0px' }} />
               <ToogleLeftButton />

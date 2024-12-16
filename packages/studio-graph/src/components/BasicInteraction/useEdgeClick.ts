@@ -6,27 +6,28 @@ const useEdgeClick = () => {
   const { emitter, data, graph } = store;
 
   useEffect(() => {
-    if (emitter && graph) {
-      const dataMap = getDataMap(data);
-      emitter.on('edge:click', (edge: any) => {
-        const { id } = edge;
-        const { source, target } = dataMap.get(id) || {};
+    const dataMap = getDataMap(data);
+    const handleClick = edge => {
+      const { id } = edge;
+      const { source, target } = dataMap.get(id) || {};
 
-        if (edge && source && target) {
-          updateStore(draft => {
-            draft.nodeStatus = {
-              [source.id]: { hovering: true },
-              [target.id]: { hovering: true },
-            };
-            draft.edgeStatus = {
-              [id]: { selected: true },
-            };
-          });
-        }
-      });
-    }
+      if (edge && source && target) {
+        updateStore(draft => {
+          draft.nodeStatus = {
+            [source.id]: { hovering: true },
+            [target.id]: { hovering: true },
+          };
+          draft.edgeStatus = {
+            [id]: { selected: true },
+          };
+          draft.selectEdges = [edge];
+        });
+      }
+    };
+
+    emitter?.on('edge:click', handleClick);
     return () => {
-      emitter?.off('edge:click');
+      emitter?.off('edge:click', handleClick);
     };
   }, [emitter, data, graph]);
 };

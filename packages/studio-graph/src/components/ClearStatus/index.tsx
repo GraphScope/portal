@@ -3,7 +3,7 @@ import { useContext } from '../../';
 
 interface IClearStatatusProps {}
 
-const ClearStatatus: React.FunctionComponent<IClearStatatusProps> = props => {
+const ClearStatus: React.FunctionComponent<IClearStatatusProps> = props => {
   const { store, updateStore } = useContext();
   const { emitter } = store;
   useEffect(() => {
@@ -12,6 +12,8 @@ const ClearStatatus: React.FunctionComponent<IClearStatatusProps> = props => {
         draft.nodeStatus = {};
         draft.edgeStatus = {};
         draft.focusNodes = [];
+        draft.selectNodes = [];
+        draft.selectEdges = [];
       });
     };
     emitter?.on('canvas:click', handleClear);
@@ -22,4 +24,4 @@ const ClearStatatus: React.FunctionComponent<IClearStatatusProps> = props => {
   return null;
 };
 
-export default ClearStatatus;
+export default ClearStatus;

@@ -11,7 +11,7 @@ const RawView: React.FunctionComponent<IJSONViewProps> = props => {
   const { data, isFetching } = props;
 
   if (isFetching) {
-    return <Result icon={<Loading3QuartersOutlined spin />} status="error" title={'Running'}></Result>;
+    return <Result icon={<Loading3QuartersOutlined spin />} status="success" title={'Running'}></Result>;
   }
   if (data.mode === 'error') {
     return <Result status="error" title={data.raw && data.raw.name} subTitle={data.raw && data.raw.message}></Result>;
