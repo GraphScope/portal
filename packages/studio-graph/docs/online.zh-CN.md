@@ -19,7 +19,7 @@ import {
   StyleSetting,
   Prepare,
   ZoomFit,
-  ClearStatatus,
+  ClearStatus,
   RunCluster,
   ContextMenu,
   NeighborQuery,
@@ -76,7 +76,7 @@ const QueryGraph = props => {
         <Prepare data={data} schema={schema} graphId={graphId} />
         <Canvas />
         <BasicInteraction />
-        <ClearStatatus />
+        <ClearStatus />
         <PropertiesPanel />
         <Loading />
         <ContextMenu>

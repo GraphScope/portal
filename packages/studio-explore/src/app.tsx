@@ -8,7 +8,7 @@ import {
   StyleSetting,
   //   Prepare,
   ZoomFit,
-  ClearStatatus,
+  ClearStatus,
   RunCluster,
   ContextMenu,
   NeighborQuery,
@@ -117,7 +117,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             {/* <Prepare data={data} schema={schema} graphId={graphId} /> */}
             <Canvas />
             <BasicInteraction />
-            <ClearStatatus />
+            <ClearStatus />
             <FetchGraph />
             <Placeholder />
             <Loading />

@@ -26,6 +26,7 @@ export const createGraph = async (params: { graphName: string; nodes: any[]; edg
       .importSchemaById(graph_id, schemaJSON)
       .then(res => {
         if (res.status === 200) {
+          debugger;
           return res.data;
         }
         return [];

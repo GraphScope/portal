@@ -10,7 +10,7 @@ import {
   StyleSetting,
   Prepare,
   ZoomFit,
-  ClearStatatus,
+  ClearStatus,
   RunCluster,
   ContextMenu,
   NeighborQuery,
@@ -90,7 +90,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
           <Canvas />
           <ZoomStatus />
           <BasicInteraction />
-          <ClearStatatus />
+          <ClearStatus />
           <PropertiesPanel />
           <Loading />
           <ContextMenu>

@@ -11,7 +11,7 @@ import {
   Canvas,
   StyleSetting,
   ZoomFit,
-  ClearStatatus,
+  ClearStatus,
   Loading,
   BasicInteraction,
   GraphProvider,
@@ -109,7 +109,7 @@ const ClusterGraph: React.FunctionComponent<QueryGraphProps> = props => {
             }}
           >
             <Canvas />
-            <ClearStatatus />
+            <ClearStatus />
 
             <BasicInteraction />
             <Loading />
