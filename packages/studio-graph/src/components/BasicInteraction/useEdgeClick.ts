@@ -20,6 +20,7 @@ const useEdgeClick = () => {
           draft.edgeStatus = {
             [id]: { selected: true },
           };
+          draft.selectEdges = [edge];
         });
       }
     };

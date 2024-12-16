@@ -40,6 +40,7 @@ const useNodeClick = () => {
         updateStore(draft => {
           draft.nodeStatus = slNodes;
           draft.edgeStatus = slEdges;
+          draft.selectNodes = [node];
         });
       }
     };

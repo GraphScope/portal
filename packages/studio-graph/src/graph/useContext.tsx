@@ -11,6 +11,8 @@ import type {
   EdgeStatus,
   ComboData,
   Layout,
+  NodeData,
+  EdgeData,
 } from './types';
 
 export type IGetServices = <T extends { id: string; query: (...args: any[]) => Promise<any> }>(
@@ -68,6 +70,8 @@ export type IStore = {
   reheatSimulation: boolean;
   layout: Layout;
   focusNodes: string[];
+  selectNodes: NodeData[];
+  selectEdges: EdgeData[];
 };
 
 export const initialStore: IStore = {
@@ -109,6 +113,8 @@ export const initialStore: IStore = {
   },
   reheatSimulation: false,
   focusNodes: [],
+  selectNodes: [],
+  selectEdges: [],
 };
 
 export const useContext = () => useZustandContext<IStore>();

@@ -18,6 +18,11 @@ const ClearCanvas: React.FunctionComponent<IReportProps> = props => {
         type: 'force',
         options: {},
       };
+      draft.selectNodes = [];
+      draft.selectEdges = [];
+      draft.focusNodes = [];
+      draft.nodeStatus = {};
+      draft.edgeStatus = {};
     });
 
     if (graph) {

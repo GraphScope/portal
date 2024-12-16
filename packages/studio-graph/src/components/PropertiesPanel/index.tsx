@@ -9,9 +9,8 @@ export interface IPropertiesPanelProps {}
 
 const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props => {
   const { store } = useContext();
-  const { nodeStatus, data, edgeStatus } = store;
+  const { selectNodes, selectEdges } = store;
   const { token } = theme.useToken();
-  const { data: selectData, type } = getSelectData(data, { nodeStatus, edgeStatus });
 
   const rootStyle: React.CSSProperties = {
     display: 'flex',
@@ -28,13 +27,22 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
     padding: token.padding,
   };
 
-  if (selectData.length === 0) {
+  if (selectEdges.length === 0 && selectNodes.length === 0) {
     return null;
   }
-  if (selectData.length === 1) {
-    return <PropertyInfo data={selectData[0]} style={rootStyle} type={type} />;
+  if (selectNodes.length === 1) {
+    return <PropertyInfo data={selectNodes[0]} style={rootStyle} type={'node'} />;
   }
-  return <PropertiesTable data={selectData} />;
+  if (selectEdges.length === 1) {
+    return <PropertyInfo data={selectEdges[0]} style={rootStyle} type={'edge'} />;
+  }
+  if (selectNodes.length > 1) {
+    return <PropertiesTable data={selectNodes} />;
+  }
+  if (selectEdges.length > 1) {
+    return <PropertiesTable data={selectEdges} />;
+  }
+  return null;
 };
 
 export default PropertiesPanel;
