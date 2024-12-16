@@ -25,9 +25,11 @@ export const createGraph = async (params: { graphName: string; nodes: any[]; edg
     graphs = await GraphApiFactory(undefined, window.COORDINATOR_URL)
       .importSchemaById(graph_id, schemaJSON)
       .then(res => {
-        if (res.status === 200) {
-          debugger;
-          return res.data;
+        if (res.status === 200 && res.data === 'Import schema successfully') {
+          return {
+            status: 200,
+            data: { graph_id },
+          };
         }
         return [];
       })

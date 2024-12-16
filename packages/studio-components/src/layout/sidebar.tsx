@@ -30,11 +30,11 @@ const Sidebar: React.FunctionComponent<ISidebar> = props => {
   const activeKey = getCurrentNav();
 
   const onClick: MenuProps['onClick'] = e => {
-    const params = getAllSearchParams();
     navigate(e.key);
-    if (params && typeof params === 'object') {
-      setSearchParams(params);
-    }
+    // const params = getAllSearchParams();
+    // if (params && typeof params === 'object') {
+    //   setSearchParams(params);
+    // }
     if (onMenuClick) {
       onMenuClick(e.key);
     }

@@ -63,10 +63,9 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
         goot_graph_id,
       )
         .then((res: any) => {
-          if (res.status === 200 || res === 'Import schema successfully') {
+          if (res.status === 200) {
             _status = 'success';
             _message = `The graph model contains ${schema.nodes.length} types of nodes and ${schema.edges.length} types of edges.`;
-
             return res.data && res.data.graph_id;
           }
           _status = 'error';
@@ -76,9 +75,10 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
           _status = 'error';
           _message = error.response.data;
         });
+
       /** 修改 URL */
       Utils.storage.set('DRAFT_GRAPH', {});
-      Utils.setSearchParams({ graph_id: state.id });
+      Utils.setSearchParams({ graph_id: graph_id });
       /** 设置Schema */
       await localforage.setItem(`GRAPH_SCHEMA_OPTIONS_${graph_id}`, Utils.fakeSnapshot(schema));
       //@ts-ignore
