@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-import { Flex, Input, List, Divider, Spin, Space, Tag, Button } from 'antd';
+import { Flex, Input, List, Divider, Spin, Space, Tag, Button, theme } from 'antd';
 import { SearchOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { Utils, useDynamicStyle } from '@graphscope/studio-components';
 import Highlighter from 'react-highlight-words';
 import { useContext } from '@graphscope/studio-graph';
 import CascaderSearch from './CascaderSearch';
 import cssStyle from './css';
-import { getIconByType } from './utils';
 
 const { debounce } = Utils;
 interface ISearchbarProps {}
@@ -38,8 +37,20 @@ export interface ISearchbarState {
 const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
   const { store, updateStore } = useContext();
   const { emitter, getService } = store;
+  const { token } = theme.useToken();
 
-  useDynamicStyle(cssStyle, 'explore-search-bar');
+  useDynamicStyle(
+    `
+    .search-list-item {
+        cursor:pointer;
+    }
+    .search-list-item:hover {
+        background-color: ${token.colorBgTextHover};
+        cursor: pointer;
+    }
+    `,
+    'explore-search-bar',
+  );
   const [state, setState] = useState<ISearchbarState>({
     isLoading: false,
     words: '',
@@ -87,7 +98,7 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
       value,
     });
     const { value: property } = breadcrumb.find(item => item.type === 'property') || { value: '' };
-    console.log('property', breadcrumb, property);
+
     setState(preState => {
       return {
         ...preState,

@@ -87,7 +87,7 @@ const SegmentedTabs: React.FunctionComponent<SegmentedTabsProps> = props => {
   return (
     <div
       style={{
-        background: token.colorBgContainer,
+        background: token.colorBgBase,
         ...styles.tabs,
         ...rootStyle,
       }}

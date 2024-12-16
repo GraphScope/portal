@@ -14,9 +14,8 @@ const Instance: React.FunctionComponent = () => {
           title: <FormattedMessage id="Graphs" />,
         },
       ]}
-      style={{ padding: '0px 20px' }}
     >
-      <Flex align="end" justify="flex-start" style={{ padding: '16px 0px' }}>
+      <Flex justify="end">
         <FeatureCase match="MULTIPLE_GRAPHS">
           <CreateInstance />
         </FeatureCase>

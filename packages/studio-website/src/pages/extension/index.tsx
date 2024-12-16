@@ -2,6 +2,8 @@ import * as React from 'react';
 import Section from '../../components/section';
 import Plugins from './plugins';
 import { FormattedMessage } from 'react-intl';
+import { Flex } from 'antd';
+import { CreatePortal, SegmentedTabs, useStudioProvier } from '@graphscope/studio-components';
 
 const Extension: React.FunctionComponent = () => {
   const items = [
@@ -35,8 +37,9 @@ const Extension: React.FunctionComponent = () => {
           },
         ]}
         desc="GraphScope provides an extension plugin mechanism, allowing you to flexibly create various types of plugins such as graph learning, store procedures, and graph analysis according to business needs."
-        items={items}
-      ></Section>
+      >
+        <SegmentedTabs items={items} rootStyle={{ borderRadius: '6px', padding: '12px' }} />
+      </Section>
     </>
   );
 };
