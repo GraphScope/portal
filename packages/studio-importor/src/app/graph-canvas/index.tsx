@@ -6,6 +6,7 @@ import { edgeTypes } from '../elements/edge-types';
 import ConnectionLine from '../elements/connection-line';
 import ArrowMarker from '../elements/arrow-marker';
 import { PlayCircleOutlined } from '@ant-design/icons';
+import { theme } from 'antd';
 
 import useInteractive from './useInteractive';
 import { FormattedMessage } from 'react-intl';
@@ -20,15 +21,16 @@ const fakeSnapshot = obj => {
 const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
   const { store, onDoubleClick, onEdgesChange, onNodesChange, onConnectStart, onConnectEnd, onReactFlowInit } =
     useInteractive();
-  const { nodes, edges, theme, collapsed, appMode, nodePositionChange } = store;
+  const { nodes, edges, collapsed, appMode, nodePositionChange } = store;
 
   const [state, updateState] = useState({
     isLocked: false,
   });
 
-  const { isLight } = useStudioProvier();
+  const { token } = theme.useToken();
+
   const isEmpty = nodes.length === 0;
-  const rfBG = !isLight ? '#161616' : collapsed.left && collapsed.right ? '#fff' : '#f4f5f5';
+
   const description = (
     <FormattedMessage
       id="Start sketching a model, a vertex label is a named grouping or categorization of nodes within the graph dataset"
@@ -42,7 +44,7 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
 
   return (
     <div style={{ height: '100%', width: '100%' }}>
-      <div style={{ height: '100%', width: '100%', position: 'absolute' }}>
+      <div style={{ height: '100%', width: '100%', position: 'absolute', background: token.colorBgContainer }}>
         <ReactFlow
           nodes={_nodes}
           edges={edges}
@@ -60,18 +62,10 @@ const GraphEditor: React.FunctionComponent<IGraphEditorProps> = props => {
           minZoom={0.01}
           onInit={onReactFlowInit}
         >
-          <ArrowMarker selectedColor={theme.primaryColor} color={!isLight ? '#d7d7d7' : '#000'} />
-
-          {!IS_PURE && (
-            <Background
-              style={{
-                // background: '#f4f5f5',
-                background: rfBG,
-              }}
-            />
-          )}
-          {isEmpty && <EmptyCanvas description={description} isLight={!isLight} />}
-          {!IS_PURE && <MiniMap style={{ backgroundColor: !isLight ? '#161616' : '' }} />}
+          <ArrowMarker />
+          {!IS_PURE && <Background style={{ background: token.colorBgBase }} />}
+          {isEmpty && <EmptyCanvas description={description} />}
+          {!IS_PURE && <MiniMap style={{ backgroundColor: token.colorBgBase }} />}
         </ReactFlow>
       </div>
     </div>

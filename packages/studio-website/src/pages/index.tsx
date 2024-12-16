@@ -4,8 +4,8 @@ import { StudioProvier, GlobalSpin } from '@graphscope/studio-components';
 import Layout from '../layouts';
 import StoreProvider from '@graphscope/use-zustand';
 import { initialStore } from '../layouts/useContext';
-import { getSlots, installSlot } from '../slots';
-import { SIDE_MENU } from '../layouts/const';
+import { getSlots } from '../slots';
+
 import locales from '../locales';
 
 interface IPagesProps {
@@ -20,7 +20,6 @@ const routes = [
   { path: '/modeling', component: React.lazy(() => import('./modeling')) },
   { path: '/importing', component: React.lazy(() => import('./importing')) },
   { path: '/querying', component: React.lazy(() => import('./query')) },
-  { path: '/explore', component: React.lazy(() => import('./explore')) },
 
   { path: '/setting', component: React.lazy(() => import('./setting')) },
   { path: '/job', component: React.lazy(() => import('./job')) },
@@ -46,9 +45,6 @@ export const ROUTES = routes.map(({ path, redirect, component: Component }, inde
     />
   );
 });
-/** 注册默认的 */
-installSlot('SIDE_MEU', 'studio', SIDE_MENU);
-installSlot('ROUTES', 'studio', ROUTES);
 
 const Pages: React.FunctionComponent<IPagesProps> = props => {
   const { children } = props;

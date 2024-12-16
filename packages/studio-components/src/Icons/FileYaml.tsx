@@ -1,6 +1,8 @@
 import React from 'react';
+import { theme } from 'antd';
 const FileYaml = ({ style = {} }: { style?: React.CSSProperties }) => {
-  const { fontSize = '16px', color = '#000' } = style as { fontSize: string; color: string };
+  const { token } = theme.useToken();
+  const { fontSize = 16, color = token.colorText } = style;
   return (
     <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width={fontSize} height={fontSize}>
       <path

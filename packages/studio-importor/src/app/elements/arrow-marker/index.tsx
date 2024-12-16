@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom';
+
 import { theme } from 'antd';
-const { useToken } = theme;
 
 interface IArrowMarkerProps {
   selectedColor?: string;
@@ -9,7 +8,8 @@ interface IArrowMarkerProps {
 }
 
 const ArrowMarker: React.FunctionComponent<IArrowMarkerProps> = props => {
-  const { selectedColor = 'red', color = '#000' } = props;
+  const { token } = theme.useToken();
+  const { selectedColor = token.colorPrimary, color = token.colorText } = props;
 
   return (
     <svg

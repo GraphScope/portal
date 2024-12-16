@@ -10,6 +10,7 @@ import QuerySetting from './query-setting';
 import { FormattedMessage } from 'react-intl';
 import Coordinator from './coordinator';
 import GraphyPlugin from './plugins/graphy';
+import ExplorePlugin from './plugins/explore';
 
 const Setting: React.FunctionComponent = () => {
   return (
@@ -69,7 +70,11 @@ const Setting: React.FunctionComponent = () => {
                 </Typography.Title>
               }
             >
-              <GraphyPlugin />
+              <Flex vertical gap={24}>
+                <ExplorePlugin />
+                <Divider />
+                <GraphyPlugin />
+              </Flex>
             </Card>
           </Flex>
         </Col>

@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import Section from '../Section';
 import Header from './header';
 import Sidebar from './sidebar';
-import { Button, Space } from 'antd';
+import { Button, Space, theme } from 'antd';
 import { ReadOutlined, GithubOutlined } from '@ant-design/icons';
 import { getCurrentNav } from '../Utils';
 
@@ -24,18 +24,22 @@ const Layout: React.FunctionComponent<ILayoutProps> = props => {
     sideStyle = {},
     github = 'https://github.com/GraphScope/portal',
     sideMenu,
-    style,
+    style = {},
     collapsedConfig = {},
     onMenuClick,
   } = props;
   const { width = 220, collapsedWidth = 56 } = sideStyle;
   const activeKey = getCurrentNav();
+  const { token } = theme.useToken();
 
   const leftSideCollapsed = collapsedConfig[activeKey] || false;
 
   return (
     <Section
-      style={style}
+      style={{
+        background: token.colorBgContainer,
+        ...style,
+      }}
       leftSide={
         <>
           <Sidebar sideStyle={{ width, collapsedWidth }} sideMenu={sideMenu} onMenuClick={onMenuClick} />

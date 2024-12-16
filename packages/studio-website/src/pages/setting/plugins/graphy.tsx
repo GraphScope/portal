@@ -4,7 +4,6 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Utils, Illustration } from '@graphscope/studio-components';
 import { ROUTES, SIDE_MENU } from '@graphscope/graphy-website';
 import { installSlot, unInstallSlot } from '../../../slots';
-import { useContext } from '../../../layouts/useContext';
 
 interface IGraphyPluginProps {}
 
@@ -27,12 +26,7 @@ const GraphyPlugin: React.FunctionComponent<IGraphyPluginProps> = props => {
   };
 
   return (
-    <Flex gap={32}>
-      {/* <Illustration.Experiment style={{ width: '150px', height: '150px' }} /> */}
-      <img
-        style={{ width: '230px', height: '130px' }}
-        src="https://img.alicdn.com/imgextra/i3/O1CN01hUJCmP1j73JF9cicq_!!6000000004500-2-tps-1393-797.png"
-      />
+    <Flex gap={32} vertical>
       <Flex vertical gap={12} flex={1}>
         <Space>
           <Typography.Title level={5}>Graphy'ourData</Typography.Title>
