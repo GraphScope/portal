@@ -11,7 +11,7 @@ title: Sigmajs-Dataset-G(2085,5409)
 
 ```jsx
 import React, { useEffect } from 'react';
-import { Canvas, GraphProvider, Prepare, useContext, Loading } from '@graphscope/studio-graph';
+import { Canvas, GraphProvider, Prepare, useContext, Loading, ZoomStatus } from '@graphscope/studio-graph';
 import { schema } from './const';
 const CustomGraphFetch = () => {
   const { store, updateStore } = useContext();
@@ -34,10 +34,23 @@ const CustomGraphFetch = () => {
           };
         }),
       };
-      console.log(data.nodes.length, data.edges.length);
+
       updateStore(draft => {
         draft.data = data;
         draft.isLoading = false;
+        draft.nodeStyle = {
+          undefined: {
+            color: 'green',
+            caption: ['label'],
+            size: 2,
+          },
+        };
+        draft.layout = {
+          // type: 'circle-pack',
+          // options: {
+          //   groupBy: 'properties.cluster',
+          // },
+        };
       });
     })();
   }, []);
@@ -45,11 +58,12 @@ const CustomGraphFetch = () => {
 };
 export default () => {
   return (
-    <div style={{ height: '600px' }}>
+    <div style={{ height: '600px', position: 'relative' }}>
       <GraphProvider id="my-graph-custom">
         <CustomGraphFetch />
         <Canvas />
         <Loading />
+        <ZoomStatus />
       </GraphProvider>
     </div>
   );

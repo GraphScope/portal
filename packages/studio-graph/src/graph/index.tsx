@@ -1,14 +1,14 @@
 import React, { CSSProperties } from 'react';
 
-import { useNodeStyle, useEdgeStyle, useData, useInit, useLayout, useComboLayout } from './useGraph/index';
+import { useNodeStyle, useEdgeStyle, useInit, useCombos, useDataAndLayout } from './hooks';
 
 const Canvas = props => {
   const { containerRef, id } = useInit();
-  // useData();
-  useEdgeStyle();
   useNodeStyle();
-  useLayout();
-  useComboLayout();
+  useEdgeStyle();
+  useDataAndLayout();
+  useCombos();
+
   const containerStyle: CSSProperties = {
     position: 'relative',
     height: '100%',

@@ -70,7 +70,7 @@ class ArxivFetcher:
         :param timeout: The maximum time (in seconds) allowed for each paper fetching operation.
         :param download_folder: The folder where the fetched papers will be downloaded.
         """
-        self.client = arxiv.Client(delay_seconds=0.2, page_size=3, num_retries=1)
+        self.client = arxiv.Client(delay_seconds=0.5, page_size=6, num_retries=1)
         self.timeout = timeout
         self.download_folder = download_folder
         self.bib_search_arxiv = BibSearchArxiv(

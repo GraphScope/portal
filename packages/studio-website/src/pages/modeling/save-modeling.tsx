@@ -47,7 +47,7 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
     if (schema) {
       let _status = '',
         _message = '';
-      const goot_graph_id = Utils.getSearchParams('id');
+      const goot_graph_id = Utils.getSearchParams('graph_id');
 
       const graph_id = await createGraph(
         //@ts-ignore

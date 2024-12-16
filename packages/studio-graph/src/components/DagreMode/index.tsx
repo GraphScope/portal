@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, Tooltip } from 'antd';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../../';
 import { BranchesOutlined } from '@ant-design/icons';
 
 interface IDagreModeProps {}

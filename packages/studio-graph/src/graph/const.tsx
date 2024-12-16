@@ -41,7 +41,7 @@ export const BASIC_NODE_R = 2;
 export const DEFAULT_NODE_COLOR = colors[6];
 export const DEFAULT_NODE_SIZE = sizes[4];
 export const SELECTED_NODE_COLOR = '#000';
-export const HOVERING_NODE_COLOR = 'rgba(255,0,0,0.3)';
+export const HOVERING_NODE_COLOR = 'rgba(0,0,0,0.8)';
 export const NODE_TEXT_COLOR = 'rgba(255, 255, 255, 0.8)';
 
 /** edges */

@@ -131,7 +131,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             <FetchGraph />
             <Placeholder />
             <Loading />
-            <Next />
+            {/* <Next /> */}
             <PropertiesPanel />
 
             <ZoomStatus />

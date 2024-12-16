@@ -55,3 +55,14 @@ export function transNeo4jSchema(raw): { nodes: []; edges: [] } {
     };
   }
 }
+
+export function getQueryEngineType() {
+  const query_endpoint = Utils.storage.get<string>('query_endpoint') || '';
+  if (query_endpoint.startsWith('neo4j+s://')) {
+    return 'neo4j';
+  }
+  if (query_endpoint.startsWith('kuzu_wasm://')) {
+    return 'kuzu_wasm';
+  }
+  return 'graphscope';
+}

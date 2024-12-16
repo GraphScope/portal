@@ -439,15 +439,9 @@ importers:
       '@ant-design/icons':
         specifier: ^5.2.6
         version: 5.5.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@antv/g6':
-        specifier: latest
-        version: 5.0.32(workerize-loader@2.0.2(webpack@5.96.1(webpack-cli@5.1.4(webpack@5.96.1))))
       '@graphscope/studio-components':
         specifier: workspace:*
         version: link:../studio-components
-      '@graphscope/studio-driver':
-        specifier: workspace:*
-        version: link:../studio-driver
       '@graphscope/use-zustand':
         specifier: workspace:*
         version: link:../use-zustand
@@ -1022,9 +1016,6 @@ packages:
   '@antv/g6@4.8.24':
     resolution: {integrity: sha512-bgj7sZ+z45JmOngIpYpwmSIg7SboMLZBoAlX0+RoAETZB3/xvZO0MXT3lCSyAhIgm5Sb68pekKi7OStuo04NyQ==}
 
-  '@antv/g6@5.0.32':
-    resolution: {integrity: sha512-9CgqhPBlVhvnHlmxeYyRsssdiU8FdrfYMrRpf0KNqa9qfF9yM+fsmEwMbcn8uWpKPRmUmcMA2mZTTL+N27A+Nw==}
-
   '@antv/g@6.1.9':
     resolution: {integrity: sha512-JwZkjU6t8Q8X43TetRFxmEAyH51COHx3mHUJppmMDmXOtHdSD0nzMyZb9i8UvRPVLzhQOht818cGy3Fu6IHt0Q==}
 
@@ -1041,17 +1032,11 @@ packages:
   '@antv/graphlib@1.2.0':
     resolution: {integrity: sha512-hhJOMThec51nU4Fe5p/viLlNIL71uDEgYFzKPajWjr2715SFG1HAgiP6AVylIeqBcAZ04u3Lw7usjl/TuI5RuQ==}
 
-  '@antv/graphlib@2.0.3':
-    resolution: {integrity: sha512-EtQR+DIfsYy28tumTnH560v7yIzXZq0nSgFBZh76mMiV1oHEN1L4p6JKu7IMtILH14mDqzmYYYFetYoAODoQUw==}
-
   '@antv/hierarchy@0.6.14':
     resolution: {integrity: sha512-V3uknf7bhynOqQDw2sg+9r9DwZ9pc6k/EcqyTFdfXB1+ydr7urisP0MipIuimucvQKN+Qkd+d6w601r1UIroqQ==}
 
   '@antv/layout@0.3.25':
     resolution: {integrity: sha512-d29Aw1PXoAavMRZy7iTB9L5rMBeChFEX0BJ9ELP4TI35ySdCu07YbmPo9ju9OH/6sG2/NB3o85Ayxrre3iwX/g==}
-
-  '@antv/layout@1.2.14-beta.9':
-    resolution: {integrity: sha512-wPlwBFMtq2lWZFc89/7Lzb8fjHnyKVZZ9zBb2h+zZIP0YWmVmHRE8+dqCiPKOyOGUXEdDtn813f1g107dCHZlg==}
 
   '@antv/matrix-util@3.0.4':
     resolution: {integrity: sha512-BAPyu6dUliHcQ7fm9hZSGKqkwcjEDVLVAstlHULLvcMZvANHeLXgHEgV7JqcAV/GIhIz8aZChIlzM1ZboiXpYQ==}
@@ -2657,11 +2642,6 @@ packages:
 
   '@microsoft/tsdoc@0.14.2':
     resolution: {integrity: sha512-9b8mPpKrfeGRuhFH5iO1iwCLeIIsV6+H1sRfxbkoGXIyQE2BTsPd9zqSqQJ+pv5sJ/hT5M1zvOFL02MnEezFug==}
-
-  '@naoak/workerize-transferable@0.1.0':
-    resolution: {integrity: sha512-fDLfuP71IPNP5+zSfxFb52OHgtjZvauRJWbVnpzQ7G7BjcbLjTny0OW1d3ZO806XKpLWNKmeeW3MhE0sy8iwYQ==}
-    peerDependencies:
-      workerize-loader: '*'
 
   '@napi-rs/nice-android-arm-eabi@1.0.1':
     resolution: {integrity: sha512-5qpvOu5IGwDo7MEKVqqyAxF90I6aLj4n07OzpARdgDRfz8UbBztTByBp0RC59r3J1Ij8uzYi6jI7r5Lws7nn6w==}
@@ -4710,9 +4690,6 @@ packages:
     resolution: {integrity: sha512-SB4/MIGlsiVkMcHmT+pSmIPoNDoHg+7cMzmt3Uxt628MTz2487DKSqK/fuhFBrkuqrYv5UCEnACpF4dTFNKc/g==}
     engines: {node: '>= 0.4.0'}
     hasBin: true
-
-  bubblesets-js@2.3.4:
-    resolution: {integrity: sha512-DyMjHmpkS2+xcFNtyN00apJYL3ESdp9fTrkDr5+9Qg/GPqFmcWgGsK1akZnttE1XFxJ/VMy4DNNGMGYtmFp1Sg==}
 
   buffer-alloc-unsafe@1.1.0:
     resolution: {integrity: sha512-TEM2iMIEQdJ2yjPJoSIsldnleVaAk1oW3DBVUykyOLsEsFmEc9kn+SFFPz+gl54KQNxlDnAwCXosOS9Okx2xAg==}
@@ -6970,10 +6947,6 @@ packages:
   https-proxy-agent@7.0.5:
     resolution: {integrity: sha512-1e4Wqeblerz+tMKPIq2EMGiiWW1dIjZOksyHWSUm1rmuvw/how9hBHZ38lAGj5ID4Ik6EdkOw7NmWPy6LAwalw==}
     engines: {node: '>= 14'}
-
-  hull.js@1.0.6:
-    resolution: {integrity: sha512-TC7e9sHYOaCVms0sn2hN7buxnaGfcl9h5EPVoVX9DTPoMpqQiS9bf3tmGDgiNaMVHBD91RAvWjCxrJ5Jx8BI5A==}
-    deprecated: This package is no longer published on npmjs.com, you are using a deprecated and vulnerable version. Do not use it. Check package homepage on GitHub to see how to fetch the latest version.
 
   human-id@1.0.2:
     resolution: {integrity: sha512-UNopramDEhHJD+VR+ehk8rOslwSfByxPIZyJRfV739NDhN5LF1fa1MqnzKm2lGTQRjNrjK19Q5fhkgIfjlVUKw==}
@@ -11678,11 +11651,6 @@ packages:
     resolution: {integrity: sha512-JNjcULU2e4KJwUNv6CHgI46UvDGitb6dGryHajXTDiLgg1/RiGoPSDw4kZfYnwGtEXf2ZMeIewDQgFGzkCB2Sg==}
     engines: {node: '>=12.17'}
 
-  workerize-loader@2.0.2:
-    resolution: {integrity: sha512-HoZ6XY4sHWxA2w0WpzgBwUiR3dv1oo7bS+oCwIpb6n54MclQ/7KXdXsVIChTCygyuHtVuGBO1+i3HzTt699UJQ==}
-    peerDependencies:
-      webpack: '*'
-
   wrap-ansi@6.2.0:
     resolution: {integrity: sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==}
     engines: {node: '>=8'}
@@ -12226,23 +12194,6 @@ snapshots:
     dependencies:
       '@antv/g6-pc': 0.8.24(@antv/g6@4.8.24)
 
-  '@antv/g6@5.0.32(workerize-loader@2.0.2(webpack@5.96.1(webpack-cli@5.1.4(webpack@5.96.1))))':
-    dependencies:
-      '@antv/algorithm': 0.1.26
-      '@antv/component': 2.1.1
-      '@antv/event-emitter': 0.1.3
-      '@antv/g': 6.1.9
-      '@antv/g-canvas': 2.0.27
-      '@antv/g-plugin-dragndrop': 2.0.20
-      '@antv/graphlib': 2.0.3
-      '@antv/hierarchy': 0.6.14
-      '@antv/layout': 1.2.14-beta.9(workerize-loader@2.0.2(webpack@5.96.1(webpack-cli@5.1.4(webpack@5.96.1))))
-      '@antv/util': 3.3.10
-      bubblesets-js: 2.3.4
-      hull.js: 1.0.6
-    transitivePeerDependencies:
-      - workerize-loader
-
   '@antv/g@6.1.9':
     dependencies:
       '@antv/g-camera-api': 2.0.23
@@ -12263,10 +12214,6 @@ snapshots:
 
   '@antv/graphlib@1.2.0': {}
 
-  '@antv/graphlib@2.0.3':
-    dependencies:
-      '@antv/event-emitter': 0.1.3
-
   '@antv/hierarchy@0.6.14': {}
 
   '@antv/layout@0.3.25(dagre@0.8.5)':
@@ -12280,23 +12227,6 @@ snapshots:
       ml-matrix: 6.5.0
     transitivePeerDependencies:
       - dagre
-
-  '@antv/layout@1.2.14-beta.9(workerize-loader@2.0.2(webpack@5.96.1(webpack-cli@5.1.4(webpack@5.96.1))))':
-    dependencies:
-      '@antv/event-emitter': 0.1.3
-      '@antv/graphlib': 2.0.3
-      '@antv/util': 3.3.10
-      '@naoak/workerize-transferable': 0.1.0(workerize-loader@2.0.2(webpack@5.96.1(webpack-cli@5.1.4(webpack@5.96.1))))
-      comlink: 4.4.2
-      d3-force: 3.0.0
-      d3-force-3d: 3.0.5
-      d3-octree: 1.0.2
-      d3-quadtree: 3.0.1
-      dagre: 0.8.5
-      ml-matrix: 6.12.0
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - workerize-loader
 
   '@antv/matrix-util@3.0.4':
     dependencies:
@@ -13917,10 +13847,6 @@ snapshots:
       resolve: 1.19.0
 
   '@microsoft/tsdoc@0.14.2': {}
-
-  '@naoak/workerize-transferable@0.1.0(workerize-loader@2.0.2(webpack@5.96.1(webpack-cli@5.1.4(webpack@5.96.1))))':
-    dependencies:
-      workerize-loader: 2.0.2(webpack@5.96.1(webpack-cli@5.1.4(webpack@5.96.1)))
 
   '@napi-rs/nice-android-arm-eabi@1.0.1':
     optional: true
@@ -16346,8 +16272,6 @@ snapshots:
       node-int64: 0.4.0
 
   btoa@1.2.1: {}
-
-  bubblesets-js@2.3.4: {}
 
   buffer-alloc-unsafe@1.1.0: {}
 
@@ -19461,8 +19385,6 @@ snapshots:
       debug: 4.3.7(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
-
-  hull.js@1.0.6: {}
 
   human-id@1.0.2: {}
 
@@ -25094,11 +25016,6 @@ snapshots:
   wordwrap@0.0.2: {}
 
   wordwrapjs@5.1.0: {}
-
-  workerize-loader@2.0.2(webpack@5.96.1(webpack-cli@5.1.4(webpack@5.96.1))):
-    dependencies:
-      loader-utils: 2.0.4
-      webpack: 5.96.1(webpack-cli@5.1.4(webpack@5.96.1))
 
   wrap-ansi@6.2.0:
     dependencies:

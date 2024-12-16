@@ -1,11 +1,9 @@
 import React from 'react';
-import { QueryGraph } from '@graphscope/studio-graph';
-import type { IEditorProps } from '../typing';
+import QueryGraph from '../../components/query-graph';
 interface IGraphViewProps {
   data: any;
   schemaData: any;
   graphId: string;
-  onQuery: IEditorProps['onQuery'];
 }
 export function transGraphSchema(schema) {
   return {
@@ -24,14 +22,13 @@ export function transGraphSchema(schema) {
 }
 
 const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
-  const { data, schemaData, graphId, onQuery } = props;
-
+  const { data, schemaData, graphId } = props;
   const graphSchema = transGraphSchema(schemaData);
 
   return (
     <div style={{ width: '100%' }}>
       {/** @ts-ignore */}
-      <QueryGraph data={data} schema={graphSchema} graphId={graphId} onQuery={onQuery} />
+      <QueryGraph data={data} schema={graphSchema} graphId={graphId} />
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Flex, Typography } from 'antd';
 import { Illustration } from '@graphscope/studio-components';
-import { useContext } from '../../hooks/useContext';
+import { useContext } from '../../';
 interface IPlaceholderProps {}
 
 const Placeholder: React.FunctionComponent<IPlaceholderProps> = props => {
