@@ -8,6 +8,7 @@ from workflow.ray_executor import RayWorkflowExecutor
 import argparse
 import json
 import os
+import logging
 
 
 def list_pdf_inputs(folder_path: str):
@@ -27,6 +28,8 @@ def list_pdf_inputs(folder_path: str):
                 inputs.append({"paper_file_path": os.path.join(folder_path, file_name)})
     except FileNotFoundError:
         print(f"Error: Folder '{folder_path}' does not exist.")
+    except NotADirectoryError:
+        inputs.append({"paper_file_path": folder_path})
     except Exception as e:
         print(f"An error occurred: {e}")
 
@@ -69,6 +72,12 @@ def parse_arguments():
         default=100,
         help="Maximum number of inspectors allowed (default: 100).",
     )
+    parser.add_argument(
+        "-t",
+        "--tmp-dir",
+        type=str,
+        help="The temporary directory for ray.",
+    )
     return parser.parse_args()
 
 
@@ -93,7 +102,17 @@ if __name__ == "__main__":
     with open(args.workflow, "r") as f:
         workflow_json = json.load(f)
     if workflow_json:
-        ray.init()
+        if args.tmp_dir:
+            ray.init(
+                logging_level=logging.INFO,
+                logging_format="%(asctime)s %(levelname)s %(message)s",
+                _temp_dir=args.tmp_dir,
+            )
+        else:
+            ray.init(
+                logging_level=logging.INFO,
+                logging_format="%(asctime)s %(levelname)s %(message)s",
+            )
         fixed_workflow_json = fix_workflow(workflow_json)
         executor = RayWorkflowExecutor(
             fixed_workflow_json, SurveyPaperReading, max_workers, max_inspectors

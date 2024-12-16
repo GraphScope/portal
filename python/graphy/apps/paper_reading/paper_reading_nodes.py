@@ -688,10 +688,11 @@ class PaperInspector(BaseNode):
             except Exception as e:
                 logger.error(f"Error processing the paper: {e}")
                 # clean state
-                state[data_id][WF_STATE_CACHE_KEY].clear()
-                state[data_id][WF_STATE_MEMORY_KEY].clear_memory()
-                state[data_id][WF_STATE_MEMORY_KEY].close()
-                state.pop(data_id)
+                if data_id and data_id in state:
+                    state[data_id][WF_STATE_CACHE_KEY].clear()
+                    state[data_id][WF_STATE_MEMORY_KEY].clear_memory()
+                    state[data_id][WF_STATE_MEMORY_KEY].close()
+                    state.pop(data_id)
                 continue
 
     def __repr__(self):
