@@ -7,6 +7,7 @@ import { submitDataloadingJob } from './services';
 import { useHistory } from '../../hooks';
 import GrootCase from '../../components/groot-case';
 import dayjs from 'dayjs';
+import FeatureCase from '../../components/feature-case';
 export type FieldType = {
   type?: string;
   delimiter?: string;
@@ -22,6 +23,7 @@ type ILeftSide = {
   onColse: () => void;
   datatype?: string;
   delimiter?: string;
+  description?: React.ReactNode;
 };
 const { Title, Text } = Typography;
 
@@ -92,7 +94,11 @@ const StartLoad: React.FC<ILeftSide> = props => {
   }, []);
 
   const gotoJob = (jobId: string) => {
-    history.push(`/job/detail?graph_id=${graphId}&jobId=${jobId}`);
+    if (jobId.startsWith('SCHEDULER')) {
+      history.push(`/job`);
+    } else {
+      history.push(`/job/detail?graph_id=${graphId}&jobId=${jobId}`);
+    }
   };
 
   const onFinish = async (values: FieldType) => {
@@ -147,87 +153,90 @@ const StartLoad: React.FC<ILeftSide> = props => {
   };
 
   return (
-    <div style={{ padding: '12px 36px' }}>
+    <Flex vertical gap={12} style={{ padding: '12px 24px' }}>
       <Title level={2}>
-        <FormattedMessage id="Configuration" />
+        <FormattedMessage id="Data Load Configuration" />
       </Title>
-      {/* <Text type="secondary">
+      <Text type="secondary">
         <FormattedMessage id="You have successfully bound the data source. Please complete the configuration to start importing data." />
-      </Text> */}
+      </Text>
       <Form
         name="modal_type"
-        // layout="vertical"
-        style={{ margin: '12px 12px 0px 0px' }}
+        layout="vertical"
+        style={{ margin: '24px 12px 0px 0px' }}
         labelCol={{ span: 5 }}
         form={form}
       >
-        <Form.Item<FieldType> label={<FormattedMessage id="Type" />} name="type">
-          <Select
-            allowClear
-            options={[
-              { label: 'csv', value: 'csv' },
-              { label: 'odps', value: 'odps' },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item<FieldType> label={<FormattedMessage id="Delimiter" />} name="delimiter">
-          <Select
-            allowClear
-            options={[
-              { label: '|', value: '|' },
-              { label: ',', value: ',' },
-              { label: ';', value: ';' },
-              { label: <>\t</>, value: '\t' },
-              { label: ' ', value: ' ' },
-              { label: ':', value: ':' },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item<FieldType> label={<FormattedMessage id="Header Row" />} name="header_row">
-          <Select
-            allowClear
-            options={[
-              { label: 'true', value: true },
-              { label: 'false', value: false },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item<FieldType> label={<FormattedMessage id="Import Option" />} name="import_option">
-          <Select
-            allowClear
-            options={[
-              { label: 'overwrite', value: 'overwrite' },
-              { label: 'init', value: 'init' },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item<FieldType> label={<FormattedMessage id="Quoting" />} name="quoting">
-          <Select
-            allowClear
-            options={[
-              { label: 'true', value: true },
-              { label: 'false', value: false },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item<FieldType> label={<FormattedMessage id="Quote char" />} name="quote_char">
-          <Select
-            allowClear
-            options={[
-              { label: '"', value: '"' },
-              { label: `'`, value: `'` },
-            ]}
-          />
-        </Form.Item>
-        <GrootCase>
+        <FeatureCase match="LOAD_CSV_DATA">
+          <Form.Item<FieldType> label={<FormattedMessage id="Type" />} name="type">
+            <Select
+              allowClear
+              options={[
+                { label: 'csv', value: 'csv' },
+                { label: 'odps', value: 'odps' },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item<FieldType> label={<FormattedMessage id="Delimiter" />} name="delimiter">
+            <Select
+              allowClear
+              options={[
+                { label: '|', value: '|' },
+                { label: ',', value: ',' },
+                { label: ';', value: ';' },
+                { label: <>\t</>, value: '\t' },
+                { label: ' ', value: ' ' },
+                { label: ':', value: ':' },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item<FieldType> label={<FormattedMessage id="Header Row" />} name="header_row">
+            <Select
+              allowClear
+              options={[
+                { label: 'true', value: true },
+                { label: 'false', value: false },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item<FieldType> label={<FormattedMessage id="Import Option" />} name="import_option">
+            <Select
+              allowClear
+              options={[
+                { label: 'overwrite', value: 'overwrite' },
+                { label: 'init', value: 'init' },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item<FieldType> label={<FormattedMessage id="Quoting" />} name="quoting">
+            <Select
+              allowClear
+              options={[
+                { label: 'true', value: true },
+                { label: 'false', value: false },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item<FieldType> label={<FormattedMessage id="Quote char" />} name="quote_char">
+            <Select
+              allowClear
+              options={[
+                { label: '"', value: '"' },
+                { label: `'`, value: `'` },
+              ]}
+            />
+          </Form.Item>
+        </FeatureCase>
+        <FeatureCase match="SCHEMA_UPDATE">
           <Form.Item label={<FormattedMessage id="Schedule" />} name="schedule">
             <DatePicker placeholder=" " showTime style={{ width: '100%' }} />
           </Form.Item>
           <Form.Item label={<FormattedMessage id="Repeat" />} name="repeat">
             <Select options={REPEATOPTIONS} />
           </Form.Item>
-        </GrootCase>
-        <Flex justify="end" gap={12}>
+        </FeatureCase>
+
+        <Flex gap={12} justify="end">
           <Button style={{ width: '128px' }} type="primary" onClick={handleClick}>
             <FormattedMessage id="Load data" />
           </Button>
@@ -236,7 +245,7 @@ const StartLoad: React.FC<ILeftSide> = props => {
           </Button>
         </Flex>
       </Form>
-    </div>
+    </Flex>
   );
 };
 

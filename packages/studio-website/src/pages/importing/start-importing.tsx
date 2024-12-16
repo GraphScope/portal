@@ -76,23 +76,23 @@ const StartImporting: React.FunctionComponent<StartImportingProps> = props => {
         <Button type="primary" onClick={handleBind}>
           <FormattedMessage id="Data source binding" />
         </Button>
-        <Modal title="" open={open} footer={null} closable={false} width={1000}>
-          <SplitSection
-            splitText=""
-            span={8}
-            leftSide={
-              <Result
-                status="404"
-                subTitle={
-                  <>
-                    <Text type={status === 'success' ? 'secondary' : 'danger'}>
-                      <FormattedMessage id={`${message}`} />
-                    </Text>
-                  </>
-                }
-              />
+        <Modal
+          title=""
+          open={open}
+          footer={null}
+          closable={false}
+          width={800}
+          onCancel={onColse}
+          // style={{ overflow: 'scroll', maxHeight: '70vh' }}
+        >
+          <StartLoad
+            onColse={onColse}
+            graphId={graphId || ''}
+            description={
+              <Text type={status === 'success' ? 'secondary' : 'danger'}>
+                <FormattedMessage id={`${message}`} />
+              </Text>
             }
-            rightSide={<StartLoad onColse={onColse} graphId={graphId || ''} />}
           />
         </Modal>
       </>

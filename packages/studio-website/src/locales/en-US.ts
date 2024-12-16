@@ -267,4 +267,5 @@ export default {
   Explore: 'Explore',
   Settings: 'Settings',
   'System Setting': 'System Setting',
+  'Data Load Configuration': 'Data Load Configuration',
 };
