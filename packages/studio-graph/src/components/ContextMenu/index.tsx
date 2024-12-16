@@ -13,63 +13,50 @@ const ContextMenu: React.FunctionComponent<IContextMenuProps> = props => {
   const { graph, emitter } = store;
   const [state, setState] = React.useState({
     visible: false,
-    data: {},
     x: 0,
     y: 0,
   });
-  const { visible, data, x, y } = state;
+  const { visible, x, y } = state;
   React.useEffect(() => {
-    if (graph && emitter) {
-      emitter.on('node:contextmenu', params => {
-        //@ts-ignore
-        const { node, evt } = params;
+    const handleContextmenu = params => {
+      //@ts-ignore
+      const { node, evt } = params;
 
-        const { offsetX, offsetY } = evt;
-        setState(preState => {
-          return {
-            ...preState,
-            visible: true,
-            data: node,
-            x: offsetX,
-            y: offsetY,
-          };
-        });
-        updateStore(draft => {
-          draft.nodeStatus = {
-            ...draft.nodeStatus,
-            [node.id]: {
-              selected: true,
-            },
-          };
-        });
+      const { offsetX, offsetY } = evt;
+      setState(preState => {
+        return {
+          ...preState,
+          visible: true,
+          x: offsetX,
+          y: offsetY,
+        };
       });
-
-      emitter.on('node:click', () => {
-        setState(preState => {
-          return {
-            ...preState,
-            visible: false,
-            data: {},
-            x: 0,
-            y: 0,
-          };
-        });
+      updateStore(draft => {
+        draft.nodeStatus = {
+          ...draft.nodeStatus,
+          [node.id]: {
+            selected: true,
+          },
+        };
       });
-    }
-    emitter?.on('canvas:click', () => {
+    };
+    const handleClear = () => {
       setState(preState => {
         return {
           ...preState,
           visible: false,
-          data: {},
           x: 0,
           y: 0,
         };
       });
-    });
+    };
+
+    emitter?.on('node:contextmenu', handleContextmenu);
+    emitter?.on('canvas:click', handleClear);
+
     return () => {
-      emitter?.off('node:click');
-      emitter?.off('node:contextmenu');
+      emitter?.off('node:contextmenu', handleContextmenu);
+      emitter?.off('canvas:click', handleClear);
     };
   }, [emitter]);
 

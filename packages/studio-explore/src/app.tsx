@@ -29,6 +29,7 @@ import {
   LayoutSwitch,
   ZoomStatus,
   registerIcons,
+  HoverMenu,
 } from '@graphscope/studio-graph';
 
 import { ToogleLeftButton, ToogleRightButton } from './components/ToggleButton';
@@ -124,6 +125,12 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             <PropertiesPanel />
 
             <ZoomStatus />
+            {/* <HoverMenu>
+              <NeighborQuery />
+              <CommonNeighbor onQuery={onQuery} />
+              <DeleteLeafNodes />
+              <DeleteNode />
+            </HoverMenu> */}
 
             <ContextMenu>
               <NeighborQuery />
