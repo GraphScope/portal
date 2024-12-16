@@ -113,9 +113,15 @@ export default function StudioLayout() {
   const _SIDE = getSlots('SIDE_MEU');
 
   const { layoutBackground } = useCustomToken();
+  const handleMenuClick = key => {
+    updateStore(draft => {
+      draft.currentnNav = key;
+    });
+  };
   if (isReady) {
     return (
       <Layout
+        onMenuClick={handleMenuClick}
         sideMenu={[_SIDE, SETTING_MENU]}
         style={{ background: layoutBackground }}
         collapsedConfig={{

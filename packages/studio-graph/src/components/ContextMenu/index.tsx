@@ -85,7 +85,7 @@ const ContextMenu: React.FunctionComponent<IContextMenuProps> = props => {
         height: 'auto',
         backgroundColor: token.colorBgContainer,
         boxShadow: token.boxShadow,
-        zIndex: 100,
+        zIndex: 2000,
         padding: '4px',
         borderRadius: '8px',
       }}

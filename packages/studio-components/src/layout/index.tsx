@@ -16,6 +16,7 @@ interface ILayoutProps {
   sideMenu: any[];
   style?: React.CSSProperties;
   collapsedConfig?: Record<string, boolean>;
+  onMenuClick?: (currentNav: string) => void;
 }
 
 const Layout: React.FunctionComponent<ILayoutProps> = props => {
@@ -25,6 +26,7 @@ const Layout: React.FunctionComponent<ILayoutProps> = props => {
     sideMenu,
     style,
     collapsedConfig = {},
+    onMenuClick,
   } = props;
   const { width = 220, collapsedWidth = 56 } = sideStyle;
   const activeKey = getCurrentNav();
@@ -36,7 +38,7 @@ const Layout: React.FunctionComponent<ILayoutProps> = props => {
       style={style}
       leftSide={
         <>
-          <Sidebar sideStyle={{ width, collapsedWidth }} sideMenu={sideMenu} />
+          <Sidebar sideStyle={{ width, collapsedWidth }} sideMenu={sideMenu} onMenuClick={onMenuClick} />
         </>
       }
       splitBorder
