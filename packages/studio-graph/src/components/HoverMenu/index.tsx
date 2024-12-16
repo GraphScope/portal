@@ -22,12 +22,10 @@ const HoverMenu: React.FunctionComponent<IContextMenuProps> = props => {
   React.useEffect(() => {
     const handleHover = params => {
       if (graph) {
-        console.log('hover menu.. node:hover');
         //@ts-ignore
         const { node, prevNode } = params;
         if (node && graph.graph2ScreenCoords) {
           const { x, y } = graph.graph2ScreenCoords(node.x, node.y, 0);
-          console.log(x, y, node);
           setState(preState => {
             return {
               ...preState,
@@ -38,11 +36,11 @@ const HoverMenu: React.FunctionComponent<IContextMenuProps> = props => {
           });
           updateStore(draft => {
             draft.nodeStatus = {
-              ...draft.nodeStatus,
               [node.id]: {
                 selected: true,
               },
             };
+            draft.selectNodes = [node];
           });
         } else {
           setState(preState => {
@@ -53,13 +51,8 @@ const HoverMenu: React.FunctionComponent<IContextMenuProps> = props => {
           });
           if (prevNode) {
             updateStore(draft => {
-              draft.nodeStatus = {
-                ...draft.nodeStatus,
-                [prevNode.id]: {
-                  ...draft.nodeStatus[prevNode.id],
-                  selected: false,
-                },
-              };
+              draft.nodeStatus = {};
+              draft.selectNodes = [];
             });
           }
         }
