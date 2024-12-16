@@ -1,5 +1,13 @@
 # @graphscope/studio-importor
 
+## 0.1.11
+
+### Patch Changes
+
+- update site
+- Updated dependencies
+  - @graphscope/studio-components@0.1.11
+
 ## 0.1.10
 
 ### Patch Changes
