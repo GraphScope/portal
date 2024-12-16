@@ -1,5 +1,13 @@
 # @graphscope/studio-draw-pattern
 
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies
+  - @graphscope/studio-components@0.1.11
+  - @graphscope/studio-graph-editor@0.1.5
+
 ## 0.0.6
 
 ### Patch Changes
