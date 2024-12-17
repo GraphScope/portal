@@ -13,14 +13,10 @@ export const useEdgeStyle = () => {
 
   useEffect(() => {
     if (graph) {
-      console.log('edgeStyle effect ....');
-      const edgeCount = graph.graphData().links.length;
-
       if (render === '2D' && (graph as ForceGraphInstance).linkCanvasObject) {
         (graph as ForceGraphInstance)
           .linkCanvasObject((link, ctx, globalScale) => {
-            //@ts-ignore
-            linkCanvasObject(link, ctx, globalScale)(edgeStyle, edgeStatus, edgeCount > 100);
+            linkCanvasObject(link as EdgeData, ctx, globalScale)(edgeStyle, edgeStatus);
           })
           // custom edge
           .linkCanvasObjectMode(() => 'after')

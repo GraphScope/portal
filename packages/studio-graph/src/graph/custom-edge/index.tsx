@@ -4,8 +4,8 @@ import { HOVERING_NODE_COLOR, BASIC_NODE_R, SELECTED_NODE_COLOR, NODE_TEXT_COLOR
 
 export const linkCanvasObject =
   (link: EdgeData, ctx: CanvasRenderingContext2D, globalScale: number) =>
-  (edgeStyle: Record<string, EdgeStyle>, nodeStatus: any, disabled: boolean) => {
-    if (disabled || globalScale < 3) {
+  (edgeStyle: Record<string, EdgeStyle>, nodeStatus: any) => {
+    if (globalScale < 3) {
       return;
     }
     const style = handleEdgeStyle(link, edgeStyle);

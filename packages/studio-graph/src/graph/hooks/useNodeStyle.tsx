@@ -12,7 +12,6 @@ export const useNodeStyle = () => {
   const { graph, render, nodeStyle, nodeStatus } = store;
   useEffect(() => {
     if (graph) {
-      console.log('nodeStyle effect ....');
       if (render === '2D' && (graph as ForceGraphInstance).nodeCanvasObject) {
         (graph as ForceGraphInstance)
           .nodeCanvasObject((node, ctx, globalScale) => {
