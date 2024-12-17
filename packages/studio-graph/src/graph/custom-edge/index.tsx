@@ -8,11 +8,14 @@ export const linkCanvasObject =
     if (disabled || globalScale < 3) {
       return;
     }
-
     const style = handleEdgeStyle(link, edgeStyle);
     const { color, size, caption, icon } = style;
-    //@ts-ignore
-    const label = link.properties && link.properties[caption];
+
+    const label = caption
+      .map(c => {
+        return link.properties && link.properties[c];
+      })
+      .join(' ');
 
     if (!caption || caption.length === 0 || !label) {
       return;
@@ -20,6 +23,7 @@ export const linkCanvasObject =
 
     const MAX_FONT_SIZE = 2;
     const labelWidth = label.length * (MAX_FONT_SIZE / 2);
+
     const LABEL_NODE_MARGIN = 10; // graph.nodeRelSize() * 1.5;
     const start = link.source;
     const end = link.target;
@@ -39,7 +43,7 @@ export const linkCanvasObject =
 
     const relLink = { x: end.x - start.x, y: end.y - start.y };
 
-    const maxTextLength = Math.sqrt(Math.pow(relLink.x, 2) + Math.pow(relLink.y, 2)) - LABEL_NODE_MARGIN * 2;
+    // const maxTextLength = Math.sqrt(Math.pow(relLink.x, 2) + Math.pow(relLink.y, 2)) - LABEL_NODE_MARGIN * 2;
 
     let textAngle = Math.atan2(relLink.y, relLink.x);
     // maintain label vertical orientation for legibility
