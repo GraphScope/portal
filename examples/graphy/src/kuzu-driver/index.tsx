@@ -245,7 +245,7 @@ export class KuzuDriver {
 
     console.log('Schema created: ', result);
   }
-  async uploadCsvFile(file: File): Promise<any> {
+  async uploadCsvFile(file: File, meta): Promise<any> {
     return new Promise((resolve, reject) => {
       if (file) {
         const reader = new FileReader();
@@ -258,10 +258,11 @@ export class KuzuDriver {
             var label_name = file.name.split('.')[0];
             await this.FS.writeFile(filePath, fileData);
             var res;
+
+            const { delimiter } = meta;
             res = await this.conn?.execute(
-              `COPY ${label_name} FROM "${filePath}" (HEADER=true, DELIM="|", ESCAPE='"', QUOTE='"');`,
+              `COPY ${label_name} FROM "${filePath}" (HEADER=true, DELIM='${delimiter}');`,
             );
-            console.log('File uploaded successfully!', filePath);
             resolve(res); // Resolve the Promise
           } catch (error) {
             reject(error); // Reject the Promise on error
@@ -279,6 +280,11 @@ export class KuzuDriver {
     });
   }
   async loadGraph(data_files: File[]): Promise<any> {
+    const logs: any = {
+      nodes: [],
+      edges: [],
+    };
+
     for (const node of this.schema.nodes) {
       const file = data_files.find(item => {
         //@ts-ignore
@@ -286,8 +292,11 @@ export class KuzuDriver {
       });
       if (file) {
         console.log('node: ', file.name);
-        await this.uploadCsvFile(file).then(res => {
-          console.log('Response received:', res.toString());
+        await this.uploadCsvFile(file, node.meta).then(res => {
+          logs.nodes.push({
+            name: file.name,
+            message: res.toString(),
+          });
         });
       }
     }
@@ -297,14 +306,15 @@ export class KuzuDriver {
         return item.name === edge.label + '.csv';
       });
       if (file) {
-        console.log('edge: ', file.name);
-        await this.uploadCsvFile(file).then(res => {
-          console.log('Response received:', res.toString());
+        await this.uploadCsvFile(file, edge.meta).then(res => {
+          logs.edges.push({
+            name: file.name,
+            message: res.toString(),
+          });
         });
       }
     }
-
-    return true;
+    return logs;
   }
 
   pathJoin(...segments) {

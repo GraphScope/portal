@@ -39,7 +39,6 @@ const ImportIntoKuzu: React.FunctionComponent<IImportIntoKuzuProps> = props => {
       files: csvFiles,
     });
 
-    //@ts-ignore
     const { success, message } = await useKuzuGraph(datasetId);
     const notifyKey = success ? 'success' : 'error';
     notification[notifyKey]({
@@ -55,6 +54,7 @@ const ImportIntoKuzu: React.FunctionComponent<IImportIntoKuzuProps> = props => {
     if (success) {
       handleClose();
       Utils.storage.set('query_endpoint', `kuzu_wasm://${datasetId}`);
+      window.location.reload();
     }
   };
 

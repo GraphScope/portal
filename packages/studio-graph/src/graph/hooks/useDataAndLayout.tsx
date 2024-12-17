@@ -6,6 +6,7 @@ import { dagreLayout } from '../layout/dagre';
 import { runCirclePack } from '../layout/circle-pack';
 import { useForceCombo } from './layout/useForceCombo';
 import type { Layout } from '../types';
+import { BASIC_NODE_R } from '../const';
 
 import {
   forceSimulation as d3ForceSimulation,
@@ -62,11 +63,13 @@ export const useDataAndLayout = () => {
         (graph as ForceGraphInstance)
           .d3Force('center', d3ForceCenter().strength(1))
           .d3Force('charge', d3ForceManyBody())
-          .d3Force('link', d3ForceLink())
+          .d3Force('link', d3ForceLink().distance(50))
           .d3Force(
             'collide',
             d3ForceCollide().radius(node => {
-              return handleNodeStyle(node, nodeStyle).size + 5;
+              const { size } = handleNodeStyle(node, nodeStyle);
+              const R = Math.sqrt(Math.max(0, size)) * BASIC_NODE_R;
+              return R + 2;
             }),
           );
         graph.graphData({ nodes, links });

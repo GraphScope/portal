@@ -63,7 +63,7 @@ const ParseCSVButton: React.FunctionComponent<IImportSchemaProps> = props => {
         footer={null}
       >
         <div style={{ height: '60vh' }}>
-          <ImportFromCSV />
+          <ImportFromCSV onCallback={handleClose} />
         </div>
       </Modal>
     </Space>

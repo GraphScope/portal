@@ -6,7 +6,9 @@ import { transform } from './transform';
 import { Button } from 'antd';
 import localforage from 'localforage';
 import { FormattedMessage } from 'react-intl';
-interface IImportFromCSVProps {}
+interface IImportFromCSVProps {
+  onCallback?: () => void;
+}
 
 const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
   const { updateStore, store } = useContext();
@@ -45,6 +47,9 @@ const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
         loading: false,
       };
     });
+    if (props.onCallback) {
+      props.onCallback();
+    }
   };
 
   return (

@@ -53,7 +53,7 @@ export const transform = (schemaData: ISchema): GraphSchema => {
       label,
       source,
       target,
-
+      meta,
       properties: properties
         .map(p => {
           const { name, type } = p;
@@ -85,6 +85,7 @@ export const transform = (schemaData: ISchema): GraphSchema => {
         ),
     };
   });
+
   return {
     nodes,
     edges,

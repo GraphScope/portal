@@ -6,11 +6,8 @@ const useEdgeClick = () => {
   const { emitter, data, graph } = store;
 
   useEffect(() => {
-    const dataMap = getDataMap(data);
     const handleClick = edge => {
-      const { id } = edge;
-      const { source, target } = dataMap.get(id) || {};
-
+      const { id, source, target } = edge;
       if (edge && source && target) {
         updateStore(draft => {
           draft.nodeStatus = {
@@ -20,6 +17,7 @@ const useEdgeClick = () => {
           draft.edgeStatus = {
             [id]: { selected: true },
           };
+
           draft.selectEdges = [edge];
         });
       }

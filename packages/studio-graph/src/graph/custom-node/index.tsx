@@ -14,7 +14,8 @@ export const nodeCanvasObject =
     const style = handleNodeStyle(node, nodeStyle);
     const status = handleStatus(node, nodeStatus);
     const { color, size, caption, icon } = style;
-    const R = Math.sqrt(Math.max(0, size)) * BASIC_NODE_R + 1;
+    // const R = BASIC_NODE_R;
+    const R = Math.sqrt(Math.max(0, size)) * BASIC_NODE_R;
 
     const options = Object.assign(
       {},
@@ -102,7 +103,7 @@ function drawLabel(options: {
     return;
   }
   if (globalScale >= zoomLevel[1]) {
-    const fontSize = 14 / globalScale;
+    const fontSize = 18 / globalScale;
     ctx.font = `${fontSize}px Sans-Serif`;
     ctx.fillStyle = NODE_TEXT_COLOR;
     ctx.textAlign = 'center';
@@ -117,7 +118,7 @@ function drawLabel(options: {
     });
   }
   if (globalScale >= zoomLevel[0] && globalScale < zoomLevel[1]) {
-    const fontSize = 2; //14 / globalScale;
+    const fontSize = R * 0.5; //14 / globalScale;
     const lineHeight = fontSize * 1.2;
     let textX = node.x;
     let textY = node.y;
@@ -180,7 +181,8 @@ export const nodePointerAreaPaint =
     const { x, y } = node;
     const { size } = handleNodeStyle(node, nodeStyle);
     ctx.beginPath();
-    const R = Math.sqrt(Math.max(0, size)) * BASIC_NODE_R + 1;
+    const R = Math.sqrt(Math.max(0, size)) * BASIC_NODE_R;
+    // const R = BASIC_NODE_R;
     ctx.arc(x, y, R, 0, 2 * Math.PI, false);
     ctx.fill();
   };

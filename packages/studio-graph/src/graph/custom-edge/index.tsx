@@ -4,22 +4,26 @@ import { HOVERING_NODE_COLOR, BASIC_NODE_R, SELECTED_NODE_COLOR, NODE_TEXT_COLOR
 
 export const linkCanvasObject =
   (link: EdgeData, ctx: CanvasRenderingContext2D, globalScale: number) =>
-  (edgeStyle: Record<string, EdgeStyle>, nodeStatus: any, disabled: boolean) => {
-    if (disabled || globalScale < 3) {
+  (edgeStyle: Record<string, EdgeStyle>, nodeStatus: any) => {
+    if (globalScale < 3) {
       return;
     }
-
     const style = handleEdgeStyle(link, edgeStyle);
     const { color, size, caption, icon } = style;
-    //@ts-ignore
-    const label = link.properties && link.properties[caption];
+
+    const label = caption
+      .map(c => {
+        return link.properties && link.properties[c];
+      })
+      .join(' ');
 
     if (!caption || caption.length === 0 || !label) {
       return;
     }
 
-    const MAX_FONT_SIZE = 2;
+    const MAX_FONT_SIZE = 4;
     const labelWidth = label.length * (MAX_FONT_SIZE / 2);
+
     const LABEL_NODE_MARGIN = 10; // graph.nodeRelSize() * 1.5;
     const start = link.source;
     const end = link.target;
@@ -39,7 +43,7 @@ export const linkCanvasObject =
 
     const relLink = { x: end.x - start.x, y: end.y - start.y };
 
-    const maxTextLength = Math.sqrt(Math.pow(relLink.x, 2) + Math.pow(relLink.y, 2)) - LABEL_NODE_MARGIN * 2;
+    // const maxTextLength = Math.sqrt(Math.pow(relLink.x, 2) + Math.pow(relLink.y, 2)) - LABEL_NODE_MARGIN * 2;
 
     let textAngle = Math.atan2(relLink.y, relLink.x);
     // maintain label vertical orientation for legibility
@@ -65,7 +69,7 @@ export const linkCanvasObject =
     // draw text label
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'darkgrey';
+    ctx.fillStyle = color;
     ctx.fillText(label, 0, 0);
     ctx.restore();
     return;
