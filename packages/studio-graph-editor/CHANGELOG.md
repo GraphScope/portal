@@ -1,5 +1,13 @@
 # @graphscope/studtio-graph-editor
 
+## 0.1.6
+
+### Patch Changes
+
+- update studio graph
+- Updated dependencies
+  - @graphscope/studio-components@0.1.12
+
 ## 0.1.5
 
 ### Patch Changes
