@@ -6,10 +6,7 @@ export const defaultEdgeStyle: EdgeStyle = {
   size: DEFAULT_EDGE_WIDTH,
   caption: [],
   icon: '',
-  options: {
-    arrowLength: 10,
-    arrowPosition: 0.9,
-  },
+  options: {},
 };
 export const defaultNodeStyle: NodeStyle = {
   color: DEFAULT_NODE_COLOR,
@@ -24,18 +21,10 @@ export const defaultNodeStyle: NodeStyle = {
 };
 
 export function handleNodeStyle(item: NodeData, runtimeStyle: Record<string, NodeStyle>): NodeStyle {
-  const { id, label, __style } = item;
-  let _style = runtimeStyle[id] || runtimeStyle[String(label)] || __style;
-  if (_style) {
-    return _style;
-  }
-  return defaultNodeStyle;
+  const _style = runtimeStyle[item.id] || runtimeStyle[String(item.label)] || item.__style;
+  return _style ? _style : defaultNodeStyle;
 }
 export function handleEdgeStyle(item: EdgeData, runtimeStyle: Record<string, EdgeStyle>): EdgeStyle {
-  const { id, label, __style } = item;
-  let _style = runtimeStyle[id] || runtimeStyle[String(label)] || __style;
-  if (_style) {
-    return _style;
-  }
-  return defaultEdgeStyle;
+  const _style = runtimeStyle[item.id] || runtimeStyle[String(item.label)] || item.__style;
+  return _style ? _style : defaultEdgeStyle;
 }
