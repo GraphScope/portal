@@ -21,6 +21,7 @@ export const useNodeStyle = () => {
           .nodePointerAreaPaint((node, color, ctx, globalScale) => {
             nodePointerAreaPaint(node as NodeData, color, ctx, globalScale)(nodeStyle);
           })
+          .nodeVal(node => handleNodeStyle(node as NodeData, nodeStyle).size)
           .nodeRelSize(BASIC_NODE_R)
           .nodeCanvasObjectMode(() => {
             return 'replace';
@@ -28,6 +29,7 @@ export const useNodeStyle = () => {
       }
       if (render === '3D') {
         (graph as ForceGraph3DInstance)
+          .nodeVal(node => handleNodeStyle(node as NodeData, nodeStyle).size)
           .nodeLabel(node => handleNodeStyle(node as NodeData, nodeStyle).caption.join(' '))
           .nodeRelSize(BASIC_NODE_R)
           .nodeColor(node => handleNodeStyle(node as NodeData, nodeStyle).color)
