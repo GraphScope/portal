@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, Tooltip } from 'antd';
-import { useContext, processLinks as pro } from '../../';
+import { useContext } from '../../';
 import { MergeOutlined } from '@ant-design/icons';
 import { Utils } from '@graphscope/studio-components';
 
