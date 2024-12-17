@@ -49,9 +49,16 @@ export default function StudioLayout() {
           });
         }
       }
+      const graph_id = Utils.getSearchParams('graph_id');
+      if (graph_id === 'DRAFT_GRAPH') {
+        return {
+          graphs: res,
+          graphId: 'DRAFT_GRAPH',
+        };
+      }
       return {
         graphs: res,
-        graphId: (matchGraph && matchGraph.id) || '',
+        graphId: (matchGraph && matchGraph.id) || 'DRAFT_GRAPH',
       };
     });
   };

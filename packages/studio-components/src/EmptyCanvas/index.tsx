@@ -18,16 +18,19 @@ const Empty: React.FunctionComponent<IEmptyProps> = props => {
         fontSize: '14px',
         height: '100%',
         width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
       }}
     >
-      <Image />
+      <Image
+        style={{
+          position: 'absolute',
+          zIndex: 2,
+        }}
+      />
       <Typography.Text
         type="secondary"
         style={{
           position: 'absolute',
+          zIndex: 3,
         }}
       >
         {description}
