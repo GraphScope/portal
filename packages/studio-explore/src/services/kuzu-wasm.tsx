@@ -45,8 +45,6 @@ export const useKuzuGraph = async (dataset_id: string) => {
   // 新的实例，需要清除默认的样式
   localStorage.removeItem('GRAPH__STYLE');
   const res = await createKuzuGraph(dataset_id);
-  //自动刷新页面
-  window.location.reload();
   return res;
 };
 
@@ -56,6 +54,20 @@ export const createKuzuGraph = async (dataset_id: string) => {
   const { files, schema } = await getFiles(dataset_id);
   await driver.use(dataset_id);
   await driver.createSchema(schema);
-  await driver.loadGraph(files);
+  const logs = await driver.loadGraph(files);
+  const error = [...logs.nodes, ...logs.edges].some(item => item.message === 'false');
+
+  if (error) {
+    const message = [...logs.nodes, ...logs.edges]
+      .map(item => {
+        const { message, name } = item;
+        return `${name}: ${message}`;
+      })
+      .join(';\n');
+    return {
+      success: false,
+      message: `Some nodes or edges failed to load, please check the data format: ${message}`,
+    };
+  }
   return await driver.writeBack();
 };
