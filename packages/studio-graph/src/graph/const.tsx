@@ -37,7 +37,7 @@ export const sizes: number[] = [0, 0.1, 0.5, 1, 2, 3, 4, 6, 8, 10, 20];
 export const widths: number[] = [0, 0.1, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
 
 /** nodes */
-export const BASIC_NODE_R = 2;
+export const BASIC_NODE_R = 4;
 export const DEFAULT_NODE_COLOR = colors[6];
 export const DEFAULT_NODE_SIZE = sizes[4];
 

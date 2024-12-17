@@ -26,12 +26,12 @@ export const useEdgeStyle = () => {
           .linkCanvasObjectMode(() => 'after')
           .linkDirectionalArrowLength(edge => {
             const { options = {}, size } = handleEdgeStyle(edge as EdgeData, edgeStyle) as EdgeStyle;
-            const { arrowLength = size * 3 } = options as any;
+            const { arrowLength = size * 4 } = options as any;
             return arrowLength;
           })
           .linkDirectionalArrowRelPos(edge => {
             const { options = {} } = handleEdgeStyle(edge as EdgeData, edgeStyle) as EdgeStyle;
-            const { arrowPosition = 0.9 } = options as any;
+            const { arrowPosition = 1 } = options as any;
             return arrowPosition;
           })
           .linkColor((edge: any) => {
@@ -52,10 +52,14 @@ export const useEdgeStyle = () => {
                 }
               })
               .join('');
+            // return `${edge.source.id} --> ${edge.target.id}`;
           })
           // .onZoom(() => {
           //   if (render === '2D') {
-          //     graph.linkWidth(0.1 * (graph as ForceGraphInstance).zoom());
+          //     const l = 4 / (graph as ForceGraphInstance).zoom();
+          //     console.log(l);
+          //     // graph.linkWidth(0.1 * (graph as ForceGraphInstance).zoom());
+          //     graph.linkHoverPrecision(l);
           //   }
           // })
           .linkWidth((edge: any) => {
@@ -75,6 +79,22 @@ export const useEdgeStyle = () => {
             }
             return 0;
           });
+        // .linkPointerAreaPaint((link, color, ctx, globalScale) => {
+        //   // ctx.fillStyle = color;
+        //   ctx.strokeStyle = color;
+        //   const { source, target } = link;
+        //   // ignore unbound links
+        //   if (typeof source !== 'object' || typeof target !== 'object') return;
+        //   // ignore unlayout links
+        //   if (source.x === undefined || source.y === undefined || target.x === undefined || target.y === undefined) {
+        //     return;
+        //   }
+        //   const { size } = handleEdgeStyle(link as EdgeData, edgeStyle);
+        //   ctx.moveTo(source.x, source.y);
+        //   ctx.lineTo(target.x, target.y);
+        //   ctx.lineWidth = size;
+        //   ctx.stroke();
+        // });
       }
       if (render === '3D') {
         (graph as ForceGraph3DInstance)
