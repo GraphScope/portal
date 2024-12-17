@@ -21,7 +21,7 @@ export const linkCanvasObject =
       return;
     }
 
-    const MAX_FONT_SIZE = 2;
+    const MAX_FONT_SIZE = 4;
     const labelWidth = label.length * (MAX_FONT_SIZE / 2);
 
     const LABEL_NODE_MARGIN = 10; // graph.nodeRelSize() * 1.5;
@@ -69,7 +69,7 @@ export const linkCanvasObject =
     // draw text label
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'darkgrey';
+    ctx.fillStyle = color;
     ctx.fillText(label, 0, 0);
     ctx.restore();
     return;
