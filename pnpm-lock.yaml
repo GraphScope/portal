@@ -381,9 +381,6 @@ importers:
       '@antv/g2':
         specifier: ^5.2.8
         version: 5.2.8
-      '@graphscope/graphy-website':
-        specifier: workspace:*
-        version: link:../../examples/graphy
       '@graphscope/studio-components':
         specifier: workspace:*
         version: link:../studio-components
