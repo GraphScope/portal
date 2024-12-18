@@ -58,7 +58,7 @@ export default function StudioLayout() {
       }
       return {
         graphs: res,
-        graphId: (matchGraph && matchGraph.id) || 'DRAFT_GRAPH',
+        graphId: (matchGraph && matchGraph.id) || '',
       };
     });
   };
