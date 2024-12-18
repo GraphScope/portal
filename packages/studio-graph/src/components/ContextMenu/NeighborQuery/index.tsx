@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Menu } from 'antd';
-import { useContext, getDataMap, type GraphSchema } from '../../../';
+import { useContext, type GraphSchema } from '../../../';
 import { handleExpand, applyStatus } from './utils';
+import { ShareAltOutlined } from '@ant-design/icons';
+import { useDynamicStyle } from '@graphscope/studio-components';
 
 interface INeighborQueryProps {}
 
@@ -16,14 +18,23 @@ export interface INeighborQueryData {
 }
 export interface INeighborQueryItems {
   id: 'queryNeighborItems';
-  query: (params: { schema: GraphSchema }) => Promise<Record<string, { label: string; value: string }[]>>;
+  query: (params: { schema: GraphSchema }) => Promise<Record<string, { label: string; key: string }[]>>;
 }
-
-const getScript = (ids, dataMap) => {};
 
 const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
   const { store, updateStore } = useContext();
-  const { nodeStatus, schema, dataMap, emitter, graph, data, getService } = store;
+  const { schema, selectNodes, emitter, graph, getService } = store;
+  useDynamicStyle(
+    `
+    .studio-graph-neighbor-query .ant-menu-vertical .ant-menu-submenu-title{
+        padding-inline:12px !important;
+    }
+    .studio-graph-neighbor-query .ant-menu .ant-menu-submenu-title .anticon span {
+        margin-inline-start:8px !important;
+    }
+  `,
+    'studio-neighbor-query',
+  );
 
   const MenuRef = useRef<HTMLDivElement>(null);
   const [state, setState] = useState({
@@ -46,11 +57,7 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
     getMenuItems();
   }, [schema]);
 
-  const selectIds = Object.keys(nodeStatus).filter(key => {
-    return nodeStatus[key].selected;
-  });
-  const selectNode = data.nodes.find(item => item.id === selectIds[0]); // dataMap[selectId] || {};
-  if (!selectNode) {
+  if (selectNodes.length === 0) {
     return null;
   }
 
@@ -59,7 +66,7 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
     updateStore(draft => {
       draft.isLoading = true;
     });
-
+    const selectIds = selectNodes.map(item => item.id);
     const res = await getService<INeighborQueryData>('queryNeighborData')({
       selectIds,
       key,
@@ -72,7 +79,6 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
       const newData = handleExpand(graph, res, selectIds);
       updateStore(draft => {
         draft.data = newData;
-        draft.dataMap = getDataMap(newData);
         draft.nodeStatus = nodeStatus;
         draft.edgeStatus = edgeStatus;
         draft.isLoading = false;
@@ -85,8 +91,29 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
     }
   };
 
+  const defaultChildren = itemMap['all'];
+  const items =
+    selectNodes.length === 1
+      ? [
+          {
+            icon: <ShareAltOutlined />,
+            key: 'NeighborQuery',
+            label: 'NeighborQuery',
+            //@ts-ignore
+            children: itemMap[selectNodes[0].label] || defaultChildren,
+          },
+        ]
+      : [
+          {
+            icon: <ShareAltOutlined />,
+            key: 'NeighborQuery',
+            label: 'NeighborQuery',
+            children: defaultChildren,
+          },
+        ];
+  console.log(items, itemMap);
   return (
-    <div ref={MenuRef}>
+    <div ref={MenuRef} className="studio-graph-neighbor-query">
       <Menu
         getPopupContainer={node => {
           if (MenuRef.current) {
@@ -97,14 +124,7 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
         onClick={onClick}
         style={{ margin: '0px', padding: '0px', width: '103%' }}
         mode="vertical"
-        items={[
-          {
-            key: 'NeighborQuery',
-            label: 'NeighborQuery',
-            //@ts-ignore
-            children: itemMap[selectNode.label],
-          },
-        ]}
+        items={items}
       />
     </div>
   );

@@ -1,5 +1,5 @@
 import type { INeighborQueryData, INeighborQueryItems } from '@graphscope/studio-graph';
-import { queryStatement } from './queryStatement';
+import { queryStatement } from '../queryStatement';
 export const queryNeighborData: INeighborQueryData['query'] = async params => {
   const { key, selectIds } = params;
   const script = `
@@ -7,20 +7,16 @@ export const queryNeighborData: INeighborQueryData['query'] = async params => {
     WHERE  elementId(a) IN [${selectIds}] 
     RETURN a,b,c
     `;
-  const data = await queryStatement(script);
-  return data;
+  // const data = await queryStatement(script);
+  return {
+    nodes: [],
+    edges: [],
+  };
 };
 
 export const queryNeighborItems: INeighborQueryItems['query'] = async params => {
   const { schema } = params;
-  const itemMap = {
-    all: [
-      {
-        key: `(a)-[b]-(c)`,
-        label: `One-Hop Neighbors`,
-      },
-    ],
-  };
+  const itemMap = {};
   schema.nodes.forEach(node => {
     itemMap[node.label] = getOptionsBySchema(schema, node.label);
   });
@@ -57,11 +53,14 @@ function getOptionsBySchema(schema, nodeLabel) {
     }
   });
 
-  return [
-    {
-      key: `(a)-[b]-(c)`,
-      label: `One-Hop Neighbors`,
-    },
-    ...options,
-  ];
+  const extraItems =
+    options.length > 1
+      ? [
+          {
+            key: `(a)-[b]-(c)`,
+            label: `All Neighbors`,
+          },
+        ]
+      : [];
+  return [...extraItems, ...options];
 }

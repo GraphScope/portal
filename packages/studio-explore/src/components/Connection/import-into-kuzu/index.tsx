@@ -4,7 +4,7 @@ import { Utils, ImportFiles } from '@graphscope/studio-components';
 import { parseSchemaByFiles } from '@graphscope/studio-importor';
 import { Button, notification } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { useKuzuGraph, setFiles, getDriver } from '../../../services/kuzu-wasm';
+import { useKuzuGraph, setFiles } from './kuzu-wasm';
 import { transform } from './transform';
 
 interface IImportIntoKuzuProps {
@@ -33,6 +33,8 @@ const ImportIntoKuzu: React.FunctionComponent<IImportIntoKuzuProps> = props => {
     const schemaData = transform(result);
 
     const datasetId = 'graph-' + Utils.uuid();
+    Utils.storage.set('query_endpoint', `kuzu_wasm://${datasetId}`);
+    Utils.storage.set('query_language', `cypher`);
 
     setFiles(datasetId, {
       schema: schemaData,
@@ -53,8 +55,10 @@ const ImportIntoKuzu: React.FunctionComponent<IImportIntoKuzuProps> = props => {
     });
     if (success) {
       handleClose();
-      Utils.storage.set('query_endpoint', `kuzu_wasm://${datasetId}`);
+      // Utils.storage.set('query_endpoint', `kuzu_wasm://${datasetId}`);
       window.location.reload();
+    } else {
+      Utils.storage.set('query_endpoint', '');
     }
   };
 

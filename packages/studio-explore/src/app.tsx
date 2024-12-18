@@ -127,14 +127,14 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             <ZoomStatus />
             {/* <HoverMenu>
               <NeighborQuery />
-              <CommonNeighbor onQuery={onQuery} />
+              <CommonNeighbor  />
               <DeleteLeafNodes />
               <DeleteNode />
             </HoverMenu> */}
 
             <ContextMenu>
               <NeighborQuery />
-              <CommonNeighbor onQuery={onQuery} />
+              {/* <CommonNeighbor /> */}
               <DeleteLeafNodes />
               <DeleteNode />
             </ContextMenu>
