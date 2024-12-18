@@ -118,7 +118,7 @@ const PaperReading: React.FunctionComponent<QueryGraphProps> = props => {
             <Loading />
             <ContextMenu>
               <NeighborQuery />
-              <CommonNeighbor onQuery={SERVICES.queryCypher} />
+              <CommonNeighbor />
               <DeleteLeafNodes />
               <DeleteNode />
             </ContextMenu>
