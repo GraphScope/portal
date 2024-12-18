@@ -129,6 +129,9 @@ class ProgressInfo:
         else:
             return 100 * self.completed / float(self.number)
 
+    def is_done(self) -> bool:
+        return self.completed == self.number
+
     def backpedal(self):
         if self.completed > 0:
             self.completed -= 1
@@ -606,6 +609,7 @@ class PaperInspector(BaseNode):
                 if not paper_meta_path:
                     continue
             try:
+                data_id = ""
                 # Initialize the paper extractor and other components
                 pdf_extractor = PaperExtractor(
                     paper_file_path, meta_path=paper_meta_path
@@ -632,10 +636,11 @@ class PaperInspector(BaseNode):
                     self.progress["total"].add(
                         ProgressInfo(self.graph.nodes_count(), self.graph.nodes_count())
                     )
-                    for node in self.graph.get_node_names():
+                    for node in all_nodes:
                         self.progress[node].add(ProgressInfo(1, 1))
 
                     paper_data = self.persist_store.get_state(data_id, first_node_name)
+                    self.persist_store.save_state(data_id, "_DONE", {"done": True})
                     curr_id = paper_data.get("data", {}).get("id", "")
                     self.persist_edge_states(data_id, parent_id, curr_id, edge_name)
 
@@ -646,7 +651,7 @@ class PaperInspector(BaseNode):
                     self.progress["total"].add(
                         ProgressInfo(self.graph.nodes_count(), 0)
                     )
-                    for node in self.graph.get_node_names():
+                    for node in all_nodes:
                         self.progress[node].add(ProgressInfo(1, 0))
 
                     state[data_id] = {
@@ -671,12 +676,8 @@ class PaperInspector(BaseNode):
                         )
                     else:
                         self.run_through(data_id, state[data_id], parent_id, edge_name)
-                    is_done = (
-                        self.progress["total"].completed
-                        == self.progress["total"].number
-                    )
                     # Mark the data as DONE
-                    if is_done:
+                    if self.progress["total"].is_done():
                         self.persist_store.save_state(data_id, "_DONE", {"done": True})
                         # clean state
                         state[data_id][WF_STATE_CACHE_KEY].clear()
