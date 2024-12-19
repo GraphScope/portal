@@ -65,6 +65,6 @@ class ScholarFetcher:
             return None, None
 
         fetch_result = self.result_former.init_from_google_scholar(paper_info)
-        paper_bib = paper_info.get("bib", None)
+        # paper_bib = paper_info.get("bib", None)
 
-        return fetch_result, paper_bib
+        return fetch_result, paper_info

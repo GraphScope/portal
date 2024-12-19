@@ -45,11 +45,13 @@ class ResultFormer:
         if scholar_result:
             result["id"] = scholar_result["id"]
             result["doi"] = ""
-            result["journal_ref"] = scholar_result["bib_info"]["Publication"]
+            result["journal_ref"] = scholar_result.get("bib_info", {}).get(
+                "Publication", ""
+            )
             result["summary"] = self.google_scholar_string_refine(
                 scholar_result["snippet"]
             )
-            result["authors"] = [scholar_result["bib_info"]["Author"]]
+            result["authors"] = [scholar_result.get("bib_info", {}).get("Author", "")]
             result["primary_category"] = ""
             result["categories"] = ""
 
