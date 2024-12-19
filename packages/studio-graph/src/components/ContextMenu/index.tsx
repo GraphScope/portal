@@ -10,7 +10,7 @@ const ContextMenu: React.FunctionComponent<IContextMenuProps> = props => {
   const { children } = props;
   const { store, updateStore } = useContext();
   const { token } = theme.useToken();
-  const { graph, emitter } = store;
+  const { emitter } = store;
   const [state, setState] = React.useState({
     visible: false,
     x: 0,
@@ -38,7 +38,10 @@ const ContextMenu: React.FunctionComponent<IContextMenuProps> = props => {
             selected: true,
           },
         };
-        // draft.selectNodes = [node];
+        const match = draft.selectNodes.find(i => i.id === node.id);
+        if (!match) {
+          draft.selectNodes = [node];
+        }
       });
     };
     const handleClear = () => {
