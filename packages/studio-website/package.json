@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/studio-site",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "author": "pomelo-nwu <czynwu@outlook.com>",
   "files": [
     "es",

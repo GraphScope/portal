@@ -1,5 +1,8 @@
 import { Utils } from '@graphscope/studio-components';
 import { getDriver as getKuzuDriver, KuzuDriver } from '@graphscope/studio-driver';
+import React from 'react';
+import { Typography, Tag, Flex } from 'antd';
+import { ExclamationCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
 const { storage } = Utils;
 
 const getDriver = async () => {
@@ -55,7 +58,26 @@ export const createKuzuGraph = async (dataset_id: string) => {
       .join(';\n');
     return {
       success: false,
-      message: `Some nodes or edges failed to load, please check the data format: ${message}`,
+      message: (
+        <Flex vertical gap={16}>
+          <Typography.Title level={3} style={{ margin: '0px' }}>
+            Load Failed
+          </Typography.Title>
+
+          {[...logs.nodes, ...logs.edges].map(item => {
+            const type = item.message === 'false' ? 'error' : 'success';
+            const icon = item.message === 'false' ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />;
+            return (
+              <Typography.Text type="secondary" key={item.name} italic>
+                <Tag color={type} icon={icon}>
+                  {item.name}
+                </Tag>
+                {item.message}
+              </Typography.Text>
+            );
+          })}
+        </Flex>
+      ),
     };
   }
   return await driver.writeBack();

@@ -168,7 +168,16 @@ registerIcons(iconfontId);
 
 ```jsx
 import React, { useEffect } from 'react';
-import { Canvas, GraphProvider, Prepare, useContext, registerIcons, ZoomStatus } from '@graphscope/studio-graph';
+import {
+  Canvas,
+  GraphProvider,
+  Prepare,
+  useContext,
+  registerIcons,
+  ZoomStatus,
+  BasicInteraction,
+  ClearStatus,
+} from '@graphscope/studio-graph';
 import { data, schema } from './const';
 registerIcons();
 const CustomGraphFetch = () => {
@@ -185,11 +194,36 @@ const CustomGraphFetch = () => {
           caption: ['name'],
           icon: 'logo',
           options: {
-            textPosition: 'top',
-            textColor: '#000',
-            iconColor: '#fff',
-            iconSize: '8px',
-            zoomLevel: [3, 5],
+            /** keyshape */
+            selectColor: 'red',
+            /** icon */
+            iconColor: '#fff', // color of keyshape
+            iconSize: undefined, // half size of keyshape
+            /** label text */
+            textSize: 12,
+            textColor: '#000', // color of keyshape
+            textPosition: 'bottom',
+            textBackgroundColor: 'rgba(255,255,255,0.8)',
+            /** strategy */
+            zoomLevel: [3, 15],
+          },
+        },
+      };
+      draft.edgeStyle = {
+        e1: {
+          size: 2,
+          color: 'blue',
+          caption: ['desc'],
+          options: {
+            /** keyshape */
+            selectColor: 'red',
+            /** arrow */
+            arrowLength: undefined, // 默认是边宽的三倍
+            arrowPosition: 1, //箭头的位置
+            /** label  */
+            textColor: '#fff', // 默认是边颜色
+            textSize: 3, // 默认是边宽的三倍
+            textBackgroundColor: 'blue',
           },
         },
       };
@@ -204,6 +238,8 @@ export default () => {
         <CustomGraphFetch />
         <Canvas />
         <ZoomStatus />
+        <BasicInteraction />
+        <ClearStatus />
       </GraphProvider>
     </div>
   );
@@ -231,11 +267,12 @@ const CustomGraphFetch = () => {
       draft.source = data;
       draft.edgeStyle = {
         e1: {
-          size: 2,
+          size: 1,
           color: 'red',
           caption: ['weight'],
           options: {
             arrowLength: 0,
+            // textSize: 1,
           },
         },
       };
