@@ -1,0 +1,17 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["es/**", "lib/**"]
+    },
+    "start": {
+      "dependsOn": ["^start"],
+      "outputs": ["es/**", "lib/**"]
+    },
+    "sync": {
+      "dependsOn": ["^sync"]
+    }
+  },
+  "globalDependencies": [".prettierrc.js"]
+}

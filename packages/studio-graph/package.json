@@ -1,0 +1,54 @@
+{
+  "name": "@graphscope/studio-graph",
+  "version": "0.1.8",
+  "description": "A React toolkit for graph analysis based on g6",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GraphScope/portal.git"
+  },
+  "files": [
+    "es",
+    "lib",
+    "dist"
+  ],
+  "scripts": {
+    "start": "father dev",
+    "build": "father build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "3d-force-graph": "^1.73.3",
+    "@ant-design/colors": "^7.1.0",
+    "@antv/g6": "latest",
+    "@graphscope/studio-driver": "workspace:*",
+    "@graphscope/studio-components": "workspace:*",
+    "@graphscope/use-zustand": "workspace:*",
+    "@tweenjs/tween.js": "^25.0.0",
+    "@types/d3-selection": "^3.0.10",
+    "d3-brush": "^3.0.0",
+    "d3-force": "^3.0.0",
+    "d3-force-3d": "^3.0.5",
+    "d3-hierarchy": "^3.1.2",
+    "d3-scale": "^4.0.2",
+    "d3-selection": "^3.0.0",
+    "force-graph": "^1.46.0",
+    "mitt": "^3.0.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-intl": "^6.6.1",
+    "uuidv4": "latest"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "@types/d3-brush": "^3.0.6",
+    "@types/d3-force": "^3.0.10",
+    "@types/d3-hierarchy": "^3.1.7"
+  }
+}

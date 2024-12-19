@@ -1,0 +1,32 @@
+{
+  "name": "@graphscope/studio-driver",
+  "version": "0.1.7",
+  "description": "A library provides a unified interface for interacting with graph databases",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GraphScope/portal.git"
+  },
+  "files": [
+    "es",
+    "lib",
+    "dist"
+  ],
+  "scripts": {
+    "start": "father dev",
+    "build": "father build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@graphscope/_test_gremlin_": "^0.1.2",
+    "neo4j-driver": "^5.12.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {}
+}

@@ -1,0 +1,217 @@
+{
+    "id": "test_pubmed",
+    "graph": {
+      "inspectors": [
+        {
+          "name": "PaperInspector",
+          "graph": {
+            "nodes": [
+              {
+                "name": "Paper"
+              },
+              {
+                "name": "Background",
+                "query": "**Question**: Please describe the problem studied in this paper, why the problem is worth studying, and what are the issues of existing solutions to this problem.",
+                "extract_from": {"exact": ["1"], "match": ["introduction"]},
+                "output_schema": {
+                  "type": "single",
+                  "description": "The background of this paper",
+                  "item": [
+                    {
+                      "name": "problem_definition",
+                      "type": "string",
+                      "description": "The problem studied in this paper."
+                    },
+                    {
+                      "name": "problem_value",
+                      "type": "string",
+                      "description": "Why the problem is worth studying."
+                    },
+                    {
+                      "name": "existing_solutions",
+                      "type": "string",
+                      "description": "What are the existing solutions and their problems."
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "Contribution",
+                "query": "**Question**: List all contributions of the paper. These contributions are always organized and listed with a head sentence like **our contributions are as follows**. For each contribution, output the **original representation** and use a few words to summarize it.",
+                "extract_from": {"exact": ["1"], "match": ["introduction"]},
+                "output_schema": {
+                  "type": "array",
+                  "description": "A list of contributions.",
+                  "item": [
+                    {
+                      "name": "original",
+                      "type": "string",
+                      "description": "The original contribution sentences."
+                    },
+                    {
+                      "name": "summary",
+                      "type": "string",
+                      "description": "The summary of the contribution."
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "Challenge",
+                "query": "**Question**: Please summarize some challenges in this paper. Each challenge has a summarized NAME, detailed DESCRIPTION, and SOLUTION.",
+                "extract_from": {"exact": ["1"], "match": ["introduction"]},
+                "output_schema": {
+                  "type": "array",
+                  "description": "A list of challenges for the problems and their solutions in the paper.",
+                  "item": [
+                    {
+                      "name": "name",
+                      "type": "string",
+                      "description": "The summarized name of the challenge."
+                    },
+                    {
+                      "name": "description",
+                      "type": "string",
+                      "description": "The description of the challenge."
+                    },
+                    {
+                      "name": "solution",
+                      "type": "string",
+                      "description": "The solutions proposed for the challenge."
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "Solution",
+                "query": "**Question**: Please present details of solutions that are proposed to solve the challenges in this paper. The solution can include system design, components of systems and algorithm details. Include as many details as possible for each solution. ",
+                "extract_from": {},
+                "output_schema": {
+                  "type": "array",
+                  "description": "A list of solutions for the problem in this paper.",
+                  "item": [
+                    {
+                      "name": "name",
+                      "type": "string",
+                      "description": "The summarized name of the solution."
+                    },
+                    {
+                      "name": "description",
+                      "type": "string",
+                      "description": "The detailed description of the solution."
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "Experiment",
+                "query": "**Question**: Please analyze details of experiments in this paper. The experiments are usually organized in a section named **Experiment** or **Evaluation**. Each experiment is typically a subsection of the whole experiment section. List each experiment with the name, settings including datasets, evaluation metrics, and baselines, and the results of the experiment. Provide the authors' analysis of the results, explaining why such results might have been observed and any implications. In addition, analysis for special cases can also be explained.",
+                "extract_from": {"match": ["experiment"]},
+                "output_schema": {
+                  "type": "array",
+                  "description": "A list of experiments in this paper.",
+                  "item": [
+                    {
+                      "name": "name",
+                      "type": "string",
+                      "description": "The name of the experiment."
+                    },
+                    {
+                      "name": "settings",
+                      "type": "string",
+                      "description": "The settings of the experiment, including datasets, evaluation metrics, and baselines."
+                    },
+                    {
+                      "name": "results",
+                      "type": "string",
+                      "description": "The results and their analysis of the experiment."
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "Baseline",
+                "query": "**Question**: Please list the baselines compared with the method proposed in this paper. For each baseline, list its name and the name of the paper that first proposes this baseline. In detail, the paper that first proposes this baseline should be cited during the initial mentions of the baseline, and the name of the paper can be extracted from the references.",
+                "extract_from": {"match": ["experiment"]},
+                "output_schema": {
+                  "type": "array",
+                  "description": "A list of baselines in this paper.",
+                  "item": [
+                    {
+                      "name": "name",
+                      "type": "string",
+                      "description": "The name of the baseline."
+                    },
+                    {
+                      "name": "paper_name",
+                      "type": "string",
+                      "description": "The name of the paper that first proposes this baseline."
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "Github",
+                "query": "**Question**: Please list the github links provided in this paper. Those links always start with 'https://github.com/'. If there is no github link in this paper, return an empty list.",
+                "extract_from": {},
+                "output_schema": {
+                  "type": "array",
+                  "description": "A list of github links in this paper.",
+                  "item": [
+                    {
+                      "name": "github",
+                      "type": "string",
+                      "description": "The github link in this paper."
+                    }
+                  ]
+                }
+              }
+            ],
+            "edges": [
+              {
+                "source": "Paper",
+                "target": "Background"
+              },
+              {
+                "source": "Paper",
+                "target": "Contribution"
+              },
+              {
+                "source": "Contribution",
+                "target": "Challenge"
+              },
+              {
+                "source": "Challenge",
+                "target": "Solution"
+              },
+              {
+                "source": "Paper",
+                "target": "Experiment"
+              },
+              {
+                "source": "Paper",
+                "target": "Baseline"
+              },
+              {
+                "source": "Paper",
+                "target": "Github"
+              }
+            ]
+          }
+        }
+      ],
+      "navigators": [
+        {
+          "name": "Reference",
+          "source": "PaperInspector",
+          "target": "PaperInspector",
+          "method": "pubmed",
+          "args": {
+            "max_thread_num": 3,
+            "ref_mode": "skip"
+          }
+        }
+      ]
+    }
+  }
+  

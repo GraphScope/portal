@@ -1,0 +1,49 @@
+{
+  "name": "@graphscope/studio-importor",
+  "version": "0.1.8",
+  "description": "A data modeling and import module in GraphStudio",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GraphScope/portal.git"
+  },
+  "files": [
+    "es",
+    "lib",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "start": "father dev",
+    "build": "father build && npm run build:umd",
+    "build:umd": "webpack  --mode production  -c ../../webpack.config.js --env path=/packages/studio-importor"
+  },
+  "dependencies": {
+    "@graphscope/use-zustand": "workspace:*",
+    "@graphscope/studio-components": "workspace:*",
+    "@graphscope/studio-server": "workspace:*",
+    "d3-force": "latest",
+    "dagre": "latest",
+    "localforage": "latest",
+    "monaco-editor": "latest",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-intl": "^6.6.1",
+    "reactflow": "latest",
+    "sql-ddl-to-json-schema": "latest",
+    "uuidv4": "^6.2.13"
+  },
+  "devDependencies": {
+    "@types/d3-force": "latest",
+    "html-to-image": "^1.11.11",
+    "js-yaml": "^4.1.0",
+    "uuid": "^9.0.1"
+  },
+  "author": "",
+  "license": "ISC"
+}

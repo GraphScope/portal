@@ -1,0 +1,50 @@
+{
+  "name": "@graphscope/studio-query",
+  "version": "0.1.8",
+  "description": "A data querying module in GraphStudio, supporting Cypher and Gremlin statements",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GraphScope/portal.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "es",
+    "lib",
+    "dist"
+  ],
+  "scripts": {
+    "start": "father dev",
+    "build": "father build &&  npm run build:umd:sdk",
+    "build:umd": "webpack  --mode production  -c ../../webpack.config.js --env path=/packages/studio-query",
+    "build:umd:sdk": "webpack  --mode production  -c ../../webpack.config.js --env path=/packages/studio-query entry=/packages/studio-query/src/sdk/index.tsx global=STUDIO_QUERY_SDK"
+  },
+  "devDependencies": {
+    "father": "^4.4.1"
+  },
+  "dependencies": {
+    "@graphscope/studio-components": "workspace:*",
+    "@graphscope/use-zustand": "workspace:*",
+    "@graphscope/studio-graph": "workspace:*",
+    "@graphscope/studio-driver": "workspace:*",
+    "@graphscope/studio-draw-pattern": "workspace:*",
+    "react-json-view": "^1.21.3",
+    "react-intl": "^6.6.1",
+    "@fortawesome/free-solid-svg-icons": "latest",
+    "@fortawesome/react-fontawesome": "latest",
+    "@fortawesome/fontawesome-svg-core": "latest",
+    "@antv/g2": "^5.2.8",
+    "uuid": "^9.0.1",
+    "dayjs": "^1.11.10",
+    "@graphscope/_test_gremlin_": "^0.1.2",
+    "neo4j-driver": "^5.12.0",
+    "monaco-editor": "^0.50.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

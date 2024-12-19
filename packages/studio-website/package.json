@@ -1,0 +1,70 @@
+{
+  "name": "@graphscope/studio-site",
+  "version": "0.1.8-beta.1",
+  "author": "pomelo-nwu <czynwu@outlook.com>",
+  "files": [
+    "es",
+    "lib"
+  ],
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "father build",
+    "start": "vite dev",
+    "build:site:single": "vite build --mode=single",
+    "build:site": "vite build"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.2.6",
+    "@antv/graphin": "^2.7.27",
+    "@antv/graphin-icons": "^1.0.0",
+    "@fortawesome/free-regular-svg-icons": "latest",
+    "@fortawesome/free-solid-svg-icons": "latest",
+    "@fortawesome/react-fontawesome": "latest",
+    "@graphscope/studio-components": "workspace:*",
+    "@graphscope/studio-driver": "workspace:*",
+    "@graphscope/studio-explore": "workspace:*",
+    "@graphscope/studio-graph": "workspace:*",
+    "@graphscope/studio-importor": "workspace:*",
+    "@graphscope/studio-query": "workspace:*",
+    "@graphscope/studio-server": "workspace:*",
+    "@graphscope/use-zustand": "workspace:*",
+    "@graphscope/graphy-website": "workspace:*",
+    "@uiw/react-codemirror": "^4.21.21",
+    "antd": "^5.22.2",
+    "js-yaml": "^4.1.0",
+    "localforage": "^1.10.0",
+    "lodash": "^4.17.21",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-intl": "^6.6.8",
+    "react-json-view": "^1.21.3",
+    "react-router-dom": "^6.26.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/lodash": "^4.14.202",
+    "@types/node": "^22.7.5",
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.0",
+    "@types/uuid": "^9.0.7",
+    "@umijs/lint": "latest",
+    "@vitejs/plugin-react": "^4.2.1",
+    "dotenv": "^16.4.5",
+    "eslint": "latest",
+    "monaco-editor-webpack-plugin": "^7.1.0",
+    "react-intl": "^6.6.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.12",
+    "vite-plugin-node-externals": "^0.0.1",
+    "vite-plugin-singlefile": "^2.0.2",
+    "vite-plugin-top-level-await": "^1.4.4",
+    "vite-plugin-wasm": "^3.3.0"
+  }
+}

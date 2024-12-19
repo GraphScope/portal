@@ -1,0 +1,2561 @@
+openapi: 3.0.3
+
+info:
+  title: GraphScope FLEX HTTP SERVICE API
+  description: |-
+    This is a specification for GraphScope FLEX HTTP service based on the OpenAPI 3.0 specification. You can find out more details about
+    specification at [doc](https://swagger.io/specification/v3/).
+  contact:
+    name: GraphScope
+    email: graphscope@alibaba-inc.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+
+externalDocs:
+  description: Find out More about GraphScope
+  url: http://graphscope.io
+
+components:
+  responses:
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    404:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    500:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    APIResponse:
+      type: string
+
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code
+        message:
+          type: string
+          description: Error message
+
+    # https://swagger.io/docs/specification/data-models/data-types/#any
+    # {} is shorthand syntax for an arbitrary-type schema
+    AnyValue: {}
+
+    RunningDeploymentInfo:
+      required:
+        - instance_name
+        - cluster_type
+        - version
+        - creation_time
+        - frontend
+        - engine
+        - storage
+      properties:
+        instance_name:
+          type: string
+        cluster_type:
+          type: string
+          enum:
+            - HOSTS
+            - KUBERNETES
+        version:
+          type: string
+        creation_time:
+          type: string
+        frontend:
+          type: string
+          enum:
+            - Cypher/Gremlin
+            - AnalyticalApps
+        engine:
+          type: string
+          enum:
+            - Hiactor
+            - Gaia
+        storage:
+          type: string
+          enum:
+            - MutableCSR
+            - MutablePersistent
+
+    ResourceUsage:
+      required:
+        - host
+        - timestamp
+        - usage
+      properties:
+        host:
+          type: string
+        timestamp:
+          type: string
+        usage:
+          type: string
+
+    GetResourceUsageResponse:
+      required:
+        - cpu_usage
+        - memory_usage
+      properties:
+        cpu_usage:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceUsage'
+        memory_usage:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceUsage'
+
+    GetStorageUsageResponse:
+      required:
+        - storage_usage
+      properties:
+        storage_usage:
+          type: object
+          additionalProperties:
+            type: number
+            format: double
+
+    NodeStatus:
+      required:
+        - name
+        - cpu_usage
+        - memory_usage
+        - disk_usage
+      properties:
+        name:
+          type: string
+        cpu_usage:
+          type: number
+          format: double
+        memory_usage:
+          type: number
+          format: double
+        disk_usage:
+          type: number
+          format: double
+
+    PodStatus:
+      required:
+        - name
+        - image
+        - labels
+        - node
+        - status
+        - restart_count
+        - cpu_usage
+        - memory_usage
+        - creation_time
+      properties:
+        name:
+          type: string
+        image:
+          type: array
+          items:
+            type: string
+        labels:
+          type: object
+          additionalProperties: true
+        node:
+          type: string
+        status:
+          type: string
+        restart_count:
+          type: integer
+          format: int32
+        cpu_usage:
+          type: integer
+          format: int32
+        memory_usage:
+          type: integer
+          format: int32
+        timestamp:
+          type: string
+        creation_time:
+          type: string
+        component_belong_to:
+          type: string
+
+    GetPodLogResponse:
+      required:
+        - log
+      properties:
+        log:
+          type: object
+          additionalProperties: true
+
+    RunningDeploymentStatus:
+      required:
+        - cluster_type
+      properties:
+        cluster_type:
+          type: string
+          enum:
+            - HOSTS
+            - KUBERNETES
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/NodeStatus'
+        pods:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/PodStatus'
+
+    StartServiceRequest:
+      x-body-name: start_service_request
+      properties:
+        graph_id:
+          type: string
+
+    ServiceStatus:
+      required:
+        - graph_id
+        - status
+        - creation_time
+      properties:
+        graph_id:
+          type: string
+        status:
+          type: string
+          enum:
+            - Running
+            - Stopped
+        sdk_endpoints:
+          properties:
+            cypher:
+              type: string
+            gremlin:
+              type: string
+            hqps:
+              type: string
+            grpc:
+              type: string
+        start_time:
+          type: string
+
+    UploadFileResponse:
+      required:
+        - file_path
+        - metadata
+      properties:
+        file_path:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+
+    LongText:
+      required:
+        - long_text
+      properties:
+        long_text:
+          type: string
+          nullable: true
+
+    PrimitiveType:
+      required:
+        - primitive_type
+      properties:
+        primitive_type:
+          type: string
+          enum: [DT_SIGNED_INT32, DT_UNSIGNED_INT32, DT_SIGNED_INT64, DT_UNSIGNED_INT64, DT_BOOL, DT_FLOAT, DT_DOUBLE]
+
+    StringType:
+      required:
+        - string
+      properties:
+        string:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/LongText'
+
+    TimeStampType:
+      required:
+        - timestamp
+      properties:
+        timestamp:
+          type: string
+
+    DateType:
+      required:
+        - date32
+      properties:
+        date32:
+          type: string
+
+    TemporalType:
+      required:
+        - temporal
+      properties:
+        temporal:
+          oneOf:
+            - $ref: '#/components/schemas/TimeStampType'
+            - $ref: '#/components/schemas/DateType'
+
+    GSDataType:
+      oneOf:
+        - $ref: '#/components/schemas/PrimitiveType'
+        - $ref: '#/components/schemas/StringType'
+        - $ref: '#/components/schemas/TemporalType'
+
+    Parameter:
+      required:
+        - name
+        - type
+      properties:
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/GSDataType'
+
+    BasePropertyMeta:
+      required:
+        - property_name
+        - property_type
+      properties:
+        property_name:
+          type: string
+        property_type:
+          $ref: '#/components/schemas/GSDataType'
+        nullable:
+          type: boolean
+        default_value:
+          $ref: '#/components/schemas/AnyValue'
+        description:
+          type: string
+
+    CreatePropertyMeta:
+      x-body-name: create_property_meta
+      allOf:
+        - $ref: '#/components/schemas/BasePropertyMeta'
+
+    GetPropertyMeta:
+      x-body-name: get_property_meta
+      allOf:
+        - $ref: '#/components/schemas/BasePropertyMeta'
+        - type: object
+          required:
+            - property_id
+          properties:
+            property_id:
+              type: integer
+              format: int32
+
+    BaseVertexType:
+      required:
+        - type_name
+        - primary_keys
+      properties:
+        type_name:
+          type: string
+        primary_keys:
+          type: array
+          items:
+            type: string
+        x_csr_params:
+          type: object
+          description: Used for storage optimization
+          properties:
+            max_vertex_num:
+              type: integer
+
+    CreateVertexType:
+      x-body-name: create_vertex_type
+      allOf:
+        - $ref: '#/components/schemas/BaseVertexType'
+        - type: object
+          required:
+            - properties
+          properties:
+            properties:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreatePropertyMeta'
+            description:
+              type: string
+
+    BaseEdgeType:
+      required:
+        - type_name
+        - vertex_type_pair_relations
+      properties:
+        type_name:
+          type: string
+        vertex_type_pair_relations:
+          type: array
+          items:
+            required:
+              - source_vertex
+              - destination_vertex
+            properties:
+              source_vertex:
+                type: string
+              destination_vertex:
+                type: string
+              relation:
+                type: string
+                enum:
+                  - MANY_TO_MANY
+                  - ONE_TO_MANY
+                  - MANY_TO_ONE
+                  - ONE_TO_ONE
+              x_csr_params:
+                description: Used for storage optimization
+                properties:
+                  edge_storage_strategy:
+                    type: string
+                    enum:
+                      - ONLY_IN
+                      - ONLY_OUT
+                      - BOTH_OUT_IN
+        directed:
+          type: boolean
+        primary_keys:
+          type: array
+          items:
+            type: string
+
+    CreateEdgeType:
+      x-body-name: create_edge_type
+      allOf:
+        - $ref: '#/components/schemas/BaseEdgeType'
+        - type: object
+          properties:
+            properties:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreatePropertyMeta'
+            description:
+              type: string
+
+    CreateStoredProcRequest:
+      x-body-name: create_stored_proc_request
+      required:
+        - name
+        - type
+        - query
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum:
+            - cpp
+            - cypher
+        query:
+          type: string
+
+    CreateStoredProcResponse:
+      required:
+        - stored_procedure_id
+      properties:
+        stored_procedure_id:
+          type: string
+
+    CreateGraphSchemaRequest:
+      x-body-name: create_graph_schema_request
+      required:
+        - vertex_types
+        - edge_types
+      properties:
+        vertex_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateVertexType'
+        edge_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateEdgeType'
+
+    CreateGraphRequest:
+      x-body-name: create_graph_request
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        stored_procedures:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateStoredProcRequest'
+        schema:
+          $ref: '#/components/schemas/CreateGraphSchemaRequest'
+
+    CreateGraphResponse:
+      required:
+        - graph_id
+      properties:
+        graph_id:
+          type: string
+
+    StoredProcedureMeta:
+      allOf:
+        - $ref: '#/components/schemas/CreateStoredProcRequest'
+        - type: object
+          required:
+            - id
+            - library
+            - params
+            - returns
+          properties:
+            id:
+              type: string
+            library:
+              type: string
+            params:
+              type: array
+              items:
+                $ref: '#/components/schemas/Parameter'
+            returns:
+              type: array
+              items:
+                $ref: '#/components/schemas/Parameter'
+
+    GetStoredProcResponse:
+      allOf:
+        - $ref: '#/components/schemas/StoredProcedureMeta'
+        - type: object
+          required:
+            - bound_graph
+            - runnable
+          properties:
+            bound_graph:
+              type: string
+            runnable:
+              type: boolean
+
+    UpdateStoredProcRequest:
+      x-body-name: update_stored_proc_request
+      required:
+        - description
+      properties:
+        description:
+          type: string
+
+    GetVertexType:
+      allOf:
+        - $ref: '#/components/schemas/BaseVertexType'
+        - type: object
+          required:
+            - properties
+          properties:
+            type_id:
+              type: integer
+              format: int32
+            properties:
+              type: array
+              items:
+                $ref: '#/components/schemas/GetPropertyMeta'
+            description:
+              type: string
+
+    GetEdgeType:
+      allOf:
+        - $ref: '#/components/schemas/BaseEdgeType'
+        - type: object
+          properties:
+            type_id:
+              type: integer
+              format: int32
+            properties:
+              type: array
+              items:
+                $ref: '#/components/schemas/GetPropertyMeta'
+            description:
+              type: string
+
+    GetGraphSchemaResponse:
+      required:
+        - vertex_types
+        - edge_types
+      properties:
+        vertex_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetVertexType'
+        edge_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetEdgeType'
+
+    GetGraphResponse:
+      required:
+        - id
+        - name
+        - schema
+        - creation_time
+        - data_update_time
+        - schema_update_time
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        store_type:
+          type: string
+          enum:
+            - mutable_csr
+        creation_time:
+          type: string
+        data_update_time:
+          type: string
+        schema_update_time:
+          type: string
+        stored_procedures:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetStoredProcResponse'
+        schema:
+          $ref: '#/components/schemas/GetGraphSchemaResponse'
+
+    ColumnMapping:
+      required:
+        - column
+        - property
+      properties:
+        column:
+          properties:
+            index:
+              type: integer
+              format: int32
+            name:
+              type: string
+        property:
+          type: string
+          description: must align with the schema
+
+    VertexMapping:
+      x-body-name: vertex_mapping
+      required:
+        - type_name
+        - inputs
+      properties:
+        type_name:
+          type: string
+        inputs:
+          type: array
+          items:
+            type: string
+            example: file:///path/to/file.csv
+        column_mappings: # column_mappings could be empty, which indicates the default mapping in order.
+          type: array
+          items:
+            $ref: '#/components/schemas/ColumnMapping'
+
+    EdgeMapping:
+      x-body-name: edge_mapping
+      required:
+        - type_triplet
+        - inputs
+      properties:
+        type_triplet:
+          required:
+            - edge
+            - source_vertex
+            - destination_vertex
+          description: source label -> [edge label] -> destination label
+          properties:
+            edge:
+              type: string
+            source_vertex:
+              type: string
+            destination_vertex:
+              type: string
+        inputs:
+          type: array
+          items:
+            type: string
+        source_vertex_mappings:
+          type: array
+          items:
+            $ref: '#/components/schemas/ColumnMapping'
+        destination_vertex_mappings:
+          type: array
+          items:
+            $ref: '#/components/schemas/ColumnMapping'
+        column_mappings:
+          type: array
+          items:
+            $ref: '#/components/schemas/ColumnMapping'
+
+    SchemaMapping:
+      x-body-name: schema_mapping
+      required:
+        - vertex_mappings
+        - edge_mappings
+      properties:
+        vertex_mappings:
+          type: array
+          items:
+            $ref: '#/components/schemas/VertexMapping'
+        edge_mappings:
+          type: array
+          items:
+            $ref: '#/components/schemas/EdgeMapping'
+
+    DataloadingJobConfig:
+      x-body-name: dataloading_job_config
+      required:
+        - loading_config
+        - vertices
+        - edges
+      properties:
+        loading_config:
+          properties:
+            import_option:
+              type: string
+              enum:
+                - init
+                - overwrite
+              example: overwrite
+            format:
+              properties:
+                type:
+                  type: string
+                metadata:
+                  type: object
+                  additionalProperties: true
+        vertices:
+          type: array
+          items:
+            type: object
+            properties:
+              type_name:
+                type: string
+        edges:
+          type: array
+          items:
+            type: object
+            properties:
+              type_name:
+                type: string
+              source_vertex:
+                type: string
+              destination_vertex:
+                type: string
+        schedule:
+          type: string
+          nullable: true
+          description: "format with '2023-02-21 11:56:30'"
+        repeat:
+          type: string
+          nullable: true
+          enum:
+            - once
+            - day
+            - week
+
+    DataloadingMRJobConfig:
+      x-body-name: dataloading_mr_job_config
+      required:
+        - config
+      properties:
+        config:
+          type: string
+
+    JobStatus:
+      required:
+        - id
+        - type
+        - status
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        status:
+          type: string
+          enum:
+            - RUNNING
+            - SUCCESS
+            - FAILED
+            - CANCELLED
+            - WAITING
+        start_time:
+          type: string
+        end_time:
+          type: string
+        log:
+          type: string
+          description: logview URL or log string
+        detail:
+          type: object
+          additionalProperties: true
+
+    CreateDataloadingJobResponse:
+      required:
+        - job_id
+      properties:
+        job_id:
+          type: string
+
+    CreateAlertRuleRequest:
+      x-body-name: create_alert_rule_request
+      required:
+        - name
+        - severity
+        - metric_type
+        - conditions_description
+        - frequency
+        - enable
+      properties:
+        name:
+          type: string
+        severity:
+          type: string
+          enum:
+            - warning
+            - emergency
+        metric_type:
+          type: string
+          enum:
+            - node
+            - service
+        conditions_description:
+          type: string
+        frequency:
+          type: integer
+          description: (mins)
+        enable:
+          type: boolean
+
+    GetAlertRuleResponse:
+      allOf:
+        - $ref: '#/components/schemas/CreateAlertRuleRequest'
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: string
+
+    GetAlertMessageResponse:
+      required:
+        - id
+        - alert_name
+        - severity
+        - metric_type
+        - target
+        - trigger_time
+        - status
+        - message
+      properties:
+        id:
+          type: string
+          description: Generated in server side
+        alert_name:
+          type: string
+        severity:
+          type: string
+          enum:
+            - warning
+            - emergency
+        metric_type:
+          type: string
+          enum:
+            - node
+            - service
+        target:
+          type: array
+          items:
+            type: string
+        trigger_time:
+          type: string
+        status:
+          type: string
+          enum:
+            - unsolved
+            - solved
+            - dealing
+        message:
+          type: string
+
+    UpdateAlertMessageStatusRequest:
+      x-body-name: update_alert_message_status_request
+      required:
+        - message_ids
+        - status
+      properties:
+        message_ids:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum:
+            - unsolved
+            - solved
+            - dealing
+
+    CreateAlertReceiverRequest:
+      x-body-name: create_alert_receiver_request
+      required:
+        - type
+        - webhook_url
+        - at_user_ids
+        - is_at_all
+        - enable
+      properties:
+        type:
+          type: string
+          enum:
+            - webhook
+        webhook_url:
+          type: string
+        at_user_ids:
+          type: array
+          items:
+            type: string
+        is_at_all:
+          type: boolean
+        enable:
+          type: boolean
+
+    GetAlertReceiverResponse:
+      allOf:
+        - $ref: '#/components/schemas/CreateAlertReceiverRequest'
+        - type: object
+          required:
+            - id
+            - message
+          properties:
+            id:
+              type: string
+            message:
+              type: string
+              description: Error message generated in server side
+
+tags:
+  - name: Deployment
+  - name: Graph
+  - name: DataSource
+  - name: Job
+  - name: Stored Procedure
+  - name: Service
+  - name: Alert
+  - name: Utils
+
+paths:
+  /api/v1/deployment:
+    get:
+      description: Deployment information
+      tags: [Deployment]
+      operationId: getDeploymentInfo
+      responses:
+        200:
+          description: Successfully returned the deployment information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunningDeploymentInfo'
+              example:
+                cluster_type: HOSTS
+                creation_time: 2024-01-01 00:00:00
+                instance_name: demo
+                frontend: Cypher/Gremlin
+                engine: Hiactor
+                storage: MutableCSR
+                version: 0.27.0
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/deployment/status:
+    get:
+      description: Get deployment status of cluster
+      tags: [Deployment]
+      operationId: getDeploymentStatus
+      responses:
+        200:
+          description: Successfully returned the deployment status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunningDeploymentStatus'
+              example:
+                cluster_type: HOSTS
+                nodes:
+                  - name: HOSTNAME-1
+                    cpu_usage: 83.0
+                    memory_usage: 37.5
+                    disk_usage: 97
+                pods:
+                  coordinator:
+                    - name: dztest283-graphscope-store-coordinator-0
+                      image:
+                        - graphscope-store:0.28.0
+                      labels:
+                        app.kubernetes.io/version: 3.4.0
+                      node: i-uf6f9rdd1wh126dg2y1p
+                      status: Running
+                      restart_count: 0
+                      cpu_usage: 2
+                      memory_usage: 597
+                      timestamp: '2024/07/19 16:40:04'
+                      creation_time: '2024/07/03 11:08:57'
+                      component_belong_to: coordinator
+                  store:
+                    - name: dztest283-graphscope-store-store-0
+                      image:
+                        - graphscope-store:0.28.0
+                      labels:
+                        app.kubernetes.io/version: 3.4.0
+                      node: i-uf6f9rdd1wh126dg2y1p
+                      status: Running
+                      restart_count: 0
+                      cpu_usage: 2
+                      memory_usage: 597
+                      timestamp: '2024/07/19 16:40:04'
+                      creation_time: '2024/07/03 11:08:57'
+                      component_belong_to: store
+                    - name: dztest283-graphscope-store-store-1
+                      image:
+                        - graphscope-store:0.28.0
+                      labels:
+                        app.kubernetes.io/version: 3.4.0
+                      node: i-uf6f9rdd1wh126dg2y1p
+                      status: Running
+                      restart_count: 0
+                      cpu_usage: 2
+                      memory_usage: 597
+                      timestamp: '2024/07/19 16:40:04'
+                      creation_time: '2024/07/03 11:08:57'
+                      component_belong_to: store
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/deployment/log:
+    get:
+      description: "[Deprecated] Get kubernetes pod's log"
+      tags: [Deployment]
+      operationId: getDeploymentPodLog
+      parameters:
+        - name: pod_name
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: component
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: from_cache
+          in: query
+          required: true
+          schema:
+            type: boolean
+      responses:
+        200:
+          description: Successfully returned the pod's log
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPodLogResponse'
+              example:
+                container1: "line1\nline2\nline3"
+                container2: "line1\nline2\nline3"
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/deployment/resource/usage:
+    get:
+      description: '[Deprecated] Get resource usage(cpu/memory) of cluster'
+      tags: [Deployment]
+      operationId: getDeploymentResourceUsage
+      responses:
+        200:
+          description: Successfully returned the resource usage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResourceUsageResponse'
+              example:
+                cpu_usage:
+                  - host: dztest283-graphscope-store-store-0
+                    timestamp: '2024/07/19 13:15:12'
+                    usage: 52
+                  - host: dztest283-graphscope-store-store-1
+                    timestamp: '2024/07/19 13:16:12'
+                    usage: 90
+                memory_usage:
+                  - host: dztest283-graphscope-store-store-0
+                    timestamp: '2024/07/19 13:15:12'
+                    usage: 152
+                  - host: dztest283-graphscope-store-store-1
+                    timestamp: '2024/07/19 13:16:12'
+                    usage: 290
+
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/deployment/storage/usage:
+    get:
+      description: '[Deprecated] Get storage usage of Groot'
+      tags: [Deployment]
+      operationId: getStorageUsage
+      responses:
+        200:
+          description: Successfully returned the resource usage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetStorageUsageResponse'
+              example:
+                dztest283-graphscope-store-store-0: 72.2
+                dztest283-graphscope-store-store-1: 91.7
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph:
+    post:
+      description: Create a new graph
+      tags: [Graph]
+      operationId: createGraph
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGraphRequest'
+      responses:
+        200:
+          description: The graph was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateGraphResponse'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+    get:
+      description: List all graphs
+      tags: [Graph]
+      operationId: listGraphs
+      responses:
+        200:
+          description: Successfully returned all graphs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetGraphResponse'
+              example:
+                - id: GRAPHID
+                  name: demo
+                  creation_time: '2024-01-01 00:00:00'
+                  schema_update_time: '2024-01-02 00:00:00'
+                  data_update_time: '2024-01-03 00:00:00'
+                  stored_procedures:
+                    - id: STORED-PROCEDURE-ID
+                      name: stored_procedure_name
+                      type: cypher
+                      query: 'MATCH(a) return COUNT(a);'
+                      library: /path/to/library
+                      params:
+                        - name: param1
+                          type:
+                            string:
+                              long_text: null
+                      returns:
+                        - name: return1
+                          type:
+                            PrimitiveType: DT_SIGNED_INT64
+                      bound_graph: demo
+                      runnable: true
+                  schema:
+                    vertex_types:
+                      - type_id: 0
+                        type_name: person
+                        properties:
+                          - property_id: 0
+                            property_name: id
+                            property_type:
+                              string:
+                                long_text: null
+                          - property_id: 1
+                            property_name: name
+                            property_type:
+                              string:
+                                long_text: null
+                        primary_keys:
+                          - id
+                      - type_id: 1
+                        type_name: software
+                        properties:
+                          - property_id: 0
+                            property_name: id
+                            property_type:
+                              string:
+                                long_text: null
+                          - property_id: 1
+                            property_name: name
+                            property_type:
+                              string:
+                                long_text: null
+                        primary_keys:
+                          - id
+                    edge_types:
+                      - type_id: 0
+                        type_name: knows
+                        vertex_type_pair_relations:
+                          - source_vertex: person
+                            destination_vertex: person
+                            relation: MANY_TO_MANY
+                            x_csr_params:
+                              edge_storage_strategy: ONLY_IN
+                        properties:
+                          - property_id: 0
+                            property_name: weight
+                            property_type:
+                              primitive_type: DT_DOUBLE
+                      - type_id: 1
+                        type_name: created
+                        vertex_type_pair_relations:
+                          - source_vertex: person
+                            destination_vertex: software
+                            relation: MANY_TO_MANY
+                            x_csr_params:
+                              edge_storage_strategy: ONLY_IN
+                        properties:
+                          - property_id: 0
+                            property_name: weight
+                            property_type:
+                              primitive_type: DT_DOUBLE
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/{graph_id}:
+    get:
+      description: Get graph by ID
+      tags: [Graph]
+      operationId: getGraphById
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully returned the graph
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetGraphResponse'
+              example:
+                id: GRAPHID
+                name: demo
+                creation_time: '2024-01-01 00:00:00'
+                schema_update_time: '2024-01-02 00:00:00'
+                data_update_time: '2024-01-03 00:00:00'
+                stored_procedures:
+                  - id: STORED-PROCEDURE-ID
+                    name: stored_procedure_name
+                    type: cypher
+                    query: 'MATCH(a) return COUNT(a);'
+                    library: /path/to/library
+                    params:
+                      - name: param1
+                        type:
+                          string:
+                            long_text: null
+                    returns:
+                      - name: return1
+                        type:
+                          PrimitiveType: DT_SIGNED_INT64
+                    bound_graph: demo
+                    runnable: true
+                schema:
+                  vertex_types:
+                    - type_id: 0
+                      type_name: person
+                      properties:
+                        - property_id: 0
+                          property_name: id
+                          property_type:
+                            string:
+                              long_text: null
+                        - property_id: 1
+                          property_name: name
+                          property_type:
+                            string:
+                              long_text: null
+                      primary_keys:
+                        - id
+                    - type_id: 1
+                      type_name: software
+                      properties:
+                        - property_id: 0
+                          property_name: id
+                          property_type:
+                            string:
+                              long_text: null
+                        - property_id: 1
+                          property_name: name
+                          property_type:
+                            string:
+                              long_text: null
+                      primary_keys:
+                        - id
+                  edge_types:
+                    - type_id: 0
+                      type_name: knows
+                      vertex_type_pair_relations:
+                        - source_vertex: person
+                          destination_vertex: person
+                          relation: MANY_TO_MANY
+                          x_csr_params:
+                            edge_storage_strategy: ONLY_IN
+                      properties:
+                        - property_id: 0
+                          property_name: weight
+                          property_type:
+                            primitive_type: DT_DOUBLE
+                    - type_id: 1
+                      type_name: created
+                      vertex_type_pair_relations:
+                        - source_vertex: person
+                          destination_vertex: software
+                          relation: MANY_TO_MANY
+                          x_csr_params:
+                            edge_storage_strategy: ONLY_IN
+                      properties:
+                        - property_id: 0
+                          property_name: weight
+                          property_type:
+                            primitive_type: DT_DOUBLE
+        500:
+          $ref: '#/components/responses/500'
+
+    delete:
+      description: Delete graph by ID
+      tags: [Graph]
+      operationId: deleteGraphById
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully deleted the graph
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/{graph_id}/schema:
+    post:
+      tags: [Graph]
+      description: Import graph schema
+      operationId: importSchemaById
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGraphSchemaRequest'
+        required: true
+      responses:
+        200:
+          description: Successful imported the graph schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+
+    get:
+      tags: [Graph]
+      description: Get graph schema by ID
+      operationId: getSchemaById
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully returned the graph schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetGraphSchemaResponse'
+              example:
+                vertex_types:
+                  - type_id: 0
+                    type_name: person
+                    properties:
+                      - property_id: 0
+                        property_name: id
+                        property_type:
+                          string:
+                            long_text: null
+                      - property_id: 1
+                        property_name: name
+                        property_type:
+                          string:
+                            long_text: null
+                    primary_keys:
+                      - id
+                  - type_id: 1
+                    type_name: software
+                    properties:
+                      - property_id: 0
+                        property_name: id
+                        property_type:
+                          string:
+                            long_text: null
+                      - property_id: 1
+                        property_name: name
+                        property_type:
+                          string:
+                            long_text: null
+                    primary_keys:
+                      - id
+                edge_types:
+                  - type_id: 0
+                    type_name: knows
+                    vertex_type_pair_relations:
+                      - source_vertex: person
+                        destination_vertex: person
+                        relation: MANY_TO_MANY
+                        x_csr_params:
+                          edge_storage_strategy: ONLY_IN
+                    properties:
+                      - property_id: 0
+                        property_name: weight
+                        property_type:
+                          primitive_type: DT_DOUBLE
+                  - type_id: 1
+                    type_name: created
+                    vertex_type_pair_relations:
+                      - source_vertex: person
+                        destination_vertex: software
+                        relation: MANY_TO_MANY
+                        x_csr_params:
+                          edge_storage_strategy: ONLY_IN
+                    properties:
+                      - property_id: 0
+                        property_name: weight
+                        property_type:
+                          primitive_type: DT_DOUBLE
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/{graph_id}/schema/vertex:
+    post:
+      tags: [Graph]
+      description: Create a vertex type
+      operationId: createVertexType
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVertexType'
+        required: true
+      responses:
+        200:
+          description: Successful created a vertex type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/{graph_id}/schema/vertex/{type_name}:
+    delete:
+      tags: [Graph]
+      description: Delete vertex type by name
+      operationId: deleteVertexTypeByName
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful deleted the vertex type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/{graph_id}/schema/edge:
+    post:
+      tags: [Graph]
+      description: Create a edge type
+      operationId: createEdgeType
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEdgeType'
+      responses:
+        200:
+          description: Successful created the edge type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/{graph_id}/schema/edge/{type_name}:
+    delete:
+      tags: [Graph]
+      description: Delete edge type by name
+      operationId: deleteEdgeTypeByName
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: source_vertex_type
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: destination_vertex_type
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful deleted the edge type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/{graph_id}/datasource:
+    post:
+      tags: [DataSource]
+      description: Bind data sources in batches
+      operationId: bindDatasourceInBatch
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SchemaMapping'
+        required: true
+      responses:
+        200:
+          description: Successful bind the data sources
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+    get:
+      tags: [DataSource]
+      description: Get data source by ID
+      operationId: getDatasourceById
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful returned all data sources
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchemaMapping'
+              example:
+                vertex_mappings:
+                  - type_name: person
+                    inputs:
+                      - file:///path/to/person.csv
+                    column_mappings:
+                      - column:
+                          index: 0
+                          name: id
+                        property: id
+                      - column:
+                          index: 1
+                          name: name
+                        property: name
+                  - type_name: software
+                    inputs:
+                      - file:///path/to/software.csv
+                    column_mappings:
+                      - column:
+                          index: 0
+                          name: id
+                        property: id
+                      - column:
+                          index: 1
+                          name: name
+                        property: name
+                edge_mappings:
+                  - type_triplet:
+                      edge: knows
+                      source_vertex: person
+                      destination_vertex: person
+                    inputs:
+                      - file:///path/to/knows.csv
+                    source_vertex_mappings:
+                      - column:
+                          index: 0
+                          name: id
+                        property: id
+                    destination_vertex_mappings:
+                      - column:
+                          index: 1
+                          name: id
+                        property: id
+                    column_mappings:
+                      - column:
+                          index: 2
+                          name: weight
+                        property: weight
+                  - type_triplet:
+                      edge: created
+                      source_vertex: person
+                      destination_vertex: software
+                    inputs:
+                      - file:///path/to/created.csv
+                    source_vertex_mappings:
+                      - column:
+                          index: 0
+                          name: id
+                        property: id
+                    destination_vertex_mappings:
+                      - column:
+                          index: 1
+                          name: id
+                        property: id
+                    column_mappings:
+                      - column:
+                          index: 2
+                          name: weight
+                        property: weight
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/{graph_id}/datasource/vertex/{type_name}:
+    delete:
+      tags: [DataSource]
+      description: Unbind data source on a vertex type
+      operationId: unbindVertexDatasource
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully unbind the data source
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/{graph_id}/datasource/edge/{type_name}:
+    delete:
+      tags: [DataSource]
+      description: Unbind datas ource on an edge type
+      operationId: unbindEdgeDatasource
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: source_vertex_type
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: destination_vertex_type
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully unbind the data source
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/job:
+    get:
+      tags: [Job]
+      description: List all jobs
+      operationId: listJobs
+      responses:
+        200:
+          description: Successful returned all the jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobStatus'
+              example:
+                - id: JOB-QWERTYUIOPASDFGH-1
+                  type: DATA IMPORT
+                  status: RUNNING
+                  start_time: 2024-02-24 00:00:00
+                  log: logging...
+                  detail:
+                    graph_id: GRAPHID
+                - id: JOB-QWERTYUIOPASDFGH-2
+                  type: DATA IMPORT
+                  status: CANCELLED
+                  start_time: 2024-02-24 00:00:00
+                  log: logging...
+                  detail:
+                    graph_id: GRAPHID
+                - id: JOB-QWERTYUIOPASDFGH-3
+                  type: DATA IMPORT
+                  status: SUCCESS
+                  start_time: 2024-02-24 00:00:00
+                  end_time: 2024-02-24 12:00:00
+                  detail:
+                    graph_id: GRAPHID
+                - id: JOB-QWERTYUIOPASDFGH-4
+                  type: DATA IMPORT
+                  status: FAILED
+                  start_time: 2024-02-24 00:00:00
+                  end_time: 2024-02-24 12:00:00
+                  log: logging...
+                  detail:
+                    graph_id: GRAPHID
+                - id: JOB-QWERTYUIOPASDFGH-5
+                  type: DATA IMPORT
+                  status: WAITING
+                  detail:
+                    graph_id: GRAPHID
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/job/{job_id}:
+    get:
+      tags: [Job]
+      description: Get job status by ID
+      operationId: getJobById
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully returned the job status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobStatus'
+        500:
+          $ref: '#/components/responses/500'
+
+    delete:
+      tags: [Job]
+      description: Delete job by ID
+      operationId: deleteJobById
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: delete_scheduler
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        200:
+          description: Successfuly cancelled the job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/{graph_id}/dataloading:
+    post:
+      tags: [Job]
+      description: Submit a dataloading job
+      operationId: submitDataloadingJob
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataloadingJobConfig'
+        required: true
+      responses:
+        200:
+          description: Successfully submitted the job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateDataloadingJobResponse'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/{graph_id}/dataloading/config:
+    post:
+      tags: [Job]
+      description: Post to get the data loading configuration for MapReduce Task
+      operationId: getDataloadingJobConfig
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataloadingJobConfig'
+        required: true
+      responses:
+        200:
+          description: Successfully returned the job configuration for MapReduce Task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataloadingMRJobConfig'
+              example: "split.size=32\nseparator=\\\\|\ngraph.endpoint=11.11.11.11:55556\nproject=graphscope"
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/{graph_id}/storedproc:
+    post:
+      tags: [Stored Procedure]
+      description: Create a new stored procedure on a certain graph
+      operationId: createStoredProcedure
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStoredProcRequest'
+        required: true
+      responses:
+        200:
+          description: Successfully created a stored procedure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateStoredProcResponse'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+
+    get:
+      tags: [Stored Procedure]
+      description: List all stored procedures on a certain graph
+      operationId: listStoredProcedures
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetStoredProcResponse'
+              example:
+                - id: STORED-PROCEDUREID-1
+                  name: stored_procedure_name_1
+                  type: cypher
+                  query: 'MATCH(a) return COUNT(a);'
+                  library: /path/to/library
+                  params:
+                    - name: param1
+                      type:
+                        string:
+                          long_text: null
+                  returns:
+                    - name: return1
+                      type:
+                        PrimitiveType: DT_SIGNED_INT64
+                  bound_graph: demo
+                  runnable: true
+                - id: STORED-PROCEDUREID-2
+                  name: stored_procedure_name_2
+                  type: cypher
+                  query: 'MATCH(a) return COUNT(a);'
+                  library: /path/to/library
+                  params:
+                    - name: param1
+                      type:
+                        string:
+                          long_text: null
+                  returns:
+                    - name: return1
+                      type:
+                        PrimitiveType: DT_SIGNED_INT64
+                  bound_graph: demo
+                  runnable: false
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/{graph_id}/storedproc/{stored_procedure_id}:
+    get:
+      tags: [Stored Procedure]
+      description: Get a stored procedure by ID
+      operationId: getStoredProcedureById
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: stored_procedure_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully returned the stored procedure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetStoredProcResponse'
+              example:
+                id: STORED-PROCEDURE-ID
+                name: stored_procedure_name
+                type: cypher
+                query: 'MATCH(a) return COUNT(a);'
+                library: /path/to/library
+                params:
+                  - name: param1
+                    type:
+                      string:
+                        long_text: null
+                returns:
+                  - name: return1
+                    type:
+                      PrimitiveType: DT_SIGNED_INT64
+                bound_graph: demo
+                runnable: true
+        500:
+          $ref: '#/components/responses/500'
+
+    put:
+      tags: [Stored Procedure]
+      description: Update a stored procedure by ID
+      operationId: updateStoredProcedureById
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: stored_procedure_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStoredProcRequest'
+      responses:
+        200:
+          description: Successfully updated the stored procedure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+    delete:
+      tags: [Stored Procedure]
+      description: Delete a stored procedure by ID
+      operationId: deleteStoredProcedureById
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: stored_procedure_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully deleted the stored procedure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/service/start:
+    post:
+      tags: [Service]
+      description: Start service
+      operationId: startService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartServiceRequest'
+      responses:
+        200:
+          description: Successfully started the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/service/stop:
+    post:
+      tags: [Service]
+      description: Stop current service
+      operationId: stopService
+      responses:
+        200:
+          description: Successfully stopped the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/service/restart:
+    post:
+      tags: [Service]
+      description: Restart current service
+      operationId: restartService
+      responses:
+        200:
+          description: Successfully restarted the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/service:
+    get:
+      tags: [Service]
+      description: List all service status
+      operationId: listServiceStatus
+      responses:
+        200:
+          description: Successfully returned all service status
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServiceStatus'
+              example:
+                - graph_id: GRAPHID
+                  status: Running
+                  sdk_endpoints:
+                    cypher: neo4j://mock.api.cypher:7676
+                    gremin: ws://mock.api.gremlin/gremlin
+                    hqps: http://mock.api.hqps:10000
+                  start_time: '2024-01-01 00:00:00'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/graph/{graph_id}/service:
+    get:
+      tags: [Service]
+      description: Get service status by graph ID
+      operationId: getServiceStatusById
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully returned the service status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceStatus'
+              example:
+                graph_id: GRAPHID
+                status: Running
+                sdk_endpoints:
+                  cypher: neo4j://mock.api.cypher:7676
+                  gremlin: ws://mock.api.gremlin/gremlin
+                  hqps: http://mock.api.hqps:10000
+                start_time: '2024-01-01 00:00:00'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/alert/rule:
+    get:
+      tags: [Alert]
+      description: List all alert rules
+      operationId: listAlertRules
+      responses:
+        200:
+          description: Successfully returned the alert rules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAlertRuleResponse'
+              example:
+                - id: ALERTRULE-1
+                  name: HighDiskUtilization
+                  severity: warning
+                  metric_type: node
+                  conditions_description: disk usage >= 85
+                  enable: true
+                - id: ALERTRULE-2
+                  name: GremlinServiceAvailable
+                  severity: emergency
+                  metric_type: node
+                  conditions_description: g.V().limit(1) failed
+                  enable: false
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/alert/rule/{rule_id}:
+    put:
+      tags: [Alert]
+      operationId: Update alert rule by ID
+      parameters:
+        - name: rule_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAlertRuleRequest'
+      responses:
+        200:
+          description: Successfully updated the alert rule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+    delete:
+      tags: [Alert]
+      operationId: Delete alert rule by ID
+      parameters:
+        - name: rule_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully deleted the alert rule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/alert/message:
+    get:
+      tags: [Alert]
+      description: List all alert messages
+      operationId: listAlertMessages
+      parameters:
+        - name: alert_type
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - solved
+              - unsolved
+              - dealing
+        - name: severity
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - warning
+              - emergency
+        - name: start_time
+          in: query
+          required: false
+          description: format with "2023-02-21-11-56-30"
+          schema:
+            type: string
+        - name: end_time
+          in: query
+          required: false
+          description: format with "2023-02-21-11-56-30"
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: Successfully returned the alert messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAlertMessageResponse'
+              example:
+                - id: ALERT-MESSAGE-QWERTYUIOP-1
+                  alert_name: HighDiskUtilization
+                  severity: warning
+                  metric_type: node
+                  target:
+                    - hostname-1
+                  trigger_time: 2023-02-21 11:56:30
+                  status: unsolved
+                  message: Disk usage node1 85.12%, exceeds threshold
+                - id: ALERT-MESSAGE-QWERTYUIOP-2
+                  alert_name: HighDiskUtilization
+                  severity: emergency
+                  metric_type: node
+                  target:
+                    - hostname-1
+                  trigger_time: 2023-02-21 11:56:30
+                  status: solved
+                  message: Disk usage node1 85.12%, exceeds threshold
+                - id: ALERT-MESSAGE-QWERTYUIOP-3
+                  alert_name: HighDiskUtilization
+                  severity: warning
+                  metric_type: node
+                  target:
+                    - hostname-1
+                  trigger_time: 2023-02-21 11:56:30
+                  status: dealing
+                  message: Disk usage node1 85.12%, exceeds threshold
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/alert/message-collection:
+    delete:
+      tags: [Alert]
+      description: Delete alert message in batch
+      operationId: deleteAlertMessageInBatch
+      parameters:
+        - name: message_ids
+          in: query
+          required: true
+          schema:
+            type: string
+          description: A list of message id separated by comma, e.g. id1,id2,id3
+      responses:
+        200:
+          description: Successfully deleted the alert message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/alert/message-collection/status:
+    put:
+      tags: [Alert]
+      description: Update the message status in batch
+      operationId: updateAlertMessageInBatch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAlertMessageStatusRequest'
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/alert/receiver:
+    post:
+      tags: [Alert]
+      description: Create a new alert receiver
+      operationId: createAlertReceiver
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAlertReceiverRequest'
+        required: true
+      responses:
+        200:
+          description: Successfully created the alert receiver
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+    get:
+      tags: [Alert]
+      description: List all alert receivers
+      operationId: listAlertReceivers
+      responses:
+        200:
+          description: Successfully returned the alert receivers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetAlertReceiverResponse'
+              example:
+                - id: RECEIVER-QWERTYUIOP-1
+                  type: webhook
+                  webhook_url: http://webhook.com
+                  is_at_all: false
+                  at_user_ids:
+                    - 111111
+                    - 222222
+                  enable: false
+                - id: RECEIVER-QWERTYUIOP-2
+                  type: webhook
+                  webhook_url: http://webhook.com
+                  is_at_all: false
+                  at_user_ids:
+                    - 111111
+                    - 222222
+                  enable: true
+                  message: error message
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/alert/receiver/{receiver_id}:
+    put:
+      tags: [Alert]
+      description: Update alert receiver by ID
+      operationId: updateAlertReceiverById
+      parameters:
+        - name: receiver_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAlertReceiverRequest'
+      responses:
+        200:
+          description: Successfully updated the alert receiver
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+    delete:
+      tags: [Alert]
+      description: Delete the alert receiver by ID
+      operationId: deleteAlertReceiverById
+      parameters:
+        - name: receiver_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully deleted the alert receiver
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIResponse'
+        500:
+          $ref: '#/components/responses/500'
+
+  /api/v1/file/uploading:
+    post:
+      tags: [Utils]
+      operationId: uploadFile
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                filestorage:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadFileResponse'
+              example:
+                file_path: /home/graphscope/path/to/file.csv
+                metadata:
+                  datasource: file
+                  file_type: csv
+        500:
+          $ref: '#/components/responses/500'
+
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/GRAPHSCOPE/flex-api/1.0.0

@@ -1,0 +1,75 @@
+{
+  "id": "test_multi_edges",
+  "graph": {
+    "inspectors": [
+      {
+        "name": "PaperInspector",
+        "graph": {
+          "nodes": [
+            {
+              "name": "Paper"
+            },
+            {
+              "name": "Background",
+              "query": "**Question**: Please describe the problem studied in this paper, why the problem is worth studying, and what are the issues of existing solutions to this problem.",
+              "extract_from": {"exact": ["1"], "match": ["introduction"]},
+              "output_schema": {
+                "type": "single",
+                "description": "The background of this paper",
+                "item": [
+                  {
+                    "name": "problem_definition",
+                    "type": "string",
+                    "description": "The problem studied in this paper."
+                  },
+                  {
+                    "name": "problem_value",
+                    "type": "string",
+                    "description": "Why the problem is worth studying."
+                  },
+                  {
+                    "name": "existing_solutions",
+                    "type": "string",
+                    "description": "What are the existing solutions and their problems."
+                  }
+                ]
+              }
+            }
+          ],
+          "edges": [
+            {
+              "source": "Paper",
+              "target": "Background"
+            }
+          ]
+        }
+      }
+    ],
+    "navigators": [
+      {
+        "name": "CitedBy",
+        "source": "PaperInspector",
+        "target": "PaperInspector",
+        "method": "scholar",
+        "args": {
+          "max_thread_num": 12,
+          "finish_signal": "_CITEDBY_REF_DONE",
+          "ref_mode": "append",
+          "key_name": "cited_by"
+        }
+      },
+      {
+        "name": "Reference",
+        "source": "PaperInspector",
+        "target": "PaperInspector",
+        "method": "scholar",
+        "args": {
+          "max_thread_num": 12,
+          "finish_signal": "_REF_DONE",
+          "ref_mode": "append",
+          "key_name": "reference"
+        }
+      }
+    ]
+  }
+}

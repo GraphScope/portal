@@ -1,0 +1,50 @@
+{
+  "name": "@graphscope/studio-draw-pattern",
+  "version": "0.0.4",
+  "description": "Experiment draw pattern code for GrapeScope",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "scripts": {
+    "start": "father dev",
+    "build": "father build",
+    "build:deps": "father prebundle",
+    "start:site": "vite dev",
+    "build:site": "vite build",
+    "test": "vitest",
+    "ci": "cd ../studio-components && npm run build && cd ../studio-draw-pattern && npm run build:site "
+  },
+  "keywords": [],
+  "authors": [],
+  "license": "MIT",
+  "files": [
+    "./dist/esm",
+    "compiled"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.202",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/uuid": "^9.0.8",
+    "@vitejs/plugin-react": "^4.3.1",
+    "father": "^4.4.5",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.3",
+    "vitest": "^2.0.5"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.2.6",
+    "@graphscope/studio-components": "workspace:*",
+    "@graphscope/studio-graph-editor": "workspace:*",
+    "antd": "^5.22.2",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rxjs": "^7.8.1",
+    "uuid": "^10.0.0",
+    "zustand": "^4.5.5"
+  }
+}

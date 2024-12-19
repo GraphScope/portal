@@ -1,0 +1,9 @@
+{
+  "knowledge": {
+    "title": "Knowledge Graph",
+    "type": "page",
+    "theme": {
+      "layout": "full"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "@graphscope/studio-components",
+  "version": "0.1.8",
+  "description": "A components for graphscope studio",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GraphScope/portal.git"
+  },
+  "files": [
+    "es",
+    "lib",
+    "dist"
+  ],
+  "scripts": {
+    "start": "father dev",
+    "build": "father build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "localforage": "^1.10.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-intl": "^6.6.1",
+    "react-resizable-panels": "^2.0.20",
+    "react-router-dom": "^6.26.1",
+    "sql-ddl-to-json-schema": "latest",
+    "typewriter-effect": "^2.21.0",
+    "uuid": "latest",
+    "uuidv4": "latest"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
