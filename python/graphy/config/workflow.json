@@ -10,6 +10,22 @@
               "name": "Paper"
             },
             {
+              "name": "Topic",
+              "query": "**Question**: Please use a phrase of three to five words to describe the topic studied in this paper.",
+              "extract_from": {"exact": ["1"]},
+              "output_schema": {
+                "type": "single",
+                "description": "The topic of this paper",
+                "item": [
+                  {
+                    "name": "name",
+                    "type": "string",
+                    "description": "The topic of this paper"
+                  }
+                ]
+              }
+            },
+            {
               "name": "Background",
               "query": "**Question**: Please describe the problem studied in this paper, why the problem is worth studying, and what are the issues of existing solutions to this problem.",
               "extract_from": {"exact": ["1"], "match": ["introduction"]},
@@ -168,6 +184,10 @@
             }
           ],
           "edges": [
+            {
+              "source": "Paper",
+              "target": "Topic"
+            },
             {
               "source": "Paper",
               "target": "Background"
