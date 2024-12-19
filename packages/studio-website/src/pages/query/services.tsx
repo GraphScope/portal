@@ -1,5 +1,5 @@
 import { CypherSchemaData } from '@graphscope/studio-query';
-import { GremlinDriver, CypherDriver, queryGraph, cancelGraph } from '@graphscope/studio-driver';
+import { queryGraph, cancelGraph } from '@graphscope/studio-driver';
 import type { QueryParams } from '@graphscope/studio-driver';
 import type { IStudioQueryProps, IStatement } from '@graphscope/studio-query';
 import localforage from 'localforage';
@@ -22,23 +22,6 @@ export async function deleteHistoryStatements(ids: string[]) {
   });
   return;
 }
-
-export const queryEndpoint = async (): Promise<{
-  cypher_endpoint: string;
-  gremlin_endpoint: string;
-}> => {
-  return fetch('/graph/endpoint')
-    .then(res => {
-      return res.json();
-    })
-    .then(res => res.data)
-    .catch(() => {
-      return {
-        cypher_endpoint: null,
-        gremlin_endpoint: null,
-      };
-    });
-};
 
 export const queryInfo = async (id: string) => {
   const result = await ServiceApiFactory(undefined, window.COORDINATOR_URL)

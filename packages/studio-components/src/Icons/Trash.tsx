@@ -1,6 +1,9 @@
 import React from 'react';
-export default ({ style, disabled }: { style?: React.CSSProperties; disabled?: boolean }) => {
-  const { color, fontSize = '15px' } = style || {};
+import { theme } from 'antd';
+export default ({ style = {} }: { style?: React.CSSProperties }) => {
+  const { token } = theme.useToken();
+  const { fontSize = 16, color = token.colorText } = style;
+
   return (
     <svg
       width={fontSize}

@@ -1,12 +1,13 @@
 import * as React from 'react';
-
+import { theme } from 'antd';
 interface IUnlockProps {
   style?: React.CSSProperties;
 }
 
 const Unlock: React.FunctionComponent<IUnlockProps> = props => {
-  const { style } = props;
-  const { color = '#000', fontSize = '14px' } = style || {};
+  const { style = {} } = props;
+  const { token } = theme.useToken();
+  const { fontSize = 16, color = token.colorText } = style;
   return (
     <svg width={fontSize} height={fontSize} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 32">
       <path

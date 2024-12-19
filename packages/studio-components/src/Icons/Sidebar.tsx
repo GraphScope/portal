@@ -4,7 +4,7 @@ export default ({ style, revert }: { style?: React.CSSProperties; revert?: boole
   const { token } = theme.useToken();
   // 根据revert属性判断是否需要镜像
   const transformStyle = revert ? { ...style, transform: 'scaleX(-1)' } : style;
-  const { color = token.colorText, fontSize = '14px' } = style || {};
+  const { color = token.colorText, fontSize = '16px' } = style || {};
   return (
     <svg
       viewBox="0 0 1024 1024"

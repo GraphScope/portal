@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { Typography, Button, Menu } from 'antd';
-import { useContext, getDataMap } from '../../../';
+import { useContext, getDataMap, GraphData } from '../../../';
 
 import { BranchesOutlined } from '@ant-design/icons';
 import { handleExpand, applyStatus } from '../NeighborQuery/utils';
 
-interface INeighborQueryProps {
-  onQuery: (params: any) => Promise<any>;
+export interface IQueryCommonNeighbor {
+  id: 'queryCommonNeighbor';
+  query: (selectIds: string[]) => Promise<GraphData>;
 }
 
 const getScript = (selectedIds, dataMap) => {
@@ -50,36 +51,28 @@ const getScript = (selectedIds, dataMap) => {
   RETURN ${returnScript},neighbor
   `;
 };
-const CommonNeighbor: React.FunctionComponent<INeighborQueryProps> = props => {
-  const { onQuery } = props;
+const CommonNeighbor = () => {
   const { store, updateStore } = useContext();
-  const { nodeStatus, schema, dataMap, emitter, graph } = store;
+  const { selectNodes, emitter, graph, getService } = store;
 
   const handleClick = async () => {
     updateStore(draft => {
       draft.isLoading = true;
     });
+
     emitter?.emit('canvas:click');
-    const selectedIds = Object.keys(nodeStatus).filter((key, index) => {
-      return nodeStatus[key].selected;
-    });
 
-    const script = getScript(selectedIds, dataMap);
+    const selectedIds = selectNodes.map(item => item.id);
 
-    const res = await onQuery({
-      script,
-      language: 'cypher',
-    });
+    const res = await getService<IQueryCommonNeighbor>('queryCommonNeighbor')(selectedIds);
 
     if (res.nodes.length > 0) {
-      const { nodeStatus, edgeStatus } = applyStatus(res, item => {
+      const { nodeStatus, edgeStatus } = applyStatus(res as any, item => {
         return { selected: true };
       });
-
+      const newData = handleExpand(graph, res, selectedIds);
       updateStore(draft => {
-        const newData = handleExpand(graph, res, selectedIds);
         draft.data = newData;
-        draft.dataMap = getDataMap(newData);
         draft.isLoading = false;
         draft.nodeStatus = nodeStatus;
         draft.edgeStatus = edgeStatus;

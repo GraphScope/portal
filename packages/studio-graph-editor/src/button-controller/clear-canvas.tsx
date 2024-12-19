@@ -32,7 +32,7 @@ const ClearCanvas: React.FunctionComponent<IAddNodeProps> = props => {
         onClick={handleClear}
         style={style}
         type="text"
-        icon={<Icons.Trash disabled={elementOptions.isEditable} />}
+        icon={<Icons.Trash />}
       ></Button>
     </Tooltip>
   );
