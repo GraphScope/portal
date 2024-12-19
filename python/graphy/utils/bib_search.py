@@ -706,6 +706,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
         # bib = None
         try:
+            cite_directory = cite_directory.replace("{id}", paper_id)
             logger.debug(f"inside: {cite_directory}")
             gathered_citations = self._get_citations(cite_directory)
             bib_info = self._search_by_object(gathered_citations)
@@ -1026,11 +1027,12 @@ class BibSearchArxiv(BibSearch):
         return {
             "title": paper_info.title,
             "id": paper_info.entry_id.strip().split("/")[-1],
-            "author": " and ".join([str(author) for author in paper_info.authors]),
+            "author": paper_info.authors[0],
+            # "author": " and ".join([str(author) for author in paper_info.authors]),
             "eprint": paper_info.entry_id,
             "doi": paper_info.doi,
-            "primary_class": paper_info.categories[0],
-            "abstract": paper_info.summary,
+            # "primary_class": paper_info.categories[0],
+            # "abstract": paper_info.summary,
             "year": paper_info.published.year,
             "month": paper_info.published.month,
             "url": [str(link) for link in paper_info.links if link.title == "pdf"][0],
