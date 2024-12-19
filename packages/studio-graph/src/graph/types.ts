@@ -71,15 +71,30 @@ export interface CommonStyle {
 }
 
 export interface NodeOptionStyle {
+  /** keyshape */
+  selectColor: string;
+  /** icon */
   iconColor: string;
   iconSize: string;
+  /** label text */
+  textSize: number;
   textColor: string;
   textPosition: 'top' | 'bottom' | 'left' | 'right' | 'center';
+  textBackgroundColor: string;
+
+  /** strategy */
   zoomLevel: number[];
 }
 export interface EdgeOptionStyle {
+  /** keyshape */
+  selectColor: string;
+  /** arrow */
   arrowLength: number;
   arrowPosition: number;
+  /** label  */
+  textColor: string;
+  textSize: number;
+  textBackgroundColor: string;
 }
 export interface NodeStatus {
   /** 是否选中节点 */

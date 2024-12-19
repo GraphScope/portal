@@ -1,15 +1,25 @@
-import { EdgeStyle, EdgeData } from '../types';
+import { EdgeStyle, EdgeData, EdgeOptionStyle } from '../types';
 import { handleEdgeStyle } from '../utils/handleStyle';
-import { HOVERING_NODE_COLOR, BASIC_NODE_R, SELECTED_NODE_COLOR, NODE_TEXT_COLOR } from '../const';
+import {
+  HOVERING_NODE_COLOR,
+  BASIC_NODE_R,
+  SELECTED_NODE_COLOR,
+  NODE_TEXT_COLOR,
+  DEFAULT_EDGE_COLOR,
+  DEFAULT_EDGE_WIDTH,
+} from '../const';
+import { handleStatus } from '../utils';
 
 export const linkCanvasObject =
   (link: EdgeData, ctx: CanvasRenderingContext2D, globalScale: number) =>
-  (edgeStyle: Record<string, EdgeStyle>, nodeStatus: any) => {
+  (edgeStyle: Record<string, EdgeStyle>, edgeStatus: any) => {
     if (globalScale < 3) {
       return;
     }
     const style = handleEdgeStyle(link, edgeStyle);
-    const { color, size, caption, icon } = style;
+    const { selected } = handleStatus(link, edgeStatus);
+    const { color, size, caption = [], options } = style;
+    const { textColor = color, textSize = size * 3, textBackgroundColor, selectColor } = options as EdgeOptionStyle;
 
     const label = caption
       .map(c => {
@@ -21,10 +31,8 @@ export const linkCanvasObject =
       return;
     }
 
-    const MAX_FONT_SIZE = 4;
-    const labelWidth = label.length * (MAX_FONT_SIZE / 2);
+    const labelWidth = label.length * (textSize / 2);
 
-    const LABEL_NODE_MARGIN = 10; // graph.nodeRelSize() * 1.5;
     const start = link.source;
     const end = link.target;
     // ignore unbound links
@@ -53,23 +61,24 @@ export const linkCanvasObject =
     ctx.save();
     // estimate fontSize to fit in link length
     ctx.font = '1px Sans-Serif';
-    const fontSize = MAX_FONT_SIZE; //Math.min(MAX_FONT_SIZE, maxTextLength / labelWidth);
-    ctx.font = `${fontSize}px Sans-Serif`;
+
+    ctx.font = `${textSize}px Sans-Serif`;
 
     const bckgDimensions: [number, number] = [
-      labelWidth + fontSize * 0.2, // some padding
-      fontSize + fontSize * 0.2,
+      labelWidth + textSize * 0.8, // some padding
+      textSize + textSize * 0.4,
     ];
 
     // draw text label background rect
     ctx.translate(textPos.x, textPos.y);
     ctx.rotate(textAngle);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+
+    ctx.fillStyle = selected ? selectColor : textBackgroundColor;
     ctx.fillRect(-bckgDimensions[0] / 2, -bckgDimensions[1] / 2, ...bckgDimensions);
     // draw text label
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = color;
+    ctx.fillStyle = textColor;
     ctx.fillText(label, 0, 0);
     ctx.restore();
     return;

@@ -1,7 +1,7 @@
 import { NodeStyle, NodeOptionStyle, NodeData } from '../types';
-import { handleNodeStyle, defaultNodeStyle } from '../utils/handleStyle';
+import { handleNodeStyle } from '../utils/handleStyle';
 import { handleStatus, hexToRgba } from '../utils';
-import { HOVERING_NODE_COLOR, BASIC_NODE_R, SELECTED_NODE_COLOR, NODE_TEXT_COLOR } from '../const';
+import { BASIC_NODE_R } from '../const';
 import { drawText } from './draw';
 import { icons } from '../custom-icons';
 
@@ -11,24 +11,20 @@ export const nodeCanvasObject =
     if (node.x === undefined || node.y === undefined) {
       return;
     }
-    const style = handleNodeStyle(node, nodeStyle);
+
+    const { color, size, caption, icon, options } = handleNodeStyle(node, nodeStyle);
     const status = handleStatus(node, nodeStatus);
-    const { color, size, caption, icon } = style;
-    // const R = BASIC_NODE_R;
     const R = Math.sqrt(Math.max(0, size)) * BASIC_NODE_R;
-
-    const options = Object.assign(
-      {},
-      defaultNodeStyle.options,
-      {
-        iconSize: `${R}px`,
-        textColor: color,
-      },
-      style.options,
-    ) as NodeOptionStyle;
-
     const { selected, hovering } = status;
-    const { zoomLevel, iconColor, iconSize, textColor, textPosition } = options;
+    const {
+      zoomLevel,
+      iconColor,
+      iconSize = `${R}px`,
+      textColor = color,
+      textPosition,
+      textBackgroundColor,
+      selectColor,
+    } = options as NodeOptionStyle;
     const texts = caption.map(c => {
       return node.properties && node.properties[c];
     });
@@ -38,7 +34,7 @@ export const nodeCanvasObject =
       ctx.beginPath();
       ctx.arc(node.x, node.y, R * 1.2, 0, 2 * Math.PI, false);
       if (selected) {
-        ctx.fillStyle = SELECTED_NODE_COLOR;
+        ctx.fillStyle = selectColor;
         // ctx.lineWidth = R * 0.2;
         // ctx.strokeStyle = SELECTED_NODE_COLOR;
         ctx.fill();
@@ -54,11 +50,8 @@ export const nodeCanvasObject =
     // draw keyshape
     ctx.beginPath();
     ctx.arc(node.x, node.y, R, 0, 2 * Math.PI, false);
-    // ctx.lineWidth = R * 0.05;
-    // ctx.strokeStyle = color;
     ctx.fillStyle = color; //hexToRgba(color, 0.2);
     ctx.fill();
-    // ctx.stroke();
 
     // draw icon
     if (icon && icon !== '' && globalScale > zoomLevel[0] && globalScale < zoomLevel[1]) {
@@ -78,9 +71,10 @@ export const nodeCanvasObject =
       R,
       texts,
       node,
-      textColor: textColor,
-      textPosition: textPosition,
-      zoomLevel: zoomLevel,
+      textColor,
+      textPosition,
+      zoomLevel,
+      textBackgroundColor,
     });
 
     ctx.restore();
@@ -96,19 +90,19 @@ function drawLabel(options: {
   textPosition: NodeOptionStyle['textPosition'];
   textColor: NodeOptionStyle['textColor'];
   zoomLevel: NodeOptionStyle['zoomLevel'];
+  textBackgroundColor: NodeOptionStyle['textBackgroundColor'];
 }) {
-  let { globalScale, ctx, node, R, texts, textColor, textPosition, zoomLevel } = options;
+  let { globalScale, ctx, node, R, texts, textColor, textPosition, zoomLevel, textBackgroundColor } = options;
 
   if (texts.length === 0 || globalScale < zoomLevel[0]) {
     return;
   }
   if (globalScale >= zoomLevel[1]) {
-    const fontSize = 18 / globalScale;
+    const fontSize = 16 / globalScale;
     ctx.font = `${fontSize}px Sans-Serif`;
-    ctx.fillStyle = NODE_TEXT_COLOR;
+    ctx.fillStyle = textColor;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#fff';
     drawText(ctx, {
       text: texts.join(' '),
       x: node.x,
@@ -125,7 +119,7 @@ function drawLabel(options: {
     if (textPosition === 'center') {
       textX = node.x;
       textY = node.y;
-      const bckgDimensions = drawTextBackground({ ctx, texts, fontSize, textX, textY });
+      const bckgDimensions = drawTextBackground({ ctx, texts, fontSize, textX, textY, textBackgroundColor });
       // @ts-ignore
       node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
     } else if (textPosition === 'top') {
@@ -153,10 +147,11 @@ function drawTextBackground(options: {
   ctx: CanvasRenderingContext2D;
   texts: string[];
   fontSize: number;
+  textBackgroundColor: string;
   textX: number;
   textY: number;
 }) {
-  const { texts, fontSize, textX, textY, ctx } = options;
+  const { texts, fontSize, textX, textY, ctx, textBackgroundColor } = options;
   const lineHeight = fontSize * 1.2;
   let textWidth = 0;
   let textHeight = lineHeight * texts.length;
@@ -164,7 +159,7 @@ function drawTextBackground(options: {
     textWidth = Math.max(ctx.measureText(text).width, textWidth);
   });
   const bckgDimensions = [textWidth, textHeight].map(n => n + fontSize * 0.2); // some padding
-  ctx.fillStyle = NODE_TEXT_COLOR;
+  ctx.fillStyle = textBackgroundColor;
   //@ts-ignore
   ctx.fillRect(textX - bckgDimensions[0] / 2, textY - bckgDimensions[1] / 2, ...bckgDimensions);
 
@@ -182,7 +177,6 @@ export const nodePointerAreaPaint =
     const { size } = handleNodeStyle(node, nodeStyle);
     ctx.beginPath();
     const R = Math.sqrt(Math.max(0, size)) * BASIC_NODE_R;
-    // const R = BASIC_NODE_R;
     ctx.arc(x, y, R, 0, 2 * Math.PI, false);
     ctx.fill();
   };

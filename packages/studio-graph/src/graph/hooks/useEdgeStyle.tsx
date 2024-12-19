@@ -15,40 +15,26 @@ export const useEdgeStyle = () => {
     if (graph) {
       if (render === '2D' && (graph as ForceGraphInstance).linkCanvasObject) {
         (graph as ForceGraphInstance)
+          /** custome label */
           .linkCanvasObject((link, ctx, globalScale) => {
             linkCanvasObject(link as EdgeData, ctx, globalScale)(edgeStyle, edgeStatus);
           })
-          // custom edge
           .linkCanvasObjectMode(() => 'after')
           .linkDirectionalArrowLength(edge => {
             const { options = {}, size } = handleEdgeStyle(edge as EdgeData, edgeStyle) as EdgeStyle;
-            const { arrowLength = size * 4 } = options as any;
-            return arrowLength;
+            return options.arrowLength || size * 4;
           })
           .linkDirectionalArrowRelPos(edge => {
-            const { options = {} } = handleEdgeStyle(edge as EdgeData, edgeStyle) as EdgeStyle;
-            const { arrowPosition = 1 } = options as any;
-            return arrowPosition;
+            const { options } = handleEdgeStyle(edge as EdgeData, edgeStyle) as EdgeStyle;
+            return options.arrowPosition || 1;
           })
           .linkColor((edge: any) => {
-            const { color } = handleEdgeStyle(edge, edgeStyle);
+            const { color, options } = handleEdgeStyle(edge, edgeStyle);
             const match = edgeStatus[edge.id];
             if (match && match.selected) {
-              return SELECTED_EDGE_COLOR;
+              return options.selectColor || SELECTED_EDGE_COLOR;
             }
             return color;
-          })
-          .linkLabel((edge: any) => {
-            const { caption } = handleEdgeStyle(edge, edgeStyle);
-            return caption
-              .map(key => {
-                const value = edge && edge.properties && edge.properties[key];
-                if (key && value) {
-                  return `${key}: ${value}`;
-                }
-              })
-              .join('');
-            // return `${edge.source.id} --> ${edge.target.id}`;
           })
           // .onZoom(() => {
           //   if (render === '2D') {
