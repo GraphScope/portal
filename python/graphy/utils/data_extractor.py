@@ -36,7 +36,26 @@ def list_to_str(lst: list) -> str:
 
 def write_csv(file_path: str, data: list, headers: list = None):
     if headers is None and data:
-        headers = list(data[0].keys())
+        # Use a set to track the maximum set of keys
+        headers = set()
+        for row in data:
+            headers.update(row.keys())
+
+    if "id" in headers:
+        headers.remove("id")  # Remove "id" if it's in the headers
+        headers = ["id"] + sorted(
+            list(headers)
+        )  # Add "id" to the front and sort the rest
+    else:
+        headers = sorted(headers)  # Just sort if "id" is not present
+    if headers:
+        header_set = set(headers)
+        for row in data:
+            missing_fields = header_set - row.keys()  # Find missing fields in the row
+            if missing_fields:
+                # Add missing fields with empty values in one go
+                row.update({field: "" for field in missing_fields})
+
     if len(data) > 0:
         with open(file_path, "w", newline="") as file:
             writer = csv.DictWriter(
@@ -46,9 +65,6 @@ def write_csv(file_path: str, data: list, headers: list = None):
             for row in data:
                 try:
                     # Exclude the 'embedding' field from being written to the CSV
-                    row = {
-                        key: value for key, value in row.items() if key != "embedding"
-                    }
                     writer.writerow(row)
                 except Exception as e:
                     print(f"Error: {e}")
