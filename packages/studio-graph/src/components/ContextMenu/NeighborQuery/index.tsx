@@ -82,7 +82,7 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
         draft.nodeStatus = nodeStatus;
         draft.edgeStatus = edgeStatus;
         draft.isLoading = false;
-        draft.focusNodes = res.nodes.map(item => item.id);
+        draft.selectNodes = res.nodes;
       });
     } else {
       updateStore(draft => {
@@ -92,25 +92,16 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
   };
 
   const defaultChildren = itemMap['all'];
-  const items =
-    selectNodes.length === 1
-      ? [
-          {
-            icon: <ShareAltOutlined />,
-            key: 'NeighborQuery',
-            label: 'NeighborQuery',
-            //@ts-ignore
-            children: itemMap[selectNodes[0].label] || defaultChildren,
-          },
-        ]
-      : [
-          {
-            icon: <ShareAltOutlined />,
-            key: 'NeighborQuery',
-            label: 'NeighborQuery',
-            children: defaultChildren,
-          },
-        ];
+  const items = [
+    {
+      icon: <ShareAltOutlined />,
+      key: 'NeighborQuery',
+      label: 'NeighborQuery',
+      //@ts-ignore
+      children: itemMap[selectNodes[0].label] || defaultChildren,
+    },
+  ];
+
   console.log(items, itemMap);
   return (
     <div ref={MenuRef} className="studio-graph-neighbor-query">

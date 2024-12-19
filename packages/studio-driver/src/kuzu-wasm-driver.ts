@@ -89,6 +89,7 @@ export class KuzuDriver {
 
   async installUDF(): Promise<void> {
     var res = await this.conn?.execute('CREATE MACRO elementid(x) AS CAST(ID(x),"STRING")');
+
     console.log(res.toString());
   }
 
@@ -351,6 +352,12 @@ export class KuzuDriver {
   }
 
   async query(queryScript: string): Promise<any> {
+    if (queryScript === 'CALL kuzu.meta.schema') {
+      return await this.querySchema();
+    }
+    if (queryScript === 'CALL kuzu.meta.statistics') {
+      return await this.getCount();
+    }
     console.time('Query cost');
     const queryResult = await this.conn?.execute(queryScript);
     console.timeEnd('Query cost');
@@ -483,7 +490,6 @@ export class KuzuDriver {
     const edge_count = parseInt(edge_res.toString().split('\n')[1], 10);
     const countArray = [vertex_count, edge_count];
 
-    console.log(countArray);
     return countArray;
   }
 
@@ -511,7 +517,7 @@ export class KuzuDriver {
     console.log(`Open dataset ${this.curDataset}`);
 
     //@ts-ignore
-    this.db = await this.kuzuEngine.Database(this.curDataset, 0, 10, false, false, 4194304 * 16 * 4);
+    this.db = await this.kuzuEngine.Database(this.curDataset, 0, 10, false, false, 4194304 * 16 * 4 * 4);
     //@ts-ignore
     this.conn = await this.kuzuEngine.Connection(this.db);
 

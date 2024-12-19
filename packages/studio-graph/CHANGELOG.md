@@ -1,5 +1,14 @@
 # @graphscope/studio-graph
 
+## 0.1.13
+
+### Patch Changes
+
+- update website
+- Updated dependencies
+  - @graphscope/studio-components@0.1.13
+  - @graphscope/use-zustand@0.1.5
+
 ## 0.1.12
 
 ### Patch Changes

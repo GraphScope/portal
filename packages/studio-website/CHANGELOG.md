@@ -1,5 +1,21 @@
 # @graphscope/studio-site
 
+## 0.1.13
+
+### Patch Changes
+
+- update website
+- Updated dependencies
+  - @graphscope/studio-explore@0.1.11
+  - @graphscope/studio-driver@0.1.11
+  - @graphscope/studio-graph@0.1.13
+  - @graphscope/graphy-website@0.1.7
+  - @graphscope/studio-components@0.1.13
+  - @graphscope/studio-importor@0.1.13
+  - @graphscope/studio-query@0.1.13
+  - @graphscope/studio-server@1.0.10
+  - @graphscope/use-zustand@0.1.5
+
 ## 0.1.12
 
 ### Patch Changes

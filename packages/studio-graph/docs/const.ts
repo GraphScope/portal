@@ -22,6 +22,7 @@ export const data = {
       id: 'e1',
       properties: {
         weight: 0.8,
+        desc: 'weight_0.8',
       },
     },
   ],
