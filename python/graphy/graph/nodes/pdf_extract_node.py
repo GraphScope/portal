@@ -68,9 +68,9 @@ class PDFExtractNode(BaseNode):
                 docs = pdf_extractor.extract_all()
                 pdf_paper_references = list(pdf_extractor.linked_contents)
                 logger.info("========= START TO INIT MEMORY ======")
-                # vectordb.init_memory_parallel(
-                #     docs, ["page_index", "section", "part_index"]
-                # )
+                vectordb.init_memory_parallel(
+                    docs, ["page_index", "section", "part_index"]
+                )
                 logger.info(
                     f"========= FINISH TO INIT MEMORY {pdf_extractor.file_path} ======"
                 )

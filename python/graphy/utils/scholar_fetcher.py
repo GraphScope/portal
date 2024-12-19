@@ -22,14 +22,14 @@ class ScholarFetcher:
         download_folder: str = WF_DOWNLOADS_DIR,
         web_data_folder: str = WF_WEBDATA_DIR,
         meta_folder: str = "",
-        proxy_manager=None
+        proxy_manager=None,
     ):
         self.download_folder = download_folder
         self.bib_search_google = BibSearchGoogleScholar(
             persist_store=persist_store,
             web_data_folder=web_data_folder,
             meta_folder=meta_folder,
-            proxy_manager=proxy_manager
+            proxy_manager=proxy_manager,
         )
 
         self.result_former = ResultFormer()

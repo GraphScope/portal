@@ -196,9 +196,6 @@ class PaperNavigateEdge(AbstractEdge):
             parent_id = paper.get("data", {}).get("id", "")
             tasks = paper.get("data", {}).get(self.key_name, [])
 
-            logger.error(data_id)
-            logger.error(tasks)
-
             if len(parent_id) == 0 or len(tasks) == 0:
                 continue
 
@@ -410,10 +407,10 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
 
 class ProxyManager:
     def __init__(self):
-        self.api_url = "http://127.0.0.1:60119"
-        self.headers = {'Authorization': 'Bearer 7969611c-b4fb-485a-848e-85b07945d343'}
-        self.proxies = ["UnitedStates-US-4-Rate:1.0", "UnitedStates-US-3-Rate:1.0", "Germany-DE-2-Rate:1.0", "Australia-AU-3-Rate:1.0", "Japan-OS-2-Rate:1.0", "Japan-FW-JP-TEST1-Rate:1.0", "Netherlands-NL-1-Rate:1.0", "Taiwan-TW-1-Rate:1.0", "Singapore-SG-1-Rate:1.0", "UnitedKingdom-UK-1-Rate:1.0", "HongKong-IPLC-HK-BETA1-Rate:1.0", "HongKong-IPLC-HK-BETA2-Rate:1.0", "HongKong-IPLC-HK-BETA3-Rate:1.0", "HongKong-IPLC-HK-BETA4-Rate:1.0", "HongKong-IPLC-HK-BETA5-Rate:1.0"]
-        self.proxies_backup = ["UnitedStates-US-4-Rate:1.0", "UnitedStates-US-3-Rate:1.0", "Germany-DE-2-Rate:1.0", "Australia-AU-3-Rate:1.0", "Japan-OS-2-Rate:1.0", "Japan-FW-JP-TEST1-Rate:1.0", "Netherlands-NL-1-Rate:1.0", "Taiwan-TW-1-Rate:1.0", "Singapore-SG-1-Rate:1.0", "UnitedKingdom-UK-1-Rate:1.0", "HongKong-IPLC-HK-BETA1-Rate:1.0", "HongKong-IPLC-HK-BETA2-Rate:1.0", "HongKong-IPLC-HK-BETA3-Rate:1.0", "HongKong-IPLC-HK-BETA4-Rate:1.0", "HongKong-IPLC-HK-BETA5-Rate:1.0"]
+        self.api_url = ""
+        self.headers = {"Authorization": "Bearer "}
+        self.proxies = []
+        self.proxies_backup = []
         self.reserve_proxies = []
         self.current_proxy = ""
 
@@ -438,7 +435,7 @@ class ProxyManager:
         proxy_groups_info = self.get_proxy_groups()
         if proxy_groups_info:
             print(f"Available proxy groups:{proxy_groups_info}")
-            self.proxies = list(proxy_groups_info.get('proxies', {}).keys())
+            self.proxies = list(proxy_groups_info.get("proxies", {}).keys())
 
     def change_proxy(self, proxies_group_name, new_proxy_name):
         proxies_group_name = "Proxy"
@@ -455,14 +452,12 @@ class ProxyManager:
 
         time.sleep(5)
 
-        
-
     def remove_proxy(self):
         if len(self.current_proxy) == 0:
             return
-        
+
         if self.current_proxy in self.proxies:
-            if len(self.proxies) > 1:         
+            if len(self.proxies) > 1:
                 self.proxies.remove(self.current_proxy)
                 self.reserve_proxies.append(self.current_proxy)
             else:
@@ -483,6 +478,7 @@ class ProxyManager:
 
         if len(self.proxies) + len(self.reserve_proxies) == 0:
             self.proxies = self.proxies_backup
+
 
 @profiler.profile(name="PaperNavigateScholarEdge")
 class PaperNavigateScholarEdge(PaperNavigateEdge):
@@ -594,7 +590,7 @@ class PaperNavigateScholarEdge(PaperNavigateEdge):
                 download_folder=self.paper_download_dir,
                 web_data_folder=web_data_dir,
                 meta_folder=self.meta_folder_dir,
-                proxy_manager=self.proxy_manager
+                proxy_manager=self.proxy_manager,
             )
             logger.error(
                 f"--------------  start to download: {link}  ------------------"

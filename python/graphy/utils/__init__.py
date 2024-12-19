@@ -10,22 +10,22 @@ from .timer import Timer
 from .bib_search import BibSearchGoogleScholar, BibSearchArxiv, BibSearchPubMed
 from .string_similarity import StringSimilarity
 
-# from .json_parser import (
-#     JsonParserType,
-#     JsonFormatter,
-#     JsonOutputParserLLamaCpp,
-#     # JsonOutputParserFormatter,
-# )
+from .json_parser import (
+    JsonParserType,
+    JsonFormatter,
+    JsonOutputParserLLamaCpp,
+    JsonOutputParserFormatter,
+)
 
 __all__ = [
     "ArxivFetcher",
     "ResultFormer",
     "ScholarFetcher",
     "PubMedFetcher",
-    # "JsonParserType",
-    # "JsonFormatter",
-    # "JsonOutputParserLLamaCpp",
-    # "JsonOutputParserFormatter",
+    "JsonParserType",
+    "JsonFormatter",
+    "JsonOutputParserLLamaCpp",
+    "JsonOutputParserFormatter",
     "Paper",
     "Timer",
     "BibSearchGoogleScholar",

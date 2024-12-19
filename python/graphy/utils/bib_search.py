@@ -63,7 +63,9 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
     last_request_google_scholar = 0
     google_scholar_request_lock = threading.Lock()
 
-    def __init__(self, persist_store=None, web_data_folder="", meta_folder="", proxy_manager=None) -> None:
+    def __init__(
+        self, persist_store=None, web_data_folder="", meta_folder="", proxy_manager=None
+    ) -> None:
         BibSearch.__init__(self, persist_store=persist_store, meta_folder=meta_folder)
         CustomGoogleScholarOrganic.__init__(self)
 
@@ -75,7 +77,6 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         self.request_interval = 30
 
         self.proxy_manager = proxy_manager
-
 
     def _formulate_query(self, query):
         return re.sub(r"[^a-zA-Z0-9, ]", "_", query.strip())
@@ -185,7 +186,6 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         driver = webdriver.Chrome(service=service, options=options)
         driver.set_window_size(800, 800)
 
-
         stealth(
             driver,
             languages=["en-US", "en"],
@@ -195,7 +195,6 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             renderer="Intel Iris OpenGL Engine",
             fix_hairline=True,
         )
-
 
         return driver, cur_web_data_dir
 
@@ -444,7 +443,6 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 refined_link = f"{link_header}?start={str(page_num)}&{link_params['hl']}&{link_params['as_sdt']}&{link_params['sciodt']}&{link_params['cites']}"
                 # refined_link = f"{link_header}?start={str(page_num)}&{link_params['hl']}&{link_params['as_sdt']}&{link_params['sciodt']}&{link_params['cites']}&scipsc="
 
-
             retry_times = 0
             max_retry_times = 3
 
@@ -474,9 +472,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                     or "人机身份验证" in driver.page_source
                 ):
                     logger.error("============== DETECTED AS A SPIDER ===============")
-                    logger.error(
-                        f"===== TO RETRY {retry_times}/{max_retry_times}"
-                    )
+                    logger.error(f"===== TO RETRY {retry_times}/{max_retry_times}")
                     if self.proxy_manager:
                         self.proxy_manager.remove_proxy()
                         self.proxy_manager.set_proxy()
@@ -488,7 +484,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                         self.proxy_manager.set_proxy()
                 else:
                     break
-                    
+
             parser = LexborHTMLParser(driver.page_source)
 
             if get_content:
@@ -913,7 +909,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
     def download_by_name(
         self, query: str, download_path, pagination: bool = False, mode: str = "vague"
     ) -> List[str]:
-        
+
         driver, cur_web_data_dir = self._init_driver(query=query)
         # driver = self._init_driver()
 
@@ -999,7 +995,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                             logger.error(driver.page_source)
                         except Exception as e:
                             logger.error(f"Cannot Get Cited by Error: {e}")
-                        
+
                         parser = LexborHTMLParser(driver.page_source)
 
                         if len(parser.css(".gs_r.gs_or.gs_scl")) == 0:

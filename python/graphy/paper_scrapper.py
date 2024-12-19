@@ -46,7 +46,6 @@ def parse_arguments():
     parser.add_argument(
         "input_folder",
         type=str,
-        default="C:\\Users\\louyk\\Downloads\\portal-test_scholar\\portal-test_scholar\\python\\graphy\\inputs\\finance",
         help="Path to the input folder containing workflow files.",
     )
     parser.add_argument(
@@ -67,15 +66,10 @@ def parse_arguments():
         "-i",
         "--max-inspectors",
         type=int,
-        default=500,
+        default=100,
         help="Maximum number of inspectors allowed (default: 100).",
     )
     return parser.parse_args()
-
-# venv\Scripts\activate
-# set PYTHONPATH=$PYTHONPATH:python/graphy
-# set http_proxy=http://127.0.0.1:58591 
-# set https_proxy=http://127.0.0.1:58591
 
 
 def fix_workflow(workflow_json):

@@ -10,7 +10,8 @@ import tempfile
 import os
 
 # Get the path of the system's temporary directory
-work_dir = "D:\\graphy"
+work_dir = tempfile.gettempdir()
+
 # Some global parameters
 WF_STATE_CACHE_KEY = "caches"
 WF_STATE_MEMORY_KEY = "memory_manager"

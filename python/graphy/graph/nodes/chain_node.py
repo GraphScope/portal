@@ -1,7 +1,7 @@
 from .base_node import BaseNode, NodeCache, DataGenerator
 from memory import CachedMemoryBlock
 from config import WF_STATE_CACHE_KEY, WF_STATE_MEMORY_KEY
-# from utils.json_parser import JsonOutputParserFormatter
+from utils.json_parser import JsonOutputParserFormatter
 
 from typing import Any, Dict, List, Generator
 
@@ -53,12 +53,12 @@ class BaseChainNode(BaseNode):
             input_variables=["memory", "input"],
         )
 
-        # if self.json_format:
-        #     self.json_parser = JsonOutputParserFormatter(
-        #         self.json_format, self.parser_llm
-        #     )
-        # else:
-        #     self.json_parser = None
+        if self.json_format:
+            self.json_parser = JsonOutputParserFormatter(
+                self.json_format, self.parser_llm
+            )
+        else:
+            self.json_parser = None
 
         self.generate_chain = self.generate_prompt | llm
         self.memory = ""
