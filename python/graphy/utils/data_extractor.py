@@ -40,15 +40,14 @@ def write_csv(file_path: str, data: list, headers: list = None):
         headers = set()
         for row in data:
             headers.update(row.keys())
-
-    if "id" in headers:
-        headers.remove("id")  # Remove "id" if it's in the headers
-        headers = ["id"] + sorted(
-            list(headers)
-        )  # Add "id" to the front and sort the rest
-    else:
-        headers = sorted(headers)  # Just sort if "id" is not present
     if headers:
+        if "id" in headers:
+            headers.remove("id")  # Remove "id" if it's in the headers
+            headers = ["id"] + sorted(
+                list(headers)
+            )  # Add "id" to the front and sort the rest
+        else:
+            headers = sorted(headers)  # Just sort if "id" is not present
         header_set = set(headers)
         for row in data:
             missing_fields = header_set - row.keys()  # Find missing fields in the row
