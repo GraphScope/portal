@@ -517,7 +517,7 @@ export class KuzuDriver {
     console.log(`Open dataset ${this.curDataset}`);
 
     //@ts-ignore
-    this.db = await this.kuzuEngine.Database(this.curDataset, 0, 10, false, false, 4194304 * 16 * 4);
+    this.db = await this.kuzuEngine.Database(this.curDataset, 0, 10, false, false, 4194304 * 16 * 4 * 4);
     //@ts-ignore
     this.conn = await this.kuzuEngine.Connection(this.db);
 
