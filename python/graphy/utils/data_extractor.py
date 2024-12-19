@@ -41,13 +41,15 @@ def write_csv(file_path: str, data: list, headers: list = None):
         for row in data:
             headers.update(row.keys())
     if headers:
+        # some hacking messy stuff
         if "abstract" in headers:
             headers.remove("abstract")
         if "primary_class" in headers:
             headers.remove("primary_class")
         if "id" in headers:
             headers.remove("id")  # Remove "id" if it's in the headers
-            headers = ["id"] + sorted(
+            headers.remove("node_type")  # Remove "id" if it's in the headers
+            headers = ["id", "node_type"] + sorted(
                 list(headers)
             )  # Add "id" to the front and sort the rest
         else:
