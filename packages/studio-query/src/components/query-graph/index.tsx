@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { Button, Tooltip, theme } from 'antd';
 import { FormattedMessage } from 'react-intl';
-import { Section, useSection, FullScreen } from '@graphscope/studio-components';
+import { Section, useSection, FullScreen, Utils } from '@graphscope/studio-components';
 import {
   Toolbar,
   SwitchEngine,
@@ -30,8 +30,8 @@ import {
 import { Divider } from 'antd';
 
 import { BgColorsOutlined } from '@ant-design/icons';
-import CypherServices from './cypher';
-import GremlinServices from './gremlin';
+import CypherServices from './cypher-services';
+import GremlinServices from './gremlin-services';
 
 interface QueryGraphProps {
   // instance id
@@ -51,16 +51,11 @@ const ToogleButton = () => {
 };
 
 registerIcons();
+
 const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
   const { data, schema, graphId, id } = props;
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const language = 'cypher';
-  let services: any = [];
-  if (language === 'cypher') {
-    services = CypherServices['services'];
-  } else {
-    services = GremlinServices['services'];
-  }
+  const services = Utils.storage.get('query_language') === 'gremlin' ? GremlinServices : CypherServices;
   const { token } = theme.useToken();
 
   return (
@@ -94,8 +89,7 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
           <PropertiesPanel />
           <Loading />
           <ContextMenu>
-            {/* <NeighborQuery />
-            <CommonNeighbor onQuery={onQuery} /> */}
+            <NeighborQuery />
             <DeleteLeafNodes />
             <DeleteNode />
           </ContextMenu>

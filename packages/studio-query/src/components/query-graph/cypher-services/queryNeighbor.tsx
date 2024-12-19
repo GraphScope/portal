@@ -1,5 +1,5 @@
 import type { INeighborQueryData, INeighborQueryItems } from '@graphscope/studio-graph';
-import { queryStatement } from './queryStatement';
+import { queryStatement } from '../queryStatement';
 export const queryNeighborData: INeighborQueryData['query'] = async params => {
   const { key, selectIds } = params;
   const script = `

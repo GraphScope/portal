@@ -3,6 +3,7 @@ import type {
   INeighborQueryData,
   INeighborQueryItems,
   IQueryStatement,
+  IQueryCommonNeighbor,
 } from '@graphscope/studio-graph';
 import { queryNeighborData, queryNeighborItems } from './queryNeighbor';
 import type { IQueryGraphData, IQueryGraphSchema } from '../../components/FetchGraph';
@@ -22,7 +23,8 @@ export type ExploreQueryTypes =
   | IQueryNeighborStatics
   | INeighborQueryData
   | INeighborQueryItems
-  | IQueryStatement;
+  | IQueryStatement
+  | IQueryCommonNeighbor;
 
 import { queryGraphSchema } from './queryGraphSchema';
 import { queryStatement } from './queryStatement';
@@ -32,6 +34,7 @@ import { queryPropertyStatics } from './queryPropertyStatics';
 import { queryNeighborStatics } from './queryNeighborStatics';
 import { querySearch } from './querySearch';
 import { queryStatistics } from './queryStatistics';
+import { queryCommonNeighbor } from './queryCommonNeighbor';
 
 const services: IServiceQueries<ExploreQueryTypes> = {
   queryNeighborData,
@@ -44,5 +47,6 @@ const services: IServiceQueries<ExploreQueryTypes> = {
   queryNeighborStatics,
   querySearch,
   queryStatistics,
+  queryCommonNeighbor,
 };
 export default services;

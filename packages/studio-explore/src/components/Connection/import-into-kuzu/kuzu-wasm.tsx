@@ -1,30 +1,19 @@
 import { Utils } from '@graphscope/studio-components';
-import { KuzuDriver } from '@graphscope/graphy-website';
+import { getDriver as getKuzuDriver, KuzuDriver } from '@graphscope/studio-driver';
+const { storage } = Utils;
 
-declare global {
-  interface Window {
-    KUZU_DRIVER: KuzuDriver;
-  }
-}
-export const getDriver = async () => {
-  if (!window.KUZU_DRIVER) {
-    const driver = new KuzuDriver();
-    await driver.initialize();
-    const query_endpoint = Utils.storage.get<string>('query_endpoint');
-    if (query_endpoint) {
-      const [engineId, datasetId] = query_endpoint.split('://');
-      const exist = await driver.existDataset(datasetId);
-      if (exist) {
-        await driver.use(datasetId);
-      }
-    }
-    window.KUZU_DRIVER = driver;
-  }
-  return window.KUZU_DRIVER;
+const getDriver = async () => {
+  const language = storage.get<'cypher' | 'gremlin'>('query_language') || 'cypher';
+  const endpoint = storage.get<string>('query_endpoint') || '';
+  const username = storage.get<string>('query_username');
+  const password = storage.get<string>('query_password');
+  return getKuzuDriver({
+    language,
+    endpoint,
+    username,
+    password,
+  }) as Promise<KuzuDriver>;
 };
-//@ts-ignore
-window.getDriver = getDriver;
-let used = false;
 const __TEMP = {};
 export const setFiles = (dataset_id: string, params) => {
   __TEMP[dataset_id] = params;

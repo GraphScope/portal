@@ -13,7 +13,9 @@ export { default as SliderFilter } from './SliderFilter';
 export { default as RunCluster } from './RunCluster';
 export { default as LayoutSetting } from './LayoutSetting';
 export { default as NeighborQuery } from './ContextMenu/NeighborQuery';
+export type { INeighborQueryData, INeighborQueryItems } from './ContextMenu/NeighborQuery';
 export { default as CommonNeighbor } from './ContextMenu/CommonNeighbor';
+export type { IQueryCommonNeighbor } from './ContextMenu/CommonNeighbor';
 export { default as DeleteNode } from './ContextMenu/DeleteNode';
 export { default as Brush } from './Brush';
 export { default as Loading } from './Loading';
@@ -29,3 +31,11 @@ export { default as Placeholder } from './Placeholder';
 export { default as LayoutSwitch } from './LayoutSwitch';
 export { default as ZoomStatus } from './ZoomStatus';
 export { default as HoverMenu } from './HoverMenu';
+
+export type IServiceQueries<T extends { id: string; query: (...args: any[]) => Promise<any> }> = {
+  [K in T['id']]?: T extends { id: K } ? T['query'] : never;
+};
+export interface IQueryStatement {
+  id: 'queryStatement';
+  query: (script: string) => Promise<any>;
+}

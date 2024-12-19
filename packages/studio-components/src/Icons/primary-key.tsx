@@ -1,5 +1,8 @@
 import React from 'react';
-export default ({ style: { color, fontSize = '16px' } }: { style: React.CSSProperties }) => {
+import { theme } from 'antd';
+export default ({ style = {} }: { style: React.CSSProperties }) => {
+  const { token } = theme.useToken();
+  const { fontSize = 16, color = token.colorText } = style;
   return (
     <svg width={fontSize} height={fontSize} viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
       <path

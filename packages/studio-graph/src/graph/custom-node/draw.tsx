@@ -27,9 +27,9 @@ export function drawText(ctx: CanvasRenderingContext2D, options: DrawTextOptions
   const totalHeight = lines.length * lineHeight;
   const startY = y - totalHeight / 2;
 
-  if (totalHeight < maxWidth) {
-    lines.forEach((line, index) => {
-      ctx.fillText(line, x, startY + index * lineHeight);
-    });
-  }
+  // if (totalHeight < maxWidth) {
+  lines.forEach((line, index) => {
+    ctx.fillText(line, x, startY + index * lineHeight);
+  });
+  // }
 }

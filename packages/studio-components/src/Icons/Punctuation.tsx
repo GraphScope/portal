@@ -1,11 +1,12 @@
 import * as React from 'react';
-
+import { theme } from 'antd';
 interface IPunctuationProps {
   style?: React.CSSProperties;
 }
 
 const Punctuation: React.FC<IPunctuationProps> = ({ style = {} }) => {
-  const { color = '#B668B0', fontSize = '16px' } = style;
+  const { token } = theme.useToken();
+  const { fontSize = 16, color = token.colorText } = style;
 
   return (
     <svg

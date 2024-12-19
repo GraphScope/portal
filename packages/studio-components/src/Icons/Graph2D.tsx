@@ -1,11 +1,13 @@
 import * as React from 'react';
-
+import { theme } from 'antd';
 interface IGraph3DProps {
   style?: React.CSSProperties;
 }
 const Graph2D: React.FunctionComponent<IGraph3DProps> = props => {
-  const { style } = props;
-  const { color = '#000', fontSize = '18px' } = style as { color: string; fontSize: string };
+  const { style = {} } = props;
+  const { token } = theme.useToken();
+  const { fontSize = 16, color = token.colorText } = style;
+
   return (
     <div>
       <svg

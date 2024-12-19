@@ -38,6 +38,7 @@ const ContextMenu: React.FunctionComponent<IContextMenuProps> = props => {
             selected: true,
           },
         };
+        // draft.selectNodes = [node];
       });
     };
     const handleClear = () => {
