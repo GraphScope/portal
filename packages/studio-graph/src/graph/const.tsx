@@ -94,7 +94,7 @@ export const defaultNodeOptionStyle: Partial<NodeOptionStyle> = {
   /** keyshape */
   selectColor: SELECTED_NODE_COLOR,
   /** icon */
-  iconColor: undefined, // color of keyshape
+  iconColor: '#fff',
   iconSize: undefined, // half size of keyshape
   /** label text */
   textSize: 12,
