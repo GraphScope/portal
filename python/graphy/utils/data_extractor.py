@@ -41,6 +41,10 @@ def write_csv(file_path: str, data: list, headers: list = None):
         for row in data:
             headers.update(row.keys())
     if headers:
+        if "abstract" in headers:
+            headers.remove("abstract")
+        if "primary_class" in headers:
+            headers.remove("primary_class")
         if "id" in headers:
             headers.remove("id")  # Remove "id" if it's in the headers
             headers = ["id"] + sorted(
@@ -49,12 +53,8 @@ def write_csv(file_path: str, data: list, headers: list = None):
         else:
             headers = sorted(headers)  # Just sort if "id" is not present
         header_set = set(headers)
-        for row in data:
-            missing_fields = header_set - row.keys()  # Find missing fields in the row
-            if missing_fields:
-                # Add missing fields with empty values in one go
-                row.update({field: "" for field in missing_fields})
-
+    else:
+        header_set = None
     if len(data) > 0:
         with open(file_path, "w", newline="") as file:
             writer = csv.DictWriter(
@@ -62,8 +62,20 @@ def write_csv(file_path: str, data: list, headers: list = None):
             )
             writer.writeheader()
             for row in data:
+                if header_set:
+                    missing_fields = (
+                        header_set - row.keys()
+                    )  # Find missing fields in the row
+                    redundant_fields = row.keys() - header_set
+                    if missing_fields:
+                        # Add missing fields with empty values in one go
+                        row.update({field: "" for field in missing_fields})
+                    for field in redundant_fields:
+                        del row[field]  # Remove field from the row
+                    if "authors" in row and "author" in header_set:
+                        if len(row["authors"]) > 0:
+                            row["author"] = row["authors"][0]
                 try:
-                    # Exclude the 'embedding' field from being written to the CSV
                     writer.writerow(row)
                 except Exception as e:
                     print(f"Error: {e}")
