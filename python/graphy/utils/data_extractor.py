@@ -176,9 +176,6 @@ class GraphBuilder:
                 if "reference" in paper_data:
                     del paper_data["reference"]
                 paper_id = paper_data["id"]
-                if paper_id not in self.facts_dict:
-                    self.facts_dict[paper_id] = sanitize_data(paper_data)
-
                 if not dimension_node_names:
                     dimension_node_names = self.persist_store.get_total_states(folder)
                     try:
@@ -187,7 +184,11 @@ class GraphBuilder:
                     except ValueError:
                         pass  # Do nothing if "Paper" is not in the list
                 for node_name in dimension_node_names:
-                    self._extract_dimension_data(paper_id, folder, node_name)
+                    self._extract_dimension_data(
+                        paper_id, paper_data, folder, node_name
+                    )
+                if paper_id not in self.facts_dict:
+                    self.facts_dict[paper_id] = sanitize_data(paper_data)
             if edge_data:
                 for edge_name, edge_pairs in edge_data.items():
                     formatted_edges = [
@@ -198,38 +199,51 @@ class GraphBuilder:
                 self.edges_dict.setdefault(edge_name, []).extend(formatted_edges)
 
     def _extract_dimension_data(
-        self, paper_id: str, folder: str, node_name: str, edge_name: str = None
+        self,
+        paper_id: str,
+        paper_data: dict,
+        folder: str,
+        node_name: str,
+        edge_name: str = None,
     ):
-        if node_name not in self.dimensions_dict:
-            dimensions_dict = self.dimensions_dict.setdefault(node_name, {})
-        else:
-            dimensions_dict = self.dimensions_dict[node_name]
-        if not edge_name:
-            edge_name = f"Paper_Has_{node_name}"
-        if edge_name not in self.edges_dict:
-            edges = self.edges_dict.setdefault(edge_name, [])
-        else:
-            edges = self.edges_dict[edge_name]
-
         data_items = self.persist_store.get_state(folder, node_name)
 
         if data_items:
             data_items = data_items.get("data", {})
             if not isinstance(data_items, list):
-                data_items = [data_items]
+                if len(data_items) == 1:  # If there's only one item, update directly
+                    paper_data.update({node_name: next(iter(data_items.values()))})
+                elif isinstance(data_items, dict):  # Otherwise, handle dictionary
+                    for key, val in data_items.items():
+                        paper_data.update({f"{node_name}_{key}": val})
+                else:
+                    print(f"Error: Invalid data format for {node_name} in {folder}")
+            else:
+                if node_name not in self.dimensions_dict:
+                    dimensions_dict = self.dimensions_dict.setdefault(node_name, {})
+                else:
+                    dimensions_dict = self.dimensions_dict[node_name]
+                if not edge_name:
+                    edge_name = f"Paper_Has_{node_name}"
+                if edge_name not in self.edges_dict:
+                    edges = self.edges_dict.setdefault(edge_name, [])
+                else:
+                    edges = self.edges_dict[edge_name]
+                for idx, item in enumerate(data_items):
+                    data_id = hash_id(f"{paper_id}_{node_name}_{idx}")
 
-            for idx, item in enumerate(data_items):
-                data_id = hash_id(f"{paper_id}_{node_name}_{idx}")
-
-                if data_id not in dimensions_dict:
-                    dimensions_dict[data_id] = {"id": data_id, "node_type": "Dimension"}
-                    dimensions_dict[data_id].update(sanitize_data(item))
-                    edges.append(
-                        {
-                            "source": paper_id,
-                            "target": data_id,
+                    if data_id not in dimensions_dict:
+                        dimensions_dict[data_id] = {
+                            "id": data_id,
+                            "node_type": "Dimension",
                         }
-                    )
+                        dimensions_dict[data_id].update(sanitize_data(item))
+                        edges.append(
+                            {
+                                "source": paper_id,
+                                "target": data_id,
+                            }
+                        )
 
     def build_graph(self, output_path=None):
         if output_path:
