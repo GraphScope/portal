@@ -490,7 +490,7 @@ class ProxyManager:
         self.current_proxy = ""
 
         if len(self.proxies) + len(self.reserve_proxies) == 0:
-            self.proxies = self.proxies_backup
+            self.proxies = copy.deepcopy(self.proxies_backup)
 
 
 @profiler.profile(name="PaperNavigateScholarEdge")
@@ -776,7 +776,7 @@ def get_meta_from_paper(file_path, out_file_name, out_file_folder):
         print(f"Headers: {headers}")  # Optional: print the headers
 
         out_file_path = os.path.join(out_file_folder, out_file_name)
-        past_line = 2
+        past_line = 242
         current_line = 0
 
         with open(out_file_path, mode="a", encoding="utf-8", newline="") as outfile:

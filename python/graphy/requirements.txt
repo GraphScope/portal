@@ -42,4 +42,4 @@ transformers==4.41
 webdriver-manager>=4.0
 Werkzeug>=3.0.3
 socksio>=1.0.0
-
+undetected-chromedriver==3.5.5

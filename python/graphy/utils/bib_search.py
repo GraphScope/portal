@@ -8,6 +8,7 @@ import shutil
 import uuid
 import traceback
 
+import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -74,7 +75,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
         self.web_data_folder = web_data_folder
 
-        self.request_interval = 25
+        self.request_interval = 0
 
         self.proxy_manager = proxy_manager
 
@@ -144,80 +145,17 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
     def _init_driver(self, query=""):
         # selenium stealth
         cur_web_data_dir = self._enrich_webdata_dir(query)
-
-        options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-
-        logger.debug("======== WEB DATA ==========")
-        logger.debug(cur_web_data_dir)
-
-        os.makedirs(cur_web_data_dir, exist_ok=True)
-
-        if len(cur_web_data_dir) > 0:
-            options.add_argument("--user-data-dir=" + cur_web_data_dir)
-
-        options.add_experimental_option(
-            "excludeSwitches", ["enable-automation", "enable-logging"]
-        )
-        options.add_experimental_option("useAutomationExtension", False)
-
-        ua = UserAgent()
-        user_agent = ua.random
-        options.add_argument(f"--user-agent={user_agent}")
-
-        logger.info("INSTALLING chrome driver ...")
-
-        need_download = False
-        if not self.driver_version:
-            with BibSearchGoogleScholar.file_lock:
-                self.driver_version = self.get_driver_version()
-                if not self.driver_version:
-                    logger.warning("===== GET FROM INSTALL ======")
-                    need_download = True
-                    driver_manager = ChromeDriverManager(
-                        cache_manager=DriverCacheManager(valid_range=1),
-                    )
-                    driver_version = (
-                        driver_manager.driver.get_driver_version_to_download()
-                    )
-                    self.write_driver_version(driver_version)
-                    self.driver_version = driver_version
-                    chrome_driver = driver_manager.install()
-        if not need_download:
-            logger.warning("===== GET FROM CACHE ======")
-            chrome_driver = ChromeDriverManager(
-                driver_version=self.driver_version,
-                cache_manager=DriverCacheManager(valid_range=1),
-            ).install()
-
-        logger.warning(chrome_driver)
-        service = Service(chrome_driver)
-
-        # logger.error("FINISH INSTALLING chrome driver")
-        driver = webdriver.Chrome(service=service, options=options)
-        driver.set_window_size(800, 800)
-
-        stealth(
-            driver,
-            languages=["en-US", "en"],
-            vendor="Google Inc.",
-            platform="Win32",
-            webgl_vendor="Intel Inc.",
-            renderer="Intel Iris OpenGL Engine",
-            fix_hairline=True,
-        )
+        driver = uc.Chrome(headless=True, use_subprocess=False)
 
         return driver, cur_web_data_dir
 
     def _quit_driver(self, driver, webdata):
         driver.quit()
 
-        try:
-            shutil.rmtree(webdata)
-        except OSError as e:
-            traceback.print_exc()
+        # try:
+        #     shutil.rmtree(webdata)
+        # except OSError as e:
+        #     traceback.print_exc()
 
     def _reinit_driver(self, query, driver, webdata):
         self._quit_driver(driver=driver, webdata=webdata)
@@ -232,43 +170,43 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
         gathered_citations = {}
 
-        if "&hl=" in link:
-            en_link = re.sub(r"&hl=.*?(&|$)", "&hl=en\1", link)
+        # if "&hl=" in link:
+        #     en_link = re.sub(r"&hl=.*?(&|$)", "&hl=en\1", link)
 
-            try:
-                citation_driver, _ = self.safe_request(
-                    driver=citation_driver,
-                    link=en_link,
-                )
-            except Exception as e:
-                traceback.print_exc()
+        #     try:
+        #         citation_driver, _ = self.safe_request(
+        #             driver=citation_driver,
+        #             link=en_link,
+        #         )
+        #     except Exception as e:
+        #         traceback.print_exc()
 
-            wait = WebDriverWait(citation_driver, 10)
+        #     wait = WebDriverWait(citation_driver, 10)
 
-            try:
-                # Wait for elements with class 'gs_cith' to become present
-                cith_elements = wait.until(
-                    EC.presence_of_all_elements_located((By.CLASS_NAME, "gs_cith"))
-                    or (
-                        "not a robot" in citation_driver.page_source
-                        or "may be sending automated queries"
-                        in citation_driver.page_source
-                        or "您的计算机网络中存在异常流量" in citation_driver.page_source
-                        or "人机身份验证" in citation_driver.page_source
-                    )
-                )
-                print(f"Found {len(cith_elements)} elements with class 'gs_cith'")
-            except Exception as e:
-                print(f"An error occurred when getting citations: {e}")
+        #     try:
+        #         # Wait for elements with class 'gs_cith' to become present
+        #         cith_elements = wait.until(
+        #             EC.presence_of_all_elements_located((By.CLASS_NAME, "gs_cith"))
+        #             or (
+        #                 "not a robot" in citation_driver.page_source
+        #                 or "may be sending automated queries"
+        #                 in citation_driver.page_source
+        #                 or "您的计算机网络中存在异常流量" in citation_driver.page_source
+        #                 or "人机身份验证" in citation_driver.page_source
+        #             )
+        #         )
+        #         print(f"Found {len(cith_elements)} elements with class 'gs_cith'")
+        #     except Exception as e:
+        #         print(f"An error occurred when getting citations: {e}")
 
-            cith_elements = citation_driver.find_elements(By.CLASS_NAME, "gs_cith")
-            citr_elements = citation_driver.find_elements(By.CLASS_NAME, "gs_citr")
+        #     cith_elements = citation_driver.find_elements(By.CLASS_NAME, "gs_cith")
+        #     citr_elements = citation_driver.find_elements(By.CLASS_NAME, "gs_citr")
 
-            for cith, citr in zip(cith_elements, citr_elements):
-                if cith.text not in gathered_citations:
-                    gathered_citations[cith.text] = (
-                        citr.text.strip().replace("\n", "").replace("-\n", "")
-                    )
+        #     for cith, citr in zip(cith_elements, citr_elements):
+        #         if cith.text not in gathered_citations:
+        #             gathered_citations[cith.text] = (
+        #                 citr.text.strip().replace("\n", "").replace("-\n", "")
+        #             )
 
         if "&hl=" in link:
             en_link = re.sub(r"&hl=.*?(&|$)", "&hl=zh-CN\1", link)
@@ -294,6 +232,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 print(f"Found {len(cith_elements)} elements with class 'gs_cith'")
             except Exception as e:
                 print(f"An error occurred when getting citations: {e}")
+                print(citation_driver.page_source)
             # print(citation_driver.page_source)
 
             cith_elements = citation_driver.find_elements(By.CLASS_NAME, "gs_cith")
@@ -331,12 +270,12 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         # print(gathered_citations)
         info = {}
         # Author
-        if "Chicago" in gathered_citations:
-            info["Author"] = gathered_citations["Chicago"].split('"')[0]
+        if "MLA" in gathered_citations:
+            info["Author"] = gathered_citations["MLA"].split('"')[0]
 
         # Title
-        if "Chicago" in gathered_citations:
-            info["Title"] = gathered_citations["Chicago"].split('"')[1].strip()
+        if "MLA" in gathered_citations:
+            info["Title"] = gathered_citations["MLA"].split('"')[1].strip()
 
         # Journal or Inproceedings
         if "GB/T 7714" in gathered_citations:
@@ -463,7 +402,8 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             else:
                 lines.append("%-13s = {%s}" % (item, info[item]))
 
-        return [("," + os.linesep).join(lines) + os.linesep + "}"]
+        return [(", ").join(lines) + "}"]
+        # return [("," + os.linesep).join(lines) + os.linesep + "}"]
 
     def _get_cited_by_paper_names(self, driver, link, max_results=50):
         cited_by = []
@@ -928,7 +868,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                         retry_times += 1
                         driver, output_str = self.safe_request(
                             driver=driver,
-                            link=f"https://scholar.google.com/scholar?q={pruned_query}&hl=zh-CN&as_sdt=0,5&start={page_num}",
+                            link=f"https://scholar.google.com/scholar?q={pruned_query}&hl=zh-CN&as_sdt=0,5&start={page_num}&oq=",
                             # link=f"https://scholar.google.com/scholar?q={pruned_query}&hl=en&gl=us&as_sdt=0,5&start={page_num}",
                         )
 
