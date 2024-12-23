@@ -41,11 +41,6 @@ def write_csv(file_path: str, data: list, headers: list = None):
         for row in data:
             headers.update(row.keys())
     if headers:
-        # some hacking messy stuff
-        if "abstract" in headers:
-            headers.remove("abstract")
-        if "primary_class" in headers:
-            headers.remove("primary_class")
         if "id" in headers:
             headers.remove("id")  # Remove "id" if it's in the headers
             headers.remove("node_type")  # Remove "id" if it's in the headers
@@ -170,11 +165,28 @@ class GraphBuilder:
             if paper_data:
                 paper_data = paper_data.get("data", {})
                 paper_data["node_type"] = "Fact"
+                # id must present
                 if "id" not in paper_data:
-                    # a default id is given
-                    paper_data["id"] = hash_id(folder)
+                    print("`id` not found for paper in: ", folder)
+                    continue
+                # some hacking messy stuff
                 if "reference" in paper_data:
                     del paper_data["reference"]
+                if "abstract" in paper_data:
+                    del paper_data["abstract"]
+                if "primary_class" in paper_data:
+                    del paper_data["primary_class"]
+                if "data_id" in paper_data:
+                    del paper_data["data_id"]
+                if "cited_by" in paper_data:
+                    if "cited_by_count" not in paper_data:
+                        if paper_data["cited_by"]:
+                            paper_data["cited_by_count"] = len(paper_data["cited_by"])
+                        else:
+                            paper_data["cited_by_count"] = "NA"
+                    del paper_data["cited_by"]
+                else:
+                    paper_data["cited_by_count"] = "NA"
                 paper_id = paper_data["id"]
                 if not dimension_node_names:
                     dimension_node_names = self.persist_store.get_total_states(folder)
@@ -182,7 +194,7 @@ class GraphBuilder:
                         dimension_node_names.remove("Paper")
                         dimension_node_names.remove("REF_DONE")
                     except ValueError:
-                        pass  # Do nothing if "Paper" is not in the list
+                        pass  # Do nothing if "Paper" or REF_DONE is not in the list
                 for node_name in dimension_node_names:
                     self._extract_dimension_data(
                         paper_id, paper_data, folder, node_name
