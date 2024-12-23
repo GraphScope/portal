@@ -158,6 +158,7 @@ class GraphBuilder:
         return self.dimensions_dict.get(node_name, {})
 
     def extract_data(self, dimension_node_names=[]):
+        total_edges_dict = {}
         for folder in self.persist_store.get_total_data():
             print("Process folder: ", folder)
             paper_data = self.persist_store.get_state(folder, "Paper")
@@ -208,7 +209,17 @@ class GraphBuilder:
                         for pair in edge_pairs
                         for source, target in [pair.split("|")]
                     ]
-                self.edges_dict.setdefault(edge_name, []).extend(formatted_edges)
+                    total_edges_dict.setdefault(edge_name, []).extend(formatted_edges)
+
+        for name, edges in total_edges_dict.items():
+            edge_vec = self.edges_dict.setdefault(name, [])
+            for edge in edges:
+                # the edge can only be appended if both vertices present as fact nodes
+                if (
+                    edge["source"] in self.facts_dict
+                    and edge["target"] in self.facts_dict
+                ):
+                    edge_vec.append(edge)
 
     def _extract_dimension_data(
         self,
@@ -330,6 +341,7 @@ class GraphBuilder:
                     target_name = parts[2]
                 else:
                     target_name = "None"
+
             edge_schema = {
                 "type_name": edge,
                 "vertex_type_pair_relations": [
