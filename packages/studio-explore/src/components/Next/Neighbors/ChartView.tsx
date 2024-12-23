@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Select, Space, Flex, Card, Button, Typography, Skeleton } from 'antd';
 
-import { useContext, IQueryStatement } from '@graphscope/studio-graph';
+import { useContext } from '@graphscope/studio-graph';
 import { getPropertyOptions } from '../../Statistics/Properties/utils';
-import { BarChartOutlined, DeleteOutlined } from '@ant-design/icons';
+
 import Chart from '../../ChartView/index';
 
 import { Illustration } from '@graphscope/studio-components';
@@ -13,15 +13,17 @@ interface IChartViewProps {
   queryChart: (property: string) => Record<string, any>;
   onChartClick?: (property: string) => void;
   extra?: any;
+  options?: Record<string, any>;
 }
 
 const PropertyChart: React.FunctionComponent<IChartViewProps> = props => {
   const { queryChart, onChartClick, extra } = props;
   const { store } = useContext();
-  const { schema } = store;
+  const { schema, selectNodes } = store;
   const options = getPropertyOptions(schema);
   const cardRef = React.createRef<HTMLDivElement>();
-  console.log('options', options);
+
+  const ids = selectNodes.map(item => item.id).join(',');
   const [state, setState] = useState<{
     data: { [key: string]: any };
     isLoading: boolean;
@@ -32,7 +34,6 @@ const PropertyChart: React.FunctionComponent<IChartViewProps> = props => {
     property: props.defaultProperty,
   });
   const { data, isLoading, property } = state;
-  console.log(state);
 
   useEffect(() => {
     (async () => {
@@ -66,7 +67,7 @@ const PropertyChart: React.FunctionComponent<IChartViewProps> = props => {
         });
       }
     })();
-  }, [property]);
+  }, [property, ids]);
   const handleChange = value => {
     setState(preState => {
       return {
@@ -108,7 +109,7 @@ const PropertyChart: React.FunctionComponent<IChartViewProps> = props => {
       {isLoading && <Skeleton active style={{ padding: '24px' }} />}
       {!isLoading &&
         (property ? (
-          <Chart data={data} xField={property} yField="counts" onClick={onChartClick} />
+          <Chart data={data} xField={property} yField="counts" onClick={onChartClick} options={props.options} />
         ) : (
           <Flex vertical justify="center" align="center">
             <Illustration.Charts style={{ height: '160px', width: '160px' }} />

@@ -4,36 +4,33 @@ import { Illustration } from '@graphscope/studio-components';
 import PropertyChart from './ChartView';
 import { useContext, type INeighborQueryData, type NodeData, type IQueryStatement } from '@graphscope/studio-graph';
 
-interface IInspectNeighborProps {
-  data: NodeData[];
-}
 export interface IQueryNeighborStatics {
   id: 'queryNeighborStatics';
   query: (property: string, selecteIds: string[]) => Promise<{ [key: string]: any }>;
 }
 
-const InspectNeighbor: React.FunctionComponent<IInspectNeighborProps> = props => {
+const InspectNeighbor = props => {
   const { store } = useContext();
-  const { getService, schema } = store;
-  const { data } = props;
+  const { getService, selectNodes } = store;
   const [state, setState] = useState({
-    charts: [],
-    onehopSelectIds: data.map(item => item.id),
-    twoHopSelectIds: [],
+    label: '',
   });
-  const { onehopSelectIds, twoHopSelectIds } = state;
+  const { label } = state;
 
   const queryNeighbors = async (property: string, hop: number) => {
-    let selectIds: any[] = [];
-    if (hop === 1) {
-      selectIds = onehopSelectIds;
-    }
-    if (hop === 2) {
-      selectIds = twoHopSelectIds;
-    }
+    const selectIds = selectNodes.map(item => item.id);
     const res = await getService<IQueryNeighborStatics>('queryNeighborStatics')(property, selectIds);
-
     return res;
+  };
+  const onLabelChartClick = e => {
+    const { label } = e.data.data;
+    console.log('e', e);
+    setState(preState => {
+      return {
+        ...preState,
+        label,
+      };
+    });
   };
 
   //   const onChartClick = async (e) => {
@@ -53,31 +50,41 @@ const InspectNeighbor: React.FunctionComponent<IInspectNeighborProps> = props =>
   //       });
 
   //   };
-
+  console.log(label, 'render...label');
   return (
     <Flex vertical gap={12}>
-      <Flex gap={12}>
+      <Flex align="center" gap={12}>
+        <Illustration.Welcome style={{ height: '100px', width: '100px' }} />
         <Typography.Text type="secondary" italic>
-          System have pre-queried the first-degree neighbors for you, and the data statistics are as follows.
+          What is the next exploration? System have pre-queried the first-degree neighbors for you, and the data
+          statistics are as follows.
         </Typography.Text>
       </Flex>
+
       <PropertyChart
+        // options={{
+        //   transpose: true,
+        // }}
+        defaultProperty={'label'}
         // onChartClick={onChartClick}
         extra={
           <Typography.Text type="secondary" italic>
-            One Hop Neighbors
+            One Hop Statistics
           </Typography.Text>
         }
         queryChart={property => queryNeighbors(property, 1)}
+        onChartClick={onLabelChartClick}
       />
-      <PropertyChart
-        extra={
-          <Typography.Text type="secondary" italic>
-            Two Hop Neighbors
-          </Typography.Text>
-        }
-        queryChart={property => queryNeighbors(property, 2)}
-      />
+      {label && (
+        <PropertyChart
+          extra={
+            <Typography.Text type="secondary" italic>
+              {label}' Properties Statistics
+            </Typography.Text>
+          }
+          queryChart={property => queryNeighbors(property, 2)}
+        />
+      )}
     </Flex>
   );
 };
