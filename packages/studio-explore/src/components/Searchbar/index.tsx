@@ -4,7 +4,7 @@ import { Flex, Input, List, Divider, Spin, Space, Tag, Button, theme } from 'ant
 import { SearchOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { Utils, useDynamicStyle } from '@graphscope/studio-components';
 import Highlighter from 'react-highlight-words';
-import { useContext } from '@graphscope/studio-graph';
+import { useContext, GraphData, useApis } from '@graphscope/studio-graph';
 import CascaderSearch from './CascaderSearch';
 import cssStyle from './css';
 
@@ -29,15 +29,13 @@ export interface ISearchbarState {
   onEnter: boolean;
   onLeave: boolean;
   breadcrumb: IbreadcrumbItem[];
-  data: {
-    nodes: [];
-    edges: [];
-  };
+  data: GraphData;
 }
 const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
   const { store, updateStore } = useContext();
   const { emitter, getService } = store;
   const { token } = theme.useToken();
+  const { focusNodes } = useApis();
 
   useDynamicStyle(
     `
@@ -64,17 +62,17 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
     },
   });
   const { breadcrumb } = state;
+  const handleClear = () => {
+    setState(preState => {
+      return {
+        ...preState,
+        words: '',
+        onEnter: false,
+        onLeave: true,
+      };
+    });
+  };
   useEffect(() => {
-    const handleClear = () => {
-      setState(preState => {
-        return {
-          ...preState,
-          words: '',
-          onEnter: false,
-          onLeave: true,
-        };
-      });
-    };
     if (emitter) {
       emitter.on('canvas:click', handleClear);
     }
@@ -84,6 +82,9 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
   }, [emitter]);
   const onChange = async e => {
     const { value } = e.target;
+    if (value === '') {
+      return;
+    }
 
     setState(preState => {
       return {
@@ -124,10 +125,16 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
         return a.id === b.id;
       });
       if (node) {
-        //@ts-ignore
-        draft.focusNodes = [node.id];
+        draft.selectNodes = [node];
+        draft.nodeStatus = {
+          [node.id]: {
+            selected: true,
+          },
+        };
+        focusNodes([node.id]);
       }
     });
+    handleClear();
   };
 
   const onClick = e => {
@@ -137,6 +144,7 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
         onEnter: true,
       };
     });
+    onChange(e);
   };
   const handleCloseTag = e => {
     setState(preState => {
@@ -151,7 +159,6 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
     updateStore(draft => {
       draft.isLoading = true;
     });
-
     const data = await getService<IQuerySearch>('querySearch')({
       config: breadcrumb,
       value: '',
@@ -161,8 +168,8 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
       draft.source = data;
       draft.data = data;
       draft.isLoading = false;
-      draft.focusNodes = data.nodes.map(item => item.id);
     });
+    focusNodes(data.nodes.map(item => item.id));
   };
   const prefix = (
     <Space size="small">

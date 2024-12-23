@@ -7,7 +7,7 @@ import { getTable } from './utils';
 interface IPropertiesTableProps {
   data: GraphData['edges'] | GraphData['nodes'];
 }
-
+import { width } from './index';
 const PropertiesTable: React.FunctionComponent<IPropertiesTableProps> = props => {
   const { data } = props;
   const { dataSource, columns } = getTable(data);
@@ -19,7 +19,8 @@ const PropertiesTable: React.FunctionComponent<IPropertiesTableProps> = props =>
     bottom: '12px',
     left: '12px',
     right: '12px',
-    maxHeight: '50%',
+    boxSizing: 'border-box',
+    maxHeight: width,
     boxShadow: token.boxShadow,
     zIndex: 1999,
     background: token.colorBgContainer,
@@ -29,11 +30,11 @@ const PropertiesTable: React.FunctionComponent<IPropertiesTableProps> = props =>
   };
 
   return (
-    <Flex style={{ overflowY: 'scroll', ...rootStyle }} vertical gap={12}>
-      <Flex justify="space-between">
+    <Flex style={{ overflowY: 'scroll', ...rootStyle }} vertical gap={0}>
+      {/* <Flex justify="space-between">
         <Typography.Title level={5}>Inspect Infos</Typography.Title>
         <Button icon={<DownloadOutlined />} type="text"></Button>
-      </Flex>
+      </Flex> */}
       <Table
         size="large"
         pagination={false}

@@ -60,6 +60,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             splitBorder
             leftSide={
               <SegmentedTabs
+                queryKey="left"
                 tableHeight={60}
                 block
                 items={[
@@ -96,22 +97,49 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
                 ]}
               ></SegmentedTabs>
             }
+            rightSide={
+              <SegmentedTabs
+                queryKey="right"
+                tableHeight={60}
+                block
+                items={[
+                  {
+                    key: 'Next',
+                    label: (
+                      <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
+                        <BarChartOutlined style={{ fontSize: 17 }} />
+                        Next
+                      </Flex>
+                    ),
+                    children: <Next />,
+                  },
+                  {
+                    key: 'AI Report',
+                    label: (
+                      <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
+                        <Icons.Cluster />
+                        AI Report
+                      </Flex>
+                    ),
+                    children: <ClusterAnalysis />,
+                  },
+                ]}
+              ></SegmentedTabs>
+            }
             autoResize={false}
             leftSideStyle={{
-              width: '380px',
-              // padding: '0px 12px',
+              width: '360px',
               boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
               overflow: 'scroll',
             }}
-            // rightSideStyle={{
-            //   width: '360px',
-            //   padding: '12px 12px 12px 18px',
-            //   boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
-            //   overflowY: 'scroll',
-            // }}
+            rightSideStyle={{
+              width: '380px',
+              boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
+              overflowY: 'scroll',
+            }}
             defaultCollapsed={{
-              leftSide: false,
-              rightSide: true,
+              leftSide: true,
+              rightSide: false,
             }}
           >
             {/* <Prepare data={data} schema={schema} graphId={graphId} /> */}
@@ -121,7 +149,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             <FetchGraph />
             <Placeholder />
             <Loading />
-            {/* <Next /> */}
+
             <PropertiesPanel />
 
             <ZoomStatus />

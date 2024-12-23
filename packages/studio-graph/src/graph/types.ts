@@ -95,6 +95,9 @@ export interface EdgeOptionStyle {
   textColor: string;
   textSize: number;
   textBackgroundColor: string;
+
+  /** strategy */
+  zoomLevel: number[];
 }
 export interface NodeStatus {
   /** 是否选中节点 */
