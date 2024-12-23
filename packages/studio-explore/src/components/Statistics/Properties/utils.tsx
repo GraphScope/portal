@@ -4,6 +4,7 @@ import React from 'react';
 import type { GraphSchema } from '@graphscope/studio-graph';
 export function getPropertyOptions(schema: GraphSchema) {
   const nodeProperties = new Map();
+  nodeProperties.set('label', { value: 'label', label: 'label' });
   const edgeProperties = new Map();
   schema.nodes.forEach(node => {
     node.properties.forEach(property => {

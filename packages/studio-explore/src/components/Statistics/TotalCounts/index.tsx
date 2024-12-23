@@ -59,7 +59,7 @@ const TotalCounts: React.FunctionComponent<IUploadProps> = props => {
   return (
     <Flex vertical gap={12}>
       <Typography.Title level={5} style={{ margin: '0px' }}>
-        Graph Statistics
+        Global Statistics
       </Typography.Title>
       <Flex align="center" justify="start" gap={64}>
         <Statistic
