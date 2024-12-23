@@ -22,7 +22,7 @@ export const useEdgeStyle = () => {
           .linkCanvasObjectMode(() => 'after')
           .linkDirectionalArrowLength(edge => {
             const { options = {}, size } = handleEdgeStyle(edge as EdgeData, edgeStyle) as EdgeStyle;
-            return options.arrowLength || size * 4;
+            return options.arrowLength === undefined ? size * 3 : options.arrowLength;
           })
           .linkDirectionalArrowRelPos(edge => {
             const { options } = handleEdgeStyle(edge as EdgeData, edgeStyle) as EdgeStyle;

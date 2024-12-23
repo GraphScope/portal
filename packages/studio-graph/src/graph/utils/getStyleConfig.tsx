@@ -11,13 +11,15 @@ import {
 } from '../const';
 const { storage } = Utils;
 export function getStyleConfig(schema: GraphSchema, graphId: string) {
-  const localStyle = storage.get<{ nodeStyle: NodeStyle; edgeStyle: EdgeStyle }>(`GRAPH_${graphId}_STYLE`);
+  const localStyle = storage.get<{ nodeStyle: Record<string, NodeStyle>; edgeStyle: Record<string, EdgeStyle> }>(
+    `GRAPH_${graphId}_STYLE`,
+  );
   if (localStyle) {
     return localStyle;
   }
   const defaultStyle = {
-    nodeStyle: {},
-    edgeStyle: {},
+    nodeStyle: {} as Record<string, NodeStyle>,
+    edgeStyle: {} as Record<string, EdgeStyle>,
   };
 
   schema.nodes.forEach((item, index) => {
@@ -33,11 +35,11 @@ export function getStyleConfig(schema: GraphSchema, graphId: string) {
       }
     });
     defaultStyle.nodeStyle[label] = {
-      label: item.label,
       size: DEFAULT_NODE_SIZE,
       color: colors[index],
       caption,
-      captionStatus: 'display',
+      icon: '',
+      options: {},
     };
   });
   schema.edges.forEach((item, index) => {
@@ -54,11 +56,11 @@ export function getStyleConfig(schema: GraphSchema, graphId: string) {
     });
 
     defaultStyle.edgeStyle[label] = {
-      label: item.label,
+      icon: '',
       size: DEFAULT_EDGE_WIDTH,
       color: DEFAULT_EDGE_COLOR,
       caption,
-      captionStatus: 'display',
+      options: {},
     };
   });
 

@@ -39,3 +39,5 @@ export interface IQueryStatement {
   id: 'queryStatement';
   query: (script: string) => Promise<any>;
 }
+
+export { default as SchemaView } from './SchemaView';

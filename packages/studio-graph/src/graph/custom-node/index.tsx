@@ -20,9 +20,11 @@ export const nodeCanvasObject =
       zoomLevel,
       iconColor,
       iconSize = `${R}px`,
+
       textColor = color,
       textPosition,
       textBackgroundColor,
+      textSize = R * 0.5,
       selectColor,
     } = options as NodeOptionStyle;
     const texts = caption.map(c => {
@@ -69,6 +71,7 @@ export const nodeCanvasObject =
       globalScale,
       ctx,
       R,
+      textSize,
       texts,
       node,
       textColor,
@@ -86,13 +89,14 @@ function drawLabel(options: {
   ctx: CanvasRenderingContext2D;
   node: any;
   R: number;
+  textSize: number;
   texts: string[];
   textPosition: NodeOptionStyle['textPosition'];
   textColor: NodeOptionStyle['textColor'];
   zoomLevel: NodeOptionStyle['zoomLevel'];
   textBackgroundColor: NodeOptionStyle['textBackgroundColor'];
 }) {
-  let { globalScale, ctx, node, R, texts, textColor, textPosition, zoomLevel, textBackgroundColor } = options;
+  let { globalScale, ctx, node, R, texts, textColor, textPosition, zoomLevel, textBackgroundColor, textSize } = options;
 
   if (texts.length === 0 || globalScale < zoomLevel[0]) {
     return;
@@ -100,7 +104,7 @@ function drawLabel(options: {
   if (globalScale >= zoomLevel[1]) {
     const fontSize = 16 / globalScale;
     ctx.font = `${fontSize}px Sans-Serif`;
-    ctx.fillStyle = textColor;
+    ctx.fillStyle = '#fff';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     drawText(ctx, {
@@ -112,7 +116,7 @@ function drawLabel(options: {
     });
   }
   if (globalScale >= zoomLevel[0] && globalScale < zoomLevel[1]) {
-    const fontSize = R * 0.5; //14 / globalScale;
+    const fontSize = textSize;
     const lineHeight = fontSize * 1.2;
     let textX = node.x;
     let textY = node.y;

@@ -13,6 +13,7 @@ const Canvas = props => {
   const containerStyle: CSSProperties = {
     position: 'relative',
     height: '100%',
+    width: '100%',
     background: token.colorBgBase,
   };
   return <div id={`GRAPH_${id}`} ref={containerRef} style={containerStyle}></div>;

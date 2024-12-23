@@ -198,9 +198,9 @@ const CustomGraphFetch = () => {
             selectColor: 'red',
             /** icon */
             iconColor: '#fff', // color of keyshape
-            iconSize: undefined, // half size of keyshape
+            iconSize: 10, // half size of keyshape
             /** label text */
-            textSize: 12,
+            textSize: 5,
             textColor: '#000', // color of keyshape
             textPosition: 'bottom',
             textBackgroundColor: 'rgba(255,255,255,0.8)',
