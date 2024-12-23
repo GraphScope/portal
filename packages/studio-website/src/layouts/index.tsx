@@ -143,7 +143,9 @@ function setCoordinator() {
   if (coordinatorURL) {
     Utils.storage.set('coordinator', coordinatorURL);
   }
-  const coordinator = Utils.storage.get<string>('coordinator') || location.origin;
+  const coordinator =
+    Utils.storage.get<string>('coordinator') ||
+    (location.origin === 'https://gsp.vercel.app' ? 'http://127.0.0.1:8080' : location.origin);
   window.COORDINATOR_URL = coordinator;
   return coordinator;
 }
