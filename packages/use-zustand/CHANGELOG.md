@@ -1,5 +1,11 @@
 # @graphscope/use-zustand
 
+## 0.1.6
+
+### Patch Changes
+
+- update studio graph
+
 ## 0.1.5
 
 ### Patch Changes
