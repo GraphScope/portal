@@ -6,9 +6,13 @@ import logging
 import difflib
 import shutil
 import uuid
+import errno, os, stat, shutil
 import traceback
+import json
+
 
 import undetected_chromedriver as uc
+from seleniumbase import SB
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -26,10 +30,106 @@ import os
 import time
 import threading
 
+import urllib, pydub, speech_recognition
+from DrissionPage.common import Keys
+from DrissionPage import ChromiumPage
+
 from google_scholar_py import CustomGoogleScholarOrganic
 from .string_similarity import StringSimilarity
 
 logger = logging.getLogger(__name__)
+
+
+class RecaptchaSolver:
+
+    def __init__(self, driver: SB):
+        super().__init__()
+        self.driver = driver
+
+    def solveCaptcha(self):
+        try:
+            print("try to solve")
+            try:
+                self.driver.wait_for_element(".rc-anchor-content", timeout=20)
+            except:
+                breakpoint()
+                print("cannot solve")
+                return True
+
+            # iframe_inner = self.driver.get_element("@title=reCAPTCHA")
+            self.driver.click(".rc-anchor-content")
+            self.driver.wait_for_element_present(
+                "xpath://iframe[contains(@title, 'recaptcha')]", timeout=3
+            )
+
+            # Sometimes just clicking on the recaptcha is enough to solve it
+            if self.isSolved():
+                return
+
+            # Get the new iframe
+            iframe = self.driver.get_element(
+                "xpath://iframe[contains(@title, 'recaptcha')]"
+            )
+
+            # Click on the audio button
+            self.driver.click("#recaptcha-audio-button")
+            time.sleep(0.3)
+
+            # Get the audio source
+            src = self.driver.get_attribute("#audio-source", "src")
+
+            # Download the audio to the temp folder
+            path_to_mp3 = os.path.normpath(
+                os.path.join(
+                    (os.getenv("TEMP") if os.name == "nt" else "/tmp/")
+                    + str(random.randrange(1, 1000))
+                    + ".mp3"
+                )
+            )
+            path_to_wav = os.path.normpath(
+                os.path.join(
+                    (os.getenv("TEMP") if os.name == "nt" else "/tmp/")
+                    + str(random.randrange(1, 1000))
+                    + ".wav"
+                )
+            )
+
+            urllib.request.urlretrieve(src, path_to_mp3)
+
+            # Convert mp3 to wav
+            sound = pydub.AudioSegment.from_mp3(path_to_mp3)
+            sound.export(path_to_wav, format="wav")
+            sample_audio = speech_recognition.AudioFile(path_to_wav)
+            r = speech_recognition.Recognizer()
+            with sample_audio as source:
+                audio = r.record(source)
+
+            # Recognize the audio
+            key = r.recognize_google(audio)
+
+            # Input the key
+            self.driver.update_text("#audio-response", key.lower())
+            time.sleep(0.1)
+
+            # Submit the key
+            self.driver.type("#audio-response", Keys.ENTER)
+            time.sleep(0.4)
+
+        except Exception as e:
+            print(f"RECAPTCHA problem: {e}")
+        # Check if the captcha is solved
+        if self.isSolved():
+            return
+        else:
+            raise Exception("Failed to solve the captcha")
+
+    def isSolved(self):
+        try:
+            return "style" in self.driver.get_attribute(
+                ".recaptcha-checkbox-checkmark", "style"
+            )
+        except:
+            return False
 
 
 class BibSearch:
@@ -75,23 +175,43 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
         self.web_data_folder = web_data_folder
 
-        self.request_interval = 0
+        self.request_interval = 10
 
         self.proxy_manager = proxy_manager
 
     def _formulate_query(self, query):
-        return re.sub(r"[^a-zA-Z0-9, ]", "_", query.strip())
+        return re.sub(r"[^a-zA-Z0-9:, ]", "_", query.strip())
 
     def _update_proxy(self, driver, cur_web_data_dir, query):
         if self.proxy_manager:
-            self.proxy_manager.delete_proxy()
+            self.proxy_manager.remove_proxy()
             self.proxy_manager.set_proxy()
-            driver, cur_web_data_dir = self._reinit_driver(
-                query=query,
-                driver=driver,
-                webdata=cur_web_data_dir,
-            )
-        return driver, cur_web_data_dir
+            # driver, cur_web_data_dir = self._reinit_driver(
+            #     query=query,
+            #     driver=driver,
+            #     webdata=cur_web_data_dir,
+            # )
+        time.sleep(60)
+        return None, None
+
+    def just_wait(self, set_proxy=False):
+        if set_proxy:
+            self.proxy_manager.set_proxy()
+        with BibSearchGoogleScholar.google_scholar_request_lock:
+            # logger.info(f"inside request: {link} {time.time()}")
+            time_to_wait = 0
+            interval = time.time() - BibSearchGoogleScholar.last_request_google_scholar
+            if interval < self.request_interval:
+                time_to_wait = (
+                    random.uniform(self.request_interval, self.request_interval + 6)
+                    - interval
+                )
+
+                time.sleep(time_to_wait)
+
+            logger.warning(f"Time Issues: {time.time()} - {time_to_wait}")
+
+            BibSearchGoogleScholar.last_request_google_scholar = time.time()
 
     def safe_request(self, driver, link):
         output_str = ""
@@ -142,20 +262,76 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         cur_web_data_dir = os.path.join(self.web_data_folder, folder_name)
         return cur_web_data_dir
 
+    def _get_url_content(self, url):
+        with SB(
+            uc=True, headless=True, undetected=True, chromium_arg="--no-sandbox"
+        ) as sb:
+            sb.uc_open_with_reconnect(url, 4)
+            sb.uc_gui_click_captcha()
+            return sb.get_page_source()
+
     def _init_driver(self, query=""):
         # selenium stealth
         cur_web_data_dir = self._enrich_webdata_dir(query)
-        driver = uc.Chrome(headless=True, use_subprocess=False)
+
+        options = uc.ChromeOptions()
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+
+        # options.add_argument("--incognito")
+        # options.add_argument("--ignore-certificate-errors")
+        # options.add_argument("--remote-allow-origins=*")
+        # options.add_argument('--disable-gpu')
+
+        options = webdriver.ChromeOptions()
+
+        # logger.debug("======== WEB DATA ==========")
+        # logger.debug(cur_web_data_dir)
+
+        os.makedirs(cur_web_data_dir, exist_ok=True)
+
+        if len(cur_web_data_dir) > 0:
+            options.add_argument("--user-data-dir=" + cur_web_data_dir)
+
+        # options.add_experimental_option(
+        #     "excludeSwitches", ["enable-automation", "enable-logging"]
+        # )
+        # options.add_experimental_option("useAutomationExtension", False)
+
+        options.add_argument("--excludeSwitches=enable-automation")
+        options.add_argument("--excludeSwitches=enable-logging")
+        options.add_argument("--useAutomationExtension=False")
+
+        # ua = UserAgent()
+        # user_agent = ua.random
+        # options.add_argument(f"--user-agent={user_agent}")
+
+        # logger.error("FINISH INSTALLING chrome driver")
+
+        driver = uc.Chrome(headless=True, use_subprocess=False, options=options)
 
         return driver, cur_web_data_dir
 
     def _quit_driver(self, driver, webdata):
         driver.quit()
 
-        # try:
-        #     shutil.rmtree(webdata)
-        # except OSError as e:
-        #     traceback.print_exc()
+        to_remove = []
+        for folder in self.proxy_manager.undeleted_folders:
+            try:
+                shutil.rmtree(folder)
+                to_remove.append(folder)
+                print(f"remove old folder {folder}")
+            except:
+                continue
+        for folder in to_remove:
+            self.proxy_manager.undeleted_folders.remove(folder)
+
+        try:
+            shutil.rmtree(webdata)
+        except OSError as e:
+            traceback.print_exc()
+            self.proxy_manager.undeleted_folders.add(webdata)
 
     def _reinit_driver(self, query, driver, webdata):
         self._quit_driver(driver=driver, webdata=webdata)
@@ -163,11 +339,6 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         return driver, cur_web_data_dir
 
     def _get_citations(self, link):
-        try:
-            citation_driver, cur_web_data_dir = self._init_driver(link)
-        except Exception as e:
-            traceback.print_exc()
-
         gathered_citations = {}
 
         # if "&hl=" in link:
@@ -210,41 +381,41 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
         if "&hl=" in link:
             en_link = re.sub(r"&hl=.*?(&|$)", "&hl=zh-CN\1", link)
-            citation_driver, _ = self.safe_request(
-                driver=citation_driver,
-                link=en_link,
-            )
+            retry_times = 0
+            max_retry_times = 3
 
-            wait = WebDriverWait(citation_driver, 10)
+            while retry_times <= max_retry_times:
+                retry_times += 1
+                self.just_wait()
 
-            try:
-                # Wait for elements with class 'gs_cith' to become present
-                cith_elements = wait.until(
-                    EC.presence_of_all_elements_located((By.CLASS_NAME, "gs_cith"))
-                    or (
-                        "not a robot" in citation_driver.page_source
-                        or "may be sending automated queries"
-                        in citation_driver.page_source
-                        or "您的计算机网络中存在异常流量" in citation_driver.page_source
-                        or "人机身份验证" in citation_driver.page_source
-                    )
-                )
-                print(f"Found {len(cith_elements)} elements with class 'gs_cith'")
-            except Exception as e:
-                print(f"An error occurred when getting citations: {e}")
-                print(citation_driver.page_source)
-            # print(citation_driver.page_source)
+                with SB(uc=True) as sb:
+                    try:
+                        sb.uc_open_with_reconnect(en_link, 4)
+                        # recaptchaSolver = RecaptchaSolver(sb)
+                        # recaptchaSolver.solveCaptcha()
+                        # sb.uc_gui_click_captcha()
+                        sb.wait_for_element(".gs_cith", timeout=10)
+                        cith_elements = sb.find_elements(".gs_cith")
+                        citr_elements = sb.find_elements(".gs_citr")
 
-            cith_elements = citation_driver.find_elements(By.CLASS_NAME, "gs_cith")
-            citr_elements = citation_driver.find_elements(By.CLASS_NAME, "gs_citr")
+                        if cith_elements and citr_elements:
+                            for cith, citr in zip(cith_elements, citr_elements):
+                                if cith.text not in gathered_citations:
+                                    gathered_citations[cith.text] = (
+                                        citr.text.strip()
+                                        .replace("\n", "")
+                                        .replace("-\n", "")
+                                    )
 
-            for cith, citr in zip(cith_elements, citr_elements):
-                if cith.text not in gathered_citations:
-                    gathered_citations[cith.text] = (
-                        citr.text.strip().replace("\n", "").replace("-\n", "")
-                    )
+                        break
 
-        self._quit_driver(citation_driver, webdata=cur_web_data_dir)
+                    except Exception as e:
+                        logger.error(f"error in get citations: {e}")
+                        cith_elements = None
+                        citr_elements = None
+
+                        logger.error(f"===== TO RETRY {retry_times}/{max_retry_times}")
+                        self._update_proxy(None, None, "")
 
         return gathered_citations
 
@@ -269,13 +440,27 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         # print("************ GATHERED CITATIONS *************")
         # print(gathered_citations)
         info = {}
-        # Author
-        if "MLA" in gathered_citations:
-            info["Author"] = gathered_citations["MLA"].split('"')[0]
 
-        # Title
         if "MLA" in gathered_citations:
-            info["Title"] = gathered_citations["MLA"].split('"')[1].strip()
+            if '"' in gathered_citations:
+                # Author
+                info["Author"] = gathered_citations["MLA"].split('"')[0]
+                # Title
+                info["Title"] = gathered_citations["MLA"].split('"')[1].strip()
+            else:
+                # Author
+                info["Author"] = gathered_citations["MLA"].split(". ")[0]
+                # Title
+                if "GB/T 7714" in gathered_citations:
+                    info["Title"] = (
+                        gathered_citations["GB/T 7714"]
+                        .split(". ")[1]
+                        .strip()
+                        .split("[")[0]
+                        .strip()
+                    )
+                else:
+                    info["Title"] = gathered_citations["MLA"].split(". ")[1].strip()
 
         # Journal or Inproceedings
         if "GB/T 7714" in gathered_citations:
@@ -283,6 +468,8 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 info["Type"] = "journal"
             elif "[C]//" in gathered_citations["GB/T 7714"]:
                 info["Type"] = "inproceedings"
+            elif "[M]." in gathered_citations["GB/T 7714"]:
+                info["Type"] = "book"
             else:
                 info["Type"] = "unknown"
 
@@ -346,11 +533,13 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 pub_pattern = r"\[C\]//\s*(.*?)(?=,\s*\d{4}|\.)"
             elif info["Type"] == "journal":
                 pub_pattern = r"\[J\]\.\s*(.*?)(?=,\s*\d{4}|\.)"
+            elif info["Type"] == "book":
+                pub_pattern = r"\[M\]\.\s*(.*?)(?=,\s*\d{4}|\.)"
             else:
                 pub_pattern = ""
             match = re.search(pub_pattern, gathered_citations["GB/T 7714"])
 
-            if match:
+            if match and pub_pattern != "":
                 result = match.group(1).strip()  # 获取匹配的部分
                 next_part = gathered_citations["GB/T 7714"][match.end() :].strip()
 
@@ -425,11 +614,6 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 link_params["hl"] = link_param
 
         try:
-            cited_by_driver, cur_web_data_dir = self._init_driver(link)
-        except Exception as e:
-            traceback.print_exc()
-
-        try:
             while page_num <= max_results:
                 # parse all pages
 
@@ -444,73 +628,41 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
                 while retry_times <= max_retry_times:
                     retry_times += 1
-                    cited_by_driver, output_str = self.safe_request(
-                        driver=cited_by_driver,
-                        link=refined_link,
-                    )
+                    self.just_wait()
+                    with SB(uc=True, undetected=True, headless=False) as sb:
+                        try:
+                            sb.uc_open_with_reconnect(refined_link, 4)
+                            sb.uc_gui_click_captcha()
+                            sb.wait_for_element("#gs_bdy_ccl", timeout=10)
+                            driver_content = sb.get_page_source()
+                            eles = sb.find_elements("#gs_captcha_ccl")
+                            if eles and len(eles) > 0:
+                                driver_content = None
+                        except Exception as e:
+                            driver_content = None
+                            logger.error(f"error in get citations: {e}")
 
-                    if "ERR_CONNECTION_RESET" in output_str:
-                        logger.error("ERR_CONNECTION_RESET")
-                        logger.error(f"===== TO RETRY {retry_times}/{max_retry_times}")
-                        cited_by_driver, cur_web_data_dir = self._update_proxy(
-                            driver=cited_by_driver,
-                            cur_web_data_dir=cur_web_data_dir,
-                            query=link,
-                        )
-                        time.sleep(random.uniform(8, 15))
-                        continue
-
-                    logger.error(f"this link: {refined_link}")
-
-                    get_content = True
-                    try:
-                        WebDriverWait(cited_by_driver, 10).until(
-                            self.finish_load_condition()
-                        )
-                    except TimeoutException as e:
-                        logger.error(f"Cannot Get Cited by Timeout Error: {e}")
-                        # logger.error(f"the result is {driver.page_source}")
-                        get_content = False
-                    except Exception as e:
-                        logger.error(f"Cannot Get Cited by Error: {e}")
-                        get_content = False
-
-                    if (
-                        "not a robot" in cited_by_driver.page_source
-                        or "may be sending automated queries"
-                        in cited_by_driver.page_source
-                        or "您的计算机网络中存在异常流量" in cited_by_driver.page_source
-                        or "人机身份验证" in cited_by_driver.page_source
-                    ):
+                    if driver_content is None:
                         logger.error(
                             "============== DETECTED AS A SPIDER ==============="
                         )
                         logger.error(f"===== TO RETRY {retry_times}/{max_retry_times}")
-                        cited_by_driver, cur_web_data_dir = self._update_proxy(
-                            driver=cited_by_driver,
-                            cur_web_data_dir=cur_web_data_dir,
-                            query=link,
-                        )
-                        time.sleep(random.uniform(8, 15))
-                    elif "ERR_CONNECTION_ABORTED" in cited_by_driver.page_source:
-                        logger.error("CONNECTION ERROR")
-                        cited_by_driver, cur_web_data_dir = self._update_proxy(
-                            driver=cited_by_driver,
-                            cur_web_data_dir=cur_web_data_dir,
-                            query=link,
-                        )
+                        self._update_proxy(None, None, "")
+                        continue
                     else:
                         break
 
-                parser = LexborHTMLParser(cited_by_driver.page_source)
+                if driver_content:
+                    parser = LexborHTMLParser(driver_content)
 
-                if get_content:
                     for result in parser.css(".gs_r.gs_or.gs_scl"):
                         try:
                             title: str = result.css_first(".gs_rt a").text()
                             cited_by.append(title)
                         except:
                             title = None
+                else:
+                    break
 
                 if len(cited_by) > max_results:
                     break
@@ -526,7 +678,8 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         except Exception as e:
             logger.warning(f"{e}")
         finally:
-            self._quit_driver(driver=cited_by_driver, webdata=cur_web_data_dir)
+            pass
+            # self._quit_driver(driver=cited_by_driver, webdata=cur_web_data_dir)
 
         return cited_by[:max_results]
 
@@ -693,6 +846,12 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         except:
             snippet = None
 
+        if not snippet or len(snippet) == 0:
+            try:
+                snippet: str = result.css_first(".gs_fma_snp").text()
+            except:
+                snippet = ""
+
         try:
             # if Cited by is present in inline links, it will be extracted
             cited_by_link = "".join(
@@ -767,7 +926,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             cite_directory = cite_directory.replace("{id}", paper_id)
             # logger.warning(f"inside: {cite_directory}")
             gathered_citations = self._get_citations(cite_directory)
-            logger.warning(f"gathered citations are: {gathered_citations}")
+            # logger.warning(f"gathered citations are: {gathered_citations}")
             bib_info = self._search_by_object(gathered_citations)
             logger.warning(f"bib info is {bib_info}")
             paper_id = self._get_paper_id(bib_info)
@@ -800,7 +959,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
     def search_by_name(
         self, query: str, pagination: bool = False, mode: str = "vague"
     ) -> List[str]:
-        driver, cur_web_data_dir = self._init_driver(query=query)
+        # driver, cur_web_data_dir = self._init_driver(query=query)
         # driver = self._init_driver()
         organic_results_data = []
 
@@ -866,83 +1025,49 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
                     while retry_times <= max_retry_times:
                         retry_times += 1
-                        driver, output_str = self.safe_request(
-                            driver=driver,
-                            link=f"https://scholar.google.com/scholar?q={pruned_query}&hl=zh-CN&as_sdt=0,5&start={page_num}&oq=",
-                            # link=f"https://scholar.google.com/scholar?q={pruned_query}&hl=en&gl=us&as_sdt=0,5&start={page_num}",
-                        )
+                        self.just_wait(set_proxy=True)
+                        with SB(uc=True) as sb:
+                            try:
+                                sb.uc_open_with_reconnect(
+                                    f"https://scholar.google.com/scholar?q={pruned_query}&hl=zh-CN&as_sdt=0,5&start={page_num}&oq=",
+                                    6,
+                                )
+                                # sb.uc_gui_handle_cf()
+                                sb.wait_for_element("#gs_bdy_ccl", timeout=5)
+                                driver_content = sb.get_page_source()
+                                eles = sb.find_elements("#gs_captcha_ccl")
+                                if eles and len(eles) > 0:
+                                    driver_content = None
+                            except Exception as e:
+                                driver_content = None
+                                logger.error(f"error in get citations: {e}")
 
-                        if "ERR_CONNECTION_RESET" in output_str:
-                            logger.error("ERR_CONNECTION_RESET")
+                        if driver_content is None:
+                            logger.error(
+                                "============== DETECTED AS A SPIDER ==============="
+                            )
                             logger.error(
                                 f"===== TO RETRY {retry_times}/{max_retry_times}"
                             )
-                            driver, cur_web_data_dir = self._update_proxy(
-                                driver=driver,
-                                cur_web_data_dir=cur_web_data_dir,
-                                query=query,
-                            )
-                            time.sleep(random.uniform(8, 15))
+                            self._update_proxy(None, None, "")
                             continue
-
-                        try:
-                            WebDriverWait(driver, 10).until(
-                                self.finish_load_condition()
-                            )
-                        except TimeoutException as e:
-                            logger.error(f"Cannot Get Paper by Timeout Error: {e}")
-                            # logger.error(driver.page_source)
-                        except Exception as e:
-                            logger.error(f"Cannot Get Paper by Error: {e}")
-
-                        parser = LexborHTMLParser(driver.page_source)
-
-                        if len(parser.css(".gs_r.gs_or.gs_scl")) == 0:
-                            if (
-                                "not a robot" in driver.page_source
-                                or "may be sending automated queries"
-                                in driver.page_source
-                                or "您的计算机网络中存在异常流量" in driver.page_source
-                                or "人机身份验证" in driver.page_source
-                            ):
-                                logger.error(
-                                    f"============== DETECTED AS A ROBOT {query} ============="
-                                )
-                                logger.error(
-                                    f"https://scholar.google.com/scholar?q={pruned_query}&hl=en&gl=us&start={page_num}"
-                                )
-                                logger.error(
-                                    f"===== TO RETRY {retry_times}/{max_retry_times}"
-                                )
-                                driver, cur_web_data_dir = self._update_proxy(
-                                    driver=driver,
-                                    cur_web_data_dir=cur_web_data_dir,
-                                    query=query,
-                                )
-                                time.sleep(random.uniform(8, 15))
-                            elif "ERR_CONNECTION_ABORTED" in driver.page_source:
-                                logger.error("CONNECTION ERROR")
-                                driver, cur_web_data_dir = self._update_proxy(
-                                    driver=driver,
-                                    cur_web_data_dir=cur_web_data_dir,
-                                    query=query,
-                                )
-
-                            else:
-                                break
-                            # with open("fail_log.log", "a") as f:
-                            #     f.write(query + "\n")
-                            #     f.write("no label\n")
-                            #     f.write(driver.page_source)
                         else:
                             break
 
-                    outputs = self.parse(driver, query, parser, mode, "bib")
-                    organic_results_data.extend(outputs)
+                    if driver_content:
+                        parser = LexborHTMLParser(driver_content)
+
+                        outputs = self.parse(None, query, parser, mode, "bib")
+                        organic_results_data.extend(outputs)
+                        if len(outputs) > 0:
+                            break
+                    else:
+                        break
         except Exception as e:
             raise
         finally:
-            self._quit_driver(driver=driver, webdata=cur_web_data_dir)
+            pass
+            # self._quit_driver(driver=driver, webdata=cur_web_data_dir)
 
         if len(organic_results_data) > 0:
             return organic_results_data[0]

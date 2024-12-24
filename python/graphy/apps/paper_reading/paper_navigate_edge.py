@@ -408,24 +408,15 @@ class PaperNavigateArxivEdge(PaperNavigateEdge):
 
 class ProxyManager:
     def __init__(self):
-        self.api_url = "http://127.0.0.1:59472"
+        self.api_url = "http://127.0.0.1:port"
         self.headers = {"Authorization": f"Bearer {os.getenv('PROXY_KEY')}"}
-        self.proxies = [
-            "HongKong-IPLC-HK-BETA1-Rate:1.0",
-            "HongKong-IPLC-HK-BETA3-Rate:1.0",
-            "HongKong-IPLC-HK-BETA5-Rate:1.0",
-            "Japan-FW-JP-TEST1-Rate:1.0",
-            "HongKong-HK-1-Rate:1.0",
-            "Japan-FW-JP-TEST1-Rate:1.0",
-            "Japan-TY-2-Rate:1.0",
-            "UnitedStates-US-1-Rate:1.5",
-            "UnitedStates-US-2-Rate:1.0",
-            "UnitedStates-US-4-Rate:1.0",
-            "Taiwan-TW-1-Rate:1.0",
-        ]
+        self.proxies = []
+        # self.proxies = ["UnitedStates-US-4-Rate:1.0", "Germany-DE-2-Rate:1.0", "Australia-AU-3-Rate:1.0", "Japan-OS-2-Rate:1.0", "Netherlands-NL-1-Rate:1.0", "Taiwan-TW-1-Rate:1.0", "Singapore-SG-1-Rate:1.0", "HongKong-IPLC-HK-BETA1-Rate:1.0", "HongKong-IPLC-HK-BETA2-Rate:1.0", "HongKong-IPLC-HK-BETA3-Rate:1.0", "HongKong-IPLC-HK-BETA4-Rate:1.0"]
         self.proxies_backup = copy.deepcopy(self.proxies)
         self.reserve_proxies = []
         self.current_proxy = ""
+
+        self.undeleted_folders = set()
 
     def set_proxy(self):
         try:
@@ -463,7 +454,7 @@ class ProxyManager:
         else:
             print("Failed to change proxy:", response.text)
 
-        time.sleep(5)
+        time.sleep(1)
 
     def remove_proxy(self):
         if len(self.current_proxy) == 0:
@@ -474,6 +465,8 @@ class ProxyManager:
                 self.proxies.remove(self.current_proxy)
                 self.reserve_proxies.append(self.current_proxy)
             else:
+                logger.error("use all proxies here 2")
+                time.sleep(1800)
                 self.proxies.clear()
                 for proxy in self.reserve_proxies:
                     self.proxies.append(proxy)
@@ -491,6 +484,9 @@ class ProxyManager:
 
         if len(self.proxies) + len(self.reserve_proxies) == 0:
             self.proxies = copy.deepcopy(self.proxies_backup)
+
+            logger.error("use all proxies here 1")
+            time.sleep(86400)
 
 
 @profiler.profile(name="PaperNavigateScholarEdge")
@@ -776,7 +772,7 @@ def get_meta_from_paper(file_path, out_file_name, out_file_folder):
         print(f"Headers: {headers}")  # Optional: print the headers
 
         out_file_path = os.path.join(out_file_folder, out_file_name)
-        past_line = 242
+        past_line = 2
         current_line = 0
 
         with open(out_file_path, mode="a", encoding="utf-8", newline="") as outfile:
@@ -857,7 +853,7 @@ def get_meta_from_paper(file_path, out_file_name, out_file_folder):
 
 if __name__ == "__main__":
     get_meta_from_paper(
-        file_path="/Users/louyk/Desktop/Projects/SIGMOD Demo graphy/_graph/Paper.csv",
+        file_path="D:\\graphy\\assist\\Paper.csv",
         out_file_name="out.csv",
-        out_file_folder="/Users/louyk/Desktop/Projects/SIGMOD Demo graphy/output",
+        out_file_folder="D:\\graphy\\assist\\output",
     )

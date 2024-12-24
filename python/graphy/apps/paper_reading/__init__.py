@@ -6,6 +6,7 @@ from .paper_navigate_edge import (
     PaperNavigateEdge,
     PaperNavigateArxivEdge,
     PaperNavigateScholarEdge,
+    ProxyManager,
 )
 from .paper_reading_nodes import (
     PaperInspector,
@@ -17,6 +18,7 @@ __all__ = [
     "PaperNavigateEdge",
     "PaperNavigateArxivEdge",
     "PaperNavigateScholarEdge",
+    "ProxyManager",
     "PaperInspector",
     "PaperExtractor",
     "SurveyPaperReading",
