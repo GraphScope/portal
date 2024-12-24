@@ -50,7 +50,7 @@ const InspectNeighbor = props => {
   //       });
 
   //   };
-  console.log(label, 'render...label');
+
   return (
     <Flex vertical gap={12}>
       <Flex align="center" gap={12}>

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Select, Space, Flex, Card, Button, Typography, Skeleton } from 'antd';
 
-import { useContext, IQueryStatement, useApis } from '@graphscope/studio-graph';
+import { useContext, IQueryStatement } from '@graphscope/studio-graph';
 import { getPropertyOptions } from './utils';
 import { BarChartOutlined, DeleteOutlined } from '@ant-design/icons';
 import Chart from '../../ChartView/index';
-import { getChartData } from '../utils';
 
 import { Illustration } from '@graphscope/studio-components';
 export interface IQueryPropertyStatics {
@@ -20,8 +19,7 @@ interface ITableViewProps {
 const ChartView: React.FunctionComponent<ITableViewProps> = props => {
   const { onRemove } = props;
   const { store, updateStore } = useContext();
-  const { focusNodes } = useApis();
-  const { schema, source } = store;
+  const { getService, schema } = store;
   const options = getPropertyOptions(schema);
 
   const [state, setState] = useState<{
@@ -34,21 +32,6 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
     property: props.property,
   });
   const { data, isLoading, property } = state;
-
-  const queryData = async (property: string): Promise<{ counts: number; [key: string]: any }[]> => {
-    return new Promise(resolve => {
-      const chartData = getChartData(source, property, 'node');
-      const _data = [...chartData.entries()].map(c => {
-        const [key, value] = c;
-        return {
-          [property]: key,
-          counts: value.counts,
-          ids: [...value.ids],
-        };
-      });
-      resolve(_data);
-    });
-  };
 
   useEffect(() => {
     (async () => {
@@ -63,7 +46,7 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
       });
 
       try {
-        const data = await queryData(property);
+        const data = await getService<IQueryPropertyStatics>('queryPropertyStatics')(property);
         setState(preState => {
           return {
             ...preState,
@@ -96,20 +79,18 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
     if (!property) {
       return;
     }
-
-    const { ids } = e.data.data;
+    const queryCypher = getService<IQueryStatement>('queryStatement');
+    const data = await queryCypher(
+      `
+        MATCH(a) 
+        WHERE a.${property}='${e.data.data[property]}'
+        return a
+        `,
+    );
     updateStore(draft => {
-      draft.nodeStatus = {};
-      ids.forEach(id => {
-        draft.nodeStatus[id] = {
-          selected: true,
-        };
-      });
-      draft.selectNodes = draft.data.nodes.filter(node => {
-        return ids.indexOf(node.id) > -1;
-      });
+      draft.data = data;
+      draft.source = data;
     });
-    focusNodes(ids);
   };
 
   return (

@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { Flex, Divider } from 'antd';
 import Properties from './Properties';
-
+import TotalCounts from './TotalCounts';
+import Labels from './Lables';
 interface IUploadProps {
   children?: React.ReactNode;
 }
-interface IFilterOptions {
-  id: string;
-  property: string;
-  chartType: 'HISTOGRAM' | 'SELECT' | 'PIE' | 'WORDCLOUD' | 'NONE' | 'DATE' | 'COLUMN';
-  chartData?: Map<string | number, number>;
-}
+
 const Statistics: React.FunctionComponent<IUploadProps> = props => {
   return (
     <Flex vertical>
+      <TotalCounts />
+      <Divider />
+      <Labels />
+      <Divider />
       <Properties />
     </Flex>
   );

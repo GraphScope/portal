@@ -8,6 +8,7 @@ import {
   DEFAULT_EDGE_COLOR,
   DEFAULT_EDGE_WIDTH,
 } from '../const';
+
 import { handleStatus } from '../utils';
 
 export const linkCanvasObject =
@@ -80,12 +81,12 @@ export const linkCanvasObject =
     ctx.translate(textPos.x, textPos.y);
     ctx.rotate(textAngle);
 
-    ctx.fillStyle = selected ? selectColor : textBackgroundColor;
+    ctx.fillStyle = textBackgroundColor;
     ctx.fillRect(-bckgDimensions[0] / 2, -bckgDimensions[1] / 2, ...bckgDimensions);
     // draw text label
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = textColor;
+    ctx.fillStyle = selected ? selectColor : textColor;
     ctx.fillText(label, 0, 0);
     ctx.restore();
     return;

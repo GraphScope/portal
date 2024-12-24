@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Statistics from '../Statistics';
+import Overview from '../Overview';
 import { useContext } from '@graphscope/studio-graph';
 import { Illustration } from '@graphscope/studio-components';
 import { Flex, Typography } from 'antd';
@@ -20,7 +20,7 @@ const GlobalStatistics: React.FunctionComponent<IGlobalStatisticsProps> = props 
           What is the next exploration? Let's take a look at the global view of graph data to find some inspiration.
         </Typography.Text>
       </Flex>
-      <Statistics />
+      <Overview />
     </Flex>
   );
 };
