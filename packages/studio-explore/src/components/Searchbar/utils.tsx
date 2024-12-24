@@ -43,7 +43,7 @@ export const getOptionsBySchema = (params: {
 }) => {
   const { schema, statements, nodeStyle, edgeStyle } = params;
   const nodeOptions = schema.nodes.map(item => {
-    const { color } = nodeStyle[item.label];
+    const { color = '#fafafa' } = nodeStyle[item.label] || {};
     return {
       type: 'label',
       value: item.label,
