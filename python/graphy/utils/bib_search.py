@@ -82,7 +82,7 @@ class RecaptchaSolver:
             self.driver.switch_to_frame(iframe)
             # Click on the audio button
             self.driver.uc_click("#recaptcha-audio-button")
-            time.sleep(0.3)
+            time.sleep(1)
 
             # Get the audio source
             src = self.driver.get_attribute("#audio-source", "src")
@@ -1262,7 +1262,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
                     while retry_times <= max_retry_times:
                         retry_times += 1
-                        self.just_wait(set_proxy=True)
+                        self.just_wait(set_proxy=False)
                         with SB(uc=True) as sb:
                             try:
                                 sb.uc_open_with_reconnect(
