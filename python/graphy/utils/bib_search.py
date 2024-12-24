@@ -11,7 +11,6 @@ import traceback
 import json
 
 
-import undetected_chromedriver as uc
 from seleniumbase import SB
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -31,8 +30,6 @@ import time
 import threading
 
 import urllib, pydub, speech_recognition
-from DrissionPage.common import Keys
-from DrissionPage import ChromiumPage
 
 from google_scholar_py import CustomGoogleScholarOrganic
 from .string_similarity import StringSimilarity
@@ -48,29 +45,41 @@ class RecaptchaSolver:
 
     def solveCaptcha(self):
         try:
-            print("try to solve")
             try:
-                self.driver.wait_for_element(".rc-anchor-content", timeout=20)
+                self.driver.wait_for_element("iframe[title='reCAPTCHA']", timeout=3)
             except:
-                breakpoint()
-                print("cannot solve")
                 return True
 
-            # iframe_inner = self.driver.get_element("@title=reCAPTCHA")
-            self.driver.click(".rc-anchor-content")
-            self.driver.wait_for_element_present(
-                "xpath://iframe[contains(@title, 'recaptcha')]", timeout=3
+            iframe_inner = self.driver.get_element("iframe[title='reCAPTCHA']")
+
+            # print(iframe_inner.get_page_source())
+            self.driver.switch_to_frame(iframe_inner)
+            self.driver.uc_click(".rc-anchor-content")
+            # self.driver.find_element(By.CSS_SELECTOR, ".rc-anchor-content")  # .click()
+            # iframe_inner.click(".rc-anchor-content")
+
+            self.driver.switch_to_default_content()
+
+            self.driver.wait_for_element(
+                "iframe[title='reCAPTCHA 验证将于 2 分钟后过期']", timeout=3
             )
+            # self.driver.wait_for_element(
+            #     "xpath://iframe[contains(@title, 'reCAPTCHA')]", timeout=3
+            # )
 
             # Sometimes just clicking on the recaptcha is enough to solve it
-            if self.isSolved():
-                return
+            # if self.isSolved():
+            #     return
 
             # Get the new iframe
             iframe = self.driver.get_element(
-                "xpath://iframe[contains(@title, 'recaptcha')]"
+                "iframe[title='reCAPTCHA 验证将于 2 分钟后过期']"
             )
+            # iframe = self.driver.get_element(
+            #     "xpath://iframe[contains(@title, 'reCAPTCHA')]"
+            # )
 
+            self.driver.switch_to_frame(iframe)
             # Click on the audio button
             self.driver.click("#recaptcha-audio-button")
             time.sleep(0.3)
@@ -105,29 +114,43 @@ class RecaptchaSolver:
                 audio = r.record(source)
 
             # Recognize the audio
+
+            print("start to rec")
             key = r.recognize_google(audio)
+            print(f"finish rec {key}")
+
+            # breakpoint()
 
             # Input the key
-            self.driver.update_text("#audio-response", key.lower())
+            self.driver.type("input[id='audio-response']", key.lower())
             time.sleep(0.1)
+            print("after input")
 
             # Submit the key
-            self.driver.type("#audio-response", Keys.ENTER)
-            time.sleep(0.4)
+            self.driver.uc_click("#recaptcha-verify-button")
+            # self.driver.type("#audio-response", Keys.ENTER)
+            time.sleep(10)
 
         except Exception as e:
             print(f"RECAPTCHA problem: {e}")
         # Check if the captcha is solved
-        if self.isSolved():
-            return
-        else:
-            raise Exception("Failed to solve the captcha")
+        try:
+            if self.isSolved():
+                return
+            else:
+                raise Exception("Failed to solve the captcha")
+        except Exception as e:
+            raise (f"solve error {e}")
+        finally:
+            self.driver.switch_to_default_content()
 
     def isSolved(self):
         try:
-            return "style" in self.driver.get_attribute(
-                ".recaptcha-checkbox-checkmark", "style"
-            )
+            eles = self.driver.find_elements(".gs_res_ccl_mid")
+            if eles and len(eles) > 0:
+                return True
+            else:
+                return False
         except:
             return False
 
@@ -175,7 +198,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
         self.web_data_folder = web_data_folder
 
-        self.request_interval = 10
+        self.request_interval = 15
 
         self.proxy_manager = proxy_manager
 
@@ -338,84 +361,25 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         driver, cur_web_data_dir = self._init_driver(query)
         return driver, cur_web_data_dir
 
-    def _get_citations(self, link):
+    def _get_citations(self, sb, element):
         gathered_citations = {}
 
-        # if "&hl=" in link:
-        #     en_link = re.sub(r"&hl=.*?(&|$)", "&hl=en\1", link)
+        element.find_element(By.CSS_SELECTOR, ".gs_or_cit.gs_or_btn.gs_nph").uc_click()
 
-        #     try:
-        #         citation_driver, _ = self.safe_request(
-        #             driver=citation_driver,
-        #             link=en_link,
-        #         )
-        #     except Exception as e:
-        #         traceback.print_exc()
+        try:
+            sb.wait_for_element(".gs_cith", timeout=10)
+            cith_elements = sb.find_elements(".gs_cith")
+            citr_elements = sb.find_elements(".gs_citr")
 
-        #     wait = WebDriverWait(citation_driver, 10)
+            if cith_elements and citr_elements:
+                for cith, citr in zip(cith_elements, citr_elements):
+                    if cith.text not in gathered_citations:
+                        gathered_citations[cith.text] = (
+                            citr.text.strip().replace("\n", "").replace("-\n", "")
+                        )
 
-        #     try:
-        #         # Wait for elements with class 'gs_cith' to become present
-        #         cith_elements = wait.until(
-        #             EC.presence_of_all_elements_located((By.CLASS_NAME, "gs_cith"))
-        #             or (
-        #                 "not a robot" in citation_driver.page_source
-        #                 or "may be sending automated queries"
-        #                 in citation_driver.page_source
-        #                 or "您的计算机网络中存在异常流量" in citation_driver.page_source
-        #                 or "人机身份验证" in citation_driver.page_source
-        #             )
-        #         )
-        #         print(f"Found {len(cith_elements)} elements with class 'gs_cith'")
-        #     except Exception as e:
-        #         print(f"An error occurred when getting citations: {e}")
-
-        #     cith_elements = citation_driver.find_elements(By.CLASS_NAME, "gs_cith")
-        #     citr_elements = citation_driver.find_elements(By.CLASS_NAME, "gs_citr")
-
-        #     for cith, citr in zip(cith_elements, citr_elements):
-        #         if cith.text not in gathered_citations:
-        #             gathered_citations[cith.text] = (
-        #                 citr.text.strip().replace("\n", "").replace("-\n", "")
-        #             )
-
-        if "&hl=" in link:
-            en_link = re.sub(r"&hl=.*?(&|$)", "&hl=zh-CN\1", link)
-            retry_times = 0
-            max_retry_times = 3
-
-            while retry_times <= max_retry_times:
-                retry_times += 1
-                self.just_wait()
-
-                with SB(uc=True) as sb:
-                    try:
-                        sb.uc_open_with_reconnect(en_link, 4)
-                        # recaptchaSolver = RecaptchaSolver(sb)
-                        # recaptchaSolver.solveCaptcha()
-                        # sb.uc_gui_click_captcha()
-                        sb.wait_for_element(".gs_cith", timeout=10)
-                        cith_elements = sb.find_elements(".gs_cith")
-                        citr_elements = sb.find_elements(".gs_citr")
-
-                        if cith_elements and citr_elements:
-                            for cith, citr in zip(cith_elements, citr_elements):
-                                if cith.text not in gathered_citations:
-                                    gathered_citations[cith.text] = (
-                                        citr.text.strip()
-                                        .replace("\n", "")
-                                        .replace("-\n", "")
-                                    )
-
-                        break
-
-                    except Exception as e:
-                        logger.error(f"error in get citations: {e}")
-                        cith_elements = None
-                        citr_elements = None
-
-                        logger.error(f"===== TO RETRY {retry_times}/{max_retry_times}")
-                        self._update_proxy(None, None, "")
+        except Exception as e:
+            raise e
 
         return gathered_citations
 
@@ -629,15 +593,12 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 while retry_times <= max_retry_times:
                     retry_times += 1
                     self.just_wait()
-                    with SB(uc=True, undetected=True, headless=False) as sb:
+                    with SB(uc=True, undetected=True, headless=True) as sb:
                         try:
                             sb.uc_open_with_reconnect(refined_link, 4)
                             sb.uc_gui_click_captcha()
                             sb.wait_for_element("#gs_bdy_ccl", timeout=10)
                             driver_content = sb.get_page_source()
-                            eles = sb.find_elements("#gs_captcha_ccl")
-                            if eles and len(eles) > 0:
-                                driver_content = None
                         except Exception as e:
                             driver_content = None
                             logger.error(f"error in get citations: {e}")
@@ -820,6 +781,139 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
         return outputs
 
+    def fetch_parse(
+        self,
+        sb,
+        query,
+        parser,
+        mode="vague",
+        action="bib",
+        download_path="",
+        num_per_page=1,
+    ):
+        outputs = []
+
+        for element in sb.find_elements(".gs_r.gs_or.gs_scl"):
+            try:
+                title: str = element.find_element(By.CSS_SELECTOR, ".gs_rt a").text
+            except Exception as e:
+                print(f"{e}")
+                title = str(time.time())
+
+            if mode == "exact":
+                if self._formulate_query(title).lower() in query.lower():
+                    similarity = 1
+                else:
+                    similarity = StringSimilarity.ratio_similarity(
+                        title.lower(), query.lower()
+                    )
+                    # similarity = StringSimilarity.semantic_similarity(
+                    #     title.lower(), query.lower()
+                    # )
+                # similarity = difflib.SequenceMatcher(
+                #     None, title.lower(), query.lower()
+                # ).ratio()
+                # similarity = StringSimilarity.semantic_similarity(
+                #     title.lower(), query.lower()
+                # )
+                logger.info(
+                    f"Scholar compared with: {query}, Found paper: {title} with similarity {similarity}"
+                )
+
+                if similarity < 0.8:
+                    continue
+            elif mode == "vague":
+                logger.info(f"Get Paper {title}")
+            else:
+                logger.error(f"Unknown mode {mode}")
+
+            if action == "bib":
+                this_bib = None
+                try:
+                    this_bib = self.get_fetch_bib(sb, title, element)
+
+                    # if (
+                    #     "cited_by_link" in this_bib
+                    #     and this_bib["cited_by_link"] is not None
+                    #     and len(this_bib["cited_by_link"]) > 0
+                    # ):
+                    #     this_bib["cited_by"] = self._get_cited_by_paper_names(
+                    #         driver, this_bib["cited_by_link"]
+                    #     )
+                except Exception as e:
+                    logger.warning(f"Download Meta Failed: {e}")
+                    raise e
+                    this_bib = {}
+
+                outputs.append(this_bib)
+
+            elif action == "download":
+                logger.error("start to download")
+                succ, file_path, file_name, exist = self.download(
+                    driver, title, result, download_path
+                )
+                logger.error("finish to download")
+
+                if not succ and not exist:
+                    logger.warning(f"Found {title}, but download failed.")
+                elif not succ and exist:
+                    logger.warning(f"Found {title}, but already downloaded.")
+
+                meta_file_path = None
+                this_bib = None
+                try:
+                    if self.meta_folder and self.persist_store:
+                        meta_file_path = os.path.join(
+                            self.persist_store.output_folder,
+                            self.meta_folder,
+                            file_name + ".json",
+                        )
+                        if not self.persist_store.get_state(
+                            self.meta_folder, file_name
+                        ):
+                            directory = parser.css_first("#gs_citd")
+                            cite_directory = (
+                                "https://scholar.google.com" + directory.attrs["data-u"]
+                            )
+                            cite_directory = cite_directory.replace("{p}", "0")
+
+                            this_bib = self.get_bib(
+                                driver, title, result, cite_directory
+                            )
+
+                            if (
+                                "cited_by_link" in this_bib
+                                and this_bib["cited_by_link"] is not None
+                                and len(this_bib["cited_by_link"]) > 0
+                            ):
+                                this_bib["cited_by"] = self._get_cited_by_paper_names(
+                                    driver, this_bib["cited_by_link"]
+                                )
+                except Exception as e:
+                    if this_bib is None:
+                        meta_file_path = None
+                    logger.warning(f"Download Meta Failed: {e}")
+                finally:
+                    if meta_file_path is not None and this_bib is not None:
+                        self.persist_store.save_state(
+                            self.meta_folder, file_name, this_bib
+                        )
+                if succ and meta_file_path:
+                    outputs.append((True, file_path, meta_file_path, exist))
+                elif succ and not meta_file_path:
+                    outputs.append((True, file_path, meta_file_path, exist))
+                elif not succ and meta_file_path:
+                    outputs.append((True, None, meta_file_path, exist))
+                elif not succ and not meta_file_path:
+                    outputs.append((False, None, meta_file_path, exist))
+
+            if len(outputs) >= num_per_page:
+                break
+
+            break
+
+        return outputs
+
     def get_bib(self, driver, title, result, cite_directory):
         try:
             paper_id = result.css_first(".gs_r.gs_or.gs_scl").attrs["data-cid"]
@@ -851,7 +945,6 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 snippet: str = result.css_first(".gs_fma_snp").text()
             except:
                 snippet = ""
-
         try:
             # if Cited by is present in inline links, it will be extracted
             cited_by_link = "".join(
@@ -956,6 +1049,150 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             "bib": bib,
         }
 
+    def get_fetch_bib(self, sb, title, element):
+        try:
+            paper_id = element.get_attribute(".gs_r.gs_or.gs_scl", "data-cid")
+        except:
+            paper_id = None
+
+        try:
+            title: str = element.find_element(By.CSS_SELECTOR, ".gs_rt a").text
+        except:
+            title = None
+
+        try:
+            title_link: str = element.get_attribute(".gs_rt a", "href")
+        except:
+            title_link = None
+
+        try:
+            publication_info: str = element.find_element(By.CSS_SELECTOR, ".gs_a").text
+        except:
+            publication_info = None
+
+        try:
+            sb.wait_for_element_present("div.gs_rs", timeout=3)
+            snippet: str = element.find_element(By.CSS_SELECTOR, ".gs_rs").text
+        except Exception as e:
+            print(f"{e}")
+            snippet = None
+
+        if not snippet or len(snippet) == 0:
+            try:
+                snippet: str = element.find_element(By.CSS_SELECTOR, ".gs_fma_snp").text
+            except:
+                snippet = ""
+
+        try:
+            # if Cited by is present in inline links, it will be extracted
+            cited_by_link = "".join(
+                [
+                    link.get_attribute("", "href")
+                    for link in element.find_elements(
+                        By.CSS_SELECTOR, ".gs_ri .gs_fl a"
+                    )
+                    if "Cited by" in link.text or "被引用次数" in link.text
+                ]
+            )
+        except:
+            cited_by_link = None
+
+        try:
+            # if Cited by is present in inline links, it will be extracted and type cast it to integer
+            cited_by_count = int(
+                "".join(
+                    [
+                        re.search(r"\d+", link.text).group()
+                        for link in element.find_elements(
+                            By.CSS_SELECTOR, ".gs_ri .gs_fl a"
+                        )
+                        if "Cited by" in link.text or "被引用次数" in link.text
+                    ]
+                )
+            )
+        except Exception as e:
+            print(f"{e}")
+            cited_by_count = None
+
+        try:
+            pdf_file: str = element.get_attribute(".gs_or_ggsm a", "href")
+        except:
+            pdf_file = None
+
+        bib = None
+        # try:
+        #     if cite_directory is not None and paper_id is not None:
+        #         bib = ""
+        #         cite_directory = cite_directory.replace("{id}", paper_id)
+
+        #         try:
+        #             logger.debug("start to find element")
+        #             element = WebDriverWait(driver, 10).until(
+        #                 EC.element_to_be_clickable(
+        #                     (By.CSS_SELECTOR, ".gs_or_cit.gs_or_btn.gs_nph")
+        #                 )
+        #             )
+
+        #             logger.error(f"find element: {element}")
+        #             element.click()
+        #         except TimeoutException:
+        #             print("Cannot click in 10 seconds")
+        #         except Exception as e:
+        #             traceback.print_exc()
+
+        #         for i in range(100):
+        #             try:
+        #                 driver.find_element(By.XPATH, f"//a[text()='BibTeX']").click()
+        #                 break
+        #             except:
+        #                 time.sleep(0.1)
+
+        #         for i in range(100):
+        #             try:
+        #                 for element in driver.find_elements(By.TAG_NAME, "pre"):
+        #                     bib += element.text
+        #                 break
+        #             except:
+        #                 time.sleep(0.1)
+        # except:
+        #     bib = None
+
+        # bib = None
+        try:
+            # cite_directory = cite_directory.replace("{id}", paper_id)
+            # logger.warning(f"inside: {cite_directory}")
+            gathered_citations = self._get_citations(sb, element)
+            # logger.warning(f"gathered citations are: {gathered_citations}")
+            bib_info = self._search_by_object(gathered_citations)
+            logger.warning(f"bib info is {bib_info}")
+            paper_id = self._get_paper_id(bib_info)
+        except Exception as e:
+            logger.error(
+                f"Some key citations are missing. Maybe because of chinese literatures: {e}"
+            )
+            raise e
+            gathered_citations = None
+            bib_info = None
+            paper_id = None
+
+        if bib_info is not None and (bib is None or len(bib.strip()) == 0):
+            bib = self._formulate_result(bib_info)[0]
+
+        return {
+            "title": title,
+            "id": paper_id,
+            "title_link": title_link,
+            "publication_info": publication_info,
+            "snippet": snippet if snippet else None,
+            "cited_by_link": (
+                f"https://scholar.google.com{cited_by_link}" if cited_by_link else None
+            ),
+            "cited_by_count": cited_by_count if cited_by_count else None,
+            "pdf_file": pdf_file,
+            "bib_info": bib_info,
+            "bib": bib,
+        }
+
     def search_by_name(
         self, query: str, pagination: bool = False, mode: str = "vague"
     ) -> List[str]:
@@ -1030,10 +1267,13 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                             try:
                                 sb.uc_open_with_reconnect(
                                     f"https://scholar.google.com/scholar?q={pruned_query}&hl=zh-CN&as_sdt=0,5&start={page_num}&oq=",
-                                    6,
+                                    4,
                                 )
-                                # sb.uc_gui_handle_cf()
-                                sb.wait_for_element("#gs_bdy_ccl", timeout=5)
+                                solver = RecaptchaSolver(sb)
+                                # sb.uc_gui_handle_rc()
+                                solver.solveCaptcha()
+
+                                sb.wait_for_element("#gs_bdy_ccl", timeout=3)
                                 driver_content = sb.get_page_source()
                                 eles = sb.find_elements("#gs_captcha_ccl")
                                 if eles and len(eles) > 0:
@@ -1042,26 +1282,34 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                                 driver_content = None
                                 logger.error(f"error in get citations: {e}")
 
-                        if driver_content is None:
-                            logger.error(
-                                "============== DETECTED AS A SPIDER ==============="
-                            )
-                            logger.error(
-                                f"===== TO RETRY {retry_times}/{max_retry_times}"
-                            )
-                            self._update_proxy(None, None, "")
-                            continue
-                        else:
-                            break
+                            if driver_content is None:
+                                logger.error(
+                                    "============== DETECTED AS A SPIDER ==============="
+                                )
+                                logger.error(
+                                    f"===== TO RETRY {retry_times}/{max_retry_times}"
+                                )
+                                # self._update_proxy(None, None, "")
+                                outputs = []
+                                continue
+                            else:
+                                try:
+                                    outputs = self.fetch_parse(
+                                        sb, query, None, mode, "bib"
+                                    )
+                                    break
+                                except:
+                                    logger.error(
+                                        "============== DETECTED AS A SPIDER ==============="
+                                    )
+                                    logger.error(
+                                        f"===== TO RETRY {retry_times}/{max_retry_times}"
+                                    )
+                                    # self._update_proxy(None, None, "")
+                                    continue
 
-                    if driver_content:
-                        parser = LexborHTMLParser(driver_content)
-
-                        outputs = self.parse(None, query, parser, mode, "bib")
-                        organic_results_data.extend(outputs)
-                        if len(outputs) > 0:
-                            break
-                    else:
+                    organic_results_data.extend(outputs)
+                    if len(outputs) > 0:
                         break
         except Exception as e:
             raise
@@ -1316,6 +1564,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
 
 class BibSearchArxiv(BibSearch):
+
     def __init__(self, persist_store=None, meta_folder="") -> None:
         super().__init__(persist_store=persist_store, meta_folder=meta_folder)
 
