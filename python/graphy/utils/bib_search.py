@@ -81,7 +81,7 @@ class RecaptchaSolver:
 
             self.driver.switch_to_frame(iframe)
             # Click on the audio button
-            self.driver.click("#recaptcha-audio-button")
+            self.driver.uc_click("#recaptcha-audio-button")
             time.sleep(0.3)
 
             # Get the audio source
