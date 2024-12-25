@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Chart } from '@antv/g2';
+import { theme } from 'antd';
 
 interface IBarChartProps {
   data: Record<string, any>;
@@ -13,6 +14,7 @@ interface IBarChartProps {
 
 const BarChart: React.FunctionComponent<IBarChartProps> = props => {
   const { data, xField, yField, style = {}, onClick, options = {} } = props;
+  const { token } = theme.useToken();
 
   const { height = 200, padding = [20, 80] } = style;
   const ChartContainerRef = useRef(null);
@@ -29,12 +31,31 @@ const BarChart: React.FunctionComponent<IBarChartProps> = props => {
 
       chart.current.options({
         data,
-        style: { radius: 4 },
+        style: { radius: 4, fill: token.colorPrimary },
         type: 'interval',
+        axis: {
+          y: false,
+          x: {
+            labelAutoRotate: true,
+            labelAutoHide: true,
+          },
+        },
         encode: {
           x: xField,
           y: yField,
         },
+        labels: [
+          {
+            text: yField,
+            fill: token.colorPrimary,
+            dy: -15,
+            transform: [
+              {
+                type: 'overlapHide',
+              },
+            ],
+          },
+        ],
         transform: [{ type: 'stackY' }],
         interaction: { elementSelect: { single: true } },
         state: { selected: { fill: '#1d6c63' }, unselected: { opacity: 0.99 } },
