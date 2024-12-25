@@ -9,8 +9,8 @@ import { queryNeighborData, queryNeighborItems } from './queryNeighbor';
 import type { IQueryGraphData, IQueryGraphSchema } from '../../components/FetchGraph';
 import type { IQuerySearch } from '../../components/Searchbar';
 import type { IQuerySavedStatements } from '../../components/Searchbar/CascaderSearch';
-import type { IQueryStatistics } from '../../components/Statistics/TotalCounts';
-import type { IQueryPropertyStatics } from '../../components/Statistics/Properties/ChartView';
+import type { IQueryStatistics } from '../../components/Overview/TotalCounts';
+import type { IQueryPropertyStatics } from '../../components/Overview/Properties/ChartView';
 import type { IQueryNeighborStatics } from '../../components/Next/Neighbors';
 
 export type ExploreQueryTypes =
