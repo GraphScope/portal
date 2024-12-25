@@ -79,6 +79,7 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
       const newData = handleExpand(graph, res, selectIds);
       updateStore(draft => {
         draft.data = newData;
+        draft.source = newData;
         draft.nodeStatus = nodeStatus;
         draft.edgeStatus = edgeStatus;
         draft.isLoading = false;

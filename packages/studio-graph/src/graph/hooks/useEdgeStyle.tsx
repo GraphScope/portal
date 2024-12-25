@@ -1,12 +1,13 @@
 import { useContext } from '../useContext';
 import { useEffect } from 'react';
 import { handleEdgeStyle } from '../utils/handleStyle';
-import { SELECTED_EDGE_COLOR } from '../const';
+import { COLOR_DISABLED, SELECTED_EDGE_COLOR } from '../const';
 
 import { linkCanvasObject } from '../custom-edge';
 import type { ForceGraphInstance } from 'force-graph';
 import type { ForceGraph3DInstance } from '3d-force-graph';
 import { EdgeStyle, EdgeData } from '../types';
+import { handleStatus } from '../utils';
 export const useEdgeStyle = () => {
   const { store } = useContext();
   const { graph, render, edgeStatus, edgeStyle } = store;
@@ -30,9 +31,12 @@ export const useEdgeStyle = () => {
           })
           .linkColor((edge: any) => {
             const { color, options } = handleEdgeStyle(edge, edgeStyle);
-            const match = edgeStatus[edge.id];
-            if (match && match.selected) {
+            const { selected, disabled } = handleStatus(edge, edgeStatus);
+            if (selected) {
               return options.selectColor || SELECTED_EDGE_COLOR;
+            }
+            if (disabled) {
+              return COLOR_DISABLED;
             }
             return color;
           })

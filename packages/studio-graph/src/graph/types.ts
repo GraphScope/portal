@@ -104,6 +104,8 @@ export interface NodeStatus {
   selected?: boolean;
   /** 是否悬停 */
   hovering?: boolean;
+  /** 是否禁用 */
+  disabled?: boolean;
 }
 
 export interface EdgeStatus {
@@ -111,6 +113,8 @@ export interface EdgeStatus {
   selected?: boolean;
   /** 是否悬停 */
   hovering?: boolean;
+  /** 是否禁用 */
+  disabled?: boolean;
 }
 
 export interface NodeStyle extends CommonStyle {

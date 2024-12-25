@@ -50,3 +50,12 @@ export default () => {
 | isLoading    | 画布异步加载状态（常用于数据请求时候设置）      |
 | focusNodes   | 画布需要聚焦的节点ID集合                        |
 | getService   | 数据请求服务，通过 `getServices`获得            |
+
+注意 ⚠️：因为 `useContext` 是由 `@graphscope/use-zustand` 封装的，因此，我们可以直接在 windows 对象上获取整个 store 的值，常用于开发测试，观察状态变化。
+
+```js | pure
+// 假设你的实例 id 设置的为 explore
+GLOBAL_USE_STORE_MAP.get('explore').getState();
+```
+
+![global store](./images/global-store.png)

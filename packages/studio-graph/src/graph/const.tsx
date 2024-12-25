@@ -42,6 +42,7 @@ const {
   SELECTED_NODE_COLOR,
   HOVERING_NODE_COLOR,
   NODE_TEXT_BACKGROUND_COLOR,
+  COLOR_DISABLED,
 } = getColor();
 export {
   DEFAULT_EDGE_COLOR,
@@ -50,6 +51,7 @@ export {
   SELECTED_NODE_COLOR,
   HOVERING_NODE_COLOR,
   NODE_TEXT_BACKGROUND_COLOR,
+  COLOR_DISABLED,
 };
 /** 考虑主题 */
 function getColor() {
@@ -63,6 +65,7 @@ function getColor() {
       SELECTED_EDGE_COLOR: '#fff',
       SELECTED_EDGE_TEXT_COLOR: '#000',
       NODE_TEXT_BACKGROUND_COLOR: 'rgba(0, 0, 0, 0.2)',
+      COLOR_DISABLED: '#ddd',
     };
   }
   return {
@@ -72,6 +75,7 @@ function getColor() {
     SELECTED_EDGE_COLOR: '#000',
     SELECTED_EDGE_TEXT_COLOR: '#fff',
     NODE_TEXT_BACKGROUND_COLOR: 'rgba(255, 255, 255, 0.8)',
+    COLOR_DISABLED: '#ddd',
   };
 }
 
