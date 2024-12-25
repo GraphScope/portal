@@ -35,21 +35,6 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
   });
   const { data, isLoading, property } = state;
 
-  const queryData = async (property: string): Promise<{ counts: number; [key: string]: any }[]> => {
-    return new Promise(resolve => {
-      const chartData = getChartData(source, property, 'node');
-      const _data = [...chartData.entries()].map(c => {
-        const [key, value] = c;
-        return {
-          [property]: key,
-          counts: value.counts,
-          ids: [...value.ids],
-        };
-      });
-      resolve(_data);
-    });
-  };
-
   useEffect(() => {
     (async () => {
       if (!property) {
@@ -63,7 +48,25 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
       });
 
       try {
-        const data = await queryData(property);
+        const chartData = getChartData(source, property, 'node');
+        const data = [...chartData.entries()].map(c => {
+          const [key, value] = c;
+          return {
+            [property]: key,
+            counts: value.counts,
+            ids: [...value.ids],
+          };
+        });
+        data.sort((a, b) => {
+          console.log(b[property], a[property], b[property] > a[property]);
+          if (a[property] > b[property]) {
+            return 1;
+          }
+          if (a[property] === b[property]) {
+            return 0;
+          }
+          return -1;
+        });
         setState(preState => {
           return {
             ...preState,
@@ -81,7 +84,7 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
         });
       }
     })();
-  }, [property]);
+  }, [property, source]);
 
   const handleChange = value => {
     setState(preState => {
@@ -99,12 +102,23 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
 
     const { ids } = e.data.data;
     updateStore(draft => {
-      draft.nodeStatus = {};
+      draft.source.nodes.forEach(node => {
+        draft.nodeStatus[node.id] = {
+          disabled: true,
+        };
+      });
+      draft.source.edges.forEach(node => {
+        draft.edgeStatus[node.id] = {
+          disabled: true,
+        };
+      });
+
       ids.forEach(id => {
         draft.nodeStatus[id] = {
           selected: true,
         };
       });
+
       draft.selectNodes = draft.data.nodes.filter(node => {
         return ids.indexOf(node.id) > -1;
       });
