@@ -1,4 +1,3 @@
-import json
 import time
 import re
 import requests
@@ -82,7 +81,17 @@ class RecaptchaSolver:
             self.driver.switch_to_frame(iframe)
             # Click on the audio button
             self.driver.uc_click("#recaptcha-audio-button")
-            time.sleep(1)
+
+            iframe_inner_most = self.driver.get_element(
+                "iframe[title='reCAPTCHA 验证将于 2 分钟后过期']"
+            )
+            # iframe = self.driver.get_element(
+            #     "xpath://iframe[contains(@title, 'reCAPTCHA')]"
+            # )
+
+            self.driver.switch_to_frame(iframe_inner_most)
+
+            self.driver.wait_for_element(".rc-audiochallenge-play-button", timeout=3)
 
             # Get the audio source
             src = self.driver.get_attribute("#audio-source", "src")
@@ -124,25 +133,39 @@ class RecaptchaSolver:
             # Input the key
             self.driver.type("input[id='audio-response']", key.lower())
             time.sleep(0.1)
-            print("after input")
 
             # Submit the key
             self.driver.uc_click("#recaptcha-verify-button")
             # self.driver.type("#audio-response", Keys.ENTER)
-            time.sleep(10)
+            time.sleep(1)
+
+            self.driver.switch_to_default_content()
+            time.sleep(600)
+
+            return False
+
+            # try:
+            #     iframe = self.driver.get_element(
+            #         "iframe[title='reCAPTCHA']"
+            #     )
+
+            #     self.driver.switch_to_frame(iframe)
+
+            #     self.driver.wait_for_element(".recaptcha-checkbox-checkmark", timeout=3)
+            #     return True
+            # except:
+            #     logger.warning("do not get reCAPTCHA iframe")
+            #     self.driver.switch_to_default_content()
+            #     if self.isSolved():
+            #         return True
+            #     else:
+            #         raise Exception(f"solve reCAPTCHA failed")
+
+            # finally:
+            #     self.driver.switch_to_default_content()
 
         except Exception as e:
             print(f"RECAPTCHA problem: {e}")
-        # Check if the captcha is solved
-        try:
-            if self.isSolved():
-                return
-            else:
-                raise Exception("Failed to solve the captcha")
-        except Exception as e:
-            raise (f"solve error {e}")
-        finally:
-            self.driver.switch_to_default_content()
 
     def isSolved(self):
         try:
@@ -198,7 +221,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
         self.web_data_folder = web_data_folder
 
-        self.request_interval = 15
+        self.request_interval = 25
 
         self.proxy_manager = proxy_manager
 
@@ -216,6 +239,12 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             # )
         time.sleep(60)
         return None, None
+
+    def _remove_proxy(self):
+        if self.proxy_manager:
+            self.proxy_manager.remove_proxy()
+
+        time.sleep(60)
 
     def just_wait(self, set_proxy=False):
         if set_proxy:
@@ -339,6 +368,24 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
     def _quit_driver(self, driver, webdata):
         driver.quit()
 
+        to_remove = []
+        for folder in self.proxy_manager.undeleted_folders:
+            try:
+                shutil.rmtree(folder)
+                to_remove.append(folder)
+                print(f"remove old folder {folder}")
+            except:
+                continue
+        for folder in to_remove:
+            self.proxy_manager.undeleted_folders.remove(folder)
+
+        try:
+            shutil.rmtree(webdata)
+        except OSError as e:
+            traceback.print_exc()
+            self.proxy_manager.undeleted_folders.add(webdata)
+
+    def _quit_sb(self, webdata):
         to_remove = []
         for folder in self.proxy_manager.undeleted_folders:
             try:
@@ -1160,7 +1207,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         # bib = None
         try:
             # cite_directory = cite_directory.replace("{id}", paper_id)
-            # logger.warning(f"inside: {cite_directory}")
+            logger.warning(f"inside: {title} {title_link} {publication_info}")
             gathered_citations = self._get_citations(sb, element)
             # logger.warning(f"gathered citations are: {gathered_citations}")
             bib_info = self._search_by_object(gathered_citations)
@@ -1263,18 +1310,26 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                     while retry_times <= max_retry_times:
                         retry_times += 1
                         self.just_wait(set_proxy=False)
-                        with SB(uc=True) as sb:
+                        ua = UserAgent()
+                        user_agent = ua.random
+                        cur_web_data_dir = self._enrich_webdata_dir(query)
+                        no_rc = None
+
+                        os.makedirs(cur_web_data_dir, exist_ok=True)
+
+                        with SB(uc=True, user_data_dir=cur_web_data_dir) as sb:
                             try:
                                 sb.uc_open_with_reconnect(
-                                    f"https://scholar.google.com/scholar?q={pruned_query}&hl=zh-CN&as_sdt=0,5&start={page_num}&oq=",
+                                    f"https://scholar.google.com/scholar?q={pruned_query}&hl=zh-CN&as_sdt=0,5&start={page_num}btnG=",
                                     4,
                                 )
                                 solver = RecaptchaSolver(sb)
                                 # sb.uc_gui_handle_rc()
-                                solver.solveCaptcha()
+                                no_rc = solver.solveCaptcha()
 
                                 sb.wait_for_element("#gs_bdy_ccl", timeout=3)
                                 driver_content = sb.get_page_source()
+
                                 eles = sb.find_elements("#gs_captcha_ccl")
                                 if eles and len(eles) > 0:
                                     driver_content = None
@@ -1289,14 +1344,19 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                                 logger.error(
                                     f"===== TO RETRY {retry_times}/{max_retry_times}"
                                 )
-                                # self._update_proxy(None, None, "")
+                                # self._remove_proxy()
+                                self._update_proxy(None, None, "")
                                 outputs = []
+                                self._quit_sb(cur_web_data_dir)
                                 continue
                             else:
                                 try:
                                     outputs = self.fetch_parse(
                                         sb, query, None, mode, "bib"
                                     )
+                                    self._quit_sb(cur_web_data_dir)
+                                    if not no_rc:
+                                        self._update_proxy(None, None, "")
                                     break
                                 except:
                                     logger.error(
@@ -1305,7 +1365,9 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                                     logger.error(
                                         f"===== TO RETRY {retry_times}/{max_retry_times}"
                                     )
-                                    # self._update_proxy(None, None, "")
+                                    # self._remove_proxy()
+                                    self._update_proxy(None, None, "")
+                                    self._quit_sb(cur_web_data_dir)
                                     continue
 
                     organic_results_data.extend(outputs)
