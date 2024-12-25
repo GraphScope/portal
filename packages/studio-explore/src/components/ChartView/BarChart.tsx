@@ -8,11 +8,13 @@ interface IBarChartProps {
   type?: string;
   style?: React.CSSProperties;
   onClick?: (data: any) => void;
+  options?: Record<string, any>;
 }
 
 const BarChart: React.FunctionComponent<IBarChartProps> = props => {
-  const { data, xField, yField, style = {}, onClick } = props;
-  const { height = 200, padding = 10 } = style;
+  const { data, xField, yField, style = {}, onClick, options = {} } = props;
+
+  const { height = 200, padding = [20, 80] } = style;
   const ChartContainerRef = useRef(null);
   const chart = useRef<Chart>();
 
@@ -24,6 +26,7 @@ const BarChart: React.FunctionComponent<IBarChartProps> = props => {
         height: height as number,
         padding: padding as number,
       });
+
       chart.current.options({
         data,
         style: { radius: 4 },
@@ -35,6 +38,11 @@ const BarChart: React.FunctionComponent<IBarChartProps> = props => {
         transform: [{ type: 'stackY' }],
         interaction: { elementSelect: { single: true } },
         state: { selected: { fill: '#1d6c63' }, unselected: { opacity: 0.99 } },
+        ...(options.transpose
+          ? {
+              coordinate: { transform: [{ type: 'transpose' }] },
+            }
+          : {}),
       });
       chart.current.render();
       if (onClick && chart.current) {

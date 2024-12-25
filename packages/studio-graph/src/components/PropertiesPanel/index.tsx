@@ -7,6 +7,7 @@ import { getSelectData } from './utils';
 
 export interface IPropertiesPanelProps {}
 
+export const width = '240px';
 const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props => {
   const { store } = useContext();
   const { selectNodes, selectEdges } = store;
@@ -18,7 +19,7 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
     top: '12px',
     bottom: '12px',
     right: '12px',
-    width: '240px',
+    width: width,
     boxShadow: token.boxShadow,
     zIndex: 1999,
     background: token.colorBgContainer,

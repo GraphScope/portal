@@ -8,6 +8,7 @@ interface IChartViewProps {
   type?: 'pie' | 'bar';
   style?: React.CSSProperties;
   onClick?: (data: any) => void;
+  options?: Record<string, any>;
 }
 
 const ChartView: React.FunctionComponent<IChartViewProps> = props => {

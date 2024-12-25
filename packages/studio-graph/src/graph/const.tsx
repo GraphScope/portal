@@ -38,7 +38,7 @@ export const sizes: number[] = [0, 0.1, 0.5, 1, 2, 3, 4, 6, 8, 10, 20];
 export const widths: number[] = [0, 0.1, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0];
 
 /** nodes */
-export const BASIC_NODE_R = 4;
+export const BASIC_NODE_R = 2;
 /** edges */
 export const DEFAULT_EDGE_WIDTH = widths[3]; //0.9
 
@@ -97,7 +97,7 @@ export const defaultNodeOptionStyle: Partial<NodeOptionStyle> = {
   iconColor: '#fff',
   iconSize: undefined, // half size of keyshape
   /** label text */
-  textSize: 12,
+  textSize: undefined, //根据节点半径
   textColor: undefined, // color of keyshape
   textPosition: 'bottom',
   textBackgroundColor: NODE_TEXT_BACKGROUND_COLOR,
@@ -124,4 +124,7 @@ export const defaultEdgeOptionStyle: Partial<EdgeOptionStyle> = {
   textColor: undefined, //默认为边色
   textSize: undefined, // 默认为边宽的3倍
   textBackgroundColor: NODE_TEXT_BACKGROUND_COLOR,
+
+  /** strategy */
+  zoomLevel: [3, 15],
 };

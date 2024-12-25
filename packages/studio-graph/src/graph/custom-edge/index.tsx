@@ -13,13 +13,20 @@ import { handleStatus } from '../utils';
 export const linkCanvasObject =
   (link: EdgeData, ctx: CanvasRenderingContext2D, globalScale: number) =>
   (edgeStyle: Record<string, EdgeStyle>, edgeStatus: any) => {
-    if (globalScale < 3) {
-      return;
-    }
     const style = handleEdgeStyle(link, edgeStyle);
     const { selected } = handleStatus(link, edgeStatus);
     const { color, size, caption = [], options } = style;
-    const { textColor = color, textSize = size * 3, textBackgroundColor, selectColor } = options as EdgeOptionStyle;
+    const {
+      textColor = color,
+      textSize = size * 1.5,
+      textBackgroundColor,
+      selectColor,
+      zoomLevel,
+    } = options as EdgeOptionStyle;
+
+    if (globalScale < zoomLevel[0]) {
+      return;
+    }
 
     const label = caption
       .map(c => {
