@@ -48,8 +48,6 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
   const { id } = props;
   const [services, setServices] = useState(props.services || getDefaultServices());
 
-  const onQuery = async () => {};
-
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { token } = theme.useToken();
 

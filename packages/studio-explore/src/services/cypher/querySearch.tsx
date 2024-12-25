@@ -40,11 +40,11 @@ export const querySearch = async params => {
       }
     }
     if (!label && property) {
-      if (value) {
-        return queryStatement(`match (a)-[r]->(b) where r.${property} CONTAINS "${value}" return a,r,b limit 100`);
-      } else {
-        return queryStatement(`match (a)-[r]->(b) where r.${property} IS NOT NULL return a,r,b limit 100`);
-      }
+      // if (value) {
+      //   return queryStatement(`match (a)-[r]->(b) where r.${property} CONTAINS "${value}" return a,r,b limit 100`);
+      // } else {
+      //   return queryStatement(`match (a)-[r]->(b) where r.${property} IS NOT NULL return a,r,b limit 100`);
+      // }
     }
   }
 
