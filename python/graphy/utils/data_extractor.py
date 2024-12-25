@@ -180,14 +180,7 @@ class GraphBuilder:
                 if "data_id" in paper_data:
                     del paper_data["data_id"]
                 if "cited_by" in paper_data:
-                    if "cited_by_count" not in paper_data:
-                        if paper_data["cited_by"]:
-                            paper_data["cited_by_count"] = len(paper_data["cited_by"])
-                        else:
-                            paper_data["cited_by_count"] = "NA"
                     del paper_data["cited_by"]
-                else:
-                    paper_data["cited_by_count"] = "NA"
                 paper_id = paper_data["id"]
                 if not dimension_node_names:
                     dimension_node_names = self.persist_store.get_total_states(folder)
