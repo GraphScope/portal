@@ -216,7 +216,8 @@ class GraphBuilder:
             for edge in edges:
                 # the edge can only be appended if both vertices present as fact nodes
                 if (
-                    edge["source"] in self.facts_dict
+                    edge["source"] != edge["target"]
+                    and edge["source"] in self.facts_dict
                     and edge["target"] in self.facts_dict
                 ):
                     edge_vec.append(edge)
