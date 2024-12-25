@@ -470,7 +470,9 @@ class ProxyManager:
                 self.proxies.clear()
                 for proxy in self.reserve_proxies:
                     self.proxies.append(proxy)
-                self.reserve_proxies = [self.current_proxy]
+                self.proxies.append(self.current_proxy)
+                self.reserve_proxies = []
+                # self.reserve_proxies = [self.current_proxy]
 
     def delete_proxy(self):
         if len(self.current_proxy) == 0:
