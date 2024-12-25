@@ -605,7 +605,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         return [(", ").join(lines) + "}"]
         # return [("," + os.linesep).join(lines) + os.linesep + "}"]
 
-    def _get_cited_by_paper_names(self, driver, link, max_results=50):
+    def _get_cited_by_paper_names(self, link, max_results=50):
         cited_by = []
         page_num = 0
 
@@ -640,45 +640,77 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 while retry_times <= max_retry_times:
                     retry_times += 1
                     self.just_wait()
-                    with SB(uc=True, undetected=True, headless=True) as sb:
+                    cur_web_data_dir = self._enrich_webdata_dir(refined_link)
+                    no_rc = None
+
+                    os.makedirs(cur_web_data_dir, exist_ok=True)
+                    has_next = False
+
+                    with SB(uc=True, user_data_dir=cur_web_data_dir) as sb:
                         try:
                             sb.uc_open_with_reconnect(refined_link, 4)
-                            sb.uc_gui_click_captcha()
-                            sb.wait_for_element("#gs_bdy_ccl", timeout=10)
+                            solver = RecaptchaSolver(sb)
+                            # sb.uc_gui_handle_rc()
+                            no_rc = solver.solveCaptcha()
+
+                            sb.wait_for_element("#gs_bdy_ccl", timeout=3)
                             driver_content = sb.get_page_source()
+
+                            eles = sb.find_elements("#gs_captcha_ccl")
+                            if eles and len(eles) > 0:
+                                driver_content = None
                         except Exception as e:
                             driver_content = None
                             logger.error(f"error in get citations: {e}")
 
-                    if driver_content is None:
-                        logger.error(
-                            "============== DETECTED AS A SPIDER ==============="
-                        )
-                        logger.error(f"===== TO RETRY {retry_times}/{max_retry_times}")
-                        self._update_proxy(None, None, "")
-                        continue
-                    else:
-                        break
-
-                if driver_content:
-                    parser = LexborHTMLParser(driver_content)
-
-                    for result in parser.css(".gs_r.gs_or.gs_scl"):
-                        try:
-                            title: str = result.css_first(".gs_rt a").text()
-                            cited_by.append(title)
-                        except:
-                            title = None
-                else:
-                    break
+                        if driver_content is None:
+                            logger.error(
+                                "============== DETECTED AS A SPIDER ==============="
+                            )
+                            logger.error(
+                                f"===== TO RETRY {retry_times}/{max_retry_times}"
+                            )
+                            # self._remove_proxy()
+                            self._update_proxy(None, None, "")
+                            self._quit_sb(cur_web_data_dir)
+                            continue
+                        else:
+                            try:
+                                for result in sb.find_elements(".gs_r.gs_or.gs_scl"):
+                                    try:
+                                        title: str = result.find_element(
+                                            By.CSS_SELECTOR, ".gs_rt a"
+                                        ).text
+                                        cited_by.append(title)
+                                    except:
+                                        title = None
+                                try:
+                                    sb.find_element(".gs_ico_nav_next")
+                                    has_next = True
+                                except:
+                                    has_next = False
+                                self._quit_sb(cur_web_data_dir)
+                                if not no_rc:
+                                    self._update_proxy(None, None, "")
+                                break
+                            except Exception as e:
+                                logger.error(f"{e}")
+                                logger.error(
+                                    "============== DETECTED AS A SPIDER ==============="
+                                )
+                                logger.error(
+                                    f"===== TO RETRY {retry_times}/{max_retry_times}"
+                                )
+                                # self._remove_proxy()
+                                self._update_proxy(None, None, "")
+                                self._quit_sb(cur_web_data_dir)
+                                continue
 
                 if len(cited_by) > max_results:
                     break
 
                 # pagination
-                if parser.css_first(
-                    ".gs_ico_nav_next"
-                ):  # checks for the "Next" page button
+                if has_next:  # checks for the "Next" page button
                     page_num += 10  # paginate to the next page
                     time.sleep(random.uniform(0.2, 1))  # sleep between paginations
                 else:
@@ -897,7 +929,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             elif action == "download":
                 logger.error("start to download")
                 succ, file_path, file_name, exist = self.download(
-                    driver, title, result, download_path
+                    sb, title, element, download_path
                 )
                 logger.error("finish to download")
 
@@ -918,15 +950,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                         if not self.persist_store.get_state(
                             self.meta_folder, file_name
                         ):
-                            directory = parser.css_first("#gs_citd")
-                            cite_directory = (
-                                "https://scholar.google.com" + directory.attrs["data-u"]
-                            )
-                            cite_directory = cite_directory.replace("{p}", "0")
-
-                            this_bib = self.get_bib(
-                                driver, title, result, cite_directory
-                            )
+                            this_bib = self.get_fetch_bib(sb, title, element)
 
                             if (
                                 "cited_by_link" in this_bib
@@ -934,7 +958,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                                 and len(this_bib["cited_by_link"]) > 0
                             ):
                                 this_bib["cited_by"] = self._get_cited_by_paper_names(
-                                    driver, this_bib["cited_by_link"]
+                                    this_bib["cited_by_link"]
                                 )
                 except Exception as e:
                     if this_bib is None:
@@ -1098,7 +1122,9 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
     def get_fetch_bib(self, sb, title, element):
         try:
-            paper_id = element.get_attribute(".gs_r.gs_or.gs_scl", "data-cid")
+            paper_id = element.find_element(
+                By.CSS_SELECTOR, ".gs_r.gs_or.gs_scl"
+            ).get_attribute("data-cid")
         except:
             paper_id = None
 
@@ -1108,13 +1134,16 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             title = None
 
         try:
-            title_link: str = element.get_attribute(".gs_rt a", "href")
+            title_link: str = element.find_element(
+                By.CSS_SELECTOR, ".gs_rt a"
+            ).get_attribute("href")
         except:
             title_link = None
 
         try:
             publication_info: str = element.find_element(By.CSS_SELECTOR, ".gs_a").text
-        except:
+        except Exception as e:
+            logger.error(f"{e}")
             publication_info = None
 
         try:
@@ -1134,7 +1163,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             # if Cited by is present in inline links, it will be extracted
             cited_by_link = "".join(
                 [
-                    link.get_attribute("", "href")
+                    link.get_attribute("href")
                     for link in element.find_elements(
                         By.CSS_SELECTOR, ".gs_ri .gs_fl a"
                     )
@@ -1142,6 +1171,12 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                 ]
             )
         except:
+            cited_by_link = None
+
+        if cited_by_link:
+            if not cited_by_link.startswith("http"):
+                cited_by_link = f"https://scholar.google.com{cited_by_link}"
+        else:
             cited_by_link = None
 
         try:
@@ -1162,7 +1197,9 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             cited_by_count = None
 
         try:
-            pdf_file: str = element.get_attribute(".gs_or_ggsm a", "href")
+            pdf_file: str = element.find_element(
+                By.CSS_SELECTOR, ".gs_or_ggsm a"
+            ).get_attribute("href")
         except:
             pdf_file = None
 
@@ -1231,9 +1268,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
             "title_link": title_link,
             "publication_info": publication_info,
             "snippet": snippet if snippet else None,
-            "cited_by_link": (
-                f"https://scholar.google.com{cited_by_link}" if cited_by_link else None
-            ),
+            "cited_by_link": cited_by_link,
             "cited_by_count": cited_by_count if cited_by_count else None,
             "pdf_file": pdf_file,
             "bib_info": bib_info,
@@ -1335,7 +1370,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
                                     driver_content = None
                             except Exception as e:
                                 driver_content = None
-                                logger.error(f"error in get citations: {e}")
+                                logger.error(f"error in search by name: {e}")
 
                             if driver_content is None:
                                 logger.error(
@@ -1384,7 +1419,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         else:
             return None
 
-    def download(self, driver, title, result, download_path):
+    def download(self, sb, title, element, download_path):
         file_name = re.sub(r"[^a-zA-Z0-9]", "_", title.strip())
         scholar_name = f"scholar_{file_name}"
         file_path = os.path.join(download_path, f"{scholar_name}.pdf")
@@ -1397,7 +1432,8 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         logger.error(file_path)
 
         try:
-            pdf_link: str = result.css_first(".gs_or_ggsm a").attrs["href"]
+            link_tag = element.find_element(By.CSS_SELECTOR, ".gs_or_ggsm a")
+            pdf_link: str = link_tag.get_attribute("href")
 
             headers = {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
@@ -1462,7 +1498,7 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         self, query: str, download_path, pagination: bool = False, mode: str = "vague"
     ) -> List[str]:
 
-        driver, cur_web_data_dir = self._init_driver(query=query)
+        # driver, cur_web_data_dir = self._init_driver(query=query)
         # driver = self._init_driver()
 
         try:
@@ -1532,80 +1568,66 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
 
                     while retry_times <= max_retry_times:
                         retry_times += 1
-                        driver, output_str = self.safe_request(
-                            driver=driver,
-                            link=f"https://scholar.google.com/scholar?q={pruned_query}&hl=zh-CN&as_sdt=0,5&start={page_num}",
-                            # link=f"https://scholar.google.com/scholar?q={pruned_query}&hl=en&gl=us&as_sdt=0,5&start={page_num}",
-                        )
+                        self.just_wait(set_proxy=False)
+                        ua = UserAgent()
+                        user_agent = ua.random
+                        cur_web_data_dir = self._enrich_webdata_dir(query)
+                        no_rc = None
 
-                        if "ERR_CONNECTION_RESET" in output_str:
-                            logger.error("ERR_CONNECTION_RESET")
-                            logger.error(
-                                f"===== TO RETRY {retry_times}/{max_retry_times}"
-                            )
-                            driver, cur_web_data_dir = self._update_proxy(
-                                driver=driver,
-                                cur_web_data_dir=cur_web_data_dir,
-                                query=query,
-                            )
-                            time.sleep(random.uniform(8, 15))
-                            continue
+                        os.makedirs(cur_web_data_dir, exist_ok=True)
 
-                        try:
-                            WebDriverWait(driver, 10).until(
-                                self.finish_load_condition()
-                            )
-                        except TimeoutException as e:
-                            logger.error(f"Cannot Get Paper by Timeout Error: {e}")
-                            # logger.error(driver.page_source)
-                        except Exception as e:
-                            logger.error(f"Cannot Get Paper by Error: {e}")
-
-                        parser = LexborHTMLParser(driver.page_source)
-
-                        if len(parser.css(".gs_r.gs_or.gs_scl")) == 0:
-                            if (
-                                "not a robot" in driver.page_source
-                                or "may be sending automated queries"
-                                in driver.page_source
-                                or "您的计算机网络中存在异常流量" in driver.page_source
-                                or "人机身份验证" in driver.page_source
-                            ):
-                                logger.error(
-                                    f"============== DETECTED AS A ROBOT {query} ============="
+                        with SB(uc=True, user_data_dir=cur_web_data_dir) as sb:
+                            try:
+                                sb.uc_open_with_reconnect(
+                                    f"https://scholar.google.com/scholar?q={pruned_query}&hl=zh-CN&as_sdt=0,5&start={page_num}",
+                                    4,
                                 )
+                                solver = RecaptchaSolver(sb)
+                                # sb.uc_gui_handle_rc()
+                                no_rc = solver.solveCaptcha()
+
+                                sb.wait_for_element("#gs_bdy_ccl", timeout=3)
+                                driver_content = sb.get_page_source()
+
+                                eles = sb.find_elements("#gs_captcha_ccl")
+                                if eles and len(eles) > 0:
+                                    driver_content = None
+                            except Exception as e:
+                                driver_content = None
+                                logger.error(f"error in download by name: {e}")
+
+                            if driver_content is None:
                                 logger.error(
-                                    f"https://scholar.google.com/scholar?q={pruned_query}&hl=en&gl=us&start={page_num}"
+                                    "============== DETECTED AS A SPIDER ==============="
                                 )
                                 logger.error(
                                     f"===== TO RETRY {retry_times}/{max_retry_times}"
                                 )
-                                driver, cur_web_data_dir = self._update_proxy(
-                                    driver=driver,
-                                    cur_web_data_dir=cur_web_data_dir,
-                                    query=query,
-                                )
-                                time.sleep(random.uniform(8, 15))
-                            elif "ERR_CONNECTION_ABORTED" in driver.page_source:
-                                logger.error("CONNECTION ERROR")
-                                driver, cur_web_data_dir = self._update_proxy(
-                                    driver=driver,
-                                    cur_web_data_dir=cur_web_data_dir,
-                                    query=query,
-                                )
-
+                                # self._remove_proxy()
+                                self._update_proxy(None, None, "")
+                                outputs = []
+                                self._quit_sb(cur_web_data_dir)
+                                continue
                             else:
-                                break
-                            # with open("fail_log.log", "a") as f:
-                            #     f.write(query + "\n")
-                            #     f.write("no label\n")
-                            #     f.write(driver.page_source)
-                        else:
-                            break
-
-                    succ_list = self.parse(
-                        driver, query, parser, mode, "download", download_path
-                    )
+                                try:
+                                    succ_list = self.fetch_parse(
+                                        sb, query, None, mode, "download", download_path
+                                    )
+                                    self._quit_sb(cur_web_data_dir)
+                                    if not no_rc:
+                                        self._update_proxy(None, None, "")
+                                    break
+                                except:
+                                    logger.error(
+                                        "============== DETECTED AS A SPIDER ==============="
+                                    )
+                                    logger.error(
+                                        f"===== TO RETRY {retry_times}/{max_retry_times}"
+                                    )
+                                    # self._remove_proxy()
+                                    self._update_proxy(None, None, "")
+                                    self._quit_sb(cur_web_data_dir)
+                                    continue
 
                     if len(succ_list) > 0:
                         found_paper = True
@@ -1620,7 +1642,8 @@ class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
         except Exception as e:
             raise
         finally:
-            self._quit_driver(driver=driver, webdata=cur_web_data_dir)
+            pass
+            # self._quit_driver(driver=driver, webdata=cur_web_data_dir)
 
         return output_list
 
