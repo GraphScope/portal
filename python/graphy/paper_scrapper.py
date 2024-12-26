@@ -2,13 +2,15 @@ import ray
 
 from apps.paper_reading import SurveyPaperReading
 from workflow import ThreadPoolWorkflowExecutor
-from models import set_llm_model, DEFAULT_LLM_MODEL_CONFIG
+from models import set_llm_model, DEFAULT_LLM_MODEL_CONFIG, DefaultEmbedding
 from workflow.ray_executor import RayWorkflowExecutor
 
 import argparse
 import json
 import os
 import logging
+
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 
 def list_pdf_inputs(folder_path: str):
@@ -102,6 +104,10 @@ if __name__ == "__main__":
     with open(args.workflow, "r") as f:
         workflow_json = json.load(f)
     if workflow_json:
+        # dummy code to trigger downloading the embedding model if not present
+        embedding_model = DefaultEmbedding()
+        embedding_model.__call__(["dummy"])
+        fixed_workflow_json = fix_workflow(workflow_json)
         if args.tmp_dir:
             ray.init(
                 logging_level=logging.INFO,
@@ -113,7 +119,7 @@ if __name__ == "__main__":
                 logging_level=logging.INFO,
                 logging_format="%(asctime)s %(levelname)s %(message)s",
             )
-        fixed_workflow_json = fix_workflow(workflow_json)
+
         executor = RayWorkflowExecutor(
             fixed_workflow_json, SurveyPaperReading, max_workers, max_inspectors
         )
