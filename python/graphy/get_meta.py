@@ -11,8 +11,76 @@ sys.argv.append("-n")
 logger = logging.getLogger()
 
 
+def refactor(file_path, out_file_name, out_file_folder):
+    out_file_path = os.path.join(out_file_folder, out_file_name)
+    refactor_file_path = os.path.join(out_file_folder, "refactor.csv")
+
+    reserved_attr = ["publication_info", "cited_by_count", "publication"]
+    records = {}
+
+    with open(out_file_path, mode="r", encoding="utf-8") as csvfile:
+        # Create a CSV reader object with '|' as the delimiter
+        csv_reader = csv.reader(csvfile, delimiter="|")
+
+        # Skip the header
+        headers = next(csv_reader, None)
+        print(headers)
+
+        for row in csv_reader:
+            id_index = headers.index("id")
+            row_id = row[id_index]
+
+            publication_index = headers.index("publication")
+            cited_by_count_index = headers.index("cited_by_count")
+            publication_info_index = headers.index("publication_info")
+
+            records[row_id] = [
+                row[publication_index],
+                row[cited_by_count_index],
+                row[publication_info_index],
+            ]
+
+    with open(refactor_file_path, mode="w", encoding="utf-8") as outfile:
+        csv_writer = csv.writer(outfile, delimiter="|")
+
+        with open(file_path, mode="r", encoding="utf-8") as csvfile:
+            csv_reader = csv.reader(csvfile, delimiter="|")
+
+            headers = next(csv_reader, None)
+            for attr in reserved_attr:
+                headers.append(attr)
+
+            csv_writer.writerow(headers)
+
+            for row in csv_reader:
+                id_index = headers.index("id")
+                row_id = row[id_index]
+                if row_id not in records:
+                    continue
+
+                row.extend(records[row_id])
+                csv_writer.writerow(row)
+                outfile.flush()
+
+
 def get_meta_from_paper(file_path, out_file_name, out_file_folder):
     proxy_manager = ProxyManager()
+    out_file_path = os.path.join(out_file_folder, out_file_name)
+    outfile_has_header = False
+
+    with open(out_file_path, mode="r", encoding="utf-8") as csvfile:
+        # Create a CSV reader object with '|' as the delimiter
+        csv_reader = csv.reader(csvfile, delimiter="|")
+
+        id_history = set()
+
+        # Skip the header
+        headers = next(csv_reader, None)
+        if headers:
+            outfile_has_header = True
+            for row in csv_reader:
+                id_index = headers.index("id")
+                id_history.add(row[id_index])
 
     with open(file_path, mode="r", encoding="utf-8") as csvfile:
         # Create a CSV reader object with '|' as the delimiter
@@ -25,24 +93,20 @@ def get_meta_from_paper(file_path, out_file_name, out_file_folder):
             headers.append(attr)
         print(f"Headers: {headers}")  # Optional: print the headers
 
-        out_file_path = os.path.join(out_file_folder, out_file_name)
-        past_line = 1539
-        current_line = 0
-
         with open(out_file_path, mode="a", encoding="utf-8", newline="") as outfile:
             # Create a CSV writer object with '|' as the delimiter
             csv_writer = csv.writer(outfile, delimiter="|")
 
             # Write the updated headers to the output file
-            if past_line == 0:
+            if not outfile_has_header:
                 csv_writer.writerow(headers)
-            current_line += 1
 
             # Iterate over each remaining row
             for row in csv_reader:
-                current_line += 1
-                if current_line <= past_line:
+                id_index = headers.index("id")
+                if row[id_index] in id_history:
                     continue
+
                 print(f"Processing {row}")
                 row_title = row[headers.index("title")]
                 web_data_dir = os.path.join(
@@ -229,8 +293,13 @@ def get_meta_from_paper_parallel(file_path, out_file_name, out_file_folder):
 
 
 if __name__ == "__main__":
-    get_meta_from_paper(
+    refactor(
         file_path="/Users/louyk/Desktop/Projects/SIGMOD Demo graphy/_graph/Paper.csv",
         out_file_name="out.csv",
         out_file_folder="/Users/louyk/Desktop/Projects/SIGMOD Demo graphy/output",
     )
+    # get_meta_from_paper(
+    #     file_path="/Users/louyk/Desktop/Projects/SIGMOD Demo graphy/_graph/Paper.csv",
+    #     out_file_name="out.csv",
+    #     out_file_folder="/Users/louyk/Desktop/Projects/SIGMOD Demo graphy/output",
+    # )
