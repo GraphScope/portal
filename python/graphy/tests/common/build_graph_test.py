@@ -15,11 +15,11 @@ def test_graphy_data():
     graph_builder.extract_data()
 
     assert len(graph_builder.facts_dict) == 12
-    assert len(graph_builder.dimensions_dict.keys()) == 5
-    for name in ["Background", "Contribution", "Challenge", "Experiment", "Solution"]:
+    assert len(graph_builder.dimensions_dict.keys()) == 4
+    for name in ["Contribution", "Challenge", "Experiment", "Solution"]:
         assert name in graph_builder.dimensions_dict
     # each dimension + one reference
-    assert len(graph_builder.edges_dict.keys()) == 6
+    assert len(graph_builder.edges_dict.keys()) == 5
 
     graph_builder.build_graph(output_path)
 
