@@ -31,7 +31,6 @@ selenium>=4.25.0
 selenium-stealth>=1.0.6
 sentence-transformers>=3.0
 scikit-learn>=1.5.0
-scrape-google-scholar-py>=0.3.4
 spacy==3.7.4
 tiktoken>=0.8.0
 tools>=0.1.9

@@ -25,7 +25,6 @@ import os
 import time
 import threading
 
-from google_scholar_py import CustomGoogleScholarOrganic
 from .string_similarity import StringSimilarity
 
 logger = logging.getLogger(__name__)
@@ -58,14 +57,13 @@ class BibSearch:
         pass
 
 
-class BibSearchGoogleScholar(BibSearch, CustomGoogleScholarOrganic):
+class BibSearchGoogleScholar(BibSearch):
     file_lock = threading.Lock()
     last_request_google_scholar = 0
     google_scholar_request_lock = threading.Lock()
 
     def __init__(self, persist_store=None, web_data_folder="", meta_folder="") -> None:
         BibSearch.__init__(self, persist_store=persist_store, meta_folder=meta_folder)
-        CustomGoogleScholarOrganic.__init__(self)
 
         self.driver_version = self.get_driver_version()
         logger.debug(f"Get Driver Version {self.driver_version}")
