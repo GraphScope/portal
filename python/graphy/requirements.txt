@@ -17,8 +17,6 @@ langchain-google-vertexai==1.0.4
 langchain-huggingface==0.0.3
 langchain-openai==0.1.8
 langchain-text-splitters==0.2.0
-llama-cpp-python>=0.2.77
-lm-format-enforcer>=0.10.2
 numpy==1.26.4
 Pillow>=10.3.0
 psutil==6.1.0

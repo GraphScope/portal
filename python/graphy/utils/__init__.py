@@ -13,7 +13,6 @@ from .string_similarity import StringSimilarity
 from .json_parser import (
     JsonParserType,
     JsonFormatter,
-    JsonOutputParserLLamaCpp,
     JsonOutputParserFormatter,
 )
 
@@ -24,7 +23,6 @@ __all__ = [
     "PubMedFetcher",
     "JsonParserType",
     "JsonFormatter",
-    "JsonOutputParserLLamaCpp",
     "JsonOutputParserFormatter",
     "Paper",
     "Timer",
