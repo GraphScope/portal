@@ -34,14 +34,6 @@ const HoverMenu: React.FunctionComponent<IContextMenuProps> = props => {
               y: y,
             };
           });
-          updateStore(draft => {
-            draft.nodeStatus = {
-              [node.id]: {
-                selected: true,
-              },
-            };
-            draft.selectNodes = [node];
-          });
         } else {
           setState(preState => {
             return {
@@ -49,12 +41,6 @@ const HoverMenu: React.FunctionComponent<IContextMenuProps> = props => {
               visible: false,
             };
           });
-          if (prevNode) {
-            updateStore(draft => {
-              draft.nodeStatus = {};
-              draft.selectNodes = [];
-            });
-          }
         }
       }
     };

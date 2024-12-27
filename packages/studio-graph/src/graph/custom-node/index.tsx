@@ -120,12 +120,15 @@ function drawLabel(options: {
     const lineHeight = fontSize * 1.2;
     let textX = node.x;
     let textY = node.y;
+    const isLongText = texts.reduce((pre, cur) => pre + cur.length, 0) > 3;
     if (textPosition === 'center') {
       textX = node.x;
       textY = node.y;
-      const bckgDimensions = drawTextBackground({ ctx, texts, fontSize, textX, textY, textBackgroundColor });
-      // @ts-ignore
-      node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
+      if (isLongText) {
+          const bckgDimensions = drawTextBackground({ ctx, texts, fontSize, textX, textY, textBackgroundColor });
+          // @ts-ignore
+          node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
+      }
     } else if (textPosition === 'top') {
       textX = node.x;
       textY = node.y - R - lineHeight / 2;
@@ -141,7 +144,7 @@ function drawLabel(options: {
     ctx.font = `${fontSize}px Sans-Serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = textColor;
+    ctx.fillStyle = isLongText ? textColor : '#fff';
     texts.forEach((line, index) => {
       ctx.fillText(line, textX, textY + index * lineHeight);
     });
@@ -160,7 +163,7 @@ function drawTextBackground(options: {
   let textWidth = 0;
   let textHeight = lineHeight * texts.length;
   texts.forEach((text, index) => {
-    textWidth = Math.max(ctx.measureText(text).width, textWidth);
+    textWidth = Math.max(ctx.measureText(text).width * fontSize * 0.6, textWidth);
   });
   const bckgDimensions = [textWidth, textHeight].map(n => n + fontSize * 0.2); // some padding
   ctx.fillStyle = textBackgroundColor;

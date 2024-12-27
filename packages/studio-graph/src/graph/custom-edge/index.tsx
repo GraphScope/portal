@@ -38,7 +38,7 @@ export const linkCanvasObject =
       return;
     }
 
-    const labelWidth = label.length * (textSize / 2);
+    const labelWidth = ctx.measureText(label).width * textSize * 0.6;
 
     const start = link.source;
     const end = link.target;
