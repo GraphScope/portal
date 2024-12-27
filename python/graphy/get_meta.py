@@ -109,7 +109,7 @@ def get_meta_from_paper(file_path, out_file_name, out_file_folder):
 
                 print(f"Processing {row}")
                 row_title = row[headers.index("title")]
-                if not row_title or len(row_title) == 0:
+                if not row_title or len(row_title) <= 5:
                     continue
 
                 web_data_dir = os.path.join(
