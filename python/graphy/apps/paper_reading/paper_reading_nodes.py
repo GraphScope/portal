@@ -490,6 +490,9 @@ class PaperInspector(BaseNode):
                 )
                 if persist_results:
                     logger.info(f"Found persisted data for node '{current_node.name}'")
+                    # execute pdf extraction anyway
+                    if current_node.name == first_node.name:
+                        next(current_node.execute(state))
                     last_output = persist_results
                     is_persist = False
                 else:
