@@ -67,20 +67,20 @@ def get_meta_from_paper(file_path, out_file_name, out_file_folder):
     proxy_manager = ProxyManager()
     out_file_path = os.path.join(out_file_folder, out_file_name)
     outfile_has_header = False
+    id_history = set()
 
-    with open(out_file_path, mode="r", encoding="utf-8") as csvfile:
-        # Create a CSV reader object with '|' as the delimiter
-        csv_reader = csv.reader(csvfile, delimiter="|")
+    if os.path.exists(out_file_path):
+        with open(out_file_path, mode="r", encoding="utf-8") as csvfile:
+            # Create a CSV reader object with '|' as the delimiter
+            csv_reader = csv.reader(csvfile, delimiter="|")
 
-        id_history = set()
-
-        # Skip the header
-        headers = next(csv_reader, None)
-        if headers:
-            outfile_has_header = True
-            for row in csv_reader:
-                id_index = headers.index("id")
-                id_history.add(row[id_index])
+            # Skip the header
+            headers = next(csv_reader, None)
+            if headers:
+                outfile_has_header = True
+                for row in csv_reader:
+                    id_index = headers.index("id")
+                    id_history.add(row[id_index])
 
     with open(file_path, mode="r", encoding="utf-8") as csvfile:
         # Create a CSV reader object with '|' as the delimiter
@@ -109,6 +109,9 @@ def get_meta_from_paper(file_path, out_file_name, out_file_folder):
 
                 print(f"Processing {row}")
                 row_title = row[headers.index("title")]
+                if not row_title or len(row_title) == 0:
+                    continue
+
                 web_data_dir = os.path.join(
                     out_file_folder,
                     "tmp",
