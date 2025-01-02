@@ -41,6 +41,7 @@ import {
   Overview,
   FloatTabs,
   Placeholder,
+  CypherQuery,
 } from './components';
 import {
   BgColorsOutlined,
@@ -48,6 +49,8 @@ import {
   InfoCircleOutlined,
   TableOutlined,
   GroupOutlined,
+  CodeOutlined,
+  CodeTwoTone,
 } from '@ant-design/icons';
 import { Divider, Flex, theme, Segmented, Tabs, Typography } from 'antd';
 import { getDefaultServices } from './services';
@@ -136,6 +139,12 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
                   icon: <BgColorsOutlined />,
                   children: <StyleSetting />,
                   key: 'StyleSetting',
+                },
+                {
+                  label: <Typography.Title level={3}>Cypher Query</Typography.Title>,
+                  icon: <CodeOutlined />,
+                  children: <CypherQuery />,
+                  key: 'CypherQuery',
                 },
               ]}
               tools={

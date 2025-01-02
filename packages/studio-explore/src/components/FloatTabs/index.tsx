@@ -154,17 +154,19 @@ const FloatTabs: React.FunctionComponent<IFloatTabsProps> = props => {
             const iconStyle: React.CSSProperties = {
               color: isActive ? token.colorBgBase : token.colorText,
             };
+            const isMatch = item.key === state.activeKey;
             return (
               <Button
                 key={item.key}
                 icon={item.icon}
                 style={iconStyle}
-                type={item.key === state.activeKey ? 'primary' : 'text'}
+                type={isMatch ? 'primary' : 'text'}
                 onClick={() => {
                   setState(preState => {
                     return {
                       ...preState,
                       activeKey: item.key,
+                      visible: isMatch ? !preState.visible : true,
                     };
                   });
                 }}
