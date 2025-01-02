@@ -75,7 +75,7 @@ const StyleSetting: React.FunctionComponent<IOverviewProps> = props => {
       {/* <Title level={4} style={{ margin: '0px' }}>
         <FormattedMessage id="Style Setting" />
       </Title> */}
-      <Text type="secondary">
+      <Text type="secondary" italic>
         You can click on each label to set the color, size, and display text for vertices and edges.
       </Text>
       <Title level={5} style={{ margin: '0px' }}>

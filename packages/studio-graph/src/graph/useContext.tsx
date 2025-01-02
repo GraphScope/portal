@@ -72,6 +72,7 @@ export type IStore = {
   focusNodes: string[];
   selectNodes: NodeData[];
   selectEdges: EdgeData[];
+  tableViewIds: string[];
 };
 
 export const initialStore: IStore = {
@@ -115,6 +116,7 @@ export const initialStore: IStore = {
   focusNodes: [],
   selectNodes: [],
   selectEdges: [],
+  tableViewIds: [],
 };
 
 export const useContext = () => useZustandContext<IStore>();

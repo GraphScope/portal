@@ -103,7 +103,6 @@ const NeighborNeighbor: React.FunctionComponent<INeighborQueryProps> = props => 
     },
   ];
 
-  console.log(items, itemMap);
   return (
     <div ref={MenuRef} className="studio-graph-neighbor-query">
       <Menu

@@ -7,15 +7,24 @@ import Legend from '../StyleSetting/legend';
 import { Utils } from '@graphscope/studio-components';
 
 interface IPropertyInfoProps {
-  data: EdgeData | NodeData;
-  style: React.CSSProperties;
-  type: 'node' | 'edge';
+  style?: React.CSSProperties;
+  noTitle?: boolean;
 }
 
 const PropertyInfo: React.FunctionComponent<IPropertyInfoProps> = props => {
-  const { data, style, type } = props;
+  const { style, noTitle } = props;
   const { store, updateStore } = useContext();
-  const { nodeStyle } = store;
+
+  const { nodeStyle, selectNodes, selectEdges } = store;
+
+  if (selectEdges.length === 0 && selectNodes.length === 0) {
+    return null;
+  }
+
+  const node = selectNodes[0];
+  const edge = selectEdges[0];
+  const type = node ? 'node' : 'edge';
+  const data = node ? node : edge;
 
   const { id, label, properties = {} } = data as EdgeData;
   //@ts-ignore
@@ -42,9 +51,11 @@ const PropertyInfo: React.FunctionComponent<IPropertyInfoProps> = props => {
 
   return (
     <Flex style={style} vertical gap={12}>
-      <Typography.Title level={5} style={{ margin: '0px' }}>
-        {title}
-      </Typography.Title>
+      {!noTitle && (
+        <Typography.Title level={5} style={{ margin: '0px' }}>
+          {title}
+        </Typography.Title>
+      )}
       {/* <Divider style={{ margin: '0px' }} /> */}
       <Flex justify="space-between">
         <Typography.Text type="secondary" italic>

@@ -27,7 +27,6 @@ export { default as ClearCanvas } from './ClearCanvas';
 export { default as CurvatureLinks } from './CurvatureLinks';
 export { default as DagreMode } from './DagreMode';
 export { default as FixedMode } from './FixedMode';
-export { default as Placeholder } from './Placeholder';
 export { default as LayoutSwitch } from './LayoutSwitch';
 export { default as ZoomStatus } from './ZoomStatus';
 export { default as HoverMenu } from './HoverMenu';
@@ -41,3 +40,5 @@ export interface IQueryStatement {
 }
 
 export { default as SchemaView } from './SchemaView';
+export { default as PropertiesTable } from './PropertiesTable';
+export { default as PropertyInfo } from './PropertiesPanel/PropertyInfo';
