@@ -14,8 +14,13 @@ export function getStyleConfig(schema: GraphSchema, graphId: string) {
   const localStyle = storage.get<{ nodeStyle: Record<string, NodeStyle>; edgeStyle: Record<string, EdgeStyle> }>(
     `GRAPH_${graphId}_STYLE`,
   );
+
   if (localStyle) {
-    return localStyle;
+    const localLabelKey = Object.keys(localStyle.nodeStyle).join('_');
+    const schemaLabelKey = schema.nodes.map(n => n.label).join('_');
+    if (localLabelKey === schemaLabelKey) {
+      return localStyle;
+    }
   }
   const defaultStyle = {
     nodeStyle: {} as Record<string, NodeStyle>,

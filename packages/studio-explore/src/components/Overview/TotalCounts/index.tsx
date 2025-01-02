@@ -41,6 +41,7 @@ const TotalCounts: React.FunctionComponent<IUploadProps> = props => {
     const res = await getService<IQueryStatement>('queryStatement')(` Match (n) return n`);
     updateStore(draft => {
       draft.data = res;
+      draft.source = res;
       draft.isLoading = false;
     });
   };
@@ -51,6 +52,7 @@ const TotalCounts: React.FunctionComponent<IUploadProps> = props => {
     const res = await getService<IQueryStatement>('queryStatement')(`match (a)-[e]->(b) return a,b,e`);
     updateStore(draft => {
       draft.data = res;
+      draft.source = res;
       draft.isLoading = false;
     });
   };

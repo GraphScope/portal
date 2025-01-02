@@ -1,7 +1,7 @@
-import { NodeStyle, NodeOptionStyle, NodeData } from '../types';
+import { NodeStyle, NodeOptionStyle, NodeData, NodeStatus } from '../types';
 import { handleNodeStyle } from '../utils/handleStyle';
 import { handleStatus, hexToRgba } from '../utils';
-import { BASIC_NODE_R } from '../const';
+import { BASIC_NODE_R, COLOR_DISABLED } from '../const';
 import { drawText } from './draw';
 import { icons } from '../custom-icons';
 
@@ -15,7 +15,7 @@ export const nodeCanvasObject =
     const { color, size, caption, icon, options } = handleNodeStyle(node, nodeStyle);
     const status = handleStatus(node, nodeStatus);
     const R = Math.sqrt(Math.max(0, size)) * BASIC_NODE_R;
-    const { selected, hovering } = status;
+    const { selected, hovering, disabled } = status;
     const {
       zoomLevel,
       iconColor,
@@ -52,7 +52,7 @@ export const nodeCanvasObject =
     // draw keyshape
     ctx.beginPath();
     ctx.arc(node.x, node.y, R, 0, 2 * Math.PI, false);
-    ctx.fillStyle = color; //hexToRgba(color, 0.2);
+    ctx.fillStyle = disabled ? COLOR_DISABLED : color; //hexToRgba(color, 0.2);
     ctx.fill();
 
     // draw icon
@@ -62,7 +62,7 @@ export const nodeCanvasObject =
       ctx.font = `${iconSize} iconfont`;
       ctx.textAlign = 'center'; // 水平居中对齐
       ctx.textBaseline = 'middle'; // 垂直居中对齐
-      ctx.fillStyle = iconColor; // 图标颜色
+      ctx.fillStyle = disabled ? COLOR_DISABLED : iconColor; // 图标颜色
       ctx.fillText(unicodeIcon, node.x, node.y);
     }
 
@@ -75,9 +75,11 @@ export const nodeCanvasObject =
       texts,
       node,
       textColor,
+      selectColor,
       textPosition,
       zoomLevel,
       textBackgroundColor,
+      status,
     });
 
     ctx.restore();
@@ -95,8 +97,23 @@ function drawLabel(options: {
   textColor: NodeOptionStyle['textColor'];
   zoomLevel: NodeOptionStyle['zoomLevel'];
   textBackgroundColor: NodeOptionStyle['textBackgroundColor'];
+  status: NodeStatus;
+  selectColor: NodeOptionStyle['selectColor'];
 }) {
-  let { globalScale, ctx, node, R, texts, textColor, textPosition, zoomLevel, textBackgroundColor, textSize } = options;
+  let {
+    globalScale,
+    ctx,
+    node,
+    R,
+    texts,
+    textColor,
+    textPosition,
+    zoomLevel,
+    textBackgroundColor,
+    textSize,
+    status,
+    selectColor,
+  } = options;
 
   if (texts.length === 0 || globalScale < zoomLevel[0]) {
     return;
@@ -141,7 +158,16 @@ function drawLabel(options: {
     ctx.font = `${fontSize}px Sans-Serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+
     ctx.fillStyle = textColor;
+
+    if (status.selected) {
+      ctx.fillStyle = selectColor;
+    }
+    if (status.disabled) {
+      ctx.fillStyle = COLOR_DISABLED;
+    }
+
     texts.forEach((line, index) => {
       ctx.fillText(line, textX, textY + index * lineHeight);
     });

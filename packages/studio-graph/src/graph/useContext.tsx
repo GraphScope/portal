@@ -121,6 +121,7 @@ export const useContext = () => useZustandContext<IStore>();
 
 export const GraphProvider = props => {
   const { children, id, services } = props;
+
   const getService: IGetServices = (serviceId: string) => {
     const service = services[serviceId];
     if (!service) {

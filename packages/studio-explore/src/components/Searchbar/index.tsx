@@ -121,9 +121,11 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
   const handleClick = id => {
     const node = state.data.nodes.find((item: any) => item.id === id);
     updateStore(draft => {
-      draft.data.nodes = Utils.uniqueElementsBy([...draft.data.nodes, node], (a, b) => {
+      const _nodes = Utils.uniqueElementsBy([...draft.data.nodes, node], (a, b) => {
         return a.id === b.id;
       });
+      draft.data.nodes = _nodes;
+      draft.source.nodes = _nodes;
       if (node) {
         draft.selectNodes = [node];
         draft.nodeStatus = {

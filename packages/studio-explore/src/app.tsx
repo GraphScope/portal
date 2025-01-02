@@ -33,9 +33,9 @@ import {
 } from '@graphscope/studio-graph';
 
 import { ToogleLeftButton, ToogleRightButton } from './components/ToggleButton';
-import { Connection, FetchGraph, Searchbar, Statistics, ClusterAnalysis, Next } from './components';
+import { Connection, FetchGraph, Searchbar, Statistics, ClusterAnalysis, Next, Overview } from './components';
 import { BgColorsOutlined, BarChartOutlined } from '@ant-design/icons';
-import { Divider, Flex, theme } from 'antd';
+import { Divider, Flex, theme, Segmented, Tabs } from 'antd';
 import { getDefaultServices } from './services';
 
 interface ExploreProps {
@@ -48,9 +48,8 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
   const { id } = props;
   const [services, setServices] = useState(props.services || getDefaultServices());
 
-  const onQuery = async () => {};
-
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const { token } = theme.useToken();
 
   return (
     <div ref={containerRef} style={{ position: 'absolute', top: '0px', left: '0px', bottom: '0px', right: '0px' }}>
@@ -62,18 +61,11 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
               <SegmentedTabs
                 queryKey="left"
                 tableHeight={60}
+                tabStyle={{
+                  marginBottom: '0px',
+                }}
                 block
                 items={[
-                  {
-                    key: 'StyleSetting',
-                    label: (
-                      <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
-                        <BgColorsOutlined style={{ fontSize: 17 }} />
-                        StyleSetting
-                      </Flex>
-                    ),
-                    children: <StyleSetting />,
-                  },
                   {
                     key: 'Statistics',
                     label: (
@@ -82,17 +74,88 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
                         Statistics
                       </Flex>
                     ),
-                    children: <Statistics />,
+                    children: (
+                      <Tabs
+                        // queryKey="Statistics"
+                        // block
+                        indicator={{ size: origin => origin - 0, align: 'center' }}
+                        items={[
+                          {
+                            key: 'current',
+                            label: (
+                              <Flex vertical gap={0} align="center">
+                                Current Canvas
+                              </Flex>
+                            ),
+                            children: <Statistics />,
+                          },
+                          {
+                            key: 'global',
+                            label: (
+                              <Flex vertical gap={0} align="center">
+                                Global
+                              </Flex>
+                            ),
+                            children: <Overview />,
+                          },
+                        ]}
+                      />
+                    ),
                   },
+
                   {
-                    key: 'ClusterAnalysis',
+                    key: 'Analysis',
                     label: (
                       <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
                         <Icons.Cluster />
-                        ClusterAnalysis
+                        Analysis
                       </Flex>
                     ),
-                    children: <ClusterAnalysis />,
+                    children: (
+                      <SegmentedTabs
+                        queryKey="analysis"
+                        block
+                        items={[
+                          {
+                            key: 'Style',
+                            label: (
+                              <Flex vertical gap={0} align="center">
+                                Style
+                              </Flex>
+                            ),
+                            children: <StyleSetting />,
+                          },
+                          {
+                            key: 'Layout',
+                            label: (
+                              <Flex vertical gap={0} align="center">
+                                Layout
+                              </Flex>
+                            ),
+                            children: <StyleSetting />,
+                          },
+                          {
+                            key: 'Cluster',
+                            label: (
+                              <Flex vertical gap={0} align="center">
+                                Cluster
+                              </Flex>
+                            ),
+                            children: <ClusterAnalysis />,
+                          },
+                        ]}
+                      />
+                    ),
+                  },
+                  {
+                    key: 'StyleSetting',
+                    label: (
+                      <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
+                        <BgColorsOutlined style={{ fontSize: 17 }} />
+                        Report
+                      </Flex>
+                    ),
+                    children: <StyleSetting />,
                   },
                 ]}
               ></SegmentedTabs>
@@ -128,8 +191,10 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             }
             autoResize={false}
             leftSideStyle={{
-              width: '360px',
-              boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
+              width: '400px',
+              boxShadow: token.boxShadow,
+              marginRight: '0px',
+              // borderRadius: token.borderRadius,
               overflow: 'scroll',
             }}
             rightSideStyle={{
@@ -138,8 +203,8 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
               overflowY: 'scroll',
             }}
             defaultCollapsed={{
-              leftSide: true,
-              rightSide: false,
+              leftSide: false,
+              rightSide: true,
             }}
           >
             {/* <Prepare data={data} schema={schema} graphId={graphId} /> */}
@@ -168,12 +233,12 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             </ContextMenu>
             <Toolbar
               direction="horizontal"
-              style={{ position: 'absolute', top: '20px', left: '80px', width: 500 }}
+              style={{ position: 'absolute', top: '12px', left: '80px', width: 500 }}
               noSpace
             >
               <Searchbar />
             </Toolbar>
-            <Toolbar style={{ position: 'absolute', top: '20px', left: '20px', right: 'unset' }}>
+            <Toolbar style={{ position: 'absolute', top: '12px', left: '12px', right: 'unset' }}>
               <Connection />
               <Divider style={{ margin: '0px' }} />
               <ToogleLeftButton />

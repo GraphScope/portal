@@ -14,23 +14,11 @@ export const colors: string[] = [
   gold[8],
   red[6],
 
-  '#000',
   '#f0f0f0',
+  '#00000043', //'#f0f0f0',
 
-  // '#569480',
-  // '#F79767',
-  // '#1978fe',
-  // '#C990C0',
-  // '#57C7E3',
-  // '#D9C8AE',
-  // '#FFE081',
-  // '#8DCC93',
-  // '#ECB5C9',
-  // '#FFC454',
-  // '#DA7194',
-  // '#848484',
-  // '#000',
-  // '#f0f0f0',
+  '#5e5e5e',
+  '#000',
 ];
 
 //  这里是 size 只是一个比率，因为还需要和内部的 BASIC_NODE_R 相乘
@@ -42,7 +30,7 @@ export const BASIC_NODE_R = 2;
 /** edges */
 export const DEFAULT_EDGE_WIDTH = widths[3]; //0.9
 
-export const DEFAULT_NODE_COLOR = colors[6];
+export const DEFAULT_NODE_COLOR = colors[0];
 export const DEFAULT_NODE_SIZE = sizes[4];
 
 export const NODE_TEXT_COLOR = 'rgba(255, 255, 255, 0.8)';
@@ -50,16 +38,20 @@ export const NODE_TEXT_COLOR = 'rgba(255, 255, 255, 0.8)';
 const {
   DEFAULT_EDGE_COLOR,
   SELECTED_EDGE_COLOR,
+  SELECTED_EDGE_TEXT_COLOR,
   SELECTED_NODE_COLOR,
   HOVERING_NODE_COLOR,
   NODE_TEXT_BACKGROUND_COLOR,
+  COLOR_DISABLED,
 } = getColor();
 export {
   DEFAULT_EDGE_COLOR,
   SELECTED_EDGE_COLOR,
+  SELECTED_EDGE_TEXT_COLOR,
   SELECTED_NODE_COLOR,
   HOVERING_NODE_COLOR,
   NODE_TEXT_BACKGROUND_COLOR,
+  COLOR_DISABLED,
 };
 /** 考虑主题 */
 function getColor() {
@@ -67,19 +59,23 @@ function getColor() {
 
   if (isDark) {
     return {
+      DEFAULT_EDGE_COLOR: colors[10],
       SELECTED_NODE_COLOR: '#fff',
       HOVERING_NODE_COLOR: 'rgba(255,255,255,0.8)',
-      DEFAULT_EDGE_COLOR: '#5e5e5e',
       SELECTED_EDGE_COLOR: '#fff',
+      SELECTED_EDGE_TEXT_COLOR: '#000',
       NODE_TEXT_BACKGROUND_COLOR: 'rgba(0, 0, 0, 0.2)',
+      COLOR_DISABLED: '#ddd',
     };
   }
   return {
     SELECTED_NODE_COLOR: '#000',
     HOVERING_NODE_COLOR: 'rgba(0,0,0,0.8)',
-    DEFAULT_EDGE_COLOR: '#f0f0f0',
+    DEFAULT_EDGE_COLOR: colors[9],
     SELECTED_EDGE_COLOR: '#000',
+    SELECTED_EDGE_TEXT_COLOR: '#fff',
     NODE_TEXT_BACKGROUND_COLOR: 'rgba(255, 255, 255, 0.8)',
+    COLOR_DISABLED: '#ddd',
   };
 }
 

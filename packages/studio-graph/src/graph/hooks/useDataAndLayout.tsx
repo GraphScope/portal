@@ -63,7 +63,7 @@ export const useDataAndLayout = () => {
         (graph as ForceGraphInstance)
           .d3Force('center', d3ForceCenter().strength(1))
           .d3Force('charge', d3ForceManyBody())
-          .d3Force('link', d3ForceLink().distance(40))
+          .d3Force('link', d3ForceLink().distance(35))
           .d3Force(
             'collide',
             d3ForceCollide().radius(node => {

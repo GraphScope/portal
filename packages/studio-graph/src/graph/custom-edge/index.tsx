@@ -7,14 +7,16 @@ import {
   NODE_TEXT_COLOR,
   DEFAULT_EDGE_COLOR,
   DEFAULT_EDGE_WIDTH,
+  COLOR_DISABLED,
 } from '../const';
+
 import { handleStatus } from '../utils';
 
 export const linkCanvasObject =
   (link: EdgeData, ctx: CanvasRenderingContext2D, globalScale: number) =>
   (edgeStyle: Record<string, EdgeStyle>, edgeStatus: any) => {
     const style = handleEdgeStyle(link, edgeStyle);
-    const { selected } = handleStatus(link, edgeStatus);
+    const { selected, disabled } = handleStatus(link, edgeStatus);
     const { color, size, caption = [], options } = style;
     const {
       textColor = color,
@@ -80,12 +82,19 @@ export const linkCanvasObject =
     ctx.translate(textPos.x, textPos.y);
     ctx.rotate(textAngle);
 
-    ctx.fillStyle = selected ? selectColor : textBackgroundColor;
+    ctx.fillStyle = textBackgroundColor;
     ctx.fillRect(-bckgDimensions[0] / 2, -bckgDimensions[1] / 2, ...bckgDimensions);
     // draw text label
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = textColor;
+    if (selected) {
+      ctx.fillStyle = selectColor;
+    }
+    if (disabled) {
+      ctx.fillStyle = COLOR_DISABLED;
+    }
+
     ctx.fillText(label, 0, 0);
     ctx.restore();
     return;
