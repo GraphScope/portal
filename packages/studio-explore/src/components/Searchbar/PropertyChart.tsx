@@ -7,7 +7,7 @@ import Chart from '../ChartView/index';
 import { Illustration } from '@graphscope/studio-components';
 export interface IQueryPropertyStatics {
   id: 'queryPropertyStatics';
-  query: (property: string) => Promise<{ [key: string]: any }>;
+  query: (label: string, property: string) => Promise<{ [key: string]: any }>;
 }
 
 interface ITableViewProps {
@@ -49,7 +49,7 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
       });
 
       try {
-        const data = await getService<IQueryPropertyStatics>('queryPropertyStatics')(property);
+        const data = await getService<IQueryPropertyStatics>('queryPropertyStatics')(label, property);
         setState(preState => {
           return {
             ...preState,

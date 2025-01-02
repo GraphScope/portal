@@ -1,14 +1,33 @@
 import { useEffect } from 'react';
 import { useContext, getDataMap } from '../../';
 
+let isCtrlPressed = false;
+
 const useNodeClick = () => {
   const { store, updateStore } = useContext();
   const { emitter, data, graph } = store;
 
   useEffect(() => {
     const dataMap = getDataMap(data);
+
+    const handleKeydown = (event: KeyboardEvent) => {
+      if (event.key === 'Shift') {
+        isCtrlPressed = true;
+      }
+    };
+    const handleKeyup = (event: KeyboardEvent) => {
+      if (event.key === 'Shift') {
+        isCtrlPressed = false;
+      }
+    };
+    const applyStatus = () => {};
+
+    document.addEventListener('keydown', handleKeydown);
+    document.addEventListener('keyup', handleKeyup);
+
     const handleClick = (node: any) => {
       const { id } = node;
+      console.log(isCtrlPressed);
 
       const {
         outNeighbors = [],
@@ -66,6 +85,8 @@ const useNodeClick = () => {
     emitter?.on('node:click', handleClick);
     return () => {
       emitter?.off('node:click', handleClick);
+      document.removeEventListener('keydown', handleKeydown);
+      document.removeEventListener('keyup', handleKeyup);
     };
   }, [emitter, data, graph]);
 };
