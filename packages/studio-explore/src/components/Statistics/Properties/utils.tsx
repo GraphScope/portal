@@ -40,12 +40,24 @@ export function getPropertyOptions(schema: GraphSchema) {
     {
       label: 'Vertex',
       title: 'Vertex Properties',
-      options: Array.from(nodeProperties.values()),
+      options: [
+        {
+          value: 'NODE_LABEL',
+          label: '#label',
+        },
+        ...Array.from(nodeProperties.values()),
+      ],
     },
     {
       label: 'Edge',
       title: 'Edge Properties',
-      options: Array.from(edgeProperties.values()),
+      options: [
+        {
+          value: 'EDGE_LABEL',
+          label: '#label',
+        },
+        ...Array.from(edgeProperties.values()),
+      ],
     },
   ];
 }

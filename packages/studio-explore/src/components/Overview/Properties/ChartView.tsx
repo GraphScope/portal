@@ -31,6 +31,14 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
     isLoading: false,
     property: props.property,
   });
+  useEffect(() => {
+    setState(preState => {
+      return {
+        ...preState,
+        property: props.property,
+      };
+    });
+  }, [props.property]);
   const { data, isLoading, property } = state;
 
   useEffect(() => {

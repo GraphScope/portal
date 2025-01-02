@@ -10,7 +10,9 @@ interface IClusterAnalysisProps {}
 const ClusterAnalysis: React.FunctionComponent<IClusterAnalysisProps> = props => {
   return (
     <Flex vertical gap={16}>
-      <Typography.Text type="secondary">You can cluster your canvas data using three approaches</Typography.Text>
+      <Typography.Text type="secondary" italic>
+        You can cluster your canvas data using three approaches
+      </Typography.Text>
       <CollapseCard title="Cluster By DataField">
         <ClusterByField />
       </CollapseCard>
