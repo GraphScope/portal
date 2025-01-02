@@ -31,7 +31,7 @@ const BarChart: React.FunctionComponent<IBarChartProps> = props => {
 
       chart.current.options({
         data,
-        style: { radius: 4, fill: token.colorPrimary },
+        style: { radius: 4, fill: token.colorPrimary, minHeight: 16, minWidth: 8 },
         type: 'interval',
         axis: {
           y: false,

@@ -35,7 +35,7 @@ const useNodeClick = () => {
           [curr]: { selected: true },
         };
       }, {});
-      console.log(slNodes, slEdges, inEdges, outEdges);
+
       if (node) {
         updateStore(draft => {
           /** 让所有的点和边进入 disabled 状态 */

@@ -7,6 +7,7 @@ import Highlighter from 'react-highlight-words';
 import { useContext, GraphData, useApis } from '@graphscope/studio-graph';
 import CascaderSearch from './CascaderSearch';
 import cssStyle from './css';
+import PropertyChart from './PropertyChart';
 
 const { debounce } = Utils;
 interface ISearchbarProps {}
@@ -83,6 +84,16 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
   const onChange = async e => {
     const { value } = e.target;
     if (value === '') {
+      if (words === '') {
+        return;
+      }
+      setState(preState => {
+        return {
+          ...preState,
+          isLoading: false,
+          words: value,
+        };
+      });
       return;
     }
 
@@ -213,7 +224,7 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
           <>
             <Divider style={{ margin: '0px' }} />
             <CascaderSearch breadcrumb={breadcrumb} updateState={setState} />
-            {words.length > 0 && (
+            {words.length > 0 && lists.length > 0 && (
               <Spin tip="Searching..." spinning={isLoading}>
                 <List
                   pagination={{ position: 'bottom', align: 'end', size: 'small' }}
@@ -229,6 +240,11 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
                   }}
                 />
               </Spin>
+            )}
+            {state.breadcrumb.length === 3 && words === '' && (
+              <Flex style={{ padding: '12px 0px' }} vertical>
+                <PropertyChart label={breadcrumb[1].value} property={breadcrumb[2].value} />
+              </Flex>
             )}
           </>
         </Flex>

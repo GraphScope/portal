@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Select, Space, Flex, Card, Button, Typography, Skeleton } from 'antd';
 
-import { useContext, IQueryStatement, useApis } from '@graphscope/studio-graph';
+import { useContext, useApis } from '@graphscope/studio-graph';
 import { getPropertyOptions } from './utils';
 import { BarChartOutlined, DeleteOutlined } from '@ant-design/icons';
 import Chart from '../../ChartView/index';
@@ -58,7 +58,6 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
           };
         });
         data.sort((a, b) => {
-          console.log(b[property], a[property], b[property] > a[property]);
           if (a[property] > b[property]) {
             return 1;
           }
@@ -118,10 +117,10 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
           selected: true,
         };
       });
-
       draft.selectNodes = draft.data.nodes.filter(node => {
         return ids.indexOf(node.id) > -1;
       });
+      draft.tableViewIds = ids;
     });
     focusNodes(ids);
   };

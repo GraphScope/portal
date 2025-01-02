@@ -14,7 +14,17 @@ export const handleExpand = (data, responseData) => {
       if (a.id && b.id) {
         return a.id === b.id;
       }
-      return a.source === b.source && a.target === b.target;
+      const sourceA = typeof a.source === 'object' ? a.source.id : a.source;
+      const sourceB = typeof b.source === 'object' ? b.source.id : b.source;
+      const targetA = typeof a.target === 'object' ? a.target.id : a.target;
+      const targetB = typeof b.target === 'object' ? b.target.id : b.target;
+      if (a.__controlPoints) {
+        delete a.__controlPoints;
+      }
+      if (b.__controlPoints) {
+        delete b.__controlPoints;
+      }
+      return sourceA === sourceB && targetA === targetB;
     }),
   };
 };

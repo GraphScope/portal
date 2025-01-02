@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Select, Space, Flex, Card, Button, Typography, Skeleton } from 'antd';
-
 import { useContext, IQueryStatement } from '@graphscope/studio-graph';
-import { getPropertyOptions } from './utils';
 import { BarChartOutlined, DeleteOutlined } from '@ant-design/icons';
-import Chart from '../../ChartView/index';
+import Chart from '../ChartView/index';
 
 import { Illustration } from '@graphscope/studio-components';
 export interface IQueryPropertyStatics {
@@ -13,23 +11,19 @@ export interface IQueryPropertyStatics {
 }
 
 interface ITableViewProps {
-  property?: string;
-  onRemove: () => void;
+  label: string;
+  property: string;
 }
 const ChartView: React.FunctionComponent<ITableViewProps> = props => {
-  const { onRemove } = props;
   const { store, updateStore } = useContext();
   const { getService, schema } = store;
-  const options = getPropertyOptions(schema);
 
   const [state, setState] = useState<{
     data: { [key: string]: any };
     isLoading: boolean;
-    property?: string;
   }>({
     data: [],
     isLoading: false,
-    property: props.property,
   });
   useEffect(() => {
     setState(preState => {
@@ -39,7 +33,8 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
       };
     });
   }, [props.property]);
-  const { data, isLoading, property } = state;
+  const { data, isLoading } = state;
+  const { property, label } = props;
 
   useEffect(() => {
     (async () => {
@@ -74,23 +69,15 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
     })();
   }, [property]);
 
-  const handleChange = value => {
-    setState(preState => {
-      return {
-        ...preState,
-        property: value,
-      };
-    });
-  };
-
   const handleChartClick = async e => {
     if (!property) {
       return;
     }
     const queryCypher = getService<IQueryStatement>('queryStatement');
+    console.log('e.data.data[property]', e.data.data[property]);
     const data = await queryCypher(
       `
-        MATCH(a) 
+        MATCH(a:${label}) 
         WHERE a.${property}='${e.data.data[property]}'
         return a
         `,
@@ -102,37 +89,11 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
   };
 
   return (
-    <Card
-      title={
-        <Select
-          allowClear
-          variant="borderless"
-          onChange={handleChange}
-          defaultValue={property}
-          style={{ width: '160px' }}
-          options={options}
-          placeholder="Select property"
-        />
-      }
-      extra={
-        <Space size={0}>
-          <Button type="text" icon={<BarChartOutlined />} />
-          <Button type="text" icon={<DeleteOutlined />} onClick={onRemove} />
-        </Space>
-      }
-      styles={{
-        header: {
-          padding: '0px 8px',
-          minHeight: '36px',
-          fontSize: '14px',
-          fontWeight: 400,
-        },
-        body: {
-          padding: '4px',
-          height: '210px',
-        },
-      }}
-    >
+    <Flex vertical>
+      <Typography.Text type="secondary" italic>
+        You can click on the `{property}` charts below to start a query, or use the search bar above for detailed
+        searches.
+      </Typography.Text>
       {isLoading && <Skeleton active style={{ padding: '24px' }} />}
       {!isLoading &&
         (property ? (
@@ -145,7 +106,7 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
             </Typography.Text>
           </Flex>
         ))}
-    </Card>
+    </Flex>
   );
 };
 

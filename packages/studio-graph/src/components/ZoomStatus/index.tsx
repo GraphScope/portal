@@ -23,7 +23,7 @@ const ZoomStatus: React.FunctionComponent<IZoomStatusProps> = props => {
     }
   }, [graph, data]);
   return (
-    <div style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 1000, padding: '12px' }}>
+    <div style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 998, padding: '12px' }}>
       <Space size="large">
         <Typography.Text type="secondary">Node Counts: {data.nodes.length}</Typography.Text>
         <Typography.Text type="secondary">Edge Counts: {data.edges.length}</Typography.Text>

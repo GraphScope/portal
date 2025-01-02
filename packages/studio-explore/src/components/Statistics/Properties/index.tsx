@@ -46,6 +46,9 @@ const Properties = props => {
 
   return (
     <Flex vertical gap={12}>
+      <Typography.Text type="secondary" italic>
+        The system will display the statistical information for the current canvas data.
+      </Typography.Text>
       <Flex justify="space-between">
         <Typography.Title level={5} style={{ margin: '0px' }}>
           Properties Statistics

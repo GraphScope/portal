@@ -25,17 +25,34 @@ import {
   ClearCanvas,
   CurvatureLinks,
   DagreMode,
-  Placeholder,
   LayoutSwitch,
   ZoomStatus,
   registerIcons,
-  HoverMenu,
 } from '@graphscope/studio-graph';
 
 import { ToogleLeftButton, ToogleRightButton } from './components/ToggleButton';
-import { Connection, FetchGraph, Searchbar, Statistics, ClusterAnalysis, Next, Overview } from './components';
-import { BgColorsOutlined, BarChartOutlined } from '@ant-design/icons';
-import { Divider, Flex, theme, Segmented, Tabs } from 'antd';
+import {
+  Connection,
+  FetchGraph,
+  Searchbar,
+  Statistics,
+  ClusterAnalysis,
+  Next,
+  Overview,
+  FloatTabs,
+  Placeholder,
+  CypherQuery,
+} from './components';
+import {
+  BgColorsOutlined,
+  BarChartOutlined,
+  InfoCircleOutlined,
+  TableOutlined,
+  GroupOutlined,
+  CodeOutlined,
+  CodeTwoTone,
+} from '@ant-design/icons';
+import { Divider, Flex, theme, Segmented, Tabs, Typography } from 'antd';
 import { getDefaultServices } from './services';
 
 interface ExploreProps {
@@ -57,109 +74,6 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
         <StudioProvier locales={locales}>
           <Section
             splitBorder
-            leftSide={
-              <SegmentedTabs
-                queryKey="left"
-                tableHeight={60}
-                tabStyle={{
-                  marginBottom: '0px',
-                }}
-                block
-                items={[
-                  {
-                    key: 'Statistics',
-                    label: (
-                      <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
-                        <BarChartOutlined style={{ fontSize: 17 }} />
-                        Statistics
-                      </Flex>
-                    ),
-                    children: (
-                      <Tabs
-                        // queryKey="Statistics"
-                        // block
-                        indicator={{ size: origin => origin - 0, align: 'center' }}
-                        items={[
-                          {
-                            key: 'current',
-                            label: (
-                              <Flex vertical gap={0} align="center">
-                                Current Canvas
-                              </Flex>
-                            ),
-                            children: <Statistics />,
-                          },
-                          {
-                            key: 'global',
-                            label: (
-                              <Flex vertical gap={0} align="center">
-                                Global
-                              </Flex>
-                            ),
-                            children: <Overview />,
-                          },
-                        ]}
-                      />
-                    ),
-                  },
-
-                  {
-                    key: 'Analysis',
-                    label: (
-                      <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
-                        <Icons.Cluster />
-                        Analysis
-                      </Flex>
-                    ),
-                    children: (
-                      <SegmentedTabs
-                        queryKey="analysis"
-                        block
-                        items={[
-                          {
-                            key: 'Style',
-                            label: (
-                              <Flex vertical gap={0} align="center">
-                                Style
-                              </Flex>
-                            ),
-                            children: <StyleSetting />,
-                          },
-                          {
-                            key: 'Layout',
-                            label: (
-                              <Flex vertical gap={0} align="center">
-                                Layout
-                              </Flex>
-                            ),
-                            children: <StyleSetting />,
-                          },
-                          {
-                            key: 'Cluster',
-                            label: (
-                              <Flex vertical gap={0} align="center">
-                                Cluster
-                              </Flex>
-                            ),
-                            children: <ClusterAnalysis />,
-                          },
-                        ]}
-                      />
-                    ),
-                  },
-                  {
-                    key: 'StyleSetting',
-                    label: (
-                      <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
-                        <BgColorsOutlined style={{ fontSize: 17 }} />
-                        Report
-                      </Flex>
-                    ),
-                    children: <StyleSetting />,
-                  },
-                ]}
-              ></SegmentedTabs>
-            }
             rightSide={
               <SegmentedTabs
                 queryKey="right"
@@ -171,20 +85,10 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
                     label: (
                       <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
                         <BarChartOutlined style={{ fontSize: 17 }} />
-                        Next
+                        Next Query
                       </Flex>
                     ),
                     children: <Next />,
-                  },
-                  {
-                    key: 'AI Report',
-                    label: (
-                      <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
-                        <Icons.Cluster />
-                        AI Report
-                      </Flex>
-                    ),
-                    children: <ClusterAnalysis />,
                   },
                 ]}
               ></SegmentedTabs>
@@ -198,26 +102,74 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
               overflow: 'scroll',
             }}
             rightSideStyle={{
-              width: '380px',
+              width: '360px',
               boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
               overflowY: 'scroll',
             }}
             defaultCollapsed={{
-              leftSide: false,
+              leftSide: true,
               rightSide: true,
             }}
           >
-            {/* <Prepare data={data} schema={schema} graphId={graphId} /> */}
             <Canvas />
             <BasicInteraction />
             <ClearStatus />
             <FetchGraph />
             <Placeholder />
             <Loading />
-
             <PropertiesPanel />
+            <FloatTabs
+              searchbar={<Searchbar />}
+              direction="vertical"
+              items={[
+                {
+                  label: <Typography.Title level={3}>Statistics Analysis</Typography.Title>,
+                  icon: <BarChartOutlined style={{ fontSize: 17 }} />,
+                  children: <Statistics />,
+                  key: 'Statistics',
+                },
+                {
+                  label: <Typography.Title level={3}>Cluster Analysis</Typography.Title>,
+                  icon: <GroupOutlined />,
+                  children: <ClusterAnalysis />,
+                  key: 'ClusterAnalysis',
+                },
+                {
+                  label: <Typography.Title level={3}>Style Setting</Typography.Title>,
+                  icon: <BgColorsOutlined />,
+                  children: <StyleSetting />,
+                  key: 'StyleSetting',
+                },
+                {
+                  label: <Typography.Title level={3}>Cypher Query</Typography.Title>,
+                  icon: <CodeOutlined />,
+                  children: <CypherQuery />,
+                  key: 'CypherQuery',
+                },
+              ]}
+              tools={
+                <>
+                  <Connection />
+                  <Divider style={{ margin: '0px' }} />
+                  <FullScreen containerRef={containerRef} />
+                  <ZoomFit />
+                  <Brush />
+                  <FixedMode />
+                  <Divider style={{ margin: '0px' }} />
+                  <CurvatureLinks />
+                  <DagreMode />
+                  <LayoutSwitch />
+                  <Divider style={{ margin: '0px' }} />
+                  <SwitchEngine />
+                  <RunCluster />
+                  <Export />
+                  <ClearCanvas />
+                </>
+              }
+            ></FloatTabs>
 
-            <ZoomStatus />
+            {/* <ZoomStatus /> */}
+
             {/* <HoverMenu>
               <NeighborQuery />
               <CommonNeighbor  />
@@ -231,30 +183,18 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
               <DeleteLeafNodes />
               <DeleteNode />
             </ContextMenu>
+
             <Toolbar
-              direction="horizontal"
-              style={{ position: 'absolute', top: '12px', left: '80px', width: 500 }}
-              noSpace
+              style={{
+                position: 'absolute',
+                top: '20px',
+                right: '12px',
+                left: 'unset',
+                zIndex: 999999,
+                boxShadow: 'none',
+              }}
             >
-              <Searchbar />
-            </Toolbar>
-            <Toolbar style={{ position: 'absolute', top: '12px', left: '12px', right: 'unset' }}>
-              <Connection />
-              <Divider style={{ margin: '0px' }} />
-              <ToogleLeftButton />
-              <Divider style={{ margin: '0px' }} />
-              <FullScreen containerRef={containerRef} />
-              <ZoomFit />
-              <Brush />
-              <FixedMode />
-              <CurvatureLinks />
-              <DagreMode />
-              <LayoutSwitch />
-              <Divider style={{ margin: '0px' }} />
-              <SwitchEngine />
-              <RunCluster />
-              <Export />
-              <ClearCanvas />
+              <ToogleRightButton />
             </Toolbar>
           </Section>
         </StudioProvier>

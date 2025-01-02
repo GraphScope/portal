@@ -28,20 +28,33 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
     padding: token.padding,
   };
 
+  const tableStyle: React.CSSProperties = {
+    display: 'flex',
+    position: 'absolute',
+    bottom: '12px',
+    left: '12px',
+    right: '12px',
+    boxSizing: 'border-box',
+    maxHeight: width,
+    boxShadow: token.boxShadow,
+    zIndex: 1999,
+    background: token.colorBgContainer,
+    borderRadius: token.borderRadius,
+    overflowY: 'scroll',
+    padding: token.padding,
+  };
+
   if (selectEdges.length === 0 && selectNodes.length === 0) {
     return null;
   }
-  if (selectNodes.length === 1) {
-    return <PropertyInfo data={selectNodes[0]} style={rootStyle} type={'node'} />;
-  }
-  if (selectEdges.length === 1) {
-    return <PropertyInfo data={selectEdges[0]} style={rootStyle} type={'edge'} />;
+  if (selectNodes.length === 1 || selectEdges.length === 1) {
+    return <PropertyInfo style={rootStyle} />;
   }
   if (selectNodes.length > 1) {
-    return <PropertiesTable data={selectNodes} />;
+    return <PropertiesTable data={selectNodes} style={tableStyle} />;
   }
   if (selectEdges.length > 1) {
-    return <PropertiesTable data={selectEdges} />;
+    return <PropertiesTable data={selectEdges} style={tableStyle} />;
   }
   return null;
 };
