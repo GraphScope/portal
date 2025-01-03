@@ -12,7 +12,7 @@ COPY . .
 
 # 从 Git 仓库中克隆项目
 RUN pnpm install && \
-    npm run build:portal
+    npm run build:portal:single
 
 # 清理不必要的文件
 RUN rm -rf .git

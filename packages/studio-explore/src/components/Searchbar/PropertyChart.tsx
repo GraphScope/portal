@@ -50,6 +50,15 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
 
       try {
         const data = await getService<IQueryPropertyStatics>('queryPropertyStatics')(property, label);
+        data.sort((a, b) => {
+          if (a[property] > b[property]) {
+            return 1;
+          }
+          if (a[property] === b[property]) {
+            return 0;
+          }
+          return -1;
+        });
         setState(preState => {
           return {
             ...preState,
@@ -82,6 +91,7 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
         return a
         `,
     );
+
     updateStore(draft => {
       draft.data = data;
       draft.source = data;
@@ -89,7 +99,7 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
   };
 
   return (
-    <Flex vertical>
+    <Flex vertical style={{ height: '400px' }}>
       <Typography.Text type="secondary" italic>
         You can click on the `{property}` charts below to start a query, or use the search bar above for detailed
         searches.
