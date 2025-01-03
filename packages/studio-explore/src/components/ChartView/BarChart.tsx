@@ -16,16 +16,19 @@ const BarChart: React.FunctionComponent<IBarChartProps> = props => {
   const { data, xField, yField, style = {}, onClick, options = {} } = props;
   const { token } = theme.useToken();
 
-  const { height = 200, padding = [20, 80] } = style;
+  const { padding = [20, 80] } = style;
   const ChartContainerRef = useRef(null);
   const chart = useRef<Chart>();
 
   useEffect(() => {
     if (ChartContainerRef.current) {
+      const { clientWidth, clientHeight } = ChartContainerRef.current;
+
       chart.current = new Chart({
         container: ChartContainerRef.current,
         autoFit: true,
-        height: height as number,
+        height: clientHeight,
+        width: clientWidth,
         padding: padding as number,
       });
 
@@ -81,7 +84,7 @@ const BarChart: React.FunctionComponent<IBarChartProps> = props => {
     };
   }, [data]);
 
-  return <div ref={ChartContainerRef} style={{ width: '100%' }}></div>;
+  return <div ref={ChartContainerRef} style={{ width: '100%', height: '100%' }}></div>;
 };
 
 export default BarChart;
