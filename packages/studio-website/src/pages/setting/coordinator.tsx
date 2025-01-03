@@ -12,7 +12,9 @@ const Coordinator: React.FunctionComponent = () => {
       window.location.reload();
     }
   };
-  const defaultValue = Utils.storage.get<string>('coordinator') || location.origin;
+  const defaultValue =
+    Utils.storage.get<string>('coordinator') ||
+    (location.origin === 'https://gsp.vercel.app' ? 'http://127.0.0.1:8080' : location.origin);
   return (
     <SettingParcel
       style={{ margin: '0px' }}

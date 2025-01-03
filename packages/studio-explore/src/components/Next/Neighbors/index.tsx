@@ -191,7 +191,7 @@ const InspectNeighbor = props => {
   }
 
   return (
-    <Flex vertical gap={12} ref={containerRef} style={{ background: token.colorBgContainer }}>
+    <Flex vertical gap={12} ref={containerRef} style={{ background: token.colorBgContainer, width: '100%' }}>
       <Flex wrap>
         <Typography.Text type="secondary" italic>
           {`Pre-query the one-degree neighbors of the ${selectNodes.length} selected nodes , resulting in ${exploreData.nodes.length} nodes, ${exploreData.edges.length} edges.`}
@@ -208,7 +208,9 @@ const InspectNeighbor = props => {
           options={options}
           placeholder="Select property"
         />
-        <Chart data={chartData} xField="name" yField="counts" onClick={onChartClick} options={options} />
+        <div style={{ height: '250px', minWidth: '348px' }}>
+          <Chart data={chartData} xField="name" yField="counts" onClick={onChartClick} options={options} />
+        </div>
       </Flex>
       <Divider style={{ margin: 0 }} />
       <Flex>

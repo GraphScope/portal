@@ -61,6 +61,7 @@ const getStyles = (props, collapsed: { leftSide: boolean; rightSide: boolean }, 
       ...rightSideStyle,
       borderLeft: borderStyle,
       width: collapsed.rightSide ? rightCollapsedWidth : rightSideStyle.width || dafaultWidth,
+
       padding: collapsed.rightSide ? '0px' : rightSideStyle.padding || dafaultPadding,
     },
   };
