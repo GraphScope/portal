@@ -168,7 +168,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
               }
             ></FloatTabs>
 
-            {/* <ZoomStatus /> */}
+            <ZoomStatus style={{ left: 350, opacity: 0.5 }} />
 
             {/* <HoverMenu>
               <NeighborQuery />

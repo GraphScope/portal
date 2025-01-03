@@ -2,9 +2,12 @@ import * as React from 'react';
 import { useContext } from '../../';
 import { ForceGraphInstance } from 'force-graph';
 import { Typography, Space } from 'antd';
-interface IZoomStatusProps {}
+interface IZoomStatusProps {
+  style?: React.CSSProperties;
+}
 
 const ZoomStatus: React.FunctionComponent<IZoomStatusProps> = props => {
+  const { style = {} } = props;
   const { store } = useContext();
   const { graph, data } = store;
   const [state, setStatus] = React.useState({
@@ -23,7 +26,7 @@ const ZoomStatus: React.FunctionComponent<IZoomStatusProps> = props => {
     }
   }, [graph, data]);
   return (
-    <div style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 998, padding: '12px' }}>
+    <div style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 998, padding: '12px', ...style }}>
       <Space size="large">
         <Typography.Text type="secondary">Node Counts: {data.nodes.length}</Typography.Text>
         <Typography.Text type="secondary">Edge Counts: {data.edges.length}</Typography.Text>
