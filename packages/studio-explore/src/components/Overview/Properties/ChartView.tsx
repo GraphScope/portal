@@ -9,7 +9,7 @@ import Chart from '../../ChartView/index';
 import { Illustration } from '@graphscope/studio-components';
 export interface IQueryPropertyStatics {
   id: 'queryPropertyStatics';
-  query: (property: string) => Promise<{ [key: string]: any }>;
+  query: (property: string, label?: string) => Promise<{ [key: string]: any }>;
 }
 
 interface ITableViewProps {
