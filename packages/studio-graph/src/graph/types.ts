@@ -9,6 +9,7 @@ export type EventType =
   | 'node:hover'
   | 'canvas:click'
   | 'edge:click'
+  | 'edge:hover'
   | 'combo:click';
 
 export type Emitter = EEmitter<Record<EventType, unknown>>;

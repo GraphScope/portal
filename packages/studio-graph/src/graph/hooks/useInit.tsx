@@ -24,7 +24,7 @@ export const useInit = () => {
     const height = containerRef.current.offsetHeight;
     let graph: ForceGraphInstance | ForceGraph3DInstance | null = null;
     engineStopped.current = false;
-    console.log('init.......');
+
     if (render === '2D') {
       graph = ForceGraph()(containerRef.current);
       graph
@@ -45,6 +45,9 @@ export const useInit = () => {
         })
         .onLinkClick(edge => {
           emitterRef.current?.emit('edge:click', edge);
+        })
+        .onLinkHover(edge => {
+          emitterRef.current?.emit('edge:hover', edge);
         });
     }
     if (render === '3D') {
@@ -55,6 +58,9 @@ export const useInit = () => {
         .onNodeClick(node => {
           emitterRef.current?.emit('node:click', node);
         })
+        .onNodeHover((node, prevNode) => {
+          emitterRef.current?.emit('node:hover', { node, prevNode });
+        })
         .onNodeRightClick((node, evt) => {
           emitterRef.current?.emit('node:contextmenu', { node, evt });
         })
@@ -63,6 +69,9 @@ export const useInit = () => {
         })
         .onLinkClick(edge => {
           emitterRef.current?.emit('edge:click', edge);
+        })
+        .onLinkHover((edge, prevEdge) => {
+          emitterRef.current?.emit('edge:hover', { edge, prevEdge });
         });
     }
 
