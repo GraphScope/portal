@@ -9,6 +9,7 @@ export type FieldType = {
   query_language?: string;
   query_endpoint?: string;
   query_initiation?: 'Browser' | 'Server';
+  query_initiation_service?: string;
   query_username?: string;
   query_password?: string;
 };
@@ -27,6 +28,7 @@ const ConnectEndpoint: React.FunctionComponent<IConnectEndpointProps> = props =>
       query_initiation: props.query_initiation || storage.get('query_initiation') || 'Browser',
       query_username: props.query_username || storage.get('query_username') || 'admin',
       query_password: props.query_password || storage.get('query_password') || 'password',
+      query_initiation_service: props.query_initiation_service || storage.get('query_initiation_service') || '',
     });
   }, []);
   const handleConnect = () => {
@@ -36,6 +38,8 @@ const ConnectEndpoint: React.FunctionComponent<IConnectEndpointProps> = props =>
     });
     onConnect && onConnect(form.getFieldsValue(true));
   };
+
+  const query_initiation = Form.useWatch('query_initiation', form);
 
   return (
     <Flex vertical style={{ padding: '12px 24px' }}>
@@ -62,12 +66,20 @@ const ConnectEndpoint: React.FunctionComponent<IConnectEndpointProps> = props =>
             options={[
               { label: 'Browser (client-side)', value: 'Browser' },
               {
-                label: `Server (Ensure that your "${location.origin}/query" endpoint is available)`,
+                label: `Server (server-side)`,
                 value: 'Server',
               },
             ]}
           />
         </Form.Item>
+        {query_initiation === 'Server' && (
+          <Form.Item<FieldType>
+            label={<FormattedMessage id="Query initiation service" />}
+            name="query_initiation_service"
+          >
+            <Input allowClear />
+          </Form.Item>
+        )}
 
         <Form.Item<FieldType> label={<FormattedMessage id="Username" />} name="query_username">
           <Input />
