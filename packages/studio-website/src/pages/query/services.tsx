@@ -125,6 +125,7 @@ export const queryGraphData = async (params: IStatement) => {
   const query_language = storage.get<'cypher' | 'gremlin'>('query_language') || 'cypher';
   const query_endpoint = storage.get<string>('query_endpoint') || '';
   const query_initiation = storage.get<'Server' | 'Browser'>('query_initiation');
+  const query_initiation_service = storage.get<string>('query_initiation_service');
   const query_username = storage.get<string>('query_username');
   const query_password = storage.get<string>('query_password');
 
@@ -139,8 +140,8 @@ export const queryGraphData = async (params: IStatement) => {
   if (query_initiation === 'Browser') {
     return queryGraph(_params);
   }
-  if (query_initiation === 'Server') {
-    return await fetch('/graph/query', {
+  if (query_initiation === 'Server' && query_initiation_service) {
+    return await fetch(query_initiation_service, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

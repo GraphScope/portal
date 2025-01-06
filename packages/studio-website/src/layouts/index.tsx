@@ -64,13 +64,24 @@ export default function StudioLayout() {
   };
   const setQueryConfig = () => {
     const { GS_ENGINE_TYPE } = window;
-    const query_language = Utils.storage.get('query_language');
-    const query_initiation = Utils.storage.get('query_initiation');
-    if (!query_language) {
+
+    const query_language = Utils.getSearchParams('query_language') || Utils.storage.get('query_language');
+    const query_initiation = Utils.getSearchParams('query_initiation') || Utils.storage.get('query_initiation');
+    const query_initiation_service =
+      Utils.getSearchParams('query_initiation_service') || Utils.storage.get('query_initiation_service');
+
+    if (query_language) {
+      Utils.storage.set('query_language', query_language);
+    } else {
       Utils.storage.set('query_language', GS_ENGINE_TYPE === 'interactive' ? 'cypher' : 'gremlin');
     }
-    if (!query_initiation) {
+    if (query_initiation) {
+      Utils.storage.set('query_initiation', query_initiation);
+    } else {
       Utils.storage.set('query_initiation', GS_ENGINE_TYPE === 'groot' ? 'Server' : 'Browser');
+    }
+    if (query_initiation_service) {
+      Utils.storage.set('query_initiation_service', query_initiation_service);
     }
   };
   useEffect(() => {
@@ -87,6 +98,8 @@ export default function StudioLayout() {
       window.GS_ENGINE_TYPE = engineType;
 
       setQueryConfig();
+      //这个URL参数不用一直携带着，能够放在localstorage即可
+      Utils.removeSearchParams(['coordinator', 'query_language', 'query_initiation_service', 'query_initiation']);
       /**接着校验可用的graphId */
       const checkedRes = await checkGraphId();
       if (checkedRes) {

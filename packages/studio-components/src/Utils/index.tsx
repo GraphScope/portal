@@ -119,6 +119,36 @@ export const setSearchParams = (params: Record<string, string>, HashMode?: boole
   }
 };
 
+export const removeSearchParams = (deleteKeys: string[], HashMode?: boolean) => {
+  const isHashMode = window.location.hash.startsWith('#/') || HashMode;
+
+  if (isHashMode) {
+    // 处理 hash router
+    let hash = window.location.hash.substring(1);
+    const [path, search] = hash.split('?');
+    const searchParams = new URLSearchParams(search);
+
+    // 更新 searchParams
+    deleteKeys.forEach(key => {
+      searchParams.delete(key);
+    });
+
+    window.location.hash = '#' + path + '?' + searchParams.toString();
+  } else {
+    // 处理 browser router
+    //@ts-ignore
+    const url = new URL(window.location);
+    const { searchParams } = url;
+
+    deleteKeys.forEach(key => {
+      searchParams.delete(key);
+    });
+
+    // 更新浏览器的 URL，只改变 search 部分
+    window.history.pushState({}, '', url);
+  }
+};
+
 export const getCurrentNav = () => {
   const hashMode = window.location.hash.startsWith('#/');
   if (hashMode) {
