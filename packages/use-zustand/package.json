@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/use-zustand",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "A state management for React",
   "main": "lib/index.js",
   "module": "es/index.js",

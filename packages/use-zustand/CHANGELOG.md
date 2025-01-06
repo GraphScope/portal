@@ -1,5 +1,11 @@
 # @graphscope/use-zustand
 
+## 0.1.7
+
+### Patch Changes
+
+- update website
+
 ## 0.1.6
 
 ### Patch Changes

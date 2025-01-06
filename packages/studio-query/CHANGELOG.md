@@ -1,5 +1,17 @@
 # @graphscope/studio-query
 
+## 0.1.15
+
+### Patch Changes
+
+- update website
+- Updated dependencies
+  - @graphscope/studio-components@0.1.15
+  - @graphscope/studio-draw-pattern@0.0.11
+  - @graphscope/studio-driver@0.1.13
+  - @graphscope/studio-graph@0.1.15
+  - @graphscope/use-zustand@0.1.7
+
 ## 0.1.14
 
 ### Patch Changes

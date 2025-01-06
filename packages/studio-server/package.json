@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/studio-server",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "OpenAPI client for GraphScope Studio",
   "author": "OpenAPI-Generator Contributors",
   "keywords": [
