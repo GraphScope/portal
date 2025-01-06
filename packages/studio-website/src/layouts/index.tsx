@@ -98,6 +98,8 @@ export default function StudioLayout() {
       window.GS_ENGINE_TYPE = engineType;
 
       setQueryConfig();
+      //这个URL参数不用一直携带着，能够放在localstorage即可
+      Utils.removeSearchParams(['coordinator', 'query_language', 'query_initiation_service', 'query_initiation']);
       /**接着校验可用的graphId */
       const checkedRes = await checkGraphId();
       if (checkedRes) {
