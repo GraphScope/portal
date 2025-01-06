@@ -51,9 +51,11 @@ import {
   GroupOutlined,
   CodeOutlined,
   CodeTwoTone,
+  TabletOutlined,
 } from '@ant-design/icons';
 import { Divider, Flex, theme, Segmented, Tabs, Typography } from 'antd';
 import { getDefaultServices } from './services';
+import TableView from './components/TableView';
 
 interface ExploreProps {
   id?: string;
@@ -127,6 +129,12 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
                   icon: <BarChartOutlined style={{ fontSize: 17 }} />,
                   children: <Statistics />,
                   key: 'Statistics',
+                },
+                {
+                  label: <Typography.Title level={3}>Table View</Typography.Title>,
+                  icon: <TableOutlined />,
+                  children: <TableView />,
+                  key: 'TableView',
                 },
                 {
                   label: <Typography.Title level={3}>Cluster Analysis</Typography.Title>,

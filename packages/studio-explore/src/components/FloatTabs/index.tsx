@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Button, Flex, Divider, theme, Typography } from 'antd';
 import { Icons } from '@graphscope/studio-components';
-import { CaretLeftOutlined, CaretDownOutlined } from '@ant-design/icons';
+import { CaretLeftOutlined, CaretDownOutlined, ColumnWidthOutlined, PauseOutlined } from '@ant-design/icons';
 import { Toolbar } from '@graphscope/studio-components';
+import useResizeWidth from './useResizeWidth';
 interface IFloatTabsProps {
   direction?: 'vertical' | 'horizontal';
   posotion?: 'left' | 'right' | 'top' | 'bottom';
@@ -48,7 +49,7 @@ const getRootStyle = (
       ...directionStyle,
       top: '0px',
       right: '0px',
-      width: '400px',
+      width: 300 + 100,
     };
   }
   // if (position === 'right') {
@@ -67,6 +68,8 @@ const FloatTabs: React.FunctionComponent<IFloatTabsProps> = props => {
     activeKey: items[0].key,
   });
   const { visible } = state;
+  const { width: panelWidth, handleMouseDown: handleResizeStart } = useResizeWidth(300);
+
   const handleToggle = () => {
     setState(preState => {
       return {
@@ -88,15 +91,17 @@ const FloatTabs: React.FunctionComponent<IFloatTabsProps> = props => {
   const panelStyle: React.CSSProperties =
     direction === 'vertical'
       ? {
-          width: visible ? '300px' : '0px',
+          width: visible ? (panelWidth as number) : '0px',
           overflowY: 'scroll',
           // transition: 'all 0.3s ease-in-out',
           background: token.colorBgContainer,
           boxShadow: token.boxShadow,
           padding: visible ? 12 : 0,
           borderRadius: token.borderRadius,
+          position: 'relative',
         }
       : {
+          position: 'relative',
           maxHeight: visible ? (posotion === 'bottom' ? '300px' : 'unset') : 0,
           //   height: visible ? '300px' : '0px',
           overflowY: 'scroll',
@@ -112,15 +117,16 @@ const FloatTabs: React.FunctionComponent<IFloatTabsProps> = props => {
       ? {
           position: 'absolute',
           top: '12px',
-          left: visible ? '400px' : '66px',
+          left: visible ? panelWidth + 100 : '66px',
           width: 500,
         }
       : {
           position: 'absolute',
           top: '12px',
-          right: visible ? '400px' : '66px',
+          right: visible ? panelWidth + 100 : '66px',
           width: 500,
         };
+
   return (
     <Flex
       style={{
@@ -194,6 +200,17 @@ const FloatTabs: React.FunctionComponent<IFloatTabsProps> = props => {
       </Flex>
 
       <Flex vertical style={panelStyle}>
+        <div
+          onMouseDown={handleResizeStart}
+          style={{
+            position: 'absolute',
+            right: '0px',
+            top: '0px',
+            bottom: '0px',
+            width: '12px',
+            cursor: 'ew-resize',
+          }}
+        ></div>
         {items.map(item => {
           const { key, children, label } = item;
           const isActive = key === state.activeKey;

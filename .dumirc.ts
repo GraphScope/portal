@@ -1,14 +1,15 @@
 import { defineConfig } from 'dumi';
 import { join } from 'path';
 import { defineThemeConfig } from 'dumi-theme-antd/dist/defineThemeConfig';
+import { Divider } from 'antd';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const basePath = isProduction ? '/portal/' : '/';
 
 const themeConfig = defineThemeConfig({
-  name: 'GraphScope',
+  name: '｜ Portal',
   title: 'GraphScope Portal',
-  logo: 'https://img.alicdn.com/imgextra/i4/O1CN01uhy1Yu1lO7HkUaW3K_!!6000000004808-2-tps-256-257.png',
+  logo: 'https://img.alicdn.com/imgextra/i4/O1CN012GxzhO1h3j6rsmvuQ_!!6000000004222-2-tps-1890-453.png',
   lastUpdated: true,
   nav: {
     'zh-CN': [
