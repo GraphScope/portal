@@ -87,4 +87,31 @@ class LLMGraphAnalyzer:
         )
 
         result = self.generate("get_report", report_prompt)
+
+        bib_text = self.append_bib_text(result, {})
+        result += bib_text
+
         return result
+
+    def append_bib_text(self, text, id2bib):
+        bib_text = ""
+        cited_papers = set()
+        matches = re.findall(r"\\cite{(.*?)}", text)
+
+        for match in matches:
+            if "," in match:
+                match_texts = match.split(",")
+                for match_text in match_texts:
+                    cited_papers.add(match_text.strip())
+            else:
+                cited_papers.add(match.strip())
+
+        logger.debug(f"CITED PAPERS ARE {cited_papers}")
+
+        for paper_id in cited_papers:
+            if paper_id in id2bib and id2bib[paper_id]:
+                bib_text += "\n" + id2bib[paper_id] + "\n"
+            else:
+                bib_text += "\n" + f"bib of {paper_id}" + "\n"
+
+        return bib_text
