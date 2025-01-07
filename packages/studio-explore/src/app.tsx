@@ -28,6 +28,7 @@ import {
   LayoutSwitch,
   ZoomStatus,
   registerIcons,
+  LayoutSetting,
 } from '@graphscope/studio-graph';
 
 import { ToogleLeftButton, ToogleRightButton } from './components/ToggleButton';
@@ -52,6 +53,8 @@ import {
   CodeOutlined,
   CodeTwoTone,
   TabletOutlined,
+  BranchesOutlined,
+  CopyrightOutlined,
 } from '@ant-design/icons';
 import { Divider, Flex, theme, Segmented, Tabs, Typography } from 'antd';
 import { getDefaultServices } from './services';
@@ -138,9 +141,16 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
                 },
                 {
                   label: <Typography.Title level={3}>Cluster Analysis</Typography.Title>,
-                  icon: <GroupOutlined />,
+                  icon: <CopyrightOutlined />,
                   children: <ClusterAnalysis />,
                   key: 'ClusterAnalysis',
+                },
+
+                {
+                  label: <Typography.Title level={3}>Cypher Query</Typography.Title>,
+                  icon: <CodeOutlined />,
+                  children: <CypherQuery />,
+                  key: 'CypherQuery',
                 },
                 {
                   label: <Typography.Title level={3}>Style Setting</Typography.Title>,
@@ -149,10 +159,10 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
                   key: 'StyleSetting',
                 },
                 {
-                  label: <Typography.Title level={3}>Cypher Query</Typography.Title>,
-                  icon: <CodeOutlined />,
-                  children: <CypherQuery />,
-                  key: 'CypherQuery',
+                  label: <Typography.Title level={3}>Layout Setting</Typography.Title>,
+                  icon: <BranchesOutlined />,
+                  children: <LayoutSetting />,
+                  key: 'LayoutSetting',
                 },
               ]}
               tools={
@@ -163,10 +173,8 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
                   <ZoomFit />
                   <Brush />
                   <FixedMode />
-                  <Divider style={{ margin: '0px' }} />
-                  <CurvatureLinks />
-                  <DagreMode />
-                  <LayoutSwitch />
+                  {/* <Divider style={{ margin: '0px' }} />
+                  <CurvatureLinks /> */}
                   <Divider style={{ margin: '0px' }} />
                   <SwitchEngine />
                   <RunCluster />
