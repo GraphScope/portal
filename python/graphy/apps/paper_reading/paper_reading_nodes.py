@@ -44,6 +44,27 @@ class NameDescListFormat(BaseModel):
     )
 
 
+class ItemInfoFormat(BaseModel):
+    title: str = Field(description="The title of the item")
+    id: str = Field(description="The id of the item")
+
+
+class CategoryListFormat(BaseModel):
+    name: str = Field(description="The name of this category")
+    description: str = Field(description="A detailed description of the category")
+    item_list: List[ItemInfoFormat] = Field(
+        description="The list of items belonging to  this category"
+    )
+
+
+class MindMapFormat(BaseModel):
+    data: List[CategoryListFormat] = Field(
+        description=(
+            "The list of categories that contain name, description and list of items belonging to this category"
+        )
+    )
+
+
 def process_id(base_name: str) -> str:
     # Replace invalid characters with underscores
     id_name = re.sub(r"[^a-zA-Z0-9_-]", "_", base_name)
