@@ -15,7 +15,7 @@ if __name__ == "__main__":
         streaming=True,
     )
     graph_analyzer = LLMGraphAnalyzer(llm_model=llm_model)
-    query = "write a related work section about the given data, you should focus on challenges only"
+    query = "write a related work section about the given data, you should category them based on the challenges they solve"
 
     with open("config/analyze/schema_paper.json") as f:
         schema_json = json.load(f)
@@ -31,9 +31,13 @@ if __name__ == "__main__":
     print(mind_map)
 
     with open("config/analyze/mind_map.json") as f:
-        mind_map = json.dumps(json.load(f))
+        mind_map = json.load(f)
 
-    report = graph_analyzer.write_report(
+    # mind_map_str = json.dumps(mind_map)
+    # report = graph_analyzer.write_report(
+    #     query=query, mind_map=mind_map_str, max_token_per_subsection=100
+    # )
+    report = graph_analyzer.write_report_sec_by_sec(
         query=query, mind_map=mind_map, max_token_per_subsection=100
     )
     print("=================== REPORT ===================")

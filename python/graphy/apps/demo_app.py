@@ -12,6 +12,7 @@ from utils.profiler import profiler
 from db import JsonFileStore
 from graph.nodes.chain_node import BaseChainNode
 from apps.text_generator import ReportGenerator
+from apps.graph_analyzer import LLMGraphAnalyzer
 from models import set_llm_model, DefaultEmbedding, DEFAULT_LLM_MODEL_CONFIG
 
 from threading import Thread
@@ -128,6 +129,7 @@ class DemoApp:
         self.llm_report()
 
         self.text_generator = ReportGenerator(self.llm.model)
+        self.graph_analyzer = LLMGraphAnalyzer(self.llm.model)
 
     def get_persist_store(self, dataset_id):
         persist_store = self.persist_stores.setdefault(
@@ -1221,6 +1223,111 @@ class DemoApp:
 
                 return (
                     create_json_response(new_graph_data),
+                    200,
+                )
+
+            except Exception as e:
+                traceback.print_exc()
+                return create_error_response(str(e)), 500
+
+        @self.app.route("/api/llm/analyze/fetch", methods=["POST"])
+        def fetch_query():
+            try:
+                # Extract the JSON payload
+                input_data = request.get_json()
+                required_fields = [
+                    "query",
+                    "schema",
+                ]
+                for field in required_fields:
+                    if field not in input_data:
+                        return (
+                            create_error_response(f"Missing {field} in request"),
+                            400,
+                        )
+
+                query = input_data["query"]
+                schema = input_data["schema"]
+                lang = input_data.get("lang", "cypher")
+
+                output_prompt = self.graph_analyzer.get_fetch_query(
+                    query=query, schema=schema, lang=lang
+                )
+
+                # Return success response
+                return (
+                    create_json_response({"prompts": output_prompt}),
+                    200,
+                )
+
+            except Exception as e:
+                traceback.print_exc()
+                return create_error_response(str(e)), 500
+
+        @self.app.route("/api/llm/analyze/mindmap", methods=["POST"])
+        def get_mind_map():
+            try:
+                # Extract the JSON payload
+                input_data = request.get_json()
+                required_fields = [
+                    "query",
+                    "data",
+                ]
+                for field in required_fields:
+                    if field not in input_data:
+                        return (
+                            create_error_response(f"Missing {field} in request"),
+                            400,
+                        )
+
+                query = input_data["query"]
+                data = input_data["data"]
+
+                output_json = self.graph_analyzer.get_mind_map(query=query, data=data)
+
+                # Return success response
+                return (
+                    create_json_response({"mind_map": output_json}),
+                    200,
+                )
+
+            except Exception as e:
+                traceback.print_exc()
+                return create_error_response(str(e)), 500
+
+        @self.app.route("/api/llm/analyze/writereport", methods=["POST"])
+        def get_report():
+            try:
+                # Extract the JSON payload
+                input_data = request.get_json()
+                required_fields = [
+                    "query",
+                    "mind_map",
+                ]
+                for field in required_fields:
+                    if field not in input_data:
+                        return (
+                            create_error_response(f"Missing {field} in request"),
+                            400,
+                        )
+
+                query = input_data["query"]
+                mind_map = input_data["mind_map"]
+                max_token_per_subsection = input_data.get(
+                    "max_token_per_subsection", 100
+                )
+                bib2id = input_data.get("bib2id", {})
+
+                output_text = self.graph_analyzer.write_report_sec_by_sec(
+                    query=query,
+                    mind_map=mind_map,
+                    max_token_per_subsection=max_token_per_subsection,
+                    bib2id=bib2id,
+                )
+
+                # Return success response
+                return (
+                    create_json_response({"text": output_text}),
                     200,
                 )
 
