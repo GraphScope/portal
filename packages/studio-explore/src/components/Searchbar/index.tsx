@@ -174,7 +174,7 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
     });
     const data = await getService<IQuerySearch>('querySearch')({
       config: breadcrumb,
-      value: '',
+      value: state.words,
     });
 
     updateStore(draft => {

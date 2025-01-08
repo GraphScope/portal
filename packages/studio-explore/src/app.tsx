@@ -122,7 +122,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             <FetchGraph />
             <Placeholder />
             <Loading />
-            <PropertiesPanel />
+            <PropertiesPanel style={{ right: '12px' }} />
             <FloatTabs
               searchbar={<Searchbar />}
               direction="vertical"

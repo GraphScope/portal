@@ -9,7 +9,7 @@ interface IPropertiesTableProps {
   style?: React.CSSProperties;
   title?: string;
 }
-import { width } from './index';
+
 const PropertiesTable: React.FunctionComponent<IPropertiesTableProps> = props => {
   const { data, style = {}, title } = props;
   const { dataSource, columns } = getTable(data);
