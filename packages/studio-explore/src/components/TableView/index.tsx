@@ -46,11 +46,12 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
   const { selectNodes, data, source } = store;
   const { dataSource, columns } = getTable(source.nodes);
   const { selectedRowKeys, onSelectChange } = useRowSelection();
-
+  /** filter cloumns */
   const [state, setState] = useState({
     columnIds: (Utils.storage.get('explore_table_view_column_ids') as string[]) || columns.map(item => item.key),
   });
   const { columnIds } = state;
+  const tableColumns = getTableColumns(columnIds);
 
   const handleChangeColumns = value => {
     setState(preState => {
@@ -60,7 +61,6 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
       };
     });
   };
-  const tableColumns = getTableColumns(columnIds);
 
   return (
     <Flex vertical gap={12}>

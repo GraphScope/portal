@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, theme, Table, Typography, Button, Space } from 'antd';
+import { Flex, theme, Table, Typography, Button, Space, Tooltip } from 'antd';
 
 import { getTable } from './getTableData';
 
 import type { TableColumnsType, TableProps } from 'antd';
 import { NodeData } from '@graphscope/studio-graph';
 import { PlayCircleOutlined } from '@ant-design/icons';
-import { FullScreen } from '@graphscope/studio-components';
+import { FullScreen, Utils } from '@graphscope/studio-components';
+import AdjustColumns, { getTableColumns } from '../../TableView/AdjustColumns';
 
 export interface IPropertiesPanelProps {
   items: NodeData[];
@@ -22,6 +23,23 @@ const TableView: React.FunctionComponent<IPropertiesPanelProps> = props => {
   const defaultSelectedRowKeys = dataSource.map(item => item.key);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>(defaultSelectedRowKeys);
   // const containerRef = React.useRef<HTMLDivElement>(null);
+
+  /** filter cloumns */
+  const [state, setState] = useState({
+    columnIds: (Utils.storage.get('explore_table_view_column_ids') as string[]) || columns.map(item => item.key),
+  });
+  const { columnIds } = state;
+  const tableColumns = getTableColumns(columnIds);
+  const handleChangeColumns = value => {
+    setState(preState => {
+      return {
+        ...preState,
+        columnIds: value,
+      };
+    });
+  };
+  /** filter cloumns end */
+
   useEffect(() => {
     const { dataSource } = getTable([...items]);
     const defaultSelectedRowKeys = dataSource.map(item => item.key);
@@ -57,7 +75,10 @@ const TableView: React.FunctionComponent<IPropertiesPanelProps> = props => {
           Total {counts} data items, {selectedRowKeys.length} selected.
         </Typography.Text>
         <Space>
-          <Button icon={<PlayCircleOutlined />} type="text" onClick={handleClick}></Button>
+          <Tooltip title="Appand selected items to the graph">
+            <Button icon={<PlayCircleOutlined />} type="text" onClick={handleClick}></Button>
+          </Tooltip>
+          <AdjustColumns onChange={handleChangeColumns} />
           <FullScreen containerRef={containerRef} />
         </Space>
       </Flex>
@@ -70,7 +91,7 @@ const TableView: React.FunctionComponent<IPropertiesPanelProps> = props => {
         }}
         // pagination={false}
         dataSource={dataSource}
-        columns={columns}
+        columns={tableColumns}
         bordered
         scroll={{ x: 'max-content' }}
       />
