@@ -9,9 +9,18 @@ const ClearStatus: React.FunctionComponent<IClearStatatusProps> = props => {
   useEffect(() => {
     const handleClear = e => {
       updateStore(draft => {
+        const isEmpty =
+          Object.keys(draft.nodeStatus).length === 0 &&
+          Object.keys(draft.edgeStatus).length === 0 &&
+          draft.selectNodes.length === 0 &&
+          draft.selectEdges.length === 0;
+
+        if (isEmpty) {
+          return;
+        }
         draft.nodeStatus = {};
         draft.edgeStatus = {};
-        draft.focusNodes = [];
+        // draft.focusNodes = [];
         draft.selectNodes = [];
         draft.selectEdges = [];
       });

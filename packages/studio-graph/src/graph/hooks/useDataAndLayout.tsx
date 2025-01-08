@@ -61,9 +61,9 @@ export const useDataAndLayout = () => {
       graph.cooldownTime(renderTime);
       if (type === 'force') {
         (graph as ForceGraphInstance)
-          .d3Force('center', d3ForceCenter().strength(1))
+          .d3Force('center', d3ForceCenter().strength(options.centerStrength || 1))
           .d3Force('charge', d3ForceManyBody())
-          .d3Force('link', d3ForceLink().distance(35))
+          .d3Force('link', d3ForceLink().distance(options.linkDistance || 35))
           .d3Force(
             'collide',
             d3ForceCollide().radius(node => {
@@ -76,7 +76,7 @@ export const useDataAndLayout = () => {
         graph.d3ReheatSimulation();
       }
       if (type === 'force-dagre') {
-        graph.dagMode('lr');
+        graph.dagMode(options.direction || 'lr');
         graph.graphData({ nodes, links });
       }
       if (type === 'force-combo') {

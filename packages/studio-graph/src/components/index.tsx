@@ -41,4 +41,3 @@ export interface IQueryStatement {
 
 export { default as SchemaView } from './SchemaView';
 export { default as PropertiesTable } from './PropertiesTable';
-export { default as PropertyInfo } from './PropertiesPanel/PropertyInfo';

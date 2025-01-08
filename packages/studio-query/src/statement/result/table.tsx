@@ -116,7 +116,14 @@ const GraphTable = ({ nodes, edges }) => {
     };
   });
 
-  return <Table style={{ width: '100%' }} columns={columns} dataSource={result} scroll={{ x: 500 }} />;
+  return (
+    <Table
+      columns={columns}
+      dataSource={result}
+      scroll={{ x: 'max-content' }}
+      pagination={{ simple: true, pageSize: 10, size: 'small' }}
+    />
+  );
 };
 
 const TableView: React.FunctionComponent<ITableViewProps> = props => {
@@ -172,12 +179,19 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
   };
   /** table 表格 */
   let Content: React.ReactNode;
-  if (mode === 'table' && table.length !== 0) {
-    Content = <RowTable data={table} />;
+  if (mode === 'table') {
+    if (nodes.length !== 0) {
+      Content = <GraphTable nodes={nodes} edges={edges} />;
+    }
+    if (table.length !== 0) {
+      Content = <RowTable data={table} />;
+    }
+    //@ts-ignore
+    if (table.length === 0 && raw.records.length !== 0 && window.GS_ENGINE_TYPE === 'interactive') {
+      Content = <InteranctiveTable data={raw.records} />;
+    }
   }
-  if (mode === 'table' && table.length === 0 && raw.records.length !== 0) {
-    Content = <InteranctiveTable data={raw.records} />;
-  }
+
   return (
     <div style={{ overflowX: 'scroll' }}>
       <Flex justify="space-between" style={{ padding: '0px 10px 10px 10px' }} align="center">

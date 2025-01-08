@@ -192,15 +192,27 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
 
 export default GPTStatements;
 
+const models = [
+  {
+    name: 'deepseek-chat',
+    endpoint: 'https://api.deepseek.com/chat/completions',
+  },
+  {
+    name: 'gpt-3.5-turbo',
+    endpoint: 'https://api.openai.com/v1/chat/completions',
+  },
+];
 export function query(
   messages: Message[],
   apiKey: string,
   signal?: AbortSignal,
+  model?: string,
 ): Promise<{
   status: 'success' | 'cancel' | 'failed';
   message: any;
 }> {
-  return fetch('https://api.openai.com/v1/chat/completions', {
+  const { endpoint, name } = models.find(m => m.name === model) || models[0];
+  return fetch(endpoint, {
     signal,
     method: 'POST',
     headers: {
@@ -208,7 +220,7 @@ export function query(
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: 'gpt-3.5-turbo',
+      model: name,
       messages: messages.map(({ role, content }) => ({ role, content })),
     }),
   })

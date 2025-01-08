@@ -1,20 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import { Slider, Button, Typography } from 'antd';
+import { Slider, Button, Typography, Flex, Select } from 'antd';
 import { useContext } from '../../';
 import * as d3 from 'd3-force-3d';
 import { Utils } from '@graphscope/studio-components';
-
+import LayoutParams from './Params';
 interface ILayoutSettingProps {}
 
+const layouts = [
+  {
+    type: 'force',
+    options: {},
+  },
+  {
+    type: 'force-combo',
+    options: {},
+  },
+  {
+    type: 'force-dagre',
+    options: {},
+  },
+  {
+    type: 'dagre',
+    options: {},
+  },
+  {
+    type: 'circle-pack',
+    options: {},
+  },
+  {
+    type: 'preset',
+    options: {},
+  },
+];
+const layoutOptions = layouts.map(item => {
+  return {
+    label: item.type,
+    value: item.type,
+  };
+});
 const LayoutSetting: React.FunctionComponent<ILayoutSettingProps> = props => {
-  const { store } = useContext();
-  const { graph, data } = store;
-  const [state, setState] = useState({
-    linkStrength: 1,
-    linkDistance: 100,
-  });
-
-  const { linkStrength } = state;
+  const { store, updateStore } = useContext();
+  const { graph, data, layout } = store;
+  const { type, options } = layout;
 
   const onChangeForcelink = strength => {
     if (graph) {
@@ -47,13 +74,26 @@ const LayoutSetting: React.FunctionComponent<ILayoutSettingProps> = props => {
       graph.d3ReheatSimulation();
     }
   };
+  const onChangeType = value => {
+    updateStore(draft => {
+      draft.layout = {
+        type: value,
+        options: {},
+      };
+    });
+  };
 
   return (
-    <div>
-      <Typography.Text>Force Link</Typography.Text>
-      <Slider defaultValue={0.5} max={1} min={0} step={0.01} onChangeComplete={onChangeForcelink} />
-      <Button onClick={onReset}>reset</Button>
-    </div>
+    <Flex vertical gap={12}>
+      <Typography.Text type="secondary" italic>
+        you can fine-tune the layout parameters here to optimize the graph display.
+      </Typography.Text>
+
+      <Typography.Text strong>Layout Algorithm</Typography.Text>
+      <Select options={layoutOptions} value={type} onChange={onChangeType} />
+
+      <LayoutParams />
+    </Flex>
   );
 };
 
