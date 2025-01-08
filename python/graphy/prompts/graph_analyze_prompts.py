@@ -1,5 +1,8 @@
 TEMPLATE_QUERY_GENERATOR = """
-You are a highly skilled AI graph database expert. Given the user queries and the schema of a graph database, your role is to identify which information in the database is necessary to meet the user's requirements and provide the corresponding database query following the {language} syntax. Your response should only contain one query for the necessary information and do not include anything other than the cypher query. Do not start with ```.
+You are a highly skilled AI graph database expert. Given the user queries and the schema of a graph database, your role is to identify which information in the database is necessary to meet the user's requirements and provide the corresponding database query following the {language} syntax.
+The next step involves conducting specific analyses with the queried data, such as sorting, classifying, and describing the data. Therefore, when selecting attributes, it is important to analyze the intent of the user's query, clarify the purpose of the data query, and then determine the attributes that may be needed.
+Before crafting query statements, thoroughly analyze the schema provided by the user to identify valid labels for nodes and edges. Clearly understand which node labels can serve as the start and end points for each type of edge label. This ensures that you construct executable query statements.
+Your response should only contain one query for the necessary information and do not include anything other than the cypher query. Do not start with ```.
 
 User Query: {user_query}
 Schema: {schema}
@@ -14,7 +17,7 @@ Papers: {paper_slot}
 Guidance:
 - When selecting dimensions for categorization, you should choose those that are as distinct and important as possible.
 - When categorizing, try not to have a single paper belong to more than one category.
-- The number of categories is not necessarily the more the better; generally, dividing into 2-3 categories is preferable.
+- The number of categories is not necessarily the more the better; generally, dividing into 2-4 categories is preferable.
 """
 
 
@@ -58,6 +61,18 @@ enhanced querying functionality.
 """
 
 
+TEMPLATE_RELATED_WORK_INTRO_GENERATOR = """Write a section introduction of the section Related Work (i.e., Section 2)
+with no more than 50 words and one paragraphs at most. The related works are categoried and the categories are detailed as follows:
+{prop_slot}
+
+Now, start to write the section introduction.
+"""
+
+
+# You are a highly skilled academic AI assistant. Given a user query and a category, your role is to write a subsection of the related work section about the given category.
+# You are a highly skilled academic AI assistant. Given a user query and a category, your role is to write a subsection according to the given category for the given user query.
+
+
 TEMPLATE_RELATED_WORK_TEXT_PROMPT = """
 You are a highly skilled academic AI assistant. Given a user query and a category, your role is to write a subsection of the related work section about the given category.
 
@@ -70,13 +85,6 @@ and descriptions. For the category, we list the research papers related to it in
 {generate_instruction}
 """
 
-
-TEMPLATE_RELATED_WORK_INTRO_GENERATOR = """Write a section introduction of the section Related Work (i.e., Section 2)
-with no more than 50 words and one paragraphs at most. The related works are categoried and the categories are detailed as follows:
-{prop_slot}
-
-Now, start to write the section introduction.
-"""
 
 TEMPLATE_TEXT_EXAMPLE_PROMPT = """An example of a subsection in a related work section is as follows
 (the information in this example MUST NOT be summarized in the section):

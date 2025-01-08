@@ -16,6 +16,9 @@ if __name__ == "__main__":
     )
     graph_analyzer = LLMGraphAnalyzer(llm_model=llm_model)
     query = "write a related work section about the given data, you should category them based on the challenges they solve"
+    # query = (
+    #     "write a section about the given data to analyze how GNN technology has evolved"
+    # )
 
     with open("config/analyze/schema_paper.json") as f:
         schema_json = json.load(f)
