@@ -94,11 +94,7 @@ const ClusterGraph: React.FunctionComponent<QueryGraphProps> = props => {
         <GraphProvider id="cluster-graph">
           <Section
             splitBorder
-            rightSide={
-              <PropertiesPanel>
-                <SegmentedTabs items={items} block />
-              </PropertiesPanel>
-            }
+            rightSide={<SegmentedTabs items={items} block />}
             autoResize={false}
             rightSideStyle={{
               width: '350px',
@@ -112,6 +108,7 @@ const ClusterGraph: React.FunctionComponent<QueryGraphProps> = props => {
             <ClearStatus />
 
             <BasicInteraction />
+            <PropertiesPanel />
             <Loading />
             <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
               <ToogleButton />
