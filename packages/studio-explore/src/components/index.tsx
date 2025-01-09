@@ -10,3 +10,5 @@ export { default as Overview } from './Overview';
 export { default as FloatTabs } from './FloatTabs';
 export { default as Placeholder } from './Placeholder';
 export { default as CypherQuery } from './CypherQuery';
+export { default as Copilot } from './Copilot';
+export { default as RunAI } from './Copilot/RunAI';

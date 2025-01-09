@@ -220,11 +220,7 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
       />
 
       {state.onEnter && (
-        <Flex
-          justify="center"
-          vertical
-          style={{ padding: '0px 12px 12px 12px', overflowY: 'scroll', maxHeight: '80vh' }}
-        >
+        <Flex justify="center" vertical style={{ padding: '0px 12px 12px 12px' }}>
           <>
             <Divider style={{ margin: '0px' }} />
             <CascaderSearch breadcrumb={breadcrumb} updateState={setState} />

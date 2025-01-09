@@ -57,6 +57,10 @@ const CascaderSearch: React.FC<ICascaderSearchProps> = props => {
   }
   return (
     <List
+      style={{
+        overflowY: 'scroll',
+        maxHeight: '70vh',
+      }}
       dataSource={_options}
       renderItem={item => {
         //@ts-ignore

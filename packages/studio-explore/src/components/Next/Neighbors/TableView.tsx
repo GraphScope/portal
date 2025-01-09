@@ -20,8 +20,8 @@ export interface IPropertiesPanelProps {
 const TableView: React.FunctionComponent<IPropertiesPanelProps> = props => {
   const { items, counts, name, onQuery, containerRef } = props;
   const { dataSource, columns } = getTable([...items]);
-  const defaultSelectedRowKeys = dataSource.map(item => item.key);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>(defaultSelectedRowKeys);
+  // const defaultSelectedRowKeys = dataSource.map(item => item.key);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   // const containerRef = React.useRef<HTMLDivElement>(null);
 
   /** filter cloumns */
@@ -40,11 +40,11 @@ const TableView: React.FunctionComponent<IPropertiesPanelProps> = props => {
   };
   /** filter cloumns end */
 
-  useEffect(() => {
-    const { dataSource } = getTable([...items]);
-    const defaultSelectedRowKeys = dataSource.map(item => item.key);
-    setSelectedRowKeys(defaultSelectedRowKeys);
-  }, [items]);
+  // useEffect(() => {
+  //   const { dataSource } = getTable([...items]);
+  //   const defaultSelectedRowKeys = dataSource.map(item => item.key);
+  //   setSelectedRowKeys(defaultSelectedRowKeys);
+  // }, [items]);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);

@@ -1,17 +1,19 @@
 import * as React from 'react';
-import { Button, Dropdown, Typography, MenuProps } from 'antd';
+import { Button, Dropdown, Typography, MenuProps, Tooltip } from 'antd';
 import { MoreOutlined, PlayCircleOutlined } from '@ant-design/icons';
-import { useContext } from '@graphscope/studio-graph';
+import { useContext, useApis } from '@graphscope/studio-graph';
 interface ISaveSelectedProps {}
 
 const SaveSelected: React.FunctionComponent<ISaveSelectedProps> = props => {
   const { store, updateStore } = useContext();
+  const { focusNodes } = useApis();
   const { selectNodes } = store;
 
   const handleChangeData = () => {
+    const matchIds = selectNodes.map(item => item.id);
     updateStore(draft => {
       draft.data.nodes = selectNodes;
-      const matchIds = selectNodes.map(item => item.id);
+
       const newEdges = draft.data.edges.filter(item => {
         const { source, target } = item;
         const matchSource = matchIds.indexOf(typeof source === 'object' ? source.id : source) !== -1;
@@ -23,18 +25,13 @@ const SaveSelected: React.FunctionComponent<ISaveSelectedProps> = props => {
       draft.source.nodes = selectNodes;
       draft.source.edges = newEdges;
     });
+    focusNodes(matchIds);
   };
-  const items: MenuProps['items'] = [
-    {
-      key: 'save',
-      label: <Typography.Text onClick={handleChangeData}>Save Selected Nodes</Typography.Text>,
-      icon: <PlayCircleOutlined />,
-    },
-  ];
+
   return (
-    <Dropdown menu={{ items }} placement="bottomRight">
-      <Button type="text" icon={<MoreOutlined />}></Button>
-    </Dropdown>
+    <Tooltip title="Save selected items to the graph" placement="right">
+      <Button onClick={handleChangeData} type="text" icon={<PlayCircleOutlined />}></Button>
+    </Tooltip>
   );
 };
 

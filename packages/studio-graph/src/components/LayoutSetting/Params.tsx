@@ -65,7 +65,7 @@ const LayoutParams: React.FunctionComponent<ILayoutParamsProps> = props => {
               value: 'rl',
             },
             {
-              lable: 'inwards-radially',
+              label: 'inwards-radially',
               value: 'radialin',
             },
             {

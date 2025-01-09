@@ -33,7 +33,7 @@ const Cluster: React.FunctionComponent<IClusterProps> = props => {
     },
     {
       value: 'label',
-      label: 'lable',
+      label: 'label',
     },
 
     ...Object.keys(firstNode.properties || {}).map(key => {
