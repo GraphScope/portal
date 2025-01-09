@@ -1,3 +1,19 @@
+CYPHER_QUERY_EXAMPLE = """
+Query Example:
+Positive Example:
+MATCH (p:Paper)-[r:Paper_Has_Challenge]->(c:Challenge)
+OPTIONAL MATCH (p)-[:Paper_Has_Solution]->(s:Solution)
+RETURN p.title AS paper_title, c.name AS challenge_name, s.name AS solution_name, c.description AS challenge_description, s.description AS solution_description
+ORDER BY challenge_name ASC
+
+Negatve Example:
+MATCH (p:Paper)-[r:Paper_Has_Challenge]->(c:Challenge)
+OPTIONAL MATCH (p)-[:Paper_Has_Solution]->(s:Solution)
+RETURN p.title AS paper_title, c.name AS challenge_name, s.name AS solution_name, c.description AS challenge_description, s.description AS solution_description
+ORDER BY c.name ASC
+
+"""
+
 TEMPLATE_QUERY_GENERATOR = """
 You are a highly skilled AI graph database expert. Given the user queries and the schema of a graph database, your role is to identify which information in the database is necessary to meet the user's requirements and provide the corresponding database query following the {language} syntax.
 The next step involves conducting specific analyses with the queried data, such as sorting, classifying, and describing the data. Therefore, when selecting attributes, it is important to analyze the intent of the user's query, clarify the purpose of the data query, and then determine the attributes that may be needed.
@@ -6,6 +22,8 @@ Your response should only contain one query for the necessary information and do
 
 User Query: {user_query}
 Schema: {schema}
+{example}
+
 """
 
 TEMPLATE_MIND_MAP_GENERATOR = """
@@ -126,4 +144,47 @@ you should introduce the current subsection by referencing those unmentioned pap
 TEMPLATE_PREVIOUS_SUBSECITON_PROMPT = """The following is the previously generated related work on other categories.
 Please create a new subsection to continue writing about the current category:
 <PREVIOUS></PREVIOUS>
+"""
+
+
+#################### EVOLVE #######################
+
+
+TEMPLATE_EVOLVE_TEXT_PROMPT = """
+You are a highly skilled academic AI assistant. Given a user query and a category, your role is to write a subsection to describe the given category. Specifically, each category corresponds to several papers published in a short period of time.
+
+User Query: {user_query}
+Category: <CATEGORY INFO> {prop_slot} </CATEGORY INFO>
+
+In the <CATEGORY INFO></CATEGORY INFO> part, we list a category with its category name
+and descriptions. For the category, we list the research papers related to it in its attribute item_list. 
+\n
+{generate_instruction}
+"""
+
+TEMPLATE_EVOLVE_SUBSECTION_INSTRUCTION_PROMPT = """
+\n\nNow, write the subsection (i.e., Section 2.{subsection_id}) about this category and this subsection
+can contain one or two or three paragraphs. Besides, this subsection can contain at most {max_token_per_subsection} words.
+You must try your best to mention all the papers related to this category provided between <CATEGORY INFO> and </CATEGORY INFO>, but NEVER write the title of the paper in the text.
+For each mentioned paper, you need to explain its method. Every time a paper is first mentioned in the text,
+add a citation in the format \cite{{Id}} and you must not use \cite as the subject of the sentence.
+For example, suppose the [Id] of paper p1 is 0000.0000, then the citation should be added as \cite{{0000.0000}}.
+If the paper propose a method named M, the sentence may be "M \cite{{0000.0000}} ...". If the paper's [Authors] are A, B, and C,
+the sentence may be "A et al.~\cite{{0000.0000}} propose that ...". If several papers with ids [Id_1], ... [Id_k] are
+related to an item or topic T, then the sentence may be "The are many related works of this topic \cite{{Id_1, ..., Id_k}} ...".
+Anyway, sentence "\cite{{0000.0000}} proposes ..." is NOT allowed. Do not introduce one paper in each paragraph,
+nor should you list them one by one. Instead, appropriately describe the connections between them.
+If a paper is already mentioned in the previous texts, you MUST NOT uses this paper again in this subsection.
+For example, Assume that Paper A has been mentioned in a previous subsection (e.g., Subsection 2.1 or Subsection 2.2)
+and is related to the current subsection. If there are at least four relevant papers that have not been mentioned in
+previous subsections, then you are prohibited from mentioning Paper A in this subsection, and instead,
+you should introduce the current subsection by referencing those unmentioned papers.
+"""
+
+TEMPLATE_EVOLVE_PREVIOUS_SUBSECITON_PROMPT = """The following is the previously generated related work proposed earlier.
+Please create a new subsection to continue writing about the current category:
+<PREVIOUS></PREVIOUS>
+
+In this subsection, when introducing a paper, you can highlight the significant improvements or differences compared to the methods mentioned in previous subsections, especially the preceding one. Additionally, you may provide a brief summary at the beginning of this subsection.
+Assess whether papers in the current category show improvements in specific aspects compared to those in earlier categories. If improvements are present, clearly explain them in a suitable part of this subsection.
 """

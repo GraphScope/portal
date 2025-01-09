@@ -22,6 +22,10 @@ from prompts.graph_analyze_prompts import (
     TEMPLATE_TEXT_EXAMPLE_PROMPT,
     TEMPLATE_SUBSECTION_INSTRUCTION_PROMPT,
     TEMPLATE_PREVIOUS_SUBSECITON_PROMPT,
+    CYPHER_QUERY_EXAMPLE,
+    TEMPLATE_EVOLVE_SUBSECTION_INSTRUCTION_PROMPT,
+    TEMPLATE_EVOLVE_TEXT_PROMPT,
+    TEMPLATE_EVOLVE_PREVIOUS_SUBSECITON_PROMPT,
 )
 
 logger = logging.getLogger()
@@ -62,8 +66,12 @@ class LLMGraphAnalyzer:
         return output_str
 
     def get_fetch_query(self, query, schema, lang="cypher"):
+        example = ""
+        if lang == "cypher":
+            example = CYPHER_QUERY_EXAMPLE
+
         fetch_prompt = TEMPLATE_QUERY_GENERATOR.format(
-            user_query=query, schema=schema, language=lang
+            user_query=query, schema=schema, language=lang, example=example
         )
 
         queries = self.generate("fetch_query", fetch_prompt)
@@ -192,3 +200,61 @@ class LLMGraphAnalyzer:
                 bib_text += "\n" + f"bib of {paper_id}" + "\n"
 
         return bib_text
+
+    def generate_evolve_texts(self, query, mind_map, max_token_per_subsection):
+        section_prompts = []
+
+        subsection_id = 0
+        for category in mind_map.get("data", []):
+            subsection_id += 1
+            prop_slot = str(category)
+
+            generated_instruction = ""
+
+            generated_instruction += (
+                TEMPLATE_EVOLVE_SUBSECTION_INSTRUCTION_PROMPT.format(
+                    subsection_id=str(subsection_id),
+                    max_token_per_subsection=str(max_token_per_subsection),
+                )
+            )
+
+            if subsection_id > 1:
+                generated_instruction += TEMPLATE_EVOLVE_PREVIOUS_SUBSECITON_PROMPT
+
+            paper_memories = TEMPLATE_EVOLVE_TEXT_PROMPT.format(
+                user_query=query,
+                prop_slot=prop_slot,
+                generate_instruction=generated_instruction,
+            )
+
+            section_prompts.append(paper_memories)
+
+        return section_prompts
+
+    def write_evolve_sec_by_sec(
+        self, query, mind_map, max_token_per_subsection, bib2id={}
+    ):
+        section_prompts = self.generate_evolve_texts(
+            query=query,
+            mind_map=mind_map,
+            max_token_per_subsection=max_token_per_subsection,
+        )
+
+        # for sec in section_prompts:
+        #     print("########## SECTION PROMPT ###############")
+        #     print(sec)
+
+        section_text = ""
+        for i in range(len(section_prompts)):
+            text_prompt = section_prompts[i]
+            if "<PREVIOUS></PREVIOUS>" in text_prompt:
+                text_prompt = text_prompt.replace("<PREVIOUS></PREVIOUS>", section_text)
+            new_section_text = self.generate("query_report_text", text_prompt)
+            section_text += "\n" + new_section_text + "\n"
+
+        final_section = section_text
+        bib_text = self.append_bib_text(final_section, bib2id)
+
+        final_section += bib_text
+
+        return final_section

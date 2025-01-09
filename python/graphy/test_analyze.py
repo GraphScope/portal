@@ -15,23 +15,21 @@ if __name__ == "__main__":
         streaming=True,
     )
     graph_analyzer = LLMGraphAnalyzer(llm_model=llm_model)
-    query = "write a related work section about the given data, you should category them based on the challenges they solve"
-    # query = (
-    #     "write a section about the given data to analyze how GNN technology has evolved"
-    # )
+    # query = "write a related work section about the given data, you should category them based on the challenges they solve"
+    query = "write a section about the given data to analyze how the method has evolved across years"
 
     with open("config/analyze/schema_paper.json") as f:
         schema_json = json.load(f)
-    queries = graph_analyzer.get_fetch_query(query=query, schema=schema_json)
+    # queries = graph_analyzer.get_fetch_query(query=query, schema=schema_json)
 
     print("=================== Queries ===================")
-    print(queries)
+    # print(queries)
 
     with open("config/analyze/data_paper.json") as f:
         data_json = json.load(f)
-    mind_map = graph_analyzer.get_mind_map(query=query, data=data_json)
+    # mind_map = graph_analyzer.get_mind_map(query=query, data=data_json)
     print("=================== MIND MAP ===================")
-    print(mind_map)
+    # print(mind_map)
 
     with open("config/analyze/mind_map.json") as f:
         mind_map = json.load(f)
@@ -40,8 +38,21 @@ if __name__ == "__main__":
     # report = graph_analyzer.write_report(
     #     query=query, mind_map=mind_map_str, max_token_per_subsection=100
     # )
-    report = graph_analyzer.write_report_sec_by_sec(
+    # report = graph_analyzer.write_report_sec_by_sec(
+    #     query=query, mind_map=mind_map, max_token_per_subsection=100
+    # )
+    print("=================== REPORT ===================")
+    # print(report)
+
+    with open("config/analyze/mind_map_evolve.json") as f:
+        mind_map = json.load(f)
+
+    # mind_map_str = json.dumps(mind_map)
+    # report = graph_analyzer.write_report(
+    #     query=query, mind_map=mind_map_str, max_token_per_subsection=100
+    # )
+    report = graph_analyzer.write_evolve_sec_by_sec(
         query=query, mind_map=mind_map, max_token_per_subsection=100
     )
-    print("=================== REPORT ===================")
+    print("=================== EVOLVE ===================")
     print(report)
