@@ -1031,6 +1031,7 @@ class BibSearchArxiv(BibSearch):
             "primary_category": paper_info.primary_category,
             "categories": paper_info.categories,
             "summary": paper_info.summary,
+            "published": paper_info.published.isoformat(),
             "year": paper_info.published.year,
             "month": paper_info.published.month,
             "url": [str(link) for link in paper_info.links if link.title == "pdf"][0],
