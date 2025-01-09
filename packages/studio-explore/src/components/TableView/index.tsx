@@ -52,7 +52,6 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
   });
   const { columnIds } = state;
   const tableColumns = getTableColumns(columnIds);
-
   const handleChangeColumns = value => {
     setState(preState => {
       return {
@@ -61,6 +60,7 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
       };
     });
   };
+    /** filter cloumns end */
 
   return (
     <Flex vertical gap={12}>
