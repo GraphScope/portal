@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Message } from './utils/message';
 
-import { getWelcomeMessage, prompt as defaultPrompt, defaultWelcome } from './utils/prompt';
+import { getWelcomeMessage, defaultWelcome } from './utils/prompt';
 import { Input, Button, Flex, Typography, Space, Skeleton, theme } from 'antd';
 import { useController } from './useController';
 import { useContext } from '@graphscope/studio-graph';
@@ -10,16 +10,12 @@ import { PlayCircleOutlined, ClearOutlined, SearchOutlined, BulbOutlined, Settin
 import MessageItem from './message';
 import Setting from './setting';
 import { useIntl } from 'react-intl';
-import { Utils } from '@graphscope/studio-components';
+
 import { query } from './query';
-interface IGPTStatementsProps {
-  prompt?: string;
-  welcome?: string;
-}
+interface IGPTStatementsProps {}
 
 const { useToken } = theme;
 const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
-  const { prompt = defaultPrompt } = props;
   const [state, updateState] = useState<{ messages: Message[]; isLoading: boolean; OPENAI_KEY_FOR_GS: string | null }>({
     messages: [],
     isLoading: false,
@@ -29,12 +25,13 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
   const InputRef = useRef(null);
   const { token } = useToken();
   const { store } = useContext();
-  const { schema: schemaData } = store;
+  const { schema } = store;
 
   const controller = useController();
   const { updateStore } = useContext();
   const intl = useIntl();
   const recommended_messages = [
+    'write a related work section about the given data, you should focus on challenges only',
     // intl.formatMessage({
     //   id: 'recommend 5 interesting query statements',
     // }),
@@ -50,14 +47,12 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
   });
 
   useEffect(() => {
-    if (schemaData) {
-      updateState(pre => {
-        return {
-          ...pre,
-          messages: [...getWelcomeMessage(welcome, prompt, schemaData)],
-        };
-      });
-    }
+    updateState(pre => {
+      return {
+        ...pre,
+        messages: [...getWelcomeMessage(welcome)],
+      };
+    });
   }, []);
 
   const handleSubmit = async (script?: string) => {
@@ -120,7 +115,7 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
     updateState(pre => {
       return {
         ...pre,
-        messages: [...getWelcomeMessage(welcome, prompt, schemaData)],
+        messages: [...getWelcomeMessage(welcome)],
       };
     });
   };
