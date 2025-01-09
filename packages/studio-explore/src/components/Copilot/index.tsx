@@ -4,22 +4,22 @@ import { Message } from './utils/message';
 import { getWelcomeMessage, prompt as defaultPrompt, defaultWelcome } from './utils/prompt';
 import { Input, Button, Flex, Typography, Space, Skeleton, theme } from 'antd';
 import { useController } from './useController';
-import { useContext } from '../../context';
+import { useContext } from '@graphscope/studio-graph';
 import { extractTextWithPlaceholders } from './utils/extractTextWithPlaceholders';
 import { PlayCircleOutlined, ClearOutlined, SearchOutlined, BulbOutlined, SettingOutlined } from '@ant-design/icons';
 import MessageItem from './message';
 import Setting from './setting';
 import { useIntl } from 'react-intl';
 import { Utils } from '@graphscope/studio-components';
+import { query } from './query';
 interface IGPTStatementsProps {
   prompt?: string;
   welcome?: string;
-  schemaData: any;
 }
 
 const { useToken } = theme;
 const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
-  const { schemaData, prompt = defaultPrompt } = props;
+  const { prompt = defaultPrompt } = props;
   const [state, updateState] = useState<{ messages: Message[]; isLoading: boolean; OPENAI_KEY_FOR_GS: string | null }>({
     messages: [],
     isLoading: false,
@@ -28,20 +28,22 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
   const { messages, isLoading, OPENAI_KEY_FOR_GS } = state;
   const InputRef = useRef(null);
   const { token } = useToken();
+  const { store } = useContext();
+  const { schema: schemaData } = store;
 
   const controller = useController();
   const { updateStore } = useContext();
   const intl = useIntl();
   const recommended_messages = [
-    intl.formatMessage({
-      id: 'recommend 5 interesting query statements',
-    }),
-    intl.formatMessage({
-      id: 'query any subgraph',
-    }),
-    intl.formatMessage({
-      id: 'insight the statistical distribution of vertex labels in the graph',
-    }),
+    // intl.formatMessage({
+    //   id: 'recommend 5 interesting query statements',
+    // }),
+    // intl.formatMessage({
+    //   id: 'query any subgraph',
+    // }),
+    // intl.formatMessage({
+    //   id: 'insight the statistical distribution of vertex labels in the graph',
+    // }),
   ];
   const welcome = intl.formatMessage({
     id: 'query.copilot.welcome',
@@ -74,7 +76,7 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
           isLoading: true,
         };
       });
-      console.log('OPENAI_KEY_FOR_GS', OPENAI_KEY_FOR_GS);
+
       const response = await query([...messages, message], OPENAI_KEY_FOR_GS!, controller.signal);
       if (!response) {
         updateState(preState => {
@@ -108,11 +110,11 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
       });
     }
   };
+  //@ts-ignore
+  window.runAI = handleSubmit;
   const onQuery = (content: string) => {
-    updateStore(draft => {
-      draft.autoRun = true;
-      draft.globalScript = content;
-    });
+    console.log('content');
+    updateStore(draft => {});
   };
   const handleClear = () => {
     updateState(pre => {
@@ -132,118 +134,62 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
     });
   };
 
-  const defaultNav = Utils.getSearchParams('tab');
   return (
-    <Flex vertical style={{ height: '100%', overflow: 'hidden', padding: '0px 12px' }} justify="space-between">
-      <div style={{ overflowY: 'scroll', position: 'relative' }}>
-        <Typography.Title level={5} style={{ margin: '0px', flexBasis: '30px', padding: '12px 0px' }}>
-          Copilot
-        </Typography.Title>
-
-        <Setting onChange={handleSave} style={{ position: 'absolute', right: '0px', top: '8px' }} />
-
-        <div>
+    <Flex vertical justify="space-between">
+      <Flex vertical gap={12} flex={1}>
+        <Flex justify="space-between" align="center">
+          <Typography.Text type="secondary" italic>
+            Think like a bot
+          </Typography.Text>
+          <Setting onChange={handleSave} />
+        </Flex>
+        <Flex vertical gap={12} style={{ overflowY: 'scroll', height: 'calc(100vh - 170px)' }}>
           {messages
             .filter(m => m.role !== 'system')
             .map(item => {
               return <MessageItem key={item.timestamp} {...item} onQuery={onQuery} />;
             })}
           {isLoading && <Skeleton style={{ padding: '0px 6px' }} />}
-        </div>
-      </div>
-      <div>
-        {recommended_messages.map((item, index) => {
-          return (
-            <div
-              key={index}
-              style={{
-                cursor: 'pointer',
-                background: token.colorBgLayout,
-                padding: '4px',
-                borderRadius: '6px',
-                margin: '6px 0px',
-              }}
-            >
-              <BulbOutlined style={{ fontSize: '12px', marginRight: '4px' }} />
-              <Typography.Text
+        </Flex>
+      </Flex>
+      <Flex vertical>
+        <Flex vertical gap={12}>
+          {recommended_messages.map((item, index) => {
+            return (
+              <div
                 key={index}
-                onClick={() => {
-                  handleSubmit(item);
-                }}
                 style={{
-                  fontSize: '12px',
+                  cursor: 'pointer',
+                  background: token.colorBgLayout,
+                  padding: '4px',
+                  borderRadius: '6px',
+                  margin: '6px 0px',
                 }}
               >
-                {item}
-              </Typography.Text>
-            </div>
-          );
-        })}
-
-        <Space>
+                <BulbOutlined style={{ fontSize: '12px', marginRight: '4px' }} />
+                <Typography.Text
+                  key={index}
+                  onClick={() => {
+                    handleSubmit(item);
+                  }}
+                  style={{
+                    fontSize: '12px',
+                  }}
+                >
+                  {item}
+                </Typography.Text>
+              </div>
+            );
+          })}
+        </Flex>
+        <Flex gap={8}>
           <Input ref={InputRef}></Input>
           <Button onClick={() => handleSubmit()} icon={<SearchOutlined />}></Button>
           <Button onClick={handleClear} icon={<ClearOutlined />}></Button>
-        </Space>
-      </div>
+        </Flex>
+      </Flex>
     </Flex>
   );
 };
 
 export default GPTStatements;
-
-const models = [
-  {
-    name: 'deepseek-chat',
-    endpoint: 'https://api.deepseek.com/chat/completions',
-  },
-  {
-    name: 'gpt-3.5-turbo',
-    endpoint: 'https://api.openai.com/v1/chat/completions',
-  },
-  {
-    name: 'qwen-plus',
-    endpoint: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
-  },
-];
-export function query(
-  messages: Message[],
-  apiKey: string,
-  signal?: AbortSignal,
-  model?: string,
-): Promise<{
-  status: 'success' | 'cancel' | 'failed';
-  message: any;
-}> {
-  const { endpoint, name } = models.find(m => m.name === model) || models[2];
-  return fetch(endpoint, {
-    signal,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: name,
-      messages: messages.map(({ role, content }) => ({ role, content })),
-    }),
-  })
-    .then(res => res.json())
-    .then(res => {
-      return {
-        status: 'success' as const,
-        message: res.choices[0].message,
-      };
-    })
-    .catch(error => {
-      if (error.name === 'AbortError')
-        return {
-          status: 'cancel',
-          message: null,
-        };
-      return {
-        status: 'failed',
-        message: error.message,
-      };
-    });
-}
