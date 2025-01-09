@@ -78,8 +78,6 @@ class PDFExtractNode(BaseNode):
                 pdf_extractor.compute_links()
                 pdf_paper_references = list(pdf_extractor.linked_contents)
 
-            paper = Paper.from_pdf_metadata(paper_metadata)
-            paper_dict = paper.to_dict()
         else:
             paper_dict = paper_metadata
 
@@ -90,25 +88,6 @@ class PDFExtractNode(BaseNode):
 
         pdf_extractor.clear()
 
-        if self.arxiv_fetch_paper:
-            paper_title = paper_dict.get("title", "")
-            if len(paper_title) > 0:
-                result, bib_text = self.arxiv_fetcher.fetch_paper(paper_title, 5)
-                if result is None and bib_text is None:
-                    if self.scholar_fetch_paper:
-                        self.scholar_fetcher.set_web_data_folder(
-                            os.path.join(
-                                WF_WEBDATA_DIR,
-                                paper_dict.get("id", f"webdata_{int(time.time())}"),
-                            ),
-                        )
-                        result, bib_text = self.scholar_fetcher.fetch_paper(
-                            paper.title, mode="exact"
-                        )
-                if result:
-                    paper_dict.update(result)
-                if bib_text is not None:
-                    paper_dict["bib"] = bib_text.replace("\n", "\\n")
         logger.debug("=========== PAPER INFO ===============")
         logger.debug(paper_dict)
 
