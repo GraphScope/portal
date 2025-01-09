@@ -16,14 +16,15 @@ if __name__ == "__main__":
     )
     graph_analyzer = LLMGraphAnalyzer(llm_model=llm_model)
     # query = "write a related work section about the given data, you should category them based on the challenges they solve"
-    query = "write a section about the given data to analyze how the method has evolved across years"
+    # query = "write a section about the given data to analyze how the method has evolved across years"
+    query = "write a related work section about the given data, do not use the challenge data, order the results according to three aspects of the paper, two DESC"
 
     with open("config/analyze/schema_paper.json") as f:
         schema_json = json.load(f)
-    # queries = graph_analyzer.get_fetch_query(query=query, schema=schema_json)
+    queries = graph_analyzer.get_fetch_query(query=query, schema=schema_json)
 
     print("=================== Queries ===================")
-    # print(queries)
+    print(queries)
 
     with open("config/analyze/data_paper.json") as f:
         data_json = json.load(f)

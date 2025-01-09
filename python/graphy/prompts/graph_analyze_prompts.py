@@ -1,16 +1,52 @@
 CYPHER_QUERY_EXAMPLE = """
-Query Example:
-Positive Example:
-MATCH (p:Paper)-[r:Paper_Has_Challenge]->(c:Challenge)
-OPTIONAL MATCH (p)-[:Paper_Has_Solution]->(s:Solution)
-RETURN p.title AS paper_title, c.name AS challenge_name, s.name AS solution_name, c.description AS challenge_description, s.description AS solution_description
-ORDER BY challenge_name ASC
 
-Negatve Example:
+Here are some specific syntax requirements of cypher to keep in mind when writing Cypher queries:
+
+Requirement (1): In Cypher queries, if you rename a property (such as 'T.a') using the 'AS' keyword (e.g., 'T.a AS b'), you must use 'b' in all subsequent parts of the query instead of 'T.a'. Especially for the content following 'ORDER BY such as 'ORDER BY T.a, T.b', if 'T.a' or 'T.b' have been renamed using the 'AS' keyword earlier in the query, you must use their new names no matter how DESC and ASC are used.
+
+Example of a correct query:
+
 MATCH (p:Paper)-[r:Paper_Has_Challenge]->(c:Challenge)
 OPTIONAL MATCH (p)-[:Paper_Has_Solution]->(s:Solution)
 RETURN p.title AS paper_title, c.name AS challenge_name, s.name AS solution_name, c.description AS challenge_description, s.description AS solution_description
-ORDER BY c.name ASC
+ORDER BY challenge_name ASC;
+In this example, 'c.name AS challenge_name' is correctly followed by 'ORDER BY challenge_name ASC'.
+
+Example of an incorrect query:
+
+MATCH (p:Paper)-[r:Paper_Has_Challenge]->(c:Challenge)
+OPTIONAL MATCH (p)-[:Paper_Has_Solution]->(s:Solution)
+RETURN p.title AS paper_title, c.name AS challenge_name, s.name AS solution_name, c.description AS challenge_description, s.description AS solution_description
+ORDER BY c.name ASC;
+In this case, 'c.name AS challenge_name' should be followed by 'ORDER BY challenge_name ASC', but instead, it incorrectly uses 'ORDER BY c.name ASC'.
+
+Requirement (2): Ensure that every edge and vertex in the MATCH pattern adheres to the schema rules:
+
+For an edge like (x:xlabel)-[e:elabel]->(y:ylabel):
+
+It is valid if the schema contains an edge with:
+A label or type name matching 'elabel'.
+Source vertex label 'xlabel' and destination vertex label 'ylabel'.
+If these conditions are not met, the edge definition is invalid.
+For a node like (x:label):
+
+It is valid if the schema includes a vertex with:
+A label or type name matching 'xlabel'.
+If this condition is not met, the node definition is invalid.
+
+Consider a schema with two node types: 'Person' and 'Message'. There is also an edge labeled 'Likes', where the edge starts from a 'Person' node (source) and ends at a 'Message' node (destination), then:
+Positive Example:
+MATCH (p:Person)-[l:Likes]->(m:Message)
+RETURN p.name;
+
+Negative Example 1:
+MATCH (p:Person)<-[l:Likes]-(m:Message)
+RETURN p.name;
+
+Negative Example 2 (as vertex with label 'Comment' is not defined in the schema):
+MATCH (p:Person)<-[l:Likes]-(c:Comment)
+RETURN p.name;
+
 
 """
 
