@@ -390,7 +390,7 @@ class PaperInspector(BaseNode):
         nodes_dict = {}
         nodes = []
         edges = []
-        start_node = "Paper"
+        start_node = "PaperNew"
 
         if "nodes" in graph_dict:
             for node in graph_dict["nodes"]:
@@ -489,12 +489,19 @@ class PaperInspector(BaseNode):
                     data_id, current_node.name
                 )
                 if persist_results:
-                    logger.info(f"Found persisted data for node '{current_node.name}'")
+                    logger.warning(
+                        f"Found persisted data for node '{current_node.name}'"
+                    )
                     # execute pdf extraction anyway
                     if current_node.name == first_node.name:
-                        next(current_node.execute(state))
-                    last_output = persist_results
-                    is_persist = False
+                        logger.warning(
+                            f"For the first node '{current_node.name}'. Do Overwriting..."
+                        )
+                        last_output = next(current_node.execute(state))
+                        is_persist = True
+                    else:
+                        last_output = persist_results
+                        is_persist = False
                 else:
                     # Execute the current node
                     output_generator = current_node.execute(state)
@@ -596,6 +603,8 @@ class PaperInspector(BaseNode):
             DataGenerator: The output data generator from the node.
         """
 
+        logger.warning(f"================= START INSPECT ==============")
+
         for input_data in input:
             logger.error(f"input data: {input_data}")
             paper_file_path = input_data.get("paper_file_path", None)
@@ -607,8 +616,8 @@ class PaperInspector(BaseNode):
             )
 
             if not paper_file_path:
-                logger.error("No 'paper_file_path' provided in input data.")
-                logger.error(f"create fake extractor {paper_meta_path}")
+                logger.warning("No 'paper_file_path' provided in input data.")
+                logger.warning(f"create fake extractor {paper_meta_path}")
                 if not paper_meta_path:
                     continue
             try:
@@ -629,11 +638,16 @@ class PaperInspector(BaseNode):
                 data_id = process_id(base_name)
                 pdf_extractor.set_img_path(f"{WF_IMAGE_DIR}/{data_id}")
 
-                first_node_name = self.graph.get_first_node_name()
+                first_node = self.graph.get_first_node()
+                first_node_name = first_node.name
+                if first_node:
+                    first_node_name = first_node.name
+                else:
+                    raise ValueError("No first node found in the graph.")
 
-                all_nodes = self.graph.get_node_names()
-                persist_states = self.persist_store.get_states(data_id, all_nodes)
-                if len(all_nodes) == len(persist_states):
+                all_nodes = set(self.graph.get_node_names())
+                persist_states = set(self.persist_store.get_total_states(data_id))
+                if persist_states == all_nodes:
                     # This means that the data has already processed
                     logger.info(f"Input with ID '{data_id}' already processed.")
                     self.progress["total"].add(
@@ -692,6 +706,7 @@ class PaperInspector(BaseNode):
 
             except Exception as e:
                 logger.error(f"Error processing the paper: {e}")
+                traceback.print_exc()
                 # clean state
                 if data_id and data_id in state:
                     state[data_id][WF_STATE_CACHE_KEY].clear()
