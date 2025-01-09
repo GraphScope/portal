@@ -2,11 +2,15 @@ import re
 from typing import List, Dict
 from datetime import datetime, timedelta
 from arxiv import Result
+import copy
+import logging
+
+logger = logging.getLogger()
 
 
 class Paper:
     @staticmethod
-    def header(cls) -> List[str]:
+    def header() -> List[str]:
         return [
             "id",
             "title",
@@ -23,13 +27,43 @@ class Paper:
             "journal_ref",
             "url",
             "bib",
-            "references",
+            "reference",
             "cited_by",
             "cited_by_count",
+            "publication",
+            "vol",
+            "issue",
+            "page",
         ]
 
     @staticmethod
-    def parse_creation_date(cls, date_str: str) -> datetime:
+    def str_header() -> List[str]:
+        return [
+            "id",
+            "title",
+            "author",
+            "published",
+            "summary",
+            "primary_category",
+            "doi",
+            "eprint",
+            "journal_ref",
+            "url",
+            "bib",
+            "publication",
+            "page",
+        ]
+
+    @staticmethod
+    def int_header() -> List[str]:
+        return ["year", "month", "cited_by_count", "vol", "issue"]
+
+    @staticmethod
+    def list_header() -> List[str]:
+        return ["authors", "categories", "reference", "cited_by"]
+
+    @staticmethod
+    def parse_creation_date(date_str: str) -> datetime:
         date_str = date_str[2:]  # Remove leading "D:"
         date_formats = [
             "%Y%m%d%H%M%S%z",
@@ -60,3 +94,43 @@ class Paper:
         # Define the allowed characters: alphabets, hyphens, apostrophes, spaces, and special characters
         allowed_characters = re.compile(r"[^a-zA-Z\s\-'À-ÖØ-öø-ÿĀ-žḀ-ỿ]")
         return allowed_characters.sub("", name)
+
+    @staticmethod
+    def parse_dict(meta: dict):
+        parsed_meta = {}
+        for key in meta:
+            if key in Paper.header():
+                parsed_meta[key] = copy.deepcopy(meta[key])
+
+        for key in Paper.header():
+            if key not in meta:
+                if key in Paper.list_header():
+                    parsed_meta.setdefault(key, [])
+                elif key in Paper.int_header():
+                    parsed_meta.setdefault(key, None)
+                elif key in Paper.str_header():
+                    parsed_meta.setdefault(key, "")
+
+        if not parsed_meta.get("published", ""):
+            try:
+                published_date = Paper.parse_creation_date(meta["creationDate"])
+            except ValueError as e:
+                try:
+                    published_date = Paper.parse_creation_date(meta["modDate"])
+                except ValueError as e:
+                    published_date = datetime.now()
+            parsed_meta["published"] = published_date.isoformat()
+
+        if not parsed_meta.get("year", None):
+            parsed_meta["year"] = published_date.year
+            parsed_meta["month"] = published_date.month
+
+        # logger.error(parsed_meta)
+        parsed_meta["author"] = Paper.clean_author_name(parsed_meta["author"])
+        parsed_meta["authors"] = [
+            Paper.clean_author_name(author.strip())
+            for author in parsed_meta["authors"]
+            if author
+        ]
+
+        return parsed_meta
