@@ -21,6 +21,11 @@ const BarChart: React.FunctionComponent<IBarChartProps> = props => {
   const chart = useRef<Chart>();
 
   useEffect(() => {
+    const handleClick = evt => {
+      if (onClick) {
+        onClick(evt);
+      }
+    };
     if (ChartContainerRef.current) {
       const { clientWidth, clientHeight } = ChartContainerRef.current;
 
@@ -69,17 +74,17 @@ const BarChart: React.FunctionComponent<IBarChartProps> = props => {
           : {}),
       });
       chart.current.render();
-      if (onClick && chart.current) {
-        chart.current.on('interval:click', onClick);
+
+      if (chart.current) {
+        chart.current.on('interval:click', handleClick);
       }
     }
 
     return () => {
       if (chart.current) {
         chart.current.destroy();
-        if (onClick) {
-          chart.current.off('interval:click', onClick);
-        }
+
+        chart.current.off('interval:click', handleClick);
       }
     };
   }, [data]);

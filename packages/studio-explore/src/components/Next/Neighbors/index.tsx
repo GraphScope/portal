@@ -58,22 +58,26 @@ const InspectNeighbor = props => {
         CacheData[queryKey] = res;
       }
       const data = CacheData[queryKey];
-      const groupedData = Utils.groupBy(
-        data.nodes.filter(node => {
-          return selectIds.indexOf(node.id) === -1;
-        }),
-        item => {
+      const items = data.nodes.filter(node => {
+        if (property) {
           if (property === 'NODE_LABEL' || property === 'EDGE_LABEL') {
-            return item.label;
+            return selectIds.indexOf(node.id) === -1;
           }
-          const value = item.properties[property];
-          if (Array.isArray(value)) {
-            return value.join('');
-          } else {
-            return value;
-          }
-        },
-      );
+          return selectIds.indexOf(node.id) === -1 && node.properties[property];
+        }
+        return selectIds.indexOf(node.id) === -1;
+      });
+      const groupedData = Utils.groupBy(items, item => {
+        if (property === 'NODE_LABEL' || property === 'EDGE_LABEL') {
+          return item.label;
+        }
+        const value = item.properties[property];
+        if (Array.isArray(value)) {
+          return value.join('');
+        } else {
+          return value;
+        }
+      });
 
       const chartData = Object.keys(groupedData)
         .map(key => {
@@ -95,9 +99,6 @@ const InspectNeighbor = props => {
       });
 
       if (viewMode === 'TableView') {
-        const items = data.nodes.filter(item => {
-          return selectIds.indexOf(item.id) === -1;
-        });
         setState(preState => {
           return {
             ...preState,
@@ -266,18 +267,16 @@ const InspectNeighbor = props => {
             ]}
           ></Select>
 
-          {viewMode === 'ChartView' && (
-            <Select
-              allowClear
-              // variant="borderless"
-              variant="filled"
-              onChange={handleChange}
-              defaultValue={property}
-              style={{ width: '160px' }}
-              options={options}
-              placeholder="Select property"
-            />
-          )}
+          <Select
+            allowClear
+            // variant="borderless"
+            variant="filled"
+            onChange={handleChange}
+            defaultValue={property}
+            style={{ width: '160px' }}
+            options={options}
+            placeholder="Select property"
+          />
         </Flex>
       </Flex>
 
