@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, Typography, Divider, Button, Space, Select, Table, TableProps, theme } from 'antd';
+import { Flex, Typography, Divider, Button, Space, Select, Table, TableProps, theme, notification } from 'antd';
 
 import {
   useContext,
@@ -15,6 +15,7 @@ import { getPropertyOptions } from '../../Statistics/Properties/utils';
 import Chart from '../../ChartView';
 import { getTable } from './getTableData';
 import TableView from './TableView';
+import { BarChartOutlined, TableOutlined } from '@ant-design/icons';
 export interface IQueryNeighborStatics {
   id: 'queryNeighborStatics';
   query: (property: string, selecteIds: string[]) => Promise<{ [key: string]: any }>;
@@ -34,12 +35,14 @@ const InspectNeighbor = props => {
       counts: number;
       name: string;
     };
+    viewMode: 'ChartView' | 'TableView';
   }>({
     chartData: [],
     property: 'NODE_LABEL',
     tableData: { items: [], counts: 0, name: '' },
+    viewMode: 'ChartView',
   });
-  const { chartData, property, tableData } = state;
+  const { chartData, property, tableData, viewMode } = state;
   const containerRef = React.useRef<HTMLDivElement>(null);
   const { token } = theme.useToken();
   useEffect(() => {
@@ -91,20 +94,38 @@ const InspectNeighbor = props => {
         return -1;
       });
 
-      setState(preState => {
-        return {
-          ...preState,
-          tableData: {
-            items: [],
-            counts: 0,
-            name: '',
-          },
-          chartData: chartData,
-        };
-      });
+      if (viewMode === 'TableView') {
+        const items = data.nodes.filter(item => {
+          return selectIds.indexOf(item.id) === -1;
+        });
+        setState(preState => {
+          return {
+            ...preState,
+            tableData: {
+              items: items,
+              counts: items.length,
+              name: 'All',
+            },
+            chartData: chartData,
+          };
+        });
+      }
+      if (viewMode === 'ChartView') {
+        setState(preState => {
+          return {
+            ...preState,
+            tableData: {
+              items: [],
+              counts: 0,
+              name: '',
+            },
+            chartData: chartData,
+          };
+        });
+      }
     };
     queryNeighbors();
-  }, [id, selectedKey, property]);
+  }, [id, selectedKey, property, viewMode]);
 
   const handleQuery = (ids?: string[]) => {
     updateStore(draft => {
@@ -137,7 +158,9 @@ const InspectNeighbor = props => {
 
         const newData = Utils.handleExpand(draft.data, expandedData);
         if (newData.nodes.length === draft.data.nodes.length && newData.edges.length === draft.data.edges.length) {
-          console.log('same data');
+          notification.info({
+            message: 'The nodes already exists on the canvas.',
+          });
           return;
         }
         draft.source = newData;
@@ -178,6 +201,34 @@ const InspectNeighbor = props => {
       };
     });
   };
+
+  const handleChangeViewMode = value => {
+    let tableData = {};
+    if (value === 'ChartView') {
+      tableData = {
+        items: [],
+        counts: 0,
+        name: '',
+      };
+    }
+    if (value === 'TableView') {
+      const queryKey = `${id}_${selectedKey}`;
+      const items = CacheData[queryKey].nodes as NodeData[];
+      tableData = {
+        items,
+        counts: items.length,
+        name: 'All',
+      };
+    }
+    //@ts-ignore
+    setState(preState => {
+      return {
+        ...preState,
+        viewMode: value,
+        tableData,
+      };
+    });
+  };
   const exploreData = CacheData[`${id}_${selectedKey}`] || { nodes: [], edges: [] };
   if (selectNodes.length === 0) {
     return (
@@ -194,28 +245,57 @@ const InspectNeighbor = props => {
     <Flex vertical gap={12} ref={containerRef} style={{ background: token.colorBgContainer, width: '100%' }}>
       <Flex wrap>
         <Typography.Text type="secondary" italic>
-          {`Pre-query the one-degree neighbors of the ${selectNodes.length} selected nodes , resulting in ${exploreData.nodes.length} nodes, ${exploreData.edges.length} edges.`}
-          <Button icon={<PlayCircleOutlined />} type="text" onClick={() => handleQuery()}></Button>
+          {`Pre-query the one-degree neighbors of the ${selectNodes.length} selected nodes , resulting in ${exploreData.nodes.length - selectNodes.length} nodes, ${exploreData.edges.length} edges.`}
+          {/* <Button icon={<PlayCircleOutlined />} type="text" onClick={() => handleQuery()}></Button> */}
         </Typography.Text>
       </Flex>
       <Flex vertical gap={12}>
-        <Select
-          allowClear
-          variant="borderless"
-          onChange={handleChange}
-          defaultValue={property}
-          style={{ width: '160px' }}
-          options={options}
-          placeholder="Select property"
-        />
-        <div style={{ height: '250px', minWidth: '348px' }}>
-          <Chart data={chartData} xField="name" yField="counts" onClick={onChartClick} options={options} />
-        </div>
+        <Flex gap={12} justify="space-between">
+          <Select
+            prefix={viewMode === 'ChartView' ? <BarChartOutlined /> : <TableOutlined />}
+            variant="filled"
+            defaultValue="ChartView"
+            onChange={handleChangeViewMode}
+            style={{ width: '160px' }}
+            options={[
+              { value: 'ChartView', label: 'ChartView', icon: <BarChartOutlined /> },
+              {
+                value: 'TableView',
+                label: 'TableView',
+              },
+            ]}
+          ></Select>
+
+          {viewMode === 'ChartView' && (
+            <Select
+              allowClear
+              // variant="borderless"
+              variant="filled"
+              onChange={handleChange}
+              defaultValue={property}
+              style={{ width: '160px' }}
+              options={options}
+              placeholder="Select property"
+            />
+          )}
+        </Flex>
       </Flex>
-      <Divider style={{ margin: 0 }} />
-      <Flex>
-        <TableView {...tableData} onQuery={handleQuery} containerRef={containerRef} />
-      </Flex>
+
+      {viewMode === 'ChartView' && (
+        <Flex vertical gap={12}>
+          <div style={{ height: '250px', minWidth: '348px' }}>
+            <Chart data={chartData} xField="name" yField="counts" onClick={onChartClick} options={options} />
+          </div>
+          <Divider style={{ margin: 0 }} />
+          <TableView {...tableData} onQuery={handleQuery} containerRef={containerRef} />
+        </Flex>
+      )}
+
+      {viewMode === 'TableView' && (
+        <Flex vertical gap={12}>
+          <TableView {...tableData} onQuery={handleQuery} containerRef={containerRef} />
+        </Flex>
+      )}
     </Flex>
   );
 };
