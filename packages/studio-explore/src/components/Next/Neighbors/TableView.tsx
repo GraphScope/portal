@@ -8,6 +8,7 @@ import { NodeData } from '@graphscope/studio-graph';
 import { PlayCircleOutlined } from '@ant-design/icons';
 import { FullScreen, Utils } from '@graphscope/studio-components';
 import AdjustColumns, { getTableColumns } from '../../TableView/AdjustColumns';
+import SelectAll from '../../TableView/SelectAll';
 
 export interface IPropertiesPanelProps {
   items: NodeData[];
@@ -74,10 +75,11 @@ const TableView: React.FunctionComponent<IPropertiesPanelProps> = props => {
         <Typography.Text type="secondary">
           Total {counts} data items, {selectedRowKeys.length} selected.
         </Typography.Text>
-        <Space>
+        <Space size={0}>
           <Tooltip title="Appand selected items to the graph">
             <Button icon={<PlayCircleOutlined />} type="text" onClick={handleClick}></Button>
           </Tooltip>
+          {/* <SelectAll /> */}
           <AdjustColumns onChange={handleChangeColumns} />
           <FullScreen containerRef={containerRef} />
         </Space>
