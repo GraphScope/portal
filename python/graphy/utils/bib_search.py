@@ -1024,14 +1024,18 @@ class BibSearchArxiv(BibSearch):
         return {
             "title": paper_info.title,
             "id": paper_info.entry_id.strip().split("/")[-1],
-            "author": " and ".join([str(author) for author in paper_info.authors]),
+            "author": str(paper_info.authors[0]),
+            "authors": [str(author) for author in paper_info.authors],
             "eprint": paper_info.entry_id,
             "doi": paper_info.doi,
-            "primary_class": paper_info.categories[0],
-            "abstract": paper_info.summary,
+            "primary_category": paper_info.primary_category,
+            "categories": paper_info.categories,
+            "summary": paper_info.summary,
+            "published": paper_info.published.isoformat(),
             "year": paper_info.published.year,
             "month": paper_info.published.month,
             "url": [str(link) for link in paper_info.links if link.title == "pdf"][0],
+            "journal_ref": paper_info.journal_ref,
             "bib": self.search_by_object(paper_info),
         }
 

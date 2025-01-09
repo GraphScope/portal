@@ -188,15 +188,15 @@ class ArxivFetcher:
                 f"Best match found: {best_match.title} with similarity {highest_similarity}"
             )
 
-            fetch_result = self.result_former.init_from_arxiv(best_match)
-            paper_bib = self.bib_search_arxiv.search_by_object(best_match)
+            fetch_result = self.bib_search_arxiv.format_json_object(best_match)
+            # paper_bib = self.bib_search_arxiv.search_by_object(best_match)
             # except:
             #    logger.error(f"Extract bib failed: {paper_arxiv_id}")
             #    paper_bib = None
-            return fetch_result, paper_bib
+            return fetch_result
         else:
             logger.error(f"Failed to fetch paper with arxiv: {name}")
-            return None, None
+            return None
 
     def fetch_papers_concurrently(
         self, citations: List[str], max_results: int = 1
