@@ -98,9 +98,6 @@ class Paper:
     @staticmethod
     def parse_dict(meta: dict):
         parsed_meta = {}
-        for key in meta:
-            if key in Paper.header():
-                parsed_meta[key] = copy.deepcopy(meta[key])
 
         for key in Paper.header():
             if key not in meta:
@@ -110,6 +107,16 @@ class Paper:
                     parsed_meta.setdefault(key, None)
                 elif key in Paper.str_header():
                     parsed_meta.setdefault(key, "")
+            else:
+                if meta[key]:
+                    parsed_meta[key] = copy.deepcopy(meta[key])
+                else:
+                    if key in Paper.list_header():
+                        parsed_meta[key] = []
+                    elif key in Paper.int_header():
+                        parsed_meta[key] = None
+                    elif key in Paper.str_header():
+                        parsed_meta[key] = ""
 
         if not parsed_meta.get("published", ""):
             try:
