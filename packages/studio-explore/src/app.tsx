@@ -133,7 +133,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
           >
             <Canvas />
             <BasicInteraction />
-            <ClearStatus />
+
             <FetchGraph />
             <Placeholder />
             <Loading />
@@ -192,6 +192,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
                   <Divider style={{ margin: '0px' }} />
                   <FullScreen containerRef={containerRef} />
                   <ZoomFit />
+                  <ClearStatus trigger="button" />
                   <Brush />
                   <FixedMode />
                   {/* <Divider style={{ margin: '0px' }} />

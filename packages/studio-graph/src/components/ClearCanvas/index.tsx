@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Tooltip, Button } from 'antd';
-import { ClearOutlined } from '@ant-design/icons';
+import { DeleteOutlined } from '@ant-design/icons';
 import { useContext } from '../../';
 
 interface IReportProps {}
@@ -14,13 +14,12 @@ const ClearCanvas: React.FunctionComponent<IReportProps> = props => {
       draft.data = { nodes: [], edges: [] };
       draft.source = { nodes: [], edges: [] };
       draft.combos = [];
-      draft.layout = {
-        type: 'force',
-        options: {},
-      };
+      // draft.layout = {
+      //   type: 'force',
+      //   options: {},
+      // };
       draft.selectNodes = [];
       draft.selectEdges = [];
-      draft.focusNodes = [];
       draft.nodeStatus = {};
       draft.edgeStatus = {};
     });
@@ -32,8 +31,8 @@ const ClearCanvas: React.FunctionComponent<IReportProps> = props => {
     }
   };
   return (
-    <Tooltip title="Clear Canvas" placement="left">
-      <Button onClick={handleClick} icon={<ClearOutlined />} type="text"></Button>
+    <Tooltip title="Clear Canvas Data" placement="left">
+      <Button onClick={handleClick} icon={<DeleteOutlined />} type="text"></Button>
     </Tooltip>
   );
 };
