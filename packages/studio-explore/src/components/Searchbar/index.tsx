@@ -183,6 +183,12 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
       draft.isLoading = false;
     });
     focusNodes(data.nodes.map(item => item.id));
+    setState(preState => {
+      return {
+        ...preState,
+        onEnter: false,
+      };
+    });
   };
   const prefix = (
     <Space size="small">
