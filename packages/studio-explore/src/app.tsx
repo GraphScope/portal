@@ -45,6 +45,7 @@ import {
   CypherQuery,
   Copilot,
   RunAI,
+  FloatToolbar,
 } from './components';
 import {
   BgColorsOutlined,
@@ -189,19 +190,12 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
               tools={
                 <>
                   <Connection />
-                  <Divider style={{ margin: '0px' }} />
-                  <FullScreen containerRef={containerRef} />
-                  <ZoomFit />
-                  <ClearStatus trigger="button" />
-                  <Brush />
-                  <FixedMode />
                   {/* <Divider style={{ margin: '0px' }} />
                   <CurvatureLinks /> */}
                   <Divider style={{ margin: '0px' }} />
                   <SwitchEngine />
                   <RunCluster />
                   <Export />
-                  <ClearCanvas />
                 </>
               }
             ></FloatTabs>
@@ -223,18 +217,16 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
               <DeleteNode />
             </ContextMenu>
 
-            <Toolbar
-              style={{
-                position: 'absolute',
-                top: '20px',
-                right: '12px',
-                left: 'unset',
-                zIndex: 999999,
-                boxShadow: 'none',
-              }}
-            >
+            <FloatToolbar>
               <ToogleRightButton />
-            </Toolbar>
+              <Divider style={{ margin: '0px' }} />
+              <Brush />
+              <FixedMode />
+              <ZoomFit />
+              <FullScreen containerRef={containerRef} />
+              <ClearCanvas />
+              <ClearStatus trigger="button" />
+            </FloatToolbar>
           </Section>
         </StudioProvier>
       </GraphProvider>
