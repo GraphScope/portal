@@ -12,11 +12,11 @@ const layouts = [
     options: {},
   },
   {
-    type: 'force-combo',
+    type: 'force-dagre',
     options: {},
   },
   {
-    type: 'force-dagre',
+    type: 'force-combo',
     options: {},
   },
   {
@@ -40,40 +40,9 @@ const layoutOptions = layouts.map(item => {
 });
 const LayoutSetting: React.FunctionComponent<ILayoutSettingProps> = props => {
   const { store, updateStore } = useContext();
-  const { graph, data, layout } = store;
-  const { type, options } = layout;
+  const { layout, graph } = store;
+  const { type } = layout;
 
-  const onChangeForcelink = strength => {
-    if (graph) {
-      // 创建一个新的 link 力并设置其强度
-      const linkForce = d3
-        .forceLink()
-        .links(Utils.fakeSnapshot(data.edges))
-        .id(d => d.id)
-        .strength((link, a, b) => {
-          console.log((Math.abs(link.properties.weight - 0.7) || 0.1) * strength);
-          return (Math.abs(link.properties.weight) || 0.1) * strength;
-        })
-        .distance(link => 30);
-
-      graph.d3Force('link', linkForce);
-      /** 立即启动力导 */
-      graph.d3ReheatSimulation();
-    }
-  };
-  const onReset = () => {
-    if (graph) {
-      // 创建一个新的 link 力并设置其强度
-      const linkForce = d3
-        .forceLink()
-        .links(Utils.fakeSnapshot(data.edges))
-        .id(d => d.id);
-
-      graph.d3Force('link', linkForce);
-      /** 立即启动力导 */
-      graph.d3ReheatSimulation();
-    }
-  };
   const onChangeType = value => {
     updateStore(draft => {
       draft.layout = {

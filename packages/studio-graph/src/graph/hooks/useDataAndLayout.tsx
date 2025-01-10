@@ -1,5 +1,5 @@
 import { useContext } from '../useContext';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import type { ForceGraphInstance } from 'force-graph';
 import { handleNodeStyle, processLinks } from '../utils';
 import { dagreLayout } from '../layout/dagre';
@@ -42,6 +42,7 @@ export function calculateRenderTime(N: number) {
 export const useDataAndLayout = () => {
   const { store, updateStore } = useContext();
   const { layout = {} as Layout, graph, nodeStyle, render, data, width, height } = store;
+  const currentLayoutType = useRef(layout.type);
 
   useEffect(() => {
     if (!graph) {
@@ -49,7 +50,6 @@ export const useDataAndLayout = () => {
     }
     const { type = 'force', options = {} } = layout;
     const { nodes, edges: links } = data;
-    console.log('use data and layout ...');
 
     if (type === 'force' || type === 'force-dagre' || type === 'force-combo') {
       if (render === '3D') {
@@ -60,10 +60,11 @@ export const useDataAndLayout = () => {
       resetForce(graph as ForceGraphInstance);
       const renderTime = calculateRenderTime(data.nodes.length);
       graph.cooldownTime(renderTime);
+      console.log('force options', options);
       if (type === 'force') {
         (graph as ForceGraphInstance)
           .d3Force('center', d3ForceCenter().strength(options.centerStrength || 1))
-          .d3Force('charge', d3ForceManyBody())
+          .d3Force('charge', d3ForceManyBody().strength(options.chargeStrength || -30))
           .d3Force('link', d3ForceLink().distance(options.linkDistance || 35))
           .d3Force(
             'collide',
@@ -77,7 +78,7 @@ export const useDataAndLayout = () => {
         graph.d3ReheatSimulation();
       }
       if (type === 'force-dagre') {
-        graph.dagMode(options.direction || 'lr');
+        graph.dagMode(options.direction || 'radialin');
         graph.graphData({ nodes, links });
       }
       if (type === 'force-combo') {
@@ -119,6 +120,12 @@ export const useDataAndLayout = () => {
       const layoutData = dagreLayout({ nodes, edges: processLinks(links) }, _options);
       graph.graphData({ nodes: layoutData.nodes, links: layoutData.links });
       graph.zoomToFit();
+    }
+
+    if (currentLayoutType.current !== type) {
+      // 切换 layout，需要重新定位下画布，防止视野丢失
+      currentLayoutType.current = type;
+      graph.zoomToFit(400, 10);
     }
   }, [data, render, graph, layout, width, height]);
 };
