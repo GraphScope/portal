@@ -33,7 +33,6 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
     background: token.colorBgContainer,
     borderRadius: token.borderRadius,
     overflowY: 'scroll',
-    overflow: 'hidden',
     padding: token.padding,
     ...style,
   };
