@@ -42,7 +42,7 @@ const PropertyInfo: React.FunctionComponent<IPropertyInfoProps> = props => {
   };
 
   return (
-    <Flex style={style} vertical gap={12}>
+    <Flex vertical gap={12}>
       {!noTitle && (
         <Typography.Title level={5} style={{ margin: '0px' }}>
           {title}

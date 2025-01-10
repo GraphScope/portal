@@ -12,3 +12,4 @@ export { default as Placeholder } from './Placeholder';
 export { default as CypherQuery } from './CypherQuery';
 export { default as Copilot } from './Copilot';
 export { default as RunAI } from './Copilot/RunAI';
+export { default as FloatToolbar } from './FloatToolbar';
