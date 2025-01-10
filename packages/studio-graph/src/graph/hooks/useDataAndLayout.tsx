@@ -42,11 +42,12 @@ export function calculateRenderTime(N: number) {
 export const useDataAndLayout = () => {
   const { store, updateStore } = useContext();
   const { layout = {} as Layout, graph, nodeStyle, render, data, width, height } = store;
+
   useEffect(() => {
     if (!graph) {
       return;
     }
-    const { type = 'force', options } = layout;
+    const { type = 'force', options = {} } = layout;
     const { nodes, edges: links } = data;
     console.log('use data and layout ...');
 
@@ -119,5 +120,5 @@ export const useDataAndLayout = () => {
       graph.graphData({ nodes: layoutData.nodes, links: layoutData.links });
       graph.zoomToFit();
     }
-  }, [data, render, graph, layout, nodeStyle, width, height]);
+  }, [data, render, graph, layout, width, height]);
 };
