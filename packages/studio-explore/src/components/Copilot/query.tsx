@@ -16,7 +16,6 @@ export const models = [
 
 export function query(
   messages: Message[],
-  apiKey: string,
   signal?: AbortSignal,
 ): Promise<{
   status: 'success' | 'cancel' | 'failed';
@@ -24,6 +23,7 @@ export function query(
 }> {
   const model = localStorage.getItem('AI_MODEL_FOR_GS') || models[0].name;
   const { endpoint, name } = models.find(m => m.name === model) || models[0];
+  const apiKey = localStorage.getItem('OPENAI_KEY_FOR_GS');
   return fetch(endpoint, {
     signal,
     method: 'POST',

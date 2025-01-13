@@ -5,12 +5,11 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { Utils } from '@graphscope/studio-components';
 import { models } from './query';
 interface ISettingProps {
-  onChange: (value: string) => void;
   style?: React.CSSProperties;
 }
 
 const Setting: React.FunctionComponent<ISettingProps> = props => {
-  const { onChange, style } = props;
+  const { style } = props;
   const [isModalOpen, setIsModalOpen] = useState(() => {
     const match = Utils.getSearchParams('tab') === 'copilot';
     return !localStorage.getItem('OPENAI_KEY_FOR_GS') && match;
@@ -28,7 +27,6 @@ const Setting: React.FunctionComponent<ISettingProps> = props => {
       const { value } = InputRef.current.input;
       const val = String(value).trim();
       localStorage.setItem('OPENAI_KEY_FOR_GS', val);
-      onChange && onChange(val);
     }
     setIsModalOpen(false);
   };

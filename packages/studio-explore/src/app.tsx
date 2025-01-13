@@ -46,6 +46,7 @@ import {
   Copilot,
   RunAI,
   FloatToolbar,
+  RelatedWork,
 } from './components';
 import {
   BgColorsOutlined,
@@ -168,11 +169,17 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
                   children: <CypherQuery />,
                   key: 'CypherQuery',
                 },
+                // {
+                //   label: <Typography.Title level={3}>Copilot</Typography.Title>,
+                //   icon: <OpenAIOutlined />,
+                //   children: <Copilot />,
+                //   key: 'Copilot',
+                // },
                 {
-                  label: <Typography.Title level={3}>Copilot</Typography.Title>,
+                  label: <Typography.Title level={3}>Write Ralated Work</Typography.Title>,
                   icon: <OpenAIOutlined />,
-                  children: <Copilot />,
-                  key: 'Copilot',
+                  children: <RelatedWork />,
+                  key: 'Ralated Work',
                 },
                 {
                   label: <Typography.Title level={3}>Style Setting</Typography.Title>,

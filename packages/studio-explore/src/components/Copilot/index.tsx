@@ -1,7 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Message } from './utils/message';
 
-import { getWelcomeMessage, defaultWelcome } from './utils/prompt';
+import {
+  getWelcomeMessage,
+  defaultWelcome,
+  TEMPLATE_QUERY_GENERATOR,
+  get_query_system_prompts,
+  get_report_system_prompts,
+} from './utils/prompt';
 import { Input, Button, Flex, Typography, Space, Skeleton, theme } from 'antd';
 import { useController } from './useController';
 import { useContext } from '@graphscope/studio-graph';
@@ -16,16 +22,15 @@ interface IGPTStatementsProps {}
 
 const { useToken } = theme;
 const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
-  const [state, updateState] = useState<{ messages: Message[]; isLoading: boolean; OPENAI_KEY_FOR_GS: string | null }>({
+  const [state, updateState] = useState<{ messages: Message[]; isLoading: boolean }>({
     messages: [],
     isLoading: false,
-    OPENAI_KEY_FOR_GS: localStorage.getItem('OPENAI_KEY_FOR_GS'),
   });
-  const { messages, isLoading, OPENAI_KEY_FOR_GS } = state;
+  const { messages, isLoading } = state;
   const InputRef = useRef(null);
   const { token } = useToken();
   const { store } = useContext();
-  const { schema } = store;
+  const { schema, selectNodes } = store;
 
   const controller = useController();
   const { updateStore } = useContext();
@@ -46,15 +51,6 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
     id: 'query.copilot.welcome',
   });
 
-  useEffect(() => {
-    updateState(pre => {
-      return {
-        ...pre,
-        messages: [...getWelcomeMessage(welcome)],
-      };
-    });
-  }, []);
-
   const handleSubmit = async (script?: string) => {
     if (InputRef.current) {
       //@ts-ignore
@@ -72,7 +68,7 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
         };
       });
 
-      const response = await query([...messages, message], OPENAI_KEY_FOR_GS!, controller.signal);
+      const response = await query([...messages, message], controller.signal);
       if (!response) {
         updateState(preState => {
           return {
@@ -120,11 +116,68 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
     });
   };
 
-  const handleSave = value => {
-    updateState(pre => {
+  const queryMindmap = () => {};
+  const queryTask = task => {
+    if (task === 'query') {
+      updateState(preState => {
+        return {
+          ...preState,
+          messages: [
+            new Message({
+              role: 'system',
+              status: 'success',
+              timestamp: Date.now(),
+              reserved: true,
+
+              content: get_query_system_prompts(JSON.stringify(schema, null, 2)),
+            }),
+            new Message({
+              status: 'success',
+              role: 'assistant',
+              content: welcome,
+              timestamp: Date.now(),
+              reserved: true,
+            }),
+          ],
+        };
+      });
+    }
+    if (task === 'analysis') {
+      updateState(preState => {
+        return {
+          ...preState,
+          messages: [
+            new Message({
+              role: 'system',
+              status: 'success',
+              timestamp: Date.now(),
+              reserved: true,
+              content: get_report_system_prompts(JSON.stringify(schema, null, 2)),
+            }),
+            new Message({
+              status: 'success',
+              role: 'assistant',
+              content: '您好！我是 GraphScope 分析助理，您你可以先选中要分析的数据，方便我为你分析',
+
+              timestamp: Date.now(),
+              reserved: true,
+            }),
+          ],
+        };
+      });
+    }
+    updateState(preState => {
       return {
-        ...pre,
-        OPENAI_KEY_FOR_GS: value,
+        ...preState,
+        messages: [
+          new Message({
+            status: 'success',
+            role: 'assistant',
+            content: '您好！我是 GraphScope Copilot,有什么可以帮到你的',
+            timestamp: Date.now(),
+            reserved: true,
+          }),
+        ],
       };
     });
   };
@@ -136,9 +189,36 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
           <Typography.Text type="secondary" italic>
             Think like a bot
           </Typography.Text>
-          <Setting onChange={handleSave} />
+          <Setting />
         </Flex>
         <Flex vertical gap={12} style={{ overflowY: 'scroll', height: 'calc(100vh - 170px)' }}>
+          <Typography.Text type="secondary" italic>
+            select role
+          </Typography.Text>
+          <Space>
+            <Button
+              onClick={() => {
+                queryTask('query');
+              }}
+            >
+              Query
+            </Button>
+            <Button
+              onClick={() => {
+                queryTask('analysis');
+              }}
+            >
+              Mindmap
+            </Button>
+            <Button
+              onClick={() => {
+                queryTask('chat');
+              }}
+            >
+              Analysis
+            </Button>
+          </Space>
+
           {messages
             .filter(m => m.role !== 'system')
             .map(item => {
