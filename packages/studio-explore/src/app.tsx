@@ -28,6 +28,7 @@ import {
   LayoutSwitch,
   ZoomStatus,
   registerIcons,
+  LayoutSetting,
 } from '@graphscope/studio-graph';
 
 import { ToogleLeftButton, ToogleRightButton } from './components/ToggleButton';
@@ -42,6 +43,9 @@ import {
   FloatTabs,
   Placeholder,
   CypherQuery,
+  Copilot,
+  RunAI,
+  FloatToolbar,
 } from './components';
 import {
   BgColorsOutlined,
@@ -51,9 +55,15 @@ import {
   GroupOutlined,
   CodeOutlined,
   CodeTwoTone,
+  TabletOutlined,
+  BranchesOutlined,
+  CopyrightOutlined,
+  OpenAIOutlined,
 } from '@ant-design/icons';
 import { Divider, Flex, theme, Segmented, Tabs, Typography } from 'antd';
 import { getDefaultServices } from './services';
+import TableView from './components/TableView';
+import ExploreLocales from './locales';
 
 interface ExploreProps {
   id?: string;
@@ -71,7 +81,18 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
   return (
     <div ref={containerRef} style={{ position: 'absolute', top: '0px', left: '0px', bottom: '0px', right: '0px' }}>
       <GraphProvider id={id} services={services}>
-        <StudioProvier locales={locales}>
+        <StudioProvier
+          locales={{
+            'zh-CN': {
+              ...locales['zh-CN'],
+              ...ExploreLocales['zh-CN'],
+            },
+            'en-US': {
+              ...locales['en-US'],
+              ...ExploreLocales['en-US'],
+            },
+          }}
+        >
           <Section
             splitBorder
             rightSide={
@@ -108,16 +129,16 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             }}
             defaultCollapsed={{
               leftSide: true,
-              rightSide: true,
+              rightSide: false,
             }}
           >
             <Canvas />
             <BasicInteraction />
-            <ClearStatus />
+
             <FetchGraph />
             <Placeholder />
             <Loading />
-            <PropertiesPanel />
+            <PropertiesPanel style={{ right: '12px' }} />
             <FloatTabs
               searchbar={<Searchbar />}
               direction="vertical"
@@ -129,10 +150,29 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
                   key: 'Statistics',
                 },
                 {
+                  label: <Typography.Title level={3}>Table View</Typography.Title>,
+                  icon: <TableOutlined />,
+                  children: <TableView />,
+                  key: 'TableView',
+                },
+                {
                   label: <Typography.Title level={3}>Cluster Analysis</Typography.Title>,
-                  icon: <GroupOutlined />,
+                  icon: <CopyrightOutlined />,
                   children: <ClusterAnalysis />,
                   key: 'ClusterAnalysis',
+                },
+
+                {
+                  label: <Typography.Title level={3}>Cypher Query</Typography.Title>,
+                  icon: <CodeOutlined />,
+                  children: <CypherQuery />,
+                  key: 'CypherQuery',
+                },
+                {
+                  label: <Typography.Title level={3}>Copilot</Typography.Title>,
+                  icon: <OpenAIOutlined />,
+                  children: <Copilot />,
+                  key: 'Copilot',
                 },
                 {
                   label: <Typography.Title level={3}>Style Setting</Typography.Title>,
@@ -141,29 +181,21 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
                   key: 'StyleSetting',
                 },
                 {
-                  label: <Typography.Title level={3}>Cypher Query</Typography.Title>,
-                  icon: <CodeOutlined />,
-                  children: <CypherQuery />,
-                  key: 'CypherQuery',
+                  label: <Typography.Title level={3}>Layout Setting</Typography.Title>,
+                  icon: <BranchesOutlined />,
+                  children: <LayoutSetting />,
+                  key: 'LayoutSetting',
                 },
               ]}
               tools={
                 <>
                   <Connection />
-                  <Divider style={{ margin: '0px' }} />
-                  <FullScreen containerRef={containerRef} />
-                  <ZoomFit />
-                  <Brush />
-                  <FixedMode />
-                  <Divider style={{ margin: '0px' }} />
-                  <CurvatureLinks />
-                  <DagreMode />
-                  <LayoutSwitch />
+                  {/* <Divider style={{ margin: '0px' }} />
+                  <CurvatureLinks /> */}
                   <Divider style={{ margin: '0px' }} />
                   <SwitchEngine />
                   <RunCluster />
                   <Export />
-                  <ClearCanvas />
                 </>
               }
             ></FloatTabs>
@@ -178,24 +210,23 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             </HoverMenu> */}
 
             <ContextMenu>
+              <RunAI />
               <NeighborQuery />
               {/* <CommonNeighbor /> */}
               <DeleteLeafNodes />
               <DeleteNode />
             </ContextMenu>
 
-            <Toolbar
-              style={{
-                position: 'absolute',
-                top: '20px',
-                right: '12px',
-                left: 'unset',
-                zIndex: 999999,
-                boxShadow: 'none',
-              }}
-            >
+            <FloatToolbar>
               <ToogleRightButton />
-            </Toolbar>
+              <Divider style={{ margin: '0px' }} />
+              <Brush />
+              <FixedMode />
+              <ZoomFit />
+              <FullScreen containerRef={containerRef} />
+              <ClearCanvas />
+              <ClearStatus trigger="button" />
+            </FloatToolbar>
           </Section>
         </StudioProvier>
       </GraphProvider>

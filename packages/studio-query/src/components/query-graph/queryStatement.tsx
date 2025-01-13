@@ -8,6 +8,7 @@ export const queryStatement: IQueryStatement['query'] = async (script: string) =
   const query_initiation = storage.get<'Server' | 'Browser'>('query_initiation');
   const query_username = storage.get<string>('query_username');
   const query_password = storage.get<string>('query_password');
+  const query_initiation_service = storage.get<string>('query_initiation_service');
   try {
     const _params = {
       script,
@@ -16,8 +17,8 @@ export const queryStatement: IQueryStatement['query'] = async (script: string) =
       username: query_username,
       password: query_password,
     };
-    if (query_initiation === 'Server') {
-      return await fetch('/graph/query', {
+    if (query_initiation === 'Server' && query_initiation_service) {
+      return await fetch(query_initiation_service, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

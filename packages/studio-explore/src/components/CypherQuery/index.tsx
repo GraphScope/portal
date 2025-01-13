@@ -22,7 +22,11 @@ const CypherQuery: React.FunctionComponent<IStatementQueryProps> = props => {
   return (
     <Flex vertical gap={12}>
       <Typography.Text italic>You can write Cypher queries here to retrieve data.</Typography.Text>
-      <Input.TextArea rows={10} ref={inputRef} defaultValue={`Match (n) return n limit 100`}></Input.TextArea>
+      <Input.TextArea
+        rows={10}
+        ref={inputRef}
+        defaultValue={`Match (a)-[r]-(b) return a,r,b limit 100`}
+      ></Input.TextArea>
       <Space>
         <Button icon={<PlayCircleOutlined />} block onClick={handleQuery}>
           Query

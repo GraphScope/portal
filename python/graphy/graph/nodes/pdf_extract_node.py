@@ -59,8 +59,17 @@ class PDFExtractNode(BaseNode):
 
         vectordb = memory_manager.retrieved_memory
         paper_metadata = pdf_extractor.get_meta_data()
-        meta_paper_references = paper_metadata.get("reference", [])
-        meta_paper_cited_by = paper_metadata.get("cited_by", [])
+
+        if len(pdf_extractor.input_meta_data) <= 0:
+            if self.arxiv_fetch_paper:
+                paper_title = paper_metadata.get("title", "")
+                if len(paper_title) > 0:
+                    result = self.arxiv_fetcher.fetch_paper(paper_title, 5)
+                    if result:
+                        paper_metadata.update(result)
+
+        paper_metadata = Paper.parse_dict(paper_metadata)
+
         pdf_paper_references = []
 
         if not pdf_extractor.fake_extractor:
@@ -78,38 +87,12 @@ class PDFExtractNode(BaseNode):
                 pdf_extractor.compute_links()
                 pdf_paper_references = list(pdf_extractor.linked_contents)
 
-            paper = Paper.from_pdf_metadata(paper_metadata)
-            paper_dict = paper.to_dict()
-        else:
-            paper_dict = paper_metadata
-
-        paper_dict["reference"] = meta_paper_references
-        paper_dict["reference"].extend(pdf_paper_references)
-        paper_dict["cited_by"] = meta_paper_cited_by
-        paper_dict["data_id"] = data_id
+        paper_metadata["reference"].extend(pdf_paper_references)
+        paper_metadata["data_id"] = data_id
 
         pdf_extractor.clear()
 
-        if self.arxiv_fetch_paper:
-            paper_title = paper_dict.get("title", "")
-            if len(paper_title) > 0:
-                result, bib_text = self.arxiv_fetcher.fetch_paper(paper_title, 5)
-                if result is None and bib_text is None:
-                    if self.scholar_fetch_paper:
-                        self.scholar_fetcher.set_web_data_folder(
-                            os.path.join(
-                                WF_WEBDATA_DIR,
-                                paper_dict.get("id", f"webdata_{int(time.time())}"),
-                            ),
-                        )
-                        result, bib_text = self.scholar_fetcher.fetch_paper(
-                            paper.title, mode="exact"
-                        )
-                if result:
-                    paper_dict.update(result)
-                if bib_text is not None:
-                    paper_dict["bib"] = bib_text.replace("\n", "\\n")
         logger.debug("=========== PAPER INFO ===============")
-        logger.debug(paper_dict)
+        logger.debug(paper_metadata)
 
-        yield {"data": paper_dict}
+        yield {"data": paper_metadata}

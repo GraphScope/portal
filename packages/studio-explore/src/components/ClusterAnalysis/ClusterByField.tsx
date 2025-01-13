@@ -64,7 +64,7 @@ const ClusterByField: React.FunctionComponent<IClusterByFieldProps> = props => {
   const options = [
     {
       value: 'label',
-      label: 'lable',
+      label: 'label',
     },
     ...Object.keys(firstNode.properties || {}).map(key => {
       return {

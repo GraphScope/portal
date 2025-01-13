@@ -9,22 +9,13 @@ import { Utils } from '@graphscope/studio-components';
 interface IPropertyInfoProps {
   style?: React.CSSProperties;
   noTitle?: boolean;
+  data: NodeData | EdgeData;
 }
 
 const PropertyInfo: React.FunctionComponent<IPropertyInfoProps> = props => {
-  const { style, noTitle } = props;
+  const { style, noTitle, data } = props;
   const { store, updateStore } = useContext();
-
-  const { nodeStyle, selectNodes, selectEdges } = store;
-
-  if (selectEdges.length === 0 && selectNodes.length === 0) {
-    return null;
-  }
-
-  const node = selectNodes[0];
-  const edge = selectEdges[0];
-  const type = node ? 'node' : 'edge';
-  const data = node ? node : edge;
+  const { nodeStyle } = store;
 
   const { id, label, properties = {} } = data as EdgeData;
   //@ts-ignore
@@ -32,6 +23,7 @@ const PropertyInfo: React.FunctionComponent<IPropertyInfoProps> = props => {
   //@ts-ignore
   const target = data.target && data.target.id;
   const elementStyle = nodeStyle[id] || nodeStyle[String(label)];
+  const type = source && target ? 'edge' : 'node';
   const title = type === 'node' ? 'Vertex Properties' : 'Edge Properties';
 
   const onChange = val => {
@@ -50,7 +42,7 @@ const PropertyInfo: React.FunctionComponent<IPropertyInfoProps> = props => {
   };
 
   return (
-    <Flex style={style} vertical gap={12}>
+    <Flex vertical gap={12}>
       {!noTitle && (
         <Typography.Title level={5} style={{ margin: '0px' }}>
           {title}

@@ -16,19 +16,27 @@ interface IBrushProps {
 const Brush: React.FunctionComponent<IBrushProps> = props => {
   const { onSelect, title = 'Select nodes by box selection', placement = 'left' } = props;
   const { store, updateStore, id } = useContext();
-  const { graph } = store;
+  const { graph, data } = store;
 
   const brushRef = useRef<SVGSVGElement>(null);
   const [isBrushActive, setIsBrushActive] = useState(false);
   const handleSelect = selectedNodes => {
-    const nodeStatus = selectedNodes.reduce((acc, curr) => {
+    const nodeStatus = data.nodes.reduce((acc, curr) => {
       return {
         ...acc,
         [curr.id]: {
-          selected: true,
+          disabled: true,
         },
       };
     }, {});
+
+    selectedNodes.forEach(item => {
+      nodeStatus[item.id] = {
+        disabled: false,
+        selected: true,
+      };
+    });
+
     updateStore(draft => {
       draft.nodeStatus = nodeStatus;
       draft.selectNodes = selectedNodes;

@@ -31,7 +31,7 @@ const ClusterByAlgorithm: React.FunctionComponent<IClusterByAlgorithmProps> = pr
   const options = [
     {
       value: 'label',
-      label: 'lable',
+      label: 'label',
     },
     ...Object.keys(firstNode.properties || {}).map(key => {
       return {

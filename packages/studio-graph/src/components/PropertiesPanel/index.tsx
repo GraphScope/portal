@@ -1,17 +1,25 @@
 import * as React from 'react';
-import { Flex, theme } from 'antd';
-import { useContext } from '../../index';
+import { Flex, theme, Select, Typography, Tag } from 'antd';
+import { ForceGraphInstance, useContext, useApis } from '../../index';
 import PropertiesTable from './PropertiesTable';
 import PropertyInfo from './PropertyInfo';
 import { getSelectData } from './utils';
 
-export interface IPropertiesPanelProps {}
+export interface IPropertiesPanelProps {
+  style?: React.CSSProperties;
+}
 
-export const width = '240px';
 const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props => {
+  const { style = {} } = props;
   const { store } = useContext();
-  const { selectNodes, selectEdges } = store;
+  const { focusNodes } = useApis();
+  const { selectNodes, selectEdges, graph, width, height } = store;
   const { token } = theme.useToken();
+  const containerRef = React.useRef<HTMLElement>(null);
+
+  const data = [...selectNodes, ...selectEdges];
+  const selectIds = data.map(item => item.id);
+  const [currentId, setCurrentId] = React.useState<string>(selectIds[0] || '');
 
   const rootStyle: React.CSSProperties = {
     display: 'flex',
@@ -19,44 +27,68 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
     top: '12px',
     bottom: '12px',
     right: '12px',
-    width: width,
+    width: '240px',
     boxShadow: token.boxShadow,
     zIndex: 1999,
     background: token.colorBgContainer,
     borderRadius: token.borderRadius,
     overflowY: 'scroll',
     padding: token.padding,
+    ...style,
   };
 
-  const tableStyle: React.CSSProperties = {
-    display: 'flex',
-    position: 'absolute',
-    bottom: '12px',
-    left: '12px',
-    right: '12px',
-    boxSizing: 'border-box',
-    maxHeight: width,
-    boxShadow: token.boxShadow,
-    zIndex: 1999,
-    background: token.colorBgContainer,
-    borderRadius: token.borderRadius,
-    overflowY: 'scroll',
-    padding: token.padding,
-  };
-
-  if (selectEdges.length === 0 && selectNodes.length === 0) {
+  if (data.length === 0) {
     return null;
   }
-  if (selectNodes.length === 1 || selectEdges.length === 1) {
-    return <PropertyInfo style={rootStyle} />;
+
+  const currentData = data.find(item => item.id === currentId) || data[0];
+
+  if (!currentData) {
+    return null;
   }
-  if (selectNodes.length > 1) {
-    return <PropertiesTable data={selectNodes} style={tableStyle} />;
-  }
-  if (selectEdges.length > 1) {
-    return <PropertiesTable data={selectEdges} style={tableStyle} />;
-  }
-  return null;
+  const options = selectIds.map(key => {
+    return {
+      value: key,
+      label: (
+        <>
+          <Tag>id</Tag> {key}
+        </>
+      ),
+    };
+  });
+  const onChange = value => {
+    setCurrentId(value);
+    focusNodes([value]);
+  };
+
+  return (
+    <Flex style={rootStyle} vertical gap={12}>
+      {data.length > 1 && (
+        <>
+          <Typography.Text type="secondary" italic>
+            Total {data.length} items selected
+          </Typography.Text>
+
+          <Select
+            // variant="borderless"
+            allowClear
+            getPopupContainer={node => {
+              if (containerRef.current) {
+                return containerRef.current;
+              }
+              return node;
+            }}
+            defaultValue={currentId}
+            placeholder="please select and inspect data"
+            options={options}
+            value={currentId}
+            onChange={onChange}
+          />
+        </>
+      )}
+      <PropertyInfo data={currentData} />
+    </Flex>
+  );
 };
 
 export default PropertiesPanel;
