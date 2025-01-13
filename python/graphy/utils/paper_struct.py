@@ -118,7 +118,8 @@ class Paper:
                     elif key in Paper.str_header():
                         parsed_meta[key] = ""
 
-        if "id" not in parsed_meta or not parsed_meta["id"]:
+        paper_id = parsed_meta.get("id", "")
+        if paper_id == "":
             parsed_meta["id"] = str(hash(parsed_meta.get("title", "").lower()))
 
         if not parsed_meta.get("published", ""):
