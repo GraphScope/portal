@@ -201,6 +201,10 @@ const models = [
     name: 'gpt-3.5-turbo',
     endpoint: 'https://api.openai.com/v1/chat/completions',
   },
+  {
+    name: 'qwen-plus',
+    endpoint: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
+  },
 ];
 export function query(
   messages: Message[],
@@ -211,7 +215,7 @@ export function query(
   status: 'success' | 'cancel' | 'failed';
   message: any;
 }> {
-  const { endpoint, name } = models.find(m => m.name === model) || models[0];
+  const { endpoint, name } = models.find(m => m.name === model) || models[2];
   return fetch(endpoint, {
     signal,
     method: 'POST',

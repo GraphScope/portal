@@ -8,6 +8,7 @@ import { NodeData } from '@graphscope/studio-graph';
 import { PlayCircleOutlined } from '@ant-design/icons';
 import { FullScreen, Utils } from '@graphscope/studio-components';
 import AdjustColumns, { getTableColumns } from '../../TableView/AdjustColumns';
+import SelectAll from '../../TableView/SelectAll';
 
 export interface IPropertiesPanelProps {
   items: NodeData[];
@@ -20,8 +21,8 @@ export interface IPropertiesPanelProps {
 const TableView: React.FunctionComponent<IPropertiesPanelProps> = props => {
   const { items, counts, name, onQuery, containerRef } = props;
   const { dataSource, columns } = getTable([...items]);
-  const defaultSelectedRowKeys = dataSource.map(item => item.key);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>(defaultSelectedRowKeys);
+  // const defaultSelectedRowKeys = dataSource.map(item => item.key);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   // const containerRef = React.useRef<HTMLDivElement>(null);
 
   /** filter cloumns */
@@ -40,11 +41,11 @@ const TableView: React.FunctionComponent<IPropertiesPanelProps> = props => {
   };
   /** filter cloumns end */
 
-  useEffect(() => {
-    const { dataSource } = getTable([...items]);
-    const defaultSelectedRowKeys = dataSource.map(item => item.key);
-    setSelectedRowKeys(defaultSelectedRowKeys);
-  }, [items]);
+  // useEffect(() => {
+  //   const { dataSource } = getTable([...items]);
+  //   const defaultSelectedRowKeys = dataSource.map(item => item.key);
+  //   setSelectedRowKeys(defaultSelectedRowKeys);
+  // }, [items]);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -74,10 +75,11 @@ const TableView: React.FunctionComponent<IPropertiesPanelProps> = props => {
         <Typography.Text type="secondary">
           Total {counts} data items, {selectedRowKeys.length} selected.
         </Typography.Text>
-        <Space>
+        <Space size={0}>
           <Tooltip title="Appand selected items to the graph">
             <Button icon={<PlayCircleOutlined />} type="text" onClick={handleClick}></Button>
           </Tooltip>
+          {/* <SelectAll /> */}
           <AdjustColumns onChange={handleChangeColumns} />
           <FullScreen containerRef={containerRef} />
         </Space>

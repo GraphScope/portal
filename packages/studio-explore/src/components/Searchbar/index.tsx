@@ -183,6 +183,12 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
       draft.isLoading = false;
     });
     focusNodes(data.nodes.map(item => item.id));
+    setState(preState => {
+      return {
+        ...preState,
+        onEnter: false,
+      };
+    });
   };
   const prefix = (
     <Space size="small">
@@ -220,11 +226,7 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
       />
 
       {state.onEnter && (
-        <Flex
-          justify="center"
-          vertical
-          style={{ padding: '0px 12px 12px 12px', overflowY: 'scroll', maxHeight: '80vh' }}
-        >
+        <Flex justify="center" vertical style={{ padding: '0px 12px 12px 12px' }}>
           <>
             <Divider style={{ margin: '0px' }} />
             <CascaderSearch breadcrumb={breadcrumb} updateState={setState} />

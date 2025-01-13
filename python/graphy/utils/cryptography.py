@@ -5,6 +5,11 @@ import os
 import base64
 import hashlib
 
+
+def id_generator(value: str, length: int = 16) -> str:
+    return hashlib.sha256(value.encode()).hexdigest()[:length]
+
+
 # Example usage
 passphrase = "this_must_be_a_very_luck_day"
 DEFAULT_KEY = hashlib.sha256(passphrase.encode()).digest()[

@@ -6,6 +6,7 @@ import { getTable } from './getTableData';
 import SaveSelected from './SaveSelected';
 import { getTableColumns } from './AdjustColumns';
 import AdjustColumns from './AdjustColumns';
+import SelectAll from './SelectAll';
 import { Utils } from '@graphscope/studio-components';
 interface ITableViewProps {}
 
@@ -52,7 +53,6 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
   });
   const { columnIds } = state;
   const tableColumns = getTableColumns(columnIds);
-
   const handleChangeColumns = value => {
     setState(preState => {
       return {
@@ -61,6 +61,7 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
       };
     });
   };
+  /** filter cloumns end */
 
   return (
     <Flex vertical gap={12}>
@@ -69,6 +70,7 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
           Total {data.nodes.length} node items, {selectNodes.length} selected.
         </Typography.Text>
         <Space size={0}>
+          <SelectAll />
           <AdjustColumns onChange={handleChangeColumns} />
           <SaveSelected />
         </Space>

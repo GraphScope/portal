@@ -6,7 +6,7 @@ interface ILayoutParamsProps {}
 
 const LayoutParams: React.FunctionComponent<ILayoutParamsProps> = props => {
   const { store, updateStore } = useContext();
-  const { graph, data, layout } = store;
+  const { layout } = store;
   const { type, options } = layout;
   const handleChange = (key, value) => {
     updateStore(draft => {
@@ -16,7 +16,7 @@ const LayoutParams: React.FunctionComponent<ILayoutParamsProps> = props => {
     });
   };
   if (type === 'force') {
-    const { linkDistance = 35, centerStrength = 1 } = options;
+    const { linkDistance = 35, centerStrength = 1, chargeStrength = -30 } = options;
     return (
       <Flex vertical gap={12}>
         <Typography.Text strong>Link distance</Typography.Text>
@@ -38,11 +38,19 @@ const LayoutParams: React.FunctionComponent<ILayoutParamsProps> = props => {
             handleChange('centerStrength', e.target.value);
           }}
         ></InputNumber>
+        <Typography.Text strong>Charge Strength</Typography.Text>
+        <Input
+          defaultValue={chargeStrength}
+          onBlur={e => {
+            console.log(e.target.value);
+            handleChange('chargeStrength', e.target.value);
+          }}
+        ></Input>
       </Flex>
     );
   }
   if (type === 'force-dagre') {
-    const { direction = 'lr' } = options;
+    const { direction = 'radialin' } = options;
     return (
       <Flex vertical gap={12}>
         <Typography.Text strong>Direction</Typography.Text>
@@ -65,7 +73,7 @@ const LayoutParams: React.FunctionComponent<ILayoutParamsProps> = props => {
               value: 'rl',
             },
             {
-              lable: 'inwards-radially',
+              label: 'inwards-radially',
               value: 'radialin',
             },
             {
