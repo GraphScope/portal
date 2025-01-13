@@ -134,7 +134,7 @@ class ArxivFetcher:
 
                 if highest_similarity > 0.9 or found_result:
                     break
-                logger.warning(f"Not Found: {query}")
+                # logger.warning(f"Not Found: {query}")
 
             if highest_similarity > 0.9:
                 break
