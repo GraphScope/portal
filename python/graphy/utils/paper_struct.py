@@ -1,9 +1,12 @@
-import re
 from typing import List, Dict
 from datetime import datetime, timedelta
 from arxiv import Result
+
+from utils.cryptography import id_generator
+
 import copy
 import logging
+import re
 
 logger = logging.getLogger()
 
@@ -120,7 +123,7 @@ class Paper:
 
         paper_id = parsed_meta.get("id", "")
         if paper_id == "":
-            parsed_meta["id"] = str(hash(parsed_meta.get("title", "").lower()))
+            parsed_meta["id"] = id_generator(parsed_meta.get("title", "").lower())
 
         if not parsed_meta.get("published", ""):
             try:

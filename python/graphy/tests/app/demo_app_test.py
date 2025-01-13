@@ -9,7 +9,7 @@ from utils.cryptography import encrypt_key, decrypt_key
 # Base URL for the API server
 BASE_URL = "http://127.0.0.1:9999"
 
-DATASET_ID = "8547eb64-a106-5d09-8950-8a47fb9292dc"
+DATASET_ID = "c1933784c9edd51a"
 SAMPLE_FILE_PATH = "inputs/samples/graphrag.pdf"
 
 

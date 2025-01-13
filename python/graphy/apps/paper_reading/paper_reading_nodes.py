@@ -631,9 +631,9 @@ class PaperInspector(BaseNode):
 
                 first_node_name = self.graph.get_first_node_name()
 
-                all_nodes = self.graph.get_node_names()
-                persist_states = self.persist_store.get_states(data_id, all_nodes)
-                if len(all_nodes) == len(persist_states):
+                all_nodes = set(self.graph.get_node_names())
+                persist_states = set(self.persist_store.get_total_states(data_id))
+                if all_nodes.issubset(persist_states):
                     # This means that the data has already processed
                     logger.info(f"Input with ID '{data_id}' already processed.")
                     self.progress["total"].add(
