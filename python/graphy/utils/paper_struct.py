@@ -118,6 +118,10 @@ class Paper:
                     elif key in Paper.str_header():
                         parsed_meta[key] = ""
 
+        parsed_meta["id"] = parsed_meta.get(
+            "id", str(hash(parsed_meta.get("title", "").lower()))
+        )
+
         if not parsed_meta.get("published", ""):
             try:
                 published_date = Paper.parse_creation_date(meta["creationDate"])
