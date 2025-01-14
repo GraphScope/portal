@@ -9,6 +9,7 @@ from config import (
     WF_STATE_EXTRACTOR_KEY,
     WF_STATE_CACHE_KEY,
     WF_IMAGE_DIR,
+    WF_OUTPUT_DIR,
 )
 from extractor import PaperExtractor
 from db import PersistentStore
@@ -27,6 +28,28 @@ import traceback
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+def change_path(original_path, new_prefix=WF_OUTPUT_DIR) -> str:
+    if not original_path:
+        return None
+    # The suffix that the old prefix ends with
+    suffix = "/graphyourdata/output"
+
+    # Find the index of the suffix in the original path
+    suffix_index = original_path.rfind(suffix)
+
+    # If the suffix is found, replace the old prefix with the new prefix
+    if suffix_index != -1:
+        # Calculate the start index of the old prefix
+        start_index = suffix_index + len(suffix)
+
+        # Replace the old prefix with the new prefix
+        new_path = new_prefix + original_path[start_index:]
+    else:
+        # If the suffix is not found, leave the path unchanged
+        new_path = original_path
+    return new_path
 
 
 class Desc(BaseModel):
@@ -609,6 +632,8 @@ class PaperInspector(BaseNode):
             logger.error(f"input data: {input_data}")
             paper_file_path = input_data.get("paper_file_path", None)
             paper_meta_path = input_data.get("paper_meta_path", None)
+            paper_file_path = change_path(paper_file_path)
+            paper_meta_path = change_path(paper_meta_path)
             parent_id = input_data.get("parent_id", None)
             edge_name = input_data.get("edge_name", "Navigator")
             logger.warning(
