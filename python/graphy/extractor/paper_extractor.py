@@ -164,6 +164,7 @@ class PaperExtractor(PDFExtractor):
         self.fake_extractor = False
         self.linked_contents = set()
         self.input_meta_data = {}
+        self.reference_page = -1
 
         try:
             if meta_path:
@@ -598,6 +599,29 @@ class PaperExtractor(PDFExtractor):
                 return True
         return False
 
+    def _extract_arxiv_link(self, page_num):
+        if self.reference_page > -1 and page_num < self.reference_page:
+            return
+
+        page_text = self.page_texts[page_num]
+        for block in page_text["blocks"]:
+            if block["type"] == 1:
+                continue
+            for line in block["lines"]:
+                succ, line_text = self._get_line_text(line)
+                if succ:
+                    line_text = line_text.lower().strip()
+                    if self.reference_page > -1:
+                        pattern = r"(arXiv[.:]\d{4}\.\d{5}|abs/\d{4}\.\d{5})"
+                        matches = re.findall(pattern, line_text)
+                        for match in matches:
+                            self.linked_contents.add(match)
+                    else:
+                        if line_text == "references" or line_text == "reference":
+                            self.reference_page = page_num
+                        else:
+                            continue
+
     def _extract_link(self, page, page_num):
         """Extract links from a given PDF page and retrieve the associated text."""
         page_width = page.rect.width
@@ -882,6 +906,8 @@ class PaperExtractor(PDFExtractor):
                 self.linked_contents.add(dest_text)
 
             logger.debug(f"Extracted {len(link_info)} links")
+
+        self._extract_arxiv_link(page_num)
 
         return link_info
 
