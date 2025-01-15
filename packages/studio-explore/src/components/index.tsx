@@ -13,4 +13,4 @@ export { default as CypherQuery } from './CypherQuery';
 export { default as Copilot } from './Copilot';
 export { default as RunAI } from './Copilot/RunAI';
 export { default as FloatToolbar } from './FloatToolbar';
-export { default as RelatedWork } from './RelatedWork';
+export { default as Report } from './Report';
