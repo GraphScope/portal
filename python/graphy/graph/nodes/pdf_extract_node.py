@@ -87,7 +87,8 @@ class PDFExtractNode(BaseNode):
                 pdf_extractor.compute_links()
                 pdf_paper_references = list(pdf_extractor.linked_contents)
 
-        paper_metadata["reference"].extend(pdf_paper_references)
+        if not paper_metadata["reference"]:
+            paper_metadata["reference"].extend(pdf_paper_references)
         paper_metadata["data_id"] = data_id
 
         pdf_extractor.clear()
