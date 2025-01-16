@@ -24,6 +24,46 @@ export interface SummaryType {
   explain: string;
 }
 
+
+export const TEMPLATE_MIND_MAP_GENERATOR_EN = (graph_data, user_query) => `
+You are a highly skilled AI assistant. Given a user input and a set of data with properties, your role is to categorize the given data based on the user's intents and the provided data by selecting specific dimensions. Each category should have a name and a corresponding description. For each category, maintain a collection of the given data that belongs to that category in the 'children' field.
+
+User Input: ${user_query}
+Graph Data: ${graph_data}
+
+Guidance:
+- When selecting dimensions for categorization, you should choose those that are as distinct and important as possible.
+- When categorizing, try not to have a single paper belong to more than one category.
+- The number of categories is not necessarily the more the better; generally, dividing into 2-5 categories is preferable.
+- Ensure that the data structure in the 'children' field for each category matches the provided data structure in graph data.
+
+Attention:
+- The reponse MUST be a JSON and there MUSTN't be \`\`\`json in the response !
+- Put the category information in the 'category' field, and place any other information in other fields.
+- The 'summary' field is also required. You need to provide the most appropriate response based on the user's input and intent, then place it in the 'summary' field.
+- If you have any additional notes, you may include them in the 'explain' field.
+  `;
+
+export const TEMPLATE_MIND_MAP_GENERATOR_CHN = (graph_data, user_query) => `
+你是一个专业的AI助手，擅长对数据做归纳总结生成思维导图。具体来说，你的任务是给定一个用户输入和一些列的带属性的数据后，分析用户实际的意图并根据具体意图和数据选出相应维度对数据进行分类、归纳、整理。每个类别应具有名称('name')和相应的描述('description')。对于每个类别，在其'children'字段中保存属于该类别的数据。
+
+用户输入：${user_query}
+图数据：${graph_data}
+
+指导建议：
+- 在选择分类维度时，应尽可能选择那些区分度高且重要的维度。
+- 在进行分类时，尽量避免让单个节点属于多个类别。
+- 分类的数量不一定是越多越好；通常，分为2-5个类别是较为合适的。
+- 每个类别的 'children' 中的数据结构应该要和提供的数据结构保持一致！
+
+注意：
+- 返回结果只有 JSON！返回结果只有 JSON！返回结果只有 JSON！且不要带 \`\`\`json ！且不要带 \`\`\`json ！且不要带 \`\`\`json ！
+- 分类信息放在 'category' 字段中，其他信息放在其他字段中
+- 'summary'字段也是必须的，你需要结合用户的输入意图，给出一个最合适的回答，放在 'summary' 字段中
+- 如果你还有其他备注，可以放在  'explain' 字段中
+- 在输出中，保留图数据的原始语言（中文或英文），其余内容请转为中文进行输出
+  `;
+
 export const TEMPLATE_MIND_MAP_GENERATOR = (graph_data, user_query) => `
 你是一位很有天赋的 AI 助理。你的任务是根据用户的目标和提供的数据，通过选择特定的维度来对给定的数据进行分类。每个类别应具有名称('name')和相应的描述('description')。
 对于每个类别，需要在 'children' 字段中维护属于该分类的给定数据的集合
@@ -103,12 +143,13 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
           id,
           label,
 
-          properties: match.properties.reduce((acc, curr) => {
-            return {
-              ...acc,
-              [curr.name]: properties[curr.name],
-            };
-          }, {}),
+          properties: {}
+          // match.properties.reduce((acc, curr) => {
+          //   return {
+          //     ...acc,
+          //     [curr.name]: properties[curr.name],
+          //   };
+          // }, {}),
         };
       });
     console.log(_nodes, _edges);
@@ -116,7 +157,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
     const _res = await query([
       new Message({
         role: 'user',
-        content: TEMPLATE_MIND_MAP_GENERATOR(JSON.stringify({ nodes: _nodes, edges: _edges }), task),
+        content: TEMPLATE_MIND_MAP_GENERATOR_CHN(JSON.stringify({ nodes: _nodes, edges: _edges }), task),
       }),
     ]);
     const res = JSON.parse(_res.message.content);
