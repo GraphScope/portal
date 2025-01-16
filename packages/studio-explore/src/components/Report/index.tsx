@@ -5,7 +5,7 @@ import { query } from '../Copilot/query';
 import { Message } from '../Copilot/utils/message';
 import { GraphSchema, useContext } from '@graphscope/studio-graph';
 import Intention from './Intention';
-import Setting from '../Copilot/setting'
+import Setting from '../Copilot/setting';
 interface IReportProps {}
 
 const GET_DATA_FILTER_RULES = (user_query: string, schema: any) => {
@@ -76,9 +76,9 @@ const Report: React.FunctionComponent<IReportProps> = props => {
     intention: ItentionType | null;
   }>({
     loading: false,
-    task:
-      // '帮我把画布上的papers按照时间和引用数整理成一个分析报告',
-      '请根据我选中的 papers ，以及 paper 关联的 challenge，写一个 related work section。要求 papers 按照 challenge 进行整理',
+    task: '请根据我选中的 papers ，分析关键技术随时间的变化，写对应的趋势分析报告',
+    // '帮我把画布上的papers按照时间和引用数整理成一个分析报告',
+    // '请根据我选中的 papers ，以及 paper 关联的 challenge，写一个 related work section。要求 papers 按照 challenge 进行整理',
     // '帮我把这些 Papers 整理写成一个 related work 的 section，关注点在 challenge 上',
     intention: null,
   });
@@ -98,6 +98,7 @@ const Report: React.FunctionComponent<IReportProps> = props => {
       ]);
       debugger;
       const res = JSON.parse(_res.message.content);
+
       setState(preState => {
         return {
           ...preState,
@@ -111,12 +112,12 @@ const Report: React.FunctionComponent<IReportProps> = props => {
 
   return (
     <Flex vertical gap={12}>
-       <Flex justify="space-between" align="center">
-          <Typography.Text type="secondary" italic>
-            Think like a bot
-          </Typography.Text>
-          <Setting />
-        </Flex>
+      <Flex justify="space-between" align="center">
+        <Typography.Text type="secondary" italic>
+          Think like a bot
+        </Typography.Text>
+        <Setting />
+      </Flex>
       <Typography.Text italic type="secondary">
         Input your intention
       </Typography.Text>
