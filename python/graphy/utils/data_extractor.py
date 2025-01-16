@@ -169,6 +169,8 @@ class GraphBuilder:
                     del paper_data["cited_by"]
                 if "data_id" in paper_data:
                     del paper_data["data_id"]
+                if "filename" in paper_data:
+                    del paper_data["filename"]
                 # These present in old data
                 if "abstract" in paper_data:
                     del paper_data["abstract"]
