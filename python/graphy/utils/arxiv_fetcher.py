@@ -79,6 +79,34 @@ class ArxivFetcher:
 
         self.result_former = ResultFormer()
 
+    def find_paper_with_arxiv_id(self, name):
+        name = name.strip()
+        pattern = r"(?:arXiv[.:]|abs/)(\d{4}\.\d{5})(v\d+)?"
+        matches = re.findall(pattern, name)
+
+        results = [match[0] + (match[1] if match[1] else "") for match in matches]
+
+        if results:
+            best_match = None
+            highest_similarity = 0.0
+            similarity = 0.0
+
+            search_by_id = arxiv.Search(id_list=results)
+            for paper in self.client.results(search_by_id):
+                similarity = difflib.SequenceMatcher(
+                    None, name.lower(), paper.title.lower()
+                ).ratio()
+
+                if similarity > highest_similarity:
+                    highest_similarity = similarity
+                    best_match = paper
+
+            highest_similarity = 1
+
+            return highest_similarity, best_match
+        else:
+            return 0.0, None
+
     def find_paper_from_arxiv(self, name, max_results):
         new_names = sorted(
             [s.strip() for s in re.split(r"[.\\/]", name.strip()) if len(s) >= 20],
@@ -133,6 +161,7 @@ class ArxivFetcher:
                         traceback.print_exc()
 
                 if highest_similarity > 0.9:
+                    # print(f"found {query}")
                     break
                 # logger.warning(f"Not Found: {query}")
 
@@ -142,6 +171,8 @@ class ArxivFetcher:
                 best_match = None
                 highest_similarity = 0.0
 
+        if not best_match:
+            return self.find_paper_with_arxiv_id(name)
         return highest_similarity, best_match
 
     def download_paper(self, name: str, max_results):
