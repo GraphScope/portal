@@ -21,6 +21,7 @@ const Summary: React.FunctionComponent<SummaryType & { task: string }> = props =
   );
   return (
     <Flex vertical gap={12}>
+      <Typography.Text type="secondary">{summary}</Typography.Text>
       <Timeline
         items={category.map(item => {
           const { name, description, children } = item;

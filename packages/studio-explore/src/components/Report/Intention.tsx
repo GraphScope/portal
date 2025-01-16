@@ -26,13 +26,14 @@ export interface SummaryType {
 
 export const TEMPLATE_MIND_MAP_GENERATOR = (graph_data, user_query) => `
 你是一位很有天赋的 AI 助理。你的任务是根据用户的目标和提供的数据，通过选择特定的维度来对给定的数据进行分类。每个类别应具有名称('name')和相应的描述('description')。
-对于每个类别，需要在 'children' 字段中维护属于该分类的给定数据的结合
+对于每个类别，需要在 'children' 字段中维护属于该分类的给定数据的集合
 
 指导建议：
 
 - 在选择分类维度时，应尽可能选择那些区分度高且重要的维度。
 - 在进行分类时，尽量避免让单个节点属于多个类别。
 - 分类的数量不一定是越多越好；通常，分为2-4个类别是较为合适的。
+- 每个类别的 'children' 中的数据结构应该要和提供的数据结构保持一致！
  
   User Query: ${user_query}
   Graph Data: ${graph_data}
