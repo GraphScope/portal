@@ -9,6 +9,62 @@ interface IWriteReportProps {
   task: string;
 }
 
+const SECTION_CONSTANT_EXAMPLE_EN = () => {
+  return `
+An example of a subsection in a report is as follows
+(the information in this example MUST NOT be summarized in the report):
+2.1 [SUBSECTION TITLE]
+
+The diversity in graph computing also extends to programming interfaces, each tailored to specific domains
+within graph operations. For graph querying, Gremlin and Cypher are widely used. Gremlin, part of Apache
+TinkerPop, offers an extensive set of operators, providing rich expressiveness for graph traversal.
+However, its robustness comes with complexity, as it includes over 200 steps, many with overlapping
+functionalities. For instance, steps like valueMap and elementMap both return vertex/edge properties,
+but with nuanced differences. This complexity poses challenges in ensuring comprehensive support within
+interactive graph engines. Cypher \\cite{[Id]}, initiated by Neo4j, has gained wide adoption and
+significantly contributed to the development of GQL, the emerging standard for querying graph databases.
+The increasing demand for Cypher integration into various systems, including GraphScope, alongside the
+standardization of ISO/GQL \\cite{[Id]}, highlights the evolving nature of graph querying interfaces.
+Additionally, many graph databases offer the capability to register custom stored procedures for
+enhanced querying functionality.
+  `;
+}
+
+const SECTION_PREVIOUS_EXAMPLE_EN = (example) => {
+  return `
+The following is the previously generated subsections on other categories.
+Please create a new subsection to continue writing about the current category:
+${example}
+  `;
+}
+
+const GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN = (user_query, category, max_tokens, example) => {
+  return `
+You are a highly skilled AI assistant. Given a user input and a category of data, your task is to write a corresponding subsection in a report based on the given data that belongs to the same category.
+
+User Input: ${user_query}
+Category: ${category}
+
+Guidance:
+- A subsection of a report can contain at most ${max_tokens} words. In each subsection, you must mention as many data related to this category as possible.
+For each mentioned data, you need to explain its relationship with the category corresponding to the current subsection. 
+- Every time a data is first mentioned in the text, add a citation in the format \\cite{Id} and you must not use \\cite as the subject of the sentence. For example, suppose the [Id] of data p1 is 0000.0000, then the citation should be added as \\cite{0000.0000}.
+If the data presents a certain viewpoint or method M, the sentence may be "M \\cite{0000.0000} ...". If there is author or source information A for the data, the sentence may be "A~\\cite{0000.0000} proposes that ...". If several data with ids [Id_1], ... [Id_k] are related to an item or topic T, then the sentence may be "Topic T is well studied \\cite{Id_1, ..., Id_k} ...".
+Anyway, sentence "\\cite{0000.0000} proposes ..." is NOT allowed. Avoid using a whole paragraph to describe one piece of data, nor should you list them one by one. Instead, appropriately describe the connections between them.
+
+${example}
+`;
+};
+
+const GET_REPORT_PROMPTS_BY_SECTION_INTRO_EN = (user_query, max_tokens, example) => {
+  return `
+You are a highly skilled AI assistant. Given a user input and several subsections belonging to the same report, your task is to write an introduction for these subsections with about ${max_tokens} words.
+
+User Input: ${user_query}
+Subsections: ${example}
+`;
+};
+
 const GET_REPORT_PROMPTS_EN = (user_query, mind_map) => {
   return `
 You are a highly skilled AI assistant. Given a user input and a mind map that categories the data, your role is to write a report based on the mind map.

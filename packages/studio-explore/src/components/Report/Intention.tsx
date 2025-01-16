@@ -33,9 +33,11 @@ Graph Data: ${graph_data}
 
 Guidance:
 - When selecting dimensions for categorization, you should choose those that are as distinct and important as possible.
-- When categorizing, try not to have a single paper belong to more than one category.
+- Avoid assigning the same data to multiple categories. Think carefully about how to classify each piece of data.
 - The number of categories is not necessarily the more the better; generally, dividing into 2-5 categories is preferable.
-- Ensure that the data structure in the 'children' field for each category matches the provided data structure in graph data.
+- Ensure that in the 'children' field for each category, only the ids of the graph data are reserved.
+- Add all the provided graph data as possible to the relevant category.
+- Ensure each piece of graph data is assigned to a category in the output. You'll lose $1 million for each one you miss.
 
 Attention:
 - The reponse MUST be a JSON and there MUSTN't be \`\`\`json in the response !
@@ -51,10 +53,11 @@ export const TEMPLATE_MIND_MAP_GENERATOR_CHN = (graph_data, user_query) => `
 图数据：${graph_data}
 
 指导建议：
-- 在选择分类维度时，应尽可能选择那些区分度高且重要的维度。
-- 在进行分类时，尽量避免让单个节点属于多个类别。
+- 在选择分类维度时，根据用户意图应尽可能选择那些区分度高且重要的维度。
+- 在进行分类时，禁止让一条图数据属于多个类别。
 - 分类的数量不一定是越多越好；通常，分为2-5个类别是较为合适的。
-- 每个类别的 'children' 中的数据结构应该要和提供的数据结构保持一致！
+- 每个类别的 'children' 中仅保留给定数据的id。
+- 尽可能将各条图数据归入对应的一个类别中，对于那些无法分类的图数据，将其放入'name'为'other category'的分类中，此时，这些图数据不能出现在其它类别中
 
 注意：
 - 返回结果只有 JSON！返回结果只有 JSON！返回结果只有 JSON！且不要带 \`\`\`json ！且不要带 \`\`\`json ！且不要带 \`\`\`json ！
