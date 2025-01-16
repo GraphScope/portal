@@ -5,7 +5,7 @@ import { query } from '../Copilot/query';
 import { Message } from '../Copilot/utils/message';
 import { useContext } from '@graphscope/studio-graph';
 import Summary from './Summary';
-import { filterDataByParticalSchema } from './utils';
+import { filterDataByParticalSchema, flattenListofDict } from './utils';
 import type { ItentionType } from './index';
 interface IReportProps {
   task: string;
@@ -45,21 +45,46 @@ Attention:
 - If you have any additional notes, you may include them in the 'explain' field.
   `;
 
-export const TEMPLATE_MIND_MAP_GENERATOR_CHN = (graph_data, user_query) => `
-你是一个专业的AI助手，擅长对数据做归纳总结生成思维导图。具体来说，你的任务是给定一个用户输入和一些列的带属性的数据后，分析用户实际的意图并根据具体意图和数据选出相应维度对数据进行分类、归纳、整理。每个类别应具有名称('name')和相应的描述('description')。对于每个类别，在其'children'字段中保存属于该类别的数据 'id'。
+export const TEMPLATE_MIND_MAP_GENERATOR_CHN = (graph_data, schema, user_query) => `
+你是一个专业的AI助手，擅长对数据做归纳总结生成思维导图。具体来说，你的任务是给定一个用户输入和一些列的带属性的数据后，分析用户实际的意图并根据具体意图和数据选出相应维度对数据进行分类、归纳、整理。最后输出分类的结果。每个类别应具有名称('name')和相应的描述('description')。
 
 用户输入：${user_query}
-图数据：${graph_data}
+图数据集合：${graph_data}
+
+给定输入的图数据集合，集合中的每个列表对应一条数据，列表中依次是节点的 ${schema}。
+输出的分类的结果应当具有如下的结构：
+{
+  "categories": [
+    {
+      "category_id": int,
+      "name": string,
+      "description": string
+    },
+    ...
+  ],
+  "data": {
+    [
+      {
+        "data_id": int,
+        "category": int (a category_id introduced in "categories"),
+      },
+      ...
+    ]
+  },
+  "summary": string,
+  "explain": string
+}
+该结构中，"categories"中存储的是划分出来的类别的信息，"data"中则存储了各条图数据的分类情况。
 
 指导建议：
-- 在选择分类维度时，根据用户意图应尽可能选择那些区分度高且重要的维度。
+- 在选择分类维度时，应根据用户意图尽可能选择那些区分度高且重要的维度。
 - 分类的数量不一定是越多越好；通常，分为2-5个类别是较为合适的。
-- 在进行分类时，尽可能将每条图数据归入对应的一个类别中，但禁止让一条图数据属于多个类别。
-- 对于那些无法分类的图数据，将其放入'name'为'other category'的分类中，此时，这些图数据不能出现在其它类别中。
+- 确保每条数据只属于一个类别，并且不要为同一条数据选择多个类别。如果无法准确归类，请将其分类为'others'。
+- 将一条数据归入一个类别，意味着在输出中"data_id"为该数据id的字典中，"category"为对应类别的"category_id"
 
 注意：
 - 返回结果只有 JSON！返回结果只有 JSON！返回结果只有 JSON！且不要带 \`\`\`json ！且不要带 \`\`\`json ！且不要带 \`\`\`json ！
-- 分类信息放在 'category' 字段中，其他信息放在其他字段中
+- 分类信息放在 'categories' 字段中，其他信息放在其他字段中
 - 'summary'字段也是必须的，你需要结合用户的输入意图，给出一个最合适的回答，放在 'summary' 字段中
 - 如果你还有其他备注，可以放在  'explain' 字段中
 - 在输出中，保留图数据的原始语言（中文或英文），其余内容请转为中文进行输出
@@ -111,14 +136,16 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
 
     const { nodes, edges } = filterDataByParticalSchema(intention.schema, data);
 
+    const { flatten_keys, flatten_values } = flattenListofDict(nodes)
+    
     const _res = await query([
       new Message({
         role: 'user',
-        content: TEMPLATE_MIND_MAP_GENERATOR_CHN(JSON.stringify({ nodes, edges }), task),
+        content: TEMPLATE_MIND_MAP_GENERATOR_CHN(JSON.stringify({ flatten_values }), JSON.stringify(flatten_keys), task),
       }),
     ]);
     const res = JSON.parse(_res.message.content);
-
+    debugger;
     res.category.forEach(element => {
       element.children = nodes.filter(n => element.children.includes(n.id));
     });

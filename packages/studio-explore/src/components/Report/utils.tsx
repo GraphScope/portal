@@ -51,3 +51,42 @@ export const filterDataByParticalSchema = (schema, data) => {
     });
   return { nodes, edges };
 };
+
+
+export const flattenListofDict = (data) => {
+  function extractKeys(obj) {
+    let keys = []
+
+    for (let key in obj) {
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        keys = keys.concat(extractKeys(obj[key]));
+      } else {
+        if (obj[key] !== null && typeof obj[key] !== 'undefined') {
+          keys.push(key);
+        }
+      }
+    }
+
+    return keys;
+  }
+  function extractValues(obj) {
+    let values = [];
+
+    for (let key in obj) {
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        values = values.concat(extractValues(obj[key]));
+      } else {
+        if (obj[key] !== null && typeof obj[key] !== 'undefined') {
+          values.push(obj[key]);
+        }
+      }
+    }
+
+    return values;
+  }
+
+  const flatten_keys = extractKeys(data[0]);
+  const flatten_values = data.map(dict => extractValues(dict));
+
+  return { flatten_keys,flatten_values }
+}
