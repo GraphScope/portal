@@ -106,6 +106,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
         loading: true,
       };
     });
+
     const { nodes, edges } = filterDataByParticalSchema(intention.schema, data);
 
     const _res = await query([
@@ -158,6 +159,10 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
             children: (
               <Flex vertical gap={12}>
                 <Typography.Text strong>Required data</Typography.Text>
+                <Typography.Text type="secondary" italic>
+                  Please first ensure that the current canvas contains these types of nodes and edges. You can manually
+                  adjust the set of node properties passed to the LLM.
+                </Typography.Text>
 
                 {intention.schema.nodes.map(item => {
                   const { id, label, properties = [] } = item;

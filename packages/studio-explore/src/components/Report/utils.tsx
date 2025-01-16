@@ -22,7 +22,7 @@ export const filterDataByParticalSchema = (schema, data) => {
       return {
         id,
         label,
-        properties: match.properties.reduce((acc, curr) => {
+        properties: (match.properties || []).reduce((acc, curr) => {
           return {
             ...acc,
             [curr.name]: properties[curr.name],
@@ -41,7 +41,7 @@ export const filterDataByParticalSchema = (schema, data) => {
       return {
         id,
         label,
-        properties: match.properties.reduce((acc, curr) => {
+        properties: (match.properties || []).reduce((acc, curr) => {
           return {
             ...acc,
             [curr.name]: properties[curr.name],
