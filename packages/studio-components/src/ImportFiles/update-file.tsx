@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Space, Tooltip, Upload, Button, message, notification } from 'antd';
 import type { UploadProps } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
-import { parseCSV, parseJSON, parseSQL } from '../Utils';
+import { parseCSV, parseJSON } from '../Utils';
 import type { IImportFromFileProps } from './index';
 import { ParsedFile } from '../Utils/parseCSV';
 const { Dragger } = Upload;
@@ -26,10 +26,6 @@ const UploadFile = ({ onChange, accept, title, description, isSaveFiles }: IProp
         const csvFiles = isSaveFiles ? [file] : [];
         const files = await parseCSV(file as File);
         onChange && onChange([files], csvFiles as File[]);
-      }
-      if (type === '') {
-        const files = await parseSQL(file as File);
-        onChange && onChange(files);
       }
     } catch (error) {
       console.error('解析文件失败:', error);
