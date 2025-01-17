@@ -5,8 +5,9 @@ import { query } from '../Copilot/query';
 import { Message } from '../Copilot/utils/message';
 import { useContext } from '@graphscope/studio-graph';
 import Summary from './Summary';
-import { filterDataByParticalSchema, flattenListofDict } from './utils';
+import { filterDataByParticalSchema, flattenListofDict, getAllAttributesByName, getStrSizeInKB, sampleHalf } from './utils';
 import type { ItentionType } from './index';
+import { debug } from 'console';
 interface IReportProps {
   task: string;
   intention: ItentionType;
@@ -45,13 +46,15 @@ Attention:
 - If you have any additional notes, you may include them in the 'explain' field.
   `;
 
-export const TEMPLATE_MIND_MAP_GENERATOR_CHN = (graph_data, schema, user_query) => `
-你是一个专业的AI助手，擅长对数据做归纳总结生成思维导图。具体来说，你的任务是给定一个用户输入和一些列的带属性的数据后，分析用户实际的意图并根据具体意图和数据选出相应维度对数据进行分类、归纳、整理。最后输出分类的结果。每个类别应具有名称('name')和相应的描述('description')。
+export const TEMPLATE_MIND_MAP_GENERATOR_CHN = (graph_data, input_ids, user_query) => `
+你是一个专业的AI助手，擅长对数据做归纳总结生成思维导图。具体来说，你的任务是给定一个用户输入和一些图数据id后，分析用户实际的意图并根据具体意图和数据选出相应维度对这些图数据id进行分类、归纳、整理。这些id对应的图数据保存在输入的图数据集合中。最后输出分类的结果。每个类别应具有名称('name')和相应的描述('description')。
 
 用户输入：${user_query}
 图数据集合：${graph_data}
 
-给定输入的图数据集合，集合中的每个列表对应一条数据，列表中依次是节点的 ${schema}。
+给定输入的图数据集合，集合中"filtered_nodes"列表中的每个字典对应一条数据。每个字典中的'id'属性代表的是该数据的id。
+要分类的图数据的id为${input_ids}。对于该列表中的每个图数据id，图数据集合中存在一个字典，其id等于该图数据id，则该字典描述的就是该id的属性。
+
 输出的分类的结果应当具有如下的结构：
 {
   "categories": [
@@ -74,13 +77,17 @@ export const TEMPLATE_MIND_MAP_GENERATOR_CHN = (graph_data, schema, user_query) 
   "summary": string,
   "explain": string
 }
-该结构中，"categories"中存储的是划分出来的类别的信息，"data"中则存储了各条图数据的分类情况。
+该结构中，"categories"中存储的是划分出来的类别的信息，"data"中则存储了${input_ids}中各id对应的图数据的分类情况。
 
 指导建议：
 - 在选择分类维度时，应根据用户意图尽可能选择那些区分度高且重要的维度。
 - 分类的数量不一定是越多越好；通常，分为2-5个类别是较为合适的。
-- 确保每条数据只属于一个类别，并且不要为同一条数据选择多个类别。如果无法准确归类，请将其分类为'others'。
-- 将一条数据归入一个类别，意味着在输出中"data_id"为该数据id的字典中，"category"为对应类别的"category_id"
+- 确保每条数据属于且只属于一个类别，并且不要为同一条数据选择多个类别。如果无法准确归类，请将其分类为'others'。
+例如，假设输入的图数据中包含id分别为1，2，..., 100的100条数据，且要分类的图数据的id为[1,2,...,100]，则输出的结构中，"data"部分应为
+{[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 100, "category": xx}]}。
+{[{"data_id": 1, "category": xx}, {"data_id": 1, "category": xx}, ..., {"data_id": 100, "category": xx}]}是错误的"data"部分输出，因为"data_id"为1的数据被分类了两次。
+{[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 105, "category": xx}]}也是错误的"data"部分输出，因为要分类的图数据中没有id为105的数据。
+
 
 注意：
 - 返回结果只有 JSON！返回结果只有 JSON！返回结果只有 JSON！且不要带 \`\`\`json ！且不要带 \`\`\`json ！且不要带 \`\`\`json ！
@@ -90,6 +97,58 @@ export const TEMPLATE_MIND_MAP_GENERATOR_CHN = (graph_data, schema, user_query) 
 - 在输出中，保留图数据的原始语言（中文或英文），其余内容请转为中文进行输出
   `;
 
+export const TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_CHN = (graph_data, input_ids, category, user_query) => `
+你是一个专业的AI助手，擅长对数据做归纳总结生成思维导图。具体来说，你的任务是给定一个用户输入、一些图数据id后、以及一些现有的类别后，分析用户实际的意图并根据具体意图并将数据按照给定的类别进行分类、归纳、整理。这些id对应的图数据保存在输入的图数据集合中。最后输出分类的结果。每个类别应具有名称('name')和相应的描述('description')。
+
+
+用户输入：${user_query}
+图数据集合：${graph_data}
+分类：${category}
+
+给定输入的图数据集合，集合中"filtered_nodes"列表中的每个字典对应一条数据。每个字典中的'id'属性代表的是该数据的id。
+要分类的图数据的id为${input_ids}。对于该列表中的每个图数据id，图数据集合中存在一个字典，其id等于该图数据id，则该字典描述的就是该id的属性。
+
+输出的分类的结果应当具有如下的结构：
+{
+  "categories": [
+    {
+      "category_id": int,
+      "name": string,
+      "description": string
+    },
+    ...
+  ],
+  "data": {
+    [
+      {
+        "data_id": int,
+        "category": int (a category_id introduced in "categories"),
+      },
+      ...
+    ]
+  },
+  "summary": string,
+  "explain": string
+}
+该结构中，"categories"中存储的是划分出来的类别的信息（一般来说与输入的分类一致），"data"中则存储了${input_ids}中各id对应的图数据的分类情况。
+
+指导建议：
+- 如果一条图数据无法分入任何给定的分类中，可以构造一个新的分类，在categories中描述该信的分类并给其一个id，并将这条数据归入这个类别
+- 分类的数量不一定是越多越好；通常，分为2-5个类别是较为合适的。
+- 确保每条数据属于且只属于一个类别，并且不要为同一条数据选择多个类别。
+例如，假设输入的图数据中包含id分别为1，2，..., 100的100条数据，且要分类的图数据的id为[1,2,...,100]，则输出的结构中，"data"部分应为
+{[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 100, "category": xx}]}。
+{[{"data_id": 1, "category": xx}, {"data_id": 1, "category": xx}, ..., {"data_id": 100, "category": xx}]}是错误的"data"部分输出，因为"data_id"为1的数据被分类了两次。
+{[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 105, "category": xx}]}也是错误的"data"部分输出，因为要分类的图数据中没有id为105的数据。
+
+注意：
+- 返回结果只有 JSON！返回结果只有 JSON！返回结果只有 JSON！且不要带 \`\`\`json ！且不要带 \`\`\`json ！且不要带 \`\`\`json ！
+- 分类信息放在 'categories' 字段中，其他信息放在其他字段中
+- 'summary'字段也是必须的，你需要结合用户的输入意图，给出一个最合适的回答，放在 'summary' 字段中
+- 如果你还有其他备注，可以放在  'explain' 字段中
+- 在输出中，保留图数据的原始语言（中文或英文），其余内容请转为中文进行输出
+  `;
+  
 export const TEMPLATE_MIND_MAP_GENERATOR = (graph_data, user_query) => `
 你是一位很有天赋的 AI 助理。你的任务是根据用户的目标和提供的数据，通过选择特定的维度来对给定的数据进行分类。每个类别应具有名称('name')和相应的描述('description')。
 对于每个类别，需要在 'children' 字段中维护属于该分类的给定数据的集合
@@ -136,16 +195,69 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
 
     const { nodes, edges } = filterDataByParticalSchema(intention.schema, data);
 
-    const { flatten_keys, flatten_values } = flattenListofDict(nodes)
+    // const { flatten_keys, flatten_values } = flattenListofDict(nodes)
+
+    let all_ids = getAllAttributesByName(nodes, "id");
+    let iterate_time = 0;
+    let category_dict = {};
+    let outputs = {};
+    let res = {"data": [{"data_id": ""}], "categories": []};
+    let prompt_size_bound = 12.8;
     
-    const _res = await query([
-      new Message({
-        role: 'user',
-        content: TEMPLATE_MIND_MAP_GENERATOR_CHN(JSON.stringify({ flatten_values }), JSON.stringify(flatten_keys), task),
-      }),
-    ]);
-    const res = JSON.parse(_res.message.content);
+    while (all_ids.length > 0) {
+      let filtered_ids = all_ids.slice();
+      let current_prompt = "";
+
+      if (iterate_time === 0) {
+        while (true) {
+          const filtered_nodes = nodes.filter(node => filtered_ids.includes(node.id));
+          current_prompt = TEMPLATE_MIND_MAP_GENERATOR_CHN(JSON.stringify({ filtered_nodes, edges }), JSON.stringify(filtered_ids), task);
+          if (getStrSizeInKB(current_prompt) < prompt_size_bound || filtered_ids.length === 1) {
+            break;
+          }
+
+          filtered_ids = sampleHalf(filtered_ids);
+        }
+
+        const _res = await query([
+          new Message({
+            role: 'user',
+            content: current_prompt,
+          }),
+        ]);
+        res = JSON.parse(_res.message.content);
+      } else {
+        while (true) {
+          const filtered_nodes = nodes.filter(node => filtered_ids.includes(node.id));
+          current_prompt = TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_CHN(JSON.stringify({ filtered_nodes, edges }), JSON.stringify(filtered_ids), JSON.stringify(category_dict), task);
+          if (getStrSizeInKB(current_prompt) < prompt_size_bound || filtered_ids.length === 1) {
+            break;
+          }
+
+          filtered_ids = sampleHalf(filtered_ids);
+        }
+
+        const _res = await query([
+          new Message({
+            role: 'user',
+            content: current_prompt,
+          }),
+        ]);
+        res = JSON.parse(_res.message.content);
+      }
+      
+      const data_ids = res.data.map(item => item.data_id.toString());
+      category_dict = res.categories;
+      all_ids = all_ids.filter(element => !data_ids.includes(element));
+      iterate_time = iterate_time + 1
+
+      for (const item of res.data) {
+        outputs[item.data_id] = item.category;
+      }
+    }
+
     debugger;
+
     res.category.forEach(element => {
       element.children = nodes.filter(n => element.children.includes(n.id));
     });

@@ -58,7 +58,7 @@ ${example}
 
 const GET_REPORT_PROMPTS_BY_SECTION_INTRO_EN = (user_query, max_tokens, example) => {
   return `
-You are a highly skilled AI assistant. Given a user input and several subsections belonging to the same report, your task is to write an introduction for these subsections with about ${max_tokens} words.
+You are a highly skilled AI assistant. Given a user input and several subsections belonging to the same report, your task is to complete the title and introduction sections of the report based on the already written subsections, and finally output the entire report. The introduction for these subsections should contain about ${max_tokens} words.
 
 User Input: ${user_query}
 Subsections: ${example}
@@ -142,12 +142,46 @@ const WriteReport: React.FunctionComponent<IWriteReportProps> = props => {
         loading: true,
       };
     });
+
+    const max_token_per_subsection = 200;
+    let subsection_id = 0;
+    let total_text = ""
+
+    for (let category_info of category) {
+      subsection_id += 1;
+      if (subsection_id === 1) {
+        const res_section = await query([
+          new Message({
+            role: 'user',
+            content: GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN(task, JSON.stringify(category_info), max_token_per_subsection.toString(), SECTION_CONSTANT_EXAMPLE_EN),
+          }),
+        ]);
+        total_text += res_section.message.content;
+      }
+      else {
+        const res_section = await query([
+          new Message({
+            role: 'user',
+            content: GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN(task, JSON.stringify(category_info), max_token_per_subsection.toString(), SECTION_PREVIOUS_EXAMPLE_EN(total_text)),
+          }),
+        ]);
+        total_text += res_section.message.content;
+      }
+    }
+
     const res = await query([
       new Message({
         role: 'user',
-        content: GET_REPORT_PROMPTS_CHN(task, JSON.stringify(category)),
+        content: GET_REPORT_PROMPTS_BY_SECTION_INTRO_EN(task, 50, total_text),
       }),
     ]);
+
+    // const res = await query([
+    //   new Message({
+    //     role: 'user',
+    //     content: GET_REPORT_PROMPTS_CHN(task, JSON.stringify(category)),
+    //   }),
+    // ]);
 
     setState(preState => {
       return {
