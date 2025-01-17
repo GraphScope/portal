@@ -1,5 +1,3 @@
-import { Parser } from 'sql-ddl-to-json-schema';
-const parser = new Parser('mysql');
 import type { ParsedFile } from '@graphscope/studio-components';
 import { ISchemaEdge, ISchemaNode } from '../../typing';
 import { v4 as uuidv4 } from 'uuid';
