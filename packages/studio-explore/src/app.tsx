@@ -129,7 +129,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             }}
             defaultCollapsed={{
               leftSide: true,
-              rightSide: false,
+              rightSide: true,
             }}
           >
             <Canvas />
