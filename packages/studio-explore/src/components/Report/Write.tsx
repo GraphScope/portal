@@ -127,7 +127,7 @@ const GET_REPORT_PROMPTS_2 = (user_query, mind_map) => {
   
   `;
 };
-const WriteReport: React.FunctionComponent<IWriteReportProps> = props => {
+const WriteReportBySection: React.FunctionComponent<IWriteReportProps> = props => {
   const { category, task } = props;
   const [state, setState] = useState({
     loading: false,
@@ -182,6 +182,47 @@ const WriteReport: React.FunctionComponent<IWriteReportProps> = props => {
     //     content: GET_REPORT_PROMPTS_CHN(task, JSON.stringify(category)),
     //   }),
     // ]);
+
+    setState(preState => {
+      return {
+        ...preState,
+        loading: false,
+        report: res.message.content,
+      };
+    });
+  };
+
+  return (
+    <Flex vertical gap={12}>
+      <Button onClick={handleClick} loading={loading}>
+        Write Report
+      </Button>
+      {report && <ReactMarkdown>{report}</ReactMarkdown>}
+    </Flex>
+  );
+};
+const WriteReport: React.FunctionComponent<IWriteReportProps> = props => {
+  const { category, task } = props;
+  const [state, setState] = useState({
+    loading: false,
+    report: '',
+  });
+  const { loading, report } = state;
+
+  const handleClick = async () => {
+    setState(preState => {
+      return {
+        ...preState,
+        loading: true,
+      };
+    });
+
+    const res = await query([
+      new Message({
+        role: 'user',
+        content: GET_REPORT_PROMPTS_CHN(task, JSON.stringify(category)),
+      }),
+    ]);
 
     setState(preState => {
       return {

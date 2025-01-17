@@ -25,21 +25,93 @@ export interface SummaryType {
   explain: string;
 }
 
-export const TEMPLATE_MIND_MAP_GENERATOR_EN = (graph_data, user_query) => `
-You are a highly skilled AI assistant. Given a user input and a set of data with properties, your role is to categorize the given data based on the user's intents and the provided data by selecting specific dimensions. Each category should have a name and a corresponding description. For each category, maintain a collection of the given data that belongs to that category in the 'children' field.
+export const TEMPLATE_MIND_MAP_GENERATOR_EN = (graph_data, input_ids, user_query) => `
+You are a highly skilled AI assistant in summarizing data and generating mind maps. Your task involves analyzing the user's actual intention given a user input and a list of graph data ids, and then select the appropriate dimensions to classify, summarize, and organize these graph data ids based on the specific intent and data.
+These ids correspond to graph data stored in the input graph data collection. Finally, you should output the classification results. Each category should have a 'name' and a corresponding 'description'.
 
 User Input: ${user_query}
-Graph Data: ${graph_data}
+Graph Data Collection: ${graph_data}
+
+Given the graph data collection, each dictionary in the "filtered_nodes" list corresponds to a piece of data. The 'id' attribute in each dictionary represents its data id. For each graph data id in ${input_ids}, if a dictionary exists in the graph data collection whose 'id' matches the graph data id, then that dictionary describes the attributes of that id.
+
+The output classification result should be structured as follows:
+
+{
+  "categories": [
+    {
+      "category_id": int,
+      "name": string,
+      "description": string
+    },
+    ...
+  ],
+  "data": [
+    {
+      "data_id": int,
+      "category": int (a category_id introduced in "categories"),
+    },
+    ...
+  ],
+  "summary": string,
+  "explain": string
+}
+In this structure, "categories" stores the information of the divided categories (generally consistent with the input categories), while "data" stores the classification information of each id in ${input_ids} corresponding to the graph data.
 
 Guidance:
-- When selecting dimensions for categorization, you should choose those that are as distinct and important as possible.
-- Avoid assigning the same data to multiple categories. Think carefully about how to classify each piece of data.
-- The number of categories is not necessarily the more the better; generally, dividing into 2-5 categories is preferable.
-- Ensure that in the 'children' field for each category, only the ids of the graph data are reserved.
-- Add all the provided graph data as possible to the relevant category.
-- Ensure each piece of graph data is assigned to a category in the output. You'll lose $1 million for each one you miss.
+- When selecting classification dimensions, choose those with high distinctiveness and importance according to the user intent wherever possible.
+- The number of categories is not necessarily the more the better; usually, classifying into 2-5 categories is more appropriate.
+- Ensure each piece of data belongs to only one category, and do not select multiple categories for the same piece of data. If accurate classification is not possible, classify them as 'others'.
 
-Attention:
+For example, suppose the input graph data contains 100 pieces of data with ids 1, 2, ..., 100, and the graph data ids to be classified are [1, 2, ..., 100], the "data" part of the output structure should be [{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 100, "category": xx}]. "[{"data_id": 1, "category": xx}, {"data_id": 1, "category": xx}, ..., {"data_id": 100, "category": xx}]" is an incorrect "data" part output because the data with "data_id" 1 is classified twice. "[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 105, "category": xx}]" is also an incorrect "data" part output because there is no data with id 105 in the graph data to be classified.
+
+Note:
+- The reponse MUST be a JSON and there MUSTN't be \`\`\`json in the response !
+- Put the category information in the 'category' field, and place any other information in other fields.
+- The 'summary' field is also required. You need to provide the most appropriate response based on the user's input and intent, then place it in the 'summary' field.
+- If you have any additional notes, you may include them in the 'explain' field.
+  `;
+
+
+export const TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_EN = (graph_data, input_ids, category, user_query) => `
+You are a highly skilled AI assistant in summarizing data and generating mind maps. Your task involves analyzing the user's actual intention given a user input, a list of graph data ids, and some existing categories. Based on the specific intention, you need to classify, summarize, and organize the data according to the provided categories. The graph data corresponding to the provided ids is stored within the graph data collection input. Finally, you should output the classification results. Each category should have a 'name' and a 'description'.
+
+User Input: ${user_query}
+Graph Data Collection: ${graph_data}
+Categories: ${category}
+
+Given the graph data collection, each dictionary in the "filtered_nodes" list corresponds to a piece of data. The 'id' attribute in each dictionary represents its data id. For each graph data id in ${input_ids}, if a dictionary exists in the graph data collection whose 'id' matches the graph data id, then that dictionary describes the attributes of that id.
+
+The output classification result should be structured as follows:
+
+{
+  "categories": [
+    {
+      "category_id": int,
+      "name": string,
+      "description": string
+    },
+    ...
+  ],
+  "data": [
+    {
+      "data_id": int,
+      "category": int (a category_id introduced in "categories"),
+    },
+    ...
+  ],
+  "summary": string,
+  "explain": string
+}
+In this structure, "categories" stores the information of the divided categories (generally consistent with the input categories), while "data" stores the classification information of each id in ${input_ids} corresponding to the graph data.
+
+Guidance:
+- If a piece of graph data cannot be classified into any given categories, a new category can be created with its description and an id described in 'categories', and the data can be placed in this category.
+- The number of categories is not necessarily the more the better; usually, classifying into 2-5 categories is more appropriate.
+- Ensure each piece of data belongs to only one category, and do not select multiple categories for the same piece of data.
+
+For example, suppose the input graph data contains 100 pieces of data with ids 1, 2, ..., 100, and the graph data ids to be classified are [1, 2, ..., 100], the "data" part of the output structure should be [{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 100, "category": xx}]. "[{"data_id": 1, "category": xx}, {"data_id": 1, "category": xx}, ..., {"data_id": 100, "category": xx}]" is an incorrect "data" part output because the data with "data_id" 1 is classified twice. "[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 105, "category": xx}]" is also an incorrect "data" part output because there is no data with id 105 in the graph data to be classified.
+
+Note:
 - The reponse MUST be a JSON and there MUSTN't be \`\`\`json in the response !
 - Put the category information in the 'category' field, and place any other information in other fields.
 - The 'summary' field is also required. You need to provide the most appropriate response based on the user's input and intent, then place it in the 'summary' field.
