@@ -1,5 +1,5 @@
 import React from 'react';
-import { Carousel, Flex, Image, Typography } from 'antd';
+import { Carousel, Flex, Image, Typography, Row, Col } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { carouselItems } from '../const';
 const contentStyle: React.CSSProperties = {
@@ -9,28 +9,31 @@ const contentStyle: React.CSSProperties = {
 };
 const { Title, Text } = Typography;
 const CarouselPanel: React.FC = () => (
-  <div style={{ padding: '100px 200px', backgroundColor: '#ccc' }}>
-    <Flex vertical gap={48}>
-      <Title style={{ textAlign: 'center' }}>We're making a difference</Title>
-
-      <Carousel arrows prevArrow={<LeftOutlined />} nextArrow={<RightOutlined />}>
+  <>
+    <Title style={{ margin: 0, textAlign: 'center' }} level={3}>
+      We're making a difference
+    </Title>
+    <div>
+      <Carousel arrows style={{ padding: '5%', backgroundColor: '#ccc', textAlign: 'center' }}>
         {carouselItems.map((item, index) => {
           const { url, title, description } = item;
           return (
-            <div key={index} style={contentStyle}>
-              <Flex gap={12} justify="center" align="center">
-                <Image src={url} width={139} preview={false} />
-                <Flex vertical>
-                  <Title>{title}</Title>
+            <div key={index}>
+              <Row align="middle">
+                <Col xs={0} sm={0} md={0} lg={4} xl={4}>
+                  <Image src={url} width={120} preview={false} />
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={20} xl={20}>
+                  <Title level={4}>{title}</Title>
                   <Text>{description}</Text>
-                </Flex>
-              </Flex>
+                </Col>
+              </Row>
             </div>
           );
         })}
       </Carousel>
-    </Flex>
-  </div>
+    </div>
+  </>
 );
 
 export default CarouselPanel;

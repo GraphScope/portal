@@ -11,59 +11,59 @@ const GenAI: React.FC<IGenAIProps> = ({ style = {} }) => {
     <svg width="573" height="428" xmlns="http://www.w3.org/2000/svg" fill="none">
       <defs>
         <linearGradient y2="0.61711" x2="1.19729" y1="-0.00005" x1="-0.00004" id="paint0_linear_5471_39113">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.61715" x2="1.19732" y1="-0.00004" x1="0.00003" id="paint1_linear_5471_39113">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.61748" x2="1.19719" y1="0.00004" x1="0" id="paint2_linear_5471_39113">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.61722" x2="1.19732" y1="0.00003" x1="0.00006" id="paint3_linear_5471_39113">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.87308" x2="1.09429" y1="0" x1="-0.44099" id="paint4_linear_5471_39113">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.61692" x2="1.19749" y1="-0.00001" x1="-0.00001" id="paint5_linear_5471_39113">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.56327" x2="1.2251" y1="0" x1="-0.00003" id="paint6_linear_5471_39113">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.56328" x2="1.2251" y1="0" x1="-0.00001" id="paint7_linear_5471_39113">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.61701" x2="1.19745" y1="0.00006" x1="0" id="paint8_linear_5471_39113">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.61738" x2="1.1972" y1="-0.00004" x1="-0.00004" id="paint9_linear_5471_39113">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.5142" x2="1.2504" y1="0" x1="0" id="paint10_linear_5471_39113">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
       </defs>
       <g>
@@ -670,7 +670,7 @@ const GenAI: React.FC<IGenAIProps> = ({ style = {} }) => {
         />
         <path
           id="svg_121"
-          fill-opacity="0.1"
+          fillOpacity="0.1"
           fill="url(#paint4_linear_5471_39113)"
           d="m328.896,239.5l11.5,-70.5l49.5,-11l9,-10.5l10.5,50.5l-46,38l-20.5,3.5l-14,0z"
         />
@@ -828,7 +828,7 @@ const GenAI: React.FC<IGenAIProps> = ({ style = {} }) => {
         />
         <path
           id="svg_152"
-          fill-opacity="0.1"
+          fillOpacity="0.1"
           fill="url(#paint10_linear_5471_39113)"
           d="m251.5,207l-3.5,-85.5l53.5,5l28,-22.5l10.5,64.5l-88.5,38.5z"
         />

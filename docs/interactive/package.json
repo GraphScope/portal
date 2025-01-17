@@ -9,6 +9,7 @@
     "deploy": "gh-pages -d out -t true"
   },
   "dependencies": {
+    "@uiw/react-codemirror": "^4.21.21",
     "next": "15.0.2",
     "next-seo": "^6.6.0",
     "nextra": "^2.13.2",

@@ -7,12 +7,12 @@ const Download: React.FC<IDownloadProps> = ({ style = {} }) => {
   const { color = '#FFF', fontSize = '16px' } = style;
 
   return (
-    <svg width="49" height="57" xmlns="http://www.w3.org/2000/svg" fill="none">
+    <svg style={style} width="53" height="56" xmlns="http://www.w3.org/2000/svg" fill="none">
       <defs>
         <linearGradient y2="1.3182" x2="0.0754" y1="0.0071" x1="-0.30797" id="paint0_linear_5471_39069">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.41146" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.41146" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
       </defs>
       <g>

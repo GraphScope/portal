@@ -9,8 +9,8 @@ interface DiscoverPlatformProps {}
 // Define reusable style constants
 const styles: Record<string, React.CSSProperties> = {
   section: {
+    padding: '24px 0',
     backgroundColor: '#dfecf9',
-    marginTop: '50px',
   },
   image: {
     width: '100%',
@@ -27,8 +27,8 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#1699fd',
   },
   timelineDot: {
-    padding: '8px 12px',
-    fontWeight: 600,
+    width: '32px',
+    height: '32px',
     fontSize: '16px',
     backgroundColor: '#b0d3f0',
     borderRadius: '50%',
@@ -40,10 +40,14 @@ const DiscoverPlatform: React.FC<DiscoverPlatformProps> = () => {
   // 创建可复用的时间轴项组件
   const renderTimelineItems = () =>
     items.map(({ title, description }, index) => ({
-      dot: <span style={styles.timelineDot}>{index + 1}</span>,
+      dot: (
+        <Flex style={styles.timelineDot} justify="center" align="center">
+          {index + 1}
+        </Flex>
+      ),
       children: (
         <>
-          <Title level={3}>{title}</Title>
+          <Title level={4}>{title}</Title>
           <Text>{description}</Text>
         </>
       ),
@@ -52,6 +56,7 @@ const DiscoverPlatform: React.FC<DiscoverPlatformProps> = () => {
   return (
     <Section style={styles.section}>
       <SplitSection
+        splitNumber={0}
         leftSide={
           <Flex vertical gap={24}>
             <Image
@@ -59,15 +64,17 @@ const DiscoverPlatform: React.FC<DiscoverPlatformProps> = () => {
               src="https://linkurious.com/images/uploads/2022/02/Getting-Started-e1635948191243.png"
               style={styles.image}
             />
-            <Title style={{ margin: 0 }}>How it works</Title>
+            <Title style={{ margin: 0 }} level={3}>
+              How it works
+            </Title>
             <Text>
               On-premise or in the cloud, real time or batch, scale to billions of nodes and edges - we've got you
               covered.
             </Text>
-            <Flex justify="space-between" align="center" gap={6}>
+            <Flex align="center" gap={12}>
               <Button style={styles.button}>Discover the platform</Button>
               <Flex justify="center" align="center" gap={6}>
-                <Title style={{ margin: 0, color: '#1a9bff' }} level={3}>
+                <Title style={{ margin: 0 }} level={5}>
                   Get a free trial
                 </Title>
                 <ArrowRightOutlined style={styles.arrowIcon} />

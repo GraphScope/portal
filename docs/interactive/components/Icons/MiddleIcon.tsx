@@ -8,7 +8,7 @@ const MiddleIcon: React.FC<IMiddleIconProps> = ({ style = {} }) => {
   const { color = '#fff', fontSize = '16px' } = style;
 
   return (
-    <svg style={style} width="136" height="147" xmlns="http://www.w3.org/2000/svg">
+    <svg style={style} width="139" height="150" xmlns="http://www.w3.org/2000/svg">
       <g>
         <path
           stroke="null"

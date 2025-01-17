@@ -11,7 +11,7 @@ const Pricing: React.FC<IPricingProps> = ({ style = {} }) => {
     <svg width="573" height="428" xmlns="http://www.w3.org/2000/svg" fill="none">
       <defs>
         <filter
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
           filterUnits="userSpaceOnUse"
           height="296.909"
           width="360.023"
@@ -25,78 +25,78 @@ const Pricing: React.FC<IPricingProps> = ({ style = {} }) => {
           <rect id="svg_1" fill="white" height="428" width="573" />
         </clipPath>
         <linearGradient y2="0.72295" x2="1.1428" y1="0" x1="0" id="paint0_linear_6762_22521">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.66911" x2="1.23084" y1="-0.04023" x1="-0.04133" id="paint1_linear_6762_22521">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.66911" x2="1.23088" y1="-0.04023" x1="-0.04133" id="paint2_linear_6762_22521">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.66911" x2="1.23084" y1="-0.04023" x1="-0.04133" id="paint3_linear_6762_22521">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.66911" x2="1.23088" y1="-0.04023" x1="-0.04129" id="paint4_linear_6762_22521">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.95378" x2="1.0153" y1="0.05491" x1="-0.00402" id="paint5_linear_6762_22521">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.95378" x2="1.0153" y1="0.05491" x1="-0.00402" id="paint6_linear_6762_22521">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.95378" x2="1.0153" y1="0.05491" x1="-0.00406" id="paint7_linear_6762_22521">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.95378" x2="1.0153" y1="0.05491" x1="-0.00406" id="paint8_linear_6762_22521">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.95379" x2="1.01526" y1="0.05491" x1="-0.00406" id="paint9_linear_6762_22521">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.95379" x2="1.01526" y1="0.05491" x1="-0.00406" id="paint10_linear_6762_22521">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.95379" x2="1.01526" y1="0.05491" x1="-0.00406" id="paint11_linear_6762_22521">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.95379" x2="1.01526" y1="0.05491" x1="-0.00406" id="paint12_linear_6762_22521">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="2.34297" x2="0.67637" y1="-0.01219" x1="-0.00325" id="paint13_linear_6762_22521">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.41146" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.41146" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
       </defs>
       <g>
-        <g id="svg_2" clip-path="url(#clip0_6762_22521)">
+        <g id="svg_2" clipPath="url(#clip0_6762_22521)">
           <path
             id="svg_3"
             fill="url(#paint0_linear_6762_22521)"
@@ -188,7 +188,7 @@ const Pricing: React.FC<IPricingProps> = ({ style = {} }) => {
           />
           <rect
             id="svg_17"
-            stroke-width="1.769"
+            strokeWidth="1.769"
             stroke="url(#paint1_linear_6762_22521)"
             transform="rotate(-1.93083 129.531 149.414)"
             rx="0.8845"
@@ -199,7 +199,7 @@ const Pricing: React.FC<IPricingProps> = ({ style = {} }) => {
           />
           <rect
             id="svg_18"
-            stroke-width="1.769"
+            strokeWidth="1.769"
             stroke="url(#paint2_linear_6762_22521)"
             transform="rotate(-1.93083 131.23 199.802)"
             rx="0.8845"
@@ -210,7 +210,7 @@ const Pricing: React.FC<IPricingProps> = ({ style = {} }) => {
           />
           <rect
             id="svg_19"
-            stroke-width="1.769"
+            strokeWidth="1.769"
             stroke="url(#paint3_linear_6762_22521)"
             transform="rotate(-1.93083 132.84 247.538)"
             rx="0.8845"
@@ -221,7 +221,7 @@ const Pricing: React.FC<IPricingProps> = ({ style = {} }) => {
           />
           <rect
             id="svg_20"
-            stroke-width="1.769"
+            strokeWidth="1.769"
             stroke="url(#paint4_linear_6762_22521)"
             transform="rotate(-1.93083 134.39 293.506)"
             rx="0.8845"
@@ -232,35 +232,35 @@ const Pricing: React.FC<IPricingProps> = ({ style = {} }) => {
           />
           <path
             id="svg_21"
-            stroke-width="0.51077"
+            strokeWidth="0.51077"
             stroke="url(#paint6_linear_6762_22521)"
             fill="url(#paint5_linear_6762_22521)"
             d="m140.562,165.098c0.129,0.12 0.281,0.215 0.446,0.277c0.166,0.062 0.342,0.091 0.518,0.085c0.177,-0.006 0.351,-0.047 0.512,-0.12l-0.106,-0.232l0.106,0.232c0.161,-0.073 0.305,-0.177 0.426,-0.306c0,0 0,0 0,0l16.836,-18.011c0.244,-0.261 0.374,-0.608 0.362,-0.965c-0.012,-0.356 -0.165,-0.694 -0.426,-0.937l-0.173,0.185l0.173,-0.185c-0.26,-0.244 -0.607,-0.374 -0.964,-0.362c-0.357,0.012 -0.694,0.165 -0.938,0.426l0,0l-15.917,17.029l-6.897,-6.448l0,0c-0.261,-0.244 -0.607,-0.374 -0.964,-0.362c-0.357,0.012 -0.694,0.165 -0.938,0.426c-0.243,0.261 -0.374,0.608 -0.362,0.964c0.012,0.357 0.166,0.694 0.426,0.938l7.88,7.366zm0,0l0.175,-0.187l-0.175,0.187l0,0z"
           />
           <path
             id="svg_22"
-            stroke-width="0.51077"
+            strokeWidth="0.51077"
             stroke="url(#paint8_linear_6762_22521)"
             fill="url(#paint7_linear_6762_22521)"
             d="m142.238,214.87c0.129,0.12 0.281,0.214 0.446,0.277c0.165,0.062 0.342,0.091 0.518,0.085c0.177,-0.006 0.351,-0.047 0.512,-0.12l-0.106,-0.233l0.106,0.233c0.16,-0.073 0.305,-0.177 0.426,-0.306c0,-0.001 0,-0.001 0,-0.001l16.836,-18.011c0.244,-0.26 0.374,-0.607 0.362,-0.964c-0.012,-0.356 -0.165,-0.694 -0.426,-0.937l-0.173,0.185l0.173,-0.185c-0.261,-0.244 -0.608,-0.374 -0.964,-0.362c-0.357,0.012 -0.694,0.165 -0.938,0.426l0,0l-15.917,17.029l-6.897,-6.448l0,0c-0.261,-0.244 -0.608,-0.374 -0.964,-0.362c-0.357,0.012 -0.694,0.165 -0.938,0.426c-0.244,0.261 -0.374,0.607 -0.362,0.964c0.012,0.357 0.165,0.694 0.426,0.938l7.88,7.366zm0,0l0.174,-0.187l-0.174,0.187l0,0z"
           />
           <path
             id="svg_23"
-            stroke-width="0.51077"
+            strokeWidth="0.51077"
             stroke="url(#paint10_linear_6762_22521)"
             fill="url(#paint9_linear_6762_22521)"
             d="m143.875,263.365c0.129,0.121 0.28,0.215 0.446,0.277c0.165,0.063 0.341,0.092 0.518,0.086c0.177,-0.006 0.35,-0.047 0.511,-0.12l-0.105,-0.233l0.105,0.233c0.161,-0.073 0.306,-0.177 0.427,-0.307c0,0 0,0 0,0l16.836,-18.011c0.244,-0.26 0.374,-0.607 0.362,-0.964c-0.012,-0.357 -0.166,-0.694 -0.426,-0.938l-0.174,0.186l0.174,-0.186c-0.261,-0.243 -0.608,-0.373 -0.964,-0.361c-0.357,0.012 -0.694,0.165 -0.938,0.426l0,0l-15.917,17.029l-6.897,-6.448l0,0c-0.261,-0.244 -0.608,-0.374 -0.965,-0.362c-0.356,0.012 -0.694,0.165 -0.937,0.426c-0.244,0.26 -0.374,0.607 -0.362,0.964c0.012,0.357 0.165,0.694 0.426,0.938l7.88,7.365zm0,0l0.174,-0.186l-0.174,0.186l0,0z"
           />
           <path
             id="svg_24"
-            stroke-width="0.51077"
+            strokeWidth="0.51077"
             stroke="url(#paint12_linear_6762_22521)"
             fill="url(#paint11_linear_6762_22521)"
             d="m145.379,308.033c0.129,0.12 0.28,0.214 0.446,0.277c0.165,0.062 0.341,0.091 0.518,0.085c0.176,-0.006 0.35,-0.047 0.511,-0.12l-0.106,-0.233l0.106,0.233c0.161,-0.073 0.306,-0.177 0.426,-0.307c0.001,0 0.001,0 0.001,0l16.836,-18.011c0.243,-0.26 0.374,-0.607 0.362,-0.964c-0.012,-0.356 -0.166,-0.694 -0.426,-0.937l-0.174,0.185l0.174,-0.185c-0.261,-0.244 -0.608,-0.374 -0.965,-0.362c-0.356,0.012 -0.694,0.165 -0.937,0.426l0,0l-15.918,17.029l-6.896,-6.448l0,0c-0.261,-0.244 -0.608,-0.374 -0.965,-0.362c-0.356,0.012 -0.694,0.165 -0.937,0.426c-0.244,0.261 -0.374,0.607 -0.362,0.964c0.012,0.357 0.165,0.694 0.426,0.938l7.88,7.366zm0,0l0.174,-0.187l-0.174,0.187l0,0z"
           />
           <rect
             id="svg_25"
-            stroke-width="1.61745"
+            strokeWidth="1.61745"
             stroke="url(#paint13_linear_6762_22521)"
             fill="#F9F9F9"
             rx="2.42617"
@@ -271,7 +271,7 @@ const Pricing: React.FC<IPricingProps> = ({ style = {} }) => {
           />
           <line
             id="svg_26"
-            stroke-width="0.91992"
+            strokeWidth="0.91992"
             stroke="#231F20"
             y2="73.5996"
             x2="366.076"
@@ -280,16 +280,16 @@ const Pricing: React.FC<IPricingProps> = ({ style = {} }) => {
           />
           <line
             id="svg_27"
-            stroke-width="0.91992"
+            strokeWidth="0.91992"
             stroke="#231F20"
             y2="73.5996"
             x2="441.084"
             y1="73.5996"
             x1="397.211"
           />
-          <circle id="svg_28" stroke-width="1.27693" stroke="#231F20" r="5.02261" cy="74.0596" cx="306.638" />
-          <circle id="svg_29" stroke-width="1.27693" stroke="#231F20" r="5.02261" cy="74.0596" cx="381.645" />
-          <circle id="svg_30" stroke-width="1.27693" stroke="#231F20" r="5.02261" cy="74.0596" cx="456.653" />
+          <circle id="svg_28" strokeWidth="1.27693" stroke="#231F20" r="5.02261" cy="74.0596" cx="306.638" />
+          <circle id="svg_29" strokeWidth="1.27693" stroke="#231F20" r="5.02261" cy="74.0596" cx="381.645" />
+          <circle id="svg_30" strokeWidth="1.27693" stroke="#231F20" r="5.02261" cy="74.0596" cx="456.653" />
           <path
             id="svg_31"
             fill="#231F20"

@@ -1,14 +1,25 @@
 import React from 'react';
-import { Button } from 'antd';
+import { Button, theme } from 'antd';
 
 interface IStyledButtonProps {
+  url?: string;
   children: React.ReactNode;
   style?: React.CSSProperties;
 }
 
-const StyledButton: React.FC<IStyledButtonProps> = ({ children, style, ...props }) => (
-  <Button size="large" style={{ backgroundColor: '#000', color: '#fff', fontSize: '16px', ...style }} {...props}>
-    {children}
-  </Button>
-);
+const StyledButton: React.FC<IStyledButtonProps> = ({ url, children, style, ...props }) => {
+  const { token } = theme.useToken();
+  return (
+    <Button
+      size="large"
+      style={{ backgroundColor: token.colorTextBase, color: token.colorBgBase, fontSize: '16px', ...style }}
+      {...props}
+      onClick={() => {
+        window.open(url, '_blank');
+      }}
+    >
+      {children}
+    </Button>
+  );
+};
 export default StyledButton;

@@ -8,7 +8,7 @@ const SecurityIcon: React.FC<ISecurityIconProps> = ({ style = {} }) => {
   const { color = '#F97108', fontSize = '16px' } = style;
 
   return (
-    <svg width="206" height="151" xmlns="http://www.w3.org/2000/svg">
+    <svg width="165" height="151" xmlns="http://www.w3.org/2000/svg">
       <g>
         <path
           stroke="null"

@@ -10,24 +10,24 @@ const Community: React.FC<ICommunityProps> = ({ style = {} }) => {
     <svg width="57" height="56" xmlns="http://www.w3.org/2000/svg" fill="none">
       <defs>
         <linearGradient y2="0.61717" x2="1.19733" y1="0" x1="0" id="paint0_linear_5471_39089">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="1.32569" x2="0.83212" y1="0" x1="0" id="paint1_linear_5471_39089">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="1.63177" x2="0.67435" y1="0" x1="0" id="paint2_linear_5471_39089">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
         <linearGradient y2="0.61716" x2="1.19733" y1="0" x1="0" id="paint3_linear_5471_39089">
-          <stop stop-color="#25b3fd" />
-          <stop stop-color="#3cecd7" offset="0.505" />
-          <stop stop-color="#2782f3" offset="1" />
+          <stop stopColor="#25b3fd" />
+          <stop stopColor="#3cecd7" offset="0.505" />
+          <stop stopColor="#2782f3" offset="1" />
         </linearGradient>
       </defs>
       <g>
