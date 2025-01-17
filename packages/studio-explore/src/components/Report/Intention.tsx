@@ -5,7 +5,14 @@ import { query } from '../Copilot/query';
 import { Message } from '../Copilot/utils/message';
 import { useContext } from '@graphscope/studio-graph';
 import Summary from './Summary';
-import { filterDataByParticalSchema, flattenListofDict, getAllAttributesByName, getStrSizeInKB, sampleHalf } from './utils';
+import {
+  filterDataByParticalSchema,
+  flattenListofDict,
+  getAllAttributesByName,
+  getStrSizeInKB,
+  sampleHalf,
+  getCategories,
+} from './utils';
 import type { ItentionType } from './index';
 import { debug } from 'console';
 interface IReportProps {
@@ -13,7 +20,7 @@ interface IReportProps {
   intention: ItentionType;
 }
 export interface SummaryType {
-  category: {
+  categories: {
     name: string;
     description: string;
     children: {
@@ -70,7 +77,6 @@ Note:
 - The 'summary' field is also required. You need to provide the most appropriate response based on the user's input and intent, then place it in the 'summary' field.
 - If you have any additional notes, you may include them in the 'explain' field.
   `;
-
 
 export const TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_EN = (graph_data, input_ids, category, user_query) => `
 You are a highly skilled AI assistant in summarizing data and generating mind maps. Your task involves analyzing the user's actual intention given a user input, a list of graph data ids, and some existing categories. Based on the specific intention, you need to classify, summarize, and organize the data according to the provided categories. The graph data corresponding to the provided ids is stored within the graph data collection input. Finally, you should output the classification results. Each category should have a 'name' and a 'description'.
@@ -220,7 +226,7 @@ export const TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_CHN = (graph_data, input_id
 - 如果你还有其他备注，可以放在  'explain' 字段中
 - 在输出中，保留图数据的原始语言（中文或英文），其余内容请转为中文进行输出
   `;
-  
+
 export const TEMPLATE_MIND_MAP_GENERATOR = (graph_data, user_query) => `
 你是一位很有天赋的 AI 助理。你的任务是根据用户的目标和提供的数据，通过选择特定的维度来对给定的数据进行分类。每个类别应具有名称('name')和相应的描述('description')。
 对于每个类别，需要在 'children' 字段中维护属于该分类的给定数据的集合
@@ -269,21 +275,25 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
 
     // const { flatten_keys, flatten_values } = flattenListofDict(nodes)
 
-    let all_ids = getAllAttributesByName(nodes, "id");
+    let all_ids = nodes.map(item => item.id); //getAllAttributesByName(nodes, "id");
     let iterate_time = 0;
     let category_dict = {};
     let outputs = {};
-    let res = {"data": [{"data_id": ""}], "categories": []};
-    let prompt_size_bound = 12.8;
-    
+    let res = { data: [{ data_id: '' }], categories: [] };
+    let prompt_size_bound = 62.8;
+
     while (all_ids.length > 0) {
       let filtered_ids = all_ids.slice();
-      let current_prompt = "";
+      let current_prompt = '';
 
       if (iterate_time === 0) {
         while (true) {
           const filtered_nodes = nodes.filter(node => filtered_ids.includes(node.id));
-          current_prompt = TEMPLATE_MIND_MAP_GENERATOR_CHN(JSON.stringify({ filtered_nodes, edges }), JSON.stringify(filtered_ids), task);
+          current_prompt = TEMPLATE_MIND_MAP_GENERATOR_CHN(
+            JSON.stringify({ filtered_nodes, edges }),
+            JSON.stringify(filtered_ids),
+            task,
+          );
           if (getStrSizeInKB(current_prompt) < prompt_size_bound || filtered_ids.length === 1) {
             break;
           }
@@ -301,7 +311,12 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
       } else {
         while (true) {
           const filtered_nodes = nodes.filter(node => filtered_ids.includes(node.id));
-          current_prompt = TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_CHN(JSON.stringify({ filtered_nodes, edges }), JSON.stringify(filtered_ids), JSON.stringify(category_dict), task);
+          current_prompt = TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_CHN(
+            JSON.stringify({ filtered_nodes, edges }),
+            JSON.stringify(filtered_ids),
+            JSON.stringify(category_dict),
+            task,
+          );
           if (getStrSizeInKB(current_prompt) < prompt_size_bound || filtered_ids.length === 1) {
             break;
           }
@@ -317,11 +332,11 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
         ]);
         res = JSON.parse(_res.message.content);
       }
-      
+
       const data_ids = res.data.map(item => item.data_id.toString());
       category_dict = res.categories;
       all_ids = all_ids.filter(element => !data_ids.includes(element));
-      iterate_time = iterate_time + 1
+      iterate_time = iterate_time + 1;
 
       for (const item of res.data) {
         outputs[item.data_id] = item.category;
@@ -329,10 +344,11 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
     }
 
     debugger;
-
-    res.category.forEach(element => {
+    const _categories = getCategories(outputs, res.categories);
+    _categories.forEach(element => {
       element.children = nodes.filter(n => element.children.includes(n.id));
     });
+    res.categories = _categories;
     debugger;
     setState(preState => {
       return {
@@ -341,7 +357,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
         summary: res,
       };
     });
-    console.log(_res);
+    console.log(res);
   };
 
   return (
@@ -406,7 +422,6 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
       <Button block icon={<OpenAIOutlined />} onClick={handleConfirm} loading={loading}>
         Generate Mindmap
       </Button>
-
       {summary && <Summary {...summary} task={task} />}
     </Flex>
   );

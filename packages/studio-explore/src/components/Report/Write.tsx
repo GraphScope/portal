@@ -3,11 +3,7 @@ import { Button, Flex } from 'antd';
 import { query } from '../Copilot/query';
 import { Message } from '../Copilot/utils/message';
 import ReactMarkdown from 'react-markdown';
-
-interface IWriteReportProps {
-  category: any;
-  task: string;
-}
+import type { SummaryType } from './Intention';
 
 const SECTION_CONSTANT_EXAMPLE_EN = () => {
   return `
@@ -28,15 +24,15 @@ standardization of ISO/GQL \\cite{[Id]}, highlights the evolving nature of graph
 Additionally, many graph databases offer the capability to register custom stored procedures for
 enhanced querying functionality.
   `;
-}
+};
 
-const SECTION_PREVIOUS_EXAMPLE_EN = (example) => {
+const SECTION_PREVIOUS_EXAMPLE_EN = example => {
   return `
 The following is the previously generated subsections on other categories.
 Please create a new subsection to continue writing about the current category:
 ${example}
   `;
-}
+};
 
 const GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN = (user_query, category, max_tokens, example) => {
   return `
@@ -127,8 +123,12 @@ const GET_REPORT_PROMPTS_2 = (user_query, mind_map) => {
   
   `;
 };
-const WriteReportBySection: React.FunctionComponent<IWriteReportProps> = props => {
-  const { category, task } = props;
+const WriteReportBySection: React.FunctionComponent<
+  SummaryType & {
+    task: string;
+  }
+> = props => {
+  const { categories, task } = props;
   const [state, setState] = useState({
     loading: false,
     report: '',
@@ -145,24 +145,33 @@ const WriteReportBySection: React.FunctionComponent<IWriteReportProps> = props =
 
     const max_token_per_subsection = 200;
     let subsection_id = 0;
-    let total_text = ""
+    let total_text = '';
 
-    for (let category_info of category) {
+    for (let category_info of categories) {
       subsection_id += 1;
       if (subsection_id === 1) {
         const res_section = await query([
           new Message({
             role: 'user',
-            content: GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN(task, JSON.stringify(category_info), max_token_per_subsection.toString(), SECTION_CONSTANT_EXAMPLE_EN),
+            content: GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN(
+              task,
+              JSON.stringify(category_info),
+              max_token_per_subsection.toString(),
+              SECTION_CONSTANT_EXAMPLE_EN,
+            ),
           }),
         ]);
         total_text += res_section.message.content;
-      }
-      else {
+      } else {
         const res_section = await query([
           new Message({
             role: 'user',
-            content: GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN(task, JSON.stringify(category_info), max_token_per_subsection.toString(), SECTION_PREVIOUS_EXAMPLE_EN(total_text)),
+            content: GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN(
+              task,
+              JSON.stringify(category_info),
+              max_token_per_subsection.toString(),
+              SECTION_PREVIOUS_EXAMPLE_EN(total_text),
+            ),
           }),
         ]);
         total_text += res_section.message.content;
@@ -201,8 +210,12 @@ const WriteReportBySection: React.FunctionComponent<IWriteReportProps> = props =
     </Flex>
   );
 };
-const WriteReport: React.FunctionComponent<IWriteReportProps> = props => {
-  const { category, task } = props;
+const WriteReport: React.FunctionComponent<
+  SummaryType & {
+    task: string;
+  }
+> = props => {
+  const { categories, task } = props;
   const [state, setState] = useState({
     loading: false,
     report: '',
@@ -220,7 +233,7 @@ const WriteReport: React.FunctionComponent<IWriteReportProps> = props => {
     const res = await query([
       new Message({
         role: 'user',
-        content: GET_REPORT_PROMPTS_CHN(task, JSON.stringify(category)),
+        content: GET_REPORT_PROMPTS_CHN(task, JSON.stringify(categories)),
       }),
     ]);
 

@@ -5,9 +5,10 @@ import { DownOutlined } from '@ant-design/icons';
 import { useApis } from '@graphscope/studio-graph';
 import { useDynamicStyle } from '@graphscope/studio-components';
 import WriteReport from './Write';
+import { filterDataByParticalSchema } from './utils';
 
 const Summary: React.FunctionComponent<SummaryType & { task: string }> = props => {
-  const { category, summary, explain, task } = props;
+  const { categories, summary, explain, task } = props;
   console.log('Summary', props);
   const { focusNodes } = useApis();
   useDynamicStyle(
@@ -23,7 +24,7 @@ const Summary: React.FunctionComponent<SummaryType & { task: string }> = props =
     <Flex vertical gap={12}>
       <Typography.Text type="secondary">{summary}</Typography.Text>
       <Timeline
-        items={category.map(item => {
+        items={categories.map(item => {
           const { name, description, children } = item;
           return {
             color: 'green',
@@ -62,7 +63,7 @@ const Summary: React.FunctionComponent<SummaryType & { task: string }> = props =
         })}
       />
 
-      <WriteReport category={category} task={task} />
+      <WriteReport categories={categories} task={task} />
     </Flex>
   );
 };

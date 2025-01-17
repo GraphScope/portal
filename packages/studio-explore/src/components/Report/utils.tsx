@@ -52,7 +52,6 @@ export const filterDataByParticalSchema = (schema, data) => {
   return { nodes, edges };
 };
 
-
 export const getAllAttributesByName = (data, attrName) => {
   function extractAttr(obj, attrName) {
     for (let key in obj) {
@@ -70,12 +69,11 @@ export const getAllAttributesByName = (data, attrName) => {
 
   const all_attrs = data.map(dict => extractAttr(dict, attrName));
   return all_attrs;
-}
+};
 
-
-export const flattenListofDict = (data) => {
+export const flattenListofDict = data => {
   function extractKeys(obj) {
-    let keys = []
+    let keys = [];
 
     for (let key in obj) {
       if (typeof obj[key] === 'object' && obj[key] !== null) {
@@ -108,17 +106,17 @@ export const flattenListofDict = (data) => {
   const flatten_keys = extractKeys(data[0]);
   const flatten_values = data.map(dict => extractValues(dict));
 
-  return { flatten_keys,flatten_values }
-}
+  return { flatten_keys, flatten_values };
+};
 
-export const getStrSizeInKB = (str) => {
+export const getStrSizeInKB = str => {
   const byteLength = new TextEncoder().encode(str).length;
   const sizeInKB = byteLength / 1024;
 
   return sizeInKB;
-}
+};
 
-export const sampleHalf = (array) => {
+export const sampleHalf = array => {
   const halfLength = Math.floor(array.length / 2);
 
   // 克隆数组以避免修改原数组
@@ -132,4 +130,22 @@ export const sampleHalf = (array) => {
 
   // 返回洗牌后的前半部分元素
   return shuffled.slice(0, halfLength);
-}
+};
+
+export const getCategories = (output, categories) => {
+  const category_children_map = {};
+  for (const key in output) {
+    const value = output[key];
+    if (!category_children_map[value]) {
+      category_children_map[value] = [key];
+    } else {
+      category_children_map[value].push(key);
+    }
+  }
+  return categories.map(category => {
+    return {
+      ...category,
+      children: category_children_map[category.category_id],
+    };
+  });
+};
