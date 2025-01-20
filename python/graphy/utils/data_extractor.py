@@ -159,7 +159,7 @@ class GraphBuilder:
                 if not paper_data.get("id", ""):
                     # this is a bug of inconsistent data
                     if "title" in paper_data:
-                        paper_data["id"] = id_generator(paper_data["title"].lower())
+                        paper_data["id"] = id_generator(paper_data["title"])
                     else:
                         continue
                 # some hacking messy stuff
