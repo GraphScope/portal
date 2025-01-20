@@ -17,22 +17,22 @@ args.forEach(arg => {
 //@ts-ignore
 const { mode } = params;
 const isSingle = mode === 'single' && process.env.NODE_ENV === 'production';
-
+const isLess = mode === 'less' && process.env.NODE_ENV === 'production';
 
 console.log('params', params, args);
 
-const plugins = isSingle ? [react(), 
-  // viteSingleFile(), 
-  wasm()] : [react(), wasm()];
-const rollupOptions = isSingle ? {
-  output: {
-    globals: {},                           // 如果有外部依赖，这里定义全局变量映射
-    inlineDynamicImports: true,            // 内联动态导入，防止拆分
-    entryFileNames: `[name].portal.js`, // 不带hash的入口文件名
-    chunkFileNames: `[name].portal.js`, // 不带hash的块文件名
-    assetFileNames: `[name].portal.[ext]`, // 不带hash的资源文件名
-  }
-}:{}
+const plugins = isSingle ? [react(), viteSingleFile(), wasm()] : [react(), wasm()];
+const rollupOptions = isLess
+  ? {
+      output: {
+        globals: {}, // 如果有外部依赖，这里定义全局变量映射
+        inlineDynamicImports: true, // 内联动态导入，防止拆分
+        entryFileNames: `[name].portal.js`, // 不带hash的入口文件名
+        chunkFileNames: `[name].portal.js`, // 不带hash的块文件名
+        assetFileNames: `[name].portal.[ext]`, // 不带hash的资源文件名
+      },
+    }
+  : {};
 const { parsed } = dotenv.configDotenv();
 
 const { COORDINATOR_URL } = parsed || {};
@@ -71,8 +71,8 @@ export default defineConfig({
     outDir: './dist',
     rollupOptions: {
       external: ['node:os', 'fsevents'], // 要排除的模块
-      ...rollupOptions
-    }
+      ...rollupOptions,
+    },
   },
   plugins,
   optimizeDeps: {
