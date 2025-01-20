@@ -11,6 +11,7 @@ export const filterDataByParticalSchema = (schema, data) => {
   const edge_labels = schema.edges.map(item => {
     return item.label;
   });
+  console.log('edge_labels', edge_labels);
 
   const nodes = data.nodes
     .filter(node => {
@@ -52,6 +53,7 @@ export const filterDataByParticalSchema = (schema, data) => {
         }, {}),
       };
     });
+  console.log(nodes, edges);
   return { nodes, edges };
 };
 
@@ -114,6 +116,21 @@ export const getCategories = (output, categories) => {
     };
   });
 };
+
+export const getInducedSubgraph = (nodes, edges, target_nodes) => {
+  const filter_edges = edges.filter(edge => {
+    return edge.source in target_nodes || edge.target in target_nodes;
+  });
+  console.log(filter_edges);
+  const connectedNodeIds = new Set();
+  filter_edges.forEach(edge => {
+    connectedNodeIds.add(edge.source.id);
+    connectedNodeIds.add(edge.target.id);
+  });
+  const filtered_nodes = nodes.filter(node => connectedNodeIds.has(node.id));
+
+  return { filtered_nodes, filter_edges };
+}
 
 import { Utils } from '@graphscope/studio-components';
 export const getPrompt = obj => {

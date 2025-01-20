@@ -5,10 +5,11 @@ import { query } from '../Copilot/query';
 import { Message } from '../Copilot/utils/message';
 import { useContext } from '@graphscope/studio-graph';
 import Summary from './Summary';
-import { filterDataByParticalSchema, getAllAttributesByName, getStrSizeInKB, sampleHalf, getCategories } from './utils';
+import { filterDataByParticalSchema, getAllAttributesByName, getStrSizeInKB, sampleHalf, getCategories, getInducedSubgraph } from './utils';
 import type { ItentionType } from './index';
 import AddNodes from './AddNodes';
 import { getPrompt } from './utils';
+import { debug } from 'console';
 interface IReportProps {
   task: string;
   intention: ItentionType;
@@ -269,7 +270,12 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
 
     // const { flatten_keys, flatten_values } = flattenListofDict(nodes)
 
-    let all_ids = nodes.map(item => item.id); //getAllAttributesByName(nodes, "id");
+    // let all_ids = nodes.map(item => item.id); //getAllAttributesByName(nodes, "id");
+
+    let all_ids = nodes.filter(node => {
+      return !node.label.startsWith('Dimension_')
+    }).map(item => item.id);
+
     let iterate_time = 0;
     let category_dict = {};
     let outputs = {};
@@ -282,11 +288,13 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
 
       if (iterate_time === 0) {
         while (true) {
-          const filtered_nodes = nodes.filter(node => filtered_ids.includes(node.id));
+          const { filtered_nodes, filter_edges } = getInducedSubgraph(nodes, edges, all_ids);
+          debugger;
+
           current_prompt = getPrompt({
             'zh-CN': TEMPLATE_MIND_MAP_GENERATOR_CHN,
             'en-US': TEMPLATE_MIND_MAP_GENERATOR_EN,
-          })(JSON.stringify({ filtered_nodes, edges }), JSON.stringify(filtered_ids), task);
+          })(JSON.stringify({ filtered_nodes, filter_edges }), JSON.stringify(filtered_ids), task);
           if (getStrSizeInKB(current_prompt) < prompt_size_bound || filtered_ids.length === 1) {
             break;
           }
@@ -303,12 +311,13 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
         res = JSON.parse(_res.message.content);
       } else {
         while (true) {
-          const filtered_nodes = nodes.filter(node => filtered_ids.includes(node.id));
+          const { filtered_nodes, filter_edges } = getInducedSubgraph(nodes, edges, all_ids);
+
           current_prompt = getPrompt({
             'zh-CN': TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_CHN,
             'en-US': TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_EN,
           })(
-            JSON.stringify({ filtered_nodes, edges }),
+            JSON.stringify({ filtered_nodes, filter_edges }),
             JSON.stringify(filtered_ids),
             JSON.stringify(category_dict),
             task,
