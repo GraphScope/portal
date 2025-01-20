@@ -54,6 +54,7 @@ class PDFExtractNode(BaseNode):
             raise ValueError("Memory manager is not provided in the state.")
         data_id = memory_manager.collection_name
         pdf_extractor = state.get(WF_STATE_EXTRACTOR_KEY, None)
+        filename = os.path.basename(pdf_extractor.file_path)
         if not pdf_extractor:
             raise ValueError("PDF extractor is not provided in the state.")
 
@@ -89,6 +90,7 @@ class PDFExtractNode(BaseNode):
 
         paper_metadata["reference"].extend(pdf_paper_references)
         paper_metadata["data_id"] = data_id
+        paper_metadata["filename"] = filename
 
         pdf_extractor.clear()
 

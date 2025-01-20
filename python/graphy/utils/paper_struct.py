@@ -123,7 +123,7 @@ class Paper:
 
         paper_id = parsed_meta.get("id", "")
         if paper_id == "":
-            parsed_meta["id"] = id_generator(parsed_meta.get("title", "").lower())
+            parsed_meta["id"] = id_generator(parsed_meta.get("title", ""))
 
         if not parsed_meta.get("published", ""):
             try:

@@ -7,6 +7,7 @@ import hashlib
 
 
 def id_generator(value: str, length: int = 16) -> str:
+    value = value.lower()
     return hashlib.sha256(value.encode()).hexdigest()[:length]
 
 
