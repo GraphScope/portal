@@ -62,7 +62,7 @@ const Summary: React.FunctionComponent<SummaryType & { task: string }> = props =
           };
         })}
       />
-
+      {/** @ts-ignore */}
       <WriteReport categories={categories} task={task} />
     </Flex>
   );

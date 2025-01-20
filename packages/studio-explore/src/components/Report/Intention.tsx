@@ -339,6 +339,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
       iterate_time = iterate_time + 1;
 
       for (const item of res.data) {
+        //@ts-ignore
         outputs[item.data_id] = item.category;
       }
     }
@@ -350,6 +351,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
     });
     res.categories = _categories;
     debugger;
+    //@ts-ignore
     setState(preState => {
       return {
         ...preState,
