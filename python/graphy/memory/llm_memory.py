@@ -103,7 +103,7 @@ class RetrievedMemory:
                 end = start + chunk_size
 
             thread = threading.Thread(
-                target=self.init_memory, args=(docs[start:end], ids_format)
+                target=self.init_memory, args=(docs[start:end], ids_format, start)
             )
             threads.append(thread)
 
@@ -225,13 +225,15 @@ class RetrievedMemory:
         # print("###################### CONDITION OUTPUT ##########################")
         # print(su_exec.search("what is the challenges"))
 
-    def init_memory(self, docs: List[dict], ids_format: list):
+    def init_memory(self, docs: List[dict], ids_format: list, start: int):
         documents = []
         metadatas = []
         embeddings = []
         ids = []
+        count = start - 1
 
         for doc in docs:
+            count += 1
             content = doc["page_content"]
             metadata = doc["metadata"]
             try:
@@ -245,9 +247,11 @@ class RetrievedMemory:
 
             if "type" in metadata:
                 if metadata["type"] == VectorDBHierarchy.FirstLayer.value:
-                    doc_id = f"{self.collection_name}_{content}"
+                    doc_id = f"{self.collection_name}_{content}_{count}"
                 elif metadata["type"] == VectorDBHierarchy.SecondLayer.value:
-                    doc_id = self.collection_name + "_" + metadata["id"]
+                    doc_id = (
+                        self.collection_name + "_" + metadata["id"] + "_" + str(count)
+                    )
                     # for id_item in ids_format:
                     # doc_id = doc_id + "_" + str(id_item) + str(metadata[id_item])
                 else:

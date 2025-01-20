@@ -1036,6 +1036,9 @@ class BibSearchArxiv(BibSearch):
             "month": paper_info.published.month,
             "url": [str(link) for link in paper_info.links if link.title == "pdf"][0],
             "journal_ref": paper_info.journal_ref,
+            "publication": re.sub(
+                r"v\d+$", "", f"arXiv preprint arXiv:{paper_info.get_short_id()}"
+            ),
             "bib": self.search_by_object(paper_info),
         }
 
@@ -1057,6 +1060,12 @@ class BibSearchArxiv(BibSearch):
             ("Month", paper_info.published.month),
             ("Url", [str(link) for link in paper_info.links if link.title == "pdf"][0]),
             ("File", paper_info_id + ".pdf"),
+            (
+                "Journal",
+                re.sub(
+                    r"v\d+$", "", f"arXiv preprint arXiv:{paper_info.get_short_id()}"
+                ),
+            ),
         ]:
             if v is not None:
                 lines.append("%-13s = {%s}" % (k, v))
