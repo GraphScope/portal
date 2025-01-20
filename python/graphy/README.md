@@ -239,7 +239,7 @@ The server will be running on `http://localhost:9999` by default. A GUI [fronten
 
 ### Create dataset
 Create dataset from a single paper, or a zip package of multiple papers. All papers must be in PDF format. We have provided a sample `graphrag.pdf` file in the `input` directory for going through
-the demo. The `dataset_id` for this paper is: `8547eb64-a106-5d09-8950-8a47fb9292dc`.
+the demo. The `dataset_id` for this paper is: `c1933784c9edd51a`.
 
 ```bash
 curl -X POST "http://localhost:9999/api/dataset" -F "file=@inputs/samples/graphrag.pdf"
@@ -250,7 +250,7 @@ curl -X POST "http://localhost:9999/api/dataset" -F "file=@inputs/samples/graphr
 Get dataset's metadata by `dataset_id`, including the id, llm_config, and its workflow for extracting the paper, if configured.
 
 ```bash
-curl -X GET http://0.0.0.0:9999/api/dataset?dataset_id=8547eb64-a106-5d09-8950-8a47fb9292dc
+curl -X GET http://0.0.0.0:9999/api/dataset?dataset_id=c1933784c9edd51a
 ```
 
 ### Get all datasets
@@ -262,7 +262,7 @@ curl -X GET http://0.0.0.0:9999/api/dataset
 ### Delete dataset
 
 ```bash
-curl -X DELETE http://0.0.0.0:9999/api/dataset/8547eb64-a106-5d09-8950-8a47fb9292dc
+curl -X DELETE http://0.0.0.0:9999/api/dataset/c1933784c9edd51a
 ```
 
 ## LLM Config
@@ -273,7 +273,7 @@ The LLM model can be configured individually for each dataset (by `dataset_id`),
 
 ```bash
 curl -X POST http://0.0.0.0:9999/api/llm/config -H "Content-Type: application/json" -d '{
-  "dataset_id": "8547eb64-a106-5d09-8950-8a47fb9292dc",
+  "dataset_id": "c1933784c9edd51a",
   "llm_model": "qwen-plus",
   "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
   "api_key": "xxx",
@@ -286,7 +286,7 @@ curl -X POST http://0.0.0.0:9999/api/llm/config -H "Content-Type: application/js
 ### Get the LLM Config
 
 ```bash
-curl -X GET http://0.0.0.0:9999/api/llm/config?dataset_id=8547eb64-a106-5d09-8950-8a47fb9292dc
+curl -X GET http://0.0.0.0:9999/api/llm/config?dataset_id=c1933784c9edd51a
 ```
 
 ## Workflow Config
@@ -296,7 +296,7 @@ Create the workflow for extracting contents for all papers in the dataset. The w
 
 ```bash
 curl -X POST http://0.0.0.0:9999/api/dataset/workflow/config -H "Content-Type: application/json" -d '{
-    "dataset_id": "8547eb64-a106-5d09-8950-8a47fb9292dc",
+    "dataset_id": "c1933784c9edd51a",
     "workflow_json": {
     "nodes": [
         {
@@ -368,7 +368,7 @@ curl -X POST http://0.0.0.0:9999/api/dataset/workflow/config -H "Content-Type: a
 ### Get the Workflow
 
 ```bash
-curl -X GET http://0.0.0.0:9999/api/dataset/workflow/config?dataset_id=8547eb64-a106-5d09-8950-8a47fb9292dc
+curl -X GET http://0.0.0.0:9999/api/dataset/workflow/config?dataset_id=c1933784c9edd51a
 ```
 
 ## Extraction
@@ -378,7 +378,7 @@ This works asynchrously. Once started, one can call the following apis to check 
 
 ```bash
 curl -X POST http://0.0.0.0:9999/api/dataset/extract -H "Content-Type: application/json" -d '{
- "dataset_id": "8547eb64-a106-5d09-8950-8a47fb9292dc",
+ "dataset_id": "c1933784c9edd51a",
  "thread_num": 16
 }'
 ```
@@ -388,13 +388,13 @@ Please note that in the extraction process, the `thread_num` parameter is option
 Get the extraction status for all workflow nodes.
 
 ```bash
-curl -X GET http://0.0.0.0:9999/api/dataset/extract?dataset_id=8547eb64-a106-5d09-8950-8a47fb9292dc
+curl -X GET http://0.0.0.0:9999/api/dataset/extract?dataset_id=c1933784c9edd51a
 ```
 
 Or for a specific node
 
 ```bash
-curl -X GET "http://0.0.0.0:9999/api/dataset/extract?dataset_id=8547eb64-a106-5d09-8950-8a47fb9292dc&workflow_node_names=Challenge"
+curl -X GET "http://0.0.0.0:9999/api/dataset/extract?dataset_id=c1933784c9edd51a&workflow_node_names=Challenge"
 ```
 
 ## Graphy Your Data
@@ -404,7 +404,7 @@ After content extraction, the results can be visualized and analyzed within a gr
 
 ```bash
 curl -X POST http://0.0.0.0:9999/api/dataset/graphy -H "Content-Type: application/json" -d '{
-    "dataset_id": "8547eb64-a106-5d09-8950-8a47fb9292dc"
+    "dataset_id": "c1933784c9edd51a"
 }' --output graph.zip
 ```
 

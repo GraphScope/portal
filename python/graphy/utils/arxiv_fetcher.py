@@ -79,9 +79,37 @@ class ArxivFetcher:
 
         self.result_former = ResultFormer()
 
+    def find_paper_with_arxiv_id(self, name):
+        name = name.strip()
+        pattern = r"(?:arXiv[.:]|abs/)(\d{4}\.\d{5})(v\d+)?"
+        matches = re.findall(pattern, name)
+
+        results = [match[0] + (match[1] if match[1] else "") for match in matches]
+
+        if results:
+            best_match = None
+            highest_similarity = 0.0
+            similarity = 0.0
+
+            search_by_id = arxiv.Search(id_list=results)
+            for paper in self.client.results(search_by_id):
+                similarity = difflib.SequenceMatcher(
+                    None, name.lower(), paper.title.lower()
+                ).ratio()
+
+                if similarity > highest_similarity:
+                    highest_similarity = similarity
+                    best_match = paper
+
+            highest_similarity = 1
+
+            return highest_similarity, best_match
+        else:
+            return 0.0, None
+
     def find_paper_from_arxiv(self, name, max_results):
         new_names = sorted(
-            [s for s in re.split(r"[.\\/]", name.strip()) if len(s) >= 20],
+            [s.strip() for s in re.split(r"[.\\/]", name.strip()) if len(s) >= 20],
             key=len,
             reverse=True,
         )
@@ -132,9 +160,10 @@ class ArxivFetcher:
                     except Exception as e:
                         traceback.print_exc()
 
-                if highest_similarity > 0.9 or found_result:
+                if highest_similarity > 0.9:
+                    # print(f"found {query}")
                     break
-                logger.warning(f"Not Found: {query}")
+                # logger.warning(f"Not Found: {query}")
 
             if highest_similarity > 0.9:
                 break
@@ -142,6 +171,8 @@ class ArxivFetcher:
                 best_match = None
                 highest_similarity = 0.0
 
+        if not best_match:
+            return self.find_paper_with_arxiv_id(name)
         return highest_similarity, best_match
 
     def download_paper(self, name: str, max_results):
@@ -230,27 +261,8 @@ class ArxivFetcher:
 
 
 if __name__ == "__main__":
-    filenames = []
-
-    # Traverse the directory
-    for root, dirs, files in os.walk("inputs/download"):
-        for file in files:
-            # Append file names to the list
-            filenames.append(file)
-
-    for file_name in filenames:
-        download_foler = os.path.join(f"{WF_DOWNLOADS_DIR}", file_name.split(".")[0])
-        fetcher = ArxivFetcher(download_folder=download_foler)
-        os.makedirs(download_foler)
-        path = os.path.join("inputs", "download", file_name)
-        with open(f"{path}", "r") as f:
-            papers = f.readlines()
-            line_counter = 0
-            for paper in papers:
-                line_counter += 1
-                if line_counter % 2 == 0:
-                    continue
-                paper = paper.strip()
-                fetcher.download_paper(paper, 5)
-                # fetcher.download_paper(paper.split(",")[0], 5)
-    # print(json.dumps(data, indent=2))
+    af = ArxivFetcher()
+    output = af.find_paper_from_arxiv(
+        "Peiyi Wang, Lei Li, Zhihong Shao, RX Xu, Damai Dai, Yifei Li, Deli Chen, Y Wu, and Zhifang Sui. Math-shepherd: Verify and reinforce llms step-by-step without human annotations. CoRR, abs/2312.08935 , 2023a."
+    )
+    print(output)

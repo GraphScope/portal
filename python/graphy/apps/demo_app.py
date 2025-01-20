@@ -4,9 +4,8 @@ from workflow import ThreadPoolWorkflowExecutor
 from config import WF_UPLOADS_DIR, WF_OUTPUT_DIR, WF_DATA_DIR, WF_VECTDB_DIR
 from utils.data_extractor import (
     GraphBuilder,
-    hash_id,
 )
-from utils.cryptography import encrypt_key, decrypt_key
+from utils.cryptography import encrypt_key, decrypt_key, id_generator
 from utils.text_clustering import KMeansClustering, OnlineClustering
 from utils.profiler import profiler
 from db import JsonFileStore
@@ -298,7 +297,7 @@ class DemoApp:
 
                     paper_data = {}
                     paper_data["name"] = paper_json["title"]
-                    paper_data["id"] = hash_id(paper_json["title"])
+                    paper_data["id"] = id_generator(paper_json["title"])
 
                     # paper_data.update(node_cached_results)
                     paper_data["data"] = []
@@ -309,18 +308,18 @@ class DemoApp:
                         if cached_results and "data" in cached_results:
                             results = cached_results["data"]
                             if type(results) is dict:
-                                results["id"] = hash_id(results["name"])
+                                results["id"] = id_generator(results["name"])
                                 paper_data["data"] = [results]
                             elif type(results) is str:
                                 paper_data["data"].append(
                                     {
-                                        "id": hash_id(results),
+                                        "id": id_generator(results),
                                         "name": results,
                                     }
                                 )
                             elif type(results) is list:
                                 for i, result in enumerate(results):
-                                    result["id"] = hash_id(result["name"])
+                                    result["id"] = id_generator(result["name"])
                                     paper_data["data"].append(result)
                             output_data["papers"].append(paper_data)
             return output_data
@@ -415,7 +414,7 @@ class DemoApp:
                 )
 
             # Create a unique identifier for the dataset
-            dataset_id = hash_id(file.filename)
+            dataset_id = id_generator(file.filename)
             dataset_name = file.filename.split(".")[0]
 
             # Create directory to store the dataset files

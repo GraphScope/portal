@@ -1023,7 +1023,7 @@ class BibSearchArxiv(BibSearch):
     def format_json_object(self, paper_info):
         return {
             "title": paper_info.title,
-            "id": paper_info.entry_id.strip().split("/")[-1],
+            "id": paper_info.get_short_id(),
             "author": str(paper_info.authors[0]),
             "authors": [str(author) for author in paper_info.authors],
             "eprint": paper_info.entry_id,

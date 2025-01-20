@@ -1,5 +1,11 @@
 # @graphscope/studio-server
 
+## 1.0.13
+
+### Patch Changes
+
+- update website
+
 ## 1.0.12
 
 ### Patch Changes

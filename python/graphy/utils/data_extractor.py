@@ -5,6 +5,8 @@ from gs_interactive.client.driver import Driver
 from gs_interactive.models import *
 
 from db import JsonFileStore
+from utils import Paper
+from utils.cryptography import id_generator
 
 import uuid
 import json
@@ -15,10 +17,6 @@ import time
 import logging
 
 DEFAULT_DELIMITER = "|"
-
-
-def hash_id(input_string: str) -> str:
-    return str(uuid.uuid5(uuid.NAMESPACE_DNS, input_string))
 
 
 def load_json(file_path: str) -> dict:
@@ -35,23 +33,12 @@ def list_to_str(lst: list) -> str:
 
 
 def write_csv(file_path: str, data: list, headers: list = None):
-    if headers is None and data:
-        # Use a set to track the maximum set of keys
-        headers = set()
-        for row in data:
-            headers.update(row.keys())
-    if headers:
-        if "id" in headers:
-            headers.remove("id")  # Remove "id" if it's in the headers
-            headers.remove("node_type")  # Remove "id" if it's in the headers
-            headers = ["id", "node_type"] + sorted(
-                list(headers)
-            )  # Add "id" to the front and sort the rest
-        else:
-            headers = sorted(headers)  # Just sort if "id" is not present
-        header_set = set(headers)
-    else:
-        header_set = None
+    if headers is None:
+        if data and len(data) > 0:
+            headers = list(data[0].keys())
+
+    header_set = set(headers)
+
     if len(data) > 0:
         with open(file_path, "w", newline="") as file:
             writer = csv.DictWriter(
@@ -161,31 +148,41 @@ class GraphBuilder:
         total_edges_dict = {}
         for folder in self.persist_store.get_total_data():
             print("Process folder: ", folder)
-            paper_data = self.persist_store.get_state(folder, "Paper")
+            paper_data = self.persist_store.get_state(folder, "PaperNew")
+            if not paper_data:
+                paper_data = self.persist_store.get_state(folder, "Paper")
             edge_data = self.persist_store.get_state(folder, "_Edges")
             if paper_data:
                 paper_data = paper_data.get("data", {})
                 paper_data["node_type"] = "Fact"
                 # id must present
-                if "id" not in paper_data:
-                    print("`id` not found for paper in: ", folder)
-                    continue
+                if not paper_data.get("id", ""):
+                    # this is a bug of inconsistent data
+                    if "title" in paper_data:
+                        paper_data["id"] = id_generator(paper_data["title"])
+                    else:
+                        continue
                 # some hacking messy stuff
                 if "reference" in paper_data:
                     del paper_data["reference"]
+                if "cited_by" in paper_data:
+                    del paper_data["cited_by"]
+                if "data_id" in paper_data:
+                    del paper_data["data_id"]
+                if "filename" in paper_data:
+                    del paper_data["filename"]
+                # These present in old data
                 if "abstract" in paper_data:
                     del paper_data["abstract"]
                 if "primary_class" in paper_data:
                     del paper_data["primary_class"]
-                if "data_id" in paper_data:
-                    del paper_data["data_id"]
-                if "cited_by" in paper_data:
-                    del paper_data["cited_by"]
+
                 paper_id = paper_data["id"]
                 if not dimension_node_names:
                     dimension_node_names = self.persist_store.get_total_states(folder)
                     try:
                         dimension_node_names.remove("Paper")
+                        dimension_node_names.remove("PaperNew")
                         dimension_node_names.remove("REF_DONE")
                     except ValueError:
                         pass  # Do nothing if "Paper" or REF_DONE is not in the list
@@ -197,10 +194,14 @@ class GraphBuilder:
                     self.facts_dict[paper_id] = sanitize_data(paper_data)
             if edge_data:
                 for edge_name, edge_pairs in edge_data.items():
+                    source_nodes_set = set()
+                    for pair in edge_pairs:
+                        source, _ = pair.split("|")
+                        source_nodes_set.add(source)
+
                     formatted_edges = [
-                        {"source": source, "target": target}
-                        for pair in edge_pairs
-                        for source, target in [pair.split("|")]
+                        {"source": source, "target": paper_id}
+                        for source in source_nodes_set
                     ]
                     total_edges_dict.setdefault(edge_name, []).extend(formatted_edges)
 
@@ -247,7 +248,7 @@ class GraphBuilder:
                 else:
                     edges = self.edges_dict[edge_name]
                 for idx, item in enumerate(data_items):
-                    data_id = hash_id(f"{paper_id}_{node_name}_{idx}")
+                    data_id = id_generator(f"{paper_id}_{node_name}_{idx}")
 
                     if data_id not in dimensions_dict:
                         dimensions_dict[data_id] = {
@@ -269,9 +270,19 @@ class GraphBuilder:
             graph_path = os.path.join(self.data_path, "_graph")
         os.makedirs(graph_path, exist_ok=True)
         gs_schemas = {"vertex_types": [], "edge_types": []}
+        paper_headers = Paper.header()
+        paper_headers.remove("reference")
+        paper_headers.remove("cited_by")
+        paper_headers.append("node_type")
+        paper_headers.append("Topic")
+        paper_headers.append("Background_problem_definition")
+        paper_headers.append("Background_problem_value")
+        paper_headers.append("Background_existing_solutions")
+
         write_csv(
             os.path.join(graph_path, "Paper.csv"),
             list(self.facts_dict.values()),
+            headers=paper_headers,
         )
 
         paper_schema = {}
