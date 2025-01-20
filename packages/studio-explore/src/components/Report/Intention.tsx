@@ -7,7 +7,8 @@ import { useContext } from '@graphscope/studio-graph';
 import Summary from './Summary';
 import { filterDataByParticalSchema, getAllAttributesByName, getStrSizeInKB, sampleHalf, getCategories } from './utils';
 import type { ItentionType } from './index';
-import { debug } from 'console';
+
+import { getPrompt } from './utils';
 interface IReportProps {
   task: string;
   intention: ItentionType;
@@ -282,11 +283,10 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
       if (iterate_time === 0) {
         while (true) {
           const filtered_nodes = nodes.filter(node => filtered_ids.includes(node.id));
-          current_prompt = TEMPLATE_MIND_MAP_GENERATOR_CHN(
-            JSON.stringify({ filtered_nodes, edges }),
-            JSON.stringify(filtered_ids),
-            task,
-          );
+          current_prompt = getPrompt({
+            'zh-CN': TEMPLATE_MIND_MAP_GENERATOR_CHN,
+            'en-US': TEMPLATE_MIND_MAP_GENERATOR_EN,
+          })(JSON.stringify({ filtered_nodes, edges }), JSON.stringify(filtered_ids), task);
           if (getStrSizeInKB(current_prompt) < prompt_size_bound || filtered_ids.length === 1) {
             break;
           }
@@ -304,7 +304,10 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
       } else {
         while (true) {
           const filtered_nodes = nodes.filter(node => filtered_ids.includes(node.id));
-          current_prompt = TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_CHN(
+          current_prompt = getPrompt({
+            'zh-CN': TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_CHN,
+            'en-US': TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_EN,
+          })(
             JSON.stringify({ filtered_nodes, edges }),
             JSON.stringify(filtered_ids),
             JSON.stringify(category_dict),

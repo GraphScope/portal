@@ -4,6 +4,7 @@ import { query } from '../Copilot/query';
 import { Message } from '../Copilot/utils/message';
 import ReactMarkdown from 'react-markdown';
 import type { SummaryType } from './Intention';
+import { getPrompt } from './utils';
 
 const SECTION_CONSTANT_EXAMPLE_EN = () => {
   return `
@@ -233,7 +234,10 @@ const WriteReport: React.FunctionComponent<
     const res = await query([
       new Message({
         role: 'user',
-        content: GET_REPORT_PROMPTS_CHN(task, JSON.stringify(categories)),
+        content: getPrompt({ 'zh-CN': GET_REPORT_PROMPTS_CHN, 'en-US': GET_REPORT_PROMPTS_EN })(
+          task,
+          JSON.stringify(categories),
+        ),
       }),
     ]);
 

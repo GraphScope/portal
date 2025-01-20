@@ -6,24 +6,8 @@ import { Message } from '../Copilot/utils/message';
 import { GraphSchema, useContext } from '@graphscope/studio-graph';
 import Intention from './Intention';
 import Setting from '../Copilot/setting';
+import { getPrompt } from './utils';
 interface IReportProps {}
-
-const GET_DATA_FILTER_RULES = (user_query: string, schema: any) => {
-  return `
-你是一个很有天赋的 AI 助理，你的任务是根据用户的输入语句，再结合图的 Schema 信息，推断出用户的分析意图。
-考虑到用户后续输入的数据量可能比较大，因此需要你先返回部分 Schema 结构，方便用户对要数据做裁剪。
-
-graph_schema :${schema}
-user_query:${user_query}
-
-注意：
-- 返回结果只有 JSON！返回结果只有 JSON！返回结果只有 JSON！且不要带 \`\`\`json ！且不要带 \`\`\`json ！且不要带 \`\`\`json ！
-- JSON 的 'description' 字段是必须的，用来描述你理解到的用户分析意图
-- JSON 的 'plan' 字段是必须的，用于描述你计划如何实现的步骤，它必须是一个数组。
-- JSON 的 "schema" 字段是必须的，用来返回分析所需的部分 Schema 结构。不要返回全部 Schema 结构，尤其是属性字段，只考虑分析必备的字段，不要返回全部的属性字段。
-- 如果你还有其他备注，可以放在  'explain' 字段中
-  `;
-};
 
 const GET_DATA_FILTER_RULES_EN = (user_query: string, schema: any) => {
   return `
@@ -90,10 +74,14 @@ const Report: React.FunctionComponent<IReportProps> = props => {
 
     try {
       setState({ ...state, task: value, loading: true });
+
       const _res = await query([
         new Message({
           role: 'user',
-          content: GET_DATA_FILTER_RULES_CHN(value, JSON.stringify(schema)),
+          content: getPrompt({ 'zh-CN': GET_DATA_FILTER_RULES_CHN, 'en-US': GET_DATA_FILTER_RULES_EN })(
+            value,
+            JSON.stringify(schema),
+          ),
         }),
       ]);
       debugger;
