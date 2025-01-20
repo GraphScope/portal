@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CaretRightOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import { Collapse, theme, Flex, Typography, Select, Space, Tooltip } from 'antd';
+import { Collapse, theme, Flex, Typography, Select, Space, Tooltip, Button } from 'antd';
 import { useContext } from '../../';
 import { CollapseCard } from '@graphscope/studio-components';
 interface IAdvancedSettingProps {}
@@ -37,7 +37,7 @@ const getOptions = elementSchema => {
     const { properties } = item;
     if (properties && isArray(properties)) {
       properties.forEach(property => {
-        if (property.type === 'number') {
+        if (property.type === 'number' || property.type === 'DT_SIGNED_INT64') {
           options.add(property.name);
         }
       });
@@ -89,22 +89,25 @@ const getRangeByOptions = (data, options) => {
 const SizeScaler = () => {
   const { store, updateStore } = useContext();
   const { schema, data } = store;
-  const { nodes, edges } = schema;
-  const [scaleType, setScaleType] = useState('linear');
+  const { nodes } = schema;
+
+  const [state, setState] = useState({
+    scaleType: 'linear',
+    property: '',
+  });
+  const { scaleType, property } = state;
 
   const nodes_options = getOptions(nodes);
-  //   const edges_options = getOptions(edges);
   const range = getRangeByOptions(data, nodes_options);
 
-  const handleChange = property => {
-    const { nodes, edges } = data;
+  const applyNodeStyle = () => {
+    const { nodes } = data;
     const { min, max } = range[property];
-    const nodeViewSize = [0.01, 20];
+    const nodeViewSize = [0.5, 10];
+
     // 创建比例尺
     const nodeSizeScaler = createScale(scaleType, [min, max], nodeViewSize);
-
     const _nodeSizeStyle = {};
-    console.log(min, max, range, nodeViewSize);
 
     nodes.forEach(item => {
       const { properties, id, label } = item;
@@ -113,17 +116,17 @@ const SizeScaler = () => {
         const _value = nodeSizeScaler(value);
         _nodeSizeStyle[id] = {
           label,
-          color: isNaN(_value) ? min : _value,
+          size: isNaN(_value) ? min : _value,
         };
       }
     });
     updateStore(draft => {
       Object.keys(_nodeSizeStyle).forEach(id => {
-        const { color, label } = _nodeSizeStyle[id];
+        const { size, label } = _nodeSizeStyle[id];
         draft.nodeStyle[id] = {
           ...draft.nodeStyle[label],
           ...draft.nodeStyle[id],
-          size: color,
+          size: size,
         };
       });
     });
@@ -131,11 +134,6 @@ const SizeScaler = () => {
 
   return (
     <Flex vertical gap={12}>
-      {/* <Typography.Text type="secondary">
-        The size of nodes or width of edges is linearly scaled based on the range of values in the selected property
-        field.
-      </Typography.Text> */}
-
       <Typography.Text>Choose Scaler:</Typography.Text>
       <Select
         defaultValue="linear"
@@ -146,12 +144,36 @@ const SizeScaler = () => {
           { label: 'Pow', value: 'pow' },
         ]}
         onChange={value => {
-          setScaleType(value);
+          setState(preState => {
+            return {
+              ...preState,
+              scaleType: value,
+            };
+          });
         }}
       />
 
       <Typography.Text>Choose Property:</Typography.Text>
-      <Select defaultValue="" style={{ flex: 1 }} options={nodes_options} onChange={handleChange} />
+      <Select
+        defaultValue=""
+        style={{ flex: 1 }}
+        options={nodes_options}
+        onChange={value => {
+          setState(preState => {
+            return {
+              ...preState,
+              property: value,
+            };
+          });
+        }}
+      />
+      <Button
+        onClick={() => {
+          applyNodeStyle();
+        }}
+      >
+        Apply
+      </Button>
     </Flex>
   );
 };

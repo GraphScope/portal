@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/studio-explore",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -25,6 +25,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
+    "react-markdown": "^9.0.3",
     "@antv/g2": "^5.2.8",
     "@graphscope/studio-components": "workspace:*",
     "@graphscope/studio-driver": "workspace:*",

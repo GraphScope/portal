@@ -46,6 +46,7 @@ import {
   Copilot,
   RunAI,
   FloatToolbar,
+  Report,
 } from './components';
 import {
   BgColorsOutlined,
@@ -129,7 +130,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             }}
             defaultCollapsed={{
               leftSide: true,
-              rightSide: false,
+              rightSide: true,
             }}
           >
             <Canvas />
@@ -169,11 +170,12 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
                   key: 'CypherQuery',
                 },
                 {
-                  label: <Typography.Title level={3}>Copilot</Typography.Title>,
+                  label: <Typography.Title level={3}>Report</Typography.Title>,
                   icon: <OpenAIOutlined />,
-                  children: <Copilot />,
-                  key: 'Copilot',
+                  children: <Report />,
+                  key: 'Report',
                 },
+
                 {
                   label: <Typography.Title level={3}>Style Setting</Typography.Title>,
                   icon: <BgColorsOutlined />,
