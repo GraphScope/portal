@@ -5,14 +5,7 @@ import { query } from '../Copilot/query';
 import { Message } from '../Copilot/utils/message';
 import { useContext } from '@graphscope/studio-graph';
 import Summary from './Summary';
-import {
-  filterDataByParticalSchema,
-  flattenListofDict,
-  getAllAttributesByName,
-  getStrSizeInKB,
-  sampleHalf,
-  getCategories,
-} from './utils';
+import { filterDataByParticalSchema, getAllAttributesByName, getStrSizeInKB, sampleHalf, getCategories } from './utils';
 import type { ItentionType } from './index';
 import { debug } from 'console';
 interface IReportProps {
