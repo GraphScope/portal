@@ -7,6 +7,7 @@ export const filterDataByParticalSchema = (schema, data) => {
   const node_labels = schema.nodes.map(item => {
     return item.label;
   });
+  console.log('node_labels', node_labels);
   const edge_labels = schema.edges.map(item => {
     return item.label;
   });
@@ -36,11 +37,13 @@ export const filterDataByParticalSchema = (schema, data) => {
       return edge_labels.includes(label || '');
     })
     .map(item => {
-      const { id, label, properties = {} } = item;
+      const { id, label, properties = {}, source, target } = item;
       const match = schema.edges.find(c => c.label === label) || { properties: [] };
       return {
         id,
         label,
+        source,
+        target,
         properties: (match.properties || []).reduce((acc, curr) => {
           return {
             ...acc,

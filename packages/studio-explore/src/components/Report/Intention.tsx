@@ -7,7 +7,7 @@ import { useContext } from '@graphscope/studio-graph';
 import Summary from './Summary';
 import { filterDataByParticalSchema, getAllAttributesByName, getStrSizeInKB, sampleHalf, getCategories } from './utils';
 import type { ItentionType } from './index';
-
+import AddNodes from './AddNodes';
 import { getPrompt } from './utils';
 interface IReportProps {
   task: string;
@@ -405,9 +405,13 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
                   });
                   return (
                     <Flex vertical gap={12} key={item.id}>
-                      <Typography.Text italic type="secondary">
-                        {label}
-                      </Typography.Text>
+                      <Flex justify="space-between" align="center">
+                        <Typography.Text italic type="secondary">
+                          {label}
+                        </Typography.Text>
+                        <AddNodes label={label} />
+                      </Flex>
+
                       <Select options={options} mode="multiple" defaultValue={defaultValue}></Select>
                     </Flex>
                   );

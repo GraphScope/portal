@@ -60,10 +60,11 @@ const Report: React.FunctionComponent<IReportProps> = props => {
     intention: ItentionType | null;
   }>({
     loading: false,
-    task: '请根据我选中的 papers ，整理出一份趋势报告，重点考虑时间因素',
-    // '帮我把画布上的papers按照时间和引用数整理成一个分析报告',
-    // '请根据我选中的 papers ，以及 paper 关联的 challenge，写一个 related work section。要求 papers 按照 challenge 进行整理',
-    // '帮我把这些 Papers 整理写成一个 related work 的 section，关注点在 challenge 上',
+    task:
+      // '请根据我选中的 papers ，整理出一份趋势报告，重点考虑时间因素',
+      // '帮我把画布上的papers按照时间和引用数整理成一个分析报告',
+      // '请根据我选中的 papers ，以及 paper 关联的 challenge，写一个 related work section。要求 papers 按照 challenge 进行整理',
+      '帮我把这些 Papers 整理写成一个 related work 的 section，关注点在 challenge 上',
     intention: null,
   });
 
@@ -98,6 +99,7 @@ const Report: React.FunctionComponent<IReportProps> = props => {
     } catch (error) {}
   };
 
+  console.log(schema);
   return (
     <Flex vertical gap={12}>
       <Flex justify="space-between" align="center">
