@@ -111,3 +111,9 @@ export const getCategories = (output, categories) => {
     };
   });
 };
+
+import { Utils } from '@graphscope/studio-components';
+export const getPrompt = obj => {
+  const locale = (Utils.storage.get('locale') as string) || 'en-US';
+  return obj[locale];
+};
