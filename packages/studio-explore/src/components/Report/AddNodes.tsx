@@ -11,13 +11,15 @@ const AddNodes: React.FunctionComponent<IAddNodesProps> = props => {
   const { label } = props;
   const { store, updateStore } = useContext();
   const { schema, getService, data } = store;
+  const match = schema.edges.find(item => {
+    const { source, target } = item;
+    return target === label;
+  });
+  if (!match || !label.startsWith('Dimension_')) {
+    return null;
+  }
 
   const handleClick = async () => {
-    console.log('click', schema, label);
-    const match = schema.edges.find(item => {
-      const { source, target } = item;
-      return target === label;
-    });
     if (!match) {
       return;
     }
@@ -29,11 +31,11 @@ const AddNodes: React.FunctionComponent<IAddNodesProps> = props => {
       .join(',');
 
     const script = `MATCH (a:${match.source})-[b:${match.label}]->(c:${match.target}) WHERE elementId(a) in [${ids}] return a,b,c`;
-    console.log('script', match, script);
+
     const res = await getService<IQueryStatement>('queryStatement')(script);
 
     const newData = Utils.handleExpand(data, res);
-    console.log('res', res, newData);
+
     updateStore(draft => {
       draft.data = newData;
       draft.source = newData;
@@ -42,9 +44,7 @@ const AddNodes: React.FunctionComponent<IAddNodesProps> = props => {
   };
   return (
     <Tooltip title="Please first ensure that the current canvas contains these types of nodes and edges.">
-      <Button type="text" icon={<PlayCircleOutlined />} onClick={handleClick}>
-        {' '}
-      </Button>
+      <Button type="text" icon={<PlayCircleOutlined />} onClick={handleClick}></Button>
     </Tooltip>
   );
 };
