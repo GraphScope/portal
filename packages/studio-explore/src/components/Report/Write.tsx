@@ -72,10 +72,10 @@ Mind Map: ${mind_map}
 Guidance:
 - The beginning of a report typically includes an introduction, which provides a brief summary of the contents of this report, usually around 50 words.
 - A report typically includes several subsections, each corresponding to a category and can contain at most 200 words. In each subsection, you must mention as many data related to this category as possible.
-For each mentioned data, you need to explain its relationship with the category corresponding to the current subsection. 
+For each mentioned data, you need to explain its relationship with the category corresponding to the current subsection.
 - Every time a data is first mentioned in the text, add a citation in the format \\cite{Id} and you must not use \\cite as the subject of the sentence. For example, suppose the [Id] of data p1 is 0000.0000, then the citation should be added as \\cite{0000.0000}.
 If the data presents a certain viewpoint or method M, the sentence may be "M \\cite{0000.0000} ...". If there is author or source information A for the data, the sentence may be "A~\\cite{0000.0000} proposes that ...". If several data with ids [Id_1], ... [Id_k] are related to an item or topic T, then the sentence may be "Topic T is well studied \\cite{Id_1, ..., Id_k} ...".
-Anyway, sentence "\\cite{0000.0000} proposes ..." is NOT allowed. Avoid using a whole paragraph to describe one piece of data, nor should you list them one by one. Instead, appropriately describe the connections between them.
+Anyway, sentence "\\cite{0000.0000} proposes ..." is NOT allowed. Avoid using a whole paragraph to describe one piece of data, nor should you list them one by one. Instead, appropriately describe the connections between them. 
 - An example of a subsection in a report is as follows
 (the information in this example MUST NOT be summarized in the report):
 2.1 [SUBSECTION TITLE]

@@ -61,7 +61,8 @@ In this structure, "categories" stores the information of the divided categories
 
 Guidance:
 - When selecting classification dimensions, choose those with high distinctiveness and importance according to the user intent wherever possible.
-- The number of categories is not necessarily the more the better; usually, classifying into 2-5 categories is more appropriate.
+- Each category should focus on a single aspect, such as "data security" or "data scalability," and should not be a mix of different things, such as focusing on "data security and scalability."
+- The number of categories is not necessarily the more the better; usually, classifying into 2-56categories is more appropriate.
 - Ensure each piece of data belongs to only one category, and do not select multiple categories for the same piece of data. If accurate classification is not possible, classify them as 'others'.
 
 For example, suppose the input graph data contains 100 pieces of data with ids 1, 2, ..., 100, and the graph data ids to be classified are [1, 2, ..., 100], the "data" part of the output structure should be [{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 100, "category": xx}]. "[{"data_id": 1, "category": xx}, {"data_id": 1, "category": xx}, ..., {"data_id": 100, "category": xx}]" is an incorrect "data" part output because the data with "data_id" 1 is classified twice. "[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 105, "category": xx}]" is also an incorrect "data" part output because there is no data with id 105 in the graph data to be classified.
@@ -107,7 +108,8 @@ In this structure, "categories" stores the information of the divided categories
 
 Guidance:
 - If a piece of graph data cannot be classified into any given categories, a new category can be created with its description and an id described in 'categories', and the data can be placed in this category.
-- The number of categories is not necessarily the more the better; usually, classifying into 2-5 categories is more appropriate.
+- Each category should focus on a single aspect, such as "data security" or "data scalability," and should not be a mix of different things, such as focusing on "data security and scalability."
+- The number of categories is not necessarily the more the better; usually, classifying into 2-6 categories is more appropriate.
 - Ensure each piece of data belongs to only one category, and do not select multiple categories for the same piece of data.
 
 For example, suppose the input graph data contains 100 pieces of data with ids 1, 2, ..., 100, and the graph data ids to be classified are [1, 2, ..., 100], the "data" part of the output structure should be [{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 100, "category": xx}]. "[{"data_id": 1, "category": xx}, {"data_id": 1, "category": xx}, ..., {"data_id": 100, "category": xx}]" is an incorrect "data" part output because the data with "data_id" 1 is classified twice. "[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 105, "category": xx}]" is also an incorrect "data" part output because there is no data with id 105 in the graph data to be classified.
@@ -154,7 +156,8 @@ export const TEMPLATE_MIND_MAP_GENERATOR_CHN = (graph_data, input_ids, user_quer
 
 指导建议：
 - 在选择分类维度时，应根据用户意图尽可能选择那些区分度高且重要的维度。
-- 分类的数量不一定是越多越好；通常，分为2-5个类别是较为合适的。
+- 每个类别应该专注于一个单一的方面，比如类别名可以是“数据安全”或“数据可扩展性”。它不应是不同事物的混合，比如类别名不应是“数据安全和可扩展性”。
+- 分类的数量不一定是越多越好；通常，分为2-6个类别是较为合适的。
 - 确保每条数据属于且只属于一个类别，并且不要为同一条数据选择多个类别。如果无法准确归类，请将其分类为'others'。
 例如，假设输入的图数据中包含id分别为1，2，..., 100的100条数据，且要分类的图数据的id为[1,2,...,100]，则输出的结构中，"data"部分应为
 {[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 100, "category": xx}]}。
@@ -207,7 +210,8 @@ export const TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_CHN = (graph_data, input_id
 
 指导建议：
 - 如果一条图数据无法分入任何给定的分类中，可以构造一个新的分类，在categories中描述该信的分类并给其一个id，并将这条数据归入这个类别
-- 分类的数量不一定是越多越好；通常，分为2-5个类别是较为合适的。
+- 每个类别应该专注于一个单一的方面，比如类别名可以是“数据安全”或“数据可扩展性”。它不应是不同事物的混合，比如类别名不应是“数据安全和可扩展性”。
+- 分类的数量不一定是越多越好；通常，分为2-6个类别是较为合适的。
 - 确保每条数据属于且只属于一个类别，并且不要为同一条数据选择多个类别。
 例如，假设输入的图数据中包含id分别为1，2，..., 100的100条数据，且要分类的图数据的id为[1,2,...,100]，则输出的结构中，"data"部分应为
 {[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 100, "category": xx}]}。
