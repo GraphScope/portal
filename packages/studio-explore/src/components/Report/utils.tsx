@@ -43,8 +43,8 @@ export const filterDataByParticalSchema = (schema, data) => {
       return {
         id,
         label,
-        source,
-        target,
+        source:typeof source ==='object' ? source.id:source,
+        target:typeof target ==='object' ? target.id:target,
         properties: (match.properties || []).reduce((acc, curr) => {
           return {
             ...acc,
@@ -118,18 +118,18 @@ export const getCategories = (output, categories) => {
 };
 
 export const getInducedSubgraph = (nodes, edges, target_nodes) => {
-  const filter_edges = edges.filter(edge => {
-    return edge.source in target_nodes || edge.target in target_nodes;
+  const filtered_edges = edges.filter(edge => {
+    return target_nodes.includes(edge.source) || target_nodes.includes(edge.target);
   });
-  console.log(filter_edges);
+  
   const connectedNodeIds = new Set();
-  filter_edges.forEach(edge => {
-    connectedNodeIds.add(edge.source.id);
-    connectedNodeIds.add(edge.target.id);
+  filtered_edges.forEach(edge => {
+    connectedNodeIds.add(edge.source);
+    connectedNodeIds.add(edge.target);
   });
   const filtered_nodes = nodes.filter(node => connectedNodeIds.has(node.id));
 
-  return { filtered_nodes, filter_edges };
+  return { filtered_nodes, filtered_edges };
 }
 
 import { Utils } from '@graphscope/studio-components';

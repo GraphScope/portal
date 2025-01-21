@@ -280,7 +280,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
     let category_dict = {};
     let outputs = {};
     let res = { data: [{ data_id: '' }], categories: [] };
-    let prompt_size_bound = 62.8;
+    let prompt_size_bound = 120;
 
     while (all_ids.length > 0) {
       let filtered_ids = all_ids.slice();
@@ -288,13 +288,12 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
 
       if (iterate_time === 0) {
         while (true) {
-          const { filtered_nodes, filter_edges } = getInducedSubgraph(nodes, edges, all_ids);
-          debugger;
-
+          const { filtered_nodes, filtered_edges } = getInducedSubgraph(nodes, edges, filtered_ids);
+          
           current_prompt = getPrompt({
             'zh-CN': TEMPLATE_MIND_MAP_GENERATOR_CHN,
             'en-US': TEMPLATE_MIND_MAP_GENERATOR_EN,
-          })(JSON.stringify({ filtered_nodes, filter_edges }), JSON.stringify(filtered_ids), task);
+          })(JSON.stringify({ filtered_nodes, filtered_edges }), JSON.stringify(filtered_ids), task);
           if (getStrSizeInKB(current_prompt) < prompt_size_bound || filtered_ids.length === 1) {
             break;
           }
@@ -311,13 +310,13 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
         res = JSON.parse(_res.message.content);
       } else {
         while (true) {
-          const { filtered_nodes, filter_edges } = getInducedSubgraph(nodes, edges, all_ids);
+          const { filtered_nodes, filtered_edges } = getInducedSubgraph(nodes, edges, filtered_ids);
 
           current_prompt = getPrompt({
             'zh-CN': TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_CHN,
             'en-US': TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_EN,
           })(
-            JSON.stringify({ filtered_nodes, filter_edges }),
+            JSON.stringify({ filtered_nodes, filtered_edges }),
             JSON.stringify(filtered_ids),
             JSON.stringify(category_dict),
             task,
