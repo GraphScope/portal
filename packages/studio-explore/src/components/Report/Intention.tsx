@@ -69,7 +69,7 @@ In this structure, "categories" stores the information of the divided categories
 Guidance:
 - When selecting classification dimensions, choose those with high distinctiveness and importance according to the user intent wherever possible.
 - Each category should focus on a single aspect, such as "data security" or "data scalability," and should not be a mix of different things, such as focusing on "data security and scalability."
-- The number of categories is not necessarily the more the better; usually, classifying into 2-56categories is more appropriate.
+- The number of categories is not necessarily the more the better; usually, classifying into 2-6 categories is more appropriate.
 - Ensure each piece of data belongs to only one category, and do not select multiple categories for the same piece of data. If accurate classification is not possible, classify them as 'others'.
 
 For example, suppose the input graph data contains 100 pieces of data with ids 1, 2, ..., 100, and the graph data ids to be classified are [1, 2, ..., 100], the "data" part of the output structure should be [{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 100, "category": xx}]. "[{"data_id": 1, "category": xx}, {"data_id": 1, "category": xx}, ..., {"data_id": 100, "category": xx}]" is an incorrect "data" part output because the data with "data_id" 1 is classified twice. "[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 105, "category": xx}]" is also an incorrect "data" part output because there is no data with id 105 in the graph data to be classified.
