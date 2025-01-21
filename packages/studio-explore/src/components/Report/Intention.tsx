@@ -5,7 +5,14 @@ import { query } from '../Copilot/query';
 import { Message } from '../Copilot/utils/message';
 import { useContext } from '@graphscope/studio-graph';
 import Summary from './Summary';
-import { filterDataByParticalSchema, getAllAttributesByName, getStrSizeInKB, sampleHalf, getCategories, getInducedSubgraph } from './utils';
+import {
+  filterDataByParticalSchema,
+  getAllAttributesByName,
+  getStrSizeInKB,
+  sampleHalf,
+  getCategories,
+  getInducedSubgraph,
+} from './utils';
 import type { ItentionType } from './index';
 import AddNodes from './AddNodes';
 import { getPrompt } from './utils';
@@ -272,9 +279,11 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
 
     // let all_ids = nodes.map(item => item.id); //getAllAttributesByName(nodes, "id");
 
-    let all_ids = nodes.filter(node => {
-      return !node.label.startsWith('Dimension_')
-    }).map(item => item.id);
+    let all_ids = nodes
+      .filter(node => {
+        return !node.label.startsWith('Dimension_');
+      })
+      .map(item => item.id);
 
     let iterate_time = 0;
     let category_dict = {};
@@ -289,7 +298,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
       if (iterate_time === 0) {
         while (true) {
           const { filtered_nodes, filtered_edges } = getInducedSubgraph(nodes, edges, filtered_ids);
-          
+
           current_prompt = getPrompt({
             'zh-CN': TEMPLATE_MIND_MAP_GENERATOR_CHN,
             'en-US': TEMPLATE_MIND_MAP_GENERATOR_EN,
@@ -351,7 +360,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
     debugger;
     const _categories = getCategories(outputs, res.categories);
     _categories.forEach(element => {
-      element.children = nodes.filter(n => element.children.includes(n.id));
+      element.children = nodes.filter(n => (element.children || []).includes(n.id));
     });
     res.categories = _categories;
     debugger;

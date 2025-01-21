@@ -5,6 +5,7 @@ import { Message } from '../Copilot/utils/message';
 import ReactMarkdown from 'react-markdown';
 import type { SummaryType } from './Intention';
 import { getPrompt } from './utils';
+import ReportText from './Text';
 
 const SECTION_CONSTANT_EXAMPLE_EN = () => {
   return `
@@ -255,7 +256,8 @@ const WriteReport: React.FunctionComponent<
       <Button onClick={handleClick} loading={loading}>
         Write Report
       </Button>
-      {report && <ReactMarkdown>{report}</ReactMarkdown>}
+
+      {report && <ReportText report={report} enableBib />}
     </Flex>
   );
 };
