@@ -46,10 +46,11 @@ const SectionContent: React.FC<{ title: string; description: string }> = ({ titl
 );
 
 const InfoDisplay: React.FC = () => (
-  <Flex vertical justify="space-around" align="center" gap={30}>
+  <Flex vertical justify="space-between" align="center" gap={30}>
     {contentData.map(({ title, description, imageSrc, imagePosition }, index) => (
       <SplitSection
         key={index}
+        styles={{ padding: 0 }}
         splitNumber={index === 1 ? 0 : 24}
         leftSide={
           imagePosition === 'left' ? (

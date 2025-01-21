@@ -10,10 +10,10 @@ const { Title, Text, Link } = Typography;
 const Realize: React.FC = () => {
   return (
     <Row gutter={48} align="middle" style={{ padding: '3% 17%' }}>
-      <Col xs={0} sm={0} md={14} lg={14} xl={14}>
+      <Col xs={0} sm={0} md={0} lg={0} xl={14}>
         <CodeMirror />
       </Col>
-      <Col xs={24} sm={24} md={10} lg={10} xl={10}>
+      <Col xs={24} sm={24} md={24} lg={24} xl={10}>
         <Flex vertical gap={24}>
           <Title level={3}>Running GraphScope Interactive Engine on Local</Title>
           <Text type="secondary">

@@ -16,7 +16,6 @@ const AntiFraud: React.FC<IAntiFraudProps> = ({ style = {} }) => {
         <use id="svg_1" overflow="visible" href="#a" />
       </clipPath>
       <g>
-        <title>Layer 1</title>
         <g id="svg_2" clip-path="url(#b)">
           <path
             id="svg_3"

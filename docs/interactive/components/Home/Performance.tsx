@@ -23,12 +23,14 @@ const StatItemComponent: React.FC<StatItem> = ({ icon, label, count }) => {
     borderRadius: '50%',
   };
   return (
-    <Col xs={24} sm={24} md={8} lg={8} xl={8}>
+    <Col xs={24} sm={24} md={24} lg={8} xl={8}>
       <Flex gap={24} align="center">
         <div style={iconContainerStyle}>{icon}</div>
         <Flex vertical>
-          <Title style={{ margin: 0 }}>{count}</Title>
-          <Text style={{ fontSize: '20px' }} type="secondary">
+          <Title style={{ margin: 0 }} level={2}>
+            {count}
+          </Title>
+          <Text style={{ fontSize: '16px' }} type="secondary">
             {label}
           </Text>
         </Flex>

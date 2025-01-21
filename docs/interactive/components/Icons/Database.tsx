@@ -19,7 +19,6 @@ const Database: React.FC<IDatabaseProps> = ({ style = {} }) => {
         </linearGradient>
       </defs>
       <g>
-        <title>Layer 1</title>
         <g id="svg_2" clipPath="url(#clip0_6762_22480)">
           <rect id="svg_3" x="143" y="40" fill="white" height="348" width="285" />
           <path

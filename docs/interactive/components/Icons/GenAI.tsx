@@ -67,7 +67,6 @@ const GenAI: React.FC<IGenAIProps> = ({ style = {} }) => {
         </linearGradient>
       </defs>
       <g>
-        <title>Layer 1</title>
         <path
           id="svg_1"
           fill="#231F20"

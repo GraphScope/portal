@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, Button } from 'antd';
+import { Flex, Button, Row, Col } from 'antd';
 import { CopyOutlined, CheckOutlined } from '@ant-design/icons';
 import CodeMirror from '@uiw/react-codemirror';
 import { createTheme } from '@uiw/codemirror-themes';
@@ -51,18 +51,35 @@ export default () => {
     return () => clearTimeout(timer);
   }, [copy]);
   return (
-    <div style={{ padding: '12px 12px 12px 0px', backgroundColor: '#f5f5f5', borderRadius: '6px' }}>
-      <Flex justify="space-between">
-        <CodeMirror
-          value={editCode}
-          readOnly
-          basicSetup={{
-            lineNumbers: false, // 确保不显示行号
-          }}
-          theme={myTheme}
-        />
-        <Button type="text" icon={copy ? <CheckOutlined /> : <CopyOutlined />} onClick={handleCopy} />
-      </Flex>
+    <div
+      style={{
+        position: 'relative',
+        backgroundColor: '#f5f5f5',
+        borderRadius: '6px',
+        overflow: 'hidden',
+        padding: '12px 12px 12px 0px',
+        height: '100%',
+        width: '100%',
+      }}
+    >
+      <Row>
+        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+          <CodeMirror
+            value={editCode}
+            readOnly
+            basicSetup={{
+              lineNumbers: false, // 确保不显示行号
+            }}
+            theme={myTheme}
+          />
+          <Button
+            style={{ position: 'absolute', top: 0, right: 0 }}
+            type="text"
+            icon={copy ? <CheckOutlined /> : <CopyOutlined />}
+            onClick={handleCopy}
+          />
+        </Col>
+      </Row>
     </div>
   );
 };

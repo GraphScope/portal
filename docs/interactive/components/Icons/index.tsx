@@ -1,5 +1,7 @@
 export { default as LeftIcon } from './LeftIcon';
 export { default as RightIcon } from './RightIcon';
+export { default as LeftPhotoIcon } from './LeftPhotoIcon';
+export { default as RightPhotoIcon } from './RightPhotoIcon';
 export { default as AntiFraud } from './Anti-fraud';
 export { default as MiddleIcon } from './MiddleIcon';
 export { default as SecurityIcon } from './SecurityIcon';
