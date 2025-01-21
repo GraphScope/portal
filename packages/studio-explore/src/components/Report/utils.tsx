@@ -117,17 +117,21 @@ export const getCategories = (output, categories) => {
   });
 };
 
-export const getInducedSubgraph = (nodes, edges, target_nodes) => {
+export const getInducedSubgraph = (nodes, edges, target_ids) => {
   const filtered_edges = edges.filter(edge => {
-    return target_nodes.includes(edge.source) || target_nodes.includes(edge.target);
+    return target_ids.includes(edge.source) || target_ids.includes(edge.target);
   });
+
+  const target_nodes = nodes.filter(node => target_ids.includes(node.id));
   
   const connectedNodeIds = new Set();
   filtered_edges.forEach(edge => {
     connectedNodeIds.add(edge.source);
     connectedNodeIds.add(edge.target);
   });
-  const filtered_nodes = nodes.filter(node => connectedNodeIds.has(node.id));
+  const neighbor_nodes = nodes.filter(node => connectedNodeIds.has(node.id) && !target_ids.includes(node.id));
+
+  const filtered_nodes = neighbor_nodes.concat(target_nodes);
 
   return { filtered_nodes, filtered_edges };
 }
