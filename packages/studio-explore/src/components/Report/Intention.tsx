@@ -41,7 +41,7 @@ These ids correspond to graph data stored in the input graph data collection. Fi
 User Input: ${user_query}
 Graph Data Collection: ${graph_data}
 
-Given the graph data collection, each dictionary in the "filtered_nodes" list corresponds to a piece of data. The 'id' attribute in each dictionary represents its data id. For each graph data id in ${input_ids}, if a dictionary exists in the graph data collection whose 'id' matches the graph data id, then that dictionary describes the attributes of that id.
+Given the graph data collection, each dictionary in the "filtered_nodes" list corresponds to a piece of data. The 'id' attribute in each dictionary represents its data id. For each graph data id in the input id list ${input_ids}, if a dictionary exists in the graph data collection whose 'id' matches the graph data id, then that dictionary describes the attributes of that id.
 
 The output classification result should be structured as follows:
 
@@ -64,7 +64,8 @@ The output classification result should be structured as follows:
   "summary": string,
   "explain": string
 }
-In this structure, "categories" stores the information of the divided categories (generally consistent with the input categories), while "data" stores the classification information of each id in ${input_ids} corresponding to the graph data.
+In this structure, "categories" stores information about the divided categories, while "data" stores the classification of graph data corresponding to each id in the input id list.
+
 
 Guidance:
 - When selecting classification dimensions, choose those with high distinctiveness and importance according to the user intent wherever possible.
@@ -111,7 +112,8 @@ The output classification result should be structured as follows:
   "summary": string,
   "explain": string
 }
-In this structure, "categories" stores the information of the divided categories (generally consistent with the input categories), while "data" stores the classification information of each id in ${input_ids} corresponding to the graph data.
+In this structure, "categories" stores the information of the divided categories. 
+You cannot change any input categories, including category ids and names. You can only add new categories. This means all the input categories must stay the same and be kept in the "categories" section. "data" stores the classification of graph data corresponding to each id in the input id list.
 
 Guidance:
 - If a piece of graph data cannot be classified into any given categories, a new category can be created with its description and an id described in 'categories', and the data can be placed in this category.
@@ -135,7 +137,7 @@ export const TEMPLATE_MIND_MAP_GENERATOR_CHN = (graph_data, input_ids, user_quer
 图数据集合：${graph_data}
 
 给定输入的图数据集合，集合中"filtered_nodes"列表中的每个字典对应一条数据。每个字典中的'id'属性代表的是该数据的id。
-要分类的图数据的id为${input_ids}。对于该列表中的每个图数据id，图数据集合中存在一个字典，其id等于该图数据id，则该字典描述的就是该id的属性。
+要分类的图数据的id存储在idlist = ${input_ids}中。对于该列表中的每个图数据id，图数据集合中存在一个字典，其id等于该图数据id，则该字典描述的就是该id的属性。
 
 输出的分类的结果应当具有如下的结构：
 {
@@ -159,7 +161,7 @@ export const TEMPLATE_MIND_MAP_GENERATOR_CHN = (graph_data, input_ids, user_quer
   "summary": string,
   "explain": string
 }
-该结构中，"categories"中存储的是划分出来的类别的信息，"data"中则存储了${input_ids}中各id对应的图数据的分类情况。
+该结构中，"categories"中存储的是划分出来的类别的信息，"data"中则存储了idlist中各id对应的图数据的分类情况。
 
 指导建议：
 - 在选择分类维度时，应根据用户意图尽可能选择那些区分度高且重要的维度。
@@ -189,7 +191,7 @@ export const TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_CHN = (graph_data, input_id
 现有分类：${category}
 
 给定输入的图数据集合，集合中"filtered_nodes"列表中的每个字典对应一条数据。每个字典中的'id'属性代表的是该数据的id。
-要分类的图数据的id为${input_ids}。对于该列表中的每个图数据id，图数据集合中存在一个字典，其id等于该图数据id，则该字典描述的就是该id的属性。
+要分类的图数据的id存储在idlist = ${input_ids}中。对于该列表中的每个图数据id，图数据集合中存在一个字典，其id等于该图数据id，则该字典描述的就是该id的属性。
 
 输出的分类的结果应当具有如下的结构：
 {
@@ -213,7 +215,7 @@ export const TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_CHN = (graph_data, input_id
   "summary": string,
   "explain": string
 }
-在这个结构中，"categories" 部分存储的是已经划分出的类别信息。你不能修改任何输入的分类信息（包括分类的 ID 和名称）。唯一可以对分类进行的修改是新增分类，这意味着所有输入的现有分类信息都必须保持不变，并在 "categories" 部分中保留。"data"中则存储了${input_ids}中各id对应的图数据的分类情况。
+在这个结构中，"categories" 部分存储的是已经划分出的类别信息。你不能修改任何输入的分类信息（包括分类的 id 和名称）。唯一可以对分类进行的修改是新增分类，这意味着所有输入的现有分类信息都必须保持不变，并在 "categories" 部分中保留。"data"中则存储了idlist中各id对应的图数据的分类情况。
 
 指导建议：
 - 如果一条图数据无法分入任何给定的分类中，可以构造一个新的分类，在categories中描述该信的分类并给其一个id，并将这条数据归入这个类别
