@@ -41,7 +41,7 @@ These ids correspond to graph data stored in the input graph data collection. Fi
 User Input: ${user_query}
 Graph Data Collection: ${graph_data}
 
-Given the graph data collection, each dictionary in the "filtered_nodes" list corresponds to a piece of data. The 'id' attribute in each dictionary represents its data id. For each graph data id in the input id list ${input_ids}, if a dictionary exists in the graph data collection whose 'id' matches the graph data id, then that dictionary describes the attributes of that id.
+Given the graph data collection, each dictionary in the "filtered_nodes" list corresponds to a piece of data. The 'id' attribute in each dictionary represents its data id. For each graph data id in the input id list ${input_ids}, if a dictionary exists in the graph data collection whose 'id' matches the graph data id, then that dictionary describes the attributes of that id. Each dictionary in the "filtered_edges" list represents a relationship between two data, whose ids are in the 'source' and 'target' field, respectively.
 
 The output classification result should be structured as follows:
 
@@ -89,7 +89,7 @@ User Input: ${user_query}
 Graph Data Collection: ${graph_data}
 Categories: ${category}
 
-Given the graph data collection, each dictionary in the "filtered_nodes" list corresponds to a piece of data. The 'id' attribute in each dictionary represents its data id. For each graph data id in the input id list ${input_ids}, if a dictionary exists in the graph data collection whose 'id' matches the graph data id, then that dictionary describes the attributes of that id.
+Given the graph data collection, each dictionary in the "filtered_nodes" list corresponds to a piece of data. The 'id' attribute in each dictionary represents its data id. For each graph data id in the input id list ${input_ids}, if a dictionary exists in the graph data collection whose 'id' matches the graph data id, then that dictionary describes the attributes of that id. Each dictionary in the "filtered_edges" list represents a relationship between two data, whose ids are in the 'source' and 'target' field, respectively.
 
 The output classification result should be structured as follows:
 
@@ -118,7 +118,8 @@ You cannot change any input categories, including category ids and names. You ca
 Guidance:
 - If a piece of graph data cannot be classified into any given categories, a new category can be created with its description and an id described in 'categories', and the data can be placed in this category.
 - Each category should focus on a single aspect, such as "data security" or "data scalability," and should not be a mix of different things, such as focusing on "data security and scalability."
-- The number of categories is not necessarily the more the better; usually, classifying into 2-6 categories is more appropriate.
+- The number of categories is not necessarily the more the better; usually, classifying into 2-6 categories is more appropriate. 
+- There are already ${JSON.parse(category).length} categories. If the number of categories goes over 6, try not to create new ones.
 - Ensure each piece of data belongs to only one category, and do not select multiple categories for the same piece of data.
 
 For example, suppose the input graph data contains 100 pieces of data with ids 1, 2, ..., 100, and the graph data ids to be classified are [1, 2, ..., 100], the "data" part of the output structure should be [{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 100, "category": xx}]. "[{"data_id": 1, "category": xx}, {"data_id": 1, "category": xx}, ..., {"data_id": 100, "category": xx}]" is an incorrect "data" part output because the data with "data_id" 1 is classified twice. "[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 105, "category": xx}]" is also an incorrect "data" part output because there is no data with id 105 in the graph data to be classified.
