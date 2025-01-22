@@ -431,12 +431,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
           },
         ]}
       />
-      <Button
-        block
-        icon={<OpenAIOutlined />}
-        onClick={handleConfirm}
-        // loading={loading}
-      >
+      <Button block icon={<OpenAIOutlined />} onClick={handleConfirm} loading={loading}>
         Generate Mindmap
       </Button>
       {summary && <Summary {...summary} task={task} />}
