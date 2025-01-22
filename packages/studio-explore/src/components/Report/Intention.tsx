@@ -1,25 +1,21 @@
-import { Flex, Typography, Button, Divider, Select, Timeline,notification } from 'antd';
-import React, { useState } from 'react';
+import { Flex, Typography, Button, Divider, Select, Timeline, notification } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { OpenAIOutlined } from '@ant-design/icons';
 import { query } from '../Copilot/query';
 import { Message } from '../Copilot/utils/message';
-import { useContext } from '@graphscope/studio-graph';
+import { GraphSchema, useContext } from '@graphscope/studio-graph';
 import Summary from './Summary';
-import {
-  filterDataByParticalSchema,
-  getAllAttributesByName,
-  getStrSizeInKB,
-  sampleHalf,
-  getCategories,
-  getInducedSubgraph,
-} from './utils';
+
+import { filterDataByParticalSchema, getStrSizeInKB, sampleHalf, getCategories, getInducedSubgraph } from './utils';
 import type { ItentionType } from './index';
 import AddNodes from './AddNodes';
 import { getPrompt } from './utils';
-import { debug } from 'console';
+import AdjustSchema from './AdjustSchema';
 interface IReportProps {
   task: string;
   intention: ItentionType;
+  intentionSchema: GraphSchema;
+  updateIntentionSchema: (value: GraphSchema) => void;
 }
 export interface SummaryType {
   categories: {
@@ -259,9 +255,9 @@ export const TEMPLATE_MIND_MAP_GENERATOR = (graph_data, user_query) => `
   `;
 
 const Intention: React.FunctionComponent<IReportProps> = props => {
-  const { intention, task } = props;
+  const { intention, task, intentionSchema, updateIntentionSchema } = props;
   const { store } = useContext();
-  const { schema, data } = store;
+  const { data } = store;
 
   const [state, setState] = useState<{
     summary: SummaryType | null;
@@ -277,10 +273,10 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
       return {
         ...preState,
         loading: true,
+        summary: null,
       };
     });
-
-    const { nodes, edges } = filterDataByParticalSchema(intention.schema, data);
+    const { nodes, edges } = filterDataByParticalSchema(intentionSchema, data);
 
     // const { flatten_keys, flatten_values } = flattenListofDict(nodes)
 
@@ -351,12 +347,12 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
           }),
         ]);
 
-        if(_res.message.content){
+        if (_res.message.content) {
           res = JSON.parse(_res.message.content);
-        }else{
+        } else {
           notification.error({
-            message:"network error"
-          })
+            message: 'network error',
+          });
           setState(preState => {
             return {
               ...preState,
@@ -364,9 +360,8 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
               summary: null,
             };
           });
-          return ;
+          return;
         }
-       
       }
 
       const data_ids = res.data.map(item => item.data_id.toString());
@@ -386,7 +381,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
       element.children = nodes.filter(n => (element.children || []).includes(n.id));
     });
     res.categories = _categories;
-    debugger;
+
     //@ts-ignore
     setState(preState => {
       return {
@@ -430,38 +425,18 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
                   Please first ensure that the current canvas contains these types of nodes and edges. You can manually
                   adjust the set of node properties passed to the LLM.
                 </Typography.Text>
-
-                {intention.schema.nodes.map(item => {
-                  const { id, label, properties = [] } = item;
-                  const match = schema.nodes.find(node => node.label === label);
-                  const options = match?.properties.map(p => {
-                    return {
-                      label: p.name,
-                      value: p.name,
-                    };
-                  });
-                  const defaultValue = properties.map(p => {
-                    return p.name;
-                  });
-                  return (
-                    <Flex vertical gap={12} key={item.id}>
-                      <Flex justify="space-between" align="center">
-                        <Typography.Text italic type="secondary">
-                          {label}
-                        </Typography.Text>
-                        <AddNodes label={label} />
-                      </Flex>
-
-                      <Select options={options} mode="multiple" defaultValue={defaultValue}></Select>
-                    </Flex>
-                  );
-                })}
+                <AdjustSchema value={intentionSchema} onChange={updateIntentionSchema} />
               </Flex>
             ),
           },
         ]}
       />
-      <Button block icon={<OpenAIOutlined />} onClick={handleConfirm} loading={loading}>
+      <Button
+        block
+        icon={<OpenAIOutlined />}
+        onClick={handleConfirm}
+        // loading={loading}
+      >
         Generate Mindmap
       </Button>
       {summary && <Summary {...summary} task={task} />}

@@ -7,8 +7,7 @@ import { GraphSchema, useContext } from '@graphscope/studio-graph';
 import Intention from './Intention';
 import Setting from '../Copilot/setting';
 import { getPrompt } from './utils';
-import ReportText from  './Text'
-import {test_report} from './const'
+
 interface IReportProps {}
 
 const GET_DATA_FILTER_RULES_EN = (user_query: string, schema: any) => {
@@ -60,6 +59,7 @@ const Report: React.FunctionComponent<IReportProps> = props => {
     loading: boolean;
     task: string;
     intention: ItentionType | null;
+    intentionSchema: GraphSchema;
   }>({
     loading: false,
     task:
@@ -68,15 +68,25 @@ const Report: React.FunctionComponent<IReportProps> = props => {
       // '请根据我选中的 papers ，以及 paper 关联的 challenge，写一个 related work section。要求 papers 按照 challenge 进行整理',
       '帮我把这些 Papers 整理写成一个 related work 的 section，关注点在 challenge 上',
     intention: null,
+    intentionSchema: { nodes: [], edges: [] },
   });
 
-  const { intention, task } = state;
+  const { intention, task, intentionSchema } = state;
 
   const handleClick = async () => {
     const { value } = InputRef.current.resizableTextArea.textArea;
 
     try {
-      setState({ ...state, task: value, loading: true });
+      setState({
+        ...state,
+        task: value,
+        intention: null,
+        intentionSchema: {
+          nodes: [],
+          edges: [],
+        },
+        loading: true,
+      });
 
       const _res = await query([
         new Message({
@@ -95,10 +105,19 @@ const Report: React.FunctionComponent<IReportProps> = props => {
           ...preState,
           loading: false,
           intention: res,
+          intentionSchema: res.schema,
         };
       });
       console.log('res', res);
     } catch (error) {}
+  };
+  const updateIntentionSchema = (schema: GraphSchema) => {
+    setState(preState => {
+      return {
+        ...preState,
+        intentionSchema: schema,
+      };
+    });
   };
 
   console.log(schema);
@@ -118,9 +137,14 @@ const Report: React.FunctionComponent<IReportProps> = props => {
       <Button icon={<OpenAIOutlined />} onClick={handleClick} loading={state.loading}>
         Infer Intention
       </Button>
-      {intention && <Intention task={task} intention={intention} />}
-
-
+      {intention && (
+        <Intention
+          task={task}
+          intention={intention}
+          intentionSchema={intentionSchema}
+          updateIntentionSchema={updateIntentionSchema}
+        />
+      )}
     </Flex>
   );
 };
