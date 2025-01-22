@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import type { SummaryType } from './Intention';
 import { getPrompt } from './utils';
 import ReportText from './Text';
+import { Utils } from '@graphscope/studio-components';
 
 const SECTION_CONSTANT_EXAMPLE_EN = () => {
   return `
@@ -24,7 +25,7 @@ significantly contributed to the development of GQL, the emerging standard for q
 The increasing demand for Cypher integration into various systems, including GraphScope, alongside the
 standardization of ISO/GQL \\cite{[Id]}, highlights the evolving nature of graph querying interfaces.
 Additionally, many graph databases offer the capability to register custom stored procedures for
-enhanced querying functionality.
+enhanced querying functionality. Some literatures summarize this kind of graph databases \\cite{[Id1], [Id2], [Id3]}.
   `;
 };
 
@@ -37,23 +38,28 @@ ${example}
 };
 
 
-const GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN = (user_query, category, section_id, example) => {
+const GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN = (user_query, category, section_id, example, intro_text) => {
   return `
-You are a highly skilled AI assistant. Given a user input and a category of data, your task is to write a corresponding subsection (subsection 2.${section_id}) in a report based on the given data that belongs to the same category.
+You are a highly skilled AI assistant. Given a user input and a category of data, your task is to write a corresponding subsection (subsection 2.${section_id}) in a report based on the given data that belongs to the same category. The introduction part of this report is as follows:
+${intro_text}
 
 User Input: ${user_query}
 Category: ${category}
 
-In the input category, the data belonging to this category are stored in the 'children' field.
+In the input category, the data belonging to this category are stored in the 'children' field. For each data, there are two fields, i.e., 'name' and 'description.
 
 Guidance:
-- In each subsection, you must mention and cite as many data belonging to this category (i.e., those in the 'children' field) as possible. 
+- In this subsection, you must mention and cite AS MANY data belonging to this category (i.e., those in the 'children' field) AS POSSIBLE. It's best to mention and cite all the data in the 'children' field.
 For each mentioned data, you need to explain its relationship with the category corresponding to the current subsection. When introducing each mentioned data, use at most two sentences (within about 50 words).
+- If the report is a related work, do not directly write the title/name of the papers in the report.
+- Sometimes, you can describe the commonalities of related data in 1-2 sentences and cite these works, which also counts as mentioning them.
 - For each mentioned data, it would be better for you to also explain its relationship with other data if possible.
 - Every time a data is first mentioned in the text, add a citation in the format \\cite{Id} and you must not use \\cite as the subject of the sentence. For example, suppose the [Id] of data p1 is 0000.0000, then the citation should be added as \\cite{0000.0000}.
 If the data presents a certain viewpoint or method M, the sentence may be "M \\cite{0000.0000} ...". If there is author or source information A for the data, the sentence may be "A~\\cite{0000.0000} proposes that ...". If several data with ids [Id_1], ... [Id_k] are related to an item or topic T, then the sentence may be "Topic T is well studied \\cite{Id_1, ..., Id_k} ...".
 Anyway, sentence "\\cite{0000.0000} proposes ..." is NOT allowed. 
 - Avoid using a whole paragraph to describe one piece of data, nor should you list the data one by one. Instead, appropriately describe the connections between data.
+- In this subsection, when introducing data, it's best to present similar and strongly related data close to each other and describe their commonalities and differences.
+
 
 ${example}
 `;
@@ -132,93 +138,7 @@ const GET_REPORT_PROMPTS_2 = (user_query, mind_map) => {
   
   `;
 };
-const WriteReportBySection: React.FunctionComponent<
-  SummaryType & {
-    task: string;
-  }
-> = props => {
-  const { categories, task } = props;
-  const [state, setState] = useState({
-    loading: false,
-    report: '',
-  });
-  const { loading, report } = state;
 
-  const handleClick = async () => {
-    setState(preState => {
-      return {
-        ...preState,
-        loading: true,
-      };
-    });
-
-    const max_token_per_subsection = 200;
-    let subsection_id = 0;
-    let total_text = '';
-
-    for (let category_info of categories) {
-      subsection_id += 1;
-      if (subsection_id === 1) {
-        const res_section = await query([
-          new Message({
-            role: 'user',
-            content: GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN(
-              task,
-              JSON.stringify(category_info),
-              max_token_per_subsection.toString(),
-              SECTION_CONSTANT_EXAMPLE_EN,
-            ),
-          }),
-        ]);
-        total_text += res_section.message.content;
-      } else {
-        const res_section = await query([
-          new Message({
-            role: 'user',
-            content: GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN(
-              task,
-              JSON.stringify(category_info),
-              max_token_per_subsection.toString(),
-              SECTION_PREVIOUS_EXAMPLE_EN(total_text),
-            ),
-          }),
-        ]);
-        total_text += res_section.message.content;
-      }
-    }
-
-    const res = await query([
-      new Message({
-        role: 'user',
-        content: GET_REPORT_PROMPTS_BY_SECTION_INTRO_EN(task, 50, total_text),
-      }),
-    ]);
-
-    // const res = await query([
-    //   new Message({
-    //     role: 'user',
-    //     content: GET_REPORT_PROMPTS_CHN(task, JSON.stringify(category)),
-    //   }),
-    // ]);
-
-    setState(preState => {
-      return {
-        ...preState,
-        loading: false,
-        report: res.message.content,
-      };
-    });
-  };
-
-  return (
-    <Flex vertical gap={12}>
-      <Button onClick={handleClick} loading={loading}>
-        Write Report
-      </Button>
-      {report && <ReactMarkdown>{report}</ReactMarkdown>}
-    </Flex>
-  );
-};
 const WriteReport: React.FunctionComponent<
   SummaryType & {
     task: string;
@@ -250,6 +170,7 @@ const WriteReport: React.FunctionComponent<
         content: GET_REPORT_PROMPTS_BY_SECTION_INTRO_EN(task, 50, JSON.stringify(categoriesWithoutChildren)),
       }),
     ]);
+    const intro_text = intro_res.message.content;
 
     let section_no = 0;
     let already_sec = "";
@@ -262,14 +183,15 @@ const WriteReport: React.FunctionComponent<
             task,
             JSON.stringify(category),
             JSON.stringify(section_no),
-            SECTION_CONSTANT_EXAMPLE_EN
+            SECTION_CONSTANT_EXAMPLE_EN,
+            intro_text
           ),
         }),
       ]);
       already_sec = already_sec + '\n' + res.message.content;
     }
 
-    already_sec = intro_res.message.content + "\n" + already_sec;
+    already_sec = intro_text + "\n" + already_sec;
 
 
     setState(preState => {
@@ -281,11 +203,22 @@ const WriteReport: React.FunctionComponent<
     });
   };
 
+  const handleDownloadMindmap = ()=>{
+    Utils.createDownload(JSON.stringify(categories,null,2),'mindmap.json')
+  }
+
   return (
     <Flex vertical gap={12}>
-      <Button onClick={handleClick} loading={loading}>
+      <Flex>
+
+    
+      <Button onClick={handleDownloadMindmap}  >
+        Download Mindmap
+      </Button>
+      <Button onClick={handleClick} loading={loading} type='primary'>
         Write Report
       </Button>
+      </Flex>
 
       {report && <ReportText report={report} enableBib />}
     </Flex>

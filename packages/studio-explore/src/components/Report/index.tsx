@@ -7,6 +7,8 @@ import { GraphSchema, useContext } from '@graphscope/studio-graph';
 import Intention from './Intention';
 import Setting from '../Copilot/setting';
 import { getPrompt } from './utils';
+import ReportText from  './Text'
+import {test_report} from './const'
 interface IReportProps {}
 
 const GET_DATA_FILTER_RULES_EN = (user_query: string, schema: any) => {
@@ -112,10 +114,13 @@ const Report: React.FunctionComponent<IReportProps> = props => {
         Input your intention
       </Typography.Text>
       <Input.TextArea rows={3} defaultValue={task} ref={InputRef}></Input.TextArea>
+      {/* <ReportText report={test_report} enableBib/> */}
       <Button icon={<OpenAIOutlined />} onClick={handleClick} loading={state.loading}>
         Infer Intention
       </Button>
       {intention && <Intention task={task} intention={intention} />}
+
+
     </Flex>
   );
 };

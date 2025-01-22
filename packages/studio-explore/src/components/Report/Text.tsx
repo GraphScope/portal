@@ -25,16 +25,33 @@ const ReportText = (props: { report: string; enableBib?: boolean }) => {
         const bibKeyMatch = bib.match(bibKeyRegex);
         const bibKey = bibKeyMatch ? bibKeyMatch[1] : null;
         nodesMap.set(id, { ...properties, [bib_key]: bibKey });
+        //@ts-ignore
+        window.nodesMap = nodesMap
       });
       // 替换 cite id 为 bibKey
-      const regex = /\\cite\{(\d+)\}/g;
-      const replacedText = report.replace(regex, (match, id) => {
-        const bibKey = nodesMap.get(id)[bib_key];
-        if (bibKey) {
-          bibs[id] = nodesMap.get(id)[property_key_of_bib];
-          return `\\cite{${bibKey}}`;
+      const regex = /\\cite\{(.*?)\}/g;
+      const replacedText = report.replace(regex, (match, ids) => {
+      
+        const bibKeys = ids.split(',').map((_id)=>{
+          const id = (_id as String).trim()
+          if(!nodesMap.get(id)){
+            console.log( 'missing id',id,nodesMap,ids)
+            debugger
+            
+          }
+          const node = nodesMap.get(id) || {};
+          const bibKey = node[bib_key];
+          if(bibKey){
+            bibs[id] = node[property_key_of_bib];
+          }else{
+            bibs[id] = `@article{${id}} is missing info ,Title={${node['title']}},`;
+          }
+          return bibKey;
+        })
+      
+        if (bibKeys.length>0) {
+          return `\\cite{${bibKeys.join(',')}}`;
         } else {
-          bibs[id] = `@article{${id}} is missing info ,Title={${nodesMap.get(id)['title']}},`;
           // 如果找到 bibKey，则替换；否则保留原内容
           return match;
         }

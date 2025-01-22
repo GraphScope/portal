@@ -1,4 +1,4 @@
-import { Flex, Typography, Button, Divider, Select, Timeline } from 'antd';
+import { Flex, Typography, Button, Divider, Select, Timeline,notification } from 'antd';
 import React, { useState } from 'react';
 import { OpenAIOutlined } from '@ant-design/icons';
 import { query } from '../Copilot/query';
@@ -349,7 +349,23 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
             content: current_prompt,
           }),
         ]);
-        res = JSON.parse(_res.message.content);
+
+        if(_res.message.content){
+          res = JSON.parse(_res.message.content);
+        }else{
+          notification.error({
+            message:"network error"
+          })
+          setState(preState => {
+            return {
+              ...preState,
+              loading: false,
+              summary: null,
+            };
+          });
+          return ;
+        }
+       
       }
 
       const data_ids = res.data.map(item => item.data_id.toString());
