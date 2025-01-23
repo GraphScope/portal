@@ -38,7 +38,7 @@ ${example}
 
 const GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN = (user_query, category, section_id, example, intro_text) => {
   return `
-You are a highly skilled AI assistant. Given a user input and a category of data, your task is to write a corresponding subsection (subsection 2.${section_id}) in a report based on the given data that belongs to the same category. The introduction part of this report is as follows:
+You are a highly skilled AI assistant. Given a user input and a category of data, your task is to write a corresponding subsection (subsection 2.${section_id}) in a report based on the given data that belongs to the same category and the requirements in the user input. The introduction part of this report is as follows:
 ${intro_text}
 
 User Input: ${user_query}
@@ -57,6 +57,7 @@ If the data presents a certain viewpoint or method M, the sentence may be "M \\c
 Anyway, sentence "\\cite{0000.0000} proposes ..." is NOT allowed. 
 - Avoid using a whole paragraph to describe one piece of data, nor should you list the data one by one. Instead, appropriately describe the connections between data.
 - In this subsection, when introducing data, it's best to present similar and strongly related data close to each other and describe their commonalities and differences.
+- DO NOT forget the requirements in the user input.
 
 
 ${example}
@@ -65,7 +66,7 @@ ${example}
 
 const GET_REPORT_PROMPTS_BY_SECTION_INTRO_EN = (user_query, max_tokens, categories) => {
   return `
-You are a highly skilled AI assistant. Given a user input and the categories, we are going to write a report about the data belonging to categories. You task is to generate and output the title and introduction of the report based on the categories. The introduction should contain about ${max_tokens} words.
+You are a highly skilled AI assistant. Given a user input and the categories, we are going to write a report about the data belonging to categories to satisfy the requirements in the user input. You task is to generate and output the title and introduction of the report based on the categories and the requirements in the user input. The introduction should contain about ${max_tokens} words.
 
 User Input: ${user_query}
 Categoreis: ${categories}

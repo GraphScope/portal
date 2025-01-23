@@ -32,13 +32,13 @@ export interface SummaryType {
 }
 
 export const TEMPLATE_MIND_MAP_GENERATOR_EN = (graph_data, input_ids, user_query) => `
-You are a highly skilled AI assistant in summarizing data and generating mind maps. Your task involves analyzing the user's actual intention given a user input and a list of graph data ids, and then select the appropriate dimensions to classify, summarize, and organize these graph data ids based on the specific intent and data.
+You are a highly skilled AI assistant in summarizing data and generating mind maps. Your task involves analyzing the user's actual intention given a user input and a list of graph data ids, and then select the appropriate dimensions to classify, summarize, and organize these graph data ids based on the specific intent and data. 
 These ids correspond to graph data stored in the input graph data collection. Finally, you should output the classification results. Each category should have a 'name' and a corresponding 'description'.
 
 User Input: ${user_query}
 Graph Data Collection: ${graph_data}
 
-Given the graph data collection, each dictionary in the "filtered_nodes" list corresponds to a piece of data. The 'id' attribute in each dictionary represents its data id. For each graph data id in the input id list ${input_ids}, if a dictionary exists in the graph data collection whose 'id' matches the graph data id, then that dictionary describes the attributes of that id. Each dictionary in the "filtered_edges" list represents a relationship between two data, whose ids are in the 'source' and 'target' field, respectively.
+Given the graph data collection, each dictionary in the "filtered_nodes" list corresponds to a piece of data. The 'id' attribute in each dictionary represents its data id. For each graph data id in the input id list IDLIST = ${input_ids}, if a dictionary exists in the graph data collection whose 'id' matches the graph data id, then that dictionary describes the attributes of that id. Each dictionary in the "filtered_edges" list represents a relationship between two data, whose ids are in the 'source' and 'target' field, respectively, and the name of the relationship is in the 'label' field.
 
 The output classification result should be structured as follows:
 
@@ -61,7 +61,7 @@ The output classification result should be structured as follows:
   "summary": string,
   "explain": string
 }
-In this structure, "categories" stores information about the divided categories, while "data" stores the classification of graph data corresponding to each id in the input id list.
+In this structure, "categories" stores information about the divided categories, while "data" stores the classification of graph data corresponding to each id in the input id list IDLIST.
 
 
 Guidance:
@@ -69,6 +69,8 @@ Guidance:
 - Each category should focus on a single aspect, such as "data security" or "data scalability," and should not be a mix of different things, such as focusing on "data security and scalability."
 - The number of categories is not necessarily the more the better; usually, classifying into 2-6 categories is more appropriate.
 - Ensure each piece of data belongs to only one category, and do not select multiple categories for the same piece of data. If accurate classification is not possible, classify them as 'others'.
+- The resultant mindmap will finally be used to solve user's requirements in user input later, so the output should be related to the user input.
+- Always exclude any data not in IDLIST from the 'data' field of the output result.
 
 For example, suppose the input graph data contains 100 pieces of data with ids 1, 2, ..., 100, and the graph data ids to be classified are [1, 2, ..., 100], the "data" part of the output structure should be [{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 100, "category": xx}]. "[{"data_id": 1, "category": xx}, {"data_id": 1, "category": xx}, ..., {"data_id": 100, "category": xx}]" is an incorrect "data" part output because the data with "data_id" 1 is classified twice. "[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 105, "category": xx}]" is also an incorrect "data" part output because there is no data with id 105 in the graph data to be classified.
 
@@ -86,7 +88,7 @@ User Input: ${user_query}
 Graph Data Collection: ${graph_data}
 Categories: ${category}
 
-Given the graph data collection, each dictionary in the "filtered_nodes" list corresponds to a piece of data. The 'id' attribute in each dictionary represents its data id. For each graph data id in the input id list ${input_ids}, if a dictionary exists in the graph data collection whose 'id' matches the graph data id, then that dictionary describes the attributes of that id. Each dictionary in the "filtered_edges" list represents a relationship between two data, whose ids are in the 'source' and 'target' field, respectively.
+Given the graph data collection, each dictionary in the "filtered_nodes" list corresponds to a piece of data. The 'id' attribute in each dictionary represents its data id. For each graph data id in the input id list IDLIST = ${input_ids}, if a dictionary exists in the graph data collection whose 'id' matches the graph data id, then that dictionary describes the attributes of that id. Each dictionary in the "filtered_edges" list represents a relationship between two data, whose ids are in the 'source' and 'target' field, respectively, and the name of the relationship is in the 'label' field.
 
 The output classification result should be structured as follows:
 
@@ -110,7 +112,7 @@ The output classification result should be structured as follows:
   "explain": string
 }
 In this structure, "categories" stores the information of the divided categories. 
-You cannot change any input categories, including category ids and names. You can only add new categories. This means all the input categories must stay the same and be kept in the "categories" section. "data" stores the classification of graph data corresponding to each id in the input id list.
+You cannot change any input categories, including category ids and names. You can only add new categories. This means all the input categories must stay the same and be kept in the "categories" section. "data" stores the classification of graph data corresponding to each id in the input id list IDLIST.
 
 Guidance:
 - If a piece of graph data cannot be classified into any given categories, a new category can be created with its description and an id described in 'categories', and the data can be placed in this category.
@@ -118,6 +120,8 @@ Guidance:
 - The number of categories is not necessarily the more the better; usually, classifying into 2-6 categories is more appropriate. 
 - There are already ${JSON.parse(category).length} categories. If the number of categories goes over 6, try not to create new ones.
 - Ensure each piece of data belongs to only one category, and do not select multiple categories for the same piece of data.
+- The resultant mindmap will finally be used to solve user's requirements in user input later, so the output should be related to the user input.
+- Always exclude any data not in IDLIST from the 'data' field of the output result.
 
 For example, suppose the input graph data contains 100 pieces of data with ids 1, 2, ..., 100, and the graph data ids to be classified are [1, 2, ..., 100], the "data" part of the output structure should be [{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 100, "category": xx}]. "[{"data_id": 1, "category": xx}, {"data_id": 1, "category": xx}, ..., {"data_id": 100, "category": xx}]" is an incorrect "data" part output because the data with "data_id" 1 is classified twice. "[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 105, "category": xx}]" is also an incorrect "data" part output because there is no data with id 105 in the graph data to be classified.
 
