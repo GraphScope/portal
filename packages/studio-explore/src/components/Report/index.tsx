@@ -7,6 +7,7 @@ import { GraphSchema, useContext } from '@graphscope/studio-graph';
 import Intention from './Intention';
 import Setting from '../Copilot/setting';
 import { getPrompt } from './utils';
+import MOCK from './Mock';
 
 interface IReportProps {}
 
@@ -87,6 +88,21 @@ const Report: React.FunctionComponent<IReportProps> = props => {
         },
         loading: true,
       });
+
+      /** MOCK START */
+      if (MOCK.enable) {
+        await MOCK.sleep(200);
+        setState(preState => {
+          return {
+            ...preState,
+            loading: false,
+            intention: MOCK.intention,
+            intentionSchema: MOCK.intention.schema,
+          };
+        });
+        return;
+      }
+      /** MOCK END */
 
       const _res = await query([
         new Message({

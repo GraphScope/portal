@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import { Button, Flex } from 'antd';
 import { query } from '../Copilot/query';
 import { Message } from '../Copilot/utils/message';
-import ReactMarkdown from 'react-markdown';
 import type { SummaryType } from './Intention';
 import { getPrompt } from './utils';
 import ReportText from './Text';
 import { Utils } from '@graphscope/studio-components';
-
+import MOCK from './Mock';
 const SECTION_CONSTANT_EXAMPLE_EN = () => {
   return `
 An example of a subsection 2.1 in a report is as follows
@@ -36,7 +35,6 @@ Please create a new subsection to continue writing about the current category:
 ${example}
   `;
 };
-
 
 const GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN = (user_query, category, section_id, example, intro_text) => {
   return `
@@ -158,10 +156,23 @@ const WriteReport: React.FunctionComponent<
         loading: true,
       };
     });
+    /** MOCK START */
+    if (MOCK.enable) {
+      await MOCK.sleep(200);
+      setState(preState => {
+        return {
+          ...preState,
+          loading: false,
+          report: MOCK.report,
+        };
+      });
+      return;
+    }
+    /** MOCK END */
 
     const categoriesWithoutChildren = categories.map(category => ({
-        name: category.name,
-        description: category.description
+      name: category.name,
+      description: category.description,
     }));
 
     const intro_res = await query([
@@ -173,51 +184,46 @@ const WriteReport: React.FunctionComponent<
     const intro_text = intro_res.message.content;
 
     let section_no = 0;
-    let already_sec = "";
+    let already_sec = '';
     for (const category of categories) {
       section_no += 1;
       const res = await query([
         new Message({
           role: 'user',
-          content: getPrompt({ 'zh-CN': GET_REPORT_PROMPTS_CHN, 'en-US':  GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN })(
+          content: getPrompt({ 'zh-CN': GET_REPORT_PROMPTS_CHN, 'en-US': GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN })(
             task,
             JSON.stringify(category),
             JSON.stringify(section_no),
             SECTION_CONSTANT_EXAMPLE_EN,
-            intro_text
+            intro_text,
           ),
         }),
       ]);
       already_sec = already_sec + '\n' + res.message.content;
     }
 
-    already_sec = intro_text + "\n" + already_sec;
-
+    already_sec = intro_text + '\n' + already_sec;
 
     setState(preState => {
       return {
         ...preState,
         loading: false,
-        report: already_sec
+        report: already_sec,
       };
     });
   };
 
-  const handleDownloadMindmap = ()=>{
-    Utils.createDownload(JSON.stringify(categories,null,2),'mindmap.json')
-  }
+  const handleDownloadMindmap = () => {
+    Utils.createDownload(JSON.stringify(categories, null, 2), 'mindmap.json');
+  };
 
   return (
     <Flex vertical gap={12}>
-      <Flex>
-
-    
-      <Button onClick={handleDownloadMindmap}  >
-        Download Mindmap
-      </Button>
-      <Button onClick={handleClick} loading={loading} type='primary'>
-        Write Report
-      </Button>
+      <Flex gap={12}>
+        <Button onClick={handleDownloadMindmap}>Download Mindmap</Button>
+        <Button onClick={handleClick} loading={loading} type="primary">
+          Write Report
+        </Button>
       </Flex>
 
       {report && <ReportText report={report} enableBib />}

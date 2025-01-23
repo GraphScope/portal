@@ -11,6 +11,7 @@ import type { ItentionType } from './index';
 import AddNodes from './AddNodes';
 import { getPrompt } from './utils';
 import AdjustSchema from './AdjustSchema';
+import MOCK from './Mock';
 interface IReportProps {
   task: string;
   intention: ItentionType;
@@ -269,6 +270,26 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
   const { summary, loading } = state;
 
   const handleConfirm = async () => {
+    if (MOCK.enable) {
+      console.log('MOCK', MOCK);
+      setState(preState => {
+        return {
+          ...preState,
+          loading: true,
+          summary: null,
+        };
+      });
+      await MOCK.sleep(200);
+      setState(preState => {
+        return {
+          ...preState,
+          loading: false,
+          summary: MOCK.mindmap,
+        };
+      });
+
+      return;
+    }
     setState(preState => {
       return {
         ...preState,

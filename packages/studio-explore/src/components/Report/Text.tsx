@@ -26,30 +26,27 @@ const ReportText = (props: { report: string; enableBib?: boolean }) => {
         const bibKey = bibKeyMatch ? bibKeyMatch[1] : null;
         nodesMap.set(id, { ...properties, [bib_key]: bibKey });
         //@ts-ignore
-        window.nodesMap = nodesMap
+        window.nodesMap = nodesMap;
       });
       // 替换 cite id 为 bibKey
       const regex = /\\cite\{(.*?)\}/g;
       const replacedText = report.replace(regex, (match, ids) => {
-      
-        const bibKeys = ids.split(',').map((_id)=>{
-          const id = (_id as String).trim()
-          if(!nodesMap.get(id)){
-            console.log( 'missing id',id,nodesMap,ids)
-            debugger
-            
+        const bibKeys = ids.split(',').map(_id => {
+          const id = (_id as String).trim();
+          if (!nodesMap.get(id)) {
+            console.log('missing id', id, nodesMap, ids);
           }
           const node = nodesMap.get(id) || {};
           const bibKey = node[bib_key];
-          if(bibKey){
+          if (bibKey) {
             bibs[id] = node[property_key_of_bib];
-          }else{
+          } else {
             bibs[id] = `@article{${id}} is missing info ,Title={${node['title']}},`;
           }
           return bibKey;
-        })
-      
-        if (bibKeys.length>0) {
+        });
+
+        if (bibKeys.length > 0) {
           return `\\cite{${bibKeys.join(',')}}`;
         } else {
           // 如果找到 bibKey，则替换；否则保留原内容
@@ -65,7 +62,6 @@ const ReportText = (props: { report: string; enableBib?: boolean }) => {
   };
   const { text, bibs } = processText();
   const handleDownload = () => {
-    processText();
     if (enableBib) {
       Utils.createDownload(text, 'report.md');
       Utils.createDownload(bibs || '', 'report.bib');
