@@ -112,7 +112,7 @@ The output classification result should be structured as follows:
   "explain": string
 }
 In this structure, "categories" stores the information of the divided categories. 
-You cannot change any input categories, including category ids and names. You can only add new categories. This means all the input categories must stay the same and be kept in the "categories" section. "data" stores the classification of graph data corresponding to each id in the input id list IDLIST.
+You cannot change any input categories, including category ids and names. You can only add new categories. This means all the input categories must stay the same and be kept in the "categories" section. "data" stores the classification of graph data corresponding to each id in the input id list IDLIST = ${input_ids}.
 
 Guidance:
 - If a piece of graph data cannot be classified into any given categories, a new category can be created with its description and an id described in 'categories', and the data can be placed in this category.
@@ -283,7 +283,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
           summary: null,
         };
       });
-      await MOCK.sleep(200);
+      await MOCK.sleep(2000);
       setState(preState => {
         return {
           ...preState,
@@ -312,6 +312,8 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
         return !node.label.startsWith('Dimension_');
       })
       .map(item => item.id);
+
+    let all_ids_backup = all_ids.slice()
 
     let iterate_time = 0;
     let category_dict = {};
@@ -391,13 +393,15 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
 
       const data_ids = res.data.map(item => item.data_id.toString());
       category_dict = res.categories;
-      all_ids = all_ids.filter(element => !data_ids.includes(element));
-      iterate_time = iterate_time + 1;
-
       for (const item of res.data) {
         //@ts-ignore
-        outputs[item.data_id] = item.category;
+        if (all_ids_backup.includes(item.data_id.toString())) {
+          outputs[item.data_id] = item.category;
+        }
       }
+
+      all_ids = all_ids.filter(element => !data_ids.includes(element));
+      iterate_time = iterate_time + 1;
     }
 
     debugger;
