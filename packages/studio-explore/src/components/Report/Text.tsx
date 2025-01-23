@@ -31,20 +31,23 @@ const ReportText = (props: { report: string; enableBib?: boolean }) => {
       // 替换 cite id 为 bibKey
       const regex = /\\cite\{(.*?)\}/g;
       const replacedText = report.replace(regex, (match, ids) => {
-        const bibKeys = ids.split(',').map(_id => {
-          const id = (_id as String).trim();
-          if (!nodesMap.get(id)) {
-            console.log('missing id', id, nodesMap, ids);
-          }
-          const node = nodesMap.get(id) || {};
-          const bibKey = node[bib_key];
-          if (bibKey) {
-            bibs[id] = node[property_key_of_bib];
-          } else {
-            bibs[id] = `@article{${id}} is missing info ,Title={${node['title']}},`;
-          }
-          return bibKey;
-        });
+        const bibKeys = ids
+          .split(',')
+          .map(_id => {
+            const id = (_id as String).trim();
+            if (!nodesMap.get(id)) {
+              console.log('missing id', id, nodesMap, ids);
+            }
+            const node = nodesMap.get(id) || {};
+            const bibKey = node[bib_key];
+            if (bibKey) {
+              bibs[id] = node[property_key_of_bib];
+            } else {
+              bibs[id] = `@article{${id}} is missing info ,Title={${node['title']}},`;
+            }
+            return bibKey;
+          })
+          .filter(c => c);
 
         if (bibKeys.length > 0) {
           return `\\cite{${bibKeys.join(',')}}`;

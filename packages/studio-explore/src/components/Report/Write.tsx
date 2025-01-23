@@ -222,7 +222,7 @@ const WriteReport: React.FunctionComponent<
     <Flex vertical gap={12}>
       <Flex gap={12}>
         <Button onClick={handleDownloadMindmap}>Download Mindmap</Button>
-        <Button onClick={handleClick} loading={loading} type="primary">
+        <Button onClick={handleClick} loading={loading} type="primary" block>
           Write Report
         </Button>
       </Flex>
