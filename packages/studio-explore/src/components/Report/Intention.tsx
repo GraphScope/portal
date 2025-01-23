@@ -450,10 +450,10 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
             children: (
               <Flex vertical gap={12}>
                 <Typography.Text strong>Required data</Typography.Text>
-                <Typography.Text type="secondary" italic>
+                {/* <Typography.Text type="secondary" italic>
                   Please first ensure that the current canvas contains these types of nodes and edges. You can manually
                   adjust the set of node properties passed to the LLM.
-                </Typography.Text>
+                </Typography.Text> */}
                 <AdjustSchema value={intentionSchema} onChange={updateIntentionSchema} />
               </Flex>
             ),
