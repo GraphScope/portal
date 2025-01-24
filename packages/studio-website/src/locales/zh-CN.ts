@@ -263,4 +263,5 @@ export default {
   Settings: '设置',
   'System Setting': '系统设置',
   'Data Load Configuration': '数据载入配置',
+  'Download Load Task Config': '下载数据导入任务的配置文件',
 };
