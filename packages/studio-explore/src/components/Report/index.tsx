@@ -7,6 +7,7 @@ import { GraphSchema, useContext } from '@graphscope/studio-graph';
 import Intention from './Intention';
 import Setting from '../Copilot/setting';
 import { getPrompt } from './utils';
+import MOCK from './Mock';
 
 interface IReportProps {}
 
@@ -62,11 +63,11 @@ const Report: React.FunctionComponent<IReportProps> = props => {
     intentionSchema: GraphSchema;
   }>({
     loading: false,
-    task:
+    task:'',
       // '请根据我选中的 papers ，整理出一份趋势报告，重点考虑时间因素',
       // '帮我把画布上的papers按照时间和引用数整理成一个分析报告',
       // '请根据我选中的 papers ，以及 paper 关联的 challenge，写一个 related work section。要求 papers 按照 challenge 进行整理',
-      '帮我把这些 Papers 整理写成一个 related work 的 section，关注点在 challenge 上',
+     
     intention: null,
     intentionSchema: { nodes: [], edges: [] },
   });
@@ -87,6 +88,22 @@ const Report: React.FunctionComponent<IReportProps> = props => {
         },
         loading: true,
       });
+
+      /** MOCK START */
+      if (MOCK.enable) {
+        const res = await MOCK.intention();
+        debugger;
+        setState(preState => {
+          return {
+            ...preState,
+            loading: false,
+            intention: res,
+            intentionSchema: res.schema,
+          };
+        });
+        return;
+      }
+      /** MOCK END */
 
       const _res = await query([
         new Message({
