@@ -1,17 +1,22 @@
-import { Flex, Typography, Button, Divider, Select, Timeline } from 'antd';
-import React, { useState } from 'react';
+import { Flex, Typography, Button, Divider, Select, Timeline, notification } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { OpenAIOutlined } from '@ant-design/icons';
 import { query } from '../Copilot/query';
 import { Message } from '../Copilot/utils/message';
-import { useContext } from '@graphscope/studio-graph';
+import { GraphSchema, useContext } from '@graphscope/studio-graph';
 import Summary from './Summary';
-import { filterDataByParticalSchema, getAllAttributesByName, getStrSizeInKB, sampleHalf, getCategories } from './utils';
-import type { ItentionType } from './index';
 
+import { filterDataByParticalSchema, getStrSizeInKB, sampleHalf, getCategories, getInducedSubgraph } from './utils';
+import type { ItentionType } from './index';
+import AddNodes from './AddNodes';
 import { getPrompt } from './utils';
+import AdjustSchema from './AdjustSchema';
+import MOCK from './Mock';
 interface IReportProps {
   task: string;
   intention: ItentionType;
+  intentionSchema: GraphSchema;
+  updateIntentionSchema: (value: GraphSchema) => void;
 }
 export interface SummaryType {
   categories: {
@@ -27,13 +32,13 @@ export interface SummaryType {
 }
 
 export const TEMPLATE_MIND_MAP_GENERATOR_EN = (graph_data, input_ids, user_query) => `
-You are a highly skilled AI assistant in summarizing data and generating mind maps. Your task involves analyzing the user's actual intention given a user input and a list of graph data ids, and then select the appropriate dimensions to classify, summarize, and organize these graph data ids based on the specific intent and data.
+You are a highly skilled AI assistant in summarizing data and generating mind maps. Your task involves analyzing the user's actual intention given a user input and a list of graph data ids, and then select the appropriate dimensions to classify, summarize, and organize these graph data ids based on the specific intent and data. 
 These ids correspond to graph data stored in the input graph data collection. Finally, you should output the classification results. Each category should have a 'name' and a corresponding 'description'.
 
 User Input: ${user_query}
 Graph Data Collection: ${graph_data}
 
-Given the graph data collection, each dictionary in the "filtered_nodes" list corresponds to a piece of data. The 'id' attribute in each dictionary represents its data id. For each graph data id in ${input_ids}, if a dictionary exists in the graph data collection whose 'id' matches the graph data id, then that dictionary describes the attributes of that id.
+Given the graph data collection, each dictionary in the "filtered_nodes" list corresponds to a piece of data. The 'id' attribute in each dictionary represents its data id. For each graph data id in the input id list IDLIST = ${input_ids}, if a dictionary exists in the graph data collection whose 'id' matches the graph data id, then that dictionary describes the attributes of that id. Each dictionary in the "filtered_edges" list represents a relationship between two data, whose ids are in the 'source' and 'target' field, respectively, and the name of the relationship is in the 'label' field.
 
 The output classification result should be structured as follows:
 
@@ -56,12 +61,16 @@ The output classification result should be structured as follows:
   "summary": string,
   "explain": string
 }
-In this structure, "categories" stores the information of the divided categories (generally consistent with the input categories), while "data" stores the classification information of each id in ${input_ids} corresponding to the graph data.
+In this structure, "categories" stores information about the divided categories, while "data" stores the classification of graph data corresponding to each id in the input id list IDLIST.
+
 
 Guidance:
 - When selecting classification dimensions, choose those with high distinctiveness and importance according to the user intent wherever possible.
-- The number of categories is not necessarily the more the better; usually, classifying into 2-5 categories is more appropriate.
+- Each category should focus on a single aspect, such as "data security" or "data scalability," and should not be a mix of different things, such as focusing on "data security and scalability."
+- The number of categories is not necessarily the more the better; usually, classifying into 2-6 categories is more appropriate.
 - Ensure each piece of data belongs to only one category, and do not select multiple categories for the same piece of data. If accurate classification is not possible, classify them as 'others'.
+- The resultant mindmap will finally be used to solve user's requirements in user input later, so the output should be related to the user input.
+- Always exclude any data not in IDLIST from the 'data' field of the output result.
 
 For example, suppose the input graph data contains 100 pieces of data with ids 1, 2, ..., 100, and the graph data ids to be classified are [1, 2, ..., 100], the "data" part of the output structure should be [{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 100, "category": xx}]. "[{"data_id": 1, "category": xx}, {"data_id": 1, "category": xx}, ..., {"data_id": 100, "category": xx}]" is an incorrect "data" part output because the data with "data_id" 1 is classified twice. "[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 105, "category": xx}]" is also an incorrect "data" part output because there is no data with id 105 in the graph data to be classified.
 
@@ -79,7 +88,7 @@ User Input: ${user_query}
 Graph Data Collection: ${graph_data}
 Categories: ${category}
 
-Given the graph data collection, each dictionary in the "filtered_nodes" list corresponds to a piece of data. The 'id' attribute in each dictionary represents its data id. For each graph data id in ${input_ids}, if a dictionary exists in the graph data collection whose 'id' matches the graph data id, then that dictionary describes the attributes of that id.
+Given the graph data collection, each dictionary in the "filtered_nodes" list corresponds to a piece of data. The 'id' attribute in each dictionary represents its data id. For each graph data id in the input id list IDLIST = ${input_ids}, if a dictionary exists in the graph data collection whose 'id' matches the graph data id, then that dictionary describes the attributes of that id. Each dictionary in the "filtered_edges" list represents a relationship between two data, whose ids are in the 'source' and 'target' field, respectively, and the name of the relationship is in the 'label' field.
 
 The output classification result should be structured as follows:
 
@@ -102,12 +111,17 @@ The output classification result should be structured as follows:
   "summary": string,
   "explain": string
 }
-In this structure, "categories" stores the information of the divided categories (generally consistent with the input categories), while "data" stores the classification information of each id in ${input_ids} corresponding to the graph data.
+In this structure, "categories" stores the information of the divided categories. 
+You cannot change any input categories, including category ids and names. You can only add new categories. This means all the input categories must stay the same and be kept in the "categories" section. "data" stores the classification of graph data corresponding to each id in the input id list IDLIST = ${input_ids}.
 
 Guidance:
 - If a piece of graph data cannot be classified into any given categories, a new category can be created with its description and an id described in 'categories', and the data can be placed in this category.
-- The number of categories is not necessarily the more the better; usually, classifying into 2-5 categories is more appropriate.
+- Each category should focus on a single aspect, such as "data security" or "data scalability," and should not be a mix of different things, such as focusing on "data security and scalability."
+- The number of categories is not necessarily the more the better; usually, classifying into 2-6 categories is more appropriate. 
+- There are already ${JSON.parse(category).length} categories. If the number of categories goes over 6, try not to create new ones.
 - Ensure each piece of data belongs to only one category, and do not select multiple categories for the same piece of data.
+- The resultant mindmap will finally be used to solve user's requirements in user input later, so the output should be related to the user input.
+- Always exclude any data not in IDLIST from the 'data' field of the output result.
 
 For example, suppose the input graph data contains 100 pieces of data with ids 1, 2, ..., 100, and the graph data ids to be classified are [1, 2, ..., 100], the "data" part of the output structure should be [{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 100, "category": xx}]. "[{"data_id": 1, "category": xx}, {"data_id": 1, "category": xx}, ..., {"data_id": 100, "category": xx}]" is an incorrect "data" part output because the data with "data_id" 1 is classified twice. "[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 105, "category": xx}]" is also an incorrect "data" part output because there is no data with id 105 in the graph data to be classified.
 
@@ -125,7 +139,7 @@ export const TEMPLATE_MIND_MAP_GENERATOR_CHN = (graph_data, input_ids, user_quer
 图数据集合：${graph_data}
 
 给定输入的图数据集合，集合中"filtered_nodes"列表中的每个字典对应一条数据。每个字典中的'id'属性代表的是该数据的id。
-要分类的图数据的id为${input_ids}。对于该列表中的每个图数据id，图数据集合中存在一个字典，其id等于该图数据id，则该字典描述的就是该id的属性。
+要分类的图数据的id存储在idlist = ${input_ids}中。对于该列表中的每个图数据id，图数据集合中存在一个字典，其id等于该图数据id，则该字典描述的就是该id的属性。
 
 输出的分类的结果应当具有如下的结构：
 {
@@ -149,11 +163,12 @@ export const TEMPLATE_MIND_MAP_GENERATOR_CHN = (graph_data, input_ids, user_quer
   "summary": string,
   "explain": string
 }
-该结构中，"categories"中存储的是划分出来的类别的信息，"data"中则存储了${input_ids}中各id对应的图数据的分类情况。
+该结构中，"categories"中存储的是划分出来的类别的信息，"data"中则存储了idlist中各id对应的图数据的分类情况。
 
 指导建议：
 - 在选择分类维度时，应根据用户意图尽可能选择那些区分度高且重要的维度。
-- 分类的数量不一定是越多越好；通常，分为2-5个类别是较为合适的。
+- 每个类别应该专注于一个单一的方面，比如类别名可以是“数据安全”或“数据可扩展性”。它不应是不同事物的混合，比如类别名不应是“数据安全和可扩展性”。
+- 分类的数量不一定是越多越好；通常，分为2-6个类别是较为合适的。
 - 确保每条数据属于且只属于一个类别，并且不要为同一条数据选择多个类别。如果无法准确归类，请将其分类为'others'。
 例如，假设输入的图数据中包含id分别为1，2，..., 100的100条数据，且要分类的图数据的id为[1,2,...,100]，则输出的结构中，"data"部分应为
 {[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 100, "category": xx}]}。
@@ -178,7 +193,7 @@ export const TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_CHN = (graph_data, input_id
 现有分类：${category}
 
 给定输入的图数据集合，集合中"filtered_nodes"列表中的每个字典对应一条数据。每个字典中的'id'属性代表的是该数据的id。
-要分类的图数据的id为${input_ids}。对于该列表中的每个图数据id，图数据集合中存在一个字典，其id等于该图数据id，则该字典描述的就是该id的属性。
+要分类的图数据的id存储在idlist = ${input_ids}中。对于该列表中的每个图数据id，图数据集合中存在一个字典，其id等于该图数据id，则该字典描述的就是该id的属性。
 
 输出的分类的结果应当具有如下的结构：
 {
@@ -202,11 +217,12 @@ export const TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_CHN = (graph_data, input_id
   "summary": string,
   "explain": string
 }
-在这个结构中，"categories" 部分存储的是已经划分出的类别信息。你不能修改任何输入的分类信息（包括分类的 ID 和名称）。唯一可以对分类进行的修改是新增分类，这意味着所有输入的现有分类信息都必须保持不变，并在 "categories" 部分中保留。"data"中则存储了${input_ids}中各id对应的图数据的分类情况。
+在这个结构中，"categories" 部分存储的是已经划分出的类别信息。你不能修改任何输入的分类信息（包括分类的 id 和名称）。唯一可以对分类进行的修改是新增分类，这意味着所有输入的现有分类信息都必须保持不变，并在 "categories" 部分中保留。"data"中则存储了idlist中各id对应的图数据的分类情况。
 
 指导建议：
 - 如果一条图数据无法分入任何给定的分类中，可以构造一个新的分类，在categories中描述该信的分类并给其一个id，并将这条数据归入这个类别
-- 分类的数量不一定是越多越好；通常，分为2-5个类别是较为合适的。
+- 每个类别应该专注于一个单一的方面，比如类别名可以是“数据安全”或“数据可扩展性”。它不应是不同事物的混合，比如类别名不应是“数据安全和可扩展性”。
+- 分类的数量不一定是越多越好；通常，分为2-6个类别是较为合适的。
 - 确保每条数据属于且只属于一个类别，并且不要为同一条数据选择多个类别。
 例如，假设输入的图数据中包含id分别为1，2，..., 100的100条数据，且要分类的图数据的id为[1,2,...,100]，则输出的结构中，"data"部分应为
 {[{"data_id": 1, "category": xx}, {"data_id": 2, "category": xx}, ..., {"data_id": 100, "category": xx}]}。
@@ -244,9 +260,9 @@ export const TEMPLATE_MIND_MAP_GENERATOR = (graph_data, user_query) => `
   `;
 
 const Intention: React.FunctionComponent<IReportProps> = props => {
-  const { intention, task } = props;
+  const { intention, task, intentionSchema, updateIntentionSchema } = props;
   const { store } = useContext();
-  const { schema, data } = store;
+  const { data } = store;
 
   const [state, setState] = useState<{
     summary: SummaryType | null;
@@ -258,23 +274,52 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
   const { summary, loading } = state;
 
   const handleConfirm = async () => {
+    if (MOCK.enable) {
+      console.log('MOCK', MOCK);
+      setState(preState => {
+        return {
+          ...preState,
+          loading: true,
+          summary: null,
+        };
+      });
+      await MOCK.sleep(200);
+      const mindmap = await MOCK.mindmap();
+      setState(preState => {
+        return {
+          ...preState,
+          loading: false,
+          summary: mindmap,
+        };
+      });
+      return;
+    }
     setState(preState => {
       return {
         ...preState,
         loading: true,
+        summary: null,
       };
     });
-
-    const { nodes, edges } = filterDataByParticalSchema(intention.schema, data);
+    const { nodes, edges } = filterDataByParticalSchema(intentionSchema, data);
 
     // const { flatten_keys, flatten_values } = flattenListofDict(nodes)
 
-    let all_ids = nodes.map(item => item.id); //getAllAttributesByName(nodes, "id");
+    // let all_ids = nodes.map(item => item.id); //getAllAttributesByName(nodes, "id");
+
+    let all_ids = nodes
+      .filter(node => {
+        return !node.label.startsWith('Dimension_');
+      })
+      .map(item => item.id);
+
+    let all_ids_backup = all_ids.slice();
+
     let iterate_time = 0;
     let category_dict = {};
     let outputs = {};
     let res = { data: [{ data_id: '' }], categories: [] };
-    let prompt_size_bound = 62.8;
+    let prompt_size_bound = 120;
 
     while (all_ids.length > 0) {
       let filtered_ids = all_ids.slice();
@@ -282,11 +327,12 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
 
       if (iterate_time === 0) {
         while (true) {
-          const filtered_nodes = nodes.filter(node => filtered_ids.includes(node.id));
+          const { filtered_nodes, filtered_edges } = getInducedSubgraph(nodes, edges, filtered_ids);
+
           current_prompt = getPrompt({
             'zh-CN': TEMPLATE_MIND_MAP_GENERATOR_CHN,
             'en-US': TEMPLATE_MIND_MAP_GENERATOR_EN,
-          })(JSON.stringify({ filtered_nodes, edges }), JSON.stringify(filtered_ids), task);
+          })(JSON.stringify({ filtered_nodes, filtered_edges }), JSON.stringify(filtered_ids), task);
           if (getStrSizeInKB(current_prompt) < prompt_size_bound || filtered_ids.length === 1) {
             break;
           }
@@ -303,12 +349,13 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
         res = JSON.parse(_res.message.content);
       } else {
         while (true) {
-          const filtered_nodes = nodes.filter(node => filtered_ids.includes(node.id));
+          const { filtered_nodes, filtered_edges } = getInducedSubgraph(nodes, edges, filtered_ids);
+
           current_prompt = getPrompt({
             'zh-CN': TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_CHN,
             'en-US': TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_EN,
           })(
-            JSON.stringify({ filtered_nodes, edges }),
+            JSON.stringify({ filtered_nodes, filtered_edges }),
             JSON.stringify(filtered_ids),
             JSON.stringify(category_dict),
             task,
@@ -326,27 +373,45 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
             content: current_prompt,
           }),
         ]);
-        res = JSON.parse(_res.message.content);
+
+        if (_res.message.content) {
+          res = JSON.parse(_res.message.content);
+        } else {
+          notification.error({
+            message: 'network error',
+          });
+          setState(preState => {
+            return {
+              ...preState,
+              loading: false,
+              summary: null,
+            };
+          });
+          return;
+        }
       }
 
       const data_ids = res.data.map(item => item.data_id.toString());
       category_dict = res.categories;
-      all_ids = all_ids.filter(element => !data_ids.includes(element));
-      iterate_time = iterate_time + 1;
-
       for (const item of res.data) {
         //@ts-ignore
-        outputs[item.data_id] = item.category;
+        if (all_ids_backup.includes(item.data_id.toString())) {
+          //@ts-ignore
+          outputs[item.data_id] = item.category;
+        }
       }
+
+      all_ids = all_ids.filter(element => !data_ids.includes(element));
+      iterate_time = iterate_time + 1;
     }
 
     debugger;
     const _categories = getCategories(outputs, res.categories);
     _categories.forEach(element => {
-      element.children = nodes.filter(n => element.children.includes(n.id));
+      element.children = nodes.filter(n => (element.children || []).includes(n.id));
     });
     res.categories = _categories;
-    debugger;
+
     //@ts-ignore
     setState(preState => {
       return {
@@ -386,32 +451,11 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
             children: (
               <Flex vertical gap={12}>
                 <Typography.Text strong>Required data</Typography.Text>
-                <Typography.Text type="secondary" italic>
+                {/* <Typography.Text type="secondary" italic>
                   Please first ensure that the current canvas contains these types of nodes and edges. You can manually
                   adjust the set of node properties passed to the LLM.
-                </Typography.Text>
-
-                {intention.schema.nodes.map(item => {
-                  const { id, label, properties = [] } = item;
-                  const match = schema.nodes.find(node => node.label === label);
-                  const options = match?.properties.map(p => {
-                    return {
-                      label: p.name,
-                      value: p.name,
-                    };
-                  });
-                  const defaultValue = properties.map(p => {
-                    return p.name;
-                  });
-                  return (
-                    <Flex vertical gap={12} key={item.id}>
-                      <Typography.Text italic type="secondary">
-                        {label}
-                      </Typography.Text>
-                      <Select options={options} mode="multiple" defaultValue={defaultValue}></Select>
-                    </Flex>
-                  );
-                })}
+                </Typography.Text> */}
+                <AdjustSchema value={intentionSchema} onChange={updateIntentionSchema} />
               </Flex>
             ),
           },

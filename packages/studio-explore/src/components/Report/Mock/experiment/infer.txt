@@ -1,0 +1,13 @@
+According to the selected paper, category these papers with the types of experiments they conduct and write a related work report to summarize the commonly conducted experiments in this research area.
+
+User intention
+The user wants to categorize papers based on the types of experiments they conduct and create a related work report summarizing commonly conducted experiments in the research area. This involves identifying the experiments associated with each paper and analyzing the frequency or commonality of these experiments.
+Execute Plan
+Identify the 'Paper' nodes that are connected to 'Dimension_Experiment' nodes via the 'Paper_Has_Experiment' relationship.; Extract the 'name' and 'settings' properties from the 'Dimension_Experiment' nodes to understand the types of experiments conducted.; Categorize the papers based on the experiment types.; Count the occurrences of each experiment type across all papers.; Summarize the findings in a related work report, highlighting the most commonly conducted experiments.
+Required data
+Please first ensure that the current canvas contains these types of nodes and edges. You can manually adjust the set of node properties passed to the LLM.
+Paper
+id title
+
+Dimension_Experiment
+id name settings

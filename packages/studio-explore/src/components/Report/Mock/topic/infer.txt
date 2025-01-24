@@ -1,0 +1,10 @@
+According to the selected paper, category these papers with their topics and write a related work report. 
+
+User intention
+The user wants to categorize papers based on their topics and generate a related work report. This involves identifying the topic of the selected paper and then finding other papers that share the same or similar topics.
+Execute Plan
+Identify the topic of the selected paper.; Retrieve papers that have the same or similar topics.; Extract relevant information from these papers, such as title, authors, year, and summary.; Generate a related work report summarizing the findings.
+Required data
+Please first ensure that the current canvas contains these types of nodes and edges. You can manually adjust the set of node properties passed to the LLM.
+Paper
+id title authors year summary primary_category Topic

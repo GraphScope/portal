@@ -1,0 +1,12 @@
+According to the selected paper, category these papers with the challenges they solve and write a related work report. 
+
+The user intends to categorize papers based on the challenges they solve and generate a related work report. This involves identifying the challenges each paper addresses and organizing this information for reporting.
+Execute Plan
+Identify the selected paper(s) from the database.; Retrieve the challenges associated with each selected paper using the 'Paper_Has_Challenge' relationship.; Categorize the papers by the challenges they solve.; Generate a related work report that includes the categorized papers and their corresponding challenges.
+Required data
+Please first ensure that the current canvas contains these types of nodes and edges. You can manually adjust the set of node properties passed to the LLM.
+Paper
+id title
+
+Dimension_Challenge
+id name description

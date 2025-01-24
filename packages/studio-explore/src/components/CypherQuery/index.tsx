@@ -25,7 +25,7 @@ const CypherQuery: React.FunctionComponent<IStatementQueryProps> = props => {
       <Input.TextArea
         rows={10}
         ref={inputRef}
-        defaultValue={`Match (a)-[r]-(b) return a,r,b limit 100`}
+        defaultValue={`Match (a:Paper)-[r:Reference]-(b:Paper) Where a.title contains "The Llama 3" return b`}
       ></Input.TextArea>
       <Space>
         <Button icon={<PlayCircleOutlined />} block onClick={handleQuery}>
