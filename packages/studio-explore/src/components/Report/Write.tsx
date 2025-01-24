@@ -160,11 +160,12 @@ const WriteReport: React.FunctionComponent<
     /** MOCK START */
     if (MOCK.enable) {
       await MOCK.sleep(200);
+      const report = await MOCK.report();
       setState(preState => {
         return {
           ...preState,
           loading: false,
-          report: MOCK.report,
+          report,
         };
       });
       return;

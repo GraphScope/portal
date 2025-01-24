@@ -283,15 +283,15 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
           summary: null,
         };
       });
-      await MOCK.sleep(2000);
+      await MOCK.sleep(200);
+      const mindmap = await MOCK.mindmap();
       setState(preState => {
         return {
           ...preState,
           loading: false,
-          summary: MOCK.mindmap,
+          summary: mindmap,
         };
       });
-
       return;
     }
     setState(preState => {
