@@ -313,7 +313,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
       })
       .map(item => item.id);
 
-    let all_ids_backup = all_ids.slice()
+    let all_ids_backup = all_ids.slice();
 
     let iterate_time = 0;
     let category_dict = {};
@@ -396,6 +396,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
       for (const item of res.data) {
         //@ts-ignore
         if (all_ids_backup.includes(item.data_id.toString())) {
+          //@ts-ignore
           outputs[item.data_id] = item.category;
         }
       }
