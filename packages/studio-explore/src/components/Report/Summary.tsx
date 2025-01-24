@@ -1,11 +1,10 @@
 import React from 'react';
 import { Avatar, List, Flex, Typography, Button, Tree, Timeline, Tag, Space } from 'antd';
 import { SummaryType } from './Intention';
-import { DownOutlined } from '@ant-design/icons';
+
 import { useApis, useContext } from '@graphscope/studio-graph';
 import { useDynamicStyle } from '@graphscope/studio-components';
 import WriteReport from './Write';
-import { filterDataByParticalSchema } from './utils';
 
 const Summary: React.FunctionComponent<SummaryType & { task: string }> = props => {
   const { categories, summary, explain, task } = props;

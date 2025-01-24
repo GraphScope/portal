@@ -91,13 +91,14 @@ const Report: React.FunctionComponent<IReportProps> = props => {
 
       /** MOCK START */
       if (MOCK.enable) {
-        await MOCK.sleep(200);
+        const res = await MOCK.intention();
+        debugger;
         setState(preState => {
           return {
             ...preState,
             loading: false,
-            intention: MOCK.intention,
-            intentionSchema: MOCK.intention.schema,
+            intention: res,
+            intentionSchema: res.schema,
           };
         });
         return;

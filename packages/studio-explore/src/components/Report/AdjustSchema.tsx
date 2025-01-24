@@ -14,7 +14,7 @@ const AdjustSchema: React.FunctionComponent<IAdjustSchemaProps> = props => {
   const { store } = useContext();
   const { schema } = store;
   const { nodes } = value;
-  const ndeoSchemaMap = React.useMemo(() => {
+  const nodeSchemaMap = React.useMemo(() => {
     return schema.nodes.reduce((acc, cur) => {
       acc[cur.label] = cur;
       return acc;
@@ -25,7 +25,10 @@ const AdjustSchema: React.FunctionComponent<IAdjustSchemaProps> = props => {
     <div>
       {nodes.map(item => {
         const { label, properties = [] } = item;
-        const options = ndeoSchemaMap[label].properties.map(p => {
+        if (!nodeSchemaMap[label]) {
+          return <></>;
+        }
+        const options = nodeSchemaMap[label].properties.map(p => {
           return {
             label: p.name,
             value: p.name,
