@@ -71,6 +71,35 @@ export const submitDataloadingJob = async (graph_id: string, graphSchema: any, l
   });
 };
 
+/** 获取周期导入的配置文件，only for groot engine*/
+export const getLoadScheduleConfig = async (graph_id: string, graphSchema: any): Promise<any> => {
+  let NODE_LABEL_MAP: any = {};
+  const schema = {
+    vertices: graphSchema.nodes.map((item: any) => {
+      const { id, data } = item;
+      NODE_LABEL_MAP[id] = data.label;
+      return {
+        type_name: data.label,
+      };
+    }),
+    edges: graphSchema.edges.map((item: any) => {
+      const { id, source, data, target } = item;
+      return {
+        type_name: data.label,
+        source_vertex: NODE_LABEL_MAP[source],
+        destination_vertex: NODE_LABEL_MAP[target],
+      };
+    }),
+  };
+
+  return await JobApiFactory(undefined, window.COORDINATOR_URL).getDataloadingJobConfig(graph_id, {
+    ...schema,
+    loading_config: {},
+    repeat: 'once',
+    schedule: '',
+  });
+};
+
 export const getSchema = async (graph_id: string) => {
   let schema;
   if (window.GS_ENGINE_TYPE === 'interactive' || window.GS_ENGINE_TYPE === 'gart') {

@@ -268,4 +268,5 @@ export default {
   Settings: 'Settings',
   'System Setting': 'System Setting',
   'Data Load Configuration': 'Data Load Configuration',
+  'Download Load Task Config': 'Download Load Task Config',
 };

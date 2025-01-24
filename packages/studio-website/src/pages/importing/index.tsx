@@ -10,6 +10,8 @@ import EmptyModelCase from './empty-model-case';
 import Section from '../../components/section';
 import localforage from 'localforage';
 import { FormattedMessage } from 'react-intl';
+import DownloadLoadConfig from './download-load-config';
+import FeatureCase from '../../components/feature-case';
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
@@ -80,6 +82,9 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
         <Toolbar style={{ top: '12px', left: '24px', right: 'unset' }} direction="horizontal">
           <SelectGraph id={id} />
           <StartImporting id={id} />
+          <FeatureCase match="DOWNLOAD_DATA_TASK_CONFIG">
+            <DownloadLoadConfig id={id} graphId={graphId} />
+          </FeatureCase>
         </Toolbar>
       </ImportApp>
     </Section>
