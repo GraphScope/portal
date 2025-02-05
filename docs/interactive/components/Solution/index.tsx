@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { Typography, Flex, Image, Button, Input } from 'antd';
-import SplitSection from '../SplitSection';
+import React from 'react';
+import { Flex } from 'antd';
 import CarouselPanel from './CarouselPanel';
 import InteractiveEngine from './InteractiveEngine';
 import InfoDisplay from './InfoDisplay';
@@ -9,23 +8,10 @@ import Analyse from './Analyse';
 import DiscoverPlatform from './DiscoverPlatform';
 import RelatedResources from './RelatedResources';
 import Discover from './Discover';
-const { Title, Text } = Typography;
 
 const Solution = () => {
-  const [state, updateState] = useState({
-    checkDescription: '',
-  });
-  const { checkDescription } = state;
-  const handleMouse = (evt: string) => {
-    updateState(preset => {
-      return {
-        ...preset,
-        checkDescription: evt,
-      };
-    });
-  };
   return (
-    <Flex vertical gap={32}>
+    <Flex vertical gap={48}>
       <InteractiveEngine />
       <InfoDisplay />
       <OpenScreening />

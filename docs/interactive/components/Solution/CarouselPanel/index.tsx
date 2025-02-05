@@ -1,6 +1,5 @@
 import React from 'react';
 import { Carousel, Flex, Image, Typography, Row, Col } from 'antd';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { carouselItems } from '../const';
 const contentStyle: React.CSSProperties = {
   color: '#fff',
@@ -9,12 +8,12 @@ const contentStyle: React.CSSProperties = {
 };
 const { Title, Text } = Typography;
 const CarouselPanel: React.FC = () => (
-  <>
+  <Flex vertical gap={24}>
     <Title style={{ margin: 0, textAlign: 'center' }} level={3}>
       We're making a difference
     </Title>
     <div>
-      <Carousel arrows style={{ padding: '5%', backgroundColor: '#ccc', textAlign: 'center' }}>
+      <Carousel arrows style={{ padding: '12%', backgroundColor: '#ccc', textAlign: 'center' }}>
         {carouselItems.map((item, index) => {
           const { url, title, description } = item;
           return (
@@ -33,7 +32,7 @@ const CarouselPanel: React.FC = () => (
         })}
       </Carousel>
     </div>
-  </>
+  </Flex>
 );
 
 export default CarouselPanel;

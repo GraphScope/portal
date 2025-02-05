@@ -56,9 +56,10 @@ const DiscoverPlatform: React.FC<DiscoverPlatformProps> = () => {
   return (
     <Section style={styles.section}>
       <SplitSection
+        styles={{ padding: '6%' }}
         splitNumber={0}
         leftSide={
-          <Flex vertical gap={24}>
+          <Flex style={{ marginRight: '24px' }} vertical gap={24}>
             <Image
               preview={false}
               src="https://linkurious.com/images/uploads/2022/02/Getting-Started-e1635948191243.png"

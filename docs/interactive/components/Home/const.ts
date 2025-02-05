@@ -22,3 +22,24 @@ export const data = [
     description: 'CTO, Founder',
   },
 ];
+
+export const codemirrorCode = `import graphscope as gs
+from graphscope.dataset.modern_graph import load_modern_graph
+
+gs.set_option(show_log=True)
+
+# load the modern graph as example.
+graph = load_modern_graph()
+
+# Hereafter, you can use the graph object to create an interactive query session
+g = gs.interactive(graph)
+# then execute any supported gremlin query (by default)
+q1 = g.execute('g.V().count()')
+print(q1.all().result())   # should print [6]
+
+q2 = g.execute('g.V().hasLabel(\'person\')')
+print(q2.all().result())  # should print [[v[2], v[3], v[0], v[1]]]
+
+# or execute any supported Cypher query, by passing lang="cypher"
+q3 = g.execute("MATCH (n) RETURN count(n)", lang="cypher")
+print(q3.records[0][0])  # should print 6`;

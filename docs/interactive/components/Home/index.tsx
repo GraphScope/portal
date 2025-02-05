@@ -7,7 +7,7 @@ import SimplePricing from './SimplePricing';
 import ComplexSupport from './ComplexSupport';
 
 const Home = () => (
-  <Flex gap={12} vertical>
+  <Flex gap={48} vertical>
     <InteractiveEngine />
     <Realize />
     <Performance />

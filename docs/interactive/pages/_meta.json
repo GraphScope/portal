@@ -4,7 +4,7 @@
     "title": "GraphScope GIE",
     "display": "hidden",
     "theme": {
-      "layout": "raw"
+      "layout": "full"
     }
   },
   "docs": {

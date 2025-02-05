@@ -8,7 +8,6 @@ const Analyse = () => {
   return (
     // <div style={{ position: 'relative', padding: '50px 200px', backgroundColor: '#ebcba6' }}>
     <SplitSection
-      styles={{ padding: 0 }}
       leftSide={
         <Image
           preview={false}

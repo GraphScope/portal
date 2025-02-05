@@ -25,7 +25,7 @@ const SimplePricing = () => {
       text: "Memgraph pricing is so clear you won't need ChatGPT to explain it. Price scales with memory capacity and we charge only for unique data. Support is always included. Starting at $25k for 16 GB.",
       leftIcon: <Pricing />,
       buttonText: 'Go to pricing',
-      styles: { backgroundColor: token.colorBgLayout },
+      styles: { padding: '6%', backgroundColor: token.colorBgLayout },
     },
     {
       title: 'Support',
@@ -34,12 +34,11 @@ const SimplePricing = () => {
       leftIcon: <Image src="https://graphscope.io/docs/_images/sample_pg.png" preview={false} />,
       rightTitle: "Don't take our word for it. Trust our customers.",
       rightTitleGradient: true,
-      styles: { padding: '8% 17%' },
     },
   ];
 
   return (
-    <Flex vertical gap={24}>
+    <Flex vertical gap={32}>
       {sectionContent.map((section, index) => (
         <SplitSection
           key={index}
@@ -93,45 +92,6 @@ const SimplePricing = () => {
           </Flex>
         }
       />
-      {/* <Col xs={0} sm={24} md={24} lg={24} xl={24}>
-        <SplitSection
-          leftSide={
-            <Flex vertical gap={16}>
-              <Title style={{ ...gradientTextStyle, margin: 0 }} level={5}>
-                Memgraph Office Hours
-              </Title>
-              <Title style={{ margin: 0 }} level={4}>
-                Schedule a 30 min session with one of our engineers to discuss how Memgraph fits with your architecture.
-              </Title>
-              <Text>
-                Our engineers are highly experienced in helping companies of all sizes to integrate and get the most out
-                of Memgraph in their projects. Talk to us about data modeling, optimizing queries, defining
-                infrastructure requirements or migrating from your existing graph database. No nonsense or sales pitch,
-                just tech.
-              </Text>
-              <Flex>
-                <StyledButton>Book a call</StyledButton>
-              </Flex>
-            </Flex>
-          }
-          rightSide={
-            <List
-              split={false}
-              itemLayout="horizontal"
-              dataSource={data}
-              renderItem={item => (
-                <List.Item>
-                  <List.Item.Meta
-                    avatar={<Avatar size="large" src={item.url} />}
-                    title={<a href="https://ant.design">{item.title}</a>}
-                    description={item.description}
-                  />
-                </List.Item>
-              )}
-            />
-          }
-        />
-      </Col> */}
     </Flex>
   );
 };

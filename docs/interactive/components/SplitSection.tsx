@@ -12,12 +12,12 @@ interface ISplitSectionProps {
 const SplitSection: React.FunctionComponent<ISplitSectionProps> = props => {
   const { styles, leftSide, rightSide, children, splitNumber = 0 } = props;
   return (
-    <Row style={{ padding: '2% 16%', ...styles }} gutter={[0, 24]}>
+    <Row style={{ ...styles }} gutter={[0, 24]}>
       <Flex align="center">
-        <Col xs={splitNumber} sm={splitNumber} lg={splitNumber} xl={12}>
+        <Col xs={splitNumber} sm={splitNumber} lg={12} xl={12}>
           {leftSide}
         </Col>
-        <Col xs={24 - splitNumber} sm={24 - splitNumber} lg={24 - splitNumber} xl={12}>
+        <Col xs={24 - splitNumber} sm={24 - splitNumber} lg={12} xl={12}>
           {rightSide}
         </Col>
       </Flex>

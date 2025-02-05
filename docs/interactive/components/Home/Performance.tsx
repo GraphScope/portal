@@ -23,7 +23,7 @@ const StatItemComponent: React.FC<StatItem> = ({ icon, label, count }) => {
     borderRadius: '50%',
   };
   return (
-    <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+    <Col xs={24} sm={24} md={8} lg={8} xl={8}>
       <Flex gap={24} align="center">
         <div style={iconContainerStyle}>{icon}</div>
         <Flex vertical>
@@ -40,7 +40,7 @@ const StatItemComponent: React.FC<StatItem> = ({ icon, label, count }) => {
 };
 
 const Performance: React.FC = () => (
-  <Row style={containerStyle} gutter={[48, 24]}>
+  <Row gutter={[48, 24]}>
     {[
       { icon: <Download />, label: 'downloads', count: '2k+' },
       { icon: <GithubGradient />, label: 'GitHub stars', count: '150k+' },
