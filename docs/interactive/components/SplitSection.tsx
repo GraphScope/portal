@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Row, Flex } from 'antd';
+import { Flex, Col, Row, ColProps } from 'antd';
 
 interface ISplitSectionProps {
   styles?: React.CSSProperties;
@@ -9,21 +9,22 @@ interface ISplitSectionProps {
   splitNumber?: number;
 }
 
-const SplitSection: React.FunctionComponent<ISplitSectionProps> = props => {
-  const { styles, leftSide, rightSide, children, splitNumber = 0 } = props;
+const getColProps = (size: number): Partial<ColProps> => ({
+  xs: size,
+  sm: size,
+  lg: 12,
+  xl: 12,
+});
+const SplitSection: React.FC<ISplitSectionProps> = ({ styles, leftSide, rightSide, children, splitNumber = 12 }) => {
   return (
-    <Row style={{ ...styles }} gutter={[0, 24]}>
-      <Flex align="center">
-        <Col xs={splitNumber} sm={splitNumber} lg={12} xl={12}>
-          {leftSide}
+    <Row style={styles} gutter={[24, 24]} justify="center" align="middle">
+      {!!leftSide && <Col {...getColProps(splitNumber)}>{leftSide}</Col>}
+      {!!rightSide && <Col {...getColProps(24 - splitNumber)}>{rightSide}</Col>}
+      {!!children && (
+        <Col span={24}>
+          <Flex justify="center">{children}</Flex>
         </Col>
-        <Col xs={24 - splitNumber} sm={24 - splitNumber} lg={12} xl={12}>
-          {rightSide}
-        </Col>
-      </Flex>
-      <Col xs={24} sm={24} lg={24} xl={24}>
-        <Flex justify="center">{children && children}</Flex>
-      </Col>
+      )}
     </Row>
   );
 };

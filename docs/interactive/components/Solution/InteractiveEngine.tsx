@@ -19,7 +19,7 @@ const IconWrapper: React.FC<{ icon: JSX.Element; position: 'left' | 'right' }> =
 const InteractiveEngine: React.FC = () => {
   const divRef = useRef<HTMLDivElement>(null);
   const { token } = theme.useToken();
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState<Boolean>(false);
 
   useEffect(() => {
     const handleResize = () => {

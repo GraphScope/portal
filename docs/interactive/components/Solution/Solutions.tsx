@@ -30,7 +30,7 @@ const styles: Record<string, React.CSSProperties> = {
 const solutions: { title: string; icon: React.ReactNode }[] = [
   {
     title: 'Anti-fraud',
-    icon: <AntiFraud />,
+    icon: <SecurityIcon />,
   },
   {
     title: 'Anti-money laundering',
@@ -42,14 +42,14 @@ const solutions: { title: string; icon: React.ReactNode }[] = [
   },
 ];
 
-const Discover: React.FC = () => {
+const Solutions: React.FC = () => {
   return (
     <Row justify="center" align="middle" gutter={[24, 16]} style={styles.section}>
       <Col span={24} style={{ textAlign: 'center' }}>
         <Title level={3}>Our Solutions</Title>
       </Col>
       {solutions.map(({ title, icon }, index) => (
-        <Col key={index} xs={24} sm={24} md={8} lg={8} xl={8}>
+        <Col key={index} xs={24} sm={24} md={24} lg={8} xl={8}>
           <Flex key={title} style={styles.solutionCard} justify="space-between" align="center">
             <Flex vertical>
               <Title style={styles.solutionTitle} level={4}>
@@ -68,4 +68,4 @@ const Discover: React.FC = () => {
   );
 };
 
-export default Discover;
+export default Solutions;

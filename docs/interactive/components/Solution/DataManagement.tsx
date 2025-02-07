@@ -4,10 +4,11 @@ import SplitSection from '../SplitSection';
 
 const { Title, Text } = Typography;
 
-const Analyse = () => {
+const DataManagement = () => {
   return (
     // <div style={{ position: 'relative', padding: '50px 200px', backgroundColor: '#ebcba6' }}>
     <SplitSection
+      splitNumber={0}
       leftSide={
         <Image
           preview={false}
@@ -35,4 +36,4 @@ const Analyse = () => {
   );
 };
 
-export default Analyse;
+export default DataManagement;

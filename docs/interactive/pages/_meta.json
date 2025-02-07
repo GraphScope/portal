@@ -16,15 +16,10 @@
     "type": "menu",
     "items": {
       "knowledge": {
-        "title": "Knowledge Graph",
-        "type": "page",
-        "theme": {
-          "layout": "raw"
-        }
+        "title": "Knowledge Graph"
       },
       "risk_detection": {
-        "title": "Risk Detection",
-        "type": "page"
+        "title": "Risk Detection"
       }
     }
   }

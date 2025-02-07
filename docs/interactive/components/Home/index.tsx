@@ -1,17 +1,17 @@
 import React from 'react';
 import { Flex } from 'antd';
 import InteractiveEngine from './InteractiveEngine';
-import Realize from './Realize';
-import Performance from './Performance';
-import SimplePricing from './SimplePricing';
+import GraphScopeInstall from './GraphScopeInstall';
+import DownloadStatistics from './DownloadStatistics';
+import DataAnalysis from './DataAnalysis';
 import ComplexSupport from './ComplexSupport';
 
 const Home = () => (
   <Flex gap={48} vertical>
     <InteractiveEngine />
-    <Realize />
-    <Performance />
-    <SimplePricing />
+    <GraphScopeInstall />
+    <DownloadStatistics />
+    <DataAnalysis />
     {/* <ComplexSupport /> */}
   </Flex>
 );

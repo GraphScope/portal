@@ -1,24 +1,24 @@
 import React from 'react';
 import { Flex } from 'antd';
-import CarouselPanel from './CarouselPanel';
 import InteractiveEngine from './InteractiveEngine';
-import InfoDisplay from './InfoDisplay';
-import OpenScreening from './OpenScreening';
-import Analyse from './Analyse';
+import SolutionInfo from './SolutionInfo';
+import VisualizeAnalyze from './VisualizeAnalyze';
 import DiscoverPlatform from './DiscoverPlatform';
+import DifferenceView from './DifferenceView';
+import DataManagement from './DataManagement';
 import RelatedResources from './RelatedResources';
-import Discover from './Discover';
+import Solutions from './Solutions';
 
 const Solution = () => {
   return (
     <Flex vertical gap={48}>
       <InteractiveEngine />
-      <InfoDisplay />
-      <OpenScreening />
+      <SolutionInfo />
+      <VisualizeAnalyze />
       <DiscoverPlatform />
-      <CarouselPanel />
-      <Analyse />
-      <Discover />
+      <DifferenceView />
+      <DataManagement />
+      <Solutions />
       <RelatedResources />
       {/* <div style={{ position: 'relative', padding: '50px 200px', backgroundColor: '#020202' }}>
         <Flex vertical justify="center" align="center" gap={12}>

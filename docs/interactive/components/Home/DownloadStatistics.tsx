@@ -4,9 +4,6 @@ import { Download, GithubGradient, Community } from '../Icons';
 
 const { Title, Text } = Typography;
 
-// 定义可复用的样式对象
-const containerStyle: React.CSSProperties = { padding: '2% 17%' };
-
 // 定义统计项的接口
 interface StatItem {
   icon: JSX.Element;
@@ -39,7 +36,7 @@ const StatItemComponent: React.FC<StatItem> = ({ icon, label, count }) => {
   );
 };
 
-const Performance: React.FC = () => (
+const DownloadStatistics: React.FC = () => (
   <Row gutter={[48, 24]}>
     {[
       { icon: <Download />, label: 'downloads', count: '2k+' },
@@ -51,4 +48,4 @@ const Performance: React.FC = () => (
   </Row>
 );
 
-export default Performance;
+export default DownloadStatistics;

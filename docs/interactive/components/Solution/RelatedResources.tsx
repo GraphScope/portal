@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Typography, Flex, Button, Card, Row, Col } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { Typography, Flex, Button, Card, Row, Col, Image } from 'antd';
 import { resources } from './const';
 const { Title } = Typography;
 const { Meta } = Card;
@@ -25,8 +25,8 @@ const styles: Record<string, React.CSSProperties> = {
 const RelatedResources = () => {
   const [activeDescriptionIndex, setActiveDescriptionIndex] = useState<string>('');
 
-  const handleMouseEnter = (index: string) => setActiveDescriptionIndex(index);
-  const handleMouseLeave = () => setActiveDescriptionIndex('');
+  const handleMouseEnter = useCallback((index: string) => setActiveDescriptionIndex(index), []);
+  const handleMouseLeave = useCallback(() => setActiveDescriptionIndex(''), []);
 
   return (
     <Row gutter={[16, 16]}>
@@ -41,13 +41,13 @@ const RelatedResources = () => {
         const { img, title, description } = resource;
         const isActive = activeDescriptionIndex === String(index);
         return (
-          <Col key={index} xs={24} sm={24} md={8} lg={8} xl={8}>
+          <Col key={index} xs={24} sm={24} md={24} lg={8} xl={8}>
             <Card
               hoverable
               style={styles.card}
               onMouseEnter={() => handleMouseEnter(String(index))}
               onMouseLeave={handleMouseLeave}
-              cover={<img alt="example" src={img} />}
+              cover={<Image preview={false} src={img} />}
             >
               <Meta
                 title={title}

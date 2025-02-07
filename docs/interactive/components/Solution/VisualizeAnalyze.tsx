@@ -12,7 +12,7 @@ const containerStyle: React.CSSProperties = {
   borderRadius: '10px',
 };
 
-const OpenScreening = () => {
+const VisualizeAnalyze = () => {
   const { token } = theme.useToken();
   const buttonStyle: React.CSSProperties = {
     fontSize: '16px',
@@ -44,4 +44,4 @@ const OpenScreening = () => {
   );
 };
 
-export default OpenScreening;
+export default VisualizeAnalyze;

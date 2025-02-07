@@ -25,7 +25,7 @@ const codeBlockStyle: React.CSSProperties = {
 // 定义安装命令
 const installCommands: Record<string, string> = {
   'Linux/MacOS': 'python3 -m pip install graphscope --upgrade',
-  Windows: 'iwr https://windows.memgraph.com | iex',
+  // Windows: 'iwr https://windows.memgraph.com | iex',
 };
 
 interface InstallCardProps {
@@ -72,7 +72,7 @@ const InteractiveEngine: React.FC = () => {
       {/* <Col xs={0} sm={0} md={0} lg={10} xl={10}>
             <Image src="https://graphscope.io/blog/assets/images/flex-title.jpg" preview={false} />
           </Col> */}
-      <Col xs={0} sm={0} md={0} lg={0} xl={0} xxl={24}>
+      <Col xs={0} sm={0} md={0} lg={0} xl={24}>
         <Flex gap={16}>
           {Object.keys(installCommands).map(os => (
             <InstallCard key={os} os={os as keyof typeof installCommands} />

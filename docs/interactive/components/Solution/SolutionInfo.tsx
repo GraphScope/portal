@@ -45,7 +45,7 @@ const SectionContent: React.FC<{ title: string; description: string }> = ({ titl
   </>
 );
 
-const InfoDisplay: React.FC = () => (
+const SolutionInfo: React.FC = () => (
   <Flex vertical justify="space-between" align="center" gap={30}>
     {contentData.map(({ title, description, imageSrc, imagePosition }, index) => (
       <SplitSection
@@ -71,4 +71,4 @@ const InfoDisplay: React.FC = () => (
   </Flex>
 );
 
-export default InfoDisplay;
+export default SolutionInfo;
