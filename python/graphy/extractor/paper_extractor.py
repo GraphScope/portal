@@ -930,13 +930,12 @@ class PaperExtractor(PDFExtractor):
             return False, last_index
 
         if line_content_lower in self.section_gt:
-            if last_index:
-                section_height_dict[line_height] = (
-                    section_height_dict.get(line_height, 0) + 100
-                )
-                if not self.contains_digit(content_list[-1]["content"]):
-                    standard_format["is_roman_index"] = True
-                standard_format["standard_font"] = line_font
+            section_height_dict[line_height] = (
+                section_height_dict.get(line_height, 0) + 100
+            )
+            if not self.contains_digit(content_list[-1]["content"]):
+                standard_format["is_roman_index"] = True
+            standard_format["standard_font"] = line_font
             last_index = False
         elif line_content_lower in self.section_signal_unheaded:
             section_height_dict[line_height] = (
@@ -982,21 +981,20 @@ class PaperExtractor(PDFExtractor):
                 last_index = False
                 return True, last_index
             elif is_possible_title == 0:
-                if last_index:
-                    content_list.append(
-                        {
-                            "content": line_content.lower(),
-                            "page_num": page_num,
-                            "location": line["bbox"],
-                            "height": line_height,
-                            "font": line_font,
-                        }
-                    )
-                    section_height_dict[line_height] = (
-                        section_height_dict.get(line_height, 0) + 1
-                    )
-                    last_index = False
-                    return True, last_index
+                content_list.append(
+                    {
+                        "content": line_content.lower(),
+                        "page_num": page_num,
+                        "location": line["bbox"],
+                        "height": line_height,
+                        "font": line_font,
+                    }
+                )
+                section_height_dict[line_height] = (
+                    section_height_dict.get(line_height, 0) + 1
+                )
+                last_index = False
+                return True, last_index
             else:
                 if last_index:
                     content_list.pop()
@@ -1157,6 +1155,10 @@ class PaperExtractor(PDFExtractor):
                 section_height_dict.get(item["height"], 0) <= 2
                 or abs(max_height - item["height"])
                 >= 0.2  # if the height is quite different from section_height
+                or (
+                    standard_format["standard_font"]
+                    and standard_format["standard_font"] != item["font"]
+                )
             ):
                 continue
             item_content = item["content"]
@@ -1234,6 +1236,26 @@ class PaperExtractor(PDFExtractor):
                         cur_rect.include_rect(fitz.Rect(item["location"]))
                     section_order[-1]["sec_name"] = item_content.lower()
                     fetch_more = False
+                else:
+                    if cur_rect is not None:
+                        if section_order[-1]["section_id"] == cur_sec:
+                            section_order[-1].update(
+                                {
+                                    "page_num": cur_page_num,
+                                    "location": fitz.Rect(cur_rect),
+                                }
+                            )
+                    cur_rect = None
+                    cur_sec = item_content
+                    cur_rect = fitz.Rect(item["location"])
+                    cur_page_num = int(item["page_num"])
+                    # section_order.append(cur_sec)
+                    section_order.append(
+                        {
+                            "sec_name": item_content.lower(),
+                            "section_id": cur_sec,
+                        }
+                    )
 
         if cur_rect is not None:
             if section_order[-1]["section_id"] == cur_sec:
@@ -1245,7 +1267,7 @@ class PaperExtractor(PDFExtractor):
                 )
 
         # logger.debug(f"SECTION TITLE INFO: {section_title_info}")
-        logger.debug(f"SECTION ORDER: {section_order}")
+        # print(f"SECTION ORDER: {section_order}")
 
         return section_order, []
 
