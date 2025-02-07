@@ -69,7 +69,7 @@ export default {
   'Label field': 'Label field',
   'Target field': 'Target field',
   'Source field': 'Source field',
-  'Delete label': 'Delete label',
+  'Delete this label': 'Delete this label',
   Label: 'Label',
   'Data Fields': 'Data Fields',
   'Add Property': 'Add Property',

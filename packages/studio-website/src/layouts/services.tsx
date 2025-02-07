@@ -20,7 +20,9 @@ export type SupportFeature =
   /** 是否支持查询多版本 */
   | 'QUERY_MULTIPLE_VERSIONS'
   /** 是否支持下载数据导入的任务配置*/
-  | 'DOWNLOAD_DATA_TASK_CONFIG';
+  | 'DOWNLOAD_DATA_TASK_CONFIG'
+  /** 是否支持批量导入数据 */
+  | 'BATCH_LOAD_DATA';
 
 type Features = {
   [K in SupportFeature]: boolean;
@@ -35,6 +37,7 @@ export const getSupportFeature = (): Features => {
       QUERY_MULTIPLE_VERSIONS: false,
       SCHEMA_UPDATE: true,
       DOWNLOAD_DATA_TASK_CONFIG: true,
+      BATCH_LOAD_DATA: false,
     };
   }
   if (window.GS_ENGINE_TYPE === 'gart') {
@@ -45,6 +48,7 @@ export const getSupportFeature = (): Features => {
       QUERY_MULTIPLE_VERSIONS: true,
       SCHEMA_UPDATE: false,
       DOWNLOAD_DATA_TASK_CONFIG: false,
+      BATCH_LOAD_DATA: true,
     };
   }
   //interactive
@@ -55,6 +59,7 @@ export const getSupportFeature = (): Features => {
     QUERY_MULTIPLE_VERSIONS: false,
     SCHEMA_UPDATE: false,
     DOWNLOAD_DATA_TASK_CONFIG: false,
+    BATCH_LOAD_DATA: true,
   };
 };
 

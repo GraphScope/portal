@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ImportApp, { transSchemaToOptions } from '@graphscope/studio-importor';
 import { useContext } from '../../layouts/useContext';
-import { Toolbar, useCustomToken } from '@graphscope/studio-components';
+import { Toolbar, useCustomToken, EngineFeature } from '@graphscope/studio-components';
 import { getSchema, createVertexTypeOrEdgeType, deleteVertexTypeOrEdgeType } from './services';
 import Save from './save-modeling';
 import SelectGraph from '../../layouts/select-graph';
@@ -71,7 +71,9 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
           direction="horizontal"
         >
           <SelectGraph id={id} />
-          <Save id={id} />
+          <EngineFeature match="BATCH_LOAD_DATA">
+            <Save id={id} />
+          </EngineFeature>
         </Toolbar>
       </ImportApp>
     </Section>

@@ -20,7 +20,7 @@ const SaveButton: React.FunctionComponent<ISaveButtonProps> = props => {
   const { updateStore, store } = useContext();
   const { nodes, appMode } = store;
 
-  const handleDelete = async event => {
+  const handleSave = async event => {
     event.stopPropagation();
 
     if (type === 'nodes') {
@@ -78,7 +78,7 @@ const SaveButton: React.FunctionComponent<ISaveButtonProps> = props => {
 
     return (
       <Tooltip title={text}>
-        <Button size="small" type="text" onClick={handleDelete} icon={<SaveOutlined />} disabled={disabled}></Button>
+        <Button size="small" type="text" onClick={handleSave} icon={<SaveOutlined />} disabled={disabled}></Button>
       </Tooltip>
     );
   }
