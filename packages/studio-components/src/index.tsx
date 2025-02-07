@@ -39,3 +39,5 @@ export type { ParsedFile } from './Utils/parseCSV';
 export { useDynamicStyle } from './hooks/useDynamicStyle';
 export { default as Illustration } from './Illustration';
 export { default as CollapseCard } from './CollapseCard';
+
+export { default as EngineFeature } from './EngineFeature';

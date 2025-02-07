@@ -16,8 +16,9 @@ export interface Option {
   disabled?: boolean;
 }
 export interface IPropertiesListProps {
+  /** 是否映射字段可编辑 */
+  mappingDisabled?: boolean;
   /** 是否可编辑 */
-
   disabled?: boolean;
   /** 标题，默认是 Properties */
   title?: string | React.ReactNode;
@@ -44,7 +45,7 @@ export interface IPropertiesListProps {
  *
  */
 const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
-  const { title = 'Properties', onChange = () => {}, disabled, typeColumn, mappingColumn } = props;
+  const { title = 'Properties', onChange = () => {}, disabled, typeColumn, mappingColumn, mappingDisabled } = props;
   const { options: typeOptions = defaultTypeOptions } = typeColumn || {};
 
   const { handleAdd, handleDelete, handleBlur, handlePrimaryKey, handleDoubleClick, handleType, handleChangeIndex } =
@@ -134,6 +135,7 @@ const PropertiesList: React.FunctionComponent<IPropertiesListProps> = props => {
       render(token, all) {
         return (
           <MappingFields
+            disabled={mappingDisabled}
             options={mappingColumn?.options}
             /** 拆分后 index/token,后期需处理 */
             value={all}

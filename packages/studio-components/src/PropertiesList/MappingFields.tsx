@@ -2,6 +2,7 @@ import * as React from 'react';
 import { InputNumber, Flex, Select } from 'antd';
 import type { Option } from './typing';
 interface IMappingFields {
+  disabled?: boolean;
   componentType: 'Select' | 'InputNumber';
   options: Option[];
   value?: { index?: number; token?: string };
@@ -17,7 +18,7 @@ export const getValue = (index, token) => {
   return _value;
 };
 const MappingFields = (props: IMappingFields) => {
-  const { options, value, onChange, componentType } = props;
+  const { options, value, onChange, componentType, disabled } = props;
   const { index, token } = value || {};
 
   /** mappingFiles options 边涉及相同value，导致不唯一 */
@@ -44,6 +45,7 @@ const MappingFields = (props: IMappingFields) => {
   if (options.length === 0 || token === '') {
     return (
       <InputNumber
+        disabled={disabled}
         style={{ minWidth: '140px' }}
         size="small"
         value={index}
@@ -59,6 +61,7 @@ const MappingFields = (props: IMappingFields) => {
 
   return (
     <Select
+      disabled={disabled}
       size="small"
       options={_options}
       value={_value}
