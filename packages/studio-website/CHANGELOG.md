@@ -1,5 +1,37 @@
 # @graphscope/studio-site
 
+## 0.1.18
+
+### Patch Changes
+
+- update website
+- Updated dependencies
+  - @graphscope/studio-components@0.1.18
+  - @graphscope/studio-importor@0.1.18
+  - @graphscope/studio-explore@0.1.16
+  - @graphscope/studio-query@0.1.18
+  - @graphscope/graphy-website@0.1.12
+  - @graphscope/studio-driver@0.1.16
+  - @graphscope/studio-graph@0.1.18
+  - @graphscope/studio-server@1.0.15
+  - @graphscope/use-zustand@0.1.10
+
+## 0.1.17
+
+### Patch Changes
+
+- update website
+- Updated dependencies
+  - @graphscope/graphy-website@0.1.11
+  - @graphscope/studio-components@0.1.17
+  - @graphscope/studio-driver@0.1.15
+  - @graphscope/studio-explore@0.1.15
+  - @graphscope/studio-graph@0.1.17
+  - @graphscope/studio-importor@0.1.17
+  - @graphscope/studio-query@0.1.17
+  - @graphscope/studio-server@1.0.14
+  - @graphscope/use-zustand@0.1.9
+
 ## 0.1.16
 
 ### Patch Changes

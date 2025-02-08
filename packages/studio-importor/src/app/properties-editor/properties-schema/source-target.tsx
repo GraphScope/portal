@@ -9,6 +9,7 @@ import { FormattedMessage } from 'react-intl';
 
 import type { ISchemaEdge, ImportorProps, IEdgeData, ISchemaNode } from '../../typing';
 type ISourceTargetProps = {
+  disabled: boolean;
   mappingColumn: ImportorProps['mappingColumn'];
   source_vertex_fields: IEdgeData['source_vertex_fields'];
   target_vertex_fields: IEdgeData['target_vertex_fields'];
@@ -41,7 +42,7 @@ const getLabelById = (nodes: ISchemaNode[], source: string, target: string) => {
   };
 };
 const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
-  const { id, source, target, mappingColumn, source_vertex_fields, target_vertex_fields } = props;
+  const { id, source, target, mappingColumn, source_vertex_fields, target_vertex_fields, disabled } = props;
   const { store } = useContext();
   const { nodes } = store;
   const { handleDataFieldsChange } = useModel({ type: 'edges', id });
@@ -61,6 +62,7 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
               <FormattedMessage id="Data Fields" />
             </Typography.Text>
             <MappingFields
+              disabled={disabled}
               value={source_vertex_fields}
               onChange={val => handleDataFieldsChange(val, 'source_vertex_fields', source_primary_key)}
               componentType={mappingColumn?.type || 'Select'}
@@ -82,6 +84,7 @@ const SourceTarget: React.FunctionComponent<ISourceTargetProps> = props => {
               <FormattedMessage id="Data Fields" />
             </Typography.Text>
             <MappingFields
+              disabled={disabled}
               value={target_vertex_fields}
               onChange={val => handleDataFieldsChange(val, 'target_vertex_fields', target_primary_key)}
               componentType={mappingColumn?.type || 'Select'}

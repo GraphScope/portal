@@ -66,7 +66,7 @@ const DeleteButton: React.FunctionComponent<IDeleteButtonProps> = props => {
   };
   if (appMode === 'DATA_MODELING') {
     return (
-      <Tooltip title={<FormattedMessage id="Delete label" />}>
+      <Tooltip title={<FormattedMessage id="Delete this label" />}>
         <Button size="small" type="text" loading={state.loading} onClick={handleDelete} icon={<Icons.Trash />}></Button>
       </Tooltip>
     );

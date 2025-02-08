@@ -149,7 +149,7 @@ class ArxivFetcher:
                             similarity = difflib.SequenceMatcher(
                                 None, new_name.lower(), paper.title.lower()
                             ).ratio()
-                            logger.info(
+                            logger.debug(
                                 f"Compared with: {new_name}, Found paper: {paper.title} with similarity {similarity}"
                             )
                             if similarity > highest_similarity:
@@ -176,9 +176,7 @@ class ArxivFetcher:
         return highest_similarity, best_match
 
     def download_paper(self, name: str, max_results):
-        logger.info(
-            f"******************** Searching for paper: {name} *******************"
-        )
+        logger.info(f"Searching for paper: {name}")
 
         name = unicodedata.normalize("NFKC", name)
 

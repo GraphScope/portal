@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/studio-graph",
-  "version": "0.1.16",
+  "version": "0.1.18",
   "description": "A React toolkit for graph analysis based on g6",
   "main": "lib/index.js",
   "module": "es/index.js",

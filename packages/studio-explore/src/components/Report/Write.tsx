@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { Button, Flex } from 'antd';
 import { query } from '../Copilot/query';
 import { Message } from '../Copilot/utils/message';
-import ReactMarkdown from 'react-markdown';
 import type { SummaryType } from './Intention';
 import { getPrompt } from './utils';
-
+import ReportText from './Text';
+import { Utils } from '@graphscope/studio-components';
+import MOCK from './Mock';
 const SECTION_CONSTANT_EXAMPLE_EN = () => {
   return `
-An example of a subsection in a report is as follows
+An example of a subsection 2.1 in a report is as follows
 (the information in this example MUST NOT be summarized in the report):
 2.1 [SUBSECTION TITLE]
 
@@ -23,7 +24,7 @@ significantly contributed to the development of GQL, the emerging standard for q
 The increasing demand for Cypher integration into various systems, including GraphScope, alongside the
 standardization of ISO/GQL \\cite{[Id]}, highlights the evolving nature of graph querying interfaces.
 Additionally, many graph databases offer the capability to register custom stored procedures for
-enhanced querying functionality.
+enhanced querying functionality. Some literatures summarize this kind of graph databases \\cite{[Id1], [Id2], [Id3]}.
   `;
 };
 
@@ -35,30 +36,40 @@ ${example}
   `;
 };
 
-const GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN = (user_query, category, max_tokens, example) => {
+const GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN = (user_query, category, section_id, example, intro_text) => {
   return `
-You are a highly skilled AI assistant. Given a user input and a category of data, your task is to write a corresponding subsection in a report based on the given data that belongs to the same category.
+You are a highly skilled AI assistant. Given a user input and a category of data, your task is to write a corresponding subsection (subsection 2.${section_id}) in a report based on the given data that belongs to the same category and the requirements in the user input. The introduction part of this report is as follows:
+${intro_text}
 
 User Input: ${user_query}
 Category: ${category}
 
+In the input category, the data belonging to this category are stored in the 'children' field. For each data, there are two fields, i.e., 'name' and 'description.
+
 Guidance:
-- A subsection of a report can contain at most ${max_tokens} words. In each subsection, you must mention as many data related to this category as possible.
-For each mentioned data, you need to explain its relationship with the category corresponding to the current subsection. 
+- In this subsection, you must mention and cite AS MANY data belonging to this category (i.e., those in the 'children' field) AS POSSIBLE. It's best to mention and cite all the data in the 'children' field.
+For each mentioned data, you need to explain its relationship with the category corresponding to the current subsection. When introducing each mentioned data, use at most two sentences (within about 50 words).
+- If the report is a related work, do not directly write the title/name of the papers in the report.
+- Sometimes, you can describe the commonalities of related data in 1-2 sentences and cite these works, which also counts as mentioning them.
+- For each mentioned data, it would be better for you to also explain its relationship with other data if possible.
 - Every time a data is first mentioned in the text, add a citation in the format \\cite{Id} and you must not use \\cite as the subject of the sentence. For example, suppose the [Id] of data p1 is 0000.0000, then the citation should be added as \\cite{0000.0000}.
 If the data presents a certain viewpoint or method M, the sentence may be "M \\cite{0000.0000} ...". If there is author or source information A for the data, the sentence may be "A~\\cite{0000.0000} proposes that ...". If several data with ids [Id_1], ... [Id_k] are related to an item or topic T, then the sentence may be "Topic T is well studied \\cite{Id_1, ..., Id_k} ...".
-Anyway, sentence "\\cite{0000.0000} proposes ..." is NOT allowed. Avoid using a whole paragraph to describe one piece of data, nor should you list them one by one. Instead, appropriately describe the connections between them.
+Anyway, sentence "\\cite{0000.0000} proposes ..." is NOT allowed. 
+- Avoid using a whole paragraph to describe one piece of data, nor should you list the data one by one. Instead, appropriately describe the connections between data.
+- In this subsection, when introducing data, it's best to present similar and strongly related data close to each other and describe their commonalities and differences.
+- DO NOT forget the requirements in the user input.
+
 
 ${example}
 `;
 };
 
-const GET_REPORT_PROMPTS_BY_SECTION_INTRO_EN = (user_query, max_tokens, example) => {
+const GET_REPORT_PROMPTS_BY_SECTION_INTRO_EN = (user_query, max_tokens, categories) => {
   return `
-You are a highly skilled AI assistant. Given a user input and several subsections belonging to the same report, your task is to complete the title and introduction sections of the report based on the already written subsections, and finally output the entire report. The introduction for these subsections should contain about ${max_tokens} words.
+You are a highly skilled AI assistant. Given a user input and the categories, we are going to write a report about the data belonging to categories to satisfy the requirements in the user input. You task is to generate and output the title and introduction of the report based on the categories and the requirements in the user input. The introduction should contain about ${max_tokens} words.
 
 User Input: ${user_query}
-Subsections: ${example}
+Categoreis: ${categories}
 `;
 };
 
@@ -71,11 +82,12 @@ Mind Map: ${mind_map}
 
 Guidance:
 - The beginning of a report typically includes an introduction, which provides a brief summary of the contents of this report, usually around 50 words.
-- A report typically includes several subsections, each corresponding to a category and can contain at most 200 words. In each subsection, you must mention as many data related to this category as possible.
-For each mentioned data, you need to explain its relationship with the category corresponding to the current subsection. 
+- A report typically includes several subsections. In each subsection, you must mention as many data related to this category as possible.
+For each mentioned data, you need to explain its relationship with the category corresponding to the current subsection.
+- If the report is a related work, do not directly write the title/name of the papers in the report.
 - Every time a data is first mentioned in the text, add a citation in the format \\cite{Id} and you must not use \\cite as the subject of the sentence. For example, suppose the [Id] of data p1 is 0000.0000, then the citation should be added as \\cite{0000.0000}.
 If the data presents a certain viewpoint or method M, the sentence may be "M \\cite{0000.0000} ...". If there is author or source information A for the data, the sentence may be "A~\\cite{0000.0000} proposes that ...". If several data with ids [Id_1], ... [Id_k] are related to an item or topic T, then the sentence may be "Topic T is well studied \\cite{Id_1, ..., Id_k} ...".
-Anyway, sentence "\\cite{0000.0000} proposes ..." is NOT allowed. Avoid using a whole paragraph to describe one piece of data, nor should you list them one by one. Instead, appropriately describe the connections between them.
+Anyway, sentence "\\cite{0000.0000} proposes ..." is NOT allowed. Avoid using a whole paragraph to describe one piece of data, nor should you list them one by one. Instead, appropriately describe the connections between them. 
 - An example of a subsection in a report is as follows
 (the information in this example MUST NOT be summarized in the report):
 2.1 [SUBSECTION TITLE]
@@ -105,8 +117,9 @@ const GET_REPORT_PROMPTS_CHN = (user_query, mind_map) => {
 写作指导：
 
 - 报告应当使用中文输出，结尾部分不用附上thebibliography
-- 报告开头通常包括引言，用于提供报告内容的简要概述，引言通常包含50个字。报告正文中通常包括若干小节，每个小节对应思维导图中的一个类别，最多可包含200个字。在每个小节中，你必须提到尽可能多的属于该类别的数据。对于每个提到的数据，你需要解释其与当前小节对应类别的关系，而不是简单地罗列这些数据。
-每次在文本中首次提到一条数据时，需要添加引用，引用格式为 \\cite{Id}，并且引用不能用作句子主语。例如，假设数据p1的[Id]为0000.0000，则添加的引用应该为\\cite{0000.0000}。
+- 报告开头通常包括引言，用于提供报告内容的简要概述，引言通常包含50个字。报告正文中通常包括若干小节，每个小节对应思维导图中的一个类别。在每个小节中，你必须提到尽可能多的属于该类别的数据。对于每个提到的数据，你需要解释其与当前小节对应类别的关系，而不是简单地罗列这些数据。
+- 如果该报告是一个相关工作报告，那么不要在报告中直接写参考的文章的名字和标题。
+- 每次在文本中首次提到一条数据时，需要添加引用，引用格式为 \\cite{Id}，并且引用不能用作句子主语。例如，假设数据p1的[Id]为0000.0000，则添加的引用应该为\\cite{0000.0000}。
 如果数据提出了某种观点或方法M，句子可以为“M \\cite{0000.0000} ...”。如果数据有作者或来源信息A，句子可以为“A~\\cite{0000.0000} 提出...”。如果多条数据的ids [Id_1], ... [Id_k] 与某个项目或主题T相关，则句子可以为“主题T已被深入研究 \\cite{Id_1, ..., Id_k} ...”。无论如何，不允许有句子"\\cite{0000.0000} 提出 ..."的出现。上面只是一些写句子的例子，在实际写作时，在保证句子不以"\\cite{0000.0000}"开头的前提下可以自由发挥。
 避免使用整段文字描述一条数据，也不应简单地逐一列出数据，而应适当地描述它们之间的关联。
 报告小节的一个示例如下（此示例中的信息不得在报告中总结）：
@@ -124,93 +137,7 @@ const GET_REPORT_PROMPTS_2 = (user_query, mind_map) => {
   
   `;
 };
-const WriteReportBySection: React.FunctionComponent<
-  SummaryType & {
-    task: string;
-  }
-> = props => {
-  const { categories, task } = props;
-  const [state, setState] = useState({
-    loading: false,
-    report: '',
-  });
-  const { loading, report } = state;
 
-  const handleClick = async () => {
-    setState(preState => {
-      return {
-        ...preState,
-        loading: true,
-      };
-    });
-
-    const max_token_per_subsection = 200;
-    let subsection_id = 0;
-    let total_text = '';
-
-    for (let category_info of categories) {
-      subsection_id += 1;
-      if (subsection_id === 1) {
-        const res_section = await query([
-          new Message({
-            role: 'user',
-            content: GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN(
-              task,
-              JSON.stringify(category_info),
-              max_token_per_subsection.toString(),
-              SECTION_CONSTANT_EXAMPLE_EN,
-            ),
-          }),
-        ]);
-        total_text += res_section.message.content;
-      } else {
-        const res_section = await query([
-          new Message({
-            role: 'user',
-            content: GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN(
-              task,
-              JSON.stringify(category_info),
-              max_token_per_subsection.toString(),
-              SECTION_PREVIOUS_EXAMPLE_EN(total_text),
-            ),
-          }),
-        ]);
-        total_text += res_section.message.content;
-      }
-    }
-
-    const res = await query([
-      new Message({
-        role: 'user',
-        content: GET_REPORT_PROMPTS_BY_SECTION_INTRO_EN(task, 50, total_text),
-      }),
-    ]);
-
-    // const res = await query([
-    //   new Message({
-    //     role: 'user',
-    //     content: GET_REPORT_PROMPTS_CHN(task, JSON.stringify(category)),
-    //   }),
-    // ]);
-
-    setState(preState => {
-      return {
-        ...preState,
-        loading: false,
-        report: res.message.content,
-      };
-    });
-  };
-
-  return (
-    <Flex vertical gap={12}>
-      <Button onClick={handleClick} loading={loading}>
-        Write Report
-      </Button>
-      {report && <ReactMarkdown>{report}</ReactMarkdown>}
-    </Flex>
-  );
-};
 const WriteReport: React.FunctionComponent<
   SummaryType & {
     task: string;
@@ -230,32 +157,78 @@ const WriteReport: React.FunctionComponent<
         loading: true,
       };
     });
+    /** MOCK START */
+    if (MOCK.enable) {
+      await MOCK.sleep(200);
+      const report = await MOCK.report();
+      setState(preState => {
+        return {
+          ...preState,
+          loading: false,
+          report,
+        };
+      });
+      return;
+    }
+    /** MOCK END */
 
-    const res = await query([
+    const categoriesWithoutChildren = categories.map(category => ({
+      name: category.name,
+      description: category.description,
+    }));
+
+    const intro_res = await query([
       new Message({
         role: 'user',
-        content: getPrompt({ 'zh-CN': GET_REPORT_PROMPTS_CHN, 'en-US': GET_REPORT_PROMPTS_EN })(
-          task,
-          JSON.stringify(categories),
-        ),
+        content: GET_REPORT_PROMPTS_BY_SECTION_INTRO_EN(task, 50, JSON.stringify(categoriesWithoutChildren)),
       }),
     ]);
+    const intro_text = intro_res.message.content;
+
+    let section_no = 0;
+    let already_sec = '';
+    for (const category of categories) {
+      section_no += 1;
+      const res = await query([
+        new Message({
+          role: 'user',
+          content: getPrompt({ 'zh-CN': GET_REPORT_PROMPTS_CHN, 'en-US': GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN })(
+            task,
+            JSON.stringify(category),
+            JSON.stringify(section_no),
+            SECTION_CONSTANT_EXAMPLE_EN,
+            intro_text,
+          ),
+        }),
+      ]);
+      already_sec = already_sec + '\n' + res.message.content;
+    }
+
+    already_sec = intro_text + '\n' + already_sec;
 
     setState(preState => {
       return {
         ...preState,
         loading: false,
-        report: res.message.content,
+        report: already_sec,
       };
     });
   };
 
+  const handleDownloadMindmap = () => {
+    Utils.createDownload(JSON.stringify(categories, null, 2), 'mindmap.json');
+  };
+
   return (
     <Flex vertical gap={12}>
-      <Button onClick={handleClick} loading={loading}>
-        Write Report
-      </Button>
-      {report && <ReactMarkdown>{report}</ReactMarkdown>}
+      <Flex gap={12}>
+        <Button onClick={handleDownloadMindmap}>Download Mindmap</Button>
+        <Button onClick={handleClick} loading={loading} type="primary" block>
+          Write Report
+        </Button>
+      </Flex>
+
+      {report && <ReportText report={report} enableBib />}
     </Flex>
   );
 };

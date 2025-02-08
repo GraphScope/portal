@@ -69,7 +69,7 @@ export default {
   'Label field': 'Label field',
   'Target field': 'Target field',
   'Source field': 'Source field',
-  'Delete label': 'Delete label',
+  'Delete this label': 'Delete this label',
   Label: 'Label',
   'Data Fields': 'Data Fields',
   'Add Property': 'Add Property',
@@ -83,4 +83,13 @@ export default {
   'Quote char': 'Quote char',
   Source: 'Source',
   Target: 'Target',
+  'Load data right now': 'Load data right now',
+  'Click to rebind datasource': 'Click to rebind datasource',
+  'Click to bind datasource': 'Click to bind datasource',
+  'Preview dataloading configuration': 'Preview dataloading configuration',
+  'Please bind datasource first': 'Please bind datasource first',
+  "Click to load all label's data": "Click to load all label's data",
+  'Binding all datasource in batch': 'Binding all datasource in batch',
+  'Bind all the datasource, but first, please check if the location for each label is filled in correctly.':
+    'Bind all the datasource, but first, please check if the location for each label is filled in correctly.',
 };

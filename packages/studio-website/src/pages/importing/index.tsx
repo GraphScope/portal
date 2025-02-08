@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import ImportApp, { ISchemaOptions, transMappingSchemaToOptions } from '@graphscope/studio-importor';
 import { queryPrimitiveTypes, uploadFile, getSchema, getDatasourceById } from './services';
 import { useContext } from '../../layouts/useContext';
@@ -10,11 +10,16 @@ import EmptyModelCase from './empty-model-case';
 import Section from '../../components/section';
 import localforage from 'localforage';
 import { FormattedMessage } from 'react-intl';
+import DownloadLoadConfig from './download-load-config';
+import FeatureCase from '../../components/feature-case';
+import DataBind from './data-bind';
+import DataLoad from './data-load';
 interface ISchemaPageProps {}
 const { GS_ENGINE_TYPE } = window;
 const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
   const { store, id } = useContext();
   const { graphId, draftId } = store;
+  const [refreshIndex, setRefreshIndex] = useState(1);
 
   const queryBoundSchema = async (): Promise<ISchemaOptions> => {
     if (graphId === draftId) {
@@ -50,6 +55,9 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
     const localFiles = getLocalFiles();
     return localFiles;
   };
+  const refresh = () => {
+    setRefreshIndex(prev => prev + 1);
+  };
 
   return (
     <Section
@@ -62,6 +70,7 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
     >
       <EmptyModelCase />
       <ImportApp
+        refreshIndex={refreshIndex}
         key={graphId}
         appMode="DATA_IMPORTING"
         queryBoundSchema={queryBoundSchema}
@@ -79,7 +88,13 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
       >
         <Toolbar style={{ top: '12px', left: '24px', right: 'unset' }} direction="horizontal">
           <SelectGraph id={id} />
-          <StartImporting id={id} />
+          <FeatureCase match="SCHEMA_UPDATE">
+            <DataBind id={id} refresh={refresh} />
+            <DataLoad id={id} />
+          </FeatureCase>
+          <FeatureCase match="BATCH_LOAD_DATA">
+            <StartImporting id={id} />
+          </FeatureCase>
         </Toolbar>
       </ImportApp>
     </Section>

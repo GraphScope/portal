@@ -629,20 +629,20 @@ class PaperInspector(BaseNode):
         logger.warning(f"================= START INSPECT ==============")
 
         for input_data in input:
-            logger.error(f"input data: {input_data}")
             paper_file_path = input_data.get("paper_file_path", None)
             paper_meta_path = input_data.get("paper_meta_path", None)
             paper_file_path = change_path(paper_file_path)
             paper_meta_path = change_path(paper_meta_path)
             parent_id = input_data.get("parent_id", None)
             edge_name = input_data.get("edge_name", "Navigator")
-            logger.warning(
+            logger.info(f"================= START INSPECT ==============")
+            logger.info(
                 f"Executing {self.name} for paper: {paper_file_path} with meta: {paper_meta_path}"
             )
 
             if not paper_file_path:
-                logger.warning("No 'paper_file_path' provided in input data.")
-                logger.warning(f"create fake extractor {paper_meta_path}")
+                logger.info("No 'paper_file_path' provided in input data.")
+                logger.info(f"create fake extractor {paper_meta_path}")
                 if not paper_meta_path:
                     continue
             try:

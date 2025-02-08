@@ -132,20 +132,41 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
   const handleClick = id => {
     const node = state.data.nodes.find((item: any) => item.id === id);
     updateStore(draft => {
+      const aplyFocusStatus = () => {
+        if (node) {
+          draft.selectNodes = [node];
+          draft.nodeStatus = draft.data.nodes.reduce((acc, curr) => {
+            if (curr.id === node.id) {
+              return {
+                ...acc,
+                [curr.id]: {
+                  selected: true,
+                },
+              };
+            }
+            return {
+              ...acc,
+              [curr.id]: {
+                selected: false,
+                disabled: true,
+              },
+            };
+          }, {});
+        }
+      };
+
+      const isExists = draft.data.nodes.find((item: any) => item.id === id);
+      if (isExists && node) {
+        aplyFocusStatus();
+        focusNodes([node.id]);
+        return;
+      }
       const _nodes = Utils.uniqueElementsBy([...draft.data.nodes, node], (a, b) => {
         return a.id === b.id;
       });
       draft.data.nodes = _nodes;
       draft.source.nodes = _nodes;
-      if (node) {
-        draft.selectNodes = [node];
-        draft.nodeStatus = {
-          [node.id]: {
-            selected: true,
-          },
-        };
-        focusNodes([node.id]);
-      }
+      aplyFocusStatus();
     });
     handleClear();
   };

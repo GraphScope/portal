@@ -7,9 +7,11 @@ export const filterDataByParticalSchema = (schema, data) => {
   const node_labels = schema.nodes.map(item => {
     return item.label;
   });
-  const edge_labels = schema.edges.map(item => {
+  console.log('node_labels', node_labels);
+  const edge_labels = (schema.edges || []).map(item => {
     return item.label;
   });
+  console.log('edge_labels', edge_labels);
 
   const nodes = data.nodes
     .filter(node => {
@@ -36,11 +38,13 @@ export const filterDataByParticalSchema = (schema, data) => {
       return edge_labels.includes(label || '');
     })
     .map(item => {
-      const { id, label, properties = {} } = item;
-      const match = schema.edges.find(c => c.label === label) || { properties: [] };
+      const { id, label, properties = {}, source, target } = item;
+      const match = (schema.edges || []).find(c => c.label === label) || { properties: [] };
       return {
         id,
         label,
+        source: typeof source === 'object' ? source.id : source,
+        target: typeof target === 'object' ? target.id : target,
         properties: (match.properties || []).reduce((acc, curr) => {
           return {
             ...acc,
@@ -49,6 +53,7 @@ export const filterDataByParticalSchema = (schema, data) => {
         }, {}),
       };
     });
+  console.log(nodes, edges);
   return { nodes, edges };
 };
 
@@ -110,6 +115,25 @@ export const getCategories = (output, categories) => {
       children: category_children_map[category.category_id],
     };
   });
+};
+
+export const getInducedSubgraph = (nodes, edges, target_ids) => {
+  const filtered_edges = edges.filter(edge => {
+    return target_ids.includes(edge.source) || target_ids.includes(edge.target);
+  });
+
+  const target_nodes = nodes.filter(node => target_ids.includes(node.id));
+
+  const connectedNodeIds = new Set();
+  filtered_edges.forEach(edge => {
+    connectedNodeIds.add(edge.source);
+    connectedNodeIds.add(edge.target);
+  });
+  const neighbor_nodes = nodes.filter(node => connectedNodeIds.has(node.id) && !target_ids.includes(node.id));
+
+  const filtered_nodes = neighbor_nodes.concat(target_nodes);
+
+  return { filtered_nodes, filtered_edges };
 };
 
 import { Utils } from '@graphscope/studio-components';

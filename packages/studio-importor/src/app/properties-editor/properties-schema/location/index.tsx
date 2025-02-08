@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Typography, Flex, Space, Button, Tooltip, Input, Upload } from 'antd';
 
 import { CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -19,6 +19,7 @@ const { Text } = Typography;
 
 const LocationField = forwardRef((props: ILocationFieldProps, ref) => {
   const { schema, type, handleUploadFile } = props;
+
   const {
     id,
     data: { filelocation, isBind },

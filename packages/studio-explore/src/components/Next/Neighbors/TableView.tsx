@@ -21,7 +21,7 @@ export interface IPropertiesPanelProps {
 const TableView: React.FunctionComponent<IPropertiesPanelProps> = props => {
   const { items, counts, name, onQuery, containerRef } = props;
   const { dataSource, columns } = getTable([...items]);
-  // const defaultSelectedRowKeys = dataSource.map(item => item.key);
+  const defaultSelectedRowKeys = dataSource.map(item => item.key);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   // const containerRef = React.useRef<HTMLDivElement>(null);
 
