@@ -1,5 +1,6 @@
 import React from 'react';
 import QueryGraph from '../../components/query-graph';
+import { Utils } from '@graphscope/studio-components';
 interface IGraphViewProps {
   data: any;
   schemaData: any;
@@ -28,7 +29,7 @@ const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
   return (
     <div style={{ width: '100%' }}>
       {/** @ts-ignore */}
-      <QueryGraph data={data} schema={graphSchema} graphId={graphId} />
+      <QueryGraph data={Utils.fakeSnapshot(data)} schema={graphSchema} graphId={graphId} />
     </div>
   );
 };

@@ -1,12 +1,8 @@
-import {
-  GraphApiFactory,
-  ServiceApiFactory,
-  // DeploymentApiFactory,
-  // LegacyApiFactory,
-  JobApiFactory,
-} from '@graphscope/studio-server';
-
-import { notification } from '../pages/utils';
+import * as React from 'react';
+interface IGrootCaseProps {
+  children: React.ReactNode;
+  match: SupportFeature;
+}
 
 export type SupportFeature =
   /** 是否支持多图 */
@@ -63,35 +59,19 @@ export const getSupportFeature = (): Features => {
   };
 };
 
-export const listGraphs = async () => {
-  const status = await ServiceApiFactory(undefined, window.COORDINATOR_URL)
-    .listServiceStatus()
-    .then(res => {
-      if (res.status === 200) {
-        return res.data;
-      }
-      return [];
-    })
-    .catch(error => {
-      notification('error', error);
-    });
-
-  let graphs;
-
-  graphs = await GraphApiFactory(undefined, window.COORDINATOR_URL)
-    .listGraphs()
-    .then(res => {
-      if (res.status === 200) {
-        return res.data;
-      }
-    })
-    .catch(error => {
-      notification('error', error);
-    });
-  console.log(graphs, status);
-
-  return {
-    graphs,
-    status,
-  };
+const EngineFeature: React.FunctionComponent<IGrootCaseProps> = props => {
+  const { children, match } = props;
+  const feature = getSupportFeature();
+  const support = feature[match];
+  return (
+    <div
+      style={{
+        display: support ? 'display' : 'none',
+      }}
+    >
+      {children}
+    </div>
+  );
 };
+
+export default EngineFeature;

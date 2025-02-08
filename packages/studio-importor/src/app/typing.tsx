@@ -50,6 +50,8 @@ export interface Option {
   value: string;
 }
 export interface ImportorProps {
+  /** 控制模块refresh的index */
+  refreshIndex: number;
   /** 用于多实例管理的 ID */
   id?: string;
   /** 语言 */

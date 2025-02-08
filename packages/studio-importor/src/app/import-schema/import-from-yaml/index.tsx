@@ -59,7 +59,7 @@ const ImportFromYAML = (props: IProps) => {
         });
       }
       if (appMode === 'DATA_IMPORTING') {
-        schema = transMappingSchemaToOptions({} as any, jsonContent, { nodes, edges } as any);
+        schema = transMappingSchemaToOptions({} as any, jsonContent, { nodes, edges } as any, false);
       }
       updateStore(draft => {
         draft.hasLayouted = false;

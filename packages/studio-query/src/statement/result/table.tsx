@@ -13,7 +13,9 @@ interface ITableViewProps {
 const RowTable = ({ data }) => {
   /** table */
   const FirstRow = data[0];
-  const columnsNum = Object.keys(FirstRow);
+
+  const columnsNum = typeof FirstRow === 'number' ? ['value'] : Object.keys(FirstRow);
+
   const columns = [
     {
       title: '#',
@@ -32,10 +34,15 @@ const RowTable = ({ data }) => {
     }),
   ];
 
-  const dataSource = data.map(item => {
+  const dataSource = data.map((item, index) => {
+    if (typeof item === 'number') {
+      return {
+        value: item,
+      };
+    }
     return {
       ...item,
-      key: item.id,
+      key: index,
     };
   });
 
@@ -54,6 +61,7 @@ const GraphTable = ({ nodes, edges }) => {
       properties: JSON.stringify({ ...properties }, null, 2),
     };
   });
+
   const edgeSource = edges.map(item => {
     const { id, label, properties, source, target } = item;
 
@@ -179,6 +187,7 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
   };
   /** table 表格 */
   let Content: React.ReactNode;
+
   if (mode === 'table') {
     if (nodes.length !== 0) {
       Content = <GraphTable nodes={nodes} edges={edges} />;
@@ -187,7 +196,7 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
       Content = <RowTable data={table} />;
     }
     //@ts-ignore
-    if (table.length === 0 && raw.records.length !== 0 && window.GS_ENGINE_TYPE === 'interactive') {
+    if (table.length === 0 && window.GS_ENGINE_TYPE === 'interactive' && raw.records.length !== 0) {
       Content = <InteranctiveTable data={raw.records} />;
     }
   }
@@ -208,9 +217,7 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
             ]}
           />
           <Tooltip title="download">
-            <Button icon={<FileExcelOutlined />} type="text" onClick={handleDownload}>
-              {' '}
-            </Button>
+            <Button icon={<FileExcelOutlined />} type="text" onClick={handleDownload}></Button>
           </Tooltip>
         </Space>
       </Flex>

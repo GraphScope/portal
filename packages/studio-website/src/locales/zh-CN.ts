@@ -264,4 +264,5 @@ export default {
   'System Setting': '系统设置',
   'Data Load Configuration': '数据载入配置',
   'Download Load Task Config': '下载数据导入任务的配置文件',
+  "Click to load all label's data": '点击载入所有 label 的数据',
 };
