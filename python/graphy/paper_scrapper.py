@@ -1,14 +1,12 @@
-import ray
-
 from apps.paper_reading import SurveyPaperReading
-from workflow import ThreadPoolWorkflowExecutor
 from models import set_llm_model, DEFAULT_LLM_MODEL_CONFIG, DefaultEmbedding
-from workflow.ray_executor import RayWorkflowExecutor
+from workflow.multiproc_executor import MultiprocWorkflowExecutor
 
 import argparse
 import json
 import os
 import logging
+import multiprocessing
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
@@ -74,12 +72,6 @@ def parse_arguments():
         default=100,
         help="Maximum number of inspectors allowed (default: 100).",
     )
-    parser.add_argument(
-        "-t",
-        "--tmp-dir",
-        type=str,
-        help="The temporary directory for ray.",
-    )
     return parser.parse_args()
 
 
@@ -96,11 +88,19 @@ def fix_workflow(workflow_json):
     return fixed_workflow_json
 
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler()],
+)
+
 if __name__ == "__main__":
+    multiprocessing.set_start_method("spawn")
     args = parse_arguments()
     input_folder = args.input_folder
     max_workers = args.max_workers
     max_inspectors = args.max_inspectors
+
     with open(args.workflow, "r") as f:
         workflow_json = json.load(f)
     if workflow_json:
@@ -108,19 +108,8 @@ if __name__ == "__main__":
         embedding_model = DefaultEmbedding()
         embedding_model.__call__(["dummy"])
         fixed_workflow_json = fix_workflow(workflow_json)
-        if args.tmp_dir:
-            ray.init(
-                logging_level=logging.INFO,
-                logging_format="%(asctime)s %(levelname)s %(message)s",
-                _temp_dir=args.tmp_dir,
-            )
-        else:
-            ray.init(
-                logging_level=logging.INFO,
-                logging_format="%(asctime)s %(levelname)s %(message)s",
-            )
 
-        executor = RayWorkflowExecutor(
+        executor = MultiprocWorkflowExecutor(
             fixed_workflow_json, SurveyPaperReading, max_workers, max_inspectors
         )
         inputs = list_pdf_inputs(input_folder)

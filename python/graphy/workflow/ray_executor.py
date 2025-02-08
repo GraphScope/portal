@@ -1,6 +1,6 @@
 from typing import List, Dict, Any, Type
 
-from apps.paper_reading import SurveyPaperReading
+from apps.demo_app import SurveyPaperReading
 from graph.types import DataType
 from graph.nodes import NodeType
 from workflow import BaseWorkflow
