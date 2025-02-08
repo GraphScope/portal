@@ -66,7 +66,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         // nodes: transformGraphNodes(schema.nodes, store.displayMode), //会报错！！！！
         edges: transformEdges(schema.edges, displayMode),
       };
-      debugger;
+
       const { nodes, edges } = schemaOptions || { nodes: [], edges: [] };
       const isEmpty = nodes.length === 0;
 

@@ -152,7 +152,6 @@ const Searchbar: React.FunctionComponent<ISearchbarProps> = props => {
               },
             };
           }, {});
-          debugger;
         }
       };
 

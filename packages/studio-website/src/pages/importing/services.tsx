@@ -22,7 +22,14 @@ export const uploadFile = async (file: File) => {
 
 export const bindDatasourceInBatch = async (graph_id: string, options: any): Promise<any> => {
   const schema = transformImportOptionsToSchemaMapping(options);
-  return await DataSourceApiFactory(undefined, window.COORDINATOR_URL).bindDatasourceInBatch(graph_id, schema);
+  const res = await DataSourceApiFactory(undefined, window.COORDINATOR_URL).bindDatasourceInBatch(graph_id, schema);
+
+  if (res.data === 'Bind data source mapping successfully') {
+    notification('success', res.data, 'Bind data source mapping successfully');
+    return true;
+  }
+  notification('error', res.data);
+  return false;
 };
 /** 数据绑定 dataMap(nodes/edges集合)*/
 export const submitDataloadingJob = async (graph_id: string, graphSchema: any, loadConfig: FieldType): Promise<any> => {

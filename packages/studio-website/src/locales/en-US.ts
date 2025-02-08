@@ -269,4 +269,5 @@ export default {
   'System Setting': 'System Setting',
   'Data Load Configuration': 'Data Load Configuration',
   'Download Load Task Config': 'Download Load Task Config',
+  "Click to load all label's data": "Click to load all label's data",
 };

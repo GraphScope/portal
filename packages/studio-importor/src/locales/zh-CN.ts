@@ -86,4 +86,8 @@ export default {
   'Click to bind datasource': '点击绑定数据源',
   'Preview dataloading configuration': '预览周期载入配置',
   'Please bind datasource first': '请先绑定数据源',
+  "Click to load all label's data": '点击载入所有 label 的数据',
+  'Binding all datasource in batch': '批量绑定所有 label 数据源',
+  'Bind all the datasource, but first, please check if the location for each label is filled in correctly.':
+    '绑定数据源之前，请先检查每个 label 的 location 是否填写正确',
 };
