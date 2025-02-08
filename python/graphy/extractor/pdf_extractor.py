@@ -147,8 +147,8 @@ class PDFExtractor(BasePDFLoader):
                 )
             self.language = self._get_language_of_pdf()
 
-            logger.info(f"COLUMN_NUMBER: {self.column_number}")
-            logger.info(f"LANGUAGE: {self.language}")
+            logger.debug(f"COLUMN_NUMBER: {self.column_number}")
+            logger.debug(f"LANGUAGE: {self.language}")
 
             self.timer = Timer()
             self.pdf_content_index = PDFContentIndex()

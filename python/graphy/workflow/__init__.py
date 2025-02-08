@@ -9,5 +9,4 @@ __all__ = [
     "BaseWorkflow",
     "SurveyPaperReading",
     "ThreadPoolWorkflowExecutor",
-    "RayWorkflowExecutor",
 ]
