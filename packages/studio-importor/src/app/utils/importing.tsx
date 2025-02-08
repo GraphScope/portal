@@ -27,6 +27,7 @@ export function transMappingSchemaToOptions(
   schema: DeepRequired<GetGraphSchemaResponse>,
   schemaMapping: DeepRequired<SchemaMapping> | {},
   _schemaOptions?: ISchemaOptions,
+  isBind?: boolean,
 ): ISchemaOptions {
   const schemaOptions =
     _schemaOptions ||
@@ -96,7 +97,7 @@ export function transMappingSchemaToOptions(
       data: {
         ...item.data,
         filelocation,
-        isBind: !!filelocation,
+        isBind: isBind === undefined ? !!filelocation : isBind,
         isEidtProperty: true,
         dataFields: loadingdataFields('nodes', properties),
         properties: properties.map((p, index) => {
@@ -142,7 +143,7 @@ export function transMappingSchemaToOptions(
           data: {
             ...item.data,
             filelocation,
-            isBind: !!filelocation,
+            isBind: isBind === undefined ? !!filelocation : isBind,
             isEidtProperty: true,
             //@ts-ignore
             dataFields: loadingdataFields('edges', realEdgeProperties),

@@ -2,19 +2,24 @@ import React, { useEffect, useRef } from 'react';
 import { Collapse, Space } from 'antd';
 import PropertiesSchema from './properties-schema';
 import { useContext } from '@graphscope/use-zustand';
-import { SegmentedTabs, Utils } from '@graphscope/studio-components';
+import { SegmentedTabs, Utils, EngineFeature } from '@graphscope/studio-components';
 import { CaretRightOutlined } from '@ant-design/icons';
 import type { ImportorProps } from '../typing';
 import ValidateInfo from './properties-schema/validate-info';
 import SaveButton from './properties-schema/save';
 import DeleteButton from './properties-schema/delete';
+import BindButton from './properties-schema/bind';
+import LoadNowButton from './properties-schema/load-now';
+import LoadScheduleButton from './properties-schema/load-schedule';
 import ScrollContainer, { disableScroll } from './scroll-container';
+import ScheduleDrawer from './properties-schema/load-schedule/drawer';
 import { useIntl } from 'react-intl';
 type IPropetiesEditorProps = Pick<
   ImportorProps,
   'appMode' | 'handleUploadFile' | 'queryPrimitiveTypes' | 'batchUploadFiles' | 'onCreateLabel' | 'onDeleteLabel'
 >;
 const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props => {
+  const ScheduleDrawerRef = useRef();
   const intl = useIntl();
   const { store, updateStore } = useContext();
   const { nodes, edges, currentType, currentId, elementOptions } = store;
@@ -42,19 +47,34 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
   const EDGES_SCROLL_ITEMS = {};
   const nodesMap = {};
 
+  const updateScheduleDrawer = params => {
+    if (ScheduleDrawerRef.current) {
+      console.log(ScheduleDrawerRef.current);
+      //@ts-ignore
+      ScheduleDrawerRef.current.update(params);
+    }
+  };
+
   const nodes_items = nodes.map((item, index) => {
     const { id, data } = item;
     const { label, properties = [], filelocation } = data || { label: id };
     NODES_SCROLL_ITEMS[id] = { index: index };
     nodesMap[id] = item;
-
+    // console.log('data', data);
     return {
       key: id,
       label: label,
       extra: (
-        <Space>
+        <Space
+          onClick={event => {
+            event.stopPropagation();
+          }}
+        >
           <SaveButton schema={item} type="nodes" onCreateLabel={onCreateLabel} />
           <DeleteButton schema={item} type="nodes" onDeleteLabel={onDeleteLabel} />
+          <BindButton schema={item} type="nodes" />
+          <LoadNowButton schema={item} type="nodes" />
+          <LoadScheduleButton schema={item} type="nodes" updateScheduleDrawer={updateScheduleDrawer} />
           <ValidateInfo
             type="nodes"
             filelocation={filelocation}
@@ -87,6 +107,15 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
         <Space>
           <SaveButton nodesMap={nodesMap} schema={item} type="edges" onCreateLabel={onCreateLabel} />
           <DeleteButton nodesMap={nodesMap} schema={item} type="edges" onDeleteLabel={onDeleteLabel} />
+          <BindButton nodesMap={nodesMap} schema={item} type="edges" />
+          <LoadNowButton nodesMap={nodesMap} schema={item} type="edges" />
+          <LoadScheduleButton
+            nodesMap={nodesMap}
+            schema={item}
+            type="edges"
+            updateScheduleDrawer={updateScheduleDrawer}
+          />
+
           <ValidateInfo
             type="edges"
             filelocation={filelocation}
@@ -172,6 +201,7 @@ const PropetiesEditor: React.FunctionComponent<IPropetiesEditorProps> = props =>
 
   return (
     <div>
+      <ScheduleDrawer ref={ScheduleDrawerRef} />
       <SegmentedTabs
         block
         queryKey="element"

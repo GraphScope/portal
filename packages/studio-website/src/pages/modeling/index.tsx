@@ -71,9 +71,9 @@ const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
           direction="horizontal"
         >
           <SelectGraph id={id} />
-          <EngineFeature match="BATCH_LOAD_DATA">
-            <Save id={id} />
-          </EngineFeature>
+          {/* <EngineFeature match="BATCH_LOAD_DATA"> */}
+          <Save id={id} />
+          {/* </EngineFeature> */}
         </Toolbar>
       </ImportApp>
     </Section>

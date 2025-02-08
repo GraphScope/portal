@@ -86,4 +86,6 @@ export default {
   'Load data right now': 'Load data right now',
   'Click to rebind datasource': 'Click to rebind datasource',
   'Click to bind datasource': 'Click to bind datasource',
+  'Preview dataloading configuration': 'Preview dataloading configuration',
+  'Please bind datasource first': 'Please bind datasource first',
 };

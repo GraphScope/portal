@@ -81,12 +81,13 @@ const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
       >
         <Toolbar style={{ top: '12px', left: '24px', right: 'unset' }} direction="horizontal">
           <SelectGraph id={id} />
-          <FeatureCase match="BATCH_LOAD_DATA">
+          {/* <FeatureCase match="BATCH_LOAD_DATA">
             <StartImporting id={id} />
-          </FeatureCase>
-          <FeatureCase match="DOWNLOAD_DATA_TASK_CONFIG">
+          </FeatureCase> */}
+          <StartImporting id={id} />
+          {/* <FeatureCase match="DOWNLOAD_DATA_TASK_CONFIG">
             <DownloadLoadConfig id={id} graphId={graphId} />
-          </FeatureCase>
+          </FeatureCase> */}
         </Toolbar>
       </ImportApp>
     </Section>

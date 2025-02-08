@@ -84,4 +84,6 @@ export default {
   'Load data right now': '立即载入数据',
   'Click to rebind datasource': '点击解绑，可重新绑定数据源',
   'Click to bind datasource': '点击绑定数据源',
+  'Preview dataloading configuration': '预览周期载入配置',
+  'Please bind datasource first': '请先绑定数据源',
 };

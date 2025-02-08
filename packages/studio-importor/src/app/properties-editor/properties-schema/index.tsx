@@ -1,8 +1,9 @@
 import React, { forwardRef } from 'react';
 import { Typography, Flex, Input } from 'antd';
-import { PropertiesList } from '@graphscope/studio-components';
+import { PropertiesList, EngineFeature } from '@graphscope/studio-components';
 import useModel from './useModel';
 import LocationField from './location';
+import Odps from './odps';
 import SourceTarget from './source-target';
 import { FormattedMessage } from 'react-intl';
 import type { ISchemaEdge, ImportorProps, Option } from '../../typing';
@@ -22,7 +23,9 @@ const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
     source_vertex_fields,
     target_vertex_fields,
     disabled = false,
+    isBind,
   } = data || {};
+
   const { handleChangeLabel, handleProperty } = useModel({
     type,
     id,
@@ -42,7 +45,14 @@ const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
     <div>
       <Flex vertical gap={12} style={{ margin: '0px 12px' }}>
         {appMode === 'DATA_IMPORTING' ? (
-          <LocationField ref={ref} schema={schema} type={type} handleUploadFile={handleUploadFile} />
+          <>
+            <EngineFeature match="LOAD_CSV_DATA">
+              <LocationField ref={ref} schema={schema} type={type} handleUploadFile={handleUploadFile} />
+            </EngineFeature>
+            <EngineFeature match="DOWNLOAD_DATA_TASK_CONFIG">
+              <Odps ref={ref} schema={schema} type={type} handleUploadFile={handleUploadFile} />
+            </EngineFeature>
+          </>
         ) : (
           <>
             <Typography.Text>
@@ -54,6 +64,7 @@ const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
         {type === 'edges' && (
           <SourceTarget
             id={id}
+            disabled={window.GS_ENGINE_TYPE === 'groot' ? isBind : false}
             source={source}
             target={target}
             source_vertex_fields={source_vertex_fields}
@@ -66,6 +77,7 @@ const PropertiesSchema = forwardRef((props: IPropertiesSchemaProps, ref) => {
           onChange={handleProperty}
           typeColumn={{ options: queryPrimitiveTypes() as unknown as Option[] }}
           disabled={disabled}
+          mappingDisabled={window.GS_ENGINE_TYPE === 'groot' ? isBind : false}
           mappingColumn={mappingColumn as ImportorProps['mappingColumn']}
         />
       </Flex>

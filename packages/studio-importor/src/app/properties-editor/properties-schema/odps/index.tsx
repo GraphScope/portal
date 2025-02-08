@@ -28,6 +28,7 @@ const LocationField = forwardRef((props: ILocationFieldProps, ref) => {
           <Input style={{ width: '100%' }} disabled value={filelocation} />
         ) : (
           <Input
+            key={filelocation}
             ref={InputRef}
             style={{ width: '100%' }}
             defaultValue={filelocation}
