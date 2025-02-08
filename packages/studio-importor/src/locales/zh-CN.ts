@@ -81,4 +81,7 @@ export default {
   'Import Option': '导入选项',
   Quoting: '引用',
   'Quote char': '分隔符',
+  'Load data right now': '立即载入数据',
+  'Click to rebind datasource': '点击解绑，可重新绑定数据源',
+  'Click to bind datasource': '点击绑定数据源',
 };

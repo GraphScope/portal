@@ -83,4 +83,7 @@ export default {
   'Quote char': 'Quote char',
   Source: 'Source',
   Target: 'Target',
+  'Load data right now': 'Load data right now',
+  'Click to rebind datasource': 'Click to rebind datasource',
+  'Click to bind datasource': 'Click to bind datasource',
 };
