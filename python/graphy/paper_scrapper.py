@@ -72,6 +72,13 @@ def parse_arguments():
         default=100,
         help="Maximum number of inspectors allowed (default: 100).",
     )
+    parser.add_argument(
+        "-q",
+        "--max-queue-size",
+        type=int,
+        default=1000,
+        help="Maximum concurrent queue size (default: 1000).",
+    )
     return parser.parse_args()
 
 
@@ -100,6 +107,7 @@ if __name__ == "__main__":
     input_folder = args.input_folder
     max_workers = args.max_workers
     max_inspectors = args.max_inspectors
+    max_queue_size = args.max_queue_size
 
     with open(args.workflow, "r") as f:
         workflow_json = json.load(f)
@@ -110,7 +118,11 @@ if __name__ == "__main__":
         fixed_workflow_json = fix_workflow(workflow_json)
 
         executor = MultiprocWorkflowExecutor(
-            fixed_workflow_json, SurveyPaperReading, max_workers, max_inspectors
+            fixed_workflow_json,
+            SurveyPaperReading,
+            max_workers,
+            max_inspectors,
+            max_queue_size,
         )
         inputs = list_pdf_inputs(input_folder)
         executor.execute(inputs)

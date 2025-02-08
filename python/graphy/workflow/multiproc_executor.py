@@ -3,7 +3,8 @@ import time
 import traceback
 import threading
 
-from multiprocessing import Process, Manager, Queue
+from multiprocessing import Process, Queue
+from multiprocessing.managers import SyncManager
 from typing import Dict, Any, Type, List
 
 # These imports are assumed to exist in your project.
@@ -13,6 +14,69 @@ from workflow import BaseWorkflow
 from workflow.executor import WorkflowExecutor
 
 logger = logging.getLogger(__name__)
+
+
+# Define your custom progress class.
+class ProgressInfo:
+    def __init__(self):
+        self.curr_submitted_tasks = 0
+        self.curr_submitted_node_tasks = 0
+        self.curr_submitted_edge_tasks = 0
+        self.total_submitted_tasks = 0
+        self.total_submitted_node_tasks = 0
+        self.total_submitted_edge_tasks = 0
+
+    def __repr__(self) -> str:
+        return (
+            f"ProgressInfo ["
+            f" current_submitted_tasks (*, node, edge)=({self.curr_submitted_tasks}, {self.curr_submitted_node_tasks}, {self.curr_submitted_edge_tasks});"
+            f" total_submitted_tasks (*, node, edge)=({self.total_submitted_tasks}, {self.total_submitted_node_tasks}, {self.total_submitted_edge_tasks})"
+            f"]"
+        )
+
+    # Optionally, add methods to update the counters.
+    def update(self, is_node_task: bool = True, is_increment: bool = True):
+        if is_increment:
+            if is_node_task:
+                self.curr_submitted_node_tasks += 1
+                self.total_submitted_node_tasks += 1
+            else:
+                self.curr_submitted_edge_tasks += 1
+                self.total_submitted_edge_tasks += 1
+            self.curr_submitted_tasks += 1
+            self.total_submitted_tasks += 1
+        else:
+            if is_node_task:
+                self.curr_submitted_node_tasks -= 1
+            else:
+                self.curr_submitted_edge_tasks -= 1
+            self.curr_submitted_tasks -= 1
+
+    # define getters
+    def get_curr_submitted_tasks(self) -> int:
+        return self.curr_submitted_tasks
+
+    def get_curr_submitted_node_tasks(self) -> int:
+        return self.curr_submitted_node_tasks
+
+    def get_curr_submitted_edge_tasks(self) -> int:
+        return self.curr_submitted_edge_tasks
+
+    def get_total_submitted_tasks(self) -> int:
+        return self.total_submitted_tasks
+
+    def get_total_submitted_node_tasks(self) -> int:
+        return self.total_submitted_node_tasks
+
+    def get_total_submitted_edge_tasks(self) -> int:
+        return self.total_submitted_edge_tasks
+
+
+class ProgressManager(SyncManager):
+    pass
+
+
+ProgressManager.register("ProgressInfo", ProgressInfo)
 
 
 def worker_function(
@@ -83,25 +147,26 @@ class MultiprocWorkflowExecutor(WorkflowExecutor):
         workflow_class: Type[BaseWorkflow],
         max_workers: int = 4,
         max_inspectors: int = 100,
+        max_queue_size: int = 1000,
     ):
         self.workflow_json = workflow_json
         self.workflow = workflow_class.from_dict(workflow_json)
         self.workflow_class = workflow_class
         self.max_workers = max_workers
         self.max_inspectors = max_inspectors
+        self.max_queue_size = max_queue_size
         self.processed_inspectors = 0
 
     def execute(self, initial_inputs: List[DataType]):
         # Define a maximum size for our queues to help control memory usage.
-        max_queue_size = max(1000, len(initial_inputs) * 10)
+        # max_queue_size = max(self.max_queue_size, len(initial_inputs) * 10)
         # Use native multiprocessing Queues with a maxsize.
-        task_queue = Queue(maxsize=max_queue_size)
-        result_queue = Queue(maxsize=max_queue_size)
+        logger.debug(f"Max queue size: {self.max_queue_size}")
+        task_queue = Queue(maxsize=self.max_queue_size)
+        result_queue = Queue(maxsize=self.max_queue_size)
 
-        with Manager() as manager:
-            submitted_tasks = manager.Value("i", 0)
-            submitted_node_tasks = manager.Value("n", 0)
-            submitted_edge_tasks = manager.Value("e", 0)
+        with ProgressManager() as manager:
+            progress = manager.ProgressInfo()
             max_reached = manager.Value("b", False)
 
             # Start worker processes.
@@ -129,20 +194,18 @@ class MultiprocWorkflowExecutor(WorkflowExecutor):
                         result = result_queue.get(timeout=1)
                     except Exception:
                         # Timeout reached; if no tasks remain and termination is signaled, break.
-                        if max_reached.value and submitted_tasks.value <= 0:
+                        if (
+                            max_reached.value
+                            and progress.get_curr_submitted_tasks() <= 0
+                        ):
                             break
                         continue
 
-                    submitted_tasks.value -= 1
-                    if result["executor_type"] == "node":
-                        submitted_node_tasks.value -= 1
-                    else:
-                        submitted_edge_tasks.value -= 1
+                    progress.update(result["executor_type"] == "node", False)
 
                     logger.debug(f"Consume result: {result}")
-                    logger.debug(
-                        f"Check Progress: submitted_tasks = {submitted_tasks.value}, submitted_node_tasks = {submitted_node_tasks.value}, \
-                            submitted_edge_tasks = {submitted_edge_tasks.value}, max_reached = {max_reached.value}"
+                    logger.info(
+                        f"Check Progress: {progress}, Max Reached: {max_reached.value}"
                     )
 
                     if result["status_code"] != 200:
@@ -168,9 +231,7 @@ class MultiprocWorkflowExecutor(WorkflowExecutor):
                             result["executor"],
                             result["results"],
                             task_queue,
-                            submitted_tasks,
-                            submitted_node_tasks,
-                            submitted_edge_tasks,
+                            progress,
                         )
 
             consumer_thread = threading.Thread(target=consumer)
@@ -182,12 +243,14 @@ class MultiprocWorkflowExecutor(WorkflowExecutor):
                 task_queue.put(
                     {"input": data, "executor": first_node, "executor_type": "node"}
                 )
-                submitted_tasks.value += 1
-                submitted_node_tasks.value += 1
+
+                progress.update(True, True)
 
             # Main loop: wait until all tasks have been processed.
             try:
-                while submitted_tasks.value > 0 or not result_queue.empty():
+                while (
+                    progress.get_curr_submitted_tasks() > 0 or not result_queue.empty()
+                ):
                     time.sleep(0.1)
             finally:
                 # Signal termination.
@@ -214,9 +277,7 @@ class MultiprocWorkflowExecutor(WorkflowExecutor):
         executor: str,
         results: List[Any],
         task_queue: Queue,
-        submitted_tasks,
-        submitted_node_tasks,
-        submitted_edge_tasks,
+        progress: ProgressInfo,
     ):
         """
         Generate and enqueue downstream tasks based on results from the last executor.
@@ -235,8 +296,4 @@ class MultiprocWorkflowExecutor(WorkflowExecutor):
                 task_queue.put(
                     {"input": data, "executor": next_exec, "executor_type": next_type}
                 )
-                submitted_tasks.value += 1
-                if next_type == "node":
-                    submitted_node_tasks.value += 1
-                else:
-                    submitted_edge_tasks.value += 1
+                progress.update(next_type == "node", True)
