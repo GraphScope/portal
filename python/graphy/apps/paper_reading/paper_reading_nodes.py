@@ -596,12 +596,12 @@ class PaperInspector(BaseNode):
             DataGenerator: The output data generator from the node.
         """
 
+        logger.info(f"================= START INSPECT ==============")
         for input_data in input:
             paper_file_path = input_data.get("paper_file_path", None)
             paper_meta_path = input_data.get("paper_meta_path", None)
             parent_id = input_data.get("parent_id", None)
             edge_name = input_data.get("edge_name", "Navigator")
-            logger.info(f"================= START INSPECT ==============")
             logger.info(
                 f"Executing {self.name} for paper: {paper_file_path} with meta: {paper_meta_path}"
             )
