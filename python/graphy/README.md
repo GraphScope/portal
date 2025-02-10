@@ -219,24 +219,6 @@ The scraped data will be saved in the directory specified by [WF_OUTPUT_DIR](con
 - If the default workflow configuration is used, the workflow ID is `test_paper_scrapper`.
 
 
-### Building the Graph
-As illustrated in the figure above, the scrapped data naturally map to a structured graph model. In this graph:
-	- Primary nodes (or "Fact" nodes) represent papers, containing key extracted information.
-	- Connected nodes (or "Dimension" nodes) represent specific pieces of information extracted from the papers by the Inspector.
-	- The Navigator links papers to related papers, forming an interconnected web of academic resources.
-
-After the process is complete, the extracted data will be stored in the directory of `WF_OUTPUT_DIR`
-defined in [`config/__init__.py`](config/__init__.py). The following script can be used to graphy the extracted data.
-
-**Usage**:
-```bash
-python graph_builder.py -i <WF_OUTPUT_DIR> -o <you_output_dir>
-```
-
-A `_graph` folder can be found in `<you_output_dir>` containing the graph data in CSV files.
-
-With this structured database in place, various analyses can be conducted. We can move forward to the Online Surveyor to explore the graph data and generate the survey report.
-
 ## Getting Started with the Online Surveyor 🔍
 
 The simplest way to try out the **Online Surveyor** is via the [Vercel deployment](https://gsp.vercel.app/).
@@ -247,9 +229,18 @@ For local deployment, follow the instructions in the [GraphScope portal reposito
 ![Enable the Explore tool](inputs/figs/enable_explore.png "Enable the Explore tool")
 
 ### For Small Datasets: All In the Browser 🌐
-For small datasets, we allow users to import the above generated graph data into [kuzu-wasm](https://unswdb.github.io/kuzu-wasm/guide/what-is-kuzu-wasm.html). This tool provides a [browser-based interface](https://gsp.vercel.app/#/explore) for exploring and analyzing graph data.
+For small datasets, we allow users to import the graph data into [kuzu-wasm](https://unswdb.github.io/kuzu-wasm/guide/what-is-kuzu-wasm.html). This tool provides a [browser-based interface](https://gsp.vercel.app/#/explore) for exploring and analyzing graph data.
 
-Go to the **Explore** page, from the left sidebar, click on the following toggle for importing graph data.
+First, parse the scraped data into a graph format using the following command:
+
+```bash
+python graph_builder.py -i WF_OUTPUT_DIR -o <your_output_dir>
+```
+
+A `_graph` folder can be found in `<your_output_dir>` containing the graph data in CSV files.
+
+
+Then go to the **Explore** page, from the left sidebar, click on the following toggle for importing graph data.
 
 ![Connect Graph Db](inputs/figs/connect_graph_db.png "Connect Graph Db")
 
@@ -265,90 +256,22 @@ For larger datasets, we recommend using **[GraphScope Interactive](https://graph
 
 To leverage the power of GraphScope Interactive, you will need to follow the [installation instructions](https://graphscope.io/docs/latest/flex/interactive/installation) to install and start the GraphScope Interactive service.
 
-Once the service is up and running, follow these steps:
+Once the service is up and running, parse the scrapped data and import it into GraphScope using the following command:
 
----
+```bash
+python graph_builder.py
+      -i WF_OUTPUT_DIR
+      -o <your_output_dir>
+      -g <graph_instance_name>
+```
 
-**Step 1: Connect to GraphScope Interactive**
+The `<graph_instance_name>` is a unique name for the graph instance in GraphScope.
 
-1. Go to the **Explore** page in GraphScope Interactive.
-2. From the left sidebar, click on the toggle to import the graph data.
+> Note: When the data has already been parsed and saved in `<your_output_dir>`, you do not need to specify the `-i` options in the above command, which will skip the parsing process.
 
-![Connect Graph Db](inputs/figs/connect_graph_db.png "Connect Graph Db")
+You can check whether the graph instance is successfully created and running in GraphScope Interactive by clicking on the "Graphs" tab in the left page of GraphScope portal, as shown below:
 
-3. On the prompted page, enter the endpoint to connect to the Cypher query service of GraphScope Interactive (which uses the Neo4j bolt protocol). The default endpoint is:
-   `neo4j://127.0.0.1:7687`
-
-> Ensure the port matches the one specified in the [GraphScope Interactive configuration](https://graphscope.io/docs/latest/flex/interactive/installation).
-Click **"Connect"** to proceed.
-
----
-
-**Step 2: Import Graph Data**
-
-Unlike the kuzu-wasm, you will need to manually import graph data into GraphScope Interactive.
-
-1. In the GraphScope portal, click the toggle to open the web page for creating a new graph instance.
-2. Click **"Create Instance"**. On the prompted page, enter a unique name for your graph and click **"Create"**.
-
-![create graph instance](inputs/figs/create_graph.png "create graph instance")
-
----
-
-**Step 3: Data Importing**
-
-1. On the newly created graph instance page, click the toggle to open the data-importing page.
-2. Drag and drop the generated graph data files from the `_graph` folder into the canvas as instructed.
-3. Once the data is loaded, click **"Generate Graph Model"** to proceed.
-
-![data import](inputs/figs/data_import.png "data import ")
-
----
-
-**Step 4: Verify and Adjust the Graph Model**
-
-After generating the graph model from the imported data, you can:
-
-- Click on specific vertices or edges to verify the model.
-- Change the model if necessary (e.g., change the data type of "cited_by_count" to "SIGNED_INT32" instead of the default "STRING").
-
-Once satisfied with the model, click **"Save Modeling"**, then click **"Go to Importing"** to proceed.
-
-![data import check](inputs/figs/data_model_check.png "data model check ")
-
----
-
-**Step 5: Import Data into the Graph Instance**
-
-1. On the importing page, after a short wait, check for green ticks next to each vertex/edge. This indicates that the data is properly bound for importing.
-2. Once all vertices/edges are ticked, click **"Data source binding"** to import the data into the graph instance.
-
-![data bind check](inputs/figs/data_bind.png "data bind check")
-
----
-
-**Step 6: Finalize Data Import**
-
-1. In this final step, configure the following:
-   - **Quoting**: Set to **true**.
-   - **Quote Char**: Set to **"**.
-2. Click **"Load Data"** to begin the actual import process.
-
-![data load](inputs/figs/data_load.png "data load")
-
----
-
-**Step 7: Check Data Import Status**
-
-A page will prompt you with notifications about the data loading job. Click **"Goto Jobs"** to check the status.
-
-- If no errors occur, return to the **Explore** page to start exploring your graph data.
-
-![data load check](inputs/figs/data_load_check.png "data load check")
-
----
-
-With these steps completed, you're now ready to explore your graph data using GraphScope Interactive! 🚀
+![list_graphs](inputs/figs/list_graphs.png "list_graphs")
 
 ## Why is Graphy Needed?
 
