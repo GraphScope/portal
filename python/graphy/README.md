@@ -1,12 +1,9 @@
 # Graphy'ourdata 🚀
-Welcome to the **Graphy** prototype! This repository introduces an innovative platform designed to streamline **iterative exploration and synthesis** of large unstructured data, especially in academic research. Imagine being able to quickly explore, analyze, and synthesize massive networks of papers, all in one place—**Graphy** makes that possible.
+Welcome to the **Graphy** prototype! This repository introduces an innovative platform designed to streamline **iterative exploration and synthesis** of large unstructured data, such as conducting literature survey in academic research. Imagine being able to quickly explore, analyze, and synthesize massive networks of papers, all in one place—**Graphy** makes that possible.
 
 If you found Graphy helpful, please star [GraphScope](https://github.com/alibaba/graphscope) and [GraphScope Portal](https://github.com/graphscope/portal) projects on GitHub. Your support is what keeps us going! 🌟
 
 A [demonstration video of Graphy](https://www.youtube.com/watch?v=uM4nzkAdGlM) is available to walk you through the literature-survey process.
-
-[![Graphy'our Data](https://img.youtube.com/vi/uM4nzkAdGlM/0.jpg)](https://www.youtube.com/watch?v=uM4nzkAdGlM)
-
 
 ## What is Graphy capable of? 🤔
 
