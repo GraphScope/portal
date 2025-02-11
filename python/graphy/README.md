@@ -3,9 +3,9 @@ Welcome to the **Graphy** prototype! This repository introduces an innovative pl
 
 If you found Graphy helpful, please star [GraphScope](https://github.com/alibaba/graphscope) and [GraphScope Portal](https://github.com/graphscope/portal) projects on GitHub. Your support is what keeps us going! 🌟
 
-A demonstration video of Graphy is available to walk you through the literature-survey process.
+A demonstration video of [Graphy](https://www.youtube.com/watch?v=uM4nzkAdGlM) is available to walk you through the literature-survey process.
 
-<iframe width="852" height="480" src="https://www.youtube.com/embed/uM4nzkAdGlM" title="Graphy&#39;our Data: Towards End-to-End Modeling, Exploring and Generating Report from Raw Data" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<video width="852" height="480" src="https://www.youtube.com/embed/uM4nzkAdGlM" title="Graphy&#39;our Data: Towards End-to-End Modeling, Exploring and Generating Report from Raw Data" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></video>
 
 
 ## What is Graphy capable of? 🤔
