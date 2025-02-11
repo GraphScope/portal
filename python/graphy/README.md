@@ -55,6 +55,17 @@ The **Online Surveyor** is where the real exploration happens. Once the papers a
 
 The provided utility allows you to scrape research papers from arXiv. Using a set of seed papers as input, the scraper can iteratively fetch papers from the references of these seed papers. The process continues until a specified number of papers (`max_inspectors`) has been downloaded and processed. The paper scrapper supports interruption and can be safely terminated at any time. When relaunched, it will resume from where it stopped, ensuring continuity without reprocessing already completed tasks.
 
+Before running the scrapper, you need to prepare a set of
+seed papers in PDF format. Additionally, you have to configure the LLM for extracting dimension nodes from the paper.
+We adopt Alibaba's [QWen-plus model](https://help.aliyun.com/zh/model-studio/developer-reference/use-qwen-by-calling-api?spm=5176.29491866.J_oDITCw3yCnOebfmeWzqd_.5.361c2325uOi54v) as the default LLM
+model.
+
+```bash
+export DASHSCOPE_API_KEY=<youR_dashscope_api_key>
+```
+
+To use other models, please refer to the configuration of[LLM model](#the-llm_config-field) while setting the workflow.
+
 **Usage**:
 ```bash
 python paper_scrapper.py \
@@ -66,7 +77,7 @@ python paper_scrapper.py \
 
 - `--max-workers`, or `-w` (optional): Specifies the maximum number of parallel workers (default: 4).
 - `--max-inspectors`, or `-i` (optional): Defines the maximum number of papers to fetch (default: 100).
-- `--workflow`, or `-f` (optional): Path to a workflow configuration file. If not provided, the default configuration file [`config/workflow.json`](config/workflow.json) will be used. Details on configuring a workflow are provided below.
+- `--workflow`, or `-f` (optional): Path to a workflow configuration file. If not provided, the default configuration file [`config/workflow.json`](config/workflow.json) will be used. If needed, [configure the workflow](#workflow-settings).
 - `--max-queue-size`, or `-q` (optional): Defines the maximum tasks that can be queued (default: 1000). If the memory is limited, reduce this value.
 - `<path_to_seed_papers>`: Provide the path containing seed papers. Each paper is a PDF document.
 
