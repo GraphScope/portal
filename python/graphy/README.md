@@ -12,7 +12,7 @@ Graphy is designed to make your literature survey process **faster, smarter, and
 - **Write Related Work**: From an already collected set of papers, you can use Graphy to automatically draft a related work section for your own paper. It’s like having an assistant write the first draft for you! ✍️
   - Brief guide: Prepare the already selected paper PDF files; use the [offline scrapper](#getting-started-with-the-offline-scrapper), with [inspector-only workflow](config/workflow_inspector.json) configuration; then [import the scrapped data to kuzu-wasm](#for-small-datasets-all-in-the-browser-); and querying all papers in the **Explore** canvas to generate the related work section.
 
-- **Build an Academic Network**: Start with a few seed papers, and let Graphy help you build a network of academic research. Explore connections, references, and much more. 📚🌐
+- **Build an Academic Network**: Start with a few seed papers, and let Graphy help you build a network of academic research. Explore connections, references, and much more. 📚
   - Brief guide: Prepare the seed paper PDF files; use the [offline scrapper](#getting-started-with-the-offline-scrapper), with [inspector-navigator workflow](config/workflow.json) configuration; once completed, [import the scrapped data to GraphScope Interactive](#for-larger-datasets-using-graphscope-interactive-). We have pre-scrapped a [paper network](todo) with over 50,000 papers and 130,000 references from arXiv for test purpose.
 
 - **Conduct Literature Survey**: With a pre-built academic network, you can explore related papers, track research trends, and generate a literature survey report based on your research focus. It’s the perfect tool for organizing and synthesizing research findings. 📊
@@ -53,17 +53,18 @@ The **Online Surveyor** is where the real exploration happens. Once the papers a
   export PYTHONPATH=$PYTHONPATH:$(pwd)
   ```
 
-The provided utility allows you to scrape research papers from arXiv. Using a set of seed papers as input, the scraper can iteratively fetch papers from the references of these seed papers. The process continues until a specified number of papers (`max_inspectors`) has been downloaded and processed. The paper scrapper supports interruption and can be safely terminated at any time. When relaunched, it will resume from where it stopped, ensuring continuity without reprocessing already completed tasks.
+The provided `paper_scrapper` utility allows you to scrape research papers from [arXiv](arxiv.com). Using a set of seed papers as input, the scraper can iteratively fetch papers from the references of these seed papers. The process continues until a specified number of papers (`max_inspectors`) has been downloaded and processed. The paper scrapper supports interruption and can be safely terminated at any time. When relaunched, it will resume from where it stopped, ensuring continuity without reprocessing already completed tasks.
 
-Before running the scrapper, you have to configure the LLM for extracting dimension nodes from the paper.
-We adopt OpenAI's [gpt-4o-mini](https://platform.openai.com/docs/models#gpt-4o) as the default LLM model.
+Before running the scraper, you need to configure the LLM for extracting dimension nodes from papers. By default, OpenAI’s [GPT-4o-mini](https://platform.openai.com/docs/models#gpt-4o) is used.
+Set your API key as an environment variable:
 
 ```bash
 export OPENAI_API_KEY=<your_openai_api_key>
 ```
 
-To use alternative models, such as [DeepSeek](https://deepseek.com) and [QWen](https://tongyi.aliyun.com/),
-please refer to the configuration of[LLM model](#the-llm_config-field) while setting the workflow.
+If you prefer to use other models, such as [DeepSeek](https://deepseek.com) or [QWen](https://tongyi.aliyun.com/), you can configure them in one of the following ways:
+- Modify the default model: open [`models/__init__.py`](models/__init__.py) and modify the `DEFAULT_LLM_MODEL_CONFIG` variable.
+- Set up the model in your workflow configuration: Refer to the LLM model configuration section for detailed [instructions](#the-llm_config-field).
 
 **Usage**:
 ```bash
@@ -157,9 +158,6 @@ This option supports locally deployed LLM models through [Ollama](https://ollama
         }
     }
     ```
-
-
-> Note: If no LLM model is specified for a dataset, a default model configuration will be applied. To customize this default, open [`models/__init__.py`](models/__init__.py) and modify the `DEFAULT_LLM_MODEL_CONFIG` variable.
 
 
 #### The `graph` field
@@ -289,7 +287,7 @@ python graph_builder.py \
 
 The `<graph_instance_name>` is a unique name for the graph instance in GraphScope.
 
-> Note: When the data has already been parsed and saved in `<your_output_dir>`, you do not need to specify the `-i` options in the above command, which will skip the parsing process.
+> **Note**: When the data has already been parsed and saved in `<your_output_dir>`, you do not need to specify the `-i` options in the above command, which will skip the parsing process.
 
 You can check whether the graph instance is successfully created and running in GraphScope Interactive by clicking on the "Graphs" tab in the left page of GraphScope portal, as shown below:
 
@@ -304,33 +302,35 @@ You can check whether the graph instance is successfully created and running in 
 
 3. On the prompted page, enter the endpoint to connect to the Cypher query service of GraphScope Interactive (which uses the Neo4j bolt protocol). Click **"Connect"** to proceed.
 
-  > The default endpoint is: `neo4j://127.0.0.1:7687`. Ensure the endpoint (ip:port) matches the one specified in the [GraphScope Interactive configuration](https://graphscope.io/docs/latest/flex/interactive/installation).
+  > **Note**: The default endpoint is: `neo4j://127.0.0.1:7687`. Ensure the endpoint (ip:port) matches the one specified in the [GraphScope Interactive configuration](https://graphscope.io/docs/latest/flex/interactive/installation).
+
+  ![Load to Interactive](inputs/figs/load_to_interactive.png "Load to Interactive")
 
 
 ### Explore Your Data and Generate Report 📊
 Once you have prepared importing the scrapped data into either kuzu-wasm or GraphScope Interactive, you can start exploring and analyzing the data. The **Explore** tool provides a user-friendly interface for navigating the graph, visualizing connections, and generating the report.
 
-Go back to the **Explore** page.
+Go back to the **Explore** page, which features three primary canvases, metaphorically referred to as
+"Past", "Present", and "Future". Here, "Past" displays already explored papers, and "Present" shows the currently active papers for reviewing in detail, while "Future" highlights the immediate neighbors (i.e., references) of the active papers. The iterative exploration process has the following steps:
 
 ![scenario explore](inputs/figs/scenario_explore.png "scenario explore")
 
-As illustrated in the above figure, the **Explore** interface features three primary canvases, metaphorically referred to as
-"Past", "Present", and "Future". Here, "Past" displays already explored papers, and "Present" shows the currently active papers for reviewing in detail, while "Future" highlights the immediate neighbors (i.e., references) of the active papers.
 
-A exploration process experiences the following steps:
- 1. search for seed papers whose titles contain “Llama3” using the \search~ module.
+ 1. search for seed papers whose titles contain “Llama3” using the search bar.
  2. select “The Llama 3 Herd of Models” and moves it to the "Present" canvas to review its details.
  3. explore the selected paper’s references by pre-querying its neighbors. These neighbors are not immediately added to the canvas to avoid overwhelming the user.
  4. present a histogram or table view, allowing users to focus on aggregated groups or order the data.
  5. decide from the top-k papers for further exploration. By doing so, these papers are added to the "Present" canvas, while the previously active papers move to the "Past" canvas.
 
-By iteratively following this workflow, users can explore as many papers as needed, before proceeding to generating the report. Click on the following toggle in the left-side bar of the **Explore** page for report generation.
+By iteratively following this workflow, users can explore as many papers as needed, before proceeding to generating the report. Click on the following "GPT" toggle in the left-side bar of the **Explore** page for report generation. Remember to configure the LLM model for report generation.
 
 ![Generate Report](inputs/figs/generate_report.png "Generate Report")
 
+
+The report regeneration goes through the following steps:
+
 ![scenario report](inputs/figs/scenario_report.png "scenario report")
 
-As illustrated in the above figure, the report generation goes through the following steps:
 
 6. click to input instructions for the report, e.g., "Please write me a related work, focusing on their challenge". Based on this input, an LLM identifies the relevant attributes and dimension nodes needed for the report.
 7. attributes and dimension nodes are displayed for user verification and possible modification. In the example, the LLM highlights the "Challenge" node as well as the "title" and "abstract" attributes from the selected papers.
