@@ -7,7 +7,7 @@ import DataAnalysis from './DataAnalysis';
 import ComplexSupport from './ComplexSupport';
 
 const Home = () => (
-  <Flex gap={48} vertical>
+  <Flex gap={60} vertical>
     <InteractiveEngine />
     <GraphScopeInstall />
     <DownloadStatistics />

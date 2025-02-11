@@ -11,7 +11,7 @@ import Solutions from './Solutions';
 
 const Solution = () => {
   return (
-    <Flex vertical gap={48}>
+    <Flex vertical gap={60}>
       <InteractiveEngine />
       <SolutionInfo />
       <VisualizeAnalyze />

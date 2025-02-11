@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Flex, Button, Card, Row, Col } from 'antd';
+import { Typography, Flex, Button, Card, Row, Col, theme } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { gradientTextStyle } from './const';
 import StyledButton from './StyledButton';
@@ -9,7 +9,6 @@ const { Title, Text, Paragraph } = Typography;
 // 定义可复用的样式对象
 const titleStyle: React.CSSProperties = { margin: 0 };
 const subtitleStyle: React.CSSProperties = { ...titleStyle, fontSize: '60px' };
-const descriptionStyle: React.CSSProperties = { color: '#646265', fontSize: '24px' };
 const buttonGroupStyle: React.CSSProperties = { fontSize: '14px', fontWeight: 'bold' };
 const cardStyle: React.CSSProperties = { width: '45%', whiteSpace: 'nowrap' };
 const codeBlockStyle: React.CSSProperties = {
@@ -42,15 +41,18 @@ const InstallCard: React.FC<InstallCardProps> = ({ os }) => (
 );
 
 const InteractiveEngine: React.FC = () => {
+  const { token } = theme.useToken();
+  console.log(token);
+
   return (
-    <Row style={{ padding: '6% 0%' }} gutter={[16, 32]}>
+    <Row style={{ paddingTop: '6%' }} gutter={[16, 32]}>
       <Col xs={24} sm={14} md={20} lg={20} xl={20}>
         <Flex vertical gap={24}>
           <Title style={subtitleStyle}>
             <span style={gradientTextStyle}>Unleash the Power of Graph Data</span>
           </Title>
           <Title style={titleStyle}>GraphScope Interactive Engine</Title>
-          <Text style={descriptionStyle}>
+          <Text style={{ color: token.colorTextDescription, fontSize: '24px' }}>
             High-performance graph processing and analytics for enterprise-scale applications
           </Text>
           <Flex align="center" gap={14}>

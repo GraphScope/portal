@@ -23,6 +23,7 @@ const styles: Record<string, React.CSSProperties> = {
 export default () => {
   const [isCopied, setIsCopied] = useState(false);
   const { token } = theme.useToken();
+
   const myTheme = createTheme({
     theme: 'light',
     settings: {
