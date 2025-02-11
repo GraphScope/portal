@@ -55,16 +55,15 @@ The **Online Surveyor** is where the real exploration happens. Once the papers a
 
 The provided utility allows you to scrape research papers from arXiv. Using a set of seed papers as input, the scraper can iteratively fetch papers from the references of these seed papers. The process continues until a specified number of papers (`max_inspectors`) has been downloaded and processed. The paper scrapper supports interruption and can be safely terminated at any time. When relaunched, it will resume from where it stopped, ensuring continuity without reprocessing already completed tasks.
 
-Before running the scrapper, you need to prepare a set of
-seed papers in PDF format. Additionally, you have to configure the LLM for extracting dimension nodes from the paper.
-We adopt Alibaba's [QWen-plus model](https://help.aliyun.com/zh/model-studio/developer-reference/use-qwen-by-calling-api?spm=5176.29491866.J_oDITCw3yCnOebfmeWzqd_.5.361c2325uOi54v) as the default LLM
-model.
+Before running the scrapper, you have to configure the LLM for extracting dimension nodes from the paper.
+We adopt OpenAI's [gpt-4o-mini](https://platform.openai.com/docs/models#gpt-4o) as the default LLM model.
 
 ```bash
-export DASHSCOPE_API_KEY=<youR_dashscope_api_key>
+export OPENAI_API_KEY=<your_openai_api_key>
 ```
 
-To use other models, please refer to the configuration of[LLM model](#the-llm_config-field) while setting the workflow.
+To use alternative models, such as [DeepSeek](https://deepseek.com) and [QWen](https://tongyi.aliyun.com/),
+please refer to the configuration of[LLM model](#the-llm_config-field) while setting the workflow.
 
 **Usage**:
 ```bash
