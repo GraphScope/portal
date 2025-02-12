@@ -1,5 +1,5 @@
 # Graphy'ourdata 🚀
-Welcome to the **Graphy** prototype! This repository introduces an innovative platform designed to streamline **iterative exploration and synthesis** of large unstructured data, such as conducting literature survey in academic research. Imagine being able to quickly explore, analyze, and synthesize massive networks of papers, all in one place—**Graphy** makes that possible.
+Welcome to the **Graphy**! This repository introduces an innovative platform designed to streamline **iterative exploration and synthesis** of large unstructured data, such as conducting literature survey in academic research. Imagine being able to quickly explore, analyze, and synthesize massive networks of papers, all in one place—**Graphy** makes that possible.
 
 If you found Graphy helpful, please star [GraphScope](https://github.com/alibaba/graphscope) and [GraphScope Portal](https://github.com/graphscope/portal) projects on GitHub. Your support is what keeps us going! 🌟
 
@@ -13,7 +13,7 @@ Graphy is designed to make your literature survey process **faster, smarter, and
   - Brief guide: Prepare the already selected paper PDF files; use the [offline scrapper](#getting-started-with-the-offline-scrapper), with [inspector-only workflow](config/workflow_inspector.json) configuration; then [import the scrapped data to kuzu-wasm](#for-small-datasets-all-in-the-browser-); and querying all papers in the **Explore** canvas to generate the related work section.
 
 - **Build an Academic Network**: Start with a few seed papers, and let Graphy help you build a network of academic research. Explore connections, references, and much more. 📚
-  - Brief guide: Prepare the seed paper PDF files; use the [offline scrapper](#getting-started-with-the-offline-scrapper), with [inspector-navigator workflow](config/workflow.json) configuration; once completed, [import the scrapped data to GraphScope Interactive](#for-larger-datasets-using-graphscope-interactive-). We have pre-scrapped a [paper network](todo) with over 50,000 papers and 130,000 references from arXiv for test purpose.
+  - Brief guide: Prepare the seed paper PDF files; use the [offline scrapper](#getting-started-with-the-offline-scrapper), with [inspector-navigator workflow](config/workflow.json) configuration; once completed, [import the scrapped data to GraphScope Interactive](#for-larger-datasets-using-graphscope-interactive-). We have pre-scrapped a [paper network](https://graphscope.oss-cn-beijing.aliyuncs.com/graphy/arxiv_paper_graph.zip) with over 50,000 papers and 130,000 references from arXiv for test purpose.
 
 - **Conduct Literature Survey**: With a pre-built academic network, you can explore related papers, track research trends, and generate a literature survey report based on your research focus. It’s the perfect tool for organizing and synthesizing research findings. 📊
   - Brief Guide: An online tool is available at [demo page](https://gsp.blue) for you to explore the above pre-scrapped paper network.
