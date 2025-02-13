@@ -1,87 +1,93 @@
-# Graphy'ourData
-Have you heard the buzz about the incredible power of large language models (LLMs) and their advanced applications, like Retrieval-Augmented Generation (RAG) or AI Agents? It’s exciting, right? But here’s the real challenge:
+# Graphy'ourdata 🚀
+Welcome to the **Graphy**! This repository introduces an innovative platform designed to streamline **iterative exploration and synthesis** of large unstructured data, such as conducting literature survey in academic research. Imagine being able to quickly explore, analyze, and synthesize massive networks of papers, all in one place—**Graphy** makes that possible.
 
-> How can you truly empower your existing data with these cutting-edge techniques—especially when your data is mostly unstructured?
+If you found Graphy helpful, please star [GraphScope](https://github.com/alibaba/graphscope) and [GraphScope Portal](https://github.com/graphscope/portal) projects on GitHub. Your support is what keeps us going! 🌟
 
-Preprocessing unstructured data is often a tedious and time-consuming task. And let’s not forget, building a practical, LLM-based system that can fully leverage the potential of your data? That can be an even bigger hurdle.
+A [demonstration video of Graphy](https://www.youtube.com/watch?v=uM4nzkAdGlM) is available to walk you through the literature-survey process.
 
-**Graphy** is an intuitive end-to-end platform that transforms unstructured data into actionable insights. Unstructured data often hides valuable information, making it difficult to access and utilize. Graphy bridges this gap by leveraging LLMs to effortlessly extract meaningful structures from unstructured data, transforming it into an organized graph format. This enables intuitive visualization, seamless exploration, and powerful LLM-based analysis, unlocking the full potential of your data.
+## What is Graphy capable of? 🤔
 
-![graphy](inputs/figs/workflow.png "The pipeline of Graphy")
+Graphy is designed to make your literature survey process **faster, smarter, and easier**. Whether you're writing related work sections, building academic networks, or conducting a full-blown literature survey, Graphy has got you covered:
 
-This repository introduces the initial prototype of the Graphy platform, as illustrated above, with a focus on academic papers, which are often publicly accessible. In this prototype, the primary unstructured data consists of research paper PDFs. Graphy’s workflow is built upon two key abstractions:
-- **Inspector**: The Inspector abstraction defines the structured information to be extracted from papers. It utilizes an inner Directed Acyclic Graph (DAG), where each subnode represents specific instructions for LLMs to extract targeted information from the paper. This DAG mirrors the commonly referenced ["Tree of Thought"](https://arxiv.org/abs/2305.10601)  pipeline in the LLM literature.
-- **Navigator**: The Navigator abstraction determines how related papers can be fetched and processed via the Inspector. Currently, three navigators are available for fetching references of papers:
-    - [PaperNavigateArxivEdge](./apps/paper_reading/paper_navigate_edge.py) for fetching PDFs from [ArXiv](https://arxiv.org/). Arxiv is rich in academic papers, particularly in the fields of artificial intelligence, machine learning, and computer vision.
-	- [PaperNavigateScholarEdge](./apps/paper_reading/paper_navigate_edge.py) for fetching PDFs from [Google Scholar](http://scholar.google.com/). Google Scholar is a comprehensive academic search engine that indexes a wide range of academic papers, including those from journals, conferences, and preprint repositories.
-	- [PaperNavigatePubMedEdge](./apps/paper_reading/paper_navigate_edge.py) for fetching paper information from [PubMed](https://pubmed.ncbi.nlm.nih.gov/). PubMed is a free search engine that indexes biomedical literature, including research articles, reviews, and clinical studies. Note that it may not be able to download paper PDFs directly from PubMed.
+- **Write Related Work**: From an already collected set of papers, you can use Graphy to automatically draft a related work section for your own paper. It’s like having an assistant write the first draft for you! ✍️
+  - Brief guide: Prepare the already selected paper PDF files; use the [offline scrapper](#getting-started-with-the-offline-scrapper), with [inspector-only workflow](config/workflow_inspector.json) configuration; then [import the scrapped data to kuzu-wasm](#for-small-datasets-all-in-the-browser-); and querying all papers in the **Explore** canvas to generate the related work section.
 
-These navigators enable the creation of a rich, interconnected database of academic papers.
+- **Build an Academic Network**: Start with a few seed papers, and let Graphy help you build a network of academic research. Explore connections, references, and much more. 📚
+  - Brief guide: Prepare the seed paper PDF files; use the [offline scrapper](#getting-started-with-the-offline-scrapper), with [inspector-navigator workflow](config/workflow.json) configuration; once completed, [import the scrapped data to GraphScope Interactive](#for-larger-datasets-using-graphscope-interactive-). We have pre-scrapped a [paper network](https://graphscope.oss-cn-beijing.aliyuncs.com/graphy/arxiv_paper_graph.zip) with over 50,000 papers and 130,000 references from arXiv for test purpose.
 
-## Workflow to Graph Mapping
-As illustrated in the figure above, the workflow maps naturally to a structured graph model. In this graph:
-	- Primary nodes (or "Fact" nodes) represent papers, containing key extracted information.
-	- Connected nodes (or "Dimension" nodes) represent specific pieces of information extracted from the papers by the Inspector.
-	- The Navigator links papers to related papers, forming an interconnected web of academic resources.
+- **Conduct Literature Survey**: With a pre-built academic network, you can explore related papers, track research trends, and generate a literature survey report based on your research focus. It’s the perfect tool for organizing and synthesizing research findings. 📊
+  - Brief Guide: An online tool is available at [demo page](https://gsp.blue) for you to explore the above pre-scrapped paper network.
 
-With this structured database in place, various analyses can be conducted. Our [frontend server](../../examples/graphy/README.md) demonstrates data visualizations, exploration tools, and analytics that support numerous downstream tasks, including tracking research trends, drafting related work sections, and generating prompts for slide creation—all with just a few clicks.
+## The Architecture of Graphy 🛠 ️
 
-## Potential Extensions
+![graphy](inputs/figs/graphy_arch.png "The architecture of Graphy")
 
-- **Customized Inspector**: The Inspector can be tailored to extract any type of information from paper documents. It can also be extended to handle other types of unstructured data, such as legal documents, medical records, or financial reports.
-- **Customized Navigator**: The Navigator can be expanded to fetch data from additional sources, such as PubMed, IEEE, or Springer. Furthermore, navigators could be developed to connect papers to supplementary sources like GitHub repositories, enabling even richer datasets and analyses.
+As shown in the above figure, Graphy is designed with two main components that work together to streamline your research workflow: **Offline Scrapper** and **Online Surveyor**.
+
+The **Offline Scrapper** is responsible for gathering and organizing data from research papers into a structured graph. It has two key abstractions:
+- **Inspector**: Extracts essential information from each paper, such as challenges or solutions. Each paper is modelled as a **fact node**, while its extracted information is organized into **dimension nodes**.
+- **Navigator**: Expands the network by following references from one paper to others, connecting them into a **fact node** network.
+
+The **Online Surveyor** is where the real exploration happens. Once the papers are organized in the offline stage, this tool lets you:
+- **Search and navigate** through the network and **Explore connections** between papers, based on your focus or research interest.
+- **Generate insights** for writing your literature survey or related work sections.
 
 
+## Getting Started with the Offline Scrapper
 
+**Prerequisites:**
 
-# Install Dependencies
+- Python 3.10+
 
-## Prerequisites
+- Install Python Dependencies
 
-- Python 3.10
+  ```bash
+  python -m venv venv
+  source venv/bin/activate
+  pip install -r requirements.txt
+  ```
 
-## Python Dependencies
+- Setting Python Environment: We have not built and installed the python package yet. So, it is important to add the path to the python package to the `PYTHONPATH` before running the server.
+
+  ```bash
+  export PYTHONPATH=$PYTHONPATH:$(pwd)
+  ```
+
+The provided `paper_scrapper` utility allows you to scrape research papers from [arXiv](arxiv.com). Using a set of seed papers as input, the scraper can iteratively fetch papers from the references of these seed papers. The process continues until a specified number of papers (`max_inspectors`) has been downloaded and processed. The paper scrapper supports interruption and can be safely terminated at any time. When relaunched, it will resume from where it stopped, ensuring continuity without reprocessing already completed tasks.
+
+Before running the scraper, you need to configure the LLM for extracting dimension nodes from papers. By default, OpenAI’s [GPT-4o-mini](https://platform.openai.com/docs/models#gpt-4o) is used.
+Set your API key as an environment variable:
 
 ```bash
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+export OPENAI_API_KEY=<your_openai_api_key>
 ```
 
-## Setting Python Environment
-We have not built and installed the python package yet. So, it is important to add the path to the python package to the `PYTHONPATH` before running the server.
-
-```bash
-export PYTHONPATH=$PYTHONPATH:$(pwd)
-```
-
-# Run Offline Paper Scrapper
-The provided utility allows you to scrape research papers from arXiv. Using a set of seed papers as input, the scraper can iteratively fetch papers from the references of these seed papers. The process continues until a specified number of papers (`max_inspectors`) has been downloaded and processed. The paper scraper supports interruption and can be safely terminated at any time. When relaunched, it will resume from where it stopped, ensuring continuity without reprocessing already completed tasks.
+If you prefer to use other models, such as [DeepSeek](https://deepseek.com) or [QWen](https://tongyi.aliyun.com/), you can configure them in one of the following ways:
+- Modify the default model: open [`models/__init__.py`](models/__init__.py) and modify the `DEFAULT_LLM_MODEL_CONFIG` variable.
+- Set up the model in your workflow configuration: Refer to the LLM model configuration section for detailed [instructions](#the-llm_config-field).
 
 **Usage**:
 ```bash
-python paper_scrapper.py --max-workers 4 --max-inspectors 500 --workflow <path_to_workflow> <path_to_seed_papers>
+python paper_scrapper.py \
+  --max-workers 4 \
+  --max-inspectors 500 \
+  --workflow <path_to_workflow> \
+  <path_to_seed_papers>
 ```
 
-- `--max-workers` (optional): Specifies the maximum number of parallel workers (default: 4).
-- `--max-inspectors` (optional): Defines the maximum number of papers to fetch (default: 100).
-- `--workflow` (optional): Path to a workflow configuration file. If not provided, the default configuration file [`config/workflow.json`](config/workflow.json) will be used.
+- `--max-workers`, or `-w` (optional): Specifies the maximum number of parallel workers (default: 4).
+- `--max-inspectors`, or `-i` (optional): Defines the maximum number of papers to fetch (default: 100).
+- `--workflow`, or `-f` (optional): Path to a workflow configuration file. If not provided, the default configuration file [`config/workflow.json`](config/workflow.json) will be used. If needed, [configure the workflow](#workflow-settings).
+- `--max-queue-size`, or `-q` (optional): Defines the maximum tasks that can be queued (default: 1000). If the memory is limited, reduce this value.
 - `<path_to_seed_papers>`: Provide the path containing seed papers. Each paper is a PDF document.
 
-After the process is complete, the extracted data will be stored in the directory of `WF_OUTPUT_DIR`
-defined in [`config/__init__.py`](config/__init__.py). The following script can be used to graphy the extracted data.
+The scrapped data will be saved in the directory specified by [WF_OUTPUT_DIR](config/__init__.py), under a subdirectory named after your workflow ID (`<your_workflow_id>`).
+- If the default workflow configuration is used, the workflow ID is `test_paper_scrapper`.
 
-**Usage**:
-```bash
-python graph_builder.py -i <WF_OUTPUT_DIR> -o <you_output_dir>
-```
-
-A `_graph` folder can be found in `<you_output_dir>` containing the graph data in CSV files.
-
-# Workflow Configuration
+### Workflow Settings
 Refer to an [example](config/workflow.json) for a workflow with Paper Inspector and Reference Navigator. Below are instructions on the following key fields in a workflow: `id`, `llm_config`, and `graph`.
 
-## The `id` field
+#### The `id` field
 The `id` field uniquely identifies the workflow. This can be any descriptive string or a generated ID.
 
 **Example**:
@@ -89,7 +95,7 @@ The `id` field uniquely identifies the workflow. This can be any descriptive str
 "id": "test_paper_inspector"
 ```
 
-## The `llm_config` field
+#### The `llm_config` field
 The `llm_config` field configures the large language model (LLM) used in the workflow
   - `llm_model`: Specifies the LLM (e.g., qwen-plus).
   - `base_url`: The API endpoint for the LLM service.
@@ -98,7 +104,7 @@ The `llm_config` field configures the large language model (LLM) used in the wor
 
 We currently offer two options for configuring an LLM model:
 - **Option 1: Using OpenAI-Compatible APIs**
-This option supports OpenAI and other providers offering compatible APIs. To configure, provide the llm_model, base_url, api_key, and any additional model arguments. The example below demonstrates using [OpenAI](https://platform.openai.com/) and Alibaba’s [DashScope](https://help.aliyun.com/zh/dashscope/developer-reference/compatibility-of-openai-with-dashscope).
+This option supports OpenAI and other providers offering compatible APIs. To configure, provide the llm_model, base_url, api_key, and any additional model arguments. The example below demonstrates using [OpenAI](https://platform.openai.com/), Alibaba’s [DashScope](https://help.aliyun.com/zh/dashscope/developer-reference/compatibility-of-openai-with-dashscope), and [DeepSeek](https://www.deepseek.com/).
 
     **Example of OpenAI**:
     ```json
@@ -126,6 +132,19 @@ This option supports OpenAI and other providers offering compatible APIs. To con
     }
     ```
 
+    **Example of Deepseek**:
+    ```json
+    "llm_config": {
+        "llm_model": "deepseek-chat",
+        "base_url": "https://api.deepseek.com/v1",
+        "api_key": "xx",
+        "model_kwargs": {
+            "temperature": 0,
+            "streaming": true
+        }
+    }
+    ```
+
 - **Option 2: Using Locally Deployed Models with Ollama**
 This option supports locally deployed LLM models through [Ollama](https://ollama.com/). Set llm_model to `ollama/<ollama_model_name>` to specify a model. For instance, the following settings configure the locally deployed Llama3.1 model (defaulting to 8b) from Ollama:
 
@@ -141,13 +160,10 @@ This option supports locally deployed LLM models through [Ollama](https://ollama
     ```
 
 
-> Note: If no LLM model is specified for a dataset, a default model configuration will be applied. To customize this default, open [`models/__init__.py`](models/__init__.py) and modify the `DEFAULT_LLM_MODEL_CONFIG` variable.
-
-
-## The `graph` field
+#### The `graph` field
 The graph field defines the structure of the workflow, comprising inspectors and navigators.
 
-### Inspectors
+##### Inspectors
 
 - Inspectors define workflows for extracting structured information from unstructured data.
 - Each inspector can contain a graph (an inner workflow) with:
@@ -191,7 +207,7 @@ We further explain the `extract_from` field for a node within an Inspector, whic
 }
 ```
 
-### Navigators
+##### Navigators
 Currently, the only thing to configure in a navigator is the connected Inspector nodes. The following
 most simple navigator configuration uses `PaperNavigateArxivEdge` by default.
 
@@ -220,199 +236,136 @@ and can be blocked if used excessively.
 > The `navigators` can be left empty, as in [workflow_inspector](config/workflow_inspector.json),
 which will only process Paper Inspector without Reference Navigator.
 
-The scraped data will be saved in the directory specified by [WF_OUTPUT_DIR](config/__init__.py), under a subdirectory named after your workflow ID (`<your_workflow_id>`).
-- If the default workflow configuration is used, the workflow ID is `test_paper_scrapper`.
 
-# Run Backend Server
-A backend demo application is included in this project, accessible as a standalone server.
+## Getting Started with the Online Surveyor 🔍
 
-**Usage**:
-```bash
-python apps/demo_app.py
-```
+The simplest way to try out the **Online Surveyor** is via the [Vercel deployment](https://gsp.vercel.app/).
+> **Note:** A VPN may be necessary to access this page from China mainland.
 
-The server will be running on `http://localhost:9999` by default. A GUI [frontend](../../examples/graphy/README.md) is provided to demonstrate the graphy process.
+For local deployment, follow the instructions in the [GraphScope portal repository](https://github.com/GraphScope/portal/tree/main). Make sure to enable the experimental **Explore** feature in the portal configuration, as shown below:
 
-# Instruction of Backend APIs
+![Enable the Explore tool](inputs/figs/enable_explore.png "Enable the Explore tool")
 
-## Dataset
+### For Small Datasets: All In the Browser 🌐
+For small datasets, we allow users to import the graph data into [kuzu-wasm](https://unswdb.github.io/kuzu-wasm/guide/what-is-kuzu-wasm.html). This tool provides a [browser-based interface](https://gsp.vercel.app/#/explore) for exploring and analyzing graph data, without the need for a graph database service.
 
-### Create dataset
-Create dataset from a single paper, or a zip package of multiple papers. All papers must be in PDF format. We have provided a sample `graphrag.pdf` file in the `input` directory for going through
-the demo. The `dataset_id` for this paper is: `c1933784c9edd51a`.
+First, parse the scrapped data into a graph format using the following command:
 
 ```bash
-curl -X POST "http://localhost:9999/api/dataset" -F "file=@inputs/samples/graphrag.pdf"
+python graph_builder.py \
+  -i <your_scrapped_data_dir> \
+  -o <your_output_dir>
 ```
 
-### Get dataset's metadata
+If you use the default settings for processing the offline scraper, `<your_scrapped_data_dir>` will be located at [WF_OUTPUT_DIR](config/__init__.py)/test_paper_scrapper. Inside `<your_output_dir>`, you will find a `_graph` folder containing the graph data in CSV format.
 
-Get dataset's metadata by `dataset_id`, including the id, llm_config, and its workflow for extracting the paper, if configured.
+
+Please wait a moment while the data is being prepared. Once ready, navigate to the **Explore** page, from the left sidebar, click on the following toggle for importing graph data.
+
+![Connect Graph Db](inputs/figs/connect_graph_db.png "Connect Graph Db")
+
+On the prompted page, drag and drop the generated graph data files from the `_graph` folder into the right canvas as instructed. Once the data is imported, you can Click on "Load CSV Files with Kuzu WASM" to proceed.
+
+![Load to kuzu-wasm](inputs/figs/load_to_wasm_db.png "Load to kuzu-wasm")
+
+### For Larger Datasets: Using GraphScope Interactive 🚀
+
+For larger datasets, we recommend using **[GraphScope Interactive](https://graphscope.io/docs/latest/flex/interactive_intro)**, which supports advanced features such as graph-algorithm support and **[record-breaking](https://ldbcouncil.org/benchmarks/snb/LDBC_SNB_I_20240514_SF100-300-1000_graphscope.pdf)** graph-query performance.
+
+**Step 1: Installing GraphScope Interactive**
+
+To leverage the power of GraphScope Interactive, you will need to follow the [installation instructions](https://graphscope.io/docs/latest/flex/interactive/installation) to install and start the GraphScope Interactive service.
+
+Once the service is up and running, parse the scrapped data and import it into GraphScope using the following command:
 
 ```bash
-curl -X GET http://0.0.0.0:9999/api/dataset?dataset_id=c1933784c9edd51a
+python graph_builder.py \
+      -i <your_scrapped_data_dir> \
+      -o <your_output_dir> \
+      -g <graph_instance_name>
 ```
 
-### Get all datasets
+The `<graph_instance_name>` is a unique name for the graph instance in GraphScope.
 
-```bash
-curl -X GET http://0.0.0.0:9999/api/dataset
-```
+> **Note**: When the data has already been parsed and saved in `<your_output_dir>`, you do not need to specify the `-i` options in the above command, which will skip the parsing process.
 
-### Delete dataset
+You can check whether the graph instance is successfully created and running in GraphScope Interactive by clicking on the "Graphs" tab in the left page of GraphScope portal, as shown below:
 
-```bash
-curl -X DELETE http://0.0.0.0:9999/api/dataset/c1933784c9edd51a
-```
+![list_graphs](inputs/figs/list_graphs.png "list_graphs")
 
-## LLM Config
+**Step 2: Connect Explore to GraphScope Interactive**
 
-### Create LLM Config
+1. Go to the **Explore** page in GraphScope Interactive.
+2. From the left sidebar, click on the toggle to import the graph data.
 
-The LLM model can be configured individually for each dataset (by `dataset_id`), allowing flexibility to use different models based on specific dataset needs. For instance, if cost is a concern, a smaller or locally deployed model can be used for datasets with a large number of papers to optimize expenses.
+![Connect Graph Db](inputs/figs/connect_graph_db.png "Connect Graph Db")
 
-```bash
-curl -X POST http://0.0.0.0:9999/api/llm/config -H "Content-Type: application/json" -d '{
-  "dataset_id": "c1933784c9edd51a",
-  "llm_model": "qwen-plus",
-  "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-  "api_key": "xxx",
-  "model_kwargs": {
-    "streaming":true
-  }
-}'
-```
+3. On the prompted page, enter the endpoint to connect to the Cypher query service of GraphScope Interactive (which uses the Neo4j bolt protocol). Click **"Connect"** to proceed.
 
-### Get the LLM Config
+  > **Note**: The default endpoint is: `neo4j://127.0.0.1:7687`. Ensure the endpoint (ip:port) matches the one specified in the [GraphScope Interactive configuration](https://graphscope.io/docs/latest/flex/interactive/installation).
 
-```bash
-curl -X GET http://0.0.0.0:9999/api/llm/config?dataset_id=c1933784c9edd51a
-```
-
-## Workflow Config
-
-### Create the workflow
-Create the workflow for extracting contents for all papers in the dataset. The workflow is a acyclic directed graph (RAG). The node of the workflow mainly defines what contents to extract from the paper and the output format. The edge indicates dependencies between nodes.
-
-```bash
-curl -X POST http://0.0.0.0:9999/api/dataset/workflow/config -H "Content-Type: application/json" -d '{
-    "dataset_id": "c1933784c9edd51a",
-    "workflow_json": {
-    "nodes": [
-        {
-            "name": "Paper"
-        },
-        {
-            "name": "Contribution",
-            "query":
-                "**Question**:\nList all contributions of the paper. These contributions are always organized and listed with a head sentence like **our contributions are as follows**. For each contribution, output the **original representation** and use few words to summarize it.",
-            "extract_from": ["1"],
-            "output_schema": {
-                "type": "array",
-                "description": "A list of contributions.",
-                "item": [
-                    {
-                        "name": "original",
-                        "type": "string",
-                        "description": "The original contribution sentences."
-                    },
-                    {
-                        "name": "summary",
-                        "type": "string",
-                        "description": "The summary of the contribution."
-                    }
-                ]
-            }
-        },
-        {
-            "name": "Challenge",
-            "query": "**Question**:\nPlease summarize some challenges in this paper. Each challenge has summarized NAME, detailed DESCRIPTION and SOLUTION.\n",
-            "extract_from": [],
-            "output_schema": {
-                "type": "array",
-                "description": "A list of challenges for the problems and their solutions in the paper.",
-                "item": [
-                    {
-                        "name": "name",
-                        "type": "string",
-                        "description": "The summarized name of the challenge."
-                    },
-                    {
-                        "name": "description",
-                        "type": "string",
-                        "description": "The description of the challenge."
-                    },
-                    {
-                        "name": "solution",
-                        "type": "string",
-                        "description": "The solution of the challenge."
-                    }
-                ]
-            }
-        }
-    ],
-    "edges": [
-        {
-            "source": "Paper",
-            "target": "Contribution"
-        },
-        {
-            "source": "Contribution",
-            "target": "Challenge"
-        }
-    ]
-  }
-}'
-```
-
-### Get the Workflow
-
-```bash
-curl -X GET http://0.0.0.0:9999/api/dataset/workflow/config?dataset_id=c1933784c9edd51a
-```
-
-## Extraction
-
-Start extracting the paper contents based on the workflow.
-This works asynchrously. Once started, one can call the following apis to check the progress.
-
-```bash
-curl -X POST http://0.0.0.0:9999/api/dataset/extract -H "Content-Type: application/json" -d '{
- "dataset_id": "c1933784c9edd51a",
- "thread_num": 16
-}'
-```
-
-Please note that in the extraction process, the `thread_num` parameter is optional, with a default value of 16.
-
-Get the extraction status for all workflow nodes.
-
-```bash
-curl -X GET http://0.0.0.0:9999/api/dataset/extract?dataset_id=c1933784c9edd51a
-```
-
-Or for a specific node
-
-```bash
-curl -X GET "http://0.0.0.0:9999/api/dataset/extract?dataset_id=c1933784c9edd51a&workflow_node_names=Challenge"
-```
-
-## Graphy Your Data
-
-After content extraction, the results can be visualized and analyzed within a graph interface. Users can export the graph data as a zip file, which can then be automatically imported and displayed in the [web-based graph visualization tool](../../examples/graphy/README.md).
+  ![Load to Interactive](inputs/figs/load_to_interactive.png "Load to Interactive")
 
 
-```bash
-curl -X POST http://0.0.0.0:9999/api/dataset/graphy -H "Content-Type: application/json" -d '{
-    "dataset_id": "c1933784c9edd51a"
-}' --output graph.zip
-```
+### Explore Your Data and Generate Report 📊
+Once you have prepared importing the scrapped data into either kuzu-wasm or GraphScope Interactive, you can start exploring and analyzing the data. The **Explore** tool provides a user-friendly interface for navigating the graph, visualizing connections, and generating the report.
 
-# Tests and Benchmark
+Go back to the **Explore** page, which features three primary canvases, metaphorically referred to as
+"Past", "Present", and "Future". Here, "Past" displays already explored papers, and "Present" shows the currently active papers for reviewing in detail, while "Future" highlights the immediate neighbors (i.e., references) of the active papers. The iterative exploration process has the following steps:
 
-The project can be tested by running the following command:
+![scenario explore](inputs/figs/scenario_explore.png "scenario explore")
 
-```bash
-python apps/demo_app.py  # run the backend app server
-pytest -s # on other terminal
-```
+
+ 1. search for seed papers whose titles contain “Llama3” using the search bar.
+ 2. select “The Llama 3 Herd of Models” and moves it to the "Present" canvas to review its details.
+ 3. explore the selected paper’s references by pre-querying its neighbors. These neighbors are not immediately added to the canvas to avoid overwhelming the user.
+ 4. present a histogram or table view, allowing users to focus on aggregated groups or order the data.
+ 5. decide from the top-k papers for further exploration. By doing so, these papers are added to the "Present" canvas, while the previously active papers move to the "Past" canvas.
+
+By iteratively following this workflow, users can explore as many papers as needed, before proceeding to generating the report. Click on the following "GPT" toggle in the left-side bar of the **Explore** page for report generation. Remember to configure the LLM model for report generation.
+
+![Generate Report](inputs/figs/generate_report.png "Generate Report")
+
+
+The report regeneration goes through the following steps:
+
+![scenario report](inputs/figs/scenario_report.png "scenario report")
+
+
+6. click to input instructions for the report, e.g., "Please write me a related work, focusing on their challenge". Based on this input, an LLM identifies the relevant attributes and dimension nodes needed for the report.
+7. attributes and dimension nodes are displayed for user verification and possible modification. In the example, the LLM highlights the "Challenge" node as well as the "title" and "abstract" attributes from the selected papers.
+8. these data are passed to the LLM to produce a mind map, effectively categorizing the papers according to the identified ``Challenge''. **This step can take for a while**.
+9. review the mind map.
+10. proceed to final report generation. The final report is built from the mind map and the user’s instructions, culminating in a point-by-point narrative.
+11. download the report in PDF or TeX format, complete with citations.
+
+## Why is Graphy Needed?
+
+Real-world investigative workflows require **iterative exploration and synthesis** of vast unstructured data—something that traditional tools or existing AI models just can't handle.
+
+Take the literature survey process, for example:
+1. **Start with a topic of interest**.
+2. **Identify seed papers** and start exploring.
+3. **Iterate** through key sections of each paper—like "Abstract," "Challenges," and "Solutions"—and expand your network by exploring references.
+4. Finally, **synthesize your findings** into a well-organized literature survey report.
+
+This multi-step, dynamic process requires **flexibility, control, and organization**—none of which traditional RAG-based solutions or AI agents provide effectively. Existing solutions often:
+- Struggle with maintaining consistency across large, complex networks.
+- Lack support for **iterative user oversight**, which researchers rely on for accuracy and control.
+- **Propagate errors** in long AI pipelines, especially when dealing with large volumes of data.
+
+Graphy overcomes these hurdles, making it easier for researchers to get reliable, consistent results throughout their exploration.
+
+## Graphy Can Be Extended to Other Scenarios
+
+While this prototype focuses on academic literature surveys, the core functionality of Graphy is **domain-agnostic**. The same principles apply to:
+- **Financial Reports**: Explore and analyze financial documents for trends, predictions, and correlations.
+- **Legal Briefs**: Build a network of legal cases and rulings for deeper insights.
+- **Healthcare Research**: Analyze medical literature, track treatments, and synthesize results for new studies.
+
+Basically, **any unstructured data set** can benefit from Graphy’s iterative exploration and structured reporting approach.
+
+
+
+
+
