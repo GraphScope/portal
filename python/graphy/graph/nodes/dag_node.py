@@ -1,4 +1,4 @@
-from config import WF_STATE_CACHE_KEY, WF_STATE_EXTRACTOR_KEY, WF_STATE_MEMORY_KEY
+from config import WF_STATE_CACHE_KEY
 from db.base_store import PersistentStore
 from graph.nodes.base_node import BaseNode, NodeCache, NodeType
 from graph.types import DataGenerator, DataType
@@ -52,6 +52,14 @@ def try_fix_json(raw_json: str):
 
 
 class ProgressInfo:
+    """
+    A utility class to track the progress of DAG node's execution
+
+    Attributes:
+        number (int): The number of node in the DAG.
+        completed (int): The number of completed nodes in the DAG.
+    """
+
     def __init__(self, number=0, completed=0):
         self.number = number
         self.completed = completed
@@ -100,6 +108,19 @@ class ProgressInfo:
 
 
 class DAGInspectorNode(BaseNode):
+    """
+    A base node of a DAG Inspector. The node contains a directed acyclic graph (DAG) that
+    defines the execution workflow of the inspector.
+
+    Attributes:
+        name (str): The name of the node
+        graph (BaseGraph): The directed acyclic graph (DAG) that defines the workflow.
+        llm_model (LLM): The language model used for the inspector.
+        embeddings_model (Embeddings): The embeddings model used for the inspector.
+        vectordb (VectorDB): The vector database used for retrieving relevant information.
+        persist_store (PersistentStore): The persistent store for storing the output of the nodes.
+    """
+
     def __init__(
         self,
         name: str,
