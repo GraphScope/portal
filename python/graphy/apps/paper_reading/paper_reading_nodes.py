@@ -192,71 +192,61 @@ class PaperInspector(DAGInspectorNode):
         Returns:
             DataGenerator: The output data generator from the node.
         """
-
         logger.info(f"================= START INSPECT ==============")
+
+        # Iterate through the input data
         for input_data in input:
-            parent_id = input_data.get("parent_id", None)
-            edge_name = input_data.get("edge_name", "Navigator")
-            paper_file_path = input_data.get("paper_file_path", None)
             try:
-                pre_result = self.pre_execute(state, input_data)
-                data_id = None
-                if pre_result:
-                    data_id = pre_result.get("data_id", None)
-                if not data_id:
-                    logger.info("Unable to identify `data_id` for {paper_file_path}.")
-                    continue
-
-                first_node_name = self.graph.get_first_node_name()
-                all_nodes = set(self.graph.get_node_names())
-                persist_states = set(self.persist_store.get_total_states(data_id))
-                if all_nodes.issubset(persist_states):
-                    # This means that the data has already processed
-                    logger.info(f"Input with ID '{data_id}' already processed.")
-                    self.progress["total"].add(
-                        ProgressInfo(self.graph.nodes_count(), self.graph.nodes_count())
-                    )
-                    for node in all_nodes:
-                        self.progress[node].add(ProgressInfo(1, 1))
-
-                    paper_data = self.persist_store.get_state(data_id, first_node_name)
-                    self.persist_store.save_state(data_id, "_DONE", {"done": True})
-                    curr_id = paper_data.get("data", {}).get("id", "")
-                    self.persist_edge_states(data_id, parent_id, curr_id, edge_name)
-
+                paper_data = self._process_input_data(state, input_data)
+                if paper_data:
                     yield paper_data
-
-                else:
-                    if not paper_file_path:
-                        self.run_through(
-                            data_id,
-                            None,
-                            parent_id,
-                            edge_name,
-                            skipped_nodes=["*"],
-                        )
-                    else:
-                        self.run_through(data_id, state[data_id], parent_id, edge_name)
-                    # Mark the data as DONE
-                    if self.progress["total"].is_done():
-                        self.post_execute(
-                            state,
-                        )
-
-                    paper_data = self.persist_store.get_state(data_id, first_node_name)
-
-                    yield paper_data
-
-                if self.progress["total"].is_done():
-                    if paper_data:
-                        self.post_execute(state, paper_data)
-
             except Exception as e:
                 logger.error(f"Error processing the paper: {e}")
-                # clean state
+                # clean state and continue with next input data
                 if paper_data:
                     self.post_execute(state, paper_data)
-                continue
+
+    def _process_input_data(
+        self, state: Dict[str, Any], input_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Processes each input data, including pre-execution, data extraction, and running through the nodes.
+
+        Args:
+            state (Dict[str, Any]): The current state of the workflow.
+            input_data (Dict[str, Any]): The input data to be processed.
+
+        Returns:
+            Dict[str, Any]: The processed paper data, or None if not processed successfully.
+        """
+        parent_id = input_data.get("parent_id", None)
+        edge_name = input_data.get("edge_name", "Navigator")
+        paper_file_path = input_data.get("paper_file_path", None)
+
+        pre_result = self.pre_execute(state, input_data)
+        data_id = pre_result.get("data_id", None) if pre_result else None
+
+        if not data_id:
+            logger.info(f"Unable to identify `data_id` for {paper_file_path}.")
+            return None
+
+        # Handle paper processing logic
+        if not paper_file_path:
+            # If there's no paper file path, we run through the node with skipped nodes
+            self.run_through(data_id, None, parent_id, edge_name, skipped_nodes=["*"])
+        else:
+            # Otherwise, process the paper using the provided file path
+            self.run_through(data_id, state[data_id], parent_id, edge_name)
+
+        first_node_name = self.graph.get_first_node_name()
+        paper_data = self.persist_store.get_state(data_id, first_node_name)
+
+        # Post-execute actions if the total progress is done
+        if self.progress["total"].is_done():
+            if paper_data:
+                self.post_execute(state, paper_data)
+
+        return paper_data
 
     def __repr__(self):
         return f"Node: {self.name}, Type: {self.node_type}, Graph: {self.graph}"

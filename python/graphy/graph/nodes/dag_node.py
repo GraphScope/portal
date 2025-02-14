@@ -165,7 +165,21 @@ class DAGInspectorNode(BaseNode):
         is_persist = True
         is_skip_all = len(skipped_nodes) == 1 and skipped_nodes[0] == "*"
 
-        all_nodes = self.graph.get_node_names()
+        all_nodes = set(self.graph.get_node_names())
+        persist_states = set(self.persist_store.get_total_states(data_id))
+        if all_nodes.issubset(persist_states):
+            # This means that the data has already processed
+            logger.info(f"Input with ID '{data_id}' already processed.")
+            self.progress["total"].add(
+                ProgressInfo(self.graph.nodes_count(), self.graph.nodes_count())
+            )
+            for node in all_nodes:
+                self.progress[node].add(ProgressInfo(1, 1))
+
+            self.persist_store.save_state(data_id, "_DONE", {"done": True})
+
+            return
+
         # global progress for all data
         self.progress["total"].add(ProgressInfo(self.graph.nodes_count(), 0))
         for node in all_nodes:
