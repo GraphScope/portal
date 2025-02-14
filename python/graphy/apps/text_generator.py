@@ -1,8 +1,8 @@
 import sys
 import os
 
-from apps.paper_reading.paper_reading_nodes import NameDesc
 from langchain_openai import ChatOpenAI
+from langchain_core.pydantic_v1 import BaseModel, Field, create_model
 from graph.nodes.chain_node import BaseChainNode
 
 from typing import List
@@ -12,11 +12,6 @@ import copy
 import re
 import traceback
 
-from config import (
-    WF_UPLOADS_DIR,
-    WF_OUTPUT_DIR,
-    WF_DATA_DIR,
-)
 
 from prompts.related_work_prompts import (
     RELATED_WORK_INTRODUCTION_PROMPT,
@@ -27,6 +22,11 @@ from prompts.related_work_prompts import (
     BASELINE_RELATED_WORK_TEXT_PROMPT,
     SUMMARIZE_PROMPT,
 )
+
+
+class NameDesc(BaseModel):
+    name: str = Field(description=("A short name that describes the given content."))
+    description: str = Field(description="A detailed description of the content.")
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))

@@ -1,7 +1,6 @@
 from apps.paper_reading import SurveyPaperReading
-from apps.paper_reading.paper_reading_nodes import ProgressInfo, NameDesc
 from workflow import ThreadPoolWorkflowExecutor
-from config import WF_UPLOADS_DIR, WF_OUTPUT_DIR, WF_DATA_DIR, WF_VECTDB_DIR
+from config import WF_UPLOADS_DIR, WF_OUTPUT_DIR, WF_DATA_DIR
 from utils.data_extractor import (
     GraphBuilder,
 )
@@ -10,9 +9,11 @@ from utils.text_clustering import KMeansClustering, OnlineClustering
 from utils.profiler import profiler
 from db import JsonFileStore
 from graph.nodes.chain_node import BaseChainNode
+from graph.nodes.dag_node import ProgressInfo
 from apps.text_generator import ReportGenerator
 from models import set_llm_model, DefaultEmbedding, DEFAULT_LLM_MODEL_CONFIG
 
+from langchain_core.pydantic_v1 import BaseModel, Field, create_model
 from threading import Thread
 from flask import Flask, request, jsonify, send_file
 from werkzeug.utils import secure_filename
@@ -36,6 +37,11 @@ import chromadb
 logger = logging.getLogger(__name__)
 
 DEFAULT_DATASET_ID = "0"
+
+
+class NameDesc(BaseModel):
+    name: str = Field(description=("A short name that describes the given content."))
+    description: str = Field(description="A detailed description of the content.")
 
 
 def list_files_in_folder(folder_path):
