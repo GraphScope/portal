@@ -1,6 +1,6 @@
 import json
 
-from apps.paper_reading.paper_reading_nodes import try_fix_json
+from graph.nodes.dag_node import try_fix_json
 
 
 def test_fix_json():
