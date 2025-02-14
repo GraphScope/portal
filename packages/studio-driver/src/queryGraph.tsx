@@ -1,6 +1,6 @@
 import CypherDriver from './cypher-driver';
 import GremlinDriver from './gremlin-driver';
-import { KuzuDriver } from './kuzu-wasm-driver';
+import { KuzuDriver } from './kuzu-wasm-driver-official';
 
 const DriverMap = new Map();
 
@@ -12,10 +12,44 @@ export interface QueryParams {
   password?: string;
 }
 
+class Mutex {
+  _locked: any;
+  _waiting: any;
+
+  constructor() {
+    this._locked = false;
+    this._waiting = [];
+  }
+
+  lock() {
+    const unlock = () => {
+      this._locked = false;
+      if (this._waiting.length > 0) {
+        const nextUnlock = this._waiting.shift();
+        this._locked = true;
+        nextUnlock(unlock);
+      }
+    };
+
+    if (this._locked) {
+      return new Promise(resolve => {
+        this._waiting.push(resolve);
+      }).then(() => unlock);
+    } else {
+      this._locked = true;
+      return Promise.resolve(unlock);
+    }
+  }
+}
+
+const mutex = new Mutex();
+
 export const getDriver = async (params: Pick<QueryParams, 'endpoint' | 'password' | 'language' | 'username'>) => {
   const { language, endpoint, username, password } = params;
   const id = `${language}_${endpoint}`;
+  const unlock = await mutex.lock();
   if (!DriverMap.has(id)) {
+    console.log("create new driver");
     if (language === 'cypher') {
       const [engineId, datasetId] = endpoint.split('://');
       if (engineId === 'kuzu_wasm') {
@@ -23,7 +57,9 @@ export const getDriver = async (params: Pick<QueryParams, 'endpoint' | 'password
         await driver.initialize();
         const exist = await driver.existDataset(datasetId);
         if (exist) {
+          console.log("start to use ", datasetId);
           await driver.use(datasetId);
+          console.log("finish to use ", datasetId);
         }
         DriverMap.set(id, driver);
       } else {
@@ -34,6 +70,8 @@ export const getDriver = async (params: Pick<QueryParams, 'endpoint' | 'password
       DriverMap.set(id, new GremlinDriver(endpoint, username, password));
     }
   }
+  console.log("get driver: ", DriverMap.get(id));
+  unlock();
   return DriverMap.get(id) as CypherDriver | GremlinDriver | KuzuDriver;
 };
 

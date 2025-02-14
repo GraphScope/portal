@@ -80,5 +80,7 @@ export const createKuzuGraph = async (dataset_id: string) => {
       ),
     };
   }
-  return await driver.writeBack();
+  // return await driver.writeBack();
+  await driver.writeBack();
+  return await driver.close();
 };

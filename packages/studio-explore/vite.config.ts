@@ -33,7 +33,7 @@ export default defineConfig({
   },
 
   optimizeDeps: {
-    exclude: ['@kuzu/kuzu-wasm'],
+    exclude: ['@kuzu/kuzu-wasm','kuzu-wasm'],
   },
 
   plugins: [react(), wasm(), topLevelAwait()],
