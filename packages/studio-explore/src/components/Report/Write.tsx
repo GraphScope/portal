@@ -7,6 +7,7 @@ import { getPrompt } from './utils';
 import ReportText from './Text';
 import { Utils } from '@graphscope/studio-components';
 import MOCK from './Mock';
+import Think, { useThink } from './Think';
 const SECTION_CONSTANT_EXAMPLE_EN = () => {
   return `
 An example of a subsection 2.1 in a report is as follows
@@ -143,6 +144,7 @@ const WriteReport: React.FunctionComponent<
     task: string;
   }
 > = props => {
+  const { thinkRef, updateThink } = useThink();
   const { categories, task } = props;
   const [state, setState] = useState({
     loading: false,
@@ -177,30 +179,36 @@ const WriteReport: React.FunctionComponent<
       description: category.description,
     }));
 
-    const intro_res = await query([
-      new Message({
-        role: 'user',
-        content: GET_REPORT_PROMPTS_BY_SECTION_INTRO_EN(task, 50, JSON.stringify(categoriesWithoutChildren)),
-      }),
-    ]);
+    const intro_res = await query(
+      [
+        new Message({
+          role: 'user',
+          content: GET_REPORT_PROMPTS_BY_SECTION_INTRO_EN(task, 50, JSON.stringify(categoriesWithoutChildren)),
+        }),
+      ],
+      updateThink,
+    );
     const intro_text = intro_res.message.content;
 
     let section_no = 0;
     let already_sec = '';
     for (const category of categories) {
       section_no += 1;
-      const res = await query([
-        new Message({
-          role: 'user',
-          content: getPrompt({ 'zh-CN': GET_REPORT_PROMPTS_CHN, 'en-US': GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN })(
-            task,
-            JSON.stringify(category),
-            JSON.stringify(section_no),
-            SECTION_CONSTANT_EXAMPLE_EN,
-            intro_text,
-          ),
-        }),
-      ]);
+      const res = await query(
+        [
+          new Message({
+            role: 'user',
+            content: getPrompt({ 'zh-CN': GET_REPORT_PROMPTS_CHN, 'en-US': GET_REPORT_PROMPTS_BY_SECTION_TEXT_EN })(
+              task,
+              JSON.stringify(category),
+              JSON.stringify(section_no),
+              SECTION_CONSTANT_EXAMPLE_EN,
+              intro_text,
+            ),
+          }),
+        ],
+        updateThink,
+      );
       already_sec = already_sec + '\n' + res.message.content;
     }
 
@@ -227,6 +235,7 @@ const WriteReport: React.FunctionComponent<
           Write Report
         </Button>
       </Flex>
+      <Think ref={thinkRef} />
 
       {report && <ReportText report={report} enableBib />}
     </Flex>

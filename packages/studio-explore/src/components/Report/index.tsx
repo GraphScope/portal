@@ -1,4 +1,4 @@
-import { Flex, Input, Typography, Button, Divider, Select } from 'antd';
+import { Flex, Input, Typography, Button, Divider, Select, notification } from 'antd';
 import React, { useRef, useState } from 'react';
 import { OpenAIOutlined } from '@ant-design/icons';
 import { query } from '../Copilot/query';
@@ -8,6 +8,7 @@ import Intention from './Intention';
 import Setting from '../Copilot/setting';
 import { getPrompt } from './utils';
 import MOCK from './Mock';
+import Think, { useThink } from './Think';
 
 interface IReportProps {}
 
@@ -55,6 +56,8 @@ export interface ItentionType {
 const Report: React.FunctionComponent<IReportProps> = props => {
   const { store } = useContext();
   const { schema, data } = store;
+
+  const { thinkRef, updateThink } = useThink();
   const InputRef = useRef<any>(null);
   const [state, setState] = useState<{
     loading: boolean;
@@ -63,11 +66,11 @@ const Report: React.FunctionComponent<IReportProps> = props => {
     intentionSchema: GraphSchema;
   }>({
     loading: false,
-    task:'',
-      // '请根据我选中的 papers ，整理出一份趋势报告，重点考虑时间因素',
-      // '帮我把画布上的papers按照时间和引用数整理成一个分析报告',
-      // '请根据我选中的 papers ，以及 paper 关联的 challenge，写一个 related work section。要求 papers 按照 challenge 进行整理',
-     
+    task: '',
+    // '请根据我选中的 papers ，整理出一份趋势报告，重点考虑时间因素',
+    // '帮我把画布上的papers按照时间和引用数整理成一个分析报告',
+    // '请根据我选中的 papers ，以及 paper 关联的 challenge，写一个 related work section。要求 papers 按照 challenge 进行整理',
+
     intention: null,
     intentionSchema: { nodes: [], edges: [] },
   });
@@ -92,7 +95,7 @@ const Report: React.FunctionComponent<IReportProps> = props => {
       /** MOCK START */
       if (MOCK.enable) {
         const res = await MOCK.intention();
-        debugger;
+
         setState(preState => {
           return {
             ...preState,
@@ -105,28 +108,48 @@ const Report: React.FunctionComponent<IReportProps> = props => {
       }
       /** MOCK END */
 
-      const _res = await query([
-        new Message({
-          role: 'user',
-          content: getPrompt({ 'zh-CN': GET_DATA_FILTER_RULES_CHN, 'en-US': GET_DATA_FILTER_RULES_EN })(
-            value,
-            JSON.stringify(schema),
-          ),
-        }),
-      ]);
-      debugger;
-      const res = JSON.parse(_res.message.content);
+      const _res = await query(
+        [
+          new Message({
+            role: 'user',
+            content: getPrompt({ 'zh-CN': GET_DATA_FILTER_RULES_CHN, 'en-US': GET_DATA_FILTER_RULES_EN })(
+              value,
+              JSON.stringify(schema),
+            ),
+          }),
+        ],
+        updateThink,
+      );
 
+      if (_res.status === 'success') {
+        const res = JSON.parse(_res.message.content);
+        setState(preState => {
+          return {
+            ...preState,
+            loading: false,
+            intention: res,
+            intentionSchema: res.schema,
+          };
+        });
+      } else {
+        setState(preState => {
+          return {
+            ...preState,
+            loading: false,
+          };
+        });
+        notification.error({
+          message: _res.message,
+        });
+      }
+    } catch (error) {
       setState(preState => {
         return {
           ...preState,
           loading: false,
-          intention: res,
-          intentionSchema: res.schema,
         };
       });
-      console.log('res', res);
-    } catch (error) {}
+    }
   };
   const updateIntentionSchema = (schema: GraphSchema) => {
     setState(preState => {
@@ -154,6 +177,7 @@ const Report: React.FunctionComponent<IReportProps> = props => {
       <Button icon={<OpenAIOutlined />} onClick={handleClick} loading={state.loading}>
         Infer Intention
       </Button>
+      <Think ref={thinkRef} />
       {intention && (
         <Intention
           task={task}
