@@ -9,6 +9,7 @@ from config import (
     WF_STATE_EXTRACTOR_KEY,
     WF_STATE_CACHE_KEY,
     WF_IMAGE_DIR,
+    WF_OUTPUT_DIR,
 )
 from extractor import PaperExtractor
 from db import PersistentStore
@@ -49,6 +50,28 @@ def process_id(base_name: str) -> str:
         id_name = f"{id_generator(base_name)}_{id_name}"
 
     return id_name
+
+
+def change_path(original_path, new_prefix=WF_OUTPUT_DIR) -> str:
+    if not original_path:
+        return None
+    # The suffix that the old prefix ends with
+    suffix = "/graphyourdata/output"
+
+    # Find the index of the suffix in the original path
+    suffix_index = original_path.rfind(suffix)
+
+    # If the suffix is found, replace the old prefix with the new prefix
+    if suffix_index != -1:
+        # Calculate the start index of the old prefix
+        start_index = suffix_index + len(suffix)
+
+        # Replace the old prefix with the new prefix
+        new_path = new_prefix + original_path[start_index:]
+    else:
+        # If the suffix is not found, leave the path unchanged
+        new_path = original_path
+    return new_path
 
 
 class PaperInspector(DAGInspectorNode):
@@ -128,6 +151,8 @@ class PaperInspector(DAGInspectorNode):
     def pre_execute(self, state: Dict[str, Any], input: DataType) -> DataType | None:
         paper_file_path = input.get("paper_file_path", None)
         paper_meta_path = input.get("paper_meta_path", None)
+        paper_file_path = change_path(paper_file_path)
+        paper_meta_path = change_path(paper_meta_path)
         if not paper_file_path:
             logger.warning("No 'paper_file_path' provided in input data.")
             logger.info(f"Try to create fake extractor from meta: {paper_meta_path}")
