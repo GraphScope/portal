@@ -10,7 +10,7 @@ def test_graphy_data():
     input_data = "inputs/graphy_raw_data"
     temp_dir = TemporaryDirectory()
     output_path = os.path.join(temp_dir.name, "graphyourdata", "build_graph_test")
-    graph_builder = GraphBuilder(input_data)
+    graph_builder = GraphBuilder(input_data, output_path)
 
     graph_builder.extract_data()
 
@@ -21,7 +21,7 @@ def test_graphy_data():
     # each dimension + one reference
     assert len(graph_builder.edges_dict.keys()) == 5
 
-    graph_builder.build_graph(output_path)
+    graph_builder.build_graph()
 
     assert os.path.exists(os.path.join(output_path, "_graph", "schema.json"))
     assert os.path.exists(os.path.join(output_path, "_graph", "Paper.csv"))

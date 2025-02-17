@@ -10,7 +10,7 @@ const RunAI: React.FunctionComponent<INeighborQueryProps> = props => {
   const { selectNodes } = store;
 
   const handleClick = () => {
-    const scripts = `write a related work section about the given data, you should focus on challenges only : ${JSON.stringify(selectNodes, null, 2)}`;
+    const scripts = `I have selected those data: ${JSON.stringify(selectNodes, null, 2)}`;
     //@ts-ignore
     window.runAI(scripts);
   };

@@ -1,4 +1,6 @@
 from config import WF_DOWNLOADS_DIR
+from .bib_search import BibSearchArxiv
+
 from typing import List, Dict, Any
 
 import concurrent.futures
@@ -10,11 +12,39 @@ import logging
 import time
 import unicodedata
 import traceback
+import wordninja
 
-from .bib_search import BibSearchArxiv, BibSearchGoogleScholar
-from requests.exceptions import ProxyError, ConnectionError, RequestException
 
 logger = logging.getLogger(__name__)
+
+
+def prepare_arxiv_queries(original_query: str) -> Dict[str, str]:
+    # Normalize input to NFKC form and strip extra spaces
+    original_query = unicodedata.normalize("NFKC", original_query).strip()
+
+    # Generate original title query (ti:query)
+    original_title_query = f"ti:{original_query}"
+
+    # Clean up the query by replacing certain characters with spaces
+    cleaned_query = re.sub(r"[-_.:\[\]\\]", " ", original_query)
+
+    cleaned_title_query = f"ti:{cleaned_query}"
+
+    # Use wordninja to split the cleaned query into separate words
+    # Create new query with spaces between the words
+    refined_query = " ".join(wordninja.split(cleaned_query))
+
+    # Generate the title query for the cleaned, split query (ti:new_query)
+    refined_title_query = f"ti:{refined_query}"
+
+    # Return all generated queries as a list
+    return {
+        "cleaned_title": cleaned_title_query,
+        "original_title": original_title_query,
+        "refined_title": refined_title_query,
+        "cleaned": cleaned_query,
+        "original": original_query,
+    }
 
 
 class ResultFormer:
@@ -118,17 +148,10 @@ class ArxivFetcher:
         best_match = None
         added_query = set()
         for new_name in new_names:
-            # replace - with space to improve search results
-
-            original_query = new_name
-            original_title_query = f"ti:{original_query}"
-            query = re.sub(r"[-_.:\[\]\\]", " ", new_name).strip()
-            new_query = re.sub(r"[-_.:\[\]\\]", " ", new_name).strip()
-            title_query = f"ti:{new_query}"
-            queries = [original_title_query, original_query, title_query, query]
-
+            # replace special characters with space to improve search results
             found_result = False
-            for query in queries:
+            queries = prepare_arxiv_queries(new_name)
+            for opt, query in queries.items():
                 if query in added_query:
                     continue
                 else:
@@ -143,14 +166,13 @@ class ArxivFetcher:
                 similarity = 0.0
 
                 if search is not None:
-                    found_result = True
                     try:
                         for paper in self.client.results(search):
                             similarity = difflib.SequenceMatcher(
                                 None, new_name.lower(), paper.title.lower()
                             ).ratio()
-                            logger.info(
-                                f"Compared with: {new_name}, Found paper: {paper.title} with similarity {similarity}"
+                            logger.debug(
+                                f"With {opt} query : {query}, Found paper: {paper.title} with similarity {similarity}"
                             )
                             if similarity > highest_similarity:
                                 highest_similarity = similarity
@@ -161,9 +183,7 @@ class ArxivFetcher:
                         traceback.print_exc()
 
                 if highest_similarity > 0.9:
-                    # print(f"found {query}")
                     break
-                # logger.warning(f"Not Found: {query}")
 
             if highest_similarity > 0.9:
                 break
@@ -176,11 +196,7 @@ class ArxivFetcher:
         return highest_similarity, best_match
 
     def download_paper(self, name: str, max_results):
-        logger.info(
-            f"******************** Searching for paper: {name} *******************"
-        )
-
-        name = unicodedata.normalize("NFKC", name)
+        logger.info(f"Searching for paper: {name}")
 
         highest_similarity, best_match = self.find_paper_from_arxiv(name, max_results)
 
@@ -209,7 +225,6 @@ class ArxivFetcher:
         :param name: The name (query) of the paper to fetch.
         :return: A string describing the result of the fetch operation, or None if no paper is found.
         """
-
         logger.info(f"Searching for paper: {name}")
 
         highest_similarity, best_match = self.find_paper_from_arxiv(name, max_results)

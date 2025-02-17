@@ -167,7 +167,7 @@ class PaperNavigateEdge(AbstractEdge):
         link_queue = Queue()
         output_queue = Queue()
 
-        logger.warning(f"================= START NAVIGATE ==============")
+        logger.info(f"================= START NAVIGATE ==============")
         paper_data_id_list = []
         for paper in input:
             if not paper:

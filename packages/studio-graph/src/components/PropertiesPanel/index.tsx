@@ -4,6 +4,7 @@ import { ForceGraphInstance, useContext, useApis } from '../../index';
 import PropertiesTable from './PropertiesTable';
 import PropertyInfo from './PropertyInfo';
 import { getSelectData } from './utils';
+import { handleNodeStyle, handleEdgeStyle } from '../../graph/utils/handleStyle';
 
 export interface IPropertiesPanelProps {
   style?: React.CSSProperties;
@@ -13,7 +14,7 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
   const { style = {} } = props;
   const { store } = useContext();
   const { focusNodes } = useApis();
-  const { selectNodes, selectEdges, graph, width, height } = store;
+  const { selectNodes, selectEdges, nodeStyle, edgeStyle } = store;
   const { token } = theme.useToken();
   const containerRef = React.useRef<HTMLElement>(null);
 
@@ -46,12 +47,22 @@ const PropertiesPanel: React.FunctionComponent<IPropertiesPanelProps> = props =>
   if (!currentData) {
     return null;
   }
-  const options = selectIds.map(key => {
+  const options = data.map(item => {
+    const { id: key, properties = {} } = item;
+    //@ts-ignore
+    const match = handleNodeStyle(item, nodeStyle) || handleEdgeStyle(item, edgeStyle);
+    const { caption } = match;
+    const title =
+      caption
+        .map(c => {
+          return properties[c];
+        })
+        .join(',') || key;
     return {
       value: key,
       label: (
         <>
-          <Tag>id</Tag> {key}
+          <Tag>{caption.join(',') || 'id'}</Tag> {title}
         </>
       ),
     };

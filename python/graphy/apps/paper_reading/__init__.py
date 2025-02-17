@@ -7,10 +7,7 @@ from .paper_navigate_edge import (
     PaperNavigateArxivEdge,
     PaperNavigateScholarEdge,
 )
-from .paper_reading_nodes import (
-    PaperInspector,
-    PaperExtractor,
-)
+from .paper_reading_nodes import PaperInspector
 from .survey_paper_reading import SurveyPaperReading
 
 __all__ = [
@@ -18,6 +15,5 @@ __all__ = [
     "PaperNavigateArxivEdge",
     "PaperNavigateScholarEdge",
     "PaperInspector",
-    "PaperExtractor",
     "SurveyPaperReading",
 ]

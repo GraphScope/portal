@@ -8,7 +8,8 @@ from db import JsonFileStore
 from utils import Paper
 from utils.cryptography import id_generator
 
-import uuid
+import numpy as np
+import math
 import json
 import csv
 import os
@@ -126,16 +127,60 @@ def sanitize_data(data: dict) -> dict:
     return sanitized_data
 
 
+def generate_reference_counts(
+    num_papers: int, min_count: int = 0, max_count: int = 5000, alpha: float = 2.5
+) -> np.ndarray:
+    """
+    Generate reference counts for academic papers following a power-law distribution.
+
+    Args:
+        num_papers (int): The number of papers for which to generate reference counts.
+        min_count (int): The minimum reference count (inclusive).
+        max_count (int): The maximum reference count (exclusive).
+        alpha (float): The power-law exponent (alpha > 1). Higher values favor lower citations.
+
+    Returns:
+        np.ndarray: An array of reference counts.
+    """
+    if alpha <= 1:
+        raise ValueError(
+            "Alpha must be greater than 1 for a valid power-law distribution."
+        )
+
+    if min_count >= max_count:
+        raise ValueError("min_count must be less than max_count.")
+
+    # Generate reference counts following a power-law distribution
+    reference_counts = []
+    while len(reference_counts) < num_papers:
+        # Generate numbers following a power-law distribution
+        sample = (
+            np.random.pareto(alpha, num_papers) + 1
+        )  # Pareto's shape parameter is alpha - 1
+        sample = min_count + (max_count - min_count) * (sample - sample.min()) / (
+            sample.max() - sample.min()
+        )
+        sample = sample.astype(int)  # Convert to integers
+
+        # Clip to ensure within range
+        valid_counts = sample[(sample >= min_count) & (sample < max_count)]
+        reference_counts.extend(valid_counts)
+
+    return np.array(reference_counts[:num_papers])
+
+
 class GraphBuilder:
     def __init__(
         self,
         data_path,
+        output_path,
         persist_store=None,
     ):
         self.facts_dict = {}
         self.dimensions_dict = {}
         self.edges_dict = {}
         self.data_path = data_path
+        self.output_path = output_path
         if not persist_store:
             self.persist_store = JsonFileStore(data_path)
         else:
@@ -169,6 +214,8 @@ class GraphBuilder:
                     del paper_data["cited_by"]
                 if "data_id" in paper_data:
                     del paper_data["data_id"]
+                if "filename" in paper_data:
+                    del paper_data["filename"]
                 # These present in old data
                 if "abstract" in paper_data:
                     del paper_data["abstract"]
@@ -202,6 +249,16 @@ class GraphBuilder:
                         for source in source_nodes_set
                     ]
                     total_edges_dict.setdefault(edge_name, []).extend(formatted_edges)
+
+        # Add simulated cited_by_count, given they are not present
+        num_papers = len(self.facts_dict)
+        dist = generate_reference_counts(num_papers)
+        for i, paper_data in enumerate(self.facts_dict.values()):
+            if "cited_by_count" not in paper_data or not paper_data["cited_by_count"]:
+                paper_data["cited_by_count"] = int(dist[i])
+            else:
+                if math.isnan(paper_data["cited_by_count"]):
+                    paper_data["cited_by_count"] = int(dist[i])
 
         for name, edges in total_edges_dict.items():
             edge_vec = self.edges_dict.setdefault(name, [])
@@ -261,11 +318,8 @@ class GraphBuilder:
                             }
                         )
 
-    def build_graph(self, output_path=None):
-        if output_path:
-            graph_path = os.path.join(output_path, "_graph")
-        else:
-            graph_path = os.path.join(self.data_path, "_graph")
+    def build_graph(self):
+        graph_path = os.path.join(self.output_path, "_graph")
         os.makedirs(graph_path, exist_ok=True)
         gs_schemas = {"vertex_types": [], "edge_types": []}
         paper_headers = Paper.header()
@@ -290,13 +344,22 @@ class GraphBuilder:
                 "properties": [],
                 "primary_keys": ["id"],
             }
-            for prop in paper.keys():
-                paper_schema["properties"].append(
-                    {
-                        "property_name": prop,
-                        "property_type": {"string": {"long_text": ""}},
-                    }
-                )
+            for prop in paper_headers:
+                # TODO only hack the data type of certain property, may support specifying the type of the property
+                if prop == "cited_by_count":
+                    paper_schema["properties"].append(
+                        {
+                            "property_name": prop,
+                            "property_type": {"primitive_type": "DT_SIGNED_INT64"},
+                        }
+                    )
+                else:
+                    paper_schema["properties"].append(
+                        {
+                            "property_name": prop,
+                            "property_type": {"string": {"long_text": ""}},
+                        }
+                    )
             break
 
         if paper_schema:
@@ -304,13 +367,14 @@ class GraphBuilder:
 
         node_schema = {}
         for node, data in self.dimensions_dict.items():
+            node_name = f"Dimension_{node}"
             write_csv(
-                os.path.join(graph_path, f"{node}.csv"),
+                os.path.join(graph_path, f"{node_name}.csv"),
                 list(data.values()),
             )
             for item in data.values():
                 node_schema = {
-                    "type_name": node,
+                    "type_name": node_name,
                     "properties": [],
                     "primary_keys": ["id"],
                 }
@@ -318,7 +382,7 @@ class GraphBuilder:
                     node_schema["properties"].append(
                         {
                             "property_name": prop,
-                            # TODO may specify the type of the property
+                            # TODO should support specifying the type of the property
                             "property_type": {"string": {"long_text": ""}},
                         }
                     )
@@ -341,7 +405,7 @@ class GraphBuilder:
                 # Ensure edge has enough parts when split
                 parts = edge.split("_")
                 if len(parts) >= 3:
-                    target_name = parts[2]
+                    target_name = f"Dimension_{parts[2]}"
                 else:
                     target_name = "None"
 
@@ -364,7 +428,8 @@ class GraphBuilder:
         return gs_schemas
 
     def get_interactive_schema(self):
-        schema_json = os.path.join(self.data_path, "graph", "schema.json")
+        graph_path = os.path.join(self.output_path, "_graph")
+        schema_json = os.path.join(graph_path, "schema.json")
         with open(schema_json, "r") as f:
             return json.load(f)
 
@@ -475,7 +540,7 @@ class GraphBuilder:
             else:
                 graph_id = resp.get_value().graph_id
 
-            graph_path = os.path.join(self.data_path, "_graph")
+            graph_path = os.path.join(self.output_path, "_graph")
             import_config = build_import_config_from_schema(schema, graph_path)
 
             bulk_load_request = SchemaMapping.from_dict(import_config)

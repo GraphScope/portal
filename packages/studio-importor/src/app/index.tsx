@@ -45,6 +45,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
     style,
     leftSide,
     rightSide,
+    refreshIndex = 1,
   } = props;
   const { store, updateStore } = useContext();
   const { isReady, displayMode } = store;
@@ -65,6 +66,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         // nodes: transformGraphNodes(schema.nodes, store.displayMode), //会报错！！！！
         edges: transformEdges(schema.edges, displayMode),
       };
+
       const { nodes, edges } = schemaOptions || { nodes: [], edges: [] };
       const isEmpty = nodes.length === 0;
 
@@ -80,9 +82,10 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         draft.currentId = isEmpty ? '' : nodes[0].id;
         draft.currentType = 'nodes';
         draft.isSaveFiles = isSaveFiles;
+        draft.hasLayouted = false;
       });
     })();
-  }, []);
+  }, [refreshIndex]);
   const IS_PURE = appMode === 'PURE';
 
   return (

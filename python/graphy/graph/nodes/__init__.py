@@ -20,6 +20,5 @@ __all__ = [
     "NodeType",
     "NodeCache",
     "PDFExtractNode",
-    "ExtractNode",
     "PaperInspector",
 ]

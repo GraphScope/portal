@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/studio-components",
-  "version": "0.1.15",
+  "version": "0.1.18",
   "description": "A components for graphscope studio",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -27,7 +27,6 @@
     "react-intl": "^6.6.1",
     "react-resizable-panels": "^2.0.20",
     "react-router-dom": "^6.26.1",
-    "sql-ddl-to-json-schema": "latest",
     "typewriter-effect": "^2.21.0",
     "uuid": "latest",
     "uuidv4": "latest"

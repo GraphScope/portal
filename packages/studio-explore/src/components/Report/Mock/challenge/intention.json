@@ -1,0 +1,46 @@
+{
+  "description": "The user intends to categorize papers based on the challenges they address and generate a related work report. This involves identifying the challenges associated with each paper and organizing this information in a structured format.",
+  "plan": [
+    "Identify the selected paper(s) from the database.",
+    "Retrieve the challenges associated with each selected paper using the 'Paper_Has_Challenge' relationship.",
+    "Categorize the papers based on the identified challenges.",
+    "Generate a related work report that includes the categorized papers and their corresponding challenges."
+  ],
+  "schema": {
+    "nodes": [
+      {
+        "label": "Paper",
+        "properties": [
+          {
+            "name": "id"
+          },
+          {
+            "name": "title"
+          }
+        ]
+      },
+      {
+        "label": "Dimension_Challenge",
+        "properties": [
+          {
+            "name": "id"
+          },
+          {
+            "name": "name"
+          },
+          {
+            "name": "description"
+          }
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "source": "Paper",
+        "target": "Dimension_Challenge",
+        "label": "Paper_Has_Challenge"
+      }
+    ]
+  },
+  "explain": "To achieve the user's intent, we need to focus on the 'Paper' and 'Dimension_Challenge' nodes along with the 'Paper_Has_Challenge' edge. This will allow us to link papers to their respective challenges and organize them accordingly for the report."
+}

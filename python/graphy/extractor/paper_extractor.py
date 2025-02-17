@@ -171,10 +171,10 @@ class PaperExtractor(PDFExtractor):
                 with open(meta_path, "r") as file:
                     self.input_meta_data = json.load(file)
         except Exception as e:
-            logger.error(f"Load Meta Data File Error: {e} {meta_path}")
+            logger.warning(f"Load Meta Data File Error: {e} {meta_path}")
             self.input_meta_data = {}
 
-        logger.error(f"input meta data: {self.input_meta_data}")
+        logger.info(f"input meta data: {self.input_meta_data}")
 
         if file_path is None:
             if len(self.input_meta_data) > 0:

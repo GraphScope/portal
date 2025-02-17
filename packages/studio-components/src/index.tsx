@@ -37,5 +37,8 @@ export type { Property } from './PropertiesList/typing';
 export type { ParsedFile } from './Utils/parseCSV';
 
 export { useDynamicStyle } from './hooks/useDynamicStyle';
+export { useHistory } from './hooks/useHistory';
 export { default as Illustration } from './Illustration';
 export { default as CollapseCard } from './CollapseCard';
+
+export { default as EngineFeature } from './EngineFeature';

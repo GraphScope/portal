@@ -1,5 +1,6 @@
 from .base_node import BaseNode, DataGenerator
 from utils import Paper, ArxivFetcher, ScholarFetcher
+from utils.profiler import profiler
 from config import (
     WF_STATE_EXTRACTOR_KEY,
     WF_STATE_MEMORY_KEY,
@@ -7,12 +8,10 @@ from config import (
 )
 
 from langchain_core.embeddings import Embeddings
-
 from typing import Any, Dict
-import logging
-from utils.profiler import profiler
-import time
+
 import os
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -54,6 +53,7 @@ class PDFExtractNode(BaseNode):
             raise ValueError("Memory manager is not provided in the state.")
         data_id = memory_manager.collection_name
         pdf_extractor = state.get(WF_STATE_EXTRACTOR_KEY, None)
+        filename = os.path.basename(pdf_extractor.file_path)
         if not pdf_extractor:
             raise ValueError("PDF extractor is not provided in the state.")
 
@@ -64,7 +64,7 @@ class PDFExtractNode(BaseNode):
             if self.arxiv_fetch_paper:
                 paper_title = paper_metadata.get("title", "")
                 if len(paper_title) > 0:
-                    result = self.arxiv_fetcher.fetch_paper(paper_title, 5)
+                    result = self.arxiv_fetcher.fetch_paper(paper_title, 3)
                     if result:
                         paper_metadata.update(result)
 
@@ -76,11 +76,11 @@ class PDFExtractNode(BaseNode):
             if vectordb.is_db_valid() and vectordb.is_db_empty():
                 docs = pdf_extractor.extract_all()
                 pdf_paper_references = list(pdf_extractor.linked_contents)
-                logger.info("========= START TO INIT MEMORY ======")
+                logger.debug("========= START TO INIT MEMORY ======")
                 vectordb.init_memory_parallel(
                     docs, ["page_index", "section", "part_index"]
                 )
-                logger.info(
+                logger.debug(
                     f"========= FINISH TO INIT MEMORY {pdf_extractor.file_path} ======"
                 )
             else:
@@ -90,6 +90,7 @@ class PDFExtractNode(BaseNode):
         if not paper_metadata["reference"]:
             paper_metadata["reference"].extend(pdf_paper_references)
         paper_metadata["data_id"] = data_id
+        paper_metadata["filename"] = filename
 
         pdf_extractor.clear()
 

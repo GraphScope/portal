@@ -2,10 +2,10 @@ import pytest
 from unittest.mock import MagicMock, create_autospec
 from graph import BaseGraph
 from graph.edges import BaseEdge
+from graph.nodes.chain_node import PaperDimensionExtractNode
 from apps.paper_reading.paper_reading_nodes import PaperInspector
 from apps.paper_reading.paper_reading_nodes import (
     ProgressInfo,
-    ExtractNode,
 )
 from graph.types import DataGenerator
 from models import LLM, set_llm_model, DEFAULT_LLM_MODEL_CONFIG, DefaultEmbedding
@@ -21,13 +21,13 @@ import chromadb
 @pytest.fixture
 def mock_graph():
     graph = BaseGraph()
-    mock_node = create_autospec(ExtractNode, instance=True)
+    mock_node = create_autospec(PaperDimensionExtractNode, instance=True)
     mock_node.name = "Paper"
     mock_node.get_query.return_value = ""
     mock_node.get_memory.return_value = ""
     mock_node.execute.return_value = iter([{"result": "node_output"}])
 
-    mock_node2 = create_autospec(ExtractNode, instance=True)
+    mock_node2 = create_autospec(PaperDimensionExtractNode, instance=True)
     mock_node2.name = "Extract"
     mock_node2.get_query.return_value = ""
     mock_node2.get_memory.return_value = ""

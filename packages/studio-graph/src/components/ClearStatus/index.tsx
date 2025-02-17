@@ -39,7 +39,7 @@ const ClearStatus: React.FunctionComponent<IClearStatatusProps> = props => {
 
   if (trigger === 'button') {
     return (
-      <Tooltip title="Clear Canvas Status" placement="left">
+      <Tooltip title="Clear Selected Status" placement="left">
         <Button type="text" onClick={handleClear} icon={<ClearOutlined />}></Button>
       </Tooltip>
     );

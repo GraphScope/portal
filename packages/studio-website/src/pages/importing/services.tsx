@@ -22,7 +22,14 @@ export const uploadFile = async (file: File) => {
 
 export const bindDatasourceInBatch = async (graph_id: string, options: any): Promise<any> => {
   const schema = transformImportOptionsToSchemaMapping(options);
-  return await DataSourceApiFactory(undefined, window.COORDINATOR_URL).bindDatasourceInBatch(graph_id, schema);
+  const res = await DataSourceApiFactory(undefined, window.COORDINATOR_URL).bindDatasourceInBatch(graph_id, schema);
+
+  if (res.data === 'Bind data source mapping successfully') {
+    notification('success', res.data, 'Bind data source mapping successfully');
+    return true;
+  }
+  notification('error', res.data);
+  return false;
 };
 /** 数据绑定 dataMap(nodes/edges集合)*/
 export const submitDataloadingJob = async (graph_id: string, graphSchema: any, loadConfig: FieldType): Promise<any> => {
@@ -68,6 +75,35 @@ export const submitDataloadingJob = async (graph_id: string, graphSchema: any, l
     },
     repeat: loadConfig.repeat,
     schedule: loadConfig.schedule,
+  });
+};
+
+/** 获取周期导入的配置文件，only for groot engine*/
+export const getLoadScheduleConfig = async (graph_id: string, graphSchema: any): Promise<any> => {
+  let NODE_LABEL_MAP: any = {};
+  const schema = {
+    vertices: graphSchema.nodes.map((item: any) => {
+      const { id, data } = item;
+      NODE_LABEL_MAP[id] = data.label;
+      return {
+        type_name: data.label,
+      };
+    }),
+    edges: graphSchema.edges.map((item: any) => {
+      const { id, source, data, target } = item;
+      return {
+        type_name: data.label,
+        source_vertex: NODE_LABEL_MAP[source],
+        destination_vertex: NODE_LABEL_MAP[target],
+      };
+    }),
+  };
+
+  return await JobApiFactory(undefined, window.COORDINATOR_URL).getDataloadingJobConfig(graph_id, {
+    ...schema,
+    loading_config: {},
+    repeat: 'once',
+    schedule: '',
   });
 };
 

@@ -31,13 +31,19 @@ class BaseNode:
         self.name = name
         self.node_type = node_type
 
-    def pre_execute(self, state: Dict[str, Any] = None):
-        """define pre-execution logic"""
-        logger.info(f"Executing node: {self.name}")
+    def pre_execute(
+        self, state: Dict[str, Any] = None, input: DataType = None
+    ) -> DataType | None:
+        """define pre-execution logic for each input data"""
+        logger.info(f"Executing node: {self.name} for input: {input}")
+        return None
 
-    def post_execute(self, output: Dict[str, Any] = None):
-        """define post-execution logic"""
-        logger.info(f"Complete executing node: {self.name}")
+    def post_execute(
+        self, state: Dict[str, Any] = None, output: Dict[str, Any] = None
+    ) -> DataType | None:
+        """define post-execution logic for each input data"""
+        logger.info(f"Complete executing node: {self.name} with output: {output}")
+        return None
 
     def execute(
         self, state: Dict[str, Any], input: DataGenerator = None
