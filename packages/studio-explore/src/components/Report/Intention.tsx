@@ -12,6 +12,7 @@ import AddNodes from './AddNodes';
 import { getPrompt } from './utils';
 import AdjustSchema from './AdjustSchema';
 import MOCK from './Mock';
+import Think, { useThink } from './Think';
 interface IReportProps {
   task: string;
   intention: ItentionType;
@@ -61,7 +62,7 @@ The output classification result should be structured as follows:
   "summary": string,
   "explain": string
 }
-In this structure, "categories" stores information about the divided categories, while "data" stores the classification of graph data corresponding to each id in the input id list IDLIST.
+In this structure, "categories" stores information about the divided categories, while "data" stores the classification of graph data corresponding to each id in the input id list ${input_ids}.
 
 
 Guidance:
@@ -263,6 +264,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
   const { intention, task, intentionSchema, updateIntentionSchema } = props;
   const { store } = useContext();
   const { data } = store;
+  const { thinkRef, updateThink } = useThink();
 
   const [state, setState] = useState<{
     summary: SummaryType | null;
@@ -275,7 +277,6 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
 
   const handleConfirm = async () => {
     if (MOCK.enable) {
-      console.log('MOCK', MOCK);
       setState(preState => {
         return {
           ...preState,
@@ -340,12 +341,15 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
           filtered_ids = sampleHalf(filtered_ids);
         }
 
-        const _res = await query([
-          new Message({
-            role: 'user',
-            content: current_prompt,
-          }),
-        ]);
+        const _res = await query(
+          [
+            new Message({
+              role: 'user',
+              content: current_prompt,
+            }),
+          ],
+          updateThink,
+        );
         res = JSON.parse(_res.message.content);
       } else {
         while (true) {
@@ -367,12 +371,15 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
           filtered_ids = sampleHalf(filtered_ids);
         }
 
-        const _res = await query([
-          new Message({
-            role: 'user',
-            content: current_prompt,
-          }),
-        ]);
+        const _res = await query(
+          [
+            new Message({
+              role: 'user',
+              content: current_prompt,
+            }),
+          ],
+          updateThink,
+        );
 
         if (_res.message.content) {
           res = JSON.parse(_res.message.content);
@@ -401,11 +408,12 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
         }
       }
 
-      all_ids = all_ids.filter(element => !data_ids.includes(element));
+      all_ids = all_ids.filter(element => {
+        return !filtered_ids.includes(element);
+      });
       iterate_time = iterate_time + 1;
     }
 
-    debugger;
     const _categories = getCategories(outputs, res.categories);
     _categories.forEach(element => {
       element.children = nodes.filter(n => (element.children || []).includes(n.id));
@@ -420,7 +428,6 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
         summary: res,
       };
     });
-    console.log(res);
   };
 
   return (
@@ -464,6 +471,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
       <Button block icon={<OpenAIOutlined />} onClick={handleConfirm} loading={loading}>
         Generate Mindmap
       </Button>
+      <Think ref={thinkRef} />
       {summary && <Summary {...summary} task={task} />}
     </Flex>
   );
