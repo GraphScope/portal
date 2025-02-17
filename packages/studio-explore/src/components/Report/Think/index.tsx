@@ -66,7 +66,7 @@ const Think = forwardRef((props, ref) => {
         transition: 'all .3s cubic-bezier(.4,0,.1,1)',
       };
   const icon = complete ? <CheckCircleOutlined style={{ color: 'green' }} /> : <OpenAIOutlined spin />;
-  const title = complete ? 'Thinking result' : 'Thinkng...';
+  const title = complete ? 'Thinking result' : 'Thinking...';
   if (content === '') {
     return null;
   }

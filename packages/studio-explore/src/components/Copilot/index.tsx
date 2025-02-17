@@ -68,7 +68,7 @@ const GPTStatements: React.FunctionComponent<IGPTStatementsProps> = props => {
         };
       });
 
-      const response = await query([...messages, message], controller.signal);
+      const response = await query([...messages, message], () => {}, controller.signal);
       if (!response) {
         updateState(preState => {
           return {
