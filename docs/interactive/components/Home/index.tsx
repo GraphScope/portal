@@ -1,23 +1,19 @@
 import React from 'react';
+import { Flex } from 'antd';
+import InteractiveEngine from './InteractiveEngine';
+import GraphScopeInstall from './GraphScopeInstall';
+import DownloadStatistics from './DownloadStatistics';
+import DataAnalysis from './DataAnalysis';
+import ComplexSupport from './ComplexSupport';
 
-const Home = () => {
-  return (
-    <div
-      style={{
-        height: '100vh',
-        padding: '200px',
-        background: 'grey',
-        textAlign: 'center',
-        color: '#fff',
-      }}
-    >
-      <h1 style={{ fontSize: '60px', marginBottom: '12px' }}>Unleash the Power of Graph Data</h1>
-      <h2 style={{ fontSize: '40px', marginBottom: '12px' }}>GraphScope Interactive Engine</h2>
-      <h5 style={{ fontSize: '20px' }}>
-        High-performance graph processing and analytics for enterprise-scale applications Flex
-      </h5>
-    </div>
-  );
-};
+const Home = () => (
+  <Flex gap={60} vertical>
+    <InteractiveEngine />
+    <GraphScopeInstall />
+    <DownloadStatistics />
+    <DataAnalysis />
+    {/* <ComplexSupport /> */}
+  </Flex>
+);
 
 export default Home;
