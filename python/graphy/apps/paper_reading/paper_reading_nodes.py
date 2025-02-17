@@ -13,6 +13,7 @@ from config import (
 from extractor import PaperExtractor
 from db import PersistentStore
 from utils.profiler import profiler
+from utils.cryptography import id_generator
 
 from langchain_core.pydantic_v1 import BaseModel, Field, create_model
 from langchain_core.language_models.llms import BaseLLM
@@ -45,7 +46,7 @@ def process_id(base_name: str) -> str:
 
     # Ensure it has at least 3 characters
     if len(id_name) < 3:
-        id_name = f"{hash(base_name)}_{id_name}"
+        id_name = f"{id_generator(base_name)}_{id_name}"
 
     return id_name
 

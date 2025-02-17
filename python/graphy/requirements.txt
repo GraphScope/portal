@@ -38,5 +38,6 @@ torch==2.3.0
 transformers==4.41
 webdriver-manager>=4.0
 Werkzeug>=3.0.3
+wordninja>=2.0.0
 socksio>=1.0.0
 
