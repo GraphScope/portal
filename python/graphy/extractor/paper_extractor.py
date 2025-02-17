@@ -283,24 +283,10 @@ class PaperExtractor(PDFExtractor):
         if meta_title_len <= 2:
             largest_sentence = self.get_largest_sentence_in_page_one()
 
-            # print("====== THREE VERSIONS TITLE ======")
-            # print("META: " + str(meta["title"]))
-            # print("EXTRACT: " + str(record_title))
-            # print("LARGEST: " + str(largest_sentence))
-
-            if (
-                # extract_title_len <= meta_title_len
-                # and
-                len(largest_sentence.split())
-                < meta_title_len
-            ):
+            if len(largest_sentence.split()) < meta_title_len:
                 return meta
             else:
                 meta["title"] = largest_sentence
-            # elif extract_title_len <= largest_sentence:
-            #    meta["title"] = largest_sentence
-            # else:
-            #    meta["title"] = record_title
 
         if len(self.input_meta_data) > 0:
             meta.update(self.input_meta_data)

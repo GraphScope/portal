@@ -52,6 +52,8 @@ def process_id(base_name: str) -> str:
     return id_name
 
 
+"""
+# Uncomment this function if you want to move the output directory to a different location
 def change_path(original_path, new_prefix=WF_OUTPUT_DIR) -> str:
     if not original_path:
         return None
@@ -72,6 +74,7 @@ def change_path(original_path, new_prefix=WF_OUTPUT_DIR) -> str:
         # If the suffix is not found, leave the path unchanged
         new_path = original_path
     return new_path
+"""
 
 
 class PaperInspector(DAGInspectorNode):
@@ -151,8 +154,9 @@ class PaperInspector(DAGInspectorNode):
     def pre_execute(self, state: Dict[str, Any], input: DataType) -> DataType | None:
         paper_file_path = input.get("paper_file_path", None)
         paper_meta_path = input.get("paper_meta_path", None)
-        paper_file_path = change_path(paper_file_path)
-        paper_meta_path = change_path(paper_meta_path)
+        # Uncomment these if you want to move the output directory to a different location
+        # paper_file_path = change_path(paper_file_path)
+        # paper_meta_path = change_path(paper_meta_path)
         if not paper_file_path:
             logger.warning("No 'paper_file_path' provided in input data.")
             logger.info(f"Try to create fake extractor from meta: {paper_meta_path}")

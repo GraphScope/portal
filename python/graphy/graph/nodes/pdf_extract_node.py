@@ -64,7 +64,7 @@ class PDFExtractNode(BaseNode):
             if self.arxiv_fetch_paper:
                 paper_title = paper_metadata.get("title", "")
                 if len(paper_title) > 0:
-                    result = self.arxiv_fetcher.fetch_paper(paper_title, 3)
+                    result = self.arxiv_fetcher.fetch_paper(paper_title, 5)
                     if result:
                         paper_metadata.update(result)
 
