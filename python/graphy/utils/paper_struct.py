@@ -140,7 +140,15 @@ class Paper:
             parsed_meta["month"] = published_date.month
 
         # logger.error(parsed_meta)
-        parsed_meta["author"] = Paper.clean_author_name(parsed_meta["author"])
+
+        if not parsed_meta["summary"] and "abstract" in parsed_meta:
+            parsed_meta["summary"] = parsed_meta["abstract"]
+            del parsed_meta["abstract"]
+        if isinstance(parsed_meta["authors"], str) and "and" in parsed_meta["authors"]:
+            parsed_meta["authors"] = parsed_meta["authors"].split(" and ")
+            parsed_meta["author"] = parsed_meta["authors"][0]
+
+        parsed_meta["author"] = Paper.clean_author_name(parsed_meta["author"].strip())
         parsed_meta["authors"] = [
             Paper.clean_author_name(author.strip())
             for author in parsed_meta["authors"]
