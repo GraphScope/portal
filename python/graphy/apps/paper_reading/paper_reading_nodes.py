@@ -152,8 +152,8 @@ class PaperInspector(DAGInspectorNode):
         return cls(name, graph, llm_model, embeddings_model, vectordb, persist_store)
 
     def pre_execute(self, state: Dict[str, Any], input: DataType) -> DataType | None:
-        paper_file_path = input.get("paper_file_path", None)
-        paper_meta_path = input.get("paper_meta_path", None)
+        paper_file_path: str = input.get("paper_file_path", "")
+        paper_meta_path: str = input.get("paper_meta_path", "")
         # Uncomment these if you want to move the output directory to a different location
         # paper_file_path = change_path(paper_file_path)
         # paper_meta_path = change_path(paper_meta_path)
@@ -162,6 +162,14 @@ class PaperInspector(DAGInspectorNode):
             logger.info(f"Try to create fake extractor from meta: {paper_meta_path}")
             if not paper_meta_path:
                 return None
+
+        if not paper_meta_path and "_NAVIGATOR" in paper_file_path:
+            paper_meta_path = paper_file_path.replace(
+                "_NAVIGATOR", "_META_FOLDER"
+            ).replace(".pdf", ".json")
+
+            if not os.path.exists(paper_meta_path):
+                paper_meta_path = ""
 
         data_id = None
         # Initialize the paper extractor and other components
