@@ -100,7 +100,7 @@ class ArxivFetcher:
         :param timeout: The maximum time (in seconds) allowed for each paper fetching operation.
         :param download_folder: The folder where the fetched papers will be downloaded.
         """
-        self.client = arxiv.Client(delay_seconds=0.5, page_size=6, num_retries=1)
+        self.client = arxiv.Client(delay_seconds=0.5, page_size=20, num_retries=1)
         self.timeout = timeout
         self.download_folder = download_folder
         self.bib_search_arxiv = BibSearchArxiv(
@@ -139,7 +139,7 @@ class ArxivFetcher:
 
     def find_paper_from_arxiv(self, name, max_results):
         new_names = sorted(
-            [s.strip() for s in re.split(r"[.\\/]", name.strip()) if len(s) >= 20],
+            [s.strip() for s in re.split(r"[.\\/]", name.strip()) if len(s) < 100],
             key=len,
             reverse=True,
         )
