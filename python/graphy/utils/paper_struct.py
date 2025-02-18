@@ -121,6 +121,13 @@ class Paper:
                     elif key in Paper.str_header():
                         parsed_meta[key] = ""
 
+        if not parsed_meta["summary"] and "abstract" in meta:
+            parsed_meta["summary"] = meta["abstract"]
+        if not parsed_meta["primary_category"] and "primary_class" in meta:
+            parsed_meta["primary_category"] = meta["primary_class"]
+        if not parsed_meta["categories"] and parsed_meta["primary_category"]:
+            parsed_meta["categories"] = [parsed_meta["primary_category"]]
+
         paper_id = parsed_meta.get("id", "")
         if paper_id == "":
             parsed_meta["id"] = id_generator(parsed_meta.get("title", ""))
@@ -141,11 +148,8 @@ class Paper:
 
         # logger.error(parsed_meta)
 
-        if not parsed_meta["summary"] and "abstract" in parsed_meta:
-            parsed_meta["summary"] = parsed_meta["abstract"]
-            del parsed_meta["abstract"]
-        if isinstance(parsed_meta["authors"], str) and "and" in parsed_meta["authors"]:
-            parsed_meta["authors"] = parsed_meta["authors"].split(" and ")
+        if not parsed_meta["authors"] and "and" in parsed_meta["author"]:
+            parsed_meta["authors"] = parsed_meta["author"].split(" and ")
             parsed_meta["author"] = parsed_meta["authors"][0]
 
         parsed_meta["author"] = Paper.clean_author_name(parsed_meta["author"].strip())
