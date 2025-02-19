@@ -1,6 +1,7 @@
 from utils.data_extractor import GraphBuilder
 
 import argparse
+import logging
 
 
 def parse_arguments():
@@ -28,6 +29,13 @@ def parse_arguments():
         help="Name of graph instance to import to GraphScope Interactive. Default is None (no import).",
     )
     return parser.parse_args()
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler()],
+)
 
 
 if __name__ == "__main__":
