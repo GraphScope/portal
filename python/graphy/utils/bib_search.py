@@ -7,6 +7,7 @@ import difflib
 import shutil
 import uuid
 import traceback
+import tarfile
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -21,6 +22,7 @@ from selenium.common.exceptions import TimeoutException
 from fake_useragent import UserAgent
 from typing import List, Dict, Callable
 import time, random, re
+import copy
 import os
 import time
 import threading
@@ -1020,8 +1022,8 @@ class BibSearchArxiv(BibSearch):
     def __init__(self, persist_store=None, meta_folder="") -> None:
         super().__init__(persist_store=persist_store, meta_folder=meta_folder)
 
-    def format_json_object(self, paper_info):
-        return {
+    def format_json_object(self, paper_info, extra={}):
+        json_output = {
             "title": paper_info.title,
             "id": paper_info.get_short_id(),
             "author": str(paper_info.authors[0]),
@@ -1038,6 +1040,121 @@ class BibSearchArxiv(BibSearch):
             "journal_ref": paper_info.journal_ref,
             "bib": self.search_by_object(paper_info),
         }
+        for key in extra:
+            json_output[key] = copy.deepcopy(extra[key])
+        return json_output
+
+    def extract_and_parse_bib(self, tar_path):
+        extraction_dir = tar_path.split(".")[0]
+        logger.error(f"extraction_dir: {extraction_dir}")
+
+        if not os.path.exists(extraction_dir):
+            os.makedirs(extraction_dir, exist_ok=True)
+
+        with tarfile.open(tar_path, "r") as tar:
+            tar.extractall(path=extraction_dir)
+
+        titles = []
+
+        for root, dirs, files in os.walk(extraction_dir):
+            for file in files:
+                if file.endswith(".bbl") or file == "bbl.tex":
+                    bib_path = os.path.join(root, file)
+
+                    with open(bib_path, "r", encoding="utf-8") as f:
+                        content = f.read()
+
+                        title_signals = [("\\newblock", "\\newblock"), ("``", "''")]
+
+                        title_at_least_len = 6
+
+                        for signal in title_signals:
+                            pattern = rf"\\bibitem.*?{re.escape(signal[0])}\s*(?=(?:.*?\S){{{title_at_least_len},}})(.*?)(?=\s*{re.escape(signal[1])}|\\bibitem|$)"
+
+                            matches = re.findall(pattern, content, re.DOTALL)
+
+                            titles = []
+                            # title enclosed with {}
+                            for match in matches:
+                                emph_pattern = r"\\emph{((?:[^{}]|\{[^{}]*\})*)}"
+                                emph_match = re.search(emph_pattern, match)
+                                if emph_match:
+                                    match = emph_match.group(1)
+
+                                # match = re.sub(r"\\emph{([^}]*)}", r"\1", match)
+                                # match = re.sub(
+                                #     r"\\href\s*{[^}]*}\s*{([^}]*)}", r"\1", match
+                                # )
+
+                                href_pattern = r"\\href\s*{((?:[^{}]|\{[^{}]*\})*)}\s*{((?:[^{}]|\{[^{}]*\})*)}"
+                                href_match = re.search(href_pattern, match)
+                                if href_match:
+                                    match = href_match.group(2)
+
+                                showarticle_pattern = (
+                                    r"\\showarticletitle{((?:[^{}]|\{[^{}]*\})*)}"
+                                )
+                                showarticletitle_match = re.search(
+                                    showarticle_pattern, match
+                                )
+
+                                if showarticletitle_match:
+                                    tmp_match = showarticletitle_match.group(1)
+                                    if len(
+                                        tmp_match
+                                    ) >= title_at_least_len and not tmp_match.endswith(
+                                        ":"
+                                    ):
+                                        match = tmp_match
+                                    else:
+                                        match = re.sub(
+                                            showarticle_pattern, r"\1", match
+                                        )
+
+                                bibinfo_title_pattern = (
+                                    r"\\bibinfo\{(title|booktitle)\}\{(.+?)\}"
+                                )
+                                bibinfo_title_match = re.search(
+                                    bibinfo_title_pattern, match
+                                )
+
+                                if bibinfo_title_match:
+                                    match = bibinfo_title_match.group(2)
+
+                                # match = re.sub(r"{\\em\s+([^}]*)}", r"\1", match)
+
+                                em_pattern = r"{\\em\s+((?:[^{}]|\{[^{}]*\})*)}"
+                                em_match = re.search(em_pattern, match)
+                                if em_match:
+                                    match = em_match.group(1)
+
+                                match = re.sub(r"\\em\s+", "", match)
+                                match = re.sub(r"[.,;:!?]$", "", match.strip())
+
+                                cleaned_match = (
+                                    match.strip().replace("\n", "").replace("-\n", "")
+                                )
+                                cleaned_match = re.sub(r"[{}]", "", cleaned_match)
+                                if cleaned_match not in titles:
+                                    if not cleaned_match.startswith(
+                                        "http"
+                                    ) and not cleaned_match.startswith("www."):
+                                        titles.append(cleaned_match)
+
+                            if len(titles) > 0:
+                                break
+
+        # logger.error(f"output {len(titles)} titles: {titles}")
+
+        for root, dirs, files in os.walk(extraction_dir, topdown=False):
+            for name in files:
+                os.remove(os.path.join(root, name))
+            for name in dirs:
+                os.rmdir(os.path.join(root, name))
+        os.rmdir(extraction_dir)
+        os.remove(tar_path)
+
+        return titles
 
     def search_by_object(self, paper_info) -> List[str]:
         """BibTex string of the reference."""
@@ -1069,6 +1186,8 @@ class BibSearchArxiv(BibSearch):
         arxiv_file_name = f"arxiv_{file_name}".lower()
         download_file_name = f"arxiv_{file_name}.pdf".lower()
         download_file_path = os.path.join(download_path, download_file_name)
+        download_tar_name = f"arxiv_{file_name}.tar".lower()
+        download_tar_path = os.path.join(download_path, download_tar_name)
         logger.debug(f"download to {download_file_path}")
 
         meta_file_path = None
@@ -1080,10 +1199,25 @@ class BibSearchArxiv(BibSearch):
                     arxiv_file_name + ".json",
                 )
                 if not self.persist_store.get_state(self.meta_folder, arxiv_file_name):
+                    extra_info = {}
+                    try:
+                        logger.warning(
+                            f"start to download source of {download_tar_path}"
+                        )
+                        best_match.download_source(
+                            dirpath=download_path, filename=download_tar_name
+                        )
+                        extra_info["reference"] = self.extract_and_parse_bib(
+                            download_tar_path
+                        )
+                    except Exception as e:
+                        logger.warning(
+                            f"Download source of {download_tar_name} error: {e}"
+                        )
                     self.persist_store.save_state(
                         self.meta_folder,
                         arxiv_file_name,
-                        self.format_json_object(best_match),
+                        self.format_json_object(best_match, extra=extra_info),
                     )
         except Exception as e:
             meta_file_path = None
