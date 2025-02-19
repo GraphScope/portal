@@ -1,15 +1,15 @@
 import React from 'react';
-import { Divider, Typography, Flex } from 'antd';
-
-const Logo = ({ style }) => {
-  const { color = '#333' } = style || {};
+import { Divider, Typography, Flex, theme, ConfigProvider } from 'antd';
+import { useTheme } from '../Hooks';
+const Logo = () => {
+  const { token } = theme.useToken();
+  const color = token.colorText;
 
   return (
     <div
       style={{
         display: 'flex',
         width: '120px',
-        ...style,
       }}
     >
       <svg width="365px" height="113px" viewBox="0 0 365 113" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -102,16 +102,37 @@ const Logo = ({ style }) => {
     </div>
   );
 };
-function Header({ title, style = {} }) {
+function Header({ title }: { title: string }) {
   return (
     <Flex align="center" justify="center" gap={6} style={{ width: '250px' }}>
-      <Logo style={{ width: '120px', ...style }} />
+      <Logo />
       <Divider type="vertical" style={{ height: '20px', borderInlineStart: '1px solid #ddd', marginTop: '4px' }} />
-      <Typography.Title level={5} style={{ margin: '0px' }}>
+      <Typography.Title level={5} style={{ margin: '0px' }} italic>
         {title}
       </Typography.Title>
     </Flex>
   );
 }
 
-export default Header;
+const algorithmMap = {
+  dark: theme.darkAlgorithm,
+  light: theme.defaultAlgorithm,
+  system: theme.defaultAlgorithm,
+};
+export default ({ title }: { title: string }) => {
+  const theme = useTheme();
+  //@ts-ignore
+  const algorithm = algorithmMap[theme];
+  return (
+    <ConfigProvider
+      theme={{
+        algorithm,
+        token: {
+          colorPrimary: '#2581f0', //'#00b96b',
+        },
+      }}
+    >
+      <Header title={title} />
+    </ConfigProvider>
+  );
+};
