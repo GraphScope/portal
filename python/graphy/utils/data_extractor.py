@@ -192,10 +192,15 @@ class GraphBuilder:
     def extract_data(self, dimension_node_names=[]):
         total_edges_dict = {}
         for folder in self.persist_store.get_total_data():
-            print("Process folder: ", folder)
-            paper_data = self.persist_store.get_state(folder, "PaperNew")
+            paper_data = {}
+            for state_name in ["PaperV2", "PaperNew", "Paper"]:
+                paper_data = self.persist_store.get_state(folder, state_name)
+                if paper_data and "summary" in paper_data:
+                    break
+
             if not paper_data:
-                paper_data = self.persist_store.get_state(folder, "Paper")
+                continue
+
             edge_data = self.persist_store.get_state(folder, "_Edges")
             if paper_data:
                 paper_data = paper_data.get("data", {})

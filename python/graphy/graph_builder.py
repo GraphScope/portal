@@ -41,7 +41,7 @@ if __name__ == "__main__":
     graph_builder = GraphBuilder(input, output)
     if input:
         graph_builder.extract_data()
-        schema = graph_builder.build_graph(output_path=args.output)
+        schema = graph_builder.build_graph()
     else:
         schema = graph_builder.get_interactive_schema()
     if gs_instance_name:
