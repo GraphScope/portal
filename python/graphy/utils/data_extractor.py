@@ -191,15 +191,13 @@ class GraphBuilder:
 
     def extract_data(self, dimension_node_names=[]):
         total_edges_dict = {}
+        paper_with_summary = 0
         for folder in self.persist_store.get_total_data():
             paper_data = {}
             for state_name in ["PaperV2", "PaperNew", "Paper"]:
                 paper_data = self.persist_store.get_state(folder, state_name)
                 if paper_data and "summary" in paper_data:
                     break
-
-            if not paper_data:
-                continue
 
             edge_data = self.persist_store.get_state(folder, "_Edges")
             if paper_data:
@@ -241,6 +239,8 @@ class GraphBuilder:
                         paper_id, paper_data, folder, node_name
                     )
                 if paper_id not in self.facts_dict:
+                    if "summary" in paper_data and paper_data["summary"]:
+                        paper_with_summary += 1
                     self.facts_dict[paper_id] = sanitize_data(paper_data)
             if edge_data:
                 for edge_name, edge_pairs in edge_data.items():
@@ -258,6 +258,9 @@ class GraphBuilder:
         # Add simulated cited_by_count, given they are not present
         num_papers = len(self.facts_dict)
         dist = generate_reference_counts(num_papers)
+        logging.info(
+            f"Number of Papers: {num_papers}; Number of Papers with summary: {paper_with_summary}"
+        )
         for i, paper_data in enumerate(self.facts_dict.values()):
             if "cited_by_count" not in paper_data or not paper_data["cited_by_count"]:
                 paper_data["cited_by_count"] = int(dist[i])
