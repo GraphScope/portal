@@ -5,7 +5,7 @@ from gs_interactive.client.driver import Driver
 from gs_interactive.models import *
 
 from db import JsonFileStore
-from utils import Paper
+from utils import Paper, ArxivFetcher
 from utils.cryptography import id_generator
 
 import numpy as np
@@ -192,6 +192,7 @@ class GraphBuilder:
     def extract_data(self, dimension_node_names=[]):
         total_edges_dict = {}
         paper_with_summary = 0
+        arxiv_fetcher = ArxivFetcher()
         for folder in self.persist_store.get_total_data():
             paper_data = {}
             for state_name in ["PaperV2", "PaperNew", "Paper"]:
@@ -210,6 +211,11 @@ class GraphBuilder:
                         paper_data["id"] = id_generator(paper_data["title"])
                     else:
                         continue
+
+                # if "summary" in paper_data and not paper_data["summary"]:
+                #    result = arxiv_fetcher.fetch_paper(paper_data["title"], 20)
+                #    if result:
+                #        paper_data.update(sanitize_data(result))
                 # some hacking messy stuff
                 if "reference" in paper_data:
                     del paper_data["reference"]
@@ -319,6 +325,7 @@ class GraphBuilder:
                             "node_type": "Dimension",
                         }
                         dimensions_dict[data_id].update(sanitize_data(item))
+                        print()
                         edges.append(
                             {
                                 "source": paper_id,
