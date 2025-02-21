@@ -105,13 +105,6 @@ class Paper:
         meta = {key.lower(): value for key, value in meta.items()}
         parsed_meta = {}
 
-        paper_title = parsed_meta.get("title", "")
-        if not paper_title:
-            raise ValueError("Title is not found in the Paper's metadata.")
-
-        paper_title = unicodedata.normalize("NFKD", paper_title)
-        parsed_meta["title"] = paper_title
-
         for key in Paper.header():
             if key not in meta:
                 if key in Paper.list_header():
@@ -130,6 +123,10 @@ class Paper:
                         parsed_meta[key] = None
                     elif key in Paper.str_header():
                         parsed_meta[key] = ""
+
+        paper_title = parsed_meta.get("title", "")
+        if not paper_title:
+            raise ValueError("Title is not found in the Paper's metadata.")
 
         if not parsed_meta["summary"] and "abstract" in meta:
             parsed_meta["summary"] = meta["abstract"]
@@ -179,7 +176,11 @@ class Paper:
         for k, v in [
             (
                 "author",
-                " and ".join([str(author) for author in parsed_meta["authors"]]),
+                (
+                    " and ".join([str(author) for author in parsed_meta["authors"]])
+                    if parsed_meta["authors"]
+                    else parsed_meta["author"]
+                ),
             ),
             ("title", parsed_meta["title"]),
             ("doi", parsed_meta["doi"]),
