@@ -1,7 +1,6 @@
 import kuzu from 'kuzu-wasm';
-// import a from 'kuzu-wasm/kuzu_wasm_worker'
+
 import { uniqueElementsBy } from './utils';
-import { debug } from 'console';
 
 interface SchemaItem {
   source?: string;
@@ -313,11 +312,18 @@ export class KuzuDriver {
           const message = await res.toString();
           await res.close();
           logs.nodes.push({
+            success: true,
             name: file.name,
             message: message,
           });
         } catch (error) {
           console.error('Error uploading file:', error);
+          logs.nodes.push({
+            success: false,
+            name: file.name,
+            //@ts-ignore
+            message: error.toString(),
+          });
         }
       }
     }
@@ -332,11 +338,18 @@ export class KuzuDriver {
           const message = await res.toString();
           await res.close();
           logs.edges.push({
+            success: true,
             name: file.name,
             message: message,
           });
         } catch (error) {
           console.error('Error uploading file:', error);
+          logs.edges.push({
+            success: false,
+            name: file.name,
+            //@ts-ignore
+            message: error.toString(),
+          });
         }
       }
     }

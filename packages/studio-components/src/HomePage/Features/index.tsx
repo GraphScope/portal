@@ -18,16 +18,16 @@ const Features: React.FunctionComponent<IFeaturesProps> = props => {
       <Row
         gutter={[
           {
-            xs: 12,
-            sm: 12,
-            md: 12,
+            xs: 24,
+            sm: 24,
+            md: 24,
             lg: 24,
             xl: 24,
           },
           {
-            xs: 12,
-            sm: 12,
-            md: 12,
+            xs: 24,
+            sm: 24,
+            md: 24,
             lg: 24,
             xl: 24,
           },

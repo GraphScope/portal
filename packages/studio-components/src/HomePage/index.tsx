@@ -35,7 +35,14 @@ const HomeSite = (props: SiteThemeProps) => {
       <Flex vertical align="center" justify="center" gap={12}>
         <ResetCSS />
         <HeroSection {...hero} />
-        <Features items={features} />
+        <Flex
+          vertical
+          align="center"
+          style={{ width: '100%', maxWidth: '90rem', padding: '0 1.5rem' }}
+          justify="center"
+        >
+          <Features items={features} />
+        </Flex>
       </Flex>
     </ConfigProvider>
   );
