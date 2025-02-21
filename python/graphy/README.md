@@ -229,7 +229,7 @@ and can be blocked if used excessively.
     "name": "Reference",
     "source": "PaperInspector",
     "target": "PaperInspector",
-    "method": "scholar" // or "pubmed"
+    "method": "scholar"
 }
 ```
 
@@ -274,7 +274,18 @@ For larger datasets, we recommend using **[GraphScope Interactive](https://graph
 
 **Step 1: Installing GraphScope Interactive**
 
-To leverage the power of GraphScope Interactive, you will need to follow the [installation instructions](https://graphscope.io/docs/latest/flex/interactive/installation) to install and start the GraphScope Interactive service.
+To leverage the power of GraphScope Interactive, you will need to follow the following instruction to install and start the GraphScope Interactive service.
+
+```bash
+pip install gsctl
+
+gsctl instance deploy --type interactive --set storage.string_default_max_length=10000
+
+export INTERACTIVE_ADMIN_ENDPOINT=http://127.0.0.1:7777
+```
+
+> Please refer to the [GraphScope Interactive documentation](https://graphscope.io/docs/latest/flex/interactive/overview) for more detailed instructions.
+
 
 Once the service is up and running, parse the scrapped data and import it into GraphScope using the following command:
 
