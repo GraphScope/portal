@@ -144,6 +144,9 @@ importers:
 
   docs/interactive:
     dependencies:
+      '@graphscope/studio-components':
+        specifier: workspace:*
+        version: link:../../packages/studio-components
       next:
         specifier: 15.0.2
         version: 15.0.2(@babel/core@7.26.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.81.0)

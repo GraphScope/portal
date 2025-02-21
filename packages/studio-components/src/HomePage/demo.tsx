@@ -1,21 +1,22 @@
 import React from 'react';
-
-import { Icons, HomePage } from '@graphscope/studio-components';
+import HomeSite from '.';
+import * as Icons from '../Icons';
 import { GithubOutlined } from '@ant-design/icons';
 
 const hero = {
-  title: 'A High-Performance, Graph-native Engine for Massive Concurrent Queries',
-  description: undefined,
+  title: 'An Intuitive Graph Data Management Tool for GraphScope',
+  description:
+    'It offers one-stop access to data modeling, importing, querying, and monitoring, catering to both Interactive and Insight engines within the Flex architecture',
   actions: [
     {
       title: 'Try it online',
-      link: null,
+      link: 'https://gsp.vercel.app',
       icon: null,
       primary: true,
     },
     {
       title: 'Github',
-      link: null,
+      link: 'https://github.com/GraphScope/portal',
       icon: <GithubOutlined />,
     },
   ],
@@ -55,5 +56,5 @@ const features = [
 ];
 
 export default () => {
-  return <HomePage hero={hero} features={features} />;
+  return <HomeSite hero={hero} features={features} />;
 };
