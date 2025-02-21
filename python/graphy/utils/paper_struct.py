@@ -8,6 +8,7 @@ import copy
 import logging
 import re
 import os
+import unicodedata
 
 logger = logging.getLogger()
 
@@ -104,6 +105,13 @@ class Paper:
         meta = {key.lower(): value for key, value in meta.items()}
         parsed_meta = {}
 
+        paper_title = parsed_meta.get("title", "")
+        if not paper_title:
+            raise ValueError("Title is not found in the Paper's metadata.")
+
+        paper_title = unicodedata.normalize("NFKD", paper_title)
+        parsed_meta["title"] = paper_title
+
         for key in Paper.header():
             if key not in meta:
                 if key in Paper.list_header():
@@ -131,8 +139,8 @@ class Paper:
             parsed_meta["categories"] = [parsed_meta["primary_category"]]
 
         paper_id = parsed_meta.get("id", "")
-        if paper_id == "":
-            parsed_meta["id"] = id_generator(parsed_meta.get("title", "").lower())
+        if not paper_id:
+            parsed_meta["id"] = id_generator(paper_title)
 
         if not parsed_meta.get("published", ""):
             try:
