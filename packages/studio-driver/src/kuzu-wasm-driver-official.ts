@@ -86,13 +86,13 @@ export class KuzuDriver {
     // this.db = await result.Database(this.dbname, 0, 10, false, false, 4194304 * 16 * 4);
     // this.conn = await result.Connection(this.db);
     this.FS = this.kuzuEngine.FS;
-    console.log("mkdir")
-    try{
+    console.log('mkdir');
+    try {
       await this.FS?.mkdir('data');
     } catch {
-      console.log("folder data already exists");
+      console.log('folder data already exists');
     }
-    console.log("finish mkdir")
+    console.log('finish mkdir');
 
     // this.FS?.mkdir('export');
   }
@@ -104,7 +104,7 @@ export class KuzuDriver {
       await res.close();
     } catch (err) {
       console.log(err);
-    }    
+    }
   }
 
   async use(datasetId: string) {
@@ -120,7 +120,7 @@ export class KuzuDriver {
     }
 
     await this.FS?.mountIdbfs(this.targetPath);
-    console.log("Mount ", this.targetPath);
+    console.log('Mount ', this.targetPath);
     // if (!this.mountedPath.has(targetPath)) {
     //   console.log(`MOUNT ${this.curDataset} ...`);
     //   try {
@@ -278,9 +278,7 @@ export class KuzuDriver {
             var res;
 
             const { delimiter } = meta;
-            res = await this.conn?.query(
-              `COPY ${label_name} FROM "${filePath}" (HEADER=true, DELIM='${delimiter}');`,
-            );
+            res = await this.conn?.query(`COPY ${label_name} FROM "${filePath}" (HEADER=true, DELIM='${delimiter}');`);
             resolve(res); // Resolve the Promise
           } catch (error) {
             reject(error); // Reject the Promise on error
@@ -330,7 +328,7 @@ export class KuzuDriver {
       });
       if (file) {
         try {
-          const res =  await this.uploadCsvFile(file, edge.meta);
+          const res = await this.uploadCsvFile(file, edge.meta);
           const message = await res.toString();
           await res.close();
           logs.edges.push({
@@ -342,7 +340,7 @@ export class KuzuDriver {
         }
       }
     }
-    
+
     return logs;
   }
 
@@ -381,7 +379,7 @@ export class KuzuDriver {
   }
 
   async query(queryScript: string): Promise<any> {
-    console.log("query: ", queryScript);
+    console.log('query: ', queryScript);
     if (queryScript === 'CALL kuzu.meta.schema') {
       return await this.querySchema();
     }
@@ -398,7 +396,7 @@ export class KuzuDriver {
         edges: [],
         raw: [],
       };
-    } 
+    }
     try {
       const data = await queryResult.getAllObjects();
       // const data = JSON.parse(qres);
@@ -460,7 +458,7 @@ export class KuzuDriver {
   }
 
   async querySchema(): Promise<any> {
-    console.log("query schema");
+    console.log('query schema');
     const tables_raw = await this.conn?.query(`call show_tables() return *`);
     const tables = await tables_raw.getAllObjects();
     await tables_raw.close();
@@ -483,7 +481,7 @@ export class KuzuDriver {
     for (let i = 0; i < tables.length; i++) {
       const { name, type } = tables[i];
       const properties_raw = await this.conn?.query(`call TABLE_INFO('${name}') return *`);
-      const properties = await properties_raw.getAllObjects();;
+      const properties = await properties_raw.getAllObjects();
       await properties_raw.close();
       if (type === 'NODE') {
         nodes.push({
@@ -540,7 +538,7 @@ export class KuzuDriver {
 
   async loadFromIndexDB(): Promise<void> {
     try {
-      await this.FS.syncfs(true);  // 直接 await 异步的 syncfs 方法
+      await this.FS.syncfs(true); // 直接 await 异步的 syncfs 方法
       console.log('Load from indexdb successfully');
     } catch (err) {
       console.error('Error loading from indexdb: ', err);
@@ -576,27 +574,27 @@ export class KuzuDriver {
     }
 
     await this.FS.unmount(this.targetPath);
-    console.log("Unmount ", this.targetPath);
+    console.log('Unmount ', this.targetPath);
   }
 
   async writeBack(): Promise<{ success: boolean; message: string }> {
     console.log('start to write back');
-    
+
     try {
       console.log('Attempting to sync to IndexDB...');
-      await this.FS.syncfs(false);  // 直接 await 异步的 syncfs 方法
-    
+      await this.FS.syncfs(false); // 直接 await 异步的 syncfs 方法
+
       console.log('Save to indexdb successfully');
       return {
         success: true,
         message: 'Save to indexdb successfully',
       };
-  
     } catch (err) {
       console.error('Error saving to indexdb: ', err);
       return {
         success: false,
-        message: "error: " + err.toString(),  // 使用 toString 获得详细的错误信息
+        //@ts-ignore
+        message: 'error: ' + err.toString(), // 使用 toString 获得详细的错误信息
       };
     }
   }
@@ -614,7 +612,8 @@ export class KuzuDriver {
       console.error('Error saving to indexdb: ', err);
       return {
         success: false,
-        message: "error: " + err.toString(),  // 使用 toString 获得详细的错误信息
+        //@ts-ignore
+        message: 'error: ' + err.toString(), // 使用 toString 获得详细的错误信息
       };
     }
   }
@@ -622,4 +621,3 @@ export class KuzuDriver {
     await this.closeDataset();
   }
 }
- 
