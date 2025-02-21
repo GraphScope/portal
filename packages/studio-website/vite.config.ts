@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react';
 import { viteSingleFile } from 'vite-plugin-singlefile';
 import dotenv from 'dotenv';
 import wasm from 'vite-plugin-wasm';
-import path from 'path';
 
 // 获取传递的参数
 const args = process.argv.slice(2);
@@ -76,6 +75,6 @@ export default defineConfig({
   },
   plugins,
   optimizeDeps: {
-    exclude: ['@kuzu/kuzu-wasm'],
+    exclude: ['@kuzu/kuzu-wasm', 'kuzu-wasm'],
   },
 });

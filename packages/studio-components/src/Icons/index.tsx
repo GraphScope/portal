@@ -15,3 +15,7 @@ export { default as Lasso } from './Lasso';
 export { default as File } from './File';
 export { default as Arrow } from './Arrow';
 export { default as Punctuation } from './Punctuation';
+export { default as Database } from './Database';
+export { default as Explorer } from './Explorer';
+export { default as Qps } from './Qps';
+export { default as Model } from './Model';

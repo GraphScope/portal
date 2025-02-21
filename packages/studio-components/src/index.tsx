@@ -42,3 +42,4 @@ export { default as Illustration } from './Illustration';
 export { default as CollapseCard } from './CollapseCard';
 
 export { default as EngineFeature } from './EngineFeature';
+export { default as HomePage } from './HomePage';
