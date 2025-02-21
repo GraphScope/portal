@@ -1,7 +1,6 @@
 import kuzu from 'kuzu-wasm';
-// import a from 'kuzu-wasm/kuzu_wasm_worker'
+
 import { uniqueElementsBy } from './utils';
-import { debug } from 'console';
 
 interface SchemaItem {
   source?: string;
@@ -313,11 +312,18 @@ export class KuzuDriver {
           const message = await res.toString();
           await res.close();
           logs.nodes.push({
+            success: true,
             name: file.name,
             message: message,
           });
         } catch (error) {
           console.error('Error uploading file:', error);
+          logs.nodes.push({
+            success: false,
+            name: file.name,
+            //@ts-ignore
+            message: error.toString(),
+          });
         }
       }
     }
@@ -332,11 +338,18 @@ export class KuzuDriver {
           const message = await res.toString();
           await res.close();
           logs.edges.push({
+            success: true,
             name: file.name,
             message: message,
           });
         } catch (error) {
           console.error('Error uploading file:', error);
+          logs.edges.push({
+            success: false,
+            name: file.name,
+            //@ts-ignore
+            message: error.toString(),
+          });
         }
       }
     }
@@ -394,12 +407,22 @@ export class KuzuDriver {
       return {
         nodes: [],
         edges: [],
-        raw: [],
+        table: [],
       };
     }
     try {
-      const data = await queryResult.getAllObjects();
-      // const data = JSON.parse(qres);
+      // 使用 replacer 函数处理 BigInt
+      const jsonString = (obj: any) =>
+        JSON.stringify(obj, (key, value) => {
+          if (typeof value === 'bigint') {
+            return value.toString(); // 将 BigInt 转换为字符串
+          }
+          return value; // 其他类型的值保持不变
+        });
+
+      const _data = await queryResult.getAllObjects();
+
+      const data = JSON.parse(jsonString(_data));
 
       const nodes: any[] = [];
       const edges: any[] = [];
@@ -442,17 +465,20 @@ export class KuzuDriver {
       const _edges = uniqueElementsBy(edges, (a, b) => {
         return a.id === b.id;
       });
-      console.log({ nodes: _nodes, edges: _edges, raw: data });
+
+      console.log({ nodes: _nodes, edges: _edges, table: data });
       await queryResult.close();
-      return { nodes: _nodes, edges: _edges, raw: data };
+
+      return { nodes: _nodes, edges: _edges, table: data };
     } catch (error) {
       console.error(error);
       const raw_data = JSON.parse(await queryResult.toString());
+
       await queryResult.close();
       return {
         nodes: [],
         edges: [],
-        raw: raw_data,
+        table: raw_data,
       };
     }
   }

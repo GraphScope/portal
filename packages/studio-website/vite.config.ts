@@ -3,6 +3,9 @@ import react from '@vitejs/plugin-react';
 import { viteSingleFile } from 'vite-plugin-singlefile';
 import dotenv from 'dotenv';
 import wasm from 'vite-plugin-wasm';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
+
+import path from 'path';
 
 // 获取传递的参数
 const args = process.argv.slice(2);
@@ -18,9 +21,18 @@ const { mode } = params;
 const isSingle = mode === 'single' && process.env.NODE_ENV === 'production';
 const isLess = mode === 'less' && process.env.NODE_ENV === 'production';
 
-console.log('params', params, args);
+const copyKuzuWasmWorkerJSFile = viteStaticCopy({
+  targets: [
+    {
+      src: path.join(__dirname, '../studio-driver/node_modules/kuzu-wasm', 'kuzu_wasm_worker.js'),
+      dest: 'assets', // 拷贝到 assets 目录下
+    },
+  ],
+});
 
-const plugins = isSingle ? [react(), viteSingleFile(), wasm()] : [react(), wasm()];
+const plugins = isSingle
+  ? [react(), viteSingleFile(), wasm(), copyKuzuWasmWorkerJSFile]
+  : [react(), wasm(), copyKuzuWasmWorkerJSFile];
 const rollupOptions = isLess
   ? {
       output: {
