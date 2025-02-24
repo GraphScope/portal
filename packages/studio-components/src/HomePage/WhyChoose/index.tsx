@@ -16,7 +16,6 @@ const WhyChoose: React.FunctionComponent<IWhyChooseProps> = props => {
   const { token } = theme.useToken();
   const { items } = props;
   const { isDark, isMobile } = useEnv();
-  console.log('isDark', isDark, isMobile);
 
   return (
     <Flex vertical style={{ width: '100%', padding: '12px' }} align="center" gap={isMobile ? '24px' : '48px'}>
@@ -68,7 +67,8 @@ const WhyChoose: React.FunctionComponent<IWhyChooseProps> = props => {
                 src={image}
                 alt=""
                 style={{
-                  width: '80%',
+                  borderRadius: token.borderRadiusLG,
+                  width: isMobile ? '100%' : '80%',
                   filter: isDark ? 'invert(1)' : 'none',
                   boxShadow: token.boxShadowTertiary,
                   border: `1px solid ${token.colorBorderSecondary}`,
