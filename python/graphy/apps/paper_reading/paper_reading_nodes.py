@@ -234,6 +234,7 @@ class PaperInspector(DAGInspectorNode):
 
         # Iterate through the input data
         for input_data in input:
+            paper_data = {}
             try:
                 paper_data = self._process_input_data(state, input_data)
                 if paper_data:
