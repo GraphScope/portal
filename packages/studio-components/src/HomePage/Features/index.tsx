@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import { Flex, Col, Row, theme, Typography, Card } from 'antd';
-
 export interface IFeaturesProps {
   items: {
     icon: React.FC<React.SVGProps<SVGSVGElement>>;
@@ -12,6 +11,7 @@ export interface IFeaturesProps {
 const Features: React.FunctionComponent<IFeaturesProps> = props => {
   const { items } = props;
   const { token } = theme.useToken();
+
   return (
     <Flex vertical style={{ width: '100%' }} gap={24} align="center">
       <Typography.Title level={2}>Core Features</Typography.Title>
@@ -37,11 +37,11 @@ const Features: React.FunctionComponent<IFeaturesProps> = props => {
           const { icon: Icon, title, description } = item;
           return (
             <Col key={index} xs={24} sm={12} md={12} lg={6} xl={6}>
-              <Card hoverable>
+              <Card hoverable style={{ height: '100%' }}>
                 <Flex vertical gap={12}>
                   <Icon
                     style={{
-                      fontSize: 48,
+                      fontSize: token.fontSizeHeading2,
                       color: token.colorPrimary,
                       // position: 'absolute',
                       // top: '0px',
