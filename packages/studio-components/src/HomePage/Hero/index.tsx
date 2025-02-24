@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import LightArea, { useLightArea } from '../LightArea';
 import { Flex, Button, theme, Typography } from 'antd';
 import { GithubOutlined } from '@ant-design/icons';
-
+import VideoHeroSection from './WithVideo';
 export interface IHeroSectionProps {
   title: string;
   description?: string;
@@ -12,6 +12,7 @@ export interface IHeroSectionProps {
     icon: React.ReactNode;
     primary?: boolean;
   }[];
+  video?: string;
 }
 
 const data = {
@@ -32,7 +33,10 @@ const data = {
   ],
 };
 const HeroSection: React.FunctionComponent<IHeroSectionProps> = props => {
-  const { title, description, actions } = props;
+  const { title, description, actions, video } = props;
+  if (video) {
+    return <VideoHeroSection {...props} />;
+  }
 
   const { token } = theme.useToken();
   const bannerRef = useRef(null);
