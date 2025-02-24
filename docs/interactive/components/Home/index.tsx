@@ -88,11 +88,11 @@ const whychooseus = [
     link: 'https://graphscope.io/blog/tech/2024/06/27/GraphScope-refreshes-the-world-record-for-the-LDBC-benchmark',
   },
   {
-    title: 'The Graph-Native Query Optimizer for Faster query execution',
+    title: 'GOpt: A Graph-Native Query Optimization Framework',
     description: `
-   GOpt is a high-performance engine designed for interactive graph analytics, excelling in both standard (LDBC) and real-world workloads. It supports Cypher and Gremlin for user-friendly query flexibility while offering advanced APIs for deeper integration. Lightweight and serverless, GOpt seamlessly integrates into existing systems via Calcite adapters and works effortlessly with graph-native databases like Neo4j. Built for speed, simplicity, and adaptability, GOpt empowers your interactive graph exploration needs.
+   GOpt is a graph-native query optimizer designed to accelerate query execution. It excels in handling hybrid scenarios that combine complex graph pattern matching with relational operations on large graphs. GOpt is not aware of the underlying storage data and focuses solely on computation on top of the data, which makes it easy and fast to be integrated into other graph or relational databases. The LDBC benchmark results show that GOpt significantly outperforms Neo4j. On the Neo4j execution engine, GOpt is 8.8x faster than Neo4j’s plan. Even more impressive, on the GraphScope execution engine, GOpt achieves a speedup of 33x. This makes GOpt a powerful choice for optimizing graph database performance.
   `,
-    image: 'https://graphscope.io/docs/latest/_images/design_of_gopt.png',
+    image: 'https://img.alicdn.com/imgextra/i1/O1CN01OlTDO81z8SOmNGNxw_!!6000000006669-0-tps-1708-1562.jpg',
   },
   {
     keyword: 'user-experience',

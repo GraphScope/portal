@@ -1,6 +1,18 @@
 import { useState, useEffect } from 'react';
 
 const KEY = 'theme';
+
+const getThemeByAlgo = () => {
+  const algo = localStorage.getItem('algorithm');
+  if (algo === 'darkAlgorithm') {
+    return 'dark';
+  }
+  return 'light';
+};
+
+const getThemeByDumi = () => {
+  return localStorage.getItem('dumi:prefers-color');
+};
 export const useTheme = () => {
   const [value, setValue] = useState('');
 
@@ -10,7 +22,7 @@ export const useTheme = () => {
       for (let mutation of mutationsList) {
         if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
           //   const { cssText } = mutation.target.style;
-          const theme_value = localStorage.getItem('theme') || 'light';
+          const theme_value = localStorage.getItem('theme') || getThemeByDumi() || getThemeByAlgo() || 'light';
           setValue(theme_value);
         }
       }
@@ -20,7 +32,8 @@ export const useTheme = () => {
       attributes: true,
       attributeFilter: ['style'], // 仅观察 'style' 属性
     });
-    const theme_value = localStorage.getItem('theme') || 'light';
+    const theme_value = localStorage.getItem('theme') || getThemeByDumi() || getThemeByAlgo() || 'light';
+
     setValue(theme_value);
   }, []);
 

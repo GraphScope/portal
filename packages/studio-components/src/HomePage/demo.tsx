@@ -20,83 +20,115 @@ const hero = {
       icon: <GithubOutlined />,
     },
   ],
+  // video: 'https://img.alicdn.com/imgextra/i4/O1CN01dA6GaL1S0mRJPUL5f_!!6000000002185-0-tps-3092-1878.jpg',
 };
 const features = [
   {
-    icon: Icons.Model,
-    title: 'Graph Modeling',
-    description: [
-      'Property Graph Data Model',
-      'Cypher Query Language, Extensible for Other Query Language, e.g. GQL, Gremlin',
-    ],
-  },
-  {
     icon: Icons.Database,
-    title: 'Graph-native Storage and Query Optimization',
-    description: [
-      'Graph-native Adjacency List | No KV/Relational Wrapper',
-      'Vectorized Storage and Compressed Result',
-      // 'Self-developed graph query optimization with optimality guarantee',
-    ],
+
+    title: 'Data Modeling',
+    description: ['Build graph models manually or automatically on a free-form canvas.'],
   },
+
   {
     icon: Icons.Qps,
-    title: 'Tens of thousands of Queries per Second',
-    description: [
-      'Record-breaking LDBC Benchmarking Resutls',
-      'Multi-core Concurrent Query Execution',
-      // 'Horisontally Scalable',
-    ],
+    title: 'Data Querying',
+    description: ['Execute queries using Cypher/Gremlin languages with visualized results.'],
   },
   {
     icon: Icons.Explorer,
-    title: 'Visualization Toolkit',
-    description: ['Graph visualization in miniseconds', 'Self-developed Exploration Tool', 'LLM integration'],
+    title: 'Data Exploration',
+    description: ['Low-barrier, interactive graph analysis driven by user interactions.'],
+  },
+  {
+    icon: Icons.Model,
+    title: 'Open Architecture',
+    description: ['Supports multiple query engines and extensible components for integration and custom development.'],
   },
 ];
 
 const installation = [
   {
-    type: 'python',
-    description: `pip3 install gsctl
-# Deploy the interactive service in local mode
-gsctl instance deploy --type interactive
+    type: 'docker',
+    description: `# Pull the GraphScope Portal  Docker image
+
+docker pull ghcr.io/graphscope/portal:latest
+
+# Start server
+
+docker run -d -p 8888:8888 --name my-portal ghcr.io/graphscope/portal:latest
+`,
+  },
+
+  {
+    type: 'source code',
+    description: `# git clone repo
+
+git clone https://github.com/GraphScope/portal.git
+
+# Compile front-end assets
+
+npm run ci
+
+# Start the server
+
+cd packages/studio-website/server
+npm run dev
 `,
   },
   {
-    type: 'docker',
-    description: `# Pull the GraphScope Interactive Docker image
-docker pull registry.cn-hongkong.aliyuncs.com/graphscope/interactive:0.29.3-arm64
+    type: 'npm',
+    description: `npm install @graphscope/studio-website
 
-# Start the GraphScope Interactive service
-docker run -d --name gs --label flex=interactive -p 8080:8080 -p 7777:7777 -p 10000:10000 -p 7687:7687 registry.cn-hongkong.aliyuncs.com/graphscope/interactive:0.29.3-arm64 --enable-coordinator
+# usage
+import GraphScopePortal from '@graphscope/studio-site';
+
+const App = () => {
+  return <GraphScopePortal />;
+};
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+root.render(<App />);
+`,
+  },
+  {
+    type: 'python',
+    description: `# install gs-visual-tool
+  
+pip install gs-visual-tool
+
+# Usage
+
+import gs_visual_tool
+gs_visual_tool.querying()
 `,
   },
 ];
 
 const whychooseus = [
   {
-    keyword: 'performance',
-    title: 'Refreshes the World Record for the LDBC SNB Benchmark in both Performance and Data Scale',
-    description: `
-    LDBC released the latest results for the LDBC SNB Interactive benchmark test, where GraphScope Interactive leads the pack once again with a score exceeding 127,000 QPS (Queries Per Second), representing a more than 2.6 times improvement over the second place, which was the previous record holder!
-  `,
-    image: 'https://img.alicdn.com/imgextra/i1/O1CN01ptPGwB1KLpifRQal4_!!6000000001148-0-tps-1178-780.jpg',
-    link: 'https://graphscope.io/blog/tech/2024/06/27/GraphScope-refreshes-the-world-record-for-the-LDBC-benchmark',
+    title: 'Build Graph Models Freely Like on a Whiteboard – Simple and Efficient',
+    description:
+      "Traditional data modeling often requires tedious template configurations. GraphScope Portal's Data Modeling module offers a free-form canvas where users can intuitively design graph models as if sketching on a whiteboard, with real-time WYSIWYG editing. For structured CSV data, it provides one-click auto-import modeling and supports manual refinements, significantly boosting modeling efficiency.",
+    link: '',
+    image: 'https://img.alicdn.com/imgextra/i3/O1CN01TDJNPL1S4u0LV8mYS_!!6000000002194-0-tps-2568-1598.jpg',
   },
   {
-    title: 'Gopt ?',
-    description: `
-    LDBC released the latest results for the LDBC SNB Interactive benchmark test, where GraphScope Interactive leads the pack once again with a score exceeding 127,000 QPS (Queries Per Second), representing a more than 2.6 times improvement over the second place, which was the previous record holder!
-  `,
-    image: 'https://img.alicdn.com/imgextra/i1/O1CN01ptPGwB1KLpifRQal4_!!6000000001148-0-tps-1178-780.jpg',
+    image: 'https://img.alicdn.com/imgextra/i4/O1CN012dvMJg21NEPA3Cvsy_!!6000000006972-0-tps-2904-1590.jpg',
+    title: 'Powerful Interactive Querying with Multi-Language Support and Visualization',
+    description:
+      "GraphScope Portal's Data Querying module features a robust editor with Cypher/Gremlin syntax autocompletion, highlighting, and version control. Users can save queries, review history, get schema-driven recommendations, and leverage LLM-powered natural language queries. Results are dynamically visualized in graphs, tables, and other rich formats.",
   },
   {
-    title: 'Visualization',
-    description: `
-    GraphScope provides a set of visualization tools that allow users to visualize their graphs in a variety of ways. It is built on top of Apache Arrow, which provides a columnar in-memory data format for efficient data processing.
-    `,
-    image: 'https://img.alicdn.com/imgextra/i2/O1CN01Kp7L9i1P6mmkYg0uo_!!6000000001792-0-tps-2290-1460.jpg',
+    title: 'Zero-Code Data Exploration Driven by Intuitive Interactions',
+    description:
+      'The Exploration module offers search tools, style/layout analysis, statistical profiling, clustering, and pathfinding components. Users bypass query scripting entirely – simple UI interactions automatically generate query snippets for instant, on-the-fly graph data exploration.',
+    image: 'https://img.alicdn.com/imgextra/i2/O1CN01RpqYMD1r1ZWAxtdiX_!!6000000005571-0-tps-2906-1608.jpg',
+  },
+  {
+    title: 'Open Source, Open Architecture – Built for Flexibility',
+    description:
+      'GraphScope Portal supports modular decoupling for web and Python integrations. Customize language settings, themes, color schemes, and UI details for any deployment scenario. With fully open-sourced code and extensible APIs, openness drives every design decision.',
+    image: 'https://img.alicdn.com/imgextra/i4/O1CN01XTFlj724luaxOvSSc_!!6000000007432-0-tps-1642-762.jpg',
   },
 ];
 
