@@ -9,13 +9,13 @@ const hero = {
   actions: [
     {
       title: 'Try it online',
-      link: null,
+      link: 'https://gsp.vercel.app',
       icon: null,
       primary: true,
     },
     {
       title: 'Github',
-      link: null,
+      link: 'https://github.com/alibaba/graphscope',
       icon: <GithubOutlined />,
     },
   ],
