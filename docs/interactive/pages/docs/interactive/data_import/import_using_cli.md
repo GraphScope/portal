@@ -1,6 +1,7 @@
-# Using Custom Graph
+# Import using CLI
 
-This guide walks you through the process of using custom graph data in GraphScope Interactive. The process comprises three main steps: 
+This guide walks you through the process of importing CSV files into GraphScope Interactive using `gsctl` CLI tool.
+The process comprises three main steps:
 - Creating a new graph,
 - Importing graph data, and
 - Starting the service with the new graph.
@@ -14,7 +15,7 @@ Before starting, please make sure you are in the GLOBAL context.
 gsctl use GLOBAL
 ```
 
-First you need to define the vertex types and edge types of your graph, i.e. here is a sample definition of a `test_graph`. Save the file to disk with name `test_graph.yaml`. 
+First you need to define the vertex types and edge types of your graph, i.e. here is a sample definition of a `test_graph`. Save the file to disk with name `test_graph.yaml`.
 
 ```yaml
 name: test_graph
@@ -66,23 +67,22 @@ To import your data, you need to first bind the data source and then submit a bu
 
 #### Bind Data Source
 
-To create a new graph, you will need the original data of the graph. We currently support files in CSV format. Fortunately, we have prepared it for you, and you can find it here [modern-graph](https://github.com/alibaba/GraphScope/tree/main/flex/interactive/examples/modern_graph). 
-The `import.yaml` file maps raw data fields to the schema of the "modern" graph created in Step 1. Here's an illustrative example `import.yaml`, 
-note that each vertex/edge type need at least one input for bulk loading. 
+To create a new graph, you will need the original data of the graph. We currently support files in CSV format. Fortunately, we have prepared it for you, and you can find it here [modern-graph](https://github.com/alibaba/GraphScope/tree/main/flex/interactive/examples/modern_graph).
+The `import.yaml` file maps raw data fields to the schema of the "modern" graph created in Step 1. Here's an illustrative example `import.yaml`,
+note that each vertex/edge type need at least one input for bulk loading.
 In the following example, we will import data to the new graph from local file
-`person.csv` and `person_knows_person.csv`. 
+`person.csv` and `person_knows_person.csv`.
 You can download the files from [GitHub](https://github.com/alibaba/GraphScope/tree/main/flex/interactive/examples/modern_graph), with following commands.
 
 ```bash
 wget https://raw.githubusercontent.com/alibaba/GraphScope/main/flex/interactive/examples/modern_graph/person.csv
 wget https://raw.githubusercontent.com/alibaba/GraphScope/main/flex/interactive/examples/modern_graph/person_knows_person.csv
 ```
- 
+
 After successfully downloading them, remember to replace `@/path/to/person.csv` and `@/path/to/person_knows_person.csv` with the actual path to files.
 
-```{note}
-`@` means the file is a local file and need to be uploaded.
-```
+
+> **Note**: `@` means the file is a local file and need to be uploaded.
 
 ```yaml
 vertex_mappings:
@@ -184,7 +184,7 @@ gsctl use GRAPH test_graph
 
 ## Step 4: A More Complicated Movies Graph(optional)
 
-The above graph is very simple, which only contains one kind vertices and one kind edges. 
+The above graph is very simple, which only contains one kind vertices and one kind edges.
 For a more complicated example, We'll use the [`movies`](https://github.com/neo4j-graph-examples/movies/) graph as an example, you can download the files from our [Github Repo](https://github.com/alibaba/GraphScope/tree/main/flex/interactive/examples/movies).
 
 ```bash
@@ -200,7 +200,7 @@ name: movies
 schema:
   vertex_types:
     - type_name: Movie
-      properties: 
+      properties:
         - property_name: id
           property_type:
             primitive_type: DT_SIGNED_INT64
@@ -377,4 +377,4 @@ edges:
 
 In addition to `movies` graph, we have also prepared the `graph_algo` graph. You can find the raw CSV files, `graph.yaml`, and `import.yaml` in the `./examples/graph_algo/` directory. You can import the `graph_algo` graph just like importing the `movies` graph. There are also some sample cypher queries, you can find them at [GraphScope/flex/interactive/examples/graph_algo](https://github.com/alibaba/GraphScope/tree/main/flex/interactive/examples/graph_algo).
 
-If you are seeking for a more complex and larger graph, then you may try `IMDB` graph. The schema definition and import configuration are available in the `./examples/imdb/` directory. 
+If you are seeking for a more complex and larger graph, then you may try `IMDB` graph. The schema definition and import configuration are available in the `./examples/imdb/` directory.
