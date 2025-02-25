@@ -3,10 +3,8 @@ import { Button, Space, Tooltip, Popconfirm, Checkbox, Flex, Typography } from '
 import { PlusOutlined, createFromIconfontCN } from '@ant-design/icons';
 import MapFromFileTable from './MapFromFileTable';
 import { FormattedMessage } from 'react-intl';
-// 使用createFromIconfontCN创建一个IconFont组件，加载自定义图标库
-const IconFont = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/a/font_4377140_eryoeoa0lk5.js',
-});
+import { DeleteOutlined } from '@ant-design/icons';
+
 const styles: { [x: string]: CSSProperties } = {
   'properties-head': {
     display: 'flex',
@@ -83,7 +81,7 @@ const Controller = props => {
           ) : (
             <Space>
               <span style={styles['sel-num']}>{selectedRowKeys.length} selected</span>
-              <IconFont type="icon-delete" onClick={() => delProperty()} />
+              <Button size="small" type="text" onClick={() => delProperty()} icon={<DeleteOutlined />}></Button>
             </Space>
           )}
         </>
