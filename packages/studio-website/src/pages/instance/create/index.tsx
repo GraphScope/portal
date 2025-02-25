@@ -28,9 +28,9 @@ const Create: React.FC = () => {
         status: 'Draft',
         schema: {
           //@ts-ignore
-          vertices: [],
+          vertex_types: [],
           //@ts-ignore
-          edges: [],
+          edge_types: [],
         },
         storeType,
       };
