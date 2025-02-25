@@ -47,15 +47,9 @@ export const createKuzuGraph = async (dataset_id: string) => {
   await driver.use(dataset_id);
   await driver.createSchema(schema);
   const logs = await driver.loadGraph(files);
-  const error = [...logs.nodes, ...logs.edges].some(item => item.message === 'false');
+  const error = [...logs.nodes, ...logs.edges].some(item => item.success === false);
 
   if (error) {
-    const message = [...logs.nodes, ...logs.edges]
-      .map(item => {
-        const { message, name } = item;
-        return `${name}: ${message}`;
-      })
-      .join(';\n');
     return {
       success: false,
       message: (
@@ -65,8 +59,8 @@ export const createKuzuGraph = async (dataset_id: string) => {
           </Typography.Title>
 
           {[...logs.nodes, ...logs.edges].map(item => {
-            const type = item.message === 'false' ? 'error' : 'success';
-            const icon = item.message === 'false' ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />;
+            const type = item.success ? 'success' : 'error';
+            const icon = item.success ? <CheckCircleOutlined /> : <ExclamationCircleOutlined />;
             return (
               <Typography.Text type="secondary" key={item.name} italic>
                 <Tag color={type} icon={icon}>
@@ -80,5 +74,7 @@ export const createKuzuGraph = async (dataset_id: string) => {
       ),
     };
   }
-  return await driver.writeBack();
+  // return await driver.writeBack();
+  await driver.writeBack();
+  return await driver.close();
 };

@@ -40,7 +40,10 @@ export const PLUGIN_LOCAL_STORAGE_KEY = `PORTAL_PLUGIN_${PLUGIN_ID}`;
 export function togglePlugin(enable?: boolean) {
   let _enable = enable;
   if (enable === undefined) {
-    _enable = Utils.storage.get(PLUGIN_LOCAL_STORAGE_KEY) || false;
+    _enable = Utils.storage.get(PLUGIN_LOCAL_STORAGE_KEY) || window.GS_ENGINE_TYPE !== 'groot';
+  }
+  if (window.GS_ENGINE_TYPE === 'groot') {
+    _enable = false;
   }
 
   if (_enable) {

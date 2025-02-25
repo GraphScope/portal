@@ -4,13 +4,13 @@ from utils.profiler import profiler
 from config import (
     WF_STATE_EXTRACTOR_KEY,
     WF_STATE_MEMORY_KEY,
-    WF_WEBDATA_DIR,
 )
 
 from langchain_core.embeddings import Embeddings
 from typing import Any, Dict
 
 import os
+import unicodedata
 import logging
 
 logger = logging.getLogger(__name__)
@@ -75,6 +75,24 @@ class PDFExtractNode(BaseNode):
         if not pdf_extractor.fake_extractor:
             if vectordb.is_db_valid() and vectordb.is_db_empty():
                 docs = pdf_extractor.extract_all()
+                if not paper_metadata["summary"]:
+                    abstract_chunks = [[], []]
+                    for doc in docs:
+                        if doc["metadata"].get("sec_name", "") == "abstract":
+                            abstract_chunks[0].append(doc["page_content"])
+                        # if there is not abstract section, it may be in the title and authors section
+                        elif doc["metadata"].get("sec_name", "") == "title and authors":
+                            abstract_chunks[1].append(doc["page_content"])
+
+                    summary = ""
+                    if abstract_chunks[0]:
+                        summary = " ".join(abstract_chunks[0])
+                    elif abstract_chunks[1]:
+                        summary = " ".join(abstract_chunks[1])
+
+                    summary = unicodedata.normalize("NFKD", summary)
+                    paper_metadata["summary"] = summary
+
                 pdf_paper_references = list(pdf_extractor.linked_contents)
                 logger.debug("========= START TO INIT MEMORY ======")
                 vectordb.init_memory_parallel(

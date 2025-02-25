@@ -1,9 +1,25 @@
-import React, { useRef } from 'react';
-import LightArea, { useLightArea } from '../LightArea';
-import { Flex, Col, Row, Button, Space, theme, Typography, ConfigProvider, Descriptions, Card } from 'antd';
-import { useDynamicStyle, useIsMobile, useTheme } from '../Hooks';
-import Icons from '../Icons';
+import React from 'react';
+
+import { Icons, HomePage } from '@graphscope/studio-components';
 import { GithubOutlined } from '@ant-design/icons';
+
+const hero = {
+  title: 'A High-Performance, Graph-native Engine for Massive Concurrent Queries',
+  description: undefined,
+  actions: [
+    {
+      title: 'Try it online',
+      link: 'https://gsp.vercel.app',
+      icon: null,
+      primary: true,
+    },
+    {
+      title: 'Github',
+      link: 'https://github.com/alibaba/graphscope',
+      icon: <GithubOutlined />,
+    },
+  ],
+};
 const features = [
   {
     icon: Icons.Model,
@@ -28,185 +44,66 @@ const features = [
     description: [
       'Record-breaking LDBC Benchmarking Resutls',
       'Multi-core Concurrent Query Execution',
-      // 'Horisontally Scalable',
+      'Horisontally Scalable',
     ],
   },
   {
     icon: Icons.Explorer,
     title: 'Visualization Toolkit',
-    description: ['Graph visualization in miniseconds', 'Self-developed Exploration Tool', 'LLM integration'],
+    description: [
+      'User-friendly web interface that simplifies managing graph data',
+      'Graph visualization in miniseconds',
+      'Self-developed Exploration Tool',
+    ],
   },
 ];
-const Home = () => {
-  const { token } = theme.useToken();
-  const isMobile = useIsMobile();
 
-  const bannerRef = useRef(null);
-  const { updatePosition, lightAreaRef } = useLightArea();
-  useDynamicStyle(
-    `
-body{
-    overflow-x: hidden;
-    background-color:${token.colorBgContainer},
-}
+const installation = [
+  {
+    type: 'python',
+    description: `pip3 install gsctl
+# Deploy the interactive service in local mode
+gsctl instance deploy --type interactive
+`,
+  },
+  {
+    type: 'docker',
+    description: `# Pull the GraphScope Interactive Docker image
+docker pull registry.cn-hongkong.aliyuncs.com/graphscope/interactive:0.29.3-arm64
 
-.container {
-  width: 100%;
-  max-width: 90rem;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-}
+# Start the GraphScope Interactive service
+docker run -d --name gs --label flex=interactive -p 8080:8080 -p 7777:7777 -p 10000:10000 -p 7687:7687 registry.cn-hongkong.aliyuncs.com/graphscope/interactive:0.29.3-arm64 --enable-coordinator
+`,
+  },
+];
 
+const whychooseus = [
+  {
+    keyword: 'performance',
+    title: 'Refreshes the World Record for the LDBC SNB Benchmark',
+    description: `
+    LDBC released the latest results for the LDBC SNB Interactive benchmark test, where GraphScope Interactive leads the pack once again with a score exceeding 127,000 QPS (Queries Per Second), representing a more than 2.6 times improvement over the second place, which was the previous record holder!
+  `,
+    image: 'https://img.alicdn.com/imgextra/i1/O1CN01ptPGwB1KLpifRQal4_!!6000000001148-0-tps-1178-780.jpg',
+    link: 'https://graphscope.io/blog/tech/2024/06/27/GraphScope-refreshes-the-world-record-for-the-LDBC-benchmark',
+  },
+  {
+    title: 'GOpt: A Graph-Native Query Optimization Framework',
+    description: `
+   GOpt is a graph-native query optimizer designed to accelerate query execution. It excels in handling hybrid scenarios that combine complex graph pattern matching with relational operations on large graphs. GOpt is not aware of the underlying storage data and focuses solely on computation on top of the data, which makes it easy and fast to be integrated into other graph or relational databases. The LDBC benchmark results show that GOpt significantly outperforms Neo4j. On the Neo4j execution engine, GOpt is 8.8x faster than Neo4j’s plan. Even more impressive, on the GraphScope execution engine, GOpt achieves a speedup of 33x. This makes GOpt a powerful choice for optimizing graph database performance.
+  `,
+    image: 'https://img.alicdn.com/imgextra/i1/O1CN01OlTDO81z8SOmNGNxw_!!6000000006669-0-tps-1708-1562.jpg',
+  },
+  {
+    keyword: 'user-experience',
+    title: 'Effortless Graph Exploration with Intuitive Tools',
+    description: `
+      GraphScope Interactive redefines graph exploration with its powerful and efficient engine. Seamlessly integrated with GraphScope Portal, a web-based interface for real-time query execution and visualization, it empowers users to unlock insights from complex graphs with ease. Focus on your data, not the complexity.GraphScope Interactive makes advanced graph analytics accessible to everyone.
     `,
-    'root',
-  );
-  return (
-    <Flex vertical align="center" justify="center" gap={12}>
-      {/** banner */}
-      <Flex
-        vertical
-        align="center"
-        style={{ width: '100%', overflow: 'hidden' }}
-        ref={bannerRef}
-        //@ts-ignore
-        onMouseMove={updatePosition}
-      >
-        {/** light area */}
-        <LightArea rootRef={bannerRef} ref={lightAreaRef} />
-        {/** banner area */}
-        <Flex
-          vertical
-          justify="center"
-          style={{
-            height: '50vh',
-            padding: '1.5rem',
-            textAlign: 'center',
-            zIndex: 1,
-            maxWidth: '70rem',
-          }}
-        >
-          <Typography.Title level={1} style={{ lineHeight: 1.1, fontWeight: 700 }}>
-            A High-Performance, Graph-native Engine for Massive Concurrent Queries
-          </Typography.Title>
-
-          <Flex justify="center" gap={12} style={{ paddingTop: 24 }}>
-            <Button
-              size="large"
-              style={{
-                width: '140px',
-                borderRadius: '20px',
-                background: token.colorPrimary,
-                color: token.colorBgBase,
-                borderColor: token.colorPrimary,
-              }}
-            >
-              Try it online
-            </Button>
-            <Button
-              size="large"
-              style={{
-                width: '140px',
-                borderRadius: '20px',
-                background: 'transparent',
-                color: token.colorText,
-                borderColor: token.colorPrimary,
-              }}
-              icon={<GithubOutlined />}
-            >
-              Github
-            </Button>
-          </Flex>
-        </Flex>
-      </Flex>
-
-      <Flex vertical align="center" style={{ width: '100%', maxWidth: '90rem', padding: '0 1.5rem' }} justify="center">
-        <Flex vertical style={{ width: '100%' }} gap={24} align="center">
-          <Typography.Title level={2}>Core Features</Typography.Title>
-          <Row
-            gutter={[
-              {
-                xs: 12,
-                sm: 12,
-                md: 12,
-                lg: 24,
-                xl: 24,
-              },
-              {
-                xs: 12,
-                sm: 12,
-                md: 12,
-                lg: 24,
-                xl: 24,
-              },
-            ]}
-          >
-            {features.map((item, index) => {
-              const { icon: Icon, title, description } = item;
-
-              return (
-                <Col key={index} xs={24} sm={12} md={12} lg={6} xl={6}>
-                  <Card hoverable>
-                    <Flex vertical gap={12}>
-                      <Icon
-                        style={{
-                          fontSize: 48,
-                          color: token.colorPrimary,
-                          // position: 'absolute',
-                          // top: '0px',
-                          // right: '0px',
-                          zIndex: 0,
-                        }}
-                      />
-                      <Typography.Title level={4} style={{ margin: '0px' }}>
-                        {title}
-                      </Typography.Title>
-                      <Typography.Text style={{ fontWeight: 500, margin: '0px' }} type="secondary">
-                        {description.join(',')}
-                      </Typography.Text>
-                    </Flex>
-                  </Card>
-                </Col>
-              );
-            })}
-          </Row>
-        </Flex>
-
-        <section
-          style={{
-            height: '400px',
-            //  background: 'grey',
-            width: '100%',
-          }}
-        ></section>
-        {/* <section style={{ height: '50vh', background: 'yellow', width: '100%' }}>Core Features</section> */}
-      </Flex>
-    </Flex>
-  );
-};
-
-const algorithmMap = {
-  dark: theme.darkAlgorithm,
-  light: theme.defaultAlgorithm,
-  system: theme.defaultAlgorithm,
-};
+    image: 'https://img.alicdn.com/imgextra/i4/O1CN01dA6GaL1S0mRJPUL5f_!!6000000002185-0-tps-3092-1878.jpg',
+    link: 'https://github.com/GraphScope/portal',
+  },
+];
 export default () => {
-  const isMobile = useIsMobile();
-  const theme = useTheme();
-  //@ts-ignore
-  const algorithm = algorithmMap[theme];
-
-  console.log('isMobile', isMobile, theme);
-  return (
-    <ConfigProvider
-      theme={{
-        algorithm,
-        token: {
-          colorPrimary: '#2581f0', //'#00b96b',
-          fontSizeHeading1: isMobile ? 32 : 60,
-        },
-      }}
-    >
-      <Home />
-    </ConfigProvider>
-  );
+  return <HomePage hero={hero} features={features} installation={installation} whychoose={whychooseus} />;
 };

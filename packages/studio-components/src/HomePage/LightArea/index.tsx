@@ -36,7 +36,7 @@ const LightArea = forwardRef<ILightAreaMethods, ILightAreaProps>((props, ref) =>
     left,
     height: '500px',
     width: '500px',
-    transition: 'all .1s ease',
+    // transition: 'all .1s ease',
     borderRadius: '50%',
     transform: 'translate(-50%,-50%)',
     filter: 'blur(120px)',
@@ -70,11 +70,17 @@ const debounce = <T extends unknown[]>(fn: (...args: T) => void, delay: number):
 
 export const useLightArea = () => {
   const lightAreaRef = useRef<ILightAreaMethods>(null);
-  const updatePosition = debounce((event: MouseEvent) => {
+  // const updatePosition = debounce((event: MouseEvent) => {
+  //   if (lightAreaRef.current) {
+  //     lightAreaRef.current.updatePosition(event);
+  //   }
+  // }, 60);
+
+  const updatePosition = (event: MouseEvent) => {
     if (lightAreaRef.current) {
       lightAreaRef.current.updatePosition(event);
     }
-  }, 60);
+  };
 
   return {
     updatePosition,

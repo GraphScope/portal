@@ -7,6 +7,8 @@ from utils.cryptography import id_generator
 import copy
 import logging
 import re
+import os
+import unicodedata
 
 logger = logging.getLogger()
 
@@ -100,6 +102,7 @@ class Paper:
 
     @staticmethod
     def parse_dict(meta: dict):
+        meta = {key.lower(): value for key, value in meta.items()}
         parsed_meta = {}
 
         for key in Paper.header():
@@ -121,6 +124,10 @@ class Paper:
                     elif key in Paper.str_header():
                         parsed_meta[key] = ""
 
+        paper_title = parsed_meta.get("title", "")
+        if not paper_title:
+            raise ValueError("Title is not found in the Paper's metadata.")
+
         if not parsed_meta["summary"] and "abstract" in meta:
             parsed_meta["summary"] = meta["abstract"]
         if not parsed_meta["primary_category"] and "primary_class" in meta:
@@ -129,15 +136,15 @@ class Paper:
             parsed_meta["categories"] = [parsed_meta["primary_category"]]
 
         paper_id = parsed_meta.get("id", "")
-        if paper_id == "":
-            parsed_meta["id"] = id_generator(parsed_meta.get("title", ""))
+        if not paper_id:
+            parsed_meta["id"] = id_generator(paper_title)
 
         if not parsed_meta.get("published", ""):
             try:
-                published_date = Paper.parse_creation_date(meta["creationDate"])
+                published_date = Paper.parse_creation_date(meta["creationdate"])
             except ValueError as e:
                 try:
-                    published_date = Paper.parse_creation_date(meta["modDate"])
+                    published_date = Paper.parse_creation_date(meta["moddate"])
                 except ValueError as e:
                     published_date = datetime.now()
             parsed_meta["published"] = published_date.isoformat()
@@ -159,4 +166,32 @@ class Paper:
             if author
         ]
 
+        if not parsed_meta.get("bib", ""):
+            parsed_meta["bib"] = Paper._format_bib(parsed_meta=parsed_meta)
+
         return parsed_meta
+
+    def _format_bib(parsed_meta):
+        lines = ["@article{" + parsed_meta["id"]]
+        for k, v in [
+            (
+                "author",
+                (
+                    " and ".join([str(author) for author in parsed_meta["authors"]])
+                    if parsed_meta["authors"]
+                    else parsed_meta["author"]
+                ),
+            ),
+            ("title", parsed_meta["title"]),
+            ("doi", parsed_meta["doi"]),
+            ("year", parsed_meta["year"]),
+            ("month", parsed_meta["month"]),
+            ("publication", parsed_meta["publication"].split("v")[0]),
+            ("vol", parsed_meta["vol"]),
+            ("issue", parsed_meta["issue"]),
+            ("page", parsed_meta["page"]),
+        ]:
+            if v:
+                lines.append("%-13s = {%s}" % (k, v))
+
+        return ("," + os.linesep).join(lines) + os.linesep + "}"

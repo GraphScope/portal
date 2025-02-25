@@ -49,7 +49,7 @@ const InspectNeighbor = props => {
     const queryNeighbors = async () => {
       const selectIds = selectedKey.split('__');
       const queryKey = `${id}_${selectedKey}`;
-      if (!CacheData[queryKey]) {
+      if (!CacheData[queryKey] && selectIds.length!==0) {
         const script = `MATCH(a)-[b]-(c) 
           where elementId(a) IN [${selectIds}]
           return a,b,c limit 50000

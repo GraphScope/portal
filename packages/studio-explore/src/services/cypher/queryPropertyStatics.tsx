@@ -1,9 +1,10 @@
 import { queryStatement } from './queryStatement';
 export const queryPropertyStatics = async (property: string, label?: string) => {
-  const match = ['year', 'month'];
-  if (!match.includes(property)) {
-    return [];
-  }
+  // const match = ['year', 'month'];
+  // if (!match.includes(property)) {
+  //   return [];
+  // }
+
   let matchScript = `MATCH(a)`;
 
   if (label) {
