@@ -1,6 +1,5 @@
-# Java SDK Reference
-
-The Interactive Java SDK Reference is a comprehensive guide for developers looking to integrate the Interactive service into their Java applications. This SDK allows users to seamlessly connect to Interactive and leverage its powerful features for graph management, stored procedure management, and query execution.
+# Java Client
+This a practical guide for developers looking to integrate the Interactive service into their Java applications. The Java Client allows users to seamlessly connect to Interactive and leverage its powerful features for graph management, stored procedure management, and query execution.
 
 
 ## Requirements
@@ -66,9 +65,7 @@ You can connect to Interactive service with Interactive SDK, with following envi
 ############################################################################################
 ```
 
-```{note}
-If you have customized the ports when deploying Interactive, remember to replace the default ports with your customized ports.
-```
+> **Note**: If you have customized the ports when deploying Interactive, remember to replace the default ports with your customized ports.
 
 Remember to export these environment variables.
 
@@ -102,7 +99,7 @@ public class GettingStarted {
 ### Create a new graph
 
 To create a new graph, user need to specify the name, description, vertex types and edges types.
-For the detail data model of the graph, please refer to [Data Model](../../data_model). 
+For the detail data model of the graph, please refer to [Data Model](../../data_model).
 
 In this example, we will create a simple graph with only one vertex type `persson`, and one edge type named `knows`.
 
@@ -181,7 +178,7 @@ In the above example, a graph with name `test_graph` is defined via a json strin
 
 ### Import data to the graph
 
-After a new graph is created, you may want to import data into the newly created graph. 
+After a new graph is created, you may want to import data into the newly created graph.
 For the detail configuration of data import, please refer to [Data Import Configuration](../../data_import).
 
 For example, you can import the local csv files into the `test_graph`. Note that, currently only csv files are supported now. Remember to replase `/path/to/person.csv` and `/path/to/person_knows_person.csv` with the actual local path. You can download them from [GraphScope Interactive Github reop](https://github.com/alibaba/GraphScope/tree/main/flex/interactive/examples/modern_graph).
@@ -266,12 +263,12 @@ public class GettingStarted {
 ```
 
 For each vertex/edge types, you need to provide the input data source and column mapping infomation.
-Remember to add `@` at the begining of the local file path. 
+Remember to add `@` at the begining of the local file path.
 `Session.bulkLoading()` will submit an dataloading job to the service, and we can query the status of the job via `Session.getJobStatus()`, and wait until the job has compleleted successfully.
 
 ### Create a stored procedure
 
-Stored procedures can be registered into GraphScope Interactive to encapsulate and reuse complex graph operations. Interactive support both `cypher` and `c++` queries as stored procedures. 
+Stored procedures can be registered into GraphScope Interactive to encapsulate and reuse complex graph operations. Interactive support both `cypher` and `c++` queries as stored procedures.
 With the following code, you will create a procedure named `testProcedure` which is definied via a `cypher` query.
 
 ```java
@@ -411,142 +408,3 @@ public class GettingStarted{
 ```
 
 For the full example, please refer to [Java SDK Example](https://github.com/alibaba/GraphScope/tree/main/flex/interactive/sdk/examples/java/interactive-example)
-
-## Documentation for Service APIs
-
-The APIs in interactive SDK are divided into five categories.
-- GraphManagementApi
-- ProcedureManagementApi
-- JobManagementApi
-- ServiceManagementApi
-- QueryServiceApi
-- VertexApi
-- EdgeApi
-
-
-
-All URIs are relative to `${INTERACTIVE_ADMIN_ENDPOINT}`
-
-Class | Method | HTTP request | Description
------------- | ------------- | ------------- | -------------
-*GraphManagementApi* | [**BulkLoading**](./GraphManagementApi.md#Bulkloading) | **POST** /v1/graph/{graph_id}/dataloading | 
-*GraphManagementApi* | [**CreateGraph**](./GraphManagementApi.md#CreateGraph) | **POST** /v1/graph | 
-*GraphManagementApi* | [**DeleteGraph**](./GraphManagementApi.md#DeleteGraph) | **DELETE** /v1/graph/{graph_id} | 
-*GraphManagementApi* | [**GetGraphMeta**](./GraphManagementApi.md#GetGraphMeta) | **GET** /v1/graph/{graph_id} | 
-*GraphManagementApi* | [**GetGraphSchema**](./GraphManagementApi.md#GetGraphSchema) | **GET** /v1/graph/{graph_id}/schema | 
-*GraphManagementApi* | [**ListGraphs**](./GraphManagementApi.md#ListGraphs) | **GET** /v1/graph | 
-*JobManagementApi* | [**CancelJob**](./JobManagementApi.md#CancelJob) | **DELETE** /v1/job/{job_id} | 
-*JobManagementApi* | [**GetJobById**](./JobManagementApi.md#GetJobById) | **GET** /v1/job/{job_id} | 
-*JobManagementApi* | [**ListJobs**](./JobManagementApi.md#ListJobs) | **GET** /v1/job | 
-*ProcedureManagementApi* | [**CreateProcedure**](./ProcedureManagementApi.md#CreateProcedure) | **POST** /v1/graph/{graph_id}/procedure | 
-*ProcedureManagementApi* | [**DeleteProcedure**](./ProcedureManagementApi.md#DeleteProcedure) | **DELETE** /v1/graph/{graph_id}/procedure/{procedure_id} | 
-*ProcedureManagementApi* | [**GetProcedure**](./ProcedureManagementApi.md#GetProcedure) | **GET** /v1/graph/{graph_id}/procedure/{procedure_id} | 
-*ProcedureManagementApi* | [**ListProcedures**](./ProcedureManagementApi.md#ListProcedures) | **GET** /v1/graph/{graph_id}/procedure | 
-*ProcedureManagementApi* | [**UpdateProcedure**](./ProcedureManagementApi.md#UpdateProcedure) | **PUT** /v1/graph/{graph_id}/procedure/{procedure_id} | 
-*ServiceManagementApi* | [**GetServiceStatus**](./ServiceManagementApi.md#GetServiceStatus) | **GET** /v1/service/status | 
-*ServiceManagementApi* | [**RestartService**](./ServiceManagementApi.md#RestartService) | **POST** /v1/service/restart | 
-*ServiceManagementApi* | [**StartService**](./ServiceManagementApi.md#StartService) | **POST** /v1/service/start | 
-*ServiceManagementApi* | [**StopService**](./ServiceManagementApi.md#StopService) | **POST** /v1/service/stop | 
-*QueryServiceApi* | [**CallProcedure**](./QueryServiceApi.md#CallProcedure) | **POST** /v1/graph/{graph_id}/query | 
-*QueryServiceApi* | [**CallProcedureOnCurrentGraph**](./QueryServiceApi.md#CallProcedureOnCurrentGraph) | **POST** /v1/graph/current/query | 
-*VertexApi* | [**addVertex**](./VertexApi.md#addVertex) | **POST** /v1/graph/{graph_id}/vertex | Add vertex to the graph
-*VertexApi* | [**getVertex**](./VertexApi.md#getVertex) | **GET** /v1/graph/{graph_id}/vertex | Get the vertex&#39;s properties with vertex primary key.
-*VertexApi* | [**updateVertex**](./VertexApi.md#updateVertex) | **PUT** /v1/graph/{graph_id}/vertex | Update vertex&#39;s property
-*EdgeApi* | [**addEdge**](./EdgeApi.md#addEdge) | **POST** /v1/graph/{graph_id}/edge | Add edge to the graph
-*EdgeApi* | [**getEdge**](./EdgeApi.md#getEdge) | **GET** /v1/graph/{graph_id}/edge | Get the edge&#39;s properties with src and dst vertex primary keys.
-*EdgeApi* | [**updateEdge**](./EdgeApi.md#updateEdge) | **PUT** /v1/graph/{graph_id}/edge | Update edge&#39;s property
-
-
-```{note}
-Delete Vertex/Edge is currently not supported by Interactive.
-```
-
-## Documentation for Utilities APIs
-
-In addition to the documentation for service APIs, we also offer documentation for [Utility APIs](./reference/index.rst).
-
-- [Driver](./reference/com/alibaba/graphscope/interactive/client/Driver.rst)
-- [Session](./reference/com/alibaba/graphscope/interactive/client/Session.rst)
-- [DefaultSession](./reference/com/alibaba/graphscope/interactive/client/impl/DefaultSession.rst)
-- [Status](./reference/com/alibaba/graphscope/interactive/client/common/Status.rst)
-- [Result](./reference/com/alibaba/graphscope/interactive/client/common/Result.rst)
-- [Encoder](./reference/com/alibaba/graphscope/interactive/client/utils/Encoder.rst)
-- [Decoder](./reference/com/alibaba/graphscope/interactive/client/utils/Encoder.rst)
-
-
-## Documentation for Data Structures
-
- - [APIResponseWithCode](./APIResponseWithCode.md)
- - [BaseEdgeType](./BaseEdgeType.md)
- - [BaseEdgeTypeVertexTypePairRelationsInner](./BaseEdgeTypeVertexTypePairRelationsInner.md)
- - [BaseEdgeTypeVertexTypePairRelationsInnerXCsrParams](./BaseEdgeTypeVertexTypePairRelationsInnerXCsrParams.md)
- - [BasePropertyMeta](./BasePropertyMeta.md)
- - [BaseVertexType](./BaseVertexType.md)
- - [BaseVertexTypeXCsrParams](./BaseVertexTypeXCsrParams.md)
- - [ColumnMapping](./ColumnMapping.md)
- - [CreateEdgeType](./CreateEdgeType.md)
- - [CreateGraphRequest](./CreateGraphRequest.md)
- - [CreateGraphResponse](./CreateGraphResponse.md)
- - [CreateGraphSchemaRequest](./CreateGraphSchemaRequest.md)
- - [CreateProcedureRequest](./CreateProcedureRequest.md)
- - [CreateProcedureResponse](./CreateProcedureResponse.md)
- - [CreatePropertyMeta](./CreatePropertyMeta.md)
- - [CreateVertexType](./CreateVertexType.md)
- - [DateType](./DateType.md)
- - [EdgeData](./EdgeData.md)
- - [EdgeMapping](./EdgeMapping.md)
- - [EdgeMappingDestinationVertexMappingsInner](./EdgeMappingDestinationVertexMappingsInner.md)
- - [EdgeMappingSourceVertexMappingsInner](./EdgeMappingSourceVertexMappingsInner.md)
- - [EdgeMappingSourceVertexMappingsInnerColumn](./EdgeMappingSourceVertexMappingsInnerColumn.md)
- - [EdgeMappingTypeTriplet](./EdgeMappingTypeTriplet.md)
- - [EdgeRequest](./EdgeRequest.md)
- - [EdgeStatistics](./EdgeStatistics.md)
- - [FixedChar](./FixedChar.md)
- - [FixedCharChar](./FixedCharChar.md)
- - [GSDataType](./GSDataType.md)
- - [GetEdgeType](./GetEdgeType.md)
- - [GetGraphResponse](./GetGraphResponse.md)
- - [GetGraphSchemaResponse](./GetGraphSchemaResponse.md)
- - [GetGraphStatisticsResponse](./GetGraphStatisticsResponse.md)
- - [GetProcedureResponse](./GetProcedureResponse.md)
- - [GetPropertyMeta](./GetPropertyMeta.md)
- - [GetVertexType](./GetVertexType.md)
- - [JobResponse](./JobResponse.md)
- - [JobStatus](./JobStatus.md)
- - [LongText](./LongText.md)
- - [Parameter](./Parameter.md)
- - [PrimitiveType](./PrimitiveType.md)
- - [Property](./Property.md)
- - [QueryRequest](./QueryRequest.md)
- - [SchemaMapping](./SchemaMapping.md)
- - [SchemaMappingLoadingConfig](./SchemaMappingLoadingConfig.md)
- - [SchemaMappingLoadingConfigDataSource](./SchemaMappingLoadingConfigDataSource.md)
- - [SchemaMappingLoadingConfigFormat](./SchemaMappingLoadingConfigFormat.md)
- - [SchemaMappingLoadingConfigXCsrParams](./SchemaMappingLoadingConfigXCsrParams.md)
- - [ServiceStatus](./ServiceStatus.md)
- - [StartServiceRequest](./StartServiceRequest.md)
- - [StoredProcedureMeta](./StoredProcedureMeta.md)
- - [StringType](./StringType.md)
- - [StringTypeString](./StringTypeString.md)
- - [TemporalType](./TemporalType.md)
- - [TemporalTypeTemporal](./TemporalTypeTemporal.md)
- - [TimeStampType](./TimeStampType.md)
- - [TypedValue](./TypedValue.md)
- - [UpdateProcedureRequest](./UpdateProcedureRequest.md)
- - [UploadFileResponse](./UploadFileResponse.md)
- - [VarChar](./VarChar.md)
- - [VarCharVarChar](./VarCharVarChar.md)
- - [VertexData](./VertexData.md)
- - [VertexEdgeRequest](./VertexEdgeRequest.md)
- - [VertexMapping](./VertexMapping.md)
- - [VertexRequest](./VertexRequest.md)
- - [VertexStatistics](./VertexStatistics.md)
- - [VertexTypePairStatistics](./VertexTypePairStatistics.md)
-
-
-<a id="documentation-for-authorization"></a>
-## Documentation for Authorization
-
-Authentication is not supported yet, and we will be introducing authorization-related implementation in the near future.
-
-

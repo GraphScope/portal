@@ -1,8 +1,6 @@
 # Getting Started
 
-Welcome to GraphScope Interactive! This guide will walk you through setting up and running your first queries with our system using `gsctl` [CLI](TODO) tool.
-
-TODO(longbin): refer to Client APIs when the docs are ready
+Welcome to GraphScope Interactive! This guide will walk you through setting up and running your first queries with our system using `gsctl` [CLI](client_apis/gsctl) tool.
 
 ## Install Interactive
 

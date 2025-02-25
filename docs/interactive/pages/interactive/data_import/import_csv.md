@@ -1,4 +1,4 @@
-# Import using CLI
+# Import CSV Files into Interactive
 
 This guide walks you through the process of importing CSV files into GraphScope Interactive using `gsctl` CLI tool.
 The process comprises three main steps:
@@ -54,7 +54,9 @@ In this file:
 - For each edge type, define the source/destination vertex types and their associated properties.
 
 
-To create a new graph `test_graph`, execute the following command:
+To create a new graph `test_graph`
+
+Running the following command using `gsctl` CLIs:
 ```bash
 gsctl create graph -f ./test_graph.yaml
 ```

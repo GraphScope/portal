@@ -7,5 +7,6 @@
   "client_apis": "Client APIs",
   "configuration": "Engine Configuration",
   "stored_procedures": "Stored Procedures",
+  "deployment": "Deployment Guide",
   "development": "Development Guide"
 }

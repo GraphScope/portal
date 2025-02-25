@@ -11,11 +11,11 @@ Below is a list of all configurable items:
 
 | Item Name         | Default | Description               | Since Version |
 |-------------------|---------|---------------------------|---------------|
-| coordinator-port  | 8080    | The port of the coordinator service  | v0.3          |
-| admin-port       | 7777    | The port of the interactive admin service       | v0.3          |
-| storedproc-port   | 10000    | The port of the interactive stored procedure service      | v0.3          |
-| cypher-port       | 7687    | The port of the cypher service       | v0.3          |
-| config             | None    | The customized configuration file for engine interactive service | v0.4   |
+| coordinator-port  | 8080    | The port of the coordinator service  | v1.0          |
+| admin-port       | 7777    | The port of the interactive admin service       | v1.0            |
+| storedproc-port   | 10000    | The port of the interactive stored procedure service      | v1.0            |
+| cypher-port       | 7687    | The port of the cypher service       | v1.0            |
+| config             | None    | The customized configuration file for engine interactive service | v1.0     |
 <!-- | gremlin-port       | None    | The port of the gremlin service       | v0.3          | -->
 
 
@@ -57,9 +57,7 @@ To customize the service's settings, you can provide a YAML configuration file `
 gsctl instance deploy --type interactive --config ./interactive_config.yaml
 ```
 
-```{note}
-Please be aware that you're not required to configure every option. Simply adjust the settings that are relevant to your needs. Any options left unconfigured will automatically adopt their default values, as detailed in the following sections.
-```
+> **Note**: Please be aware that you're not required to configure every option. Simply adjust the settings that are relevant to your needs. Any options left unconfigured will automatically adopt their default values, as detailed in the following sections.
 
 
 
@@ -90,19 +88,12 @@ In this following table, we use the `.` notation to represent the hierarchy with
 
 | PropertyName       | Default   | Meaning |  Since Version |
 | --------           | --------  | -------- |-----------  |
-| log_level     |  INFO   | The level of database log, INFO/WARNING/ERROR/FATAL | 0.0.1 |
-| verbose_level     |  0   | The verbose level of database log, should be a int | 0.0.3 |
-| compute_engine.thread_num_per_worker | 1 | The number of threads will be used to process the queries. Increase the number can benefit the query throughput | 0.0.1 |
-| compiler.planner.is_on | true | Determines if query optimization is enabled for compiling Cypher queries  | 0.0.1 |
-| compiler.planner.opt | RBO | Specifies the optimizer to be used for query optimization. Currently, only the Rule-Based Optimizer (RBO) is supported | 0.0.1 |
-| compiler.planner.rules.FilterMatchRule | N/A | An optimization rule that pushes filter (`Where`) conditions into the `Match` clause | 0.0.1 |
-| compiler.planner.rules.FilterIntoJoinRule | N/A | A native Calcite optimization rule that pushes filter conditions to the Join participants before performing the join | 0.0.1 |
-| compiler.planner.rules.NotMatchToAntiJoinRule | N/A | An optimization rule that transforms a "not exist" pattern into an anti-join operation  | 0.0.1 |
-| compiler.query_timeout  | 3000000   ｜ The maximum time for compiler to wait engine's reply, in `ms`  | 0.0.3 | 
-
-#### TODOs
-
-We currently only allow service configuration during instance deployment. In the near future, we will support:
-
-- Graph-level configurations
-- Modifying service configurations
+| log_level     |  INFO   | The level of database log, INFO/WARNING/ERROR/FATAL | v1.0 |
+| verbose_level     |  0   | The verbose level of database log, should be a int | v1.0  |
+| compute_engine.thread_num_per_worker | 1 | The number of threads will be used to process the queries. Increase the number can benefit the query throughput | v1.0  |
+| compiler.planner.is_on | true | Determines if query optimization is enabled for compiling Cypher queries  | v1.0  |
+| compiler.planner.opt | RBO | Specifies the optimizer to be used for query optimization. Currently, only the Rule-Based Optimizer (RBO) is supported | v1.0  |
+| compiler.planner.rules.FilterMatchRule | N/A | An optimization rule that pushes filter (`Where`) conditions into the `Match` clause | v1.0  |
+| compiler.planner.rules.FilterIntoJoinRule | N/A | A native Calcite optimization rule that pushes filter conditions to the Join participants before performing the join | v1.0  |
+| compiler.planner.rules.NotMatchToAntiJoinRule | N/A | An optimization rule that transforms a "not exist" pattern into an anti-join operation  | v1.0  |
+| compiler.query_timeout  | 3,000,000 | The maximum time in `ms` for compiler to wait engine's reply  | v1.0  |

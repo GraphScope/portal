@@ -2,9 +2,13 @@
 
 Stored procedures in GraphScope Interactive offer a powerful way to encapsulate and reuse complex graph operations. This document provides a guide on how to compile, enable, and manage these procedures. We will take movies graph for example.
 
-```{note}
-Before executing the following code, please ensure that you are in the context of the builtin graph `gs_interactive_default_graph`: `gsctl use GRAPH gs_interactive_default_graph`. 
+Before executing the following code, please ensure that you are in the context of the builtin graph `gs_interactive_default_graph`.
+
+```bash
+gsctl use GRAPH gs_interactive_default_graph
 ```
+
+Otherwise, you must be aware of the graph schema while defining the stored procedure.
 
 ## Define a Stored Procedure
 
@@ -52,7 +56,7 @@ gsctl delete storedproc test_procedure
 
 ## Viewing Stored Procedures
 
-To view a single stored procedure, 
+To view a single stored procedure,
 
 ```bash
 gsctl desc storedproc test_procedure
@@ -63,7 +67,7 @@ Or, show all valid procedures in cypher shell.
 @neo4j> Show Procedures;
 ```
 
-## Querying Stored Procedures 
+## Querying Stored Procedures
 
 #### Call the Stored Procedure via Interactive SDK
 

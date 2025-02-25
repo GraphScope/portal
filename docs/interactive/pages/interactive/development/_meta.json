@@ -1,4 +1,16 @@
 {
-  "index": "index",
-  "dev_guide": "Development Guide"
+  "dev_and_test": "Dev and Test",
+  "cpp_procedure": "C++ Stored Procedure",
+  "Python SDK": {
+    "title:": "Python SDK",
+    "href": "https://graphscope.io/docs/latest/flex/interactive/development/python/python_sdk"
+  },
+  "Java SDK": {
+    "title:": "Java SDK",
+    "href": "https://graphscope.io/docs/latest/flex/interactive/development/java/java_sdk"
+  },
+  "RESTful APIs": {
+    "title:": "RESTful APIs",
+    "href": "https://graphscope.io/docs/latest/flex/interactive/development/restful_api"
+  }
 }
