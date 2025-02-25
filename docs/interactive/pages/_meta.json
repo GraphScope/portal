@@ -7,8 +7,12 @@
       "layout": "raw"
     }
   },
-  "docs": {
+  "interactive": {
     "title": "Documentation",
+    "type": "page"
+  },
+  "portal": {
+    "title": "Portal-TEMP",
     "type": "page"
   },
   "solution": {
