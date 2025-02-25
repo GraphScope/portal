@@ -1,7 +1,7 @@
 {
   "engines": {
     "node": "^18.19.1",
-    "pnpm": "^9"
+    "pnpm": "^9 || ^10"
   },
   "scripts": {
     "prev": "pnpm i --force && rm -rf package-lock.json",

@@ -1,5 +1,10 @@
-// import "../styles.css";
-
+ 
+import React, { useEffect } from 'react';
+import { useImageTheme } from '../components/Hooks/useUrl'
 export default function ReadingNotes({ Component, pageProps }) {
+  useImageTheme()
   return <Component {...pageProps} />;
 }
+
+
+
