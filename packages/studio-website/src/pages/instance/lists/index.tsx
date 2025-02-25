@@ -31,7 +31,7 @@ const InstanceCard: React.FC = () => {
   useEffect(() => {
     fetchLists();
   }, []);
-  const isEmpty = instanceList.length === 0;
+  const isEmpty = [draftGraph, ...instanceList].length === 0;
   if (isEmpty && isReady) {
     return (
       <Result
