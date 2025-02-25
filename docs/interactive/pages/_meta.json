@@ -13,7 +13,8 @@
   },
   "portal": {
     "title": "Portal[TEMP]",
-    "type": "page"
+    "type": "page",
+    "display": "hidden"
   },
   "solution": {
     "title": "Solution",
