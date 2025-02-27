@@ -15,7 +15,7 @@ interface IReportProps {}
 const GET_DATA_FILTER_RULES_EN = (user_query: string, schema: any) => {
   return `
 You are a highly skilled AI graph database expert. Given the user input and the schema of a graph database, your role is to identify the users' intents and which information in the database is necessary to meet the user's requirements.
-In detail, it is important to analyze the intent of the user's input, clarify the purpose of the data query, and then determine the properties that may be needed. When choosing properties, remember that you will need to use the relevant data to create a report.
+In detail, it is important to analyze the intent of the user's input, clarify the purpose of the data query, and then determine the properties that may be needed. When choosing properties, remember that you will need to use the relevant data to create a report. IMPORTANTLY, DO NOT include the property of id in the result.
 
 graph_schema :${schema}
 user_input:${user_query}
@@ -32,7 +32,7 @@ Guidance:
 const GET_DATA_FILTER_RULES_CHN = (user_query: string, schema: any) => {
   return `
 你是一位非常专业的AI图数据库专家，擅长分析用户的分析意图以及整理数据。你的任务是根据用户的输入语句，再结合图的 Schema 信息，推断出用户的分析意图。
-具体来说，重要的是分析用户查询的意图，明确数据查询的目的，然后确定Schema中的可能需要的属性。在从Schema中选择属性时，请记住需要使用相关内容来创建报告，因此选择的属性中应当包含一些描述性的适合在报告中出现的属性。
+具体来说，重要的是分析用户查询的意图，明确数据查询的目的，然后确定Schema中的可能需要的属性。在从Schema中选择属性时，请记住需要使用相关内容来创建报告，因此选择的属性中应当包含一些描述性的适合在报告中出现的属性。注意, 不要在结果中包含id属性。
 
 图数据库模式：${schema}
 用户输入：${user_query}
