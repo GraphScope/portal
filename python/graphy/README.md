@@ -247,7 +247,7 @@ For local deployment, follow the instructions in the [GraphScope portal reposito
 ![Enable the Explore tool](inputs/figs/enable_explore.png "Enable the Explore tool")
 
 ### For Small Datasets: All In the Browser 🌐
-For small datasets, we allow users to import the graph data into [kuzu-wasm](https://unswdb.github.io/kuzu-wasm/guide/what-is-kuzu-wasm.html). This tool provides a [browser-based interface](https://gsp.vercel.app/#/explore) for exploring and analyzing graph data, without the need for a graph database service.
+For small datasets, we allow users to import the graph data into [kuzu-wasm](https://docs.kuzudb.com/client-apis/wasm/). This tool provides a [browser-based interface](https://gsp.vercel.app/#/explore) for exploring and analyzing graph data, without the need for a graph database service.
 
 First, parse the scrapped data into a graph format using the following command:
 
