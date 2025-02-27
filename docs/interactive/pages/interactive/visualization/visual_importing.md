@@ -1,65 +1,38 @@
 ---
-title: Visual Modeling
+title: Visual Importing
 ---
 
-After creating the draft instance, we need to click on "Modeling" to enter the visual graph modeling page.
-Here, we have two ways to build the model:
+## Upload source data
 
-## Create Graph Model
+Once the graph model is created, we can begin importing data.there are three ways to import data:
 
-### Options 1: Manual Creation
+### Option 1: Manual Import
 
-#### Create Vertex and Vertex Properties
+Each label contains a location field. Click the "upload" button to upload the corresponding CSV file to the interactive service.
 
-We need to click the fourth button, "Create new vertex," in the sidebar to create a node on the canvas. The initial name of the node will be "Vertex_1.
+<img src="/visualization/importing/upload_start.png" />
 
-After clicking on the node, we can manually modify its label in the right-hand panel, or simply double-click the node to edit it directly on the canvas.
-<img src="/visualization/modeling/add_vertex_edit.png" />
+Upon success, a location path will be returned, indicating the data has been imported.
 
-Next, following the prompts, we need to complete the property information for this node. Click the "Plus" button under Properties to add attributes, and fill them out one by one.
-<img src="/visualization/modeling/add_property.png" />
+<img src="/visualization/importing/upload_end.png" />
 
-If we want to delete a node’s property, check the properties you wish to remove in the Checkbox area and click the delete button.
-<img src="/visualization/modeling/delete_property.png" />
+### Option 2: Automatic Import After CSV Parsing
 
-#### Create Edges
+This Option extends the convenience of automatic CSV modeling. During CSV parsing, the system caches the source file locally in the browser. As a result, the data can be automatically uploaded on the data loading page.
 
-Now let's create edges. To create an edge, hover over the edge of the starting node, then click and drag.
-<img src="/visualization/modeling/drag_start.png" />
+### Option 3: Import via Configuration File
 
-If the endpoint is an empty area of the canvas, a new node will automatically be created.
-<img src="/visualization/modeling/drag_end.png" />
+<img src="/visualization/importing/via_config.png" />
 
-If the endpoint is another existing node, an edge will be established between the two nodes.
-<img src="/visualization/modeling/drag_other_edge_end.png" />
+## Bind Data Source
 
-### Option 2: Parsing CSV Files for Creation
+After uploading the data, click the "data source binding" button to bind the data path to the model label. If successful, a configuration panel will appear.
+<img src="/visualization/importing/load_data.png" />
 
-Manually creating a graph model is particularly helpful when designing complex business models. However, when we already have some graph data, automatically deriving the graph model based on the existing data becomes a more convenient approach.
+Click "import" to proceed to the job page.
 
-Note: There are two constraints for the CSV files here:
+## Verify Results
 
-- Each CSV file, by default, represents one type of label. The file name should ideally be the label name, such as person.csv.
-- The CSV file must include a header row.
+At this point, validate the data on the query page. We will cover this in detail in the next chapter. Let’s move on to the next chapter!
 
-When the above two requirements are met, we can utilize the "Automatic Parsing and Modeling" feature provided by GraphScope Portal, which is located in the second option of the right-hand sidebar.
-<img src="/visualization/modeling/auto_parse_1.png" />
-
-After uploading the data, we only need to verify each CSV file to ensure that the automatically inferred node and edge types are accurate.
-
-<img src="/visualization/modeling/auto_parse_2.png" />
-
-Once confirmed, we can click "Generate Graph Model" , and the system will automatically derive the graph model.
-
-<img src="/visualization/modeling/auto_parse_3.png" />
-
-## Save Model
-
-Once the model is created and passes the system's validation, we can save the model. Here,there are two key points that <strong> require special attention:</strong>
-
-> - Each `vertex label` must have a `primary key` in its properties, and each `edge label` can only have one property field.
-> - <span style='color:red'>The `GraphScope Interactive` engine does not support modifications to the graph model. If you need to modify the graph model, you must create a new graph instance.</span>
-
-<img src="/visualization/modeling/save_model.png" />
-
-Now, let's goto importing page
+<img src="/visualization/importing/test_query.png" />

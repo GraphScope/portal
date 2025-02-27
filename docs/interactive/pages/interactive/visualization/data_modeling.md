@@ -2,10 +2,10 @@
 title: Visual Modeling
 ---
 
-After creating the draft instance, we need to click on "Modeling" to enter the visual graph modeling page.
-Here, we have two ways to build the model:
-
 ## Create Graph Model
+
+After creating the draft instance, we need to click on "Modeling" to enter the visual graph modeling page.
+Here, we have three ways to build the model:
 
 ### Options 1: Manual Creation
 
@@ -52,6 +52,12 @@ After uploading the data, we only need to verify each CSV file to ensure that th
 Once confirmed, we can click "Generate Graph Model" , and the system will automatically derive the graph model.
 
 <img src="/visualization/modeling/auto_parse_3.png" />
+
+### Options 3: Creation from Configuration File
+
+Click the third button in the sidebar to upload the schema's YAML configuration file here.
+
+<img src="/visualization/modeling/via_config.png" />
 
 ## Save Model
 
