@@ -278,7 +278,7 @@ To leverage the power of GraphScope Interactive, you will need to follow the fol
 
 ```bash
 pip install gsctl
-gsctl instance deploy --type interactive --set storage.string_default_max_length=10000
+gsctl instance deploy --type interactive
 export INTERACTIVE_ADMIN_ENDPOINT=http://127.0.0.1:7777
 ```
 
