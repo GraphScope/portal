@@ -374,7 +374,26 @@ While this prototype focuses on academic literature surveys, the core functional
 
 Basically, **any unstructured data set** can benefit from Graphy’s iterative exploration and structured reporting approach.
 
+## Acknowledgements
+We would like to thank:
+- [kuzudb](https://kuzudb.com/) for providing the cool kuzu-wasm tool
+- [@DylanShang](https://github.com/DylanShang) for his generous support of integrating wasm
 
+## Reference
+
+Please cite this project:
+
+```bib
+@misc{lai2025graphyourdataendtoendmodeling,
+      title={Graphy'our Data: Towards End-to-End Modeling, Exploring and Generating Report from Raw Data},
+      author={Longbin Lai and Changwei Luo and Yunkai Lou and Mingchen Ju and Zhengyi Yang},
+      year={2025},
+      eprint={2502.16868},
+      archivePrefix={arXiv},
+      primaryClass={cs.DB},
+      url={https://arxiv.org/abs/2502.16868},
+}
+```
 
 
 
