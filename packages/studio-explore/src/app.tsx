@@ -66,7 +66,7 @@ import { Divider, Flex, theme, Segmented, Tabs, Typography } from 'antd';
 import { getDefaultServices } from './services';
 import TableView from './components/TableView';
 import ExploreLocales from './locales';
-import NextQuery from './components/NextQuery';
+
 import FloatContainer from './components/FloatContainer';
 
 interface ExploreProps {
@@ -224,8 +224,6 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             </HoverMenu> */}
 
             <ContextMenu>
-              {/* <RunAI /> */}
-              <NextQuery />
               <NeighborQuery />
               {/* <CommonNeighbor /> */}
               <DeleteLeafNodes />
