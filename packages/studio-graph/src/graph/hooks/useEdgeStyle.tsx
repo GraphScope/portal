@@ -1,7 +1,7 @@
 import { useContext } from '../useContext';
 import { useEffect } from 'react';
 import { handleEdgeStyle } from '../utils/handleStyle';
-import { COLOR_DISABLED, SELECTED_EDGE_COLOR } from '../const';
+import { COLOR_DISABLED, SELECTED_EDGE_COLOR, SELECTED_EDGE_TEXT_COLOR } from '../const';
 
 import { linkCanvasObject } from '../custom-edge';
 import type { ForceGraphInstance } from 'force-graph';
@@ -84,14 +84,14 @@ export const useEdgeStyle = () => {
       }
       if (render === '3D') {
         (graph as ForceGraph3DInstance)
-          .linkColor((edge: any) => {
-            const { color } = handleEdgeStyle(edge, edgeStyle);
-            const match = edgeStatus[edge.id];
-            if (match && match.selected) {
-              return SELECTED_EDGE_COLOR;
-            }
-            return color;
-          })
+          // .linkColor((edge: any) => {
+          //   const { color } = handleEdgeStyle(edge, edgeStyle);
+          //   const match = edgeStatus[edge.id];
+          //   if (match && match.selected) {
+          //     return SELECTED_EDGE_TEXT_COLOR;
+          //   }
+          //   return color;
+          // })
           .linkLabel((edge: any) => {
             const { caption } = handleEdgeStyle(edge, edgeStyle);
             return caption

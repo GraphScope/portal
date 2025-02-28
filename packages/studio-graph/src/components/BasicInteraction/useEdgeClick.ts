@@ -17,7 +17,7 @@ const useEdgeClick = () => {
           draft.edgeStatus = {
             [id]: { selected: true },
           };
-
+          draft.selectNodes = [];
           draft.selectEdges = [edge];
         });
       }

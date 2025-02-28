@@ -68,7 +68,7 @@ const FloatTabs: React.FunctionComponent<IFloatTabsProps> = props => {
     activeKey: items[0].key,
   });
   const { visible } = state;
-  const { width: panelWidth, handleMouseDown: handleResizeStart } = useResizeWidth(300);
+  const { width: panelWidth, handleMouseDown: handleResizeStart } = useResizeWidth(360);
 
   const handleToggle = () => {
     setState(preState => {

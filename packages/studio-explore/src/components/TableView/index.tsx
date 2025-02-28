@@ -42,6 +42,18 @@ const useRowSelection = () => {
   };
 };
 
+const sortDatasource = (dataSource, selectedKeys) => {
+  // 根据选中的 keys 对数据重新排序
+  const sortedData = [...dataSource].sort((a, b) => {
+    const aSelected = selectedKeys.includes(a.key);
+    const bSelected = selectedKeys.includes(b.key);
+    if (aSelected && !bSelected) return -1; // a 在前
+    if (!aSelected && bSelected) return 1; // b 在前
+    return 0; // 保持原顺序
+  });
+  return sortedData;
+};
+
 const TableView: React.FunctionComponent<ITableViewProps> = props => {
   const { store } = useContext();
   const { selectNodes, data, source } = store;
@@ -62,7 +74,7 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
     });
   };
   /** filter cloumns end */
-
+  const _dataSource = sortDatasource(dataSource, selectedRowKeys);
   return (
     <Flex vertical gap={12}>
       <Flex justify="space-between" align="center">
@@ -81,14 +93,13 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
           onChange: onSelectChange,
         }}
         size="large"
-        dataSource={dataSource}
+        dataSource={_dataSource}
         columns={tableColumns}
         bordered
         // scroll={{ x: 'max-content' }}
         pagination={{
           simple: true,
           size: 'small',
-          pageSize: 10,
         }}
       />
     </Flex>

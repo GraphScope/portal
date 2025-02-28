@@ -60,11 +60,14 @@ import {
   BranchesOutlined,
   CopyrightOutlined,
   OpenAIOutlined,
+  DeploymentUnitOutlined,
 } from '@ant-design/icons';
 import { Divider, Flex, theme, Segmented, Tabs, Typography } from 'antd';
 import { getDefaultServices } from './services';
 import TableView from './components/TableView';
 import ExploreLocales from './locales';
+
+import FloatContainer from './components/FloatContainer';
 
 interface ExploreProps {
   id?: string;
@@ -96,25 +99,25 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
         >
           <Section
             splitBorder
-            rightSide={
-              <SegmentedTabs
-                queryKey="right"
-                tableHeight={60}
-                block
-                items={[
-                  {
-                    key: 'Next',
-                    label: (
-                      <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
-                        <BarChartOutlined style={{ fontSize: 17 }} />
-                        Next Query
-                      </Flex>
-                    ),
-                    children: <Next />,
-                  },
-                ]}
-              ></SegmentedTabs>
-            }
+            // rightSide={
+            //   <SegmentedTabs
+            //     queryKey="right"
+            //     tableHeight={60}
+            //     block
+            //     items={[
+            //       {
+            //         key: 'Next',
+            //         label: (
+            //           <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
+            //             <BarChartOutlined style={{ fontSize: 17 }} />
+            //             Next Query
+            //           </Flex>
+            //         ),
+            //         children: <Next />,
+            //       },
+            //     ]}
+            //   ></SegmentedTabs>
+            // }
             autoResize={false}
             leftSideStyle={{
               width: '400px',
@@ -145,17 +148,28 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
               direction="vertical"
               items={[
                 {
-                  label: <Typography.Title level={3}>Statistics Analysis</Typography.Title>,
-                  icon: <BarChartOutlined style={{ fontSize: 17 }} />,
-                  children: <Statistics />,
-                  key: 'Statistics',
+                  label: <Typography.Title level={3}>Next Query</Typography.Title>,
+                  icon: <DeploymentUnitOutlined style={{ fontSize: 17 }} />,
+                  children: <Next />,
+                  key: 'NextQuery',
                 },
                 {
-                  label: <Typography.Title level={3}>Table View</Typography.Title>,
-                  icon: <TableOutlined />,
-                  children: <TableView />,
-                  key: 'TableView',
+                  label: <Typography.Title level={3}>Statistics Analysis</Typography.Title>,
+                  icon: <BarChartOutlined style={{ fontSize: 17 }} />,
+                  children: (
+                    <Flex vertical>
+                      <Statistics />
+                      <TableView />
+                    </Flex>
+                  ),
+                  key: 'Statistics',
                 },
+                // {
+                //   label: <Typography.Title level={3}>Table View</Typography.Title>,
+                //   icon: <TableOutlined />,
+                //   children: <TableView />,
+                //   key: 'TableView',
+                // },
                 {
                   label: <Typography.Title level={3}>Cluster Analysis</Typography.Title>,
                   icon: <CopyrightOutlined />,
@@ -202,8 +216,6 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
               }
             ></FloatTabs>
 
-            <ZoomStatus style={{ left: 350, opacity: 0.5 }} />
-
             {/* <HoverMenu>
               <NeighborQuery />
               <CommonNeighbor  />
@@ -212,20 +224,27 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             </HoverMenu> */}
 
             <ContextMenu>
-              <RunAI />
               <NeighborQuery />
               {/* <CommonNeighbor /> */}
               <DeleteLeafNodes />
               <DeleteNode />
             </ContextMenu>
+            <FloatContainer position="bottom">
+              <ZoomStatus
+                style={{
+                  opacity: 0.5,
+                }}
+              />
+            </FloatContainer>
 
             <FloatToolbar>
-              <ToogleRightButton />
-              <Divider style={{ margin: '0px' }} />
+              {/* <ToogleRightButton /> */}
+              {/* <Divider style={{ margin: '0px' }} /> */}
               <Brush />
               <FixedMode />
               <ZoomFit />
               <FullScreen containerRef={containerRef} />
+              <Divider style={{ margin: '0px' }} />
               <ClearCanvas />
               <ClearStatus trigger="button" />
             </FloatToolbar>
