@@ -16,7 +16,6 @@ Graphy is designed to make your literature survey process **faster, smarter, and
   - Brief guide: Prepare the seed paper PDF files; use the [offline scrapper](#getting-started-with-the-offline-scrapper), with [inspector-navigator workflow](config/workflow.json) configuration; once completed, [import the scrapped data to GraphScope Interactive](#for-larger-datasets-using-graphscope-interactive-). We have pre-scrapped a [paper network](https://graphscope.oss-cn-beijing.aliyuncs.com/graphy/arxiv_paper_graph.zip) with over 50,000 papers and 130,000 references from arXiv for test purpose.
 
 - **Conduct Literature Survey**: With a pre-built academic network, you can explore related papers, track research trends, and generate a literature survey report based on your research focus. It’s the perfect tool for organizing and synthesizing research findings. 📊
-  - Brief Guide: An online tool is available at [demo page](https://gsp.blue) for you to explore the above pre-scrapped paper network.
 
 ## The Architecture of Graphy 🛠 ️
 
