@@ -83,11 +83,19 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
       return;
     }
     const queryCypher = getService<IQueryStatement>('queryStatement');
-    console.log('e.data.data[property]', e.data.data[property]);
+    console.log(
+      'e.data.data[property]',
+      e.data.data[property],
+      `
+      MATCH(a:${label}) 
+      WHERE a.${property}="${e.data.data[property]}"
+      return a
+      `,
+    );
     const data = await queryCypher(
       `
         MATCH(a:${label}) 
-        WHERE a.${property}='${e.data.data[property]}'
+        WHERE a.${property}="${e.data.data[property]}"
         return a
         `,
     );
