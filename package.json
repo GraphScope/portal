@@ -1,8 +1,9 @@
 {
   "engines": {
     "node": "^18.19.1",
-    "pnpm": "^9 || ^10"
+    "pnpm": "^10||^9"
   },
+  "packageManager": "pnpm@9.15.6",
   "scripts": {
     "prev": "pnpm i --force && rm -rf package-lock.json",
     "start": "turbo run start",

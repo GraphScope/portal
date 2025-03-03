@@ -49,7 +49,7 @@ export const getDriver = async (params: Pick<QueryParams, 'endpoint' | 'password
   const id = `${language}_${endpoint}`;
   const unlock = await mutex.lock();
   if (!DriverMap.has(id)) {
-    console.log("create new driver");
+    console.log('create new driver');
     if (language === 'cypher') {
       const [engineId, datasetId] = endpoint.split('://');
       if (engineId === 'kuzu_wasm') {
@@ -57,9 +57,9 @@ export const getDriver = async (params: Pick<QueryParams, 'endpoint' | 'password
         await driver.initialize();
         const exist = await driver.existDataset(datasetId);
         if (exist) {
-          console.log("start to use ", datasetId);
+          console.log('start to use ', datasetId);
           await driver.use(datasetId);
-          console.log("finish to use ", datasetId);
+          console.log('finish to use ', datasetId);
         }
         DriverMap.set(id, driver);
       } else {
@@ -70,7 +70,6 @@ export const getDriver = async (params: Pick<QueryParams, 'endpoint' | 'password
       DriverMap.set(id, new GremlinDriver(endpoint, username, password));
     }
   }
-  console.log("get driver: ", DriverMap.get(id));
   unlock();
   return DriverMap.get(id) as CypherDriver | GremlinDriver | KuzuDriver;
 };

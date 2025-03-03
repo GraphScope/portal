@@ -99,7 +99,14 @@ const ChartView: React.FunctionComponent<ITableViewProps> = props => {
       return;
     }
 
-    const { ids } = e.data.data;
+    const idSet = new Set();
+    e.forEach(item => {
+      (item.ids as string[]).forEach(i => {
+        idSet.add(i);
+      });
+    });
+    const ids = [...idSet.values()] as string[];
+
     updateStore(draft => {
       draft.source.nodes.forEach(node => {
         draft.nodeStatus[node.id] = {
