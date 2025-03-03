@@ -1,0 +1,28 @@
+{
+    "data": [
+        {
+            "name": "Complexity of Time Series Forecasting",
+            "description": "The paper introduces a simplified and optimized CNN structure inspired by the WaveNet model, using ReLU activation functions and parametrized skip connections. It employs stacks of dilated convolutions to capture long-term dependencies efficiently and mitigate the vanishing gradient problem."
+        },
+        {
+            "name": "Limited Historical Data",
+            "description": "The proposed model utilizes multiple financial time series as input, conditioning the forecast on both the target series' history and the histories of other related series. Parallel processing of multiple time series enhances forecasting performance even with limited historical data."
+        },
+        {
+            "name": "Model Efficiency and Training Time",
+            "description": "The paper replaces the gated activation function from the original WaveNet model with a rectified linear unit (ReLU), reducing the complexity of the model and leading to faster training times and lower computational costs. The efficient architecture also reduces the overall computational load."
+        },
+        {
+            "name": "Applying CNNs to Time Series Forecasting",
+            "description": "The authors demonstrate that CNNs can be successfully adapted to forecasting financial time series of limited length by using dilated convolutions and conditioning on multiple time series. Extensive experiments show that the CNN model is a viable and efficient alternative to LSTMs and autoregressive models."
+        },
+        {
+            "name": "Handling Multivariate Time Series",
+            "description": "The proposed model processes multiple time series in parallel using multiple convolutional filters, exploiting the correlation structure between the multivariate time series. The model conditions the forecast on both the target series and other related series, capturing interdependencies effectively."
+        },
+        {
+            "name": "Comparative Performance Analysis",
+            "description": "The paper provides a comprehensive performance comparison of the proposed CNN model with LSTM and autoregressive models, evaluating the performance using standard metrics such as MAE and RMSE. The model's robustness is tested under various conditions to ensure reliability and generalizability."
+        }
+    ]
+}

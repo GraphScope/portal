@@ -1,0 +1,24 @@
+{
+    "data": [
+        {
+            "name": "Misalignment Between Infinite and Finite Trials Objectives",
+            "description": "The paper identifies a fundamental issue in convex reinforcement learning (RL) where the commonly used infinite trials objective does not align well with the finite trials setting. Specifically, policies optimized for the infinite trials objective can be significantly sub-optimal when deployed in a finite trials context. This misalignment leads to a significant approximation error, which can degrade performance in practical applications.",
+            "solution": "The authors propose a new finite trials convex RL formulation. They derive an upper bound on the approximation error when optimizing the infinite trials objective as a proxy for the finite trials objective. This formulation helps in understanding and mitigating the approximation error, leading to more accurate and effective policies in finite trials settings."
+        },
+        {
+            "name": "Computational Tractability of Convex RL",
+            "description": "The paper challenges the common assumption in the convex RL literature that the problem is always computationally tractable. The single trial convex RL analysis suggests that the computational complexity of solving convex RL problems may be higher than previously thought, especially in practical scenarios with limited data.",
+            "solution": "The authors suggest revisiting the computational methods used in convex RL. They recommend developing more efficient algorithms and heuristics that can handle the increased complexity while maintaining tractability. This may involve leveraging advanced optimization techniques or approximations that are tailored to the finite trials setting."
+        },
+        {
+            "name": "Sufficiency of Stationary Policies",
+            "description": "Another common assumption in convex RL is that stationary policies are generally sufficient for achieving optimal performance. However, the single trial analysis in the paper indicates that this assumption may not hold in all cases. Non-stationary policies might be necessary to achieve optimal performance in certain finite trials scenarios.",
+            "solution": "The authors propose exploring the use of non-stationary policies in convex RL. They suggest that dynamic or adaptive policies, which can change over time, might be more suitable for finite trials settings. This could involve developing new algorithms that allow for the adaptation of policies based on the evolving state distribution."
+        },
+        {
+            "name": "Theoretical and Empirical Validation",
+            "description": "The paper emphasizes the importance of both theoretical and empirical validation of the proposed finite trials convex RL formulation. While the theoretical bounds provide a foundation, they need to be supported by empirical evidence to ensure practical applicability.",
+            "solution": "The authors conduct numerical analyses to validate their theoretical findings. They demonstrate that the approximation bounds derived in the paper are non-vacuous and relevant for practical applications. This empirical validation strengthens the credibility of the proposed formulation and provides confidence in its effectiveness."
+        }
+    ]
+}

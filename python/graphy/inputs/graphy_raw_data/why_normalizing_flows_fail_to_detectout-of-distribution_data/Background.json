@@ -1,7 +1,0 @@
-{
-    "data": {
-        "problem_definition": "The paper investigates the issue of out-of-distribution (OOD) detection using normalizing flows, specifically addressing the phenomenon where these models often fail to distinguish between in-distribution and out-of-distribution data.",
-        "problem_value": "Detecting OOD data is crucial for the robustness and reliability of machine learning systems. It helps in understanding model behavior, improving generative models, and ensuring safety and security. Identifying the limitations of normalizing flows can lead to the development of more effective and reliable generative models.",
-        "existing_solutions": "Normalizing flows tend to learn latent representations based on local pixel correlations rather than semantic content, leading to poor OOD detection. They also learn generic image-to-latent transformations and can generate high-fidelity images, which can paradoxically hinder OOD detection. Additionally, the architecture of the coupling layers in normalizing flows may not be well-suited for learning the semantic structure of the target data."
-    }
-}

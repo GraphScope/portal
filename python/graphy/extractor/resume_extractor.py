@@ -146,10 +146,10 @@ class ResumeExtractor(PDFExtractor):
         self._itemize_start = ["+", "-", "*", "•", "➢", "◆"]
 
         self._educational_background = self._read_file_gt(
-            ["gt_files/educational_background.txt"]
+            ["resource/gt_files/educational_background.txt"]
         )
 
-        self._last_names = self._read_file_gt(["gt_files/last_name.txt"])
+        self._last_names = self._read_file_gt(["resource/gt_files/last_name.txt"])
 
         self.maximal_line_width = -1
         self.first_page_text = self.pages[0].get_text()

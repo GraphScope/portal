@@ -1,0 +1,19 @@
+{
+    "data": [
+        {
+            "name": "Baseline Performance Evaluation",
+            "settings": "Datasets: In-distribution (ID): CIFAR-10; Out-of-distribution (OOD): SVHN, LSUN, and TinyImageNet. Evaluation Metrics: Likelihood scores, Area Under the Receiver Operating Characteristic Curve (AUROC). Baselines: Standard normalizing flow (e.g., RealNVP, Glow).",
+            "results": "Standard normalizing flows assigned higher likelihood scores to OOD data (e.g., SVHN) compared to ID data (CIFAR-10). AUROC values were low, indicating poor OOD detection performance."
+        },
+        {
+            "name": "Architecture Modification Experiment",
+            "settings": "Datasets: In-distribution (ID): CIFAR-10; Out-of-distribution (OOD): SVHN, LSUN, and TinyImageNet. Evaluation Metrics: Likelihood scores, Area Under the Receiver Operating Characteristic Curve (AUROC). Baselines: Standard normalizing flow (e.g., RealNVP, Glow); Modified normalizing flow with biased coupling layers.",
+            "results": "The modified normalizing flow with biased coupling layers showed improved OOD detection performance. Likelihood scores for OOD data were significantly lower compared to ID data. AUROC values increased, indicating better OOD detection."
+        },
+        {
+            "name": "Robustness to Perturbations",
+            "settings": "Datasets: In-distribution (ID): CIFAR-10; Out-of-distribution (OOD): CIFAR-10 with Gaussian noise, CIFAR-10 with adversarial perturbations. Evaluation Metrics: Likelihood scores, Area Under the Receiver Operating Characteristic Curve (AUROC). Baselines: Standard normalizing flow (e.g., RealNVP, Glow); Modified normalizing flow with biased coupling layers.",
+            "results": "Both standard and modified normalizing flows showed decreased performance when faced with perturbed data. However, the modified flow maintained better OOD detection performance under perturbations compared to the standard flow."
+        }
+    ]
+}

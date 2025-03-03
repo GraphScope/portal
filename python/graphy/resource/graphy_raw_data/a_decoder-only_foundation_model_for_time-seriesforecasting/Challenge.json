@@ -1,0 +1,29 @@
+{
+    "data": [
+        {
+            "name": "Data Diversity and Quality",
+            "description": "The model's performance heavily depends on the diversity and quality of the training data. Time series data can vary widely across different domains, temporal granularities, and forecasting horizons. Ensuring that the training corpus is comprehensive and representative of various types of time series data is crucial for the model to generalize well and perform accurately in zero-shot settings.",
+            "solution": "The authors address this challenge by pretraining the model on a large and diverse time series corpus that includes both real-world and synthetic datasets. This approach helps the model learn a wide range of patterns and structures, improving its ability to handle unseen data."
+        },
+        {
+            "name": "Model Size and Efficiency",
+            "description": "Large language models (LLMs) like GPT-3 and LLaMA 2 have shown promise in zero-shot forecasting but come with significant computational and resource costs. Designing a smaller, more efficient model that can still achieve competitive performance is a significant challenge.",
+            "solution": "The authors develop a time series foundation model (TimesFM) with a relatively small parameter size (200M parameters) and a moderate pretraining data size (O(100B timepoints)). They demonstrate that this smaller model can achieve near state-of-the-art zero-shot forecasting accuracy, making it a more practical and cost-effective solution."
+        },
+        {
+            "name": "Generalization Across Domains",
+            "description": "Time series data can be highly domain-specific, and models trained on one domain may not generalize well to others. Ensuring that the model can perform well across different domains, forecasting horizons, and temporal granularities is a critical challenge.",
+            "solution": "The authors use a decoder-style attention architecture with input patching, which allows the model to capture both local and global patterns in the time series data. Additionally, the diverse training corpus helps the model learn domain-agnostic features, enhancing its generalization capabilities."
+        },
+        {
+            "name": "Zero-Shot Performance",
+            "description": "Achieving high zero-shot performance is challenging because the model must make accurate predictions on datasets it has never seen during training. This requires the model to have strong generalization and adaptability.",
+            "solution": "The authors design the model to be pre-trained on a large and diverse corpus, which helps it learn robust and transferable representations. They also experiment with various datasets to validate the model's zero-shot performance, demonstrating that it can achieve near state-of-the-art accuracy on a wide range of forecasting tasks."
+        },
+        {
+            "name": "Comparative Performance with General LLMs",
+            "description": "General large language models (LLMs) have been proposed as out-of-the-box zero-shot forecasters. However, these models are often not optimized for time series data and may not perform as well as specialized models.",
+            "solution": "The authors conduct experiments comparing their specialized time series foundation model with general LLMs. They find that their model outperforms general LLMs in zero-shot forecasting while requiring significantly fewer resources, highlighting the benefits of domain-specific model design."
+        }
+    ]
+}
