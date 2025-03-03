@@ -83,7 +83,15 @@ const QueryGraph: React.FunctionComponent<QueryGraphProps> = props => {
         >
           <Prepare data={data} schema={schema} graphId={graphId} />
           <Canvas />
-          <ZoomStatus />
+          <ZoomStatus
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              zIndex: 998,
+              padding: '12px',
+            }}
+          />
           <BasicInteraction />
           <ClearStatus />
           <PropertiesPanel />
