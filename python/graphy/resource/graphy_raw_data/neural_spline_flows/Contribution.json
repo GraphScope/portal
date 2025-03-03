@@ -1,0 +1,20 @@
+{
+    "data": [
+        {
+            "original": "We propose a fully differentiable module based on monotonic rational quadratic splines, which enhances the flexibility of both coupling and autoregressive transforms while retaining analytic invertibility.",
+            "summary": "Introduced a new module using monotonic rational quadratic splines that increases model flexibility and maintains analytical invertibility."
+        },
+        {
+            "original": "We demonstrate that neural spline flows improve density estimation, variational inference, and generative modeling of images.",
+            "summary": "Showed empirical improvements in density estimation, variational inference, and image generation using neural spline flows."
+        },
+        {
+            "original": "The module acts as a drop-in replacement for the affine or additive transformations commonly found in coupling and autoregressive transforms.",
+            "summary": "Provided a direct replacement for existing transformations in coupling and autoregressive models, enhancing their capabilities without altering the overall architecture."
+        },
+        {
+            "original": "Monotonic rational quadratic splines naturally induce multi-modality when used to transform random variables.",
+            "summary": "Highlighted the ability of the proposed splines to introduce multi-modality in transformed distributions, improving the model's representational power."
+        }
+    ]
+}

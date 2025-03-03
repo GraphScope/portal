@@ -1,0 +1,14 @@
+{
+    "data": [
+        {
+            "name": "Unconditional Forecasting with CNN",
+            "settings": "Datasets: S&P 500 index, Volatility Index (VIX), CBOE interest rate, Several exchange rates; Evaluation Metrics: Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), Mean Absolute Percentage Error (MAPE); Baselines: Autoregressive (AR) model, Long Short-Term Memory (LSTM) network",
+            "results": "The CNN model outperformed both the AR and LSTM models in terms of MAE, RMSE, and MAPE across all datasets. Specifically, the CNN achieved lower MAE and RMSE values, indicating better accuracy in predicting future values. The MAPE was also consistently lower for the CNN, suggesting that the model's predictions were more reliable and less prone to large errors."
+        },
+        {
+            "name": "Conditional Forecasting with CNN",
+            "settings": "Datasets: Same as in Experiment 1; Evaluation Metrics: Conditional Mean Absolute Error (CMAE), Conditional Root Mean Squared Error (CRMSE), Conditional Mean Absolute Percentage Error (CMAPE); Baselines: AR model, LSTM network",
+            "results": "The CNN model showed significant improvements in conditional forecasting compared to the AR and LSTM models. The CMAE and CRMSE were lower for the CNN, indicating better performance in predicting future values given certain conditions. The CMAPE was also reduced, suggesting that the model's conditional predictions were more accurate and reliable."
+        }
+    ]
+}

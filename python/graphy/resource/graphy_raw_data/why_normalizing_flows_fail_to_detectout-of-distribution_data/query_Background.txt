@@ -1,0 +1,30 @@
+**************QUERY***************: 
+ 
+You are a highly skilled academic AI assistant. Your role is to respond to user queries with structured,
+clear, and well-organized answers, maintaining an academic tone and focusing on relevance and clarity.
+
+User Query: **Question**: Please describe the problem studied in this paper, why the problem is worth studying, and what are the issues of existing solutions to this problem.
+
+Guidance:
+Research papers typically contain key components, including the problem definition, challenges,
+contributions, solutions, and experimental results. These components are generally organized as follows:
+- **Problem Definition, Challenges, and Contributions**: Usually found within the first few sections.
+- **Solutions**: Typically located in the main body of the paper.
+- **Experiment Results**: Usually appear toward the end in sections titled "Experiments" or "Empirical Studies."
+
+The content is retrieved in annotated chunks, marked with **SECTION_X** (indicating the specific section)
+or **POS_0.XX** (indicating the position within the paper, calculated as current page/total pages).
+Use these annotations to identify and focus on the sections most relevant to the user’s query,
+ensuring a precise and targeted response.
+                             **************MEMORY**************: 
+ **SECTION_1**: We also provide code at https: github.com PolinaKirichenko flows ood.
+**SECTION_1**: a Log likelihoods b ImageNet input, in distribution c CelebA input, OOD Figure 1: RealNVP ow on in and out of distribution images. a : A histogram of log likelihoods that a RealNVP ow trained on ImageNet assigns to ImageNet, SVHN and CelebA. The ow assigns higher likelihood to out of distribution data. b, c : A visualization of the intermediate layers of a RealNVP model on an b in distribution image and c
+**SECTION_1**: dataset 35 subsampled to 64 64 resolution. The ow assigns higher likelihood to both the CelebA dataset of celebrity photos, and the SVHN dataset of images of house numbers, compared to the target ImageNet dataset. While there has been empirical progress in improving OOD detection with ows 27, 7, 28, 36, 37, 45 , the fundamental reasons for why ows fail at OOD detection in the rst place are not fully understood. In this paper, we show how the inductive biases 26, 44 of ow
+**SECTION_1**: likelihood for all structured images. For example, in Figure 1 b, c , we show that the coupling layers of RealNVP transform the in distribution ImageNet in the same way as the OOD CelebA. Equal contribution. 1 arXiv:2006.08545v1 stat.ML 15 Jun 2020
+**SECTION_paper_meta**: Why Normalizing Flows Fail to Detect Out of Distribution Data Polina Kirichenko , Pavel Izmailov , Andrew Gordon Wilson New York University Abstract Detecting out of distribution OOD data is crucial for robust machine learning systems. Normalizing ows are exible deep generative models that often surprisingly fail to distinguish between in and out of distribution data: a ow trained on pictures of clothing assigns higher likelihood to handwritten digits.
+**SECTION_1**: OOD image. The rst row shows the coupling layer activations, the second and third rows show the scale s and shift t parameters predicted by a neural network applied to the corresponding coupling layer input. Both on in distribution and out of distribution images, s and t accurately approximate the structure of the input, even though the model has not observed inputs images similar to the OOD image during training. Flows learn generic
+**SECTION_1**: models implicit assumptions in the architectures and training procedures can hinder OOD detection. In particular, our contributions are the following: We show that ows learn latent representations for images largely based on local pixel correlations, rather than semantic content, making it di cult to detect data with anomalous semantics. We identify mechanisms through which normalizing ows can simultaneously increase
+**SECTION_paper_meta**: high delity images can have a detrimental e ect on OOD detection.
+**SECTION_1**: 1 Introduction Normalizing ows 39, 9, 10 seem to be ideal candidates for out of distribution detection, since they are simple generative models that provide an exact likelihood. However, Nalisnick et al. 27 revealed the puzzling result that ows often assign higher likelihood to out ofdistribution data than the data used for maximum likelihood training. In Figure 1 a , we show the log likelihood histogram for a RealNVP ow model 10 trained on the ImageNet
+**SECTION_paper_meta**: We investigate why normalizing ows perform poorly for OOD detection. We demonstrate that ows learn local pixel correlations and generic image to latentspace transformations which are not speci c to the target image dataset. We show that by modifying the architecture of ow coupling layers we can bias the ow towards learning the semantic structure of the target data, improving OOD detection. Our investigation reveals that properties that enable ows to generate
+**SECTION_1**: image to latent space transformations that leverage local pixel correlations and graphical details rather than the semantic content needed for OOD detection. We show that by changing the architectural details of the coupling layers, we can encourage ows to learn transformations speci c to the target data, improving OOD detection. We show that OOD detection is improved when ows are trained on high level features which contain semantic information extracted from image datasets.

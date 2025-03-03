@@ -1,9 +1,11 @@
 import { queryStatement } from './queryStatement';
+import { Utils } from '@graphscope/studio-components';
 export const queryPropertyStatics = async (property: string, label?: string) => {
-  // const match = ['year', 'month'];
-  // if (!match.includes(property)) {
-  //   return [];
-  // }
+  const statistical_keys = (Utils.storage.get('exploration_chart_statistical_keys') as string[]) || [];
+
+  if (!statistical_keys.includes(property)) {
+    return [];
+  }
 
   let matchScript = `MATCH(a)`;
 

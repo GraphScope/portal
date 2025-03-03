@@ -55,7 +55,7 @@ For each mentioned data, you need to explain its relationship with the category 
 - For each mentioned data, it would be better for you to also explain its relationship with other data if possible.
 - Every time a data is first mentioned in the text, add a citation in the format \\cite{Id} and you must not use \\cite as the subject of the sentence. For example, suppose the [Id] of data p1 is 0000.0000, then the citation should be added as \\cite{0000.0000}.
 If the data presents a certain viewpoint or method M, the sentence may be "M \\cite{0000.0000} ...". If there is author or source information A for the data, the sentence may be "A~\\cite{0000.0000} proposes that ...". If several data with ids [Id_1], ... [Id_k] are related to an item or topic T, then the sentence may be "Topic T is well studied \\cite{Id_1, ..., Id_k} ...".
-Anyway, sentence "\\cite{0000.0000} proposes ..." is NOT allowed. 
+Anyway, sentence "\\cite{0000.0000} proposes ..." is NOT allowed.
 - Avoid using a whole paragraph to describe one piece of data, nor should you list the data one by one. Instead, appropriately describe the connections between data.
 - In this subsection, when introducing data, it's best to present similar and strongly related data close to each other and describe their commonalities and differences.
 - DO NOT forget the requirements in the user input.
@@ -70,7 +70,7 @@ const GET_REPORT_PROMPTS_BY_SECTION_INTRO_EN = (user_query, max_tokens, categori
 You are a highly skilled AI assistant. Given a user input and the categories, we are going to write a report about the data belonging to categories to satisfy the requirements in the user input. You task is to generate and output the title and introduction of the report based on the categories and the requirements in the user input. The introduction should contain about ${max_tokens} words.
 
 User Input: ${user_query}
-Categoreis: ${categories}
+Categories: ${categories}
 `;
 };
 
@@ -88,7 +88,7 @@ For each mentioned data, you need to explain its relationship with the category 
 - If the report is a related work, do not directly write the title/name of the papers in the report.
 - Every time a data is first mentioned in the text, add a citation in the format \\cite{Id} and you must not use \\cite as the subject of the sentence. For example, suppose the [Id] of data p1 is 0000.0000, then the citation should be added as \\cite{0000.0000}.
 If the data presents a certain viewpoint or method M, the sentence may be "M \\cite{0000.0000} ...". If there is author or source information A for the data, the sentence may be "A~\\cite{0000.0000} proposes that ...". If several data with ids [Id_1], ... [Id_k] are related to an item or topic T, then the sentence may be "Topic T is well studied \\cite{Id_1, ..., Id_k} ...".
-Anyway, sentence "\\cite{0000.0000} proposes ..." is NOT allowed. Avoid using a whole paragraph to describe one piece of data, nor should you list them one by one. Instead, appropriately describe the connections between them. 
+Anyway, sentence "\\cite{0000.0000} proposes ..." is NOT allowed. Avoid using a whole paragraph to describe one piece of data, nor should you list them one by one. Instead, appropriately describe the connections between them.
 - An example of a subsection in a report is as follows
 (the information in this example MUST NOT be summarized in the report):
 2.1 [SUBSECTION TITLE]
@@ -132,10 +132,10 @@ const GET_REPORT_PROMPTS_CHN = (user_query, mind_map) => {
 const GET_REPORT_PROMPTS_2 = (user_query, mind_map) => {
   return `
   You are a highly skilled academic AI assistant. Given a user query and a mind map to generate a report
-  
+
   User Query: ${user_query}
   Mind Map: ${mind_map}
-  
+
   `;
 };
 

@@ -9,18 +9,16 @@ A [demonstration video of Graphy](https://www.youtube.com/watch?v=uM4nzkAdGlM) i
 
 Graphy is designed to make your literature survey process **faster, smarter, and easier**. Whether you're writing related work sections, building academic networks, or conducting a full-blown literature survey, Graphy has got you covered:
 
-- **Write Related Work**: From an already collected set of papers, you can use Graphy to automatically draft a related work section for your own paper. It’s like having an assistant write the first draft for you! ✍️
-  - Brief guide: Prepare the already selected paper PDF files; use the [offline scrapper](#getting-started-with-the-offline-scrapper), with [inspector-only workflow](config/workflow_inspector.json) configuration; then [import the scrapped data to kuzu-wasm](#for-small-datasets-all-in-the-browser-); and querying all papers in the **Explore** canvas to generate the related work section.
+- [Write Related Work](resource/tutorials/related_work.md): From an already collected set of papers, you can use Graphy to automatically draft a related work section for your own paper. It’s like having an assistant write the first draft for you! ✍️
 
-- **Build an Academic Network**: Start with a few seed papers, and let Graphy help you build a network of academic research. Explore connections, references, and much more. 📚
+- Build an Academic Network: Start with a few seed papers, and let Graphy help you build a network of academic research. Explore connections, references, and much more. 📚
   - Brief guide: Prepare the seed paper PDF files; use the [offline scrapper](#getting-started-with-the-offline-scrapper), with [inspector-navigator workflow](config/workflow.json) configuration; once completed, [import the scrapped data to GraphScope Interactive](#for-larger-datasets-using-graphscope-interactive-). We have pre-scrapped a [paper network](https://graphscope.oss-cn-beijing.aliyuncs.com/graphy/arxiv_paper_graph.zip) with over 50,000 papers and 130,000 references from arXiv for test purpose.
 
 - **Conduct Literature Survey**: With a pre-built academic network, you can explore related papers, track research trends, and generate a literature survey report based on your research focus. It’s the perfect tool for organizing and synthesizing research findings. 📊
-  - Brief Guide: An online tool is available at [demo page](https://gsp.blue) for you to explore the above pre-scrapped paper network.
 
 ## The Architecture of Graphy 🛠 ️
 
-![graphy](inputs/figs/graphy_arch.png "The architecture of Graphy")
+![graphy](resource/figs/graphy_arch.png "The architecture of Graphy")
 
 As shown in the above figure, Graphy is designed with two main components that work together to streamline your research workflow: **Offline Scrapper** and **Online Surveyor**.
 
@@ -244,10 +242,10 @@ The simplest way to try out the **Online Surveyor** is via the [Vercel deploymen
 
 For local deployment, follow the instructions in the [GraphScope portal repository](https://github.com/GraphScope/portal/tree/main). Make sure to enable the experimental **Explore** feature in the portal configuration, as shown below:
 
-![Enable the Explore tool](inputs/figs/enable_explore.png "Enable the Explore tool")
+![Enable the Explore tool](resource/figs/enable_explore.png "Enable the Explore tool")
 
 ### For Small Datasets: All In the Browser 🌐
-For small datasets, we allow users to import the graph data into [kuzu-wasm](https://unswdb.github.io/kuzu-wasm/guide/what-is-kuzu-wasm.html). This tool provides a [browser-based interface](https://gsp.vercel.app/#/explore) for exploring and analyzing graph data, without the need for a graph database service.
+For small datasets, we allow users to import the graph data into [kuzu-wasm](https://docs.kuzudb.com/client-apis/wasm/). This tool provides a [browser-based interface](https://gsp.vercel.app/#/explore) for exploring and analyzing graph data, without the need for a graph database service.
 
 First, parse the scrapped data into a graph format using the following command:
 
@@ -262,11 +260,11 @@ If you use the default settings for processing the offline scraper, `<your_scrap
 
 Please wait a moment while the data is being prepared. Once ready, navigate to the **Explore** page, from the left sidebar, click on the following toggle for importing graph data.
 
-![Connect Graph Db](inputs/figs/connect_graph_db.png "Connect Graph Db")
+![Connect Graph Db](resource/figs/connect_graph_db.png "Connect Graph Db")
 
 On the prompted page, drag and drop the generated graph data files from the `_graph` folder into the right canvas as instructed. Once the data is imported, you can Click on "Load CSV Files with Kuzu WASM" to proceed.
 
-![Load to kuzu-wasm](inputs/figs/load_to_wasm_db.png "Load to kuzu-wasm")
+![Load to kuzu-wasm](resource/figs/load_to_wasm_db.png "Load to kuzu-wasm")
 
 ### For Larger Datasets: Using GraphScope Interactive 🚀
 
@@ -278,7 +276,7 @@ To leverage the power of GraphScope Interactive, you will need to follow the fol
 
 ```bash
 pip install gsctl
-gsctl instance deploy --type interactive --set storage.string_default_max_length=10000
+gsctl instance deploy --type interactive
 export INTERACTIVE_ADMIN_ENDPOINT=http://127.0.0.1:7777
 ```
 
@@ -300,20 +298,20 @@ The `<graph_instance_name>` is a unique name for the graph instance in GraphScop
 
 You can check whether the graph instance is successfully created and running in GraphScope Interactive by clicking on the "Graphs" tab in the left page of GraphScope portal, as shown below:
 
-![list_graphs](inputs/figs/list_graphs.png "list_graphs")
+![list_graphs](resource/figs/list_graphs.png "list_graphs")
 
 **Step 2: Connect Explore to GraphScope Interactive**
 
 1. Go to the **Explore** page in GraphScope Interactive.
 2. From the left sidebar, click on the toggle to import the graph data.
 
-![Connect Graph Db](inputs/figs/connect_graph_db.png "Connect Graph Db")
+![Connect Graph Db](resource/figs/connect_graph_db.png "Connect Graph Db")
 
 3. On the prompted page, enter the endpoint to connect to the Cypher query service of GraphScope Interactive (which uses the Neo4j bolt protocol). Click **"Connect"** to proceed.
 
   > **Note**: The default endpoint is: `neo4j://127.0.0.1:7687`. Ensure the endpoint (ip:port) matches the one specified in the [GraphScope Interactive configuration](https://graphscope.io/docs/latest/flex/interactive/installation).
 
-  ![Load to Interactive](inputs/figs/load_to_interactive.png "Load to Interactive")
+  ![Load to Interactive](resource/figs/load_to_interactive.png "Load to Interactive")
 
 
 ### Explore Your Data and Generate Report 📊
@@ -322,7 +320,7 @@ Once you have prepared importing the scrapped data into either kuzu-wasm or Grap
 Go back to the **Explore** page, which features three primary canvases, metaphorically referred to as
 "Past", "Present", and "Future". Here, "Past" displays already explored papers, and "Present" shows the currently active papers for reviewing in detail, while "Future" highlights the immediate neighbors (i.e., references) of the active papers. The iterative exploration process has the following steps:
 
-![scenario explore](inputs/figs/scenario_explore.png "scenario explore")
+![scenario explore](resource/figs/scenario_explore.png "scenario explore")
 
 
  1. search for seed papers whose titles contain “Llama3” using the search bar.
@@ -333,12 +331,12 @@ Go back to the **Explore** page, which features three primary canvases, metaphor
 
 By iteratively following this workflow, users can explore as many papers as needed, before proceeding to generating the report. Click on the following "GPT" toggle in the left-side bar of the **Explore** page for report generation. Remember to configure the LLM model for report generation.
 
-![Generate Report](inputs/figs/generate_report.png "Generate Report")
+![Generate Report](resource/figs/generate_report.png "Generate Report")
 
 
 The report regeneration goes through the following steps:
 
-![scenario report](inputs/figs/scenario_report.png "scenario report")
+![scenario report](resource/figs/scenario_report.png "scenario report")
 
 
 6. click to input instructions for the report, e.g., "Please write me a related work, focusing on their challenge". Based on this input, an LLM identifies the relevant attributes and dimension nodes needed for the report.

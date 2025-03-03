@@ -1,0 +1,24 @@
+{
+    "data": [
+        {
+            "original": "We show that flows learn latent representations for images largely based on local pixel correlations, rather than semantic content, making it difficult to detect data with anomalous semantics.",
+            "summary": "Flows learn local pixel correlations over semantic content, hindering OOD detection."
+        },
+        {
+            "original": "We identify mechanisms through which normalizing flows can simultaneously increase likelihood for all structured images.",
+            "summary": "Mechanisms are identified that allow flows to increase likelihood for structured images, affecting OOD detection."
+        },
+        {
+            "original": "We demonstrate that flows learn local pixel correlations and generic image to latent space transformations which are not specific to the target image dataset.",
+            "summary": "Flows learn generic transformations, not specific to the target dataset."
+        },
+        {
+            "original": "We show that by modifying the architecture of flow coupling layers we can bias the flow towards learning the semantic structure of the target data, improving OOD detection.",
+            "summary": "Modifying coupling layers can improve OOD detection by learning semantic structures."
+        },
+        {
+            "original": "Our investigation reveals that properties that enable flows to generate high fidelity images can have a detrimental effect on OOD detection.",
+            "summary": "Properties enabling high-fidelity image generation can negatively impact OOD detection."
+        }
+    ]
+}

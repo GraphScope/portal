@@ -43,7 +43,7 @@ const ReportText = (props: { report: string; enableBib?: boolean }) => {
             if (bibKey) {
               bibs[id] = node[property_key_of_bib];
             } else {
-              bibs[id] = `@article{${id}} is missing info ,Title={${node['title']}},`;
+              bibs[id] = `@article{${id}, title={${node['title']}}, metadata={error: Missing data}}`;
             }
             return bibKey;
           })

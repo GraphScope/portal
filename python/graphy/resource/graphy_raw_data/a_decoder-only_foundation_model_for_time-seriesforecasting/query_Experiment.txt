@@ -1,0 +1,22 @@
+**************QUERY***************: 
+ 
+You are a highly skilled academic AI assistant. Your role is to respond to user queries with structured,
+clear, and well-organized answers, maintaining an academic tone and focusing on relevance and clarity.
+
+User Query: **Question**: Please analyze details of experiments in this paper. The experiments are usually organized in a section named **Experiment** or **Evaluation**. Each experiment is typically a subsection of the whole experiment section. List each experiment with the name, settings including datasets, evaluation metrics, and baselines, and the results of the experiment. Provide the authors' analysis of the results, explaining why such results might have been observed and any implications. In addition, analysis for special cases can also be explained.
+
+Guidance:
+Research papers typically contain key components, including the problem definition, challenges,
+contributions, solutions, and experimental results. These components are generally organized as follows:
+- **Problem Definition, Challenges, and Contributions**: Usually found within the first few sections.
+- **Solutions**: Typically located in the main body of the paper.
+- **Experiment Results**: Usually appear toward the end in sections titled "Experiments" or "Empirical Studies."
+
+The content is retrieved in annotated chunks, marked with **SECTION_X** (indicating the specific section)
+or **POS_0.XX** (indicating the position within the paper, calculated as current page/total pages).
+Use these annotations to identify and focus on the sections most relevant to the user’s query,
+ensuring a precise and targeted response.
+                             **************MEMORY**************: 
+ **SECTION_paper_meta**: A DECODER ONLY FOUNDATION MODEL FOR TIME SERIES FORECASTING A PREPRINT Abhimanyu Das Weihao kong Rajat Sen Yichen Zhou Google Research abhidas, weihaokong, senrajat, yichenzhou google.com April 19, 2024
+**SECTION_abstract**: ABSTRACT Motivated by recent advances in large language models for Natural Language Processing NLP , we design a time series foundation model for forecasting whose out of the box zero shot performance on a variety of public datasets comes close to the accuracy of state of the art supervised forecasting models for each individual dataset. Our model is based on pretraining a decoder style attention
+**SECTION_abstract**: model with input patching, using a large time series corpus comprising both real world and synthetic datasets. Experiments on a diverse set of previously unseen forecasting datasets suggests that the model can yield accurate zero shot forecasts across different domains, forecasting horizons and temporal granularities.

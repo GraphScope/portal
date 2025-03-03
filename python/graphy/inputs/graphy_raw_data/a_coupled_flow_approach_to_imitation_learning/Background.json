@@ -1,7 +1,0 @@
-{
-    "data": {
-        "problem_definition": "The paper focuses on the problem of distribution matching in imitation learning (IL), specifically addressing the challenge of accurately modeling and matching the state and state-action distributions between an expert's policy and the learner's policy.",
-        "problem_value": "The problem is worth studying due to its central importance in reinforcement learning (RL) and IL, potential practical applications, the need to address density estimation challenges, and the contribution to unifying frameworks under convex RL.",
-        "existing_solutions": "Existing solutions often lack direct modeling of the state and state-action distributions, use different divergences without a clear consensus on optimality, face difficulties in density estimation, and have limited generalization across different settings."
-    }
-}

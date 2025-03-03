@@ -32,7 +32,7 @@ export const useApis = () => {
         return ids.includes(node.id as string);
       });
       const isSingle = ids.length === 1;
-      const padding = isSingle ? height / 2.5 : 10;
+      const padding = isSingle ? height / 2 : height / 4;
 
       if (bbox) {
         const center = {

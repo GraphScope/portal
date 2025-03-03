@@ -1,0 +1,28 @@
+{
+    "data": [
+        {
+            "original": "In this paper, we formalize the notion of a finite trials RL problem, in which the objective is a function of the empirical state distribution induced by the agent's policy over \\( n \\) trials rather than its expectation over infinite trials.",
+            "summary": "Formalization of finite trials RL problem."
+        },
+        {
+            "original": "We show that this property does not hold for the convex RL formulation: a policy optimized over infinite trials can be significantly sub-optimal when deployed over finite trials.",
+            "summary": "Demonstration of sub-optimality in convex RL under finite trials."
+        },
+        {
+            "original": "In particular, we prove that erroneously optimizing the infinite trials objective in place of the actual finite trials one, as it is usually done, can lead to a significant approximation error.",
+            "summary": "Proof of significant approximation error in convex RL when using infinite trials objective."
+        },
+        {
+            "original": "We provide the finite trial convex RL formulation, for which we prove an upper bound on the approximation error made by optimizing the infinite trials as a proxy of the finite trials objective.",
+            "summary": "Development of finite trial convex RL formulation and proof of approximation error bounds."
+        },
+        {
+            "original": "We corroborate this result with an additional numerical analysis showing that the approximation bound is non-vacuous for relevant applications.",
+            "summary": "Numerical validation of the theoretical findings."
+        },
+        {
+            "original": "Finally, in Section 5 we include an in-depth analysis of the single trial convex RL, which suggests that other common assumptions in the convex RL literature, i.e., that 2 the problem is always computationally tractable and that 3 stationary policies are in general sufficient, should be reconsidered as well.",
+            "summary": "Reconsideration of common assumptions in convex RL based on single trial analysis."
+        }
+    ]
+}

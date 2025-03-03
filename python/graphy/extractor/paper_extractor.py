@@ -152,7 +152,7 @@ class PaperExtractor(PDFExtractor):
     def __init__(
         self,
         file_path: str,
-        gt_file_path: str = ["inputs/gt_files/section_title_gt.txt"],
+        gt_file_path: str = ["resource/gt_files/section_title_gt.txt"],
         block_id_str: List[str] = ["page_index", "section", "part_index"],
         inline_img_width: int = 8,
         zoom=1.0,

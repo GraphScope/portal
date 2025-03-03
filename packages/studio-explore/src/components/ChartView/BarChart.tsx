@@ -19,11 +19,23 @@ const BarChart: React.FunctionComponent<IBarChartProps> = props => {
   const { padding = [20, 80] } = style;
   const ChartContainerRef = useRef(null);
   const chart = useRef<Chart>();
+  const current_data = useRef(new Map());
 
   useEffect(() => {
+    if (current_data) {
+      current_data.current = new Map();
+    }
     const handleClick = evt => {
-      if (onClick) {
-        onClick(evt);
+      if (onClick && current_data.current) {
+        const item = evt.data.data;
+        const x = item[xField];
+        if (current_data.current.has(x)) {
+          current_data.current.delete(x);
+        } else {
+          current_data.current.set(x, item);
+        }
+        const values = [...current_data.current.values()];
+        onClick(values);
       }
     };
     if (ChartContainerRef.current) {
@@ -65,7 +77,9 @@ const BarChart: React.FunctionComponent<IBarChartProps> = props => {
           },
         ],
         transform: [{ type: 'stackY' }],
-        interaction: { elementSelect: { single: true } },
+        interaction: {
+          elementSelect: { single: false },
+        },
         state: { selected: { fill: '#1d6c63' }, unselected: { opacity: 0.99 } },
         ...(options.transpose
           ? {

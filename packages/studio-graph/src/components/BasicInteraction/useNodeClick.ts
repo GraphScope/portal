@@ -104,6 +104,7 @@ const useNodeClick = () => {
         };
         // draft.edgeStatus = slEdges;
         draft.selectNodes = [node];
+        draft.selectEdges = [];
       });
     };
     emitter?.on('node:click', handleClick);
