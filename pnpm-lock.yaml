@@ -13,6 +13,8 @@ overrides:
   antd: ^5.22.2
   '@antv/g2': ^5.2.8
 
+packageExtensionsChecksum: sha256-Ug7CwNl4YZEi2S8ke56dUSiYOAtr+ykwnpDmGmqnkSY=
+
 importers:
 
   .:
