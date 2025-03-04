@@ -9,10 +9,9 @@ A [demonstration video of Graphy](https://www.youtube.com/watch?v=uM4nzkAdGlM) i
 
 Graphy is designed to make your literature survey process **faster, smarter, and easier**. Whether you're writing related work sections, building academic networks, or conducting a full-blown literature survey, Graphy has got you covered:
 
-- [Write Related Work](resource/tutorials/related_work.md): From an already collected set of papers, you can use Graphy to automatically draft a related work section for your own paper. It’s like having an assistant write the first draft for you! ✍️
+- [**Tutorial**: Write Related Work](resource/tutorials/related_work.md): From an already collected set of papers, you can use Graphy to automatically draft a related work section for your own paper. It’s like having an assistant write the first draft for you! ✍️
 
-- Build an Academic Network: Start with a few seed papers, and let Graphy help you build a network of academic research. Explore connections, references, and much more. 📚
-  - Brief guide: Prepare the seed paper PDF files; use the [offline scrapper](#getting-started-with-the-offline-scrapper), with [inspector-navigator workflow](config/workflow.json) configuration; once completed, [import the scrapped data to GraphScope Interactive](#for-larger-datasets-using-graphscope-interactive-). We have pre-scrapped a [paper network](https://graphscope.oss-cn-beijing.aliyuncs.com/graphy/arxiv_paper_graph.zip) with over 50,000 papers and 130,000 references from arXiv for test purpose.
+- [**Tutorial**: Build an Academic Network](resource/tutorials/build_network.md): Start with a few seed papers, and let Graphy help you build a network of academic research. Explore connections, references, and much more. 📚
 
 - **Conduct Literature Survey**: With a pre-built academic network, you can explore related papers, track research trends, and generate a literature survey report based on your research focus. It’s the perfect tool for organizing and synthesizing research findings. 📊
 
