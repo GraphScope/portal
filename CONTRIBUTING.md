@@ -5,9 +5,9 @@
 ## 快速导航
 - [📋 开始之前](#开始之前)
 - [🐛 报告问题](#报告问题)
-- [✨ 提交新功能](#提交新功能)
+- [✨ 贡献流程](#贡献流程)
 - [🤝 社区准则](#社区准则)
-- [📜 许可协议](#社区准则)
+- [📜 许可协议](#许可协议)
 ---
 ## 开始之前
 ### 阅读项目文档：
@@ -91,7 +91,7 @@ interface VertexType {
 - [ ] 网络请求异常截图（F12 > Network）
 - [ ] Docker日志片段（`docker logs gs --tail 100`）
 
-## 提交新功能
+## 贡献流程
 ### 功能名称
 [需包含GraphScope组件标识]    
 
@@ -128,25 +128,28 @@ graph TD
   A[可视化面板] -->|生成AST| B(Transformer服务)
   B -->|输出Cypher| C[Interactive引擎]
   C -->|返回执行计划| A
-#### 开发实施规范
-1. **分支管理**
+
+#### 开发实施流程
+1. Fork 仓库  
+   GitHub 页面点击右上角 Fork 按钮
+2. 克隆到本地
+```
+   git clone https://github.com/your-account/repo.git
+cd repo
+git remote add upstream https://github.com/org/repo.git
+```
+3. **分支管理**
 ```bash
    # 从最新main分支创建
    git checkout -b feat/interactive-query-builder
-   git push -u origin feat/interactive-query-builder
 ```
-2. **提交消息规范**
-```bash
-   # 类型需对应功能模块
-    feat(interactive): add query builder UI components
-    fix(portal): resolve node dragging boundary issue
-    docs(query): update cypher generation guidelines
+4. 提交 & 推送
+```bash 
+   git commit -s -m "feat: add new feature"
+   git push origin feat/new-feature
 ```
-3. **PR创建检查清单**
-- [ ] 已关联Issue #123
-- [ ] 通过所有CI检查（包括Docker构建）
-- [ ] 文档更新已完成（至少包含API文档）
-- [ ] 无冲突存在
+5. 创建 PR  
+在 GitHub 仓库页面点击 "Compare & pull request"
 
 ##  社区准则
 
