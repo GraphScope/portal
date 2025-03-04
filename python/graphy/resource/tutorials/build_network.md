@@ -118,4 +118,31 @@ Another valuable searching feature is the arbitrary match function. You can sele
 
 ![Arbitrary Match](../figs/tutorials/arbitrary_match.gif "Arbitrary Match")
 
-## Step 5: What are NEXT?
+## Step 5: What's NEXT?
+When you have identified the initial papers that interest you using the search bar, a natural question arises:
+
+> What's NEXT?
+
+Starting from these initial papers, you can expand your exploration by navigating through their references. These references have been automatically constructed by the [Navigation](../../README.md) component of the "Offline Scrapper". This process enables you to discover new papers related to the initial ones.
+
+The exploration can be carried out iteratively. At each step, you can uncover further related papers, building on the knowledge gained from the previous iteration. The NEXT widget is designed to guide you through this iterative exploration process, facilitating a seamless and comprehensive discovery of relevant literature.
+
+The NEXT Widget allows you to pre-query the neighbors of the selected papers on the canvas. If you see the papers on the canvas as "Present", then the NEXT Widget will give you a view of the "Future".
+
+![Next Query](../figs/next_query.png "Next Query")
+
+One of the notable advantages of the NEXT Widget is its non-immediate rendering of the neighbors of the current papers. Instead, it allows these neighboring papers to be initially captured by specific Business Intelligence (BI) tools.
+
+For instance, these neighboring papers can be organized using a histogram based on their "years" (similar to the functionality available in the Search bar). When you click on a particular bar within this histogram, a table displaying the selected papers will be presented. This table enables you to review detailed information about the papers and even re-rank them based on certain attributes.
+From there, you can select the papers that interest you most and add them to the canvas for further exploration.
+
+![Next Select](../figs/tutorials/next_select.gif "Next Select")
+
+The NEXT Widget offers two significant benefits:
+
+1. **Preventing Canvas Overload**: It effectively prevents an overwhelming display of neighboring papers on the canvas. By managing the number of visible connections, it ensures that users are not inundated with excessive information, maintaining a clear and focused view.
+
+2. **Facilitating Targeted Exploration**: It assists users in concentrating on the most relevant papers. This targeted approach saves both time and effort, enabling users to efficiently navigate through the vast amount of information and focus on what truly matters for their research or exploration goals.
+
+## Conclusion
+In this tutorial, you have been exploring the capabilities of Graphy in constructing an academic network and getting started with its visualized exploration. In the subsequent tutorial, we will guide you through the process of using Graphy to perform a comprehensive literature review, step by step.
