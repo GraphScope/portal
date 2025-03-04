@@ -49,7 +49,7 @@ const InspectNeighbor = props => {
     const queryNeighbors = async () => {
       const selectIds = selectedKey.split('__');
       const queryKey = `${id}_${selectedKey}`;
-      if (!CacheData[queryKey] && selectIds.length!==0) {
+      if (!CacheData[queryKey] && selectIds.length !== 0) {
         const script = `MATCH(a)-[b]-(c) 
           where elementId(a) IN [${selectIds}]
           return a,b,c limit 50000
@@ -194,11 +194,25 @@ const InspectNeighbor = props => {
     });
   };
   const onChartClick = e => {
-    console.log(e.data.data, e);
+    const table_items = e.reduce(
+      (acc, curr) => {
+        return {
+          items: [...acc.items, ...curr.items],
+          counts: acc.counts + curr.counts,
+          name: curr.name,
+        };
+      },
+      {
+        items: [],
+        counts: 0,
+        name: '',
+      },
+    );
+
     setState(preState => {
       return {
         ...preState,
-        tableData: e.data.data,
+        tableData: table_items,
       };
     });
   };

@@ -51,13 +51,13 @@ const PropertyInfo: React.FunctionComponent<IPropertyInfoProps> = props => {
       {/* <Divider style={{ margin: '0px' }} /> */}
       <Flex justify="space-between">
         <Typography.Text type="secondary" italic>
-          id
+          :ID
         </Typography.Text>
         <Typography.Text italic>{id}</Typography.Text>
       </Flex>
       <Flex justify="space-between">
         <Typography.Text type="secondary" italic>
-          label
+          :LABEL
         </Typography.Text>
         <Legend
           {...elementStyle}

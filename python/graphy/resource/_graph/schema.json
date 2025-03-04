@@ -1,0 +1,414 @@
+{
+    "vertex_types": [
+        {
+            "type_name": "Paper",
+            "properties": [
+                {
+                    "property_name": "id",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "published",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "year",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "month",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "title",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "authors",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "summary",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "journal_ref",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "doi",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "primary_category",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "categories",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "bib",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "node_type",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                }
+            ],
+            "primary_keys": [
+                "id"
+            ]
+        },
+        {
+            "type_name": "Background",
+            "properties": [
+                {
+                    "property_name": "id",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "node_type",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "problem_definition",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "problem_value",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "existing_solutions",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                }
+            ],
+            "primary_keys": [
+                "id"
+            ]
+        },
+        {
+            "type_name": "Challenge",
+            "properties": [
+                {
+                    "property_name": "id",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "node_type",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "name",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "description",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "solution",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                }
+            ],
+            "primary_keys": [
+                "id"
+            ]
+        },
+        {
+            "type_name": "Contribution",
+            "properties": [
+                {
+                    "property_name": "id",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "node_type",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "original",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "summary",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                }
+            ],
+            "primary_keys": [
+                "id"
+            ]
+        },
+        {
+            "type_name": "Experiment",
+            "properties": [
+                {
+                    "property_name": "id",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "node_type",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "name",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "settings",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "results",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                }
+            ],
+            "primary_keys": [
+                "id"
+            ]
+        },
+        {
+            "type_name": "Solution",
+            "properties": [
+                {
+                    "property_name": "id",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "node_type",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "name",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                },
+                {
+                    "property_name": "description",
+                    "property_type": {
+                        "string": {
+                            "long_text": ""
+                        }
+                    }
+                }
+            ],
+            "primary_keys": [
+                "id"
+            ]
+        }
+    ],
+    "edge_types": [
+        {
+            "type_name": "Reference",
+            "vertex_type_pair_relations": [
+                {
+                    "source_vertex": "Paper",
+                    "destination_vertex": "Paper",
+                    "relation": "MANY_TO_MANY"
+                }
+            ],
+            "properties": [],
+            "primary_keys": []
+        },
+        {
+            "type_name": "Paper_Has_Background",
+            "vertex_type_pair_relations": [
+                {
+                    "source_vertex": "Paper",
+                    "destination_vertex": "Background",
+                    "relation": "MANY_TO_MANY"
+                }
+            ],
+            "properties": [],
+            "primary_keys": []
+        },
+        {
+            "type_name": "Paper_Has_Challenge",
+            "vertex_type_pair_relations": [
+                {
+                    "source_vertex": "Paper",
+                    "destination_vertex": "Challenge",
+                    "relation": "MANY_TO_MANY"
+                }
+            ],
+            "properties": [],
+            "primary_keys": []
+        },
+        {
+            "type_name": "Paper_Has_Contribution",
+            "vertex_type_pair_relations": [
+                {
+                    "source_vertex": "Paper",
+                    "destination_vertex": "Contribution",
+                    "relation": "MANY_TO_MANY"
+                }
+            ],
+            "properties": [],
+            "primary_keys": []
+        },
+        {
+            "type_name": "Paper_Has_Experiment",
+            "vertex_type_pair_relations": [
+                {
+                    "source_vertex": "Paper",
+                    "destination_vertex": "Experiment",
+                    "relation": "MANY_TO_MANY"
+                }
+            ],
+            "properties": [],
+            "primary_keys": []
+        },
+        {
+            "type_name": "Paper_Has_Solution",
+            "vertex_type_pair_relations": [
+                {
+                    "source_vertex": "Paper",
+                    "destination_vertex": "Solution",
+                    "relation": "MANY_TO_MANY"
+                }
+            ],
+            "properties": [],
+            "primary_keys": []
+        }
+    ]
+}

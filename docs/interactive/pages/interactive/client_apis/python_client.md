@@ -1,7 +1,6 @@
-
 # Python Client
 
-This a comprehensive guide designed to assist developers in integrating the Interactive service into their Python applications. The Python client allows users to seamlessly connect to Interactive and harness its powerful features for graph management, stored procedure management, and query execution.
+This a practical guide designed to assist developers in integrating the Interactive service into their Python applications. The Python client allows users to seamlessly connect to Interactive and harness its powerful features for graph management, stored procedure management, and query execution.
 
 ## Requirements.
 
