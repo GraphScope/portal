@@ -19,7 +19,7 @@ args.forEach(arg => {
 const WORKSPACE = path.dirname(__dirname);
 
 const {
-  port = 8888,
+  port = 8080,
   coordinator = 'http://127.0.0.1:8080',
   cypher_endpoint = 'neo4j://127.0.0.1:7687',
   gremlin_endpoint,
