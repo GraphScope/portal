@@ -3,14 +3,15 @@ import { Tag, Typography, theme } from 'antd';
 import { transGraphSchema } from '../../../statement/result/graph';
 import { getStyleConfig } from '@graphscope/studio-graph';
 import { useContext } from '../../context';
-const { Title } = Typography;
 import Section from '../section';
 import { FormattedMessage } from 'react-intl';
+
+const { Title } = Typography;
+const { useToken } = theme;
 interface IRecommendedStatementsProps {
   schemaData: any;
   schemaId: string;
 }
-const { useToken } = theme;
 const getPropertyKeys = (schema: any): string[] => {
   const keys = new Set<string>();
 
@@ -34,13 +35,13 @@ const styles = {
 };
 const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps> = props => {
   const { schemaData, schemaId } = props;
+  const { token } = useToken();
   const { updateStore, store } = useContext();
   const { language } = store;
   const graphSchema = transGraphSchema(schemaData);
   const configMap = getStyleConfig(schemaData, schemaId);
   const { nodes, edges } = schemaData;
   const keys = getPropertyKeys(graphSchema);
-  const { token } = useToken();
   const handleClick = (label: string, type: 'nodes' | 'edges' | 'property') => {
     let script = '';
 
@@ -103,11 +104,10 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
         </Title>
         {edges.map(item => {
           const { label } = item;
-          const { color } = configMap.edgeStyle[label] ?? { color: '#000' };
           return (
             <Tag
               key={label}
-              style={{ borderRadius: '8px', backgroundColor: color, cursor: 'pointer', margin: '4px', color: '#000' }}
+              style={{ borderRadius: '8px', cursor: 'pointer',margin: '4px', color: token.colorText }}
               bordered={false}
               onClick={() => {
                 handleClick(label, 'edges');
@@ -126,10 +126,9 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
               key={item}
               style={{
                 borderRadius: '8px',
-                backgroundColor: token.colorPrimary,
                 cursor: 'pointer',
                 margin: '4px',
-                color: token.colorBgBase,
+                color: token.colorText,
               }}
               bordered={false}
               onClick={() => {
