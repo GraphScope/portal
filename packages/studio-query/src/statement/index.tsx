@@ -5,6 +5,9 @@ import Editor from './editor';
 import Result from './result';
 import { useIntl } from 'react-intl';
 import { IEditorProps } from './typing';
+import { Utils } from '@graphscope/studio-components';
+
+const { debounce } = Utils;
 
 export type IStatementProps = IEditorProps & {
   /** 是否是当前激活的语句 */
@@ -58,7 +61,7 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
     }
   }, [active]);
 
-  const handleQuery = async params => {
+  const handleQuery =debounce(async params => {
     if (isFetching) {
       onCancel && onCancel(params);
       updateState(preState => {
@@ -87,7 +90,8 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
         endTime: new Date().getTime(),
       };
     });
-  };
+  }, 500);
+   
   useEffect(() => {
     if (enableImmediateQuery) {
       console.log('enableImmediateQuery script', enableImmediateQuery, script, language);
