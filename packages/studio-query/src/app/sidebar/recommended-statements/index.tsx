@@ -1,29 +1,28 @@
 import * as React from 'react';
-import { Tag, Typography } from 'antd';
+import { Tag, Typography, theme } from 'antd';
 import { transGraphSchema } from '../../../statement/result/graph';
 import { getStyleConfig } from '@graphscope/studio-graph';
 import { useContext } from '../../context';
 const { Title } = Typography;
 import Section from '../section';
 import { FormattedMessage } from 'react-intl';
-import { useStudioProvier } from '@graphscope/studio-components';
 interface IRecommendedStatementsProps {
   schemaData: any;
   schemaId: string;
 }
-const getPropertyKeys = schema => {
-  const keys = new Set();
-  schema.nodes.forEach(item => {
-    Object.keys(item.properties || {}).forEach(key => {
-      keys.add(key);
-    });
-  });
-  schema.edges.forEach(item => {
-    Object.keys(item.properties || {}).forEach(key => {
-      keys.add(key);
-    });
-  });
-  return [...keys.values()] as string[];
+const { useToken } = theme;
+const getPropertyKeys = (schema: any): string[] => {
+  const keys = new Set<string>();
+
+  // 提取节点属性键
+  schema.nodes.reduce((acc, item) => acc.concat(item.properties || []), [])
+    .forEach(property => Object.keys(property).forEach(key => keys.add(key)));
+
+  // 提取边属性键
+  schema.edges.reduce((acc, item) => acc.concat(item.properties || []), [])
+    .forEach(property => Object.keys(property).forEach(key => keys.add(key)));
+
+  return [...keys.values()];
 };
 
 const styles = {
@@ -41,8 +40,7 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
   const configMap = getStyleConfig(schemaData, schemaId);
   const { nodes, edges } = schemaData;
   const keys = getPropertyKeys(graphSchema);
-  const { isLight } = useStudioProvier();
-
+  const { token } = useToken();
   const handleClick = (label: string, type: 'nodes' | 'edges' | 'property') => {
     let script = '';
 
@@ -128,10 +126,10 @@ const RecommendedStatements: React.FunctionComponent<IRecommendedStatementsProps
               key={item}
               style={{
                 borderRadius: '8px',
-                backgroundColor: !isLight ? '#fff' : '#000',
+                backgroundColor: token.colorPrimary,
                 cursor: 'pointer',
                 margin: '4px',
-                color: !isLight ? '#000' : '#fff',
+                color: token.colorBgBase,
               }}
               bordered={false}
               onClick={() => {
