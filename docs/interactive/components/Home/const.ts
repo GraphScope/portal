@@ -22,7 +22,7 @@ export const data = [
     description: 'CTO, Founder',
   },
 ];
-
+/** 安装数据 */
 export const codemirrorCode = `import graphscope as gs
 from graphscope.dataset.modern_graph import load_modern_graph
 
