@@ -3,14 +3,14 @@ import { InsertRowAboveOutlined, OrderedListOutlined, PlayCircleOutlined } from 
 import { Segmented, Button, Space, Flex } from 'antd';
 import { IStudioQueryProps, localStorageVars } from '../context';
 import { useContext } from '../context';
-
+import { Utils } from '@graphscope/studio-components';
 import { countLines } from '../utils';
 import { v4 as uuidv4 } from 'uuid';
 import ToggleButton from './toggle-button';
-
 import CypherEditor from '../../components/cypher-editor';
 import { DrawPatternModal } from '../../components/draw-pattern-modal';
 
+const { debounce } = Utils;
 interface IHeaderProps {
   connectComponent?: IStudioQueryProps['connectComponent'];
   displaySidebarPosition?: IStudioQueryProps['displaySidebarPosition'];
@@ -92,7 +92,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       };
     });
   };
-  const handleQuery = () => {
+  const handleQuery =debounce(() => {
     if (editorRef.current) {
       const value = editorRef.current.codeEditor.getValue();
       if (value === '') {
@@ -120,7 +120,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
         };
       });
     }
-  };
+  }, 500);
 
   const minRows = countLines(globalScript);
 
