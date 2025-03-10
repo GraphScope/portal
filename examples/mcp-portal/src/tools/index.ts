@@ -51,8 +51,7 @@ const nl_to_cypher = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`,
-          Authorization: `Bearer sk-08d91e2194db40f8bf434fa6efcf254c`,
+          Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`,
         },
         body: JSON.stringify({
           model: 'deepseek-chat',
