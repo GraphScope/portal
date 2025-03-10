@@ -106,6 +106,7 @@ class CypherDriver {
    */
   async query(cypher: string): Promise<Graph | Table> {
     try {
+      console.log('%c[Cypher Query Driver] Statement', 'color:blue', cypher);
       const session = await this.getSession();
       if (!session) {
         return {
@@ -114,10 +115,32 @@ class CypherDriver {
         };
       }
       const result = await session.run(cypher);
-      console.log('%c[Cypher Query Driver] QueryCypher 查询语句', 'color:blue', cypher);
-      console.log('%c[Cypher Query Driver] QueryCypher 查询结果', 'color:green', result);
-      session.close();
-      return processResult(result);
+      console.log('%c[Cypher Query Driver] Result', 'color:green', result);
+
+      const { nodes_need_properties, ...data } = processResult(result);
+      if (nodes_need_properties.length === 0) {
+        session.close();
+        return data;
+      } else {
+        /** path 中的node 不包含属性，需要在这里额外请求一次 **/
+        const script = `
+        Match (n) where elementId(n) in [${nodes_need_properties}] return n;
+        `;
+        const result_nodes = await session.run(script);
+        const { nodes } = processResult(result_nodes);
+        const nodeMap = nodes.reduce((acc, curr) => {
+          acc[curr.id] = curr;
+          return acc;
+        }, {});
+        /** 将属性追加到数据中 */
+        data.nodes.forEach(item => {
+          if (nodeMap[item.id]) {
+            item.properties = { ...item.properties, ...nodeMap[item.id].properties };
+          }
+        });
+        session.close();
+        return data;
+      }
     } catch (error: any) {
       return {
         nodes: [],
@@ -150,6 +173,7 @@ export function processResult(result) {
   const nodes: GraphNode[] = [];
   const edges: GraphEdge[] = [];
   const table: any[] = [];
+  const nodes_need_properties: Set<any> = new Set();
   result.records.forEach(record => {
     let tempRow = {};
     //@ts-ignore
@@ -183,39 +207,42 @@ export function processResult(result) {
         });
       }
       if (isPath) {
-        const { segments } = item as Path;
+        const { start, segments, end } = item as Path;
+
         segments.forEach(c => {
           const { start, end, relationship } = c;
-          const { identity: startIdentity, labels: startLabels, properties: startProperties } = start;
-          const { identity: endIdentity, labels: endLabels, properties: endProperties } = end;
+          const { elementId: startElementId, labels: startLabels, properties: startProperties } = start;
+          const { elementId: endElementId, labels: endLabels, properties: endProperties } = end;
           let hasStarNode, hasEndNode;
 
           nodes.forEach(item => {
-            if (item.id === startIdentity.low.toString()) hasStarNode = true;
-            if (item.id === endIdentity.low.toString()) hasEndNode = true;
+            if (item.id === startElementId) hasStarNode = true;
+            if (item.id === endElementId) hasEndNode = true;
           });
 
           if (!hasStarNode) {
             nodes.push({
-              id: startIdentity.low.toString(),
+              id: startElementId,
               label: startLabels[0],
               properties: processProperties(start.properties),
             });
+            nodes_need_properties.add(startElementId);
           }
           if (!hasEndNode) {
             nodes.push({
-              id: endIdentity.low.toString(),
+              id: endElementId,
               label: endLabels[0],
               properties: processProperties(end.properties),
             });
+            nodes_need_properties.add(endElementId);
           }
-          const { identity, type, start: source, end: target } = relationship;
-          const hasRelationship = edges.find(d => d.id === identity.low.toString());
+          const { elementId: edgeElementId, type, startNodeElementId, endNodeElementId } = relationship;
+          const hasRelationship = edges.find(d => d.id === edgeElementId);
           if (!hasRelationship) {
             edges.push({
-              id: 'e_' + identity.low.toString(),
-              source: source.low.toString(),
-              target: target.low.toString(),
+              id: edgeElementId,
+              source: startNodeElementId,
+              target: endNodeElementId,
               label: type,
               properties: processProperties(relationship.properties),
             });
@@ -235,7 +262,12 @@ export function processResult(result) {
     }
   });
 
-  return { ...transformData(nodes, edges), table, raw: result };
+  return {
+    ...transformData(nodes, edges),
+    table,
+    raw: result,
+    nodes_need_properties: [...nodes_need_properties.values()],
+  };
 }
 
 export function transformData(_nodes, _edges) {
