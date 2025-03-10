@@ -69,10 +69,10 @@ gsctl instance deploy --type interactive
   {
     type: 'docker',
     description: `# Pull the GraphScope Interactive Docker image
-docker pull registry.cn-hongkong.aliyuncs.com/graphscope/interactive:0.29.3-arm64
+docker pull registry.cn-hongkong.aliyuncs.com/graphscope/interactive
 
 # Start the GraphScope Interactive service
-docker run -d --name gs --label flex=interactive -p 8080:8080 -p 7777:7777 -p 10000:10000 -p 7687:7687 registry.cn-hongkong.aliyuncs.com/graphscope/interactive:0.29.3-arm64 --enable-coordinator
+docker run -d --name gs -p 8080:8080 -p 7777:7777 -p 10000:10000 -p 7687:7687 registry.cn-hongkong.aliyuncs.com/graphscope/interactive --enable-coordinator --port-mapping "8080:8080,7777:7777,10000:10000,7687:7687"
 `,
   },
 ];
