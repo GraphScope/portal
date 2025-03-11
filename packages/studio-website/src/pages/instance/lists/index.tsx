@@ -30,6 +30,9 @@ const InstanceCard: React.FC<IProps> = ({ changeCreateAction }) => {
   });
 
   const { instanceList, isReady, isServerAvailable } = state;
+
+  const isEmpty = instanceList.length === 0 && Object.keys(draftGraph || {}).length === 0;
+
   const fetchLists = async () => {
     try {
       const res = await listGraphs();
@@ -42,7 +45,7 @@ const InstanceCard: React.FC<IProps> = ({ changeCreateAction }) => {
           instanceList: res || [],
         };
       });
-      changeCreateAction(true);
+      changeCreateAction(!(res?.length=== 0&&Object.keys(draftGraph || {}).length ===0));
     } catch (error) {
       updateState(preState => {
         return {
@@ -59,7 +62,6 @@ const InstanceCard: React.FC<IProps> = ({ changeCreateAction }) => {
     fetchLists();
   }, []);
 
-  const isEmpty = instanceList.length === 0 && Object.keys(draftGraph || {}).length === 0;
 
   if (isReady && !isServerAvailable) {
     return (
