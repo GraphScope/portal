@@ -1,5 +1,5 @@
 # Tutorial of Writing Related work
-In this tutorial, we will guide you through the process of writing the "Related Work" section of a draft paper using Graphy. Before you begin, ensure that you have gathered and prepared all the necessary paper PDFs for this section. If you do not already have these materials, we have provided the related work [PDFs](../samples/relgo_related_work.zip) from our [RelGO](https://dl.acm.org/doi/10.1145/3698828) paper for testing purposes.
+In this tutorial, we will guide you through the process of writing the "Related Work" section of a draft paper using Graphy. Before you begin, ensure that you have gathered and prepared all the necessary paper PDFs for this section. If you do not already have these materials, we have provided the related work [PDFs](../samples/relgo_related_work.zip) from our [RelGO](https://dl.acm.org/doi/10.1145/3698828) paper for testing purposes. We have also prepared the [graph data](../samples/relgo_graph.zip) extracted from RelGO's related work, enabling you to skip ahead to [Step 3](#step-3-import-the-graph-data-into-online-surveyor) in this tutorial.
 
 ## Prerequisites
 
