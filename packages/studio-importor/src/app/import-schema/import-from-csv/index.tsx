@@ -20,7 +20,7 @@ const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
     params: {
       files: ParsedFile[];
       csvFiles: File[];
-      comleted: boolean;
+      completed: boolean;
     },
     updateState,
   ) => {
