@@ -10,22 +10,12 @@ const ServerNotAvailable: React.FC = () => {
 const { token } = theme.useToken();
 const ColorText = (props) => <Text style={{ color: token.colorTextLightSolid }} >{props.children}</Text>;
   return (
-    <ConfigProvider
-      theme={{
-        components: {
-          Result: {
-            paddingLG: 0,
-            marginXS: 0,
-          },
-        },
-      }}
-    >
       <Row gutter={[12, 12]}>
-        <Col span={24} style={{ padding: '20px' }}>
+        <Col span={24} >
           <Card>
-            <Flex style={{ height: '320px' }}>
+            <Flex >
               <Result status="404" />
-              <Flex vertical justify="flex-start" style={{ padding: '20px', flex: 1 }}>
+              <Flex vertical justify="flex-start" style={{  flex: 1 }}>
                 <Title level={3}>
                   <FormattedMessage id="No available Coordinator service" />
                 </Title>
@@ -62,7 +52,6 @@ const ColorText = (props) => <Text style={{ color: token.colorTextLightSolid }} 
           </Card>
         </Col>
       </Row>
-    </ConfigProvider>
   );
 };
 
