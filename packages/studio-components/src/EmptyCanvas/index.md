@@ -6,7 +6,7 @@ import { EmptyCanvas } from '@graphscope/studio-components';
 export default () => {
   return (
     <div>
-      <EmptyCanvas />
+      <EmptyCanvas description="This is a empty canvas"/>
     </div>
   );
 };

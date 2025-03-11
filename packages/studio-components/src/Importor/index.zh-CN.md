@@ -21,7 +21,7 @@ export default () => {
     return { nodes: [], edges: [] };
   };
   return (
-    <div style={{ position: 'relative', height: '400px' }}>
+    <div >
       <ImportorApp
         /** 属性下拉选项值 */
         queryPrimitiveTypes={() => {
@@ -50,7 +50,7 @@ export default () => {
     return { nodes: [], edges: [] };
   };
   return (
-    <div style={{ position: 'relative', height: '400px' }}>
+    <div>
       <ImportorApp
         /** 属性下拉选项值 */
         queryPrimitiveTypes={() => {
