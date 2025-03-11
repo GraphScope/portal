@@ -1,44 +1,75 @@
 import React, { useEffect, useState, memo } from 'react';
-import { Row, Col, Card, Skeleton, Result, Button } from 'antd';
+import { Row, Col, Card, Skeleton, Result, Button, Flex, ConfigProvider, Typography } from 'antd';
 import { useHistory } from '../../../hooks';
 import InstaceCard, { InstaceCardType } from './instance-card';
 import { useContext } from '../../../layouts/useContext';
 import { useCustomToken } from '@graphscope/studio-components';
 import { FormattedMessage } from 'react-intl';
+import ServerNotAvailable from './server-not-available'
+import Empty from './empty'
 import { listGraphs } from './service';
-const InstanceCard: React.FC = () => {
+
+const { Paragraph, Text, Title } = Typography;
+
+type IProps = {
+  changeCreateAction: (state: boolean) => void;
+};
+const InstanceCard: React.FC<IProps> = ({ changeCreateAction }) => {
   const { store } = useContext();
   const history = useHistory();
   const { draftGraph } = store;
   const { instanceBackground } = useCustomToken();
-  const [state, updateState] = useState<{ isReady: boolean; instanceList: InstaceCardType[] }>({
+  const [state, updateState] = useState<{
+    isReady: boolean;
+    instanceList: InstaceCardType[];
+    isServerAvailable: boolean;
+  }>({
     instanceList: [],
     isReady: false,
+    isServerAvailable: true,
   });
-  const { instanceList, isReady } = state;
-  const fetchLists = async () => {
-    const res = await listGraphs();
 
-    //@ts-ignore
-    updateState(preState => {
-      return {
-        ...preState,
-        isReady: true,
-        instanceList: res || [],
-      };
-    });
+  const { instanceList, isReady, isServerAvailable } = state;
+  const fetchLists = async () => {
+    try {
+      const res = await listGraphs();
+      //@ts-ignore
+      updateState(preState => {
+        return {
+          ...preState,
+          isServerAvailable: true,
+          isReady: true,
+          instanceList: res || [],
+        };
+      });
+      changeCreateAction(true);
+    } catch (error) {
+      updateState(preState => {
+        return {
+          ...preState,
+          isReady: true,
+          instanceList: [],
+          isServerAvailable: false,
+        };
+      });
+      changeCreateAction(false);
+    }
   };
   useEffect(() => {
     fetchLists();
   }, []);
+
   const isEmpty = instanceList.length === 0 && Object.keys(draftGraph || {}).length === 0;
+
+  if (isReady && !isServerAvailable) {
+    return (
+      <ServerNotAvailable />
+    );
+  }
+
   if (isEmpty && isReady) {
     return (
-      <Result
-        status="404"
-        title={<FormattedMessage id="No graph available" />}
-        subTitle={<FormattedMessage id="Please click the button above to 「Create instance」" />}
-      />
+      <Empty/>
     );
   }
 

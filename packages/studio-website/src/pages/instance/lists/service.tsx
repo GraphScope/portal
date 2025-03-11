@@ -3,6 +3,7 @@ import type { DataloadingJobConfig } from '@graphscope/studio-server';
 import { notification } from '../../../pages/utils';
 
 export const listGraphs = async () => {
+  let isServerAvailable = true;
   const _status = await ServiceApiFactory(undefined, window.COORDINATOR_URL)
     .listServiceStatus()
     .then(res => {
@@ -12,9 +13,12 @@ export const listGraphs = async () => {
       return [];
     })
     .catch(error => {
+      isServerAvailable = false;
       notification('error', error);
     });
-
+  if(!isServerAvailable){
+    throw new Error('No available Coordinator service');
+  }
   // const { GS_ENGINE_TYPE } = window;
   let graphs;
   // if (GS_ENGINE_TYPE === 'interactive') {
@@ -42,6 +46,7 @@ export const listGraphs = async () => {
   //       notification('error', error);
   //     });
   // }
+
   const graphs_map = graphs?.map(item => {
     const { schema, store_type, stored_procedures, schema_update_time, data_update_time, creation_time, id, name } =
       item;
@@ -72,7 +77,6 @@ export const listGraphs = async () => {
       stored_procedures,
     };
   });
-
   return graphs_map;
 };
 

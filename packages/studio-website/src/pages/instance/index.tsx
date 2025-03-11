@@ -7,6 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import CreateInstance from './create';
 import FeatureCase from '../../components/feature-case';
 const Instance: React.FunctionComponent = () => {
+  const [showCreateAction, setShowCreateAction] = React.useState(true);
   return (
     <Section
       breadcrumb={[
@@ -15,12 +16,14 @@ const Instance: React.FunctionComponent = () => {
         },
       ]}
     >
-      <Flex justify="end">
-        <FeatureCase match="MULTIPLE_GRAPHS">
-          <CreateInstance />
-        </FeatureCase>
-      </Flex>
-      <InstanceLists />
+      {showCreateAction && (
+        <Flex justify="end">
+          <FeatureCase match="MULTIPLE_GRAPHS">
+            <CreateInstance />
+          </FeatureCase>
+        </Flex>
+      )}
+      <InstanceLists changeCreateAction={setShowCreateAction} />
     </Section>
   );
 };
