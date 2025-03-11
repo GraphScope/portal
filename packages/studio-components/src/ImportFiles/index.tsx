@@ -39,7 +39,6 @@ const ImportFromCSV = forwardRef((props: IImportFromFileProps, ref: LegacyRef<HT
 
   const { files } = state;  
   const handleAllCompleted = () => {
-    console.log('handleAllCompleted::: ');
     setState(preState => {
       return {
         ...preState,
