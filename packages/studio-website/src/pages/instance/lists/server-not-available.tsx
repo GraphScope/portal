@@ -1,9 +1,14 @@
 import React, { memo } from 'react';
-import { Row, Col, Card, Result,  Flex, ConfigProvider, Typography } from 'antd';
+import { Row, Col, Card, Result,  Flex, ConfigProvider, Typography, theme } from 'antd';
 import { FormattedMessage } from 'react-intl';
 
 const { Text, Title } = Typography;
+
 const ServerNotAvailable: React.FC = () => {
+
+
+const { token } = theme.useToken();
+const ColorText = (props) => <Text style={{ color: token.colorTextLightSolid }} >{props.children}</Text>;
   return (
     <ConfigProvider
       theme={{
@@ -11,7 +16,6 @@ const ServerNotAvailable: React.FC = () => {
           Result: {
             paddingLG: 0,
             marginXS: 0,
-            iconFontSize: 20,
           },
         },
       }}
@@ -25,35 +29,33 @@ const ServerNotAvailable: React.FC = () => {
                 <Title level={3}>
                   <FormattedMessage id="No available Coordinator service" />
                 </Title>
-                <Text style={{ fontSize: '16px' }}>
+                <Text type="secondary">
                   <FormattedMessage id="Start the local service by following the steps below and then refresh this web page" />
                 </Text>
                 <Flex
                   vertical
                   style={{
-                    background: 'rgba(0, 0, 0, 0.7)',
+                    background: token.colorBgSpotlight,
                     flex: 1,
-                    borderRadius: '10px',
+                    borderRadius: token.borderRadius,
                     padding: '20px',
                     marginTop: '20px',
                   }}
                 >
-                  <Text style={{ color: 'rgba(255,255,255,.8)' }}>
-                    <FormattedMessage id="# Pull the GraphScope Interactive Docker image" />
-                  </Text>
-                  <Text style={{ color: 'rgba(255,255,255,.8)' }}>
-                    <FormattedMessage id="docker pull registry.cn-hongkong.aliyuncs.com/graphscope/interactive:0.29.3-arm64" />
-                  </Text>
+                  <ColorText>
+                    # Pull the GraphScope Interactive Docker image
+                  </ColorText>
+                  <ColorText>
+                   docker pull registry.cn-hongkong.aliyuncs.com/graphscope/interactive:0.29.3-arm64
+                  </ColorText>
                   <br />
-                  <Text style={{ color: 'rgba(255,255,255,.8)' }}>
-                    <FormattedMessage id="# Start the GraphScope Interactive service" />
-                  </Text>
-                  <Text style={{ color: 'rgba(255,255,255,.8)' }}>
-                    <FormattedMessage
-                      id="docker run -d --name gs -label flex=interactive - 8080:8080 - 7777:7777 - 10000:10000 -p
-7687:7687 registry.cn-hongkong.aliyuncs.com/graphscope/interactive:0.29.3-arm64-enable-coordinator"
-                    />
-                  </Text>
+                  <ColorText>
+                    # Start the GraphScope Interactive service
+                  </ColorText>
+                  <ColorText>
+                    docker run -d --name gs -label flex=interactive - 8080:8080 - 7777:7777 - 10000:10000 -p
+7687:7687 registry.cn-hongkong.aliyuncs.com/graphscope/interactive:0.29.3-arm64-enable-coordinator
+                  </ColorText>
                 </Flex>
               </Flex>
             </Flex>

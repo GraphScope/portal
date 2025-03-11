@@ -1,11 +1,12 @@
 import React, { memo } from 'react';
-import { Row, Col, Card, Result, Flex, ConfigProvider, Typography } from 'antd';
+import { Row, Col, Card, Result, Flex, ConfigProvider, Typography,theme } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import FeatureCase from '../../../components/feature-case';
 import CreateInstance from '../create';
 
 const { Text, Title } = Typography;
 const ServerNotAvailable: React.FC = () => {
+  const { token } = theme.useToken();
   return (
     <ConfigProvider
       theme={{
@@ -27,7 +28,7 @@ const ServerNotAvailable: React.FC = () => {
                 <Title level={3}>
                   <FormattedMessage id="No graph available" />
                 </Title>
-                <Text style={{ fontSize: '16px',marginBottom: 30,marginTop:4 }}>
+                <Text style={{ marginBottom: 30,marginTop:4 }} type="secondary">
                   <FormattedMessage id="Please click the button below to 「Create instances」" />
                 </Text>
                 <FeatureCase match="MULTIPLE_GRAPHS">
