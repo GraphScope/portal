@@ -1,57 +1,60 @@
 import React, { memo } from 'react';
-import { Row, Col, Card, Result,  Flex, ConfigProvider, Typography, theme } from 'antd';
+import { Row, Col, Card, Result, Flex, ConfigProvider, Typography, theme } from 'antd';
 import { FormattedMessage } from 'react-intl';
 
 const { Text, Title } = Typography;
 
 const ServerNotAvailable: React.FC = () => {
+  const { token } = theme.useToken();
+  const Pre = props => (
+    <pre
+      style={{
+        color: token.colorTextLightSolid,
+        whiteSpace: 'pre-wrap', // 关键修改点
+      }}
+    >
+      {props.children}
+    </pre>
+  );
 
-
-const { token } = theme.useToken();
-const ColorText = (props) => <Text style={{ color: token.colorTextLightSolid }} >{props.children}</Text>;
   return (
-      <Row gutter={[12, 12]}>
-        <Col span={24} >
-          <Card>
-            <Flex >
-              <Result status="404" style={{transform: 'scale(0.9)'}}/>
-              <Flex vertical justify="flex-start" style={{  flex: 1 }}>
-                <Title level={3}>
-                  <FormattedMessage id="No available Coordinator service" />
-                </Title>
-                <Text  type="secondary">
-                  <FormattedMessage id="Start the local service by following the steps below and then refresh this web page" />
-                </Text>
-                <Flex
-                  vertical
-                  style={{
-                    background: token.colorBgSpotlight,
-                    height: '140px',
-                    borderRadius: token.borderRadius,
-                    padding: '20px',
-                    marginTop: '20px',
-                  }}
-                >
-                  <ColorText>
-                    # Pull the GraphScope Interactive Docker image
-                  </ColorText>
-                  <ColorText>
-                   docker pull registry.cn-hongkong.aliyuncs.com/graphscope/interactive:0.29.3-arm64
-                  </ColorText>
-                  <br />
-                  <ColorText>
-                    # Start the GraphScope Interactive service
-                  </ColorText>
-                  <ColorText>
-                    docker run -d --name gs -label flex=interactive - 8080:8080 - 7777:7777 - 10000:10000 -p
-7687:7687 registry.cn-hongkong.aliyuncs.com/graphscope/interactive:0.29.3-arm64-enable-coordinator
-                  </ColorText>
-                </Flex>
+    <Row gutter={[12, 12]}>
+      <Col span={24}>
+        <Card>
+          <Flex>
+            <Result status="404" style={{ transform: 'scale(0.9)' }} />
+            <Flex vertical justify="flex-start" style={{ flex: 1 }}>
+              <Title level={3}>
+                <FormattedMessage id="No available Coordinator service" />
+              </Title>
+              <Text type="secondary">
+                <FormattedMessage id="Start the local service by following the steps below and then refresh this web page" />
+              </Text>
+              <Flex
+                vertical
+                style={{
+                  background: token.colorBgSpotlight,
+                  height: '160px',
+                  borderRadius: token.borderRadius,
+                  padding: '20px',
+                  marginTop: '20px',
+                }}
+              >
+                <Pre># Pull the GraphScope Interactive Docker image</Pre>
+                <Pre>docker pull registry.cn-hongkong.aliyuncs.com/graphscope/interactive</Pre>
+                <br />
+                <Pre># Start the GraphScope Interactive service</Pre>
+                <Pre>
+                  docker run -d --name gs -p 8080:8080 -p 7777:7777 -p 10000:10000 -p 7687:7687
+                  registry.cn-hongkong.aliyuncs.com/graphscope/interactive --enable-coordinator --port-mapping
+                  "8080:8080,7777:7777,10000:10000,7687:7687"
+                </Pre>
               </Flex>
             </Flex>
-          </Card>
-        </Col>
-      </Row>
+          </Flex>
+        </Card>
+      </Col>
+    </Row>
   );
 };
 
