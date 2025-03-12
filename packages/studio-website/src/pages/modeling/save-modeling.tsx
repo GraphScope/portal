@@ -9,6 +9,7 @@ import { Utils } from '@graphscope/studio-components';
 import { useHistory } from '../../hooks';
 import localforage from 'localforage';
 import { FormattedMessage } from 'react-intl';
+import { listGraphs } from '../instance/lists/service';
 
 interface SaveModelingProps {
   id: string;
@@ -80,17 +81,26 @@ const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
       Utils.setSearchParams({ graph_id: graph_id });
       /** 设置Schema */
       await localforage.setItem(`GRAPH_SCHEMA_OPTIONS_${graph_id}`, Utils.fakeSnapshot(schema));
-      //@ts-ignore
-      setState(preState => {
-        return {
-          ...preState,
-          status: _status,
-          message: _message,
-          schema: schema,
-          open: true,
-          id: graph_id,
-        };
-      });
+      try {
+        const graphsRes = await listGraphs();
+        updateStore(draft => {
+          draft.graphs = graphsRes || [];
+        });
+      } catch (error) {
+        console.error(error);
+      } finally {
+        //@ts-ignore
+        setState(preState => {
+          return {
+            ...preState,
+            status: _status,
+            message: _message,
+            schema: schema,
+            open: true,
+            id: graph_id,
+          };
+        });
+      }
     }
   };
 
