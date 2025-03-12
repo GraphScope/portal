@@ -1,0 +1,30 @@
+{
+  "name": "mcp-portal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prestart": "tsc",
+    "start": "node build/sse.js"
+  },
+  "dependencies": {
+    "@graphscope/studio-driver": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.6.0",
+    "@zodios/core": "^10.9.6",
+    "express": "^4.21.2",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.5",
+    "typescript": "^5.7.3"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
