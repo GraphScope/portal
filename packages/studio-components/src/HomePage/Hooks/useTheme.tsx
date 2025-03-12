@@ -20,8 +20,7 @@ export const useTheme = () => {
     const targetElement = document.querySelector('html'); // 目标元素
     const observer = new MutationObserver((mutationsList, observer) => {
       for (let mutation of mutationsList) {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-          //   const { cssText } = mutation.target.style;
+        if (mutation.attributeName === 'style' || mutation.attributeName === 'data-prefers-color') {
           const theme_value = localStorage.getItem('theme') || getThemeByDumi() || getThemeByAlgo() || 'light';
           setValue(theme_value);
         }
@@ -30,7 +29,7 @@ export const useTheme = () => {
     //@ts-ignore
     observer.observe(targetElement, {
       attributes: true,
-      attributeFilter: ['style'], // 仅观察 'style' 属性
+      attributeFilter: ['style', 'data-prefers-color'], // 仅观察 'style' 和 'data-prefers-color' 属性
     });
     const theme_value = localStorage.getItem('theme') || getThemeByDumi() || getThemeByAlgo() || 'light';
 
