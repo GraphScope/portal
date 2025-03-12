@@ -63,7 +63,7 @@ const InstanceCard: React.FC<IProps> = ({ changeCreateAction }) => {
   }, []);
 
 
-  if (isReady && isServerAvailable) {
+  if (isReady && !isServerAvailable) {
     return (
       <ServerNotAvailable />
     );
