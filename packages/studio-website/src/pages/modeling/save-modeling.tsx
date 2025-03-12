@@ -13,7 +13,6 @@ import { FormattedMessage } from 'react-intl';
 interface SaveModelingProps {
   id: string;
 }
-const { GS_ENGINE_TYPE } = window;
 const SaveModeling: React.FunctionComponent<SaveModelingProps> = props => {
   const history = useHistory();
   const [state, setState] = useState<{
@@ -194,6 +193,7 @@ export function validate(nodes: ISchemaNode[], edges: ISchemaEdge[]): { passed: 
 
 export function getButtonStatus(params: { IS_DRAFT_GRAPH: boolean; validatePassed: boolean; nodes: ISchemaNode[] }) {
   const { IS_DRAFT_GRAPH, validatePassed, nodes } = params;
+  const { GS_ENGINE_TYPE } = window;
 
   if (GS_ENGINE_TYPE === 'interactive') {
     if (IS_DRAFT_GRAPH && nodes.length !== 0) {
