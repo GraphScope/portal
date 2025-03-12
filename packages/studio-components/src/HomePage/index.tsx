@@ -38,7 +38,7 @@ const HomeSite = (props: SiteThemeProps) => {
         <Flex
           vertical
           align="center"
-          style={{ width: '100%', maxWidth: '90rem', padding: '0 1.5rem', paddingBottom: '48px' }}
+          style={{ width: '100%', maxWidth: '90rem', padding: '1.5rem', boxSizing: 'border-box' }}
           justify="center"
           gap={84}
         >
