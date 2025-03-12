@@ -12,7 +12,8 @@ const ServerNotAvailable: React.FC = () => {
           <Card>
             <Flex >
               <Result status="404" />
-              <Flex vertical justify="flex-start" style={{ flex: 1 }}>
+              <Flex vertical>
+              <br/>
                 <Title level={3}>
                   <FormattedMessage id="No graph available" />
                 </Title>

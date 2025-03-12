@@ -14,19 +14,19 @@ const ColorText = (props) => <Text style={{ color: token.colorTextLightSolid }} 
         <Col span={24} >
           <Card>
             <Flex >
-              <Result status="404" />
+              <Result status="404" style={{transform: 'scale(0.9)'}}/>
               <Flex vertical justify="flex-start" style={{  flex: 1 }}>
                 <Title level={3}>
                   <FormattedMessage id="No available Coordinator service" />
                 </Title>
-                <Text type="secondary">
+                <Text  type="secondary">
                   <FormattedMessage id="Start the local service by following the steps below and then refresh this web page" />
                 </Text>
                 <Flex
                   vertical
                   style={{
                     background: token.colorBgSpotlight,
-                    flex: 1,
+                    height: '140px',
                     borderRadius: token.borderRadius,
                     padding: '20px',
                     marginTop: '20px',
