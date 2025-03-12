@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Flex, Typography, Segmented, theme } from 'antd';
+import { useEnv } from '../Hooks';
 export interface IInstallationProps {
   items: {
     type: string;
@@ -9,6 +10,7 @@ export interface IInstallationProps {
 
 const Installation: React.FunctionComponent<IInstallationProps> = props => {
   const { token } = theme.useToken();
+  const { isMobile } = useEnv();
   const { items } = props;
   const options = items.map(item => item.type);
   const defaultItem = items[0];
@@ -38,13 +40,20 @@ const Installation: React.FunctionComponent<IInstallationProps> = props => {
       align="center"
     >
       <Typography.Title level={2}>Installation</Typography.Title>
-      <Segmented options={options} block style={{ width: '50%' }} onChange={handleChange} value={type} />
+      <Segmented
+        options={options}
+        block
+        style={{ width: isMobile ? '100%' : '50%' }}
+        onChange={handleChange}
+        value={type}
+      />
       <pre
         style={{
           color: token.colorText,
           //   fontSize: '12px',
           padding: '12px 24px',
           background: token.colorBgLayout,
+          boxSizing: 'border-box',
           width: '100%',
           borderRadius: token.borderRadius,
           whiteSpace: 'pre-wrap' /* 保留空格和换行符，但允许自动换行 */,

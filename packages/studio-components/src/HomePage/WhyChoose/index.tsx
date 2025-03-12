@@ -68,10 +68,10 @@ const WhyChoose: React.FunctionComponent<IWhyChooseProps> = props => {
                 alt=""
                 style={{
                   borderRadius: token.borderRadiusLG,
-                  width: isMobile ? '100%' : '80%',
+                  width: isMobile ? '100%' : '90%',
                   filter: isDark ? 'invert(1)' : 'none',
-                  boxShadow: token.boxShadowTertiary,
-                  border: `1px solid ${token.colorBorderSecondary}`,
+                  boxShadow: token.boxShadowSecondary,
+                  // border: `2px solid ${token.colorBorder}`,
                 }}
               />
             </Col>
