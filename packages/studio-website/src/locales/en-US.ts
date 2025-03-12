@@ -273,6 +273,4 @@ export default {
   "Please click the button below to 「Create instances」": "Please click the button below to 「Create instances」",
   "No available Coordinator service": "No available Coordinator service",
   "Start the local service by following the steps below and then refresh this web page": "Start the local service by following the steps below and then refresh this web page",
-  "# Pull the GraphScope Interactive Docker image":"# Pull the GraphScope Interactive Docker image",
-  "# Start the GraphScope Interactive service":"# Start the GraphScope Interactive service"
 };

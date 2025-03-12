@@ -6,17 +6,13 @@ const { Text, Title } = Typography;
 
 const ServerNotAvailable: React.FC = () => {
   const { token } = theme.useToken();
-  const Pre = props => (
-    <pre
-      style={{
-        color: token.colorTextLightSolid,
-        whiteSpace: 'pre-wrap', // 关键修改点
-      }}
-    >
-      {props.children}
-    </pre>
-  );
-
+  const commandText = [
+    '# Pull the GraphScope Interactive Docker image',
+    'docker pull registry.cn-hongkong.aliyuncs.com/graphscope/interactive',
+    '',
+    '# Start the GraphScope Interactive service',
+    `docker run -d --name gs -p 8080:8080 -p 7777:7777 -p 10000:10000 -p 7687:7687 registry.cn-hongkong.aliyuncs.com/graphscope/interactive --enable-coordinator --port-mapping "8080:8080,7777:7777,10000:10000,7687:7687"`,
+  ].join('\n');
   return (
     <Row gutter={[12, 12]}>
       <Col span={24}>
@@ -36,19 +32,18 @@ const ServerNotAvailable: React.FC = () => {
                   background: token.colorBgSpotlight,
                   height: '160px',
                   borderRadius: token.borderRadius,
-                  padding: '20px',
-                  marginTop: '20px',
+                  marginTop: 20,
+                  padding: 20,
                 }}
               >
-                <Pre># Pull the GraphScope Interactive Docker image</Pre>
-                <Pre>docker pull registry.cn-hongkong.aliyuncs.com/graphscope/interactive</Pre>
-                <br />
-                <Pre># Start the GraphScope Interactive service</Pre>
-                <Pre>
-                  docker run -d --name gs -p 8080:8080 -p 7777:7777 -p 10000:10000 -p 7687:7687
-                  registry.cn-hongkong.aliyuncs.com/graphscope/interactive --enable-coordinator --port-mapping
-                  "8080:8080,7777:7777,10000:10000,7687:7687"
-                </Pre>
+                <pre
+                  style={{
+                    color: token.colorTextLightSolid,
+                    whiteSpace: 'pre-wrap',
+                  }}
+                >
+                  {commandText}
+                </pre>
               </Flex>
             </Flex>
           </Flex>

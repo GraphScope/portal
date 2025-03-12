@@ -268,6 +268,4 @@ export default {
   "Please click the button below to 「Create instances」": "请单击下面的按钮『创建图实例』",
   "No available Coordinator service": "没有可用的协调服务",
   "Start the local service by following the steps below and then refresh this web page": "按照以下步骤启动本地服务，然后刷新此网页",
-  "# Pull the GraphScope Interactive Docker image":"# 拉取GraphScope交互式Docker镜像",
-   "# Start the GraphScope Interactive service": "# 启动 GraphScope 交互式服务"
 };
