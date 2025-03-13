@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, LegacyRef } from 'react';
+import React, { forwardRef, useState, LegacyRef, useEffect } from 'react';
 import UploadFile from './update-file';
 import { Button, Collapse, Space, Typography } from 'antd';
 import Mapping from './mapping';
@@ -12,6 +12,7 @@ export interface IState {
   files: ParsedFile[];
   loading: boolean;
   csvFiles: File[];
+  completed: boolean;
 }
 
 export interface IImportFromFileProps {
@@ -33,11 +34,21 @@ const ImportFromCSV = forwardRef((props: IImportFromFileProps, ref: LegacyRef<HT
     files: [],
     loading: false,
     csvFiles: [],
+    completed: false
   });
 
-  const { files } = state;
+  const { files } = state;  
+  const handleAllCompleted = () => {
+    setState(preState => {
+      return {
+        ...preState,
+        completed: true,
+      };
+    });
+  };
+
+
   const onChange = (value: ParsedFile[], csvFiles?: File[]) => {
-    console.log(value);
     setState(preState => {
       return {
         ...preState,
@@ -53,11 +64,23 @@ const ImportFromCSV = forwardRef((props: IImportFromFileProps, ref: LegacyRef<HT
         ...preState,
         files: [],
         csvFiles: [],
+        completed: false,
       };
     });
     localforage.setItem('DRAFT_GRAPH_FILES', []);
   };
   const isEmpty = files.length === 0;
+
+  useEffect(() => {
+    if(isEmpty){
+      setState(preState => {
+        return {
+          ...preState,
+          completed: false,
+        };
+      });
+    }
+  }, [isEmpty]);
 
   const items = files.map((item, index) => {
     const { meta, id } = item;
@@ -96,7 +119,7 @@ const ImportFromCSV = forwardRef((props: IImportFromFileProps, ref: LegacyRef<HT
         }}
       >
         {isEmpty ? (
-          <UploadFile isSaveFiles={isSaveFiles} onChange={onChange} {...upload} />
+          <UploadFile onAllCompleted={handleAllCompleted} isSaveFiles={isSaveFiles} onChange={onChange} {...upload} />
         ) : (
           <>
             {/* <Typography.Text type="secondary">fffdsaf</Typography.Text> */}

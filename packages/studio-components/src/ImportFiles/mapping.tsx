@@ -11,6 +11,7 @@ interface IMappingProps {
       files: ParsedFile[];
       loading: boolean;
       csvFiles: File[];
+      completed: boolean;
     }>
   >;
 

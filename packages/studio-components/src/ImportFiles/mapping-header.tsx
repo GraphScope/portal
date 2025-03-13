@@ -14,6 +14,7 @@ interface IMappingHeaderProps {
       files: ParsedFile[];
       loading: boolean;
       csvFiles: File[];
+      completed: boolean;
     }>
   >;
   meta: IMeta;

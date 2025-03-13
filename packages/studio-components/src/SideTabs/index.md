@@ -3,7 +3,7 @@
 ```jsx
 import React, { useState } from 'react';
 import { Space } from 'antd';
-import { SegmentedTabs } from '@graphscope/studio-components';
+import { SideTabs } from '@graphscope/studio-components';
 const Tab1 = () => {
   return <div>Tab-1 components</div>;
 };
@@ -33,7 +33,7 @@ export default () => {
   ];
   return (
     <div>
-      <Sidebar options={items} value="Tab-1" collapse={false} />
+      <SideTabs items={items}  />
     </div>
   );
 };
