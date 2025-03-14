@@ -26,8 +26,6 @@ jobs:
             args: ''
 
     runs-on: ubuntu-latest
-    # 当具有 release 标签的 PR 被合并时，自动发布包版本
-    if: contains(github.event.pull_request.labels.*.name, 'release') && github.event.pull_request.merged == true
 
     steps:
       - uses: actions/checkout@v3
