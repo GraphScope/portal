@@ -6,7 +6,7 @@ name: Publish desktop app
 on:
   push:
     branches:
-      - '**' # 匹配所有分支
+      - 'release'
 
 jobs:
   publish:
@@ -48,6 +48,21 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
         # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
         # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
+
+      # macOS 专属依赖安装 aarch64
+      - name: Install macOS Dependencies
+        if: matrix.args == '--target aarch64-apple-darwin'
+        run: |
+          brew update
+          brew install glib pkg-config gobject-2.0
+          echo "PKG_CONFIG_PATH=$(brew --prefix glib)/lib/pkgconfig" >> $GITHUB_ENV
+      # macOS 专属依赖安装  x86_64
+      - name: Install macOS Dependencies
+        if: matrix.args == '--target x86_64-apple-darwin'
+        run: |
+          brew update
+          brew install glib pkg-config
+          echo "PKG_CONFIG_PATH=$(brew --prefix glib)/lib/pkgconfig" >> $GITHUB_ENV
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
