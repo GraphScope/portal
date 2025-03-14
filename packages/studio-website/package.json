@@ -16,7 +16,8 @@
     "start": "vite dev",
     "build:site:single": "vite build --mode=single",
     "build:site:less": "vite build --mode=less",
-    "build:site": "vite build"
+    "build:site": "vite build",
+    "build:desktop-app": "pnpm tauri build"
   },
   "publishConfig": {
     "access": "public",

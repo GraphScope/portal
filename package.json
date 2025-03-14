@@ -9,6 +9,7 @@
     "start": "turbo run start",
     "build": "turbo run build --no-cache",
     "build:portal": "npm run build && cd packages/studio-website && npm run build:site",
+    "build:portal:desktop": "npm run build && cd packages/studio-website && npm run build:desktop-app",
     "build:portal:single": "npm run build && cd packages/studio-website && npm run build:site:single",
     "build:docs:interactive": "npm run build && cd docs/interactive && npm run build:site",
     "build:docs:portal": "npm run build && dumi build",
