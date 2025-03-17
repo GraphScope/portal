@@ -44,7 +44,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libglib2.0-dev pkg-config libgtk-3-dev libjavascriptcoregtk-4.1-dev libsoup3 libwebkit2gtk-4.1-dev
+          sudo apt-get install -y libglib2.0-dev pkg-config libgtk-3-dev libjavascriptcoregtk-4.1-dev  libwebkit2gtk-4.1-dev
 
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
