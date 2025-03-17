@@ -1,5 +1,4 @@
 {
-  "$schema": "https://schema.tauri.app/config/2",
   "productName": "graphscope-portal",
   "version": "0.1.0",
   "identifier": "com.graphscope-portal.app",
