@@ -23,12 +23,16 @@ const UploadFile = ({ onChange, accept, title, description, isSaveFiles, onAllCo
       try {
         if (type === 'application/json') {
           const files = await parseJSON(file as File);
-          onChange?.(files);
+          if(onChange){
+            onChange(files);
+          }
         }
         if (type === 'text/csv') {
           const csvFiles = isSaveFiles ? [file] : [];
           const files = await parseCSV(file as File);
-          onChange?.([files], csvFiles as File[]);
+          if(onChange){
+            onChange([files], csvFiles as File[]);
+          }
         }
       } catch (error) {
         console.error('解析文件失败:', error);
