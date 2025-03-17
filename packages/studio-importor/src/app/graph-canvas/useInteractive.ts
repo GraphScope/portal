@@ -142,21 +142,22 @@ const useInteractive: any = () => {
       //   onDoubleClick();
       // }
       // 布局
+      const graph = createStaticForceLayout(fakeSnapshot(nodes), fakeSnapshot(edges));
       if (!hasLayouted) {
-        const graph = createStaticForceLayout(fakeSnapshot(nodes), fakeSnapshot(edges));
-        if (timerRef.current) {
-          clearTimeout(timerRef.current);
-        }
-        const timerId = setTimeout(() => {
-          const bbox = getBBox(graph.nodes);
-          fitBounds(bbox, { duration: 300 });
-        }, 300);
-        timerRef.current = timerId;
         updateStore(draft => {
           draft.hasLayouted = true;
           draft.nodes = graph.nodes;
           draft.edges = graph.edges;
         });
+      }
+      if(hasLayouted){
+        if (timerRef.current) {
+          clearTimeout(timerRef.current);
+        }
+        timerRef.current = setTimeout(() => {
+          const bbox = getBBox(graph.nodes);
+          fitBounds(bbox, { duration: 300 });
+        }, 300);
       }
     }
   }, [nodes, edges, hasLayouted]);
@@ -171,9 +172,9 @@ const useInteractive: any = () => {
 
   const onReactFlowInit = reactFlowInstance => {
     if (reactFlowInstance) {
-      const allNodes = reactFlowInstance.toObject().nodes;
-      const bbox = getNodesBounds(allNodes);
-      fitBounds(bbox, { duration: 600 });
+        const allNodes = reactFlowInstance.toObject().nodes;
+        const bbox = getNodesBounds(allNodes);
+        fitBounds(bbox, { duration: 600 });
     }
   };
 
