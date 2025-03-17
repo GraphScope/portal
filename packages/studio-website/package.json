@@ -11,17 +11,22 @@
   "module": "es/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
+    "tauri": "tauri",
     "build": "father build",
     "start": "vite dev",
     "build:site:single": "vite build --mode=single",
     "build:site:less": "vite build --mode=less",
-    "build:site": "vite build"
+    "build:site": "vite build",
+    "build:desktop-app": "pnpm tauri build",
+    "build:desktop-icon": "pnpm tauri icon ./src-tauri/app-icon.png"
   },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-opener": "^2",
     "@ant-design/icons": "^5.2.6",
     "@antv/graphin": "^2.7.27",
     "@antv/graphin-icons": "^1.0.0",
@@ -50,6 +55,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^2",
     "vite-plugin-static-copy": "^2.2.0",
     "@types/js-yaml": "^4.0.9",
     "@types/lodash": "^4.14.202",
