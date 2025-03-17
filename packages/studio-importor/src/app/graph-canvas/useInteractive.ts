@@ -171,9 +171,11 @@ const useInteractive: any = () => {
 
   const onReactFlowInit = reactFlowInstance => {
     if (reactFlowInstance) {
-      const allNodes = reactFlowInstance.toObject().nodes;
-      const bbox = getNodesBounds(allNodes);
-      fitBounds(bbox, { duration: 600 });
+      setTimeout(()=>{
+        const allNodes = reactFlowInstance.toObject().nodes;
+        const bbox = getNodesBounds(allNodes);
+        fitBounds(bbox, { duration: 600 });
+      },300)
     }
   };
 
