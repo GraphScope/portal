@@ -6,6 +6,8 @@ import { transform } from './transform';
 import { Button } from 'antd';
 import localforage from 'localforage';
 import { FormattedMessage } from 'react-intl';
+
+
 interface IImportFromCSVProps {
   onCallback?: () => void;
 }
@@ -18,6 +20,7 @@ const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
     params: {
       files: ParsedFile[];
       csvFiles: File[];
+      completed: boolean;
     },
     updateState,
   ) => {
@@ -67,7 +70,7 @@ const ImportFromCSV: React.FunctionComponent<IImportFromCSVProps> = props => {
     >
       {(params, updateState) => {
         return (
-          <Button type="primary" onClick={() => onSubmit(params, updateState)} loading={params.loading}>
+          <Button type="primary" onClick={() => onSubmit(params, updateState)} loading={!params.completed||params.loading}>
             <FormattedMessage id="Generate graph model" />
           </Button>
         );
