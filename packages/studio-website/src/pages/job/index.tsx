@@ -2,6 +2,7 @@ import * as React from 'react';
 import Section from '../../components/section';
 import JobsList from './job-list';
 import { FormattedMessage } from 'react-intl';
+/** job */
 const Job: React.FunctionComponent = () => {
   return (
     <>
