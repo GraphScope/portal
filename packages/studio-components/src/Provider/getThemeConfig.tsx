@@ -38,8 +38,6 @@ export const getThemeConfig = (algorithm: ThemeProviderType['algorithm']) => {
     Result: {
       iconFontSize: 62,
       titleFontSize: 20,
-      paddingLG: 0,
-      marginXS: 0,
       colorError: isLight ? '#00000073' : '#ddd',
     },
   };

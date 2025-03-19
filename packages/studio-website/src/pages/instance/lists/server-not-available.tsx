@@ -3,16 +3,15 @@ import { Row, Col, Card, Result, Flex, ConfigProvider, Typography, theme } from 
 import { FormattedMessage } from 'react-intl';
 
 const { Text, Title } = Typography;
-
 const ServerNotAvailable: React.FC = () => {
   const { token } = theme.useToken();
   return (
-    <Row gutter={[12, 12]}>
+    <Row >
       <Col span={24}>
         <Card>
           <Flex>
-            <Result status="404" />
-            <Flex vertical justify="flex-start" style={{ flex: 1 }}>
+            <Result status="404" style={{padding: '0 20px 0 0',margin: 0}}/>
+            <Flex vertical justify="flex-start" style={{ flex: 1, paddingTop: 10 }}>
               <Title level={3}>
                 <FormattedMessage id="No available Coordinator service" />
               </Title>
