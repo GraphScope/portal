@@ -7,11 +7,11 @@ import CreateInstance from '../create';
 const { Text, Title } = Typography;
 const ServerNotAvailable: React.FC = () => {
   return (
-      <Row gutter={[12, 12]}>
+    <Row >
         <Col span={24} >
           <Card>
             <Flex >
-              <Result status="404" />
+              <Result status="404" style={{padding: '0 20px 0 0', margin: 0}}/>
               <Flex vertical>
               <br/>
                 <Title level={3}>
