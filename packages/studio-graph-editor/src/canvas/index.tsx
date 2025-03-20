@@ -11,7 +11,7 @@ import useInteractive from './useInteractive';
 import { FormattedMessage } from 'react-intl';
 import { useGraphContext } from '..';
 import { useContext } from './useContext';
-import reactflowCss from 'reactflow/dist/style.css?raw';
+import reactFLowStyle from './reactflowStyle'
 
 
 interface ISchemaGraphProps {
@@ -38,7 +38,7 @@ const SchemaGraph: React.FunctionComponent<ISchemaGraphProps> = props => {
     disabled = false,
     graphId,
   } = useGraphContext();
-  useDynamicStyle(reactflowCss, 'reactflow-dynamic-styles');
+  useDynamicStyle(reactFLowStyle, 'reactflow-dynamic-styles');
   const description = (
     <FormattedMessage
       id="Start sketching a model, a vertex label is a named grouping or categorization of nodes within the graph dataset"
