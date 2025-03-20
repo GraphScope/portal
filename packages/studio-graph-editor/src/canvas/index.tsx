@@ -1,18 +1,18 @@
 import React, { CSSProperties, useEffect } from 'react';
 import { ReactFlow, Controls, Background, MiniMap } from 'reactflow';
-import { EmptyCanvas, useStudioProvier, Utils } from '@graphscope/studio-components';
+import { EmptyCanvas, useStudioProvier, Utils,useDynamicStyle } from '@graphscope/studio-components';
 import { nodeTypes } from '../elements/node-types';
 import { edgeTypes } from '../elements/edge-types';
 import ConnectionLine from '../elements/connection-line';
 import ArrowMarker from '../elements/arrow-marker';
 import { PlayCircleOutlined } from '@ant-design/icons';
 import ButtonController from '../button-controller';
-
 import useInteractive from './useInteractive';
 import { FormattedMessage } from 'react-intl';
 import { useGraphContext } from '..';
-// import 'reactflow/dist/style.css';
 import { useContext } from './useContext';
+import reactFLowStyle from './reactflowStyle'
+
 
 interface ISchemaGraphProps {
   children?: React.ReactNode;
@@ -38,6 +38,7 @@ const SchemaGraph: React.FunctionComponent<ISchemaGraphProps> = props => {
     disabled = false,
     graphId,
   } = useGraphContext();
+  useDynamicStyle(reactFLowStyle, 'reactflow-dynamic-styles');
   const description = (
     <FormattedMessage
       id="Start sketching a model, a vertex label is a named grouping or categorization of nodes within the graph dataset"
