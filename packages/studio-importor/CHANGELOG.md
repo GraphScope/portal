@@ -1,5 +1,15 @@
 # @graphscope/studio-importor
 
+## 0.1.19
+
+### Patch Changes
+
+- update site GS_ENGINE_TYPE window
+- Updated dependencies
+  - @graphscope/studio-components@0.1.19
+  - @graphscope/studio-server@1.0.16
+  - @graphscope/use-zustand@0.1.11
+
 ## 0.1.18
 
 ### Patch Changes

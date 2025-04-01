@@ -1,5 +1,17 @@
 # @graphscope/graphy-website
 
+## 0.1.13
+
+### Patch Changes
+
+- update site GS_ENGINE_TYPE window
+- Updated dependencies
+  - @graphscope/studio-importor@0.1.19
+  - @graphscope/studio-components@0.1.19
+  - @graphscope/studio-driver@0.1.17
+  - @graphscope/studio-graph@0.1.19
+  - @graphscope/studio-query@0.1.19
+
 ## 0.1.12
 
 ### Patch Changes

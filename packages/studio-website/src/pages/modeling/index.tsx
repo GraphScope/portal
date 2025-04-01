@@ -8,13 +8,14 @@ import SelectGraph from '../../layouts/select-graph';
 import Section from '../../components/section';
 import { FormattedMessage } from 'react-intl';
 interface ISchemaPageProps {}
-const { GS_ENGINE_TYPE } = window;
+
 
 const ModelingPage: React.FunctionComponent<ISchemaPageProps> = props => {
   /**查询数据导入 */
   const { store, id } = useContext();
   const { graphId, draftId } = store;
   const { buttonBackground } = useCustomToken();
+  const { GS_ENGINE_TYPE } = window;
   /** 查询图 */
   const queryGraphSchema = async () => {
     if (graphId === draftId) {

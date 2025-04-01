@@ -1,5 +1,11 @@
 # @graphscope/use-zustand
 
+## 0.1.11
+
+### Patch Changes
+
+- update site GS_ENGINE_TYPE window
+
 ## 0.1.10
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @graphscope/studio-driver
 
+## 0.1.17
+
+### Patch Changes
+
+- update site GS_ENGINE_TYPE window
+
 ## 0.1.16
 
 ### Patch Changes
