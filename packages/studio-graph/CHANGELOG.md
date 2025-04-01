@@ -1,5 +1,14 @@
 # @graphscope/studio-graph
 
+## 0.1.19
+
+### Patch Changes
+
+- update site GS_ENGINE_TYPE window
+- Updated dependencies
+  - @graphscope/studio-components@0.1.19
+  - @graphscope/use-zustand@0.1.11
+
 ## 0.1.18
 
 ### Patch Changes

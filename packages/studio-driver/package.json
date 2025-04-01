@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/studio-driver",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "A library provides a unified interface for interacting with graph databases",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -24,7 +24,7 @@
     "@graphscope/_test_gremlin_": "^0.1.2",
     "neo4j-driver": "^5.12.0",
     "@kuzu/kuzu-wasm": "0.7.0",
-    "kuzu-wasm":"latest"
+    "kuzu-wasm": "latest"
   },
   "publishConfig": {
     "access": "public",

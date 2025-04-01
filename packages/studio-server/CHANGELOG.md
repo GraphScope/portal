@@ -1,5 +1,11 @@
 # @graphscope/studio-server
 
+## 1.0.16
+
+### Patch Changes
+
+- update site GS_ENGINE_TYPE window
+
 ## 1.0.15
 
 ### Patch Changes
