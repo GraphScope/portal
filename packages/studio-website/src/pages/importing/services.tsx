@@ -1,8 +1,7 @@
 import { GraphApiFactory, UtilsApiFactory, DataSourceApiFactory, JobApiFactory } from '@graphscope/studio-server';
-
 import { notification } from '../../pages/utils';
 import { transformImportOptionsToSchemaMapping } from '@graphscope/studio-importor';
-const { GS_ENGINE_TYPE } = window;
+
 import type { FieldType } from './start-load';
 
 /** upload file */
@@ -152,6 +151,7 @@ export const getDatasourceById = async (graph_id: string) => {
 };
 
 export const queryPrimitiveTypes = () => {
+  const { GS_ENGINE_TYPE } = window;
   if (GS_ENGINE_TYPE === 'groot') {
     return ['DT_DOUBLE', 'DT_STRING', 'DT_SIGNED_INT32', 'DT_SIGNED_INT64'].map(item => {
       return { label: item, value: item };

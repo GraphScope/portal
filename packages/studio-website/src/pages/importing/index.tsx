@@ -15,8 +15,9 @@ import FeatureCase from '../../components/feature-case';
 import DataBind from './data-bind';
 import DataLoad from './data-load';
 interface ISchemaPageProps {}
-const { GS_ENGINE_TYPE } = window;
+
 const SchemaPage: React.FunctionComponent<ISchemaPageProps> = props => {
+  const { GS_ENGINE_TYPE } = window;
   const { store, id } = useContext();
   const { graphId, draftId } = store;
   const [refreshIndex, setRefreshIndex] = useState(1);
