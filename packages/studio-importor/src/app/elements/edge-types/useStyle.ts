@@ -1,10 +1,10 @@
 import { useContext } from '@graphscope/use-zustand';
-import { useStudioProvier } from '@graphscope/studio-components';
+import { useThemeProvider } from '@graphscope/studio-components';
 export const usePathStyle = (id: string) => {
   const { store } = useContext();
   const { currentId, theme } = store;
   const isSelected = id === currentId;
-  const { isLight } = useStudioProvier();
+  const { isLight } = useThemeProvider();
   const getStyle = () => {
     if (!isLight) {
       return isSelected ? theme.primaryColor : '#d7d7d7';

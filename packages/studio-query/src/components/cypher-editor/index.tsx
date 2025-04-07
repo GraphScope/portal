@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect } from 'react';
-import { useStudioProvier, useDynamicStyle } from '@graphscope/studio-components';
+import { useThemeProvider, useDynamicStyle } from '@graphscope/studio-components';
 import { editor, languages } from 'monaco-editor';
 import 'monaco-editor/esm/vs/basic-languages/cypher/cypher.contribution';
 import { registerGremlinLanguage } from '../basic-languages-gremlin/index';
@@ -80,7 +80,7 @@ const Editor = forwardRef((props: IEditor, editorRef: any) => {
   const { value, language = 'cypher', maxRows = 10, minRows = 1, onChangeContent, clear, onInit } = props;
   let codeEditor: editor.IStandaloneCodeEditor;
   const MAGIC_NUMBER = onChangeContent ? 0 : countLines(value);
-  const { isLight } = useStudioProvier();
+  const { isLight } = useThemeProvider();
   useEffect(() => {
     if (editorRef && editorRef.current) {
       if (countLines(value) <= maxRows) {

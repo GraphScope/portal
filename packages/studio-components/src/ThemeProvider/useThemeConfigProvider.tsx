@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react';
 import type { IColorStore } from './getThemeConfig';
+
 export interface ThemeProviderType extends IColorStore {
   algorithm?: 'defaultAlgorithm' | 'darkAlgorithm';
   components?: { [key: string]: { [key: string]: string | number } };
@@ -8,24 +9,24 @@ export interface ThemeProviderType extends IColorStore {
   isLight?: boolean;
 }
 export interface IContainerContext extends ThemeProviderType {
-  handleThemeOrLocale: (value: ThemeProviderType) => void;
+  handleTheme: (value: ThemeProviderType) => void;
 }
 export const ContainerContext = createContext<IContainerContext>({
   components: {},
   token: {},
-  handleThemeOrLocale: ({}) => {},
+  handleTheme: ({}) => {},
   locale: 'en-US',
   algorithm: 'defaultAlgorithm',
   isLight: false,
 });
 
-export const ContainerProvider = ContainerContext.Provider;
+export const ThemeProvider = ContainerContext.Provider;
 
-export const useStudioProvier = () => {
+export const useThemeProvider = () => {
   const context = useContext(ContainerContext);
 
   if (context === undefined || Object.keys(context).length === 0) {
-    throw new Error(`useContext must be used within a ContainerProvider`);
+    throw new Error(`useContext must be used within a ThemeProvider`);
   }
   return context;
 };

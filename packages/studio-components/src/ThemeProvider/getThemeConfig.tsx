@@ -46,6 +46,7 @@ export const getThemeConfig = (algorithm: ThemeProviderType['algorithm']) => {
     colorBorder: isLight ? '#F0F0F0' : '#303030',
     colorBgBase: isLight ? '#fff' : '#1d1d1d',
     colorBgLayout: isLight ? '#f5f7f9' : 'rgba(43,43,43,1)',
+    fontFamily: "'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
   };
   return { componentsConfig, tokenConfig };
 };

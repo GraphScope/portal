@@ -13,7 +13,7 @@ import { useContext } from '../../canvas/useContext';
 import LoopEdge from './loop-edge';
 import Label from './label';
 
-import { useStudioProvier } from '@graphscope/studio-components';
+import { useThemeProvider } from '@graphscope/studio-components';
 import { useGraphContext } from '../..';
 
 function GraphEdge(props: EdgeProps) {
@@ -25,7 +25,7 @@ function GraphEdge(props: EdgeProps) {
   const { store } = useContext();
   const { currentId, theme } = store;
 
-  const { isLight } = useStudioProvier();
+  const { isLight } = useThemeProvider();
   const { onEdgeClick } = useGraphContext();
   if (!sourceNode || !targetNode) {
     return null;

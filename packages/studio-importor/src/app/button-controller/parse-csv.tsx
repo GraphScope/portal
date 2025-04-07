@@ -3,7 +3,7 @@ import { Button, Modal, Segmented, Space, Tooltip } from 'antd';
 import { BulbOutlined } from '@ant-design/icons';
 import ImportFromCSV from '../import-schema/import-from-csv';
 
-import { SegmentedTabs, Icons, useStudioProvier } from '@graphscope/studio-components';
+import { SegmentedTabs, Icons, useThemeProvider } from '@graphscope/studio-components';
 import type { SegmentedTabsProps } from '@graphscope/studio-components';
 
 import { FormattedMessage } from 'react-intl';
@@ -20,7 +20,7 @@ const ParseCSVButton: React.FunctionComponent<IImportSchemaProps> = props => {
   const { visible } = state;
   const { store } = useContext();
   const { elementOptions } = store;
-  const { isLight } = useStudioProvier();
+  const { isLight } = useThemeProvider();
 
   /** svg pathFill */
   let pathFill = () => {

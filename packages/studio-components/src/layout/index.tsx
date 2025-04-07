@@ -3,9 +3,13 @@ import { Outlet } from 'react-router-dom';
 import Section from '../Section';
 import Header from './header';
 import Sidebar from './sidebar';
-import { Button, Space, theme } from 'antd';
-import { ReadOutlined, GithubOutlined } from '@ant-design/icons';
+import { Button, Space, theme, Tooltip } from 'antd';
+import { ReadOutlined, GithubOutlined, SunOutlined, MoonOutlined } from '@ant-design/icons';
 import { getCurrentNav } from '../Utils';
+import { useThemes } from '../ThemeProvider/useThemes';
+import { useLocales } from '../LocaleProvider/useLocales';
+import SvgEnToZh from './SvgEnToZh';
+import SvgZhToEn from './SvgZhToEn';
 
 interface ILayoutProps {
   sideStyle?: {
@@ -31,7 +35,8 @@ const Layout: React.FunctionComponent<ILayoutProps> = props => {
   const { width = 220, collapsedWidth = 56 } = sideStyle;
   const activeKey = getCurrentNav();
   const { token } = theme.useToken();
-
+  const { algorithm, updateTheme, isDark } = useThemes();
+  const { locale = 'en-US', handleLocales } = useLocales();
   const leftSideCollapsed = collapsedConfig[activeKey] || false;
 
   return (
@@ -61,20 +66,46 @@ const Layout: React.FunctionComponent<ILayoutProps> = props => {
           <div id="header-breadcrumb"></div>
         </Space>
         <Space>
-          <Button
-            onClick={() => {
-              window.open('https://graphscope.io/', '_blank');
-            }}
-            icon={<ReadOutlined />}
-            type="text"
-          ></Button>
-          <Button
-            onClick={() => {
-              window.open(github, '_blank');
-            }}
-            icon={<GithubOutlined />}
-            type="text"
-          ></Button>
+          <Tooltip title={locale === 'en-US' ? '切换为中文' : '切换为英文'}>
+            <Button
+              type="text"
+              onClick={() => {
+                handleLocales();
+              }}
+              icon={locale === 'en-US' ? <SvgEnToZh /> : <SvgZhToEn />}
+            >
+              {/* 切换主题 */}
+            </Button>
+          </Tooltip>
+          <Tooltip title={isDark ? '切换为亮色主题' : '切换为暗色主题'}>
+            <Button
+              type="text"
+              onClick={() => {
+                updateTheme();
+              }}
+              icon={isDark ? <SunOutlined /> : <MoonOutlined />}
+            >
+              {/* 切换主题 */}
+            </Button>
+          </Tooltip>
+          <Tooltip title="访问 GraphScope 官网">
+            <Button
+              onClick={() => {
+                window.open('https://graphscope.io/', '_blank');
+              }}
+              icon={<ReadOutlined />}
+              type="text"
+            ></Button>
+          </Tooltip>
+          <Tooltip title="GraphScope Github">
+            <Button
+              onClick={() => {
+                window.open(github, '_blank');
+              }}
+              icon={<GithubOutlined />}
+              type="text"
+            ></Button>
+          </Tooltip>
         </Space>
       </Header>
       <Outlet />

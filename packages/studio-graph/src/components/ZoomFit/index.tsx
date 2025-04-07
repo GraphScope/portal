@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, TooltipProps, Tooltip } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { ForceGraphInstance, useContext } from '../../';
-import { Icons, useStudioProvier } from '@graphscope/studio-components';
+import { Icons } from '@graphscope/studio-components';
 
 export interface IZoomFitProps {
   title?: TooltipProps['title'];

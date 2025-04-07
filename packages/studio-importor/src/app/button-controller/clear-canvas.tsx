@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Tooltip } from 'antd';
 
-import { Icons, useStudioProvier } from '@graphscope/studio-components';
+import { Icons, useThemeProvider } from '@graphscope/studio-components';
 import { resetIndex } from '../utils';
 import { FormattedMessage } from 'react-intl';
 interface IAddNodeProps {
@@ -12,7 +12,7 @@ const ClearCanvas: React.FunctionComponent<IAddNodeProps> = props => {
   const { style } = props;
   const { updateStore, store } = useContext();
   const { elementOptions } = store;
-  const { isLight } = useStudioProvier();
+  const { isLight } = useThemeProvider();
   /** svg pathFill */
   let pathFill = () => {
     if (!isLight) {

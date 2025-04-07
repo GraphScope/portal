@@ -13,7 +13,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { v4 as uuidv4 } from 'uuid';
 import { formatCypherStatement } from './utils';
-import { Utils, Section, StudioProvier } from '@graphscope/studio-components';
+import { Utils, Section, ThemeProvider, LocaleProvider } from '@graphscope/studio-components';
 const { getSearchParams } = Utils;
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark, faClockFour, faServer, faRobot, faLightbulb } from '@fortawesome/free-solid-svg-icons';
@@ -146,28 +146,30 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
             rightSide: <Sidebar items={navbarOptions} type={displaySidebarType} />,
           };
     return (
-      <StudioProvier locales={locales}>
-        <Section
-          style={{ height: 'calc(100vh - 50px)' }}
-          {...side}
-          defaultCollapsed={{
-            leftSide: sidebarCollapsed,
-            rightSide: sidebarCollapsed,
-          }}
-          leftSideStyle={sidebarStyle}
-          rightSideStyle={sidebarStyle}
-          splitBorder
-        >
-          <Content
-            displaySidebarPosition={displaySidebarPosition}
-            connectComponent={connectComponent}
-            handleCancelQuery={handleCancelQuery}
-            createStatements={createStatements}
-            queryGraphData={handleQuery}
-            enableImmediateQuery={enableImmediateQuery}
-          />
-        </Section>
-      </StudioProvier>
+      <LocaleProvider locales={locales}>
+        <ThemeProvider>
+          <Section
+            style={{ height: 'calc(100vh - 50px)' }}
+            {...side}
+            defaultCollapsed={{
+              leftSide: sidebarCollapsed,
+              rightSide: sidebarCollapsed,
+            }}
+            leftSideStyle={sidebarStyle}
+            rightSideStyle={sidebarStyle}
+            splitBorder
+          >
+            <Content
+              displaySidebarPosition={displaySidebarPosition}
+              connectComponent={connectComponent}
+              handleCancelQuery={handleCancelQuery}
+              createStatements={createStatements}
+              queryGraphData={handleQuery}
+              enableImmediateQuery={enableImmediateQuery}
+            />
+          </Section>
+        </ThemeProvider>
+      </LocaleProvider>
     );
   }
   return null;

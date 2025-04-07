@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 
 import { Button } from 'antd';
 
-import { Section, useSection, Icons, FullScreen, StudioProvier } from '@graphscope/studio-components';
+import { Section, useSection, Icons, FullScreen } from '@graphscope/studio-components';
 import {
   Toolbar,
   SwitchEngine,

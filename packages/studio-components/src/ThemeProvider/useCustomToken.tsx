@@ -1,4 +1,4 @@
-import { useStudioProvier } from './useThemeConfigProvider';
+import { useThemeProvider } from './useThemeConfigProvider';
 export interface IColorStore {
   sectionBackground?: string;
   containerBackground?: string;
@@ -12,7 +12,7 @@ export interface IColorStore {
 }
 
 export const useCustomToken = () => {
-  const { algorithm } = useStudioProvier();
+  const { algorithm } = useThemeProvider();
   const isLight = algorithm === 'defaultAlgorithm';
   /** 特殊颜色配置 */
   const colorConfig = {

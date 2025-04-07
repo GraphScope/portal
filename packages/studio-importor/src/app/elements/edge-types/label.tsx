@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EdgeLabelRenderer } from 'reactflow';
-import { EditableText, useStudioProvier, useSection } from '@graphscope/studio-components';
+import { EditableText, useThemeProvider, useSection } from '@graphscope/studio-components';
 import { useContext } from '@graphscope/use-zustand';
 import { CheckOutlined } from '@ant-design/icons';
 import { theme } from 'antd';
@@ -20,7 +20,7 @@ const Label: React.FunctionComponent<ILabelProps> = props => {
   const { token } = useToken();
   const { currentId, theme } = store;
   const isSelected = id === currentId;
-  const { isLight } = useStudioProvier();
+  const { isLight } = useThemeProvider();
   const onEdgeClick = () => {
     updateStore(draft => {
       draft.currentId = id;

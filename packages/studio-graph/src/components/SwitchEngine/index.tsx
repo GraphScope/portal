@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, TooltipProps, Tooltip, theme } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { useContext } from '../../';
-import { Icons, useStudioProvier } from '@graphscope/studio-components';
+import { Icons } from '@graphscope/studio-components';
 const { Graph3D, Graph2D } = Icons;
 export interface ISwitchEngineProps {
   title?: TooltipProps['title'];

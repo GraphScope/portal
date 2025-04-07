@@ -10,6 +10,7 @@ import { ROUTES } from './pages/index';
 import { SIDE_MENU } from './layouts/const';
 import { togglePlugin } from './pages/explore/slot';
 
+
 /** Portal 内置模块 */
 installSlot('SIDE_MEU', 'studio', SIDE_MENU);
 installSlot('ROUTES', 'studio', ROUTES);

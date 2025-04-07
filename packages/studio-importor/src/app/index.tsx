@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import GraphCanvas from './graph-canvas';
 import PropertiesEditor from './properties-editor';
 import { ReactFlowProvider } from 'reactflow';
-import { Section, StudioProvier, GlobalSpin, useDynamicStyle } from '@graphscope/studio-components';
+import { Section, ThemeProvider, LocaleProvider, GlobalSpin, useDynamicStyle } from '@graphscope/studio-components';
 import cssStyles from './style';
 import { transformGraphNodes, transformEdges } from './elements/index';
 
@@ -89,38 +89,40 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   const IS_PURE = appMode === 'PURE';
 
   return (
-    <StudioProvier locales={locales}>
-      <Section
-        rightSide={
-          rightSide || (
-            <PropertiesEditor
-              appMode={appMode}
-              /**  第二项 */
-              queryPrimitiveTypes={queryPrimitiveTypes}
-              handleUploadFile={handleUploadFile}
-              batchUploadFiles={batchUploadFiles}
-              onCreateLabel={onCreateLabel}
-              onDeleteLabel={onDeleteLabel}
-            />
-          )
-        }
-        leftSideStyle={leftSideStyle}
-        rightSideStyle={rightSideStyle}
-        defaultCollapsed={defaultCollapsed}
-        style={{ height: 'calc(100vh - 50px)', ...style }}
-        splitBorder
-      >
-        {isReady ? (
-          <ReactFlowProvider>
-            {!IS_PURE && <ButtonController />}
-            <GraphCanvas />
-            {children}
-          </ReactFlowProvider>
-        ) : (
-          <GlobalSpin />
-        )}
-      </Section>
-    </StudioProvier>
+    <LocaleProvider locales={locales}>
+      <ThemeProvider>
+        <Section
+          rightSide={
+            rightSide || (
+              <PropertiesEditor
+                appMode={appMode}
+                /**  第二项 */
+                queryPrimitiveTypes={queryPrimitiveTypes}
+                handleUploadFile={handleUploadFile}
+                batchUploadFiles={batchUploadFiles}
+                onCreateLabel={onCreateLabel}
+                onDeleteLabel={onDeleteLabel}
+              />
+            )
+          }
+          leftSideStyle={leftSideStyle}
+          rightSideStyle={rightSideStyle}
+          defaultCollapsed={defaultCollapsed}
+          style={{ height: 'calc(100vh - 50px)', ...style }}
+          splitBorder
+        >
+          {isReady ? (
+            <ReactFlowProvider>
+              {!IS_PURE && <ButtonController />}
+              <GraphCanvas />
+              {children}
+            </ReactFlowProvider>
+          ) : (
+            <GlobalSpin />
+          )}
+        </Section>
+      </ThemeProvider>
+    </LocaleProvider>
   );
 };
 

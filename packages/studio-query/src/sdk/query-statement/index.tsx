@@ -4,7 +4,7 @@ import { Statement } from '../..';
 import type { IStatement } from '../..';
 import { CypherDriver, GremlinDriver } from '@graphscope/studio-driver';
 import ConnectEndpoint, { IConnectEndpointProps } from '../../components/connect-endpoint';
-import { StudioProvier } from '@graphscope/studio-components';
+import { ThemeProvider, LocaleProvider } from '@graphscope/studio-components';
 
 import locales from '../../locales';
 
@@ -79,28 +79,32 @@ const QueryStatement = (props: IQueryStatementProps) => {
 
   if (!onQuery && (!endpoint || !language)) {
     return (
-      <StudioProvier locales={locales}>
-        <ConnectEndpoint onConnect={onConnect} />
-      </StudioProvier>
+      <LocaleProvider locales={locales}>
+        <ThemeProvider>
+          <ConnectEndpoint onConnect={onConnect} />
+        </ThemeProvider>
+      </LocaleProvider>
     );
   }
 
   return (
-    <StudioProvier locales={locales}>
-      <Statement
-        language={language}
-        enableImmediateQuery={enableImmediateQuery}
-        mode={mode}
-        active={true}
-        id={id}
-        timestamp={timestamp}
-        graphId={graphId}
-        schemaData={schemaData}
-        script={script}
-        onQuery={onQuery || onQueryByEndpoint}
-        onCancel={onCancel}
-      />
-    </StudioProvier>
+    <LocaleProvider locales={locales}>
+      <ThemeProvider>
+        <Statement
+          language={language}
+          enableImmediateQuery={enableImmediateQuery}
+          mode={mode}
+          active={true}
+          id={id}
+          timestamp={timestamp}
+          graphId={graphId}
+          schemaData={schemaData}
+          script={script}
+          onQuery={onQuery || onQueryByEndpoint}
+          onCancel={onCancel}
+        />
+      </ThemeProvider>
+    </LocaleProvider>
   );
 };
 

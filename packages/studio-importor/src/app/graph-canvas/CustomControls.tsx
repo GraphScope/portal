@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Flex, Divider } from 'antd';
 import { PlusOutlined, MinusOutlined, ExpandOutlined } from '@ant-design/icons';
 import { useReactFlow, Panel } from 'reactflow';
-import { Icons, useStudioProvier } from '@graphscope/studio-components';
+import { Icons, useThemeProvider } from '@graphscope/studio-components';
 
 interface ICustomControlsProps {
   isLocked: boolean;
@@ -11,7 +11,7 @@ interface ICustomControlsProps {
 const CustomControls: React.FunctionComponent<ICustomControlsProps> = props => {
   const { isLocked, handleLocked } = props;
   const { zoomIn, zoomOut, fitView } = useReactFlow();
-  const { isLight } = useStudioProvier();
+  const { isLight } = useThemeProvider();
   // svg path fill
   const color = !isLight ? '#FFF' : '#000';
   // lock or unlock
