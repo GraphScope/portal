@@ -1,7 +1,7 @@
 import * as React from 'react';
 import SelectCards from '../../components/select-cards';
 import { FormattedMessage } from 'react-intl';
-import { useStudioProvier } from '@graphscope/studio-components';
+import { useThemeProvider } from '@graphscope/studio-components';
 import SettingParcel from '../../components/setting-parcel';
 
 const engines: any = [
@@ -21,9 +21,9 @@ const engines: any = [
   },
 ];
 const InteractTheme: React.FunctionComponent = () => {
-  const { algorithm = 'defaultAlgorithm', handleThemeOrLocale } = useStudioProvier();
+  const { algorithm = 'defaultAlgorithm', handleTheme } = useThemeProvider();
   const changeEngineType = (item: { id: string }) => {
-    handleThemeOrLocale({
+    handleTheme({
       algorithm: item.id as 'defaultAlgorithm' | 'darkAlgorithm',
     });
   };

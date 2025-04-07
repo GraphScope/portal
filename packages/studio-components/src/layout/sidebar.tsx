@@ -4,11 +4,9 @@ import type { MenuProps } from 'antd';
 import { Menu, Flex, theme } from 'antd';
 import Logo from '../Logo';
 import { useSection } from '../Section/useSection';
-
 import Header from './header';
 import CollapsedButton from './collapsed';
-import { getAllSearchParams, setSearchParams, getCurrentNav } from '../Utils';
-import { useStudioProvier } from '../Provider/useThemeConfigProvider';
+import {  getCurrentNav } from '../Utils';
 
 interface ISidebar {
   sideStyle: {

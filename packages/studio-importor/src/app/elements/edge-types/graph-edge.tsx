@@ -12,7 +12,7 @@ import {
 import { useContext } from '@graphscope/use-zustand';
 import LoopEdge from './loop-edge';
 import Label from './label';
-import { useStudioProvier } from '@graphscope/studio-components';
+import { useThemeProvider } from '@graphscope/studio-components';
 
 function GraphEdge(props: EdgeProps) {
   const { id, source, target, style, data } = props;
@@ -22,7 +22,7 @@ function GraphEdge(props: EdgeProps) {
   const targetNode = useStore(useCallback(store => store.nodeInternals.get(target), [target]));
   const { store } = useContext();
   const { currentId, theme } = store;
-  const { isLight } = useStudioProvier();
+  const { isLight } = useThemeProvider();
   if (!sourceNode || !targetNode) {
     return null;
   }

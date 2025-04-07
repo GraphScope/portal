@@ -2,7 +2,7 @@ import React, { memo, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { theme } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
-import { EditableText, useStudioProvier, useSection } from '@graphscope/studio-components';
+import { EditableText, useThemeProvider, useSection } from '@graphscope/studio-components';
 const { useToken } = theme;
 import { useContext } from '../../canvas/useContext';
 
@@ -27,7 +27,7 @@ const GraphNode = (props: NodeProps) => {
   const { label, filelocation, disabled } = data;
   const { store, updateStore } = useContext();
   const { currentId, theme, elementOptions } = store;
-  const { isLight } = useStudioProvier();
+  const { isLight } = useThemeProvider();
   const { toggleRightSide, toggleLeftSide } = useSection();
   const { token } = useToken();
   const isSelected = id === currentId;

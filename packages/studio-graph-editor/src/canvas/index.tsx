@@ -1,6 +1,6 @@
 import React, { CSSProperties, useEffect } from 'react';
 import { ReactFlow, Controls, Background, MiniMap } from 'reactflow';
-import { EmptyCanvas, useStudioProvier, Utils,useDynamicStyle } from '@graphscope/studio-components';
+import { EmptyCanvas, useThemeProvider, Utils,useDynamicStyle } from '@graphscope/studio-components';
 import { nodeTypes } from '../elements/node-types';
 import { edgeTypes } from '../elements/edge-types';
 import ConnectionLine from '../elements/connection-line';
@@ -25,7 +25,7 @@ const SchemaGraph: React.FunctionComponent<ISchemaGraphProps> = props => {
   const { store, updateStore } = useContext();
   const { onEdgesChange, onNodesChange, onConnectStart, onConnectEnd } = useInteractive();
   const { nodes, edges, theme } = store;
-  const { isLight } = useStudioProvier();
+  const { isLight } = useThemeProvider();
   const isEmpty = nodes.length === 0;
   // const rfBG = !isLight ? '#161616' : collapsed.left && collapsed.right ? '#fff' : '#f4f5f5';
   const rfBG = '#fff';

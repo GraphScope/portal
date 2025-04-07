@@ -4,6 +4,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Utils, Illustration } from '@graphscope/studio-components';
 import { ROUTES, SIDE_MENU } from '@graphscope/graphy-website';
 import { installSlot, unInstallSlot } from '../../../slots';
+import { FormattedMessage } from 'react-intl';
 
 interface IGraphyPluginProps {}
 
@@ -29,19 +30,16 @@ const GraphyPlugin: React.FunctionComponent<IGraphyPluginProps> = props => {
     <Flex gap={32} vertical>
       <Flex vertical gap={12} flex={1}>
         <Space>
-          <Typography.Title level={5}>Graphy'ourData</Typography.Title>
+          <Typography.Title level={5}><FormattedMessage id="Graphy'ourData"/></Typography.Title>
           <Tooltip
-            title={` Graphy is an end-to-end platform designed for extracting, visualizing, and analyzing large volumes of
-              unstructured data. Without structured organization, valuable insights in such data often remain hidden.
-              Graphy empowers users to extract predefined structures from unstructured data, organizing it into a graph
-              format for enhanced visualization, analysis, and exploration.`}
+            title={<FormattedMessage id="Graphy is an end-to-end platform designed for extracting, visualizing, and analyzing large volumes of unstructured data. Without structured organization, valuable insights in such data often remain hidden.Graphy empowers users to extract predefined structures from unstructured data, organizing it into a graph format for enhanced visualization, analysis, and exploration."/>}
           >
             <QuestionCircleOutlined />
           </Tooltip>
         </Space>
 
         <Typography.Text type="secondary">
-          An intuitive tool that transforms unstructured data into graph dataset.
+        <FormattedMessage id="An intuitive tool that transforms unstructured data into graph dataset."/>
         </Typography.Text>
         <Space>
           Enable:
@@ -49,7 +47,6 @@ const GraphyPlugin: React.FunctionComponent<IGraphyPluginProps> = props => {
         </Space>
         <Space>
           <Typography.Text>Endpoint: </Typography.Text>
-
           <Input placeholder="Graphy Endpoint" defaultValue={defaultEndpoint} />
         </Space>
       </Flex>

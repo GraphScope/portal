@@ -270,7 +270,25 @@ export default {
   'Data Load Configuration': 'Data Load Configuration',
   'Download Load Task Config': 'Download Load Task Config',
   "Click to load all label's data": "Click to load all label's data",
-  "Please click the button below to 「Create instances」": "Please click the button below to 「Create instances」",
-  "No available Coordinator service": "No available Coordinator service",
-  "Start the local service by following the steps below and then refresh this web page": "Start the local service by following the steps below and then refresh this web page",
+  'Please click the button below to 「Create instances」': 'Please click the button below to 「Create instances」',
+  'No available Coordinator service': 'No available Coordinator service',
+  'Start the local service by following the steps below and then refresh this web page':
+    'Start the local service by following the steps below and then refresh this web page',
+  'Configure GraphScope engine address and set query page sidebar style':
+    'Configure GraphScope engine address and set query page sidebar style',
+  'refers to the address of the GraphScope engine. If you have also started the GraphScope engine locally using Docker.':
+    'refers to the address of the GraphScope engine. If you have also started the GraphScope engine locally using Docker.',
+  'Configure theme colors and rounded corners': 'Configure theme colors and rounded corners',
+  'Experimental Tools': 'Experimental Tools',
+  'Coordinator URL': 'Coordinator URL',
+  'Explor is a tool that allows you to explore the graph data in a more visual way.':
+    'Explor is a tool that allows you to explore the graph data in a more visual way.',
+  Enable: 'Enable',
+  "Graphy": "Graphy",
+  "Graphy'ourData": "Graphy'ourData",
+  'Graphy is an end-to-end platform designed for extracting, visualizing, and analyzing large volumes of unstructured data. Without structured organization, valuable insights in such data often remain hidden.Graphy empowers users to extract predefined structures from unstructured data, organizing it into a graph format for enhanced visualization, analysis, and exploration.':
+    'Graphy is an end-to-end platform designed for extracting, visualizing, and analyzing large volumes of unstructured data. Without structured organization, valuable insights in such data often remain hidden.Graphy empowers users to extract predefined structures from unstructured data, organizing it into a graph format for enhanced visualization, analysis, and exploration.',
+  'An intuitive tool that transforms unstructured data into graph dataset.':
+    'An intuitive tool that transforms unstructured data into graph dataset.',
+  'Configure and enable experimental tools for advanced graph data exploration and analysis.':'Configure and enable experimental tools for advanced graph data exploration and analysis.'
 };

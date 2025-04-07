@@ -3,12 +3,12 @@ import { Typography } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { PlayCircleOutlined } from '@ant-design/icons';
 import Image from './image';
-import { useStudioProvier } from '@graphscope/studio-components';
+import { useThemeProvider } from '@graphscope/studio-components';
 
 interface IEmptyProps {}
 
 const Empty: React.FunctionComponent<IEmptyProps> = props => {
-  const { isLight } = useStudioProvier();
+  const { isLight } = useThemeProvider();
   return (
     <div
       style={{

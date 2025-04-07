@@ -1,5 +1,12 @@
 import React, { useRef, useState } from 'react';
-import { Section, FullScreen, StudioProvier, SegmentedTabs, Icons } from '@graphscope/studio-components';
+import {
+  Section,
+  FullScreen,
+  ThemeProvider,
+  LocaleProvider,
+  SegmentedTabs,
+  Icons,
+} from '@graphscope/studio-components';
 import {
   Toolbar,
   SwitchEngine,
@@ -85,7 +92,7 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
   return (
     <div ref={containerRef} style={{ position: 'absolute', top: '0px', left: '0px', bottom: '0px', right: '0px' }}>
       <GraphProvider id={id} services={services}>
-        <StudioProvier
+        <LocaleProvider
           locales={{
             'zh-CN': {
               ...locales['zh-CN'],
@@ -97,159 +104,161 @@ const Explore: React.FunctionComponent<ExploreProps> = props => {
             },
           }}
         >
-          <Section
-            splitBorder
-            // rightSide={
-            //   <SegmentedTabs
-            //     queryKey="right"
-            //     tableHeight={60}
-            //     block
-            //     items={[
-            //       {
-            //         key: 'Next',
-            //         label: (
-            //           <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
-            //             <BarChartOutlined style={{ fontSize: 17 }} />
-            //             Next Query
-            //           </Flex>
-            //         ),
-            //         children: <Next />,
-            //       },
-            //     ]}
-            //   ></SegmentedTabs>
-            // }
-            autoResize={false}
-            leftSideStyle={{
-              width: '400px',
-              boxShadow: token.boxShadow,
-              marginRight: '0px',
-              // borderRadius: token.borderRadius,
-              overflow: 'scroll',
-            }}
-            rightSideStyle={{
-              width: '360px',
-              boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
-              overflowY: 'scroll',
-            }}
-            defaultCollapsed={{
-              leftSide: true,
-              rightSide: true,
-            }}
-          >
-            <Canvas />
-            <BasicInteraction />
+          <ThemeProvider>
+            <Section
+              splitBorder
+              // rightSide={
+              //   <SegmentedTabs
+              //     queryKey="right"
+              //     tableHeight={60}
+              //     block
+              //     items={[
+              //       {
+              //         key: 'Next',
+              //         label: (
+              //           <Flex vertical gap={0} align="center" style={{ paddingTop: '6px' }}>
+              //             <BarChartOutlined style={{ fontSize: 17 }} />
+              //             Next Query
+              //           </Flex>
+              //         ),
+              //         children: <Next />,
+              //       },
+              //     ]}
+              //   ></SegmentedTabs>
+              // }
+              autoResize={false}
+              leftSideStyle={{
+                width: '400px',
+                boxShadow: token.boxShadow,
+                marginRight: '0px',
+                // borderRadius: token.borderRadius,
+                overflow: 'scroll',
+              }}
+              rightSideStyle={{
+                width: '360px',
+                boxShadow: 'rgba(0, 0, 0, 0.19) 0px 4px 12px',
+                overflowY: 'scroll',
+              }}
+              defaultCollapsed={{
+                leftSide: true,
+                rightSide: true,
+              }}
+            >
+              <Canvas />
+              <BasicInteraction />
 
-            <FetchGraph />
-            <Placeholder />
-            <Loading />
-            <PropertiesPanel style={{ right: '12px' }} />
-            <FloatTabs
-              searchbar={<Searchbar />}
-              direction="vertical"
-              items={[
-                {
-                  label: <Typography.Title level={3}>Next Query</Typography.Title>,
-                  icon: <DeploymentUnitOutlined style={{ fontSize: 17 }} />,
-                  children: <Next />,
-                  key: 'NextQuery',
-                },
-                {
-                  label: <Typography.Title level={3}>Statistics Analysis</Typography.Title>,
-                  icon: <BarChartOutlined style={{ fontSize: 17 }} />,
-                  children: (
-                    <Flex vertical>
-                      <Statistics />
-                      <TableView />
-                    </Flex>
-                  ),
-                  key: 'Statistics',
-                },
-                // {
-                //   label: <Typography.Title level={3}>Table View</Typography.Title>,
-                //   icon: <TableOutlined />,
-                //   children: <TableView />,
-                //   key: 'TableView',
-                // },
-                {
-                  label: <Typography.Title level={3}>Cluster Analysis</Typography.Title>,
-                  icon: <CopyrightOutlined />,
-                  children: <ClusterAnalysis />,
-                  key: 'ClusterAnalysis',
-                },
+              <FetchGraph />
+              <Placeholder />
+              <Loading />
+              <PropertiesPanel style={{ right: '12px' }} />
+              <FloatTabs
+                searchbar={<Searchbar />}
+                direction="vertical"
+                items={[
+                  {
+                    label: <Typography.Title level={3}>Next Query</Typography.Title>,
+                    icon: <DeploymentUnitOutlined style={{ fontSize: 17 }} />,
+                    children: <Next />,
+                    key: 'NextQuery',
+                  },
+                  {
+                    label: <Typography.Title level={3}>Statistics Analysis</Typography.Title>,
+                    icon: <BarChartOutlined style={{ fontSize: 17 }} />,
+                    children: (
+                      <Flex vertical>
+                        <Statistics />
+                        <TableView />
+                      </Flex>
+                    ),
+                    key: 'Statistics',
+                  },
+                  // {
+                  //   label: <Typography.Title level={3}>Table View</Typography.Title>,
+                  //   icon: <TableOutlined />,
+                  //   children: <TableView />,
+                  //   key: 'TableView',
+                  // },
+                  {
+                    label: <Typography.Title level={3}>Cluster Analysis</Typography.Title>,
+                    icon: <CopyrightOutlined />,
+                    children: <ClusterAnalysis />,
+                    key: 'ClusterAnalysis',
+                  },
 
-                {
-                  label: <Typography.Title level={3}>Cypher Query</Typography.Title>,
-                  icon: <CodeOutlined />,
-                  children: <CypherQuery />,
-                  key: 'CypherQuery',
-                },
-                {
-                  label: <Typography.Title level={3}>Report</Typography.Title>,
-                  icon: <OpenAIOutlined />,
-                  children: <Report />,
-                  key: 'Report',
-                },
+                  {
+                    label: <Typography.Title level={3}>Cypher Query</Typography.Title>,
+                    icon: <CodeOutlined />,
+                    children: <CypherQuery />,
+                    key: 'CypherQuery',
+                  },
+                  {
+                    label: <Typography.Title level={3}>Report</Typography.Title>,
+                    icon: <OpenAIOutlined />,
+                    children: <Report />,
+                    key: 'Report',
+                  },
 
-                {
-                  label: <Typography.Title level={3}>Style Setting</Typography.Title>,
-                  icon: <BgColorsOutlined />,
-                  children: <StyleSetting />,
-                  key: 'StyleSetting',
-                },
-                {
-                  label: <Typography.Title level={3}>Layout Setting</Typography.Title>,
-                  icon: <BranchesOutlined />,
-                  children: <LayoutSetting />,
-                  key: 'LayoutSetting',
-                },
-              ]}
-              tools={
-                <>
-                  <Connection />
-                  {/* <Divider style={{ margin: '0px' }} />
+                  {
+                    label: <Typography.Title level={3}>Style Setting</Typography.Title>,
+                    icon: <BgColorsOutlined />,
+                    children: <StyleSetting />,
+                    key: 'StyleSetting',
+                  },
+                  {
+                    label: <Typography.Title level={3}>Layout Setting</Typography.Title>,
+                    icon: <BranchesOutlined />,
+                    children: <LayoutSetting />,
+                    key: 'LayoutSetting',
+                  },
+                ]}
+                tools={
+                  <>
+                    <Connection />
+                    {/* <Divider style={{ margin: '0px' }} />
                   <CurvatureLinks /> */}
-                  <Divider style={{ margin: '0px' }} />
-                  <SwitchEngine />
-                  <RunCluster />
-                  <Export />
-                </>
-              }
-            ></FloatTabs>
+                    <Divider style={{ margin: '0px' }} />
+                    <SwitchEngine />
+                    <RunCluster />
+                    <Export />
+                  </>
+                }
+              ></FloatTabs>
 
-            {/* <HoverMenu>
+              {/* <HoverMenu>
               <NeighborQuery />
               <CommonNeighbor  />
               <DeleteLeafNodes />
               <DeleteNode />
             </HoverMenu> */}
 
-            <ContextMenu>
-              <NeighborQuery />
-              {/* <CommonNeighbor /> */}
-              <DeleteLeafNodes />
-              <DeleteNode />
-            </ContextMenu>
-            <FloatContainer position="bottom">
-              <ZoomStatus
-                style={{
-                  opacity: 0.5,
-                }}
-              />
-            </FloatContainer>
+              <ContextMenu>
+                <NeighborQuery />
+                {/* <CommonNeighbor /> */}
+                <DeleteLeafNodes />
+                <DeleteNode />
+              </ContextMenu>
+              <FloatContainer position="bottom">
+                <ZoomStatus
+                  style={{
+                    opacity: 0.5,
+                  }}
+                />
+              </FloatContainer>
 
-            <FloatToolbar>
-              {/* <ToogleRightButton /> */}
-              {/* <Divider style={{ margin: '0px' }} /> */}
-              <Brush />
-              <FixedMode />
-              <ZoomFit />
-              <FullScreen containerRef={containerRef} />
-              <Divider style={{ margin: '0px' }} />
-              <ClearCanvas />
-              <ClearStatus trigger="button" />
-            </FloatToolbar>
-          </Section>
-        </StudioProvier>
+              <FloatToolbar>
+                {/* <ToogleRightButton /> */}
+                {/* <Divider style={{ margin: '0px' }} /> */}
+                <Brush />
+                <FixedMode />
+                <ZoomFit />
+                <FullScreen containerRef={containerRef} />
+                <Divider style={{ margin: '0px' }} />
+                <ClearCanvas />
+                <ClearStatus trigger="button" />
+              </FloatToolbar>
+            </Section>
+          </ThemeProvider>
+        </LocaleProvider>
       </GraphProvider>
     </div>
   );

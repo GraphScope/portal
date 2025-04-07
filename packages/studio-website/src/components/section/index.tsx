@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Breadcrumb, theme, Flex } from 'antd';
 
 import type { TabsProps } from 'antd';
-import { CreatePortal, SegmentedTabs, useStudioProvier } from '@graphscope/studio-components';
+import { CreatePortal } from '@graphscope/studio-components';
 interface IFormattedMessage {
   id: string;
   values?: { [key: string]: string };

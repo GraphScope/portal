@@ -1,17 +1,17 @@
 import React from 'react';
 import { useContext } from '../../layouts/useContext';
 import LocaleSwitch from '../../components/locale-switch';
-import { useStudioProvier } from '@graphscope/studio-components';
+import { useLocaleProvider } from '@graphscope/studio-components';
 import type { ILocaleSwitchProps } from '../../components/locale-switch';
 import SettingParcel from '../../components/setting-parcel';
 
 const International: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { locale = 'en-US' } = store;
-  const { handleThemeOrLocale } = useStudioProvier();
+  const { handleLocale } = useLocaleProvider();
 
   const handleLocales = (value: ILocaleSwitchProps['value']) => {
-    handleThemeOrLocale({ locale: value });
+    handleLocale({ locale: value });
     updateStore(draft => {
       draft.locale = value;
     });

@@ -1,6 +1,6 @@
 import { notification as notifications } from 'antd';
 import { createTheme } from '@uiw/codemirror-themes';
-import { useStudioProvier, useCustomToken } from '@graphscope/studio-components';
+import { useThemeProvider, useCustomToken } from '@graphscope/studio-components';
 export const getSearchParams = (location: Location) => {
   const { hash } = location;
   const [path, search] = hash.split('?');
@@ -34,7 +34,7 @@ export const notification = (type: string, data: any, defaultData?: string) => {
 
 //@ts-ignore
 export const useEditorTheme = (isEdit: boolean): any => {
-  const { algorithm } = useStudioProvier();
+  const { algorithm } = useThemeProvider();
   const { editorBackground, editorForeground } = useCustomToken();
   const background = isEdit ? '#F5F5F5' : editorBackground;
   //@ts-ignore

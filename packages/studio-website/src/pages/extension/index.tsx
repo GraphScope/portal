@@ -2,8 +2,7 @@ import * as React from 'react';
 import Section from '../../components/section';
 import Plugins from './plugins';
 import { FormattedMessage } from 'react-intl';
-import { Flex } from 'antd';
-import { CreatePortal, SegmentedTabs, useStudioProvier } from '@graphscope/studio-components';
+import { SegmentedTabs } from '@graphscope/studio-components';
 
 const Extension: React.FunctionComponent = () => {
   const items = [

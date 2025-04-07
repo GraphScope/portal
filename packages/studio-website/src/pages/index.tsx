@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { Routes, Route, Navigate, HashRouter } from 'react-router-dom';
-import { StudioProvier, GlobalSpin } from '@graphscope/studio-components';
+import { ThemeProvider, GlobalSpin, LocaleProvider } from '@graphscope/studio-components';
 import Layout from '../layouts';
 import StoreProvider from '@graphscope/use-zustand';
 import { initialStore } from '../layouts/useContext';
@@ -52,16 +52,18 @@ const Pages: React.FunctionComponent<IPagesProps> = props => {
 
   return (
     <StoreProvider store={initialStore}>
-      <StudioProvier locales={locales}>
-        <HashRouter>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              {routes}
-              {children}
-            </Route>
-          </Routes>
-        </HashRouter>
-      </StudioProvier>
+      <LocaleProvider locales={locales}>
+        <ThemeProvider>
+          <HashRouter>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                {routes}
+                {children}
+              </Route>
+            </Routes>
+          </HashRouter>
+        </ThemeProvider>
+      </LocaleProvider>
     </StoreProvider>
   );
 };

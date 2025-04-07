@@ -3,7 +3,15 @@ import React, { useRef } from 'react';
 import { Button } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
 
-import { Section, useSection, Icons, FullScreen, SegmentedTabs, StudioProvier } from '@graphscope/studio-components';
+import {
+  Section,
+  useSection,
+  Icons,
+  FullScreen,
+  SegmentedTabs,
+  ThemeProvider,
+  LocaleProvider,
+} from '@graphscope/studio-components';
 import {
   Toolbar,
   SwitchEngine,
@@ -90,37 +98,39 @@ const ClusterGraph: React.FunctionComponent<QueryGraphProps> = props => {
       }}
       ref={containerRef}
     >
-      <StudioProvier locales={locales}>
-        <GraphProvider id="cluster-graph">
-          <Section
-            splitBorder
-            rightSide={<SegmentedTabs items={items} block />}
-            autoResize={false}
-            rightSideStyle={{
-              width: '350px',
-            }}
-            defaultCollapsed={{
-              leftSide: true,
-              rightSide: false,
-            }}
-          >
-            <Canvas />
-            <ClearStatus />
+      <LocaleProvider locales={locales}>
+        <ThemeProvider>
+          <GraphProvider id="cluster-graph">
+            <Section
+              splitBorder
+              rightSide={<SegmentedTabs items={items} block />}
+              autoResize={false}
+              rightSideStyle={{
+                width: '350px',
+              }}
+              defaultCollapsed={{
+                leftSide: true,
+                rightSide: false,
+              }}
+            >
+              <Canvas />
+              <ClearStatus />
 
-            <BasicInteraction />
-            <PropertiesPanel />
-            <Loading />
-            <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
-              <ToogleButton />
-              <Divider style={{ margin: '0px' }} />
-              <SwitchEngine />
-              <ZoomFit />
-              {/* <RunCluster /> */}
-              <FullScreen containerRef={containerRef} />
-            </Toolbar>
-          </Section>
-        </GraphProvider>
-      </StudioProvier>
+              <BasicInteraction />
+              <PropertiesPanel />
+              <Loading />
+              <Toolbar style={{ position: 'absolute', top: '20px', right: '20px', left: 'unset' }}>
+                <ToogleButton />
+                <Divider style={{ margin: '0px' }} />
+                <SwitchEngine />
+                <ZoomFit />
+                {/* <RunCluster /> */}
+                <FullScreen containerRef={containerRef} />
+              </Toolbar>
+            </Section>
+          </GraphProvider>
+        </ThemeProvider>
+      </LocaleProvider>
     </div>
   );
 };
