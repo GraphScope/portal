@@ -237,7 +237,7 @@ const InstaceCard: React.FC<InstaceCardType> = props => {
       <Flex justify="space-between">
         <Flex>
           <GraphView data={schema}></GraphView>
-          <Flex align="flex-start" vertical gap="middle">
+          <Flex align="flex-start" vertical gap="middle" style={{marginLeft: '10px'}}>
             <Tag style={{ fontSize: '16px', lineHeight: '140%' }} color={STATUS_COLOR_MAP[status]}>
               <FormattedMessage id={status} />
             </Tag>

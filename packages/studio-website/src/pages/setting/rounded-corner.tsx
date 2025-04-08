@@ -6,11 +6,11 @@ const { useToken } = theme;
 const RoundedCorner: React.FunctionComponent = () => {
   const { token } = useToken();
   const { borderRadius } = token;
-  const { handleThemeOrLocale } = useStudioProvier();
+  const { updateStudio } = useStudioProvier();
 
   const handleBorderRadiusChange: (newBorderRadius: number | null) => void = newBorderRadius => {
     //@ts-ignore
-    handleThemeOrLocale({ token: { borderRadius: newBorderRadius } });
+    updateStudio({ token: { borderRadius: newBorderRadius } });
   };
 
   return (

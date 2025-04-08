@@ -21,9 +21,9 @@ const engines: any = [
   },
 ];
 const InteractTheme: React.FunctionComponent = () => {
-  const { algorithm = 'defaultAlgorithm', handleThemeOrLocale } = useStudioProvier();
+  const { algorithm = 'defaultAlgorithm', updateStudio } = useStudioProvier();
   const changeEngineType = (item: { id: string }) => {
-    handleThemeOrLocale({
+    updateStudio({
       algorithm: item.id as 'defaultAlgorithm' | 'darkAlgorithm',
     });
   };

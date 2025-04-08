@@ -6,7 +6,9 @@ import type { ThemeProviderType } from './useThemeConfigProvider';
 import { storage } from '../Utils';
 import { getThemeConfig } from './getThemeConfig';
 import { useCustomToken } from './useCustomToken';
+import { useTheme, useLocale } from '../HomePage/Hooks';
 
+type AlgorithmType = 'defaultAlgorithm' | 'darkAlgorithm';
 type IThemeProvider = {
   locales: {
     'zh-CN': Record<string, string>;
@@ -14,7 +16,7 @@ type IThemeProvider = {
   };
   children: React.ReactNode;
   locale?: 'zh-CN' | 'en-US';
-  algorithm?: 'defaultAlgorithm' | 'darkAlgorithm';
+  algorithm?: AlgorithmType;
 };
 
 const Provider: React.FC<IThemeProvider> = props => {
@@ -47,13 +49,39 @@ const Provider: React.FC<IThemeProvider> = props => {
   const { componentsConfig, tokenConfig } = getThemeConfig(algorithm);
   const colorConfig = useCustomToken();
   const isLight = algorithm === 'defaultAlgorithm';
+  const currentTheme = useTheme();
+  const currentLocale = useLocale();
 
-  const handleThemeOrLocale = (themeConfig: Partial<ThemeProviderType>) => {
+  useEffect(() => {
+    setState(preState => {
+      return {
+        ...preState,
+        algorithm: currentTheme as AlgorithmType,
+        locale: currentLocale as 'zh-CN' | 'en-US',
+      };
+    });
+  }, [currentTheme, currentLocale]);
+
+  useEffect(() => {
+    const theme = storage.get<AlgorithmType>('algorithm');
+    const locale = storage.get<'zh-CN' | 'en-US'>('locale');
+    document.documentElement.setAttribute('data-theme', theme || 'defaultAlgorithm');
+    document.documentElement.setAttribute('data-locale', locale || 'en-US');
+  }, []);
+
+  const updateStudio = (themeConfig: Partial<ThemeProviderType>) => {
+    console.log('themeConfig::: ', themeConfig);
     const { components, token } = themeConfig;
     Object.keys(themeConfig).forEach(key => {
       storage.set(key, themeConfig[key]);
-    });
+      if (key === 'algorithm') {
+        document.documentElement.setAttribute('data-theme', themeConfig.algorithm || 'defaultAlgorithm');
+      }
 
+      if (key === 'locale') {
+        document.documentElement.setAttribute('data-locale', themeConfig.locale || 'en-US');
+      }
+    });
     setState(preState => {
       // 特殊化处理,切token数据需初始化数据做基础
       storage.set('token', { ...preState.token, ...token });
@@ -74,7 +102,7 @@ const Provider: React.FC<IThemeProvider> = props => {
       value={{
         token: { ...tokenConfig, ...token },
         components: { ...componentsConfig, ...components },
-        handleThemeOrLocale,
+        updateStudio,
         algorithm,
         locale: locale,
         isLight,

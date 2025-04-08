@@ -8,10 +8,10 @@ import SettingParcel from '../../components/setting-parcel';
 const International: React.FunctionComponent = () => {
   const { store, updateStore } = useContext();
   const { locale = 'en-US' } = store;
-  const { handleThemeOrLocale } = useStudioProvier();
+  const { updateStudio } = useStudioProvier();
 
   const handleLocales = (value: ILocaleSwitchProps['value']) => {
-    handleThemeOrLocale({ locale: value });
+    updateStudio({ locale: value });
     updateStore(draft => {
       draft.locale = value;
     });
