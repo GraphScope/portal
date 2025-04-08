@@ -17,7 +17,7 @@ interface ILayoutProps {
   style?: React.CSSProperties;
   collapsedConfig?: Record<string, boolean>;
   onMenuClick?: (currentNav: string) => void;
-  headerSlot: React.ReactNode | null;
+  headerSlot?: React.ReactNode | null;
 }
 
 const Layout: React.FunctionComponent<ILayoutProps> = props => {
