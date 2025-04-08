@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Typography,
   Button,
@@ -13,15 +13,11 @@ import {
   Divider,
   Tooltip,
   Radio,
-} from "antd";
-import {
-  PlayCircleOutlined,
-  ClearOutlined,
-  DownloadOutlined,
-  CopyOutlined,
-} from "@ant-design/icons";
-import type { SelectProps } from "antd";
-import duckDBService from "../services/duckdbService";
+} from 'antd';
+import { PlayCircleOutlined, ClearOutlined, DownloadOutlined, CopyOutlined } from '@ant-design/icons';
+import type { SelectProps } from 'antd';
+import duckDBService from '../services/duckdbService';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 const { Title, Paragraph, Text } = Typography;
 const { TabPane } = Tabs;
@@ -50,19 +46,20 @@ interface Field {
   type: string;
 }
 
-type ExportFormat = "csv" | "json" | "tsv";
+type ExportFormat = 'csv' | 'json' | 'tsv';
 
 const QueryPage: React.FC = () => {
+  const intl = useIntl();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [selectedDataset, setSelectedDataset] = useState<string | null>(null);
-  const [query, setQuery] = useState<string>("");
+  const [query, setQuery] = useState<string>('');
   const [queryResult, setQueryResult] = useState<QueryResult[] | null>(null);
   const [columns, setColumns] = useState<Column[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [executing, setExecuting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [exportFormat, setExportFormat] = useState<ExportFormat>("csv");
-  const [activeTab, setActiveTab] = useState<string>("query");
+  const [exportFormat, setExportFormat] = useState<ExportFormat>('csv');
+  const [activeTab, setActiveTab] = useState<string>('query');
   const textAreaRef = useRef<any>(null);
 
   useEffect(() => {
@@ -75,7 +72,7 @@ const QueryPage: React.FC = () => {
       const allDatasets = await duckDBService.getAllDatasets();
       setDatasets(allDatasets);
     } catch (error) {
-      message.error("加载数据集失败: " + (error as Error).message);
+      message.error(<FormattedMessage id="Failed to load datasets" />);
     } finally {
       setLoading(false);
     }
@@ -92,9 +89,9 @@ const QueryPage: React.FC = () => {
       // 设置默认查询
       setQuery(`SELECT * FROM "${datasetName}" LIMIT 100`);
 
-      message.success(`数据集 "${datasetName}" 已加载`);
+      message.success(<FormattedMessage id="Dataset '{name}' loaded" values={{ name: datasetName }} />);
     } catch (error) {
-      message.error("加载数据集失败: " + (error as Error).message);
+      message.error(<FormattedMessage id="Failed to load dataset" />);
     } finally {
       setLoading(false);
     }
@@ -102,14 +99,14 @@ const QueryPage: React.FC = () => {
 
   const executeQuery = async (): Promise<void> => {
     if (!query.trim()) {
-      message.warning("请输入查询语句");
+      message.warning(<FormattedMessage id="Please enter a query" />);
       return;
     }
 
     try {
       setExecuting(true);
       setError(null);
-      setActiveTab("results");
+      setActiveTab('results');
 
       const result = await duckDBService.executeQuery(query);
 
@@ -123,7 +120,7 @@ const QueryPage: React.FC = () => {
         key: field.name,
         ellipsis: true,
         render: (text: any) => {
-          if (text === null) return <span style={{ color: "#999" }}>NULL</span>;
+          if (text === null) return <span style={{ color: '#999' }}>NULL</span>;
           return String(text);
         },
       }));
@@ -131,17 +128,21 @@ const QueryPage: React.FC = () => {
       setColumns(columns);
       setQueryResult(data);
 
-      message.success(`查询成功，返回 ${data.length} 条记录`);
+      message.success(
+        <FormattedMessage id="Query successful, {count} records returned" values={{ count: data.length }} />,
+      );
     } catch (error) {
       setError((error as Error).message);
-      message.error("查询执行失败: " + (error as Error).message);
+      message.error(
+        <FormattedMessage id="Query execution failed: {message}" values={{ message: (error as Error).message }} />,
+      );
     } finally {
       setExecuting(false);
     }
   };
 
   const clearQuery = (): void => {
-    setQuery("");
+    setQuery('');
     if (textAreaRef.current) {
       textAreaRef.current.focus();
     }
@@ -150,59 +151,59 @@ const QueryPage: React.FC = () => {
   const copyToClipboard = (text: string): void => {
     navigator.clipboard.writeText(text).then(
       () => {
-        message.success("已复制到剪贴板");
+        message.success(<FormattedMessage id="Copied to clipboard" />);
       },
       () => {
-        message.error("复制失败");
-      }
+        message.error(<FormattedMessage id="Copy failed" />);
+      },
     );
   };
 
   const exportData = (): void => {
     if (!queryResult || queryResult.length === 0) {
-      message.warning("没有数据可导出");
+      message.warning(<FormattedMessage id="No data to export" />);
       return;
     }
 
     try {
-      let content = "";
-      const header = columns.map((col) => col.title);
+      let content = '';
+      const header = columns.map(col => col.title);
 
-      if (exportFormat === "csv") {
+      if (exportFormat === 'csv') {
         // CSV 格式
         content = [
-          header.join(","),
-          ...queryResult.map((row) =>
+          header.join(','),
+          ...queryResult.map(row =>
             header
-              .map((key) => {
+              .map(key => {
                 const value = row[key];
-                return value === null ? "" : String(value).replace(/,/g, ";");
+                return value === null ? '' : String(value).replace(/,/g, ';');
               })
-              .join(",")
+              .join(','),
           ),
-        ].join("\n");
-      } else if (exportFormat === "json") {
+        ].join('\n');
+      } else if (exportFormat === 'json') {
         // JSON 格式
         content = JSON.stringify(queryResult, null, 2);
-      } else if (exportFormat === "tsv") {
+      } else if (exportFormat === 'tsv') {
         // TSV 格式
         content = [
-          header.join("\t"),
-          ...queryResult.map((row) =>
+          header.join('\t'),
+          ...queryResult.map(row =>
             header
-              .map((key) => {
+              .map(key => {
                 const value = row[key];
-                return value === null ? "" : String(value).replace(/\t/g, " ");
+                return value === null ? '' : String(value).replace(/\t/g, ' ');
               })
-              .join("\t")
+              .join('\t'),
           ),
-        ].join("\n");
+        ].join('\n');
       }
 
       // 创建下载链接
-      const blob = new Blob([content], { type: "text/plain" });
+      const blob = new Blob([content], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
+      const a = document.createElement('a');
       a.href = url;
       a.download = `query-result.${exportFormat}`;
       document.body.appendChild(a);
@@ -210,34 +211,39 @@ const QueryPage: React.FC = () => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      message.success(`数据已导出为 ${exportFormat.toUpperCase()} 格式`);
+      message.success(
+        <FormattedMessage id="Data exported as {format} format" values={{ format: exportFormat.toUpperCase() }} />,
+      );
     } catch (error) {
-      message.error("导出失败: " + (error as Error).message);
+      message.error(<FormattedMessage id="Export failed" />);
     }
   };
 
   return (
     <div>
-      <Title level={2}>数据查询</Title>
+      <Title level={2}>
+        <FormattedMessage id="SQL Query" />
+      </Title>
       <Paragraph>
-        在这里您可以使用 SQL
-        查询您的数据集。先选择一个数据集，然后编写并执行查询。
+        <FormattedMessage id="Execute SQL queries on your datasets" />
       </Paragraph>
 
       <Card>
         <div style={{ marginBottom: 16 }}>
-          <Space align='center' style={{ marginBottom: 16 }}>
-            <Text strong>选择数据集:</Text>
+          <Space align="center" style={{ marginBottom: 16 }}>
+            <Text strong>
+              <FormattedMessage id="Select Dataset" />:
+            </Text>
             <Select
-              placeholder='选择要查询的数据集'
+              placeholder={intl.formatMessage({ id: 'Select a dataset to query' })}
               style={{ width: 240 }}
               onChange={handleSelectDataset}
               loading={loading}
               disabled={loading}
             >
-              {datasets.map((dataset) => (
+              {datasets.map(dataset => (
                 <Option key={dataset.name} value={dataset.name}>
-                  {dataset.name} ({dataset.rowCount.toLocaleString()} 行)
+                  {dataset.name} ({dataset.rowCount.toLocaleString()} <FormattedMessage id="rows" />)
                 </Option>
               ))}
             </Select>
@@ -246,72 +252,68 @@ const QueryPage: React.FC = () => {
           <Divider />
 
           <Tabs activeKey={activeTab} onChange={setActiveTab}>
-            <TabPane tab='查询' key='query'>
+            <TabPane tab={intl.formatMessage({ id: 'Query' })} key="query">
               <div style={{ marginBottom: 16 }}>
                 <TextArea
-                  ref={textAreaRef}
                   value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder='输入 SQL 查询语句...'
+                  onChange={e => setQuery(e.target.value)}
+                  placeholder={intl.formatMessage({ id: 'Enter your SQL query here' })}
                   autoSize={{ minRows: 6, maxRows: 12 }}
-                  disabled={!selectedDataset || executing}
-                  className='query-editor'
+                  style={{ fontFamily: 'monospace' }}
+                  ref={textAreaRef}
                 />
               </div>
 
               <Space>
                 <Button
-                  type='primary'
+                  type="primary"
                   icon={<PlayCircleOutlined />}
                   onClick={executeQuery}
                   loading={executing}
-                  disabled={!selectedDataset || !query.trim()}
+                  disabled={!selectedDataset}
                 >
-                  执行查询
+                  <FormattedMessage id="Execute Query" />
                 </Button>
-                <Button
-                  icon={<ClearOutlined />}
-                  onClick={clearQuery}
-                  disabled={!query || executing}
-                >
-                  清除
+                <Button icon={<ClearOutlined />} onClick={clearQuery} disabled={!query}>
+                  <FormattedMessage id="Clear" />
                 </Button>
               </Space>
-
-              {error && (
-                <div style={{ marginTop: 16, color: "red" }}>
-                  <Text type='danger' strong>
-                    错误:
-                  </Text>
-                  <pre
-                    style={{
-                      background: "#fff2f0",
-                      padding: 12,
-                      borderRadius: 4,
-                      border: "1px solid #ffccc7",
-                    }}
-                  >
-                    {error}
-                  </pre>
-                </div>
-              )}
             </TabPane>
 
-            <TabPane tab='结果' key='results'>
-              {queryResult && (
-                <>
+            <TabPane tab={intl.formatMessage({ id: 'Results' })} key="results">
+              {error ? (
+                <div className="error-message">
+                  <Title level={4} style={{ color: 'red' }}>
+                    <FormattedMessage id="Error executing query" />:
+                  </Title>
+                  <pre>{error}</pre>
+                </div>
+              ) : queryResult && queryResult.length > 0 ? (
+                <div>
                   <div style={{ marginBottom: 16 }}>
                     <Space>
+                      <Text strong>
+                        <FormattedMessage id="Export as" />:
+                      </Text>
                       <Radio.Group
                         value={exportFormat}
-                        onChange={(e) => setExportFormat(e.target.value)}
+                        onChange={e => setExportFormat(e.target.value)}
+                        buttonStyle="solid"
+                        size="small"
                       >
-                        <Radio.Button value='csv'>CSV</Radio.Button>
-                        <Radio.Button value='json'>JSON</Radio.Button>
-                        <Radio.Button value='tsv'>TSV</Radio.Button>
+                        <Radio.Button value="csv">CSV</Radio.Button>
+                        <Radio.Button value="json">JSON</Radio.Button>
+                        <Radio.Button value="tsv">TSV</Radio.Button>
                       </Radio.Group>
-                      <Button icon={<DownloadOutlined />} onClick={exportData}>
-                        导出数据
+                      <Button icon={<DownloadOutlined />} onClick={exportData} size="small">
+                        <FormattedMessage id="Export" />
+                      </Button>
+                      <Button
+                        icon={<CopyOutlined />}
+                        onClick={() => copyToClipboard(JSON.stringify(queryResult, null, 2))}
+                        size="small"
+                      >
+                        <FormattedMessage id="Copy as JSON" />
                       </Button>
                     </Space>
                   </div>
@@ -319,10 +321,32 @@ const QueryPage: React.FC = () => {
                   <Table
                     dataSource={queryResult}
                     columns={columns}
-                    scroll={{ x: "max-content" }}
-                    pagination={{ pageSize: 10 }}
+                    rowKey={(record, index) => `${index}`}
+                    pagination={{
+                      pageSize: 10,
+                      showSizeChanger: true,
+                      pageSizeOptions: ['10', '20', '50', '100'],
+                    }}
+                    scroll={{ x: 'max-content' }}
+                    size="small"
+                    bordered
                   />
-                </>
+
+                  <div style={{ marginTop: 16 }}>
+                    <Text>
+                      <FormattedMessage id="Showing" /> {queryResult.length} <FormattedMessage id="records" />
+                    </Text>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ textAlign: 'center', padding: '20px 0' }}>
+                  <Paragraph>
+                    <FormattedMessage id="No results to display" />
+                  </Paragraph>
+                  <Paragraph>
+                    <FormattedMessage id="Execute a query to see results" />
+                  </Paragraph>
+                </div>
               )}
             </TabPane>
           </Tabs>

@@ -18,6 +18,7 @@ import {
 import { UploadOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd/es/upload/interface';
 import duckDBService from '../services/duckdbService';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 const { Title, Paragraph } = Typography;
 const { TabPane } = Tabs;
@@ -41,6 +42,7 @@ interface Field {
 }
 
 const DatasetPage: React.FC = () => {
+  const intl = useIntl();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [uploadModalVisible, setUploadModalVisible] = useState<boolean>(false);
@@ -61,7 +63,7 @@ const DatasetPage: React.FC = () => {
       const allDatasets = await duckDBService.getAllDatasets();
       setDatasets(allDatasets);
     } catch (error) {
-      message.error('加载数据集失败: ' + (error as Error).message);
+      message.error(<FormattedMessage id="Failed to load datasets" />);
     } finally {
       setLoading(false);
     }
@@ -69,7 +71,7 @@ const DatasetPage: React.FC = () => {
 
   const handleUpload = async (values: { name: string; description: string }): Promise<void> => {
     if (!uploadFile) {
-      message.error('请选择要上传的 CSV 文件');
+      message.error(<FormattedMessage id="Please select a CSV file to upload" />);
       return;
     }
 
@@ -77,13 +79,13 @@ const DatasetPage: React.FC = () => {
       setLoading(true);
 
       await duckDBService.registerDataset(values.name, uploadFile, values.description);
-      message.success('数据集上传成功');
+      message.success(<FormattedMessage id="Dataset uploaded successfully" />);
       setUploadModalVisible(false);
       form.resetFields();
       setUploadFile(null);
       await loadDatasets();
     } catch (error) {
-      message.error('上传失败: ' + (error as Error).message);
+      message.error(<FormattedMessage id="Upload failed" />);
     } finally {
       setLoading(false);
     }
@@ -93,10 +95,10 @@ const DatasetPage: React.FC = () => {
     try {
       setLoading(true);
       await duckDBService.deleteDataset(name);
-      message.success('数据集删除成功');
+      message.success(<FormattedMessage id="Dataset deleted successfully" />);
       await loadDatasets();
     } catch (error) {
-      message.error('删除失败: ' + (error as Error).message);
+      message.error(<FormattedMessage id="Delete failed" />);
     } finally {
       setLoading(false);
     }
@@ -127,7 +129,7 @@ const DatasetPage: React.FC = () => {
       setPreviewData(data);
       setPreviewModalVisible(true);
     } catch (error) {
-      message.error('预览数据失败: ' + (error as Error).message);
+      message.error(<FormattedMessage id="Failed to preview data" />);
     } finally {
       setLoading(false);
     }
@@ -135,29 +137,29 @@ const DatasetPage: React.FC = () => {
 
   const columns = [
     {
-      title: '数据集名称',
+      title: <FormattedMessage id="Dataset Name" />,
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: '描述',
+      title: <FormattedMessage id="Description" />,
       dataIndex: 'description',
       key: 'description',
       ellipsis: true,
     },
     {
-      title: '文件名',
+      title: <FormattedMessage id="File Name" />,
       dataIndex: 'fileName',
       key: 'fileName',
     },
     {
-      title: '记录数',
+      title: <FormattedMessage id="Records" />,
       dataIndex: 'rowCount',
       key: 'rowCount',
       render: (text: number) => text.toLocaleString(),
     },
     {
-      title: '大小',
+      title: <FormattedMessage id="Size" />,
       dataIndex: 'size',
       key: 'size',
       render: (size: number) => {
@@ -171,25 +173,25 @@ const DatasetPage: React.FC = () => {
       },
     },
     {
-      title: '添加日期',
+      title: <FormattedMessage id="Last Modified" />,
       dataIndex: 'dateAdded',
       key: 'dateAdded',
       render: (date: string) => new Date(date).toLocaleString(),
     },
     {
-      title: '操作',
+      title: <FormattedMessage id="Actions" />,
       key: 'action',
       render: (_: any, record: Dataset) => (
         <Space size="small">
-          <Tooltip title="预览数据">
+          <Tooltip title={<FormattedMessage id="Preview Data" />}>
             <Button icon={<EyeOutlined />} onClick={() => handlePreview(record)} size="small" type="text" />
           </Tooltip>
-          <Tooltip title="删除数据集">
+          <Tooltip title={<FormattedMessage id="Delete Dataset" />}>
             <Popconfirm
-              title="确定要删除此数据集吗？"
+              title={<FormattedMessage id="Are you sure you want to delete this dataset?" />}
               onConfirm={() => handleDelete(record.name)}
-              okText="是"
-              cancelText="否"
+              okText={<FormattedMessage id="Yes" />}
+              cancelText={<FormattedMessage id="No" />}
             >
               <Button icon={<DeleteOutlined />} danger size="small" type="text" />
             </Popconfirm>
@@ -201,96 +203,159 @@ const DatasetPage: React.FC = () => {
 
   return (
     <div>
-      <Title level={2}>数据集管理</Title>
-      <Paragraph>在这里您可以上传、管理和删除您的 CSV 数据集。所有数据都存储在您的浏览器中。</Paragraph>
+      <Title level={2}>
+        <FormattedMessage id="Your Datasets" />
+      </Title>
+      <Paragraph>
+        <FormattedMessage id="Manage your CSV datasets here" />
+      </Paragraph>
 
       <div style={{ marginBottom: 16 }}>
         <Button type="primary" icon={<UploadOutlined />} onClick={() => setUploadModalVisible(true)}>
-          上传新数据集
+          <FormattedMessage id="Upload New Dataset" />
         </Button>
       </div>
 
       <Card>
         <Spin spinning={loading}>
-          <Table
-            dataSource={datasets}
-            columns={columns}
-            rowKey="name"
-            pagination={{
-              pageSize: 10,
-              showSizeChanger: false,
-              hideOnSinglePage: true,
-              position: ['bottomCenter'],
-            }}
-            scroll={{ x: 'max-content' }}
-            size="middle"
-            bordered={false}
-          />
+          {datasets.length > 0 ? (
+            <Table
+              dataSource={datasets}
+              columns={columns}
+              rowKey="name"
+              pagination={{
+                pageSize: 10,
+                showSizeChanger: false,
+                hideOnSinglePage: true,
+                position: ['bottomCenter'],
+              }}
+              scroll={{ x: 'max-content' }}
+              size="middle"
+              bordered={false}
+            />
+          ) : (
+            <div style={{ textAlign: 'center', padding: '20px 0' }}>
+              <Paragraph>
+                <FormattedMessage id="No datasets found" />
+              </Paragraph>
+              <Paragraph>
+                <FormattedMessage id="Please upload a dataset to get started" />
+              </Paragraph>
+            </div>
+          )}
         </Spin>
       </Card>
 
-      {/* 上传数据集对话框 */}
-      <Modal title="上传新数据集" open={uploadModalVisible} onCancel={() => setUploadModalVisible(false)} footer={null}>
+      {/* Upload Dataset Dialog */}
+      <Modal
+        title={<FormattedMessage id="Upload New Dataset" />}
+        open={uploadModalVisible}
+        onCancel={() => setUploadModalVisible(false)}
+        footer={null}
+      >
         <Form form={form} layout="vertical" onFinish={handleUpload}>
           <Form.Item
             name="name"
-            label="数据集名称"
+            label={<FormattedMessage id="Dataset Name" />}
             rules={[
-              { required: true, message: '请输入数据集名称' },
+              {
+                required: true,
+                message: <FormattedMessage id="Please enter a dataset name" />,
+              },
               {
                 pattern: /^[a-zA-Z0-9_]+$/,
-                message: '只允许字母、数字和下划线',
+                message: <FormattedMessage id="Only letters, numbers and underscores are allowed" />,
               },
             ]}
           >
-            <Input placeholder="输入唯一的数据集名称" />
+            <Input placeholder={intl.formatMessage({ id: 'Enter a unique name for your dataset' })} />
           </Form.Item>
 
-          <Form.Item name="description" label="描述">
-            <Input.TextArea placeholder="输入数据集描述（可选）" />
+          <Form.Item name="description" label={<FormattedMessage id="Description" />}>
+            <Input.TextArea placeholder={intl.formatMessage({ id: 'Enter dataset description (optional)' })} />
           </Form.Item>
 
-          <Form.Item label="CSV 文件" required>
+          <Form.Item
+            name="file"
+            label={<FormattedMessage id="Select CSV file" />}
+            rules={[
+              {
+                required: true,
+                message: <FormattedMessage id="Please select a CSV file" />,
+              },
+            ]}
+          >
             <Upload
+              accept=".csv"
               beforeUpload={file => {
                 setUploadFile(file);
                 return false;
               }}
+              fileList={
+                uploadFile ? [{ uid: '1', name: uploadFile.name, size: uploadFile.size, type: uploadFile.type }] : []
+              }
+              onRemove={() => setUploadFile(null)}
               maxCount={1}
             >
-              <Button icon={<UploadOutlined />}>选择文件</Button>
+              <Button icon={<UploadOutlined />}>
+                <FormattedMessage id="Select File" />
+              </Button>
             </Upload>
           </Form.Item>
 
-          <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading}>
-              上传
-            </Button>
+          <Form.Item style={{ marginBottom: 0 }}>
+            <Space>
+              <Button type="primary" htmlType="submit" disabled={!uploadFile}>
+                <FormattedMessage id="Upload" />
+              </Button>
+              <Button onClick={() => setUploadModalVisible(false)}>
+                <FormattedMessage id="Cancel" />
+              </Button>
+            </Space>
           </Form.Item>
         </Form>
       </Modal>
 
-      {/* 预览数据对话框 */}
+      {/* Preview Data Dialog */}
       <Modal
-        title={`预览数据: ${currentDataset?.name}`}
+        title={
+          currentDataset
+            ? intl.formatMessage({ id: 'Preview of' }) + `: ${currentDataset.name}`
+            : intl.formatMessage({ id: 'Preview' })
+        }
         open={previewModalVisible}
         onCancel={() => setPreviewModalVisible(false)}
-        width={800}
-        footer={null}
+        width="90%"
+        footer={[
+          <Button key="close" onClick={() => setPreviewModalVisible(false)}>
+            <FormattedMessage id="Close" />
+          </Button>,
+        ]}
       >
-        <Table
-          dataSource={previewData || []}
-          columns={previewColumns}
-          scroll={{ x: 'max-content' }}
-          pagination={{
-            pageSize: 10,
-            showSizeChanger: false,
-            hideOnSinglePage: true,
-            position: ['bottomCenter'],
-          }}
-          size="middle"
-          bordered={false}
-        />
+        <Spin spinning={loading}>
+          {previewData && previewData.length > 0 ? (
+            <Table
+              dataSource={previewData}
+              columns={previewColumns}
+              rowKey={(_, index) => `row-${index}`}
+              pagination={{
+                pageSize: 10,
+                showSizeChanger: false,
+                hideOnSinglePage: true,
+                position: ['bottomCenter'],
+              }}
+              scroll={{ x: 'max-content' }}
+              size="small"
+              bordered={false}
+            />
+          ) : (
+            <div style={{ textAlign: 'center', padding: '20px 0' }}>
+              <Paragraph>
+                <FormattedMessage id="No preview data available" />
+              </Paragraph>
+            </div>
+          )}
+        </Spin>
       </Modal>
     </div>
   );

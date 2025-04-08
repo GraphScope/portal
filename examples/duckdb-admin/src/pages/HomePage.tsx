@@ -1,60 +1,79 @@
-import React from "react";
-import { Typography, Card, Button, Row, Col } from "antd";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Typography, Card, Button, Row, Col } from 'antd';
+import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 
 const { Title, Paragraph } = Typography;
 
 const HomePage: React.FC = () => {
   return (
     <div>
-      <Title level={2}>欢迎使用 DuckDB CSV 查询工具</Title>
+      <Title level={2}>
+        <FormattedMessage id="Welcome to DuckDB CSV Query Tool" />
+      </Title>
       <Paragraph>
-        这是一个基于 DuckDB-WASM 的 CSV
-        数据查询工具，支持数据集管理和持久化存储。 您可以上传 CSV 文件，然后使用
-        SQL 查询您的数据。
+        <FormattedMessage id="This is a CSV data query tool based on DuckDB-WASM, supporting dataset management and persistent storage. You can upload CSV files and then query your data using SQL." />
       </Paragraph>
 
       <Row gutter={16} style={{ marginTop: 24 }}>
         <Col span={8}>
-          <Card title='管理数据集' style={{ height: "100%" }}>
+          <Card title={<FormattedMessage id="Dataset Manager" />} style={{ height: '100%' }}>
             <Paragraph>
-              上传、管理和删除您的 CSV 数据集。所有数据都存储在您的浏览器中。
+              <FormattedMessage id="Upload, manage and delete your CSV datasets. All data is stored in your browser." />
             </Paragraph>
-            <Button type='primary'>
-              <Link to='/datasets'>浏览数据集</Link>
+            <Button type="primary">
+              <Link to="/datasets">
+                <FormattedMessage id="Browse Datasets" />
+              </Link>
             </Button>
           </Card>
         </Col>
         <Col span={8}>
-          <Card title='查询数据' style={{ height: "100%" }}>
+          <Card title={<FormattedMessage id="Query Data" />} style={{ height: '100%' }}>
             <Paragraph>
-              使用 SQL 查询语句查询您的数据。支持 DuckDB 的所有 SQL 功能。
+              <FormattedMessage id="Query your data with SQL statements. Supports all SQL features of DuckDB." />
             </Paragraph>
-            <Button type='primary'>
-              <Link to='/query'>开始查询</Link>
+            <Button type="primary">
+              <Link to="/query">
+                <FormattedMessage id="Start Querying" />
+              </Link>
             </Button>
           </Card>
         </Col>
         <Col span={8}>
-          <Card title='关于' style={{ height: "100%" }}>
+          <Card title={<FormattedMessage id="About" />} style={{ height: '100%' }}>
             <Paragraph>
-              了解更多关于此工具的信息，包括使用的技术和功能。
+              <FormattedMessage id="Learn more about this tool, including technologies used and features." />
             </Paragraph>
-            <Button type='primary'>
-              <Link to='/about'>了解更多</Link>
+            <Button type="primary">
+              <Link to="/about">
+                <FormattedMessage id="Learn More" />
+              </Link>
             </Button>
           </Card>
         </Col>
       </Row>
 
       <Card style={{ marginTop: 24 }}>
-        <Title level={3}>快速入门</Title>
+        <Title level={3}>
+          <FormattedMessage id="Quick Start" />
+        </Title>
         <ol>
-          <li>前往"数据集"页面上传您的 CSV 文件</li>
-          <li>为数据集指定一个唯一的名称</li>
-          <li>转到"查询"页面，选择您的数据集</li>
-          <li>编写 SQL 查询并执行</li>
-          <li>查看结果并根据需要导出</li>
+          <li>
+            <FormattedMessage id="Go to the 'Datasets' page to upload your CSV file" />
+          </li>
+          <li>
+            <FormattedMessage id="Give your dataset a unique name" />
+          </li>
+          <li>
+            <FormattedMessage id="Go to the 'Query' page and select your dataset" />
+          </li>
+          <li>
+            <FormattedMessage id="Write SQL queries and execute them" />
+          </li>
+          <li>
+            <FormattedMessage id="View results and export as needed" />
+          </li>
         </ol>
       </Card>
     </div>
