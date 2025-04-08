@@ -3,11 +3,21 @@ export const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap');
 
   body {
-    font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Geist', -apple-system, BlinkSans, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f8fafc;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* 明暗主题基本颜色 - 与shadcn主题保持一致 */
+  body {
+    background-color: #ffffff;
     color: #0f172a;
+  }
+
+  body.dark {
+    background-color: #0f172a;
+    color: #f8fafc;
   }
 
   .app-container {
@@ -17,13 +27,17 @@ export const globalStyles = `
   }
 
   .header {
-    background-color: #1a1a1e;
+    background-color: #0f172a;
     color: white;
     padding: 16px 0;
     margin-bottom: 20px;
-    box-shadow:
-      0 1px 3px 0 rgba(0, 0, 0, 0.1),
-      0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    transition: background-color 0.3s ease;
+  }
+
+  .dark .header {
+    background-color: #0c1322;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
   }
 
   .header-content {
@@ -50,7 +64,7 @@ export const globalStyles = `
     color: white;
     text-decoration: none;
     padding: 6px 12px;
-    border-radius: 6px;
+    border-radius: 0.5rem;
     transition: background-color 0.2s;
     font-family: 'Geist', sans-serif;
     font-weight: 500;
@@ -61,23 +75,12 @@ export const globalStyles = `
     text-decoration: none;
   }
 
-  .card {
-    background: white;
-    border-radius: 8px;
-    box-shadow:
-      0 1px 3px 0 rgba(0, 0, 0, 0.1),
-      0 1px 2px 0 rgba(0, 0, 0, 0.06);
-    padding: 20px;
-    margin-bottom: 20px;
-    border: 1px solid #e2e8f0;
-  }
-
   .table-container {
     overflow-x: auto;
     max-height: 400px;
     overflow-y: auto;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    transition: border-color 0.3s ease;
   }
 
   table {
@@ -85,18 +88,11 @@ export const globalStyles = `
     border-collapse: collapse;
   }
 
-  th,
-  td {
+  th, td {
     padding: 12px 16px;
     text-align: left;
-    border-bottom: 1px solid #e2e8f0;
     font-family: 'Geist', sans-serif;
-  }
-
-  th {
-    background-color: #f8fafc;
-    font-weight: 500;
-    color: #0f172a;
+    transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease;
   }
 
   .query-editor {
@@ -104,21 +100,10 @@ export const globalStyles = `
     min-height: 120px;
     font-family: 'Geist Mono', monospace;
     padding: 12px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
+    border-radius: 0.5rem;
     margin-bottom: 16px;
     resize: vertical;
-    background-color: #ffffff;
-    color: #0f172a;
-    transition:
-      border-color 0.2s,
-      box-shadow 0.2s;
-  }
-
-  .query-editor:focus {
-    outline: none;
-    border-color: #1a1a1e;
-    box-shadow: 0 0 0 2px rgba(26, 26, 30, 0.2);
+    transition: border-color 0.2s, box-shadow 0.2s, background-color 0.3s ease, color 0.3s ease;
   }
 
   .button-group {
@@ -127,9 +112,41 @@ export const globalStyles = `
     margin-bottom: 16px;
   }
 
-  /* 为 Ant Design 组件添加 Geist 字体 */
-  .ant-btn, .ant-input, .ant-select, .ant-table, .ant-modal, .ant-form, .ant-card {
-    font-family: 'Geist', sans-serif;
+  /* 设置页面样式 */
+  .settings-card {
+    margin-bottom: 20px;
+  }
+
+  .setting-item {
+    margin-bottom: 24px;
+  }
+
+  .theme-switch {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* 链接样式 */
+  a {
+    color: #0f172a;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .dark a {
+    color: #f8fafc;
+  }
+
+  /* 平滑过渡效果 */
+  * {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
   }
 `;
 
