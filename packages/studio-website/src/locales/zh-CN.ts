@@ -265,7 +265,26 @@ export default {
   'Data Load Configuration': '数据载入配置',
   'Download Load Task Config': '下载数据导入任务的配置文件',
   "Click to load all label's data": '点击载入所有 label 的数据',
-  "Please click the button below to 「Create instances」": "请单击下面的按钮『创建图实例』",
-  "No available Coordinator service": "没有可用的协调服务",
-  "Start the local service by following the steps below and then refresh this web page": "按照以下步骤启动本地服务，然后刷新此网页",
+ 'Please click the button below to 「Create instances」': '请单击下面的按钮『创建图实例』',
+  'No available Coordinator service': '没有可用的协调服务',
+  'Start the local service by following the steps below and then refresh this web page':
+    '按照以下步骤启动本地服务，然后刷新此网页',
+  'Configure GraphScope engine address and set query page sidebar style':
+    '配置 GraphScope 引擎地址并且设置查询页面侧边栏样式',
+  'refers to the address of the GraphScope engine. If you have also started the GraphScope engine locally using Docker.':
+    '指定GraphScope引擎的地址。如果您还使用Docker在本地启动了GraphScope引擎',
+  'Configure theme colors and rounded corners': '配置主题颜色及圆角',
+  'Experimental Tools': '实验工具设置',
+  'Coordinator URL': '引擎地址',
+  'Explor is a tool that allows you to explore the graph data in a more visual way.':
+    'Explor是一个工具，它允许您以更直观的方式探索图形数据。',
+  Enable: 'Enable',
+  "Graphy'ourData": '图数据工具',
+  'Graphy is an end-to-end platform designed for extracting, visualizing, and analyzing large volumes of unstructured data. Without structured organization, valuable insights in such data often remain hidden.Graphy empowers users to extract predefined structures from unstructured data, organizing it into a graph format for enhanced visualization, analysis, and exploration.':
+    'Graphy 是一个端到端的平台，旨在从大量非结构化数据中提取、可视化和分析信息。如果没有结构化的组织，这些数据中的宝贵见解往往会被隐藏起来。Graphy 赋能用户从非结构化数据中提取预定义的结构，并将其组织成图格式，以增强数据的可视化、分析和探索能力。',
+  'An intuitive tool that transforms unstructured data into graph dataset.':
+    '一个直观的工具，能够将非结构化数据转换为图数据集，便于进一步分析和可视化。',
+  'Configure and enable experimental tools for advanced graph data exploration and analysis.':
+    '配置和启用用于高级图形数据探索和分析的实验工具。',
+  Graphy: 'Graphy',
 };

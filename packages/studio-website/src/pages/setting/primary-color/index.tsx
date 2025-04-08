@@ -6,13 +6,13 @@ import SettingParcel from '../../../components/setting-parcel';
 
 const { useToken } = theme;
 const PrimaryColor: React.FunctionComponent = () => {
-  const { handleThemeOrLocale } = useStudioProvier();
+  const { updateStudio } = useStudioProvier();
   const { token } = useToken();
   const { colorPrimary } = token;
 
   // Function to handle primary color change
   const handlePrimaryColor = (color: string) => {
-    handleThemeOrLocale({ token: { colorPrimary: color } });
+    updateStudio({ token: { colorPrimary: color } });
   };
   return (
     <SettingParcel title="Primary color" text="Set the primary color">

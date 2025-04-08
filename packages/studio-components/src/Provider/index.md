@@ -10,11 +10,11 @@ import { useStudioProvier } from './useThemeConfigProvider.tsx';
 import { components, token } from './const.ts';
 /** 修改主题色 */
 const ToogleButton = () => {
-  const { handleThemeOrLocale } = useStudioProvier();
+  const { updateStudio } = useStudioProvier();
   return (
     <Button
       onClick={() => {
-        handleThemeOrLocale({
+        updateStudio({
           components,
           token,
         });

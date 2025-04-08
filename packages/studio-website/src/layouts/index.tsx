@@ -1,20 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import { useContext, IGraph } from './useContext';
-
-import { Layout, Utils, useCustomToken, GlobalSpin } from '@graphscope/studio-components';
+import { Layout, Utils, GlobalSpin, useDynamicStyle, useStudioProvier } from '@graphscope/studio-components';
 import { DeploymentApiFactory } from '@graphscope/studio-server';
-import { SIDE_MENU, SETTING_MENU } from './const';
-
+import { SETTING_MENU } from './const';
 import { listGraphs } from '../pages/instance/lists/service';
 import { getSlots } from '../slots';
-
+import SvgEnToZh from './SvgEnToZh';
+import SvgZhToEn from './SvgZhToEn';
+import { Button, Tooltip } from 'antd';
+import { SunOutlined, MoonOutlined } from '@ant-design/icons';
 export default function StudioLayout() {
   const { store, updateStore } = useContext();
   const { graphId, draftId } = store;
+  const { isLight, locale = 'en-US', updateStudio } = useStudioProvier();
   const [state, setState] = useState({
     isReady: false,
     engineType: 'interactive',
   });
+
+  useDynamicStyle(
+    `
+    @font-face {
+      font-family: 'Geist Sans';
+      src: url('https://g.alicdn.com/GraphScope/portal-assets/0.0.1/fonts/Geist-otf/Geist-Light.otf');
+      font-weight: 400 500 600 700 800 900;
+      font-style: normal;
+      font-display: swap;
+    }
+    `,
+    'layoutFontFace',
+  );
+  const changeTheme = () => {
+    const algorithm = isLight ? 'darkAlgorithm' : 'defaultAlgorithm';
+    updateStudio({
+      algorithm,
+    });
+  };
+
+  const changeLocale = () => {
+    const curLocale = locale === 'en-US' ? 'zh-CN' : 'en-US';
+    updateStudio({
+      locale: curLocale,
+    });
+  };
   const depolymentInfo = async () => {
     return await DeploymentApiFactory(undefined, window.COORDINATOR_URL)
       .getDeploymentInfo()
@@ -84,6 +112,7 @@ export default function StudioLayout() {
       Utils.storage.set('query_initiation_service', query_initiation_service);
     }
   };
+
   useEffect(() => {
     (async () => {
       setCoordinator();
@@ -144,6 +173,20 @@ export default function StudioLayout() {
           '/querying': true,
           '/explore': true,
         }}
+        headerSlot={
+          <>
+            <Tooltip title={locale === 'en-US' ? '切换为中文' : '切换为英文'}>
+              <Button type="text" onClick={changeLocale} icon={locale === 'en-US' ? <SvgEnToZh /> : <SvgZhToEn />}>
+                {/* 切换主题 */}
+              </Button>
+            </Tooltip>
+            <Tooltip title={isLight ? '切换为暗色主题' : '切换为亮色主题'}>
+              <Button type="text" onClick={changeTheme} icon={isLight ? <MoonOutlined /> : <SunOutlined />}>
+                {/* 切换主题 */}
+              </Button>
+            </Tooltip>
+          </>
+        }
       />
     );
   }

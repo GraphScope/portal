@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import Section from '../Section';
 import Header from './header';
 import Sidebar from './sidebar';
-import { Button, Space, theme } from 'antd';
+import { Button, Space, theme, Tooltip } from 'antd';
 import { ReadOutlined, GithubOutlined } from '@ant-design/icons';
 import { getCurrentNav } from '../Utils';
 
@@ -17,6 +17,7 @@ interface ILayoutProps {
   style?: React.CSSProperties;
   collapsedConfig?: Record<string, boolean>;
   onMenuClick?: (currentNav: string) => void;
+  headerSlot: React.ReactNode | null;
 }
 
 const Layout: React.FunctionComponent<ILayoutProps> = props => {
@@ -27,7 +28,9 @@ const Layout: React.FunctionComponent<ILayoutProps> = props => {
     style = {},
     collapsedConfig = {},
     onMenuClick,
+    headerSlot=null,
   } = props;
+
   const { width = 220, collapsedWidth = 56 } = sideStyle;
   const activeKey = getCurrentNav();
   const { token } = theme.useToken();
@@ -61,20 +64,25 @@ const Layout: React.FunctionComponent<ILayoutProps> = props => {
           <div id="header-breadcrumb"></div>
         </Space>
         <Space>
-          <Button
-            onClick={() => {
-              window.open('https://graphscope.io/', '_blank');
-            }}
-            icon={<ReadOutlined />}
-            type="text"
-          ></Button>
-          <Button
-            onClick={() => {
-              window.open(github, '_blank');
-            }}
-            icon={<GithubOutlined />}
-            type="text"
-          ></Button>
+          {headerSlot}
+          <Tooltip title="访问 GraphScope 官网">
+            <Button
+              onClick={() => {
+                window.open('https://graphscope.io/', '_blank');
+              }}
+              icon={<ReadOutlined />}
+              type="text"
+            ></Button>
+          </Tooltip>
+          <Tooltip title="GraphScope Github">
+            <Button
+              onClick={() => {
+                window.open(github, '_blank');
+              }}
+              icon={<GithubOutlined />}
+              type="text"
+            ></Button>
+          </Tooltip>
         </Space>
       </Header>
       <Outlet />

@@ -8,12 +8,12 @@ export interface ThemeProviderType extends IColorStore {
   isLight?: boolean;
 }
 export interface IContainerContext extends ThemeProviderType {
-  handleThemeOrLocale: (value: ThemeProviderType) => void;
+  updateStudio: (value: ThemeProviderType) => void;
 }
 export const ContainerContext = createContext<IContainerContext>({
   components: {},
   token: {},
-  handleThemeOrLocale: ({}) => {},
+  updateStudio: ({}) => {},
   locale: 'en-US',
   algorithm: 'defaultAlgorithm',
   isLight: false,
