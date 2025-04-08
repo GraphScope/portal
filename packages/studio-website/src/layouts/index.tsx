@@ -22,7 +22,7 @@ export default function StudioLayout() {
     `
     @font-face {
       font-family: 'Geist Sans';
-      src: url('https://g.alicdn.com/GraphScope/portal-assets/0.0.1/fonts/Geist-otf/Geist-Light.otf');
+      src: url('https://g.alicdn.com/GraphScope/portal-assets/0.0.2/fonts/Geist-ice.woff2') format('woff2');
       font-weight: 400 500 600 700 800 900;
       font-style: normal;
       font-display: swap;
