@@ -7,7 +7,6 @@ import SaveSelected from './SaveSelected';
 import { getTableColumns } from './AdjustColumns';
 import AdjustColumns from './AdjustColumns';
 import SelectAll from './SelectAll';
-import { Utils } from '@graphscope/studio-components';
 interface ITableViewProps {}
 
 const useRowSelection = () => {
@@ -61,8 +60,18 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
   const { selectedRowKeys, onSelectChange } = useRowSelection();
   /** filter cloumns */
   const [state, setState] = useState({
-    columnIds: (Utils.storage.get('explore_table_view_column_ids') as string[]) || columns.map(item => item.key),
+    columnIds: columns.map(item => item.key),
   });
+  useEffect(() => {
+    const value = columns.map(item => item.key);
+    setState(preState => {
+      return {
+        ...preState,
+        columnIds: value,
+      };
+    });
+  }, [source.nodes]);
+  
   const { columnIds } = state;
   const tableColumns = getTableColumns(columnIds);
   const handleChangeColumns = value => {
@@ -83,7 +92,7 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
         </Typography.Text>
         <Space size={0}>
           <SelectAll />
-          <AdjustColumns onChange={handleChangeColumns} />
+          <AdjustColumns onChange={handleChangeColumns} columnKeys={columnIds}/>
           <SaveSelected />
         </Space>
       </Flex>
