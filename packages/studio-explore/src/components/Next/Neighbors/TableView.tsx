@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, theme, Table, Typography, Button, Space, Tooltip } from 'antd';
+import { Flex, Table, Typography, Button, Space, Tooltip } from 'antd';
 
 import { getTable } from './getTableData';
-
-import type { TableColumnsType, TableProps } from 'antd';
+import type {  TableProps } from 'antd';
 import { NodeData } from '@graphscope/studio-graph';
 import { PlayCircleOutlined } from '@ant-design/icons';
-import { FullScreen, Utils } from '@graphscope/studio-components';
+import { FullScreen } from '@graphscope/studio-components';
 import AdjustColumns, { getTableColumns } from '../../TableView/AdjustColumns';
-import SelectAll from '../../TableView/SelectAll';
 
 export interface IPropertiesPanelProps {
   items: NodeData[];
@@ -21,13 +19,10 @@ export interface IPropertiesPanelProps {
 const TableView: React.FunctionComponent<IPropertiesPanelProps> = props => {
   const { items, counts, name, onQuery, containerRef } = props;
   const { dataSource, columns } = getTable([...items]);
-  const defaultSelectedRowKeys = dataSource.map(item => item.key);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  // const containerRef = React.useRef<HTMLDivElement>(null);
 
-  /** filter cloumns */
   const [state, setState] = useState({
-    columnIds: (Utils.storage.get('explore_table_view_column_ids') as string[]) || columns.map(item => item.key),
+    columnIds: columns.map(item => item.key),
   });
   const { columnIds } = state;
   const tableColumns = getTableColumns(columnIds);
@@ -39,13 +34,17 @@ const TableView: React.FunctionComponent<IPropertiesPanelProps> = props => {
       };
     });
   };
-  /** filter cloumns end */
 
-  // useEffect(() => {
-  //   const { dataSource } = getTable([...items]);
-  //   const defaultSelectedRowKeys = dataSource.map(item => item.key);
-  //   setSelectedRowKeys(defaultSelectedRowKeys);
-  // }, [items]);
+  useEffect(() => {
+    const { columns } = getTable([...items]);
+    const value = columns.map(item => item.key);
+    setState(preState => {
+      return {
+        ...preState,
+        columnIds: value,
+      };
+    });
+  }, [name,items]);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -69,7 +68,6 @@ const TableView: React.FunctionComponent<IPropertiesPanelProps> = props => {
         width: '100%',
         maxHeight: '450px',
       }}
-      // ref={containerRef}
     >
       <Flex justify="space-between" align="center" style={{ paddingBottom: '6px' }}>
         <Typography.Text type="secondary">
@@ -79,8 +77,7 @@ const TableView: React.FunctionComponent<IPropertiesPanelProps> = props => {
           <Tooltip title="Appand selected items to the graph">
             <Button icon={<PlayCircleOutlined />} type="text" onClick={handleClick}></Button>
           </Tooltip>
-          {/* <SelectAll /> */}
-          <AdjustColumns onChange={handleChangeColumns} />
+          <AdjustColumns onChange={handleChangeColumns} columnKeys={columnIds}/>
           <FullScreen containerRef={containerRef} />
         </Space>
       </Flex>
@@ -91,7 +88,6 @@ const TableView: React.FunctionComponent<IPropertiesPanelProps> = props => {
           simple: true,
           size: 'small',
         }}
-        // pagination={false}
         dataSource={dataSource}
         columns={tableColumns}
         bordered
