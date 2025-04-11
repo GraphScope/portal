@@ -16,6 +16,9 @@ import {
   Tag,
   Alert,
   Badge,
+  Row,
+  Col,
+  Layout,
 } from 'antd';
 import {
   PlayCircleOutlined,
@@ -32,6 +35,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 const { Title, Paragraph, Text } = Typography;
 const { TextArea } = Input;
+const { Content } = Layout;
 
 // 类型定义
 interface Dataset {
@@ -115,13 +119,9 @@ const DatasetSelector = ({
   const intl = useIntl();
 
   return (
-    <Card style={{ marginBottom: 16 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-        {/* 数据集选择器 */}
-        <div style={{ minWidth: '250px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>
-            <FormattedMessage id="Dataset" />:
-          </label>
+    <Card style={{ marginBottom: 12 }} size="small" bodyStyle={{ padding: '16px' }}>
+      <Row align="middle" gutter={16}>
+        <Col span={6}>
           <Select
             style={{ width: '100%' }}
             placeholder={intl.formatMessage({ id: 'Select a dataset' })}
@@ -132,35 +132,46 @@ const DatasetSelector = ({
           >
             {datasets.map(dataset => (
               <Select.Option key={dataset.id} value={dataset.id}>
-                <span>
-                  <DatabaseOutlined /> {dataset.name}
-                  {dataset.tables.length > 0 && (
-                    <Badge count={dataset.tables.length} size="small" style={{ marginLeft: '8px' }} />
-                  )}
-                </span>
+                <Space>
+                  <DatabaseOutlined />
+                  <span>{dataset.name}</span>
+                  {dataset.tables.length > 0 && <Badge count={dataset.tables.length} size="small" />}
+                </Space>
               </Select.Option>
             ))}
           </Select>
-        </div>
+        </Col>
 
-        <div>
-          <Button type="primary" onClick={onShowTables} icon={<SearchOutlined />} disabled={!selectedDataset}>
-            <FormattedMessage id="Show Tables" />
-          </Button>
-        </div>
+        <Col span={18}>
+          <Row justify="start" gutter={16} align="middle">
+            <Col>
+              <Button
+                type="primary"
+                onClick={onShowTables}
+                icon={<SearchOutlined />}
+                disabled={!selectedDataset}
+                size="middle"
+              >
+                <FormattedMessage id="Show Tables" />
+              </Button>
+            </Col>
 
-        <div>
-          <Button onClick={onRefresh} icon={<ReloadOutlined />} disabled={loading}>
-            <FormattedMessage id="Refresh" />
-          </Button>
-        </div>
+            <Col>
+              <Button onClick={onRefresh} icon={<ReloadOutlined />} disabled={loading} size="middle">
+                <FormattedMessage id="Refresh" />
+              </Button>
+            </Col>
 
-        {activeDataset && (
-          <Tag color="blue">
-            <FormattedMessage id="Active Dataset" />: {activeDataset.name}
-          </Tag>
-        )}
-      </div>
+            {activeDataset && (
+              <Col>
+                <Tag color="blue" style={{ padding: '4px 8px', fontSize: '14px' }}>
+                  <FormattedMessage id="Active Dataset" />: {activeDataset.name}
+                </Tag>
+              </Col>
+            )}
+          </Row>
+        </Col>
+      </Row>
     </Card>
   );
 };
@@ -192,71 +203,69 @@ const QueryEditor = ({
   const intl = useIntl();
 
   return (
-    <div style={{ padding: '10px 0', display: 'flex', flexDirection: 'column' }}>
-      <Title level={5}>
+    <Space direction="vertical" style={{ width: '100%' }} size={8}>
+      <Typography.Title level={5} style={{ marginBottom: '4px', fontSize: '16px' }}>
         <FormattedMessage id="Query" />
-      </Title>
-      <div style={{ display: 'flex', flexDirection: 'column', marginBottom: 16 }}>
-        {selectedDataset && (
-          <div style={{ marginBottom: 8 }}>
-            <Space wrap>
-              <Button size="small" onClick={() => onChangeQuery('SHOW TABLES')} icon={<TableOutlined />}>
-                SHOW TABLES
-              </Button>
+      </Typography.Title>
 
-              {/* 表格显示后用户可以点击表格行查询特定表 */}
-              {selectedTable && activeDataset && (
-                <Button
-                  size="small"
-                  onClick={() => {
-                    const fullTableName = `${activeDataset.name}_${selectedTable}`;
-                    onChangeQuery(`SELECT * FROM "${fullTableName}" LIMIT 100`);
-                  }}
-                >
-                  SELECT * FROM "{activeDataset.name}_{selectedTable}"
-                </Button>
-              )}
-              {selectedTable && activeDataset && (
-                <Button
-                  size="small"
-                  onClick={() => {
-                    const fullTableName = `${activeDataset.name}_${selectedTable}`;
-                    onChangeQuery(`DESCRIBE "${fullTableName}"`);
-                  }}
-                >
-                  DESCRIBE "{activeDataset.name}_{selectedTable}"
-                </Button>
-              )}
-            </Space>
-          </div>
+      <Space direction="vertical" style={{ width: '100%' }} size={6}>
+        {selectedDataset && (
+          <Space wrap size={[4, 4]}>
+            <Button size="small" onClick={() => onChangeQuery('SHOW TABLES')} icon={<TableOutlined />}>
+              SHOW TABLES
+            </Button>
+
+            {/* 表格显示后用户可以点击表格行查询特定表 */}
+            {selectedTable && activeDataset && (
+              <Button
+                size="small"
+                onClick={() => {
+                  const fullTableName = `${activeDataset.name}_${selectedTable}`;
+                  onChangeQuery(`SELECT * FROM "${fullTableName}" LIMIT 100`);
+                }}
+              >
+                SELECT * FROM "{activeDataset.name}_{selectedTable}"
+              </Button>
+            )}
+            {selectedTable && activeDataset && (
+              <Button
+                size="small"
+                onClick={() => {
+                  const fullTableName = `${activeDataset.name}_${selectedTable}`;
+                  onChangeQuery(`DESCRIBE "${fullTableName}"`);
+                }}
+              >
+                DESCRIBE "{activeDataset.name}_{selectedTable}"
+              </Button>
+            )}
+          </Space>
         )}
 
         <TextArea
           value={query}
           onChange={e => onChangeQuery(e.target.value)}
           placeholder={intl.formatMessage({ id: 'Enter your SQL query here' })}
-          style={{ height: '120px', fontFamily: 'monospace', resize: 'none' }}
+          style={{ height: '100px', fontFamily: 'monospace', resize: 'none' }}
           ref={textAreaRef}
         />
 
-        <div style={{ marginTop: 10 }}>
-          <Space>
-            <Button
-              type="primary"
-              icon={<PlayCircleOutlined />}
-              onClick={onExecute}
-              loading={executing}
-              disabled={!selectedDataset}
-            >
-              <FormattedMessage id="Execute Query" />
-            </Button>
-            <Button icon={<ClearOutlined />} onClick={onClear} disabled={!query}>
-              <FormattedMessage id="Clear" />
-            </Button>
-          </Space>
-        </div>
-      </div>
-    </div>
+        <Space size={4}>
+          <Button
+            type="primary"
+            icon={<PlayCircleOutlined />}
+            onClick={onExecute}
+            loading={executing}
+            disabled={!selectedDataset}
+            size="small"
+          >
+            <FormattedMessage id="Execute Query" />
+          </Button>
+          <Button icon={<ClearOutlined />} onClick={onClear} disabled={!query} size="small">
+            <FormattedMessage id="Clear" />
+          </Button>
+        </Space>
+      </Space>
+    </Space>
   );
 };
 
@@ -289,32 +298,31 @@ const QueryResults = ({
   const isShowTablesQuery = query.trim().toLowerCase() === 'show tables';
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
-      <Title level={5}>
+    <Space direction="vertical" style={{ width: '100%', overflow: 'auto' }} size={8}>
+      <Typography.Title level={5} style={{ marginBottom: '4px', fontSize: '16px' }}>
         <FormattedMessage id="Results" />
-      </Title>
+      </Typography.Title>
 
       {error ? (
-        <div className="error-message">
-          <Title level={4} style={{ color: 'red' }}>
+        <Space direction="vertical" style={{ width: '100%' }}>
+          <Typography.Title level={4} style={{ color: 'red', marginBottom: '8px' }}>
             <FormattedMessage id="Error executing query" />:
-          </Title>
+          </Typography.Title>
           <pre>{error}</pre>
-        </div>
+        </Space>
       ) : queryResult && queryResult.length > 0 ? (
-        <div style={{ overflow: 'auto' }}>
+        <Space direction="vertical" style={{ width: '100%', overflow: 'auto' }} size={10}>
           {isShowTablesQuery && activeDataset && (
             <Alert
               type="info"
               message={
                 <FormattedMessage id="Showing tables in dataset '{name}'" values={{ name: activeDataset.name }} />
               }
-              style={{ marginBottom: 16 }}
               showIcon
             />
           )}
 
-          <div style={{ marginBottom: 16 }}>
+          <Space direction="vertical" style={{ width: '100%' }} size={10}>
             <Space>
               <Text strong>
                 <FormattedMessage id="Export as" />:
@@ -340,52 +348,55 @@ const QueryResults = ({
                 <FormattedMessage id="Copy as JSON" />
               </Button>
             </Space>
-          </div>
 
-          <Table
-            dataSource={queryResult}
-            columns={columns}
-            rowKey={(record, index) => `${index}`}
-            pagination={{
-              pageSize: 10,
-              showSizeChanger: true,
-              pageSizeOptions: ['10', '20', '50', '100'],
-            }}
-            scroll={{ x: 'max-content' }}
-            size="small"
-            bordered
-            onRow={record => {
-              return {
-                onClick: () => {
-                  // 当点击表格行时，如果是SHOW TABLES查询结果，则选择该表
-                  if (isShowTablesQuery && record.table_name) {
-                    onSelectTableRow(record);
-                  }
-                },
-                style: {
-                  cursor: isShowTablesQuery && record.table_name ? 'pointer' : 'default',
-                },
-              };
-            }}
-          />
+            <Table
+              dataSource={queryResult}
+              columns={columns}
+              rowKey={(record, index) => `${index}`}
+              pagination={{
+                pageSize: 10,
+                showSizeChanger: true,
+                pageSizeOptions: ['10', '20', '50', '100'],
+                size: 'small',
+              }}
+              scroll={{ x: 'max-content' }}
+              size="small"
+              bordered
+              onRow={record => {
+                return {
+                  onClick: () => {
+                    // 当点击表格行时，如果是SHOW TABLES查询结果，则选择该表
+                    if (isShowTablesQuery && record.table_name) {
+                      onSelectTableRow(record);
+                    }
+                  },
+                  style: {
+                    cursor: isShowTablesQuery && record.table_name ? 'pointer' : 'default',
+                  },
+                };
+              }}
+            />
 
-          <div style={{ marginTop: 16 }}>
             <Text>
               <FormattedMessage id="Showing" /> {queryResult.length} <FormattedMessage id="records" />
             </Text>
-          </div>
-        </div>
+          </Space>
+        </Space>
       ) : (
-        <div style={{ textAlign: 'center', padding: '20px 0' }}>
-          <Paragraph>
-            <FormattedMessage id="No results to display" />
-          </Paragraph>
-          <Paragraph>
-            <FormattedMessage id="Execute a query to see results" />
-          </Paragraph>
-        </div>
+        <Empty
+          description={
+            <Space direction="vertical" size={4}>
+              <Text>
+                <FormattedMessage id="No results to display" />
+              </Text>
+              <Text>
+                <FormattedMessage id="Execute a query to see results" />
+              </Text>
+            </Space>
+          }
+        />
       )}
-    </div>
+    </Space>
   );
 };
 
@@ -745,13 +756,15 @@ const QueryPage: React.FC = () => {
   };
 
   return (
-    <div>
-      <Title level={2}>
-        <FormattedMessage id="SQL Query" />
-      </Title>
-      <Paragraph>
-        <FormattedMessage id="Execute SQL queries on your datasets" />
-      </Paragraph>
+    <Space direction="vertical" style={{ width: '100%' }} size={12}>
+      <Space direction="vertical" size={8} style={{ width: '100%' }}>
+        <Typography.Title level={2} style={{ fontSize: '24px', marginBottom: '4px' }}>
+          <FormattedMessage id="SQL Query" />
+        </Typography.Title>
+        <Typography.Paragraph style={{ marginBottom: '8px' }}>
+          <FormattedMessage id="Execute SQL queries on your datasets" />
+        </Typography.Paragraph>
+      </Space>
 
       {/* 数据集选择组件 */}
       <DatasetSelector
@@ -764,8 +777,8 @@ const QueryPage: React.FC = () => {
         activeDataset={activeDataset}
       />
 
-      <Card>
-        <div style={{ display: 'flex', flexDirection: 'column', height: '70vh' }}>
+      <Card size="small">
+        <Space direction="vertical" style={{ width: '100%', height: '68vh' }} size={10}>
           {/* 提示信息 */}
           {!selectedDataset && (
             <Alert
@@ -773,7 +786,6 @@ const QueryPage: React.FC = () => {
               message={<FormattedMessage id="Please select a dataset" />}
               description={<FormattedMessage id="Select a dataset to start querying" />}
               showIcon
-              style={{ marginBottom: 16 }}
             />
           )}
 
@@ -791,7 +803,7 @@ const QueryPage: React.FC = () => {
           />
 
           {/* 分隔线 */}
-          <Divider style={{ margin: '0 0 16px 0' }} />
+          <Divider style={{ margin: 0 }} />
 
           {/* 查询结果组件 */}
           <QueryResults
@@ -806,9 +818,9 @@ const QueryPage: React.FC = () => {
             onCopyToClipboard={copyToClipboard}
             onSelectTableRow={handleSelectTableRow}
           />
-        </div>
+        </Space>
       </Card>
-    </div>
+    </Space>
   );
 };
 
