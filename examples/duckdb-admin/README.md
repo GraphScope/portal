@@ -2,14 +2,19 @@
 
 A powerful browser-based CSV data query tool built with DuckDB-WASM. This tool allows you to manage and query your CSV datasets directly in the browser using SQL, with no server required.
 
-## ✨ Features
+## Features
 
-- 📊 Upload and manage multiple CSV datasets
+- 🚀 Runs completely in the browser with no server required
+- 📊 Upload and query CSV files
+- 📝 Write and execute SQL queries
+- 💾 Save datasets for later use
+- 📥 Export query results as CSV, JSON, or TSV
+- 🌐 Multi-language interface support
+- 📁 Support for multiple tables within a dataset, matching SQL user expectations
 - 🔍 Query data using standard SQL
-- 💾 Persistent storage in the browser
-- 📤 Export results in CSV, JSON, or TSV formats
-- 🚀 Runs entirely in the browser
 - 🔒 Privacy-focused: all data stays in your browser
+
+## 🛠️ Development
 
 ## 🚀 Quick Start
 

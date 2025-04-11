@@ -14,22 +14,41 @@ import {
   Popconfirm,
   Space,
   Tabs,
+  Collapse,
+  Empty,
 } from 'antd';
-import { UploadOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import {
+  UploadOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  PlusOutlined,
+  TableOutlined,
+  FolderOutlined,
+} from '@ant-design/icons';
 import type { UploadFile } from 'antd/es/upload/interface';
 import duckDBService from '../services/duckdbService';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 const { Title, Paragraph } = Typography;
 const { TabPane } = Tabs;
+const { Panel } = Collapse;
 
 interface Dataset {
+  id: string;
+  name: string;
+  description: string;
+  dateCreated: string;
+  tables: string[];
+}
+
+interface Table {
   name: string;
   description: string;
   fileName: string;
   rowCount: number;
   size: number;
   dateAdded: string;
+  datasetId: string;
 }
 
 interface PreviewData {
@@ -44,24 +63,35 @@ interface Field {
 const DatasetPage: React.FC = () => {
   const intl = useIntl();
   const [datasets, setDatasets] = useState<Dataset[]>([]);
+  const [tables, setTables] = useState<{ [datasetId: string]: Table[] }>({});
   const [loading, setLoading] = useState<boolean>(true);
-  const [uploadModalVisible, setUploadModalVisible] = useState<boolean>(false);
+  const [datasetModalVisible, setDatasetModalVisible] = useState<boolean>(false);
+  const [tableModalVisible, setTableModalVisible] = useState<boolean>(false);
   const [previewModalVisible, setPreviewModalVisible] = useState<boolean>(false);
   const [previewData, setPreviewData] = useState<PreviewData[] | null>(null);
   const [previewColumns, setPreviewColumns] = useState<any[]>([]);
   const [currentDataset, setCurrentDataset] = useState<Dataset | null>(null);
-  const [form] = Form.useForm();
+  const [currentTable, setCurrentTable] = useState<Table | null>(null);
+  const [datasetForm] = Form.useForm();
+  const [tableForm] = Form.useForm();
   const [uploadFile, setUploadFile] = useState<File | null>(null);
 
   useEffect(() => {
-    loadDatasets();
+    loadData();
   }, []);
 
-  const loadDatasets = async (): Promise<void> => {
+  const loadData = async (): Promise<void> => {
     try {
       setLoading(true);
       const allDatasets = await duckDBService.getAllDatasets();
       setDatasets(allDatasets);
+
+      const tablesByDataset: { [datasetId: string]: Table[] } = {};
+      for (const dataset of allDatasets) {
+        const datasetTables = await duckDBService.getTablesInDataset(dataset.id);
+        tablesByDataset[dataset.id] = datasetTables;
+      }
+      setTables(tablesByDataset);
     } catch (error) {
       message.error(<FormattedMessage id="Failed to load datasets" />);
     } finally {
@@ -69,8 +99,24 @@ const DatasetPage: React.FC = () => {
     }
   };
 
-  const handleUpload = async (values: { name: string; description: string }): Promise<void> => {
-    if (!uploadFile) {
+  const handleCreateDataset = async (values: { name: string; description: string }): Promise<void> => {
+    try {
+      setLoading(true);
+
+      await duckDBService.createDataset(values.name, values.description);
+      message.success(<FormattedMessage id="Dataset created successfully" />);
+      setDatasetModalVisible(false);
+      datasetForm.resetFields();
+      await loadData();
+    } catch (error) {
+      message.error(<FormattedMessage id="Dataset creation failed" />);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUploadTable = async (values: { name: string; description: string }): Promise<void> => {
+    if (!uploadFile || !currentDataset) {
       message.error(<FormattedMessage id="Please select a CSV file to upload" />);
       return;
     }
@@ -78,12 +124,12 @@ const DatasetPage: React.FC = () => {
     try {
       setLoading(true);
 
-      await duckDBService.registerDataset(values.name, uploadFile, values.description);
-      message.success(<FormattedMessage id="Dataset uploaded successfully" />);
-      setUploadModalVisible(false);
-      form.resetFields();
+      await duckDBService.registerTable(currentDataset.id, values.name, uploadFile, values.description);
+      message.success(<FormattedMessage id="Table uploaded successfully" />);
+      setTableModalVisible(false);
+      tableForm.resetFields();
       setUploadFile(null);
-      await loadDatasets();
+      await loadData();
     } catch (error) {
       message.error(<FormattedMessage id="Upload failed" />);
     } finally {
@@ -91,53 +137,71 @@ const DatasetPage: React.FC = () => {
     }
   };
 
-  const handleDelete = async (name: string): Promise<void> => {
+  const handlePreview = async (datasetId: string, tableName: string): Promise<void> => {
     try {
       setLoading(true);
-      await duckDBService.deleteDataset(name);
-      message.success(<FormattedMessage id="Dataset deleted successfully" />);
-      await loadDatasets();
-    } catch (error) {
-      message.error(<FormattedMessage id="Delete failed" />);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const handlePreview = async (dataset: Dataset): Promise<void> => {
-    try {
-      setLoading(true);
-      setCurrentDataset(dataset);
-      const result = await duckDBService.getPreviewData(dataset.name);
+      const dataset = datasets.find(d => d.id === datasetId);
+      if (!dataset) {
+        throw new Error(`Dataset not found: ${datasetId}`);
+      }
 
-      // 处理预览数据
+      const table = tables[datasetId]?.find(t => t.name === tableName);
+      if (!table) {
+        throw new Error(`Table not found: ${tableName}`);
+      }
+
+      setCurrentTable(table);
+
+      const result = await duckDBService.getTablePreview(datasetId, tableName, 10);
       const data = result.toArray();
 
-      // 创建列定义
-      const columns = result.schema.fields.map((field: Field) => ({
+      const columns = result.schema.fields.map((field: any) => ({
         title: field.name,
         dataIndex: field.name,
         key: field.name,
-        ellipsis: true,
-        render: (text: any) => {
-          if (text === null) return <span style={{ color: '#999' }}>NULL</span>;
-          return String(text);
-        },
+        render: (text: any) => (text === null ? 'NULL' : String(text)),
       }));
 
-      setPreviewColumns(columns);
       setPreviewData(data);
+      setPreviewColumns(columns);
       setPreviewModalVisible(true);
     } catch (error) {
-      message.error(<FormattedMessage id="Failed to preview data" />);
+      message.error(<FormattedMessage id="Failed to load preview" />);
     } finally {
       setLoading(false);
     }
   };
 
-  const columns = [
+  const handleDeleteDataset = async (datasetId: string): Promise<void> => {
+    try {
+      setLoading(true);
+      await duckDBService.deleteDataset(datasetId);
+      message.success(<FormattedMessage id="Dataset deleted successfully" />);
+      await loadData();
+    } catch (error) {
+      message.error(<FormattedMessage id="Failed to delete dataset" />);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteTable = async (datasetId: string, tableName: string): Promise<void> => {
+    try {
+      setLoading(true);
+      await duckDBService.deleteTable(datasetId, tableName);
+      message.success(<FormattedMessage id="Table deleted successfully" />);
+      await loadData();
+    } catch (error) {
+      message.error(<FormattedMessage id="Failed to delete table" />);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const tableColumns = [
     {
-      title: <FormattedMessage id="Dataset Name" />,
+      title: <FormattedMessage id="Table Name" />,
       dataIndex: 'name',
       key: 'name',
     },
@@ -181,15 +245,20 @@ const DatasetPage: React.FC = () => {
     {
       title: <FormattedMessage id="Actions" />,
       key: 'action',
-      render: (_: any, record: Dataset) => (
+      render: (_: any, record: Table) => (
         <Space size="small">
           <Tooltip title={<FormattedMessage id="Preview Data" />}>
-            <Button icon={<EyeOutlined />} onClick={() => handlePreview(record)} size="small" type="text" />
+            <Button
+              icon={<EyeOutlined />}
+              onClick={() => handlePreview(record.datasetId, record.name)}
+              size="small"
+              type="text"
+            />
           </Tooltip>
-          <Tooltip title={<FormattedMessage id="Delete Dataset" />}>
+          <Tooltip title={<FormattedMessage id="Delete Table" />}>
             <Popconfirm
-              title={<FormattedMessage id="Are you sure you want to delete this dataset?" />}
-              onConfirm={() => handleDelete(record.name)}
+              title={<FormattedMessage id="Are you sure you want to delete this table?" />}
+              onConfirm={() => handleDeleteTable(record.datasetId, record.name)}
               okText={<FormattedMessage id="Yes" />}
               cancelText={<FormattedMessage id="No" />}
             >
@@ -207,94 +276,203 @@ const DatasetPage: React.FC = () => {
         <FormattedMessage id="Your Datasets" />
       </Title>
       <Paragraph>
-        <FormattedMessage id="Manage your CSV datasets here" />
+        <FormattedMessage id="Manage your datasets and tables here" />
       </Paragraph>
 
       <div style={{ marginBottom: 16 }}>
-        <Button type="primary" icon={<UploadOutlined />} onClick={() => setUploadModalVisible(true)}>
-          <FormattedMessage id="Upload New Dataset" />
+        <Button type="primary" icon={<PlusOutlined />} onClick={() => setDatasetModalVisible(true)}>
+          <FormattedMessage id="Create New Dataset" />
         </Button>
       </div>
 
       <Card>
         <Spin spinning={loading}>
           {datasets.length > 0 ? (
-            <Table
-              dataSource={datasets}
-              columns={columns}
-              rowKey="name"
-              pagination={{
-                pageSize: 10,
-                showSizeChanger: false,
-                hideOnSinglePage: true,
-                position: ['bottomCenter'],
-              }}
-              scroll={{ x: 'max-content' }}
-              size="middle"
-              bordered={false}
-            />
+            <Collapse defaultActiveKey={datasets.length > 0 ? [datasets[0].id] : []}>
+              {datasets.map(dataset => (
+                <Panel
+                  header={
+                    <Space>
+                      <FolderOutlined />
+                      <span style={{ fontWeight: 'bold' }}>{dataset.name}</span>
+                      <span>({dataset.tables.length} tables)</span>
+                      {dataset.description && <span style={{ color: '#888' }}>- {dataset.description}</span>}
+                    </Space>
+                  }
+                  key={dataset.id}
+                  extra={
+                    <Space onClick={e => e.stopPropagation()}>
+                      <Button
+                        type="primary"
+                        size="small"
+                        icon={<TableOutlined />}
+                        onClick={e => {
+                          e.stopPropagation();
+                          setCurrentDataset(dataset);
+                          setTableModalVisible(true);
+                        }}
+                      >
+                        <FormattedMessage id="Add Table" />
+                      </Button>
+                      <Popconfirm
+                        title={
+                          <FormattedMessage id="Are you sure you want to delete this dataset and all its tables?" />
+                        }
+                        onConfirm={e => {
+                          e?.stopPropagation();
+                          handleDeleteDataset(dataset.id);
+                        }}
+                        okText={<FormattedMessage id="Yes" />}
+                        cancelText={<FormattedMessage id="No" />}
+                      >
+                        <Button danger size="small" icon={<DeleteOutlined />} onClick={e => e.stopPropagation()}>
+                          <FormattedMessage id="Delete Dataset" />
+                        </Button>
+                      </Popconfirm>
+                    </Space>
+                  }
+                >
+                  {tables[dataset.id] && tables[dataset.id].length > 0 ? (
+                    <Table
+                      dataSource={tables[dataset.id]}
+                      columns={tableColumns}
+                      rowKey="name"
+                      pagination={{
+                        pageSize: 5,
+                        showSizeChanger: false,
+                        hideOnSinglePage: true,
+                        position: ['bottomCenter'],
+                      }}
+                      scroll={{ x: 'max-content' }}
+                      size="middle"
+                      bordered={false}
+                    />
+                  ) : (
+                    <Empty description={<FormattedMessage id="No tables in this dataset" />}>
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          setCurrentDataset(dataset);
+                          setTableModalVisible(true);
+                        }}
+                      >
+                        <FormattedMessage id="Add Table" />
+                      </Button>
+                    </Empty>
+                  )}
+                </Panel>
+              ))}
+            </Collapse>
           ) : (
             <div style={{ textAlign: 'center', padding: '20px 0' }}>
               <Paragraph>
                 <FormattedMessage id="No datasets found" />
               </Paragraph>
               <Paragraph>
-                <FormattedMessage id="Please upload a dataset to get started" />
+                <FormattedMessage id="Please create a dataset to get started" />
               </Paragraph>
             </div>
           )}
         </Spin>
       </Card>
 
-      {/* Upload Dataset Dialog */}
+      {/* Create Dataset Dialog */}
       <Modal
-        title={<FormattedMessage id="Upload New Dataset" />}
-        open={uploadModalVisible}
-        onCancel={() => setUploadModalVisible(false)}
+        title={<FormattedMessage id="Create New Dataset" />}
+        open={datasetModalVisible}
+        onCancel={() => setDatasetModalVisible(false)}
         footer={null}
       >
-        <Form form={form} layout="vertical" onFinish={handleUpload}>
+        <Form form={datasetForm} layout="vertical" onFinish={handleCreateDataset}>
           <Form.Item
             name="name"
             label={<FormattedMessage id="Dataset Name" />}
             rules={[
-              {
-                required: true,
-                message: <FormattedMessage id="Please enter a dataset name" />,
-              },
+              { required: true, message: intl.formatMessage({ id: 'Please enter a dataset name' }) },
+              { max: 50, message: intl.formatMessage({ id: 'Name cannot exceed 50 characters' }) },
               {
                 pattern: /^[a-zA-Z0-9_]+$/,
-                message: <FormattedMessage id="Only letters, numbers and underscores are allowed" />,
+                message: intl.formatMessage({ id: 'Name can only contain letters, numbers, and underscores' }),
               },
             ]}
           >
-            <Input placeholder={intl.formatMessage({ id: 'Enter a unique name for your dataset' })} />
+            <Input placeholder={intl.formatMessage({ id: 'Enter dataset name' })} />
           </Form.Item>
 
-          <Form.Item name="description" label={<FormattedMessage id="Description" />}>
-            <Input.TextArea placeholder={intl.formatMessage({ id: 'Enter dataset description (optional)' })} />
+          <Form.Item name="description" label={<FormattedMessage id="Description (Optional)" />}>
+            <Input.TextArea
+              placeholder={intl.formatMessage({ id: 'Enter optional description' })}
+              rows={3}
+              maxLength={200}
+              showCount
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit" loading={loading}>
+              <FormattedMessage id="Create Dataset" />
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* Upload Table Dialog */}
+      <Modal
+        title={
+          <FormattedMessage id="Upload Table to {datasetName}" values={{ datasetName: currentDataset?.name || '' }} />
+        }
+        open={tableModalVisible}
+        onCancel={() => {
+          setTableModalVisible(false);
+          setUploadFile(null);
+        }}
+        footer={null}
+      >
+        <Form form={tableForm} layout="vertical" onFinish={handleUploadTable}>
+          <Form.Item
+            name="name"
+            label={<FormattedMessage id="Table Name" />}
+            rules={[
+              { required: true, message: intl.formatMessage({ id: 'Please enter a table name' }) },
+              { max: 50, message: intl.formatMessage({ id: 'Name cannot exceed 50 characters' }) },
+              {
+                pattern: /^[a-zA-Z0-9_]+$/,
+                message: intl.formatMessage({ id: 'Name can only contain letters, numbers, and underscores' }),
+              },
+            ]}
+          >
+            <Input placeholder={intl.formatMessage({ id: 'Enter table name' })} />
+          </Form.Item>
+
+          <Form.Item name="description" label={<FormattedMessage id="Description (Optional)" />}>
+            <Input.TextArea
+              placeholder={intl.formatMessage({ id: 'Enter optional description' })}
+              rows={3}
+              maxLength={200}
+              showCount
+            />
           </Form.Item>
 
           <Form.Item
-            name="file"
-            label={<FormattedMessage id="Select CSV file" />}
-            rules={[
-              {
-                required: true,
-                message: <FormattedMessage id="Please select a CSV file" />,
-              },
-            ]}
+            label={<FormattedMessage id="CSV File" />}
+            required
+            tooltip={<FormattedMessage id="Upload a CSV file to create a table" />}
           >
             <Upload
-              accept=".csv"
               beforeUpload={file => {
+                const isCsv = file.name.endsWith('.csv');
+                if (!isCsv) {
+                  message.error(<FormattedMessage id="Only CSV files are allowed" />);
+                  return Upload.LIST_IGNORE;
+                }
                 setUploadFile(file);
                 return false;
               }}
-              fileList={
-                uploadFile ? [{ uid: '1', name: uploadFile.name, size: uploadFile.size, type: uploadFile.type }] : []
-              }
-              onRemove={() => setUploadFile(null)}
+              onRemove={() => {
+                setUploadFile(null);
+                return true;
+              }}
+              fileList={uploadFile ? [{ uid: '1', name: uploadFile.name, size: uploadFile.size } as any] : []}
               maxCount={1}
             >
               <Button icon={<UploadOutlined />}>
@@ -303,59 +481,38 @@ const DatasetPage: React.FC = () => {
             </Upload>
           </Form.Item>
 
-          <Form.Item style={{ marginBottom: 0 }}>
-            <Space>
-              <Button type="primary" htmlType="submit" disabled={!uploadFile}>
-                <FormattedMessage id="Upload" />
-              </Button>
-              <Button onClick={() => setUploadModalVisible(false)}>
-                <FormattedMessage id="Cancel" />
-              </Button>
-            </Space>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" loading={loading} disabled={!uploadFile}>
+              <FormattedMessage id="Upload Table" />
+            </Button>
           </Form.Item>
         </Form>
       </Modal>
 
-      {/* Preview Data Dialog */}
+      {/* Preview Modal */}
       <Modal
-        title={
-          currentDataset
-            ? intl.formatMessage({ id: 'Preview of' }) + `: ${currentDataset.name}`
-            : intl.formatMessage({ id: 'Preview' })
-        }
+        title={<FormattedMessage id="Preview of {tableName}" values={{ tableName: currentTable?.name || '' }} />}
         open={previewModalVisible}
         onCancel={() => setPreviewModalVisible(false)}
-        width="90%"
-        footer={[
-          <Button key="close" onClick={() => setPreviewModalVisible(false)}>
-            <FormattedMessage id="Close" />
-          </Button>,
-        ]}
+        footer={null}
+        width={800}
       >
-        <Spin spinning={loading}>
-          {previewData && previewData.length > 0 ? (
-            <Table
-              dataSource={previewData}
-              columns={previewColumns}
-              rowKey={(_, index) => `row-${index}`}
-              pagination={{
-                pageSize: 10,
-                showSizeChanger: false,
-                hideOnSinglePage: true,
-                position: ['bottomCenter'],
-              }}
-              scroll={{ x: 'max-content' }}
-              size="small"
-              bordered={false}
-            />
-          ) : (
-            <div style={{ textAlign: 'center', padding: '20px 0' }}>
-              <Paragraph>
-                <FormattedMessage id="No preview data available" />
-              </Paragraph>
-            </div>
-          )}
-        </Spin>
+        {previewData && previewData.length > 0 ? (
+          <Table
+            dataSource={previewData}
+            columns={previewColumns}
+            rowKey={(_, index) => `${index}`}
+            pagination={false}
+            scroll={{ x: 'max-content' }}
+            size="small"
+          />
+        ) : (
+          <div style={{ textAlign: 'center', padding: '20px 0' }}>
+            <Paragraph>
+              <FormattedMessage id="No data available for preview" />
+            </Paragraph>
+          </div>
+        )}
       </Modal>
     </div>
   );
