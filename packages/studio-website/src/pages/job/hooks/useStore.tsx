@@ -1,7 +1,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import { Flex, Typography } from 'antd';
-import type { IJobType } from './service';
+import type { IJobType } from '../service';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
@@ -89,76 +89,8 @@ export const STATUSOPTIONS: JobOption[] = [
     ),
   },
 ];
-
-export default function useStore() {
-  /** job状态显示图标 */
-  const JOB_TYPE_ICONS: Record<string, JSX.Element> = {
-    RUNNING: <SyncOutlined spin />,
-    CANCELLED: <MinusCircleOutlined />,
-    SUCCESS: <CheckCircleOutlined />,
-    FAILED: <CloseCircleOutlined />,
-    WAITING: <ExclamationCircleOutlined />,
-  };
-
-  const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
-
-  return {
-    STATUSOPTIONS,
-    JOB_TYPE_ICONS,
-    getStatusColor,
-    capitalizeFirstLetter,
-    timeAgo,
-    formatDateTime,
-    handleChange,
-    statusColor,
-  };
-}
-
-const timeAgo = date => {
-  const now: any = new Date();
-  const secondsPast = Math.floor((now - date) / 1000);
-
-  if (secondsPast < 60) {
-    return `${secondsPast} second ago`;
-  }
-  if (secondsPast < 3600) {
-    const minutes = Math.floor(secondsPast / 60);
-    return `${minutes} min ago`;
-  }
-  if (secondsPast < 86400) {
-    const hours = Math.floor(secondsPast / 3600);
-    return `${hours} hour ago`;
-  }
-  if (secondsPast < 2592000) {
-    const days = Math.floor(secondsPast / 86400);
-    return `${days} day ago`;
-  }
-  if (secondsPast < 31536000) {
-    const months = Math.floor(secondsPast / 2592000);
-    return `${months} month ago`;
-  }
-  const years = Math.floor(secondsPast / 31536000);
-  return `${years} year ago`;
-};
-
-const formatDateTime = (date, locale = 'en') => {
-  const now = dayjs();
-  dayjs.locale(locale); // 设置语言环境
-
-  if (date.isSame(now, 'day')) {
-    return `Today at ${date.format('h:mm A')}`; // 使用 AM/PM
-  } else if (date.isSame(now.subtract(1, 'day'), 'day')) {
-    return `Yesterday at ${date.format('h:mm A')}`;
-  } else if (date.isSame(now.add(1, 'day'), 'day')) {
-    return `Tomorrow at ${date.format('h:mm A')}`;
-  } else if (date.isBefore(now, 'year')) {
-    return date.format('MMM D, YYYY [at] h:mm A'); // 过去年份的日期
-  } else {
-    return date.format('MMM D [at] h:mm A'); // 其他日期
-  }
-};
-
-const map = new Map();
+// 筛选逻辑
+const map = new Map<string, any>();
 const handleChange = (selectedItems: string[], filterType: string, rawJobsList) => {
   // Update or remove the filter criteria in the map
   if (selectedItems && selectedItems.length > 0) {
@@ -204,7 +136,55 @@ const handleChange = (selectedItems: string[], filterType: string, rawJobsList) 
 
   // Update the map with the new filtered data
   map.set('data', filteredData);
-
   // Update the component's state with the filtered list
   return filteredData;
+};
+
+export default function useStore() {
+  /** job状态显示图标 */
+  const JOB_TYPE_ICONS: Record<string, JSX.Element> = {
+    RUNNING: <SyncOutlined spin />,
+    CANCELLED: <MinusCircleOutlined />,
+    SUCCESS: <CheckCircleOutlined />,
+    FAILED: <CloseCircleOutlined />,
+    WAITING: <ExclamationCircleOutlined />,
+  };
+
+  const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+
+  return {
+    STATUSOPTIONS,
+    JOB_TYPE_ICONS,
+    getStatusColor,
+    capitalizeFirstLetter,
+    timeAgo,
+    formatDateTime,
+    handleChange,
+    statusColor,
+  };
+}
+
+// 时间格式化函数
+const timeAgo = (date: Date): string => {
+  const now = new Date().getTime();
+  const secondsPast = Math.floor((now - date.getTime()) / 1000);
+
+  if (secondsPast < 60) return `${secondsPast} second${secondsPast > 1 ? 's' : ''} ago`;
+  if (secondsPast < 3600) return `${Math.floor(secondsPast / 60)} minute${secondsPast >= 120 ? 's' : ''} ago`;
+  if (secondsPast < 86400) return `${Math.floor(secondsPast / 3600)} hour${secondsPast >= 7200 ? 's' : ''} ago`;
+  if (secondsPast < 2592000) return `${Math.floor(secondsPast / 86400)} day${secondsPast >= 2 ? 's' : ''} ago`;
+  if (secondsPast < 31536000) return `${Math.floor(secondsPast / 2592000)} month${secondsPast >= 2 ? 's' : ''} ago`;
+  return `${Math.floor(secondsPast / 31536000)} year${secondsPast >= 2 ? 's' : ''} ago`;
+};
+
+// 日期时间格式化函数
+const formatDateTime = (date: dayjs.Dayjs, locale = 'en'): string => {
+  const now = dayjs();
+  dayjs.locale(locale);
+
+  if (date.isSame(now, 'day')) return `Today at ${date.format('h:mm A')}`;
+  if (date.isSame(now.subtract(1, 'day'), 'day')) return `Yesterday at ${date.format('h:mm A')}`;
+  if (date.isSame(now.add(1, 'day'), 'day')) return `Tomorrow at ${date.format('h:mm A')}`;
+  if (date.isBefore(now, 'year')) return date.format('MMM D, YYYY [at] h:mm A');
+  return date.format('MMM D [at] h:mm A');
 };

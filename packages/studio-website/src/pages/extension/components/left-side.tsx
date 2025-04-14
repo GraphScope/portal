@@ -1,7 +1,7 @@
 import React from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { useCustomToken } from '@graphscope/studio-components';
-import { useEditorTheme } from '../../pages/utils';
+import { useEditorTheme } from '../../../pages/utils';
 import UploadFiles from './upload-files';
 import type { FieldType } from './right-side';
 interface ILeftSide {

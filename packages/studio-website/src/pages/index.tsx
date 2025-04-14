@@ -23,9 +23,9 @@ const routes = [
 
   { path: '/setting', component: React.lazy(() => import('./setting')) },
   { path: '/job', component: React.lazy(() => import('./job')) },
-  { path: '/job/detail', component: React.lazy(() => import('./job/job-detail')) },
+  { path: '/job/detail', component: React.lazy(() => import('./job/components/job-detail')) },
   { path: '/extension', component: React.lazy(() => import('./extension')) },
-  { path: '/extension/:name', component: React.lazy(() => import('./extension/create-plugins')) },
+  { path: '/extension/:name', component: React.lazy(() => import('./extension/plugins/create-plugins')) },
 ];
 
 export const ROUTES = routes.map(({ path, redirect, component: Component }, index) => {

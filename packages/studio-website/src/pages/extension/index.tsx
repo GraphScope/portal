@@ -2,31 +2,15 @@ import * as React from 'react';
 import Section from '../../components/section';
 import Plugins from './plugins';
 import { FormattedMessage } from 'react-intl';
-import { Flex } from 'antd';
-import { CreatePortal, SegmentedTabs, useStudioProvier } from '@graphscope/studio-components';
+import { SegmentedTabs } from '@graphscope/studio-components';
 
 const Extension: React.FunctionComponent = () => {
   const items = [
-    // {
-    //   key: 'Plugins',
-    //   children: <>全部插件</>,
-    //   label: '全部插件',
-    // },
     {
       key: 'Store',
       children: <Plugins />,
       label: <FormattedMessage id="Stored Procedures" />,
     },
-    // {
-    //   key: 'Learn',
-    //   children: <>图学习</>,
-    //   label: '图学习',
-    // },
-    // {
-    //   key: 'analyse',
-    //   children: <>图分析</>,
-    //   label: '图分析',
-    // },
   ];
   return (
     <>

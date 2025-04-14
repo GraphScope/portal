@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Flex, Select, DatePicker, Typography } from 'antd';
 import { SearchOutlined, DownOutlined } from '@ant-design/icons';
-import useStore from './useStore';
-import type { IState } from './job-list';
+import useStore from '../hooks/useStore';
+import type { IState } from '../types';
 import CircleAnimation from './circle-animation';
 
 const { RangePicker } = DatePicker;
@@ -16,13 +16,38 @@ const JobHeader: React.FC<IJobHeaderProps> = ({ typeOptions, searchOptions, onCh
   const [statusValue, setStatusValue] = useState<string[]>([]);
   const { STATUSOPTIONS } = useStore();
 
-  const handleStatusChange = (evt: string[]) => {
-    onChange(evt, 'status');
-    setStatusValue(evt);
-  };
+  /**
+   * 处理状态筛选变化
+   */
+  const handleStatusChange = useCallback(
+    (evt: string[]) => {
+      onChange(evt, 'status');
+      setStatusValue(evt);
+    },
+    [onChange],
+  );
+
+  /**
+   * 渲染状态选择器的前缀
+   */
+  const renderStatusPrefix = useCallback(() => <CircleAnimation statusValue={statusValue} />, [statusValue]);
+
+  /**
+   * 渲染状态选择器的后缀
+   */
+  const renderStatusSuffix = useCallback(
+    () => (
+      <>
+        <Text type="secondary">Status</Text>
+        <DownOutlined />
+      </>
+    ),
+    [],
+  );
 
   return (
     <Flex gap={12}>
+      {/* Job ID 搜索框 */}
       <Select
         placeholder="Select JobId"
         prefix={<SearchOutlined />}
@@ -34,16 +59,17 @@ const JobHeader: React.FC<IJobHeaderProps> = ({ typeOptions, searchOptions, onCh
         tokenSeparators={[',']}
         options={searchOptions}
       />
+
+      {/* 时间范围选择器 */}
       <RangePicker style={{ flex: 1 }} onChange={evt => onChange(evt, 'picker')} />
+
+      {/* Job 类型选择器 */}
       <Select placeholder="JobType" style={{ flex: 1 }} onChange={evt => onChange(evt, 'type')} options={typeOptions} />
+
+      {/* 状态选择器 */}
       <Select
-        prefix={<CircleAnimation statusValue={statusValue} />}
-        suffixIcon={
-          <>
-            <Text type="secondary">Status</Text>
-            <DownOutlined />
-          </>
-        }
+        prefix={renderStatusPrefix()}
+        suffixIcon={renderStatusSuffix()}
         style={{ flex: 2 }}
         mode="tags"
         value={statusValue}

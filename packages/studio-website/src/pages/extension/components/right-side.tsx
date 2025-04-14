@@ -19,6 +19,7 @@ const TYPEOPTION = [
   // { label: 'Cpp', value: 'cpp' },
 ];
 const { Title } = Typography;
+const { TextArea } = Input;
 const RightSide: React.FC<IRightSide> = props => {
   const { form, isEdit, options } = props;
   return (
@@ -55,7 +56,7 @@ const RightSide: React.FC<IRightSide> = props => {
           name="description"
           rules={[{ required: true, message: 'Please input your Description!' }]}
         >
-          <Input />
+          <TextArea rows={4} />
         </Form.Item>
       </Form>
     </>
