@@ -5,7 +5,7 @@ import { SplitSection } from '@graphscope/studio-components';
 import Section from '../../../components/section';
 import LeftSide from '../components/left-side';
 import RightSide from '../components/right-side';
-import SelectCards from '../../../components/select-cards';
+import SelectCards, { type ICard } from '../../../components/select-cards';
 import { useCreatePlugins } from '../hooks/useCreatePlugins';
 import { Utils } from '@graphscope/studio-components';
 
@@ -13,18 +13,16 @@ const { getUrlParams } = Utils;
 const { useToken } = theme;
 
 // 常量定义
-const ENGINES = [
+const ENGINES: ICard[] = [
   {
     id: 'Stored procedures',
-    value: 'Stored procedures',
-    type: 'Stored procedures',
     title: 'Stored procedures',
   },
 ];
 
 // 样式提取
 const styles = {
-  selectCards: { position: 'absolute', top: '3px', right: '3px', fontSize: '20px' },
+  selectCards: { position: 'absolute', top: '3px', right: '3px', fontSize: '20px' } as React.CSSProperties,
   divider: { margin: '3px 0px' },
   button: { width: '128px' },
   buttonContainer: { display: 'flex', justifyContent: 'end' },

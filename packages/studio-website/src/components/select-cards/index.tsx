@@ -5,7 +5,7 @@ const { Title, Text } = Typography;
 import { FormattedMessage } from 'react-intl';
 
 export interface ICard {
-  id: 'defaultAlgorithm' | 'darkAlgorithm';
+  id: string;
   title?: string;
   desc?: string | React.ReactNode;
   avatar?: string;

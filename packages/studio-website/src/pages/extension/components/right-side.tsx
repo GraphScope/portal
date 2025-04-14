@@ -27,7 +27,7 @@ const RightSide: React.FC<IRightSide> = props => {
       <Title level={3} style={{ margin: 0 }}>
         <FormattedMessage id="Plugin info" />
       </Title>
-      <Divider />
+      <Divider style={{ margin: '12px 0px 24px' }} />
       <Form name="basic" layout="vertical" form={form}>
         <Form.Item<FieldType>
           label={<FormattedMessage id="Name" />}

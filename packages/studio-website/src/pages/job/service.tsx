@@ -1,7 +1,6 @@
 import { JobApiFactory, GraphApiFactory } from '@graphscope/studio-server';
 import { notification } from '../../pages/utils';
 import dayjs from 'dayjs';
-
 export type IJobType = {
   key?: string;
   id: string;
@@ -15,81 +14,75 @@ export type IJobType = {
     additionalProp1: object;
   };
 };
-
-const COORDINATOR_URL = window.COORDINATOR_URL;
-
-/** 通用错误处理函数 */
-const handleApiError = (error: any, message: string) => {
-  console.error(message, error);
-  notification('error', message);
-  return [];
-};
-
-/** 获取图 ID 到名称的映射 */
-const getGraphIdToNameMap = async (): Promise<Map<string, string>> => {
-  try {
-    const graphs = await GraphApiFactory(undefined, COORDINATOR_URL).listGraphs();
-    if (graphs.status === 200) {
-      const idToGraph = new Map();
-      graphs.data.forEach(graph => {
-        idToGraph.set(graph.id, graph.name);
-      });
-      return idToGraph;
-    }
-    return new Map();
-  } catch (error) {
-    handleApiError(error, 'Failed to fetch graphs');
-    return new Map();
-  }
-};
-
-/** 获取作业列表 */
-export const listJobs = async (): Promise<IJobType[]> => {
-  try {
-    const jobsResponse = await JobApiFactory(undefined, COORDINATOR_URL).listJobs();
-    if (jobsResponse.status !== 200) {
+export const listJobs = async () => {
+  const message = await JobApiFactory(undefined, window.COORDINATOR_URL)
+    .listJobs()
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
       return [];
-    }
+    })
+    .catch(error => {
+      notification('error', error);
+      return [];
+    });
+  const graphs = await GraphApiFactory(undefined, window.COORDINATOR_URL)
+    .listGraphs()
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
+    })
+    .catch(error => {
+      notification('error', error);
+    });
+  const idToGraph = new Map();
+  graphs?.forEach(graph => {
+    idToGraph.set(graph.id, graph.name);
+  });
 
-    const idToGraph = await getGraphIdToNameMap();
+  const data = message.map(V => {
+    //@ts-ignore
+    const graph_name = idToGraph.get(V?.detail.graph_id);
+    return graph_name ? { ...V, graph_name } : V;
+  });
 
-    return jobsResponse.data
-      .map(job => {
-        const graph_name = idToGraph.get(job?.detail?.graph_id) || '';
-        return { ...job, graph_name };
-      })
-      .sort((a, b) => dayjs(b.start_time).valueOf() - dayjs(a.start_time).valueOf())
-      .map(job => ({
-        ...job,
-        key: job.job_id,
-      }));
-  } catch (error) {
-    return handleApiError(error, 'Failed to fetch jobs');
-  }
+  const info = data
+    .sort((a, b) => dayjs(b.start_time).valueOf() - dayjs(a.start_time).valueOf())
+    .map(item => {
+      //@ts-ignore
+      const { job_id } = item;
+      return {
+        ...item,
+        key: job_id,
+      };
+    });
+  return info;
 };
-
-/** 删除作业 */
-export const deleteJobById = async (jobId: string): Promise<any> => {
-  try {
-    const response = await JobApiFactory(undefined, COORDINATOR_URL).deleteJobById(jobId);
-    if (response.status === 200) {
-      return response.data;
-    }
-    return [];
-  } catch (error) {
-    return handleApiError(error, `Failed to delete job with ID: ${jobId}`);
-  }
+export const deleteJobById = async (jobId: string) => {
+  return await JobApiFactory(undefined, window.COORDINATOR_URL)
+    .deleteJobById(jobId)
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
+      return [];
+    })
+    .catch(error => {
+      notification('error', error);
+    });
 };
-
-/** 获取作业详情 */
-export const getJobById = async (jobId: string): Promise<any> => {
-  try {
-    const response = await JobApiFactory(undefined, COORDINATOR_URL).getJobById(jobId);
-    if (response.status === 200) {
-      return response.data;
-    }
-    return [];
-  } catch (error) {
-    return handleApiError(error, `Failed to fetch job with ID: ${jobId}`);
-  }
+export const getJobById = async (jobId: string) => {
+  return await JobApiFactory(undefined, window.COORDINATOR_URL)
+    .getJobById(jobId)
+    .then(res => {
+      if (res.status === 200) {
+        return res.data;
+      }
+      return [];
+    })
+    .catch(error => {
+      notification('error', error);
+    });
 };
