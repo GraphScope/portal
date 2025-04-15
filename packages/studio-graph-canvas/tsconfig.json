@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "declaration": true,
+    "target": "es2018",
+    "moduleResolution": "node",
+    "emitDeclarationOnly": true, // Only emit type declarations
+    "outDir": "./dist", // Output directory for .d.ts files
+    "rootDir": "./src", // Root directory of your source files
+    "jsx": "react",
+    "resolveJsonModule": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "lib": ["dom", "esnext"],
+    "module": "esnext",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": false
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

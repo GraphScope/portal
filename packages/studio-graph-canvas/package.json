@@ -1,0 +1,55 @@
+{
+  "name": "@graphscope/studio-graph-canvas",
+  "version": "0.1.13",
+  "description": "",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GraphScope/portal.git"
+  },
+  "files": [
+    "es",
+    "lib",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "start": "father dev",
+    "build": "father build",
+    "start:site": "vite dev",
+    "build:site": "vite build && tsc"
+  },
+  "peerDependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "dependencies": {
+    "@graphscope/studio-components": "workspace:*",
+    "@graphscope/use-zustand": "workspace:*",
+    "antd": "^5.22.2",
+    "d3-force": "latest",
+    "dagre": "latest",
+    "html-to-image": "^1.11.11",
+    "immer": "^10.1.1",
+    "lodash": "^4.17.21",
+    "react-intl": "^6.6.1",
+    "reactflow": "latest",
+    "rxjs": "^7.8.1",
+    "uuid": "^9.0.1",
+    "valtio": "2.0.0-rc.1",
+    "zustand": "^4.5.5"
+  },
+  "devDependencies": {
+    "@types/d3-force": "latest",
+    "@types/lodash": "^4.14.202",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.4.16"
+  },
+  "author": "",
+  "license": "ISC"
+}
