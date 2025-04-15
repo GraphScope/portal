@@ -5,6 +5,8 @@ If you found Graphy helpful, please star [GraphScope](https://github.com/alibaba
 
 A [demonstration video of Graphy](https://www.youtube.com/watch?v=uM4nzkAdGlM) is available to walk you through the literature-survey process.
 
+**News**: Graphy is accepted as a demo paper at [Sigmod 2025](https://2025.sigmod.org/). See you in Berlin, Germany. 
+
 ## What is Graphy capable of? 🤔
 
 Graphy is designed to make your literature survey process **faster, smarter, and easier**. Whether you're writing related work sections, building academic networks, or conducting a full-blown literature survey, Graphy has got you covered:
