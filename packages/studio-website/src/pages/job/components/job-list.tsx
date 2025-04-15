@@ -18,12 +18,12 @@ const JobsList: FC = () => {
 
   return (
     <List
-      style={{ padding: '0px 12px 24px 12px', backgroundColor: token.colorBgBase, borderRadius: 6 }}
+      style={{ padding: '0px 12px 24px 12px', backgroundColor: token.colorBgContainer, borderRadius: 6 }}
       itemLayout="horizontal"
       header={<JobHeader {...state} onChange={handleFilterChange} />}
       dataSource={state.jobsList}
       pagination={{ position: 'bottom', align: 'end' }}
-      renderItem={job => <JobListItem job={job} isSelected={state.jobId === job.id} onDelete={handleDeleteJob} />}
+      renderItem={job => <JobListItem job={job} onDelete={handleDeleteJob} />}
     />
   );
 };

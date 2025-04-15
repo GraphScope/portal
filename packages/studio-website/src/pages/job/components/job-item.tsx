@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { List, Space, Typography, Tag, Divider, Popover, Popconfirm, Button } from 'antd';
+import React, { FC, useState } from 'react';
+import { List, Space, Typography, Tag, Divider, Popover, Popconfirm, Button, theme } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
@@ -13,21 +13,24 @@ const { Title, Text } = Typography;
 
 interface JobListItemProps {
   job: IJobType;
-  isSelected: boolean;
   onDelete: (id: string) => void;
 }
 
-const JobListItem: FC<JobListItemProps> = ({ job, isSelected, onDelete }) => {
+const JobListItem: FC<JobListItemProps> = ({ job, onDelete }) => {
   const { JOB_TYPE_ICONS, statusColor, capitalizeFirstLetter, formatDateTime } = useStore();
   const history = useHistory();
+  const { token } = theme.useToken();
+  const { colorBgLayout } = token;
+  const [id, updateId] = useState('');
   return (
     <List.Item
       style={{
         padding: '12px 12px',
-        backgroundColor: isSelected ? '#f5f5f5' : '#ffffff',
+        backgroundColor: job.id === id ? colorBgLayout : '',
         cursor: 'pointer',
       }}
-      // onClick={() => onSelect(job.id)}
+      onMouseEnter={() => updateId(job.id)}
+      onMouseLeave={() => updateId('')}
       onClick={() => history.push(`/job/detail?jobId=${job.id}`)}
     >
       <List.Item.Meta

@@ -30,7 +30,7 @@ const styles = {
 
 const CreatePlugins: React.FC = () => {
   const { token } = useToken();
-  const { colorBgContainer } = token;
+  const { colorBgBase } = token;
   const { graph_id } = getUrlParams();
 
   const {
@@ -44,7 +44,7 @@ const CreatePlugins: React.FC = () => {
 
   return (
     <Section
-      style={{ backgroundColor: colorBgContainer }}
+      style={{ backgroundColor: colorBgBase }}
       breadcrumb={[{ title: 'Extensions' }, { title: 'Create Plugin' }]}
       desc="Expand its functionality or offer solutions that are finely tuned to specific needs."
     >
