@@ -9,7 +9,7 @@ const EnvContext = React.createContext({
 export const EnvProvider = props => {
   const isMobile = useIsMobile();
   const currentMode = useTheme();
-  const isDark = currentMode === 'dark';
+  const isDark = currentMode === 'darkAlgorithm';
   console.log('currentMode', currentMode, 'isDark', isDark);
 
   return (
