@@ -71,8 +71,8 @@ const Content = () => {
         style={{ height: '160px' }}
         icon={
           <Space split="or">
-            <Icons.File text="YAML" style={{ fontSize: '30px', color: token.colorTextSecondary }} />
-            <Icons.File text="JSON" style={{ fontSize: '30px', color: token.colorTextSecondary }} />
+            <Icons.File style={{ fontSize: '30px', color: token.colorTextSecondary, text: 'YAML' }} />
+            <Icons.File style={{ fontSize: '30px', color: token.colorTextSecondary, text: 'JSON' }} />
           </Space>
         }
       />

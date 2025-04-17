@@ -32,7 +32,7 @@ const hackContent = jsonContent => {
 };
 
 const ImportFromYAML = (props: IProps) => {
-  const { style = {}, icon = <Icons.File text="YAML" />, disabled } = props;
+  const { style = {}, icon = <Icons.File style={{ text: 'YAML' }} />, disabled } = props;
   const { updateStore, store } = useContext();
   const { appMode, nodes, edges } = store;
   const customRequest: UploadProps['customRequest'] = async options => {

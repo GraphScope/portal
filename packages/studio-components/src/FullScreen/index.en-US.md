@@ -1,22 +1,22 @@
 ---
-title: FullScreen 全屏
+title: FullScreen
 group:
-  title: 通用
+  title: General
   order: 1
 ---
 
-# FullScreen 全屏
+# FullScreen
 
-一个简单的全屏切换组件，可以将指定容器切换为全屏模式。
+A simple component to toggle fullscreen mode for a specified container.
 
-## 何时使用
+## When To Use
 
-- 需要将某个区域切换为全屏显示时
-- 在数据可视化、图片查看等场景下使用
+- When you need to toggle fullscreen mode for a specific area
+- Useful in data visualization, image viewing, and similar scenarios
 
-## 代码演示
+## Examples
 
-### 基础用法
+### Basic Usage
 
 ```jsx
 import React, { useRef } from 'react';
@@ -39,14 +39,14 @@ export default () => {
           borderRadius: '4px',
         }}
       >
-        点击左上角按钮进入全屏模式
+        Click the button in the top-left corner to enter fullscreen mode
       </div>
     </div>
   );
 };
 ```
 
-### 自定义样式
+### Custom Styling
 
 ```jsx
 import React, { useRef } from 'react';
@@ -69,14 +69,14 @@ export default () => {
           borderRadius: '4px',
         }}
       >
-        自定义样式的全屏按钮
+        Fullscreen button with custom styling
       </div>
     </div>
   );
 };
 ```
 
-### 监听全屏状态变化
+### Listen to Fullscreen State Changes
 
 ```jsx
 import React, { useRef, useState } from 'react';
@@ -89,7 +89,7 @@ export default () => {
 
   const handleFullScreenChange = fullScreen => {
     setIsFullScreen(fullScreen);
-    message.info(`当前全屏状态: ${fullScreen ? '全屏' : '非全屏'}`);
+    message.info(`Current fullscreen state: ${fullScreen ? 'Fullscreen' : 'Normal'}`);
   };
 
   return (
@@ -107,7 +107,7 @@ export default () => {
           borderRadius: '4px',
         }}
       >
-        全屏状态: {isFullScreen ? '全屏' : '非全屏'}
+        Fullscreen state: {isFullScreen ? 'Fullscreen' : 'Normal'}
       </div>
     </div>
   );
@@ -118,11 +118,15 @@ export default () => {
 
 ### FullScreen
 
-| 参数               | 说明                   | 类型                                   | 默认值       |
-| ------------------ | ---------------------- | -------------------------------------- | ------------ |
-| containerRef       | 需要全屏显示的容器引用 | React.RefObject<HTMLElement \| null>   | -            |
-| title              | 提示文本，支持国际化   | string \| React.ReactNode              | 'Fullscreen' |
-| placement          | 提示框位置             | 'top' \| 'right' \| 'bottom' \| 'left' | 'left'       |
-| className          | 自定义按钮样式类名     | string                                 | -            |
-| style              | 自定义按钮样式         | React.CSSProperties                    | -            |
-| onFullScreenChange | 全屏状态变化回调       | (isFullScreen: boolean) => void        | -            |
+| Property           | Description                                                      | Type                                   | Default      |
+| ------------------ | ---------------------------------------------------------------- | -------------------------------------- | ------------ |
+| containerRef       | Reference to the container element to be displayed in fullscreen | React.RefObject<HTMLElement \| null>   | -            |
+| title              | Tooltip text, supports internationalization                      | string \| React.ReactNode              | 'Fullscreen' |
+| placement          | Tooltip placement                                                | 'top' \| 'right' \| 'bottom' \| 'left' | 'left'       |
+| className          | Custom CSS class name for the button                             | string                                 | -            |
+| style              | Custom inline styles for the button                              | React.CSSProperties                    | -            |
+| onFullScreenChange | Callback when fullscreen state changes                           | (isFullScreen: boolean) => void        | -            |
+
+```
+
+```
