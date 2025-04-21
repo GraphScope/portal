@@ -1,8 +1,9 @@
 import type { NodePositionChange } from 'reactflow';
-import { create } from 'zustand';
-import {produce} from 'immer'
+import StoreProvider, { useContext as useZustandContext } from '@graphscope/use-zustand';
 import type { Node, Edge } from 'reactflow';
 import type { Property } from '@graphscope/studio-components';
+import React, { useContext, useMemo } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface IEdgeData {
   label: string;
@@ -42,6 +43,7 @@ export interface INodeData {
 export type ISchemaNode = Node<INodeData>;
 
 export type ISchemaEdge = Edge<IEdgeData> & { data: IEdgeData };
+
 interface GraphState {
   displayMode: 'graph' | 'table';
   nodes: ISchemaNode[];
@@ -58,34 +60,44 @@ interface GraphState {
   currentId: string;
   currentType: 'nodes' | 'edges';
 }
-interface GraphStore {
-  store: GraphState;
-  updateStore: (fn: (draft: GraphState) => void) => void;
-}
 
-export const useGraphStore = create<GraphStore>(set => ({
-  store: {
-    displayMode: 'graph',
-    nodes: [],
-    edges: [],
-    nodePositionChange: [],
-    hasLayouted: false,
-    elementOptions: {
-      isEditable: true,
-      isConnectable: true,
-    },
-    currentId: '',
-    theme: {
-      primaryColor: '#1978FF',
-    },
-    currentType: 'nodes',
+const initialStore: GraphState = {
+  displayMode: 'graph',
+  nodes: [],
+  edges: [],
+  nodePositionChange: [],
+  hasLayouted: false,
+  elementOptions: {
+    isEditable: true,
+    isConnectable: true,
   },
-  updateStore: fn =>
-    set(state => {
-      // ✅ 使用 immer 的 produce 包裹修改逻辑
-      return produce(state, draft => {
-        // 将原有逻辑放在 immer 的草稿操作中
-        fn(draft.store);
-      });
-    })
-}));
+  currentId: '',
+  theme: {
+    primaryColor: '#1978FF',
+  },
+  currentType: 'nodes',
+};
+const GraphInstanceContext = React.createContext<string | null>(null);
+
+export const GraphProvider = props => {
+  const { children, id } = props;
+  const instanceId = useMemo(() => {
+    return id || `graph-${uuidv4()}`;
+  }, []);
+  console.log('GraphProvider instanceId::: ', instanceId);
+  return (
+    <GraphInstanceContext.Provider value={instanceId}>
+      <StoreProvider id={instanceId} store={{ ...initialStore }}>
+        {children}
+      </StoreProvider>
+    </GraphInstanceContext.Provider>
+  );
+};
+export const useGraphStore = (id?: string) => {
+  const instanceId = useContext(GraphInstanceContext);
+
+  if (!instanceId) {
+    throw new Error('请在 GraphProvider 内使用 useGraphStore');
+  }
+  return useZustandContext<GraphState>(id || instanceId);
+};

@@ -1,5 +1,5 @@
 {
-  "name": "@graphscope/studio-graph-canvas",
+  "name": "@graphscope/studio-flow-editor",
   "version": "0.1.13",
   "description": "",
   "main": "lib/index.js",

@@ -52,4 +52,8 @@ export interface Option {
 export interface ImportorProps {
   /** 用于多实例管理的 ID */
   id?: string;
+  showBackground?: boolean;
+  showMinimap?: boolean;
+  children?: React.ReactNode;
+  showDefaultBtn?: boolean;
 }
