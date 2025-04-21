@@ -114,6 +114,9 @@ const useInteractive = () => {
         draft.nodes = applyNodeChanges(changes, fakeSnapshot(nodes));
       });
     }
+    console.log('changes::: ', changes);
+    console.log('applyNodeChanges(tempRef.current, nodes)::: ', applyNodeChanges(tempRef.current, nodes));
+
     if (type === 'position') {
       if (changes[0].dragging) {
         tempRef.current = changes;

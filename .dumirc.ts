@@ -2,6 +2,7 @@ import { defineConfig } from 'dumi';
 import { join } from 'path';
 import { defineThemeConfig } from 'dumi-theme-antd/dist/defineThemeConfig';
 import { Divider } from 'antd';
+import { dir } from 'console';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const basePath = isProduction ? '/portal/' : '/';
@@ -15,12 +16,14 @@ const themeConfig = defineThemeConfig({
     'zh-CN': [
       { title: '图组件', link: '/graphs' },
       { title: '通用组件', link: '/components' },
+      { title: '模型编辑', link: '/floweditors' },
       { title: '建模', link: '/modelings' },
       { title: '查询', link: '/queries' },
     ],
     'en-US': [
       { title: 'graph', link: '/graphs' },
       { title: 'components', link: '/components' },
+      { title: 'flow-editor', link: '/floweditors' },
       { title: 'modeling', link: '/modelings' },
       { title: 'query', link: '/queries' },
     ],
@@ -181,6 +184,7 @@ export default defineConfig({
     '@graphscope/studio-query': join(__dirname, 'packages', 'studio-query'),
     '@graphscope/use-zustand': join(__dirname, 'packages', 'use-zustand'),
     '@graphscope/studio-graph': join(__dirname, 'packages', 'studio-graph'),
+    '@graphscope/studio-flow-editor': join(__dirname, 'packages', 'studio-flow-editor'),
   },
   externals: {
     'node:os': 'commonjs2 node:os',
@@ -204,6 +208,10 @@ export default defineConfig({
       {
         type: 'components/query-statement',
         dir: 'packages/studio-query/src/statement',
+      },
+      {
+        type: 'floweditor',
+        dir: 'packages/studio-flow-editor/docs',
       },
       {
         type: 'modeling',
