@@ -1,7 +1,3 @@
----
-order: 0
-title: 快速开始
----
 # Studio Flow Editor
 
 ## 简介
@@ -11,6 +7,7 @@ Studio Flow Editor 是一个基于 React 的流程图编辑器组件，提供了
 ## 特性
 
 - 完整的流程图编辑功能
+- 支持多种布局算法（D3-force, Dagre）
 - 响应式状态管理
 - 支持国际化
 - 支持图片导出
@@ -26,20 +23,18 @@ yarn add @graphscope/studio-flow-editor
 
 ## 使用示例
 
-```jsx
-import * as React from 'react';
+```tsx
 import { GraphProvider, GraphEditor } from '@graphscope/studio-flow-editor';
 
 const App = () => {
   return (
-    <div style={{ width: '100%', height: '20vh',position: 'relative' }}>
+    <div style={{ width: '100%', height: '100vh' }}>
       <GraphProvider>
         <GraphEditor />
       </GraphProvider>
     </div>
   );
 };
-export default App;
 ```
 
 ## API
@@ -48,28 +43,25 @@ export default App;
 
 提供编辑器所需的上下文。
 
-```bash
-    import { GraphProvider, GraphEditor } from '@graphscope/studio-flow-editor';
-    <GraphProvider>
-      <GraphEditor />
-    </GraphProvider>
+```tsx
+<GraphProvider>
+  <GraphEditor />
+</GraphProvider>
 ```
 
 ### GraphEditor
 
 主编辑器组件，包含完整的编辑功能。
 
-```bash
-  import { GraphEditor } from '@graphscope/studio-flow-editor';
-  <GraphEditor />
+```tsx
+<GraphEditor />
 ```
 
 ### useGraphStore
 
 状态管理 hook，用于访问和更新编辑器状态。
 
-```bash
-import {useGraphStore } from '@graphscope/studio-flow-editor';
+```tsx
 const { store, updateStore } = useGraphStore();
 const { nodes, edges } = store;
 
@@ -99,11 +91,33 @@ updateStore(draft => {
 1. D3-force: 力导向布局
 2. Dagre: 层次布局
 
+## 事件处理
 
+编辑器支持以下事件：
 
+- `onConnectStart`: 开始连接
+- `onConnectEnd`: 结束连接
+- `onNodesChange`: 节点变化
+- `onEdgesChange`: 边变化
+- `onDoubleClick`: 双击事件
 
+## 开发
 
+```bash
+# 安装依赖
+npm install
 
+# 开发模式
+npm run start
 
+# 构建
+npm run build
+```
 
+## 贡献
 
+欢迎提交 Issue 和 Pull Request。
+
+## 许可证
+
+ISC 
