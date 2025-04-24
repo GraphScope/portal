@@ -1,5 +1,5 @@
 import React from 'react';
-import { useContext } from '@graphscope/use-zustand';
+import {useContext} from '../../useContext'
 import { Property } from '@graphscope/studio-components';
 interface IuseModel {
   type: string;

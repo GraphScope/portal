@@ -27,6 +27,7 @@
     "@graphscope/use-zustand": "workspace:*",
     "@graphscope/studio-components": "workspace:*",
     "@graphscope/studio-server": "workspace:*",
+    "@graphscope/studio-flow-editor": "workspace:*",
     "d3-force": "latest",
     "dagre": "latest",
     "localforage": "latest",

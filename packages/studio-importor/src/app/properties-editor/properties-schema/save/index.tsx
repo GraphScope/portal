@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Button, Tooltip } from 'antd';
-
-import { useContext } from '@graphscope/use-zustand';
+import {useContext} from '../../../useContext'
 import type { ImportorProps, ISchemaEdge, ISchemaNode } from '../../../typing';
 import { SaveOutlined } from '@ant-design/icons';
 import { validateProperties } from '../validate-info';

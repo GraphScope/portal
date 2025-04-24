@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Tooltip, notification } from 'antd';
 import { useHistory, Utils } from '@graphscope/studio-components';
-import { useContext } from '@graphscope/use-zustand';
+import {useContext} from '../../../useContext'
 import { LinkOutlined, CloudUploadOutlined } from '@ant-design/icons';
 import { bindDatasourceInBatch, submitDataloadingJob } from './services';
 import type { ImportorProps, ISchemaNode, ISchemaEdge } from '../../../typing';

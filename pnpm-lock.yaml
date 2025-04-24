@@ -462,6 +462,70 @@ importers:
         specifier: ^3.3.0
         version: 3.3.0(vite@5.4.16(@types/node@22.13.14)(less@4.2.0)(lightningcss@1.22.1)(sass@1.81.0)(terser@5.36.0))
 
+  packages/studio-flow-editor:
+    dependencies:
+      '@graphscope/studio-components':
+        specifier: workspace:*
+        version: link:../studio-components
+      '@graphscope/use-zustand':
+        specifier: workspace:*
+        version: link:../use-zustand
+      antd:
+        specifier: ^5.22.2
+        version: 5.22.2(date-fns@2.30.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      d3-force:
+        specifier: latest
+        version: 3.0.0
+      dagre:
+        specifier: latest
+        version: 0.8.5
+      html-to-image:
+        specifier: ^1.11.11
+        version: 1.11.11
+      immer:
+        specifier: ^10.1.1
+        version: 10.1.1
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: 18.2.0
+        version: 18.2.0(react@18.2.0)
+      react-intl:
+        specifier: ^6.6.1
+        version: 6.8.9(react@18.2.0)(typescript@5.8.2)
+      reactflow:
+        specifier: latest
+        version: 11.11.4(@types/react@18.2.0)(immer@10.1.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.1
+      uuid:
+        specifier: ^9.0.1
+        version: 9.0.1
+      valtio:
+        specifier: 2.0.0-rc.1
+        version: 2.0.0-rc.1(@types/react@18.2.0)(react@18.2.0)
+      zustand:
+        specifier: ^4.5.5
+        version: 4.5.5(@types/react@18.2.0)(immer@10.1.1)(react@18.2.0)
+    devDependencies:
+      '@types/d3-force':
+        specifier: latest
+        version: 3.0.10
+      '@types/lodash':
+        specifier: ^4.14.202
+        version: 4.17.13
+      '@vitejs/plugin-react':
+        specifier: ^4.2.1
+        version: 4.3.4(vite@5.4.16(@types/node@22.13.14)(less@4.2.0)(lightningcss@1.22.1)(sass@1.81.0)(terser@5.36.0))
+      vite:
+        specifier: ^5.4.16
+        version: 5.4.16(@types/node@22.13.14)(less@4.2.0)(lightningcss@1.22.1)(sass@1.81.0)(terser@5.36.0)
+
   packages/studio-graph:
     dependencies:
       3d-force-graph:
@@ -604,6 +668,9 @@ importers:
       '@graphscope/studio-components':
         specifier: workspace:*
         version: link:../studio-components
+      '@graphscope/studio-flow-editor':
+        specifier: workspace:*
+        version: link:../studio-flow-editor
       '@graphscope/studio-server':
         specifier: workspace:*
         version: link:../studio-server
@@ -16185,6 +16252,17 @@ snapshots:
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
       vite: 5.4.16(@types/node@22.9.1)(less@4.2.0)(lightningcss@1.22.1)(sass@1.81.0)(terser@5.36.0)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@vitejs/plugin-react@4.3.4(vite@5.4.16(@types/node@22.13.14)(less@4.2.0)(lightningcss@1.22.1)(sass@1.81.0)(terser@5.36.0))':
+    dependencies:
+      '@babel/core': 7.26.0
+      '@babel/plugin-transform-react-jsx-self': 7.25.9(@babel/core@7.26.0)
+      '@babel/plugin-transform-react-jsx-source': 7.25.9(@babel/core@7.26.0)
+      '@types/babel__core': 7.20.5
+      react-refresh: 0.14.2
+      vite: 5.4.16(@types/node@22.13.14)(less@4.2.0)(lightningcss@1.22.1)(sass@1.81.0)(terser@5.36.0)
     transitivePeerDependencies:
       - supports-color
 

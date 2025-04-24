@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useContext } from '@graphscope/use-zustand';
+import {useContext} from '../../useContext'
 import { Utils, ImportFiles, ParsedFile } from '@graphscope/studio-components';
 import { parseSchemaByFiles } from './web-worker';
 import { transform } from './transform';
