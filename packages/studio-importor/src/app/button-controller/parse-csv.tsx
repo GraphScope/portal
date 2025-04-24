@@ -7,7 +7,7 @@ import { SegmentedTabs, Icons, useStudioProvier } from '@graphscope/studio-compo
 import type { SegmentedTabsProps } from '@graphscope/studio-components';
 
 import { FormattedMessage } from 'react-intl';
-import { useContext } from '@graphscope/use-zustand';
+import { useContext } from '../useContext';
 interface IImportSchemaProps {
   style?: React.CSSProperties;
 }
@@ -25,9 +25,9 @@ const ParseCSVButton: React.FunctionComponent<IImportSchemaProps> = props => {
   /** svg pathFill */
   let pathFill = () => {
     if (!isLight) {
-      return elementOptions.isEditable ? '#585858' : '#fff';
+      return !elementOptions.isEditable ? '#585858' : '#fff';
     } else {
-      return elementOptions.isEditable ? '#ddd' : '#000';
+      return !elementOptions.isEditable ? '#ddd' : '#000';
     }
   };
   const handleClick = () => {
@@ -48,7 +48,7 @@ const ParseCSVButton: React.FunctionComponent<IImportSchemaProps> = props => {
       <Tooltip title={<FormattedMessage id="Shortcut: parse files into a graph model" />} placement="left">
         <Button
           type="text"
-          disabled={elementOptions.isEditable}
+          disabled={!elementOptions.isEditable}
           onClick={handleClick}
           style={style}
           icon={<BulbOutlined style={{ color: pathFill() }} />}

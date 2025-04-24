@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { Button } from 'antd';
 
-import { useContext } from '@graphscope/use-zustand';
+import {useContext} from '../../useContext'
 
 import { Utils, ImportFiles } from '@graphscope/studio-components';
 

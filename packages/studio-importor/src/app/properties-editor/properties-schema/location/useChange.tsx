@@ -1,4 +1,4 @@
-import { useContext } from '@graphscope/use-zustand';
+import {useContext} from '../../../useContext';
 import { ISchemaEdge, ISchemaNode } from '../../../typing';
 import { Utils } from '@graphscope/studio-components';
 export const useChange = ({ type, id }) => {

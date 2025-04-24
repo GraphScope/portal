@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Collapse, Space } from 'antd';
 import PropertiesSchema from './properties-schema';
-import { useContext } from '@graphscope/use-zustand';
+import {useContext} from '../useContext';
 import { SegmentedTabs, Utils, EngineFeature } from '@graphscope/studio-components';
 import { CaretRightOutlined } from '@ant-design/icons';
 import type { ImportorProps } from '../typing';

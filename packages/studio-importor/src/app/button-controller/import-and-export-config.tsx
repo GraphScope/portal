@@ -1,7 +1,7 @@
 import { Button, Popover, Flex, Typography, Divider, theme, Space } from 'antd';
 import * as React from 'react';
 import { Utils, Icons } from '@graphscope/studio-components';
-import { useContext } from '@graphscope/use-zustand';
+import { useContext } from '../useContext';
 import { transOptionsToSchema } from '../utils/modeling';
 import { transformImportOptionsToSchemaMapping } from '../utils/importing';
 import yaml from 'js-yaml';

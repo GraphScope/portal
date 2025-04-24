@@ -4,7 +4,7 @@ export interface IParams {
   iterations?: number;
   center?: { x: number; y: number };
 }
-export function createStaticForceLayout(nodes, edges, params: IParams = {}) {
+export function createStaticForceLayout(nodes: any[], edges: any[], params: IParams = {}) {
   const { iterations = 1000, center = { x: window.innerWidth / 2, y: window.innerHeight / 2 } } = params;
   const edgeDistance = 250;
   const nodeStrength = -1 * (edgeDistance * (edges.length === 0 ? 0.5 : 8));
@@ -27,7 +27,7 @@ export function createStaticForceLayout(nodes, edges, params: IParams = {}) {
   }
 
   // 输出最终的节点和连线的位置
-  nodes.forEach(node => {
+  nodes.forEach((node: { index: any; vx: any; vy: any; position: { x: any; y: any; }; x: any; y: any; }) => {
     delete node.index;
     delete node.vx;
     delete node.vy;
@@ -36,7 +36,7 @@ export function createStaticForceLayout(nodes, edges, params: IParams = {}) {
     delete node.y;
   });
 
-  edges.forEach(edge => {
+  edges.forEach((edge: { index: any; source: { id: any; }; target: { id: any; }; }) => {
     delete edge.index;
     edge.source = edge.source.id;
     edge.target = edge.target.id;

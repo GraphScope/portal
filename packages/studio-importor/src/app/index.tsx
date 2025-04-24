@@ -1,16 +1,14 @@
-import React, { useEffect, useMemo } from 'react';
-import GraphCanvas from './graph-canvas';
+import React, { useEffect } from 'react';
 import PropertiesEditor from './properties-editor';
-import { ReactFlowProvider } from 'reactflow';
-import { Section, StudioProvier, GlobalSpin, useDynamicStyle } from '@graphscope/studio-components';
-import cssStyles from './style';
+import { Section, StudioProvier, GlobalSpin, EmptyCanvas } from '@graphscope/studio-components';
 import { transformGraphNodes, transformEdges } from './elements/index';
-
+import { GraphEditor, GraphProvider } from '@graphscope/studio-flow-editor';
+import { PlayCircleOutlined } from '@ant-design/icons';
 import ButtonController from './button-controller';
 import type { ISchemaOptions, ImportorProps } from './typing';
-import { initialStore } from './useContext';
 import locales from '../locales';
-import StoreProvider, { useContext } from '@graphscope/use-zustand';
+import { ImportorProvider, useContext } from './useContext';
+import { FormattedMessage } from 'react-intl';
 
 const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   const {
@@ -43,15 +41,13 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
     onCreateLabel,
     onDeleteLabel,
     style,
-    leftSide,
     rightSide,
     refreshIndex = 1,
   } = props;
   const { store, updateStore } = useContext();
-  const { isReady, displayMode } = store;
-
-  useDynamicStyle(cssStyles, 'graphscope-importor');
-
+  const { isReady, nodes, displayMode } = store;
+  const IS_PURE = appMode === 'PURE';
+  const isEmpty = nodes.length === 0;
   useEffect(() => {
     (async () => {
       let schema: ISchemaOptions = { nodes: [], edges: [] };
@@ -66,9 +62,19 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         // nodes: transformGraphNodes(schema.nodes, store.displayMode), //会报错！！！！
         edges: transformEdges(schema.edges, displayMode),
       };
-
       const { nodes, edges } = schemaOptions || { nodes: [], edges: [] };
-      const isEmpty = nodes.length === 0;
+      console.log('schemaOptions edges::: ', edges);
+      console.log('schemaOptions nodes::: ', nodes);
+      const schemaEmpty = nodes.length === 0;
+      const canConnect = () => {
+        if (IS_PURE) {
+          return false;
+        }
+        if (GS_ENGINE_TYPE === 'groot' && appMode === 'DATA_MODELING') {
+          return true;
+        }
+        return schemaEmpty;
+      };
 
       updateStore(draft => {
         draft.isReady = true;
@@ -76,18 +82,24 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         draft.edges = edges;
         draft.appMode = appMode;
         draft.elementOptions = {
-          isEditable: !isEmpty, // 操作按钮： nodes没有值,导入，删除，添加都可以操作；接口返回有值，只能操作添加按钮。
-          isConnectable: GS_ENGINE_TYPE === 'groot' && appMode === 'DATA_MODELING' ? true : isEmpty, //  初始状态，接口获取画布有 Schema 数据的时候，不可连线;groot时候一直可以连线
+          isEditable: schemaEmpty, // 操作按钮： nodes没有值,导入，删除，添加都可以操作；接口返回有值，只能操作添加按钮。
+          isConnectable: canConnect(), //  初始状态，接口获取画布有 Schema 数据的时候，不可连线;groot时候一直可以连线
         };
-        draft.currentId = isEmpty ? '' : nodes[0].id;
+        draft.currentId = schemaEmpty ? '' : nodes[0].id;
         draft.currentType = 'nodes';
         draft.isSaveFiles = isSaveFiles;
         draft.hasLayouted = false;
       });
     })();
   }, [refreshIndex]);
-  const IS_PURE = appMode === 'PURE';
-
+  const description = (
+    <FormattedMessage
+      id="Start sketching a model, a vertex label is a named grouping or categorization of nodes within the graph dataset"
+      values={{
+        icon: <PlayCircleOutlined />,
+      }}
+    />
+  );
   return (
     <StudioProvier locales={locales}>
       <Section
@@ -111,11 +123,11 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         splitBorder
       >
         {isReady ? (
-          <ReactFlowProvider>
+          <GraphEditor showDefaultBtn={false} showMinimap={!IS_PURE} showBackground={!IS_PURE}>
             {!IS_PURE && <ButtonController />}
-            <GraphCanvas />
+            {isEmpty && <EmptyCanvas description={description} />}
             {children}
-          </ReactFlowProvider>
+          </GraphEditor>
         ) : (
           <GlobalSpin />
         )}
@@ -124,10 +136,11 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   );
 };
 
+
 export default props => {
   return (
-    <StoreProvider id={props.id} store={initialStore}>
+     <ImportorProvider {...props} id={props.id} >
       <ImportApp {...props} />
-    </StoreProvider>
+    </ImportorProvider>
   );
 };

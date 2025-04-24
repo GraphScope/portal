@@ -9,7 +9,7 @@ import {
   getSmoothPath,
   calculateDegree,
 } from './utils';
-import { useContext } from '@graphscope/use-zustand';
+import { useGraphStore } from '../../store';
 import LoopEdge from './loop-edge';
 import Label from './label';
 import { useStudioProvier } from '@graphscope/studio-components';
@@ -20,7 +20,7 @@ function GraphEdge(props: EdgeProps) {
   const { offset = 0 } = _extra || {};
   const sourceNode = useStore(useCallback(store => store.nodeInternals.get(source), [source]));
   const targetNode = useStore(useCallback(store => store.nodeInternals.get(target), [target]));
-  const { store } = useContext();
+  const { store } = useGraphStore();
   const { currentId, theme } = store;
   const { isLight } = useStudioProvier();
   if (!sourceNode || !targetNode) {

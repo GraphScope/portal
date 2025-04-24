@@ -4,7 +4,7 @@ import { theme } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
 import { EditableText, useStudioProvier, useSection } from '@graphscope/studio-components';
 const { useToken } = theme;
-import { useContext } from '@graphscope/use-zustand';
+import {useGraphStore} from '../../store'
 
 const R = 50;
 const HALO_LINE_WIDTH = 16;
@@ -25,7 +25,7 @@ const styles = {
 const GraphNode = (props: NodeProps) => {
   const { data = {}, id } = props;
   const { label, filelocation, disabled } = data;
-  const { store, updateStore } = useContext();
+  const { store, updateStore } = useGraphStore();
   const { currentId, theme, elementOptions } = store;
   const { isLight } = useStudioProvier();
   const { toggleRightSide, toggleLeftSide } = useSection();

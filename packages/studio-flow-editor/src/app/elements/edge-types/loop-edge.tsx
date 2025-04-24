@@ -1,6 +1,5 @@
 import React from 'react';
 import type { EdgeProps } from 'reactflow';
-import { useContext } from '@graphscope/use-zustand';
 import { usePathStyle } from './useStyle';
 import Label from './label';
 

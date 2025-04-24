@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { EdgeLabelRenderer } from 'reactflow';
 import { EditableText, useStudioProvier, useSection } from '@graphscope/studio-components';
-import { useContext } from '@graphscope/use-zustand';
+import { useGraphStore } from '../../store';
 import { CheckOutlined } from '@ant-design/icons';
 import { theme } from 'antd';
 const { useToken } = theme;
@@ -15,7 +15,7 @@ interface ILabelProps {
 
 const Label: React.FunctionComponent<ILabelProps> = props => {
   const { id, label, style, filelocation, disabled } = props;
-  const { store, updateStore } = useContext();
+  const { store, updateStore } = useGraphStore();
   const { toggleRightSide } = useSection();
   const { token } = useToken();
   const { currentId, theme } = store;

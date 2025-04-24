@@ -1,7 +1,7 @@
-import { useContext } from '@graphscope/use-zustand';
+import {useGraphStore} from '../../store'
 import { useStudioProvier } from '@graphscope/studio-components';
 export const usePathStyle = (id: string) => {
-  const { store } = useContext();
+  const { store } = useGraphStore();
   const { currentId, theme } = store;
   const isSelected = id === currentId;
   const { isLight } = useStudioProvier();

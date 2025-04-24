@@ -1,12 +1,9 @@
 import React from 'react';
 import { Divider } from 'antd';
-import { Toolbar, useCustomToken } from '@graphscope/studio-components';
-
+import { Toolbar } from '@graphscope/studio-components';
+import {AddNode,ClearCanvas,ExportSvg} from '@graphscope/studio-flow-editor';
 import RightButton from './right-button';
-import ClearCanvas from './clear-canvas';
-import AddNode from './add-node';
-import ExportImage from './export-image';
-import { useContext } from '@graphscope/use-zustand';
+import { useContext } from '../useContext';
 
 import ParseCSV from './parse-csv';
 import ImportAndExportConfig from './import-and-export-config';
@@ -28,7 +25,7 @@ const ButtonController: React.FunctionComponent<IButtonControllerProps> = props 
           <Divider style={{ margin: '0px' }} />
           <AddNode />
           <ClearCanvas />
-          <ExportImage />
+          <ExportSvg />
         </Toolbar>
       </>
     );
