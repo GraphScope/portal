@@ -1,6 +1,6 @@
 import { Button, Segmented } from 'antd';
 import * as React from 'react';
-import { useContext } from '@graphscope/use-zustand';
+import {useContext} from '../useContext'
 import { useReactFlow } from 'reactflow';
 import { ApartmentOutlined, BranchesOutlined } from '@ant-design/icons';
 

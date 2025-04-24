@@ -30,8 +30,7 @@ const GraphCanvas: React.FC<ImportorProps> = ({
     onReactFlowInit,
   } = useInteractive();
   const { token } = theme.useToken();
-  useDynamicStyle(cssStyles, 'graphscope-graph-canvas');
- 
+  useDynamicStyle(cssStyles, 'graphscope-flow-editor');
   const _nodes = nodePositionChange.length === 0 ? nodes : applyNodeChanges(nodePositionChange, nodes);
   return (
     <div style={{ height: '100%', width: '100%' }}>
@@ -58,7 +57,7 @@ const GraphCanvas: React.FC<ImportorProps> = ({
           {showMinimap && <MiniMap style={{ backgroundColor: token.colorBgBase }} />}
           <ArrowMarker />
           {children}
-        </ReactFlow>
+        </ReactFlow>             
       </div>
     </div>
   );

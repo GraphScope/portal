@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Button, Tooltip } from 'antd';
-import { Icons, Utils } from '@graphscope/studio-components';
-import { useContext } from '@graphscope/use-zustand';
+import {useContext} from '../../../useContext'
 import { LinkOutlined, CheckOutlined } from '@ant-design/icons';
 
 import type { ImportorProps, ISchemaNode, ISchemaEdge } from '../../../typing';
