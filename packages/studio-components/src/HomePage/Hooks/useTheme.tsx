@@ -1,40 +1,62 @@
 import { useState, useEffect } from 'react';
 
+/**
+ * 主题类型
+ */
+type ThemeType = 'defaultAlgorithm' | 'darkAlgorithm';
 
-const getThemeByAlgo = () => {
+/**
+ * 获取算法主题
+ */
+const getThemeByAlgo = (): ThemeType => {
   const algo = localStorage.getItem('algorithm');
-  if (algo === 'darkAlgorithm') {
-    return 'darkAlgorithm';
-  }
-  return 'defaultAlgorithm';
+  return (algo === 'darkAlgorithm' ? 'darkAlgorithm' : 'defaultAlgorithm') as ThemeType;
 };
 
-const getThemeByDumi = () => {
+/**
+ * 获取 dumi 主题
+ */
+const getThemeByDumi = (): string | null => {
   return localStorage.getItem('dumi:prefers-color');
 };
-export const useTheme = () => {
-  const [value, setValue] = useState("defaultAlgorithm");
+
+/**
+ * 主题 Hook
+ *
+ * 用于管理和监听主题变化
+ * 支持算法主题和 dumi 主题
+ */
+export const useTheme = (): ThemeType => {
+  const [theme, setTheme] = useState<ThemeType>('defaultAlgorithm');
 
   useEffect(() => {
-    const targetElement = document.querySelector('html'); // 目标元素
-    const observer = new MutationObserver((mutationsList, observer) => {
-      for (let mutation of mutationsList) {
+    // 初始化主题
+    const initialTheme = getThemeByAlgo();
+    setTheme(initialTheme);
+
+    // 监听主题变化
+    const targetElement = document.querySelector('html');
+    if (!targetElement) return;
+
+    const observer = new MutationObserver(mutationsList => {
+      for (const mutation of mutationsList) {
         if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
-          //   const { cssText } = mutation.target.style;
-          const theme_value = localStorage.getItem('algorithm') || 'defaultAlgorithm';
-          setValue(JSON.parse(theme_value));
+          const newTheme = getThemeByAlgo();
+          setTheme(newTheme);
         }
       }
     });
-    //@ts-ignore
+
     observer.observe(targetElement, {
       attributes: true,
-      attributeFilter: ['data-theme'], // 仅观察 'style' 属性
+      attributeFilter: ['data-theme'],
     });
-    const theme_value = localStorage.getItem('algorithm') ||  'defaultAlgorithm';
 
-    setValue(JSON.parse(theme_value));
+    // 清理函数
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
-  return value || 'defaultAlgorithm';
+  return theme;
 };

@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { theme } from 'antd';
-interface IDatabaseProps {
-  style?: React.CSSProperties;
-}
+import { IconProps } from './index';
 
-const Database: React.FunctionComponent<IDatabaseProps> = props => {
-  const { style = {} } = props;
+/**
+ * 数据库图标组件
+ */
+const Database: React.FC<IconProps> = ({ style = {} }) => {
   const { token } = theme.useToken();
-  const { fontSize = 16, color = token.colorText } = style;
+  const { fontSize = token.fontSize, color = token.colorText } = style;
+
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width={fontSize} height={fontSize} style={style}>
       <path

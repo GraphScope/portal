@@ -1,3 +1,6 @@
+import * as React from 'react';
+
+// 导入所有插画组件
 import Job from './Job';
 import Explore from './Explore';
 import DesignSchema from './DesignSchema';
@@ -12,7 +15,19 @@ import Programming from './Programming';
 import Experiment from './Experiment';
 import Settings from './Settings';
 import Charts from './Charts';
-export default {
+
+/**
+ * 插画组件的通用属性接口
+ */
+export interface IIllustrationProps {
+  /** 自定义样式 */
+  style?: React.CSSProperties;
+  /** 自定义类名 */
+  className?: string;
+}
+
+// 导出所有插画组件
+const Illustration = {
   Job,
   Explore,
   DesignSchema,
@@ -28,3 +43,5 @@ export default {
   Settings,
   Charts,
 };
+
+export default Illustration;

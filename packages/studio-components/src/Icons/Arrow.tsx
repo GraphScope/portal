@@ -1,15 +1,17 @@
 import * as React from 'react';
+import { theme } from 'antd';
+import { IconProps } from './index';
 
-interface IArrowProps {
-  style?: React.CSSProperties;
-}
-
-const Arrow: React.FC<IArrowProps> = ({ style = {} }) => {
-  const { color = '#F97108', fontSize = '16px' } = style;
+/**
+ * 箭头图标组件
+ */
+const Arrow: React.FC<IconProps> = ({ style = {} }) => {
+  const { token } = theme.useToken();
+  const { fontSize = token.fontSize, color = token.colorText } = style;
 
   return (
     <svg
-      style={{ verticalAlign: 'middle' }}
+      style={{ ...style, verticalAlign: 'middle' }}
       width={fontSize}
       height={fontSize}
       viewBox="0 0 1024 1024"
