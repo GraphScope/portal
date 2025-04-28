@@ -1,7 +1,5 @@
 import React, { useCallback, useContext, useMemo } from 'react';
-import { Graph } from '@graphscope/studio-graph-editor';
-import { ISchemaNode } from '@graphscope/studio-graph-editor';
-import { ISchemaEdge } from '@graphscope/studio-graph-editor';
+import { ISchemaEdge, ISchemaNode, GraphEditor, GraphProvider } from '@graphscope/studio-flow-editor';
 import { useTransform } from '../../hooks/transform/useTransform';
 import { useGraphStore } from '../../stores/useGraphStore';
 import { useNodeStore } from '../../stores/useNodeStore';
@@ -54,20 +52,23 @@ export const Preview = () => {
         flexBasis: '50%',
         marginTop: '1rem',
         overflow: 'hidden',
+        position: 'relative',
       }}
     >
       <span style={{ fontSize: '1rem' }}>Model Preview</span>
       <div style={{ backgroundColor: 'white', height: '100%', flexGrow: '1' }}>
-        <Graph
-          isControlButton={false}
-          isMiniMap={false}
-          disabled={true}
-          isPreview={true}
-          defaultEdges={previewGraph?.edges}
-          defaultNodes={updatePositionNode}
-          graphId="preview-graph"
-          onSelectionChange={handleSelectionChange}
-        />
+        <GraphProvider>
+          <GraphEditor
+            showControl={false}
+            showMinimap={false}
+            isPreview={true}
+            nodesDraggable={true}
+            showDefaultBtn={false}
+            defaultEdges={previewGraph?.edges}
+            defaultNodes={updatePositionNode}
+            onSelectionChange={handleSelectionChange}
+          />
+        </GraphProvider>
       </div>
     </div>
   );

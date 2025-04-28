@@ -1,4 +1,4 @@
-import { IEdgeData, ISchemaEdge } from '@graphscope/studio-graph-editor';
+import { IEdgeData, ISchemaNode} from '@graphscope/studio-flow-editor';
 import { Property } from './property';
 
 export interface EdgeData extends ISchemaEdge {

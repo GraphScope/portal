@@ -1,16 +1,16 @@
-import {useRef} from 'react'
+import { useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useReactFlow } from 'reactflow';
 import { useGraphStore } from '../store';
 import { createNodeLabel } from '../utils';
 
-export const useAddNode = () => {
+export const useAddNode = ({ noDefaultLabel }) => {
   const addNodeIndexRef = useRef(0);
   const { setCenter } = useReactFlow();
-  const {updateStore } = useGraphStore();
+  const { updateStore } = useGraphStore();
   const handleAddVertex = () => {
     updateStore(draft => {
-      const label = createNodeLabel();
+      const label = noDefaultLabel ? '' : createNodeLabel();
       const x = addNodeIndexRef.current * 200;
       const y = addNodeIndexRef.current * 100;
       addNodeIndexRef.current++;

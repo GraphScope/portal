@@ -7,17 +7,20 @@ import {
   ReactFlowInstance,
   OnConnectStartParams,
   OnConnectEnd,
+  useOnSelectionChange,
 } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';
 import { createStaticForceLayout } from '../elements/forceLayout';
-import {transformEdges} from '../elements'
+import { transformEdges } from '../elements';
 import { fakeSnapshot } from '../utils/index';
 import type { NodeChange, EdgeChange, NodePositionChange } from 'reactflow';
 import { useGraphStore } from '../store';
+import { ISchemaEdge } from '../types';
 import { getBBox, createEdgeLabel, createNodeLabel } from '../utils';
 
-const useInteractive = () => {
+const useInteractive = props => {
   const { store, updateStore } = useGraphStore();
+  const { handleNodesChange, handleEdgesChange, onSelectionChange, isPreview, noDefaultLabel } = props;
   const { nodes, edges, nodePositionChange, hasLayouted, elementOptions, displayMode } = store;
   const { screenToFlowPosition, fitBounds } = useReactFlow();
   const connectingNodeId = useRef<string | null>(null);
@@ -39,7 +42,6 @@ const useInteractive = () => {
 
       const target = event.target as HTMLElement;
       const targetIsPane = target.classList.contains('react-flow__pane');
-
       if (targetIsPane) {
         const nodeId = uuidv4();
         const edgeId = uuidv4();
@@ -61,7 +63,7 @@ const useInteractive = () => {
             y: newPosition.y - 50,
           },
           type: 'graph-node',
-          data: { label: createNodeLabel() },
+          data: { label: noDefaultLabel ? '' : createNodeLabel() },
         };
 
         updateStore(draft => {
@@ -74,7 +76,7 @@ const useInteractive = () => {
               target: nodeId,
               type: 'graph-edge',
               data: {
-                label: createEdgeLabel(),
+                label: noDefaultLabel ? '' : createEdgeLabel(),
               },
             },
           ];
@@ -92,7 +94,7 @@ const useInteractive = () => {
               {
                 id: edgeId,
                 data: {
-                  label: edgeLabel,
+                  label: noDefaultLabel ? '' : edgeLabel,
                 },
                 source: connectingNodeId.current || '',
                 target: nodeid,
@@ -107,15 +109,20 @@ const useInteractive = () => {
   );
 
   const onNodesChange = (changes: NodeChange[]) => {
+    if (isPreview) {
+      return;
+    }
     const { type } = changes[0];
 
     if (elementOptions.isConnectable && type !== 'position') {
       updateStore(draft => {
-        draft.nodes = applyNodeChanges(changes, fakeSnapshot(nodes));
+        const newNodes = applyNodeChanges(changes, fakeSnapshot(nodes));
+        draft.nodes = newNodes;
+        if (handleNodesChange) {
+          handleNodesChange(newNodes);
+        }
       });
     }
-    console.log('changes::: ', changes);
-    console.log('applyNodeChanges(tempRef.current, nodes)::: ', applyNodeChanges(tempRef.current, nodes));
 
     if (type === 'position') {
       if (changes[0].dragging) {
@@ -125,16 +132,29 @@ const useInteractive = () => {
         });
       } else {
         updateStore(draft => {
-          draft.nodes = applyNodeChanges(tempRef.current, nodes);
+          const newNodes = applyNodeChanges(tempRef.current, nodes);
+          draft.nodes = newNodes;
+          if (handleNodesChange) {
+            handleNodesChange(newNodes);
+          }
         });
       }
     }
   };
 
+  useOnSelectionChange({
+    onChange: useCallback(
+      ({ nodes, edges }) => {
+        onSelectionChange && onSelectionChange(nodes, edges as unknown as ISchemaEdge[]);
+      },
+      [onSelectionChange],
+    ),
+  });
   const onEdgesChange = (changes: EdgeChange[]) => {
+    if (isPreview) return;
     if (elementOptions.isConnectable) {
       updateStore(draft => {
-        draft.edges = applyEdgeChanges(changes, fakeSnapshot(edges)) as typeof edges;;
+        draft.edges = applyEdgeChanges(changes, fakeSnapshot(edges)) as typeof edges;
       });
     }
   };
@@ -143,6 +163,16 @@ const useInteractive = () => {
     const bbox = getBBox(nodes);
     fitBounds(bbox, { duration: 600 });
   };
+
+  useEffect(() => {
+    if (handleEdgesChange) {
+      handleEdgesChange(edges);
+      console.log('handleEdgesChange edges::: ', edges);
+    }
+    if (handleNodesChange) {
+      handleNodesChange(nodes);
+    }
+  }, [edges, nodes]);
 
   useEffect(() => {
     if (nodes.length > 0 && !hasLayouted) {
@@ -172,6 +202,15 @@ const useInteractive = () => {
       }, 300);
     }
   };
+
+  useEffect(() => {
+    /** 把marker 放到 reactflow 内部，目的是为了导出的时候 dom 不丢失 */
+    const marker = document.getElementById('arrow-marker-svg');
+    const view = document.querySelector('.react-flow__viewport');
+    if (marker && view) {
+      view.appendChild(marker);
+    }
+  }, []);
 
   return {
     nodes,

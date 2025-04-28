@@ -52,8 +52,13 @@ export interface Option {
 export interface ImportorProps {
   /** 用于多实例管理的 ID */
   id?: string;
-  showBackground?: boolean;
-  showMinimap?: boolean;
   children?: React.ReactNode;
-  showDefaultBtn?: boolean;
+  nodesDraggable?: boolean;
+  isPreview?: boolean;
+  onNodesChange?: (nodes: ISchemaNode[]) => void;
+  onEdgesChange?: (edges: ISchemaEdge[]) => void;
+  onSelectionChange?: (nodes: ISchemaNode[], edges: ISchemaEdge[]) => void;
+  noDefaultLabel?: boolean;
+  defaultNodes?: ISchemaNode[];
+  defaultEdges?: ISchemaEdge[];
 }

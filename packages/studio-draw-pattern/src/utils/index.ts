@@ -1,4 +1,4 @@
-import { ISchemaNode } from '@graphscope/studio-graph-editor';
+import { ISchemaNode } from '@graphscope/studio-flow-editor';
 
 export function isArrayExist<T>(item: T, arrary: Array<T>): boolean {
   return arrary.indexOf(item) !== -1;

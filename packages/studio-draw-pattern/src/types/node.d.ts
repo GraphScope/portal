@@ -1,4 +1,4 @@
-import { ISchemaNode } from '@graphscope/studio-graph-editor';
+import { ISchemaNode } from '@graphscope/studio-flow-editor';
 import type { Property } from './property';
 
 export interface NodeData extends ISchemaNode {

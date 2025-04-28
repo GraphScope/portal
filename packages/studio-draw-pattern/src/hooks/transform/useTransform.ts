@@ -1,7 +1,6 @@
-import { ISchemaNode } from '@graphscope/studio-graph-editor';
+import { ISchemaEdge, ISchemaNode} from '@graphscope/studio-flow-editor';
 import { useCallback } from 'react';
 import { Node } from '../../types/node';
-import { ISchemaEdge } from '@graphscope/studio-graph-editor';
 import { Edge } from '../../types/edge';
 import { useNodeStore } from '../../stores/useNodeStore';
 import { useEdgeStore } from '../../stores/useEdgeStore';

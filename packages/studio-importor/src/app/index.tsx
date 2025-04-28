@@ -9,7 +9,8 @@ import type { ISchemaOptions, ImportorProps } from './typing';
 import locales from '../locales';
 import { ImportorProvider, useContext } from './useContext';
 import { FormattedMessage } from 'react-intl';
-
+import { Background, MiniMap } from 'reactflow';
+import { theme as antTheme } from 'antd';
 const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   const {
     appMode,
@@ -46,6 +47,7 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   } = props;
   const { store, updateStore } = useContext();
   const { isReady, nodes, displayMode } = store;
+  const { token } = antTheme.useToken();
   const IS_PURE = appMode === 'PURE';
   const isEmpty = nodes.length === 0;
   useEffect(() => {
@@ -123,8 +125,10 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         splitBorder
       >
         {isReady ? (
-          <GraphEditor showDefaultBtn={false} showMinimap={!IS_PURE} showBackground={!IS_PURE}>
+          <GraphEditor>
             {!IS_PURE && <ButtonController />}
+            {!IS_PURE && <Background style={{ background: token.colorBgBase }} />}
+            {!IS_PURE && <MiniMap style={{ backgroundColor: token.colorBgBase }} />}
             {isEmpty && <EmptyCanvas description={description} />}
             {children}
           </GraphEditor>
@@ -136,10 +140,9 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
   );
 };
 
-
 export default props => {
   return (
-     <ImportorProvider {...props} id={props.id} >
+    <ImportorProvider {...props} id={props.id}>
       <ImportApp {...props} />
     </ImportorProvider>
   );

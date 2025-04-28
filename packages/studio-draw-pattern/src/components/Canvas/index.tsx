@@ -1,21 +1,21 @@
-import { Graph } from '@graphscope/studio-graph-editor';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useNodeStore } from '../../stores/useNodeStore';
 import { useEdgeStore } from '../../stores/useEdgeStore';
-import { ISchemaEdge } from '@graphscope/studio-graph-editor';
 import { useGenerateRelation } from '../../hooks/generateRelation/useGenerateRelation';
-import PopoverContent from './PopoverContent';
 import { Property } from '../../types/property';
 import { useTransform } from '../../hooks/transform/useTransform';
-import { ISchemaNode } from '@graphscope/studio-graph-editor';
 import { useGraphStore } from '../../stores/useGraphStore';
 import { useEncodeCypher } from '../../hooks/cypher/useEncodeCypher';
-import { Button, Input, Modal, Tooltip } from 'antd';
+import { Button, Tooltip } from 'antd';
 import { usePropertiesStore } from '../../stores/usePropertiesStore';
+import ButtonController from './ButtonController';
 import { DrawPatternContext, DrawPatternValue } from '../DrawPattern';
 import _ from 'lodash';
+import { theme } from 'antd';
 import { useSection } from '@graphscope/studio-components';
+import { Background, MiniMap, Controls } from 'reactflow';
 import { InsertRowRightOutlined, SearchOutlined } from '@ant-design/icons';
+import { GraphProvider, GraphEditor, ISchemaEdge, ISchemaNode } from '@graphscope/studio-flow-editor';
 
 export const Canvas = () => {
   const [descState, setDescState] = useState<string>();
@@ -40,6 +40,7 @@ export const Canvas = () => {
   const { toggleLeftSide } = useSection();
   const [clickTrigger, setClickTrigger] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const { token } = theme.useToken();
 
   useEffect(() => {
     const nodeReturn = Array.from(nodesStore).map(node => `${node.variable}`);
@@ -115,22 +116,32 @@ export const Canvas = () => {
 
   const MyGraph = useCallback(() => {
     return (
-      <Graph
-        graphId="edit-graph"
+      <GraphEditor
         noDefaultLabel={true}
         defaultNodes={graphNodes}
         defaultEdges={graphEdges as unknown as ISchemaEdge[]}
         onNodesChange={handleNodes}
         onEdgesChange={handleEdges}
-        isShowPopover={true}
-        popoverCustomContent={<PopoverContent onChange={handlePropertiesChange}></PopoverContent>}
-      />
+      >
+        <ButtonController />
+        <Controls
+          style={{
+            gap: '4px',
+            boxShadow:
+              '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)',
+          }}
+        />
+        <Background style={{ background: token.colorBgBase }} />
+        <MiniMap style={{ backgroundColor: token.colorBgBase }} />
+      </GraphEditor>
     );
   }, [graphNodes, graphEdges]);
 
   return (
     <div style={{ height: '100%', width: '100%' }}>
-      <MyGraph></MyGraph>
+      <GraphProvider>
+        <MyGraph></MyGraph>
+      </GraphProvider>
       <div
         style={{
           backgroundColor: 'white',

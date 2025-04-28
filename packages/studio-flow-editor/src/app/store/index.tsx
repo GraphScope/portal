@@ -1,7 +1,5 @@
 import type { NodePositionChange } from 'reactflow';
 import StoreProvider, { useContext as useZustandContext } from '@graphscope/use-zustand';
-import type { Node, Edge } from 'reactflow';
-import type { Property } from '@graphscope/studio-components';
 import React, { useContext, useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { ISchemaEdge, ISchemaNode } from '../types';
@@ -46,7 +44,6 @@ export const GraphProvider = props => {
   const instanceId = useMemo(() => {
     return id || `graph-${uuidv4()}`;
   }, []);
-  console.log('GraphProvider instanceId::: ', instanceId);
   return (
     <GraphInstanceContext.Provider value={instanceId}>
       <StoreProvider id={instanceId} store={{ ...initialStore }}>

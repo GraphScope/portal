@@ -12,10 +12,12 @@ const AddNodeIcon = Icons.AddNode;
 
 interface IAddNodeProps {
   style?: React.CSSProperties;
+  noDefaultLabel?: boolean;
 }
 let addNodeIndex = 0;
+
 const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
-  const { style } = props;
+  const { style, noDefaultLabel } = props;
   const { store } = useGraphStore();
   const { elementOptions } = store;
   const disabled = !elementOptions.isConnectable;
@@ -24,7 +26,7 @@ const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
   ) : (
     <FormattedMessage id="Create new vertex" />
   );
-  const { handleAddVertex } = useAddNode();
+  const { handleAddVertex } = useAddNode({ noDefaultLabel });
 
   return (
     <Tooltip title={tooltipText} placement="right">
