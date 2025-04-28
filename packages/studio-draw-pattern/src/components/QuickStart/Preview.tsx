@@ -59,11 +59,8 @@ export const Preview = () => {
       <div style={{ backgroundColor: 'white', height: '100%', flexGrow: '1' }}>
         <GraphProvider>
           <GraphEditor
-            showControl={false}
-            showMinimap={false}
             isPreview={true}
             nodesDraggable={true}
-            showDefaultBtn={false}
             defaultEdges={previewGraph?.edges}
             defaultNodes={updatePositionNode}
             onSelectionChange={handleSelectionChange}
