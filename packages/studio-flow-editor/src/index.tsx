@@ -1,4 +1,4 @@
-export { default as GraphEditor } from './app';
+export { default as GraphCanvas } from './app';
 export * from './app/store';
 export { useClearCanvas, useAddNode, useExportSvg } from './app/hooks';
 export {default as AddNode} from './app/button-controller/add-node'

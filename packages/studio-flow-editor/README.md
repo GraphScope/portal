@@ -22,12 +22,12 @@ yarn add @graphscope/studio-flow-editor
 ## 快速开始
 
 ```tsx
-import { GraphEditor, GraphProvider } from '@graphscope/studio-flow-editor';
+import { GraphCanvas, GraphProvider } from '@graphscope/studio-flow-editor';
 
 function App() {
   return (
     <GraphProvider>
-      <GraphEditor/>
+      <GraphCanvas/>
     </GraphProvider>
   );
 }
@@ -35,12 +35,12 @@ function App() {
 
 ## 组件
 
-### GraphEditor
+### GraphCanvas
 
 流程图编辑器主组件。
 
 ```tsx
-<GraphEditor/>
+<GraphCanvas/>
 ```
 
 #### Props

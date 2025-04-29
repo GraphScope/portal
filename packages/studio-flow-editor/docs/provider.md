@@ -21,12 +21,12 @@ import { GraphProvider } from '@graphscope/studio-flow-editor';
 
 ```bash
 import React from 'react';
-import { GraphProvider, GraphEditor } from '@graphscope/studio-flow-editor';
+import { GraphProvider, GraphCanvas } from '@graphscope/studio-flow-editor';
 
 const App = () => {
   return (
     <GraphProvider id="my-graph">
-      <GraphEditor />
+      <GraphCanvas />
       {/* 其他需要访问图形状态的组件 */}
     </GraphProvider>
   );
@@ -72,7 +72,7 @@ interface GraphState {
 ```jsx
 import React from 'react';
 import { Toolbar } from '@graphscope/studio-components';
-import { GraphProvider, GraphEditor, AddNode, ClearCanvas, ExportSvg } from '@graphscope/studio-flow-editor';
+import { GraphProvider, GraphCanvas, AddNode, ClearCanvas, ExportSvg } from '@graphscope/studio-flow-editor';
 import { Divider } from 'antd';
 
 const App = () => {
@@ -80,25 +80,25 @@ const App = () => {
     <div style={{ display: 'flex', height: '300px' }}>
       <div style={{ flex: 1, position: 'relative' }}>
         <GraphProvider>
-          <GraphEditor>
+          <GraphCanvas>
             <Toolbar>
               <AddNode />
               <ClearCanvas />
               <ExportSvg />
             </Toolbar>
-          </GraphEditor>
+          </GraphCanvas>
         </GraphProvider>
       </div>
       <Divider type="vertical" style={{ height: '100%' }} />
       <div style={{ flex: 1, position: 'relative' }}>
         <GraphProvider>
-          <GraphEditor>
+          <GraphCanvas>
             <Toolbar>
               <AddNode />
               <ClearCanvas />
               <ExportSvg />
             </Toolbar>
-          </GraphEditor>
+          </GraphCanvas>
         </GraphProvider>
       </div>
     </div>
@@ -111,7 +111,7 @@ export default App;
 
 ## ReactFlowProvider
 
-`ReactFlowProvider` 在内部用于为所有组件提供 ReactFlow 上下文。它已自动包含在 `GraphEditor` 组件中，因此通常不需要直接使用它。
+`ReactFlowProvider` 在内部用于为所有组件提供 ReactFlow 上下文。它已自动包含在 `GraphCanvas` 组件中，因此通常不需要直接使用它。
 
 ### 访问状态
 
@@ -171,7 +171,7 @@ const App = () => {
   return (
     <ThemeProvider theme="dark">
       <GraphProvider id="main-graph">
-        <GraphEditor />
+        <GraphCanvas />
       </GraphProvider>
     </ThemeProvider>
   );

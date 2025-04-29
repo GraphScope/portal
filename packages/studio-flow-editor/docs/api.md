@@ -24,16 +24,16 @@ title: API 文档
 
 ```bash
 <GraphProvider id="my-graph">
-  <GraphEditor />
+  <GraphCanvas />
   {/* 其他需要访问图状态的组件 */}
 </GraphProvider>
 ```
 
-## GraphEditor
+## GraphCanvas
 
 ### 描述
 
-`GraphEditor` 是主要的图编辑器组件，提供了交互式的图形编辑界面。它必须包裹在 `GraphProvider` 内部。
+`GraphCanvas` 是主要的图编辑器组件，提供了交互式的图形编辑界面。它必须包裹在 `GraphProvider` 内部。
 
 ### 属性
 
@@ -52,7 +52,7 @@ title: API 文档
 ### 示例
 
 ```bash
-<GraphEditor
+<GraphCanvas
   nodesDraggable={true}
   isPreview={false}
   onNodesChange={(nodes) => console.log('Nodes changed:', nodes)}
@@ -62,7 +62,7 @@ title: API 文档
   defaultEdges={initialEdges}
 >
   {/* 可选的自定义UI组件 */}
-</GraphEditor>
+</GraphCanvas>
 ```
 
 ## Hooks

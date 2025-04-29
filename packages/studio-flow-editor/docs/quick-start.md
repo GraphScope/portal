@@ -23,13 +23,13 @@ pnpm add @graphscope/studio-flow-editor
 
 ```jsx
 import React from 'react';
-import { GraphProvider, GraphEditor } from '@graphscope/studio-flow-editor';
+import { GraphProvider, GraphCanvas } from '@graphscope/studio-flow-editor';
 
 const App = () => {
   return (
     <div style={{ width: '100%', height: '600px', position: 'relative' }}>
       <GraphProvider>
-        <GraphEditor />
+        <GraphCanvas />
       </GraphProvider>
     </div>
   );

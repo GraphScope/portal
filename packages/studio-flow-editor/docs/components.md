@@ -100,7 +100,7 @@ import { ExportSvg } from '@graphscope/studio-flow-editor';
 import React from 'react';
 import { 
   GraphProvider, 
-  GraphEditor, 
+  GraphCanvas, 
   AddNode, 
   ClearCanvas, 
   ExportSvg 
@@ -131,7 +131,7 @@ const App = () => {
   return (
     <div style={{ width: '100%', height: '600px', position: 'relative' }} id="testZh">
       <GraphProvider>
-        <GraphEditor>
+        <GraphCanvas>
           <div style={ToolbarStyle}>
             <AddNode 
               style={ButtonStyle} 
@@ -144,7 +144,7 @@ const App = () => {
               style={ButtonStyle} 
             />
           </div>
-        </GraphEditor>
+        </GraphCanvas>
       </GraphProvider>
     </div>
   );
@@ -161,7 +161,7 @@ export default App;
 import React from 'react';
 import { 
   GraphProvider, 
-  GraphEditor, 
+  GraphCanvas, 
   useGraphStore,
   AddNode, 
   ClearCanvas 
@@ -195,7 +195,7 @@ const App = () => {
   return (
     <div style={{ width: '100%', height: '600px', position: 'relative' }}>
       <GraphProvider>
-        <GraphEditor>
+        <GraphCanvas>
           <div style={{ 
             position: 'absolute', 
             top: '10px', 
@@ -208,7 +208,7 @@ const App = () => {
             <ClearCanvas />
           </div>
           <InfoPanel />
-        </GraphEditor>
+        </GraphCanvas>
       </GraphProvider>
     </div>
   );

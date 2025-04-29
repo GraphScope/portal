@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useMemo } from 'react';
-import { ISchemaEdge, ISchemaNode, GraphEditor, GraphProvider } from '@graphscope/studio-flow-editor';
+import { ISchemaEdge, ISchemaNode, GraphCanvas, GraphProvider } from '@graphscope/studio-flow-editor';
 import { useTransform } from '../../hooks/transform/useTransform';
 import { useGraphStore } from '../../stores/useGraphStore';
 import { useNodeStore } from '../../stores/useNodeStore';
@@ -58,7 +58,7 @@ export const Preview = () => {
       <span style={{ fontSize: '1rem' }}>Model Preview</span>
       <div style={{ backgroundColor: 'white', height: '100%', flexGrow: '1' }}>
         <GraphProvider>
-          <GraphEditor
+          <GraphCanvas
             isPreview={true}
             nodesDraggable={true}
             defaultEdges={previewGraph?.edges}

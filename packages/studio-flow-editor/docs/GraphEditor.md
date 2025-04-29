@@ -1,30 +1,30 @@
 ---
 order: 3
-title: GraphEditor 组件
+title: GraphCanvas 组件
 ---
 
-# GraphEditor 组件
+# GraphCanvas 组件
 
-`GraphEditor` 组件是 `@graphscope/studio-flow-editor` 包的核心组件，提供了完整的图形可视化和交互编辑功能。本文档详细介绍该组件的用法和配置选项。
+`GraphCanvas` 组件是 `@graphscope/studio-flow-editor` 包的核心组件，提供了完整的图形可视化和交互编辑功能。本文档详细介绍该组件的用法和配置选项。
 
 ## 导入方式
 
 ```bash
-import { GraphEditor } from '@graphscope/studio-flow-editor';
+import { GraphCanvas } from '@graphscope/studio-flow-editor';
 ```
 
 ## 基本用法
 
 ```bash
 import React from 'react';
-import { GraphProvider, GraphEditor } from '@graphscope/studio-flow-editor';
+import { GraphProvider, GraphCanvas } from '@graphscope/studio-flow-editor';
 
 const MyGraph = () => {
   return (
     <GraphProvider>
-      <GraphEditor>
+      <GraphCanvas>
         {/* 可在此添加自定义UI组件 */}
-      </GraphEditor>
+      </GraphCanvas>
     </GraphProvider>
   );
 };
@@ -46,7 +46,7 @@ const MyGraph = () => {
 
 ## 功能特性
 
-`GraphEditor` 组件提供以下核心功能：
+`GraphCanvas` 组件提供以下核心功能：
 
 1. **节点管理**
 
@@ -75,7 +75,7 @@ const MyGraph = () => {
 
 ## 内部组件结构
 
-`GraphEditor` 组件内部由多个组件组合而成：
+`GraphCanvas` 组件内部由多个组件组合而成：
 
 - **GraphCanvas**：主要的画布区域，包含节点和边
 - **ReactFlow**：底层的 ReactFlow 组件，负责图形渲染
@@ -89,11 +89,11 @@ const MyGraph = () => {
 
 ## 与 GraphProvider 集成
 
-`GraphEditor` 必须在 `GraphProvider` 内使用才能访问共享状态：
+`GraphCanvas` 必须在 `GraphProvider` 内使用才能访问共享状态：
 
 ```bash
 <GraphProvider>
-  <GraphEditor />
+  <GraphCanvas />
 </GraphProvider>
 ```
 
@@ -104,7 +104,7 @@ const MyGraph = () => {
 
 ```jsx
 import React from 'react';
-import { GraphProvider, GraphEditor } from '@graphscope/studio-flow-editor';
+import { GraphProvider, GraphCanvas } from '@graphscope/studio-flow-editor';
 
 const App = () => {
   // 初始节点数据
@@ -137,7 +137,7 @@ const App = () => {
   return (
     <div style={{ width: '100%', height: '600px', position: 'relative' }}>
       <GraphProvider>
-        <GraphEditor defaultNodes={initialNodes} defaultEdges={initialEdges} />
+        <GraphCanvas defaultNodes={initialNodes} defaultEdges={initialEdges} />
       </GraphProvider>
     </div>
   );
@@ -152,7 +152,7 @@ export default App;
 
 ```jsx
 import React, { useState } from 'react';
-import { GraphProvider, GraphEditor, AddNode, ClearCanvas } from '@graphscope/studio-flow-editor';
+import { GraphProvider, GraphCanvas, AddNode, ClearCanvas } from '@graphscope/studio-flow-editor';
 import { Card, Divider } from 'antd';
 import { Toolbar } from '@graphscope/studio-components';
 
@@ -180,7 +180,7 @@ const App = () => {
   return (
     <div style={{ width: '100%', height: '600px', position: 'relative' }}>
       <GraphProvider>
-        <GraphEditor onNodesChange={handleNodesChange} onEdgesChange={handleEdgesChange}>
+        <GraphCanvas onNodesChange={handleNodesChange} onEdgesChange={handleEdgesChange}>
           <Toolbar style={{ top: '12px', right: '24px', left: 'unset' }} direction="vertical">
             <AddNode />
             <ClearCanvas />
@@ -195,7 +195,7 @@ const App = () => {
               <p style={{ overflow: 'auto' }}>{JSON.stringify(edges)}</p>
             </Card>
           </div>
-        </GraphEditor>
+        </GraphCanvas>
       </GraphProvider>
     </div>
   );
@@ -212,7 +212,7 @@ export default App;
 import React from 'react';
 import {
   GraphProvider,
-  GraphEditor,
+  GraphCanvas,
   useGraphStore,
   useAddNode,
   useClearCanvas,
@@ -266,10 +266,10 @@ const App = () => {
   return (
     <div style={{ width: '100%', height: '600px', position: 'relative' }} id="graphPanel">
       <GraphProvider>
-        <GraphEditor>
+        <GraphCanvas>
           <ControlPanel />
           <MiniMap />
-        </GraphEditor>
+        </GraphCanvas>
       </GraphProvider>
     </div>
   );
@@ -285,19 +285,19 @@ Studio Flow Editor 提供了几个预定义的控制组件，可以直接使用�
 ```jsx
 import React from 'react';
 import { Toolbar } from '@graphscope/studio-components';
-import { GraphProvider, GraphEditor, AddNode, ClearCanvas, ExportSvg } from '@graphscope/studio-flow-editor';
+import { GraphProvider, GraphCanvas, AddNode, ClearCanvas, ExportSvg } from '@graphscope/studio-flow-editor';
 
 const App = () => {
   return (
     <div style={{ width: '100%', height: '600px', position: 'relative' }}>
       <GraphProvider>
-        <GraphEditor>
+        <GraphCanvas>
           <Toolbar>
             <AddNode />
             <ClearCanvas />
             <ExportSvg />
           </Toolbar>
-        </GraphEditor>
+        </GraphCanvas>
       </GraphProvider>
     </div>
   );
@@ -315,7 +315,7 @@ import React from 'react';
 import { Toolbar } from '@graphscope/studio-components';
 import {
   GraphProvider,
-  GraphEditor,
+  GraphCanvas,
   AddNode,
   ClearCanvas,
   useGraphStore,
@@ -350,20 +350,20 @@ const CustomNodePanel = () => {
 };
 
 // 完整示例
-const MyGraphEditor = () => {
+const MyGraphCanvas = () => {
   return (
     <div style={{ height: '50vh', position: 'relative' }}>
       <GraphProvider>
-        <GraphEditor>
+        <GraphCanvas>
           <Toolbar>
             <AddNode />
             <ClearCanvas />
           </Toolbar>
           <CustomNodePanel />
-        </GraphEditor>
+        </GraphCanvas>
       </GraphProvider>
     </div>
   );
 };
-export default MyGraphEditor;
+export default MyGraphCanvas;
 ```

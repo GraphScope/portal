@@ -23,7 +23,7 @@ title: 写在前面
 
 ### 主要组件一览
 
-#### GraphEditor
+#### GraphCanvas
 
 主编辑器组件，提供可视化图编辑功能。
 

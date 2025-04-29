@@ -15,7 +15,7 @@ import { theme } from 'antd';
 import { useSection } from '@graphscope/studio-components';
 import { Background, MiniMap, Controls } from 'reactflow';
 import { InsertRowRightOutlined, SearchOutlined } from '@ant-design/icons';
-import { GraphProvider, GraphEditor, ISchemaEdge, ISchemaNode } from '@graphscope/studio-flow-editor';
+import { GraphProvider, GraphCanvas, ISchemaEdge, ISchemaNode } from '@graphscope/studio-flow-editor';
 
 export const Canvas = () => {
   const [descState, setDescState] = useState<string>();
@@ -116,7 +116,7 @@ export const Canvas = () => {
 
   const MyGraph = useCallback(() => {
     return (
-      <GraphEditor
+      <GraphCanvas
         noDefaultLabel={true}
         defaultNodes={graphNodes}
         defaultEdges={graphEdges as unknown as ISchemaEdge[]}
@@ -133,7 +133,7 @@ export const Canvas = () => {
         />
         <Background style={{ background: token.colorBgBase }} />
         <MiniMap style={{ backgroundColor: token.colorBgBase }} />
-      </GraphEditor>
+      </GraphCanvas>
     );
   }, [graphNodes, graphEdges]);
 

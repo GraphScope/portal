@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropertiesEditor from './properties-editor';
 import { Section, StudioProvier, GlobalSpin, EmptyCanvas } from '@graphscope/studio-components';
 import { transformGraphNodes, transformEdges } from './elements/index';
-import { GraphEditor, GraphProvider } from '@graphscope/studio-flow-editor';
+import { GraphCanvas, GraphProvider } from '@graphscope/studio-flow-editor';
 import { PlayCircleOutlined } from '@ant-design/icons';
 import ButtonController from './button-controller';
 import type { ISchemaOptions, ImportorProps } from './typing';
@@ -125,13 +125,13 @@ const ImportApp: React.FunctionComponent<ImportorProps> = props => {
         splitBorder
       >
         {isReady ? (
-          <GraphEditor>
+          <GraphCanvas>
             {!IS_PURE && <ButtonController />}
             {!IS_PURE && <Background style={{ background: token.colorBgBase }} />}
             {!IS_PURE && <MiniMap style={{ backgroundColor: token.colorBgBase }} />}
             {isEmpty && <EmptyCanvas description={description} />}
             {children}
-          </GraphEditor>
+          </GraphCanvas>
         ) : (
           <GlobalSpin />
         )}

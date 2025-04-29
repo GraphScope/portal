@@ -1,6 +1,6 @@
 ---
 order: 8
-title: 工具函数
+title: 进阶示例
 ---
 
 # 进阶示例
@@ -13,7 +13,7 @@ title: 工具函数
 
 ```jsx
 import React, { useState } from 'react';
-import { GraphProvider, GraphEditor, useGraphStore, useAddNode, useClearCanvas } from '@graphscope/studio-flow-editor';
+import { GraphProvider, GraphCanvas, useGraphStore, useAddNode, useClearCanvas } from '@graphscope/studio-flow-editor';
 
 // 标签编辑面板组件
 const LabelEditor = () => {
@@ -171,10 +171,10 @@ const App = () => {
   return (
     <div style={{ width: '100%', height: '600px', position: 'relative' }}>
       <GraphProvider>
-        <GraphEditor>
+        <GraphCanvas>
           <Toolbar />
           <LabelEditor />
-        </GraphEditor>
+        </GraphCanvas>
       </GraphProvider>
     </div>
   );
@@ -190,7 +190,7 @@ export default App;
 ```jsx
 import React, { useState, useEffect } from 'react';
 import { MiniMap, Background } from 'reactflow';
-import { GraphProvider, GraphEditor, useGraphStore, useAddNode, useClearCanvas } from '@graphscope/studio-flow-editor';
+import { GraphProvider, GraphCanvas, useGraphStore, useAddNode, useClearCanvas } from '@graphscope/studio-flow-editor';
 
 // Cypher生成器组件
 const CypherGenerator = () => {
@@ -633,13 +633,13 @@ const App = () => {
   return (
     <div style={{ width: '100%', height: '600px', position: 'relative' }}>
       <GraphProvider>
-        <GraphEditor>
+        <GraphCanvas>
           <Toolbar />
           <CypherGenerator />
           <NodeDataPanel />
           <MiniMap />
           <Background />
-        </GraphEditor>
+        </GraphCanvas>
       </GraphProvider>
     </div>
   );
@@ -662,7 +662,7 @@ export default App;
 import React, { useState, useEffect } from 'react';
 import {
   GraphProvider,
-  GraphEditor,
+  GraphCanvas,
   useGraphStore,
   useAddNode,
   useClearCanvas,
@@ -674,12 +674,12 @@ const GraphApplication = () => {
   return (
     <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
       <GraphProvider>
-        <GraphEditor>
+        <GraphCanvas>
           <MainToolbar />
           <PropertiesPanel />
           <CypherPanel />
           <StatusBar />
-        </GraphEditor>
+        </GraphCanvas>
       </GraphProvider>
     </div>
   );

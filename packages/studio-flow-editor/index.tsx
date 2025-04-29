@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GraphProvider, GraphEditor, useGraphStore } from './src/index';
+import { GraphProvider, GraphCanvas, useGraphStore } from './src/index';
 import { createRoot } from 'react-dom/client';
 import { Divider ,Button} from 'antd';
 import StoreProvider from '@graphscope/use-zustand';
@@ -13,11 +13,11 @@ const Edit = ()=>{
     console.log(JSON.stringify(store))
   }
   return  (
-    <GraphEditor>
+    <GraphCanvas>
       <Button style={{position:"absolute",zIndex:4}} onClick={()=>printData()}>
           test
       </Button>
-    </GraphEditor>
+    </GraphCanvas>
   )
 }
 const DrawGraph: React.FunctionComponent<IAppProps> = props => {
