@@ -69,6 +69,7 @@ const GraphCanvas: React.FC<ImportorProps> = ({
           nodesDraggable={nodesDraggable}
           onDoubleClick={onDoubleClick}
           minZoom={0.01}
+          fitView
         >
           <ArrowMarker />
           {children}

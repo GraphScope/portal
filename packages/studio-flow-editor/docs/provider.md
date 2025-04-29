@@ -1,97 +1,180 @@
 ---
-order: 1
+order: 2
 title: GraphProvider
 ---
 
+# 状态管理与Provider
+
+`@graphscope/studio-flow-editor` 包使用Provider组件来管理应用中的状态和上下文。这些Provider组件是图形编辑器正常运行的基础。
+
 ## GraphProvider
 
-GraphProvider是一个全局数据的提供者，在其内部的组件，即可通过 useGraphStore获得全局数据
-| props | desc | default |
-| -------- | --------------------------------------- | ---------------- |
-| id | 多实例管理需要的唯一表示 | 默认是uuid生成的 |
+`GraphProvider` 是图形编辑器的主要状态提供者。它创建一个上下文，用于保存和管理节点、边和其他图形相关数据的状态。
 
-### 数据隔离
+### 导入方式
 
-GraphProvider 实现数据隔离的核心机制在于使用了 唯一实例 ID 和 上下文（Context）。即使在不传递id的情况下，也会生成一个唯一的 ID，并通过 React 的 Context API 将该 ID 传递给 GraphProvider 和 GraphEditor 组件。这样即使它们都使用相同的 GraphProvider 组件，在多个实例中，每个实例都可以独立地管理自己的数据，而不会影响其他实例的数据，下面我们通过代码来进行演示；
+```bash
+import { GraphProvider } from '@graphscope/studio-flow-editor';
+```
 
-```jsx
-import * as React from 'react';
+### 基本用法
+
+```bash
+import React from 'react';
 import { GraphProvider, GraphEditor } from '@graphscope/studio-flow-editor';
-import { Divider } from 'antd';
-export default () => {
+
+const App = () => {
   return (
-    <>
-      <div style={{ width: '100%', height: '20vh', position: 'relative' }}>
-        <GraphProvider>
-          <GraphEditor />
-        </GraphProvider>
-      </div>
-      <Divider />
-      <div style={{ width: '100%', height: '20vh', position: 'relative' }}>
-        <GraphProvider>
-          <GraphEditor />
-        </GraphProvider>
-      </div>
-    </>
+    <GraphProvider id="my-graph">
+      <GraphEditor />
+      {/* 其他需要访问图形状态的组件 */}
+    </GraphProvider>
   );
 };
 ```
 
-### 更新、获取数据
-@graphscope/studio-flow-editor包提供了useGraphStore钩子，该钩子提供了对GraphProvider组件内部数据的更新和获取能力。
+### 属性配置
+
+| 属性名     | 类型      | 默认值         | 说明                     |
+| ---------- | --------- | -------------- | ------------------------ |
+| `id`       | string    | 自动生成的UUID | 该图实例的唯一标识符     |
+| `children` | ReactNode | -              | 需要访问图形状态的子组件 |
+
+### 状态管理
+
+`GraphProvider` 内部使用 [Zustand](https://github.com/pmndrs/zustand)（通过 `@graphscope/use-zustand`）来管理状态。初始状态结构如下：
+
+```typescript
+interface GraphState {
+  displayMode: 'graph' | 'table';
+  nodes: ISchemaNode[];
+  edges: ISchemaEdge[];
+  nodePositionChange: NodePositionChange[];
+  hasLayouted: boolean;
+  elementOptions: {
+    isEditable: boolean;
+    isConnectable: boolean;
+  };
+  theme: {
+    primaryColor: string;
+  };
+  currentId: string;
+  currentType: 'nodes' | 'edges';
+  selectedNodeIds: string[];
+  selectedEdgeIds: string[];
+}
+```
+
+## 多实例支持
+
+可以在同一页面创建多个独立的图编辑器实例：
 
 ```jsx
-import * as React from 'react';
-import { GraphProvider, GraphEditor, useGraphStore } from '@graphscope/studio-flow-editor';
-import { Divider, Button } from 'antd';
-const Edit = () => {
-  const { store,updateStore } = useGraphStore();
+import React from 'react';
+import { Toolbar } from '@graphscope/studio-components';
+import { GraphProvider, GraphEditor, AddNode, ClearCanvas, ExportSvg } from '@graphscope/studio-flow-editor';
+import { Divider } from 'antd';
 
-  React.useEffect(() => {
-    updateStore(draft=>{
-        draft.nodes = [];
-    })
-  },[])
-  const { nodes, edges, nodePositionChange, hasLayouted, elementOptions, displayMode } = store;
-
-  const printData = () => {
-    console.log('nodes::: ', nodes);
-    console.log('edges::: ', edges);
-    console.log('nodePositionChange::: ', nodePositionChange);
-    console.log('hasLayouted::: ', hasLayouted);
-    console.log('displayMode::: ', displayMode);
-    console.log('elementOptions::: ', elementOptions);
-  };
+const App = () => {
   return (
-    <>
-      <div style={{ position: 'absolute', top: 38, left: 0 }}>{JSON.stringify(store)}</div>
-      <Button style={{ position: 'absolute', top: 0, left: 0, zIndex: 4 }} onClick={printData}>
-        打印节点数据
-      </Button>
-    </>
+    <div style={{ display: 'flex', height: '300px' }}>
+      <div style={{ flex: 1, position: 'relative' }}>
+        <GraphProvider>
+          <GraphEditor>
+            <Toolbar>
+              <AddNode />
+              <ClearCanvas />
+              <ExportSvg />
+            </Toolbar>
+          </GraphEditor>
+        </GraphProvider>
+      </div>
+      <Divider type="vertical" style={{ height: '100%' }} />
+      <div style={{ flex: 1, position: 'relative' }}>
+        <GraphProvider>
+          <GraphEditor>
+            <Toolbar>
+              <AddNode />
+              <ClearCanvas />
+              <ExportSvg />
+            </Toolbar>
+          </GraphEditor>
+        </GraphProvider>
+      </div>
+    </div>
   );
 };
-export default () => {
+
+export default App;
+```
+
+
+## ReactFlowProvider
+
+`ReactFlowProvider` 在内部用于为所有组件提供 ReactFlow 上下文。它已自动包含在 `GraphEditor` 组件中，因此通常不需要直接使用它。
+
+### 访问状态
+
+要在 `GraphProvider` 的子组件中访问图状态，使用 `useGraphStore` 钩子：
+
+```bash
+import { useGraphStore } from '@graphscope/studio-flow-editor';
+
+const MyComponent = () => {
+  const { store, updateStore } = useGraphStore();
+
   return (
-    <div style={{ width: '100%', height: '50vh', position: 'relative' }}>
-      <GraphProvider>
-        <GraphEditor showMinimap={false}>
-          <Edit />
-        </GraphEditor>
-      </GraphProvider>
+    <div>
+      <p>节点数量: {store.nodes.length}</p>
+      <p>边数量: {store.edges.length}</p>
     </div>
   );
 };
 ```
-### store数据属性
-| attr | desc | default |
-| -------- | --------------------------------------- | ---------------- |
-| nodes | 节点数据 | [] |
-| edges | 连线数据 | [] |
-| nodePositionChange | 节点位置变化存储 | [] |
-| hasLayouted | 是否第一次渲染 | false |
-| elementOptions.isEditable | 如使用默认按钮控制器（showDefaultBtn为true的情况） 是否可以编辑 | true |
-| elementOptions.isConnectable | 是否可以进行连线 | true |
-| currentId | 当前选中（node/edge）id | '' |
-| currentType | 当前选中类型 | 'nodes' |
-| theme.primaryColor | 连线/节点的主题色 | '#1978FF' |
+
+### 更新状态
+
+要更新图状态，使用 `useGraphStore` 提供的 `updateStore` 函数：
+
+```bash
+import { useGraphStore } from '@graphscope/studio-flow-editor';
+
+const AddRandomNode = () => {
+  const { updateStore } = useGraphStore();
+
+  const handleClick = () => {
+    updateStore(draft => {
+      draft.nodes.push({
+        id: `node-${Math.random().toString(36).substring(2, 9)}`,
+        position: { x: Math.random() * 500, y: Math.random() * 500 },
+        data: { label: '随机节点' },
+        type: 'graph-node',
+      });
+    });
+  };
+
+  return <button onClick={handleClick}>添加随机节点</button>;
+};
+```
+
+## 高级用法
+
+### 嵌套Provider
+
+可以嵌套Provider来创建复杂的状态层次结构：
+
+```bash
+import { GraphProvider } from '@graphscope/studio-flow-editor';
+import { ThemeProvider } from 'your-theme-provider';
+
+const App = () => {
+  return (
+    <ThemeProvider theme="dark">
+      <GraphProvider id="main-graph">
+        <GraphEditor />
+      </GraphProvider>
+    </ThemeProvider>
+  );
+};
+```
+

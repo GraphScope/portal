@@ -1,109 +1,101 @@
 ---
 order: 0
-title: 快速开始
+title: 写在前面
 ---
+
 # Studio Flow Editor
 
-## 简介
+## 写在前面
 
-Studio Flow Editor 是一个基于 React 的流程图编辑器组件，提供了完整的流程图编辑功能和状态管理方案。它基于 ReactFlow 构建，支持节点和边的创建、编辑，以及多种布局算法。
+### 概述
 
-## 特性
+`@graphscope/studio-flow-editor` 是一个基于 React 的图编辑器组件库，提供了一套完整的图数据可视化和交互编辑解决方案。该库基于 ReactFlow 构建，支持节点与边的直观编辑、自动布局以及高度可定制的图形表示。
 
-- 完整的流程图编辑功能
-- 响应式状态管理
-- 支持国际化
-- 支持图片导出
-- 模块化设计
+### 主要特性
 
-## 安装
+- **交互式编辑**：支持拖拽式创建、移动节点和连线
+- **状态管理**：集成 Zustand 进行高效状态管理
+- **多实例支持**：允许在同一页面创建多个独立图编辑器
+- **自动布局**：内置力导向图布局算法
+- **类型安全**：完整的 TypeScript 类型定义
+- **自定义外观**：可定制节点和边的样式与行为
+- **导出功能**：支持导出为 SVG 图片
 
-```bash
-npm install @graphscope/studio-flow-editor
-# 或
-yarn add @graphscope/studio-flow-editor
+### 主要组件一览
+
+#### GraphEditor
+
+主编辑器组件，提供可视化图编辑功能。
+
+```typescript
+interface ImportorProps {
+  id?: string;                                 // 编辑器实例ID
+  children?: React.ReactNode;                  // 子组件
+  nodesDraggable?: boolean;                    // 节点是否可拖拽
+  isPreview?: boolean;                         // 是否为预览模式
+  onNodesChange?: (nodes: ISchemaNode[]) => void; // 节点变化回调
+  onEdgesChange?: (edges: ISchemaEdge[]) => void; // 边变化回调
+  onSelectionChange?: (nodes: ISchemaNode[], edges: ISchemaEdge[]) => void; // 选择变化回调
+  noDefaultLabel?: boolean;                    // 是否禁用默认标签
+  defaultNodes?: ISchemaNode[];                // 初始节点
+  defaultEdges?: ISchemaEdge[];                // 初始边
+}
 ```
 
-## 使用示例
+#### GraphProvider 
 
-```jsx
-import * as React from 'react';
-import { GraphProvider, GraphEditor } from '@graphscope/studio-flow-editor';
+状态管理提供者，负责管理图编辑器的所有状态。
 
-const App = () => {
-  return (
-    <div style={{ width: '100%', height: '20vh',position: 'relative' }}>
-      <GraphProvider>
-        <GraphEditor />
-      </GraphProvider>
-    </div>
-  );
-};
-export default App;
+```typescript
+interface GraphProviderProps {
+  id?: string;                 // 图实例ID，默认自动生成
+  children: React.ReactNode;   // 子组件
+}
 ```
 
-## API
+#### 状态结构
 
-### GraphProvider
-
-提供编辑器所需的上下文。
-
-```bash
-    import { GraphProvider, GraphEditor } from '@graphscope/studio-flow-editor';
-    <GraphProvider>
-      <GraphEditor />
-    </GraphProvider>
+```typescript
+interface GraphState {
+  displayMode: 'graph' | 'table';              // 显示模式
+  nodes: ISchemaNode[];                        // 节点列表
+  edges: ISchemaEdge[];                        // 边列表
+  nodePositionChange: NodePositionChange[];    // 节点位置变更
+  hasLayouted: boolean;                        // 是否已布局
+  elementOptions: {                            // 元素选项
+    isEditable: boolean;                       // 是否可编辑
+    isConnectable: boolean;                    // 是否可连接
+  };
+  theme: {                                     // 主题
+    primaryColor: string;                      // 主色调
+  };
+  currentId: string;                           // 当前选中元素ID
+  currentType: 'nodes' | 'edges';              // 当前选中元素类型
+  selectedNodeIds: string[];                   // 选中的节点ID数组
+  selectedEdgeIds: string[];                   // 选中的边ID数组
+}
 ```
 
-### GraphEditor
+### 钩子(Hooks)一览
 
-主编辑器组件，包含完整的编辑功能。
+| 钩子名称 | 返回值 | 描述 |
+|---------|-------|------|
+| `useGraphStore` | `{ store, updateStore }` | 访问和更新图状态 |
+| `useClearCanvas` | `{ handleClear }` | 清除画布或删除选中元素 |
+| `useAddNode` | `{ handleAddVertex }` | 添加新节点到画布 |
+| `useExportSvg` | `{ exportSvg }` | 导出图为SVG或图片 |
 
-```bash
-  import { GraphEditor } from '@graphscope/studio-flow-editor';
-  <GraphEditor />
-```
+### 工具组件一览
 
-### useGraphStore
+| 组件名称 | 描述 |
+|---------|------|
+| `AddNode` | 添加节点按钮组件 |
+| `ClearCanvas` | 清空/删除选中元素按钮组件 |
+| `ExportSvg` | 导出SVG按钮组件 |
 
-状态管理 hook，用于访问和更新编辑器状态。
+## 文档导航
 
-```bash
-import {useGraphStore } from '@graphscope/studio-flow-editor';
-const { store, updateStore } = useGraphStore();
-const { nodes, edges } = store;
-
-// 更新状态
-updateStore(draft => {
-  draft.nodes = newNodes;
-  draft.edges = newEdges;
-});
-```
-
-## 状态管理
-
-编辑器使用 Zustand 进行状态管理，主要状态包括：
-
-- `nodes`: 节点列表
-- `edges`: 边列表
-- `nodePositionChange`: 节点位置变化
-- `hasLayouted`: 是否已布局
-- `elementOptions`: 元素选项
-  - `isEditable`: 是否可编辑
-  - `isConnectable`: 是否可连接
-
-## 布局算法
-
-支持两种布局算法：
-
-1. D3-force: 力导向布局
-2. Dagre: 层次布局
-
-
-
-
-
-
-
-
-
+- [快速开始](./quick-start.md) - 安装指南和基本使用方法
+- [API文档](./api.md) - 详细的API参考
+- [组件](./components.md) - 工具组件使用指南
+- [示例](./demos.md) - 实用示例和高级用法

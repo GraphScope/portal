@@ -19,6 +19,8 @@ export interface GraphState {
   };
   currentId: string;
   currentType: 'nodes' | 'edges';
+  selectedNodeIds: string[];
+  selectedEdgeIds: string[];
 }
 
 const initialStore: GraphState = {
@@ -36,6 +38,8 @@ const initialStore: GraphState = {
     primaryColor: '#1978FF',
   },
   currentType: 'nodes',
+  selectedNodeIds: [],
+  selectedEdgeIds: []
 };
 const GraphInstanceContext = React.createContext<string | null>(null);
 

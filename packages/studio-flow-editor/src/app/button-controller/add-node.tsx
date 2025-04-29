@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { Button, Tooltip } from 'antd';
-import { v4 as uuidv4 } from 'uuid';
-import { useReactFlow } from 'reactflow';
 import { Icons } from '@graphscope/studio-components';
 import { FormattedMessage } from 'react-intl';
 import { useGraphStore } from '../store';
 import { useAddNode } from '../hooks/useAddNode';
-import { createNodeLabel } from '../utils';
 
 const AddNodeIcon = Icons.AddNode;
 
@@ -30,7 +27,7 @@ const AddNode: React.FunctionComponent<IAddNodeProps> = props => {
 
   return (
     <Tooltip title={tooltipText} placement="right">
-      <Button disabled={disabled} onClick={handleAddVertex} style={style} type="text" icon={<AddNodeIcon />}></Button>
+      <Button disabled={disabled} onClick={() => handleAddVertex()} style={style} type="text" icon={<AddNodeIcon />}></Button>
     </Tooltip>
   );
 };

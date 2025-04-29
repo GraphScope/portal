@@ -4,11 +4,12 @@ import { useReactFlow } from 'reactflow';
 import { useGraphStore } from '../store';
 import { createNodeLabel } from '../utils';
 
-export const useAddNode = ({ noDefaultLabel }) => {
+export const useAddNode = ({ noDefaultLabel }: { noDefaultLabel?: boolean } = {}) => {
   const addNodeIndexRef = useRef(0);
   const { setCenter } = useReactFlow();
   const { updateStore } = useGraphStore();
-  const handleAddVertex = () => {
+  const handleAddVertex = (position?: { x: number; y: number }) => {
+    
     updateStore(draft => {
       const label = noDefaultLabel ? '' : createNodeLabel();
       const x = addNodeIndexRef.current * 200;
@@ -18,7 +19,7 @@ export const useAddNode = ({ noDefaultLabel }) => {
         ...draft.nodes,
         {
           id: uuidv4(),
-          position: {
+          position: position || {
             x,
             y,
           },

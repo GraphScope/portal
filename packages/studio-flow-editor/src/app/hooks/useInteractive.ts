@@ -145,6 +145,10 @@ const useInteractive = props => {
   useOnSelectionChange({
     onChange: useCallback(
       ({ nodes, edges }) => {
+        updateStore(draft => {
+          draft.selectedNodeIds = nodes.map(node => node.id);
+          draft.selectedEdgeIds = edges.map(edge => edge.id);
+        });
         onSelectionChange && onSelectionChange(nodes, edges as unknown as ISchemaEdge[]);
       },
       [onSelectionChange],
