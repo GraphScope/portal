@@ -46,7 +46,7 @@
     "@types/d3-force": "latest",
     "@types/lodash": "^4.14.202",
     "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.4.16"
+    "vite": "^5.4.19"
   },
   "author": "",
   "license": "ISC"
