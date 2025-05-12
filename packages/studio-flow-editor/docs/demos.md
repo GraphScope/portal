@@ -672,7 +672,7 @@ import {
 // 主应用组件
 const GraphApplication = () => {
   return (
-    <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
+    <div style={{ width: '100%', height: '100vh', position: 'relative' }} id="demo3Box">
       <GraphProvider>
         <GraphCanvas>
           <MainToolbar />
@@ -756,7 +756,7 @@ const MainToolbar = () => {
       <button onClick={handleClear} style={{ ...buttonStyle, background: '#ff4d4f' }}>
         删除
       </button>
-      <button onClick={() => exportSvg({ name: 'graph.svg' })} style={buttonStyle}>
+      <button onClick={() => exportSvg({ name: 'graph.svg',parentId: 'demo3Box'})} style={buttonStyle}>
         导出SVG
       </button>
       <button onClick={exportJSON} style={buttonStyle}>
