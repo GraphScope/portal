@@ -687,7 +687,7 @@ const GraphApplication = () => {
 
 // 主工具栏
 const MainToolbar = () => {
-  const addNode = useAddNode();
+  const {handleAddVertex} = useAddNode();
   const { handleClear } = useClearCanvas();
   const {exportSvg} = useExportSvg();
   const { store, updateStore } = useGraphStore();
@@ -750,7 +750,7 @@ const MainToolbar = () => {
         gap: '8px',
       }}
     >
-      <button onClick={() => addNode()} style={buttonStyle}>
+      <button onClick={() => handleAddVertex()} style={buttonStyle}>
         添加节点
       </button>
       <button onClick={handleClear} style={{ ...buttonStyle, background: '#ff4d4f' }}>

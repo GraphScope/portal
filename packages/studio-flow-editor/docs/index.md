@@ -95,7 +95,9 @@ interface GraphState {
 
 ## 文档导航
 
-- [快速开始](./quick-start.md) - 安装指南和基本使用方法
-- [API文档](./api.md) - 详细的API参考
-- [组件](./components.md) - 工具组件使用指南
-- [示例](./demos.md) - 实用示例和高级用法
+- [快速开始](/floweditors/quick-start) - 安装指南和基本使用方法
+- [GraphProvider](/floweditors/provider) - 状态管理与Provider
+- [GraphCanvas](/floweditors/graph-canvas) - GraphCanvas组件
+- [API文档](/floweditors/api) - 详细的API参考
+- [组件](/floweditors/components) - 工具组件使用指南
+- [示例](/floweditors/demos) - 实用示例和高级用法

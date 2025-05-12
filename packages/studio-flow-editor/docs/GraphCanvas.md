@@ -1,6 +1,6 @@
 ---
 order: 3
-title: GraphCanvas 组件
+title: GraphCanvas
 ---
 
 # GraphCanvas 组件
