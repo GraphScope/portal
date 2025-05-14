@@ -62,9 +62,9 @@ export const initialStore: IStore<{}> = {
   graphId: '',
   activeNavbar: 'recommended',
   collapse: true,
-  activeId: 'query-1',
-  /** 全局语句 */
-  globalScript: 'Match (n) return n limit 10',
+  activeId: '',
+  /** 全局语句 - 不再需要 */
+  globalScript: '',
   /** autoRun */
   autoRun: false,
   /** 启用绝对布局 */
@@ -81,6 +81,7 @@ export const initialStore: IStore<{}> = {
   savedStatements: [],
   /** 存储过程语句 */
   storeProcedures: [],
+  /** 设置默认为 flow 模式 */
   mode: 'flow',
   enableImmediateQuery: false,
   language: 'gremlin',

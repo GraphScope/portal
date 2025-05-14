@@ -18,9 +18,26 @@ const RawView: React.FunctionComponent<IJSONViewProps> = props => {
   }
 
   return (
-    <div>
-      <ReactJson src={data.raw} />
-      {/* <pre style={{ textWrap: 'pretty' }}>{JSON.stringify(data.raw, null, 2)}</pre> */}
+    <div style={{ 
+      height: '100%', 
+      width: '100%', 
+      padding: '8px',
+      boxSizing: 'border-box',
+      overflow: 'auto'
+    }}>
+      <ReactJson 
+        src={data.raw} 
+        style={{ 
+          overflowWrap: 'break-word', 
+          width: '100%'
+        }}
+        displayDataTypes={false}
+        enableClipboard={true}
+        displayObjectSize={true}
+        collapsed={1}
+        theme="rjv-default"
+        indentWidth={2}
+      />
     </div>
   );
 };
