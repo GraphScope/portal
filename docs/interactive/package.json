@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@graphscope/studio-components": "workspace:*",
-    "next": "15.0.2",
+    "next": "15.2.4",
     "next-seo": "^6.6.0",
     "nextra": "^2.13.2",
     "nextra-theme-docs": "^2.13.2",
