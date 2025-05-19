@@ -155,7 +155,7 @@ const Result: React.FunctionComponent<IResultProps> = props => {
         activeKey={viewMode} 
         onChange={handleChange}
         tabBarStyle={{ margin: 0 }}
-        style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}
+        style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%',overflow: 'auto' }}
         className="result-tabs"
       />
     </div>

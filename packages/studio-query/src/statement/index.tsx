@@ -93,11 +93,11 @@ const Statement: React.FunctionComponent<IStatementProps> = props => {
   }, 500);
    
   useEffect(() => {
-    if (enableImmediateQuery) {
+    if (enableImmediateQuery && timestamp) {
       console.log('enableImmediateQuery script', enableImmediateQuery, script, language);
       handleQuery({ id, script, language });
     }
-  }, [enableImmediateQuery]);
+  }, [enableImmediateQuery, timestamp]);
 
   const isRunning = endTime - startTime < 0;
   const message = isRunning

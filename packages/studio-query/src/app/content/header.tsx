@@ -1,6 +1,6 @@
 import React, { useRef, useState, Suspense } from 'react';
 import { InsertRowAboveOutlined, OrderedListOutlined } from '@ant-design/icons';
-import { Segmented, Space, Flex } from 'antd';
+import { Segmented, Space, Flex, theme } from 'antd';
 import { IStudioQueryProps, localStorageVars } from '../context';
 import { useContext } from '../context';
 import { Utils } from '@graphscope/studio-components';
@@ -19,6 +19,8 @@ const options = [
   },
   { icon: <OrderedListOutlined />, value: 'flow' },
 ];
+
+const { useToken } = theme;
 
 const ModeSwitch = () => {
   const { updateStore, store } = useContext();
@@ -72,12 +74,15 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
   const { connectComponent, displaySidebarPosition } = props;
   const { store } = useContext();
   const { language } = store;
+  const { token } = useToken();
 
   return (
     <div
       style={{
         width: '100%',
-        padding: '8px 0px',
+        padding: '10px 0px',
+        backgroundColor: token.colorBgContainer,
+        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)'
       }}
     >
       <Flex justify="space-between" align="center">

@@ -3,7 +3,7 @@ import CypherEdit from '../../components/cypher-editor';
 import { Space, Button, Flex, Tooltip, Typography } from 'antd';
 import type { GlobalToken } from 'antd';
 import { PlayCircleOutlined, CloseOutlined, ShareAltOutlined } from '@ant-design/icons';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { IEditorProps } from '../typing';
 import SaveStatement from './save';
 import { v4 as uuidv4 } from 'uuid';
@@ -36,7 +36,27 @@ const Editor: React.FunctionComponent<
     message,
   } = props;
   const editorRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const intl = useIntl();
+  
+  // 确保编辑器容器可以接收点击并传递焦点
+  useEffect(() => {
+    const focusEditor = () => {
+      if (editorRef?.current?.codeEditor) {
+        setTimeout(() => {
+          editorRef.current.codeEditor.focus();
+        }, 10);
+      }
+    };
+    
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('click', focusEditor);
+      return () => {
+        container.removeEventListener('click', focusEditor);
+      };
+    }
+  }, []);
 
   const handleQuery = async () => {
     const value = editorRef?.current?.codeEditor?.getValue();
@@ -69,16 +89,9 @@ const Editor: React.FunctionComponent<
     );
   };
   return (
-    <div style={{}}>
+    <div ref={containerRef} style={{ position: 'relative' }}>
       <Flex justify="space-between" style={{ paddingBottom: '8px' }}>
         <Space>
-          {/* <Tag>{language}</Tag> */}
-          <Typography.Text type="secondary" style={{ fontSize: '12px', textAlign: 'center' }}>
-            {capitalizeFirstLetter(language)} {message}
-          </Typography.Text>
-        </Space>
-
-        <Space size={0}>
           <Tooltip title={intl.formatMessage({ id: 'Query' })}>
             <Button
               type="text"
@@ -93,20 +106,37 @@ const Editor: React.FunctionComponent<
               onClick={handleQuery}
             />
           </Tooltip>
+          {/* <Tag>{language}</Tag> */}
+          <Typography.Text type="secondary" style={{ fontSize: '12px', textAlign: 'center' }}>
+            {capitalizeFirstLetter(language)} {message}
+          </Typography.Text>
+        </Space>
+
+        <Space size={0}>
           {onSave && <SaveStatement onSave={handleSave} />}
           {onClose && (
             <Tooltip title={intl.formatMessage({ id: 'Share' })}>
-              <Button type="text" icon={<ShareAltOutlined onClick={handleShare} />} />
+              <Button type="text" icon={<ShareAltOutlined />} onClick={handleShare} />
             </Tooltip>
           )}
           {onClose && (
             <Tooltip title={intl.formatMessage({ id: 'Delete' })}>
-              <Button type="text" icon={<CloseOutlined onClick={handleClose} />} />
+              <Button type="text" icon={<CloseOutlined />} onClick={handleClose} />
             </Tooltip>
           )}
         </Space>
       </Flex>
-      <CypherEdit language={language} ref={editorRef} value={script} />
+      <CypherEdit 
+        language={language} 
+        ref={editorRef} 
+        value={script} 
+        onCreated={(editor) => {
+          // 确保编辑器在创建后立即聚焦
+          setTimeout(() => {
+            editor.focus();
+          }, 100);
+        }}
+      />
     </div>
   );
 };

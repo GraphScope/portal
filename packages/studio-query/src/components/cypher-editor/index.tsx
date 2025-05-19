@@ -51,7 +51,7 @@ interface IEditor extends CypherEditorProps {
   language?: string;
   clear?: boolean;
   onInit?: (val: HTMLDivElement) => void;
-  onCreated?: (val: editor.IStandaloneCodeEditor) => void;
+  onCreated?: (editor: editor.IStandaloneCodeEditor) => void;
   onChange?: (val: string) => void;
 }
 const cypherEditorStyle = `
@@ -77,7 +77,7 @@ const cypherEditorStyle = `
 `;
 const Editor = forwardRef((props: IEditor, editorRef: any) => {
   useDynamicStyle(cypherEditorStyle, 'cypher-editor-style');
-  const { value, language = 'cypher', maxRows = 10, minRows = 1, onChangeContent, clear, onInit } = props;
+  const { value, language = 'cypher', maxRows = 10, minRows = 1, onChangeContent, clear, onInit, onCreated } = props;
   let codeEditor: editor.IStandaloneCodeEditor;
   const MAGIC_NUMBER = onChangeContent ? 0 : countLines(value);
   const { isLight } = useStudioProvier();
@@ -101,8 +101,19 @@ const Editor = forwardRef((props: IEditor, editorRef: any) => {
         wordWrap: 'on',
         scrollBeyondLastLine: false, // 不允许在内容的下方滚动
         scrollBeyondLastColumn: 0, // 不允许在内容的右侧滚动
+        // 增强编辑器的交互性
+        contextmenu: true,
+        mouseWheelScrollSensitivity: 1,
+        mouseWheelZoom: false,
+        // 允许使用 Tab 键
+        tabCompletion: 'on',
+        autoIndent: 'advanced',
       });
+      
+      // 保存编辑器实例到 DOM 元素
       editorRef.current.codeEditor = codeEditor;
+      
+      // 添加对编辑器内容变化的监听
       codeEditor.onDidChangeModelContent(() => {
         const contentHeight = codeEditor.getContentHeight();
         const lineCount = codeEditor.getModel()?.getLineCount(); // 获取行数
@@ -114,13 +125,27 @@ const Editor = forwardRef((props: IEditor, editorRef: any) => {
           onChangeContent(lineCount, codeEditor);
         }
       });
+      
+      // 确保编辑器在创建后立即获得焦点
+      setTimeout(() => {
+        codeEditor.focus();
+      }, 50);
+      
+      // 调用初始化回调
       if (onInit) {
         onInit(editorRef.current);
+      }
+      
+      // 调用创建完成回调
+      if (onCreated) {
+        onCreated(codeEditor);
       }
     }
 
     return () => {
-      codeEditor.dispose();
+      if (codeEditor) {
+        codeEditor.dispose();
+      }
     };
   }, [editorRef, value, language, !isLight]);
   React.useEffect(() => {

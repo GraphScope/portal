@@ -12,10 +12,26 @@ export interface IStatement {
   name?: string;
   /** 查询的语言 */
   language?: 'gremlin' | 'cypher';
+  /** 关联的图数据源ID */
+  graphId?: string;
+}
+
+export interface INotebook {
+  /** Notebook ID */
+  id: string;
+  /** Notebook 名称 */
+  name: string;
+  /** 创建时间 */
+  createdAt: number;
+  /** 最后修改时间 */
+  updatedAt: number;
+  /** 保存的查询语句 */
+  statements: IStatement[];
 }
 
 export const localStorageVars = {
   mode: 'GS_STUDIO_QUERY_MODE',
+  notebooks: 'GS_STUDIO_QUERY_NOTEBOOKS',
 };
 
 export type IStore<T> = T & {
@@ -54,6 +70,12 @@ export type IStore<T> = T & {
   };
   /** 默认的折叠状态 */
   defaultCollapsed: boolean;
+  /** 当前活动的notebook */
+  activeNotebook: INotebook | null;
+  /** 所有notebooks */
+  notebooks: INotebook[];
+  /** 是否显示welcome页面 */
+  showWelcomePage: boolean;
 };
 
 export const initialStore: IStore<{}> = {
@@ -87,6 +109,12 @@ export const initialStore: IStore<{}> = {
   language: 'gremlin',
   defaultCollapsed: true,
   welcome: undefined,
+  /** 初始没有活动的notebook */
+  activeNotebook: null,
+  /** 初始notebooks为空数组 */
+  notebooks: [],
+  /** 默认显示welcome页面 */
+  showWelcomePage: true,
 };
 
 export const useContext = () => useZustandContext<IStore<{}>>();

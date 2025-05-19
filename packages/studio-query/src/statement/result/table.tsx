@@ -249,8 +249,8 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
         height: 'calc(100% - 32px)',
         boxSizing: 'border-box',
       }}>
-        {Content}
-        {mode === 'chart' && table.length !== 0 && <ChartView table={table} />}
+      {Content}
+      {mode === 'chart' && table.length !== 0 && <ChartView table={table} />}
       </div>
     </div>
   );

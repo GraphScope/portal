@@ -8,7 +8,17 @@ interface ISortableQueryCellProps extends Omit<IQueryCellProps, 'dragHandleProps
 }
 
 const SortableQueryCell: React.FC<ISortableQueryCellProps> = (props) => {
-  const { id, index } = props;
+  const { 
+    id, 
+    index, 
+    graphs, 
+    onGraphChange,
+    graphId,
+    onMoveUp,
+    onMoveDown,
+    // 其他属性
+    ...restProps 
+  } = props;
   
   const { 
     attributes, 
@@ -38,8 +48,18 @@ const SortableQueryCell: React.FC<ISortableQueryCellProps> = (props) => {
       style={style}
     >
       <QueryCell 
-        {...props} 
+        id={id}
+        onMoveUp={onMoveUp}
+        onMoveDown={onMoveDown}
         index={index}
+        graphs={graphs}
+        onGraphChange={(cellId, newGraphId) => {
+          if (onGraphChange) {
+            onGraphChange(cellId, newGraphId);
+          }
+        }}
+        graphId={graphId}
+        {...restProps}
         dragHandleProps={{
           ...attributes,
           ...listeners
