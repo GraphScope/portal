@@ -185,6 +185,7 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
     });
     Utils.createDownload(JSON.stringify({ nodes: _nodes, edges: _edges }, null, 2), 'result.json');
   };
+  
   /** table 表格 */
   let Content: React.ReactNode;
 
@@ -196,15 +197,34 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
       Content = <RowTable data={table} />;
     }
     //@ts-ignore
-    if (table.length === 0 && window.GS_ENGINE_TYPE === 'interactive' && raw.records.length !== 0) {
+    if (table.length === 0 && window.GS_ENGINE_TYPE === 'interactive' && raw?.records?.length !== 0) {
       Content = <InteranctiveTable data={raw.records} />;
     }
   }
 
+  // 表格视图的分页配置
+  const tablePaginationConfig = {
+    simple: true, 
+    pageSize: 10, 
+    size: 'small',
+  };
+
   return (
-    <div style={{ overflowX: 'scroll' }}>
-      <Flex justify="space-between" style={{ padding: '0px 10px 10px 10px' }} align="center">
-        <Typography.Text>{description}</Typography.Text>
+    <div style={{ 
+      height: '100%', 
+      width: '100%', 
+      display: 'flex', 
+      flexDirection: 'column',
+      overflow: 'hidden'
+    }}>
+      <div style={{ 
+        padding: '4px 8px', 
+        borderBottom: '1px solid #f0f0f0',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}>
+        <Typography.Text style={{ fontSize: '12px' }}>{description}</Typography.Text>
         <Space>
           <Segmented
             value={mode}
@@ -215,16 +235,23 @@ const TableView: React.FunctionComponent<ITableViewProps> = props => {
               { value: 'chart', icon: <BarChartOutlined />, label: 'chart' },
               { value: 'table', icon: <TableOutlined /> },
             ]}
+            size="small"
           />
           <Tooltip title="download">
-            <Button icon={<FileExcelOutlined />} type="text" onClick={handleDownload}></Button>
+            <Button icon={<FileExcelOutlined />} type="text" onClick={handleDownload} size="small"></Button>
           </Tooltip>
         </Space>
-      </Flex>
-      {/* {mode === 'table' && nodes.length !== 0 && <GraphTable nodes={nodes} edges={edges} />} */}
-      {/* {mode === 'table' && raw.records.length !== 0 && <GrootTable grootData={[]} />} */}
+      </div>
+      <div style={{ 
+        flex: 1, 
+        overflow: 'auto', 
+        padding: '8px',
+        height: 'calc(100% - 32px)',
+        boxSizing: 'border-box',
+      }}>
       {Content}
       {mode === 'chart' && table.length !== 0 && <ChartView table={table} />}
+      </div>
     </div>
   );
 };

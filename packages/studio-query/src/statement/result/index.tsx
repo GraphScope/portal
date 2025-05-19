@@ -1,10 +1,11 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Tabs } from 'antd';
 import TableView from './table';
 import RawView from './raw';
 import GraphView from './graph';
 import { useIntl } from 'react-intl';
 import type { IEditorProps } from '../typing';
+import { useDynamicStyle } from '@graphscope/studio-components'
 import { DeploymentUnitOutlined, TableOutlined, BarChartOutlined, CodeOutlined } from '@ant-design/icons';
 
 interface IResultProps {
@@ -64,6 +65,37 @@ const Result: React.FunctionComponent<IResultProps> = props => {
 
   const { viewMode, options } = getOptions(data, isFetching, activeKey);
 
+  // 使用 useDynamicStyle 添加样式
+  useDynamicStyle('result-tabs-styles', `
+    .result-tabs {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .result-tabs .ant-tabs-content {
+      flex: 1;
+      height: 100%;
+    }
+    .result-tabs .ant-tabs-content-holder {
+      height: 100%;
+      overflow: hidden;
+    }
+    .result-tabs .ant-tabs-tabpane {
+      height: 100%;
+      overflow: auto;
+    }
+    .result-tabs .ant-tabs-tabpane > div {
+      height: 100%;
+    }
+    .ant-table-wrapper {
+      height: 100%;
+    }
+    .ant-spin-nested-loading, 
+    .ant-spin-container {
+      height: 100%;
+    }
+  `);
+
   const handleChange = value => {
     setActiveKey(value);
   };
@@ -72,32 +104,60 @@ const Result: React.FunctionComponent<IResultProps> = props => {
     return options.indexOf(type) !== -1;
   };
 
+  // 用于所有Tab内容的通用容器样式
+  const tabContentContainerStyle = {
+    height: '100%',
+    width: '100%',
+    padding: '0',
+  };
+
+  // 包装Tab内容的函数
+  const wrapTabContent = (content) => (
+    <div style={tabContentContainerStyle}>
+      {content}
+    </div>
+  );
+
   const items = [
     {
       label: intl.formatMessage({ id: 'Graph' }),
       key: 'graph',
       icon: <DeploymentUnitOutlined />,
-      children: <GraphView data={data} schemaData={schemaData} graphId={graphId} />,
+      children: wrapTabContent(<GraphView data={data} schemaData={schemaData} graphId={graphId} />),
       disabled: !isExist('graph'),
     },
     {
       label: intl.formatMessage({ id: 'Table' }),
       key: 'table',
       icon: <TableOutlined />,
-      children: <TableView data={data} />,
+      children: wrapTabContent(<TableView data={data} />),
       disabled: !isExist('table'),
     },
     {
       label: intl.formatMessage({ id: 'Raw' }),
       key: 'raw',
       icon: <CodeOutlined />,
-      children: <RawView data={data} isFetching={isFetching} />,
+      children: wrapTabContent(<RawView data={data} isFetching={isFetching} />),
       disabled: !isExist('raw'),
     },
   ];
+
   return (
-    <div style={{ padding: '16px 0px' }}>
-      <Tabs items={items} size="small" type="card" activeKey={viewMode} onChange={handleChange} />
+    <div style={{ 
+      height: '100%',
+      display: 'flex', 
+      flexDirection: 'column'
+    }}>
+      <Tabs 
+        items={items} 
+        size="small" 
+        type="card" 
+        activeKey={viewMode} 
+        onChange={handleChange}
+        tabBarStyle={{ margin: 0 }}
+        style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%',overflow: 'auto' }}
+        className="result-tabs"
+      />
     </div>
   );
 };

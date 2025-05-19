@@ -27,7 +27,12 @@ const GraphView: React.FunctionComponent<IGraphViewProps> = props => {
   const graphSchema = transGraphSchema(schemaData);
 
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ 
+      width: '100%', 
+      height: '100%',
+      position: 'relative', 
+      overflow: 'hidden'
+    }}>
       {/** @ts-ignore */}
       <QueryGraph data={Utils.fakeSnapshot(data)} schema={graphSchema} graphId={graphId} />
     </div>

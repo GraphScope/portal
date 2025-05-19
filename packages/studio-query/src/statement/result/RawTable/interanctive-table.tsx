@@ -12,7 +12,7 @@ export interface IInteranctiveTableProps {
 }
 
 const InteranctiveTable: React.FC<IInteranctiveTableProps> = ({ data }) => {
-  const dataSource = data.map(item => {
+  const dataSource = data?.map(item => {
     const { keys, _fields } = item;
     return keys.reduce((acc, key, index) => {
       const field = _fields[index];

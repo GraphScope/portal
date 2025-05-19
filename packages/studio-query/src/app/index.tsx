@@ -5,7 +5,7 @@ import GPTStatements from './sidebar/gpt-statements';
 import RecommendedStatements from './sidebar/recommended-statements';
 import StoreProcedure from './sidebar/store-procedure';
 import HistoryStatements from './sidebar/history-statements';
-import { useContext, localStorageVars, initialStore } from './context';
+import { useContext, localStorageVars, initialStore, INotebook } from './context';
 
 import type { IStatement, IStudioQueryProps } from './context';
 import Sidebar from './sidebar';
@@ -20,11 +20,40 @@ import { faBookmark, faClockFour, faServer, faRobot, faLightbulb } from '@fortaw
 import StoreProvider from '@graphscope/use-zustand';
 import locales from '../locales';
 
+// 扩展初始化存储的函数
+function extendInitialStore(props: IStudioQueryProps): typeof initialStore {
+  // 尝试从本地存储加载 notebooks
+  let notebooks: INotebook[] = [];
+  try {
+    const storedNotebooks = localStorage.getItem(localStorageVars.notebooks);
+    if (storedNotebooks) {
+      notebooks = JSON.parse(storedNotebooks);
+    }
+  } catch (error) {
+    console.error('加载 notebooks 失败', error);
+  }
+
+  // 从本地存储中获取视图模式
+  const storedMode = localStorage.getItem(localStorageVars.mode);
+  
+  return {
+    ...initialStore,
+    enableImmediateQuery: props.enableImmediateQuery || false,
+    language: props.language || 'gremlin',
+    absolutePosition: props.enableAbsolutePosition || false,
+    welcome: props.welcome,
+    defaultCollapsed: true, // 使用确定的布尔值
+    mode: (storedMode as any) || 'flow',
+    notebooks: notebooks, // 添加从本地存储加载的 notebooks
+  };
+}
+
 const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
   const {
     queryGraphData,
     handleCancelQuery,
     queryGraphSchema,
+    queryInfo,
 
     displaySidebarPosition = 'left',
     displaySidebarType = 'Sidebar',
@@ -119,7 +148,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
 
   const handleQuery = (value: IStatement) => {
     /** 查询的时候，就可以存储历史记录了 */
-    const { script, language } = value;
+    const { script, language, graphId: statementGraphId } = value;
     const queryId = uuidv4();
     const timestamp = new Date().getTime();
     const params = {
@@ -127,6 +156,8 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       timestamp,
       script,
       language,
+      // 确保使用传入的graphId，如果没有则使用全局graphId
+      graphId: statementGraphId || store.graphId,
     };
 
     updateStore(draft => {
@@ -165,6 +196,8 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
             createStatements={createStatements}
             queryGraphData={handleQuery}
             enableImmediateQuery={enableImmediateQuery}
+            queryGraphSchema={queryGraphSchema}
+            queryInfo={queryInfo}
           />
         </Section>
       </StudioProvier>
@@ -174,8 +207,11 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
 };
 
 export default (props: IStudioQueryProps) => {
+  // 使用扩展后的初始化存储
+  const extendedStore = extendInitialStore(props);
+  
   return (
-    <StoreProvider store={initialStore}>
+    <StoreProvider store={extendedStore}>
       <StudioQuery {...props} />
     </StoreProvider>
   );
