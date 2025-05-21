@@ -1,0 +1,258 @@
+:root {
+  --background-color: #1e1e2e;
+  --text-color: #cdd6f4;
+  --primary-color: #89b4fa;
+  --secondary-color: #74c7ec;
+  --accent-color: #f5c2e7;
+  --danger-color: #f38ba8;
+  --warning-color: #fab387;
+  --success-color: #a6e3a1;
+  --info-color: #89dceb;
+  --border-color: #313244;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.5;
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+
+.connection-status {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.status-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-indicator.connected {
+  background-color: var(--success-color);
+  box-shadow: 0 0 8px var(--success-color);
+}
+
+.status-indicator.disconnected {
+  background-color: var(--danger-color);
+  box-shadow: 0 0 8px var(--danger-color);
+}
+
+h1 {
+  font-size: 2rem;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+h2 {
+  font-size: 1.5rem;
+  color: var(--secondary-color);
+  margin-bottom: 1rem;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: rgba(49, 50, 68, 0.5);
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+}
+
+.message-input {
+  padding: 0.75rem 1rem;
+  background-color: rgba(30, 30, 46, 0.8);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-color);
+  font-size: 1rem;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.message-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(137, 180, 250, 0.3);
+}
+
+.message-input::placeholder {
+  color: rgba(205, 214, 244, 0.5);
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.info-button {
+  background-color: var(--info-color);
+  color: #1e1e2e;
+}
+
+.info-button:hover {
+  background-color: rgba(137, 220, 235, 0.8);
+}
+
+.warn-button {
+  background-color: var(--warning-color);
+  color: #1e1e2e;
+}
+
+.warn-button:hover {
+  background-color: rgba(250, 179, 135, 0.8);
+}
+
+.error-button {
+  background-color: var(--danger-color);
+  color: #1e1e2e;
+}
+
+.error-button:hover {
+  background-color: rgba(243, 139, 168, 0.8);
+}
+
+.logs-container {
+  background-color: rgba(49, 50, 68, 0.5);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 1.5rem;
+  flex-grow: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.logs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  max-height: 500px;
+}
+
+.no-logs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  color: rgba(205, 214, 244, 0.6);
+  font-style: italic;
+}
+
+.log-entry {
+  padding: 1rem;
+  background-color: rgba(30, 30, 46, 0.8);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: transform 0.2s;
+}
+
+.log-entry:hover {
+  transform: translateY(-2px);
+}
+
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.log-timestamp {
+  color: rgba(205, 214, 244, 0.6);
+}
+
+.log-level {
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background-color: rgba(30, 30, 46, 0.5);
+}
+
+.log-message {
+  font-weight: 500;
+}
+
+.log-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.log-detail-item {
+  background-color: rgba(49, 50, 68, 0.5);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  display: flex;
+  gap: 0.3rem;
+}
+
+.log-detail-key {
+  font-weight: 500;
+  color: var(--accent-color);
+}
+
+.log-detail-value {
+  color: rgba(205, 214, 244, 0.8);
+}
