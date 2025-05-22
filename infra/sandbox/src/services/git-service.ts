@@ -1,6 +1,7 @@
 import Docker from "dockerode";
 import logger from "../utils/logger";
 import { ApiError } from "../middleware/error-handler";
+import dockerConfig from "./docker-config";
 
 /**
  * Service for managing Git operations in sandbox containers
@@ -9,7 +10,7 @@ class GitService {
   private docker: Docker;
 
   constructor() {
-    this.docker = new Docker();
+    this.docker = dockerConfig.getDockerInstance();
   }
 
   /**

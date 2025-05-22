@@ -4,6 +4,7 @@ import logger from "../utils/logger";
 import { ContainerInfo, SandboxOptions } from "../types";
 import { ApiError } from "../middleware/error-handler";
 import gitService from "./git-service";
+import dockerConfig from "./docker-config";
 
 // DNS服务器配置，可以从环境变量中读取，默认使用公共DNS
 const DNS_SERVERS = process.env.DNS_SERVERS
@@ -13,10 +14,11 @@ const DNS_SERVERS = process.env.DNS_SERVERS
 class ContainerService {
   private docker: Docker;
   private containers: Map<string, ContainerInfo>;
+  private browserPortMap: Map<string, number> = new Map(); // Map of containerId -> port
 
   constructor() {
-    // Initialize Docker client
-    this.docker = new Docker();
+    // Use the shared Docker instance from dockerConfig
+    this.docker = dockerConfig.getDockerInstance();
     this.containers = new Map();
 
     // Start container cleanup interval
@@ -24,6 +26,20 @@ class ContainerService {
       this.cleanupContainers.bind(this),
       config.containerCleanupInterval
     );
+  }
+
+  /**
+   * Get the Docker instance
+   */
+  getDockerInstance(): Docker {
+    return this.docker;
+  }
+
+  /**
+   * Get the mapped browser port for a container
+   */
+  getBrowserPort(containerId: string): number | undefined {
+    return this.browserPortMap.get(containerId);
   }
 
   /**
@@ -38,6 +54,7 @@ class ContainerService {
       const timeout = options?.timeout || config.defaultTimeout;
       const memoryLimit = options?.memoryLimit || config.defaultMemoryLimit;
       const cpuLimit = options?.cpuLimit || config.defaultCpuLimit;
+      const portMappings = options?.portMappings || {};
 
       // 我们将使用Docker生成的实际容器ID，先生成一个唯一的名称前缀
       const containerName = `sandbox-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
@@ -51,21 +68,49 @@ class ContainerService {
         await this.pullImage(image);
       }
 
+      // Prepare port bindings if specified
+      const portBindings: Record<string, Array<{HostPort: string}>> = {};
+      const exposedPorts: Record<string, {}> = {};
+      
+      // Always expose container port 3000 for browser service
+      const browserPort = "3000/tcp";
+      exposedPorts[browserPort] = {};
+      // Use empty host port to let Docker choose an available port
+      portBindings[browserPort] = [{ HostPort: "" }];
+      
+      // Process additional port mappings if provided
+      if (Object.keys(portMappings).length > 0) {
+        logger.info(`Setting up port mappings: ${JSON.stringify(portMappings)}`);
+        
+        for (const [containerPort, hostPort] of Object.entries(portMappings)) {
+          // Format port for Docker API (must end with /tcp)
+          const formattedContainerPort = containerPort.includes('/') 
+            ? containerPort 
+            : `${containerPort}/tcp`;
+            
+          portBindings[formattedContainerPort] = [{ HostPort: hostPort }];
+          exposedPorts[formattedContainerPort] = {};
+          
+          logger.info(`Mapping container port ${containerPort} to host port ${hostPort}`);
+        }
+      }
+
       // Create container
       const container: Docker.Container = await this.docker.createContainer({
         Image: image,
         name: containerName,
         Tty: true,
+        ExposedPorts: exposedPorts,
         HostConfig: {
           Memory: this.parseMemoryLimit(memoryLimit),
           NanoCpus: this.parseCpuLimit(cpuLimit),
           SecurityOpt: ["no-new-privileges"],
-          NetworkMode: "bridge", // 使用默认的bridge网络
           ReadonlyRootfs: false, // Allow writing to filesystem for file operations
           AutoRemove: false, // We'll manage cleanup ourselves
           // 添加DNS配置
           Dns: DNS_SERVERS,
-          DnsOptions: ["timeout:2", "attempts:3"] // 设置DNS查询超时和重试次数
+          DnsOptions: ["timeout:2", "attempts:3"], // 设置DNS查询超时和重试次数
+          PortBindings: portBindings
         },
         // 添加容器内环境变量
         Env: [
@@ -75,7 +120,9 @@ class ContainerService {
           "npm_config_cache=/tmp/.npm", // 将npm缓存目录设置到/tmp下
           // 为pip设置配置
           "PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/",
-          "PIP_TRUSTED_HOST=mirrors.aliyun.com"
+          "PIP_TRUSTED_HOST=mirrors.aliyun.com",
+          // Make services bind to all interfaces
+          "HOST=0.0.0.0"
         ],
         // 临时使用root用户启动容器，我们会在容器启动后创建目录并设置权限
         User: "root",
@@ -84,6 +131,20 @@ class ContainerService {
 
       // Start the container
       await container.start();
+      
+      // Get container info to read the assigned host port
+      const inspectData = await container.inspect();
+      const dockerId = container.id;
+      
+      // Get the mapped port for browser service
+      const portBindingsInfo = inspectData.NetworkSettings.Ports;
+      if (portBindingsInfo && portBindingsInfo["3000/tcp"] && portBindingsInfo["3000/tcp"][0]) {
+        const mappedBrowserPort = parseInt(portBindingsInfo["3000/tcp"][0].HostPort, 10);
+        this.browserPortMap.set(dockerId, mappedBrowserPort);
+        logger.info(`Container ${dockerId} browser service mapped to host port ${mappedBrowserPort}`);
+      } else {
+        logger.warn(`Failed to get mapped port for container ${dockerId}`);
+      }
 
       // Update environment variable with actual Docker ID
       await this.execInContainer(container, [
@@ -91,8 +152,7 @@ class ContainerService {
         "-c",
         `echo SANDBOX_CONTAINER_ID=${container.id} >> /etc/environment`
       ]);
-      // 获取Docker分配的实际ID
-      const dockerId = container.id;
+
       logger.info(`Created container with Docker ID: ${dockerId}`);
 
       // 创建home/sandbox目录并设置权限
@@ -132,14 +192,16 @@ class ContainerService {
         status: "running",
         createdAt: now,
         expiresAt: expiresAt,
-        containerName // 记录容器名称，便于后续查找
+        containerName, // 记录容器名称，便于后续查找
+        browserPort: this.browserPortMap.get(dockerId) // Store the port mapping
       };
 
       // Save container info
       this.containers.set(dockerId, containerInfo);
       logger.info(`Stored container info for Docker ID: ${dockerId}`, {
         dockerId,
-        image
+        image,
+        browserPort: containerInfo.browserPort
       });
 
       return containerInfo;
@@ -165,7 +227,7 @@ class ContainerService {
       // 尝试直接通过Docker ID查找容器
       try {
         const container = this.docker.getContainer(containerId);
-        await container.inspect(); // 验证容器存在
+        const inspectData = await container.inspect(); // 验证容器存在
 
         // 容器存在但不在我们的记录中，可能是服务重启导致，创建新记录
         logger.info(
@@ -173,7 +235,6 @@ class ContainerService {
         );
 
         // 获取容器信息，包括创建时间等
-        const inspectData = await container.inspect();
         const state = inspectData.State?.Status || "unknown";
 
         // 从创建时间推断过期时间
@@ -181,13 +242,23 @@ class ContainerService {
         const expiresAt = new Date(createdAt.getTime() + config.defaultTimeout);
 
         const name = inspectData.Name?.replace(/^\//, "") || "";
+        
+        // Try to recover browser port mapping
+        let browserPort: number | undefined;
+        const portBindingsInfo = inspectData.NetworkSettings.Ports;
+        if (portBindingsInfo && portBindingsInfo["3000/tcp"] && portBindingsInfo["3000/tcp"][0]) {
+          browserPort = parseInt(portBindingsInfo["3000/tcp"][0].HostPort, 10);
+          this.browserPortMap.set(containerId, browserPort);
+          logger.info(`Recovered browser port mapping for container ${containerId}: ${browserPort}`);
+        }
 
         const restoredInfo: ContainerInfo = {
           id: containerId,
           status: state,
           createdAt: createdAt,
           expiresAt: expiresAt,
-          containerName: name
+          containerName: name,
+          browserPort: browserPort
         };
 
         // 将恢复的信息存入内存
@@ -232,6 +303,7 @@ class ContainerService {
     } catch (error) {
       // 容器不存在，从记录中删除
       this.containers.delete(containerId);
+      this.browserPortMap.delete(containerId);
       throw new ApiError(
         "CONTAINER_NOT_FOUND",
         `Container ${containerId} no longer exists in Docker engine`,
@@ -252,10 +324,17 @@ class ContainerService {
         logger.info(`Removing container from registry: ${containerId}`);
         this.containers.delete(containerId);
       }
+      
+      // Remove browser port mapping
+      if (this.browserPortMap.has(containerId)) {
+        logger.info(`Removing browser port mapping for container: ${containerId}`);
+        this.browserPortMap.delete(containerId);
+      }
 
       // 直接使用Docker ID删除容器
       try {
         const container = this.docker.getContainer(containerId);
+        
         logger.info(`Removing container with ID: ${containerId}`);
         await container.remove({ force: true, v: true });
         logger.info(`Successfully removed container with ID: ${containerId}`);
@@ -363,6 +442,7 @@ class ContainerService {
     return new Promise((resolve, reject) => {
       this.docker.pull(image, (err: any, stream: NodeJS.ReadableStream) => {
         if (err) {
+          console.log(err);
           return reject(
             new ApiError(
               "IMAGE_PULL_FAILED",
@@ -378,7 +458,7 @@ class ContainerService {
             return reject(
               new ApiError(
                 "IMAGE_PULL_FAILED",
-                `Failed to pull image: ${image}`,
+                `Failed to follow progress: ${image}`,
                 500,
                 { cause: err.message }
               )

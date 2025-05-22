@@ -1,0 +1,9 @@
+{
+  "error": {
+    "code": "PROXY_ERROR",
+    "message": "Failed to proxy request to container",
+    "details": {
+      "cause": "connect ENOENT /var/run/docker.sock"
+    }
+  }
+}

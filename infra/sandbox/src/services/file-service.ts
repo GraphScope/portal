@@ -7,6 +7,7 @@ import logger from "../utils/logger";
 import { ApiError } from "../middleware/error-handler";
 import { SandboxFiles } from "../types";
 import gitService from "./git-service";
+import dockerConfig from "./docker-config";
 
 // 固定工作目录，所有代码都存放在这里，由Git管理版本
 const WORK_DIR = "/home/sandbox";
@@ -15,7 +16,7 @@ class FileService {
   private docker: Docker;
 
   constructor() {
-    this.docker = new Docker();
+    this.docker = dockerConfig.getDockerInstance();
   }
 
   /**

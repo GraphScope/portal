@@ -6,12 +6,13 @@ import { ExecutionResult, SandboxFiles } from "../types";
 import fileService from "./file-service";
 import dependencyService from "./dependency-service";
 import gitService from "./git-service";
+import dockerConfig from "./docker-config";
 
 class ExecutionService {
   private docker: Docker;
 
   constructor() {
-    this.docker = new Docker();
+    this.docker = dockerConfig.getDockerInstance();
   }
 
   /**
