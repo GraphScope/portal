@@ -21,6 +21,11 @@ echo "Building Python images..."
 ./python/build.sh
 echo ""
 
+# 构建Mix镜像
+echo "Building Mix images..."
+./mix/build.sh
+echo ""
+
 echo "=== All images have been built successfully ==="
 echo ""
 echo "Available images:"
