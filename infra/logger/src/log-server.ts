@@ -8,8 +8,8 @@
  * - Logger -> Log Socket Server -> Connected clients
  */
 
-import http from "http";
-import { Server as SocketIOServer } from "socket.io";
+import http from 'http';
+import { Server as SocketIOServer } from 'socket.io';
 
 /**
  * Options for the log server
@@ -35,31 +35,31 @@ export function createLogServer(options: LogServerOptions = {}) {
   const server = http.createServer();
   const io = new SocketIOServer(server, {
     cors: {
-      origin: "*", // Allow connections from any origin
-      methods: ["GET", "POST"] // Allow these HTTP methods for CORS preflight
-    }
+      origin: '*', // Allow connections from any origin
+      methods: ['GET', 'POST'], // Allow these HTTP methods for CORS preflight
+    },
   });
 
   // Handle client connections
-  io.on("connection", (socket) => {
+  io.on('connection', socket => {
     if (debug) {
       // console.log(`[Log Server] Client connected: ${socket.id}`);
     }
 
     // Listen for incoming log events from loggers
-    socket.on("log", (logEntry) => {
+    socket.on('log', logEntry => {
       // Debug output to show received logs
       if (debug) {
-        // console.log(`[Log Server] Received log: ${JSON.stringify(logEntry)}`);
+        console.log(`[Log Server] Received log: ${JSON.stringify(logEntry)}`);
       }
 
-      // Broadcast the log to all other connected clients
-      // This allows multiple frontends to receive logs in real-time
-      socket.broadcast.emit("log", logEntry);
+      // Broadcast the log to ALL connected clients (including sender)
+      // This ensures logs are delivered even in PM2 environment
+      io.emit('log', logEntry);
     });
 
     // Handle client disconnection
-    socket.on("disconnect", () => {
+    socket.on('disconnect', () => {
       if (debug) {
         // console.log(`[Log Server] Client disconnected: ${socket.id}`);
       }
@@ -70,9 +70,7 @@ export function createLogServer(options: LogServerOptions = {}) {
   server.listen(port);
 
   if (debug) {
-    console.log(
-      `[Log Server] WebSocket server running on http://127.0.0.1:${port}`
-    );
+    console.log(`[Log Server] WebSocket server running on http://127.0.0.1:${port}`);
   }
 
   // Return server information
@@ -80,7 +78,7 @@ export function createLogServer(options: LogServerOptions = {}) {
     server: io,
     url: `http://127.0.0.1:${port}`,
     port,
-    close: () => server.close()
+    close: () => server.close(),
   };
 }
 
