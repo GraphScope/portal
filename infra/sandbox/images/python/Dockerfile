@@ -77,7 +77,7 @@ RUN pip install --user \
 WORKDIR ${APP_HOME}
 USER sandbox
 RUN npm init -y && \
-    npm install @playwright/mcp --save --registry=https://registry.anpm.alibaba-inc.com \
+    npm install @playwright/mcp --save \
     npx -y playwright-core install-deps chromium
 
 # 切换回root用户
