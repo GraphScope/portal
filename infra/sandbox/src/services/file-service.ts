@@ -285,7 +285,11 @@ class FileService {
           "'*/.local/**'",
           "'*/.cache'",
           "'*/.cache/*'",
-          "'*/.cache/**'"
+          "'*/.cache/**'",
+          "'*/.venv'",
+          "'*/.venv/**'",
+          "'*/.npm'",
+          "'*/.npm/**'"
         ];
 
         // Create a command to archive files with zip
