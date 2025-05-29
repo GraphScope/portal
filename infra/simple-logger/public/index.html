@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Logger Demo</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .container {
+        display: flex;
+        gap: 20px;
+      }
+
+      .panel {
+        flex: 1;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 15px;
+      }
+
+      .log-viewer {
+        height: 300px;
+        overflow-y: auto;
+        background-color: #f5f5f5;
+        padding: 10px;
+        border-radius: 4px;
+        font-family: monospace;
+      }
+
+      .log-entry {
+        margin-bottom: 5px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+      }
+
+      button {
+        padding: 8px 12px;
+        margin-top: 10px;
+        cursor: pointer;
+      }
+
+      h2 {
+        margin-top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Logger Demo</h1>
+
+    <div class="container">
+      <div class="panel">
+        <h2>Container 1 (ID: 1111)</h2>
+        <div id="log-viewer-1" class="log-viewer"></div>
+        <button id="trigger-1">Trigger API Request for Container 1</button>
+      </div>
+
+      <div class="panel">
+        <h2>Container 2 (ID: 2222)</h2>
+        <div id="log-viewer-2" class="log-viewer"></div>
+        <button id="trigger-2">Trigger API Request for Container 2</button>
+      </div>
+    </div>
+
+    <script>
+      // Connect to WebSocket server for container 1
+      const ws1 = new WebSocket('ws://localhost:3002');
+      ws1.onopen = () => {
+        console.log('Connected to logger for container 1');
+        // Subscribe to container 1
+        ws1.send(JSON.stringify({ type: 'subscribe', containerId: '1111' }));
+      };
+
+      // Connect to WebSocket server for container 2
+      const ws2 = new WebSocket('ws://localhost:3002');
+      ws2.onopen = () => {
+        console.log('Connected to logger for container 2');
+        // Subscribe to container 2
+        ws2.send(JSON.stringify({ type: 'subscribe', containerId: '2222' }));
+      };
+
+      // Handle logs for container 1
+      ws1.onmessage = event => {
+        const log = JSON.parse(event.data);
+        appendLog('log-viewer-1', log);
+      };
+
+      // Handle logs for container 2
+      ws2.onmessage = event => {
+        const log = JSON.parse(event.data);
+        appendLog('log-viewer-2', log);
+      };
+
+      // Handle WebSocket errors
+      ws1.onerror = ws2.onerror = error => {
+        console.error('WebSocket error:', error);
+      };
+
+      // Handle WebSocket connection close
+      ws1.onclose = () => console.log('WebSocket connection closed for container 1');
+      ws2.onclose = () => console.log('WebSocket connection closed for container 2');
+
+      // Function to append log entry to viewer
+      function appendLog(viewerId, log) {
+        const logViewer = document.getElementById(viewerId);
+        const logEntry = document.createElement('div');
+        logEntry.className = 'log-entry';
+
+        // Format the log entry for better readability
+        let logText = log.message;
+
+        // Add timestamp to log entry for better visibility
+        const timestamp = new Date(log.timestamp).toLocaleTimeString();
+        logEntry.innerHTML = `<span style="color: #888;">[${timestamp}]</span> ${logText}`;
+
+        logViewer.appendChild(logEntry);
+
+        // Auto-scroll to bottom
+        logViewer.scrollTop = logViewer.scrollHeight;
+      }
+
+      // Set up API trigger buttons
+      document.getElementById('trigger-1').addEventListener('click', () => {
+        fetch('/api?contaierId=1111')
+          .then(response => response.json())
+          .then(data => console.log('API response:', data))
+          .catch(error => console.error('Error calling API:', error));
+      });
+
+      document.getElementById('trigger-2').addEventListener('click', () => {
+        fetch('/api?contaierId=2222')
+          .then(response => response.json())
+          .then(data => console.log('API response:', data))
+          .catch(error => console.error('Error calling API:', error));
+      });
+    </script>
+  </body>
+</html>
