@@ -34,7 +34,7 @@ scikit-learn>=1.5.0
 spacy==3.7.4
 tiktoken>=0.8.0
 tools>=0.1.9
-torch==2.3.0
+torch==2.7.0
 transformers==4.41
 webdriver-manager>=4.0
 Werkzeug>=3.0.3
