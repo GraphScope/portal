@@ -11,7 +11,6 @@ LABEL version="1.0.0"
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV SANDBOX_HOME=/home/sandbox
-ENV APP_HOME=/home/sandbox/.local/app
 ENV PATH="${PATH}:/home/sandbox/.local/bin"
 
 # 安装基本工具和依赖
@@ -31,8 +30,6 @@ RUN apk add --no-cache \
     openssh-client \
     tzdata \
     jq \
-    nodejs \
-    npm \
     # 添加构建psutil所需的依赖
     linux-headers \
     musl-dev \
@@ -48,9 +45,9 @@ RUN addgroup -S sandbox && \
     chmod 0440 /etc/sudoers.d/sandbox
 
 # 创建工作目录并设置权限
-RUN mkdir -p ${SANDBOX_HOME} ${APP_HOME} && \
-    chown -R sandbox:sandbox ${SANDBOX_HOME} ${APP_HOME} && \
-    chmod -R 755 ${SANDBOX_HOME} ${APP_HOME}
+RUN mkdir -p ${SANDBOX_HOME} && \
+    chown -R sandbox:sandbox ${SANDBOX_HOME} && \
+    chmod -R 755 ${SANDBOX_HOME}
 
 # 创建nobody用户可写入的目录
 RUN mkdir -p ${SANDBOX_HOME}/tmp && \
@@ -72,13 +69,6 @@ RUN pip install --user \
 RUN pip install --user \
     numpy \
     pandas
-
-# 初始化Node.js项目和安装Playwright
-WORKDIR ${APP_HOME}
-USER sandbox
-RUN npm init -y && \
-    npm install @playwright/mcp --save \
-    npx -y playwright-core install-deps chromium
 
 # 切换回root用户
 USER root
@@ -143,22 +133,5 @@ RUN git config --global --add safe.directory ${SANDBOX_HOME} && \
     echo "[safe]" > /home/nobody/.gitconfig && \
     echo "    directory = ${SANDBOX_HOME}" >> /home/nobody/.gitconfig && \
     chown -R nobody:nobody /home/nobody
-
-# 创建入口点脚本
-COPY <<-"EOF" /usr/local/bin/entrypoint.sh
-#!/bin/sh
-if [ "$1" = "serve" ]; then
-    cd ${APP_HOME}
-    exec npx @playwright/mcp --port 3000 --host 0.0.0.0
-else
-    exec "$@"
-fi
-EOF
-
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
-# 设置工作目录和入口点
-WORKDIR ${SANDBOX_HOME}
-EXPOSE 3000
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["serve"]
+# 设置入口点
+CMD ["python"]

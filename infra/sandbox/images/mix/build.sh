@@ -10,8 +10,11 @@ cd "$(dirname "$0")"
 
 echo "Building $IMAGE_NAME:$NODE_VERSION..."
 
-# Build Docker image
-docker build -t "$IMAGE_NAME:$NODE_VERSION" -f Dockerfile .
+# Build Docker image with BuildKit optimizations
+DOCKER_BUILDKIT=1 docker build \
+  --progress=plain \
+  -t "$IMAGE_NAME:$NODE_VERSION" \
+  -f Dockerfile .
 
 # Create latest tag
 docker tag "$IMAGE_NAME:$NODE_VERSION" "$IMAGE_NAME:latest"
