@@ -1,8 +1,9 @@
 import dotenv from "dotenv";
 import path from "path";
+import { dirname } from "./utils/paths";
 
 // Load environment variables from .env file
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+dotenv.config({ path: path.resolve(dirname, "../.env") });
 
 interface Config {
   port: number;

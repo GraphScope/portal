@@ -2,9 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "module": "CommonJS",
-    "outDir": "./dist/lib",
-    "rootDir": "./src",
-    "declaration": true,
-    "emitDeclarationOnly": false
-  }
-}
+    "moduleResolution": "node",
+    "outDir": "./dist/lib"
+  },
+  "exclude": ["**/*.test.ts", "src/__mocks__/**/*"]
+} 

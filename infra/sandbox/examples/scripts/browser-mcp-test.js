@@ -4,7 +4,7 @@ import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/
 async function createSandbox() {
   const API_URL = "http://localhost:3000/api/sandbox";
   const params = {
-    image: "ai-spider/python:latest",
+    image: "ai-spider/mix:latest",
     options: {
       timeout: 3000000, //300s,50min
       memoryLimit: "512m",

@@ -1,9 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "ESNext",
-    "outDir": "./dist/esm",
-    "rootDir": "./src",
-    "emitDeclarationOnly": false
-  }
-}
+    "outDir": "./dist/esm"
+  },
+  "exclude": ["**/*.test.ts", "src/__mocks__/**/*"]
+} 
