@@ -1,243 +1,258 @@
+import Docker from "dockerode";
 import { Request, Response } from "express";
 import http, { RequestOptions, Agent as HttpAgent } from "http";
 import logger from "../utils/logger";
 import { ApiError } from "../middleware/error-handler";
+import dockerConfig from "./docker-config";
 import containerService from "./container-service";
 
-// Browser action types matching the Python API
-export interface BrowserActionRequest {
-  // Navigation actions
-  url?: string;
-  query?: string;
-  
-  // Element interaction
-  index?: number;
-  text?: string;
-  x?: number;
-  y?: number;
-  
-  // Tab management
-  page_id?: number;
-  
-  // Scroll actions
-  amount?: number;
-  
-  // Other actions
-  keys?: string;
-  seconds?: number;
-  goal?: string;
-  option_text?: string;
-}
-
-export interface BrowserActionResult {
-  success: boolean;
-  message: string;
-  error?: string;
-  url?: string;
-  title?: string;
-  elements?: string;
-  screenshot_base64?: string;
-  pixels_above?: number;
-  pixels_below?: number;
-  content?: string;
-  element_count?: number;
-  interactive_elements?: Array<{
-    index: number;
-    tag_name: string;
-    text: string;
-    is_in_viewport: boolean;
-    [key: string]: any;
-  }>;
-  viewport_width?: number;
-  viewport_height?: number;
-}
-
 class BrowserService {
+  private docker: Docker;
   private agent: HttpAgent;
 
   constructor() {
-    // Keep-alive agent for socket reuse
+    this.docker = dockerConfig.getDockerInstance();
+    // keep‑alive agent for socket reuse
     this.agent = new http.Agent({ keepAlive: true, maxSockets: 100 });
     logger.info("BrowserService initialized");
   }
 
-  /**
-   * Forward a browser request from Express to the container's browser service
-   */
+  /** Entry point for any /api/.../:containerId/mcp request */
   public async forwardRequest(
     containerId: string,
     req: Request,
     res: Response,
     targetPath: string
   ): Promise<void> {
+    const requestId = Math.random().toString(36).slice(2, 10);
+    const start = Date.now();
+    logger.info(`[${requestId}] → ${req.method} ${req.originalUrl}`);
+
+    // 30s global timeout fallback
+    const TIMEOUT = 30_000;
+    const to = setTimeout(() => {
+      if (!res.headersSent) {
+        logger.error(`[${requestId}] ✕ Timeout after ${TIMEOUT}ms`);
+        res.status(504).json({
+          error: { code: "REQUEST_TIMEOUT", message: `No response in ${TIMEOUT}ms` }
+        });
+      }
+    }, TIMEOUT);
+
     try {
-      // Use the targetPath as the action name directly
-      const action = targetPath;
-      
-      // Pass the request body and method to the browser service
-      const data = req.body || {};
-      const method = req.method;
+      // Ensure container exists and fetch its port
+      await containerService.getContainer(containerId);
+      const port = containerService.getBrowserPort(containerId);
+      if (!port) throw new ApiError(
+        "CONTAINER_PORT_NOT_FOUND",
+        `No port for container ${containerId}`,
+        502
+      );
 
-      logger.info('Forwarding browser request', {
-        containerId,
-        action,
-        method: method,
-        hasBody: Object.keys(data).length > 0
-      });
+      if (targetPath !== "mcp") {
+        clearTimeout(to);
+        throw new ApiError("NOT_FOUND", `Unknown path: ${targetPath}`, 404);
+      }
 
-      // Make the request to the browser service
-      const result = await this.makeBrowserRequest(containerId, action, data, method);
-      
-      // Return the result
-      res.status(200).json(result);
+      logger.info(req.method);
 
-    } catch (error) {
-      logger.error('Browser request forwarding failed:', error);
-      
-      if (error instanceof ApiError) {
-        res.status(error.statusCode).json({
-          error: {
-            code: error.code,
-            message: error.message,
-            ...(error.details && { details: error.details })
-          }
-        });
+      // Dispatch to POST or GET handler
+      if (req.method === "GET") {
+        await this.handleMcpGet(port, req, res, requestId, to, start);
       } else {
-        res.status(500).json({
-          error: {
-            code: 'BROWSER_FORWARD_ERROR',
-            message: error instanceof Error ? error.message : String(error)
-          }
-        });
+        await this.handleMcpPost(port, req, res, requestId, to, start);
+      }
+    } catch (err: any) {
+      clearTimeout(to);
+      logger.error(`[${requestId}] ✕`, err);
+      if (!res.headersSent) {
+        if (err instanceof ApiError) {
+          res.status(err.statusCode).json({
+            error: {
+              code: err.code,
+              message: err.message,
+              ...(err.details && { details: err.details }),
+            }
+          });
+        } else {
+          res.status(502).json({
+            error: { code: "PROXY_ERROR", message: err.message }
+          });
+        }
       }
     }
   }
 
-/**
-   * Make a browser action request to the container
-   */
-private async makeBrowserRequest(
-    containerId: string,
-    action: string,
-    data?: BrowserActionRequest,
-    method: string = 'POST'
-  ): Promise<BrowserActionResult> {
-    const requestId = Math.random().toString(36).slice(2, 10);
-    const start = Date.now();
-    
-    try {
-      // Get container info and browser port
-      const containerInfo = await containerService.getContainer(containerId);
-      const port = containerInfo.browserPort;
-      
-      if (!port) {
-        throw new ApiError(
-          "BROWSER_PORT_NOT_FOUND",
-          `No browser port mapping for container ${containerId}`,
-          502
-        );
-      }
-
-      logger.info(`[${requestId}] → ${method} /api/browser/${action} to port ${port}`, {
-        containerId,
-        action,
-        data,
-        method
-      });
-
-      // Prepare request body based on method
-      let body = '';
-      const headers: Record<string, string> = {
-        'Host': `127.0.0.1:${port}`
+  /** Handle HTTP GET → /mcp (open SSE stream for server‑initiated messages) */
+  private handleMcpGet(
+    port: number,
+    req: Request,
+    res: Response,
+    requestId: string,
+    to: NodeJS.Timeout,
+    start: number
+  ): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // Build headers, forwarding the client’s Mcp-Session-Id if present
+      const headers: Record<string,string> = {
+        Accept: "text/event-stream",
+        Host: `127.0.0.1:${port}`,
       };
-
-      // For methods that typically have a body (POST, PUT, PATCH)
-      if (['POST', 'PUT', 'PATCH'].includes(method.toUpperCase())) {
-        body = data ? JSON.stringify(data) : '{}';
-        headers['Content-Type'] = 'application/json';
-        headers['Content-Length'] = Buffer.byteLength(body).toString();
-      } else if (['GET', 'DELETE'].includes(method.toUpperCase())) {
-        // For GET/DELETE, don't send a body but still set content-length to 0
-        headers['Content-Length'] = '0';
+      if (req.headers["mcp-session-id"]) {
+        headers["Mcp-Session-Id"] = String(req.headers["mcp-session-id"]);
       }
 
-      const options: RequestOptions = {
-        host: '127.0.0.1',
+      const opts: RequestOptions = {
+        host: "127.0.0.1",
         port,
-        path: `/api/browser/${action}`,
-        method: method.toUpperCase(),
+        path: "/mcp",
+        method: "GET",
         headers,
         agent: this.agent,
-        timeout: 30000 // 30 second timeout
+        timeout: 0,  // no socket timeout for SSE
       };
 
-      return new Promise((resolve, reject) => {
-        const req = http.request(options, (res) => {
-          const chunks: Buffer[] = [];
-          
-          res.on('data', (chunk) => {
-            chunks.push(chunk);
-          });
-          
-          res.on('end', () => {
-            const responseBody = Buffer.concat(chunks).toString();
-            const duration = Date.now() - start;
-            
-            logger.info(`[${requestId}] ← ${res.statusCode} ${duration}ms`);
-            
-            try {
-              if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
-                const result: BrowserActionResult = JSON.parse(responseBody);
-                resolve(result);
-              } else {
-                const errorInfo = responseBody ? JSON.parse(responseBody) : { message: 'Unknown error' };
-                reject(new ApiError(
-                  'BROWSER_ACTION_FAILED',
-                  errorInfo.message || `Browser action failed with status ${res.statusCode}`,
-                  res.statusCode || 500,
-                  errorInfo
-                ));
-              }
-            } catch (parseError) {
-              reject(new ApiError(
-                'INVALID_RESPONSE',
-                'Failed to parse browser service response',
-                502,
-                { responseBody, parseError: parseError instanceof Error ? parseError.message : String(parseError) }
-              ));
-            }
-          });
-        });
+      const upstream = http.request(opts, upstreamRes => {
+        clearTimeout(to);
+        // Mirror status (should be 200 or 405)
+        res.statusCode = upstreamRes.statusCode || 200;
 
-        req.on('error', (error) => {
-          logger.error(`[${requestId}] Request error:`, error);
-          reject(new ApiError(
-            'BROWSER_REQUEST_FAILED',
-            `Failed to connect to browser service: ${error.message}`,
-            503,
-            { cause: error.message }
-          ));
-        });
+        // Copy all non‑hop‑by‑hop headers (including new Mcp-Session-Id)
+        for (const [k,v] of Object.entries(upstreamRes.headers)) {
+          if (!["connection","keep-alive","transfer-encoding","upgrade"]
+            .includes(k.toLowerCase())) {
+            res.setHeader(k, v as string);
+          }
+        }
 
-        req.on('timeout', () => {
-          logger.error(`[${requestId}] Request timeout`);
-          req.destroy();
-          reject(new ApiError(
-            'BROWSER_REQUEST_TIMEOUT',
-            'Browser service request timed out',
-            504
-          ));
-        });
+        // SSE handshake
+        res.setHeader("Content-Type", "text/event-stream");
+        res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Connection", "keep-alive");
+        res.flushHeaders();
 
-        // Send the request body
-        req.write(body);
-        req.end();
+        // Pipe the stream
+        upstreamRes.pipe(res);
+        upstreamRes.on("end", () => {
+          const took = Date.now() - start;
+          logger.info(`[${requestId}] ← SSE closed after ${took}ms`);
+          resolve();
+        });
+        upstreamRes.on("error", reject);
       });
 
-    } catch (error) {
-      logger.error(`[${requestId}] Browser request error:`, error);
-      throw error;
-    }
+      upstream.on("error", err => {
+        clearTimeout(to);
+        reject(err);
+      });
+
+      // Abort upstream if client disconnects
+      req.on("aborted", () => upstream.abort());
+      upstream.end();
+    });
+  }
+
+  /** Handle HTTP POST → /mcp (JSON‑RPC requests, notifications, or DELETE to close session) */
+  private handleMcpPost(
+    port: number,
+    req: Request,
+    res: Response,
+    requestId: string,
+    to: NodeJS.Timeout,
+    start: number
+  ): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // Buffer the entire JSON‑RPC payload
+      const bufs: Buffer[] = [];
+
+        const bodyBuffer: Buffer = Buffer.from(JSON.stringify(req.body), 'utf-8');
+
+
+        // Build headers with both JSON & SSE accepts
+        const headers: Record<string, any> = {
+          Accept: "application/json, text/event-stream",
+          "Content-Type": "application/json",
+          "Content-Length": bodyBuffer.length,
+          Host: `127.0.0.1:${port}`,
+        };
+        if (req.headers["mcp-session-id"]) {
+          headers["Mcp-Session-Id"] = String(req.headers["mcp-session-id"]);
+        }
+
+        const opts: RequestOptions = {
+          host: "127.0.0.1",
+          port,
+          path: "/mcp",
+          method: "POST",
+          headers,
+          agent: this.agent,
+          timeout: 0,
+        };
+
+        logger.info(`[${requestId}] → POST ${opts.path} ${opts.port} ${bodyBuffer.length}`);
+
+        const upstream = http.request(opts, upstreamRes => {
+          clearTimeout(to);
+          // Mirror status (200, 202, or error)
+          res.statusCode = upstreamRes.statusCode || 200;
+
+          logger.info(`[${requestId}] ← POST ${upstreamRes.statusCode} ${upstreamRes.statusMessage}`);
+
+          // Copy all non‑hop‑by‑hop headers (session, retry‑ids, etc.)
+          for (const [k,v] of Object.entries(upstreamRes.headers)) {
+            if (!["connection","keep-alive","transfer-encoding","upgrade"]
+              .includes(k.toLowerCase())) {
+              res.setHeader(k, v as string);
+            }
+          }
+
+          // 202 Accepted → no body expected
+          if (upstreamRes.statusCode === 202) {
+            res.end();
+            return resolve();
+          }
+
+          const ct = upstreamRes.headers["content-type"] || "";
+          if ((ct as string).includes("text/event-stream")) {
+            // SSE response to a POST: stream JSON‑RPC responses + notifications
+            res.setHeader("Cache-Control", "no-cache");
+            res.setHeader("Connection", "keep-alive");
+            res.flushHeaders();
+            upstreamRes.pipe(res);
+            upstreamRes.on("end", () => {
+              const took = Date.now() - start;
+              logger.info(`[${requestId}] ← SSE POST closed after ${took}ms`);
+              resolve();
+            });
+          } else {
+            // Regular JSON response (single RPC result or batch)
+            const respBufs: Buffer[] = [];
+            upstreamRes.on("data", c => respBufs.push(c));
+            upstreamRes.on("end", () => {
+              const resp = Buffer.concat(respBufs);
+              res.setHeader("Content-Type", "application/json");
+              res.setHeader("Content-Length", resp.length);
+              res.end(resp);
+              const took = Date.now() - start;
+              logger.info(`[${requestId}] ← JSON POST ${upstreamRes.statusCode} ${took}ms`);
+              resolve();
+            });
+          }
+        });
+
+        upstream.on("error", err => {
+          clearTimeout(to);
+          reject(err);
+        });
+
+        // Send buffered body once
+        upstream.setHeader('Content-Length', bodyBuffer.length);
+        upstream.write(bodyBuffer);
+        upstream.end();
+
+
+      req.on("error", err => reject(err));
+    });
   }
 }
 

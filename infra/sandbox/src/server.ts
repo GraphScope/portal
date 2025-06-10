@@ -52,7 +52,7 @@ export function createApp(): {
   );
 
   app.use(
-    "/api/sandbox/:containerId/browser",
+    "/api/sandbox/browser/:containerId",
     containerIdValidation,
     validate,
     sandboxController.useBrowser.bind(sandboxController)
