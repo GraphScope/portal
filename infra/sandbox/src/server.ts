@@ -42,12 +42,20 @@ export function createApp(): {
     sandboxController.createSandbox.bind(sandboxController)
   );
 
+
   // Standard code execution endpoint (maintains backward compatibility)
   app.post(
     "/api/sandbox/exec",
     execCodeValidation,
     validate,
     sandboxController.executeCode.bind(sandboxController)
+  );
+
+  app.use(
+    "/api/sandbox/browser/:containerId",
+    containerIdValidation,
+    validate,
+    sandboxController.useBrowser.bind(sandboxController)
   );
 
   // Removed real-time logs endpoint

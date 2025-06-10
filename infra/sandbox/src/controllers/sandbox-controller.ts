@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import containerService from "../services/container-service";
 import executionService from "../services/execution-service";
+import browserService from "../services/browser-service";
 import { CreateSandboxRequest, ExecuteCodeRequest } from "../types";
 import logger from "../utils/logger";
 
@@ -27,7 +28,8 @@ class SandboxController {
         containerId: container.id,
         status: container.status,
         createdAt: container.createdAt.toISOString(),
-        expiresAt: container.expiresAt.toISOString()
+        expiresAt: container.expiresAt.toISOString(),
+        browserPort: container.browserPort // Include the browser port in response
       });
     } catch (error) {
       next(error);
@@ -90,6 +92,7 @@ class SandboxController {
         status: status.status,
         createdAt: containerInfo.createdAt.toISOString(),
         expiresAt: containerInfo.expiresAt.toISOString(),
+        browserPort: containerInfo.browserPort, // Include browser port in response
         ...(status.resourceUsage && { resourceUsage: status.resourceUsage })
       });
     } catch (error) {
@@ -205,6 +208,91 @@ class SandboxController {
 
       // Send the ZIP file content
       res.status(200).send(buffer);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Proxy browser requests to container using port mapping
+   */
+  async useBrowser(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { containerId } = req.params;
+
+      const fullPath = req.path;
+      
+      const prefixToRemove = `/api/sandbox/browser/${containerId}`;
+      const path = fullPath.startsWith(prefixToRemove) 
+        ? fullPath.slice(prefixToRemove.length) 
+        : fullPath;
+
+      // Ensure path starts with / if not empty
+      const normalizedPath = path ? (path.startsWith('/') ? path.slice(1) : path) : '';
+
+      logger.info("Handling browser request", { 
+        method: req.method,
+        containerId, 
+        originalPath: fullPath,
+        normalizedPath 
+      });
+
+      // Check if the container exists and is running
+      const containerInfo = await containerService.getContainer(containerId);
+      if (containerInfo.status !== 'running') {
+        res.status(400).json({
+          error: {
+            code: "CONTAINER_NOT_RUNNING",
+            message: `Container ${containerId} is not running`,
+            details: { status: containerInfo.status }
+          }
+        });
+        return;
+      }
+      
+      // Check if the container has a port mapping for browser service
+      if (!containerInfo.browserPort) {
+        res.status(400).json({
+          error: {
+            code: "BROWSER_SERVICE_NOT_AVAILABLE",
+            message: `Container ${containerId} does not have browser service port mapping`,
+            details: { containerId }
+          }
+        });
+        return;
+      }
+      
+      // Log detailed connection information for debugging
+      logger.info(`Using port mapping for container browser service`, {
+        containerId,
+        browserPort: containerInfo.browserPort,
+        targetEndpoint: `http://127.0.0.1:${containerInfo.browserPort}`,
+        containerStatus: containerInfo.status,
+        requestPath: normalizedPath || 'mcp'
+      });
+      
+      // MCP server requires specific endpoints
+      let targetPath = normalizedPath || 'mcp';
+      
+      // Use browserService to proxy the request using port mapping
+      if (targetPath === 'mcp' || targetPath === 'sse') {
+        logger.info(`Proxying ${targetPath} request to container`, { 
+          containerId,
+          browserPort: containerInfo.browserPort,
+          path: targetPath
+        });
+        
+        // Use browserService to forward the request directly
+        await browserService.forwardRequest(containerId, req, res, targetPath);
+      } else {
+        // For any other path, pass through as is
+        logger.info(`Proxying custom path request to container: ${targetPath}`, {
+          containerId,
+          browserPort: containerInfo.browserPort
+        });
+        
+        await browserService.forwardRequest(containerId, req, res, targetPath);
+      }
     } catch (error) {
       next(error);
     }

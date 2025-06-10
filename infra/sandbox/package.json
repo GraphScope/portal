@@ -2,37 +2,54 @@
   "name": "@graphscope/sandbox",
   "version": "0.1.0",
   "description": "Secure sandbox environment for executing code in isolated containers",
-  "main": "dist/lib/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/esm/index.d.ts",
+  "type": "module",
   "exports": {
-    ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/lib/index.js",
-      "types": "./dist/esm/index.d.ts"
+    "./*": {
+      "import": "./dist/esm/*",
+      "require": "./dist/lib/*"
     }
   },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/esm/*"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "start": "concurrently \"tsc --watch -p tsconfig.build.esm.json\" \"tsc --watch -p tsconfig.build.cjs.json\"",
-    "build": "tsc  -p tsconfig.build.esm.json && tsc  -p tsconfig.build.cjs.json ",
-    "dev": "ts-node-dev --respawn src/index.ts",
+    "build": "npm run build:cjs && npm run build:esm",
+    "build:esm": "npm run prepare:esm && tsc -p tsconfig.build.esm.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
+    "build:cjs": "npm run prepare:cjs && tsc -p tsconfig.build.cjs.json && echo '{\"type\": \"commonjs\"}' > dist/lib/package.json",
+    "prepare:esm": "cp src/utils/paths.esm.ts src/utils/paths.ts",
+    "prepare:cjs": "cp src/utils/paths.cjs.ts src/utils/paths.ts",
+    "start": "tsx watch --clear-screen=false src/index.ts",
+    "dev": "tsx watch --clear-screen=false src/index.ts",
+    "dev:mcp": "tsx watch --clear-screen=false src/mcp-server.ts",
     "test": "jest",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src --ext .ts",
+    "prepack": "npm run build"
   },
   "dependencies": {
     "@graphscope/logger": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.11.5",
+    "@types/http-proxy": "^1.17.16",
     "cors": "^2.8.5",
     "dockerode": "^3.3.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-validator": "^7.0.1",
     "helmet": "^7.1.0",
+    "http-proxy": "^1.18.1",
     "morgan": "^1.10.0",
     "uuid": "^9.0.1",
-    "winston": "^3.11.0"
+    "winston": "^3.11.0",
+    "zod": "^3.22.4",
+    "zod-to-json-schema": "^3.22.4"
   },
   "devDependencies": {
-    "concurrently": "^7.6.0",
     "@types/archiver": "^6.0.3",
     "@types/cors": "^2.8.17",
     "@types/dockerode": "^3.3.38",
@@ -50,7 +67,7 @@
     "tar-stream": "^3.1.7",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.16.5",
     "typescript": "^5.3.3"
   }
 }

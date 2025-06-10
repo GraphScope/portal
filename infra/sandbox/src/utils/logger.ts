@@ -1,9 +1,10 @@
 import path from 'path';
 import { createLoggerWithServer } from '@graphscope/logger';
 import config from '../config';
+import { dirname } from './paths';
 
 // 设置日志文件路径
-const logFilePath = path.join(__dirname, '../../logs/sandbox.log');
+const logFilePath = path.join(dirname, '../../logs/sandbox.log');
 
 // 设置WebSocket服务器端口，用于实时日志流
 const WS_PORT = Number(process.env.WS_LOG_PORT || '3002');

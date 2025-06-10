@@ -9,6 +9,7 @@ export interface SandboxOptions {
   timeout?: number; // Timeout in milliseconds
   memoryLimit?: string; // Memory limit (e.g., "512m")
   cpuLimit?: string; // CPU limit (e.g., "0.5")
+  portMappings?: Record<string, string>; // Map of container port to host port
 }
 
 /**
@@ -27,6 +28,7 @@ export interface SandboxResponse {
   status: string;
   createdAt: string;
   expiresAt: string;
+  browserPort?: number; // Port for browser service connections
 }
 
 /**
@@ -69,6 +71,7 @@ export interface SandboxStatus {
   status: string;
   createdAt: string;
   expiresAt: string;
+  browserPort?: number; // Port for browser service connections
   resourceUsage?: {
     cpuUsage?: string;
     memoryUsage?: string;
@@ -95,6 +98,7 @@ export interface ContainerInfo {
   createdAt: Date;
   expiresAt: Date;
   containerName?: string; // 容器名称，方便通过名称查找
+  browserPort?: number; // Mapped host port for browser service
 }
 
 /**
