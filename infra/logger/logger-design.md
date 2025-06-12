@@ -2,235 +2,159 @@
 
 ## 项目概述
 
-本项目实现了一个基于 Winston 的日志工具，保持与 Winston API 完全一致的同时，支持将日志同步输出到三个不同渠道：
+本项目实现了一个基于 Winston 的多通道日志工具，保持与 Winston API 完全一致的同时，支持将日志同步输出到多个渠道：
 
-1. **标准输出 (stdout)**：直接在控制台显示日志，支持彩色输出
-2. **本地文件**：将日志保存到指定的本地文件，支持文件轮转
-3. **WebSocket**：通过 Socket.IO 实时推送日志信息到客户端，支持断线重连
+1. **标准输出 (stdout)**：控制台彩色输出
+2. **本地文件**：日志文件持久化，支持轮转
+3. **WebSocket**：通过 Socket.IO 实时推送日志到前端/订阅端
+4. **HTTP**：通过 HTTP 动态推送日志，支持自定义 header（如鉴权、容器隔离）
 
 ## 技术栈
-
 - Node.js
 - TypeScript
 - Winston (日志库)
-- Socket.io (WebSocket 通信)
-- Jest (单元测试)
+- Socket.IO (WebSocket 通信)
+- Express (HTTP 日志服务)
 
-## 设计方案
+## 主要组件与职责
 
-### 核心组件
+### 1. Logger（多通道日志采集器）
+- 通过 `createLogger` 创建，支持 console、file、WebSocket、HTTP 多种 transport。
+- 保持 Winston API 兼容，支持 info/warn/error/debug 等所有标准方法。
+- 支持自定义格式、日志级别、文件轮转、动态 header。
+- WebSocket/HTTP transport 可选，按需启用。
 
-1. **Logger 类**：主要的日志处理类，封装 Winston 功能并扩展多通道能力
-   - `createMultiChannelLogger()`: 创建具有自定义配置的 logger 实例
-   - `createDefaultLogger()`: 创建具有默认配置的 logger 实例，简化常见场景
-2. **Transport 实现**：
-   - 使用原生 Winston Console Transport 处理标准输出
-   - 使用原生 Winston File Transport 处理文件日志
-   - 自定义 Socket.IO Transport 处理 WebSocket 实时日志
-3. **配置管理**：提供灵活的配置选项和默认配置，包括：
-   - 日志格式化配置
-   - 日志级别管理
-   - 文件轮转策略
-   - WebSocket 连接和重连策略
+### 2. SocketIOTransport（WebSocket 日志推送）
+- 继承自 winston-transport，自定义实现。
+- 通过 Socket.IO 客户端连接指定 WS server，推送日志。
+- 支持断线重连、消息队列缓存、事件名自定义。
+- 连接失败时自动降级，日志不会丢失。
 
-### API 设计
+### 3. DynamicHttpTransport（HTTP 日志推送）
+- 继承自 winston.transports.Http。
+- 支持每条日志动态生成 header（如 Authorization、x-container-id 等）。
+- 通过 fetch 发送 POST 请求到 HTTP 日志服务。
+- 失败时自动忽略，不影响主流程。
 
-Logger 类将保持与 Winston 完全一致的 API，包括但不限于：
+### 4. 日志服务端（WS/HTTP Server）
+- WS server：通过 `createWsLogServer` 创建，负责接收 logger 推送的日志并广播给所有客户端。
+- HTTP server：通过 `createHttpLogServer` 创建，负责日志的 HTTP API（如 ingest/query/stream/health），不做日志推送。
+- 支持 session 隔离、SSE 流式查询、健康检查等。
 
-```typescript
-logger.info(message, ...meta);
-logger.error(message, ...meta);
-logger.warn(message, ...meta);
-logger.debug(message, ...meta);
-logger.verbose(message, ...meta);
-logger.silly(message, ...meta);
-```
+### 5. 统一入口（createLogService）
+- 通过一份配置同时创建 logger、WS server、HTTP server。
+- 便于业务方一键集成多通道日志能力。
 
-### Socket.io Transport 实现
-
-自定义一个 Winston Transport，用于将日志消息通过 Socket.io 发送到指定的 WebSocket 端点。
+## 主要类型定义（TypeScript）
 
 ```typescript
-class SocketIOTransport extends winston.Transport {
-  private socket: SocketIOClient.Socket;
-
-  constructor(options: SocketIOTransportOptions) {
-    super(options);
-    this.socket = io(options.url);
-    // 初始化连接管理与错误处理
-  }
-
-  log(info: any, callback: () => void) {
-    this.socket.emit("log", info);
-    callback();
-  }
+export interface LogServiceConfig {
+  logFilePath: string;         // 日志文件路径
+  level?: string;              // 日志级别
+  debug?: boolean;             // 是否开启 debug 输出
+  service?: string;            // 服务名（可选）
+  ws?: {
+    port: number;
+    enabled: boolean;
+  };
+  http?: {
+    port: number;
+    enabled: boolean;
+    host?: string;
+    path?: string;
+    getContext?: () => { authorization?: string; xContainerId?: string };
+  };
 }
 ```
 
-### 配置示例
+## 典型用法
 
+### 1. 创建多通道 logger
 ```typescript
-const logger = createLogger({
-  level: "info",
-  format: combine(timestamp(), json()),
-  transports: [
-    // 标准输出
-    new transports.Console(),
-
-    // 文件输出
-    new transports.File({
-      filename: "/tmp/logs/app.log",
-      maxsize: 5242880, // 5MB
-      maxFiles: 5
-    }),
-
-    // WebSocket 输出
-    new SocketIOTransport({
-      url: "ws://localhost:3000/ws",
-      level: "info"
-    })
-  ]
-});
-```
-
-## 系统架构
-
-### 组件架构
-
-```
-客户端应用 <---- Socket.IO ----> 独立日志服务器  <---- Socket.IO ---- 日志库
-    |                               |                                    |
-    |                               |                                    |
-    +------ HTTP API -------> API服务器 <---------------------------- 控制台输出
-                                                                        |
-                                                                        |
-                                                                     日志文件
-```
-
-### 项目结构
-
-```
-/
-├── src/
-│   ├── index.ts              # 主入口文件
-│   ├── logger.ts             # Logger 类实现
-│   ├── transports/
-│   │   └── socket-io.ts      # Socket.IO Transport 实现
-│   └── types/
-│       └── index.ts          # 类型定义
-├── examples/
-│   ├── server/               # 服务器示例
-│   │   ├── index.ts          # API 服务器示例
-│   │   └── log-socket-server.ts # 日志 Socket.IO 服务器
-│   ├── client/               # 客户端示例 (React)
-│   ├── logs/                 # 日志文件存储目录
-│   ├── curl-test.sh          # cURL 测试脚本
-│   └── run.sh                # 运行脚本
-│   ├── logger.test.ts        # Logger 单元测试
-│   └── socket-transport.test.ts # Socket.io Transport 测试
-├── examples/
-│   ├── basic-usage.ts        # 基本使用示例
-│   └── websocket-client.html # WebSocket 客户端示例
-├── package.json
-├── tsconfig.json
-└── README.md
-```
-
-## 实现详情
-
-### 日志格式化
-
-- 支持 Winston 所有的内置格式化器，如 json、simple、colorize 等
-- 为控制台和文件输出提供不同的格式
-- 确保在不同输出渠道保持语义一致性
-
-### 错误处理机制
-
-- **WebSocket 连接失败处理**：
-
-  - 自动重连机制
-  - 消息队列缓存 - 当连接断开时，日志消息会被缓存，连接恢复后重新发送
-  - 降级策略 - 在 WebSocket 不可用时，仍能保证控制台和文件输出正常工作
-
-- **文件写入错误处理**：
-  - 目录自动创建
-  - 文件轮转策略，避免单个文件过大
-  - 日志备份配置
-
-### 日志服务端架构
-
-为了避免循环连接问题并提高可维护性，日志系统分为两个独立服务：
-
-1. **API 服务器**：提供 HTTP 接口，生成日志
-2. **日志 WebSocket 服务器**：专门用于接收和广播日志信息
-
-这种分离架构解决了以下问题：
-
-- 避免了循环连接问题
-- 提高了系统可伸缩性
-- 降低了单个服务的负担
-
-### 性能优化
-
-- **批量处理**：WebSocket Transport 实现了消息队列
-- **缓冲策略**：在高日志量场景下，通过队列管理减少网络压力
-- **轻量级事件传输**：避免冗余信息传输
-
-## 使用示例
-
-### 基本使用
-
-```typescript
-import { createLogger } from "./path-to-logger";
+import { createLogger, SocketIOTransport } from '@graphscope/logger';
 
 const logger = createLogger({
-  // 配置选项
+  level: 'info',
+  file: { filename: '/tmp/app.log' },
+  console: {},
+  ws: {
+    enabled: true,
+    url: 'http://localhost:3001',
+    eventName: 'log',
+    level: 'info',
+    reconnection: true,
+    reconnectionAttempts: 10,
+    reconnectionDelay: 2000,
+  },
+  http: {
+    enabled: true,
+    host: '127.0.0.1',
+    port: 4002,
+    path: '/logs/log',
+    getContext: () => ({ authorization: 'Bearer ...', xContainerId: 'abc' })
+  }
 });
 
-logger.info("Hello, world!");
-logger.error("An error occurred", { error: "Details" });
+logger.info('This is an info log');
+logger.error('This is an error log', { error: new Error('fail') });
 ```
 
-### WebSocket 客户端订阅
+### 2. 统一入口创建 logger + WS/HTTP server
+```typescript
+import { createLogService } from '@graphscope/logger';
 
+const { logger, wsServer, httpServer } = createLogService({
+  logFilePath: '/var/log/app.log',
+  level: 'info',
+  ws: { port: 3002, enabled: true },
+  http: { port: 4001, enabled: true },
+  service: 'my-service',
+});
+
+logger.info('hello world');
+```
+
+### 3. WebSocket 客户端订阅日志
 ```javascript
-// 浏览器中
-const socket = io("ws://localhost:3000/ws");
-socket.on("log", (logMessage) => {
-  console.log("Received log:", logMessage);
+const socket = io('http://localhost:3002');
+socket.on('log', (logMessage) => {
+  console.log('Received log:', logMessage);
 });
 ```
 
-### Curl 测试 (WebSocket)
+### 4. HTTP 日志 API 查询/推送
+- POST `/logs/log` 发送日志（需带鉴权 header）
+- GET `/logs/query` 查询历史日志
+- GET `/logs/stream` SSE 实时流式日志
+- GET `/logs/health` 健康检查
 
-使用 websocat 等工具测试 WebSocket 连接：
+## 架构图
 
-```bash
-# 安装 websocat
-brew install websocat  # macOS
-apt-get install websocat  # Ubuntu
-
-# 连接到 WebSocket 端点
-websocat ws://localhost:3000/ws
-
-# 此时终端将显示接收到的日志消息
+```
+客户端 <---Socket.IO---> WS 日志服务 <---Socket.IO---> Logger (WS Transport)
+    |                                             |
+    |                                             |
+    +-------------------HTTP----------------------+
+                              |
+                        HTTP 日志服务 (API)
+                              |
+                        日志文件/内存存储
 ```
 
-## 部署与配置
+## 设计要点与实现细节
 
-提供详细的配置项文档，包括：
+- **多通道输出**：console/file 必须，ws/http 可选，均可单独启用/关闭。
+- **WebSocket 断线重连**：自动重连，消息队列缓存，恢复后补发。
+- **HTTP 动态 header**：每条日志可带不同 header，支持多租户/鉴权。
+- **文件写入安全**：自动创建目录，支持文件轮转与备份。
+- **API 兼容性**：logger 完全兼容 winston API，便于迁移。
+- **统一入口**：`createLogService` 一键集成所有能力。
+- **类型安全**：所有配置项、API、日志结构均有完整 TypeScript 类型定义。
 
-- 日志级别设置
-- 文件轮转策略
-- WebSocket 连接配置
-- 格式化选项
-
-## 后续扩展可能性
-
-1. 添加更多传输渠道，如数据库存储、云日志服务等
-2. 支持日志分析和可视化工具集成
-3. 实现分布式日志收集与聚合
+## 后续扩展方向
+- 支持更多 transport（如数据库、云日志等）
+- 日志分析与可视化集成
+- 分布式日志聚合
 
 ## 结论
-
-这个日志工具将提供与 Winston 完全兼容的 API，同时扩展了多通道输出能力，特别是实时 WebSocket 传输功能。通过合理的设计和实现，确保日志处理的可靠性、灵活性和高性能。
+本工具为 Node.js 应用提供了高性能、可扩展、易用的多通道日志采集与分发能力，适合现代微服务、云原生等多场景。

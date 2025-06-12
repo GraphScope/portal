@@ -16,6 +16,7 @@
     "docs": "dumi dev",
     "version": "changeset version",
     "publish": "npm run build && pnpm changeset publish -r",
+    "lint": "",
     "check:publish": "npm run build && pnpm changeset publish -r --dry-run"
   },
   "husky": {
@@ -84,7 +85,9 @@
     "typescript": "^5.3.3",
     "webpack": "^5.96.1",
     "webpack-cli": "^5.1.4",
-    "terser-webpack-plugin": "^5.3.10"
+    "terser-webpack-plugin": "^5.3.10",
+    "node-fetch": "^2.6.7",
+    "@types/node-fetch": "^2.6.4"
   },
   "publishConfig": {
     "access": "public"
