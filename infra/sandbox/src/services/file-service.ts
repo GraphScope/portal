@@ -8,6 +8,7 @@ import { ApiError } from "../middleware/error-handler";
 import { SandboxFiles } from "../types";
 import gitService from "./git-service";
 import dockerConfig from "./docker-config";
+import tar from 'tar-stream'
 
 // 固定工作目录，所有代码都存放在这里，由Git管理版本
 const WORK_DIR = "/home/sandbox";
@@ -363,7 +364,6 @@ class FileService {
       });
 
       // Extract the zip file from the tar archive
-      const tar = require("tar-stream");
       const extract = tar.extract();
 
       // Use promise to properly handle async extraction
@@ -376,6 +376,7 @@ class FileService {
 
             stream.on("data", (chunk: Buffer) => {
               chunks.push(chunk);
+              logger.info(`${chunk.toString()}`, { position: 'FileService', containerId: container.id });
             });
 
             stream.on("end", () => {
@@ -501,6 +502,10 @@ class FileService {
           }
         );
 
+        stream.on("data", (chunk: Buffer) => {
+          logger.info(`${chunk.toString()}`, { position: 'FileService', containerId: container.id });
+        });
+
         stream.on("end", () => {
           resolve({ stdout, stderr });
         });
@@ -530,8 +535,7 @@ class FileService {
       // Read the file content
       const content = fs.readFileSync(localPath);
 
-      // Create a tar stream with the file
-      const pack = require("tar-stream").pack();
+      const pack = tar.pack();
 
       // Add file to the tar stream
       const fileName = path.basename(containerPath);
