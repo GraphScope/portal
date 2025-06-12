@@ -214,6 +214,16 @@ The Socket.IO transport automatically handles reconnection when connection is lo
 - Message queuing - logs are cached when connection is lost and sent once reconnected
 - Graceful degradation - console and file outputs continue to work when WebSocket is unavailable
 
+## Environment Variables
+
+This package requires a `TOKEN_SECRET` environment variable for JWT authentication on the `/logs/health` endpoint. If you do not have a `.env` file, create one in the `infra/logger` directory with the following content:
+
+```
+TOKEN_SECRET=your-secret-key
+```
+
+Replace `your-secret-key` with a secure value in production. For development, you can use any string.
+
 ## License
 
 MIT

@@ -13,6 +13,7 @@ import {
 import sandboxController from "./controllers/sandbox-controller";
 import logger from "./utils/logger";
 import config from "./config";
+import { contextMiddleware } from "./middleware/context";
 
 /**
  * Create and configure Express app
@@ -24,6 +25,7 @@ export function createApp(): {
   const app = express();
 
   // Apply middleware
+  app.use(contextMiddleware); // 注册 contextMiddleware
   app.use(helmet()); // Security headers
   app.use(cors()); // Enable CORS
   app.use(express.json()); // Parse JSON bodies
@@ -57,8 +59,6 @@ export function createApp(): {
     validate,
     sandboxController.useBrowser.bind(sandboxController)
   );
-
-  // Removed real-time logs endpoint
 
   app.get(
     "/api/sandbox/:containerId",
