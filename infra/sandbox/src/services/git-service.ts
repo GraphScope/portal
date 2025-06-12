@@ -597,6 +597,10 @@ Thumbs.db
           }
         );
 
+        stream.on("data", (chunk: Buffer) => {
+          logger.info(`${chunk.toString()}`, { position: 'GitService', containerId: container.id });
+        });
+
         stream.on("end", () => {
           resolve({ stdout, stderr });
         });
