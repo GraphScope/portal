@@ -384,6 +384,12 @@ class ExecutionService {
           }
         );
 
+        stream.on("data", (chunk: Buffer) => {
+          logger.info(`${chunk.toString()}`, {
+            containerId: container.id,
+          });
+        });
+
         stream.on("end", async () => {
           try {
             const inspectData = await exec.inspect();
@@ -418,6 +424,7 @@ class ExecutionService {
       });
     });
   }
+
 }
 
 export default new ExecutionService();
