@@ -122,7 +122,9 @@ class ContainerService {
           "PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/",
           "PIP_TRUSTED_HOST=mirrors.aliyun.com",
           // Make services bind to all interfaces
-          "HOST=0.0.0.0"
+          "HOST=0.0.0.0",
+          // 解决Playwright截图字体问题: https://github.com/microsoft/playwright/issues/35972
+          "PW_TEST_SCREENSHOT_NO_FONTS_READY=1"
         ],
         // 临时使用root用户启动容器，我们会在容器启动后创建目录并设置权限
         User: "root",
