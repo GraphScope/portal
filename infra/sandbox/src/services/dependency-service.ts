@@ -72,6 +72,10 @@ class NodePackageHandler implements DependencyHandler {
             }
           );
 
+          stream.on("data", (chunk: Buffer) => {
+            logger.info(`${chunk.toString()}`, { position: 'NodePackageHandler', containerId: container.id });
+          });
+
           stream.on("end", async () => {
             try {
               const inspectData = await exec.inspect();
@@ -185,6 +189,10 @@ class PythonPackageHandler implements DependencyHandler {
               }
             }
           );
+
+          stream.on("data", (chunk: Buffer) => {
+            logger.info(`${chunk.toString()}`, { position: 'PythonPackageHandler', containerId: container.id });
+          });
 
           stream.on("end", async () => {
             try {

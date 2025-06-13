@@ -586,6 +586,12 @@ class ContainerService {
           }
         );
 
+        stream.on("data", (chunk: Buffer) => {
+          logger.info(`${chunk.toString()}`, {
+            containerId: container.id,
+          });
+        });
+
         stream.on("end", () => {
           resolve({ stdout, stderr });
         });
