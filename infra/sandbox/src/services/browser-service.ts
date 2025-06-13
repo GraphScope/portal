@@ -29,7 +29,7 @@ class BrowserService {
     logger.info(`[${requestId}] → ${req.method} ${req.originalUrl}`);
 
     // 30s global timeout fallback
-    const TIMEOUT = 30_000;
+    const TIMEOUT = 65_000;
     const to = setTimeout(() => {
       if (!res.headersSent) {
         logger.error(`[${requestId}] ✕ Timeout after ${TIMEOUT}ms`);
