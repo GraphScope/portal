@@ -8,7 +8,7 @@ import { ApiError } from "../middleware/error-handler";
 import { SandboxFiles } from "../types";
 import gitService from "./git-service";
 import dockerConfig from "./docker-config";
-import tar from 'tar-stream'
+import * as tar from 'tar-stream'
 
 // 固定工作目录，所有代码都存放在这里，由Git管理版本
 const WORK_DIR = "/home/sandbox";
@@ -376,7 +376,7 @@ class FileService {
 
             stream.on("data", (chunk: Buffer) => {
               chunks.push(chunk);
-              logger.info(`${chunk.toString()}`, { position: 'FileService', containerId: container.id });
+              logger.info(chunk.toString(), { position: 'FileService', containerId: container.id });
             });
 
             stream.on("end", () => {
@@ -443,11 +443,11 @@ class FileService {
       throw error instanceof ApiError
         ? error
         : new ApiError(
-            "ZIP_CREATION_FAILED",
-            "Failed to create zip archive",
-            500,
-            { cause: error instanceof Error ? error.message : String(error) }
-          );
+          "ZIP_CREATION_FAILED",
+          "Failed to create zip archive",
+          500,
+          { cause: error instanceof Error ? error.message : String(error) }
+        );
     }
   }
 
@@ -492,19 +492,19 @@ class FileService {
           stream,
           {
             write: (chunk: Buffer) => {
-              stdout += chunk.toString();
+              const message = chunk.toString();
+              stdout += message;
+              logger.info(message, { position: 'FileService', containerId: container.id });
             }
           },
           {
             write: (chunk: Buffer) => {
-              stderr += chunk.toString();
+              const message = chunk.toString();
+              stderr += message;
+              logger.error(message, { position: 'FileService', containerId: container.id });
             }
           }
         );
-
-        stream.on("data", (chunk: Buffer) => {
-          logger.info(`${chunk.toString()}`, { position: 'FileService', containerId: container.id });
-        });
 
         stream.on("end", () => {
           resolve({ stdout, stderr });

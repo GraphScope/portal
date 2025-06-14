@@ -69,28 +69,28 @@ class ContainerService {
       }
 
       // Prepare port bindings if specified
-      const portBindings: Record<string, Array<{HostPort: string}>> = {};
+      const portBindings: Record<string, Array<{ HostPort: string }>> = {};
       const exposedPorts: Record<string, {}> = {};
-      
+
       // Always expose container port 3000 for browser service
       const browserPort = "3000/tcp";
       exposedPorts[browserPort] = {};
       // Use empty host port to let Docker choose an available port
       portBindings[browserPort] = [{ HostPort: "" }];
-      
+
       // Process additional port mappings if provided
       if (Object.keys(portMappings).length > 0) {
         logger.info(`Setting up port mappings: ${JSON.stringify(portMappings)}`);
-        
+
         for (const [containerPort, hostPort] of Object.entries(portMappings)) {
           // Format port for Docker API (must end with /tcp)
-          const formattedContainerPort = containerPort.includes('/') 
-            ? containerPort 
+          const formattedContainerPort = containerPort.includes('/')
+            ? containerPort
             : `${containerPort}/tcp`;
-            
+
           portBindings[formattedContainerPort] = [{ HostPort: hostPort }];
           exposedPorts[formattedContainerPort] = {};
-          
+
           logger.info(`Mapping container port ${containerPort} to host port ${hostPort}`);
         }
       }
@@ -131,11 +131,11 @@ class ContainerService {
 
       // Start the container
       await container.start();
-      
+
       // Get container info to read the assigned host port
       const inspectData = await container.inspect();
       const dockerId = container.id;
-      
+
       // Get the mapped port for browser service
       const portBindingsInfo = inspectData.NetworkSettings.Ports;
       if (portBindingsInfo && portBindingsInfo["3000/tcp"] && portBindingsInfo["3000/tcp"][0]) {
@@ -242,7 +242,7 @@ class ContainerService {
         const expiresAt = new Date(createdAt.getTime() + config.defaultTimeout);
 
         const name = inspectData.Name?.replace(/^\//, "") || "";
-        
+
         // Try to recover browser port mapping
         let browserPort: number | undefined;
         const portBindingsInfo = inspectData.NetworkSettings.Ports;
@@ -324,7 +324,7 @@ class ContainerService {
         logger.info(`Removing container from registry: ${containerId}`);
         this.containers.delete(containerId);
       }
-      
+
       // Remove browser port mapping
       if (this.browserPortMap.has(containerId)) {
         logger.info(`Removing browser port mapping for container: ${containerId}`);
@@ -334,7 +334,7 @@ class ContainerService {
       // 直接使用Docker ID删除容器
       try {
         const container = this.docker.getContainer(containerId);
-        
+
         logger.info(`Removing container with ID: ${containerId}`);
         await container.remove({ force: true, v: true });
         logger.info(`Successfully removed container with ID: ${containerId}`);
@@ -576,21 +576,19 @@ class ContainerService {
           stream,
           {
             write: (chunk: Buffer) => {
-              stdout += chunk.toString();
+              const message = chunk.toString();
+              stdout += message;
+              logger.info(message, { containerId: container.id, position: 'ContainerService' });
             }
           },
           {
             write: (chunk: Buffer) => {
-              stderr += chunk.toString();
+              const message = chunk.toString();
+              stderr += message;
+              logger.error(message, { containerId: container.id, position: 'ContainerService' });
             }
           }
         );
-
-        stream.on("data", (chunk: Buffer) => {
-          logger.info(`${chunk.toString()}`, {
-            containerId: container.id,
-          });
-        });
 
         stream.on("end", () => {
           resolve({ stdout, stderr });

@@ -374,21 +374,19 @@ class ExecutionService {
           stream,
           {
             write: (chunk: Buffer) => {
-              stdout += chunk.toString();
+              const message = chunk.toString();
+              stdout += message;
+              logger.info(message, { containerId: container.id, position: 'ExecutionService' });
             }
           },
           {
             write: (chunk: Buffer) => {
-              stderr += chunk.toString();
+              const message = chunk.toString();
+              stderr += message;
+              logger.error(message, { containerId: container.id, position: 'ExecutionService' });
             }
           }
         );
-
-        stream.on("data", (chunk: Buffer) => {
-          logger.info(`${chunk.toString()}`, {
-            containerId: container.id,
-          });
-        });
 
         stream.on("end", async () => {
           try {
