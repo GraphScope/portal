@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
-import http from "http";
+import http, { createServer } from "http";
 import { errorHandler, notFoundHandler } from "./middleware/error-handler";
 import {
   createSandboxValidation,
@@ -13,6 +13,8 @@ import {
 import sandboxController from "./controllers/sandbox-controller";
 import logger from "./utils/logger";
 import config from "./config";
+import { registerTerminalSocket } from "./terminal/terminal-socket";
+import { Server as SocketIOServer } from "socket.io";
 
 /**
  * Create and configure Express app
@@ -20,6 +22,7 @@ import config from "./config";
 export function createApp(): {
   app: express.Application;
   server: http.Server;
+  io?: any;
 } {
   const app = express();
 
@@ -90,9 +93,17 @@ export function createApp(): {
   app.use(errorHandler);
 
   // Create HTTP server
-  const server = http.createServer(app);
+  const server = createServer(app);
 
-  return { app, server };
+  // 集成Socket.IO
+  const io = new SocketIOServer(server, {
+    cors: { origin: "*" }
+  });
+
+  // 注册终端Socket事件
+  registerTerminalSocket(io);
+
+  return { app, server, io };
 }
 
 /**
