@@ -505,12 +505,12 @@ Thumbs.db
         "sh",
         "-c",
         "if command -v apt-get > /dev/null; then " +
-          "apt-get update && apt-get install -y git; " +
-          "elif command -v apk > /dev/null; then " +
-          "apk add --no-cache git; " +
-          "elif command -v yum > /dev/null; then " +
-          "yum install -y git; " +
-          "else echo 'Unsupported package manager'; exit 1; fi"
+        "apt-get update && apt-get install -y git; " +
+        "elif command -v apk > /dev/null; then " +
+        "apk add --no-cache git; " +
+        "elif command -v yum > /dev/null; then " +
+        "yum install -y git; " +
+        "else echo 'Unsupported package manager'; exit 1; fi"
       ]);
 
       // Verify git is installed
@@ -587,19 +587,19 @@ Thumbs.db
           stream,
           {
             write: (chunk: Buffer) => {
-              stdout += chunk.toString();
+              const message = chunk.toString();
+              stdout += message;
+              logger.info(message, { position: 'GitService', containerId: container.id });
             }
           },
           {
             write: (chunk: Buffer) => {
-              stderr += chunk.toString();
+              const message = chunk.toString();
+              stderr += message;
+              logger.error(message, { position: 'GitService', containerId: container.id });
             }
           }
         );
-
-        stream.on("data", (chunk: Buffer) => {
-          logger.info(`${chunk.toString()}`, { position: 'GitService', containerId: container.id });
-        });
 
         stream.on("end", () => {
           resolve({ stdout, stderr });

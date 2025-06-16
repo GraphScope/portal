@@ -62,19 +62,19 @@ class NodePackageHandler implements DependencyHandler {
             stream,
             {
               write: (chunk: Buffer) => {
-                stdout += chunk.toString();
+                const message = chunk.toString();
+                stdout += message;
+                logger.info(message, { position: 'NodePackageHandler', containerId: container.id });
               }
             },
             {
               write: (chunk: Buffer) => {
-                stderr += chunk.toString();
+                const message = chunk.toString();
+                stderr += message;
+                logger.error(message, { position: 'NodePackageHandler', containerId: container.id });
               }
             }
           );
-
-          stream.on("data", (chunk: Buffer) => {
-            logger.info(`${chunk.toString()}`, { position: 'NodePackageHandler', containerId: container.id });
-          });
 
           stream.on("end", async () => {
             try {
@@ -180,19 +180,19 @@ class PythonPackageHandler implements DependencyHandler {
             stream,
             {
               write: (chunk: Buffer) => {
-                stdout += chunk.toString();
+                const message = chunk.toString();
+                stdout += message;
+                logger.info(message, { position: 'PythonPackageHandler', containerId: container.id });
               }
             },
             {
               write: (chunk: Buffer) => {
-                stderr += chunk.toString();
+                const message = chunk.toString();
+                stderr += message;
+                logger.error(message, { position: 'PythonPackageHandler', containerId: container.id });
               }
             }
           );
-
-          stream.on("data", (chunk: Buffer) => {
-            logger.info(`${chunk.toString()}`, { position: 'PythonPackageHandler', containerId: container.id });
-          });
 
           stream.on("end", async () => {
             try {
