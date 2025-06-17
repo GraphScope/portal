@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Divider, Card, Row, Col, Typography, Flex } from 'antd';
+import { Divider, Card, Row, Col, Typography, Flex, Switch } from 'antd';
 import Section from '../../components/section';
 import InteractTheme from './interact-theme';
 import PrimaryColor from './primary-color';
@@ -11,8 +11,19 @@ import { FormattedMessage } from 'react-intl';
 import Coordinator from './coordinator';
 import GraphyPlugin from './plugins/graphy';
 import ExplorePlugin from './plugins/explore';
+import { Utils } from '@graphscope/studio-components';
 
 const Setting: React.FunctionComponent = () => {
+  const [whetherMockLLM, setWhetherMockLLM] = React.useState(() => {
+    const val = Utils.storage.get('WhetherMockLLM');
+    return val === true || val === 'true';
+  });
+
+  const handleSwitchChange = (checked: boolean) => {
+    setWhetherMockLLM(checked);
+    Utils.storage.set('WhetherMockLLM', checked);
+  };
+
   return (
     <Section
       breadcrumb={[
@@ -62,6 +73,11 @@ const Setting: React.FunctionComponent = () => {
               <PrimaryColor />
               <Divider />
               <RoundedCorner />
+              <Divider />
+              <Flex align="center" gap={8}>
+                <Typography.Text>WhetherMockLLM</Typography.Text>
+                <Switch checked={whetherMockLLM} onChange={handleSwitchChange} />
+              </Flex>
             </Card>
             <Card
               title={

@@ -12,6 +12,8 @@ import AddNodes from './AddNodes';
 import { getPrompt } from './utils';
 import AdjustSchema from './AdjustSchema';
 import MOCK from './Mock';
+import { Utils } from '@graphscope/studio-components';
+
 interface IReportProps {
   task: string;
   intention: ItentionType;
@@ -167,7 +169,7 @@ export const TEMPLATE_MIND_MAP_GENERATOR_CHN = (graph_data, input_ids, user_quer
 
 指导建议：
 - 在选择分类维度时，应根据用户意图尽可能选择那些区分度高且重要的维度。
-- 每个类别应该专注于一个单一的方面，比如类别名可以是“数据安全”或“数据可扩展性”。它不应是不同事物的混合，比如类别名不应是“数据安全和可扩展性”。
+- 每个类别应该专注于一个单一的方面，比如类别名可以是"数据安全"或"数据可扩展性"。它不应是不同事物的混合，比如类别名不应是"数据安全和可扩展性"。
 - 分类的数量不一定是越多越好；通常，分为2-6个类别是较为合适的。
 - 确保每条数据属于且只属于一个类别，并且不要为同一条数据选择多个类别。如果无法准确归类，请将其分类为'others'。
 例如，假设输入的图数据中包含id分别为1，2，..., 100的100条数据，且要分类的图数据的id为[1,2,...,100]，则输出的结构中，"data"部分应为
@@ -221,7 +223,7 @@ export const TEMPLATE_MIND_MAP_GENERATOR_INCREMENTAL_CHN = (graph_data, input_id
 
 指导建议：
 - 如果一条图数据无法分入任何给定的分类中，可以构造一个新的分类，在categories中描述该信的分类并给其一个id，并将这条数据归入这个类别
-- 每个类别应该专注于一个单一的方面，比如类别名可以是“数据安全”或“数据可扩展性”。它不应是不同事物的混合，比如类别名不应是“数据安全和可扩展性”。
+- 每个类别应该专注于一个单一的方面，比如类别名可以是"数据安全"或"数据可扩展性"。它不应是不同事物的混合，比如类别名不应是"数据安全和可扩展性"。
 - 分类的数量不一定是越多越好；通常，分为2-6个类别是较为合适的。
 - 确保每条数据属于且只属于一个类别，并且不要为同一条数据选择多个类别。
 例如，假设输入的图数据中包含id分别为1，2，..., 100的100条数据，且要分类的图数据的id为[1,2,...,100]，则输出的结构中，"data"部分应为
@@ -274,7 +276,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
   const { summary, loading } = state;
 
   const handleConfirm = async () => {
-    if (MOCK.enable) {
+    if (Utils.storage.get('WhetherMockLLM') === true || Utils.storage.get('WhetherMockLLM') === 'true') {
       console.log('MOCK', MOCK);
       setState(preState => {
         return {
@@ -283,7 +285,7 @@ const Intention: React.FunctionComponent<IReportProps> = props => {
           summary: null,
         };
       });
-      await MOCK.sleep(200);
+      await MOCK.sleep(2000);
       const mindmap = await MOCK.mindmap();
       setState(preState => {
         return {
