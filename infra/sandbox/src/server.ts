@@ -8,6 +8,7 @@ import {
   createSandboxValidation,
   execCodeValidation,
   containerIdValidation,
+  updateFilesValidation,
   validate
 } from "./middleware/validation";
 import sandboxController from "./controllers/sandbox-controller";
@@ -42,13 +43,20 @@ export function createApp(): {
     sandboxController.createSandbox.bind(sandboxController)
   );
 
-
   // Standard code execution endpoint (maintains backward compatibility)
   app.post(
     "/api/sandbox/exec",
     execCodeValidation,
     validate,
     sandboxController.executeCode.bind(sandboxController)
+  );
+
+  // New endpoint for updating files
+  app.post(
+    "/api/sandbox/files",
+    updateFilesValidation,
+    validate,
+    sandboxController.updateFiles.bind(sandboxController)
   );
 
   app.use(

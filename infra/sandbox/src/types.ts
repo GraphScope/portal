@@ -133,3 +133,14 @@ export interface DependencyHandler {
     workDir?: string
   ): Promise<DependencyInstallResult>;
 }
+
+export interface UpdateFilesRequest {
+  containerId: string;
+  files: SandboxFiles;
+  gitTracking?: boolean;
+}
+
+export interface SandboxContainer {
+  id: string;
+  status: "running" | "exited" | "created" | "removing" | "paused";
+}

@@ -2,7 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import containerService from "../services/container-service";
 import executionService from "../services/execution-service";
 import browserService from "../services/browser-service";
-import { CreateSandboxRequest, ExecuteCodeRequest } from "../types";
+import {
+  CreateSandboxRequest,
+  ExecuteCodeRequest,
+  UpdateFilesRequest
+} from "../types";
 import logger from "../utils/logger";
 
 /**
@@ -60,6 +64,36 @@ class SandboxController {
         command,
         files,
         env,
+        gitTracking
+      );
+
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Update files in a sandbox
+   */
+  async updateFiles(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { containerId, files, gitTracking } =
+        req.body as UpdateFilesRequest;
+
+      logger.info("Updating files in sandbox", {
+        containerId,
+        gitTracking
+      });
+
+      // Update files in container
+      const result = await executionService.updateFiles(
+        containerId,
+        files,
         gitTracking
       );
 
@@ -184,7 +218,9 @@ class SandboxController {
 
       logger.info(
         "Downloading files as ZIP from sandbox (including .git for version history)",
-        { containerId }
+        {
+          containerId
+        }
       );
 
       const fileService = await import("../services/file-service").then(
@@ -216,30 +252,38 @@ class SandboxController {
   /**
    * Proxy browser requests to container using port mapping
    */
-  async useBrowser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async useBrowser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { containerId } = req.params;
 
       const fullPath = req.path;
-      
+
       const prefixToRemove = `/api/sandbox/browser/${containerId}`;
-      const path = fullPath.startsWith(prefixToRemove) 
-        ? fullPath.slice(prefixToRemove.length) 
+      const path = fullPath.startsWith(prefixToRemove)
+        ? fullPath.slice(prefixToRemove.length)
         : fullPath;
 
       // Ensure path starts with / if not empty
-      const normalizedPath = path ? (path.startsWith('/') ? path.slice(1) : path) : '';
+      const normalizedPath = path
+        ? path.startsWith("/")
+          ? path.slice(1)
+          : path
+        : "";
 
-      logger.info("Handling browser request", { 
+      logger.info("Handling browser request", {
         method: req.method,
-        containerId, 
+        containerId,
         originalPath: fullPath,
-        normalizedPath 
+        normalizedPath
       });
 
       // Check if the container exists and is running
       const containerInfo = await containerService.getContainer(containerId);
-      if (containerInfo.status !== 'running') {
+      if (containerInfo.status !== "running") {
         res.status(400).json({
           error: {
             code: "CONTAINER_NOT_RUNNING",
@@ -249,7 +293,7 @@ class SandboxController {
         });
         return;
       }
-      
+
       // Check if the container has a port mapping for browser service
       if (!containerInfo.browserPort) {
         res.status(400).json({
@@ -261,36 +305,39 @@ class SandboxController {
         });
         return;
       }
-      
+
       // Log detailed connection information for debugging
       logger.info(`Using port mapping for container browser service`, {
         containerId,
         browserPort: containerInfo.browserPort,
         targetEndpoint: `http://127.0.0.1:${containerInfo.browserPort}`,
         containerStatus: containerInfo.status,
-        requestPath: normalizedPath || 'mcp'
+        requestPath: normalizedPath || "mcp"
       });
-      
+
       // MCP server requires specific endpoints
-      let targetPath = normalizedPath || 'mcp';
-      
+      let targetPath = normalizedPath || "mcp";
+
       // Use browserService to proxy the request using port mapping
-      if (targetPath === 'mcp' || targetPath === 'sse') {
-        logger.info(`Proxying ${targetPath} request to container`, { 
+      if (targetPath === "mcp" || targetPath === "sse") {
+        logger.info(`Proxying ${targetPath} request to container`, {
           containerId,
           browserPort: containerInfo.browserPort,
           path: targetPath
         });
-        
+
         // Use browserService to forward the request directly
         await browserService.forwardRequest(containerId, req, res, targetPath);
       } else {
         // For any other path, pass through as is
-        logger.info(`Proxying custom path request to container: ${targetPath}`, {
-          containerId,
-          browserPort: containerInfo.browserPort
-        });
-        
+        logger.info(
+          `Proxying custom path request to container: ${targetPath}`,
+          {
+            containerId,
+            browserPort: containerInfo.browserPort
+          }
+        );
+
         await browserService.forwardRequest(containerId, req, res, targetPath);
       }
     } catch (error) {

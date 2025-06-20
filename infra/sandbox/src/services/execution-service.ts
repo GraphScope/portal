@@ -42,58 +42,16 @@ class ExecutionService {
         );
       }
 
-      // 创建文件并获取工作目录路径
+      // 如果提供了文件，则更新它们
       let workDir = "/home/sandbox";
-      let filesChanged = false;
-
       if (files && Object.keys(files).length > 0) {
-        workDir = await fileService.createFilesInContainer(containerId, files);
-        filesChanged = true;
-
-        // 如果启用了Git跟踪，初始化或提交更改
-        if (gitTracking) {
-          try {
-            // 检查是否已经初始化了Git仓库
-            const gitInitialized = await this.isGitInitialized(
-              container,
-              workDir
-            );
-
-            if (!gitInitialized) {
-              logger.info(
-                `Initializing Git repository for container ${containerId}`
-              );
-              await gitService.initializeRepository(containerId, workDir);
-            }
-
-            // 准备好提交消息
-            const commitMessage = this.generateCommitMessage(
-              files,
-              executionId
-            );
-            logger.info(
-              `Committing file changes to Git for execution ${executionId}`,
-              {
-                containerId,
-                files: Object.keys(files)
-              }
-            );
-
-            // 提交更改
-            await gitService.commitChanges(
-              containerId,
-              executionId,
-              commitMessage,
-              workDir
-            );
-          } catch (gitError) {
-            // Git错误不应该中断执行，只记录日志
-            logger.warn(`Git tracking failed for execution ${executionId}`, {
-              containerId,
-              error: gitError
-            });
-          }
-        }
+        const updateResult = await this.updateFiles(
+          containerId,
+          files,
+          gitTracking,
+          executionId
+        );
+        workDir = updateResult.workDir;
       }
 
       // 检测和安装依赖（在工作目录中）
@@ -197,9 +155,78 @@ class ExecutionService {
         "EXECUTION_FAILED",
         `Failed to execute command in container`,
         500,
-        { cause: error instanceof Error ? error.message : String(error) }
+        {
+          cause: error instanceof Error ? error.message : String(error)
+        }
       );
     }
+  }
+
+  /**
+   * Update files in the sandbox container and commit to Git if enabled.
+   */
+  async updateFiles(
+    containerId: string,
+    files: SandboxFiles,
+    gitTracking: boolean = true,
+    commitContextId?: string
+  ): Promise<{ workDir: string }> {
+    let container: Docker.Container;
+    try {
+      container = this.docker.getContainer(containerId);
+      await container.inspect(); // 验证容器存在
+    } catch (error) {
+      throw new ApiError(
+        "CONTAINER_NOT_FOUND",
+        `Container with ID ${containerId} not found`,
+        404
+      );
+    }
+
+    // 创建文件并获取工作目录路径
+    const workDir = await fileService.createFilesInContainer(
+      containerId,
+      files
+    );
+
+    // 如果启用了Git跟踪，初始化或提交更改
+    if (gitTracking) {
+      const contextId = commitContextId || `update_${uuidv4()}`;
+      try {
+        // 检查是否已经初始化了Git仓库
+        const gitInitialized = await this.isGitInitialized(container, workDir);
+
+        if (!gitInitialized) {
+          logger.info(
+            `Initializing Git repository for container ${containerId}`
+          );
+          await gitService.initializeRepository(containerId, workDir);
+        }
+
+        // 准备好提交消息
+        const commitMessage = this.generateCommitMessage(files, contextId);
+
+        logger.info(`Committing file changes to Git for context ${contextId}`, {
+          containerId,
+          files: Object.keys(files)
+        });
+
+        // 提交更改
+        await gitService.commitChanges(
+          containerId,
+          contextId,
+          commitMessage,
+          workDir
+        );
+      } catch (gitError) {
+        // Git错误不应该中断执行，只记录日志
+        logger.warn(`Git tracking failed for context ${contextId}`, {
+          containerId,
+          error: gitError
+        });
+      }
+    }
+    return { workDir };
   }
 
   /**
@@ -233,17 +260,55 @@ class ExecutionService {
         Cmd: ["test", "-d", ".git"],
         AttachStdout: false,
         AttachStderr: false,
-        WorkingDir: workDir
+        WorkingDir: workDir,
+        User: "root" // Ensure the check runs as the correct user
       });
 
-      return new Promise<boolean>((resolve) => {
-        exec.start({}, async () => {
-          const inspect = await exec.inspect();
-          resolve(inspect.ExitCode === 0);
+      return new Promise<boolean>((resolve, reject) => {
+        exec.start({ hijack: true }, (err, stream) => {
+          if (err) {
+            (logger as any).warn(`Error starting Git check exec`, {
+              error: err,
+              containerId
+            });
+            return reject(err);
+          }
+          if (!stream) {
+            const noStreamError = new Error(
+              "No stream returned from exec.start for Git check"
+            );
+            (logger as any).warn(noStreamError.message, { containerId });
+            return reject(noStreamError);
+          }
+
+          // Wait for the command to finish, then inspect the exit code
+          stream.on("end", async () => {
+            try {
+              const inspectData = await exec.inspect();
+              resolve(inspectData.ExitCode === 0);
+            } catch (inspectError) {
+              (logger as any).warn(`Error inspecting Git check exec`, {
+                error: inspectError,
+                containerId
+              });
+              reject(inspectError);
+            }
+          });
+
+          stream.on("error", (streamErr) => {
+            (logger as any).warn(`Stream error during Git check`, {
+              error: streamErr,
+              containerId
+            });
+            reject(streamErr);
+          });
         });
       });
     } catch (error) {
-      logger.warn(`Error checking Git initialization`, { error, containerId });
+      (logger as any).warn(`Error checking Git initialization`, {
+        error,
+        containerId
+      });
       return false;
     }
   }
@@ -278,7 +343,7 @@ class ExecutionService {
       });
 
       const checkResult = await new Promise<{ ExitCode: number }>((resolve) => {
-        checkDirExec.start({}, async (err) => {
+        checkDirExec.start({}, async (err: Error | null) => {
           if (err) {
             logger.warn(`Error checking directory ${workDir}`, {
               error: err,
@@ -330,13 +395,13 @@ class ExecutionService {
       });
     }
 
-    // 执行用户命令，使用nobody用户
+    // 执行用户命令，使用root用户
     const execOptions: Docker.ExecCreateOptions = {
       Cmd: command,
       AttachStdout: true,
       AttachStderr: true,
       WorkingDir: workDir,
-      User: "nobody" // 使用非特权用户
+      User: "root" // 使用非特权用户
     };
 
     // 添加环境变量，如果提供了的话
@@ -350,79 +415,90 @@ class ExecutionService {
     const exec = await container.exec(execOptions);
 
     return new Promise((resolve, reject) => {
-      exec.start({ hijack: true }, (err, stream) => {
-        if (err) {
-          logger.error(`Error starting command execution`, {
-            error: err,
-            containerId,
-            command
-          });
-          return reject(err);
-        }
-        if (!stream) {
-          logger.error(`No stream returned from exec.start`, {
-            containerId,
-            command
-          });
-          return reject(new Error("No stream returned from exec.start"));
-        }
-
-        let stdout = "";
-        let stderr = "";
-
-        container.modem.demuxStream(
-          stream,
-          {
-            write: (chunk: Buffer) => {
-              const message = chunk.toString();
-              stdout += message;
-              logger.info(message, { containerId: container.id, position: 'ExecutionService' });
-            }
-          },
-          {
-            write: (chunk: Buffer) => {
-              const message = chunk.toString();
-              stderr += message;
-              logger.error(message, { containerId: container.id, position: 'ExecutionService' });
-            }
-          }
-        );
-
-        stream.on("end", async () => {
-          try {
-            const inspectData = await exec.inspect();
-            const exitCode = inspectData.ExitCode ?? -1;
-            logger.debug(
-              `Command execution completed with exit code ${exitCode}`,
-              { containerId, command }
-            );
-            resolve({
-              stdout,
-              stderr,
-              exitCode: exitCode // Default to -1 if ExitCode is null
-            });
-          } catch (error) {
-            logger.error(`Error inspecting command execution`, {
-              error,
+      exec.start(
+        { hijack: true },
+        (err: Error | null, stream: NodeJS.ReadWriteStream | undefined) => {
+          if (err) {
+            logger.error(`Error starting command execution`, {
+              error: err,
               containerId,
               command
             });
-            reject(error);
+            return reject(err);
           }
-        });
+          if (!stream) {
+            logger.error(`No stream returned from exec.start`, {
+              containerId,
+              command
+            });
+            return reject(new Error("No stream returned from exec.start"));
+          }
 
-        stream.on("error", (err) => {
-          logger.error(`Stream error during command execution`, {
-            error: err,
-            containerId,
-            command
+          let stdout = "";
+          let stderr = "";
+
+          container.modem.demuxStream(
+            stream,
+            {
+              write: (chunk: Buffer) => {
+                const message = chunk.toString();
+                stdout += message;
+                logger.info(message, {
+                  containerId: container.id,
+                  position: "ExecutionService"
+                });
+              }
+            },
+            {
+              write: (chunk: Buffer) => {
+                const message = chunk.toString();
+                stderr += message;
+                logger.error(message, {
+                  containerId: container.id,
+                  position: "ExecutionService"
+                });
+              }
+            }
+          );
+
+          stream.on("end", async () => {
+            try {
+              const inspectData = await exec.inspect();
+              const exitCode = inspectData.ExitCode ?? -1;
+              logger.debug(
+                `Command execution completed with exit code ${exitCode}`,
+                {
+                  containerId,
+                  command
+                }
+              );
+              resolve({
+                stdout,
+                stderr,
+                exitCode: exitCode // Default to -1 if ExitCode is null
+              });
+            } catch (error) {
+              logger.error(`Error inspecting command execution`, {
+                error,
+                containerId,
+                command
+              });
+              reject(error);
+            }
           });
-          reject(err);
-        });
-      });
+
+          stream.on("error", (err: Error) => {
+            logger.error(`Stream error during command execution`, {
+              error: err,
+              containerId,
+              command
+            });
+            reject(err);
+          });
+        }
+      );
     });
   }
-
 }
 
 export default new ExecutionService();

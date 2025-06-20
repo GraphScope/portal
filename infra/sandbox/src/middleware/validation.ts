@@ -34,6 +34,15 @@ export const execCodeValidation = [
   body("files").optional().isObject().withMessage("Files must be an object")
 ];
 
+export const updateFilesValidation = [
+  body("containerId").isString().withMessage("Container ID must be a string"),
+  body("files").isObject().withMessage("Files must be an object"),
+  body("gitTracking")
+    .optional()
+    .isBoolean()
+    .withMessage("Git tracking flag must be a boolean")
+];
+
 export const containerIdValidation = [
   param("containerId")
     .isString()
