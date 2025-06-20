@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
 import containerService from "../services/container-service";
 import Docker from "dockerode";
-import logger from "src/utils/logger";
+import logger from "../utils/logger";
 
 /**
  * Register terminal socket events for remote container terminal access.
