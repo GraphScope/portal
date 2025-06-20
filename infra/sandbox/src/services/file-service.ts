@@ -376,10 +376,6 @@ class FileService {
 
             stream.on("data", (chunk: Buffer) => {
               chunks.push(chunk);
-              logger.info(chunk.toString(), {
-                position: "FileService",
-                containerId: container.id
-              });
             });
 
             stream.on("end", () => {
