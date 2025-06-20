@@ -1,0 +1,97 @@
+// ---- Styles from App.css ----
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+// ---- End of App.css styles ----
+
+// POSIX-like Terminal Container Styles
+// ------------------------------------
+
+.posix-terminal-container {
+  /* Responsive: occupy 50% of viewport width and height */
+  width: 50vw;
+  height: 50vh;
+  background: #1e1e1e;
+  font-family: Menlo, Monaco, 'Courier New', monospace;
+  font-size: 14px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 320px;
+  min-height: 240px;
+  max-width: 100vw;
+  max-height: 100vh;
+}
+
+// Title bar (macOS style)
+.posix-terminal-titlebar {
+  height: 28px;
+  background: #2d2d2d;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-bottom: 1px solid #393939;
+  position: relative;
+  z-index: 2;
+}
+
+.posix-terminal-titlebar-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.posix-terminal-titlebar-btn {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 0;
+  border: 1px solid #222;
+}
+.posix-terminal-titlebar-btn-close {
+  background: #ff5f56;
+  border-color: #e0443e;
+}
+.posix-terminal-titlebar-btn-min {
+  background: #ffbd2e;
+  border-color: #dea123;
+}
+.posix-terminal-titlebar-btn-max {
+  background: #27c93f;
+  border-color: #13a10e;
+}
+
+.posix-terminal-titlebar-title {
+  flex: 1;
+  text-align: center;
+  color: #d4d4d4;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+// Xterm content area
+.posix-terminal-xterm-content {
+  flex: 1;
+  background: #1e1e1e;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+  text-align: left;
+}
+
+// Ensure all text inside xterm is also left-aligned
+.posix-terminal-xterm-content .xterm,
+.posix-terminal-xterm-content .xterm-rows {
+  text-align: left !important;
+}

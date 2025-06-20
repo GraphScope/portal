@@ -415,12 +415,66 @@ class ExecutionService {
     const exec = await container.exec(execOptions);
 
     return new Promise((resolve, reject) => {
-      exec.start(
-        { hijack: true },
-        (err: Error | null, stream: NodeJS.ReadWriteStream | undefined) => {
-          if (err) {
-            logger.error(`Error starting command execution`, {
-              error: err,
+      exec.start({ hijack: true }, (err, stream) => {
+        if (err) {
+          logger.error(`Error starting command execution`, {
+            error: err,
+            containerId,
+            command
+          });
+          return reject(err);
+        }
+        if (!stream) {
+          logger.error(`No stream returned from exec.start`, {
+            containerId,
+            command
+          });
+          return reject(new Error("No stream returned from exec.start"));
+        }
+
+        let stdout = "";
+        let stderr = "";
+
+        container.modem.demuxStream(
+          stream,
+          {
+            write: (chunk: Buffer) => {
+              const message = chunk.toString();
+              stdout += message;
+              logger.info(message, {
+                containerId: container.id,
+                position: "ExecutionService"
+              });
+            }
+          },
+          {
+            write: (chunk: Buffer) => {
+              const message = chunk.toString();
+              stderr += message;
+              logger.error(message, {
+                containerId: container.id,
+                position: "ExecutionService"
+              });
+            }
+          }
+        );
+
+        stream.on("end", async () => {
+          try {
+            const inspectData = await exec.inspect();
+            const exitCode = inspectData.ExitCode ?? -1;
+            logger.debug(
+              `Command execution completed with exit code ${exitCode}`,
+              { containerId, command }
+            );
+            resolve({
+              stdout,
+              stderr,
+              exitCode: exitCode // Default to -1 if ExitCode is null
+            });
+          } catch (error) {
+            logger.error(`Error inspecting command execution`, {
+              error,
               containerId,
               command
             });
@@ -495,8 +549,8 @@ class ExecutionService {
             });
             reject(err);
           });
-        }
-      );
+        });
+      });
     });
   }
 }

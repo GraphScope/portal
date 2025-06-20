@@ -1,0 +1,504 @@
+Found 188652 repositories. Showing top 100:
+
+Top 100 LLM Repositories on GitHub:
+============================================================
+1. transformers
+   Stars: 145589
+   Description: 🤗 Transformers: the model-definition framework for state-of-the-art machine learning models in text, vision, audio, and multimodal models, for both inference and training. 
+   URL: https://github.com/huggingface/transformers
+============================================================
+2. ollama
+   Stars: 143649
+   Description: Get up and running with Llama 3.3, DeepSeek-R1, Phi-4, Gemma 3, Mistral Small 3.1 and other large language models.
+   URL: https://github.com/ollama/ollama
+============================================================
+3. awesome-chatgpt-prompts
+   Stars: 128828
+   Description: This repo includes ChatGPT prompt curation to use ChatGPT and other LLM tools better.
+   URL: https://github.com/f/awesome-chatgpt-prompts
+============================================================
+4. dify
+   Stars: 103202
+   Description: Production-ready platform for agentic workflow development.
+   URL: https://github.com/langgenius/dify
+============================================================
+5. open-webui
+   Stars: 98820
+   Description: User-friendly AI Interface (Supports Ollama, OpenAI API, ...)
+   URL: https://github.com/open-webui/open-webui
+============================================================
+6. llama.cpp
+   Stars: 81747
+   Description: LLM inference in C/C++
+   URL: https://github.com/ggml-org/llama.cpp
+============================================================
+7. gpt4all
+   Stars: 73598
+   Description: GPT4All: Run Local LLMs on Any Device. Open-source and available for commercial use.
+   URL: https://github.com/nomic-ai/gpt4all
+============================================================
+8. gpt_academic
+   Stars: 68758
+   Description: 为GPT/GLM等LLM大语言模型提供实用化交互接口，特别优化论文阅读/润色/写作体验，模块化设计，支持自定义快捷按钮&函数插件，支持Python和C++等项目剖析&自译解功能，PDF/LaTex论文翻译&总结功能，支持并行问询多种LLM模型，支持chatglm3等本地模型。接入通义千问, deepseekcoder, 讯飞星火, 文心一言, llama2, rwkv, claude2, moss等。
+   URL: https://github.com/binary-husky/gpt_academic
+============================================================
+9. browser-use
+   Stars: 63133
+   Description: 🌐 Make websites accessible for AI agents. Automate tasks online with ease.
+   URL: https://github.com/browser-use/browser-use
+============================================================
+10. OpenHands
+   Stars: 58044
+   Description: 🙌 OpenHands: Code Less, Make More
+   URL: https://github.com/All-Hands-AI/OpenHands
+============================================================
+11. MetaGPT
+   Stars: 56387
+   Description: 🌟 The Multi-Agent Framework: First AI Software Company, Towards Natural Language Programming
+   URL: https://github.com/FoundationAgents/MetaGPT
+============================================================
+12. llm-course
+   Stars: 55378
+   Description: Course to get into Large Language Models (LLMs) with roadmaps and Colab notebooks.
+   URL: https://github.com/mlabonne/llm-course
+============================================================
+13. ragflow
+   Stars: 55067
+   Description: RAGFlow is an open-source RAG (Retrieval-Augmented Generation) engine based on deep document understanding.
+   URL: https://github.com/infiniflow/ragflow
+============================================================
+14. LLaMA-Factory
+   Stars: 52255
+   Description: Unified Efficient Fine-Tuning of 100+ LLMs & VLMs (ACL 2024)
+   URL: https://github.com/hiyouga/LLaMA-Factory
+============================================================
+15. LLMs-from-scratch
+   Stars: 51077
+   Description: Implement a ChatGPT-like LLM in PyTorch from scratch, step by step
+   URL: https://github.com/rasbt/LLMs-from-scratch
+============================================================
+16. vllm
+   Stars: 49595
+   Description: A high-throughput and memory-efficient inference and serving engine for LLMs
+   URL: https://github.com/vllm-project/vllm
+============================================================
+17. crawl4ai
+   Stars: 45544
+   Description: 🚀🤖 Crawl4AI: Open-source LLM Friendly Web Crawler & Scraper. Don't be shy, join here: https://discord.gg/jP8KfhDhyN
+   URL: https://github.com/unclecode/crawl4ai
+============================================================
+18. anything-llm
+   Stars: 45288
+   Description: The all-in-one Desktop & Docker AI application with built-in RAG, AI agents, No-code agent builder, MCP compatibility,  and more.
+   URL: https://github.com/Mintplex-Labs/anything-llm
+============================================================
+19. text-generation-webui
+   Stars: 43923
+   Description: LLM UI with advanced features, easy setup, and multiple backend support.
+   URL: https://github.com/oobabooga/text-generation-webui
+============================================================
+20. llama_index
+   Stars: 42338
+   Description: LlamaIndex is the leading framework for building LLM-powered agents over your data.
+   URL: https://github.com/run-llama/llama_index
+============================================================
+21. unsloth
+   Stars: 40538
+   Description: Fine-tuning & Reinforcement Learning for LLMs. 🦥 Train Qwen3, Llama 4, DeepSeek-R1, Gemma 3, TTS 2x faster with 70% less VRAM.
+   URL: https://github.com/unslothai/unsloth
+============================================================
+22. firecrawl
+   Stars: 39946
+   Description: 🔥 Turn entire websites into LLM-ready markdown or structured data. Scrape, crawl and extract with a single API.
+   URL: https://github.com/mendableai/firecrawl
+============================================================
+23. awesome-llm-apps
+   Stars: 39788
+   Description: Collection of awesome LLM apps with AI Agents and RAG using OpenAI, Anthropic, Gemini and opensource models.
+   URL: https://github.com/Shubhamsaboo/awesome-llm-apps
+============================================================
+24. Pake
+   Stars: 39602
+   Description: 🤱🏻 Turn any webpage into a desktop app with Rust.  🤱🏻 利用 Rust 轻松构建轻量级多端桌面应用
+   URL: https://github.com/tw93/Pake
+============================================================
+25. quivr
+   Stars: 37986
+   Description: Opiniated RAG for integrating GenAI in your apps 🧠   Focus on your product rather than the RAG. Easy integration in existing products with customisation!  Any LLM: GPT4, Groq, Llama. Any Vectorstore: PGVector, Faiss. Any Files. Anyway you want. 
+   URL: https://github.com/QuivrHQ/quivr
+============================================================
+26. chatgpt-on-wechat
+   Stars: 37638
+   Description: 基于大模型搭建的聊天机器人，同时支持 微信公众号、企业微信应用、飞书、钉钉 等接入，可选择GPT4.1/GPT-4o/GPT-o1/ DeepSeek/Claude/文心一言/讯飞星火/通义千问/ Gemini/GLM-4/Kimi/LinkAI，能处理文本、语音和图片，访问操作系统和互联网，支持基于自有知识库进行定制企业智能客服。
+   URL: https://github.com/zhayujie/chatgpt-on-wechat
+============================================================
+27. ray
+   Stars: 37517
+   Description: Ray is an AI compute engine. Ray consists of a core distributed runtime and a set of AI Libraries for accelerating ML workloads.
+   URL: https://github.com/ray-project/ray
+============================================================
+28. ChatTTS
+   Stars: 36786
+   Description: A generative speech model for daily dialogue.
+   URL: https://github.com/2noise/ChatTTS
+============================================================
+29. MoneyPrinterTurbo
+   Stars: 36611
+   Description: 利用AI大模型，一键生成高清短视频 Generate short videos with one click using AI LLM.
+   URL: https://github.com/harry0703/MoneyPrinterTurbo
+============================================================
+30. milvus
+   Stars: 35352
+   Description: Milvus is a high-performance, cloud-native vector database built for scalable vector ANN search
+   URL: https://github.com/milvus-io/milvus
+============================================================
+31. Langchain-Chatchat
+   Stars: 35283
+   Description: Langchain-Chatchat（原Langchain-ChatGLM）基于 Langchain 与 ChatGLM, Qwen 与 Llama 等语言模型的 RAG 与 Agent 应用 | Langchain-Chatchat (formerly langchain-ChatGLM), local knowledge based LLM (like ChatGLM, Qwen and Llama) RAG and Agent app with langchain 
+   URL: https://github.com/chatchat-space/Langchain-Chatchat
+============================================================
+32. chatbox
+   Stars: 35251
+   Description: User-friendly Desktop Client App for AI Models/LLMs (GPT, Claude, Gemini, Ollama...)
+   URL: https://github.com/chatboxai/chatbox
+============================================================
+33. mem0
+   Stars: 34465
+   Description: Memory for AI Agents; Announcing OpenMemory MCP - local and secure memory management.
+   URL: https://github.com/mem0ai/mem0
+============================================================
+34. LLM101n
+   Stars: 33618
+   Description: LLM101n: Let's build a Storyteller
+   URL: https://github.com/karpathy/LLM101n
+============================================================
+35. LocalAI
+   Stars: 33202
+   Description: :robot: The free, Open Source alternative to OpenAI, Claude and others. Self-hosted and local-first. Drop-in replacement for OpenAI,  running on consumer-grade hardware. No GPU required. Runs gguf, transformers, diffusers and many more models architectures. Features: Generate Text, Audio, Video, Images, Voice Cloning, Distributed, P2P inference
+   URL: https://github.com/mudler/LocalAI
+============================================================
+36. khoj
+   Stars: 30318
+   Description: Your AI second brain. Self-hostable. Get answers from the web or your docs. Build custom agents, schedule automations, do deep research. Turn any online or local LLM into your personal, autonomous AI (gpt, claude, gemini, llama, qwen, mistral). Get started - free.
+   URL: https://github.com/khoj-ai/khoj
+============================================================
+37. Mr.-Ranedeer-AI-Tutor
+   Stars: 29560
+   Description: A GPT-4 AI Tutor Prompt for customizable personalized learning experiences.
+   URL: https://github.com/JushBJJ/Mr.-Ranedeer-AI-Tutor
+============================================================
+38. 1Panel
+   Stars: 28956
+   Description: 🔥 1Panel provides an intuitive web interface and MCP Server to manage websites, files, containers, databases, and LLMs on a Linux server.
+   URL: https://github.com/1Panel-dev/1Panel
+============================================================
+39. cherry-studio
+   Stars: 28415
+   Description: 🍒 Cherry Studio is a desktop client that supports for multiple LLM providers.
+   URL: https://github.com/CherryHQ/cherry-studio
+============================================================
+40. ChatDev
+   Stars: 27024
+   Description: Create Customized Software using Natural Language Idea (through LLM-powered Multi-Agent Collaboration)
+   URL: https://github.com/OpenBMB/ChatDev
+============================================================
+41. continue
+   Stars: 26913
+   Description: ⏩ Create, share, and use custom AI code assistants with our open-source IDE extensions and hub of models, rules, prompts, docs, and other building blocks
+   URL: https://github.com/continuedev/continue
+============================================================
+42. llm.c
+   Stars: 26863
+   Description: LLM training in simple, raw C/CUDA
+   URL: https://github.com/karpathy/llm.c
+============================================================
+43. pathway
+   Stars: 26723
+   Description: Python ETL framework for stream processing, real-time analytics, LLM pipelines, and RAG.
+   URL: https://github.com/pathwaycom/pathway
+============================================================
+44. graphrag
+   Stars: 25832
+   Description: A modular graph-based Retrieval-Augmented Generation (RAG) system
+   URL: https://github.com/microsoft/graphrag
+============================================================
+45. one-api
+   Stars: 25671
+   Description: LLM API 管理 & 分发系统，支持 OpenAI、Azure、Anthropic Claude、Google Gemini、DeepSeek、字节豆包、ChatGLM、文心一言、讯飞星火、通义千问、360 智脑、腾讯混元等主流模型，统一 API 适配，可用于 key 管理与二次分发。单可执行文件，提供 Docker 镜像，一键部署，开箱即用。LLM API management & key redistribution system, unifying multiple providers under a single API. Single binary, Docker-ready, with an English UI.
+   URL: https://github.com/songquanpeng/one-api
+============================================================
+46. composio
+   Stars: 25498
+   Description: Composio equips your AI agents & LLMs with 100+ high-quality integrations via function calling
+   URL: https://github.com/ComposioHQ/composio
+============================================================
+47. llm-app
+   Stars: 25351
+   Description: Ready-to-run cloud templates for RAG, AI pipelines, and enterprise search with live data. 🐳Docker-friendly.⚡Always in sync with Sharepoint, Google Drive, S3, Kafka, PostgreSQL, real-time data APIs, and more.
+   URL: https://github.com/pathwaycom/llm-app
+============================================================
+48. semantic-kernel
+   Stars: 25023
+   Description: Integrate cutting-edge LLM technology quickly and easily into your apps
+   URL: https://github.com/microsoft/semantic-kernel
+============================================================
+49. FastGPT
+   Stars: 24714
+   Description: FastGPT is a knowledge-based platform built on the LLMs, offers a comprehensive suite of out-of-the-box capabilities such as data processing, RAG retrieval, and visual AI workflow orchestration, letting you easily develop and deploy complex question-answering systems without the need for extensive setup or configuration.
+   URL: https://github.com/labring/FastGPT
+============================================================
+50. storm
+   Stars: 24568
+   Description: An LLM-powered knowledge curation system that researches a topic and generates a full-length report with citations.
+   URL: https://github.com/stanford-oval/storm
+============================================================
+51. JARVIS
+   Stars: 24178
+   Description: JARVIS, a system to connect LLMs with ML community. Paper: https://arxiv.org/pdf/2303.17580.pdf
+   URL: https://github.com/microsoft/JARVIS
+============================================================
+52. litellm
+   Stars: 24030
+   Description: Python SDK, Proxy Server (LLM Gateway) to call 100+ LLM APIs in OpenAI format - [Bedrock, Azure, OpenAI, VertexAI, Cohere, Anthropic, Sagemaker, HuggingFace, Replicate, Groq]
+   URL: https://github.com/BerriAI/litellm
+============================================================
+53. Awesome-LLM
+   Stars: 23786
+   Description: Awesome-LLM: a curated list of Large Language Model
+   URL: https://github.com/Hannibal046/Awesome-LLM
+============================================================
+54. void
+   Stars: 23657
+   Description: No description
+   URL: https://github.com/voideditor/void
+============================================================
+55. gin-vue-admin
+   Stars: 23013
+   Description: 🚀Vite+Vue3+Gin拥有AI辅助的基础开发平台，支持TS和JS混用。它集成了JWT鉴权、权限管理、动态路由、显隐可控组件、分页封装、多点登录拦截、资源权限、上传下载、代码生成器、表单生成器和可配置的导入导出等开发必备功能。
+   URL: https://github.com/flipped-aurora/gin-vue-admin
+============================================================
+56. llamafile
+   Stars: 22603
+   Description: Distribute and run LLMs with a single file.
+   URL: https://github.com/Mozilla-Ocho/llamafile
+============================================================
+57. gpt-researcher
+   Stars: 21869
+   Description: LLM based autonomous agent that conducts deep local and web research on any topic and generates a long report with citations.
+   URL: https://github.com/assafelovic/gpt-researcher
+============================================================
+58. unilm
+   Stars: 21391
+   Description: Large-scale Self-supervised Pre-training Across Tasks, Languages, and Modalities
+   URL: https://github.com/microsoft/unilm
+============================================================
+59. CopilotKit
+   Stars: 21174
+   Description: React UI + elegant infrastructure for AI Copilots, AI chatbots, and in-app AI agents. The Agentic last-mile 🪁
+   URL: https://github.com/CopilotKit/CopilotKit
+============================================================
+60. haystack
+   Stars: 21150
+   Description: AI orchestration framework to build customizable, production-ready LLM applications. Connect components (models, vector DBs, file converters) to pipelines or agents that can interact with your data. With advanced retrieval methods, it's best suited for building RAG, question answering, semantic search or conversational agent chatbots.
+   URL: https://github.com/deepset-ai/haystack
+============================================================
+61. mlc-llm
+   Stars: 20782
+   Description: Universal LLM Deployment Engine with ML Compilation
+   URL: https://github.com/mlc-ai/mlc-llm
+============================================================
+62. pandas-ai
+   Stars: 20610
+   Description: Chat with your database or your datalake (SQL, CSV, parquet). PandasAI makes data analysis conversational using LLMs and RAG.
+   URL: https://github.com/sinaptik-ai/pandas-ai
+============================================================
+63. Awesome-Chinese-LLM
+   Stars: 20359
+   Description: 整理开源的中文大语言模型，以规模较小、可私有化部署、训练成本较低的模型为主，包括底座模型，垂直领域微调及应用，数据集与教程等。
+   URL: https://github.com/HqWu-HITCS/Awesome-Chinese-LLM
+============================================================
+64. architecture.of.internet-product
+   Stars: 20291
+   Description: 互联网公司技术架构，微信/淘宝/微博/腾讯/阿里/美团点评/百度/OpenAI/Google/Facebook/Amazon/eBay的架构，欢迎PR补充
+   URL: https://github.com/davideuler/architecture.of.internet-product
+============================================================
+65. gitleaks
+   Stars: 20208
+   Description: Find secrets with Gitleaks 🔑
+   URL: https://github.com/gitleaks/gitleaks
+============================================================
+66. BitNet
+   Stars: 20058
+   Description: Official inference framework for 1-bit LLMs
+   URL: https://github.com/microsoft/BitNet
+============================================================
+67. Scrapegraph-ai
+   Stars: 19993
+   Description: Python scraper based on AI
+   URL: https://github.com/ScrapeGraphAI/Scrapegraph-ai
+============================================================
+68. llm-cookbook
+   Stars: 19865
+   Description: 面向开发者的 LLM 入门教程，吴恩达大模型系列课程中文版
+   URL: https://github.com/datawhalechina/llm-cookbook
+============================================================
+69. Chinese-LLaMA-Alpaca
+   Stars: 18855
+   Description: 中文LLaMA&Alpaca大语言模型+本地CPU/GPU训练部署 (Chinese LLaMA & Alpaca LLMs)
+   URL: https://github.com/ymcui/Chinese-LLaMA-Alpaca
+============================================================
+70. peft
+   Stars: 18766
+   Description: 🤗 PEFT: State-of-the-art Parameter-Efficient Fine-Tuning.
+   URL: https://github.com/huggingface/peft
+============================================================
+71. llm-action
+   Stars: 18526
+   Description: 本项目旨在分享大模型相关技术原理以及实战经验（大模型工程化、大模型应用落地）
+   URL: https://github.com/liguodongiot/llm-action
+============================================================
+72. Qwen
+   Stars: 18493
+   Description: The official repo of Qwen (通义千问) chat & pretrained large language model proposed by Alibaba Cloud.
+   URL: https://github.com/QwenLM/Qwen
+============================================================
+73. agenticSeek
+   Stars: 18192
+   Description: Fully Local Manus AI. No APIs, No $200 monthly bills. Enjoy an autonomous agent that thinks, browses the web, and code for the sole cost of electricity. 🔔 Official updates only via twitter @Martin993886460. Any other account is fake.
+   URL: https://github.com/Fosowl/agenticSeek
+============================================================
+74. self-llm
+   Stars: 18137
+   Description: 《开源大模型食用指南》针对中国宝宝量身打造的基于Linux环境快速微调（全参数/Lora）、部署国内外开源大模型（LLM）/多模态大模型（MLLM）教程
+   URL: https://github.com/datawhalechina/self-llm
+============================================================
+75. vanna
+   Stars: 18115
+   Description: 🤖 Chat with your SQL database 📊. Accurate Text-to-SQL Generation via LLMs using RAG 🔄.
+   URL: https://github.com/vanna-ai/vanna
+============================================================
+76. crawlee
+   Stars: 17915
+   Description: Crawlee—A web scraping and browser automation library for Node.js to build reliable crawlers. In JavaScript and TypeScript. Extract data for AI, LLMs, RAG, or GPTs. Download HTML, PDF, JPG, PNG, and other files from websites. Works with Puppeteer, Playwright, Cheerio, JSDOM, and raw HTTP. Both headful and headless mode. With proxy rotation.
+   URL: https://github.com/apify/crawlee
+============================================================
+77. agentic
+   Stars: 17634
+   Description: AI agent stdlib that works with any LLM and TypeScript AI SDK.
+   URL: https://github.com/transitive-bullshit/agentic
+============================================================
+78. RAG_Techniques
+   Stars: 17616
+   Description: This repository showcases various advanced techniques for Retrieval-Augmented Generation (RAG) systems. RAG systems combine information retrieval with generative models to provide accurate and contextually rich responses.
+   URL: https://github.com/NirDiamant/RAG_Techniques
+============================================================
+79. llama-cookbook
+   Stars: 17472
+   Description: Welcome to the Llama Cookbook! This is your go to guide for Building with Llama: Getting started with Inference, Fine-Tuning, RAG. We also show you how to solve end to end problems using Llama model family and using them on various provider services  
+   URL: https://github.com/meta-llama/llama-cookbook
+============================================================
+80. LightRAG
+   Stars: 17428
+   Description: "LightRAG: Simple and Fast Retrieval-Augmented Generation"
+   URL: https://github.com/HKUDS/LightRAG
+============================================================
+81. Janus
+   Stars: 17357
+   Description: Janus-Series: Unified Multimodal Understanding and Generation Models
+   URL: https://github.com/deepseek-ai/Janus
+============================================================
+82. repomix
+   Stars: 16921
+   Description: 📦 Repomix is a powerful tool that packs your entire repository into a single, AI-friendly file. Perfect for when you need to feed your codebase to Large Language Models (LLMs) or other AI tools like Claude, ChatGPT, DeepSeek, Perplexity, Gemini, Gemma, Llama, Grok, and more.
+   URL: https://github.com/yamadashy/repomix
+============================================================
+83. letta
+   Stars: 16854
+   Description: Letta (formerly MemGPT) is the stateful agents framework with memory, reasoning, and context management.
+   URL: https://github.com/letta-ai/letta
+============================================================
+84. MaxKB
+   Stars: 16818
+   Description: 💬 MaxKB is an open-source AI assistant for enterprise. It seamlessly integrates RAG pipelines, supports robust workflows, and provides MCP tool-use capabilities.
+   URL: https://github.com/1Panel-dev/MaxKB
+============================================================
+85. DB-GPT
+   Stars: 16760
+   Description: AI Native Data App Development framework with AWEL(Agentic Workflow Expression Language) and Agents
+   URL: https://github.com/eosphoros-ai/DB-GPT
+============================================================
+86. SuperAGI
+   Stars: 16414
+   Description: <⚡️> SuperAGI - A dev-first open source autonomous AI agent framework. Enabling developers to build, manage & run useful autonomous agents quickly and reliably.
+   URL: https://github.com/TransformerOptimus/SuperAGI
+============================================================
+87. evals
+   Stars: 16364
+   Description: Evals is a framework for evaluating LLMs and LLM systems, and an open-source registry of benchmarks.
+   URL: https://github.com/openai/evals
+============================================================
+88. SWE-agent
+   Stars: 16295
+   Description: SWE-agent takes a GitHub issue and tries to automatically fix it, using your LM of choice. It can also be employed for offensive cybersecurity or competitive coding challenges. [NeurIPS 2024] 
+   URL: https://github.com/SWE-agent/SWE-agent
+============================================================
+89. RagaAI-Catalyst
+   Stars: 16191
+   Description: Python SDK for Agent AI Observability, Monitoring and Evaluation Framework. Includes features like agent, llm and tools tracing, debugging multi-agentic system, self-hosted dashboard and advanced analytics with timeline and execution graph view 
+   URL: https://github.com/raga-ai-hub/RagaAI-Catalyst
+============================================================
+90. kubesphere
+   Stars: 16059
+   Description: The container platform tailored for Kubernetes multi-cloud, datacenter, and edge management ⎈ 🖥 ☁️
+   URL: https://github.com/kubesphere/kubesphere
+============================================================
+91. ChatGLM2-6B
+   Stars: 15731
+   Description: ChatGLM2-6B: An Open Bilingual Chat LLM | 开源双语对话语言模型
+   URL: https://github.com/THUDM/ChatGLM2-6B
+============================================================
+92. DocsGPT
+   Stars: 15708
+   Description: DocsGPT is an open-source genAI tool that helps users get reliable answers from knowledge source, while avoiding hallucinations. It enables private and reliable information retrieval, with tooling and agentic system capability built in.
+   URL: https://github.com/arc53/DocsGPT
+============================================================
+93. web-llm
+   Stars: 15668
+   Description: High-performance In-browser LLM Inference Engine 
+   URL: https://github.com/mlc-ai/web-llm
+============================================================
+94. ChuanhuChatGPT
+   Stars: 15415
+   Description: GUI for ChatGPT API and many LLMs. Supports agents, file-based QA, GPT finetuning and query with web search. All with a neat UI.
+   URL: https://github.com/GaiZhenbiao/ChuanhuChatGPT
+============================================================
+95. SillyTavern
+   Stars: 15272
+   Description: LLM Frontend for Power Users.
+   URL: https://github.com/SillyTavern/SillyTavern
+============================================================
+96. sglang
+   Stars: 15126
+   Description: SGLang is a fast serving framework for large language models and vision language models.
+   URL: https://github.com/sgl-project/sglang
+============================================================
+97. screenpipe
+   Stars: 15018
+   Description: AI app store powered by 24/7 desktop history.  open source | 100% local | dev friendly | 24/7 screen, mic recording
+   URL: https://github.com/mediar-ai/screenpipe
+============================================================
+98. ai
+   Stars: 14940
+   Description: The AI Toolkit for TypeScript. From the creators of Next.js, the AI SDK is a free open-source library for building AI-powered applications and agents 
+   URL: https://github.com/vercel/ai
+============================================================
+99. Llama-Chinese
+   Stars: 14609
+   Description: Llama中文社区，实时汇总最新Llama学习资料，构建最好的中文Llama大模型开源生态，完全开源可商用
+   URL: https://github.com/LlamaFamily/Llama-Chinese
+============================================================
+100. goose
+   Stars: 14586
+   Description: an open source, extensible AI agent that goes beyond code suggestions - install, execute, edit, and test with any LLM
+   URL: https://github.com/block/goose
+============================================================
