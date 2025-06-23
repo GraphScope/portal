@@ -83,7 +83,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # -------------------------------------------------------------------
 RUN apt-get update && apt-get install -y --no-install-recommends \
     # utilities
-    git curl wget tar zip unzip bash sudo make gnupg tzdata jq openssh-client \
+    git curl wget tar zip unzip bash sudo make gnupg tzdata jq openssh-client tree file \
     # Python runtime (no build tools needed)
     python3 python3-pip \
     && apt-get clean \
