@@ -35,7 +35,10 @@ export const execCodeValidation = [
 ];
 
 export const updateFilesValidation = [
-  body("containerId").isString().withMessage("Container ID must be a string"),
+  body("containerId")
+    .isString()
+    .notEmpty()
+    .withMessage("Container ID is required and cannot be empty"),
   body("files").isObject().withMessage("Files must be an object"),
   body("gitTracking")
     .optional()
