@@ -21,8 +21,8 @@ class ExecutionService {
   async executeInContainer(
     containerId: string,
     command: string[],
+    files?: SandboxFiles,
     env?: Record<string, string>,
-    workDir: string = "/home/sandbox",
     gitTracking: boolean = true
   ): Promise<ExecutionResult> {
     try {
@@ -42,13 +42,25 @@ class ExecutionService {
         );
       }
 
-      // 检测和安装依赖（直接在容器的工作目录中检查）
+      // 如果提供了文件，则更新它们
+      let workDir = "/home/sandbox";
+      if (files && Object.keys(files).length > 0) {
+        const updateResult = await this.updateFiles(
+          containerId,
+          files,
+          gitTracking,
+          executionId
+        );
+        workDir = updateResult.workDir;
+      }
+
+      // 检测和安装依赖（在工作目录中）
       logger.info(
         `Checking for dependencies in container ${containerId} at ${workDir}`
       );
       const installResult = await dependencyService.installDependenciesIfNeeded(
         container,
-        null, // 传递 null，让 dependencyService 直接检查容器内文件
+        null, // 传递文件或null让依赖服务检查
         workDir
       );
 

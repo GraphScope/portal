@@ -58,23 +58,12 @@ class SandboxController {
         hasFiles: files ? Object.keys(files).length > 0 : false
       });
 
-      // 如果有文件需要更新，先更新文件
-      let workDir = "/home/sandbox";
-      if (files && Object.keys(files).length > 0) {
-        const updateResult = await executionService.updateFiles(
-          containerId,
-          files,
-          gitTracking
-        );
-        workDir = updateResult.workDir;
-      }
-
       // Execute code in container
       const result = await executionService.executeInContainer(
         containerId,
         command,
+        files,
         env,
-        workDir,
         gitTracking
       );
 
