@@ -64,14 +64,20 @@ class NodePackageHandler implements DependencyHandler {
               write: (chunk: Buffer) => {
                 const message = chunk.toString();
                 stdout += message;
-                logger.info(message, { position: 'NodePackageHandler', containerId: container.id });
+                logger.info(message, {
+                  position: "NodePackageHandler",
+                  containerId: container.id
+                });
               }
             },
             {
               write: (chunk: Buffer) => {
                 const message = chunk.toString();
                 stderr += message;
-                logger.error(message, { position: 'NodePackageHandler', containerId: container.id });
+                logger.error(message, {
+                  position: "NodePackageHandler",
+                  containerId: container.id
+                });
               }
             }
           );
@@ -182,14 +188,20 @@ class PythonPackageHandler implements DependencyHandler {
               write: (chunk: Buffer) => {
                 const message = chunk.toString();
                 stdout += message;
-                logger.info(message, { position: 'PythonPackageHandler', containerId: container.id });
+                logger.info(message, {
+                  position: "PythonPackageHandler",
+                  containerId: container.id
+                });
               }
             },
             {
               write: (chunk: Buffer) => {
                 const message = chunk.toString();
                 stderr += message;
-                logger.error(message, { position: 'PythonPackageHandler', containerId: container.id });
+                logger.error(message, {
+                  position: "PythonPackageHandler",
+                  containerId: container.id
+                });
               }
             }
           );
@@ -263,24 +275,84 @@ class DependencyService {
   }
 
   /**
-   * Install dependencies if needed based on files
+   * Check what dependency files exist in the container
+   */
+  private async checkContainerFiles(
+    container: Docker.Container,
+    workDir: string = "/home/sandbox"
+  ): Promise<SandboxFiles> {
+    const containerId = container.id;
+    const dependencyFiles: SandboxFiles = {};
+
+    // 常见的依赖配置文件
+    const configFiles = ["package.json", "requirements.txt"];
+
+    for (const filename of configFiles) {
+      try {
+        // 检查文件是否存在
+        const checkExec = await container.exec({
+          Cmd: ["test", "-f", filename],
+          AttachStdout: false,
+          AttachStderr: false,
+          WorkingDir: workDir,
+          User: "root"
+        });
+
+        const exists = await new Promise<boolean>((resolve) => {
+          checkExec.start({}, async () => {
+            const inspect = await checkExec.inspect();
+            resolve((inspect.ExitCode ?? -1) === 0);
+          });
+        });
+
+        if (exists) {
+          // 文件存在，读取内容（虽然我们不需要内容，但保持接口兼容）
+          dependencyFiles[filename] = `// ${filename} detected in container`;
+          logger.info(`Found dependency file: ${filename} in ${workDir}`, {
+            containerId
+          });
+        }
+      } catch (error) {
+        logger.debug(`Error checking file ${filename}`, {
+          error,
+          containerId
+        });
+      }
+    }
+
+    return dependencyFiles;
+  }
+
+  /**
+   * Install dependencies if needed based on files or by checking container
    */
   async installDependenciesIfNeeded(
     container: Docker.Container,
-    files: SandboxFiles,
+    files: SandboxFiles | null = null,
     workDir: string = "/home/sandbox"
   ): Promise<DependencyInstallResult> {
     const containerId = container.id;
     try {
+      let filesToCheck = files;
+
+      // 如果没有传递 files，则自动检查容器内的依赖文件
+      if (!files || Object.keys(files).length === 0) {
+        filesToCheck = await this.checkContainerFiles(container, workDir);
+      }
+
+      if (!filesToCheck || Object.keys(filesToCheck).length === 0) {
+        return { success: true, logs: "No dependency configuration detected." };
+      }
+
       // 查找能处理当前文件集合的处理器
       for (const handler of this.handlers) {
-        if (handler.canHandle(files)) {
+        if (handler.canHandle(filesToCheck)) {
           logger.info(
             `Dependency handler found, installing dependencies in ${workDir}`,
             { containerId }
           );
           // @ts-ignore: 传递workDir参数到install方法
-          return handler.install(container, files, workDir);
+          return handler.install(container, filesToCheck, workDir);
         }
       }
 

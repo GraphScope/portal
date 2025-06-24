@@ -21,9 +21,9 @@ class ExecutionService {
   async executeInContainer(
     containerId: string,
     command: string[],
-    files?: SandboxFiles,
     env?: Record<string, string>,
-    gitTracking: boolean = true // Changed default to true
+    workDir: string = "/home/sandbox",
+    gitTracking: boolean = true
   ): Promise<ExecutionResult> {
     try {
       const startTime = Date.now();
@@ -42,75 +42,38 @@ class ExecutionService {
         );
       }
 
-      // 如果提供了文件，则更新它们
-      let workDir = "/home/sandbox";
-      if (files && Object.keys(files).length > 0) {
-        const updateResult = await this.updateFiles(
-          containerId,
-          files,
-          gitTracking,
-          executionId
-        );
-        workDir = updateResult.workDir;
-      }
+      // 检测和安装依赖（直接在容器的工作目录中检查）
+      logger.info(
+        `Checking for dependencies in container ${containerId} at ${workDir}`
+      );
+      const installResult = await dependencyService.installDependenciesIfNeeded(
+        container,
+        null, // 传递 null，让 dependencyService 直接检查容器内文件
+        workDir
+      );
 
-      // 检测和安装依赖（在工作目录中）
-      if (files && Object.keys(files).length > 0) {
-        logger.info(
-          `Checking for dependencies in container ${containerId} at ${workDir}`
-        );
-        const installResult =
-          await dependencyService.installDependenciesIfNeeded(
-            container,
-            files,
-            workDir
-          );
-
-        if (!installResult.success) {
-          logger.error(
-            `Dependency installation failed for container ${containerId}`,
-            {
-              error: installResult.error
-            }
-          );
-
-          return {
-            id: executionId,
-            status: "error",
-            duration: Date.now() - startTime,
-            stdout: installResult.logs,
-            stderr: installResult.error || "Dependency installation failed",
-            error: "Dependency installation failed"
-          };
-        } else if (
-          installResult.logs !== "No dependency configuration detected."
-        ) {
-          // 仅当实际安装了依赖时才记录
-          logger.info(
-            `Dependencies installed for container ${containerId} at ${workDir}`
-          );
-
-          // 如果启用了Git跟踪且安装了依赖，提交依赖更改
-          if (gitTracking) {
-            try {
-              const dependenciesCommitMsg = `Install dependencies for execution ${executionId}`;
-              await gitService.commitChanges(
-                containerId,
-                executionId,
-                dependenciesCommitMsg,
-                workDir
-              );
-            } catch (gitError) {
-              logger.warn(
-                `Failed to commit dependencies to Git for execution ${executionId}`,
-                {
-                  containerId,
-                  error: gitError
-                }
-              );
-            }
+      if (!installResult.success) {
+        logger.error(
+          `Dependency installation failed for container ${containerId}`,
+          {
+            error: installResult.error
           }
-        }
+        );
+        return {
+          id: executionId,
+          status: "error",
+          duration: Date.now() - startTime,
+          stdout: installResult.logs,
+          stderr: installResult.error || "Dependency installation failed",
+          error: "Dependency installation failed"
+        };
+      } else if (
+        installResult.logs !== "No dependency configuration detected."
+      ) {
+        // 仅当实际安装了依赖时才记录
+        logger.info(
+          `Dependencies installed for container ${containerId} at ${workDir}`
+        );
       }
 
       // 执行命令，使用工作目录
