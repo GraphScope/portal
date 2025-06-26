@@ -25,8 +25,23 @@ function App() {
   const termRef = useRef<Terminal | null>(null);
   const fitAddonRef = useRef<FitAddon | null>(null);
   const socketRef = useRef<Socket | null>(null);
+  const hasEmittedInitialResize = useRef<boolean>(false);
   const [containerId, setContainerId] = useState("");
   const [connected, setConnected] = useState(false);
+
+  /**
+   * Sends the current terminal dimensions to the backend PTY.
+   * This ensures that the PTY dimensions match the frontend terminal display.
+   * 
+   * @param socket - The Socket.IO socket instance
+   * @param terminal - The xterm.js Terminal instance
+   */
+  const sendTerminalResize = (socket: Socket, terminal: Terminal) => {
+    const cols = terminal.cols;
+    const rows = terminal.rows;
+    console.log(`Sending resize: ${cols}x${rows}`);
+    socket.emit("resize", { cols, rows });
+  };
 
   // 连接Socket并建立终端会话
   const connectTerminal = () => {
@@ -34,6 +49,9 @@ function App() {
       alert("Please input containerId");
       return;
     }
+
+    // Reset the resize emission flag for new connections
+    hasEmittedInitialResize.current = false;
 
     // Initialize terminal
     if (!xtermRef.current) return;
@@ -69,9 +87,24 @@ function App() {
     socket.on("connect", () => {
       socket.emit("start-terminal", { containerId });
     });
+
+    // 监听终端会话建立成功后发送初始尺寸
+    socket.on("terminal-ready", () => {
+      // Send initial terminal dimensions after terminal session is established
+      sendTerminalResize(socket, term);
+      hasEmittedInitialResize.current = true;
+    });
+
     // 输出到xterm
     socket.on("output", (data: string) => {
       termRef.current?.write(data);
+
+      // Fallback: Send initial dimensions on first output if not sent yet
+      // This ensures dimensions are synced even if terminal-ready event is missed
+      if (!hasEmittedInitialResize.current) {
+        sendTerminalResize(socket, term);
+        hasEmittedInitialResize.current = true;
+      }
     });
     // 输入转发
     termRef.current?.onData((data) => {
@@ -83,10 +116,20 @@ function App() {
     });
   };
 
-  // Fit terminal on window resize
+  // Fit terminal on window resize and sync dimensions with PTY
   useEffect(() => {
     const handleResize = () => {
-      fitAddonRef.current?.fit();
+      if (fitAddonRef.current && termRef.current && socketRef.current) {
+        fitAddonRef.current.fit();
+
+        // Sync the new dimensions with backend PTY after a short delay
+        // The delay ensures the fit operation has completed
+        setTimeout(() => {
+          if (termRef.current && socketRef.current) {
+            sendTerminalResize(socketRef.current, termRef.current);
+          }
+        }, 10);
+      }
     };
     window.addEventListener("resize", handleResize);
     return () => {
