@@ -32,7 +32,7 @@ WORKDIR ${PLAYWRIGHT_HOME}
 
 # Install Playwright dependencies and Chromium
 RUN npm init -y \
-    && npm install @playwright/mcp --save \
+    && npm install @ai-spider/playwright-mcp@0.0.2 --save \
     && npx playwright-core install-deps chromium \
     && npx playwright-core install --no-shell chromium \
     && npm cache clean --force \
@@ -44,7 +44,7 @@ RUN mkdir -p /opt/playwright-mcp/bin \
 #!/bin/sh
 if [ "$1" = "serve" ]; then
 cd "${PLAYWRIGHT_HOME}"
-exec npx @playwright/mcp \
+exec npx @ai-spider/playwright-mcp@0.0.2 \
 --headless \
 --browser chromium \
 --port 3000 \
