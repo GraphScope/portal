@@ -56,11 +56,13 @@ class ExecutionService {
 
       // 检测和安装依赖（在工作目录中）
       logger.info(
-        `Checking for dependencies in container ${containerId} at ${workDir}`
+        `Checking for dependencies in container ${containerId} at ${workDir}`,
+        {
+          containerId
+        }
       );
       const installResult = await dependencyService.installDependenciesIfNeeded(
         container,
-        null, // 传递文件或null让依赖服务检查
         workDir
       );
 
@@ -68,6 +70,7 @@ class ExecutionService {
         logger.error(
           `Dependency installation failed for container ${containerId}`,
           {
+            containerId,
             error: installResult.error
           }
         );
@@ -84,7 +87,10 @@ class ExecutionService {
       ) {
         // 仅当实际安装了依赖时才记录
         logger.info(
-          `Dependencies installed for container ${containerId} at ${workDir}`
+          `Dependencies installed for container ${containerId} at ${workDir}`,
+          {
+            containerId
+          }
         );
       }
 
