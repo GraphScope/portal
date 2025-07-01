@@ -45,7 +45,7 @@ RUN mkdir -p /opt/playwright-mcp/bin \
 #!/bin/sh
 if [ "$1" = "serve" ]; then
 cd "${PLAYWRIGHT_HOME}"
-exec npx @ai-spider/playwright-mcp@0.0.2 \
+exec npx @ai-spider/playwright-mcp@0.0.3 \
 --headless \
 --browser chromium \
 --port 3000 \
