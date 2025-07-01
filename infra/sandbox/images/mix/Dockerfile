@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         beautifulsoup4 \
         numpy \
         pandas \
+        playwright==1.53.0 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -32,9 +33,9 @@ WORKDIR ${PLAYWRIGHT_HOME}
 
 # Install Playwright dependencies and Chromium
 RUN npm init -y \
-    && npm install @ai-spider/playwright-mcp@0.0.2 --save \
+    && npm install @ai-spider/playwright-mcp@0.0.3 --save \
     && npx playwright-core install-deps chromium \
-    && npx playwright-core install --no-shell chromium \
+    && npx playwright-core install chromium \
     && npm cache clean --force \
     && rm -rf /tmp/* /var/tmp/*
 
