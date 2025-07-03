@@ -30,7 +30,8 @@ export function createApp(): {
   // Apply middleware
   app.use(helmet()); // Security headers
   app.use(cors()); // Enable CORS
-  app.use(express.json()); // Parse JSON bodies
+  app.use(express.json({ limit: '100mb' })); // Parse JSON bodies with 100MB limit
+  app.use(express.urlencoded({ limit: '100mb', extended: true })); // Parse URL-encoded bodies with 100MB limit
   app.use(morgan("dev")); // HTTP request logging
 
   // Health check endpoint
