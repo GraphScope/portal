@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         numpy \
         pandas \
         playwright==1.53.0 \
+        lxml \
+        scrapy \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
