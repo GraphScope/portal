@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         playwright==1.53.0 \
         lxml \
         scrapy \
+        crawl4ai \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -91,6 +92,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 python3-pip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN npm install -g jsonpath
 
 # -------------------------------------------------------------------
 # Layer 2: Copy Python virtual environment from builder
