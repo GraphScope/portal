@@ -6,11 +6,11 @@
 
 ```bash
 # 阿里云 OSS 配置
-ALIYUN_ACCESS_KEY_ID=your_access_key_id_here          # 阿里云 AccessKey ID
-ALIYUN_ACCESS_KEY_SECRET=your_access_key_secret_here  # 阿里云 AccessKey Secret
-ALIYUN_OSS_REGION=oss-cn-shanghai                    # OSS 地域，如 oss-cn-shanghai
-ALIYUN_OSS_BUCKET=your_bucket_name_here               # OSS 存储桶名称
-ALIYUN_OSS_ENDPOINT=https://oss-cn-shanghai.aliyuncs.com  # OSS 端点（可选）
+OSS_ACCESS_KEY_ID=your_access_key_id_here          # 阿里云 AccessKey ID
+OSS_ACCESS_KEY_SECRET=your_access_key_secret_here  # 阿里云 AccessKey Secret
+OSS_REGION=oss-cn-shanghai                    # OSS 地域，如 oss-cn-shanghai
+OSS_BUCKET=your_bucket_name_here               # OSS 存储桶名称
+OSS_ENDPOINT=https://oss-cn-shanghai.aliyuncs.com  # OSS 端点（可选）
 ```
 
 ## 获取阿里云 OSS 配置信息

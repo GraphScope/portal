@@ -60,16 +60,16 @@ class OSSService {
    * 从环境变量获取 OSS 配置
    */
   private getOSSConfig(): OSSConfig {
-    const accessKeyId = process.env.ALIYUN_ACCESS_KEY_ID;
-    const accessKeySecret = process.env.ALIYUN_ACCESS_KEY_SECRET;
-    const region = process.env.ALIYUN_OSS_REGION;
-    const bucket = process.env.ALIYUN_OSS_BUCKET;
-    const endpoint = process.env.ALIYUN_OSS_ENDPOINT;
+    const accessKeyId = process.env.OSS_ACCESS_KEY_ID;
+    const accessKeySecret = process.env.OSS_ACCESS_KEY_SECRET;
+    const region = process.env.OSS_REGION;
+    const bucket = process.env.OSS_BUCKET;
+    const endpoint = process.env.OSS_ENDPOINT;
 
     if (!accessKeyId || !accessKeySecret || !region || !bucket) {
       throw new ApiError(
         "OSS_CONFIG_MISSING",
-        "OSS 配置不完整，请检查环境变量: ALIYUN_ACCESS_KEY_ID, ALIYUN_ACCESS_KEY_SECRET, ALIYUN_OSS_REGION, ALIYUN_OSS_BUCKET",
+        "OSS 配置不完整，请检查环境变量: OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET, OSS_REGION, OSS_BUCKET",
         500
       );
     }
