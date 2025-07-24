@@ -2,10 +2,14 @@ import { Request, Response, NextFunction } from "express";
 import containerService from "../services/container-service";
 import executionService from "../services/execution-service";
 import browserService from "../services/browser-service";
+import claudeCodeService from "../services/claude-code-service";
 import {
   CreateSandboxRequest,
   ExecuteCodeRequest,
-  UpdateFilesRequest
+  UpdateFilesRequest,
+  CreateClaudeSessionRequest,
+  ResumeClaudeSessionRequest,
+  ContinueClaudeSessionRequest
 } from "../types";
 import logger from "../utils/logger";
 
@@ -340,6 +344,171 @@ class SandboxController {
 
         await browserService.forwardRequest(containerId, req, res, targetPath);
       }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * 创建新的 Claude 会话
+   */
+  async createClaudeSession(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { containerId, prompt, outputFormat, taskId } =
+        req.body as CreateClaudeSessionRequest;
+
+      logger.info("Creating Claude session", {
+        containerId,
+        promptLength: prompt.length,
+        outputFormat,
+        taskId
+      });
+
+      const result = await claudeCodeService.createClaudeSession({
+        containerId,
+        prompt,
+        outputFormat,
+        taskId
+      });
+
+      // 根据返回类型设置不同的响应
+      if (result.type === "stream") {
+        // 类型保护确保result是ClaudeStreamResponse
+        const streamResult = result as import("../types").ClaudeStreamResponse;
+
+        // 设置流式响应头
+        res.setHeader("Content-Type", "text/event-stream");
+        res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Connection", "keep-alive");
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Headers", "Cache-Control");
+
+        // 发送初始事件
+        if (streamResult.session_id) {
+          res.write(
+            `data: ${JSON.stringify({ type: "session_start", session_id: streamResult.session_id })}\n\n`
+          );
+        }
+
+        // 管道流数据到响应
+        streamResult.stream.on("data", (chunk: Buffer) => {
+          const data = chunk.toString();
+          // 按行发送数据作为SSE事件
+          const lines = data.split("\n");
+          for (const line of lines) {
+            if (line.trim()) {
+              res.write(`data: ${line}\n\n`);
+            }
+          }
+        });
+
+        streamResult.stream.on("end", () => {
+          res.write(`data: ${JSON.stringify({ type: "stream_end" })}\n\n`);
+          res.end();
+        });
+
+        streamResult.stream.on("error", (error: Error) => {
+          logger.error("Claude stream error", { error, containerId });
+          res.write(
+            `data: ${JSON.stringify({ type: "error", message: error.message })}\n\n`
+          );
+          res.end();
+        });
+      } else {
+        // JSON响应
+        res.status(200).json(result);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * 恢复 Claude 会话
+   */
+  async resumeClaudeSession(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { containerId, sessionId, prompt, outputFormat } =
+        req.body as ResumeClaudeSessionRequest;
+
+      logger.info("Resuming Claude session", {
+        containerId,
+        sessionId,
+        hasNewPrompt: !!prompt,
+        outputFormat
+      });
+
+      const result = await claudeCodeService.resumeClaudeSession({
+        containerId,
+        sessionId,
+        prompt,
+        outputFormat
+      });
+
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * 继续最近的 Claude 会话
+   */
+  async continueClaudeSession(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { containerId, prompt, outputFormat } =
+        req.body as ContinueClaudeSessionRequest;
+
+      logger.info("Continuing Claude session", {
+        containerId,
+        hasNewPrompt: !!prompt,
+        outputFormat
+      });
+
+      const result = await claudeCodeService.continueClaudeSession({
+        containerId,
+        prompt,
+        outputFormat
+      });
+
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * 启动交互式 Claude 会话
+   */
+  async startInteractiveClaudeSession(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { containerId } = req.params;
+
+      logger.info("Starting interactive Claude session", { containerId });
+
+      const session =
+        await claudeCodeService.startInteractiveClaudeSession(containerId);
+
+      res.status(200).json({
+        sessionId: session.sessionId,
+        message: "Interactive Claude session started successfully"
+      });
     } catch (error) {
       next(error);
     }

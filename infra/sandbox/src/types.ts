@@ -144,3 +144,82 @@ export interface SandboxContainer {
   id: string;
   status: "running" | "exited" | "created" | "removing" | "paused";
 }
+
+/**
+ * Claude CLI 会话选项
+ */
+export interface ClaudeSessionOptions {
+  prompt?: string;
+  outputFormat?: "text" | "json" | "stream-json";
+  sessionId?: string;
+  containerId: string;
+  taskId?: string; // 任务ID，用于OSS存储路径
+}
+
+/**
+ * Claude CLI 响应
+ */
+export interface ClaudeResponse {
+  type: string;
+  subtype?: string;
+  total_cost_usd?: number;
+  is_error: boolean;
+  duration_ms?: number;
+  duration_api_ms?: number;
+  num_turns?: number;
+  result: string;
+  session_id?: string;
+}
+
+/**
+ * Claude CLI 流式响应类型 - 用于stream-json格式
+ */
+export interface ClaudeStreamResponse {
+  type: "stream";
+  stream: NodeJS.ReadableStream;
+  session_id?: string;
+}
+
+/**
+ * Claude CLI 统一响应类型
+ */
+export type ClaudeUnifiedResponse = ClaudeResponse | ClaudeStreamResponse;
+
+/**
+ * Claude CLI 流式响应
+ */
+export interface StreamResponse {
+  type: string;
+  content?: string;
+  role?: string;
+  session_id?: string;
+}
+
+/**
+ * 创建 Claude 会话请求
+ */
+export interface CreateClaudeSessionRequest {
+  containerId: string;
+  prompt: string;
+  outputFormat?: "text" | "json" | "stream-json";
+  taskId?: string; // 任务ID，用于OSS存储路径
+}
+
+/**
+ * 恢复 Claude 会话请求
+ */
+export interface ResumeClaudeSessionRequest {
+  containerId: string;
+  sessionId: string;
+  prompt?: string;
+  outputFormat?: "text" | "json" | "stream-json";
+}
+
+/**
+ * 继续 Claude 会话请求
+ */
+export interface ContinueClaudeSessionRequest {
+  containerId: string;
+  prompt?: string;
+  outputFormat?: "text" | "json" | "stream-json";
+}

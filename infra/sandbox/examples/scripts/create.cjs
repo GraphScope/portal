@@ -2,10 +2,10 @@ const fs = require("fs");
 async function create() {
   const API_URL = "http://localhost:3000/api/sandbox";
   const params = {
-    image: "ai-spider/mix:latest",
+    image: "ai-spider/claude-code:latest",
     options: {
       timeout: 3000000, //300s,50min
-      memoryLimit: "512m"
+      memoryLimit: "1024m"
     }
   };
   const options = {

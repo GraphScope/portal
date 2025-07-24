@@ -53,6 +53,49 @@ export const containerIdValidation = [
     .withMessage("Container ID is required")
 ];
 
+// Claude CLI 验证规则
+export const createClaudeSessionValidation = [
+  body("containerId")
+    .isString()
+    .notEmpty()
+    .withMessage("Container ID is required"),
+  body("prompt").isString().notEmpty().withMessage("Prompt is required"),
+  body("outputFormat")
+    .optional()
+    .isIn(["text", "json", "stream-json"])
+    .withMessage("Output format must be text, json, or stream-json"),
+  body("taskId")
+    .optional()
+    .isString()
+    .notEmpty()
+    .withMessage("Task ID must be a non-empty string if provided")
+];
+
+export const resumeClaudeSessionValidation = [
+  body("containerId")
+    .isString()
+    .notEmpty()
+    .withMessage("Container ID is required"),
+  body("sessionId").isString().notEmpty().withMessage("Session ID is required"),
+  body("prompt").optional().isString().withMessage("Prompt must be a string"),
+  body("outputFormat")
+    .optional()
+    .isIn(["text", "json", "stream-json"])
+    .withMessage("Output format must be text, json, or stream-json")
+];
+
+export const continueClaudeSessionValidation = [
+  body("containerId")
+    .isString()
+    .notEmpty()
+    .withMessage("Container ID is required"),
+  body("prompt").optional().isString().withMessage("Prompt must be a string"),
+  body("outputFormat")
+    .optional()
+    .isIn(["text", "json", "stream-json"])
+    .withMessage("Output format must be text, json, or stream-json")
+];
+
 // Real-time validation has been removed
 
 // Middleware to handle validation errors
