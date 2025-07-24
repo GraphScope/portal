@@ -1480,7 +1480,7 @@ class ClaudeCodeService {
 
         if (sandboxBuffer) {
           const sandboxFileName = `sandbox.zip`;
-          const sandboxObjectName = `${taskId}/${sessionId}/${sandboxFileName}`;
+          const sandboxObjectName = `claude/${taskId}/${sessionId}/${sandboxFileName}`;
 
           const sandboxUploadResult = await ossService.uploadFile(
             sandboxObjectName,
