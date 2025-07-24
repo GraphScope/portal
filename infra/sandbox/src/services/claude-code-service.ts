@@ -851,7 +851,7 @@ class ClaudeCodeService {
     taskId: string
   ): Transform {
     let sessionId = "";
-    let streamEnded = false;
+    let uploadTriggered = false;
 
     const wrappedStream = new Transform({
       transform(chunk: any, encoding: any, callback: any) {
@@ -859,23 +859,19 @@ class ClaudeCodeService {
 
         // 尝试从流数据中提取 sessionId
         try {
-          const lines = data.split("\n").filter((line: any) => line.trim());
-          for (const line of lines) {
-            try {
-              const parsed = JSON.parse(line);
-              if (parsed.session_id && !sessionId) {
-                sessionId = parsed.session_id;
-                logger.info(`Extracted sessionId from stream: ${sessionId}`, {
-                  containerId,
-                  taskId
-                });
-              }
-            } catch (e) {
-              // 忽略非JSON行
-            }
+          const parsed = JSON.parse(data);
+          if (parsed.session_id && !sessionId) {
+            sessionId = parsed.session_id;
+            logger.info(`Extracted sessionId from stream: ${sessionId}`, {
+              containerId,
+              taskId
+            });
           }
+
+          logger.info(`chunk data: ${data}, ${sessionId}`);
         } catch (e) {
-          // 忽略解析错误
+          // 忽略非JSON数据
+          logger.error(`Error parsing chunk JSON: ${e}`);
         }
 
         // 转发数据
@@ -886,8 +882,9 @@ class ClaudeCodeService {
 
     // 监听原始流结束事件
     originalStream.on("end", () => {
-      if (!streamEnded) {
-        streamEnded = true;
+      // 只触发一次文件上传
+      if (!uploadTriggered) {
+        uploadTriggered = true;
 
         // 流结束后，如果有 sessionId，开始压缩和上传文件
         if (sessionId) {
@@ -928,14 +925,39 @@ class ClaudeCodeService {
           });
         }
       }
+
+      // 不需要手动调用 wrappedStream.end()，pipe 会自动处理
     });
 
     originalStream.on("error", (error) => {
+      logger.error(`Original stream error in wrapper`, {
+        error,
+        containerId,
+        taskId
+      });
       wrappedStream.destroy(error);
     });
 
-    // 管道原始流到包装流
-    originalStream.pipe(wrappedStream);
+    // 监听包装流的结束事件，用于日志记录
+    wrappedStream.on("end", () => {
+      logger.info(`Wrapped stream ended`, {
+        containerId,
+        taskId,
+        sessionId
+      });
+    });
+
+    wrappedStream.on("error", (error) => {
+      logger.error(`Wrapped stream error`, {
+        error,
+        containerId,
+        taskId,
+        sessionId
+      });
+    });
+
+    // 管道原始流到包装流，{ end: true } 确保当原始流结束时包装流也结束
+    originalStream.pipe(wrappedStream, { end: true });
 
     return wrappedStream;
   }
@@ -1196,20 +1218,59 @@ class ClaudeCodeService {
             this.docker.modem.demuxStream(stream, stdoutStream, stderrStream);
 
             // 将stdout连接到输出流
-            stdoutStream.pipe(outputStream);
+            stdoutStream.pipe(outputStream, { end: true });
 
+            // 确保当主流结束时，所有子流都正确结束
             stream.on("end", () => {
               logger.info(
                 `Claude stream session ended for container ${containerId}`,
                 { sessionId }
               );
+
+              // 确保所有流都正确结束
+              if (!stdoutStream.destroyed) {
+                stdoutStream.end();
+              }
+              if (!stderrStream.destroyed) {
+                stderrStream.end();
+              }
+              // outputStream 会通过 pipe 自动结束
             });
 
             stream.on("error", (streamError) => {
               logger.error(`Claude stream error for container ${containerId}`, {
                 error: streamError
               });
-              outputStream.destroy(streamError);
+
+              // 销毁所有相关流
+              if (!stdoutStream.destroyed) {
+                stdoutStream.destroy(streamError);
+              }
+              if (!stderrStream.destroyed) {
+                stderrStream.destroy(streamError);
+              }
+              if (!outputStream.destroyed) {
+                outputStream.destroy(streamError);
+              }
+            });
+
+            // 处理各个流的错误事件
+            stdoutStream.on("error", (error) => {
+              logger.error(`Claude stdout stream error`, {
+                error,
+                containerId
+              });
+              if (!outputStream.destroyed) {
+                outputStream.destroy(error);
+              }
+            });
+
+            stderrStream.on("error", (error) => {
+              logger.error(`Claude stderr stream error`, {
+                error,
+                containerId
+              });
+              // stderr 错误不应该影响主流，只记录日志
             });
 
             // 返回流式响应，包含初始的 sessionId（可能为空）
