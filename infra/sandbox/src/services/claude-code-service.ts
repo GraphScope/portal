@@ -1610,7 +1610,7 @@ class ClaudeCodeService {
       }
 
       // 直接上传 jsonl 文件到 OSS
-      const objectName = `${taskId}/${sessionId}/${sessionFileName}`;
+      const objectName = `claude/${taskId}/${sessionId}/${sessionFileName}`;
 
       const uploadResult = await ossService.uploadFile(
         objectName,
