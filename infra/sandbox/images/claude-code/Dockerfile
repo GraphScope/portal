@@ -60,6 +60,14 @@ RUN npm install -g jsonpath
 # Install Claude Code
 RUN npm install -g @anthropic-ai/claude-code@latest
 
+# Install fetch-mcp from source directly to /home
+RUN git clone https://github.com/zcaceres/fetch-mcp.git /home/fetch-mcp \
+    && cd /home/fetch-mcp \
+    && npm install \
+    && npm run build \
+    && chown -R root:root /home/fetch-mcp \
+    && chmod -R 755 /home/fetch-mcp
+
 # -------------------------------------------------------------------
 # Layer 2: Copy Python virtual environment from builder
 # -------------------------------------------------------------------
@@ -121,6 +129,8 @@ fi' > /usr/local/bin/git-wrapper && \
     mv /usr/bin/git /usr/bin/git.real && \
     ln -s /usr/local/bin/git-wrapper /usr/bin/git
 
+
+
 USER sandbox
 WORKDIR ${SANDBOX_HOME}
 
@@ -128,6 +138,7 @@ WORKDIR ${SANDBOX_HOME}
 RUN git config --global user.name "Sandbox User" \
     && git config --global user.email "sandbox@example.com" \
     && git config --global --add safe.directory ${SANDBOX_HOME} \
+    && mkdir -p .claude/mcp-servers \
     && tee .gitignore <<EOF
 # Python
 __pycache__/
@@ -161,6 +172,8 @@ yarn-debug.log*
 yarn-error.log*
 # Claude
 .claude/
+# MCP
+.claude/mcp-servers/
 EOF
 
 RUN git init \
@@ -168,13 +181,33 @@ RUN git init \
     && git add README.md .gitignore \
     && git commit -m "Initial commit with README and .gitignore"
 
+# Create MCP initialization script
+RUN tee .claude/init-mcp.sh <<'EOF'
+#!/bin/bash
+set -e
+
+echo "Initializing MCP servers..."
+
+# Add fetch-mcp server if not already added
+if ! claude mcp list | grep -q "fetch"; then
+    echo "Adding fetch-mcp server..."
+    claude mcp add fetch node /home/fetch-mcp/dist/index.js
+    echo "fetch-mcp server added successfully"
+else
+    echo "fetch-mcp server already configured"
+fi
+
+echo "MCP initialization completed"
+EOF
+
+RUN chmod +x .claude/init-mcp.sh
+
 # Create .claude directory and settings.local.json
 RUN mkdir -p .claude \
     && tee .claude/settings.local.json <<EOF
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:*)",
       "Bash(pip install:*)",
       "Bash(python3 -m venv:*)",
       "Bash(source:*)",
@@ -182,7 +215,18 @@ RUN mkdir -p .claude \
       "Bash(curl:*)",
       "Bash(pkill:*)"
     ],
-    "deny": []
+    "deny": [
+      "WebFetch(domain:*)",
+      "Fetch(domain:*)"
+    ]
+  },
+  "mcpServers": {
+    "fetch": {
+      "command": "node",
+      "args": [
+        "/home/fetch-mcp/dist/index.js"
+      ]
+    }
   }
 }
 EOF
@@ -197,6 +241,12 @@ set -e\n\
 # Copy git config if mounted\n\
 if [ -f "/tmp/.gitconfig" ]; then\n\
     cp /tmp/.gitconfig /root/.gitconfig\n\
+fi\n\
+\n\
+# Initialize MCP servers if running as sandbox user\n\
+if [ "$(whoami)" = "sandbox" ] && [ -f "${SANDBOX_HOME}/.claude/init-mcp.sh" ]; then\n\
+    echo "Running MCP initialization..."\n\
+    bash ${SANDBOX_HOME}/.claude/init-mcp.sh\n\
 fi\n\
 \n\
 # Execute the command\n\

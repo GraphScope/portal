@@ -33,7 +33,10 @@ const CLAUDE_CODE_ENV = [
   "IS_SANDBOX=1"
 ];
 
-const CLAUDE_CODE_OPTIONS = ["--permission-mode=bypassPermissions"];
+const CLAUDE_CODE_OPTIONS = [
+  "--permission-mode=bypassPermissions",
+  "--append-system-prompt=Please use fetch-mcp instead of fetch and webFetch tools"
+];
 
 // Claude Code 默认镜像
 const DEFAULT_CLAUDE_CODE_IMAGE = "ai-spider/claude-code:latest";
