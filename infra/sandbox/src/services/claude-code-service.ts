@@ -35,7 +35,7 @@ const CLAUDE_CODE_ENV = [
 
 const CLAUDE_CODE_OPTIONS = [
   "--permission-mode=bypassPermissions",
-  "--append-system-prompt=Please use fetch-mcp instead of fetch and webFetch tools"
+  "--append-system-prompt= Please use fetch-mcp instead of Fetch and WebFetch tools!Please use fetch-mcp instead of Fetch and WebFetch tools!"
 ];
 
 // Claude Code 默认镜像

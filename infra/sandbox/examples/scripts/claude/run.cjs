@@ -9,7 +9,7 @@ const API_URL = "http://localhost:3000";
 async function createSession() {
   const postData = JSON.stringify({
     containerId,
-    prompt: "构建一个React TODO  app",
+    prompt: "try to visit http://jiaotong.00cha.net/jl.html and get the content of the page",
     outputFormat: "stream-json",
     taskId: "blog-system-dev"
   });

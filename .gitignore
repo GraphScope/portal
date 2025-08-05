@@ -225,3 +225,5 @@ dmypy.json
 
 # graphy output data
 graphyourdata/
+
+.env

@@ -191,7 +191,7 @@ echo "Initializing MCP servers..."
 # Add fetch-mcp server if not already added
 if ! claude mcp list | grep -q "fetch"; then
     echo "Adding fetch-mcp server..."
-    claude mcp add fetch node /home/fetch-mcp/dist/index.js
+    claude mcp add fetch node /home/fetch-mcp/dist/index.js --scope user
     echo "fetch-mcp server added successfully"
 else
     echo "fetch-mcp server already configured"
@@ -244,7 +244,7 @@ if [ -f "/tmp/.gitconfig" ]; then\n\
 fi\n\
 \n\
 # Initialize MCP servers if running as sandbox user\n\
-if [ "$(whoami)" = "sandbox" ] && [ -f "${SANDBOX_HOME}/.claude/init-mcp.sh" ]; then\n\
+if [ -f "${SANDBOX_HOME}/.claude/init-mcp.sh" ]; then\n\
     echo "Running MCP initialization..."\n\
     bash ${SANDBOX_HOME}/.claude/init-mcp.sh\n\
 fi\n\
