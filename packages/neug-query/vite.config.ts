@@ -16,7 +16,10 @@ args.forEach(arg => {
 const { mode } = params;
 const isSingle = mode === 'single' && process.env.NODE_ENV === 'production';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  const isDev = mode === 'development';
+  
+  return {
   plugins: [
     react({
       // 添加 React 插件配置以修复 preamble 检测问题
@@ -88,7 +91,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      // 始终指向源文件，确保开发和生产环境都能获取最新代码
+      // 始终指向源文件，确保获取最新代码
       '@graphscope/studio-components': path.resolve(__dirname, '../studio-components/src'),
       '@graphscope/studio-query': path.resolve(__dirname, '../studio-query/src'),
     },
@@ -109,7 +112,7 @@ export default defineConfig({
       'react-dom', 
       'react-router-dom'
     ],
-    // 始终排除 workspace 依赖，让 alias 生效
+    // 排除 workspace 依赖，让 alias 生效
     exclude: [
       '@graphscope/studio-components',
       '@graphscope/studio-query'
@@ -117,4 +120,5 @@ export default defineConfig({
     // 强制预构建依赖
     force: true
   }
+  };
 });
