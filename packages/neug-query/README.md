@@ -22,6 +22,9 @@ pnpm run start:site
 # Build for production
 pnpm run build:site
 
+# Build for production Combines all resources into a single HTML file
+pnpm run build:site:single
+
 # Serve built files locally
 pnpm run serve
 ```
