@@ -24,8 +24,7 @@
     "start:site": "vite dev",
     "build:site": "NODE_OPTIONS='--max-old-space-size=8192' vite build",
     "build:site:single": "NODE_OPTIONS='--max-old-space-size=8192' vite build --mode=single",
-    "preview": "vite preview",
-    "serve": "node serve.js"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@graphscope/studio-components": "workspace:*",
