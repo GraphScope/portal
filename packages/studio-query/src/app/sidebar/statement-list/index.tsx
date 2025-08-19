@@ -180,7 +180,7 @@ const StatementList: React.FunctionComponent<IListProps> = props => {
 
   const [state, updateState] = useState({
     checkedSet: new Set<string>(),
-    batch: true,
+    batch: false,
   });
   const { checkedSet, batch } = state;
 
