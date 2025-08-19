@@ -125,12 +125,16 @@ const List = props => {
                     {description}
                   </div>
                 )}
-                <code style={{ fontSize: '12px', color: token.colorTextHeading }}>{item.script}</code>
-                {item.query && (
+                <code style={{ fontSize: '12px', wordBreak: 'break-all', color: token.colorTextHeading }}>
+                  {item.script}
+                </code>
+                {query && (
                   <>
                     <br />
                     <br />
-                    <code style={{ fontSize: '12px', color: token.colorTextDescription }}>{item.query}</code>
+                    <code style={{ fontSize: '12px', wordBreak: 'break-all', color: token.colorTextDescription }}>
+                      {query}
+                    </code>
                   </>
                 )}
               </pre>
@@ -176,7 +180,7 @@ const StatementList: React.FunctionComponent<IListProps> = props => {
 
   const [state, updateState] = useState({
     checkedSet: new Set<string>(),
-    batch: false,
+    batch: true,
   });
   const { checkedSet, batch } = state;
 

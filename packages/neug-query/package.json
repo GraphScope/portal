@@ -1,0 +1,57 @@
+{
+  "name": "@graphscope/neug-query",
+  "version": "0.1.0",
+  "description": "Neug Query - A standalone query interface for GraphScope",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GraphScope/portal.git"
+  },
+  "files": [
+    "es",
+    "lib",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "start": "father dev",
+    "build": "father build",
+    "start:site": "vite dev",
+    "build:site": "NODE_OPTIONS='--max-old-space-size=8192' vite build",
+    "build:site:single": "NODE_OPTIONS='--max-old-space-size=8192' vite build --mode=single",
+    "preview": "vite preview",
+    "serve": "node serve.js"
+  },
+  "dependencies": {
+    "@graphscope/studio-components": "workspace:*",
+    "@graphscope/studio-query": "workspace:*",
+    "antd": "^5.22.2",
+    "localforage": "^1.10.0",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-intl": "^6.6.1",
+    "react-router-dom": "^6.26.1",
+    "rxjs": "^7.8.1",
+    "uuid": "^9.0.1",
+    "valtio": "2.0.0-rc.1",
+    "zustand": "^4.5.5"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.202",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "father": "^4.3.1",
+    "typescript": "^5.0.0",
+    "vite": "^5.4.16",
+    "vite-plugin-singlefile": "^2.0.2"
+  },
+  "author": "",
+  "license": "ISC"
+}

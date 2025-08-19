@@ -54,6 +54,7 @@ export type IStore<T> = T & {
   };
   /** 默认的折叠状态 */
   defaultCollapsed: boolean;
+  onlyCypher?: boolean;
 };
 
 export const initialStore: IStore<{}> = {
@@ -86,6 +87,7 @@ export const initialStore: IStore<{}> = {
   language: 'gremlin',
   defaultCollapsed: true,
   welcome: undefined,
+  onlyCypher: undefined
 };
 
 export const useContext = () => useZustandContext<IStore<{}>>();
@@ -168,4 +170,6 @@ export interface IStudioQueryProps {
 
   // draw-pattern 预览图模板
   previewGraphSchema?: GraphProps;
+  onlyCypher?: boolean;
+  notStoredProcedures?: boolean;
 }

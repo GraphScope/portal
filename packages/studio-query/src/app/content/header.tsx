@@ -49,23 +49,30 @@ const ModeSwitch = () => {
 };
 const LanguageSwitch = () => {
   const { updateStore, store } = useContext();
-  const { language } = store;
+  const { language, onlyCypher } = store;
   const onChange = value => {
     updateStore(draft => {
       draft.language = value;
     });
   };
+
+  const allOptions = [
+    {
+      label: 'Gremlin',
+      value: 'gremlin',
+      disabled: language === 'cypher',
+    },
+    { label: 'Cypher', value: 'cypher', disabled: language === 'gremlin' },
+  ];
+
+  const options = onlyCypher 
+    ? allOptions.filter(option => option.value === 'cypher')
+    : allOptions;
+
   return (
     <Segmented
       value={language}
-      options={[
-        {
-          label: 'Gremlin',
-          value: 'gremlin',
-          disabled: language === 'cypher',
-        },
-        { label: 'Cypher', value: 'cypher', disabled: language === 'gremlin' },
-      ]}
+      options={options}
       onChange={onChange}
     />
   );
@@ -92,7 +99,7 @@ const Header: React.FunctionComponent<IHeaderProps> = props => {
       };
     });
   };
-  const handleQuery =debounce(() => {
+  const handleQuery = debounce(() => {
     if (editorRef.current) {
       const value = editorRef.current.codeEditor.getValue();
       if (value === '') {
