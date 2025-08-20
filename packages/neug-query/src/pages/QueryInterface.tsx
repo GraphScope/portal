@@ -9,11 +9,12 @@ const { storage } = Utils;
 const getPrefixParams = () => {
   // 目前默认设置为 cypher，保留 gremlin 作为备用选项
   const language: 'cypher' | 'gremlin' = 'cypher';
-  
+
   // 根据语言类型设置默认查询脚本
-  const globalScript = language === 'cypher' 
-    ? 'MATCH (n) RETURN n LIMIT 500'  // cypher 默认查询
-    : 'g.V().outE().limit(500)';      // gremlin 默认查询（备用）
+  const globalScript =
+    language === 'cypher'
+      ? 'MATCH (n) RETURN n LIMIT 500' // cypher 默认查询
+      : 'g.V().outE().limit(500)'; // gremlin 默认查询（备用）
 
   return {
     language,
@@ -31,7 +32,7 @@ const QueryInterface: React.FC = () => {
   // query_initiation
   useEffect(() => {
     storage.set('query_initiation', 'Server');
-    storage.set('query_initiation_service', window.location.origin);
+    storage.set('query_initiation_service', `${window.location.origin}/queryGraphData`);
   }, []);
   return (
     <StudioQuery
