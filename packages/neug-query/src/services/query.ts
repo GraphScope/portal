@@ -664,33 +664,6 @@ export class QueryService {
     };
   }
 
-  // 取消查询 - 基于 website 包的逻辑，去掉 Browser 模式
-  async handleCancelQuery(params: IStatement): Promise<IGraphData> {
-    const _params = {
-      script: params.script,
-      language: 'cypher',
-    };
-    try {
-      const response = await fetch(`${window.location.origin}/graph/cancel`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(_params),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        return result.data;
-      }
-    } catch (error) {
-      console.error('Cancel query error:', error);
-    }
-
-    return { nodes: [], edges: [] };
-  }
-
   // 查询图模式
   async queryGraphSchema(): Promise<CypherSchemaData> {
     try {
