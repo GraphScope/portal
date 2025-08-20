@@ -48,8 +48,6 @@ export default defineConfig(({ mode }) => {
           'react-vendor': ['react', 'react-dom'],
           'router': ['react-router-dom'],
           'antd': ['antd'],
-          'studio-query': ['@graphscope/studio-query'],
-          'studio-components': ['@graphscope/studio-components']
         },
         entryFileNames: 'assets/[name].[hash].js',
         chunkFileNames: 'assets/[name].[hash].js',
@@ -89,16 +87,6 @@ export default defineConfig(({ mode }) => {
       ignored: ['!**/node_modules/@graphscope/**', '!../studio-components/**', '!../studio-query/**']
     }
   },
-  resolve: {
-    alias: {
-      // 始终指向源文件，确保获取最新代码
-      '@graphscope/studio-components': path.resolve(__dirname, '../studio-components/src'),
-      '@graphscope/studio-query': path.resolve(__dirname, '../studio-query/src'),
-    },
-    // 优先解析 ES 模块
-    mainFields: ['module', 'es2015', 'esm', 'main'],
-    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json']
-  },
   define: {
     // 为生产环境定义环境变量
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
@@ -111,11 +99,6 @@ export default defineConfig(({ mode }) => {
       'react', 
       'react-dom', 
       'react-router-dom'
-    ],
-    // 排除 workspace 依赖，让 alias 生效
-    exclude: [
-      '@graphscope/studio-components',
-      '@graphscope/studio-query'
     ],
     // 强制预构建依赖
     force: true
