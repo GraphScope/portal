@@ -93,6 +93,14 @@ export default defineConfig(({ mode }) => {
       hmr: {
         overlay: true,
       },
+      proxy: {
+        // 代理 API 请求到后端服务
+        '/api': {
+          target: 'http://localhost:10001',
+          changeOrigin: true,
+          rewrite: path => path.replace(/^\/api/, ''),
+        },
+      },
       // 监听 workspace 依赖的文件变更
       watch: {
         // 监听 workspace 依赖目录
