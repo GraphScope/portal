@@ -765,6 +765,7 @@ get 请求、无参数、返回格式如下
 ### queryGraphData
 
 post 请求，参数
+入参1
 
 ```json
 {
@@ -1384,5 +1385,194 @@ post 请求，参数
     }
   },
   "table": []
+}
+```
+
+```json
+
+入参2
+{
+  "script": "Match (n) return count(n)",
+  "language": "cypher"
+}
+```
+
+返回参数
+
+```json
+{
+  "nodes": [],
+  "edges": [],
+  "table": [{ "$f0": 2371558 }],
+  "raw": {
+    "records": [
+      { "keys": ["$f0"], "length": 1, "_fields": [{ "low": 2371558, "high": 0 }], "_fieldLookup": { "$f0": 0 } }
+    ],
+    "summary": {
+      "query": { "text": "Match (n) return count(n)", "parameters": {} },
+      "queryType": "r",
+      "counters": {
+        "_stats": {
+          "nodesCreated": 0,
+          "nodesDeleted": 0,
+          "relationshipsCreated": 0,
+          "relationshipsDeleted": 0,
+          "propertiesSet": 0,
+          "labelsAdded": 0,
+          "labelsRemoved": 0,
+          "indexesAdded": 0,
+          "indexesRemoved": 0,
+          "constraintsAdded": 0,
+          "constraintsRemoved": 0
+        },
+        "_systemUpdates": 0
+      },
+      "updateStatistics": {
+        "_stats": {
+          "nodesCreated": 0,
+          "nodesDeleted": 0,
+          "relationshipsCreated": 0,
+          "relationshipsDeleted": 0,
+          "propertiesSet": 0,
+          "labelsAdded": 0,
+          "labelsRemoved": 0,
+          "indexesAdded": 0,
+          "indexesRemoved": 0,
+          "constraintsAdded": 0,
+          "constraintsRemoved": 0
+        },
+        "_systemUpdates": 0
+      },
+      "plan": false,
+      "profile": false,
+      "notifications": [],
+      "gqlStatusObjects": [
+        {
+          "gqlStatus": "00000",
+          "statusDescription": "note: successful completion",
+          "diagnosticRecord": { "OPERATION": "", "OPERATION_CODE": "0", "CURRENT_SCHEMA": "/" },
+          "severity": "UNKNOWN",
+          "classification": "UNKNOWN",
+          "isNotification": false
+        }
+      ],
+      "server": { "address": "127.0.0.1:7687", "agent": "Neo4j/4.4.0", "protocolVersion": 4.4 },
+      "resultConsumedAfter": { "low": 252, "high": 0 },
+      "resultAvailableAfter": { "low": 1033, "high": 0 },
+      "database": { "name": "neo4j" }
+    }
+  }
+}
+```
+
+入参3
+
+```json
+{
+  "script": "Match (n) return n.id limit 5",
+  "language": "cypher"
+}
+```
+
+返回参数
+
+```json
+{
+  "nodes": [],
+  "edges": [],
+  "table": [
+    { "id": "ASN_3bc5b0706c3df8182f7784cafa0bd864c4a6d432266863609f1f5c22c47fa04b" },
+    { "id": "ASN_894a39aa8f6405a82567c5c1832fd3a6b110552c2fe84eafa929a3e603fc4387" },
+    { "id": "ASN_a86c15455bcb9b7967833d13f513d8b030183a92137f02f26f9a0d6415521224" },
+    { "id": "ASN_d4df4808b721a2daba0101a5592c424a0b91fb5aa96b4ebf5fdd36de94e5ec25" },
+    { "id": "ASN_bfe47d08b0915207ce5f3b739e2bd60484069a0f0591adf4ca6baf9f5779d27a" }
+  ],
+  "raw": {
+    "records": [
+      {
+        "keys": ["id"],
+        "length": 1,
+        "_fields": ["ASN_3bc5b0706c3df8182f7784cafa0bd864c4a6d432266863609f1f5c22c47fa04b"],
+        "_fieldLookup": { "id": 0 }
+      },
+      {
+        "keys": ["id"],
+        "length": 1,
+        "_fields": ["ASN_894a39aa8f6405a82567c5c1832fd3a6b110552c2fe84eafa929a3e603fc4387"],
+        "_fieldLookup": { "id": 0 }
+      },
+      {
+        "keys": ["id"],
+        "length": 1,
+        "_fields": ["ASN_a86c15455bcb9b7967833d13f513d8b030183a92137f02f26f9a0d6415521224"],
+        "_fieldLookup": { "id": 0 }
+      },
+      {
+        "keys": ["id"],
+        "length": 1,
+        "_fields": ["ASN_d4df4808b721a2daba0101a5592c424a0b91fb5aa96b4ebf5fdd36de94e5ec25"],
+        "_fieldLookup": { "id": 0 }
+      },
+      {
+        "keys": ["id"],
+        "length": 1,
+        "_fields": ["ASN_bfe47d08b0915207ce5f3b739e2bd60484069a0f0591adf4ca6baf9f5779d27a"],
+        "_fieldLookup": { "id": 0 }
+      }
+    ],
+    "summary": {
+      "query": { "text": "Match (n) return n.id limit 5", "parameters": {} },
+      "queryType": "r",
+      "counters": {
+        "_stats": {
+          "nodesCreated": 0,
+          "nodesDeleted": 0,
+          "relationshipsCreated": 0,
+          "relationshipsDeleted": 0,
+          "propertiesSet": 0,
+          "labelsAdded": 0,
+          "labelsRemoved": 0,
+          "indexesAdded": 0,
+          "indexesRemoved": 0,
+          "constraintsAdded": 0,
+          "constraintsRemoved": 0
+        },
+        "_systemUpdates": 0
+      },
+      "updateStatistics": {
+        "_stats": {
+          "nodesCreated": 0,
+          "nodesDeleted": 0,
+          "relationshipsCreated": 0,
+          "relationshipsDeleted": 0,
+          "propertiesSet": 0,
+          "labelsAdded": 0,
+          "labelsRemoved": 0,
+          "indexesAdded": 0,
+          "indexesRemoved": 0,
+          "constraintsAdded": 0,
+          "constraintsRemoved": 0
+        },
+        "_systemUpdates": 0
+      },
+      "plan": false,
+      "profile": false,
+      "notifications": [],
+      "gqlStatusObjects": [
+        {
+          "gqlStatus": "00000",
+          "statusDescription": "note: successful completion",
+          "diagnosticRecord": { "OPERATION": "", "OPERATION_CODE": "0", "CURRENT_SCHEMA": "/" },
+          "severity": "UNKNOWN",
+          "classification": "UNKNOWN",
+          "isNotification": false
+        }
+      ],
+      "server": { "address": "127.0.0.1:7687", "agent": "Neo4j/4.4.0", "protocolVersion": 4.4 },
+      "resultConsumedAfter": { "low": 776, "high": 0 },
+      "resultAvailableAfter": { "low": 4184, "high": 0 },
+      "database": { "name": "neo4j" }
+    }
+  }
 }
 ```
