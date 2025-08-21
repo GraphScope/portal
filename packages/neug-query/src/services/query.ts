@@ -16,9 +16,16 @@ const DB_QUERY_SAVED = localforage.createInstance({
 // QueryService 类 - 将原来的 website 服务逻辑适配到这里，使用 localforage
 export class QueryService {
   private language: 'cypher' | 'gremlin';
+  private apiBaseUrl: string;
 
   constructor(language: 'cypher' | 'gremlin' = 'gremlin') {
     this.language = language;
+    // 在开发环境使用相对路径以利用 Vite 代理，生产环境使用环境变量
+    if (import.meta.env.DEV) {
+      this.apiBaseUrl = ''; // 使用相对路径，让 Vite 代理处理
+    } else {
+      this.apiBaseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+    }
   }
 
   // 查询图数据 - 基于 website 包的逻辑，去掉 Browser 模式
@@ -30,19 +37,17 @@ export class QueryService {
       language: 'cypher',
     };
     try {
-      const response = await fetch(`${window.location.origin}/queryGraphData`, {
+      const response = await fetch(`${this.apiBaseUrl}/cypherv2`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'text/plain',
         },
-        body: JSON.stringify(_params),
+        body: params.script,
       });
 
       const result = await response.json();
 
-      if (result.success) {
-        return result.data;
-      }
+      return result;
 
       console.warn('查询失败，返回模拟数据');
     } catch (error) {
@@ -667,7 +672,7 @@ export class QueryService {
   // 查询图模式
   async queryGraphSchema(): Promise<CypherSchemaData> {
     try {
-      const response = await fetch(`${window.location.origin}/queryGraphSchema`);
+      const response = await fetch(`${this.apiBaseUrl}/schema`);
       const result = await response.json();
       if (result.success) {
         const schema = result.data;
