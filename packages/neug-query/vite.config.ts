@@ -18,7 +18,8 @@ const isSingle = mode === 'single' && process.env.NODE_ENV === 'production';
 
 export default defineConfig(({ mode }) => {
   const isDev = mode === 'development';
-
+  const apiBaseUrl = process.env.VITE_API_BASE_URL || 'http://localhost:10001';
+  
   return {
     plugins: [
       react({
@@ -97,6 +98,24 @@ export default defineConfig(({ mode }) => {
       watch: {
         // 监听 workspace 依赖目录
         ignored: ['!**/node_modules/@graphscope/**', '!../studio-components/**', '!../studio-query/**'],
+      },
+      // 配置代理来解决 CORS 问题
+      proxy: {
+        '/cypher': {
+          target: apiBaseUrl,
+          changeOrigin: true,
+          secure: false
+        },
+        '/cypherv2': {
+          target: apiBaseUrl,
+          changeOrigin: true,
+          secure: false
+        },
+        '/schema': {
+          target: apiBaseUrl,
+          changeOrigin: true,
+          secure: false
+        },
       },
     },
     define: {
