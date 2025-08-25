@@ -1,5 +1,6 @@
 import { queryGraph } from '@graphscope/studio-driver';
 import { Utils } from '@graphscope/studio-components';
+import { message } from 'antd';
 import type { IQueryStatement } from '@graphscope/studio-graph';
 const { storage } = Utils;
 export const queryStatement: IQueryStatement['query'] = async (script: string) => {
@@ -20,8 +21,8 @@ export const queryStatement: IQueryStatement['query'] = async (script: string) =
     };
     if (query_initiation === 'Server' && query_initiation_service) {
       const isNeugQuery = query_mode === 'neug-query';
-      
-      const requestConfig = isNeugQuery 
+
+      const requestConfig = isNeugQuery
         ? {
             headers: { 'Content-Type': 'text/plain' },
             body: script,
@@ -35,9 +36,17 @@ export const queryStatement: IQueryStatement['query'] = async (script: string) =
         method: 'POST',
         ...requestConfig,
       });
-
+      if (response.status !== 200 && isNeugQuery) {
+        const errorText = await response.text();
+        message.error(errorText);
+        return {
+          nodes: [],
+          edges: [],
+          mode: 'error',
+          raw: { message: errorText },
+        };
+      }
       const res = await response.json();
-      
       // 根据不同模式处理响应数据
       if (isNeugQuery) {
         return res || { nodes: [], edges: [] };
