@@ -31,8 +31,9 @@ const QueryInterface: React.FC = () => {
   const apiService = new QueryService(language);
   // query_initiation
   useEffect(() => {
+    storage.set('query_mode', 'neug-query');
     storage.set('query_initiation', 'Server');
-    storage.set('query_initiation_service', `${window.location.origin}/queryGraphData`);
+    storage.set('query_initiation_service', `${window.location.origin}/cypherv2`);
   }, []);
   return (
     <StudioQuery

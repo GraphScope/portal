@@ -9,6 +9,7 @@ export const queryStatement: IQueryStatement['query'] = async (script: string) =
   const query_username = storage.get<string>('query_username');
   const query_password = storage.get<string>('query_password');
   const query_initiation_service = storage.get<string>('query_initiation_service');
+  const query_mode = storage.get('query_mode');
   try {
     const _params = {
       script,
@@ -18,6 +19,27 @@ export const queryStatement: IQueryStatement['query'] = async (script: string) =
       password: query_password,
     };
     if (query_initiation === 'Server' && query_initiation_service) {
+      if(query_mode === 'neug-query'){
+        // neug-query 走 /cypherv2 接口
+        return await fetch(`${query_initiation_service}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain',
+          },
+          body: script,
+        })
+          .then(res => res.json())
+          .then(res => {
+            if (res) {
+              return res;
+            }
+            return {
+              nodes: [],
+              edges: [],
+            };
+          });
+
+      }
       return await fetch(query_initiation_service, {
         method: 'POST',
         headers: {

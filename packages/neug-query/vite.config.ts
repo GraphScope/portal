@@ -101,11 +101,6 @@ export default defineConfig(({ mode }) => {
       },
       // 配置代理来解决 CORS 问题
       proxy: {
-        '/cypher': {
-          target: apiBaseUrl,
-          changeOrigin: true,
-          secure: false
-        },
         '/cypherv2': {
           target: apiBaseUrl,
           changeOrigin: true,
