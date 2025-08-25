@@ -19,44 +19,31 @@ export const queryStatement: IQueryStatement['query'] = async (script: string) =
       password: query_password,
     };
     if (query_initiation === 'Server' && query_initiation_service) {
-      if(query_mode === 'neug-query'){
-        // neug-query 走 /cypherv2 接口
-        return await fetch(`${query_initiation_service}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'text/plain',
-          },
-          body: script,
-        })
-          .then(res => res.json())
-          .then(res => {
-            if (res) {
-              return res;
-            }
-            return {
-              nodes: [],
-              edges: [],
-            };
-          });
-
-      }
-      return await fetch(query_initiation_service, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(_params),
-      })
-        .then(res => res.json())
-        .then(res => {
-          if (res.success) {
-            return res.data;
+      const isNeugQuery = query_mode === 'neug-query';
+      
+      const requestConfig = isNeugQuery 
+        ? {
+            headers: { 'Content-Type': 'text/plain' },
+            body: script,
           }
-          return {
-            nodes: [],
-            edges: [],
+        : {
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(_params),
           };
-        });
+
+      const response = await fetch(query_initiation_service, {
+        method: 'POST',
+        ...requestConfig,
+      });
+
+      const res = await response.json();
+      
+      // 根据不同模式处理响应数据
+      if (isNeugQuery) {
+        return res || { nodes: [], edges: [] };
+      } else {
+        return res.success ? res.data : { nodes: [], edges: [] };
+      }
     }
     return queryGraph(_params);
   } catch (error) {
