@@ -46,10 +46,17 @@ export class QueryService {
       });
 
       const result = await response.json();
-
-      return result;
+      return (
+        result || {
+          nodes: [],
+          edges: [],
+        }
+      );
     } catch (error) {
-      console.error('Query error:', error);
+      return {
+        nodes: [],
+        edges: [],
+      };
     }
   }
 
@@ -58,14 +65,16 @@ export class QueryService {
     try {
       const response = await fetch(`${this.apiBaseUrl}/schema`);
       const result = await response.json();
-      if (result.success) {
-        const schema = result.data;
+      if (result) {
+        const {schema} = result;
         // 转换 schema 格式以适配前端使用
         const cypherSchema = transformSchema(schema);
         return cypherSchema as CypherSchemaData;
       }
+      return { nodes: [], edges: [] };
     } catch (error) {
       console.error('Query schema error:', error);
+      return { nodes: [], edges: [] };
     }
   }
 
@@ -125,7 +134,7 @@ export class QueryService {
         return [];
       }
     }
-
+    // 暂时neug-query不支持存储过程的查询，返回模拟数据
     if (type === 'store-procedure') {
       // 返回模拟的存储过程数据
       const mockStoreProcedures: IStatement[] =
