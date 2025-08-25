@@ -53,6 +53,7 @@ export class QueryService {
         }
       );
     } catch (error) {
+      message.error('查询失败，请检查服务是否可用');
       return {
         nodes: [],
         edges: [],
@@ -66,14 +67,16 @@ export class QueryService {
       const response = await fetch(`${this.apiBaseUrl}/schema`);
       const result = await response.json();
       if (result) {
-        const {schema} = result;
+        const { schema } = result;
         // 转换 schema 格式以适配前端使用
         const cypherSchema = transformSchema(schema);
         return cypherSchema as CypherSchemaData;
       }
+      message.error('查询失败，请检查服务是否可用');
       return { nodes: [], edges: [] };
     } catch (error) {
       console.error('Query schema error:', error);
+      message.error('查询失败，请检查服务是否可用');
       return { nodes: [], edges: [] };
     }
   }
