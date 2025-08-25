@@ -44,7 +44,16 @@ export class QueryService {
         },
         body: params.script,
       });
-
+      if (response.status !== 200) {
+        const errorText = await response.text();
+        message.error(errorText);
+        return {
+          nodes: [],
+          edges: [],
+          mode: 'error',
+          raw: { message: errorText },
+        };
+      }
       const result = await response.json();
       return (
         result || {
