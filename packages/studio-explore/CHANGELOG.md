@@ -1,5 +1,12 @@
 # @graphscope/studio-explore
 
+## 0.1.18
+
+### Patch Changes
+
+- Updated dependencies
+  - @graphscope/studio-query@0.1.20
+
 ## 0.1.17
 
 ### Patch Changes
