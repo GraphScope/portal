@@ -1,5 +1,11 @@
 # @graphscope/studio-query
 
+## 0.1.20
+
+### Patch Changes
+
+- add neug-query packages
+
 ## 0.1.19
 
 ### Patch Changes
