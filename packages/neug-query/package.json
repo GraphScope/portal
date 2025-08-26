@@ -5,6 +5,8 @@
   "main": "lib/index.js",
   "module": "es/index.js",
   "types": "lib/index.d.ts",
+  "jsdelivr": "dist/index.html",
+  "unpkg": "dist/index.html",
   "repository": {
     "type": "git",
     "url": "https://github.com/GraphScope/portal.git"
@@ -20,11 +22,13 @@
   },
   "scripts": {
     "start": "father dev",
-    "build": "father build",
+    "build": "father build && npm run build:site:single",
+    "build:lib": "father build",
     "start:site": "vite dev",
     "build:site": "NODE_OPTIONS='--max-old-space-size=8192' vite build",
     "build:site:single": "NODE_OPTIONS='--max-old-space-size=8192' vite build --mode=single",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@graphscope/studio-components": "workspace:*",
