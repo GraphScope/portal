@@ -37,13 +37,14 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
     connectComponent,
     sidebarCollapsed,
     sidebarStyle,
-
+    onlyCypher,
+    notStoredProcedures,
     welcome,
   } = props;
   const { store, updateStore } = useContext();
   const { graphId, isReady, schemaData } = store;
 
-  const navbarOptions = [
+  const allNavbarOptions = [
     {
       key: 'recommended',
       title: <FormattedMessage id="Recommended" />,
@@ -75,6 +76,10 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
       children: <GPTStatements schemaData={schemaData} />,
     },
   ];
+
+  const navbarOptions = notStoredProcedures 
+    ? allNavbarOptions.filter(option => option.key !== 'store-procedure')
+    : allNavbarOptions;
 
   useEffect(() => {
     (async () => {
@@ -113,6 +118,7 @@ const StudioQuery: React.FunctionComponent<IStudioQueryProps> = props => {
         draft.mode = displayMode as 'flow' | 'tabs';
         draft.language = language as 'gremlin' | 'cypher';
         draft.welcome = welcome;
+        draft.onlyCypher = onlyCypher;
       });
     })();
   }, []);

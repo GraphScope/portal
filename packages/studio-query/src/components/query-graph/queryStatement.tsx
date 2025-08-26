@@ -1,5 +1,6 @@
 import { queryGraph } from '@graphscope/studio-driver';
 import { Utils } from '@graphscope/studio-components';
+import { message } from 'antd';
 import type { IQueryStatement } from '@graphscope/studio-graph';
 const { storage } = Utils;
 export const queryStatement: IQueryStatement['query'] = async (script: string) => {
@@ -9,6 +10,7 @@ export const queryStatement: IQueryStatement['query'] = async (script: string) =
   const query_username = storage.get<string>('query_username');
   const query_password = storage.get<string>('query_password');
   const query_initiation_service = storage.get<string>('query_initiation_service');
+  const query_mode = storage.get('query_mode');
   try {
     const _params = {
       script,
@@ -18,23 +20,39 @@ export const queryStatement: IQueryStatement['query'] = async (script: string) =
       password: query_password,
     };
     if (query_initiation === 'Server' && query_initiation_service) {
-      return await fetch(query_initiation_service, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(_params),
-      })
-        .then(res => res.json())
-        .then(res => {
-          if (res.success) {
-            return res.data;
+      const isNeugQuery = query_mode === 'neug-query';
+
+      const requestConfig = isNeugQuery
+        ? {
+            headers: { 'Content-Type': 'text/plain' },
+            body: script,
           }
-          return {
-            nodes: [],
-            edges: [],
+        : {
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(_params),
           };
-        });
+
+      const response = await fetch(query_initiation_service, {
+        method: 'POST',
+        ...requestConfig,
+      });
+      if (response.status !== 200 && isNeugQuery) {
+        const errorText = await response.text();
+        message.error(errorText);
+        return {
+          nodes: [],
+          edges: [],
+          mode: 'error',
+          raw: { message: errorText },
+        };
+      }
+      const res = await response.json();
+      // 根据不同模式处理响应数据
+      if (isNeugQuery) {
+        return res || { nodes: [], edges: [] };
+      } else {
+        return res.success ? res.data : { nodes: [], edges: [] };
+      }
     }
     return queryGraph(_params);
   } catch (error) {
