@@ -1,6 +1,6 @@
 {
   "name": "@graphscope/neug-query",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Neug Query - A standalone query interface for GraphScope",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "father dev",
-    "build": "father build && npm run build:site:single",
+    "build": "father build && npm run build:site",
     "build:lib": "father build",
     "start:site": "vite dev",
     "build:site": "NODE_OPTIONS='--max-old-space-size=8192' vite build",
