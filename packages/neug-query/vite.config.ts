@@ -52,9 +52,9 @@ export default defineConfig(({ mode }) => {
                 router: ['react-router-dom'],
                 antd: ['antd'],
               },
-              entryFileNames: 'assets/[name].[hash].js',
-              chunkFileNames: 'assets/[name].[hash].js',
-              assetFileNames: 'assets/[name].[hash].[ext]',
+              entryFileNames: 'assets/[name].js',
+              chunkFileNames: 'assets/[name].js',
+              assetFileNames: 'assets/[name].[ext]',
             },
         // 增大 chunk 大小警告阈值
         onwarn(warning, warn) {

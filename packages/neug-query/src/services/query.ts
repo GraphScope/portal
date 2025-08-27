@@ -32,10 +32,6 @@ export class QueryService {
   async queryGraphData(params: IStatement) {
     // 首先保存到历史记录
     await this.createStatements('history', params);
-    const _params = {
-      script: params.script,
-      language: 'cypher',
-    };
     try {
       const response = await fetch(`${this.apiBaseUrl}/cypherv2`, {
         method: 'POST',
