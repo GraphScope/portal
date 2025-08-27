@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "father dev",
-    "build": "father build && npm run build:site:single",
+    "build": "father build && npm run build:site",
     "build:lib": "father build",
     "start:site": "vite dev",
     "build:site": "NODE_OPTIONS='--max-old-space-size=8192' vite build",
