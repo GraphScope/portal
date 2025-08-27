@@ -1,5 +1,11 @@
 # @graphscope/neug-query
 
+## 0.2.2
+
+### Patch Changes
+
+- publish neug-query packages
+
 ## 0.2.1
 
 ### Patch Changes
