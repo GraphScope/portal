@@ -28,6 +28,7 @@
     "start": "tsx watch --clear-screen=false src/index.ts",
     "dev": "tsx watch --clear-screen=false src/index.ts",
     "dev:mcp": "tsx watch --clear-screen=false src/mcp-server.ts",
+    "generate-api-key": "node scripts/generate-api-key.cjs",
     "test": "jest",
     "lint": "eslint src --ext .ts",
     "prepack": "npm run build"

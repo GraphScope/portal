@@ -4,6 +4,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import http, { createServer } from "http";
 import { errorHandler, notFoundHandler } from "./middleware/error-handler";
+import { conditionalAuth } from "./middleware/simple-auth";
 import {
   createSandboxValidation,
   execCodeValidation,
@@ -37,10 +38,13 @@ export function createApp(): {
   app.use(express.urlencoded({ limit: "100mb", extended: true })); // Parse URL-encoded bodies with 100MB limit
   app.use(morgan("dev")); // HTTP request logging
 
-  // Health check endpoint
+  // Health check endpoint (no auth required)
   app.get("/health", (req, res) => {
     res.status(200).json({ status: "ok" });
   });
+
+  // Apply API Key authentication to all /api routes
+  app.use("/api", conditionalAuth);
 
   // API routes
   app.post(
