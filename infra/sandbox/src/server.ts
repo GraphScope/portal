@@ -9,6 +9,9 @@ import {
   execCodeValidation,
   containerIdValidation,
   updateFilesValidation,
+  createClaudeSessionValidation,
+  resumeClaudeSessionValidation,
+  continueClaudeSessionValidation,
   validate
 } from "./middleware/validation";
 import sandboxController from "./controllers/sandbox-controller";
@@ -30,8 +33,8 @@ export function createApp(): {
   // Apply middleware
   app.use(helmet()); // Security headers
   app.use(cors()); // Enable CORS
-  app.use(express.json({ limit: '100mb' })); // Parse JSON bodies with 100MB limit
-  app.use(express.urlencoded({ limit: '100mb', extended: true })); // Parse URL-encoded bodies with 100MB limit
+  app.use(express.json({ limit: "100mb" })); // Parse JSON bodies with 100MB limit
+  app.use(express.urlencoded({ limit: "100mb", extended: true })); // Parse URL-encoded bodies with 100MB limit
   app.use(morgan("dev")); // HTTP request logging
 
   // Health check endpoint
@@ -95,6 +98,35 @@ export function createApp(): {
     containerIdValidation,
     validate,
     sandboxController.downloadAllFilesAsZip.bind(sandboxController)
+  );
+
+  // Claude CLI 相关路由
+  app.post(
+    "/api/claude/session/create",
+    createClaudeSessionValidation,
+    validate,
+    sandboxController.createClaudeSession.bind(sandboxController)
+  );
+
+  app.post(
+    "/api/claude/session/resume",
+    resumeClaudeSessionValidation,
+    validate,
+    sandboxController.resumeClaudeSession.bind(sandboxController)
+  );
+
+  app.post(
+    "/api/claude/session/continue",
+    continueClaudeSessionValidation,
+    validate,
+    sandboxController.continueClaudeSession.bind(sandboxController)
+  );
+
+  app.post(
+    "/api/claude/session/interactive/:containerId",
+    containerIdValidation,
+    validate,
+    sandboxController.startInteractiveClaudeSession.bind(sandboxController)
   );
 
   // Error handling
