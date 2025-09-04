@@ -1,36 +1,45 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Popover, Select } from 'antd';
 import { ControlOutlined } from '@ant-design/icons';
-import { Utils } from '@graphscope/studio-components';
 import { useContext } from '@graphscope/studio-graph';
 import { getTable } from './getTableData';
 interface IAdjustColumnsProps {
   onChange: (columnIds: string[]) => void;
+  columnKeys: string[];
 }
 
 export function getTableColumns(columnIds: string[]) {
-  return columnIds.map(key => {
+  return columnIds?.map(key => {
     return {
       title: key,
       dataIndex: key,
       key: key,
       sorter: (a, b) => a[key] - b[key],
     };
-  });
+  })||[];
 }
 const AdjustColumns: React.FunctionComponent<IAdjustColumnsProps> = props => {
   const { store } = useContext();
   const { source } = store;
   const { columns } = getTable(source.nodes);
-  const { onChange } = props;
+  const { onChange, columnKeys } = props;
 
-  const defaultColumnIds =
-    (Utils.storage.get('explore_table_view_column_ids') as string[]) || columns.map(item => item.key);
   const [state, setState] = useState({
-    columnIds: defaultColumnIds,
-    tableColumns: getTableColumns(defaultColumnIds),
+    columnIds: columnKeys,
+    tableColumns: getTableColumns(columnKeys),
   });
-  const { columnIds, tableColumns } = state;
+
+  useEffect(()=>{
+    setState(preState => {
+      return {
+        ...preState,
+        columnIds: columnKeys,
+        tableColumns: getTableColumns(columnKeys),
+      };
+    });
+  },[columnKeys])
+
+  const { columnIds } = state;
   const onChangeColumns = value => {
     setState(preState => {
       return {
@@ -39,7 +48,6 @@ const AdjustColumns: React.FunctionComponent<IAdjustColumnsProps> = props => {
         tableColumns: getTableColumns(value),
       };
     });
-    Utils.storage.set('explore_table_view_column_ids', value);
     if (onChange) {
       onChange(value);
     }
