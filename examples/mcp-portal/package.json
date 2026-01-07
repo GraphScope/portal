@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@graphscope/studio-driver": "workspace:*",
-    "@modelcontextprotocol/sdk": "^1.6.0",
+    "@modelcontextprotocol/sdk": "^1.25.2",
     "@zodios/core": "^10.9.6",
     "express": "^4.21.2",
     "zod": "^3.24.2"
