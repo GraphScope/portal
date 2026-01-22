@@ -34,7 +34,7 @@
     "d3-force": "latest",
     "dagre": "latest",
     "html-to-image": "^1.11.11",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "react-intl": "^6.6.1",
     "reactflow": "latest",
     "rxjs": "^7.8.1",
